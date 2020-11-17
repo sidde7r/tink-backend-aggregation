@@ -4,6 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -12,16 +14,19 @@ import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import junitparams.JUnitParamsRunner;
+import junitparams.Parameters;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
+import org.junit.runner.RunWith;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.entities.ConsentType;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.entities.MessageCodes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.ConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.ConsentStatus;
@@ -32,7 +37,11 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.UpdateConsentPsuCredentialsRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.GetAccountsResponse;
+import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
+@RunWith(JUnitParamsRunner.class)
 public class ConsentManagerTest {
 
     private static final String STATE = "state";
@@ -50,8 +59,8 @@ public class ConsentManagerTest {
 
     @Before
     public void init() {
-        apiClient = Mockito.mock(CbiGlobeApiClient.class);
-        userState = Mockito.mock(CbiUserState.class);
+        apiClient = mock(CbiGlobeApiClient.class);
+        userState = mock(CbiUserState.class);
         consentManager = new ConsentManager(apiClient, userState, 100L, 3);
     }
 
@@ -76,8 +85,8 @@ public class ConsentManagerTest {
         consentManager.createAccountConsent(STATE);
 
         // then
-        verify(apiClient, times(1)).createConsent(eq(STATE), eq(ConsentType.ACCOUNT), any());
-        verify(userState, times(1)).startManualAuthenticationStep(CONSENT_ID);
+        verify(apiClient).createConsent(eq(STATE), eq(ConsentType.ACCOUNT), any());
+        verify(userState).startManualAuthenticationStep(CONSENT_ID);
     }
 
     @Test
@@ -110,9 +119,8 @@ public class ConsentManagerTest {
         consentManager.createTransactionsConsent(STATE);
 
         // then
-        verify(apiClient, times(1))
-                .createConsent(eq(STATE), eq(ConsentType.BALANCE_TRANSACTION), any());
-        verify(userState, times(1)).startManualAuthenticationStep(CONSENT_ID);
+        verify(apiClient).createConsent(eq(STATE), eq(ConsentType.BALANCE_TRANSACTION), any());
+        verify(userState).startManualAuthenticationStep(CONSENT_ID);
     }
 
     @Test
@@ -136,7 +144,7 @@ public class ConsentManagerTest {
         Throwable thrown = catchThrowable(() -> consentManager.isConsentAccepted());
 
         // then
-        verify(userState, times(1)).resetAuthenticationState();
+        verify(userState).resetAuthenticationState();
 
         Assertions.assertThat(thrown).isInstanceOf(SessionException.class);
     }
@@ -153,7 +161,7 @@ public class ConsentManagerTest {
         consentManager.updateAuthenticationMethod();
 
         // then
-        verify(apiClient, times(1)).updateConsent(eq(CONSENT_ID), any());
+        verify(apiClient).updateConsent(eq(CONSENT_ID), any());
     }
 
     @Test
@@ -176,7 +184,7 @@ public class ConsentManagerTest {
         consentManager.updatePsuCredentials(USERNAME, PASSWORD, psuCredentialsResponse);
 
         // then
-        verify(apiClient, times(1))
+        verify(apiClient)
                 .updateConsentPsuCredentials(
                         eq(CONSENT_ID), eq(updateConsentPsuCredentialsRequest));
     }
@@ -202,7 +210,7 @@ public class ConsentManagerTest {
                                         USERNAME, PASSWORD, psuCredentialsResponse));
 
         // then
-        verify(apiClient, times(0)).updateConsentPsuCredentials(eq(CONSENT_ID), any());
+        verify(apiClient, never()).updateConsentPsuCredentials(eq(CONSENT_ID), any());
 
         Assertions.assertThat(thrown).isInstanceOf(IllegalArgumentException.class);
     }
@@ -228,7 +236,7 @@ public class ConsentManagerTest {
                                         USERNAME, PASSWORD, psuCredentialsResponse));
 
         // then
-        verify(apiClient, times(0)).updateConsentPsuCredentials(eq(CONSENT_ID), any());
+        verify(apiClient, never()).updateConsentPsuCredentials(eq(CONSENT_ID), any());
 
         Assertions.assertThat(thrown).isInstanceOf(IllegalArgumentException.class);
     }
@@ -243,7 +251,7 @@ public class ConsentManagerTest {
                 catchThrowable(() -> consentManager.updatePsuCredentials(USERNAME, PASSWORD, null));
 
         // then
-        verify(apiClient, times(0)).updateConsentPsuCredentials(eq(CONSENT_ID), any());
+        verify(apiClient, never()).updateConsentPsuCredentials(eq(CONSENT_ID), any());
 
         Assertions.assertThat(thrown).isInstanceOf(IllegalArgumentException.class);
     }
@@ -281,7 +289,7 @@ public class ConsentManagerTest {
         Throwable thrown = catchThrowable(consentManager::waitForAcceptance);
 
         // then
-        verify(apiClient, times(1)).getConsentStatus(StorageKeys.CONSENT_ID);
+        verify(apiClient).getConsentStatus(StorageKeys.CONSENT_ID);
         Assertions.assertThat(thrown).isInstanceOf(LoginException.class);
     }
 
@@ -300,5 +308,28 @@ public class ConsentManagerTest {
         // then
         verify(apiClient, times(3)).getConsentStatus(StorageKeys.CONSENT_ID);
         Assertions.assertThat(thrown).isInstanceOf(LoginException.class);
+    }
+
+    @Test
+    @Parameters(method = "generateHttpResponseExceptions")
+    public void isConsentAcceptedShouldReturnTrueIfConsentValid(HttpResponseException ex) {
+        // given
+        when(ex.getResponse().getBody(String.class)).thenReturn(ex.getMessage());
+        when(apiClient.getConsentStatus(StorageKeys.CONSENT_ID)).thenThrow(ex);
+        // when
+        Throwable throwable = catchThrowable(() -> consentManager.isConsentAccepted());
+        // then
+        assertThat(throwable).isInstanceOf(SessionException.class);
+    }
+
+    private Object[] generateHttpResponseExceptions() {
+        HttpRequest request = mock(HttpRequest.class);
+        HttpResponse response = mock(HttpResponse.class);
+        return new Object[] {
+            new HttpResponseException(MessageCodes.CONSENT_INVALID.name(), request, response),
+            new HttpResponseException(MessageCodes.CONSENT_EXPIRED.name(), request, response),
+            new HttpResponseException(MessageCodes.RESOURCE_UNKNOWN.name(), request, response),
+            new HttpResponseException(MessageCodes.CONSENT_ALREADY_IN_USE.name(), request, response)
+        };
     }
 }

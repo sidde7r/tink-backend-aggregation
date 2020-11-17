@@ -132,7 +132,8 @@ public class ConsentManager {
     private boolean isConsentsProblem(String message) {
         return message.contains(MessageCodes.CONSENT_INVALID.name())
                 || message.contains(MessageCodes.CONSENT_EXPIRED.name())
-                || message.contains(MessageCodes.RESOURCE_UNKNOWN.name());
+                || message.contains(MessageCodes.RESOURCE_UNKNOWN.name())
+                || message.contains(MessageCodes.CONSENT_ALREADY_IN_USE.name());
     }
 
     public ConsentResponse updateAuthenticationMethod() {
