@@ -23,12 +23,12 @@ public class TypedThreadPoolBuilder {
             int maximumPoolSize, long keepAliveTime, TimeUnit unit) {
         Preconditions.checkArgument(
                 maximumPoolSize >= corePoolSize,
-                "maximumPoolSize (was: %d) must be greater or equal than corePoolSize (was: %d).",
+                "maximumPoolSize (was: %s) must be greater or equal than corePoolSize (was: %s).",
                 maximumPoolSize,
                 corePoolSize);
         Preconditions.checkArgument(
                 keepAliveTime >= 0,
-                "keepAliveTime must be zero or positive. Was: %d",
+                "keepAliveTime must be zero or positive. Was: %s",
                 keepAliveTime);
         Preconditions.checkNotNull(unit, "keepAliveTime unit must not be null.");
 
