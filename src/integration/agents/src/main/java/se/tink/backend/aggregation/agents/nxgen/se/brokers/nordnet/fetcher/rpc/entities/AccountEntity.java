@@ -134,11 +134,15 @@ public class AccountEntity {
                 .withType(getPortfolioType())
                 .withUniqueIdentifier(accountNumber)
                 .withCashValue(getCashBalance(accountInfoEntity).getDoubleValue())
-                .withTotalProfit(0)
+                .withTotalProfit(calculateInstrumentsProfit(instruments))
                 .withTotalValue(accountInfoEntity.getFullMarketValue().getDoubleValue())
                 .withInstruments(instruments)
                 .setRawType(accountCode)
                 .build();
+    }
+
+    private Double calculateInstrumentsProfit(List<InstrumentModule> instruments) {
+        return instruments.stream().map(InstrumentModule::getProfit).reduce(Double::sum).orElse(0d);
     }
 
     /**
