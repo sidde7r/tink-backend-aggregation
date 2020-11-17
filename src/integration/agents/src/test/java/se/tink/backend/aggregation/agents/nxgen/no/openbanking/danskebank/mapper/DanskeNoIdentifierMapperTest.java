@@ -6,7 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.danskebank.DanskeNoConstants;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.danskebank.mapper.fixtures.DanskeNoIdentifierFixtures;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.entities.AccountIdentifierEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountIdentifierEntity;
 import se.tink.libraries.mapper.PrioritizedValueExtractor;
 
 public class DanskeNoIdentifierMapperTest {

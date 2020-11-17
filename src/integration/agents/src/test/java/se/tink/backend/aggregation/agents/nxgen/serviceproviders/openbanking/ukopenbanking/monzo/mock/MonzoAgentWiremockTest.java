@@ -5,7 +5,7 @@ import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesJsonFileParser;
 import se.tink.backend.aggregation.agents.framework.assertions.entities.AgentContractEntity;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockrefresh.AgentWireMockRefreshTest;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.UkOpenBankingV31Constants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingV31Constants;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.MonzoConstants.StorageKeys;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationReader;
 import se.tink.libraries.credentials.service.RefreshableItem;

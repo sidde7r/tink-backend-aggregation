@@ -2,6 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.firsttrust;
 
 public class FirstTrustConstants {
 
+    static final String ORGANISATION_ID = "0015800000jf9VgAAI";
+
     class Urls {
 
         class V31 {

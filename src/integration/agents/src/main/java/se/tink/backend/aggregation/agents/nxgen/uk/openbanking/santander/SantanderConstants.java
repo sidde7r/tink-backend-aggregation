@@ -2,6 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.santander;
 
 final class SantanderConstants {
 
+    static final String ORGANISATION_ID = "0015800000jfFGuAAM";
+
     class Urls {
 
         class V31 {

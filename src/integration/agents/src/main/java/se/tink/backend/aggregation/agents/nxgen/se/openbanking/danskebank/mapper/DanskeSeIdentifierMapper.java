@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.danskebank.mappe
 
 import java.util.regex.Pattern;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.danskebank.mapper.DanskeIdentifierMapper;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.entities.AccountIdentifierEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountIdentifierEntity;
 import se.tink.libraries.mapper.PrioritizedValueExtractor;
 
 public class DanskeSeIdentifierMapper extends DanskeIdentifierMapper {

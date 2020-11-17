@@ -12,7 +12,8 @@ junit_test(
     ],
     visibility = ["//visibility:public"],
     deps = [
-        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/base",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/ais/base",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/ais/v31",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/uk/openbanking/monzo",
         "//src/integration/amount",
         "//src/integration/credentials/src/main/java/se/tink/libraries/credentials/service",
