@@ -57,9 +57,6 @@ public class BankIdMobilSSAuthenticationController {
         if (!isUserAuthenticated(credentials)) {
             throw BankIdError.TIMEOUT.exception();
         }
-
-        // ITE-1457, remove after investigation
-        log.info("User is supposed to be authenticated. Page source: {}", driver.getPageSource());
     }
 
     private boolean isUserAuthenticated(Credentials credentials) {

@@ -27,6 +27,12 @@ public class BpceValidationHelper {
     }
 
     public String getValidationIdFromStep(StepDto stepDto) {
+        // there are rare cases of that integration not retuning the list at all
+        // we are unable to continue the flow when it happens
+        if (stepDto.getValidationUnits() == null) {
+            throw new IllegalArgumentException("Validation unit was not found.");
+        }
+
         final Map<String, List<ValidationUnitResponseItemDto>> validationUnit =
                 stepDto.getValidationUnits().get(0);
 
