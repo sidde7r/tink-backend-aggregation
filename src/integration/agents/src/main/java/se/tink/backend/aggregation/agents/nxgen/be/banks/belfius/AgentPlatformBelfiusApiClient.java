@@ -88,31 +88,26 @@ public class AgentPlatformBelfiusApiClient {
                         .setRequestCounter(requestCounterAggregated));
     }
 
-    public String prepareAuthentication(
+    public PrepareAuthenticationResponse prepareAuthentication(
             String sessionId, String machineId, String requestCounterAggregated, String panNumber)
             throws AuthenticationException {
-        PrepareAuthenticationResponse response =
-                post(
-                        buildGepaRenderingUrl(machineId),
-                        PrepareAuthenticationResponse.class,
-                        PrepareAuthenticationRequest.create(panNumber)
-                                .setSessionId(sessionId)
-                                .setRequestCounter(requestCounterAggregated));
-        response.validate();
-        return response.getChallenge();
+        return post(
+                buildGepaRenderingUrl(machineId),
+                PrepareAuthenticationResponse.class,
+                PrepareAuthenticationRequest.create(panNumber)
+                        .setSessionId(sessionId)
+                        .setRequestCounter(requestCounterAggregated));
     }
 
-    public void authenticateWithCode(
+    public AuthenticateWithCodeResponse authenticateWithCode(
             String sessionId, String machineId, String requestCounterAggregated, String code)
             throws AuthenticationException {
-        AuthenticateWithCodeResponse response =
-                post(
-                        buildGepaRenderingUrl(machineId),
-                        AuthenticateWithCodeResponse.class,
-                        AuthenticateWithCodeRequest.create(code)
-                                .setSessionId(sessionId)
-                                .setRequestCounter(requestCounterAggregated));
-        response.validate();
+        return post(
+                buildGepaRenderingUrl(machineId),
+                AuthenticateWithCodeResponse.class,
+                AuthenticateWithCodeRequest.create(code)
+                        .setSessionId(sessionId)
+                        .setRequestCounter(requestCounterAggregated));
     }
 
     public boolean isDeviceRegistered(
@@ -154,18 +149,15 @@ public class AgentPlatformBelfiusApiClient {
                         .setRequestCounter(requestCounterServices));
     }
 
-    public BelfiusResponse registerDevice(
+    public RegisterDeviceSignResponse registerDevice(
             String sessionId, String machineId, String requestCounterAggregated, String signature)
             throws AuthenticationException {
-        RegisterDeviceSignResponse response =
-                post(
-                        buildGepaRenderingUrl(machineId),
-                        RegisterDeviceSignResponse.class,
-                        RegisterDeviceRequest.create(signature)
-                                .setSessionId(sessionId)
-                                .setRequestCounter(requestCounterAggregated));
-        response.validate();
-        return response;
+        return post(
+                buildGepaRenderingUrl(machineId),
+                RegisterDeviceSignResponse.class,
+                RegisterDeviceRequest.create(signature)
+                        .setSessionId(sessionId)
+                        .setRequestCounter(requestCounterAggregated));
     }
 
     public String prepareDeviceRegistration(

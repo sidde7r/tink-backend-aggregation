@@ -14,4 +14,8 @@ public class AuthenticateWithCodeResponse extends BelfiusResponse {
             throw LoginError.INCORRECT_CHALLENGE_RESPONSE.exception();
         }
     }
+
+    public boolean isChallengeResponseOk() {
+        return !MessageResponse.isError(this);
+    }
 }

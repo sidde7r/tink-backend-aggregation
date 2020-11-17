@@ -47,4 +47,16 @@ public class PrepareLoginResponse extends BelfiusResponse {
             }
         }
     }
+
+    public boolean isDeviceRegistrationError() {
+        MessageResponse messageResponse =
+                this.filter(MessageResponse.class).findFirst().orElse(null);
+        return messageResponse != null
+                && messageResponse
+                        .getMessageType()
+                        .equalsIgnoreCase(BelfiusConstants.ErrorCodes.ERROR_MESSAGE_TYPE)
+                && StringUtils.containsIgnoreCase(
+                        messageResponse.getMessageDetail(),
+                        BelfiusConstants.ErrorCodes.MISSING_MOBILEBANKING_SUBSCRIPTION);
+    }
 }

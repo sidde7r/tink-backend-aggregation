@@ -7,12 +7,15 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.auth.BelfiusPro
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.auth.BelfiusProcessStateAccessor;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.auth.persistence.BelfiusDataAccessorFactory;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.HumanInteractionDelaySimulator;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.rpc.AuthenticateWithCodeResponse;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationProcessStepIdentifier;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.request.AgentUserInteractionAuthenticationProcessRequest;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentAuthenticationResult;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentFailedAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentProceedNextStepAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.steps.AgentAuthenticationProcessStep;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.userinteraction.fielddefinition.CardReaderLoginInputAgentField;
+import se.tink.backend.aggregation.agentsplatform.framework.error.IncorrectCardReaderResponseCodeError;
 
 @RequiredArgsConstructor
 public class RegisterDeviceLoginStep
@@ -36,17 +39,23 @@ public class RegisterDeviceLoginStep
                         .replace(" ", "");
         keepAlive(processState);
         new HumanInteractionDelaySimulator().delayExecution(500);
-        authenticateWithCode(processState, code);
-
-        return new AgentProceedNextStepAuthenticationResult(
-                AgentAuthenticationProcessStepIdentifier.of(
-                        RegisterDeviceGetSignCodeStep.class.getSimpleName()),
-                processStateAccessor.storeBelfiusProcessState(processState),
+        AuthenticateWithCodeResponse authenticateWithCodeResponse =
+                authenticateWithCode(processState, code);
+        if (authenticateWithCodeResponse.isChallengeResponseOk()) {
+            return new AgentProceedNextStepAuthenticationResult(
+                    AgentAuthenticationProcessStepIdentifier.of(
+                            RegisterDeviceGetSignCodeStep.class.getSimpleName()),
+                    processStateAccessor.storeBelfiusProcessState(processState),
+                    request.getAuthenticationPersistedData());
+        }
+        return new AgentFailedAuthenticationResult(
+                new IncorrectCardReaderResponseCodeError(),
                 request.getAuthenticationPersistedData());
     }
 
-    private void authenticateWithCode(BelfiusProcessState processState, String code) {
-        apiClient.authenticateWithCode(
+    private AuthenticateWithCodeResponse authenticateWithCode(
+            BelfiusProcessState processState, String code) {
+        return apiClient.authenticateWithCode(
                 processState.getSessionId(),
                 processState.getMachineId(),
                 processState.incrementAndGetRequestCounterAggregated(),

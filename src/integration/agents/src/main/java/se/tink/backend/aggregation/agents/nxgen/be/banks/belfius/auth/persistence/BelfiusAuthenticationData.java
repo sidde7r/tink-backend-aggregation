@@ -47,4 +47,10 @@ public class BelfiusAuthenticationData {
         }
         return formatPanNumber(panNumber);
     }
+
+    public void clearData() {
+        deviceToken = null;
+        panNumber = null;
+        password = null;
+    }
 }
