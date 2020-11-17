@@ -8,6 +8,7 @@ import org.assertj.core.util.VisibleForTesting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.PathParameterKeys;
@@ -91,10 +92,14 @@ public class SibsBaseApiClient {
                 createUrl(SibsConstants.Urls.ACCOUNT_BALANCES)
                         .parameter(PathParameterKeys.ACCOUNT_ID, accountId);
 
-        return client.request(accountBalances)
-                .queryParam(QueryKeys.PSU_INVOLVED, isPsuInvolved)
-                .header(HeaderKeys.CONSENT_ID, userState.getConsentId())
-                .get(BalancesResponse.class);
+        try {
+            return client.request(accountBalances)
+                    .queryParam(QueryKeys.PSU_INVOLVED, isPsuInvolved)
+                    .header(HeaderKeys.CONSENT_ID, userState.getConsentId())
+                    .get(BalancesResponse.class);
+        } catch (HttpResponseException e) {
+            throw mapHttpException(e);
+        }
     }
 
     public TransactionKeyPaginatorResponse<String> getAccountTransactions(
@@ -256,5 +261,13 @@ public class SibsBaseApiClient {
                                 .parameter(PathParameterKeys.PAYMENT_ID, uniqueId))
                 .header(HeaderKeys.CONSENT_ID, userState.getConsentId())
                 .get(SibsGetPaymentStatusResponse.class);
+    }
+
+    private SessionException mapHttpException(HttpResponseException exception) {
+        if (exception.getResponse().getStatus() == 429) {
+            return SessionError.SESSION_EXPIRED.exception();
+        } else {
+            throw exception;
+        }
     }
 }
