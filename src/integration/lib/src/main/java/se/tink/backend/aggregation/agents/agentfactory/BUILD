@@ -294,6 +294,7 @@ java_library(
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/pt/banks/montepio",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/pt/banks/novobanco",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/pt/banks/santander",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/pt/banks/sodexo",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/pt/openbanking/activobank",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/pt/openbanking/atlanticoeuropa",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/pt/openbanking/bancobpi",
