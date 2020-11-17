@@ -20,6 +20,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sib
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.filter.ConsentInvalidErrorFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.filter.RateLimitErrorFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.filter.ServiceInvalidErrorFilter;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.filter.SibsRetryFilter;
 import se.tink.backend.aggregation.agents.progressive.ProgressiveAuthAgent;
 import se.tink.backend.aggregation.agents.utils.transfer.InferredTransferDestinations;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
@@ -91,6 +92,7 @@ public abstract class SibsProgressiveBaseAgent extends SubsequentProgressiveGene
         client.addFilter(new ConsentInvalidErrorFilter());
         client.addFilter(new ServiceUnavailableBankServiceErrorFilter());
         client.addFilter(new RateLimitErrorFilter());
+        client.addFilter(new SibsRetryFilter());
     }
 
     private AgentConfiguration<SibsConfiguration> getAgentConfiguration() {
