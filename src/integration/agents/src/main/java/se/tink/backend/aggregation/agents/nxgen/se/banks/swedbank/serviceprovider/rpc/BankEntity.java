@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import lombok.Getter;
+import org.apache.commons.collections4.ListUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @Getter
@@ -38,11 +39,12 @@ public class BankEntity {
             return privateProfile;
         }
 
-        if (Objects.nonNull(businessProfiles)) {
+        if (businessProfiles != null) {
             return businessProfiles.stream()
                     .filter(profile -> profile.getId().equalsIgnoreCase(profileId))
                     .findFirst()
-                    .orElseThrow(IllegalStateException::new);
+                    .orElseThrow(
+                            () -> new IllegalStateException("Could not find profile " + profileId));
         }
 
         throw new IllegalStateException("Profile not found");
@@ -50,11 +52,7 @@ public class BankEntity {
 
     @JsonIgnore
     public Optional<BusinessProfileEntity> getBusinessProfile(String organizationNumber) {
-        if (Objects.isNull(businessProfiles)) {
-            return Optional.empty();
-        }
-
-        return businessProfiles.stream()
+        return ListUtils.emptyIfNull(businessProfiles).stream()
                 .filter(profile -> profile.getCustomerNumber().equalsIgnoreCase(organizationNumber))
                 .findFirst();
     }
