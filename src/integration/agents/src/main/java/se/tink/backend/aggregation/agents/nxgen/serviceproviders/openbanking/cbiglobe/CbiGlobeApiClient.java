@@ -149,12 +149,12 @@ public class CbiGlobeApiClient {
     }
 
     protected RequestBuilder createConsentRequest(String state, ConsentType consentType) {
-        String okfullRedirectUrl = createRedirectUrl(state, consentType, QueryValues.SUCCESS);
-        String nokfullRedirectUrl = createRedirectUrl(state, consentType, QueryValues.FAILURE);
+        String okFullRedirectUrl = createRedirectUrl(state, consentType, QueryValues.SUCCESS);
+        String nokFullRedirectUrl = createRedirectUrl(state, consentType, QueryValues.FAILURE);
         return createRequestInSession(Urls.CONSENTS)
                 .header(HeaderKeys.ASPSP_PRODUCT_CODE, providerConfiguration.getAspspProductCode())
-                .header(HeaderKeys.TPP_REDIRECT_URI, okfullRedirectUrl)
-                .header(HeaderKeys.TPP_NOK_REDIRECT_URI, nokfullRedirectUrl);
+                .header(HeaderKeys.TPP_REDIRECT_URI, okFullRedirectUrl)
+                .header(HeaderKeys.TPP_NOK_REDIRECT_URI, nokFullRedirectUrl);
     }
 
     public String createRedirectUrl(String state, ConsentType consentType, String authResult) {
