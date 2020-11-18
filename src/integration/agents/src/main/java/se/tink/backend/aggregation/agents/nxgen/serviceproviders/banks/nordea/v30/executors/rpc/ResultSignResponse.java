@@ -23,7 +23,6 @@ public class ResultSignResponse {
     public BankIdStatus getBankIdStatus() {
         switch (status.toUpperCase()) {
             case NordeaBankIdStatus.PENDING:
-                return BankIdStatus.WAITING;
             case NordeaBankIdStatus.SIGN_PENDING:
                 return BankIdStatus.WAITING;
             case NordeaBankIdStatus.OK:

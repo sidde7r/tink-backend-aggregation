@@ -350,21 +350,6 @@ public class NordeaBaseApiClient {
         return requestRefreshablePost(request, BankPaymentResponse.class);
     }
 
-    public PaymentEntity updatePayment(PaymentRequest updateRequest) {
-        final RequestBuilder request =
-                httpClient
-                        .request(
-                                Urls.getUrl(
-                                                nordeaConfiguration.getBaseUrl(),
-                                                Urls.FETCH_PAYMENTS_DETAILS)
-                                        .parameter(
-                                                IdTags.PAYMENT_ID,
-                                                updateRequest.getApiIdentifier()))
-                        .accept(MediaType.APPLICATION_JSON_TYPE)
-                        .body(updateRequest, MediaType.APPLICATION_JSON_TYPE);
-        return requestRefreshablePut(request, PaymentEntity.class);
-    }
-
     public ConfirmTransferResponse confirmBankTransfer(
             ConfirmTransferRequest confirmTransferRequest) {
         final RequestBuilder request =
@@ -478,18 +463,6 @@ public class NordeaBaseApiClient {
 
         } catch (HttpResponseException hre) {
             return handleRefreshableRequestAndErrors(hre, request, responseType, HttpMethod.POST);
-        }
-    }
-
-    private <T> T requestRefreshablePut(RequestBuilder request, Class<T> responseType) {
-        try {
-            return request.header(
-                            HttpHeaders.AUTHORIZATION, getTokenType() + ' ' + getAccessToken())
-                    .header(HttpHeaders.ACCEPT_LANGUAGE, HeaderParams.LANGUAGE)
-                    .put(responseType);
-
-        } catch (HttpResponseException hre) {
-            return handleRefreshableRequestAndErrors(hre, request, responseType, HttpMethod.PUT);
         }
     }
 
