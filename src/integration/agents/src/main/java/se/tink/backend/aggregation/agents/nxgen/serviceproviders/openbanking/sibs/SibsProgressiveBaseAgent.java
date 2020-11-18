@@ -87,12 +87,12 @@ public abstract class SibsProgressiveBaseAgent extends SubsequentProgressiveGene
 
     private void applyFilters(TinkHttpClient client) {
         client.addFilter(new ExecutionTimeLoggingFilter());
+        client.addFilter(new SibsRetryFilter());
         client.addFilter(new BankServiceInternalErrorFilter());
         client.addFilter(new ServiceInvalidErrorFilter());
         client.addFilter(new ConsentInvalidErrorFilter());
         client.addFilter(new ServiceUnavailableBankServiceErrorFilter());
         client.addFilter(new RateLimitErrorFilter());
-        client.addFilter(new SibsRetryFilter());
     }
 
     private AgentConfiguration<SibsConfiguration> getAgentConfiguration() {
