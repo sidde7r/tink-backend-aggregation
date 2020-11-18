@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 import com.nimbusds.jose.crypto.RSASSASigner;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.configuration.UkOpenBankingConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.signer.iface.JwtSigner;
 import se.tink.backend.aggregation.agents.utils.crypto.RSA;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
@@ -10,8 +11,7 @@ import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 @RequiredArgsConstructor
 public class LocalJwtSigner implements JwtSigner {
 
-    private final String signingKey;
-    private final String signingKeyId;
+    private final UkOpenBankingConfiguration configuration;
 
     @Override
     public String sign(
@@ -21,8 +21,9 @@ public class LocalJwtSigner implements JwtSigner {
             boolean detachedPayload) {
         RSASSASigner signer =
                 new RSASSASigner(
-                        RSA.getPrivateKeyFromBytes(EncodingUtils.decodeBase64String(signingKey)));
-        return TinkJwtSigner.builder(() -> signingKeyId, signer)
+                        RSA.getPrivateKeyFromBytes(
+                                EncodingUtils.decodeBase64String(configuration.getSigningKey())));
+        return TinkJwtSigner.builder(configuration::getSigningKeyId, signer)
                 .withAlgorithm(algorithm)
                 .withHeaderClaims(headerClaims)
                 .withPayloadClaims(payloadClaims)

@@ -3,11 +3,13 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
+import com.google.inject.name.Named;
 import java.security.cert.X509Certificate;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.contexts.AgentConfigurationControllerContext;
 import se.tink.backend.aggregation.agents.contexts.EidasContext;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.configuration.UkOpenBankingClientConfigurationAdapter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.configuration.UkOpenBankingConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.jwt.JwksClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.jwt.kid.JwksKidProvider;
@@ -21,33 +23,36 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponen
 
 @Slf4j
 public final class KeySignerProvider implements Provider<JwtSigner> {
-    // TODO this is temporary solution until we will able to fetch CERT_ID from TPA on the Agent
-    // setup
-    private static final String UKOB_CERT_ID = "UKOB";
     private static final ImmutableSet<String> EIDAS_ENABLED_APPS =
             ImmutableSet.of(
                     "5f98e87106384b2981c0354a33b51590", // oxford-staging
-                    "e643eb7981d24acfb47834ef338a4e2a", // oxford-production,
+                    "e643eb7981d24acfb47834ef338a4e2a", // oxford-prod
+                    "c859501868b742b6bebd7a3f7911cd85", // oxford-preprod
                     "bb9275c6890a413398d92116047ebfb2", // kirkby-staging,
                     "bb7defc66be94f6ca35cb069135d350a" // kirkby-production
                     );
     private final AgentComponentProvider agentComponentProvider;
-    private final UkOpenBankingConfiguration configuration;
+    private final UkOpenBankingClientConfigurationAdapter configuration;
     private final AgentConfigurationControllerContext agentConfigurationControllerContext;
     private final InternalEidasProxyConfiguration internalEidasProxyConfiguration;
     private final EidasContext eidasContext;
+    // TODO this is temporary solution until we will able to fetch CERT_ID from TPA on the Agent
+    // setup
+    private final String eidasCertId;
 
     @Inject
     private KeySignerProvider(
-            UkOpenBankingConfiguration configuration,
+            UkOpenBankingClientConfigurationAdapter configuration,
             AgentComponentProvider agentComponentProvider,
-            AgentsServiceConfiguration agentsServiceConfiguration) {
+            AgentsServiceConfiguration agentsServiceConfiguration,
+            @Named("eidasCertId") String eidasCertId) {
         this.configuration = configuration;
         this.agentComponentProvider = agentComponentProvider;
         this.agentConfigurationControllerContext = agentComponentProvider.getContext();
         this.internalEidasProxyConfiguration =
                 agentsServiceConfiguration.getEidasProxy().toInternalConfig();
         this.eidasContext = agentComponentProvider.getContext();
+        this.eidasCertId = eidasCertId;
     }
 
     @Override
@@ -72,8 +77,7 @@ public final class KeySignerProvider implements Provider<JwtSigner> {
                             certificate);
             return new EidasJwtSigner(kidProvider, createEidasJwsSigner());
         } else {
-            return new LocalJwtSigner(
-                    configuration.getSigningKey(), configuration.getSigningKeyId());
+            return new LocalJwtSigner((UkOpenBankingConfiguration) configuration);
         }
     }
 
@@ -81,6 +85,6 @@ public final class KeySignerProvider implements Provider<JwtSigner> {
         return new EidasJwsSigner(
                 internalEidasProxyConfiguration,
                 new EidasIdentity(
-                        eidasContext.getClusterId(), eidasContext.getAppId(), UKOB_CERT_ID, ""));
+                        eidasContext.getClusterId(), eidasContext.getAppId(), eidasCertId, ""));
     }
 }
