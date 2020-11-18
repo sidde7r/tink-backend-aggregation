@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationReade
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.enums.MarketCode;
 import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.rpc.Transfer;
@@ -37,6 +38,8 @@ public class SwedbankSEAgentWireMockTest {
 
         final AgentWireMockRefreshTest agentWireMockRefreshTest =
                 AgentWireMockRefreshTest.builder(MarketCode.SE, "swedbank-bankid", wireMockFilePath)
+                        .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
+                        .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
                         .withConfigurationFile(configuration)
                         .build();
 

@@ -2,7 +2,7 @@ REQUEST 1
 POST https://mobiltbankid.collectorbank.se/api/v3/auth/
 Content-Type: application/json
 
-{"personal_number":""}
+{"personal_number":"199901011234"}
 
 RESPONSE 1 SET POLL_1
 200
@@ -102,7 +102,7 @@ Server: Microsoft-IIS/10.0
 X-Powered-By: ASP.NET
 Date: Mon, 15 Jun 2020 05:43:05 GMT
 
-[]
+[{"accountId":"532add7f-1234-1234-1234-89a872fae1af","background":"#E50C81","color":"#000000","created":null,"customerId":null,"customName":null,"image":null,"name":"Collector 3-mån sparkonto","product":"Savings","state":"Active","text":{"none":"Du har\nsparat\n<<[value]>>","default":"Du har\nsparat\n<<[value]>>"},"title":{"none":"IntjÃ¤nad rÃ¤nta Ã¤r <<[value]>>","default":"IntjÃ¤nad rÃ¤nta Ã¤r <<[value]>>"},"visible":true},{"accountId":"8a90ea61-4321-4321-4321-23f0b77ba92e","background":"#6B1FAF","color":"#000000","created":null,"customerId":null,"customName":null,"image":null,"name":"Collector sparkonto","product":"Savings","state":"Active","text":{"none":"Du har\nsparat\n<<[value]>>","default":"Du har\nsparat\n<<[value]>>"},"title":{"none":"IntjÃ¤nad rÃ¤nta Ã¤r <<[value]>>","default":"IntjÃ¤nad rÃ¤nta Ã¤r <<[value]>>"},"visible":true}]
 
 REQUEST 8
 GET https://api-bankapp-prod.azurewebsites.net/views/v2/Profile
@@ -117,4 +117,34 @@ Server: Microsoft-IIS/10.0
 X-Powered-By: ASP.NET
 Date: Mon, 15 Jun 2020 05:43:07 GMT
 
-{"givenName":"TINK","lastName":"TESTING","isCustomer":false,"payments":{"directDebit":null}}
+{"givenName":"TINK","lastName":"TESTING","isCustomer":true,"payments":{"directDebit":null}}
+
+REQUEST 9
+GET https://api-olivia-prod.azurewebsites.net/api/v1/savings/details/532add7f-1234-1234-1234-89a872fae1af
+Content-Type: application/json
+
+RESPONSE 9
+200
+Transfer-Encoding: chunked
+Content-Type: application/json; charset=utf-8
+Vary: Accept-Encoding
+Server: Microsoft-IIS/10.0
+X-Powered-By: ASP.NET
+Date: Mon, 15 Jun 2020 05:43:07 GMT
+
+{"accountName":null,"accruedInterest":0.0,"accountStatus":"Active","accountActivatedDate":"2020-03-30T00:00:00","interestRate":0.009,"interestRateType":"Fixed","accountNextRenewalDate":null,"productInformation":{"id":"41e521b5-2222-2222-2222-0c6003e3a151","productName":"Collector 3-mån sparkonto","effectiveInterestRate":0.00903042058812931},"externalPaymentInformation":{"plusgiro":"4130503-8","bankgiro":"149-8930","paymentReference":"1111111111","name":"Collector Bank AB"},"name":"Collector 3-mån sparkonto","accountNumber":"1111111111","balance":0.0,"transactions":[]}
+
+REQUEST 10
+GET https://api-olivia-prod.azurewebsites.net/api/v1/savings/details/8a90ea61-4321-4321-4321-23f0b77ba92e
+Content-Type: application/json
+
+RESPONSE 10
+200
+Transfer-Encoding: chunked
+Content-Type: application/json; charset=utf-8
+Vary: Accept-Encoding
+Server: Microsoft-IIS/10.0
+X-Powered-By: ASP.NET
+Date: Mon, 15 Jun 2020 05:43:07 GMT
+
+{"accountName":null,"accruedInterest":0.02,"accountStatus":"Active","accountActivatedDate":"2020-03-30T00:00:00","interestRate":0.0075,"interestRateType":"Variable","accountNextRenewalDate":null,"productInformation":{"id":"3bddc0f6-1111-1111-1111-431bdbf444fa","productName":"Collector sparkonto","effectiveInterestRate":0.00750000000000006},"externalPaymentInformation":{"plusgiro":"4130503-8","bankgiro":"149-8930","paymentReference":"2222222222","name":"Collector Bank AB"},"name":"Collector sparkonto","accountNumber":"2222222222","balance":500.00,"transactions":[{"created":"2020-03-31T00:00:00+02:00","transactionType":"Deposit","amount":500.00}]}
