@@ -1,0 +1,91 @@
+{
+    "traceId": null,
+    "statusCode": 200,
+    "responseCode": 200,
+    "responseMessage": null,
+    "eupToken": null,
+    "currentTime": "2020-11-17T15:18:08",
+    "derivativeDetails": null,
+    "stockExchange": {
+        "closeDateTime": "0001-01-01T00:00:00",
+        "openDateTime": "0001-01-01T00:00:00",
+        "closeTime": "2020-11-17T17:20:00",
+        "openTime": "2020-11-17T08:45:00"
+    },
+    "dividend": [],
+    "interest": [],
+    "bondDetails": null,
+    "fundDetails": {
+        "yearlyCost": 0,
+        "sharpRatio": 0,
+        "standardDeviation": 0,
+        "minSubscriptionAmount": 1,
+        "firstSubscriptionAmount": 1,
+        "totalExpenseRatio": 0.69,
+        "morningstarRatingDate": null,
+        "morningstarRating": null
+    },
+    "bid": [
+        {
+            "price": 0,
+            "volume": 0
+        },
+        {
+            "price": 0,
+            "volume": 0
+        },
+        {
+            "price": 0,
+            "volume": 0
+        },
+        {
+            "price": 0,
+            "volume": 0
+        },
+        {
+            "price": 0,
+            "volume": 0
+        }
+    ],
+    "ask": [
+        {
+            "price": 0,
+            "volume": 0
+        },
+        {
+            "price": 0,
+            "volume": 0
+        },
+        {
+            "price": 0,
+            "volume": 0
+        },
+        {
+            "price": 0,
+            "volume": 0
+        },
+        {
+            "price": 0,
+            "volume": 0
+        }
+    ],
+    "latestPriceDate": "2020-11-17T00:00:00",
+    "currencyCode": "DKK",
+    "latestTradePriceTime": "1900-01-01T00:00:00",
+    "delayInMinutes": 15,
+    "latestPriceChangePct": 0,
+    "latestPriceChange": 0,
+    "maxBidAskPrice": 0,
+    "securitySubTypeName": "Funds",
+    "securityTypeName": "Funds",
+    "type": 3,
+    "isin": "LU123456789",
+    "name": "DI Allocation June Opportunity Screened J dkk",
+    "latestPrice": 123.12,
+    "yearLow": 87.65,
+    "yearHigh": 123.45,
+    "dayLow": 0,
+    "dayHigh": 0,
+    "tradeTotalCount": 0,
+    "tradeTotalVolume": 0
+}

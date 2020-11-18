@@ -1,0 +1,42 @@
+{
+    "traceId": null,
+    "statusCode": 200,
+    "responseCode": 200,
+    "responseMessage": null,
+    "eupToken": null,
+    "cashAccounts": [
+        {
+            "marketValue": 0.01,
+            "accountName": "June",
+            "internalId": "1234500000"
+        }
+    ],
+    "securities": [
+        {
+            "custodyAccounts": [
+                {
+                    "profitLoss": 123.12,
+                    "marketValue": 1234.12,
+                    "custodyAccountId": "1234554321"
+                }
+            ],
+            "fixedIncome": false,
+            "unrealizedProfitLossPct": 11.11,
+            "unrealizedProfitLoss": 123.12,
+            "price": 123.45,
+            "latestChangePercentage": null,
+            "portfolioAllocation": 99.98765432123456,
+            "noOfSecurities": 21.21211,
+            "value": 2349.16,
+            "currency": "DKK",
+            "name": "June OppScr Jdkk",
+            "id": "LU123456789"
+        }
+    ],
+    "dailyPerformancePct": 0,
+    "dailyPerformance": 0,
+    "performancePct": 11.9876543219876543,
+    "performance": 234.12,
+    "marketValueCurrency": "DKK",
+    "marketValue": 2345.12
+}

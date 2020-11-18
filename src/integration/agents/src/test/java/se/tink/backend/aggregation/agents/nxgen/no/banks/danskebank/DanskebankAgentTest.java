@@ -33,7 +33,7 @@ public class DanskebankAgentTest {
                 .addCredentialField(Field.Key.USERNAME, manager.get(Arg.USERNAME))
                 .addCredentialField(Field.Key.PASSWORD, manager.get(Arg.PASSWORD))
                 .addCredentialField(Field.Key.BANKID_PASSWORD, manager.get(Arg.BANKID_PASSWORD))
-                .loadCredentialsBefore(true)
+                .loadCredentialsBefore(false)
                 .saveCredentialsAfter(true)
                 .expectLoggedIn(true)
                 .build()

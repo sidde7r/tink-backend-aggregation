@@ -47,6 +47,7 @@ junit_test(
         "//src/integration/amount",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/compliance/account_capabilities",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/core/account",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/source_info",
         "//src/integration/models",
         "//src/libraries/serialization",
         "//third_party:org_assertj_assertj_core",
