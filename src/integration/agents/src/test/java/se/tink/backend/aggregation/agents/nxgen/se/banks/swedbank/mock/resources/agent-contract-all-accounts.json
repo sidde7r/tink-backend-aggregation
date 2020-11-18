@@ -2831,5 +2831,25 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false
-  } ]
+  } ],
+  "identityData" : {
+    "nameElements" : [ {
+      "type" : "FULLNAME",
+      "value" : "Wiremock User"
+    } ],
+    "dateOfBirth" : {
+      "year" : 1990,
+      "month" : "JANUARY",
+      "era" : "CE",
+      "dayOfWeek" : "MONDAY",
+      "leapYear" : false,
+      "dayOfYear" : 1,
+      "chronology" : {
+        "calendarType" : "iso8601",
+        "id" : "ISO"
+      },
+      "monthValue" : 1,
+      "dayOfMonth" : 1
+    }
+  }
 }
