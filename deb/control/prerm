@@ -1,5 +1,0 @@
-#!/bin/sh
-
-if [ "$1" = remove ]; then
-  systemctl stop "$DPKG_MAINTSCRIPT_PACKAGE" || true
-fi

@@ -1,4 +1,4 @@
-load("@rules_pkg//:pkg.bzl", "pkg_deb", "pkg_tar")
+load("@rules_pkg//:pkg.bzl", "pkg_tar")
 
 # TODO: as there is no data deb this section is repetitive
 # data pkgs
@@ -13,17 +13,6 @@ pkg_tar(
 )
 
 # end data pkgs
-
-# service files
-
-pkg_tar(
-    name = "aggregation_system_tar",
-    srcs = [":tink-backend-aggregation.service"],
-    mode = "0444",
-    package_dir = "/lib/systemd/system",
-)
-
-# end service files
 
 # binary files
 pkg_tar(
@@ -51,43 +40,3 @@ pkg_tar(
 )
 
 # end binary files
-
-# package tars
-
-pkg_tar(
-    name = "aggregation_tar",
-    deps = [
-        ":aggregation_bin_tar",
-        ":aggregation_data_tar",
-        ":aggregation_system_tar",
-        ":libkbc_wbaes_bin_tar",
-        ":phantomjs_bin_tar",
-    ],
-)
-
-# end package tars
-
-# package debs
-
-pkg_deb(
-    name = "aggregation",
-    architecture = "amd64",
-    data = ":aggregation_tar",
-    depends = [
-        "imagemagick",
-        "tesseract-ocr",
-        "tesseract-ocr-swe",
-        "xvfb",
-        "libm4ri-dev",
-    ],
-    description = "Tink Backend Aggregation",
-    homepage = "https://tink.se",
-    maintainer = "Tink AB <support@tink.se>",
-    package = "tink-backend-aggregation",
-    postinst = ":control/postinst",
-    preinst = ":control/preinst",
-    prerm = ":control/prerm",
-    version_file = ".version",
-)
-
-# end package debs
