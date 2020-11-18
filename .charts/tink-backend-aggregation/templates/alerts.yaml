@@ -12,7 +12,7 @@ spec:
     for: 10m
     labels:
       severity: ping
-      who: aggregation
+      who: aggregation-agent-platform
     annotations:
       description: <{ $labels.client }> is using a certificate that expires in <{ $value }> days.
       summary: A used certificate is expiring in <{ $value }> days.
@@ -23,7 +23,7 @@ spec:
     for: 1m
     labels:
       severity: ping
-      who: '#aggregation-alerts'
+      who: aggregation-agent-platform
     annotations:
       description: The 95-%tile of the response duration for the Aggregation Service over the last 5 minutes is over 500 ms.
 
@@ -41,7 +41,7 @@ spec:
     for: 15m
     labels:
       severity: ping
-      who: 'aggregation'
+      who: aggregation-agent-platform
     annotations:
       summary: "Health check <{ $labels.name }> in aggregation is having a low success ratio of <{ $value }> for the past 15m"
       description: "Health check <{ $labels.name }> in aggregation is having a low success ratio of <{ $value }> for the past 15m"
@@ -54,7 +54,7 @@ spec:
     for: 1m
     labels:
       severity: ping
-      who: 'aggregation'
+      who: aggregation-agent-platform
     annotations:
       description: No messages has been consumed from the Automatic Refresh Queue for the past 15 minutes.
   {{- end }}
