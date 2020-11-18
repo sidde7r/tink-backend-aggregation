@@ -27,7 +27,9 @@ public final class KeySignerProvider implements Provider<JwtSigner> {
     private static final ImmutableSet<String> EIDAS_ENABLED_APPS =
             ImmutableSet.of(
                     "5f98e87106384b2981c0354a33b51590", // oxford-staging
-                    "e643eb7981d24acfb47834ef338a4e2a" // oxford-prod
+                    "e643eb7981d24acfb47834ef338a4e2a", // oxford-production,
+                    "bb9275c6890a413398d92116047ebfb2", // kirkby-staging,
+                    "bb7defc66be94f6ca35cb069135d350a" // kirkby-production
                     );
     private final AgentComponentProvider agentComponentProvider;
     private final UkOpenBankingConfiguration configuration;
