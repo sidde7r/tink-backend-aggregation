@@ -207,24 +207,18 @@ public class SwedbankAuthenticationController
         ConsentResponse initConsent = authenticator.getConsentForAllAccounts();
         authenticator.useConsent(initConsent);
 
-        ConsentResponse consentResponseIbanList;
-        try {
-            consentResponseIbanList = authenticator.getConsentForIbanList();
-        } catch (HttpResponseException e) {
-            if (e.getResponse().getBody(GenericResponse.class).isKycError()) {
-                throw AuthorizationError.ACCOUNT_BLOCKED.exception(
-                        EndUserMessage.MUST_ANSWER_KYC.getKey());
-            }
-            throw e;
-        }
-        authenticator.useConsent(consentResponseIbanList);
+        authenticator.getConsentForIbanList().ifPresent(this::handleAccountDetailsConsent);
+    }
 
-        if (consentResponseIbanList.getConsentStatus().equalsIgnoreCase(ConsentStatus.VALID)) {
+    private void handleAccountDetailsConsent(ConsentResponse detailsConsentResponse) {
+        authenticator.useConsent(detailsConsentResponse);
+
+        if (detailsConsentResponse.getConsentStatus().equalsIgnoreCase(ConsentStatus.VALID)) {
             return;
         }
         AuthenticationResponse response =
                 authenticator.initiateAuthorization(
-                        consentResponseIbanList.getLinks().getHrefEntity().getHref());
+                        detailsConsentResponse.getLinks().getHrefEntity().getHref());
         supplementalRequester.openBankId(response.getChallengeData().getAutoStartToken(), true);
 
         while (authenticator

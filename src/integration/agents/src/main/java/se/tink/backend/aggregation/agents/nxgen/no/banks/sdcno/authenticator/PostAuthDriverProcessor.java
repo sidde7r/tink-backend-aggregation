@@ -53,7 +53,8 @@ public class PostAuthDriverProcessor {
 
     private void checkForErrors() {
         WebElement errorMessageElement = driver.findElement(ERROR_MESSAGE);
-        String errorMessage = errorMessageElement.findElement(ERROR_MESSAGE_CONTENT).getText();
+        String errorMessage =
+                errorMessageElement.findElement(ERROR_MESSAGE_CONTENT).getAttribute("innerText");
 
         if (isNotACustomer(errorMessage)) {
             throw LoginError.NOT_CUSTOMER.exception();
