@@ -86,7 +86,7 @@ public class DanskeBankAccountLoanFetcher implements AccountFetcher<LoanAccount>
 
             return Optional.ofNullable(loansResponse.getLoans()).orElseGet(Collections::emptyList)
                     .stream()
-                    .map(this::mortgateToLoanAccount)
+                    .map(this::mortgageToLoanAccount)
                     .collect(Collectors.toList());
         } catch (RuntimeException e) {
             logger.warn(
@@ -99,7 +99,7 @@ public class DanskeBankAccountLoanFetcher implements AccountFetcher<LoanAccount>
         }
     }
 
-    private LoanAccount mortgateToLoanAccount(LoanEntity loan) {
+    private LoanAccount mortgageToLoanAccount(LoanEntity loan) {
         LoanDetailsResponse loanDetailsResponse =
                 apiClient.loanDetails(
                         new LoanDetailsRequest(
