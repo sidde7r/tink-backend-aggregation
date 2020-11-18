@@ -40,13 +40,8 @@ spec:
     expr: sum(increase(tink_aggregation_successful_health_checks_total[5m])) by (name)/sum(increase(tink_aggregation_total_health_checks_total[5m])) by (name) < 0.99
     for: 15m
     labels:
-      {{- if eq .Values.Environment "production" }}
       severity: ping
       who: 'aggregation'
-      {{- else }}
-      severity: ping
-      who: 'aggregation'
-      {{- end }}
     annotations:
       summary: "Health check <{ $labels.name }> in aggregation is having a low success ratio of <{ $value }> for the past 15m"
       description: "Health check <{ $labels.name }> in aggregation is having a low success ratio of <{ $value }> for the past 15m"
