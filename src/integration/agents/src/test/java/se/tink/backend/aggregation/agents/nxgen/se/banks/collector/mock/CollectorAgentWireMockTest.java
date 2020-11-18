@@ -16,7 +16,7 @@ public class CollectorAgentWireMockTest {
     public void test() throws Exception {
         // given
         final String wireMockFilePath =
-                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/banks/collector/mock/resources/collector_mock";
+                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/banks/collector/mock/resources/collector_mock.aap";
         final String contractFilePath =
                 "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/banks/collector/mock/resources/collector_contract.json";
 
