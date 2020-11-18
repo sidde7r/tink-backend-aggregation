@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.xml.bind.annotation.XmlRootElement;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.SantanderEsConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.entities.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.entities.ContractEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.entities.InfoEntity;
@@ -108,7 +109,7 @@ public class TransactionsResponse implements TransactionKeyPaginatorResponse<Rep
 
     @Override
     public Optional<Boolean> canFetchMore() {
-        return Optional.of(reposition.getTransactionNumber() > 1);
+        return Optional.of(SantanderEsConstants.Indicators.NO.equalsIgnoreCase(endOfList));
     }
 
     @Override
