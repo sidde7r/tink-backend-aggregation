@@ -1,15 +1,22 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
+import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.EndUserMessage;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator.rpc.AuthenticationResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator.rpc.AuthenticationStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator.rpc.ConsentResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.fetcher.transactionalaccount.entity.account.AccountEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.fetcher.transactionalaccount.rpc.FetchAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.rpc.GenericResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
@@ -81,9 +88,23 @@ public class SwedbankAuthenticator implements OAuth2Authenticator {
                 SwedbankConstants.StorageKeys.CONSENT, consentResponse.getConsentId());
     }
 
-    public ConsentResponse getConsentForIbanList() {
-        return apiClient.getConsentAccountDetails(
-                apiClient.mapAccountResponseToIbanList(apiClient.fetchAccounts()));
+    public Optional<ConsentResponse> getConsentForIbanList() {
+        FetchAccountResponse accountsResponse;
+        try {
+            accountsResponse = apiClient.fetchAccounts();
+        } catch (HttpResponseException e) {
+            if (e.getResponse().getBody(GenericResponse.class).isKycError()) {
+                throw AuthorizationError.ACCOUNT_BLOCKED.exception(
+                        EndUserMessage.MUST_ANSWER_KYC.getKey());
+            }
+            throw e;
+        }
+
+        return accountsResponse.getAccountList().isEmpty()
+                ? Optional.empty()
+                : Optional.of(
+                        apiClient.getConsentAccountDetails(
+                                mapAccountResponseToIbanList(accountsResponse)));
     }
 
     public ConsentResponse getConsentForAllAccounts() {
@@ -100,5 +121,11 @@ public class SwedbankAuthenticator implements OAuth2Authenticator {
 
     public AuthenticationResponse initiateAuthorization(String authorizationLink) {
         return apiClient.startAuthorization(authorizationLink);
+    }
+
+    private List<String> mapAccountResponseToIbanList(FetchAccountResponse accounts) {
+        return accounts.getAccountList().stream()
+                .map(AccountEntity::getIban)
+                .collect(Collectors.toList());
     }
 }
