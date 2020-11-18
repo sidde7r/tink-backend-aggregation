@@ -65,6 +65,9 @@ public class IngLoggingAdapter extends LoggingAdapter<HttpRequest, HttpResponse>
 
     @Override
     protected String mapRequestBody(HttpRequest request) {
+        if (!hasRequestBody(request)) {
+            return null;
+        }
         if (request.getBody() instanceof String) {
             return (String) request.getBody();
         }
