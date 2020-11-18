@@ -5,9 +5,9 @@ import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
@@ -210,7 +210,7 @@ public class ConsentManagerTest {
                                         USERNAME, PASSWORD, psuCredentialsResponse));
 
         // then
-        verify(apiClient, never()).updateConsentPsuCredentials(eq(CONSENT_ID), any());
+        verifyNoMoreInteractions(apiClient);
 
         Assertions.assertThat(thrown).isInstanceOf(IllegalArgumentException.class);
     }
@@ -236,7 +236,7 @@ public class ConsentManagerTest {
                                         USERNAME, PASSWORD, psuCredentialsResponse));
 
         // then
-        verify(apiClient, never()).updateConsentPsuCredentials(eq(CONSENT_ID), any());
+        verifyNoMoreInteractions(apiClient);
 
         Assertions.assertThat(thrown).isInstanceOf(IllegalArgumentException.class);
     }
@@ -251,7 +251,7 @@ public class ConsentManagerTest {
                 catchThrowable(() -> consentManager.updatePsuCredentials(USERNAME, PASSWORD, null));
 
         // then
-        verify(apiClient, never()).updateConsentPsuCredentials(eq(CONSENT_ID), any());
+        verifyNoMoreInteractions(apiClient);
 
         Assertions.assertThat(thrown).isInstanceOf(IllegalArgumentException.class);
     }
@@ -312,7 +312,8 @@ public class ConsentManagerTest {
 
     @Test
     @Parameters(method = "generateHttpResponseExceptions")
-    public void isConsentAcceptedShouldReturnTrueIfConsentValid(HttpResponseException ex) {
+    public void isConsentAcceptedShouldThrowSessionExceptionIfIdentifiedHttpException(
+            HttpResponseException ex) {
         // given
         when(ex.getResponse().getBody(String.class)).thenReturn(ex.getMessage());
         when(apiClient.getConsentStatus(StorageKeys.CONSENT_ID)).thenThrow(ex);

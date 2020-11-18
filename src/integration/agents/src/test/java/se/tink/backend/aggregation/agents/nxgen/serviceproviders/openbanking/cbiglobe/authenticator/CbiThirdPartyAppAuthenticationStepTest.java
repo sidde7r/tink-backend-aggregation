@@ -2,8 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cb
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import com.google.common.collect.ImmutableMap;
@@ -86,7 +86,7 @@ public class CbiThirdPartyAppAuthenticationStepTest {
         // then
         assertThat(result.getSupplementInformationRequester().get().getSupplementalWaitRequest())
                 .isNotNull();
-        verify(thirdPartyAppRequestParamsProvider, never()).getPayload();
+        verifyNoMoreInteractions(thirdPartyAppRequestParamsProvider);
         verify(strongAuthenticationState).getSupplementalKey();
     }
 
@@ -108,10 +108,10 @@ public class CbiThirdPartyAppAuthenticationStepTest {
         AuthenticationStepResponse result = accountConsentStep.execute(request);
 
         // then
-        verify(thirdPartyAppRequestParamsProvider, never()).getPayload();
-        verify(strongAuthenticationState, never()).getSupplementalKey();
+        verifyNoMoreInteractions(thirdPartyAppRequestParamsProvider);
+        verifyNoMoreInteractions(strongAuthenticationState);
         verify(consentManager).isConsentAccepted();
-        verify(userState, never()).finishManualAuthenticationStep();
+        verifyNoMoreInteractions(userState);
     }
 
     @Test
@@ -133,8 +133,8 @@ public class CbiThirdPartyAppAuthenticationStepTest {
         AuthenticationStepResponse result = transactionsConsentStep.execute(request);
 
         // then
-        verify(thirdPartyAppRequestParamsProvider, never()).getPayload();
-        verify(strongAuthenticationState, never()).getSupplementalKey();
+        verifyNoMoreInteractions(thirdPartyAppRequestParamsProvider);
+        verifyNoMoreInteractions(strongAuthenticationState);
         verify(consentManager).isConsentAccepted();
         verify(userState).finishManualAuthenticationStep();
         assertThat(result.isAuthenticationFinished()).isTrue();
