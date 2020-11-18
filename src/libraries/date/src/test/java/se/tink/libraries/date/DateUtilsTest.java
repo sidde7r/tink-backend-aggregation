@@ -246,8 +246,8 @@ public class DateUtilsTest {
         "2019-01-05, 2016-12-05, -25"
     })
     public void getCalendarMonthsBetween(String date1Raw, String date2Raw, Long expected) {
-        Date date1 = new DateTime(DateTime.parse(date1Raw)).toDate();
-        Date date2 = new DateTime(DateTime.parse(date2Raw)).toDate();
+        Date date1 = DateTime.parse(date1Raw).toDate();
+        Date date2 = DateTime.parse(date2Raw).toDate();
 
         Long actual = DateUtils.getCalendarMonthsBetween(date1, date2);
 
