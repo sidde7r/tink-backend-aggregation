@@ -158,7 +158,7 @@ public class AapFileParser implements RequestResponseParser {
             throw new UnsupportedOperationException(
                     String.format(
                             "Invalid operation: %s in line %s. A response can only perform SET operation on state",
-                            firstLineWords, rawData.get(0)));
+                            Arrays.toString(firstLineWords), rawData.get(0)));
         }
         return Optional.of(firstLineWords[3]);
     }
@@ -178,7 +178,7 @@ public class AapFileParser implements RequestResponseParser {
             throw new UnsupportedOperationException(
                     String.format(
                             "Invalid operation: %s in line %s. A response can only perform MATCH operation on state",
-                            firstLineWords, rawData.get(0)));
+                            Arrays.toString(firstLineWords), rawData.get(0)));
         }
         return Optional.of(firstLineWords[3]);
     }
