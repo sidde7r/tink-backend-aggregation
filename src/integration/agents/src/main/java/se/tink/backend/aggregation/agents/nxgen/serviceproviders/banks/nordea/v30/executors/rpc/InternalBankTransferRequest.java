@@ -1,21 +1,17 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.executors.rpc;
 
-import static io.vavr.Predicates.not;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.common.base.Strings;
-import java.util.Optional;
+import java.util.Date;
+import lombok.Builder;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.NordeaBaseConstants;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
-import se.tink.libraries.transfer.rpc.Transfer;
 
 @JsonObject
+@Builder
 public class InternalBankTransferRequest {
     @JsonProperty private int amount;
-    @JsonProperty private String speed;
+
     @JsonProperty private String from;
     @JsonProperty private String to;
 
@@ -23,66 +19,14 @@ public class InternalBankTransferRequest {
     private String message;
 
     @JsonProperty("to_account_number_type")
-    private String toAccountNumberType;
+    @Builder.Default
+    private String toAccountNumberType = NordeaBaseConstants.Transfer.TO_ACCOUNT_TYPE;
 
-    @JsonProperty private String type;
-    @JsonProperty private String currency;
-    @JsonProperty private String due;
+    @Builder.Default @JsonProperty private String speed = NordeaBaseConstants.Transfer.SPEED;
+    @Builder.Default @JsonProperty private String type = NordeaBaseConstants.Transfer.OWN_TRANSFER;
+    @Builder.Default @JsonProperty private String currency = NordeaBaseConstants.CURRENCY;
 
-    public InternalBankTransferRequest() {
-        this.speed = NordeaBaseConstants.Transfer.SPEED;
-        // To account type field is mandatory but it seems like anything can be set to that field
-        this.toAccountNumberType = NordeaBaseConstants.Transfer.TO_ACCOUNT_TYPE;
-        this.type = NordeaBaseConstants.Transfer.OWN_TRANSFER;
-        this.currency = NordeaBaseConstants.CURRENCY;
-    }
-
-    @JsonIgnore
-    public void setAmount(Transfer transfer) {
-        this.amount = transfer.getAmount().getValue().intValue();
-    }
-
-    @JsonIgnore
-    public void setFrom(AccountEntity sourceAccount) {
-        this.from = sourceAccount.formatAccountNumber();
-    }
-
-    @JsonIgnore
-    public void setTo(AccountEntity destinationAccount) {
-        this.to = destinationAccount.formatAccountNumber();
-    }
-
-    @JsonIgnore
-    public void setMessage(Transfer transfer, TransferMessageFormatter transferMessageFormatter) {
-        this.message = getInternalTransferMessage(transfer, transferMessageFormatter);
-    }
-
-    @JsonIgnore
-    public void setDue(String dueDate) {
-        this.due = dueDate;
-    }
-
-    /**
-     * Since Nordea only has one message field, we want to have their default formatting of transfer
-     * messages when transferring between two Nordea accounts. How they set the default message is
-     * better, since they internally have different values on the source and destination account,
-     * but for us using the API we can only set one message. So default to empty string to let them
-     * decide message if our client hasn't set any message.
-     *
-     * <p>If the client has set the destination message we use it with the formatter (in order to
-     * get it cut off if it's too long).
-     */
-    @JsonIgnore
-    private String getInternalTransferMessage(
-            Transfer transfer, TransferMessageFormatter transferMessageFormatter) {
-        return Optional.ofNullable(transfer)
-                .map(t -> t.getRemittanceInformation().getValue())
-                .filter(not(Strings::isNullOrEmpty))
-                .map(
-                        s ->
-                                transferMessageFormatter
-                                        .getDestinationMessageFromRemittanceInformation(
-                                                transfer, true))
-                .orElse("");
-    }
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "CET")
+    @JsonProperty
+    private Date due;
 }

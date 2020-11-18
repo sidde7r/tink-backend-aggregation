@@ -191,11 +191,8 @@ public class NordeaExecutorHelper {
     }
 
     public void confirm(String id) {
-        ConfirmTransferRequest confirmTransferRequest = new ConfirmTransferRequest(id);
         ConfirmTransferResponse confirmTransferResponse =
-                apiClient.confirmBankTransfer(confirmTransferRequest);
-
-        // sign external transfer or e-invoice
+                apiClient.confirmBankTransfer(new ConfirmTransferRequest(id));
         sign(confirmTransferResponse, id);
     }
 
@@ -264,7 +261,8 @@ public class NordeaExecutorHelper {
     }
 
     private CompleteTransferResponse completeTransfer(String orderRef, String code) {
-        return apiClient.completeTransfer(orderRef, new CompleteTransferRequest().setCode(code));
+        return apiClient.completeTransfer(
+                orderRef, CompleteTransferRequest.builder().code(code).build());
     }
 
     private void cancelSign(String orderRef) {
@@ -324,14 +322,15 @@ public class NordeaExecutorHelper {
     }
 
     private InitBankIdAutostartRequest createSignPaymentRequest(String signingOrderId) {
-        return new InitBankIdAutostartRequest()
-                .setState(Base64.encodeBase64URLSafeString(RandomUtils.secureRandom(19)))
-                .setNonce(Base64.encodeBase64URLSafeString(RandomUtils.secureRandom(19)))
-                .setCodeChallenge(createCodeChallenge())
-                .setRedirectUri(nordeaConfiguration.getRedirectUri())
-                .setClientId(nordeaConfiguration.getClientId())
-                .setSigningOrderId(signingOrderId)
-                .setUserId(fetchIdentity());
+        return InitBankIdAutostartRequest.builder()
+                .state(Base64.encodeBase64URLSafeString(RandomUtils.secureRandom(19)))
+                .nonce(Base64.encodeBase64URLSafeString(RandomUtils.secureRandom(19)))
+                .codeChallenge(createCodeChallenge())
+                .redirectUri(nordeaConfiguration.getRedirectUri())
+                .clientId(nordeaConfiguration.getClientId())
+                .signingOrderId(signingOrderId)
+                .userId(fetchIdentity())
+                .build();
     }
 
     private String createCodeChallenge() {

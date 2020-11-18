@@ -3,10 +3,12 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.api.client.repackaged.com.google.common.base.Strings;
+import lombok.Getter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.executors.entities.PermissionsEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
+@Getter
 public class BankPaymentResponse {
     @JsonProperty private String id;
     @JsonProperty private String from;
@@ -37,11 +39,6 @@ public class BankPaymentResponse {
     @JsonProperty private String due;
     @JsonProperty private String currency;
     @JsonProperty private PermissionsEntity permissions;
-
-    @JsonIgnore
-    public String getId() {
-        return id;
-    }
 
     @JsonIgnore
     public String getApiIdentifier() {

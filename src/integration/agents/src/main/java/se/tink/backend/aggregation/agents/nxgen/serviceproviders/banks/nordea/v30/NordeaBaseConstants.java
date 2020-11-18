@@ -166,6 +166,8 @@ public class NordeaBaseConstants {
         public static final String CODE_VERIFIER = "code_verifier";
         public static final String COUNTRY_VALUE = "SE";
         public static final String CLIENT_ID_VALUE = "NDHMSE";
+        public static final String SCOPE_OPENID = "openid ndf agreement offline_access";
+        public static final String CHALLENGE_METHOD = "S256";
     }
 
     public static class IdTags {
