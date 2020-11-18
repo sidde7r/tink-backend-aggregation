@@ -5,8 +5,8 @@
     "exactBalance" : {
       "currencyCode" : "SEK",
       "doubleValue" : 20108.3095671207,
-      "scale" : 10,
       "exactValue" : 20108.3095671207,
+      "scale" : 10,
       "unscaledValue" : 201083095671207
     },
     "currencyCode" : "SEK",
@@ -30,8 +30,8 @@
     "exactBalance" : {
       "currencyCode" : "SEK",
       "doubleValue" : 0.35,
-      "scale" : 2,
       "exactValue" : 0.35,
+      "scale" : 2,
       "unscaledValue" : 35
     },
     "currencyCode" : "SEK",
@@ -55,8 +55,8 @@
     "exactBalance" : {
       "currencyCode" : "SEK",
       "doubleValue" : 175598.7,
-      "scale" : 2,
       "exactValue" : 175598.7,
+      "scale" : 2,
       "unscaledValue" : 17559870
     },
     "currencyCode" : "SEK",
@@ -80,8 +80,8 @@
     "exactBalance" : {
       "currencyCode" : "SEK",
       "doubleValue" : 0.0,
-      "scale" : 1,
       "exactValue" : 0.0,
+      "scale" : 1,
       "unscaledValue" : 0
     },
     "currencyCode" : "SEK",
@@ -105,8 +105,8 @@
     "exactBalance" : {
       "currencyCode" : "SEK",
       "doubleValue" : 32701.1147,
-      "scale" : 12,
       "exactValue" : 32701.1147,
+      "scale" : 12,
       "unscaledValue" : 32701114699999997
     },
     "currencyCode" : "SEK",
@@ -125,5 +125,28 @@
     "availableCredit" : 0.0,
     "balance" : 32701.1147
   } ],
-  "transactions" : [ ]
+  "transactions" : [ ],
+  "identityData" : {
+    "nameElements" : [ {
+      "type" : "FIRST_NAME",
+      "value" : "FirstName"
+    }, {
+      "type" : "SURNAME",
+      "value" : "LastName"
+    } ],
+    "dateOfBirth" : {
+      "year" : 1990,
+      "month" : "JANUARY",
+      "dayOfWeek" : "MONDAY",
+      "leapYear" : false,
+      "dayOfYear" : 1,
+      "chronology" : {
+        "id" : "ISO",
+        "calendarType" : "iso8601"
+      },
+      "monthValue" : 1,
+      "dayOfMonth" : 1,
+      "era" : "CE"
+    }
+  }
 }
