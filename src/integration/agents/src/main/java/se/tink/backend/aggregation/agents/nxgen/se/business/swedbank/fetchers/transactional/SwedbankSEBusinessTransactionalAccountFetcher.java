@@ -19,7 +19,7 @@ public class SwedbankSEBusinessTransactionalAccountFetcher
     protected EngagementTransactionsResponse fetchTransactions(
             TransactionalAccount account, LinkEntity key) {
         // the business app adds ?page=first to fetch first page
-        // otherwise the link to the next page will be wrong, and it will return any transactions
+        // otherwise the link to the next page will be wrong, and it won't return any transactions
         // pagination is tracked server-side: subsequent pages have the same URL with page=next
         if (!key.getUri().contains("page=")) {
             key.setUri(key.getUri() + "?page=first");
