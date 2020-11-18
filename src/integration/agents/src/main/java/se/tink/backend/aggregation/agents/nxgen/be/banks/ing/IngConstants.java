@@ -86,4 +86,7 @@ public final class IngConstants {
                             + "5DC7D7B46154D6B6CE8EF4AD69B15D4982559B297BCF1885C529F566660E57EC"
                             + "68EDBC3C05726CC02FD4CBF4976EAA9AFD5138FE8376435B9FC61D2FC0EB06E3");
     public static final byte[] GROUP_PARAM = EncodingUtils.decodeHexString("02");
+
+    public static final int MAX_RETRIES = 2;
+    public static final int THROTTLING_DELAY = 2000;
 }
