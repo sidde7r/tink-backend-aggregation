@@ -95,7 +95,7 @@ public final class NordeaDkAgent extends SubsequentProgressiveGenerationAgent
     }
 
     private NordeaDkApiClient constructNordeaClient() {
-        return new NordeaDkApiClient(sessionStorage, client, persistentStorage);
+        return new NordeaDkApiClient(sessionStorage, client, persistentStorage, catalog);
     }
 
     @Override

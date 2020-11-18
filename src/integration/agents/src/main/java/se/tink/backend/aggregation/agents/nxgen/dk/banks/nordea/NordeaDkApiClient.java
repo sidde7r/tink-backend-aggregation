@@ -3,17 +3,21 @@ package se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea;
 import static se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaDkConstants.HeaderValues.TEXT_HTML;
 
 import java.util.AbstractMap.SimpleEntry;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.ws.rs.core.MediaType;
 import org.apache.commons.lang3.StringUtils;
+import org.xnap.commons.i18n.I18n;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaDkConstants.FormKeys;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaDkConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaDkConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaDkConstants.HeaderValues;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaDkConstants.NordeaNemIdLocale;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaDkConstants.QueryParamKeys;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaDkConstants.QueryParamValues;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaDkConstants.StorageKeys;
@@ -41,20 +45,24 @@ import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestB
 import se.tink.backend.aggregation.nxgen.http.form.Form;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.libraries.i18n.Catalog;
 
 public class NordeaDkApiClient {
 
     private final SessionStorage sessionStorage;
     private final PersistentStorage persistentStorage;
+    private final Catalog catalog;
     protected final TinkHttpClient client;
 
     public NordeaDkApiClient(
             SessionStorage sessionStorage,
             TinkHttpClient client,
-            PersistentStorage persistentStorage) {
+            PersistentStorage persistentStorage,
+            Catalog catalog) {
         this.sessionStorage = sessionStorage;
         this.client = client;
         this.persistentStorage = persistentStorage;
+        this.catalog = catalog;
 
         this.client.addFilter(new ServerErrorFilter());
         this.client.addFilter(new ServerErrorRetryFilter());
@@ -100,8 +108,18 @@ public class NordeaDkApiClient {
                         .withState(state)
                         .withCodeChallenge(codeChallenge)
                         .build();
-        return baseIdentifyRequest(URLs.NORDEA_AUTH_BASE_URL + URLs.NEM_ID_AUTHENTICATION)
+
+        // this value affects the language of nemID notification on user's device
+        String userLocaleForNemIdRequest =
+                Optional.ofNullable(catalog.getI18n())
+                        .map(I18n::getLocale)
+                        .map(Locale::getLanguage)
+                        .filter(NordeaNemIdLocale::isUserLocaleSupported)
+                        .orElse(NordeaNemIdLocale.DEFAULT_LOCALE);
+
+        return baseIdentifyRequest(URLs.NORDEA_AUTH_BASE_URL + URLs.NEM_ID_AUTHENTICATION, false)
                 .type(MediaType.APPLICATION_JSON)
+                .header(HeaderKeys.ACCEPT_LANGUAGE, userLocaleForNemIdRequest)
                 .post(NemIdParamsResponse.class, request);
     }
 
@@ -171,14 +189,22 @@ public class NordeaDkApiClient {
     }
 
     private RequestBuilder baseIdentifyRequest(String url) {
-        return client.request(url)
-                .header(HeaderKeys.ACCEPT_ENCODING, HeaderValues.BR_GZIP_ENCODING)
-                .header(HeaderKeys.PLATFORM_TYPE, HeaderKeys.PLATFORM_TYPE)
-                .header(HeaderKeys.ACCEPT_LANGUAGE, HeaderValues.ACCEPT_LANGUAGE)
-                .header(HeaderKeys.ORIGIN, "https://identify.nordea.com")
-                .accept(MediaType.WILDCARD)
-                .header(HeaderKeys.HOST, HeaderValues.NORDEA_AUTH_HOST)
-                .header("x-device-ec", "0");
+        return baseIdentifyRequest(url, true);
+    }
+
+    private RequestBuilder baseIdentifyRequest(String url, boolean setDefaultLanguage) {
+        RequestBuilder builder =
+                client.request(url)
+                        .header(HeaderKeys.ACCEPT_ENCODING, HeaderValues.BR_GZIP_ENCODING)
+                        .header(HeaderKeys.PLATFORM_TYPE, HeaderKeys.PLATFORM_TYPE)
+                        .header(HeaderKeys.ORIGIN, "https://identify.nordea.com")
+                        .accept(MediaType.WILDCARD)
+                        .header(HeaderKeys.HOST, HeaderValues.NORDEA_AUTH_HOST)
+                        .header("x-device-ec", "0");
+        if (setDefaultLanguage) {
+            builder.header(HeaderKeys.ACCEPT_LANGUAGE, HeaderValues.ACCEPT_LANGUAGE);
+        }
+        return builder;
     }
 
     private RequestBuilder basePrivateRequest(String url) {
