@@ -20,14 +20,16 @@ public class GeneralPayload {
     private String userId;
     private String pincode;
 
-    public GeneralPayload(String userId, String pincode, String deviceId, String scaOption) {
+    public GeneralPayload(
+            String userId, String pincode, String deviceId, String scaOption, String userLocale) {
         this.appType = Meta.APP_TYPE;
         this.appVersion = Meta.APP_VERSION;
         this.deviceId = deviceId;
         this.data = "";
         this.cics = "";
         this.deviceType = Meta.DEVICE_TYPE;
-        this.locale = Meta.LOCALE;
+        // this value affects the language of nemID notification on user's device
+        this.locale = userLocale;
         this.osVersion = Meta.OS_VERSION;
         this.screenSize = Meta.SCREEN_SIZE;
 

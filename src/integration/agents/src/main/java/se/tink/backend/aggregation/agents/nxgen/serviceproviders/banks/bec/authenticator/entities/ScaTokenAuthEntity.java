@@ -11,8 +11,12 @@ public class ScaTokenAuthEntity extends GeneralPayload {
     private ScaTokenEntity scatoken;
 
     public ScaTokenAuthEntity(
-            String userId, String pincode, String deviceId, ScaTokenEntity scaTokenEntity) {
-        super(userId, pincode, deviceId, SCATOKEN_OPTION);
+            String userId,
+            String pincode,
+            String deviceId,
+            ScaTokenEntity scaTokenEntity,
+            String userLocale) {
+        super(userId, pincode, deviceId, SCATOKEN_OPTION, userLocale);
         this.scatoken = scaTokenEntity;
     }
 }

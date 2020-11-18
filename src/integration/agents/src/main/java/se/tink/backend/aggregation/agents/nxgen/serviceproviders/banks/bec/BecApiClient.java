@@ -6,15 +6,19 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import javax.ws.rs.core.MediaType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.xnap.commons.i18n.I18n;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.ThirdPartyAppException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.BecConstants.BecNemIdLocale;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.BecConstants.ScaOptions;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.accounts.checking.entities.FetchAccountTransactionRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.accounts.checking.rpc.AccountDetailsResponse;
@@ -57,6 +61,7 @@ import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestB
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.libraries.date.ThreadSafeDateFormat;
+import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class BecApiClient {
@@ -72,12 +77,17 @@ public class BecApiClient {
     private BecSecurityHelper securityHelper;
     private final TinkHttpClient apiClient;
     private final BecUrlConfiguration agentUrl;
+    private final String userLocale;
 
     public BecApiClient(
-            BecSecurityHelper securityHelper, TinkHttpClient client, BecUrlConfiguration url) {
+            BecSecurityHelper securityHelper,
+            TinkHttpClient client,
+            BecUrlConfiguration url,
+            Catalog catalog) {
         this.securityHelper = securityHelper;
         this.apiClient = client;
         this.agentUrl = url;
+        this.userLocale = getUserLocaleForNemIdRequest(catalog);
 
         nemIdStateMap.put("1", () -> {});
         nemIdStateMap.put(
@@ -102,7 +112,7 @@ public class BecApiClient {
 
         payloadAndroidEntity.setAppType(BecConstants.Meta.APP_TYPE);
         payloadAndroidEntity.setAppVersion(BecConstants.Meta.APP_VERSION);
-        payloadAndroidEntity.setLocale(BecConstants.Meta.LOCALE);
+        payloadAndroidEntity.setLocale(BecNemIdLocale.DEFAULT_USER_LOCALE);
         payloadAndroidEntity.setOsVersion(BecConstants.Meta.OS_VERSION);
         payloadAndroidEntity.setDeviceType(BecConstants.Meta.DEVICE_TYPE);
 
@@ -119,7 +129,8 @@ public class BecApiClient {
         try {
             BaseBecRequest request = baseRequest();
             GeneralPayload payloadEntity =
-                    new GeneralPayload(username, password, deviceId, ScaOptions.KEYCARD_OPTION);
+                    new GeneralPayload(
+                            username, password, deviceId, ScaOptions.KEYCARD_OPTION, userLocale);
             request.setEncryptedPayload(
                     securityHelper.encrypt(
                             SerializationUtils.serializeToString(payloadEntity).getBytes()));
@@ -143,7 +154,7 @@ public class BecApiClient {
         try {
             CodeAppPayloadScaEntity payloadEntity =
                     new CodeAppPayloadScaEntity(
-                            username, password, deviceId, new CodeAppScaEntity(token));
+                            username, password, deviceId, new CodeAppScaEntity(token), userLocale);
 
             return logonScaAndDecryptResponse(SerializationUtils.serializeToString(payloadEntity));
         } catch (BecAuthenticationException e) {
@@ -165,7 +176,8 @@ public class BecApiClient {
                             username,
                             password,
                             deviceId,
-                            new KeyCardChallengeEntity(nemidChallenge, challengeResponseValue));
+                            new KeyCardChallengeEntity(nemidChallenge, challengeResponseValue),
+                            userLocale);
             return logonScaAndDecryptResponse(SerializationUtils.serializeToString(payloadEntity));
         } catch (BecAuthenticationException e) {
             logger.error("SCA KeyCard-> error auth response: {}", e.getMessage(), e);
@@ -178,7 +190,7 @@ public class BecApiClient {
         try {
             ScaTokenAuthEntity payloadEntity =
                     new ScaTokenAuthEntity(
-                            username, password, deviceId, new ScaTokenEntity(scaToken));
+                            username, password, deviceId, new ScaTokenEntity(scaToken), userLocale);
             return logonScaAndDecryptResponse(SerializationUtils.serializeToString(payloadEntity));
         } catch (BecAuthenticationException e) {
             logger.error("SCA ScaToken-> error auth response: {}", e.getMessage(), e);
@@ -192,7 +204,8 @@ public class BecApiClient {
         logger.info("SCA prepare -> get available options");
         BaseBecRequest request = baseRequest();
         GeneralPayload payloadEntity =
-                new GeneralPayload(username, password, deviceId, ScaOptions.DEFAULT_OPTION);
+                new GeneralPayload(
+                        username, password, deviceId, ScaOptions.DEFAULT_OPTION, userLocale);
 
         request.setEncryptedPayload(
                 securityHelper.encrypt(
@@ -211,7 +224,8 @@ public class BecApiClient {
             logger.info("SCA prepare -> get token");
             BaseBecRequest request = baseRequest();
             GeneralPayload payloadEntity =
-                    new GeneralPayload(username, password, deviceId, ScaOptions.CODEAPP_OPTION);
+                    new GeneralPayload(
+                            username, password, deviceId, ScaOptions.CODEAPP_OPTION, userLocale);
 
             request.setEncryptedPayload(
                     securityHelper.encrypt(
@@ -423,5 +437,13 @@ public class BecApiClient {
                         .post(EncryptedResponse.class, request);
         String decryptedResponse = securityHelper.decrypt(encryptedResponse.getEncryptedPayload());
         return SerializationUtils.deserializeFromString(decryptedResponse, LoggedInEntity.class);
+    }
+
+    private String getUserLocaleForNemIdRequest(Catalog catalog) {
+        return Optional.ofNullable(catalog.getI18n())
+                .map(I18n::getLocale)
+                .map(Locale::getLanguage)
+                .filter(BecNemIdLocale::isLocaleSupported)
+                .orElse(BecNemIdLocale.DEFAULT_USER_LOCALE);
     }
 }

@@ -8,8 +8,12 @@ public class CodeAppPayloadScaEntity extends GeneralPayload {
     private CodeAppScaEntity codeapp;
 
     public CodeAppPayloadScaEntity(
-            String userId, String pincode, String deviceId, CodeAppScaEntity codeapp) {
-        super(userId, pincode, deviceId, ScaOptions.CODEAPP_OPTION);
+            String userId,
+            String pincode,
+            String deviceId,
+            CodeAppScaEntity codeapp,
+            String userLocale) {
+        super(userId, pincode, deviceId, ScaOptions.CODEAPP_OPTION, userLocale);
         this.codeapp = codeapp;
     }
 
