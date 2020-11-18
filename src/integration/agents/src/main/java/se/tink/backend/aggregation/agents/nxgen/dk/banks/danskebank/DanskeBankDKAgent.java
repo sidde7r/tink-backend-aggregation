@@ -22,8 +22,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeban
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConstants.HttpClientParams;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password.DanskeBankChallengeAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.DanskeBankAccountLoanFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.DanskeBankCreditCardFetcher;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.DanskeBankLoanFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.DanskeBankMultiTransactionsFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.DanskeBankTransactionalAccountFetcher;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
@@ -70,8 +70,8 @@ public final class DanskeBankDKAgent extends DanskeBankAgent
                 new LoanRefreshController(
                         this.metricRefreshController,
                         this.updateController,
-                        new DanskeBankLoanFetcher(
-                                this.credentials, this.apiClient, this.configuration));
+                        new DanskeBankAccountLoanFetcher(
+                                apiClient, configuration, accountEntityMapper, true));
 
         this.creditCardRefreshController = constructCreditCardRefreshController();
 

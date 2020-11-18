@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeba
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import java.io.File;
 import java.util.List;
 import org.junit.Before;
@@ -12,6 +11,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeban
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.mapper.AccountEntityMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.AccountEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.ListAccountsResponse;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class DanskeBankTransactionalAccountFetcherTest {
@@ -32,8 +32,8 @@ public class DanskeBankTransactionalAccountFetcherTest {
                         apiClient, configuration, accountEntityMapper);
         accounts =
                 SerializationUtils.deserializeFromString(
-                        new File(ACCOUNT_ENTITIES_FILE_PATH),
-                        new TypeReference<List<AccountEntity>>() {});
+                                new File(ACCOUNT_ENTITIES_FILE_PATH), ListAccountsResponse.class)
+                        .getAccounts();
     }
 
     @Test
