@@ -149,17 +149,19 @@ public class CbiGlobeApiClient {
     }
 
     protected RequestBuilder createConsentRequest(String state, ConsentType consentType) {
-        String fullRedirectUrl = createRedirectUrl(state, consentType);
+        String okfullRedirectUrl = createRedirectUrl(state, consentType, QueryValues.SUCCESS);
+        String nokfullRedirectUrl = createRedirectUrl(state, consentType, QueryValues.FAILURE);
         return createRequestInSession(Urls.CONSENTS)
                 .header(HeaderKeys.ASPSP_PRODUCT_CODE, providerConfiguration.getAspspProductCode())
-                .header(HeaderKeys.TPP_REDIRECT_URI, fullRedirectUrl)
-                .header(HeaderKeys.TPP_NOK_REDIRECT_URI, fullRedirectUrl);
+                .header(HeaderKeys.TPP_REDIRECT_URI, okfullRedirectUrl)
+                .header(HeaderKeys.TPP_NOK_REDIRECT_URI, nokfullRedirectUrl);
     }
 
-    public String createRedirectUrl(String state, ConsentType consentType) {
+    public String createRedirectUrl(String state, ConsentType consentType, String authResult) {
         return new URL(redirectUrl)
                 .queryParam(QueryKeys.STATE, state)
                 .queryParam(QueryKeys.CODE, consentType.getCode())
+                .queryParam(QueryKeys.RESULT, authResult)
                 .get();
     }
 
@@ -317,9 +319,5 @@ public class CbiGlobeApiClient {
                         ? psuIpAddress
                         : sessionStorage.get(HeaderKeys.PSU_IP_ADDRESS));
         return requestBuilder.header(HeaderKeys.PSU_IP_ADDRESS, originatingUserIPAddress);
-    }
-
-    public void invalidateToken() {
-        persistentStorage.remove(StorageKeys.OAUTH_TOKEN);
     }
 }

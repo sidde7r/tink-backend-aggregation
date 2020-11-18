@@ -5,4 +5,5 @@ public enum MessageCodes {
     CONSENT_INVALID,
     CONSENT_EXPIRED,
     NO_ACCESS_TOKEN_IN_STORAGE,
+    CONSENT_ALREADY_IN_USE
 }
