@@ -64,7 +64,7 @@ public class UkOpenbankingPaymentHelperTest {
         final DomesticScheduledPaymentConsentResponse domesticScheduledPaymentConsentResponseMock =
                 createDomesticScheduledPaymentConsentResponse(paymentResponseMock);
 
-        when(apiClientMock.createDomesticScheduledPaymentConsent(any(), any()))
+        when(apiClientMock.createDomesticScheduledPaymentConsent(any()))
                 .thenReturn(domesticScheduledPaymentConsentResponseMock);
 
         // when
@@ -73,7 +73,7 @@ public class UkOpenbankingPaymentHelperTest {
 
         // then
         assertThat(returnedResponse).isEqualTo(paymentResponseMock);
-        verify(apiClientMock).createDomesticScheduledPaymentConsent(any(), any());
+        verify(apiClientMock).createDomesticScheduledPaymentConsent(any());
     }
 
     @Test
@@ -85,8 +85,7 @@ public class UkOpenbankingPaymentHelperTest {
         final DomesticPaymentResponse domesticPaymentResponseMock =
                 createDomesticPaymentResponse(paymentResponseMock);
 
-        when(apiClientMock.getDomesticPayment(PAYMENT_ID, DomesticPaymentResponse.class))
-                .thenReturn(domesticPaymentResponseMock);
+        when(apiClientMock.getDomesticPayment(PAYMENT_ID)).thenReturn(domesticPaymentResponseMock);
 
         // when
         final PaymentResponse returnedResponse =
@@ -95,8 +94,8 @@ public class UkOpenbankingPaymentHelperTest {
 
         // then
         assertThat(returnedResponse).isEqualTo(paymentResponseMock);
-        verify(apiClientMock).getDomesticPayment(PAYMENT_ID, DomesticPaymentResponse.class);
-        verify(apiClientMock, never()).getDomesticPaymentConsent(anyString(), any());
+        verify(apiClientMock).getDomesticPayment(PAYMENT_ID);
+        verify(apiClientMock, never()).getDomesticPaymentConsent(anyString());
     }
 
     @Test
@@ -108,8 +107,7 @@ public class UkOpenbankingPaymentHelperTest {
         final DomesticScheduledPaymentResponse domesticScheduledPaymentResponseMock =
                 createDomesticScheduledPaymentResponse(paymentResponseMock);
 
-        when(apiClientMock.getDomesticScheduledPayment(
-                        PAYMENT_ID, DomesticScheduledPaymentResponse.class))
+        when(apiClientMock.getDomesticScheduledPayment(PAYMENT_ID))
                 .thenReturn(domesticScheduledPaymentResponseMock);
 
         // when
@@ -119,9 +117,8 @@ public class UkOpenbankingPaymentHelperTest {
 
         // then
         assertThat(returnedResponse).isEqualTo(paymentResponseMock);
-        verify(apiClientMock)
-                .getDomesticScheduledPayment(PAYMENT_ID, DomesticScheduledPaymentResponse.class);
-        verify(apiClientMock, never()).getDomesticScheduledPaymentConsent(anyString(), any());
+        verify(apiClientMock).getDomesticScheduledPayment(PAYMENT_ID);
+        verify(apiClientMock, never()).getDomesticScheduledPaymentConsent(anyString());
     }
 
     @Test
@@ -133,8 +130,7 @@ public class UkOpenbankingPaymentHelperTest {
         final DomesticPaymentConsentResponse domesticPaymentConsentResponseMock =
                 createDomesticPaymentConsentResponse(paymentResponseMock);
 
-        when(apiClientMock.getDomesticPaymentConsent(
-                        CONSENT_ID, DomesticPaymentConsentResponse.class))
+        when(apiClientMock.getDomesticPaymentConsent(CONSENT_ID))
                 .thenReturn(domesticPaymentConsentResponseMock);
 
         // when
@@ -144,9 +140,8 @@ public class UkOpenbankingPaymentHelperTest {
 
         // then
         assertThat(returnedResponse).isEqualTo(paymentResponseMock);
-        verify(apiClientMock, never()).getDomesticPayment(anyString(), any());
-        verify(apiClientMock)
-                .getDomesticPaymentConsent(CONSENT_ID, DomesticPaymentConsentResponse.class);
+        verify(apiClientMock, never()).getDomesticPayment(anyString());
+        verify(apiClientMock).getDomesticPaymentConsent(CONSENT_ID);
     }
 
     @Test
@@ -158,8 +153,7 @@ public class UkOpenbankingPaymentHelperTest {
         final DomesticScheduledPaymentConsentResponse domesticScheduledPaymentConsentResponseMock =
                 createDomesticScheduledPaymentConsentResponse(paymentResponseMock);
 
-        when(apiClientMock.getDomesticScheduledPaymentConsent(
-                        CONSENT_ID, DomesticScheduledPaymentConsentResponse.class))
+        when(apiClientMock.getDomesticScheduledPaymentConsent(CONSENT_ID))
                 .thenReturn(domesticScheduledPaymentConsentResponseMock);
 
         // when
@@ -169,10 +163,8 @@ public class UkOpenbankingPaymentHelperTest {
 
         // then
         assertThat(returnedResponse).isEqualTo(paymentResponseMock);
-        verify(apiClientMock, never()).getDomesticScheduledPayment(anyString(), any());
-        verify(apiClientMock)
-                .getDomesticScheduledPaymentConsent(
-                        CONSENT_ID, DomesticScheduledPaymentConsentResponse.class);
+        verify(apiClientMock, never()).getDomesticScheduledPayment(anyString());
+        verify(apiClientMock).getDomesticScheduledPaymentConsent(CONSENT_ID);
     }
 
     @Test
@@ -183,8 +175,7 @@ public class UkOpenbankingPaymentHelperTest {
         final FundsConfirmationResponse confirmationResponseMock =
                 createFundsConfirmationResponse();
 
-        when(apiClientMock.getDomesticFundsConfirmation(
-                        CONSENT_ID, FundsConfirmationResponse.class))
+        when(apiClientMock.getDomesticFundsConfirmation(CONSENT_ID))
                 .thenReturn(confirmationResponseMock);
 
         // when
@@ -196,8 +187,7 @@ public class UkOpenbankingPaymentHelperTest {
         returnedResponse.ifPresent(
                 response -> assertThat(response).isEqualTo(confirmationResponseMock));
 
-        verify(apiClientMock)
-                .getDomesticFundsConfirmation(CONSENT_ID, FundsConfirmationResponse.class);
+        verify(apiClientMock).getDomesticFundsConfirmation(CONSENT_ID);
     }
 
     @Test
@@ -225,8 +215,7 @@ public class UkOpenbankingPaymentHelperTest {
         final DomesticPaymentResponse domesticPaymentResponseMock =
                 createDomesticPaymentResponse(paymentResponseMock);
 
-        when(apiClientMock.executeDomesticPayment(any(), any()))
-                .thenReturn(domesticPaymentResponseMock);
+        when(apiClientMock.executeDomesticPayment(any())).thenReturn(domesticPaymentResponseMock);
 
         // when
         final PaymentResponse returnedResponse =
@@ -235,7 +224,7 @@ public class UkOpenbankingPaymentHelperTest {
 
         // then
         assertThat(returnedResponse).isEqualTo(paymentResponseMock);
-        verify(apiClientMock).executeDomesticPayment(any(), any());
+        verify(apiClientMock).executeDomesticPayment(any());
     }
 
     @Test
@@ -247,7 +236,7 @@ public class UkOpenbankingPaymentHelperTest {
         final DomesticScheduledPaymentResponse domesticScheduledPaymentResponseMock =
                 createDomesticScheduledPaymentResponse(paymentResponseMock);
 
-        when(apiClientMock.executeDomesticScheduledPayment(any(), any()))
+        when(apiClientMock.executeDomesticScheduledPayment(any()))
                 .thenReturn(domesticScheduledPaymentResponseMock);
 
         // when
@@ -257,7 +246,7 @@ public class UkOpenbankingPaymentHelperTest {
 
         // then
         assertThat(returnedResponse).isEqualTo(paymentResponseMock);
-        verify(apiClientMock).executeDomesticScheduledPayment(any(), any());
+        verify(apiClientMock).executeDomesticScheduledPayment(any());
     }
 
     private static Clock createClockMock() {

@@ -4,9 +4,7 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.rpc.domestic.DomesticScheduledPaymentConsentRequest;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.rpc.domestic.DomesticScheduledPaymentConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.rpc.domestic.DomesticScheduledPaymentRequest;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.rpc.domestic.DomesticScheduledPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.rpc.international.FundsConfirmationResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
@@ -21,25 +19,17 @@ public class DomesticScheduledPaymentApiClientWrapper implements ApiClientWrappe
         final DomesticScheduledPaymentConsentRequest request =
                 new DomesticScheduledPaymentConsentRequest(paymentRequest.getPayment());
 
-        return apiClient
-                .createDomesticScheduledPaymentConsent(
-                        request, DomesticScheduledPaymentConsentResponse.class)
-                .toTinkPaymentResponse();
+        return apiClient.createDomesticScheduledPaymentConsent(request).toTinkPaymentResponse();
     }
 
     @Override
     public PaymentResponse getPayment(String paymentId) {
-        return apiClient
-                .getDomesticScheduledPayment(paymentId, DomesticScheduledPaymentResponse.class)
-                .toTinkPaymentResponse();
+        return apiClient.getDomesticScheduledPayment(paymentId).toTinkPaymentResponse();
     }
 
     @Override
     public PaymentResponse getPaymentConsent(String consentId) {
-        return apiClient
-                .getDomesticScheduledPaymentConsent(
-                        consentId, DomesticScheduledPaymentConsentResponse.class)
-                .toTinkPaymentResponse();
+        return apiClient.getDomesticScheduledPaymentConsent(consentId).toTinkPaymentResponse();
     }
 
     @Override
@@ -58,8 +48,6 @@ public class DomesticScheduledPaymentApiClientWrapper implements ApiClientWrappe
                 new DomesticScheduledPaymentRequest(
                         paymentRequest.getPayment(), consentId, instructionIdentification);
 
-        return apiClient
-                .executeDomesticScheduledPayment(request, DomesticScheduledPaymentResponse.class)
-                .toTinkPaymentResponse();
+        return apiClient.executeDomesticScheduledPayment(request).toTinkPaymentResponse();
     }
 }
