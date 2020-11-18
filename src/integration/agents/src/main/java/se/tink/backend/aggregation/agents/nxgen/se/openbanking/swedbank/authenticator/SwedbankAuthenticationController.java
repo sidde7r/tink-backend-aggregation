@@ -153,10 +153,10 @@ public class SwedbankAuthenticationController
 
         if (errorResponse.isKycError()) {
             throw AuthorizationError.ACCOUNT_BLOCKED.exception(
-                    EndUserMessage.MUST_ANSWER_KYC.getKey());
+                    EndUserMessage.MUST_UPDATE_AGREEMENT.getKey());
         }
 
-        if (errorResponse.isNotACustomer()) {
+        if (errorResponse.isMissingBankAgreement()) {
             throw LoginError.NOT_CUSTOMER.exception();
         }
 

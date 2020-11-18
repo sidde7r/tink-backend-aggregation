@@ -17,7 +17,7 @@ public class GenericResponse {
     }
 
     @JsonIgnore
-    public boolean isNotACustomer() {
+    public boolean isMissingBankAgreement() {
         return containsError(ErrorCodes.MISSING_BANK_AGREEMENT);
     }
 
