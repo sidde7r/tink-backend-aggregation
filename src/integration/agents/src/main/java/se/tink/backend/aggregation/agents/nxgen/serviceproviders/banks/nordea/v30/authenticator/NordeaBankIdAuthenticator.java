@@ -118,12 +118,13 @@ public class NordeaBankIdAuthenticator implements BankIdAuthenticator<BankIdAuto
         this.nonce = Base64.encodeBase64URLSafeString(RandomUtils.secureRandom(19));
         this.codeChallenge = createCodeChallenge();
 
-        return new InitBankIdAutostartRequest()
-                .setState(state)
-                .setNonce(nonce)
-                .setCodeChallenge(codeChallenge)
-                .setRedirectUri(nordeaConfiguration.getRedirectUri())
-                .setClientId(nordeaConfiguration.getClientId());
+        return InitBankIdAutostartRequest.builder()
+                .state(state)
+                .nonce(nonce)
+                .codeChallenge(codeChallenge)
+                .redirectUri(nordeaConfiguration.getRedirectUri())
+                .clientId(nordeaConfiguration.getClientId())
+                .build();
     }
 
     private String createCodeChallenge() {

@@ -191,11 +191,8 @@ public class NordeaExecutorHelper {
     }
 
     public void confirm(String id) {
-        ConfirmTransferRequest confirmTransferRequest = new ConfirmTransferRequest(id);
         ConfirmTransferResponse confirmTransferResponse =
-                apiClient.confirmBankTransfer(confirmTransferRequest);
-
-        // sign external transfer or e-invoice
+                apiClient.confirmBankTransfer(new ConfirmTransferRequest(id));
         sign(confirmTransferResponse, id);
     }
 
@@ -258,23 +255,12 @@ public class NordeaExecutorHelper {
                 throw ErrorResponse.signTransferFailedError();
             }
         }
-        // Time out - cancel the signing request
-        cancelSign(orderRef);
         throw ErrorResponse.bankIdTimedOut();
     }
 
     private CompleteTransferResponse completeTransfer(String orderRef, String code) {
-        return apiClient.completeTransfer(orderRef, new CompleteTransferRequest().setCode(code));
-    }
-
-    private void cancelSign(String orderRef) {
-        try {
-            // the user will still be able to sign but this will set the status at Nordea at
-            // canceled.
-            apiClient.cancelSign(orderRef);
-        } catch (Exception e) {
-            // NOP
-        }
+        return apiClient.completeTransfer(
+                orderRef, CompleteTransferRequest.builder().code(code).build());
     }
 
     /** Check if there are errors in the Complete Transfer Response */
@@ -324,14 +310,15 @@ public class NordeaExecutorHelper {
     }
 
     private InitBankIdAutostartRequest createSignPaymentRequest(String signingOrderId) {
-        return new InitBankIdAutostartRequest()
-                .setState(Base64.encodeBase64URLSafeString(RandomUtils.secureRandom(19)))
-                .setNonce(Base64.encodeBase64URLSafeString(RandomUtils.secureRandom(19)))
-                .setCodeChallenge(createCodeChallenge())
-                .setRedirectUri(nordeaConfiguration.getRedirectUri())
-                .setClientId(nordeaConfiguration.getClientId())
-                .setSigningOrderId(signingOrderId)
-                .setUserId(fetchIdentity());
+        return InitBankIdAutostartRequest.builder()
+                .state(Base64.encodeBase64URLSafeString(RandomUtils.secureRandom(19)))
+                .nonce(Base64.encodeBase64URLSafeString(RandomUtils.secureRandom(19)))
+                .codeChallenge(createCodeChallenge())
+                .redirectUri(nordeaConfiguration.getRedirectUri())
+                .clientId(nordeaConfiguration.getClientId())
+                .signingOrderId(signingOrderId)
+                .userId(fetchIdentity())
+                .build();
     }
 
     private String createCodeChallenge() {

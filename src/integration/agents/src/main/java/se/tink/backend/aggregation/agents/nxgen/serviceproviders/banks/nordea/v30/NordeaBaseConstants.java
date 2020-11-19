@@ -166,6 +166,8 @@ public class NordeaBaseConstants {
         public static final String CODE_VERIFIER = "code_verifier";
         public static final String COUNTRY_VALUE = "SE";
         public static final String CLIENT_ID_VALUE = "NDHMSE";
+        public static final String SCOPE_OPENID = "openid ndf agreement offline_access";
+        public static final String CHALLENGE_METHOD = "S256";
     }
 
     public static class IdTags {
@@ -205,12 +207,6 @@ public class NordeaBaseConstants {
         public static final String BANKID_AUTOSTART_SIGN_PENDING = "confirmation_pending";
         public static final String BANKID_AUTOSTART_COMPLETED = "completed";
         public static final String BANKID_AUTOSTART_CANCELLED = "cancelled";
-        public static final String AGREEMENTS_UNAVAILABLE = "agreements_unavailable";
-        public static final String EXTERNAL_AUTHENTICATION_REQUIRED =
-                "external_authentication_required";
-        public static final String AUTHENTICATION_CANCELLED = "authentication_cancelled";
-        public static final String EXTERNAL_AUTHENTICATION_PENDING =
-                "external_authentication_pending";
         public static final String SIGN_PENDING = "SIGN_PENDING";
         public static final String PENDING = "PENDING";
         public static final String CANCELLED = "CANCELLED";
