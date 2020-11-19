@@ -10,4 +10,8 @@ public class LoginRequest {
     public LoginRequest(String username, String password, String multistepProcessId) {
         this.authentication = new AuthenticationEntity(username, password, multistepProcessId);
     }
+
+    public LoginRequest(String username, String multistepProcessId) {
+        this.authentication = new AuthenticationEntity(username, multistepProcessId);
+    }
 }
