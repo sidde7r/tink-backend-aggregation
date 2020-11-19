@@ -47,6 +47,7 @@ import se.tink.backend.aggregation.storage.database.repositories.CryptoConfigura
 import se.tink.backend.integration.tpp_secrets_service.client.iface.TppSecretsServiceClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.ManualAuthenticateRequest;
+import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 import se.tink.libraries.user.rpc.User;
 
@@ -131,6 +132,7 @@ public class AgentInitialisor {
         doReturn(AggregatorInfo.getAggregatorForTesting()).when(context).getAggregatorInfo();
         doReturn(new HashMap<>()).when(context).getTransactionCountByEnabledAccount();
         doReturn(new ByteArrayOutputStream()).when(context).getLogOutputStream();
+        doReturn(mock(Catalog.class)).when(context).getCatalog();
 
         // Not easily mockable since we need the implementation of getAgentConfiguration ->
         // getAgentConfigurationDev (and the parameter for these methods comes from Agent)

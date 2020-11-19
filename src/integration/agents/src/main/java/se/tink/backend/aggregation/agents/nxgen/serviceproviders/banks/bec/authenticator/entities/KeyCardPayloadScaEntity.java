@@ -11,8 +11,9 @@ public class KeyCardPayloadScaEntity extends GeneralPayload {
             String userId,
             String pincode,
             String deviceId,
-            KeyCardChallengeEntity keyCardChallengeEntity) {
-        super(userId, pincode, deviceId, ScaOptions.KEYCARD_OPTION);
+            KeyCardChallengeEntity keyCardChallengeEntity,
+            String userLocale) {
+        super(userId, pincode, deviceId, ScaOptions.KEYCARD_OPTION, userLocale);
         keycard = keyCardChallengeEntity;
     }
 

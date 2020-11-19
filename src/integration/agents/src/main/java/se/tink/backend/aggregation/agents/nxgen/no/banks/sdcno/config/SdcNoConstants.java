@@ -63,8 +63,7 @@ public class SdcNoConstants {
         public static final String INVALID_CONFIGURATION =
                 "Invalid Configuration: %s cannot be empty or null";
 
-        public static final String NO_ACCOUNT_FOR_BANK_ID =
-                "Banken har ingen bruker med det fødselsnummer det logges inn med.";
+        public static final String NO_ACCOUNT_FOR_BANK_ID = "Banken har ingen bruker med det";
     }
 
     public static class Headers {
