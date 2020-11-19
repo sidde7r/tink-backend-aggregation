@@ -1,0 +1,63 @@
+{
+  "accounts": [
+    {
+      "accountNumber": "09090912345678",
+      "accountExclusion": "NONE",
+      "exactBalance": {
+        "currencyCode": "GBP",
+        "exactValue": -1295.87 ,
+        "scale": 2,
+        "doubleValue": -1295.87 ,
+        "unscaledValue": -129587
+      },
+      "availableBalance": {
+        "currencyCode": "GBP",
+        "exactValue": -1295.87 ,
+        "scale": 2,
+        "doubleValue": -1295.87 ,
+        "unscaledValue": -129587
+      },
+      "currencyCode": "GBP",
+      "bankId": "09090912345678",
+      "name": "09090912345678",
+      "ownership": 1.0,
+      "type": "CHECKING",
+      "identifiers": "[\"sort-code://09090912345678\"]",
+      "closed": false,
+      "holderName": null,
+      "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
+      "availableCredit": 4.13,
+      "balance": -1295.87
+    },
+    {
+      "accountNumber": "SAVINGR12345678",
+      "accountExclusion": "NONE",
+      "exactBalance": {
+        "currencyCode": "GBP",
+        "exactValue": 0.0,
+        "scale": 2,
+        "doubleValue": 0.0,
+        "unscaledValue": 0
+      },
+      "availableBalance": {
+        "currencyCode": "GBP",
+        "exactValue": 0.0,
+        "scale": 2,
+        "doubleValue": 0.0,
+        "unscaledValue": 0
+      },
+      "currencyCode": "GBP",
+      "bankId": "SAVINGR12345678",
+      "name": "SAVINGR12345678",
+      "ownership": 1.0,
+      "type": "SAVINGS",
+      "identifiers": "[\"bban://SAVINGR12345678\"]",
+      "closed": false,
+      "holderName": null,
+      "flags": "[]",
+      "availableCredit": 0.0,
+      "balance": 0.0
+    }
+  ],
+  "transactions": []
+}

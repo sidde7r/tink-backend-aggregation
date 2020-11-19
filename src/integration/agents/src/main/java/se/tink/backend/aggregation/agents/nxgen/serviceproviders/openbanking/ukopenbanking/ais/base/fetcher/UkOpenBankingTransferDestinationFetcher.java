@@ -1,7 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.fetcher;
 
+import static se.tink.libraries.account.AccountIdentifier.Type;
+
 import com.google.common.collect.ImmutableList;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -30,8 +31,24 @@ public class UkOpenBankingTransferDestinationFetcher implements TransferDestinat
                     .add(AccountTypes.CHECKING)
                     .add(AccountTypes.SAVINGS)
                     .build();
+    // Whitelist transfer destination account type
+    // Only NO, SE_BG, BE, SE_PG, IBAN, SE_SHB_INTERNAL, SORT_CODE, SE, SEPA_EUR, FI, TINK
+    private static final ImmutableList<Type> WHITELISTED_TRANSFER_DESTINATION_ACCOUNT_TYPES =
+            ImmutableList.<Type>builder()
+                    .add(Type.NO)
+                    .add(Type.SE_BG)
+                    .add(Type.BE)
+                    .add(Type.SE)
+                    .add(Type.SE_PG)
+                    .add(Type.SE_SHB_INTERNAL)
+                    .add(Type.IBAN)
+                    .add(Type.SORT_CODE)
+                    .add(Type.FI)
+                    .add(Type.SEPA_EUR)
+                    .add(Type.TINK)
+                    .build();
 
-    private final AccountIdentifier.Type destinationAccountIdentifierType;
+    private final Type destinationAccountIdentifierType;
     private final Class<? extends AccountIdentifier> destinationAccountIdentifierClass;
 
     @Override
@@ -42,8 +59,15 @@ public class UkOpenBankingTransferDestinationFetcher implements TransferDestinat
     private Map<Account, List<TransferDestinationPattern>> getTransferAccountDestinations(
             Collection<Account> accounts) {
         final List<GeneralAccountEntity> ownAccounts = getAccountEntityList(accounts);
-        final List<GeneralAccountEntity> destinations = new ArrayList<>(ownAccounts);
-
+        final List<GeneralAccountEntity> destinations =
+                ownAccounts.stream()
+                        .filter(
+                                destination ->
+                                        WHITELISTED_TRANSFER_DESTINATION_ACCOUNT_TYPES.contains(
+                                                destination
+                                                        .generalGetAccountIdentifier()
+                                                        .getType()))
+                        .collect(Collectors.toList());
         accounts.forEach(
                 account ->
                         destinations.addAll(
