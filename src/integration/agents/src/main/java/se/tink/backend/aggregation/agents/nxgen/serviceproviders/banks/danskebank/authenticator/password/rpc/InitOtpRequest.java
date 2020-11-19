@@ -1,12 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password.rpc;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.Locale;
-import java.util.Optional;
-import org.xnap.commons.i18n.I18n;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.i18n.Catalog;
+import src.integration.nemid.NemIdSupportedLanguageCode;
 
 @JsonObject
 public class InitOtpRequest {
@@ -35,15 +33,8 @@ public class InitOtpRequest {
         this.transactionContext =
                 catalog.getString(DanskeBankConstants.Device.REGISTER_TRANSACTION_TEXT);
         this.suppressPush = DanskeBankConstants.Device.SUPPRESS_PUSH;
-        String language =
-                Optional.ofNullable(catalog.getI18n())
-                        .map(I18n::getLocale)
-                        .map(Locale::getLanguage)
-                        .map(String::toUpperCase)
-                        .orElse(DanskeBankConstants.Device.DEFAULT_LANGUAGE_CODE);
+        // note: this value affects the language of nemID notification on user's device
         this.iSOLanguageCode =
-                DanskeBankConstants.Device.ACCEPTABLE_LANGUAGE_CODES.contains(language)
-                        ? language
-                        : DanskeBankConstants.Device.DEFAULT_LANGUAGE_CODE;
+                NemIdSupportedLanguageCode.getFromCatalogOrDefault(catalog).getIsoLanguageCode();
     }
 }

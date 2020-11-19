@@ -232,6 +232,7 @@ public class SdcConstants {
     public static class Headers {
         // header names
         public static final String X_SDC_PORTLET_PATH = "X-SDC-PORTLET_PATH";
+        // note: this header affects the language of nemID notification on user's device
         public static final String X_SDC_LOCALE = "X-SDC-LOCALE";
         public static final String X_SDC_CLIENT_TYPE = "X-SDC-CLIENT-TYPE";
         public static final String X_SDC_API_VERSION = "X-SDC-API-VERSION";

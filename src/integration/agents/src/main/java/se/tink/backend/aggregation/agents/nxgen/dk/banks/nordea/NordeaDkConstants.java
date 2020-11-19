@@ -1,7 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea;
 
-import java.util.Arrays;
-import java.util.List;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 
@@ -98,17 +96,6 @@ public class NordeaDkConstants {
         public static final String HOUSEHOLD_APP_SEGMENT = "household";
         public static final String PLATFORM_VERSION = "12.4.3";
         public static final String ACCEPT_LANGUAGE = "en-DK";
-    }
-
-    public static class NordeaNemIdLocale {
-        private static final List<String> SUPPORTED_LOCALES = Arrays.asList("en", "da");
-
-        public static final String DEFAULT_LOCALE = "en";
-
-        public static boolean isUserLocaleSupported(String userLocale) {
-            return SUPPORTED_LOCALES.stream()
-                    .anyMatch(supportedLocale -> supportedLocale.equalsIgnoreCase(userLocale));
-        }
     }
 
     public static class StorageKeys {

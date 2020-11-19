@@ -35,6 +35,7 @@ import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestB
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.serialization.utils.SerializationUtils;
+import src.integration.nemid.NemIdSupportedLanguageCode;
 
 public class BecApiClientTest {
 
@@ -577,7 +578,8 @@ public class BecApiClientTest {
 
         payloadAndroidEntity.setAppType(BecConstants.Meta.APP_TYPE);
         payloadAndroidEntity.setAppVersion(BecConstants.Meta.APP_VERSION);
-        payloadAndroidEntity.setLocale(BecConstants.BecNemIdLocale.DEFAULT_USER_LOCALE);
+        payloadAndroidEntity.setLocale(
+                NemIdSupportedLanguageCode.DEFAULT_LANGUAGE_CODE.getIsoLanguageCode());
         payloadAndroidEntity.setOsVersion(BecConstants.Meta.OS_VERSION);
         payloadAndroidEntity.setDeviceType(BecConstants.Meta.DEVICE_TYPE);
         return payloadAndroidEntity;

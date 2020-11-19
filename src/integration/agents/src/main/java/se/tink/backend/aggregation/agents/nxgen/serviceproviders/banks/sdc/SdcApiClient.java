@@ -27,17 +27,23 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.libraries.i18n.Catalog;
+import src.integration.nemid.NemIdSupportedLanguageCode;
 
 // Sdc has two version of its api, set as a http header
 public class SdcApiClient {
 
     private final TinkHttpClient client;
     private final SdcConfiguration agentConfiguration;
+    private final String languageCode;
     private DeviceToken deviceToken;
 
-    public SdcApiClient(TinkHttpClient client, SdcConfiguration agentConfiguration) {
+    public SdcApiClient(
+            TinkHttpClient client, SdcConfiguration agentConfiguration, Catalog catalog) {
         this.client = client;
         this.agentConfiguration = agentConfiguration;
+        this.languageCode =
+                NemIdSupportedLanguageCode.getFromCatalogOrDefault(catalog).getIsoLanguageCode();
     }
 
     public void setDeviceToken(DeviceToken deviceToken) {
@@ -189,9 +195,7 @@ public class SdcApiClient {
                         .header(
                                 SdcConstants.Headers.X_SDC_PORTLET_PATH,
                                 SdcConstants.Headers.PORTLET_PATH)
-                        .header(
-                                SdcConstants.Headers.X_SDC_LOCALE,
-                                SdcConstants.Headers.LOCALE_EN_GB)
+                        .header(SdcConstants.Headers.X_SDC_LOCALE, languageCode)
                         .accept(MediaType.WILDCARD)
                         .type(MediaType.APPLICATION_JSON);
         if (deviceToken != null) {
