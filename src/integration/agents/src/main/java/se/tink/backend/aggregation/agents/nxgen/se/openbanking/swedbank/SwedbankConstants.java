@@ -222,7 +222,7 @@ public final class SwedbankConstants {
     }
 
     public enum EndUserMessage implements LocalizableEnum {
-        MUST_ANSWER_KYC(
+        MUST_UPDATE_AGREEMENT(
                 new LocalizableKey(
                         "To be able to refresh your accounts you need to answer some questions from your bank. Please log in to your bank's app or internet bank."));
         private final LocalizableKey userMessage;

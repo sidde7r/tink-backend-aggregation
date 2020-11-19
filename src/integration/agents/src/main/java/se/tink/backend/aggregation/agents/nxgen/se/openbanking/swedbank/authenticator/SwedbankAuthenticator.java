@@ -93,9 +93,11 @@ public class SwedbankAuthenticator implements OAuth2Authenticator {
         try {
             accountsResponse = apiClient.fetchAccounts();
         } catch (HttpResponseException e) {
-            if (e.getResponse().getBody(GenericResponse.class).isKycError()) {
+            GenericResponse errorResponse = e.getResponse().getBody(GenericResponse.class);
+
+            if (errorResponse.isKycError() || errorResponse.isMissingBankAgreement()) {
                 throw AuthorizationError.ACCOUNT_BLOCKED.exception(
-                        EndUserMessage.MUST_ANSWER_KYC.getKey());
+                        EndUserMessage.MUST_UPDATE_AGREEMENT.getKey());
             }
             throw e;
         }

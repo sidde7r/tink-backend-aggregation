@@ -5,7 +5,6 @@ import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalUnit;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
-import org.apache.http.HttpStatus;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
 import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
@@ -15,6 +14,7 @@ import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.AuthStatus;
@@ -124,17 +124,7 @@ public class SwedbankAuthenticationController
         try {
             authenticationStatusResponse = authenticator.collect(ssn, collectAuthUri);
         } catch (HttpResponseException e) {
-            GenericResponse genericResponse = e.getResponse().getBody(GenericResponse.class);
-            if ((e.getResponse().getStatus() == HttpStatus.SC_FORBIDDEN
-                            || e.getResponse().getStatus() == HttpStatus.SC_UNAUTHORIZED)
-                    && genericResponse.isKycError()) {
-                throw AuthorizationError.ACCOUNT_BLOCKED.exception(
-                        EndUserMessage.MUST_ANSWER_KYC.getKey());
-            } else if (genericResponse.loginInterrupted()) {
-                return BankIdStatus.INTERRUPTED;
-            } else {
-                return BankIdStatus.FAILED_UNKNOWN;
-            }
+            return getBankIdStatusBasedOnError(e);
         }
 
         if (authenticationStatusResponse.loginCanceled()) {
@@ -152,6 +142,25 @@ public class SwedbankAuthenticationController
             default:
                 return BankIdStatus.FAILED_UNKNOWN;
         }
+    }
+
+    private BankIdStatus getBankIdStatusBasedOnError(HttpResponseException e) {
+        GenericResponse errorResponse = e.getResponse().getBody(GenericResponse.class);
+
+        if (errorResponse.isLoginInterrupted()) {
+            return BankIdStatus.INTERRUPTED;
+        }
+
+        if (errorResponse.isKycError()) {
+            throw AuthorizationError.ACCOUNT_BLOCKED.exception(
+                    EndUserMessage.MUST_UPDATE_AGREEMENT.getKey());
+        }
+
+        if (errorResponse.isMissingBankAgreement()) {
+            throw LoginError.NOT_CUSTOMER.exception();
+        }
+
+        throw e;
     }
 
     private BankIdStatus finalizeBankid(AuthenticationStatusResponse authenticationStatusResponse) {
