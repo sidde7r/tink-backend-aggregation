@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeba
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.LoanDetailsResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
@@ -64,10 +65,29 @@ public class LoanEntity {
                 .build();
     }
 
-    private Double parseInterestRate(LoanDetailsResponse loanDetailsResponse) {
+    /**
+     * From Investopedia: The interest rate is the amount a lender charges for the use of assets
+     * expressed as a percentage of the principal.
+     *
+     * <p>Interest rate = interest * payment frequency / cash debt (this calculation was provided by
+     * mortgage expert)
+     *
+     * <p>Scale is rounded up to 6 decimal places, because that bank shows in the app percentage
+     * interest rate with 4 decimal places - at least this is what we can assume now. Interest rate
+     * returned in our data model is a number so it should be multiplied by 100 to get percentage
+     * value.
+     */
+    @JsonIgnore
+    Double parseInterestRate(LoanDetailsResponse loanDetailsResponse) {
         try {
-            return Double.valueOf(loanDetailsResponse.getLoanDetail().getInterest());
-        } catch (NumberFormatException | NullPointerException e) {
+            BigDecimal interest = new BigDecimal(loanDetailsResponse.getLoanDetail().getInterest());
+            BigDecimal frequency =
+                    new BigDecimal(loanDetailsResponse.getLoanDetail().getPaymentFrequency());
+            BigDecimal cashDebt = new BigDecimal(loanDetailsResponse.getLoanDetail().getCashDebt());
+            return interest.multiply(frequency)
+                    .divide(cashDebt, 6, RoundingMode.HALF_UP)
+                    .doubleValue();
+        } catch (NumberFormatException | NullPointerException | ArithmeticException e) {
             return null;
         }
     }
