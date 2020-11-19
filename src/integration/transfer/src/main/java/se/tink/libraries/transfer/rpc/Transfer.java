@@ -19,7 +19,6 @@ import java.text.DecimalFormatSymbols;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +26,6 @@ import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.date.ThreadSafeDateFormat;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.transfer.enums.TransferPayloadType;
 import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.iface.UuidIdentifiable;
@@ -56,14 +54,12 @@ public class Transfer implements UuidIdentifiable, Serializable, Cloneable {
     @JsonProperty("destinationUri")
     private String destination;
 
-    @JsonIgnore private String originalDestination;
     private String destinationMessage;
     private UUID id;
 
     @JsonProperty("sourceUri")
     private String source;
 
-    @JsonIgnore private String originalSource;
     private String sourceMessage;
     private UUID userId;
     private String type;
@@ -157,36 +153,6 @@ public class Transfer implements UuidIdentifiable, Serializable, Cloneable {
             this.amount = amount.getExactValue();
             this.oldAmount = amount.getDoubleValue();
             this.currency = amount.getCurrencyCode();
-        }
-    }
-
-    public AccountIdentifier getOriginalDestination() {
-        if (originalDestination == null) {
-            return null;
-        }
-        return AccountIdentifier.create(URI.create(originalDestination));
-    }
-
-    public void setOriginalDestination(AccountIdentifier originalDestination) {
-        if (originalDestination == null) {
-            this.originalDestination = null;
-        } else {
-            this.originalDestination = originalDestination.toUriAsString();
-        }
-    }
-
-    public AccountIdentifier getOriginalSource() {
-        if (originalSource == null) {
-            return null;
-        }
-        return AccountIdentifier.create(URI.create(originalSource));
-    }
-
-    public void setOriginalSource(AccountIdentifier originalSource) {
-        if (originalSource == null) {
-            this.originalSource = null;
-        } else {
-            this.originalSource = originalSource.toUriAsString();
         }
     }
 
@@ -344,25 +310,6 @@ public class Transfer implements UuidIdentifiable, Serializable, Cloneable {
 
     public RemittanceInformation getRemittanceInformation() {
         return this.remittanceInformation;
-    }
-
-    @JsonIgnore
-    public Optional<Transfer> getOriginalTransfer() {
-        String originalTransferSerialized = getPayload().get(TransferPayloadType.ORIGINAL_TRANSFER);
-
-        if (!Strings.isNullOrEmpty(originalTransferSerialized)) {
-            return Optional.ofNullable(
-                    SerializationUtils.deserializeFromString(
-                            originalTransferSerialized, Transfer.class));
-        }
-
-        return Optional.empty();
-    }
-
-    @JsonIgnore
-    public Optional<String> getPayloadValue(TransferPayloadType type) {
-        Map<TransferPayloadType, String> payload = getPayload();
-        return Optional.ofNullable(payload.get(type));
     }
 
     public void addPayload(TransferPayloadType type, String value) {
