@@ -1,0 +1,72 @@
+{
+    "traceId": null,
+    "statusCode": 200,
+    "responseCode": 200,
+    "responseMessage": null,
+    "eupToken": null,
+    "disableInvestment": false,
+    "customerProfile": {
+        "smsFee": 0,
+        "noContactInfo": false,
+        "notificationsAgreement": true,
+        "emailFormat": "HTML",
+        "emailAddress": "test@test.dk",
+        "phoneNo": "12345678",
+        "agentUserId": "1234054321"
+    },
+    "custodyAccounts": {
+        "selectedAccount": "G5",
+        "groups": [
+            {
+                "accounts": [
+                    {
+                        "custodyAccounts": null,
+                        "cashAccounts": null,
+                        "isTimeHorizonReadOnly": true,
+                        "package": null,
+                        "type": "Group",
+                        "displayValue": null,
+                        "value": "G5",
+                        "name": "Alle"
+                    }
+                ],
+                "name": "Grupper"
+            },
+            {
+                "accounts": [
+                    {
+                        "custodyAccounts": null,
+                        "cashAccounts": null,
+                        "isTimeHorizonReadOnly": true,
+                        "package": null,
+                        "type": "CustodyAccount",
+                        "displayValue": "123456789",
+                        "value": "D123456789",
+                        "name": "Opbevaringsdepot"
+                    },
+                    {
+                        "custodyAccounts": [
+                            {
+                                "marketValue": 0,
+                                "custodyAccountId": "1234554321"
+                            }
+                        ],
+                        "cashAccounts": [
+                            {
+                                "internalId": "1234500000"
+                            }
+                        ],
+                        "isTimeHorizonReadOnly": true,
+                        "package": 1,
+                        "type": "InvestmentAgreement",
+                        "displayValue": null,
+                        "value": "DU123PA1234PAP",
+                        "name": "June"
+                    }
+                ],
+                "name": "Aftaler og depoter"
+            }
+        ]
+    },
+    "package": 1
+}

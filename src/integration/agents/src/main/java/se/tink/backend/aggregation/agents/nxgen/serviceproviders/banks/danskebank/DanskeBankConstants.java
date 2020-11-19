@@ -150,6 +150,7 @@ public class DanskeBankConstants {
 
     public static class Account {
         static final String CREDIT_CARD_CODE = "101";
+        static final String ALL_INVESTMENTS_GROUP = "Group";
     }
 
     public static class Investment {
@@ -281,5 +282,6 @@ public class DanskeBankConstants {
 
     public static class Market {
         public static final String SE_MARKET = "SE";
+        public static final String DK_MARKET = "DK";
     }
 }

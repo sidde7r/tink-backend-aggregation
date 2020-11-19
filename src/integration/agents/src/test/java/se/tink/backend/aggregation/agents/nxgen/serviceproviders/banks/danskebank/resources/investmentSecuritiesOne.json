@@ -1,0 +1,36 @@
+{
+    "traceId": null,
+    "statusCode": 200,
+    "responseCode": 200,
+    "responseMessage": null,
+    "eupToken": null,
+    "cashAccounts": [],
+    "securities": [
+        {
+            "custodyAccounts": [
+                {
+                    "profitLoss": -123.12,
+                    "marketValue": 1234.12,
+                    "custodyAccountId": "123456789"
+                }
+            ],
+            "fixedIncome": false,
+            "unrealizedProfitLossPct": -1.12,
+            "unrealizedProfitLoss": -123.45,
+            "price": 0.1234,
+            "latestChangePercentage": -1.12,
+            "portfolioAllocation": 12.701339024906844,
+            "noOfSecurities": 12345,
+            "value": 1234.12,
+            "currency": "NOK",
+            "name": "Norwegian Something",
+            "id": "NO0012345678"
+        }
+    ],
+    "dailyPerformancePct": 45.45,
+    "dailyPerformance": 5432.23,
+    "performancePct": 30.303030303030303,
+    "performance": 8653.12,
+    "marketValueCurrency": "DKK",
+    "marketValue": 12345.12
+}
