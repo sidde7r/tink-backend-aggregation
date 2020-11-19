@@ -24,6 +24,7 @@ import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.transfer.enums.TransferType;
+import se.tink.libraries.transfer.rpc.RemittanceInformation;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 public class SwedbankSEAgentTest {
@@ -120,9 +121,11 @@ public class SwedbankSEAgentTest {
     }
 
     private Transfer create1SekTransfer() {
+        RemittanceInformation remittanceInformation = new RemittanceInformation();
+        remittanceInformation.setValue("Tink dest");
         Transfer transfer = new Transfer();
         transfer.setAmount(Amount.inSEK(1.0));
-        transfer.setDestinationMessage("Tink dest");
+        transfer.setRemittanceInformation(remittanceInformation);
         transfer.setSourceMessage("Tink source");
         transfer.setType(TransferType.BANK_TRANSFER);
         // transfer.setDueDate(new Date(2020, 1, 1));

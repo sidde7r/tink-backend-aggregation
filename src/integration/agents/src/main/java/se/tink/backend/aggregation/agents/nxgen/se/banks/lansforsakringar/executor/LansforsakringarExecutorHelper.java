@@ -50,7 +50,7 @@ public class LansforsakringarExecutorHelper {
 
     DirectTransferRequest createTransferRequest(Transfer transfer) {
         return new DirectTransferRequest(
-                transfer.getDestinationMessage(),
+                transfer.getRemittanceInformation().getValue(),
                 transfer.getSource().getIdentifier(),
                 transfer.getAmount().toBigDecimal(),
                 transfer.getDestination().getIdentifier(),

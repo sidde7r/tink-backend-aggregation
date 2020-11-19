@@ -12,6 +12,7 @@ import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.transfer.enums.TransferType;
+import se.tink.libraries.transfer.rpc.RemittanceInformation;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 public class LansforsakringarAgentTest {
@@ -47,6 +48,8 @@ public class LansforsakringarAgentTest {
 
     @Test
     public void testPayment() throws Exception {
+        RemittanceInformation remittanceInformation = new RemittanceInformation();
+        remittanceInformation.setValue("Destination message");
         Transfer transfer = new Transfer();
         transfer.setSource(
                 AccountIdentifier.create(
@@ -59,7 +62,7 @@ public class LansforsakringarAgentTest {
         transfer.setAmount(Amount.inSEK(2d));
         transfer.setType(TransferType.PAYMENT);
         transfer.setDueDate(null);
-        transfer.setDestinationMessage("Destination message");
+        transfer.setRemittanceInformation(remittanceInformation);
 
         builder.build().testBankTransfer(transfer);
     }

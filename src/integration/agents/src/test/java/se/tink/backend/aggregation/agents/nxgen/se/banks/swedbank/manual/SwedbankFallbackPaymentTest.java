@@ -81,7 +81,6 @@ public class SwedbankFallbackPaymentTest {
         transfer.setAmount(Amount.inSEK(1d));
         transfer.setType(TransferType.PAYMENT);
         transfer.setDueDate(getDueDate());
-        transfer.setDestinationMessage("202091249021");
 
         RemittanceInformation remittanceInformation = new RemittanceInformation();
         remittanceInformation.setType(RemittanceInformationType.OCR);

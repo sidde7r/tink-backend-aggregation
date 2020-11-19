@@ -13,6 +13,7 @@ import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.enums.MarketCode;
 import se.tink.libraries.transfer.enums.TransferType;
+import se.tink.libraries.transfer.rpc.RemittanceInformation;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 public class HandelsbankenSEAgentWireMockTest {
@@ -56,7 +57,8 @@ public class HandelsbankenSEAgentWireMockTest {
     }
 
     private Transfer createMockedDomesticTransfer() {
-
+        RemittanceInformation remittanceInformation = new RemittanceInformation();
+        remittanceInformation.setValue("241234491");
         Transfer transfer = new Transfer();
         transfer.setSource(AccountIdentifier.create(AccountIdentifier.Type.SE, "83279000000000"));
 
@@ -68,7 +70,7 @@ public class HandelsbankenSEAgentWireMockTest {
                         LocalDate.of(2020, 7, 8)
                                 .atStartOfDay(ZoneId.of("Europe/Stockholm"))
                                 .toInstant()));
-        transfer.setDestinationMessage("241234491");
+        transfer.setRemittanceInformation(remittanceInformation);
 
         return transfer;
     }

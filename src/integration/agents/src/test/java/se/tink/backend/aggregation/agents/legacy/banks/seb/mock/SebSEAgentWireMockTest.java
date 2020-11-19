@@ -15,6 +15,7 @@ import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.enums.MarketCode;
 import se.tink.libraries.transfer.enums.TransferType;
+import se.tink.libraries.transfer.rpc.RemittanceInformation;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 public class SebSEAgentWireMockTest {
@@ -44,12 +45,14 @@ public class SebSEAgentWireMockTest {
     }
 
     private Transfer createTransfer() {
+        RemittanceInformation remittanceInformation = new RemittanceInformation();
+        remittanceInformation.setValue("1047514784933");
         Transfer transfer = new Transfer();
         transfer.setAmount(ExactCurrencyAmount.inSEK(328.0));
         transfer.setSource(new SwedishIdentifier("58398257466"));
         transfer.setSourceMessage("Tinkpay");
         transfer.setDestination(new BankGiroIdentifier("5768353"));
-        transfer.setDestinationMessage("1047514784933");
+        transfer.setRemittanceInformation(remittanceInformation);
         transfer.setType(TransferType.PAYMENT);
         transfer.setDueDate(
                 Date.from(LocalDate.of(2020, 6, 22).atStartOfDay(ZoneId.of("CET")).toInstant()));
