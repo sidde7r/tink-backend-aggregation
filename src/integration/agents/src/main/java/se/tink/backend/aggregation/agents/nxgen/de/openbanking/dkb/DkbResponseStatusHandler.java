@@ -17,7 +17,7 @@ public class DkbResponseStatusHandler implements HttpResponseStatusHandler {
 
     @Override
     public void handleResponse(HttpRequest httpRequest, HttpResponse httpResponse) {
-        if (httpResponse.getStatus() >= 500) {
+        if (httpResponse.getStatus() >= 400) {
             defaultResponseStatusHandler.handleResponse(httpRequest, httpResponse);
         }
     }

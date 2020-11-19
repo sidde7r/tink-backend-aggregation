@@ -4,7 +4,10 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
 
 import java.time.temporal.ChronoUnit;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
@@ -20,14 +23,16 @@ import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConf
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.scaffold.ModuleDependenciesRegistry;
 import se.tink.libraries.credentials.service.CredentialsRequest;
+import se.tink.libraries.i18n.Catalog;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS})
 public final class DkbAgent extends NextGenerationAgent
@@ -55,14 +60,16 @@ public final class DkbAgent extends NextGenerationAgent
             DkbModuleDependenciesRegistration moduleDependenciesRegistration) {
         final DkbConfiguration dkbConfiguration =
                 getAgentConfiguration().getProviderSpecificConfiguration();
+
+        Map<Class<?>, Object> beans = new HashMap<>();
+        beans.put(DkbConfiguration.class, dkbConfiguration);
+        beans.put(DkbUserIpInformation.class, new DkbUserIpInformation(request.isManual(), userIp));
+        beans.put(Catalog.class, catalog);
+        beans.put(Credentials.class, credentials);
+        beans.put(SupplementalInformationHelper.class, supplementalInformationHelper);
+
         moduleDependenciesRegistration.registerExternalDependencies(
-                client,
-                sessionStorage,
-                persistentStorage,
-                dkbConfiguration,
-                supplementalInformationHelper,
-                new DkbUserIpInformation(request.isManual(), userIp),
-                catalog);
+                client, sessionStorage, persistentStorage, beans);
         moduleDependenciesRegistration.registerInternalModuleDependencies();
         return moduleDependenciesRegistration.createModuleDependenciesRegistry();
     }
@@ -75,8 +82,9 @@ public final class DkbAgent extends NextGenerationAgent
 
     @Override
     protected Authenticator constructAuthenticator() {
-        return new PasswordAuthenticationController(
-                dependencyRegistry.getBean(DkbAuthenticator.class));
+        DkbAuthenticator authenticator = dependencyRegistry.getBean(DkbAuthenticator.class);
+        return new AutoAuthenticationController(
+                request, systemUpdater, authenticator, authenticator);
     }
 
     @Override

@@ -16,4 +16,12 @@ public class Consent {
     boolean isNotAuthorized() {
         return "received".equalsIgnoreCase(consentStatus);
     }
+
+    boolean isExpired() {
+        return "expired".equalsIgnoreCase(consentStatus);
+    }
+
+    boolean isRevokedByPsu() {
+        return "revokedByPsu".equalsIgnoreCase(consentStatus);
+    }
 }

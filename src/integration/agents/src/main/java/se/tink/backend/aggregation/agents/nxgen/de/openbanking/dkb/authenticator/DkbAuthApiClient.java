@@ -61,7 +61,9 @@ public class DkbAuthApiClient {
         Consent consent = executeHttpRequest(request, Consent.class);
         // Consent details returned from bank do not contain consentId
         // Enrich the object here to keep the handling of Consent object consistent
-        consent.setConsentId(consentId);
+        if (consent != null) {
+            consent.setConsentId(consentId);
+        }
         return consent;
     }
 
