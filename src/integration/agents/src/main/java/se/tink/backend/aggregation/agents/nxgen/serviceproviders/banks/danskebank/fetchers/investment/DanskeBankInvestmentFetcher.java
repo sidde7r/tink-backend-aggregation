@@ -76,7 +76,7 @@ public class DanskeBankInvestmentFetcher implements AccountFetcher<InvestmentAcc
                             .filter(DanskeBankPredicates.GROUPS_WITH_ACCOUNTS)
                             .map(GroupEntity::getAccounts)
                             .flatMap(List::stream)
-                            .filter(DanskeBankPredicates.NON_ALL_INVESTMENTS_GROUP)
+                            .filter(DanskeBankPredicates.ALL_INVESTMENTS_GROUP.negate())
                             .collect(Collectors.toList());
         }
 

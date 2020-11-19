@@ -36,6 +36,6 @@ public final class DanskeBankPredicates {
     public static final Predicate<SecurityEntity> NON_ZERO_QUANTITY =
             s -> !s.getQuantity().equals(BigDecimal.ZERO);
 
-    public static final Predicate<GroupAccountEntity> NON_ALL_INVESTMENTS_GROUP =
-            ga -> !ga.getType().equals(DanskeBankConstants.Account.ALL_INVESTMENTS_GROUP);
+    public static final Predicate<GroupAccountEntity> ALL_INVESTMENTS_GROUP =
+            ga -> ga.getType().equals(DanskeBankConstants.Account.ALL_INVESTMENTS_GROUP);
 }
