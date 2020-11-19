@@ -148,6 +148,9 @@ public class LoginStep extends AbstractAuthenticationStep {
             if (errorResponse.hasErrorField(ErrorCodes.LOGIN_DOCUMENT_FIELD)) {
                 LOGGER.warn("Login document didn't pass server-side validation");
                 throw LoginError.INCORRECT_CREDENTIALS.exception(hre);
+            } else if (errorResponse.hasErrorField(ErrorCodes.BIRTHDAY_FIELD)) {
+                LOGGER.warn("Birthday date didn't pass server-side validation");
+                throw LoginError.INCORRECT_CREDENTIALS.exception(hre);
             }
         } else if (hre.getResponse().getStatus() == HttpStatus.SC_FORBIDDEN) {
             final ErrorResponse errorResponse = hre.getResponse().getBody(ErrorResponse.class);

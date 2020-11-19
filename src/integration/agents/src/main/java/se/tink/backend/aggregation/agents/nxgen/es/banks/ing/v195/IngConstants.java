@@ -124,6 +124,7 @@ public class IngConstants {
 
     public static class ErrorCodes {
         public static final String LOGIN_DOCUMENT_FIELD = "loginDocument";
+        public static final String BIRTHDAY_FIELD = "birthday";
         public static final String MOBILE_VALIDATION_ENROLLMENT_REQUIRED = "19902";
         public static final String INVALID_PIN = "403001";
         public static final String GENERIC_LOCK = "403002";
