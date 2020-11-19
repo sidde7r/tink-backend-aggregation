@@ -12,4 +12,12 @@ public class BalanceEntity {
     public BalanceSingleEntity getInterimAvailable() {
         return interimAvailable;
     }
+
+    public BalanceSingleEntity getClosingBooked() {
+        return closingBooked;
+    }
+
+    public BalanceSingleEntity getAuthorised() {
+        return authorised;
+    }
 }

@@ -5,9 +5,10 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsBaseApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsUserState;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.entities.account.AccountEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.entities.account.BalanceEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.fetcher.SibsBaseTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.rpc.AccountsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
@@ -37,18 +38,19 @@ public class SibsCreditCardFetcher extends SibsBaseTransactionFetcher
     }
 
     private CreditCardAccount toTinkCreditCard(AccountEntity accountEntity) {
-        ExactCurrencyAmount balanceAmount =
+
+        BalanceEntity balanceEntity =
                 apiClient.getAccountBalances(accountEntity.getId()).getBalances().stream()
                         .findFirst()
-                        .orElseThrow(
-                                () ->
-                                        new IllegalStateException(
-                                                SibsConstants.ErrorMessages.NO_BALANCE))
-                        .getInterimAvailable()
-                        .getAmount()
-                        .toTinkAmount();
+                        .orElseThrow(() -> new IllegalStateException(ErrorMessages.NO_BALANCE));
 
-        return accountEntity.toTinkCreditCard(balanceAmount);
+        ExactCurrencyAmount closingBooked =
+                balanceEntity.getClosingBooked().getAmount().toTinkAmount();
+
+        ExactCurrencyAmount interimAvailable =
+                balanceEntity.getInterimAvailable().getAmount().toTinkAmount();
+
+        return accountEntity.toTinkCreditCard(closingBooked, interimAvailable);
     }
 
     @Override
