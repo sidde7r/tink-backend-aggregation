@@ -73,18 +73,6 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
         Transfer transfer = transferRequest.getTransfer();
         SignableOperation signableOperation = transferRequest.getSignableOperation();
 
-        if (transfer.isDestinationMessageGenerated()) {
-            log.info(
-                    "DestinationMessage contains 'TinkGenerated://' for transfer with transferId: {}",
-                    UUIDUtils.toTinkUUID(transfer.getId()));
-        }
-
-        if (transfer.isRemittanceInformationGenerated()) {
-            log.info(
-                    "RemittanceInformation contains 'TinkGenerated://' for transfer with transferId: {}",
-                    UUIDUtils.toTinkUUID(transfer.getId()));
-        }
-
         // TODO: This (hack) is here to handle direct integration flow, will remove it after the
         // observing that we are receiving RI throw all flows, Jira Ticket:
         // https://tinkab.atlassian.net/browse/PAY1-506

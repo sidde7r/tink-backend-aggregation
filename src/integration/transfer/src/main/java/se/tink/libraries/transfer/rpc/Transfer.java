@@ -42,7 +42,6 @@ import se.tink.libraries.uuid.UUIDUtils;
 public class Transfer implements UuidIdentifiable, Serializable, Cloneable {
     private static final String FOUR_POINT_PRECISION_FORMAT_STRING = "0.0000";
 
-    private static final String TINK_GENERATED_MESSAGE_FORMAT = "TinkGenerated://";
     private static final Logger log = LoggerFactory.getLogger(Transfer.class);
 
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
@@ -204,11 +203,6 @@ public class Transfer implements UuidIdentifiable, Serializable, Cloneable {
         this.destinationMessage = destinationMessage;
     }
 
-    @JsonIgnore
-    public void setGeneratedDestinationMessage(String generatedDestinationMessage) {
-        this.destinationMessage = serializeGeneratedMessage(generatedDestinationMessage);
-    }
-
     /**
      * @return Non-formatted source message of transfer. For e.g. bank transfers message might need
      *     formatting and default values (use TransferMessageFormatter for this) to confirm to the
@@ -220,11 +214,6 @@ public class Transfer implements UuidIdentifiable, Serializable, Cloneable {
 
     public void setSourceMessage(String sourceMessage) {
         this.sourceMessage = sourceMessage;
-    }
-
-    @JsonIgnore
-    public void setGeneratedSourceMessage(String generatedSourceMessage) {
-        this.sourceMessage = serializeGeneratedMessage(generatedSourceMessage);
     }
 
     @Override
@@ -392,35 +381,8 @@ public class Transfer implements UuidIdentifiable, Serializable, Cloneable {
     }
 
     @JsonIgnore
-    public boolean isDestinationMessageGenerated() {
-        return !Strings.isNullOrEmpty(destinationMessage) && isMessageGenerated(destinationMessage);
-    }
-
-    @JsonIgnore
-    public boolean isSourceMessageGenerated() {
-        return isMessageGenerated(sourceMessage);
-    }
-
-    private boolean isMessageGenerated(String message) {
-        return message.startsWith(TINK_GENERATED_MESSAGE_FORMAT);
-    }
-
-    private String serializeGeneratedMessage(String message) {
-        return TINK_GENERATED_MESSAGE_FORMAT + message;
-    }
-
-    @JsonIgnore
     public boolean isOfType(TransferType type) {
         return getType() != null && getType().equals(type);
-    }
-
-    @JsonIgnore
-    public boolean isRemittanceInformationGenerated() {
-        if (remittanceInformation != null) {
-            return !Strings.isNullOrEmpty(remittanceInformation.getValue())
-                    && isMessageGenerated(remittanceInformation.getValue());
-        }
-        return false;
     }
 
     public String getOriginatingUserIp() {
