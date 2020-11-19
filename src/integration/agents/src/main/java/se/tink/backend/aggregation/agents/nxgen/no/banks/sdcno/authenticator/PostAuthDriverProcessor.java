@@ -23,8 +23,7 @@ public class PostAuthDriverProcessor {
     private final WebDriver driver;
     private final CookieManager cookieManager;
 
-    private static final By ERROR_MESSAGE = By.id("error-message");
-    private static final By ERROR_MESSAGE_CONTENT = By.xpath("//li[@role]");
+    private static final By ERROR_MESSAGE_CONTENT = By.xpath("//*[@id='error-message']/ul/li");
     private static final By AGREEMENT_LIST = By.className("agreement-list");
     private static final By AGREEMENT_LIST_FIRST_OPTION = By.xpath("//a[@data-id='0']");
 
@@ -52,9 +51,7 @@ public class PostAuthDriverProcessor {
     }
 
     private void checkForErrors() {
-        WebElement errorMessageElement = driver.findElement(ERROR_MESSAGE);
-        String errorMessage =
-                errorMessageElement.findElement(ERROR_MESSAGE_CONTENT).getAttribute("innerText");
+        String errorMessage = driver.findElement(ERROR_MESSAGE_CONTENT).getAttribute("innerText");
 
         if (isNotACustomer(errorMessage)) {
             throw LoginError.NOT_CUSTOMER.exception();
