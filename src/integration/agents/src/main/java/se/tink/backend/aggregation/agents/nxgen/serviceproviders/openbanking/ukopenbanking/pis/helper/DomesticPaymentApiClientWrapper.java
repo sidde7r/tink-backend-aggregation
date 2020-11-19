@@ -6,7 +6,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.rpc.domestic.DomesticPaymentConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.rpc.domestic.DomesticPaymentConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.rpc.domestic.DomesticPaymentRequest;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.rpc.domestic.DomesticPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.rpc.international.FundsConfirmationResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
@@ -34,8 +33,7 @@ public class DomesticPaymentApiClientWrapper implements ApiClientWrapper {
                 new DomesticPaymentConsentRequest(paymentRequest.getPayment());
 
         final DomesticPaymentConsentResponse response =
-                apiClient.createDomesticPaymentConsent(
-                        consentRequest, DomesticPaymentConsentResponse.class);
+                apiClient.createDomesticPaymentConsent(consentRequest);
 
         validateDomesticPaymentConsentResponse(response);
 
@@ -44,22 +42,17 @@ public class DomesticPaymentApiClientWrapper implements ApiClientWrapper {
 
     @Override
     public PaymentResponse getPayment(String paymentId) {
-        return apiClient
-                .getDomesticPayment(paymentId, DomesticPaymentResponse.class)
-                .toTinkPaymentResponse();
+        return apiClient.getDomesticPayment(paymentId).toTinkPaymentResponse();
     }
 
     @Override
     public PaymentResponse getPaymentConsent(String consentId) {
-        return apiClient
-                .getDomesticPaymentConsent(consentId, DomesticPaymentConsentResponse.class)
-                .toTinkPaymentResponse();
+        return apiClient.getDomesticPaymentConsent(consentId).toTinkPaymentResponse();
     }
 
     @Override
     public Optional<FundsConfirmationResponse> getFundsConfirmation(String consentId) {
-        return Optional.of(
-                apiClient.getDomesticFundsConfirmation(consentId, FundsConfirmationResponse.class));
+        return Optional.of(apiClient.getDomesticFundsConfirmation(consentId));
     }
 
     @Override
@@ -76,8 +69,6 @@ public class DomesticPaymentApiClientWrapper implements ApiClientWrapper {
                         endToEndIdentification,
                         instructionIdentification);
 
-        return apiClient
-                .executeDomesticPayment(request, DomesticPaymentResponse.class)
-                .toTinkPaymentResponse();
+        return apiClient.executeDomesticPayment(request).toTinkPaymentResponse();
     }
 }

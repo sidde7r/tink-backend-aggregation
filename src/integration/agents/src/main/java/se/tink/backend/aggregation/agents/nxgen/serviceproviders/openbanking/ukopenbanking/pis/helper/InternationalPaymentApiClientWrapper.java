@@ -5,9 +5,7 @@ import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.rpc.international.FundsConfirmationResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.rpc.international.InternationalPaymentConsentRequest;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.rpc.international.InternationalPaymentConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.rpc.international.InternationalPaymentRequest;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.rpc.international.InternationalPaymentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 
@@ -21,32 +19,22 @@ public class InternationalPaymentApiClientWrapper implements ApiClientWrapper {
         final InternationalPaymentConsentRequest consentRequest =
                 new InternationalPaymentConsentRequest(paymentRequest.getPayment());
 
-        return apiClient
-                .createInternationalPaymentConsent(
-                        consentRequest, InternationalPaymentConsentResponse.class)
-                .toTinkPaymentResponse();
+        return apiClient.createInternationalPaymentConsent(consentRequest).toTinkPaymentResponse();
     }
 
     @Override
     public PaymentResponse getPayment(String paymentId) {
-        return apiClient
-                .getInternationalPayment(paymentId, InternationalPaymentResponse.class)
-                .toTinkPaymentResponse();
+        return apiClient.getInternationalPayment(paymentId).toTinkPaymentResponse();
     }
 
     @Override
     public PaymentResponse getPaymentConsent(String consentId) {
-        return apiClient
-                .getInternationalPaymentConsent(
-                        consentId, InternationalPaymentConsentResponse.class)
-                .toTinkPaymentResponse();
+        return apiClient.getInternationalPaymentConsent(consentId).toTinkPaymentResponse();
     }
 
     @Override
     public Optional<FundsConfirmationResponse> getFundsConfirmation(String consentId) {
-        return Optional.of(
-                apiClient.getInternationalFundsConfirmation(
-                        consentId, FundsConfirmationResponse.class));
+        return Optional.of(apiClient.getInternationalFundsConfirmation(consentId));
     }
 
     @Override
@@ -63,8 +51,6 @@ public class InternationalPaymentApiClientWrapper implements ApiClientWrapper {
                         endToEndIdentification,
                         instructionIdentification);
 
-        return apiClient
-                .executeInternationalPayment(request, InternationalPaymentResponse.class)
-                .toTinkPaymentResponse();
+        return apiClient.executeInternationalPayment(request).toTinkPaymentResponse();
     }
 }

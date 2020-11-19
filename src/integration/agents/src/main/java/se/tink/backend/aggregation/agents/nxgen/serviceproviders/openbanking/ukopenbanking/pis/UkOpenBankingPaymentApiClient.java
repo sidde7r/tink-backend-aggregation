@@ -19,6 +19,13 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentConstants.HttpHeaders;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentConstants.JWTSignatureHeaders.PAYLOAD;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.configuration.UkOpenBankingPisConfig;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.rpc.domestic.DomesticPaymentConsentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.rpc.domestic.DomesticPaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.rpc.domestic.DomesticScheduledPaymentConsentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.rpc.domestic.DomesticScheduledPaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.rpc.international.FundsConfirmationResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.rpc.international.InternationalPaymentConsentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.rpc.international.InternationalPaymentResponse;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
@@ -60,73 +67,77 @@ public class UkOpenBankingPaymentApiClient extends OpenIdApiClient {
         this.pisConfig = pisConfig;
     }
 
-    public <T> T createDomesticPaymentConsent(Object request, Class<T> responseType) {
+    public DomesticPaymentConsentResponse createDomesticPaymentConsent(Object request) {
         return createPisRequestWithJwsHeader(pisConfig.createDomesticPaymentConsentURL(), request)
-                .post(responseType, request);
+                .post(DomesticPaymentConsentResponse.class, request);
     }
 
-    public <T> T getDomesticPaymentConsent(String consentId, Class<T> responseType) {
+    public DomesticPaymentConsentResponse getDomesticPaymentConsent(String consentId) {
         return createPisRequest(pisConfig.getDomesticPaymentConsentURL(consentId))
-                .get(responseType);
+                .get(DomesticPaymentConsentResponse.class);
     }
 
-    public <T> T executeDomesticPayment(Object request, Class<T> responseType) {
+    public DomesticPaymentResponse executeDomesticPayment(Object request) {
         return createPisRequestWithJwsHeader(pisConfig.createDomesticPaymentURL(), request)
-                .post(responseType, request);
+                .post(DomesticPaymentResponse.class, request);
     }
 
-    public <T> T getDomesticFundsConfirmation(String consentId, Class<T> responseType) {
+    public FundsConfirmationResponse getDomesticFundsConfirmation(String consentId) {
         return createPisRequest(pisConfig.getDomesticFundsConfirmationURL(consentId))
-                .get(responseType);
+                .get(FundsConfirmationResponse.class);
     }
 
-    public <T> T getDomesticPayment(String paymentId, Class<T> responseType) {
-        return createPisRequest(pisConfig.getDomesticPayment(paymentId)).get(responseType);
+    public DomesticPaymentResponse getDomesticPayment(String paymentId) {
+        return createPisRequest(pisConfig.getDomesticPayment(paymentId))
+                .get(DomesticPaymentResponse.class);
     }
 
-    public <T> T createDomesticScheduledPaymentConsent(Object request, Class<T> responseType) {
+    public DomesticScheduledPaymentConsentResponse createDomesticScheduledPaymentConsent(
+            Object request) {
         return createPisRequestWithJwsHeader(
                         pisConfig.createDomesticScheduledPaymentConsentURL(), request)
-                .post(responseType, request);
+                .post(DomesticScheduledPaymentConsentResponse.class, request);
     }
 
-    public <T> T getDomesticScheduledPaymentConsent(String consentId, Class<T> responseType) {
+    public DomesticScheduledPaymentConsentResponse getDomesticScheduledPaymentConsent(
+            String consentId) {
         return createPisRequest(pisConfig.getDomesticScheduledPaymentConsentURL(consentId))
-                .get(responseType);
+                .get(DomesticScheduledPaymentConsentResponse.class);
     }
 
-    public <T> T executeDomesticScheduledPayment(Object request, Class<T> responseType) {
+    public DomesticScheduledPaymentResponse executeDomesticScheduledPayment(Object request) {
         return createPisRequestWithJwsHeader(pisConfig.createDomesticScheduledPaymentURL(), request)
-                .post(responseType, request);
+                .post(DomesticScheduledPaymentResponse.class, request);
     }
 
-    public <T> T getDomesticScheduledPayment(String paymentId, Class<T> responseType) {
-        return createPisRequest(pisConfig.getDomesticScheduledPayment(paymentId)).get(responseType);
+    public DomesticScheduledPaymentResponse getDomesticScheduledPayment(String paymentId) {
+        return createPisRequest(pisConfig.getDomesticScheduledPayment(paymentId))
+                .get(DomesticScheduledPaymentResponse.class);
     }
 
-    public <T> T createInternationalPaymentConsent(Object request, Class<T> responseType) {
+    public InternationalPaymentConsentResponse createInternationalPaymentConsent(Object request) {
         return createPisRequest(pisConfig.createInternationalPaymentConsentURL())
-                .post(responseType, request);
+                .post(InternationalPaymentConsentResponse.class, request);
     }
 
-    public <T> T getInternationalPaymentConsent(String consentId, Class<T> responseType) {
+    public InternationalPaymentConsentResponse getInternationalPaymentConsent(String consentId) {
         return createPisRequest(pisConfig.getInternationalPaymentConsentURL(consentId))
-                .get(responseType);
+                .get(InternationalPaymentConsentResponse.class);
     }
 
-    public <T> T getInternationalPayment(String paymentId, Class<T> responseType) {
+    public InternationalPaymentResponse getInternationalPayment(String paymentId) {
         return createPisRequest(pisConfig.getInternationalPayment(paymentId))
-                .post(responseType, paymentId);
+                .post(InternationalPaymentResponse.class, paymentId);
     }
 
-    public <T> T getInternationalFundsConfirmation(String consentId, Class<T> responseType) {
+    public FundsConfirmationResponse getInternationalFundsConfirmation(String consentId) {
         return createPisRequest(pisConfig.getInternationalFundsConfirmationURL(consentId))
-                .get(responseType);
+                .get(FundsConfirmationResponse.class);
     }
 
-    public <T> T executeInternationalPayment(Object request, Class<T> responseType) {
+    public InternationalPaymentResponse executeInternationalPayment(Object request) {
         return createPisRequest(pisConfig.createInternationalPaymentURL())
-                .post(responseType, request);
+                .post(InternationalPaymentResponse.class, request);
     }
 
     private RequestBuilder createPisRequest(URL url) {
