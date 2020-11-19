@@ -65,6 +65,18 @@ public class LoanEntity {
                 .build();
     }
 
+    /**
+     * From Investopedia: The interest rate is the amount a lender charges for the use of assets
+     * expressed as a percentage of the principal.
+     *
+     * <p>Interest rate = interest * payment frequency / cash debt (this calculation was provided by
+     * mortgage expert)
+     *
+     * <p>Scale is rounded up to 6 decimal places, because that bank shows in the app percentage
+     * interest rate with 4 decimal places - at least this is what we can assume now. Interest rate
+     * returned in our data model is a number so it should be multiplied by 100 to get percentage
+     * value.
+     */
     @JsonIgnore
     Double parseInterestRate(LoanDetailsResponse loanDetailsResponse) {
         try {
