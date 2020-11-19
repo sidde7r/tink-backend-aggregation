@@ -99,8 +99,8 @@ public class NordeaPartnerApiClient {
     private OAuth2Token getAccessToken() {
         return sessionStorage
                 .get(OAuth2Constants.PersistentStorageKeys.OAUTH_2_TOKEN, OAuth2Token.class)
-                .filter(OAuth2Token::hasAccessExpired)
-                .orElse(this.refreshAccessToken());
+                .filter(OAuth2Token::isValid)
+                .orElseGet(this::refreshAccessToken);
     }
 
     private OAuth2Token refreshAccessToken() {
