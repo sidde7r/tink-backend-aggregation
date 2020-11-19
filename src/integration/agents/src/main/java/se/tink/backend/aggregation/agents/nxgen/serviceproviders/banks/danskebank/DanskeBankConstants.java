@@ -74,7 +74,8 @@ public class DanskeBankConstants {
 
         // == START Credit card info ==
 
-        public static final String LIST_CARD_INFO_URL = BASE_URL + "/kk/api/cards/getlist";
+        public static final String CARDS_LIST_URL = BASE_URL + "/kk/api/cards/getlist";
+        public static final String CARD_DETAILS_URL = BASE_URL + "/kk/api/cards/getcarddetails";
 
         // == END Credit card info ==
 

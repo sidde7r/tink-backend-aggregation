@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password.rpc.BindDeviceRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password.rpc.BindDeviceResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password.rpc.CheckDeviceResponse;
@@ -27,6 +28,10 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeban
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.investment.rpc.ListSecuritiesResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.investment.rpc.ListSecurityDetailsRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.investment.rpc.ListSecurityDetailsResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.CardDetailsRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.CardDetailsResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.CardsListRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.CardsListResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.FutureTransactionsRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.FutureTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.ListAccountsRequest;
@@ -144,6 +149,36 @@ public class DanskeBankApiClient {
         }
 
         return accounts;
+    }
+
+    /**
+     * This method is used only for debug purposes, all data fetched by this method is available in
+     * s3 for further analysis.
+     *
+     * <p>No business output is required from this method, thus it's ok to not care about potential
+     * exceptions.
+     *
+     * @param request request object for cards/list endpoint
+     */
+    public void listCards(CardsListRequest request) {
+        try {
+            fetchCardDetails(request);
+        } catch (RuntimeException e) {
+            logger.warn(e.getMessage());
+        }
+    }
+
+    private void fetchCardDetails(CardsListRequest request) {
+        CardsListResponse cardsListResponse =
+                postRequest(Urls.CARDS_LIST_URL, CardsListResponse.class, request);
+        cardsListResponse
+                .getCards()
+                .forEach(
+                        cardEntity ->
+                                postRequest(
+                                        Urls.CARD_DETAILS_URL,
+                                        CardDetailsResponse.class,
+                                        new CardDetailsRequest(cardEntity.getCardId())));
     }
 
     public ListLoansResponse listLoans(ListLoansRequest request) {

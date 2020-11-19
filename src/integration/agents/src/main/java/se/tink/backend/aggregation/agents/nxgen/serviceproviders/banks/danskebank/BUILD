@@ -46,6 +46,7 @@ java_library(
         "//third_party:org_json_json",
         "//third_party:org_slf4j_slf4j_api",
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
         "@aggregation//:com_google_guava_guava",
         "@aggregation//:org_apache_commons_commons_text",
         "@selenium//:com_codeborne_phantomjsdriver",
