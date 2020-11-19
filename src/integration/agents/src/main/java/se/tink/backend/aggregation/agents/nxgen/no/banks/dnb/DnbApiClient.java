@@ -12,6 +12,7 @@ import java.util.regex.Pattern;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import javax.ws.rs.core.MediaType;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
@@ -35,6 +36,7 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 
+@Slf4j
 public class DnbApiClient {
 
     public static final String TRUE = "TRUE";
@@ -175,14 +177,29 @@ public class DnbApiClient {
 
     ////// Credit Cards Begin //////
     public ListCardResponse listCards() {
-        return this.client
-                .request(DnbConstants.Url.LIST_CARDS)
-                .queryParam(
-                        DnbConstants.QueryParam.PREVENT_CACHE, String.valueOf(new Date().getTime()))
-                .header(
-                        DnbConstants.Header.REQUEST_WITH_KEY,
-                        DnbConstants.Header.REQUEST_WITH_VALUE)
-                .get(ListCardResponse.class);
+        HttpResponse httpResponse =
+                this.client
+                        .request(DnbConstants.Url.LIST_CARDS)
+                        .queryParam(
+                                DnbConstants.QueryParam.PREVENT_CACHE,
+                                String.valueOf(new Date().getTime()))
+                        .header(
+                                DnbConstants.Header.REQUEST_WITH_KEY,
+                                DnbConstants.Header.REQUEST_WITH_VALUE)
+                        .get(HttpResponse.class);
+
+        // ITE-1726, adding logs for 302 redirect, that the httpClient is set not to follow
+        // Need to see at least the location header to understand where they would redirect me,
+        // before changing anything about it
+        if (httpResponse.getStatus() == 302) {
+            log.warn(
+                    "Card list response was a redirect, that we don't handle, with location "
+                            + httpResponse.getHeaders().getFirst("Location"));
+            // Return empty lists in such case, for the time being
+            return new ListCardResponse();
+        }
+
+        return httpResponse.getBody(ListCardResponse.class);
     }
 
     public GetCardResponse getCard(String cardId) {
