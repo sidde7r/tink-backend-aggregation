@@ -197,7 +197,7 @@ public class Transfer implements UuidIdentifiable, Serializable, Cloneable {
      *     the specific agent.
      */
     public String getDestinationMessage() {
-        return trimGeneratedText(destinationMessage);
+        return destinationMessage;
     }
 
     public void setDestinationMessage(String destinationMessage) {
@@ -215,7 +215,7 @@ public class Transfer implements UuidIdentifiable, Serializable, Cloneable {
      *     specific agent.
      */
     public String getSourceMessage() {
-        return trimGeneratedText(sourceMessage);
+        return sourceMessage;
     }
 
     public void setSourceMessage(String sourceMessage) {
@@ -403,13 +403,6 @@ public class Transfer implements UuidIdentifiable, Serializable, Cloneable {
 
     private boolean isMessageGenerated(String message) {
         return message.startsWith(TINK_GENERATED_MESSAGE_FORMAT);
-    }
-
-    private String trimGeneratedText(String generatedMessage) {
-        if (Strings.isNullOrEmpty(generatedMessage)) {
-            return null;
-        }
-        return generatedMessage.replaceAll("^" + TINK_GENERATED_MESSAGE_FORMAT, "");
     }
 
     private String serializeGeneratedMessage(String message) {
