@@ -478,18 +478,6 @@ public class NordeaBaseApiClient {
         }
     }
 
-    private <T> T requestRefreshableDelete(RequestBuilder request, Class<T> responseType) {
-        try {
-            return request.header(
-                            HttpHeaders.AUTHORIZATION, getTokenType() + ' ' + getAccessToken())
-                    .header(HttpHeaders.ACCEPT_LANGUAGE, HeaderParams.LANGUAGE)
-                    .delete(responseType);
-
-        } catch (HttpResponseException hre) {
-            return handleRefreshableRequestAndErrors(hre, request, responseType, HttpMethod.DELETE);
-        }
-    }
-
     private <T> T handleRefreshableRequestAndErrors(
             HttpResponseException hre,
             RequestBuilder request,
@@ -638,16 +626,5 @@ public class NordeaBaseApiClient {
                 .accept(MediaType.APPLICATION_JSON_TYPE)
                 .body(verifyRequest, MediaType.APPLICATION_JSON_TYPE)
                 .put(VerifyPersonalCodeResponse.class, verifyRequest);
-    }
-
-    public ResultSignResponse cancelSign(String orderRef) {
-        final RequestBuilder request =
-                httpClient
-                        .request(
-                                Urls.getUrl(nordeaConfiguration.getBaseUrl(), Urls.POLL_SIGN)
-                                        .parameter(IdTags.ORDER_REF, orderRef))
-                        .accept(MediaType.APPLICATION_JSON_TYPE);
-
-        return requestRefreshableDelete(request, ResultSignResponse.class);
     }
 }

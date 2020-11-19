@@ -255,24 +255,12 @@ public class NordeaExecutorHelper {
                 throw ErrorResponse.signTransferFailedError();
             }
         }
-        // Time out - cancel the signing request
-        cancelSign(orderRef);
         throw ErrorResponse.bankIdTimedOut();
     }
 
     private CompleteTransferResponse completeTransfer(String orderRef, String code) {
         return apiClient.completeTransfer(
                 orderRef, CompleteTransferRequest.builder().code(code).build());
-    }
-
-    private void cancelSign(String orderRef) {
-        try {
-            // the user will still be able to sign but this will set the status at Nordea at
-            // canceled.
-            apiClient.cancelSign(orderRef);
-        } catch (Exception e) {
-            // NOP
-        }
     }
 
     /** Check if there are errors in the Complete Transfer Response */
