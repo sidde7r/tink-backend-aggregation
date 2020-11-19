@@ -4,7 +4,6 @@ import com.google.common.base.CharMatcher;
 import com.google.common.base.Joiner;
 import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
-import com.google.common.base.Strings;
 import com.google.common.collect.Sets;
 import java.util.LinkedHashSet;
 import java.util.Optional;
@@ -28,7 +27,6 @@ public class TransferMessageFormatter {
     private final Catalog catalog;
     private final TransferMessageLengthConfig messageLengthConfig;
     private final Optional<StringNormalizer> stringNormalizer;
-    private static final String TINK_GENERATED_MESSAGE_FORMAT = "TinkGenerated://";
 
     public TransferMessageFormatter(
             Catalog catalog,
@@ -92,12 +90,7 @@ public class TransferMessageFormatter {
         int maxLength =
                 messageLengthConfig.getDestinationMessageMaxLength(
                         isTransferBetweenSameUserAccounts);
-        String destinationMessage =
-                trimGeneratedText(transfer.getRemittanceInformation().getValue());
-
-        if (transfer.isRemittanceInformationGenerated()) {
-            return normalizeAndtrimMessageIfNeeded(destinationMessage, maxLength);
-        }
+        String destinationMessage = transfer.getRemittanceInformation().getValue();
 
         if (destinationMessage.length() > maxLength) {
             throw new TransferMessageException(
@@ -131,10 +124,6 @@ public class TransferMessageFormatter {
 
         int maxLength = messageLengthConfig.getSourceMessageMaxLength();
         String sourceMessage = transfer.getSourceMessage();
-
-        if (transfer.isSourceMessageGenerated()) {
-            return normalizeAndtrimMessageIfNeeded(sourceMessage, maxLength);
-        }
 
         if (sourceMessage.length() > maxLength) {
             throw new TransferMessageException(
@@ -207,18 +196,6 @@ public class TransferMessageFormatter {
         return Joiner.on(" ").join(normalizedCharacters);
     }
 
-    private String normalizeAndtrimMessageIfNeeded(String message, int maxLength) {
-        if (stringNormalizer.isPresent()) {
-            message = stringNormalizer.get().normalize(message);
-        }
-
-        if (message.length() > maxLength) {
-            return message.substring(0, maxLength);
-        }
-
-        return trim(message);
-    }
-
     private void preconditionIsBankTransfer(Transfer transfer) {
         if (!transfer.isOfType(TransferType.BANK_TRANSFER)) {
             throw new IllegalArgumentException(
@@ -288,12 +265,5 @@ public class TransferMessageFormatter {
         public String get() {
             return message;
         }
-    }
-
-    private String trimGeneratedText(String generatedMessage) {
-        if (Strings.isNullOrEmpty(generatedMessage)) {
-            return null;
-        }
-        return generatedMessage.replaceAll("^" + TINK_GENERATED_MESSAGE_FORMAT, "");
     }
 }

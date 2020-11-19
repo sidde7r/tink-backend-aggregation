@@ -19,7 +19,6 @@ import java.text.DecimalFormatSymbols;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +26,6 @@ import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.date.ThreadSafeDateFormat;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.transfer.enums.TransferPayloadType;
 import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.iface.UuidIdentifiable;
@@ -42,7 +40,6 @@ import se.tink.libraries.uuid.UUIDUtils;
 public class Transfer implements UuidIdentifiable, Serializable, Cloneable {
     private static final String FOUR_POINT_PRECISION_FORMAT_STRING = "0.0000";
 
-    private static final String TINK_GENERATED_MESSAGE_FORMAT = "TinkGenerated://";
     private static final Logger log = LoggerFactory.getLogger(Transfer.class);
 
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
@@ -57,14 +54,12 @@ public class Transfer implements UuidIdentifiable, Serializable, Cloneable {
     @JsonProperty("destinationUri")
     private String destination;
 
-    @JsonIgnore private String originalDestination;
     private String destinationMessage;
     private UUID id;
 
     @JsonProperty("sourceUri")
     private String source;
 
-    @JsonIgnore private String originalSource;
     private String sourceMessage;
     private UUID userId;
     private String type;
@@ -161,36 +156,6 @@ public class Transfer implements UuidIdentifiable, Serializable, Cloneable {
         }
     }
 
-    public AccountIdentifier getOriginalDestination() {
-        if (originalDestination == null) {
-            return null;
-        }
-        return AccountIdentifier.create(URI.create(originalDestination));
-    }
-
-    public void setOriginalDestination(AccountIdentifier originalDestination) {
-        if (originalDestination == null) {
-            this.originalDestination = null;
-        } else {
-            this.originalDestination = originalDestination.toUriAsString();
-        }
-    }
-
-    public AccountIdentifier getOriginalSource() {
-        if (originalSource == null) {
-            return null;
-        }
-        return AccountIdentifier.create(URI.create(originalSource));
-    }
-
-    public void setOriginalSource(AccountIdentifier originalSource) {
-        if (originalSource == null) {
-            this.originalSource = null;
-        } else {
-            this.originalSource = originalSource.toUriAsString();
-        }
-    }
-
     /**
      * @return Non-formatted destination message of transfer. For e.g. bank transfers message might
      *     need formatting and default values (use TransferMessageFormatter for this) to confirm to
@@ -204,11 +169,6 @@ public class Transfer implements UuidIdentifiable, Serializable, Cloneable {
         this.destinationMessage = destinationMessage;
     }
 
-    @JsonIgnore
-    public void setGeneratedDestinationMessage(String generatedDestinationMessage) {
-        this.destinationMessage = serializeGeneratedMessage(generatedDestinationMessage);
-    }
-
     /**
      * @return Non-formatted source message of transfer. For e.g. bank transfers message might need
      *     formatting and default values (use TransferMessageFormatter for this) to confirm to the
@@ -220,11 +180,6 @@ public class Transfer implements UuidIdentifiable, Serializable, Cloneable {
 
     public void setSourceMessage(String sourceMessage) {
         this.sourceMessage = sourceMessage;
-    }
-
-    @JsonIgnore
-    public void setGeneratedSourceMessage(String generatedSourceMessage) {
-        this.sourceMessage = serializeGeneratedMessage(generatedSourceMessage);
     }
 
     @Override
@@ -357,25 +312,6 @@ public class Transfer implements UuidIdentifiable, Serializable, Cloneable {
         return this.remittanceInformation;
     }
 
-    @JsonIgnore
-    public Optional<Transfer> getOriginalTransfer() {
-        String originalTransferSerialized = getPayload().get(TransferPayloadType.ORIGINAL_TRANSFER);
-
-        if (!Strings.isNullOrEmpty(originalTransferSerialized)) {
-            return Optional.ofNullable(
-                    SerializationUtils.deserializeFromString(
-                            originalTransferSerialized, Transfer.class));
-        }
-
-        return Optional.empty();
-    }
-
-    @JsonIgnore
-    public Optional<String> getPayloadValue(TransferPayloadType type) {
-        Map<TransferPayloadType, String> payload = getPayload();
-        return Optional.ofNullable(payload.get(type));
-    }
-
     public void addPayload(TransferPayloadType type, String value) {
         Map<TransferPayloadType, String> payload = getPayload();
         payload.put(type, value);
@@ -392,35 +328,8 @@ public class Transfer implements UuidIdentifiable, Serializable, Cloneable {
     }
 
     @JsonIgnore
-    public boolean isDestinationMessageGenerated() {
-        return !Strings.isNullOrEmpty(destinationMessage) && isMessageGenerated(destinationMessage);
-    }
-
-    @JsonIgnore
-    public boolean isSourceMessageGenerated() {
-        return isMessageGenerated(sourceMessage);
-    }
-
-    private boolean isMessageGenerated(String message) {
-        return message.startsWith(TINK_GENERATED_MESSAGE_FORMAT);
-    }
-
-    private String serializeGeneratedMessage(String message) {
-        return TINK_GENERATED_MESSAGE_FORMAT + message;
-    }
-
-    @JsonIgnore
     public boolean isOfType(TransferType type) {
         return getType() != null && getType().equals(type);
-    }
-
-    @JsonIgnore
-    public boolean isRemittanceInformationGenerated() {
-        if (remittanceInformation != null) {
-            return !Strings.isNullOrEmpty(remittanceInformation.getValue())
-                    && isMessageGenerated(remittanceInformation.getValue());
-        }
-        return false;
     }
 
     public String getOriginatingUserIp() {
