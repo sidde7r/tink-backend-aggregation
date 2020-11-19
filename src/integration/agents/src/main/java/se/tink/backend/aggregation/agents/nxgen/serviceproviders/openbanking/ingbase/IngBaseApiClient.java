@@ -12,6 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants.ErrorCodes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants.HeaderKeys;
@@ -108,6 +109,10 @@ public class IngBaseApiClient {
             if (errorResponse.getErrorCode().equals(ErrorCodes.NOT_FOUND)) {
                 clearToken();
                 throw AuthorizationError.UNAUTHORIZED.exception();
+            }
+            if (e.getResponse().getStatus() == 401) {
+                clearToken();
+                throw SessionError.SESSION_EXPIRED.exception();
             }
             throw e;
         }
