@@ -30,7 +30,10 @@ public class CredentialsCrypto {
 
     // according to
     // https://grafana.global-production.tink.network/d/000000054/aggregation-service?editPanel=8&orgId=1&from=now-2d&to=now
-    private static final int CACHE_EXPIRE_TIME = Math.toIntExact(TimeUnit.MINUTES.toSeconds(150));
+    // some refreshes stopped before finalizing DecryptCredentialsWorkerCommand or 500 exception pop
+    // up when finalizing it
+    // which causes the sensitive data to not persistent back to the customer cluster
+    private static final int CACHE_EXPIRE_TIME = Math.toIntExact(TimeUnit.MINUTES.toSeconds(780));
     public static final MetricId CREDENTIALS_DECRYPT = MetricId.newId("credentials_decrypt");
     public static final MetricId CREDENTIALS_ENCRYPT = MetricId.newId("credentials_encrypt");
 
