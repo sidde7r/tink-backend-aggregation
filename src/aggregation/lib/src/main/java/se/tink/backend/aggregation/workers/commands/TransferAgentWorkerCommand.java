@@ -131,7 +131,9 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
 
                 if (paymentControllerable.getPaymentController().isPresent()) {
                     handlePayment(
-                            paymentControllerable.getPaymentController().get(), transferRequest);
+                            paymentControllerable.getPaymentController().get(),
+                            transfer,
+                            transferRequest.getProvider().getMarket());
                 } else {
                     TransferExecutorNxgen transferExecutorNxgen = (TransferExecutorNxgen) agent;
                     operationStatusMessage = transferExecutorNxgen.execute(transfer);
@@ -418,13 +420,11 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
         }
     }
 
-    private void handlePayment(PaymentController paymentController, TransferRequest transferRequest)
+    private void handlePayment(
+            PaymentController paymentController, Transfer transfer, String market)
             throws PaymentException {
         PaymentResponse createPaymentResponse =
-                paymentController.create(
-                        PaymentRequest.of(
-                                transferRequest.getTransfer(),
-                                transferRequest.getProvider().getMarket()));
+                paymentController.create(PaymentRequest.of(transfer, market));
 
         log.info("Credentials contain - status: {} before first signing", credentials.getStatus());
 
