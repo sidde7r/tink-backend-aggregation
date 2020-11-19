@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeba
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.LoanDetailsResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
@@ -64,10 +65,17 @@ public class LoanEntity {
                 .build();
     }
 
-    private Double parseInterestRate(LoanDetailsResponse loanDetailsResponse) {
+    @JsonIgnore
+    Double parseInterestRate(LoanDetailsResponse loanDetailsResponse) {
         try {
-            return Double.valueOf(loanDetailsResponse.getLoanDetail().getInterest());
-        } catch (NumberFormatException | NullPointerException e) {
+            BigDecimal interest = new BigDecimal(loanDetailsResponse.getLoanDetail().getInterest());
+            BigDecimal frequency =
+                    new BigDecimal(loanDetailsResponse.getLoanDetail().getPaymentFrequency());
+            BigDecimal cashDebt = new BigDecimal(loanDetailsResponse.getLoanDetail().getCashDebt());
+            return interest.multiply(frequency)
+                    .divide(cashDebt, 6, RoundingMode.HALF_UP)
+                    .doubleValue();
+        } catch (NumberFormatException | NullPointerException | ArithmeticException e) {
             return null;
         }
     }
