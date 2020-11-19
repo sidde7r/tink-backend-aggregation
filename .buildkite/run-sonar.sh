@@ -16,33 +16,23 @@ rm $HOME/.sonar/sonar-scanner.zip
 export PATH=$SONAR_SCANNER_HOME/bin:$PATH
 export SONAR_SCANNER_OPTS="-server"
 
-BAZEL_OPTS="--workspace_status_command $(pwd)/stamp.sh
-      --disk_cache=/cache/v4-disk
-      --repository_cache=/cache/v4-repo
-      --deleted_packages=deb,docker
-      --curses=yes
-      --color=yes"
+./bazel-wrapper build \
+    --workspace_status_command $(pwd)/stamp.sh \
+    --disk_cache=/cache/v4-disk \
+    --repository_cache=/cache/v4-repo \
+    --deleted_packages=deb,docker \
+    --curses=yes \
+    --color=yes \
+    -- \
+    //src/...
 
 if [ "$BUILDKITE_PULL_REQUEST" != "false" ]; then
-  ./bazel-wrapper build \
-    "$BAZEL_OPTS" \
-     //src/...
-
   sonar-scanner \
     -Dsonar.pullrequest.key="$BUILDKITE_PULL_REQUEST" \
     -Dsonar.pullrequest.branch="$BUILDKITE_BRANCH" \
     -Dsonar.login="$SONAR_TOKEN"
 else
-  ./bazel-wrapper coverage \
-      "$BAZEL_OPTS" \
-      --collect_code_coverage \
-      --combined_report=lcov \
-      --coverage_report_generator=@bazel_sonarqube//:sonarqube_coverage_generator \
-       //src/...
-
   sonar-scanner \
     -Dsonar.login="$SONAR_TOKEN" \
-    -Dsonar.branch.name="$BUILDKITE_BRANCH" \
-    -Dsonar.coverage.exclusions="" \
-    -Dsonar.coverageReportPaths=bazel-out/_coverage/_coverage_report.dat
+    -Dsonar.branch.name="$BUILDKITE_BRANCH"
 fi
