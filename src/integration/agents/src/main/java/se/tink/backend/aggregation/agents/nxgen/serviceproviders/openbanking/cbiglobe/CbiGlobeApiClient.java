@@ -107,8 +107,12 @@ public class CbiGlobeApiClient {
     }
 
     protected RequestBuilder createAccountsRequestWithConsent() {
-        return createRequestInSession(getAccountsUrl())
-                .header(HeaderKeys.CONSENT_ID, persistentStorage.get(StorageKeys.CONSENT_ID));
+        RequestBuilder rb =
+                createRequestInSession(getAccountsUrl())
+                        .header(
+                                HeaderKeys.CONSENT_ID,
+                                persistentStorage.get(StorageKeys.CONSENT_ID));
+        return addPsuIpAddressHeaderIfNeeded(rb);
     }
 
     private URL getAccountsUrl() {
