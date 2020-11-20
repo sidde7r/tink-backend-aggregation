@@ -406,6 +406,8 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         accountDataCache.cacheAccountFeatures(account.getBankId(), accountFeatures);
     }
 
+    // Note: this method should not be called simultaneously because that may cause unwanted side
+    // effects especially during the PSD2 migration process
     public Account sendAccountToUpdateService(String bankAccountId) {
         Optional<AccountData> optionalAccountData =
                 accountDataCache.getFilteredAccountDataByBankAccountId(bankAccountId);

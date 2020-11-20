@@ -231,6 +231,8 @@ public class AgentWorkerCommandContext extends AgentWorkerContext {
         getAccountDataCache()
                 .getFilteredAccounts()
                 .forEach(
+                        // Note: these calls should be done synchronously, making them
+                        // simultaneous can cause unwanted effects
                         filteredAccount -> sendAccountToUpdateService(filteredAccount.getBankId()));
     }
 
