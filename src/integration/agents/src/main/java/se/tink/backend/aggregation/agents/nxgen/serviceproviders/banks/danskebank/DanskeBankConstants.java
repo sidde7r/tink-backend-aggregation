@@ -1,9 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank;
 
 import com.google.common.base.Strings;
-import com.google.common.collect.ImmutableList;
 import java.text.MessageFormat;
-import java.util.List;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.utils.deviceprofile.DeviceProfileConfiguration;
@@ -142,11 +140,9 @@ public class DanskeBankConstants {
         public static final String DEVICE_TYPE_DANSKEID = "DANSKEID";
         public static final String USER_ID_TYPE = "PRIV";
         public static final String SUPPRESS_PUSH = "N";
-        public static final String DEFAULT_LANGUAGE_CODE = "EN";
         // This is the text shown in the code app.
         public static final LocalizableKey REGISTER_TRANSACTION_TEXT =
                 new LocalizableKey("Register with Danske Mobile Banking");
-        public static final List<String> ACCEPTABLE_LANGUAGE_CODES = ImmutableList.of("EN", "DA");
     }
 
     public static class Account {

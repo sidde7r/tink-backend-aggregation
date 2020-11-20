@@ -79,7 +79,7 @@ public final class SdcSeAgent extends SdcAgent
 
     @Override
     protected SdcApiClient createApiClient(SdcConfiguration agentConfiguration) {
-        return new SdcApiClient(client, agentConfiguration);
+        return new SdcApiClient(client, agentConfiguration, catalog);
     }
 
     @Override

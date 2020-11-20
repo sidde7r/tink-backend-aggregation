@@ -4,6 +4,7 @@ import com.google.common.base.Strings;
 import java.util.Map;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.BecConstants.ErrorMessageLocalizedParts;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import src.integration.nemid.NemIdSupportedLanguageCode;
 
 @JsonObject
 public class BecErrorResponse {
@@ -33,7 +34,7 @@ public class BecErrorResponse {
     }
 
     private boolean doesMessageContainAnyLocalizedMessagePart(
-            Map<String, String> localizedErrorParts) {
+            Map<NemIdSupportedLanguageCode, String> localizedErrorParts) {
         return localizedErrorParts.values().stream()
                 .anyMatch(
                         errorPart -> getMessage().toLowerCase().contains(errorPart.toLowerCase()));

@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.dk.banks.sdc.authenticator;
 
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.mock;
 
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Credentials;
@@ -16,6 +17,7 @@ import se.tink.backend.aggregation.nxgen.http.LegacyTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.libraries.i18n.Catalog;
 
 public class SdcDkPinAuthenticatorTest {
 
@@ -37,7 +39,8 @@ public class SdcDkPinAuthenticatorTest {
 
         TinkHttpClient tinkHttpClient = new LegacyTinkHttpClient();
         tinkHttpClient.addFilter(new SdcExceptionFilter());
-        SdcApiClient apiClient = new SdcApiClient(tinkHttpClient, configuration);
+        SdcApiClient apiClient =
+                new SdcApiClient(tinkHttpClient, configuration, mock(Catalog.class));
 
         new SdcPinAuthenticator(apiClient, sessionStorage, configuration)
                 .authenticate(username, password);

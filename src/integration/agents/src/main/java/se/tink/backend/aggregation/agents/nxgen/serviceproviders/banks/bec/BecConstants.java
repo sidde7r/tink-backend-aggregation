@@ -1,12 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec;
 
 import com.google.common.collect.ImmutableMap;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
+import src.integration.nemid.NemIdSupportedLanguageCode;
 
 public final class BecConstants {
 
@@ -60,20 +59,6 @@ public final class BecConstants {
         public static final String CIPHER = "AES/CBC/PKCS5Padding";
     }
 
-    public static final class BecNemIdLocale {
-
-        private static final String EN = "en";
-        private static final String DA = "da";
-        private static final List<String> SUPPORTED_LOCALES = Arrays.asList(EN, DA);
-
-        public static final String DEFAULT_USER_LOCALE = EN;
-
-        public static boolean isLocaleSupported(String locale) {
-            return SUPPORTED_LOCALES.stream()
-                    .anyMatch(supportedLocale -> supportedLocale.equalsIgnoreCase(locale));
-        }
-    }
-
     public static final class Header {
         static final String PRAGMA_KEY = "Pragma";
         static final String PRAGMA_VALUE = "BECJson/1.0";
@@ -95,19 +80,21 @@ public final class BecConstants {
     }
 
     public static final class ErrorMessageLocalizedParts {
-        public static final Map<String, String> NO_MORTGAGE =
+        public static final Map<NemIdSupportedLanguageCode, String> NO_MORTGAGE =
                 ImmutableMap.of(
-                        BecNemIdLocale.EN, "you have not taken out a mortgage loan through us",
-                        BecNemIdLocale.DA, "Du har ikke optaget et realkreditlån gennem os");
-        public static final Map<String, String> LOAN_NO_DETAILS_EXIST =
+                        NemIdSupportedLanguageCode.EN,
+                                "you have not taken out a mortgage loan through us",
+                        NemIdSupportedLanguageCode.DA,
+                                "Du har ikke optaget et realkreditlån gennem os");
+        public static final Map<NemIdSupportedLanguageCode, String> LOAN_NO_DETAILS_EXIST =
                 ImmutableMap.of(
-                        BecNemIdLocale.EN, "no details exist",
-                        BecNemIdLocale.DA, "ingen detaljer findes");
-        public static final Map<String, String> FUNCTION_NOT_AVAILABLE =
+                        NemIdSupportedLanguageCode.EN, "no details exist",
+                        NemIdSupportedLanguageCode.DA, "ingen detaljer findes");
+        public static final Map<NemIdSupportedLanguageCode, String> FUNCTION_NOT_AVAILABLE =
                 ImmutableMap.of(
-                        BecNemIdLocale.EN,
+                        NemIdSupportedLanguageCode.EN,
                                 "the required function is not currently available. try again later.",
-                        BecNemIdLocale.DA,
+                        NemIdSupportedLanguageCode.DA,
                                 "den nødvendige funktion er ikke tilgængelig i øjeblikket. Prøv igen senere.");
     }
 
