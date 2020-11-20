@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.danskebank;
 
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.UkOpenBankingV31Ais.defaultCreditCardAccountMapper;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.UkOpenBankingV31Ais.defaultTransactionalAccountMapper;
 
 import java.util.List;
@@ -40,10 +39,12 @@ public abstract class DanskeBankV31EUBaseAgent extends NextGenerationAgent
     public DanskeBankV31EUBaseAgent(
             AgentComponentProvider componentProvider,
             AgentsServiceConfiguration configuration,
-            UkOpenBankingAisConfig aisConfig) {
+            UkOpenBankingAisConfig aisConfig,
+            CreditCardAccountMapper creditCardAccountMapper) {
         super(componentProvider);
         ukOpenBankingBaseAgent =
-                new UkOpenBankingBaseAgentImpl(componentProvider, configuration, aisConfig);
+                new UkOpenBankingBaseAgentImpl(
+                        componentProvider, configuration, aisConfig, creditCardAccountMapper);
         this.aisConfig = aisConfig;
     }
 
@@ -143,7 +144,8 @@ public abstract class DanskeBankV31EUBaseAgent extends NextGenerationAgent
         UkOpenBankingBaseAgentImpl(
                 AgentComponentProvider componentProvider,
                 AgentsServiceConfiguration configuration,
-                UkOpenBankingAisConfig agentConfig) {
+                UkOpenBankingAisConfig agentConfig,
+                CreditCardAccountMapper creditCardAccountMapper) {
             super(
                     componentProvider,
                     createEidasJwtSigner(
@@ -151,8 +153,8 @@ public abstract class DanskeBankV31EUBaseAgent extends NextGenerationAgent
                             componentProvider.getContext(),
                             UkOpenBankingBaseAgentImpl.class),
                     agentConfig);
-            creditCardAccountMapper = defaultCreditCardAccountMapper();
-            transactionalAccountMapper = defaultTransactionalAccountMapper();
+            this.creditCardAccountMapper = creditCardAccountMapper;
+            this.transactionalAccountMapper = defaultTransactionalAccountMapper();
         }
 
         UkOpenBankingBaseAgentImpl(
