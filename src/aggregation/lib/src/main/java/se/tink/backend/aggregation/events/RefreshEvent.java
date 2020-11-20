@@ -4,14 +4,12 @@ import javax.annotation.Nullable;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import se.tink.eventproducerservice.events.grpc.RefreshResultEventProto;
 
 @Builder
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 @Getter
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class RefreshEvent {
     String providerName;
     String correlationId;
