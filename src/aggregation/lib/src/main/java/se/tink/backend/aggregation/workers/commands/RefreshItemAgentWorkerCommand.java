@@ -198,7 +198,8 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
     private void handleFailedRefreshDueToBankError(MetricAction action, BankServiceException e) {
         // The way frontend works now the message will not be displayed to the user.
         context.updateStatus(
-                CredentialsStatus.UNCHANGED, context.getCatalog().getString(e.getUserMessage()));
+                CredentialsStatus.TEMPORARY_ERROR,
+                context.getCatalog().getString(e.getUserMessage()));
         action.unavailable();
         AdditionalInfo errorInfo = ADDITIONAL_INFO_ERROR_MAPPER.get(e.getError());
         RefreshEvent refreshEvent = getRefreshEvent(errorInfo);
