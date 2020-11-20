@@ -1,13 +1,16 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.ing.helper;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.iface.Filter;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
@@ -18,10 +21,16 @@ public class IngRetryFilterTest {
 
     private IngRetryFilter ingRetryFilter;
 
+    @Mock private BackOffProvider backOffProvider;
+
+    @Before
+    public void setup() {
+        when(backOffProvider.calculate(anyInt())).thenReturn(0L);
+        ingRetryFilter = new IngRetryFilter(2, backOffProvider);
+    }
+
     @Test
     public void shouldRetry() {
-        ingRetryFilter = new IngRetryFilter(2, 0);
-
         Filter nextFilter = mock(Filter.class);
         HttpResponse response = mockResponse(429);
         when(nextFilter.handle(any())).thenReturn(response);
@@ -34,8 +43,6 @@ public class IngRetryFilterTest {
 
     @Test
     public void shouldRetryOnExceptionUntilSuccess() {
-        ingRetryFilter = new IngRetryFilter(2, 0);
-
         Filter nextFilter = mock(Filter.class);
         HttpResponse response = mockResponse(429);
         when(nextFilter.handle(any()))
@@ -50,8 +57,6 @@ public class IngRetryFilterTest {
 
     @Test
     public void shouldNotRetry() {
-        ingRetryFilter = new IngRetryFilter(2, 0);
-
         Filter nextFilter = mock(Filter.class);
         HttpResponse response = mockResponse(500);
         when(nextFilter.handle(any())).thenReturn(response);

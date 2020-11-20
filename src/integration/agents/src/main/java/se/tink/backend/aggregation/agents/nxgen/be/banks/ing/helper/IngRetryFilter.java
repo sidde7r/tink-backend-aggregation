@@ -4,27 +4,30 @@ import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.AbstractRetry
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
+/** A retry filter that uses backOff provider to calculate sleep times between tries */
 public class IngRetryFilter extends AbstractRetryFilter {
 
-    /**
-     * @param maxNumRetries Number of additional retries to be performed.
-     * @param retrySleepMilliseconds Time im milliseconds that will be spent sleeping between
-     */
-    public IngRetryFilter(int maxNumRetries, long retrySleepMilliseconds) {
-        super(maxNumRetries, retrySleepMilliseconds);
+    private final BackOffProvider backOffProvider;
+
+    public IngRetryFilter(int maxNumRetries, BackOffProvider backOffProvider) {
+        super(maxNumRetries, 0L);
+        this.backOffProvider = backOffProvider;
     }
 
-    @Override
     protected boolean shouldRetry(HttpResponse response) {
         return response.getStatus() == 429;
     }
 
-    @Override
     protected boolean shouldRetry(RuntimeException exception) {
         if (exception instanceof HttpResponseException) {
             HttpResponseException responseException = (HttpResponseException) exception;
             return responseException.getResponse().getStatus() == 429;
         }
         return false;
+    }
+
+    @Override
+    protected long getRetrySleepMilliseconds(int retry) {
+        return backOffProvider.calculate(retry);
     }
 }
