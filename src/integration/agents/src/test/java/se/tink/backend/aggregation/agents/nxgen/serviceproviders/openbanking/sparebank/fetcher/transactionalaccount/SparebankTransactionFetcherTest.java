@@ -8,8 +8,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import java.util.Date;
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankApiClient;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
@@ -24,10 +23,9 @@ public class SparebankTransactionFetcherTest {
     private static HttpResponse httpResponse;
 
     private static SparebankTransactionFetcher transactionFetcher;
-    private static Date anyDate = new Date();
 
-    @BeforeClass
-    public static void setup() {
+    @Before
+    public void setup() {
         apiClient = mock(SparebankApiClient.class);
         account = mock(TransactionalAccount.class);
         when(account.getApiIdentifier()).thenReturn("doesNotMatter");
@@ -39,11 +37,10 @@ public class SparebankTransactionFetcherTest {
     @Test
     public void shouldConsumeExceptionAndReturnEmptyResponseInCaseOfScaRedirectException() {
         when(httpResponse.getBody(any())).thenReturn("SomethingSomethingscaRedirect12445zxcvasdf");
-        when(apiClient.fetchTransactions(anyString(), any(Date.class), any(Date.class)))
+        when(apiClient.fetchTransactions(anyString()))
                 .thenThrow(new HttpResponseException("", null, httpResponse));
 
-        PaginatorResponse response =
-                transactionFetcher.getTransactionsFor(account, anyDate, anyDate);
+        PaginatorResponse response = transactionFetcher.getTransactionsFor(account, null);
 
         assertEquals(0, response.getTinkTransactions().size());
         assertEquals(false, response.canFetchMore().get());
@@ -54,12 +51,10 @@ public class SparebankTransactionFetcherTest {
         when(httpResponse.getBody(any())).thenReturn("123456");
         String message = "A example message to test rethrow";
         Exception exception = new HttpResponseException(message, null, httpResponse);
-        when(apiClient.fetchTransactions(anyString(), any(Date.class), any(Date.class)))
-                .thenThrow(exception);
+        when(apiClient.fetchTransactions(anyString())).thenThrow(exception);
 
         Throwable throwable =
-                catchThrowable(
-                        () -> transactionFetcher.getTransactionsFor(account, anyDate, anyDate));
+                catchThrowable(() -> transactionFetcher.getTransactionsFor(account, null));
 
         assertThat(throwable).isEqualTo(exception);
     }

@@ -1,8 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.fetcher.transactionalaccount;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -15,7 +14,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.fetcher.transactionalaccount.rpc.AccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.util.AccountTestData;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.util.CustomAsserts;
@@ -37,6 +35,8 @@ public class SparebankAccountFetcherTest {
     public void shouldParseJsonResponseToTransactionalAccountCorrectly() {
         SparebankAccountFetcher accountFetcher = new SparebankAccountFetcher(apiClient);
         when(apiClient.fetchAccounts()).thenReturn(AccountTestData.getAccountResponse());
+        when(apiClient.fetchBalances(any(String.class)))
+                .thenReturn(AccountTestData.getBalanceResponse());
 
         Collection<TransactionalAccount> accounts = accountFetcher.fetchAccounts();
 
@@ -59,7 +59,7 @@ public class SparebankAccountFetcherTest {
         CustomAsserts.assertTransactionalAccountsEqual(
                 iterator.next(),
                 AccountTypes.OTHER,
-                ExactCurrencyAmount.of(10000.0, "NOK"),
+                ExactCurrencyAmount.of(100.26, "NOK"),
                 "91351631959",
                 "NO8591351631959",
                 "",
@@ -86,17 +86,5 @@ public class SparebankAccountFetcherTest {
         Collection<TransactionalAccount> accounts = accountFetcher.fetchAccounts();
 
         assertEquals(0, accounts.size());
-    }
-
-    @Test
-    public void shouldThrowIfNoBalancesInAccountResponse() {
-        SparebankAccountFetcher accountFetcher = new SparebankAccountFetcher(apiClient);
-        when(apiClient.fetchAccounts())
-                .thenReturn(AccountTestData.getAccountResponseWithNoBalance());
-
-        Throwable throwable = catchThrowable(accountFetcher::fetchAccounts);
-        assertThat(throwable)
-                .isInstanceOf(IllegalStateException.class)
-                .hasMessage(SparebankConstants.ErrorMessages.NO_AMOUNT_FOUND);
     }
 }

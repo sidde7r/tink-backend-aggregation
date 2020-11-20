@@ -48,6 +48,7 @@ public class SparebankAuthenticatorTest {
         HttpResponse httpResponse = mock(HttpResponse.class);
         when(httpResponse.getBody(String.class)).thenReturn(getScaResponseString());
         when(httpResponse.getBody(ScaResponse.class)).thenReturn(getScaResponse());
+        when(httpResponse.hasBody()).thenReturn(true);
         HttpResponseException httpResponseException =
                 new HttpResponseException("", null, httpResponse);
         when(apiClient.getScaRedirect(anyString())).thenThrow(httpResponseException);
