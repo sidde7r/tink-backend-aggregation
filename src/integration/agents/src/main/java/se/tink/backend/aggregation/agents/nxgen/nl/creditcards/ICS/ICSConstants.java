@@ -112,6 +112,7 @@ public class ICSConstants {
         public static final String TOKEN = "token";
         public static final String ACCOUNT_ID = "accountId";
         public static final String TRANSACTION_FROM_DATE = "transactionFromDate";
+        public static final String EXPIRATION_DATE = "expirationDate";
     }
 
     public static class HttpClient {

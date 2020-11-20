@@ -48,13 +48,15 @@ public class ICSOAuthAuthenticator implements OAuth2Authenticator {
 
         storeTransactionFromDate(accountRequestData.getTransactionFromDate());
         sessionStorage.put(StorageKeys.STATE, state);
+        // refresh expiry date is sent in the account request data, not in the token
+        sessionStorage.put(StorageKeys.EXPIRATION_DATE, accountRequestData.getExpirationDate());
         return client.createAuthorizeRequest(state, accountRequestData.getAccountRequestId())
                 .getUrl();
     }
 
     @Override
     public OAuth2Token exchangeAuthorizationCode(String code) throws BankServiceException {
-        return client.fetchToken(code);
+        return addRefreshExpireToToken(client.fetchToken(code));
     }
 
     @Override
@@ -83,5 +85,19 @@ public class ICSOAuthAuthenticator implements OAuth2Authenticator {
 
     private void storeTransactionFromDate(Date date) {
         persistentStorage.put(StorageKeys.TRANSACTION_FROM_DATE, date);
+    }
+
+    private OAuth2Token addRefreshExpireToToken(OAuth2Token token) {
+        if (!token.hasRefreshExpire()) {
+            sessionStorage
+                    .get(StorageKeys.EXPIRATION_DATE, Date.class)
+                    .ifPresent(
+                            expirationDate -> {
+                                final long millisToExpire =
+                                        expirationDate.getTime() - new Date().getTime();
+                                token.setRefreshExpiresInSeconds(millisToExpire / 1000);
+                            });
+        }
+        return token;
     }
 }
