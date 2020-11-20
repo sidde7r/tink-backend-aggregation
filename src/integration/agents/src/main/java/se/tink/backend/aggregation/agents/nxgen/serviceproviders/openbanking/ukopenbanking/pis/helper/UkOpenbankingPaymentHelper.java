@@ -8,7 +8,7 @@ import java.util.Objects;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingV31PaymentConstants;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.rpc.international.FundsConfirmationResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.rpc.FundsConfirmationResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.core.account.GenericTypeMapper;
@@ -50,10 +50,7 @@ public class UkOpenbankingPaymentHelper {
                 ImmutableMap.of(
                         PaymentType.DOMESTIC, new DomesticPaymentApiClientWrapper(apiClient),
                         PaymentType.DOMESTIC_FUTURE,
-                                new DomesticScheduledPaymentApiClientWrapper(apiClient),
-                        PaymentType.SEPA, new InternationalPaymentApiClientWrapper(apiClient),
-                        PaymentType.INTERNATIONAL,
-                                new InternationalPaymentApiClientWrapper(apiClient));
+                                new DomesticScheduledPaymentApiClientWrapper(apiClient));
 
         this.clock = clock;
     }

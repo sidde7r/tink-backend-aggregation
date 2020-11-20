@@ -94,46 +94,4 @@ public class UkOpenBankingPisConfiguration implements UkOpenBankingPisConfig {
                         UkOpenBankingV31PaymentConstants.ApiServices.UrlParameterKeys.PAYMENT_ID,
                         paymentId);
     }
-
-    @Override
-    public URL createInternationalPaymentConsentURL() {
-        return pisBaseURL.concat(
-                UkOpenBankingPaymentConstants.ApiServices.International.PAYMENT_CONSENT);
-    }
-
-    @Override
-    public URL getInternationalPaymentConsentURL(String consentId) {
-        return pisBaseURL
-                .concat(
-                        UkOpenBankingPaymentConstants.ApiServices.International
-                                .PAYMENT_CONSENT_STATUS)
-                .parameter(
-                        UkOpenBankingV31PaymentConstants.ApiServices.UrlParameterKeys.CONSENT_ID,
-                        consentId);
-    }
-
-    @Override
-    public URL getInternationalFundsConfirmationURL(String consentId) {
-        return pisBaseURL
-                .concat(
-                        UkOpenBankingPaymentConstants.ApiServices.International
-                                .PAYMENT_FUNDS_CONFIRMATION)
-                .parameter(
-                        UkOpenBankingV31PaymentConstants.ApiServices.UrlParameterKeys.CONSENT_ID,
-                        consentId);
-    }
-
-    @Override
-    public URL createInternationalPaymentURL() {
-        return pisBaseURL.concat(UkOpenBankingPaymentConstants.ApiServices.International.PAYMENT);
-    }
-
-    @Override
-    public URL getInternationalPayment(String internationalPaymentId) {
-        return pisBaseURL
-                .concat(UkOpenBankingPaymentConstants.ApiServices.International.PAYMENT_STATUS)
-                .parameter(
-                        UkOpenBankingV31PaymentConstants.ApiServices.UrlParameterKeys.PAYMENT_ID,
-                        internationalPaymentId);
-    }
 }
