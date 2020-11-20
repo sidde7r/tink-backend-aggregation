@@ -58,7 +58,7 @@ public class PushStep extends AbstractAuthenticationStep {
         }
 
         LOGGER.info("SCA polling timed out.");
-        throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception();
+        throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception("SCA polling timed out");
     }
 
     private String getProcessId() {

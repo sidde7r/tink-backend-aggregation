@@ -175,7 +175,7 @@ public class LoginStep extends AbstractAuthenticationStep {
                                     + error.getMessage());
                 } else if (error.getErrorCode() == ErrorCodes.INVALID_PIN) {
                     throw LoginError.INCORRECT_CHALLENGE_RESPONSE.exception(
-                            "Suppied otp or pinpad code seems to be invalid. Message from the bank: "
+                            "Supplied otp or pinpad code seems to be invalid. Message from the bank: "
                                     + error.getMessage());
                 }
                 throw LoginError.INCORRECT_CREDENTIALS.exception(hre);
