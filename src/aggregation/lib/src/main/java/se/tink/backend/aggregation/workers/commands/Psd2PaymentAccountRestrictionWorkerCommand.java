@@ -72,10 +72,8 @@ public class Psd2PaymentAccountRestrictionWorkerCommand extends AgentWorkerComma
                     .getFilteredAccountData()
                     .forEach(
                             accountData -> { // we can't register the filter yet as we need to
-                                // figure out which has been restricted and delete
+                                // figure out which accounts have been restricted and delete
                                 // these
-                                // currently we do not want to restrict anything - just see this
-                                // command running
                                 Account account = accountData.getAccount();
                                 boolean shouldBeFilteredOut =
                                         shouldFilterRestrictedAccount(account);
