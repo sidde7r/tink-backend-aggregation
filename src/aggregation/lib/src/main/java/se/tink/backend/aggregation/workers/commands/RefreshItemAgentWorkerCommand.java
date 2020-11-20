@@ -34,6 +34,7 @@ import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceErro
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.compliance.customer_restrictions.CustomerDataFetchingRestrictions;
 import se.tink.backend.aggregation.events.DataTrackerEventProducer;
+import se.tink.backend.aggregation.events.RefreshEvent;
 import se.tink.backend.aggregation.events.RefreshEventProducer;
 import se.tink.backend.aggregation.workers.commands.metrics.MetricsCommand;
 import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
@@ -117,14 +118,10 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
 
     @Override
     protected AgentWorkerCommandResult doExecute() throws Exception {
-        if (isNotAllowedToRefreshItem()) {
-            log.info(
-                    "Item: {} is restricted from refresh - restrictions: {}, credentialsId: {}",
-                    item,
-                    dataFetchingRestrictions,
-                    context.getRequest().getCredentials().getId());
+        if (isNotAllowedToRefresh()) {
             return AgentWorkerCommandResult.CONTINUE;
         }
+
         metrics.start(AgentWorkerOperationMetricType.EXECUTE_COMMAND);
         try {
             MetricAction action =
@@ -133,79 +130,102 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
                 log.info("Refreshing item: {}", item.name());
 
                 Agent agent = context.getAgent();
-                boolean fullSuccessfulRefresh = true;
-                if (agent instanceof DeprecatedRefreshExecutor) {
-                    ((DeprecatedRefreshExecutor) agent).refresh();
-                } else {
-                    fullSuccessfulRefresh =
-                            RefreshExecutorUtils.executeSegregatedRefresher(agent, item, context);
-                }
-
-                if (isAbleToRefreshItem(agent, item)) {
-                    if (!fullSuccessfulRefresh) {
-                        action.partiallyCompleted();
-                    } else {
-                        action.completed();
-                    }
-                }
+                boolean fullSuccessfulRefresh = executeRefresh(agent);
+                markRefreshAsSuccessful(action, agent, fullSuccessfulRefresh);
             } catch (BankServiceException e) {
-                // The way frontend works now the message will not be displayed to the user.
-                context.updateStatus(
-                        CredentialsStatus.TEMPORARY_ERROR,
-                        context.getCatalog().getString(e.getUserMessage()));
-                action.unavailable();
-                refreshEventProducer.sendEventForRefreshWithErrorInBankSide(
-                        context.getRequest().getProvider().getName(),
-                        context.getCorrelationId(),
-                        context.getRequest().getProvider().getMarket(),
-                        context.getRequest().getCredentials().getId(),
-                        context.getAppId(),
-                        context.getClusterId(),
-                        context.getRequest().getCredentials().getUserId(),
-                        ADDITIONAL_INFO_ERROR_MAPPER.get(e.getError()),
-                        item);
-                log.warn(
-                        "BankServiceException is received and credentials status set UNCHANGED.",
-                        e);
+                handleFailedRefreshDueToBankError(action, e);
                 return AgentWorkerCommandResult.ABORT;
-            } catch (java.lang.NullPointerException e) {
+            } catch (NullPointerException e) {
                 log.warn(
                         "Couldn't refresh RefreshableItem({}) because of NullPointerException.",
                         item,
                         e);
-                action.failed();
-                refreshEventProducer.sendEventForRefreshWithErrorInTinkSide(
-                        context.getRequest().getProvider().getName(),
-                        context.getCorrelationId(),
-                        context.getRequest().getProvider().getMarket(),
-                        context.getRequest().getCredentials().getId(),
-                        context.getAppId(),
-                        context.getClusterId(),
-                        context.getRequest().getCredentials().getUserId(),
-                        AdditionalInfo.INTERNAL_SERVER_ERROR,
-                        item);
-                throw e;
+                handleFailedRefreshDueToTinkException(
+                        action, e, AdditionalInfo.INTERNAL_SERVER_ERROR);
             } catch (Exception e) {
-
                 log.warn("Couldn't refresh RefreshableItem({}) because of exception.", item, e);
-                action.failed();
-                refreshEventProducer.sendEventForRefreshWithErrorInTinkSide(
-                        context.getRequest().getProvider().getName(),
-                        context.getCorrelationId(),
-                        context.getRequest().getProvider().getMarket(),
-                        context.getRequest().getCredentials().getId(),
-                        context.getAppId(),
-                        context.getClusterId(),
-                        context.getRequest().getCredentials().getUserId(),
-                        AdditionalInfo.ERROR_INFO,
-                        item);
-                throw e;
+                handleFailedRefreshDueToTinkException(action, e, AdditionalInfo.ERROR_INFO);
             }
         } finally {
             metrics.stop();
         }
 
         return AgentWorkerCommandResult.CONTINUE;
+    }
+
+    private boolean isNotAllowedToRefresh() {
+        try {
+            log.info(
+                    "[Restrict] Restrictions for credentialsId: {} are: {}",
+                    context.getRequest().getCredentials().getId(),
+                    dataFetchingRestrictions);
+            if (isNotAllowedToRefreshItem()) {
+                log.info(
+                        "Item: {} is restricted from refresh - restrictions: {}, credentialsId: {}",
+                        item,
+                        dataFetchingRestrictions,
+                        context.getRequest().getCredentials().getId());
+                return true;
+            }
+        } catch (RuntimeException e) {
+            log.warn("[Restrict] Failed: ", e);
+        }
+        return false;
+    }
+
+    private boolean executeRefresh(Agent agent) throws Exception {
+        boolean fullSuccessfulRefresh = true;
+        if (agent instanceof DeprecatedRefreshExecutor) {
+            ((DeprecatedRefreshExecutor) agent).refresh();
+        } else {
+            fullSuccessfulRefresh =
+                    RefreshExecutorUtils.executeSegregatedRefresher(agent, item, context);
+        }
+        return fullSuccessfulRefresh;
+    }
+
+    private void markRefreshAsSuccessful(
+            MetricAction action, Agent agent, boolean fullSuccessfulRefresh) {
+        if (isAbleToRefreshItem(agent, item)) {
+            if (!fullSuccessfulRefresh) {
+                action.partiallyCompleted();
+            } else {
+                action.completed();
+            }
+        }
+    }
+
+    private void handleFailedRefreshDueToBankError(MetricAction action, BankServiceException e) {
+        // The way frontend works now the message will not be displayed to the user.
+        context.updateStatus(
+                CredentialsStatus.UNCHANGED, context.getCatalog().getString(e.getUserMessage()));
+        action.unavailable();
+        AdditionalInfo errorInfo = ADDITIONAL_INFO_ERROR_MAPPER.get(e.getError());
+        RefreshEvent refreshEvent = getRefreshEvent(errorInfo);
+        refreshEventProducer.sendEventForRefreshWithErrorInBankSide(refreshEvent);
+        log.warn("BankServiceException is received and credentials status set UNCHANGED.", e);
+    }
+
+    private void handleFailedRefreshDueToTinkException(
+            MetricAction action, Exception e, AdditionalInfo errorInfo) throws Exception {
+        action.failed();
+        RefreshEvent refreshEvent = getRefreshEvent(errorInfo);
+        refreshEventProducer.sendEventForRefreshWithErrorInTinkSide(refreshEvent);
+        throw e;
+    }
+
+    private RefreshEvent getRefreshEvent(AdditionalInfo errorInfo) {
+        return RefreshEvent.builder()
+                .providerName(context.getRequest().getProvider().getName())
+                .correlationId(context.getCorrelationId())
+                .marketCode(context.getRequest().getProvider().getMarket())
+                .credentialsId(context.getRequest().getCredentials().getId())
+                .appId(context.getAppId())
+                .clusterId(context.getClusterId())
+                .userId(context.getRequest().getCredentials().getUserId())
+                .additionalInfo(errorInfo)
+                .refreshableItem(item)
+                .build();
     }
 
     private boolean isNotAllowedToRefreshItem() {
