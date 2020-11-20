@@ -133,14 +133,20 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
                 log.info("Refreshing item: {}", item.name());
 
                 Agent agent = context.getAgent();
+                boolean fullSuccessfulRefresh = true;
                 if (agent instanceof DeprecatedRefreshExecutor) {
                     ((DeprecatedRefreshExecutor) agent).refresh();
                 } else {
-                    RefreshExecutorUtils.executeSegregatedRefresher(agent, item, context);
+                    fullSuccessfulRefresh =
+                            RefreshExecutorUtils.executeSegregatedRefresher(agent, item, context);
                 }
 
                 if (isAbleToRefreshItem(agent, item)) {
-                    action.completed();
+                    if (!fullSuccessfulRefresh) {
+                        action.partiallyCompleted();
+                    } else {
+                        action.completed();
+                    }
                 }
             } catch (BankServiceException e) {
                 // The way frontend works now the message will not be displayed to the user.

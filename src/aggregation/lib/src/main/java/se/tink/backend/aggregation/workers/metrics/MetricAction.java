@@ -66,12 +66,17 @@ public class MetricAction implements MetricActionIface {
         mark(Outcome.UNAVAILABLE);
     }
 
+    public void partiallyCompleted() {
+        mark(Outcome.PARTIALLY_COMPLETED);
+    }
+
     private void mark(Outcome outcome) {
         metricRegistry.meter(metricPath.label("outcome", outcome.getMetricName())).inc();
     }
 
     private enum Outcome {
         COMPLETED,
+        PARTIALLY_COMPLETED,
         FAILED,
         CANCELLED,
         UNAVAILABLE;

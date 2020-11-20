@@ -5,7 +5,7 @@ import java.util.List;
 
 public class MetricActionComposite implements MetricActionIface {
 
-    private List<MetricActionIface> metricActions;
+    private final List<MetricActionIface> metricActions;
 
     public MetricActionComposite(MetricActionIface... metricActions) {
         this.metricActions = Arrays.asList(metricActions);
@@ -13,7 +13,7 @@ public class MetricActionComposite implements MetricActionIface {
 
     @Override
     public void start() {
-        metricActions.forEach(ma -> ma.start());
+        metricActions.forEach(MetricActionIface::start);
     }
 
     @Override
@@ -23,26 +23,31 @@ public class MetricActionComposite implements MetricActionIface {
 
     @Override
     public void stop() {
-        metricActions.forEach(ma -> ma.stop());
+        metricActions.forEach(MetricActionIface::stop);
     }
 
     @Override
     public void completed() {
-        metricActions.forEach(ma -> ma.completed());
+        metricActions.forEach(MetricActionIface::completed);
     }
 
     @Override
     public void failed() {
-        metricActions.forEach(ma -> ma.failed());
+        metricActions.forEach(MetricActionIface::failed);
     }
 
     @Override
     public void cancelled() {
-        metricActions.forEach(ma -> ma.cancelled());
+        metricActions.forEach(MetricActionIface::cancelled);
     }
 
     @Override
     public void unavailable() {
-        metricActions.forEach(ma -> ma.unavailable());
+        metricActions.forEach(MetricActionIface::unavailable);
+    }
+
+    @Override
+    public void partiallyCompleted() {
+        metricActions.forEach(MetricActionIface::partiallyCompleted);
     }
 }

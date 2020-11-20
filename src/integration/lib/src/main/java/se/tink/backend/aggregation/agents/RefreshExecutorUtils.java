@@ -5,8 +5,7 @@ import com.google.common.collect.ImmutableMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.agent.Agent;
@@ -16,8 +15,8 @@ import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.libraries.credentials.service.RefreshableItem;
 
+@Slf4j
 public final class RefreshExecutorUtils {
-    private static Logger log = LoggerFactory.getLogger(RefreshExecutorUtils.class);
 
     private RefreshExecutorUtils() {
         throw new AssertionError();
@@ -57,7 +56,7 @@ public final class RefreshExecutorUtils {
         return REFRESHABLEITEM_EXECUTOR_MAP.get(item);
     }
 
-    public static void executeSegregatedRefresher(
+    public static boolean executeSegregatedRefresher(
             Agent agent, RefreshableItem item, AgentContext context) {
         Class executorKlass = RefreshExecutorUtils.getRefreshExecutor(item);
         if (executorKlass == null) {
@@ -87,8 +86,8 @@ public final class RefreshExecutorUtils {
                     cacheCheckingAccounts(agent, context);
                     break;
                 case CHECKING_TRANSACTIONS:
-                    fetchCheckingTransactions((RefreshCheckingAccountsExecutor) agent, context);
-                    break;
+                    return fetchCheckingTransactions(
+                            (RefreshCheckingAccountsExecutor) agent, context);
                 case SAVING_ACCOUNTS:
                     List<Account> savingAccounts =
                             ((RefreshSavingsAccountsExecutor) agent)
@@ -98,8 +97,7 @@ public final class RefreshExecutorUtils {
                     context.cacheAccounts(savingAccounts);
                     break;
                 case SAVING_TRANSACTIONS:
-                    fetchSavingTransactions((RefreshSavingsAccountsExecutor) agent, context);
-                    break;
+                    return fetchSavingTransactions((RefreshSavingsAccountsExecutor) agent, context);
                 case CREDITCARD_ACCOUNTS:
                     List<Account> creditCardAccounts =
                             ((RefreshCreditCardAccountsExecutor) agent)
@@ -109,8 +107,8 @@ public final class RefreshExecutorUtils {
                     context.cacheAccounts(creditCardAccounts);
                     break;
                 case CREDITCARD_TRANSACTIONS:
-                    fetchCreditCardTransactions((RefreshCreditCardAccountsExecutor) agent, context);
-                    break;
+                    return fetchCreditCardTransactions(
+                            (RefreshCreditCardAccountsExecutor) agent, context);
                 case LOAN_ACCOUNTS:
                     Map<Account, AccountFeatures> loanAccounts =
                             ((RefreshLoanAccountsExecutor) agent).fetchLoanAccounts().getAccounts();
@@ -122,8 +120,7 @@ public final class RefreshExecutorUtils {
                     }
                     break;
                 case LOAN_TRANSACTIONS:
-                    fetchLoansTransactions((RefreshLoanAccountsExecutor) agent, context);
-                    break;
+                    return fetchLoansTransactions((RefreshLoanAccountsExecutor) agent, context);
                 case INVESTMENT_ACCOUNTS:
                     Map<Account, AccountFeatures> investmentAccounts =
                             ((RefreshInvestmentAccountsExecutor) agent)
@@ -136,15 +133,14 @@ public final class RefreshExecutorUtils {
                     }
                     break;
                 case INVESTMENT_TRANSACTIONS:
-                    fetchInvestmentTransactions((RefreshInvestmentAccountsExecutor) agent, context);
-                    break;
+                    return fetchInvestmentTransactions(
+                            (RefreshInvestmentAccountsExecutor) agent, context);
                 case IDENTITY_DATA:
                     log.info("Trying to fetch and cache identity data");
                     context.cacheIdentityData(
                             ((RefreshIdentityDataExecutor) agent)
                                     .fetchIdentityData()
                                     .getIdentityData());
-                    break;
                 default:
                     throw new IllegalStateException(
                             String.format("Invalid refreshable item detected %s", item.name()));
@@ -154,6 +150,7 @@ public final class RefreshExecutorUtils {
                     "A request for {} is received, agent is not capable of doing this",
                     item.name());
         }
+        return true;
     }
 
     private static void logIfFetchedEmptyAccounts(boolean isEmpty) {
@@ -196,7 +193,7 @@ public final class RefreshExecutorUtils {
         }
     }
 
-    private static void fetchCheckingTransactions(
+    private static boolean fetchCheckingTransactions(
             RefreshCheckingAccountsExecutor agent, AgentContext context) {
         try {
             for (Map.Entry<Account, List<Transaction>> accountTransactions :
@@ -204,12 +201,14 @@ public final class RefreshExecutorUtils {
                 context.updateTransactions(
                         accountTransactions.getKey(), accountTransactions.getValue());
             }
+            return true;
         } catch (RuntimeException e) {
             log.error("Failed to fetch some checking account transactions.", e);
+            return false;
         }
     }
 
-    private static void fetchSavingTransactions(
+    private static boolean fetchSavingTransactions(
             RefreshSavingsAccountsExecutor agent, AgentContext context) {
         try {
             for (Map.Entry<Account, List<Transaction>> accountTransactions :
@@ -217,12 +216,14 @@ public final class RefreshExecutorUtils {
                 context.updateTransactions(
                         accountTransactions.getKey(), accountTransactions.getValue());
             }
+            return true;
         } catch (RuntimeException e) {
             log.error("Failed to fetch some saving account transactions.", e);
+            return false;
         }
     }
 
-    private static void fetchLoansTransactions(
+    private static boolean fetchLoansTransactions(
             RefreshLoanAccountsExecutor agent, AgentContext context) {
         try {
             for (Map.Entry<Account, List<Transaction>> accountTransactions :
@@ -230,12 +231,14 @@ public final class RefreshExecutorUtils {
                 context.updateTransactions(
                         accountTransactions.getKey(), accountTransactions.getValue());
             }
+            return true;
         } catch (RuntimeException e) {
             log.error("Failed to fetch some checking loan transactions.", e);
+            return false;
         }
     }
 
-    private static void fetchCreditCardTransactions(
+    private static boolean fetchCreditCardTransactions(
             RefreshCreditCardAccountsExecutor agent, AgentContext context) {
         try {
             for (Map.Entry<Account, List<Transaction>> accountTransactions :
@@ -243,12 +246,14 @@ public final class RefreshExecutorUtils {
                 context.updateTransactions(
                         accountTransactions.getKey(), accountTransactions.getValue());
             }
+            return true;
         } catch (RuntimeException e) {
             log.error("Failed to fetch some credit card account transactions.", e);
+            return false;
         }
     }
 
-    private static void fetchInvestmentTransactions(
+    private static boolean fetchInvestmentTransactions(
             RefreshInvestmentAccountsExecutor agent, AgentContext context) {
         try {
             for (Map.Entry<Account, List<Transaction>> accountTransactions :
@@ -256,8 +261,10 @@ public final class RefreshExecutorUtils {
                 context.updateTransactions(
                         accountTransactions.getKey(), accountTransactions.getValue());
             }
+            return true;
         } catch (RuntimeException e) {
             log.error("Failed to fetch some investment account transactions.", e);
+            return false;
         }
     }
 }
