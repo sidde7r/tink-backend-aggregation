@@ -42,7 +42,8 @@ public class SwedbankDefaultCreditCardFetcher
         for (BankProfile bankProfile : apiClient.getBankProfiles()) {
             apiClient.selectProfile(bankProfile);
 
-            EngagementOverviewResponse engagementOverviewResponse = apiClient.engagementOverview();
+            EngagementOverviewResponse engagementOverviewResponse =
+                    bankProfile.getEngagementOverViewResponse();
             List<CardAccountEntity> cardAccounts = engagementOverviewResponse.getCardAccounts();
 
             if (cardAccounts != null) {

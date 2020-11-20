@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.business.swedbank.mock;
 
 import org.junit.Test;
+import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesJsonFileParser;
 import se.tink.backend.aggregation.agents.framework.assertions.entities.AgentContractEntity;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockrefresh.AgentWireMockRefreshTest;
@@ -19,8 +20,8 @@ public class SwedbankBusinessAgentWireMockTest {
             AgentsServiceConfiguration configuration) {
         return AgentWireMockRefreshTest.builder(MarketCode.SE, providerName, wireMockFilePath)
                 .withConfigurationFile(configuration)
-                .addCredentialField("psu-corporate-id", "555555-5555")
-                .addCredentialField("SSN", "200012121212")
+                .addCredentialField(Key.CORPORATE_ID.getFieldKey(), "555555-5555")
+                .addCredentialField(Key.USERNAME.getFieldKey(), "200012121212")
                 .addRefreshableItems(RefreshableItem.CHECKING_ACCOUNTS)
                 .addRefreshableItems(RefreshableItem.CHECKING_TRANSACTIONS)
                 .addRefreshableItems(RefreshableItem.SAVING_ACCOUNTS)

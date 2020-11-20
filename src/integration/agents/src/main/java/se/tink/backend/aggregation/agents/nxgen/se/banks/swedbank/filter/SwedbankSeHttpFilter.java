@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.filter;
 
 import com.google.api.client.repackaged.com.google.common.base.Strings;
-import javax.ws.rs.core.HttpHeaders;
+import com.google.common.base.Preconditions;
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.SwedbankSEConstants;
@@ -15,12 +15,17 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
 public class SwedbankSeHttpFilter extends Filter {
 
+    private final String userAgent;
+
+    public SwedbankSeHttpFilter(String userAgent) {
+        this.userAgent = Preconditions.checkNotNull(userAgent);
+    }
+
     @Override
     public HttpResponse handle(HttpRequest httpRequest)
             throws HttpClientException, HttpResponseException {
 
-        httpRequest.getHeaders().add(HttpHeaders.USER_AGENT, HeaderValues.APPS_VERSION);
-        httpRequest.getHeaders().add(HeaderKeys.X_CLIENT, HeaderValues.APPS_VERSION);
+        httpRequest.getHeaders().add(HeaderKeys.X_CLIENT, userAgent);
         httpRequest.getHeaders().add(HeaderKeys.ADRUM_1, HeaderValues.ADRUM_1);
         httpRequest.getHeaders().add(HeaderKeys.ADRUM, HeaderValues.ADRUM);
 

@@ -65,7 +65,8 @@ public class SwedbankDefaultTransactionalAccountFetcher
         for (BankProfile bankProfile : apiClient.getBankProfiles()) {
             apiClient.selectProfile(bankProfile);
 
-            EngagementOverviewResponse engagementOverviewResponse = apiClient.engagementOverview();
+            EngagementOverviewResponse engagementOverviewResponse =
+                    bankProfile.getEngagementOverViewResponse();
 
             accounts.addAll(
                     engagementOverviewResponse.getTransactionAccounts().stream()
@@ -183,7 +184,7 @@ public class SwedbankDefaultTransactionalAccountFetcher
         return transactionKeyPaginatorResponse;
     }
 
-    private EngagementTransactionsResponse fetchTransactions(
+    protected EngagementTransactionsResponse fetchTransactions(
             TransactionalAccount account, LinkEntity key) {
         try {
             EngagementTransactionsResponse rawResponse = apiClient.engagementTransactions(key);

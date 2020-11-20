@@ -51,7 +51,6 @@ public class SwedbankBaseConstants {
         PROFILE("/v5/profile/");
 
         public static final String IDENTIFICATION = "/v5/identification";
-        public static final String DSID_KEY = "dsid";
         private String path;
 
         Url(String path) {

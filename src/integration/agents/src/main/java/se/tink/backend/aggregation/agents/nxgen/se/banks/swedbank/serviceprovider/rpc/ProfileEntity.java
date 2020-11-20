@@ -1,7 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Getter;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
+@Getter
 @JsonObject
 public abstract class ProfileEntity {
     private String activeProfileLanguage;
@@ -12,36 +15,11 @@ public abstract class ProfileEntity {
     private boolean customerInternational;
     private String customerName;
     private boolean youthProfile;
+    private String id;
+    private LinksEntity links;
 
-    public String getActiveProfileLanguage() {
-        return activeProfileLanguage;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public String getBankId() {
-        return bankId;
-    }
-
-    public String getCustomerNumber() {
-        return customerNumber;
-    }
-
-    public String getBankName() {
-        return bankName;
-    }
-
-    public boolean isCustomerInternational() {
-        return customerInternational;
-    }
-
-    public String getCustomerName() {
+    @JsonIgnore
+    public String getHolderName() {
         return customerName;
-    }
-
-    public boolean isYouthProfile() {
-        return youthProfile;
     }
 }

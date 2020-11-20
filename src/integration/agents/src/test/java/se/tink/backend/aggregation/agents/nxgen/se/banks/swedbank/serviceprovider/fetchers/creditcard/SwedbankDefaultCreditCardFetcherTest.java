@@ -21,8 +21,9 @@ public class SwedbankDefaultCreditCardFetcherTest {
     @Test
     public void fetchAccounts() {
         SwedbankDefaultApiClient apiClient = mock(SwedbankDefaultApiClient.class);
-        when(apiClient.getBankProfiles()).thenReturn(Collections.singletonList(new BankProfile()));
-        when(apiClient.engagementOverview())
+        BankProfile bankProfile = mock(BankProfile.class);
+        when(apiClient.getBankProfiles()).thenReturn(Collections.singletonList(bankProfile));
+        when(bankProfile.getEngagementOverViewResponse())
                 .thenReturn(
                         SerializationUtils.deserializeFromString(
                                 SwedbankDefaultCreditCardFetcherTestData

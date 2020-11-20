@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.TreeMap;
-import javax.ws.rs.core.Cookie;
 import lombok.Getter;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
@@ -27,6 +26,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.loan.
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.loan.rpc.LoanOverviewResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants.ErrorMessage;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants.Retry;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants.TimeoutFilter;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.authenticator.rpc.CollectBankIdResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.authenticator.rpc.InitAuthenticationRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.authenticator.rpc.InitBankIdRequest;
@@ -52,6 +52,9 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovide
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.transfer.rpc.RegisterTransferRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.fetchers.creditcard.rpc.DetailedCardAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.fetchers.transferdestination.rpc.PaymentBaseinfoResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.filters.SwedbankBaseHttpFilter;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.filters.SwedbankServiceUnavailableFilter;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.profile.SwedbankProfileSelector;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.BankEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.BankProfile;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.BankProfileHandler;
@@ -59,7 +62,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovide
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.EngagementTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.LinkEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.MenuItemLinkEntity;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.PrivateProfileEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.ProfileEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.ProfileResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.SelectedProfileResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.TouchResponse;
@@ -67,9 +70,11 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponen
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.TimeoutRetryFilter;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.libraries.pair.Pair;
 import se.tink.libraries.signableoperation.enums.InternalStatus;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
@@ -79,12 +84,11 @@ public class SwedbankDefaultApiClient {
     @Getter private final String host;
     protected final TinkHttpClient client;
     private final SwedbankConfiguration configuration;
+    private final SwedbankProfileSelector profileSelector;
     private final String username;
     private final SwedbankStorage swedbankStorage;
-    private final AgentComponentProvider componentProvider;
     // only use cached menu items for a profile
     private BankProfileHandler bankProfileHandler;
-    private final String organizationNumber;
 
     private enum Method {
         GET,
@@ -96,28 +100,33 @@ public class SwedbankDefaultApiClient {
     protected SwedbankDefaultApiClient(
             TinkHttpClient client,
             SwedbankConfiguration configuration,
-            String username,
             SwedbankStorage swedbankStorage,
+            SwedbankProfileSelector profileSelector,
             AgentComponentProvider componentProvider) {
         this.client = client;
         this.configuration = configuration;
-        this.username = username;
+        this.profileSelector = profileSelector;
+        this.username =
+                componentProvider.getCredentialsRequest().getCredentials().getField(Key.USERNAME);
         this.swedbankStorage = swedbankStorage;
-        this.componentProvider = componentProvider;
-        this.organizationNumber =
-                Optional.ofNullable(
-                                componentProvider
-                                        .getCredentialsRequest()
-                                        .getCredentials()
-                                        .getField(Key.CORPORATE_ID))
-                        .orElse("");
-        ensureAuthorizationHeaderIsSet();
         this.host = configuration.getHost();
+        configureHttpClient();
     }
 
-    private String generateDSID() {
-        Base64 base64 = new Base64(100, null, true);
-        return base64.encodeAsString(componentProvider.getRandomValueGenerator().secureRandom(6));
+    private void configureHttpClient() {
+        final String userAgent = configuration.getUserAgent();
+        if (!Strings.isNullOrEmpty(userAgent)) {
+            client.setUserAgent(userAgent);
+        }
+
+        client.addFilter(
+                new SwedbankBaseHttpFilter(
+                        SwedbankBaseConstants.generateAuthorization(configuration, username)));
+        client.addFilter(
+                new TimeoutRetryFilter(
+                        TimeoutFilter.NUM_TIMEOUT_RETRIES,
+                        TimeoutFilter.TIMEOUT_RETRY_SLEEP_MILLISECONDS));
+        client.addFilter(new SwedbankServiceUnavailableFilter());
     }
 
     protected <T> T makeGetRequest(URL url, Class<T> responseClass, boolean retry) {
@@ -198,7 +207,7 @@ public class SwedbankDefaultApiClient {
 
     private <T> T executeRequest(
             URL url, Method method, Object requestObject, Class<T> responseClass) {
-        RequestBuilder requestBuilder = buildAbstractRequest(url);
+        RequestBuilder requestBuilder = client.request(url);
         switch (method) {
             case GET:
                 return requestBuilder.get(responseClass);
@@ -212,17 +221,6 @@ public class SwedbankDefaultApiClient {
                 log.warn("SwedbankDefaultApiClient: Invalid method - Method:[{}]", method);
                 throw new IllegalStateException();
         }
-    }
-
-    private RequestBuilder buildAbstractRequest(URL url) {
-        String dsid = generateDSID();
-
-        return client.request(url)
-                .header(
-                        SwedbankBaseConstants.Headers.AUTHORIZATION_KEY,
-                        SwedbankBaseConstants.generateAuthorization(configuration, username))
-                .queryParam(SwedbankBaseConstants.Url.DSID_KEY, dsid)
-                .cookie(new Cookie(SwedbankBaseConstants.Url.DSID_KEY, dsid));
     }
 
     public InitBankIdResponse initBankId() {
@@ -284,10 +282,6 @@ public class SwedbankDefaultApiClient {
         return profileResponse;
     }
 
-    public EngagementOverviewResponse engagementOverview() {
-        return fetchEngagementOverview();
-    }
-
     public EngagementTransactionsResponse engagementTransactions(LinkEntity linkEntity) {
         return makeRequest(linkEntity, EngagementTransactionsResponse.class, true);
     }
@@ -303,10 +297,6 @@ public class SwedbankDefaultApiClient {
 
     public DetailedCardAccountResponse cardAccountDetails(LinkEntity linkEntity) {
         return makeRequest(linkEntity, DetailedCardAccountResponse.class, true);
-    }
-
-    public PaymentBaseinfoResponse paymentBaseinfo() {
-        return fetchPaymentBaseinfo();
     }
 
     public RegisterRecipientResponse registerPayee(RegisterPayeeRequest registerPayeeRequest)
@@ -504,16 +494,6 @@ public class SwedbankDefaultApiClient {
                 false);
     }
 
-    private void ensureAuthorizationHeaderIsSet() {
-        if (client.isPersistentHeaderPresent(SwedbankBaseConstants.Headers.AUTHORIZATION_KEY)) {
-            return;
-        }
-
-        client.addPersistentHeader(
-                SwedbankBaseConstants.Headers.AUTHORIZATION_KEY,
-                SwedbankBaseConstants.generateAuthorization(configuration, username));
-    }
-
     public List<BankProfile> getBankProfiles() {
         return getBankProfileHandler().getBankProfiles();
     }
@@ -538,7 +518,7 @@ public class SwedbankDefaultApiClient {
     private BankProfile activateProfile(BankProfile bankProfile) {
 
         Map<String, MenuItemLinkEntity> profileMenuItems =
-                fetchProfile(bankProfile.getBank().getProfile().getLinks().getNextOrThrow());
+                fetchProfile(bankProfile.getProfile().getLinks().getNextOrThrow());
         getBankProfileHandler().setMenuItems(profileMenuItems);
         getBankProfileHandler().setActiveBankProfile(bankProfile);
         swedbankStorage.setBankProfileHandler(getBankProfileHandler());
@@ -549,62 +529,35 @@ public class SwedbankDefaultApiClient {
     private void setupProfiles(ProfileResponse profileResponse) {
         bankProfileHandler = new BankProfileHandler();
 
-        if (Strings.isNullOrEmpty(organizationNumber)) {
-            for (BankEntity bank : profileResponse.getBanks()) {
-                createAndAddProfileToHandler(bank, bank.getPrivateProfile());
-            }
-        } else {
-            for (BankEntity bank : profileResponse.getBanks()) {
-                bank.setOrgNumber(organizationNumber);
-
-                bank.getMatchingBusinessProfile()
-                        .ifPresent(
-                                businessProfileEntity ->
-                                        createAndAddProfileToHandler(bank, businessProfileEntity));
-            }
-
-            if (bankProfileHandler.getBankProfiles().isEmpty()) {
-                throw LoginError.INCORRECT_CREDENTIALS.exception(
-                        "No business profile matched organisation number provider by user.");
-            }
+        // delegate profile selection
+        for (Pair<BankEntity, ProfileEntity> pair :
+                profileSelector.selectBankProfiles(profileResponse.getBanks())) {
+            createAndAddProfileToHandler(pair.first, pair.second);
         }
 
         swedbankStorage.setBankProfileHandler(bankProfileHandler);
     }
 
-    private void createAndAddProfileToHandler(BankEntity bank, PrivateProfileEntity profileEntity) {
+    private void createAndAddProfileToHandler(BankEntity bank, ProfileEntity profileEntity) {
         // fetch all profile details
         Map<String, MenuItemLinkEntity> menuItems =
                 fetchProfile(profileEntity.getLinks().getNextOrThrow());
         bankProfileHandler.setMenuItems(menuItems);
         EngagementOverviewResponse engagementOverViewResponse = fetchEngagementOverview();
-        PaymentBaseinfoResponse paymentBaseinfoResponse = getPaymentBaseInfoIfNotBusiness();
+        PaymentBaseinfoResponse paymentBaseinfoResponse =
+                configuration.hasPayments() ? fetchPaymentBaseinfo() : null;
 
         // create and add profile
         BankProfile bankProfile =
                 new BankProfile(
-                        bank, menuItems, engagementOverViewResponse, paymentBaseinfoResponse);
+                        bank,
+                        menuItems,
+                        engagementOverViewResponse,
+                        paymentBaseinfoResponse,
+                        profileEntity.getId());
         bankProfileHandler.addBankProfile(bankProfile);
         // profile is already activated
         bankProfileHandler.setActiveBankProfile(bankProfile);
-    }
-
-    /**
-     * Half temporary fix to handle that some business users don't have any payment related menu
-     * items. Fetching of payment base info is only relevant for PIS, which is not implemented for
-     * business. To be consistent we won't fetch payment base info for any business users.
-     *
-     * <p>Bank profile setup is very messy, we need to go over the fetching of engagement overview
-     * and payment base info as we store it on the bank profiles but don't use any of the stored
-     * data except for in BaseTransferExecutor. The private vs business setup is also getting
-     * increasingly complex (see TC-3614).
-     */
-    private PaymentBaseinfoResponse getPaymentBaseInfoIfNotBusiness() {
-        if (Strings.isNullOrEmpty(organizationNumber)) {
-            return fetchPaymentBaseinfo();
-        }
-
-        return null;
     }
 
     private BankProfileHandler getBankProfileHandler() {
