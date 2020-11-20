@@ -28,16 +28,6 @@ public interface UkOpenBankingPaymentConstants {
             public static final String PAYMENT_STATUS = "/domestic-scheduled-payments/{paymentId}";
         }
 
-        public static class International {
-            public static final String PAYMENT_CONSENT = "/international-payment-consents";
-            public static final String PAYMENT_CONSENT_STATUS =
-                    "/international-payment-consents/{consentId}";
-            public static final String PAYMENT_FUNDS_CONFIRMATION =
-                    "/international-payment-consents/{consentId}/funds-confirmation";
-            public static final String PAYMENT = "/international-payments";
-            public static final String PAYMENT_STATUS = "/international-payments/{paymentId}";
-        }
-
         public static class UrlParameterKeys {
             public static final String CONSENT_ID = "consentId";
             public static final String PAYMENT_ID = "paymentId";

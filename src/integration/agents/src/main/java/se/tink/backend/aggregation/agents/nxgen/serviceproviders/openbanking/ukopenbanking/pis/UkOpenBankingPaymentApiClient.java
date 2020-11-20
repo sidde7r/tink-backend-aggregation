@@ -19,13 +19,11 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentConstants.HttpHeaders;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentConstants.JWTSignatureHeaders.PAYLOAD;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.configuration.UkOpenBankingPisConfig;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.rpc.domestic.DomesticPaymentConsentResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.rpc.domestic.DomesticPaymentResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.rpc.domestic.DomesticScheduledPaymentConsentResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.rpc.domestic.DomesticScheduledPaymentResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.rpc.international.FundsConfirmationResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.rpc.international.InternationalPaymentConsentResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.rpc.international.InternationalPaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.rpc.DomesticPaymentConsentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.rpc.DomesticPaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.rpc.DomesticScheduledPaymentConsentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.rpc.DomesticScheduledPaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.rpc.FundsConfirmationResponse;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
@@ -113,31 +111,6 @@ public class UkOpenBankingPaymentApiClient extends OpenIdApiClient {
     public DomesticScheduledPaymentResponse getDomesticScheduledPayment(String paymentId) {
         return createPisRequest(pisConfig.getDomesticScheduledPayment(paymentId))
                 .get(DomesticScheduledPaymentResponse.class);
-    }
-
-    public InternationalPaymentConsentResponse createInternationalPaymentConsent(Object request) {
-        return createPisRequest(pisConfig.createInternationalPaymentConsentURL())
-                .post(InternationalPaymentConsentResponse.class, request);
-    }
-
-    public InternationalPaymentConsentResponse getInternationalPaymentConsent(String consentId) {
-        return createPisRequest(pisConfig.getInternationalPaymentConsentURL(consentId))
-                .get(InternationalPaymentConsentResponse.class);
-    }
-
-    public InternationalPaymentResponse getInternationalPayment(String paymentId) {
-        return createPisRequest(pisConfig.getInternationalPayment(paymentId))
-                .post(InternationalPaymentResponse.class, paymentId);
-    }
-
-    public FundsConfirmationResponse getInternationalFundsConfirmation(String consentId) {
-        return createPisRequest(pisConfig.getInternationalFundsConfirmationURL(consentId))
-                .get(FundsConfirmationResponse.class);
-    }
-
-    public InternationalPaymentResponse executeInternationalPayment(Object request) {
-        return createPisRequest(pisConfig.createInternationalPaymentURL())
-                .post(InternationalPaymentResponse.class, request);
     }
 
     private RequestBuilder createPisRequest(URL url) {
