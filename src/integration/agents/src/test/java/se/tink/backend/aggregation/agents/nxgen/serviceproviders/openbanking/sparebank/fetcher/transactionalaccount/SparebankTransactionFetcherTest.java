@@ -8,8 +8,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import java.util.Date;
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankApiClient;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
@@ -24,10 +23,9 @@ public class SparebankTransactionFetcherTest {
     private static HttpResponse httpResponse;
 
     private static SparebankTransactionFetcher transactionFetcher;
-    private static Date anyDate = new Date();
 
-    @BeforeClass
-    public static void setup() {
+    @Before
+    public void setup() {
         apiClient = mock(SparebankApiClient.class);
         account = mock(TransactionalAccount.class);
         when(account.getApiIdentifier()).thenReturn("doesNotMatter");

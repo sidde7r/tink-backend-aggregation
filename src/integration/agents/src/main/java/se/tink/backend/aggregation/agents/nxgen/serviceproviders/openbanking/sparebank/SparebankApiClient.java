@@ -61,6 +61,8 @@ public class SparebankApiClient {
         persistentStorage.remove(StorageKeys.ACCOUNTS);
         persistentStorage.remove(StorageKeys.SESSION_ID);
         persistentStorage.remove(StorageKeys.PSU_ID);
+        persistentStorage.remove(StorageKeys.STATE);
+        persistentStorage.remove(StorageKeys.TRANSACTIONS_ALL_FETCHED);
     }
 
     public Optional<String> getPsuId() {
