@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovide
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.InstrumentModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.id.InstrumentIdModule;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.strings.StringUtils;
 
 @JsonObject
@@ -170,7 +171,7 @@ public class DetailedHoldingEntity {
         Instrument instrument = new Instrument();
 
         instrument.setAverageAcquisitionPriceFromAmount(
-                Optional.ofNullable(acquisitionValue).map(AmountEntity::toTinkAmount).orElse(null));
+                getAverageAcquisitionPriceForTinkFundInstrument());
         instrument.setCurrency(
                 Optional.ofNullable(marketValue).map(AmountEntity::getCurrencyCode).orElse(null));
         instrument.setIsin(isinCode);
@@ -194,14 +195,15 @@ public class DetailedHoldingEntity {
                 || nameMarketPlace == null
                 || numberOrAmount == null
                 || numberOrAmount.getNominalValue() == null
-                || numberOrAmount.getNominalValue().getAmount() == null) {
+                || numberOrAmount.getNominalValue().getAmount() == null
+                || numberOfFundParts == null) {
             return Optional.empty();
         }
 
         Instrument instrument = new Instrument();
 
         instrument.setAverageAcquisitionPriceFromAmount(
-                Optional.ofNullable(acquisitionPrice).map(AmountEntity::toTinkAmount).orElse(null));
+                getAverageAcquisitionPriceForTinkInstrument());
         instrument.setCurrency(getInstrumentCurrency());
         instrument.setIsin(isin);
         instrument.setMarketValueFromAmount(
@@ -224,6 +226,21 @@ public class DetailedHoldingEntity {
         instrument.setMarketPlace(nameMarketPlace);
 
         return Optional.of(instrument);
+    }
+
+    private ExactCurrencyAmount getAverageAcquisitionPriceForTinkInstrument() {
+        return ExactCurrencyAmount.of(
+                AgentParsingUtils.parseAmount(acquisitionValue.getAmount())
+                        / AgentParsingUtils.parseAmount(
+                                numberOrAmount.getNominalValue().getAmount()),
+                acquisitionValue.getCurrencyCode());
+    }
+
+    private ExactCurrencyAmount getAverageAcquisitionPriceForTinkFundInstrument() {
+        return ExactCurrencyAmount.of(
+                AgentParsingUtils.parseAmount(acquisitionValue.getAmount())
+                        / AgentParsingUtils.parseAmount(numberOfFundParts),
+                acquisitionValue.getCurrencyCode());
     }
 
     private String getUniqueIdentifier(String isin) {
