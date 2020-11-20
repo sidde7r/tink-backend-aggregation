@@ -4,6 +4,10 @@ junit_test(
     name = "kbc",
     srcs = glob(["agents/*.java"]),
     data = ["//:agent_test_data"],
+    tags = [
+        "external",
+        "manual",
+    ],
     visibility = ["//visibility:public"],
     deps = [
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/be/openbanking/kbc",
