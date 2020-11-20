@@ -39,11 +39,10 @@ public class SparebankTransactionFetcherTest {
     @Test
     public void shouldConsumeExceptionAndReturnEmptyResponseInCaseOfScaRedirectException() {
         when(httpResponse.getBody(any())).thenReturn("SomethingSomethingscaRedirect12445zxcvasdf");
-        when(apiClient.fetchTransactions(anyString(), any(Date.class), any(Date.class)))
+        when(apiClient.fetchTransactions(anyString()))
                 .thenThrow(new HttpResponseException("", null, httpResponse));
 
-        PaginatorResponse response =
-                transactionFetcher.getTransactionsFor(account, anyDate, anyDate);
+        PaginatorResponse response = transactionFetcher.getTransactionsFor(account, null);
 
         assertEquals(0, response.getTinkTransactions().size());
         assertEquals(false, response.canFetchMore().get());
@@ -54,12 +53,10 @@ public class SparebankTransactionFetcherTest {
         when(httpResponse.getBody(any())).thenReturn("123456");
         String message = "A example message to test rethrow";
         Exception exception = new HttpResponseException(message, null, httpResponse);
-        when(apiClient.fetchTransactions(anyString(), any(Date.class), any(Date.class)))
-                .thenThrow(exception);
+        when(apiClient.fetchTransactions(anyString())).thenThrow(exception);
 
         Throwable throwable =
-                catchThrowable(
-                        () -> transactionFetcher.getTransactionsFor(account, anyDate, anyDate));
+                catchThrowable(() -> transactionFetcher.getTransactionsFor(account, null));
 
         assertThat(throwable).isEqualTo(exception);
     }

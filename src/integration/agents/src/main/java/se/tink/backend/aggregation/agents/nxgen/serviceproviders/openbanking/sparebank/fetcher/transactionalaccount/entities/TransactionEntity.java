@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -33,7 +34,9 @@ public class TransactionEntity {
         }
     }
 
-    public TransactionalLinksEntity getLinks() {
-        return links;
+    public Optional<String> getNext() {
+        return Optional.ofNullable(links)
+                .map(TransactionalLinksEntity::getNext)
+                .map(LinkEntity::getHref);
     }
 }

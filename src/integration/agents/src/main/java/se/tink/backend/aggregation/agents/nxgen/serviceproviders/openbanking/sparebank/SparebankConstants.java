@@ -41,6 +41,7 @@ public final class SparebankConstants {
 
     public static class Urls {
         public static final String FETCH_TRANSACTIONS = "/v1/accounts/{resourceId}/transactions";
+        public static final String FETCH_BALANCES = "/v1/accounts/{resourceId}/balances";
         public static final String GET_ACCOUNTS = "/v1/accounts";
         public static final String GET_SCA_REDIRECT = "/v1/bank-offered-consents";
         public static final String CREATE_PAYMENT = "/v1/payments/{paymentProduct}";
@@ -104,11 +105,12 @@ public final class SparebankConstants {
     }
 
     public static class StorageKeys {
-        public static final String ACCOUNT_ID = "account_id";
+        public static final String ACCOUNTS = "accounts";
         public static final String TRANSACTIONS_URL = "TRANSACTIONS_URL";
         public static final String SESSION_ID = "SESSION_ID";
         public static final String PSU_ID = "PSU_ID";
         public static final String STATE = "STATE";
+        public static final String TRANSACTIONS_ALL_FETCHED = "TRANSACTIONS_ALL_FETCHED";
     }
 
     public static class ErrorMessages {

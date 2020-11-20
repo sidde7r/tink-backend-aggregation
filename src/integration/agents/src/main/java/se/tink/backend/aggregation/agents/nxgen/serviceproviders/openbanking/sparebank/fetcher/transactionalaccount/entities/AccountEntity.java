@@ -2,9 +2,10 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sp
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
+import lombok.Getter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.fetcher.transactionalaccount.rpc.BalanceResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
@@ -17,7 +18,7 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class AccountEntity {
-    private String resourceId;
+    @Getter private String resourceId;
     private String iban;
     private String currency;
     private String name;
@@ -25,18 +26,16 @@ public class AccountEntity {
     private String bban;
     private String product;
 
-    private List<BalanceEntity> balances;
-
     @JsonProperty("_links")
     private AccountLinksEntity links;
 
-    public Optional<TransactionalAccount> toTinkAccount() {
+    public Optional<TransactionalAccount> toTinkAccount(BalanceResponse balancesResponse) {
         return TransactionalAccount.nxBuilder()
                 .withTypeAndFlagsFrom(
                         SparebankConstants.ACCOUNT_TYPE_MAPPER,
                         Optional.ofNullable(cashAccountType).orElse(product),
                         TransactionalAccountType.OTHER)
-                .withBalance(BalanceModule.of(getBalance()))
+                .withBalance(BalanceModule.of(getBalance(balancesResponse)))
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(getUniqueIdentifier())
@@ -53,8 +52,9 @@ public class AccountEntity {
                 .build();
     }
 
-    protected ExactCurrencyAmount getBalance() {
-        return Optional.ofNullable(balances).orElse(Collections.emptyList()).stream()
+    protected ExactCurrencyAmount getBalance(BalanceResponse balancesResponse) {
+        return Optional.ofNullable(balancesResponse.getBalances()).orElse(Collections.emptyList())
+                .stream()
                 .filter(this::doesMatchWithAccountCurrency)
                 .findFirst()
                 .map(BalanceEntity::toAmount)

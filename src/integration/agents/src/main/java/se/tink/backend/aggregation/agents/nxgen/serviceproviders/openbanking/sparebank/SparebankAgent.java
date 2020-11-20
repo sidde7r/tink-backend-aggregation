@@ -4,7 +4,6 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
 
 import java.security.cert.CertificateException;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -14,7 +13,6 @@ import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankConstants.TransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.authenticator.SparebankAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.authenticator.SparebankController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.configuration.SparebankApiConfiguration;
@@ -28,7 +26,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticato
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
@@ -49,7 +47,7 @@ public final class SparebankAgent extends NextGenerationAgent
         apiClient =
                 new SparebankApiClient(
                         client,
-                        sessionStorage,
+                        persistentStorage,
                         agentsServiceConfiguration.getEidasProxy(),
                         this.getEidasIdentity(),
                         getApiConfiguration());
@@ -132,11 +130,7 @@ public final class SparebankAgent extends NextGenerationAgent
                 accountFetcher,
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(
-                                transactionFetcher,
-                                TransactionsResponse.CONSECUTIVE_EMPTY_PAGES,
-                                TransactionsResponse.NO_OF_DAYS,
-                                ChronoUnit.DAYS)));
+                        new TransactionKeyPaginationController<>(transactionFetcher)));
     }
 
     @Override
