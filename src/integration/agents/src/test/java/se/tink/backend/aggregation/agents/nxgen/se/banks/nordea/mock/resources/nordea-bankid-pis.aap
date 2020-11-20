@@ -1,4 +1,3 @@
-
 REQUEST 1
 POST https://private.nordea.se/api/dbf/ca/token-service-v3/oauth/token
 Accept: application/json
@@ -9,17 +8,11 @@ client_id=NDHMSE&grant_type=refresh_token&refresh_token=***MASKED***
 
 RESPONSE 1
 200
-X-Backside-Transport: ***
-nnCoection: ***
 Transfer-Encoding: chunked
 Date: Thu, 18 Jun 2020 13:38:37 GMT
-X-Application-Context: ***
 Content-Type: application/json
 X-Global-Transaction-ID: eaf52b955eeb6e5d025a99e8
 Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-X-Frame-Options: ***
-X-XSS-Protection: ***
-strict-transport-security: ***
 Pragma: no-cache
 
 {"access_token":"***MASKED***","expires_in":180,"token_type":"***MASKED***","refresh_token":"***MASKED***","scope":"ndf agreement openid offline_access","uh":"***MASKED***"}
@@ -33,20 +26,13 @@ X-Aggregator: Tink Testing
 
 RESPONSE 2
 200
-X-Backside-Transport: ***
-nnCoection: ***
 Transfer-Encoding: chunked
 Date: Thu, 18 Jun 2020 13:38:38 GMT
-X-Application-Context: ***
-X-Content-Type-Options: ***
-X-XSS-Protection: ***
 Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
-X-Frame-Options: ***
 Content-Type: application/json
 X-Global-Transaction-ID: eb55ecf65eeb6e5ec360ec38
-strict-transport-security: ***
 
 {"results":[],"errors":[]}
 
@@ -59,22 +45,15 @@ X-Aggregator: Tink Testing
 
 RESPONSE 3
 200
-X-Backside-Transport: ***
-nnCoection: ***
 Transfer-Encoding: chunked
 Date: Thu, 18 Jun 2020 13:38:38 GMT
-X-Application-Context: ***
-X-Content-Type-Options: ***
-X-XSS-Protection: ***
 Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
-X-Frame-Options: ***
 Content-Type: application/json
 X-Global-Transaction-ID: 19aea2635eeb6e5e4e1ca327
-strict-transport-security: ***
 
-{"result":[{"account_id":"NAID-SE-SEK-3300123456","display_account_number":"33001-23456","iban":"SE7830000000003300123456","bic":"NDEASESS","country_code":"SE","product_code":"SE4001","product_mename":"PERSONKONTO","nickname":"PERSONKONTO","product_type":"Transaktionskonton","category":"transaction","account_status":"open","booked_balance":13425.94,"credit_limit":0.00,"available_balance":13425.94,"currency":"SEK","roles":[{"customer_id":"","last_name":"Joe,Poe","role":"owner"}],"permissions":{"can_view":true,"can_view_transactions":true,"can_pay_from_account":true,"can_transfer_from_account":true,"can_transfer_to_account":true,"can_deposit_to_account":true,"can_pay_pgbg_from_account":true}},{"account_id":"NAID-SE-SEK-11571002839","display_account_number":"1157 10 02839","iban":"SE1130000000011571002839","bic":"NDEASESS","country_code":"SE","product_code":"SE0059","product_name":"AKTIELIKVIDKONTO","nickname":"a","product_type":"Transaktionskonton","category":"transaction","account_status":"open","booked_balance":0.00,"credit_limit":0.00,"available_balance":0.00,"currency":"SEK","roles":[{"customer_id":"","last_name":"Joe,Doe","role":"owner"}],"permissions":{"can_view":true,"can_view_transactions":true,"can_pay_from_account":true,"can_transfer_from_account":true,"can_transfer_to_account":true,"can_deposit_to_account":true,"can_pay_pgbg_from_account":false}},{"account_id":"NAID-SE-SEK-11573066117","display_account_number":"1157 30 66117","iban":"SE6030000000011573066117","bic":"NDEASESS","country_code":"SE","product_code":"SE1145","product_name":"FÖRMÅNSKONTO","nickname":"Förmånskonto","product_type":"Sparkonton","category":"savings","account_status":"open","booked_balance":93303.00,"credit_limit":0.00,"available_balance":93303.00,"currency":"SEK","roles":[{"customer_id":"","last_name":"Joe,Doe","role":"owner"}],"permissions":{"can_view":true,"can_view_transactions":true,"can_pay_from_account":true,"can_transfer_from_account":true,"can_transfer_to_account":true,"can_deposit_to_account":true,"can_pay_pgbg_from_account":false}},{"account_id":"NAID-SE-SEK-3300123456","display_account_number":"3300323456","iban":"SE1530000000011573076724","bic":"NDEASESS","country_code":"SE","product_code":"SE1145","product_name":"FÖRMÅNSKONTO","nickname":"H","product_type":"Sparkonton","category":"savings","account_status":"open","booked_balance":0.00,"credit_limit":0.00,"available_balance":0.00,"currency":"SEK","roles":[{"customer_id":"","last_name":"Joe,Doe","role":"owner"}],"permissions":{"can_view":true,"can_view_transactions":true,"can_pay_from_account":true,"can_transfer_from_account":true,"can_transfer_to_account":true,"can_deposit_to_account":true,"can_pay_pgbg_from_account":false}},{"account_id":"NAID-SE-SEK-47200812516","display_account_number":"4720 08 12516","iban":"SE6230000000047200812516","bic":"NDEASESS","country_code":"SE","product_code":"SE0052","product_name":"ISK DEPÅLIKVIDKONTO","nickname":"ISK DEPÅLIKVIDKONTO","product_type":"Transaktionskonton","category":"transaction","account_status":"open","booked_balance":5691.36,"credit_limit":0.00,"available_balance":5691.36,"currency":"SEK","roles":[{"customer_id":"","last_name":"Joe,Doe","role":"owner"}],"permissions":{"can_view":true,"can_view_transactions":true,"can_pay_from_account":false,"can_transfer_from_account":true,"can_transfer_to_account":true,"can_deposit_to_account":true,"can_pay_pgbg_from_account":false}}]}
+{"result":[{"account_id":"NAID-SE-SEK-3300123456","display_account_number":"33001-23456","iban":"SE1643735257268387154821","bic":"NDEASESS","country_code":"SE","product_code":"SE4001","product_mename":"PERSONKONTO","nickname":"PERSONKONTO","product_type":"Transaktionskonton","category":"transaction","account_status":"open","booked_balance":13425.94,"credit_limit":0.00,"available_balance":13425.94,"currency":"SEK","roles":[{"customer_id":"","last_name":"Joe,Poe","role":"owner"}],"permissions":{"can_view":true,"can_view_transactions":true,"can_pay_from_account":true,"can_transfer_from_account":true,"can_transfer_to_account":true,"can_deposit_to_account":true,"can_pay_pgbg_from_account":true}},{"account_id":"NAID-SE-SEK-11571002839","display_account_number":"1157 10 02839","iban":"SE6618842338595134431181","bic":"NDEASESS","country_code":"SE","product_code":"SE0059","product_name":"AKTIELIKVIDKONTO","nickname":"a","product_type":"Transaktionskonton","category":"transaction","account_status":"open","booked_balance":0.00,"credit_limit":0.00,"available_balance":0.00,"currency":"SEK","roles":[{"customer_id":"","last_name":"Joe,Doe","role":"owner"}],"permissions":{"can_view":true,"can_view_transactions":true,"can_pay_from_account":true,"can_transfer_from_account":true,"can_transfer_to_account":true,"can_deposit_to_account":true,"can_pay_pgbg_from_account":false}},{"account_id":"NAID-SE-SEK-11573066117","display_account_number":"1157 30 66117","iban":"SE2734368889872526745192","bic":"NDEASESS","country_code":"SE","product_code":"SE1145","product_name":"FÖRMÅNSKONTO","nickname":"Förmånskonto","product_type":"Sparkonton","category":"savings","account_status":"open","booked_balance":93303.00,"credit_limit":0.00,"available_balance":93303.00,"currency":"SEK","roles":[{"customer_id":"","last_name":"Joe,Doe","role":"owner"}],"permissions":{"can_view":true,"can_view_transactions":true,"can_pay_from_account":true,"can_transfer_from_account":true,"can_transfer_to_account":true,"can_deposit_to_account":true,"can_pay_pgbg_from_account":false}},{"account_id":"NAID-SE-SEK-3300123456","display_account_number":"3300323456","iban":"SE5298342791432145595666","bic":"NDEASESS","country_code":"SE","product_code":"SE1145","product_name":"FÖRMÅNSKONTO","nickname":"H","product_type":"Sparkonton","category":"savings","account_status":"open","booked_balance":0.00,"credit_limit":0.00,"available_balance":0.00,"currency":"SEK","roles":[{"customer_id":"","last_name":"Joe,Doe","role":"owner"}],"permissions":{"can_view":true,"can_view_transactions":true,"can_pay_from_account":true,"can_transfer_from_account":true,"can_transfer_to_account":true,"can_deposit_to_account":true,"can_pay_pgbg_from_account":false}},{"account_id":"NAID-SE-SEK-47200812516","display_account_number":"4720 08 12516","iban":"SE5213949687878231454699","bic":"NDEASESS","country_code":"SE","product_code":"SE0052","product_name":"ISK DEPÅLIKVIDKONTO","nickname":"ISK DEPÅLIKVIDKONTO","product_type":"Transaktionskonton","category":"transaction","account_status":"open","booked_balance":5691.36,"credit_limit":0.00,"available_balance":5691.36,"currency":"SEK","roles":[{"customer_id":"","last_name":"Joe,Doe","role":"owner"}],"permissions":{"can_view":true,"can_view_transactions":true,"can_pay_from_account":false,"can_transfer_from_account":true,"can_transfer_to_account":true,"can_deposit_to_account":true,"can_pay_pgbg_from_account":false}}]}
 
 REQUEST 4
 GET https://private.nordea.se/api/dbf/ca/beneficiary-v1/beneficiaries
@@ -85,17 +64,11 @@ Content-Type: application/json
 
 RESPONSE 4
 200
-X-Backside-Transport: ***
-nnCoection: ***
 Transfer-Encoding: chunked
 Date: Thu, 18 Jun 2020 13:38:38 GMT
-X-Application-Context: ***
-X-Content-Type-Options: ***
-X-XSS-Protection: ***
 Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
-X-Frame-Options: ***
 Content-Type: application/json
 X-Global-Transaction-ID: 2760e24c5eeb6e5eb3e1d9c5
 strict-transport-security: ***
@@ -112,20 +85,13 @@ X-Aggregator: Tink Testing
 
 RESPONSE 5
 200
-X-Backside-Transport: ***
-nnCoection: ***
 Transfer-Encoding: chunked
 Date: Thu, 18 Jun 2020 13:38:38 GMT
-X-Application-Context: ***
-X-Content-Type-Options: ***
-X-XSS-Protection: ***
 Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
-X-Frame-Options: ***
 Content-Type: application/json
 X-Global-Transaction-ID: 19aea2635eeb6e5e4e1ca457
-strict-transport-security: ***
 
 {"id":"1701577114358","from":"3300123456","from_currency":"SEK","to":"3228756","to_account_number_type":"BG","recipient_name": null,"message":"610550873500157","own_message":"","reference":"","amount":4246.0,"status":"unconfirmed","type":"bankgiro","status_message":"","due":"2020-06-22","currency":"SEK","permissions":{"delete":true,"copy":true,"modify":{"from":true,"to":true,"amount":true,"due":true,"message":true,"recurring_count":true,"recurring_interval":true,"recurring_repeats":true,"recurring_lastday":true,"type":true}},"credit_notes":[]}
 
@@ -136,182 +102,106 @@ Content-Type: application/json
 Accept-Language: en-SE
 X-Aggregator: Tink Testing
 
-{"payment_ids":["1701577114358"]}
+{"payment_ids":["1701577114358"],"signing_type":"nasa"}
 
 RESPONSE 6
 200
-X-Backside-Transport: ***
-nnCoection: ***
 Transfer-Encoding: chunked
 Date: Thu, 18 Jun 2020 13:38:39 GMT
-X-Application-Context: ***
-X-Content-Type-Options: ***
-X-XSS-Protection: ***
 Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
-X-Frame-Options: ***
 Content-Type: application/json
 X-Global-Transaction-ID: 19aea2635eeb6e5f2a8ed1e1
-strict-transport-security: ***
 
 {"results":["eaaadebc-3506-4024-8552-357ba1e06310"],"errors":[]}
 
 REQUEST 7
-POST https://private.nordea.se/api/dbf/ca/signing-v1/signing/bankid_se/signature/
+GET https://private.nordea.se/api/dbf/se/customerinfo-v3/customers/self/info
 Accept: application/json
-Content-Type: application/json
 Accept-Language: en-SE
 X-Aggregator: Tink Testing
 
-[{"id":"eaaadebc-3506-4024-8552-357ba1e06310"}]
-
 RESPONSE 7
-201
-X-Backside-Transport: ***
-Cneonction: ***
+200
 Transfer-Encoding: chunked
-Date: Thu, 18 Jun 2020 13:38:39 GMT
-X-Application-Context: ***
-Last-Modified: Thu, 18 Jun 2020 13:38:39 GMT
+Date: Mon, 16 Nov 2020 15:01:27 GMT
 Content-Type: application/json
-X-Content-Type-Options: ***
-X-XSS-Protection: ***
 Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
-X-Frame-Options: ***
-X-Global-Transaction-ID: eb55ecf65eeb6e5fc360f518
-strict-transport-security: ***
+X-Content-Type-Options: nosniff
+X-Frame-Options: DENY
+X-XSS-Protection: 1; mode=block
+x-request-id: 1.36458
+X-Global-Transaction-ID: 2504d7535fb29447c015617c
+strict-transport-security: max-age=31536000; includeSubDomains
 
-{"signature_state":"STARTED","order_reference":"77d11db0-20b4-4be3-89a2-949015811a54","order_status":"PENDING","text_to_be_signed":"I want to pay\n\namount: 4 246,00 SEK\nto: Hemförsäkring Länsförsäkringar\naccount: 3228756\ndate: 2020-06-22\nfrom account: 3300123456\n"}
+{"customer_id":"199009129702","segment":"household","loyalty_group":"home_owners","loyalty_group_in_raw":"F","person_id":"199009129702","branch_id":"2050003265","birth_date":"1990-09-30","preferred_name":{"family_name":"L_NAME","given_name":"F_NAME"},"address":{"street_line":"ADDRESS","city":"STOCKHOLM","postal_code":"11366","country_code":"SE"},"emails":[{"value":"EMAIL@google.com","tags":["home"]}],"phone_numbers":[{"value":"700890987","country_code":"46","tags":["mobile"]}]}
 
 REQUEST 8
-GET https://private.nordea.se/api/dbf/ca/signing-v1/signing/bankid_se/signature/77d11db0-20b4-4be3-89a2-949015811a54?polling_sequence=1
+POST https://private.nordea.se/api/dbf/ca/bankidse-v1/bankidse/authentications/
 Accept: application/json
 Content-Type: application/json
 Accept-Language: en-SE
 X-Aggregator: Tink Testing
+
+{"scope":"openid ndf agreement offline_access","state":"AAAAAAAAAAAAAAAAAAAAAAAAAA","nonce":"AAAAAAAAAAAAAAAAAAAAAAAAAA","code_challenge":"4WWa1UBjo3n3f-4Qijdqan1a49DEN7-EcgOWO9AHjfw","response_type":"code","code_challenge_method":"S256","user_id":"199009129702","redirect_uri":"com.nordea.mobilebank.se://auth-callback","client_id":"zrIIeWA0LqJHJJ0ZSZr1","signing_order_id":"eaaadebc-3506-4024-8552-357ba1e06310"}
 
 RESPONSE 8
 200
-X-Backside-Transport: ***
-nnCoection: ***
 Transfer-Encoding: chunked
-Date: Thu, 18 Jun 2020 13:38:41 GMT
-X-Application-Context: ***
+Date: Mon, 16 Nov 2020 15:01:27 GMT
 Content-Type: application/json
-X-Content-Type-Options: ***
-X-XSS-Protection: ***
+X-Global-Transaction-ID: c2da75b45fb29447c01d8dec
 Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+X-Frame-Options: DENY
+X-XSS-Protection: 1; mode=block
+strict-transport-security: max-age=31536000; includeSubDomains
 Pragma: no-cache
-Expires: 0
-X-Frame-Options: ***
-X-Global-Transaction-ID: eb55ecf65eeb6e614f75300a
-strict-transport-security: ***
 
-{"status":"PENDING","signature_state":"SIGN_PENDING","order_reference":"77d11db0-20b4-4be3-89a2-949015811a54"}
+{"session_id":"f35e11a7-8fe9-4370-b8ad-ff9b2379ae34","auto_start_token":"7a8cf451-269d-4471-8495-184cd92ca305","status":"assignment_pending","verify_after":2000}
 
 REQUEST 9
-GET https://private.nordea.se/api/dbf/ca/signing-v1/signing/bankid_se/signature/77d11db0-20b4-4be3-89a2-949015811a54?polling_sequence=2
+GET https://private.nordea.se/api/dbf/ca/bankidse-v1/bankidse/authentications/f35e11a7-8fe9-4370-b8ad-ff9b2379ae34
 Accept: application/json
-Content-Type: application/json
-Accept-Language: en-SE
 X-Aggregator: Tink Testing
 
 RESPONSE 9
 200
-X-Backside-Transport: ***
-nnCoection: ***
 Transfer-Encoding: chunked
-Date: Thu, 18 Jun 2020 13:38:44 GMT
-X-Application-Context: ***
+Date: Mon, 16 Nov 2020 15:01:51 GMT
 Content-Type: application/json
-X-Content-Type-Options: ***
-X-XSS-Protection: ***
+X-Global-Transaction-ID: c2da75b45fb2945f648d3a2b
 Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+X-Frame-Options: DENY
+X-XSS-Protection: 1; mode=block
+strict-transport-security: max-age=31536000; includeSubDomains
 Pragma: no-cache
-Expires: 0
-X-Frame-Options: ***
-X-Global-Transaction-ID: 19aea2635eeb6e64aa550799
-strict-transport-security: ***
 
-{"status":"SIGN_PENDING","signature_state":"ASSIGNED","order_reference":"77d11db0-20b4-4be3-89a2-949015811a54"}
+{"session_id":"f35e11a7-8fe9-4370-b8ad-ff9b2379ae34","status":"completed","verify_after":2000,"code":"eyJ6aXAiOiJERUYiLCJ0dHlwIjoiYXV0aGVudGljYXRpb25fdG9rZW4iLCJ2ZXIiOiIyLjAuMyIsImtpZCI6Im5hc2YtYXV0aGVudGljYXRpb24tdG9rZW4tZW5jcnlwdGlvbi1wcm9kIiwiY3R5IjoiSldUIiwiZW5jIjoiQTEyOEdDTSIsImFsZyI6ImRpciJ9..ued7PkGZCnxMqFUE.8CwqbyAj641d6Wy6KkNJtNBMRPGgdtuIHS0zl8NLgG2vMCWD2gHWVQfb7YrL6GbhnXL6W7jZg9U_l6tTGIm1EYHJM8dO-rPq40B2C9ZLd0wD11mzUs5QHXdDuqeQzC_rE6aotpDEHqqCqBr_kxn3BzcOCfyDpcx2gXLYbRyrW64qjL2ud0B9RhiII8nL6hNI6XzE1AuiJW8Bwyhksm9FEfdaaoxaZfbBwRHIJHG__q4LsgAUGPIM0Ldxie-AzogHzaAhVnZIOdCGirfw0ZwiUnP_k519vWQHzrAjhSLOsnoVIRGaM3m-ZwBXoqDMDj-dsUaEp92-h_jfwTMMzY6lS8ukFYUsgPU4-Os9wq4USTyGSA8otrxDFzVp_72xIXFnxvQ-wzqOxJTnWRcC2p8xlqnxwElSIo7Mfy93FESOdglzMRN8ajjQqaAApnj0lIR17IdKMBE1IK87abehaXhinuze4QlGlgXqrss7YvrMWZAOCQHya-C_PgHrmws3Ya5stJBzYfoMqO31Exk2Mm7LagU6_y5JTuZ_iXHqilDFsWeN29eTPrNeDU7BOhKe8m320Kp9X-sMrM9TiAXAJNY8K2Lai61a8frnCdJqe8sq9MUXljBRyVzdtYpqZ_3cqjY5oYrOd6LXgZLZcHZi5Wag4_WWzHAOX9OPyK6aLgaVSOym5OgHrwIgqeVHCHSXeEDuB1a0rFNshKvl1tSiqeaXT86ZkP4KVmFLi-DtZGFsz2XF3BOQczPT3heonT3NXH2-4Hdni1ck7ik0epFrZ82KVDkVKK6kcHemHZDfS-MzkP6Xje2UCfznMWL26psHYqeec4iNID2ARCTppQOxzHrco7r27bcTvvZ-TgxU_qo272fjRvojXIRj6-Wv0mPQhTE3BFP--Z7csxoU-vxyHU5cGjT_ALnDHlygaR6kKcYaQcyDM2PFZzG_d1f6DtJMSLO4Hu6BTGFTGGFbQPq3pbzW89ROetmf50J72ZfjW89jVkvzqQFuu5mVOLXekrKvnMlaH996rkw_NatPlwFGEQ3pImIMUEv-Kf8aZi5oCqhZYN9SHW3MiYkdklTM99aT-zKFV5-CqCzW6c9jWqaBZ-YkDgya6Bzp0Dv7Qb2nBsb49ktjV3wf0KMtfzgSKwuNMoupHtWG9PNLxrTXbPqG0atQijhpPr4JI3HVDa5EucgCIPmG19FSEw2cIugjV5wwdFptGjnancPuv1AEu-X-ToRO2U_WcoOhPZl_EEQkJ_tyRQ3_6_RpTADld12Gtp2_YY8N79IZta4SU9cwqt6hyrKyTAeocv_bx3k9zBbuyWCAX30RtFvR4tDSPJ9zmcugehQlHUFGaV6blfBoembRQN2S_PUD1GI9OCcy5pIEI6egV-YnAjzXYzOBqYhpsodDi5wTb9b2qlLP7GdRFbcGrKswV8zR1uiMnd8ciZlhSNsrw3B3uGo8HJQhYnqs53xXVKreP0YSlc31DbFIBgp_W9C5sPVnkEPh_qZ7YbpeG_o7R5QgDIBF5Qw4Lm6J1bKR2PjntSpkHfpFXFBNGRH3-RlrxoP8985LWFowkf_DJL6RGPJ5FTEAp9L4D95Whtz32f-ZwiM8KXBcXsT6eiFzjYREv5I.-tzN1aGw_ZekoTFU9f3GlA","user_id":"199009129702"}
 
 REQUEST 10
-GET https://private.nordea.se/api/dbf/ca/signing-v1/signing/bankid_se/signature/77d11db0-20b4-4be3-89a2-949015811a54?polling_sequence=3
+POST https://private.nordea.se/api/dbf/ca/payments-v2/payments/complete/eaaadebc-3506-4024-8552-357ba1e06310
 Accept: application/json
 Content-Type: application/json
 Accept-Language: en-SE
 X-Aggregator: Tink Testing
+
+{"code":"eyJ6aXAiOiJERUYiLCJ0dHlwIjoiYXV0aGVudGljYXRpb25fdG9rZW4iLCJ2ZXIiOiIyLjAuMyIsImtpZCI6Im5hc2YtYXV0aGVudGljYXRpb24tdG9rZW4tZW5jcnlwdGlvbi1wcm9kIiwiY3R5IjoiSldUIiwiZW5jIjoiQTEyOEdDTSIsImFsZyI6ImRpciJ9..ued7PkGZCnxMqFUE.8CwqbyAj641d6Wy6KkNJtNBMRPGgdtuIHS0zl8NLgG2vMCWD2gHWVQfb7YrL6GbhnXL6W7jZg9U_l6tTGIm1EYHJM8dO-rPq40B2C9ZLd0wD11mzUs5QHXdDuqeQzC_rE6aotpDEHqqCqBr_kxn3BzcOCfyDpcx2gXLYbRyrW64qjL2ud0B9RhiII8nL6hNI6XzE1AuiJW8Bwyhksm9FEfdaaoxaZfbBwRHIJHG__q4LsgAUGPIM0Ldxie-AzogHzaAhVnZIOdCGirfw0ZwiUnP_k519vWQHzrAjhSLOsnoVIRGaM3m-ZwBXoqDMDj-dsUaEp92-h_jfwTMMzY6lS8ukFYUsgPU4-Os9wq4USTyGSA8otrxDFzVp_72xIXFnxvQ-wzqOxJTnWRcC2p8xlqnxwElSIo7Mfy93FESOdglzMRN8ajjQqaAApnj0lIR17IdKMBE1IK87abehaXhinuze4QlGlgXqrss7YvrMWZAOCQHya-C_PgHrmws3Ya5stJBzYfoMqO31Exk2Mm7LagU6_y5JTuZ_iXHqilDFsWeN29eTPrNeDU7BOhKe8m320Kp9X-sMrM9TiAXAJNY8K2Lai61a8frnCdJqe8sq9MUXljBRyVzdtYpqZ_3cqjY5oYrOd6LXgZLZcHZi5Wag4_WWzHAOX9OPyK6aLgaVSOym5OgHrwIgqeVHCHSXeEDuB1a0rFNshKvl1tSiqeaXT86ZkP4KVmFLi-DtZGFsz2XF3BOQczPT3heonT3NXH2-4Hdni1ck7ik0epFrZ82KVDkVKK6kcHemHZDfS-MzkP6Xje2UCfznMWL26psHYqeec4iNID2ARCTppQOxzHrco7r27bcTvvZ-TgxU_qo272fjRvojXIRj6-Wv0mPQhTE3BFP--Z7csxoU-vxyHU5cGjT_ALnDHlygaR6kKcYaQcyDM2PFZzG_d1f6DtJMSLO4Hu6BTGFTGGFbQPq3pbzW89ROetmf50J72ZfjW89jVkvzqQFuu5mVOLXekrKvnMlaH996rkw_NatPlwFGEQ3pImIMUEv-Kf8aZi5oCqhZYN9SHW3MiYkdklTM99aT-zKFV5-CqCzW6c9jWqaBZ-YkDgya6Bzp0Dv7Qb2nBsb49ktjV3wf0KMtfzgSKwuNMoupHtWG9PNLxrTXbPqG0atQijhpPr4JI3HVDa5EucgCIPmG19FSEw2cIugjV5wwdFptGjnancPuv1AEu-X-ToRO2U_WcoOhPZl_EEQkJ_tyRQ3_6_RpTADld12Gtp2_YY8N79IZta4SU9cwqt6hyrKyTAeocv_bx3k9zBbuyWCAX30RtFvR4tDSPJ9zmcugehQlHUFGaV6blfBoembRQN2S_PUD1GI9OCcy5pIEI6egV-YnAjzXYzOBqYhpsodDi5wTb9b2qlLP7GdRFbcGrKswV8zR1uiMnd8ciZlhSNsrw3B3uGo8HJQhYnqs53xXVKreP0YSlc31DbFIBgp_W9C5sPVnkEPh_qZ7YbpeG_o7R5QgDIBF5Qw4Lm6J1bKR2PjntSpkHfpFXFBNGRH3-RlrxoP8985LWFowkf_DJL6RGPJ5FTEAp9L4D95Whtz32f-ZwiM8KXBcXsT6eiFzjYREv5I.-tzN1aGw_ZekoTFU9f3GlA","signing_type":"nasa"}
 
 RESPONSE 10
 200
-X-Backside-Transport: ***
-nnCoection: ***
 Transfer-Encoding: chunked
-Date: Thu, 18 Jun 2020 13:38:46 GMT
-X-Application-Context: ***
 Content-Type: application/json
-X-Content-Type-Options: ***
-X-XSS-Protection: ***
 Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
-X-Frame-Options: ***
-X-Global-Transaction-ID: 19aea2635eeb6e666380f683
-strict-transport-security: ***
+X-Content-Type-Options: nosniff
+X-Frame-Options: DENY
+X-XSS-Protection: 1; mode=block
+Date: Mon, 16 Nov 2020 15:01:52 GMT
+X-Global-Transaction-ID: 2504d7535fb2945f646c370b
+strict-transport-security: max-age=31536000; includeSubDomains
 
-{"status":"SIGN_PENDING","signature_state":"ASSIGNED","order_reference":"77d11db0-20b4-4be3-89a2-949015811a54"}
-
-REQUEST 11
-GET https://private.nordea.se/api/dbf/ca/signing-v1/signing/bankid_se/signature/77d11db0-20b4-4be3-89a2-949015811a54?polling_sequence=4
-Accept: application/json
-Content-Type: application/json
-Accept-Language: en-SE
-X-Aggregator: Tink Testing
-
-RESPONSE 11
-200
-X-Backside-Transport: ***
-nnCoection: ***
-Transfer-Encoding: chunked
-Date: Thu, 18 Jun 2020 13:38:48 GMT
-X-Application-Context: ***
-Content-Type: application/json
-X-Content-Type-Options: ***
-X-XSS-Protection: ***
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Pragma: no-cache
-Expires: 0
-X-Frame-Options: ***
-X-Global-Transaction-ID: 2760e24c5eeb6e687e174b9c
-strict-transport-security: ***
-
-{"status":"OK","signature_state":"SUCCESSFUL","order_reference":"77d11db0-20b4-4be3-89a2-949015811a54"}
-
-REQUEST 12
-POST https://private.nordea.se/api/dbf/ca/payments-v2/payments/complete/77d11db0-20b4-4be3-89a2-949015811a54
-Accept: application/json
-Content-Type: application/json
-Accept-Language: en-SE
-X-Aggregator: Tink Testing
-
-RESPONSE 12
-200
-X-Backside-Transport: ***
-nnCoection: ***
-Transfer-Encoding: chunked
-Date: Thu, 18 Jun 2020 13:38:48 GMT
-X-Application-Context: ***
-X-Content-Type-Options: ***
-X-XSS-Protection: ***
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Pragma: no-cache
-Expires: 0
-X-Frame-Options: ***
-Content-Type: application/json
-X-Global-Transaction-ID: 19aea2635eeb6e68802dbeac
-strict-transport-security: ***
-
-{"results":[{"id":"1701577114358","from":"3300123456","from_currency":"SEK","to":"3228756","to_account_number_type":"BG","recipient_name": null,"message":"610550873500157","own_message":"","reference":"","amount":4246.0,"status":"confirmed","type":"bankgiro","status_message":"","due":"2020-06-22","currency":"SEK","permissions":{"delete":true,"copy":true,"modify":{"from":true,"to":true,"amount":true,"due":true,"message":true,"recurring_count":true,"recurring_interval":true,"recurring_repeats":true,"recurring_lastday":true,"type":true}},"credit_notes":[]}],"errors":[]}
+{"results":[{"id":"1701577114358","from":"3300123456","from_currency":"SEK","to":"3228756","to_account_number_type":"BG","recipient_name":null,"message":"610550873500157","own_message":"","reference":"","amount":4246.0,"status":"confirmed","type":"bankgiro","status_message":"","due":"2020-06-22","currency":"SEK","permissions":{"delete":true,"copy":true,"modify":{"from":true,"to":true,"amount":true,"due":true,"message":true,"recurring_count":true,"recurring_interval":true,"recurring_repeats":true,"recurring_lastday":true,"type":true}},"credit_notes":[]}],"errors":[]}
