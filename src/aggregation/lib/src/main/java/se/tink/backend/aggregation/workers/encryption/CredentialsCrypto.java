@@ -197,14 +197,18 @@ public class CredentialsCrypto {
         // read/write logic such that
         // a request will never have stale data in the first place.
         // This cache is read in class `CredentialsCrypto`
-        cacheClient.set(
-                CacheScope.ENCRYPTED_CREDENTIALS_BY_CREDENTIALSID,
-                request.getCredentials().getId(),
-                CACHE_EXPIRE_TIME,
-                serializedEncryptedCredentials);
-        logger.info(
-                "cached sensitive data with timestamp: {}",
-                formatDate(encryptedCredentials.getTimestamp()));
+        try {
+            cacheClient.set(
+                    CacheScope.ENCRYPTED_CREDENTIALS_BY_CREDENTIALSID,
+                    request.getCredentials().getId(),
+                    CACHE_EXPIRE_TIME,
+                    serializedEncryptedCredentials);
+            logger.info(
+                    "cached sensitive data with timestamp: {}",
+                    formatDate(encryptedCredentials.getTimestamp()));
+        } catch (Exception e) {
+            logger.error("Could not cache sensitive data", e);
+        }
 
         cryptoMetrics(CREDENTIALS_ENCRYPT, encryptedCredentials, true);
 
