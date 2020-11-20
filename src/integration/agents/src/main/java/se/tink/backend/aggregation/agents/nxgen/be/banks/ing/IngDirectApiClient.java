@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.rpc.K
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.rpc.RemoteEvidenceSessionRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.rpc.RemoteEvidenceSessionResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.rpc.RemoteProfileMeansResponse;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.helper.BackOffProvider;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.helper.IngLoggingAdapter;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.helper.IngRetryFilter;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -30,7 +31,9 @@ public class IngDirectApiClient {
         this.httpClient = httpClient;
         this.directLoggingFilter = new DirectLoggingFilter(ingLoggingAdapter);
         this.retryFilter =
-                new IngRetryFilter(IngConstants.MAX_RETRIES, IngConstants.THROTTLING_DELAY);
+                new IngRetryFilter(
+                        IngConstants.MAX_RETRIES,
+                        new BackOffProvider(IngConstants.THROTTLING_DELAY));
     }
 
     public KeyAgreementResponse bootstrapKeys(KeyAgreementRequest request) {
