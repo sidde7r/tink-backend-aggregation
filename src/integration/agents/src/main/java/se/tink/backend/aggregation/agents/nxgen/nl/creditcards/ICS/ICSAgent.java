@@ -85,7 +85,7 @@ public final class ICSAgent extends NextGenerationAgent
                 new OAuth2AuthenticationController(
                         persistentStorage,
                         supplementalInformationHelper,
-                        new ICSOAuthAuthenticator(apiClient, sessionStorage),
+                        new ICSOAuthAuthenticator(apiClient, sessionStorage, persistentStorage),
                         credentials,
                         strongAuthenticationState);
 
@@ -115,7 +115,7 @@ public final class ICSAgent extends NextGenerationAgent
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
                         new TransactionDatePaginationController<>(
-                                new ICSCreditCardFetcher(apiClient)),
+                                new ICSCreditCardFetcher(apiClient, persistentStorage)),
                         null));
     }
 

@@ -1,12 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.authenticator;
 
+import java.util.Date;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSApiClient;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSConstants;
+import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSConstants.StorageKeys;
+import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.authenticator.entities.DataResponseEntity;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.authenticator.rpc.AccountSetupResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.authenticator.rpc.ClientCredentialTokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.authenticator.rpc.ErrorBody;
@@ -14,34 +17,39 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class ICSOAuthAuthenticator implements OAuth2Authenticator {
 
     private final ICSApiClient client;
     private final SessionStorage sessionStorage;
+    private final PersistentStorage persistentStorage;
 
-    public ICSOAuthAuthenticator(ICSApiClient client, SessionStorage sessionStorage) {
+    public ICSOAuthAuthenticator(
+            ICSApiClient client,
+            SessionStorage sessionStorage,
+            PersistentStorage persistentStorage) {
         this.client = client;
         this.sessionStorage = sessionStorage;
+        this.persistentStorage = persistentStorage;
     }
 
     @Override
     public URL buildAuthorizeUrl(String state) {
-        final String accountRequestId =
+        final DataResponseEntity accountRequestData =
                 Optional.ofNullable(client.fetchTokenWithClientCredential())
                         .map(ClientCredentialTokenResponse::toTinkToken)
                         .map(client::setupAccount)
                         .filter(AccountSetupResponse::receivedAllReadPermissions)
                         .orElseThrow(
-                                () ->
-                                        new IllegalStateException(
-                                                ICSConstants.ErrorMessages.MISSING_PERMISSIONS))
-                        .getData()
-                        .getAccountRequestId();
+                                () -> new IllegalStateException(ErrorMessages.MISSING_PERMISSIONS))
+                        .getData();
 
+        storeTransactionFromDate(accountRequestData.getTransactionFromDate());
         sessionStorage.put(StorageKeys.STATE, state);
-        return client.createAuthorizeRequest(state, accountRequestId).getUrl();
+        return client.createAuthorizeRequest(state, accountRequestData.getAccountRequestId())
+                .getUrl();
     }
 
     @Override
@@ -71,5 +79,9 @@ public class ICSOAuthAuthenticator implements OAuth2Authenticator {
     @Override
     public void useAccessToken(OAuth2Token accessToken) {
         this.client.setToken(accessToken);
+    }
+
+    private void storeTransactionFromDate(Date date) {
+        persistentStorage.put(StorageKeys.TRANSACTION_FROM_DATE, date);
     }
 }
