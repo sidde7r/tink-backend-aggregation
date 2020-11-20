@@ -37,7 +37,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v3
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.fetcher.transfer.entities.BeneficiariesEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.rpc.ErrorResponse;
 import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
-import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.i18n.Catalog;
@@ -55,16 +55,19 @@ public class NordeaExecutorHelper {
     private final Catalog catalog;
     private final NordeaBaseApiClient apiClient;
     private NordeaConfiguration nordeaConfiguration;
+    private final RandomValueGenerator randomValueGenerator;
 
     public NordeaExecutorHelper(
             SupplementalRequester supplementalRequester,
             Catalog catalog,
             NordeaBaseApiClient apiClient,
-            NordeaConfiguration nordeaConfiguration) {
+            NordeaConfiguration nordeaConfiguration,
+            RandomValueGenerator randomValueGenerator) {
         this.supplementalRequester = supplementalRequester;
         this.catalog = catalog;
         this.apiClient = apiClient;
         this.nordeaConfiguration = nordeaConfiguration;
+        this.randomValueGenerator = randomValueGenerator;
     }
 
     /** Check if source account is a valid one to make a transfer or payment from. */
@@ -311,8 +314,8 @@ public class NordeaExecutorHelper {
 
     private InitBankIdAutostartRequest createSignPaymentRequest(String signingOrderId) {
         return InitBankIdAutostartRequest.builder()
-                .state(Base64.encodeBase64URLSafeString(RandomUtils.secureRandom(19)))
-                .nonce(Base64.encodeBase64URLSafeString(RandomUtils.secureRandom(19)))
+                .state(Base64.encodeBase64URLSafeString(randomValueGenerator.secureRandom(19)))
+                .nonce(Base64.encodeBase64URLSafeString(randomValueGenerator.secureRandom(19)))
                 .codeChallenge(createCodeChallenge())
                 .redirectUri(nordeaConfiguration.getRedirectUri())
                 .clientId(nordeaConfiguration.getClientId())
@@ -322,7 +325,7 @@ public class NordeaExecutorHelper {
     }
 
     private String createCodeChallenge() {
-        byte[] randomCodeChallengeBytes = RandomUtils.secureRandom(64);
+        byte[] randomCodeChallengeBytes = randomValueGenerator.secureRandom(64);
         String codeVerifier = Base64.encodeBase64URLSafeString(randomCodeChallengeBytes);
         return Base64.encodeBase64URLSafeString(Hash.sha256(codeVerifier));
     }
