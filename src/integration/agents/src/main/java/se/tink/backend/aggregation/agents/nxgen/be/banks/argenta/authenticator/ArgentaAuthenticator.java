@@ -22,7 +22,6 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.authenticator.r
 import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.authenticator.rpc.StartAuthResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.authenticator.rpc.ValidateAuthRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.authenticator.rpc.ValidateAuthResponse;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.utils.ArgentaCardNumber;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.utils.ArgentaSecurityUtil;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.authenticator.AutoAuthenticator;
@@ -68,8 +67,7 @@ public class ArgentaAuthenticator implements TypedAuthenticator, AutoAuthenticat
     public void authenticate(Credentials credentials)
             throws AuthenticationException, AuthorizationException {
         String deviceToken = persistentStorage.getDeviceId();
-        String cardNumber =
-                ArgentaCardNumber.formatCardNumber(credentials.getField(Field.Key.USERNAME));
+        String cardNumber = credentials.getField(Field.Key.USERNAME);
         ValidateAuthResponse validateAuthResponse;
         if (Strings.isNullOrEmpty(deviceToken)) {
             validateAuthResponse = registerNewDevice(cardNumber);
