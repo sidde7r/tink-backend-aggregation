@@ -33,7 +33,7 @@ public class CredentialsCrypto {
     // some refreshes stopped before finalizing DecryptCredentialsWorkerCommand or 500 exception pop
     // up when finalizing it
     // which causes the sensitive data to not persistent back to the customer cluster
-    private static final int CACHE_EXPIRE_TIME = Math.toIntExact(TimeUnit.MINUTES.toSeconds(780));
+    private static final int CACHE_EXPIRE_TIME = Math.toIntExact(TimeUnit.MINUTES.toSeconds(1500));
     public static final MetricId CREDENTIALS_DECRYPT = MetricId.newId("credentials_decrypt");
     public static final MetricId CREDENTIALS_ENCRYPT = MetricId.newId("credentials_encrypt");
 
