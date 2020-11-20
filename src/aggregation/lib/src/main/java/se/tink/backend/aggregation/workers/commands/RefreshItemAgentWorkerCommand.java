@@ -154,7 +154,7 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
             } catch (BankServiceException e) {
                 // The way frontend works now the message will not be displayed to the user.
                 context.updateStatus(
-                        CredentialsStatus.UNCHANGED,
+                        CredentialsStatus.TEMPORARY_ERROR,
                         context.getCatalog().getString(e.getUserMessage()));
                 action.unavailable();
                 refreshEventProducer.sendEventForRefreshWithErrorInBankSide(
