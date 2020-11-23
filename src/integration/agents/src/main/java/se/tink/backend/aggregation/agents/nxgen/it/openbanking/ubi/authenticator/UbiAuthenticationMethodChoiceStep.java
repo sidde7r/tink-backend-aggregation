@@ -45,7 +45,7 @@ public class UbiAuthenticationMethodChoiceStep implements AuthenticationStep {
                     CbiThirdPartyAppAuthenticationStep.getStepIdentifier(ConsentType.ACCOUNT));
         } else {
             return AuthenticationStepResponse.executeStepWithId(
-                    UbiUsernamePasswordAuthenticationStep.getStepIdentifier());
+                    AccountConsentDecoupledStep.getStepIdentifier());
         }
     }
 

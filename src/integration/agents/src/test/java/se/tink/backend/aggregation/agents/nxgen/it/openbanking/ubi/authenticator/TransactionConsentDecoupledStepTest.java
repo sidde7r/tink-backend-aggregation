@@ -1,49 +1,47 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.ubi.authenticator;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.times;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
-import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.ubi.UbiConstants.FormValues;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.CbiUserState;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.ConsentManager;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.PsuCredentialsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationRequest;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.i18n.LocalizableKey;
 
-public class UbiUsernamePasswordAuthenticationStepTest {
-
-    private UbiUsernamePasswordAuthenticationStep step;
+public class TransactionConsentDecoupledStepTest {
+    private TransactionConsentDecoupledStep step;
     private ConsentManager consentManager;
     private StrongAuthenticationState strongAuthenticationState;
-    private Catalog catalog;
+    private CbiUserState userState;
 
     @Before
     public void init() {
-        consentManager = Mockito.mock(ConsentManager.class);
-        strongAuthenticationState = Mockito.mock(StrongAuthenticationState.class);
-        catalog = Mockito.mock(Catalog.class);
+        this.consentManager = mock(ConsentManager.class);
+        this.strongAuthenticationState = mock(StrongAuthenticationState.class);
+        Catalog catalog = mock(Catalog.class);
         when(catalog.getString(any(LocalizableKey.class))).thenReturn("");
-        step =
-                new UbiUsernamePasswordAuthenticationStep(
-                        consentManager,
-                        strongAuthenticationState,
-                        Mockito.mock(SupplementalRequester.class),
-                        catalog);
+        this.userState = mock(CbiUserState.class);
+        this.step =
+                new TransactionConsentDecoupledStep(
+                        consentManager, strongAuthenticationState, userState);
     }
 
     @Test
@@ -80,14 +78,14 @@ public class UbiUsernamePasswordAuthenticationStepTest {
         when(strongAuthenticationState.getState()).thenReturn(state);
 
         // when
-        step.execute(new AuthenticationRequest(credentials));
+        AuthenticationStepResponse response = step.execute(new AuthenticationRequest(credentials));
 
         // then
-        verify(strongAuthenticationState, times(2)).getState();
-        verify(consentManager, times(1)).createAccountConsent(state);
-        verify(consentManager, times(1)).createTransactionsConsent(state);
-        verify(consentManager, times(2)).updateAuthenticationMethod(FormValues.SCA_DECOUPLED);
-        verify(consentManager, times(2)).updatePsuCredentials(username, password, psuCredentials);
-        verify(consentManager, times(2)).waitForAcceptance();
+        verify(strongAuthenticationState).getState();
+        verify(consentManager).createTransactionsConsent(state);
+        verify(consentManager).updateAuthenticationMethod(FormValues.SCA_DECOUPLED);
+        verify(consentManager).updatePsuCredentials(username, password, psuCredentials);
+        verify(consentManager).waitForAcceptance();
+        assertThat(response.isAuthenticationFinished()).isTrue();
     }
 }

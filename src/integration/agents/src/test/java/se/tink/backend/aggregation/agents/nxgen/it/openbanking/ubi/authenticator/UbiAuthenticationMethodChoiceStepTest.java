@@ -44,8 +44,7 @@ public class UbiAuthenticationMethodChoiceStepTest {
         // then
         Assert.assertTrue(response.getNextStepId().isPresent());
         Assert.assertEquals(
-                response.getNextStepId().get(),
-                UbiUsernamePasswordAuthenticationStep.class.getSimpleName());
+                response.getNextStepId().get(), AccountConsentDecoupledStep.class.getSimpleName());
     }
 
     @Test
