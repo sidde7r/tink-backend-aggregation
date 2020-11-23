@@ -882,6 +882,7 @@ maven_install(
         "org.slf4j:jul-to-slf4j:1.7.6",
         "org.slf4j:slf4j-api:1.7.26",
         "org.slf4j:slf4j-log4j12:1.7.5",
+        "org.slf4j:slf4j-simple:1.7.5",
         "org.w3c.css:sac:1.3",
         "org.xerial.snappy:snappy-java:1.0.5-M2",
         "org.xmlunit:xmlunit-core:2.1.1",

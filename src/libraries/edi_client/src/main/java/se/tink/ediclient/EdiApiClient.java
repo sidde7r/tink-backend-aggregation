@@ -37,6 +37,10 @@ class EdiApiClient {
                 return baos.toByteArray();
             } else if (response.getStatusLine().getStatusCode() == 404) {
                 LOG.info("Still waiting");
+                try {
+                    Thread.sleep(4000);
+                } catch (InterruptedException ignored) {
+                }
             } else {
                 LOG.info(response.getStatusLine().toString());
                 throw new EdiClientException(

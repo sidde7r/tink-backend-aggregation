@@ -12,6 +12,15 @@ java_library(
     ],
 )
 
+java_binary(
+    name = "issue",
+    main_class = "se.tink.ediclient.EdiMain",
+    runtime_deps = [
+        ":edi_client",
+        "@aggregation//:org_slf4j_slf4j_simple",
+    ],
+)
+
 junit_test(
     name = "edi_client_test",
     srcs = glob(["src/test/java/**/*.java"]),
