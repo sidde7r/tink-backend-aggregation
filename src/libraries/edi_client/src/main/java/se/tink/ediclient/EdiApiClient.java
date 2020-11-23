@@ -39,7 +39,9 @@ class EdiApiClient {
                 LOG.info("Still waiting");
             } else {
                 LOG.info(response.getStatusLine().toString());
-                throw new RuntimeException("FAILED");
+                throw new EdiClientException(
+                        "Error response from eIDAS dev issuer service: "
+                                + response.getStatusLine().toString());
             }
         }
     }

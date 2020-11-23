@@ -10,6 +10,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.security.GeneralSecurityException;
 import java.security.KeyPair;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
@@ -21,6 +24,7 @@ import java.security.interfaces.RSAPublicKey;
 import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.Locale;
+import org.bouncycastle.operator.OperatorCreationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,7 +36,9 @@ public class EdiClient {
     private static final String CERT_ALIAS = "clientcert";
     private static final char[] DEFAULT_KEYSTORE_PWD = "changeme".toCharArray();
 
-    private static KeyStore issue() throws Exception {
+    private static KeyStore issue()
+            throws GeneralSecurityException, URISyntaxException, IOException,
+                    OperatorCreationException {
         KeyPair pair = EdiCryptoUtils.generateKeyPair();
         String csrString = generateCSR(pair);
 
@@ -62,7 +68,6 @@ public class EdiClient {
     public static KeyStore requestOrGetDevCert(File workDir)
             throws KeyStoreException, IOException, CertificateException, NoSuchAlgorithmException {
         if (!workDir.exists()) {
-
             if (!workDir.mkdirs()) {
                 throw new IllegalStateException(
                         "Could not make working directory; " + workDir.getAbsolutePath());
@@ -78,7 +83,7 @@ public class EdiClient {
                 LOG.info("Certificate exists, checking expiry");
                 if (certificateAboutToExpire(certificate.getNotAfter())) {
                     LOG.info("Certificate is about to expire, should be renewed");
-                    devCertKeystore.delete();
+                    Files.delete(devCertKeystore.toPath());
                 } else {
                     LOG.info("Certificate has plenty of validity");
                     return keyStore;
