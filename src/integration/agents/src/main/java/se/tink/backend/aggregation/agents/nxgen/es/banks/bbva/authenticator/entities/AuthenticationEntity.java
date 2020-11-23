@@ -34,6 +34,7 @@ public class AuthenticationEntity {
         this.authenticationType = LoginParameter.AUTH_TYPE;
         this.multistepProcessId = multistepProcessId;
         this.authenticationState = AuthenticationStates.GO_ON;
+        this.authenticationData = Collections.emptyList();
     }
 
     private String getDataId(String multistepProcessId) {
