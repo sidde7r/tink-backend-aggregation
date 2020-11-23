@@ -31,8 +31,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.configuration.SoftwareStatementAssertion;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.signer.EidasJwtSigner;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.signer.iface.JwtSigner;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenbankingV31Executor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.configuration.UkOpenBankingPisConfig;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
@@ -348,8 +348,8 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
 
         UkOpenBankingPaymentApiClient paymentApiClient = createPaymentApiClient();
 
-        UkOpenbankingV31Executor paymentExecutor =
-                new UkOpenbankingV31Executor(
+        UkOpenBankingExecutor paymentExecutor =
+                new UkOpenBankingExecutor(
                         softwareStatement,
                         providerConfiguration,
                         paymentApiClient,
@@ -361,7 +361,7 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
         return Optional.of(new PaymentController(paymentExecutor, paymentExecutor));
     }
 
-    protected UkOpenBankingPaymentApiClient createPaymentApiClient() {
+    private UkOpenBankingPaymentApiClient createPaymentApiClient() {
         return new UkOpenBankingPaymentApiClient(
                 client,
                 jwtSigner,

@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.entities.AuthorizeRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.rpc.WellKnownResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenbankingPaymentHelper;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.helper.UkOpenBankingPaymentHelper;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -17,7 +17,7 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 public class OpenIdPisAuthenticator implements OpenIdAuthenticator {
 
     private final UkOpenBankingPaymentApiClient apiClient;
-    private final UkOpenbankingPaymentHelper paymentHelper;
+    private final UkOpenBankingPaymentHelper paymentHelper;
     private final SoftwareStatementAssertion softwareStatement;
     private final ClientInfo clientInfo;
     private final PaymentRequest paymentRequest;
