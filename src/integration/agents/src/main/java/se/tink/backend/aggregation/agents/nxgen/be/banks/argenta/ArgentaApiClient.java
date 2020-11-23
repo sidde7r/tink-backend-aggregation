@@ -142,15 +142,17 @@ public class ArgentaApiClient {
             throws LoginException, AuthorizationException {
         String errorCode = argentaErrorResponse.getCode();
         if (!Strings.isNullOrEmpty(errorCode)) {
-            if (errorCode.toLowerCase().startsWith(ArgentaConstants.ErrorResponse.AUTHENTICATION)) {
+            String value = errorCode.toLowerCase();
+            if (value.startsWith(ArgentaConstants.ErrorResponse.AUTHENTICATION)) {
                 throw LoginError.INCORRECT_CREDENTIALS.exception(responseException);
-            } else if (errorCode
-                    .toLowerCase()
-                    .startsWith(ArgentaConstants.ErrorResponse.ERROR_CODE_SBB)) {
+            } else if (value.startsWith(ArgentaConstants.ErrorResponse.ERROR_CODE_SBB)) {
                 String errorMessage = getErrorMessage(argentaErrorResponse);
                 if (!Strings.isNullOrEmpty(errorMessage)) {
                     handleKnownErrorMessages(errorMessage.toLowerCase(), responseException);
                 }
+            } else if (value.startsWith(ArgentaConstants.ErrorResponse.ERROR_INVALID_REQUEST)) {
+                // happens when app version is too old
+                throw new IllegalArgumentException(value, responseException);
             }
         }
     }
