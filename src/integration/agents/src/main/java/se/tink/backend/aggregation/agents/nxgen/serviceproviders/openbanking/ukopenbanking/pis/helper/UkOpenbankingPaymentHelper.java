@@ -35,11 +35,13 @@ public class UkOpenbankingPaymentHelper {
                                             AccountIdentifier.Type.SORT_CODE),
                                     new Pair<>(
                                             AccountIdentifier.Type.PAYM_PHONE_NUMBER,
-                                            AccountIdentifier.Type.PAYM_PHONE_NUMBER),
+                                            AccountIdentifier.Type.PAYM_PHONE_NUMBER))
+                            .put(
+                                    PaymentType.SEPA,
+                                    new Pair<>(null, AccountIdentifier.Type.IBAN),
                                     new Pair<>(
                                             AccountIdentifier.Type.IBAN,
-                                            AccountIdentifier.Type.IBAN),
-                                    new Pair<>(null, AccountIdentifier.Type.IBAN))
+                                            AccountIdentifier.Type.IBAN))
                             .build();
 
     private final Map<PaymentType, ApiClientWrapper> apiClientWrapperMap;
@@ -48,9 +50,12 @@ public class UkOpenbankingPaymentHelper {
     public UkOpenbankingPaymentHelper(UkOpenBankingPaymentApiClient apiClient, Clock clock) {
         this.apiClientWrapperMap =
                 ImmutableMap.of(
-                        PaymentType.DOMESTIC, new DomesticPaymentApiClientWrapper(apiClient),
+                        PaymentType.DOMESTIC,
+                        new DomesticPaymentApiClientWrapper(apiClient),
                         PaymentType.DOMESTIC_FUTURE,
-                                new DomesticScheduledPaymentApiClientWrapper(apiClient));
+                        new DomesticScheduledPaymentApiClientWrapper(apiClient),
+                        PaymentType.SEPA,
+                        new DomesticPaymentApiClientWrapper(apiClient));
 
         this.clock = clock;
     }
