@@ -74,6 +74,7 @@ public class ArgentaConstants {
     public static class ErrorResponse {
         public static final String AUTHENTICATION = "error.authentication";
         public static final String ERROR_CODE_SBB = "error.sbb";
+        public static final String ERROR_INVALID_REQUEST = "error.invalid.request";
         public static final String TOO_MANY_DEVICES = "maximumaantal actieve registraties";
         public static final String TOO_MANY_ATTEMPTS =
                 "je hebt te vaak een foute pincode ingevoerd";
