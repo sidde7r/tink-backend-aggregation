@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.fetcher.transactionalaccount;
+package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.fetcher.creditcard;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -7,42 +7,40 @@ import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.OpBankApiC
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.OpBankConstants.IdTags;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.OpBankConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.OpBankConstants.Urls;
-import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.fetcher.entities.AccountEntity;
+import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.fetcher.entities.CreditCardEntity;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
-public class OpBankTransactionalAccountFetcher
-        implements AccountFetcher<TransactionalAccount>,
-                TransactionKeyPaginator<TransactionalAccount, URL> {
+public class OpBankCreditCardAccountFetcher
+        implements AccountFetcher<CreditCardAccount>,
+                TransactionKeyPaginator<CreditCardAccount, URL> {
 
     private final OpBankApiClient apiClient;
 
-    public OpBankTransactionalAccountFetcher(OpBankApiClient apiClient) {
+    public OpBankCreditCardAccountFetcher(OpBankApiClient apiClient) {
         this.apiClient = apiClient;
     }
 
     @Override
-    public Collection<TransactionalAccount> fetchAccounts() {
-        return apiClient.getAccounts().stream()
-                .map(AccountEntity::toTinkAccount)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
+    public Collection<CreditCardAccount> fetchAccounts() {
+        return apiClient.getCreditCards().stream()
+                .map(CreditCardEntity::toTinkAccount)
                 .collect(Collectors.toList());
     }
 
     @Override
     public TransactionKeyPaginatorResponse<URL> getTransactionsFor(
-            TransactionalAccount account, URL nextUrl) {
+            CreditCardAccount account, URL nextUrl) {
         URL url =
                 Optional.ofNullable(nextUrl)
                         .orElse(
-                                Urls.GET_ACCOUNT_TRANSACTIONS.parameter(
-                                        IdTags.ACCOUNT_ID,
-                                        account.getFromTemporaryStorage(StorageKeys.ACCOUNT_ID)));
+                                Urls.GET_CREDIT_CARD_TRANSACTIONS.parameter(
+                                        IdTags.CARD_ID,
+                                        account.getFromTemporaryStorage(StorageKeys.CARD_ID)));
 
-        return apiClient.getTransactions(url);
+        return apiClient.getCreditCardTransactions(url);
     }
 }

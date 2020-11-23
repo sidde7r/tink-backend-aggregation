@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank;
+package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.agent;
 
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -34,7 +34,7 @@ public class OpBankAgentTest {
                         .setAppId("tink")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(false);
+                        .saveCredentialsAfter(true);
     }
 
     @Test
