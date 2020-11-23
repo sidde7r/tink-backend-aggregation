@@ -1,7 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis;
 
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentConstants.JWTSignatureHeaders.HEADERS;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableMap;
 import java.time.Instant;
@@ -17,13 +15,14 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.signer.iface.JwtSigner;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.signer.iface.JwtSigner.Algorithm;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentConstants.HttpHeaders;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentConstants.JWTSignatureHeaders.PAYLOAD;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentConstants.JWTSignatureHeaders.Headers;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentConstants.JWTSignatureHeaders.Payload;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.configuration.UkOpenBankingPisConfig;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.rpc.DomesticPaymentConsentResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.rpc.DomesticPaymentResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.rpc.DomesticScheduledPaymentConsentResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.rpc.DomesticScheduledPaymentResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.rpc.FundsConfirmationResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.dto.common.FundsConfirmationResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.dto.domestic.DomesticPaymentConsentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.dto.domestic.DomesticPaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.dto.domesticscheduled.DomesticScheduledPaymentConsentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.dto.domesticscheduled.DomesticScheduledPaymentResponse;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
@@ -153,8 +152,8 @@ public class UkOpenBankingPaymentApiClient extends OpenIdApiClient {
 
         ImmutableMap<String, Object> payloadClaims =
                 ImmutableMap.<String, Object>builder()
-                        .put(PAYLOAD.DATA, requestBody.get(PAYLOAD.DATA))
-                        .put(PAYLOAD.RISK, requestBody.get(PAYLOAD.RISK))
+                        .put(Payload.DATA, requestBody.get(Payload.DATA))
+                        .put(Payload.RISK, requestBody.get(Payload.RISK))
                         .build();
 
         switch (UkOpenBankingV31PaymentConstants.SIGNING_ALGORITHM.valueOf(preferredAlgorithm)) {
@@ -169,10 +168,10 @@ public class UkOpenBankingPaymentApiClient extends OpenIdApiClient {
     private String createRs256Signature(Map<String, Object> payloadClaims) {
 
         Map<String, Object> jwtHeaders = new LinkedHashMap<>();
-        jwtHeaders.put(HEADERS.B64, false);
-        jwtHeaders.put(HEADERS.IAT, new Date().getTime() - 1000);
-        jwtHeaders.put(HEADERS.ISS, softwareStatement.getSoftwareId());
-        jwtHeaders.put(HEADERS.CRIT, Arrays.asList(HEADERS.B64, HEADERS.IAT, HEADERS.ISS));
+        jwtHeaders.put(Headers.B64, false);
+        jwtHeaders.put(Headers.IAT, new Date().getTime() - 1000);
+        jwtHeaders.put(Headers.ISS, softwareStatement.getSoftwareId());
+        jwtHeaders.put(Headers.CRIT, Arrays.asList(Headers.B64, Headers.IAT, Headers.ISS));
 
         return signer.sign(Algorithm.RS256, jwtHeaders, payloadClaims, true);
     }
@@ -202,17 +201,17 @@ public class UkOpenBankingPaymentApiClient extends OpenIdApiClient {
 
         Map<String, Object> jwtHeaders = new LinkedHashMap<>();
 
-        jwtHeaders.put(HEADERS.B64, false);
-        jwtHeaders.put(HEADERS.IAT, Instant.now().minusSeconds(3600).getEpochSecond());
+        jwtHeaders.put(Headers.B64, false);
+        jwtHeaders.put(Headers.IAT, Instant.now().minusSeconds(3600).getEpochSecond());
         jwtHeaders.put(
-                HEADERS.ISS,
+                Headers.ISS,
                 String.format(
                         "%s/%s",
                         UkOpenBankingV31PaymentConstants.TINK_UK_OPEN_BANKING_ORG_ID,
                         UkOpenBankingV31PaymentConstants.GENERAL_STANDARD_ISS));
-        jwtHeaders.put(HEADERS.TAN, UkOpenBankingV31PaymentConstants.UKOB_TAN);
+        jwtHeaders.put(Headers.TAN, UkOpenBankingV31PaymentConstants.UKOB_TAN);
         jwtHeaders.put(
-                HEADERS.CRIT, Arrays.asList(HEADERS.B64, HEADERS.IAT, HEADERS.ISS, HEADERS.TAN));
+                Headers.CRIT, Arrays.asList(Headers.B64, Headers.IAT, Headers.ISS, Headers.TAN));
 
         return signer.sign(Algorithm.PS256, jwtHeaders, payloadClaims, true);
     }
@@ -221,15 +220,15 @@ public class UkOpenBankingPaymentApiClient extends OpenIdApiClient {
 
         Map<String, Object> jwtHeaders = new LinkedHashMap<>();
 
-        jwtHeaders.put(HEADERS.IAT, Instant.now().minusSeconds(3600).getEpochSecond());
+        jwtHeaders.put(Headers.IAT, Instant.now().minusSeconds(3600).getEpochSecond());
         jwtHeaders.put(
-                HEADERS.ISS,
+                Headers.ISS,
                 String.format(
                         "%s/%s",
                         UkOpenBankingV31PaymentConstants.TINK_UK_OPEN_BANKING_ORG_ID,
                         UkOpenBankingV31PaymentConstants.GENERAL_STANDARD_ISS));
-        jwtHeaders.put(HEADERS.TAN, UkOpenBankingV31PaymentConstants.UKOB_TAN);
-        jwtHeaders.put(HEADERS.CRIT, Arrays.asList(HEADERS.IAT, HEADERS.ISS, HEADERS.TAN));
+        jwtHeaders.put(Headers.TAN, UkOpenBankingV31PaymentConstants.UKOB_TAN);
+        jwtHeaders.put(Headers.CRIT, Arrays.asList(Headers.IAT, Headers.ISS, Headers.TAN));
 
         return signer.sign(Algorithm.PS256, jwtHeaders, payloadClaims, true);
     }
@@ -238,10 +237,10 @@ public class UkOpenBankingPaymentApiClient extends OpenIdApiClient {
 
         Map<String, Object> jwtHeaders = new LinkedHashMap<>();
 
-        jwtHeaders.put(HEADERS.IAT, Instant.now().minusSeconds(3600).getEpochSecond());
-        jwtHeaders.put(HEADERS.ISS, UkOpenBankingV31PaymentConstants.RFC_2253_DN);
-        jwtHeaders.put(HEADERS.TAN, UkOpenBankingV31PaymentConstants.UKOB_TAN);
-        jwtHeaders.put(HEADERS.CRIT, Arrays.asList(HEADERS.IAT, HEADERS.ISS, HEADERS.TAN));
+        jwtHeaders.put(Headers.IAT, Instant.now().minusSeconds(3600).getEpochSecond());
+        jwtHeaders.put(Headers.ISS, UkOpenBankingV31PaymentConstants.RFC_2253_DN);
+        jwtHeaders.put(Headers.TAN, UkOpenBankingV31PaymentConstants.UKOB_TAN);
+        jwtHeaders.put(Headers.CRIT, Arrays.asList(Headers.IAT, Headers.ISS, Headers.TAN));
 
         return signer.sign(Algorithm.PS256, jwtHeaders, payloadClaims, true);
     }
