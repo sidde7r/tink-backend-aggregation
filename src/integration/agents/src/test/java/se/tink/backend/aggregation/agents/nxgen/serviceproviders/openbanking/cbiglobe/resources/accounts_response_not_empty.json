@@ -1,0 +1,39 @@
+{
+  "accounts": [
+    {
+      "iban": "**HASHED:bU**",
+      "currency": "EUR",
+      "resourceId": "**HASHED:4d**",
+      "details": "",
+      "_links": {
+        "account": {
+          "href": "/accounts/**HASHED:4d**"
+        },
+        "balances": {
+          "href": "/accounts/**HASHED:4d**/balances"
+        },
+        "transactions": {
+          "href": "/accounts/**HASHED:4d**/transactions"
+        }
+      }
+    },
+    {
+      "iban": "**HASHED:5k**",
+      "maskedPan": "***********08",
+      "currency": "EUR",
+      "resourceId": "**HASHED:mQ**",
+      "details": "",
+      "_links": {
+        "account": {
+          "href": "/accounts/**HASHED:mQ**"
+        },
+        "balances": {
+          "href": "/accounts/**HASHED:mQ**/balances"
+        },
+        "transactions": {
+          "href": "/accounts/**HASHED:mQ**/transactions"
+        }
+      }
+    }
+  ]
+}

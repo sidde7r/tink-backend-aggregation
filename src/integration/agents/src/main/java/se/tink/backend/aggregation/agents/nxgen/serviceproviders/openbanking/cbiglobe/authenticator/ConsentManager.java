@@ -64,7 +64,7 @@ public class ConsentManager {
     }
 
     public ConsentResponse createTransactionsConsent(String state) {
-        GetAccountsResponse getAccountsResponse = apiClient.fetchAccounts();
+        GetAccountsResponse getAccountsResponse = userState.getAccountsResponseFromStorage();
         ConsentRequest consentRequestBalancesTransactions =
                 createConsentRequestBalancesTransactions(getAccountsResponse);
 
@@ -213,8 +213,6 @@ public class ConsentManager {
             log.warn("Authorization failed, consents status is not accepted.", e);
             throw LoginError.INCORRECT_CHALLENGE_RESPONSE.exception(e);
         }
-
-        userState.finishManualAuthenticationStep();
     }
 
     private Retryer<ConsentStatus> getApprovalStatusRetryer() {

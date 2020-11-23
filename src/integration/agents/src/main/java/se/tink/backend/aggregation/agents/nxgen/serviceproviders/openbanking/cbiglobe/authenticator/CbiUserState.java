@@ -4,8 +4,10 @@ import java.util.Date;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.StorageKeys;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class CbiUserState {
 
@@ -45,7 +47,7 @@ public class CbiUserState {
         finishManualAuthenticationStep();
     }
 
-    void finishManualAuthenticationStep() {
+    public void finishManualAuthenticationStep() {
         persistentStorage.put(CBI_MANUAL_AUTHENTICATION_IN_PROGRESS, false);
     }
 
@@ -57,6 +59,15 @@ public class CbiUserState {
         return persistentStorage
                 .get(CHOSEN_AUTHENTICATION_METHOD_ID, String.class)
                 .orElseThrow(() -> new IllegalStateException("Cannot find authentication method"));
+    }
+
+    public GetAccountsResponse getAccountsResponseFromStorage() {
+        return SerializationUtils.deserializeFromString(
+                persistentStorage.get(StorageKeys.ACCOUNTS), GetAccountsResponse.class);
+    }
+
+    public void persistAccounts(GetAccountsResponse getAccountsResponse) {
+        persistentStorage.put(StorageKeys.ACCOUNTS, getAccountsResponse);
     }
 
     void saveToken(OAuth2Token token) {

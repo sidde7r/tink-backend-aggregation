@@ -74,6 +74,8 @@ public class CbiGlobeAuthenticator extends StatelessProgressiveAuthenticator {
                             userState,
                             strongAuthenticationState));
 
+            manualAuthenticationSteps.add(new AccountFetchingStep(apiClient, userState));
+
             manualAuthenticationSteps.add(
                     new CbiThirdPartyAppAuthenticationStep(
                             new TransactionsConsentRequestParamsProvider(
