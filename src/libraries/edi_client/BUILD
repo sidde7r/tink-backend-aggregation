@@ -20,15 +20,3 @@ java_binary(
         "@aggregation//:org_slf4j_slf4j_simple",
     ],
 )
-
-junit_test(
-    name = "edi_client_test",
-    srcs = glob(["src/test/java/**/*.java"]),
-    tags = ["manual"],
-    visibility = ["//visibility:public"],
-    deps = [
-        ":edi_client",
-        "//third_party:junit_junit",
-        "//third_party:org_slf4j_slf4j_api",
-    ],
-)
