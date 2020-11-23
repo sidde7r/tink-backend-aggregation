@@ -174,9 +174,6 @@ public class SkandiaBankenConstants {
         public static final String ERROR_MESSAGE_COMMUNICATION_FAILED = "Communication failed.";
         public static final String INVESTMENT_NUMBER_NOT_FOUND =
                 "Investment account number was not found";
-        public static final String TECHNICAL_ERROR = "Skandia bank & försäkring - Tekniskt fel";
-        public static final String TECHNICAL_DIFFICULTIES =
-                "We're experiencing technical difficulties at the moment. Please try again or contact Customer services.";
         public static final String NOT_CUSTOMER =
                 "för att använda tjänsten behöver du bli kund hos oss.";
     }
@@ -185,7 +182,7 @@ public class SkandiaBankenConstants {
         public static final String APPROVED = "Approved";
     }
 
-    public static class TimeoutFilter {
+    public static class TimeoutRetryConfig {
         public static final int NUM_TIMEOUT_RETRIES = 3;
         public static final int TIMEOUT_RETRY_SLEEP_MILLISECONDS = 1000;
     }

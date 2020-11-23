@@ -19,7 +19,7 @@ import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.Fetcher;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.TimeoutFilter;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.TimeoutRetryConfig;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.authenticator.SkandiaBankenAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.creditcard.SkandiaBankenCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.identity.SkandiaBankenIdentityDataFetcher;
@@ -27,7 +27,6 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.i
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.transactionalaccount.SkandiaBankenAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.transactionalaccount.SkandiaBankenTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.upcomingtransaction.SkandiaBankenUpcomingTransactionFetcher;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.filter.SkandiabankenHttpFilter;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.session.SkandiaBankenSessionHandler;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -41,6 +40,9 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.BankServiceInternalErrorFilter;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.GatewayTimeoutFilter;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.TimeoutFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.TimeoutRetryFilter;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
@@ -161,10 +163,12 @@ public final class SkandiaBankenAgent extends NextGenerationAgent
     }
 
     protected void configureHttpClient(TinkHttpClient client) {
+        client.addFilter(new TimeoutFilter());
         client.addFilter(
                 new TimeoutRetryFilter(
-                        TimeoutFilter.NUM_TIMEOUT_RETRIES,
-                        TimeoutFilter.TIMEOUT_RETRY_SLEEP_MILLISECONDS));
-        client.addFilter(new SkandiabankenHttpFilter());
+                        TimeoutRetryConfig.NUM_TIMEOUT_RETRIES,
+                        TimeoutRetryConfig.TIMEOUT_RETRY_SLEEP_MILLISECONDS));
+        client.addFilter(new BankServiceInternalErrorFilter());
+        client.addFilter(new GatewayTimeoutFilter());
     }
 }
