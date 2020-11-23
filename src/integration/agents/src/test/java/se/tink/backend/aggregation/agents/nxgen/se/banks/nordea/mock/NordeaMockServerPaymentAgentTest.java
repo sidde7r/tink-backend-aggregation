@@ -34,14 +34,14 @@ public class NordeaMockServerPaymentAgentTest {
         final AgentWireMockPaymentTest agentWireMockPaymentTest =
                 AgentWireMockPaymentTest.builder(SE, "nordea-bankid", wireMockFilePath)
                         .withConfigurationFile(configuration)
-                        .addTransfer(createMockedDomesticTransfer())
+                        .addTransfer(createMockPayment())
                         .withHttpDebugTrace()
                         .buildWithoutLogin(TransferCommand.class);
 
         agentWireMockPaymentTest.executePayment();
     }
 
-    private Transfer createMockedDomesticTransfer() {
+    private Transfer createMockPayment() {
         Transfer transfer = new Transfer();
         transfer.setSource(AccountIdentifier.create(AccountIdentifier.Type.SE, "3300123456"));
         transfer.setDestination(AccountIdentifier.create(AccountIdentifier.Type.SE_BG, "3228756"));

@@ -27,6 +27,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
         "//src/integration/models",
+        "//src/integration/nemid",
         "//src/libraries/i18n",
         "//src/libraries/iban",
         "//src/libraries/serialization",

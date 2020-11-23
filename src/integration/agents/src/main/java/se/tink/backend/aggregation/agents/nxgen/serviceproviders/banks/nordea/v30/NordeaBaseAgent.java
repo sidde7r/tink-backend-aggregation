@@ -41,6 +41,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v3
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
@@ -75,6 +76,7 @@ public abstract class NordeaBaseAgent extends NextGenerationAgent
     private final NordeaConfiguration nordeaConfiguration;
     private final LocalDateTimeSource localDateTimeSource;
     private final String organisationNumber;
+    private final RandomValueGenerator randomValueGenerator;
 
     public NordeaBaseAgent(
             AgentComponentProvider componentProvider, NordeaConfiguration nordeaConfiguration) {
@@ -82,6 +84,7 @@ public abstract class NordeaBaseAgent extends NextGenerationAgent
         this.nordeaConfiguration = nordeaConfiguration;
         apiClient = new NordeaBaseApiClient(client, sessionStorage, nordeaConfiguration);
         this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
+        randomValueGenerator = componentProvider.getRandomValueGenerator();
         this.organisationNumber =
                 Optional.ofNullable(
                                 componentProvider
@@ -130,7 +133,8 @@ public abstract class NordeaBaseAgent extends NextGenerationAgent
     }
 
     private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
-        final NordeaTransactionFetcher transactionFetcher = new NordeaTransactionFetcher(apiClient);
+        final NordeaTransactionFetcher transactionFetcher =
+                new NordeaTransactionFetcher(apiClient, nordeaConfiguration);
         final NordeaUpcomingTransactionFetcher upcomingTransactionFetcher =
                 new NordeaUpcomingTransactionFetcher(apiClient, nordeaConfiguration);
 
@@ -242,7 +246,9 @@ public abstract class NordeaBaseAgent extends NextGenerationAgent
 
     @Override
     protected Optional<TransferController> constructTransferController() {
-        NordeaExecutorHelper executorHelper = new NordeaExecutorHelper(context, catalog, apiClient);
+        NordeaExecutorHelper executorHelper =
+                new NordeaExecutorHelper(
+                        context, catalog, apiClient, nordeaConfiguration, randomValueGenerator);
 
         return Optional.of(
                 new TransferController(

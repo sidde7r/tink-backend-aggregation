@@ -4,7 +4,7 @@ POST https://www.avanza.se/_api/authentication/sessions/bankid
 Accept: application/json
 Content-Type: application/json
 
-{"identificationNumber":"psu"}
+{"identificationNumber":"199909091234"}
 
 RESPONSE 1 SET BANK_ID_1
 202

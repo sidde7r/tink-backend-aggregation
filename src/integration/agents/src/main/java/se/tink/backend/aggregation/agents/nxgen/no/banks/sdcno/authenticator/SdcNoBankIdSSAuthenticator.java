@@ -66,6 +66,7 @@ public class SdcNoBankIdSSAuthenticator implements AutoAuthenticator, TypedAuthe
 
         controller.doLogin(credentials);
 
+        postAuthDriverProcessor.processLogonCasesAfterSuccessfulBankIdAuthentication();
         postAuthDriverProcessor.processWebDriver();
 
         driver.close();

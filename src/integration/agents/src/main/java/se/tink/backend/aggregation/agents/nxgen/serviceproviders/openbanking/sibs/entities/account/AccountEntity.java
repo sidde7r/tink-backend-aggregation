@@ -72,13 +72,14 @@ public class AccountEntity {
     }
 
     @JsonIgnore
-    public CreditCardAccount toTinkCreditCard(ExactCurrencyAmount balance) {
+    public CreditCardAccount toTinkCreditCard(
+            ExactCurrencyAmount closingBooked, ExactCurrencyAmount interimAvailable) {
         return CreditCardAccount.nxBuilder()
                 .withCardDetails(
                         CreditCardModule.builder()
                                 .withCardNumber(maskedPan)
-                                .withBalance(balance.negate())
-                                .withAvailableCredit(balance.negate())
+                                .withBalance(closingBooked)
+                                .withAvailableCredit(interimAvailable)
                                 .withCardAlias(name)
                                 .build())
                 .withoutFlags()

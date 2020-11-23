@@ -15,6 +15,7 @@ junit_test(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/payment",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
         "//src/integration/payment:rpc",
+        "//src/integration/transfer:rpc",
         "//src/libraries/account_identifier",
         "//third_party:org_mockito_mockito_core",
     ],

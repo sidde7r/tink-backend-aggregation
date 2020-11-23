@@ -1,4 +1,3 @@
-rule ch.qos.** agents_platform_framework.ch.qos.@1
 rule com.amazonaws.** agents_platform_framework.com.amazonaws.@1
 rule com.amazon.** agents_platform_framework.com.amazon.@1
 rule com.fasterxml.** agents_platform_framework.com.fasterxml.@1
@@ -17,7 +16,6 @@ rule org.aspectj.** agents_platform_framework.org.aspectj.@1
 rule org.checkerframework.** agents_platform_framework.org.checkerframework.@1
 rule com.jayway.** agents_platform_framework.com.jayway.@1
 rule org.joda.** agents_platform_framework.org.joda.@1
-rule org.slf4j.** agents_platform_framework.org.slf4j.@1
 rule io.prometheus.** agents_platform_framework.io.prometheus.@1
 rule org.objectweb.** agents_platform_framework.org.objectweb.@1
 rule software.amazon.** agents_platform_framework.software.amazon.@1
@@ -28,7 +26,6 @@ rule org.atteo.** agents_platform_framework.org.atteo.@1
 rule org.aopalliance.** agents_platform_framework.org.aopalliance.@1
 rule org.LatencyUtils.** agents_platform_framework.org.LatencyUtils.@1
 rule org.HdrHistogram.** agents_platform_framework.org.HdrHistogram.@1
-rule javax.** agents_platform_framework.javax.@1
 rule com.zwitserloot.** agents_platform_framework.com.zwitserloot.@1
 rule io.perfmark.** agents_platform_framework.io.perfmark.@1
 rule swagger.** agents_platform_framework.swagger.@1
@@ -37,3 +34,5 @@ rule com.flipkart.** agents_platform_framework.com.flipkart.@1
 rule assets.** agents_platform_framework.assets.@1
 rule aj.** agents_platform_framework.aj.@1
 rule android.** agents_platform_framework.android.@1
+rule se.tink.libraries.serialization.** agents_platform_framework.se.tink.libraries.serialization.@1
+rule grpc.gateway.** agents_platform_agents_framework.grpc.gateway.@1

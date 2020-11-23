@@ -120,7 +120,6 @@ public final class SwedbankConstants {
     }
 
     public static class RequestValues {
-        public static final String SWEDBANK_BANKID = "08999";
         public static final String PSD2 = "PSD2";
         public static final String MOBILE_ID = "MOBILE_ID";
         public static final String ALL_SCOPES =
@@ -223,7 +222,7 @@ public final class SwedbankConstants {
     }
 
     public enum EndUserMessage implements LocalizableEnum {
-        MUST_ANSWER_KYC(
+        MUST_UPDATE_AGREEMENT(
                 new LocalizableKey(
                         "To be able to refresh your accounts you need to answer some questions from your bank. Please log in to your bank's app or internet bank."));
         private final LocalizableKey userMessage;

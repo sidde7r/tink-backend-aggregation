@@ -37,7 +37,6 @@ public class CbiGlobeTransactionalAccountFetcher
                 SerializationUtils.deserializeFromString(
                         persistentStorage.get(StorageKeys.ACCOUNTS), GetAccountsResponse.class);
         return getAccountsResponse.getAccounts().stream()
-                .filter(acc -> !acc.isEmptyAccountObject())
                 .map(acc -> acc.toTinkAccount(apiClient.getBalances(acc.getResourceId())))
                 .map(Optional::get)
                 .collect(Collectors.toList());

@@ -53,8 +53,8 @@ public class ArgentaConstants {
 
     public static class Application {
         // Probably also want to change User-Agent
-        static final String APPLICATION_VERSION = "5.10.1";
-        static final String USER_AGENT = "Argenta-PROD/3024 CFNetwork/1121.2.2 Darwin/19.3.0";
+        static final String APPLICATION_VERSION = "5.11.0";
+        static final String USER_AGENT = "Argenta-PROD/3301 CFNetwork/1121.2.2 Darwin/19.3.0";
     }
 
     public static class Device {
@@ -74,6 +74,7 @@ public class ArgentaConstants {
     public static class ErrorResponse {
         public static final String AUTHENTICATION = "error.authentication";
         public static final String ERROR_CODE_SBB = "error.sbb";
+        public static final String ERROR_INVALID_REQUEST = "error.invalid.request";
         public static final String TOO_MANY_DEVICES = "maximumaantal actieve registraties";
         public static final String TOO_MANY_ATTEMPTS =
                 "je hebt te vaak een foute pincode ingevoerd";

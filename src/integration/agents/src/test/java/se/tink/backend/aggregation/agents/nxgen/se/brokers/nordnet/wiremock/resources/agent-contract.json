@@ -4,10 +4,10 @@
     "accountExclusion" : "NONE",
     "exactBalance" : {
       "currencyCode" : "SEK",
-      "scale" : 10,
-      "unscaledValue" : 201083095671207,
+      "doubleValue" : 20108.3095671207,
       "exactValue" : 20108.3095671207,
-      "doubleValue" : 20108.3095671207
+      "scale" : 10,
+      "unscaledValue" : 201083095671207
     },
     "currencyCode" : "SEK",
     "bankId" : "11111111",
@@ -29,10 +29,10 @@
     "accountExclusion" : "NONE",
     "exactBalance" : {
       "currencyCode" : "SEK",
-      "scale" : 2,
-      "unscaledValue" : 35,
+      "doubleValue" : 0.35,
       "exactValue" : 0.35,
-      "doubleValue" : 0.35
+      "scale" : 2,
+      "unscaledValue" : 35
     },
     "currencyCode" : "SEK",
     "bankId" : "44444444",
@@ -54,10 +54,10 @@
     "accountExclusion" : "NONE",
     "exactBalance" : {
       "currencyCode" : "SEK",
-      "scale" : 2,
-      "unscaledValue" : 17559870,
+      "doubleValue" : 175598.7,
       "exactValue" : 175598.7,
-      "doubleValue" : 175598.7
+      "scale" : 2,
+      "unscaledValue" : 17559870
     },
     "currencyCode" : "SEK",
     "bankId" : "33333333",
@@ -79,10 +79,10 @@
     "accountExclusion" : "NONE",
     "exactBalance" : {
       "currencyCode" : "SEK",
-      "scale" : 1,
-      "unscaledValue" : 0,
+      "doubleValue" : 0.0,
       "exactValue" : 0.0,
-      "doubleValue" : 0.0
+      "scale" : 1,
+      "unscaledValue" : 0
     },
     "currencyCode" : "SEK",
     "bankId" : "22222222",
@@ -104,10 +104,10 @@
     "accountExclusion" : "NONE",
     "exactBalance" : {
       "currencyCode" : "SEK",
-      "scale" : 10,
-      "unscaledValue" : 53660329702771,
-      "exactValue" : 5366.0329702771,
-      "doubleValue" : 5366.0329702771
+      "doubleValue" : 32701.1147,
+      "exactValue" : 32701.1147,
+      "scale" : 12,
+      "unscaledValue" : 32701114699999997
     },
     "currencyCode" : "SEK",
     "bankId" : "55555555",
@@ -123,7 +123,30 @@
     "closed" : false,
     "flags" : "[]",
     "availableCredit" : 0.0,
-    "balance" : 5366.0329702771
+    "balance" : 32701.1147
   } ],
-  "transactions" : [ ]
+  "transactions" : [ ],
+  "identityData" : {
+    "nameElements" : [ {
+      "type" : "FIRST_NAME",
+      "value" : "FirstName"
+    }, {
+      "type" : "SURNAME",
+      "value" : "LastName"
+    } ],
+    "dateOfBirth" : {
+      "year" : 1990,
+      "month" : "JANUARY",
+      "dayOfWeek" : "MONDAY",
+      "leapYear" : false,
+      "dayOfYear" : 1,
+      "chronology" : {
+        "id" : "ISO",
+        "calendarType" : "iso8601"
+      },
+      "monthValue" : 1,
+      "dayOfMonth" : 1,
+      "era" : "CE"
+    }
+  }
 }

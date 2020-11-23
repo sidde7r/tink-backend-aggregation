@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.util;
 
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.fetcher.transactionalaccount.rpc.AccountResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.fetcher.transactionalaccount.rpc.BalanceResponse;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class AccountTestData {
@@ -84,6 +85,42 @@ public class AccountTestData {
                         + "  ]\n"
                         + "}",
                 AccountResponse.class);
+    }
+
+    public static BalanceResponse getBalanceResponse() {
+        return SerializationUtils.deserializeFromString(
+                "{\n"
+                        + "    \"_links\": {\n"
+                        + "        \"self\": {\n"
+                        + "            \"href\": \"/v1/accounts/enc!!bcvncvbn-f-cvbncvbn=/balances\",\n"
+                        + "            \"verbs\": [\n"
+                        + "                \"GET\"\n"
+                        + "            ]\n"
+                        + "        }\n"
+                        + "    },\n"
+                        + "    \"account\": {\n"
+                        + "        \"bban\": \"23452346234\",\n"
+                        + "        \"currency\": \"NOK\",\n"
+                        + "        \"iban\": \"NO23452346234\"\n"
+                        + "    },\n"
+                        + "    \"balances\": [\n"
+                        + "        {\n"
+                        + "            \"balanceAmount\": {\n"
+                        + "                \"amount\": \"100.26\",\n"
+                        + "                \"currency\": \"NOK\"\n"
+                        + "            },\n"
+                        + "            \"balanceType\": \"closingBooked\"\n"
+                        + "        },\n"
+                        + "        {\n"
+                        + "            \"balanceAmount\": {\n"
+                        + "                \"amount\": \"100.26\",\n"
+                        + "                \"currency\": \"NOK\"\n"
+                        + "            },\n"
+                        + "            \"balanceType\": \"expected\"\n"
+                        + "        }\n"
+                        + "    ]\n"
+                        + "}",
+                BalanceResponse.class);
     }
 
     public static AccountResponse getAccountResponseWithNoBalance() {

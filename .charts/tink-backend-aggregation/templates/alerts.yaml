@@ -12,18 +12,18 @@ spec:
     for: 10m
     labels:
       severity: ping
-      who: aggregation
+      who: aggregation-agent-platform
     annotations:
       description: <{ $labels.client }> is using a certificate that expires in <{ $value }> days.
       summary: A used certificate is expiring in <{ $value }> days.
 
 ### Response time alerts ###
   - alert: HighResponseTimeAggregationService
-    expr: histogram_quantile(0.95, sum(increase(tink_api_response_duration_seconds_bucket{app="tink-aggregation-controller", team_owner="INTEGRATION", path=~'/aggregation.*', path!~'/aggregation/update'}[5m])) by (method, path, le, instance)) > 0.5
+    expr: histogram_quantile(0.95, sum(increase(tink_api_response_duration_seconds_bucket{app="aggregation-controller", path=~'/aggregation.*', path!~'/aggregation/update'}[5m])) by (method, path, le, instance)) > 0.5
     for: 1m
     labels:
       severity: ping
-      who: '#aggregation-alerts'
+      who: aggregation-agent-platform
     annotations:
       description: The 95-%tile of the response duration for the Aggregation Service over the last 5 minutes is over 500 ms.
 
@@ -40,13 +40,8 @@ spec:
     expr: sum(increase(tink_aggregation_successful_health_checks_total[5m])) by (name)/sum(increase(tink_aggregation_total_health_checks_total[5m])) by (name) < 0.99
     for: 15m
     labels:
-      {{- if eq .Values.Environment "production" }}
       severity: ping
-      who: 'aggregation'
-      {{- else }}
-      severity: ping
-      who: 'aggregation'
-      {{- end }}
+      who: aggregation-agent-platform
     annotations:
       summary: "Health check <{ $labels.name }> in aggregation is having a low success ratio of <{ $value }> for the past 15m"
       description: "Health check <{ $labels.name }> in aggregation is having a low success ratio of <{ $value }> for the past 15m"
@@ -59,7 +54,7 @@ spec:
     for: 1m
     labels:
       severity: ping
-      who: 'aggregation'
+      who: aggregation-agent-platform
     annotations:
       description: No messages has been consumed from the Automatic Refresh Queue for the past 15 minutes.
   {{- end }}

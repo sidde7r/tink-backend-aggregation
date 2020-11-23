@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.be.openbanking.bpost.authentica
 
 import com.google.common.base.Strings;
 import java.util.Map;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersApiClient;
@@ -17,8 +18,9 @@ public class BPostAuthenticator extends Xs2aDevelopersAuthenticator {
             Xs2aDevelopersApiClient apiClient,
             PersistentStorage persistentStorage,
             Xs2aDevelopersProviderConfiguration configuration,
-            LocalDateTimeSource localDateTimeSource) {
-        super(apiClient, persistentStorage, configuration, localDateTimeSource);
+            LocalDateTimeSource localDateTimeSource,
+            Credentials credentials) {
+        super(apiClient, persistentStorage, configuration, localDateTimeSource, credentials);
     }
 
     @Override

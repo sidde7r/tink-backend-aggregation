@@ -138,7 +138,12 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         if (request.getUser() != null) {
             String locale = request.getUser().getProfile().getLocale();
             this.catalog = Catalog.getCatalog(locale);
-            logger.info("Catalog created on Locale: {}", locale);
+            logger.info("[AgentWorkerContext] Catalog created on Locale: {}", locale);
+        } else {
+            logger.warn(
+                    "[AgentWorkerContext] Could not get locale. AppId {} CorrelationId {}",
+                    appId,
+                    correlationId);
         }
 
         this.setMetricRegistry(metricRegistry);
@@ -401,6 +406,8 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         accountDataCache.cacheAccountFeatures(account.getBankId(), accountFeatures);
     }
 
+    // Note: this method should not be called simultaneously because that may cause unwanted side
+    // effects especially during the PSD2 migration process
     public Account sendAccountToUpdateService(String bankAccountId) {
         Optional<AccountData> optionalAccountData =
                 accountDataCache.getFilteredAccountDataByBankAccountId(bankAccountId);
@@ -569,7 +576,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
                         + " "
                         + request.getProvider().getDisplayName()
                         + ": \""
-                        + statusPayload
+                        + catalog.getString(statusPayload)
                         + "\"";
 
         credentials.setStatusPayload(payload);

@@ -11,6 +11,9 @@ public class ConfirmTransferRequest {
     @JsonProperty("payment_ids")
     private List<String> paymentIds;
 
+    @JsonProperty("signing_type")
+    private String signingType = "nasa";
+
     @JsonIgnore
     public ConfirmTransferRequest(String id) {
         paymentIds = new ArrayList<String>();

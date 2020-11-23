@@ -1,0 +1,82 @@
+{
+    "traceId": null,
+    "statusCode": 200,
+    "responseCode": 200,
+    "responseMessage": null,
+    "eupToken": null,
+    "currentTime": "2020-11-17T09:46:24",
+    "derivativeDetails": null,
+    "stockExchange": {
+        "closeDateTime": "0001-01-01T00:00:00",
+        "openDateTime": "0001-01-01T00:00:00",
+        "closeTime": "2020-11-17T16:25:30",
+        "openTime": "2020-11-17T09:00:00"
+    },
+    "dividend": [],
+    "interest": [],
+    "bondDetails": null,
+    "fundDetails": null,
+    "bid": [
+        {
+            "price": 0.126,
+            "volume": 66123
+        },
+        {
+            "price": 0.1256,
+            "volume": 11200
+        },
+        {
+            "price": 0.125,
+            "volume": 121121
+        },
+        {
+            "price": 0.1248,
+            "volume": 1234
+        },
+        {
+            "price": 0.1244,
+            "volume": 9876
+        }
+    ],
+    "ask": [
+        {
+            "price": 0.1272,
+            "volume": 12345
+        },
+        {
+            "price": 0.1276,
+            "volume": 12345
+        },
+        {
+            "price": 0.1284,
+            "volume": 12345
+        },
+        {
+            "price": 0.1288,
+            "volume": 1234
+        },
+        {
+            "price": 0.129,
+            "volume": 1234
+        }
+    ],
+    "latestPriceDate": "2020-11-17T00:00:00",
+    "currencyCode": "NOK",
+    "latestTradePriceTime": "2020-11-17T09:30:54",
+    "delayInMinutes": 15,
+    "latestPriceChangePct": -1.1,
+    "latestPriceChange": -0.0123,
+    "maxBidAskPrice": 121212,
+    "securitySubTypeName": "Share",
+    "securityTypeName": "Shares",
+    "type": 1,
+    "isin": "NO0012345678",
+    "name": "Norwegian Something ASA",
+    "latestPrice": 0.1256,
+    "yearLow": 0.1214,
+    "yearHigh": 12.34,
+    "dayLow": 0.125,
+    "dayHigh": 0.543,
+    "tradeTotalCount": 1234,
+    "tradeTotalVolume": 36012345
+}

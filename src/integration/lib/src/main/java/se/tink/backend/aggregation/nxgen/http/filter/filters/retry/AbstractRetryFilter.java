@@ -52,7 +52,7 @@ public abstract class AbstractRetryFilter extends Filter {
                             maxNumRetries);
 
                     Uninterruptibles.sleepUninterruptibly(
-                            retrySleepMilliseconds, TimeUnit.MILLISECONDS);
+                            getRetrySleepMilliseconds(retryCount), TimeUnit.MILLISECONDS);
 
                     continue;
                 }
@@ -101,4 +101,14 @@ public abstract class AbstractRetryFilter extends Filter {
      * @return {@code true} if the operation should be retried, {@code false} otherwise.
      */
     protected abstract boolean shouldRetry(RuntimeException exception);
+
+    /**
+     * Returns the sleep between retries. Can be overridden for custom logic
+     *
+     * @param retry the current retry attempt
+     * @return the time that should pass before next retry
+     */
+    protected long getRetrySleepMilliseconds(int retry) {
+        return retrySleepMilliseconds;
+    }
 }

@@ -15,7 +15,6 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 public class AktiaTransactionalAccountFetcher implements AccountFetcher<TransactionalAccount> {
 
     private final AktiaApiClient aktiaApiClient;
-    private final AktiaTransactionalAccountConverter transactionalAccountConverter;
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
@@ -26,7 +25,7 @@ public class AktiaTransactionalAccountFetcher implements AccountFetcher<Transact
                 accountsSummaryResponse.getAccountsSummaryResponseDto().getAccountSummary();
 
         return accountSummaryDto.getAccountSummaryList().stream()
-                .map(transactionalAccountConverter::toTransactionalAccount)
+                .map(AktiaTransactionalAccountConverter::toTransactionalAccount)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toList());

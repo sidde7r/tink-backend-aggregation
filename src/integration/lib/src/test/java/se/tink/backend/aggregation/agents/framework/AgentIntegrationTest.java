@@ -37,6 +37,8 @@ import se.tink.backend.aggregation.agents.TransferExecutor;
 import se.tink.backend.aggregation.agents.TransferExecutorNxgen;
 import se.tink.backend.aggregation.agents.agent.Agent;
 import se.tink.backend.aggregation.agents.agentfactory.iface.AgentFactory;
+import se.tink.backend.aggregation.agents.agentplatform.authentication.AgentPlatformAuthenticationExecutor;
+import se.tink.backend.aggregation.agents.agentplatform.authentication.AgentPlatformAuthenticator;
 import se.tink.backend.aggregation.agents.contractproducer.ContractProducer;
 import se.tink.backend.aggregation.agents.framework.context.NewAgentTestContext;
 import se.tink.backend.aggregation.agents.framework.dao.CredentialDataDao;
@@ -260,6 +262,12 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
 
     private void login(Agent agent, CredentialsRequest credentialsRequest) throws Exception {
         if (isLoggedIn(agent)) {
+            return;
+        }
+
+        if (agent instanceof AgentPlatformAuthenticator) {
+            AgentPlatformAuthenticationExecutor.processAuthentication(
+                    agent, credentialsRequest, supplementalInformationController);
             return;
         }
 

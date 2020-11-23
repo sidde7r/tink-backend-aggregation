@@ -5,183 +5,132 @@ import java.text.MessageFormat;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.utils.deviceprofile.DeviceProfileConfiguration;
+import se.tink.libraries.i18n.LocalizableKey;
 
 public class DanskeBankConstants {
 
-    public String getHostUrl() {
-        return "https://apiebank3.danskebank.com";
-    }
+    public static class Urls {
+        static final String HOST_URL = "https://apiebank3.danskebank.com";
 
-    public String getBaseUrl() {
-        return getHostUrl() + "/ebanking/ext";
-    }
+        public static final String BASE_URL = HOST_URL + "/ebanking/ext";
 
-    public String getE4BaseUrl() {
-        return getBaseUrl() + "/e4";
-    }
+        static final String E4_BASE_URL = BASE_URL + "/e4";
 
-    public String getFIBaseUrl() {
-        return getBaseUrl() + "/fi";
-    }
+        static final String FI_BASE_URL = BASE_URL + "/fi";
 
-    public String getDynamicJsAuthenticateUrl() {
-        return getBaseUrl() + "/Functions?stage=LogonStep1&secsystem=%s&brand=%s&channel=MOB";
-    }
+        static final String DYNAMIC_JS_AUTHENTICATE_URL =
+                BASE_URL + "/Functions?stage=LogonStep1&secsystem=%s&brand=%s&channel=MOB";
 
-    public String getDynamicJsAuthorizeUrl() {
-        return getBaseUrl() + "/Functions?stage=Postlogon";
-    }
+        static final String DYNAMIC_JS_AUTHORIZE_URL = BASE_URL + "/Functions?stage=Postlogon";
 
-    // == START Authentication ==
+        // == START Authentication ==
 
-    public String getBankidInitLogonUrl() {
-        return getBaseUrl() + "/swedinitlogon";
-    }
+        public static final String BANK_ID_INIT_LOGON_URL = BASE_URL + "/swedinitlogon";
 
-    public String getDeviceBindCheckUrl() {
-        return getBaseUrl() + "/devicebind/check";
-    }
+        static final String DEVICE_BIND_CHECK_URL = BASE_URL + "/devicebind/check";
 
-    public String getDeviceBindBindUrl(String secSystemCode) {
-        if (Strings.isNullOrEmpty(secSystemCode)) {
-            return getBaseUrl() + "/devicebind/bind";
+        static String getDeviceBindBindUrl(String secSystemCode) {
+            if (Strings.isNullOrEmpty(secSystemCode)) {
+                return BASE_URL + "/devicebind/bind";
+            }
+            return BASE_URL + String.format("/devicebind/bind?secsystem=%s", secSystemCode);
         }
-        return getBaseUrl() + String.format("/devicebind/bind?secsystem=%s", secSystemCode);
+
+        static final String DEVICE_LIST_OTP_URL = BASE_URL + "/ListOTP";
+
+        static final String DEVICE_INIT_OTP_URL = BASE_URL + "/InitOTP";
+
+        static final String FINALIZE_AUTHENTICATION_URL = BASE_URL + "/logon";
+
+        static final URL DANSKEID_INIT = new URL(BASE_URL + "/danskeid/init");
+
+        static final URL DANSKEID_STATUS = new URL(BASE_URL + "/danskeid/status");
+
+        // == END Authentication ==
+
+        // == START BankID polling ==
+
+        public static final String BANKID_POLL_URL = BASE_URL + "/swedpoll";
+
+        // == END Polling ==
+
+        // == START Accounts ==
+
+        static final String LIST_ACCOUNTS_URL = E4_BASE_URL + "/account/list";
+
+        static final String LIST_CUSTODY_ACCOUNTS_URL = FI_BASE_URL + "/initialization/get";
+
+        // == END Accounts ==
+
+        // == START Loans ==
+
+        static final String LIST_LOANS_URL = E4_BASE_URL + "/realestate/loan/list";
+
+        static final String LOAN_DETAILS_URL = E4_BASE_URL + "/realestate/loan/detail";
+
+        // == END Loans ==
+
+        // == START Credit card info ==
+
+        public static final String CARDS_LIST_URL = BASE_URL + "/kk/api/cards/getlist";
+        public static final String CARD_DETAILS_URL = BASE_URL + "/kk/api/cards/getcarddetails";
+
+        // == END Credit card info ==
+
+        // == START Instruments ==
+
+        static final String LIST_SECURITIES_URL = FI_BASE_URL + "/marketvalue/listSecurities";
+
+        static final String LIST_SECURITY_DETAILS_URL =
+                FI_BASE_URL + "/securityDetails/getSecurityDetails";
+
+        // == END Instruments ==
+
+        // == START Transactions ==
+
+        static final String LIST_TRANSACTIONS_URL = E4_BASE_URL + "/transaction/list";
+
+        static final String LIST_UPCOMING_TRANSACTIONS_URL = E4_BASE_URL + "/transaction/future";
+
+        // == END Transactions
+
+        // == START SessionHandler ==
+
+        public static final String EXTEND_SESSION_URL = BASE_URL + "/extend";
+
+        // == END SessionHandler ==
+
+        // == START IdentityData ==
+
+        public static final String HOUSEHOLD_FI_URL = E4_BASE_URL + "/myProfile/fetchHouseholdFI";
+
+        // == END IdentityData ==
+
+        // == START Transfers ==
+
+        public static final String LIST_PAYEES_URL = E4_BASE_URL + "/payee/list";
+
+        public static final String CREDITOR_NAME_URL = E4_BASE_URL + "/transfers/getCreditorName";
+
+        public static final String CREDITOR_BANK_NAME_URL = E4_BASE_URL + "/transfers/getBankName";
+
+        public static final String VALIDATE_PAYMENT_REQUEST_URL =
+                E4_BASE_URL + "/transfers/validateBookDate";
+
+        public static final String REGISTER_PAYMENT_URL = BASE_URL + "/ValidateSignature";
+
+        public static String getAcceptSignatureUrl(String signatureType) {
+            return BASE_URL + "/AcceptSignature?signatureType=" + signatureType;
+        }
+
+        public static final String VALIDATE_GIRO_REQUEST_URL =
+                E4_BASE_URL + "/transfers/validateGiroSe";
+
+        public static final String VALIDATE_OCR_REQUEST_URL =
+                E4_BASE_URL + "/transfers/validateOcrSe";
+
+        // == END Transfers ==
     }
-
-    public String getDeviceListOtpUrl() {
-        return getBaseUrl() + "/ListOTP";
-    }
-
-    public String getDeviceInitOtpUrl() {
-        return getBaseUrl() + "/InitOTP";
-    }
-
-    public String getFinalizeAuthenticationUrl() {
-        return getBaseUrl() + "/logon";
-    }
-
-    public final URL DANSKEID_INIT = new URL(getBaseUrl() + "/danskeid/init");
-
-    public final URL DANSKEID_STATUS = new URL(getBaseUrl() + "/danskeid/status");
-
-    // == END Authentication ==
-
-    // == START BankID polling ==
-
-    public String getBankidPollUrl() {
-        return getBaseUrl() + "/swedpoll";
-    }
-
-    // == END Polling ==
-
-    // == START Accounts ==
-
-    public String getListAccountsUrl() {
-        return getE4BaseUrl() + "/account/list";
-    }
-
-    public String getListCustodyAccountsUrl() {
-        return getFIBaseUrl() + "/initialization/get";
-    }
-
-    // == END Accounts ==
-
-    // == START Loans ==
-
-    public String getListLoansUrl() {
-        return getE4BaseUrl() + "/realestate/loan/list";
-    }
-
-    public String getLoanDetailsUrl() {
-        return getE4BaseUrl() + "/realestate/loan/detail";
-    }
-
-    // == END Loans ==
-
-    // == START Credit card info ==
-
-    public String getListCardInfoUrl() {
-        return getBaseUrl() + "/kk/api/cards/getlist";
-    }
-
-    // == END Credit card info ==
-
-    // == START Instruments ==
-
-    public String getListSecuritiesUrl() {
-        return getFIBaseUrl() + "/marketvalue/listSecurities";
-    }
-
-    public String getListSecurityDetailsUrl() {
-        return getFIBaseUrl() + "/securityDetails/getSecurityDetails";
-    }
-
-    // == END Instruments ==
-
-    // == START Transactions ==
-
-    public String getListTransactionsUrl() {
-        return getE4BaseUrl() + "/transaction/list";
-    }
-
-    public String getListUpcomingTransactionsUrl() {
-        return getE4BaseUrl() + "/transaction/future";
-    }
-
-    // == END Transactions
-
-    // == START SessionHandler ==
-
-    public String getExtendSessionUrl() {
-        return getBaseUrl() + "/extend";
-    }
-
-    // == END SessionHandler ==
-
-    // == START IdentityData ==
-
-    public String getHouseholdFiUrl() {
-        return getE4BaseUrl() + "/myProfile/fetchHouseholdFI";
-    }
-
-    // == END IdentityData ==
-
-    // == START Transfers ==
-
-    public String getListPayeesUrl() {
-        return getE4BaseUrl() + "/payee/list";
-    }
-
-    public String getCreditorNameUrl() {
-        return getE4BaseUrl() + "/transfers/getCreditorName";
-    }
-
-    public String getCreditorBankNameUrl() {
-        return getE4BaseUrl() + "/transfers/getBankName";
-    }
-
-    public String getValidatePaymentRequestUrl() {
-        return getE4BaseUrl() + "/transfers/validateBookDate";
-    }
-
-    public String getRegisterPaymentUrl() {
-        return getBaseUrl() + "/ValidateSignature";
-    }
-
-    public String getAcceptSignatureUrl(String signatureType) {
-        return getBaseUrl() + "/AcceptSignature?signatureType=" + signatureType;
-    }
-
-    public String getValidateGiroRequestUrl() {
-        return getE4BaseUrl() + "/transfers/validateGiroSe";
-    }
-
-    public String getValidateOcrRequestUrl() {
-        return getE4BaseUrl() + "/transfers/validateOcrSe";
-    }
-
-    // == END Transfers ==
 
     public static class Device {
         public static final String DEVICE_TYPE_CODE_APP = "CODEAPP";
@@ -191,14 +140,14 @@ public class DanskeBankConstants {
         public static final String DEVICE_TYPE_DANSKEID = "DANSKEID";
         public static final String USER_ID_TYPE = "PRIV";
         public static final String SUPPRESS_PUSH = "N";
-        public static final String LANGUAGE_CODE = "EN";
         // This is the text shown in the code app.
-        public static final String REGISTER_TRANSACTION_TEXT =
-                "Register with Danske Mobile Banking";
+        public static final LocalizableKey REGISTER_TRANSACTION_TEXT =
+                new LocalizableKey("Register with Danske Mobile Banking");
     }
 
     public static class Account {
-        public static final String CREDIT_CARD_CODE = "101";
+        static final String CREDIT_CARD_CODE = "101";
+        static final String ALL_INVESTMENTS_GROUP = "Group";
     }
 
     public static class Investment {
@@ -244,7 +193,7 @@ public class DanskeBankConstants {
                                 .getUserAgentEntity()
                                 .getExtensions();
         // "Mozilla/5.0 (iPhone; CPU iPhone OS 10_1_1 like Mac OS X) AppleWebKit/602.2.14 (KHTML,
-        // like Gecko) Mobile/14B100";
+        // like Gecko) Mobile/14B100"
         private static final String LANGUAGE = "en";
         private static final String PRODUCT_SUB = "10.1.1";
         private static final String PLATFORM = DeviceProfileConfiguration.IOS_STABLE.getOs();
@@ -330,5 +279,6 @@ public class DanskeBankConstants {
 
     public static class Market {
         public static final String SE_MARKET = "SE";
+        public static final String DK_MARKET = "DK";
     }
 }

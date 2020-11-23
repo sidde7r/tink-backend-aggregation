@@ -9,30 +9,35 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
 import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
+import se.tink.backend.aggregation.agents.exceptions.LoginException;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException.EndUserMessage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.NordeaBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.NordeaBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.NordeaBaseConstants.ErrorCodes;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.NordeaBaseConstants.NordeaBankIdStatus;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.NordeaConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.authenticator.rpc.BankIdAutostartResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.authenticator.rpc.InitBankIdAutostartRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.executors.entities.ResultsEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.executors.entities.SignatureEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.executors.rpc.CompleteTransferRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.executors.rpc.CompleteTransferResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.executors.rpc.ConfirmTransferRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.executors.rpc.ConfirmTransferResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.executors.rpc.ResultSignResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.executors.rpc.SignatureRequest;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.executors.rpc.SignatureResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.executors.utilities.NordeaAccountIdentifierFormatter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.fetcher.einvoice.entities.PaymentEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.fetcher.transactionalaccount.rpc.FetchAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.fetcher.transfer.entities.BeneficiariesEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.rpc.ErrorResponse;
+import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.i18n.Catalog;
@@ -49,14 +54,20 @@ public class NordeaExecutorHelper {
     private final SupplementalRequester supplementalRequester;
     private final Catalog catalog;
     private final NordeaBaseApiClient apiClient;
+    private NordeaConfiguration nordeaConfiguration;
+    private final RandomValueGenerator randomValueGenerator;
 
     public NordeaExecutorHelper(
             SupplementalRequester supplementalRequester,
             Catalog catalog,
-            NordeaBaseApiClient apiClient) {
+            NordeaBaseApiClient apiClient,
+            NordeaConfiguration nordeaConfiguration,
+            RandomValueGenerator randomValueGenerator) {
         this.supplementalRequester = supplementalRequester;
         this.catalog = catalog;
         this.apiClient = apiClient;
+        this.nordeaConfiguration = nordeaConfiguration;
+        this.randomValueGenerator = randomValueGenerator;
     }
 
     /** Check if source account is a valid one to make a transfer or payment from. */
@@ -183,31 +194,28 @@ public class NordeaExecutorHelper {
     }
 
     public void confirm(String id) {
-
-        ConfirmTransferRequest confirmTransferRequest = new ConfirmTransferRequest(id);
         ConfirmTransferResponse confirmTransferResponse =
-                apiClient.confirmBankTransfer(confirmTransferRequest);
-
-        SignatureRequest signatureRequest = new SignatureRequest();
-        SignatureEntity signatureEntity = new SignatureEntity(confirmTransferResponse.getResult());
-        signatureRequest.add(signatureEntity);
-        // sign external transfer or einvoice
-        sign(signatureRequest, id);
+                apiClient.confirmBankTransfer(new ConfirmTransferRequest(id));
+        sign(confirmTransferResponse, id);
     }
 
-    public void sign(SignatureRequest signatureRequest, String transferId) {
-        SignatureResponse signatureResponse = apiClient.signTransfer(signatureRequest);
-        if (signatureResponse.getSignatureState().equals(BankIdStatus.WAITING)) {
-            supplementalRequester.openBankId(null, false);
-            pollSignTransfer(transferId, signatureResponse.getOrderReference());
+    public void sign(ConfirmTransferResponse confirmTransferResponse, String transferId) {
+        BankIdAutostartResponse signatureResponse =
+                signPayment(confirmTransferResponse.getResult());
+        if (signatureResponse.getStatus().equals(NordeaBankIdStatus.BANKID_AUTOSTART_PENDING)) {
+            supplementalRequester.openBankId(signatureResponse.getAutoStartToken(), false);
+            pollSignTransfer(
+                    transferId,
+                    signatureResponse.getSessionId(),
+                    confirmTransferResponse.getResult());
         } else {
             throw ErrorResponse.paymentFailedError(null);
         }
     }
 
-    private void pollSignTransfer(String transferId, String orderRef) {
+    private void pollSignTransfer(String transferId, String orderRef, String signingOrderId) {
         try {
-            CompleteTransferResponse completeTransferResponse = poll(orderRef);
+            CompleteTransferResponse completeTransferResponse = poll(orderRef, signingOrderId);
             assertSuccessfulSignOrThrow(completeTransferResponse, transferId);
         } catch (HttpResponseException e) {
             if (e.getResponse().getStatus() == HttpStatus.SC_CONFLICT) {
@@ -217,21 +225,20 @@ public class NordeaExecutorHelper {
         }
     }
 
-    private CompleteTransferResponse poll(String orderRef) {
-        BankIdStatus status;
+    private CompleteTransferResponse poll(String orderRef, String signingOrderId) {
         for (int i = 1; i < NordeaBaseConstants.Transfer.MAX_POLL_ATTEMPTS; i++) {
             // sleep before so when a time out occur the bankId signing is canceled after polling
             Uninterruptibles.sleepUninterruptibly(2000, TimeUnit.MILLISECONDS);
             try {
-                ResultSignResponse signResponse = apiClient.pollSign(orderRef, i);
-                status = signResponse.getBankIdStatus();
+                BankIdAutostartResponse signResponse = apiClient.pollBankIdAutostart(orderRef);
 
-                switch (status) {
-                    case DONE:
-                        return completeTransfer(orderRef);
-                    case WAITING:
+                switch (signResponse.getStatus().toLowerCase()) {
+                    case NordeaBankIdStatus.BANKID_AUTOSTART_PENDING:
+                    case NordeaBankIdStatus.BANKID_AUTOSTART_SIGN_PENDING:
                         break;
-                    case CANCELLED:
+                    case NordeaBankIdStatus.BANKID_AUTOSTART_COMPLETED:
+                        return completeTransfer(signingOrderId, signResponse.getCode());
+                    case NordeaBankIdStatus.BANKID_AUTOSTART_CANCELLED:
                         throw ErrorResponse.bankIdCancelledError();
                     default:
                         throw ErrorResponse.signTransferFailedError();
@@ -251,23 +258,12 @@ public class NordeaExecutorHelper {
                 throw ErrorResponse.signTransferFailedError();
             }
         }
-        // Time out - cancel the signing request
-        cancelSign(orderRef);
         throw ErrorResponse.bankIdTimedOut();
     }
 
-    private CompleteTransferResponse completeTransfer(String orderRef) {
-        return apiClient.completeTransfer(orderRef);
-    }
-
-    private void cancelSign(String orderRef) {
-        try {
-            // the user will still be able to sign but this will set the status at Nordea at
-            // canceled.
-            apiClient.cancelSign(orderRef);
-        } catch (Exception e) {
-            // NOP
-        }
+    private CompleteTransferResponse completeTransfer(String orderRef, String code) {
+        return apiClient.completeTransfer(
+                orderRef, CompleteTransferRequest.builder().code(code).build());
     }
 
     /** Check if there are errors in the Complete Transfer Response */
@@ -310,5 +306,31 @@ public class NordeaExecutorHelper {
                 .setEndUserMessage(catalog.getString(endUserMessage))
                 .setInternalStatus(internalStatus.toString())
                 .build();
+    }
+
+    public BankIdAutostartResponse signPayment(String signingOrderId) throws BankServiceException {
+        return apiClient.signPayment(createSignPaymentRequest(signingOrderId));
+    }
+
+    private InitBankIdAutostartRequest createSignPaymentRequest(String signingOrderId) {
+        return InitBankIdAutostartRequest.builder()
+                .state(Base64.encodeBase64URLSafeString(randomValueGenerator.secureRandom(19)))
+                .nonce(Base64.encodeBase64URLSafeString(randomValueGenerator.secureRandom(19)))
+                .codeChallenge(createCodeChallenge())
+                .redirectUri(nordeaConfiguration.getRedirectUri())
+                .clientId(nordeaConfiguration.getClientId())
+                .signingOrderId(signingOrderId)
+                .userId(fetchIdentity())
+                .build();
+    }
+
+    private String createCodeChallenge() {
+        byte[] randomCodeChallengeBytes = randomValueGenerator.secureRandom(64);
+        String codeVerifier = Base64.encodeBase64URLSafeString(randomCodeChallengeBytes);
+        return Base64.encodeBase64URLSafeString(Hash.sha256(codeVerifier));
+    }
+
+    private String fetchIdentity() throws LoginException {
+        return apiClient.fetchIdentityData().toPrivateIdentityData().getSsn();
     }
 }

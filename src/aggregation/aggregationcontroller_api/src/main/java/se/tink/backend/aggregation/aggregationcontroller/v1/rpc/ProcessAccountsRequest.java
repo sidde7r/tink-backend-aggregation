@@ -6,6 +6,7 @@ public class ProcessAccountsRequest {
     private List<String> accountIds;
     private String credentialsId;
     private String userId;
+    private String operationId;
 
     public String getCredentialsId() {
         return credentialsId;
@@ -29,5 +30,13 @@ public class ProcessAccountsRequest {
 
     public void setAccountIds(List<String> accountIds) {
         this.accountIds = accountIds;
+    }
+
+    public String getOperationId() {
+        return operationId;
+    }
+
+    public void setOperationId(String operationId) {
+        this.operationId = operationId;
     }
 }

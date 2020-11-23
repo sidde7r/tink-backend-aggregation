@@ -12,6 +12,7 @@ import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.enums.MarketCode;
 import se.tink.libraries.transfer.enums.TransferType;
+import se.tink.libraries.transfer.rpc.RemittanceInformation;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 public class LansforsakringarAgentWireMockTest {
@@ -38,6 +39,8 @@ public class LansforsakringarAgentWireMockTest {
     }
 
     private Transfer createMockedDomesticTransfer() {
+        RemittanceInformation remittanceInformation = new RemittanceInformation();
+        remittanceInformation.setValue("108117405510002");
         Transfer transfer = new Transfer();
         transfer.setSource(AccountIdentifier.create(AccountIdentifier.Type.SE, "90247744574"));
 
@@ -49,7 +52,7 @@ public class LansforsakringarAgentWireMockTest {
                         LocalDate.of(2020, 6, 17)
                                 .atStartOfDay(ZoneId.of("Europe/Stockholm"))
                                 .toInstant()));
-        transfer.setDestinationMessage("108117405510002");
+        transfer.setRemittanceInformation(remittanceInformation);
 
         return transfer;
     }

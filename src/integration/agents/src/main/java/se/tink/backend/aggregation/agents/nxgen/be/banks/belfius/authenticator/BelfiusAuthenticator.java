@@ -40,7 +40,7 @@ public class BelfiusAuthenticator implements PasswordAuthenticator, AutoAuthenti
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final BelfiusSignatureCreator belfiusSignatureCreator;
     private final LoginResponseValidator loginResponseValidator;
-    private final AuthenticatorSleepHelper authenticatorSleepHelper;
+    private final HumanInteractionDelaySimulator humanInteractionDelaySimulator;
     private boolean requestConfigIosSent;
 
     public BelfiusAuthenticator(
@@ -50,14 +50,14 @@ public class BelfiusAuthenticator implements PasswordAuthenticator, AutoAuthenti
             final BelfiusSessionStorage sessionStorage,
             final SupplementalInformationHelper supplementalInformationHelper,
             final BelfiusSignatureCreator belfiusSignatureCreator,
-            final AuthenticatorSleepHelper authenticatorSleepHelper) {
+            final HumanInteractionDelaySimulator humanInteractionDelaySimulator) {
         this.apiClient = apiClient;
         this.credentials = credentials;
         this.persistentStorage = persistentStorage;
         this.sessionStorage = sessionStorage;
         this.supplementalInformationHelper = supplementalInformationHelper;
         this.belfiusSignatureCreator = belfiusSignatureCreator;
-        this.authenticatorSleepHelper = authenticatorSleepHelper;
+        this.humanInteractionDelaySimulator = humanInteractionDelaySimulator;
         this.loginResponseValidator = new LoginResponseValidator();
     }
 
@@ -139,7 +139,7 @@ public class BelfiusAuthenticator implements PasswordAuthenticator, AutoAuthenti
 
         apiClient.keepAlive();
 
-        authenticatorSleepHelper.sleepForMilliseconds(500);
+        humanInteractionDelaySimulator.delayExecution(500);
 
         apiClient.authenticateWithCode(code);
 
@@ -212,7 +212,7 @@ public class BelfiusAuthenticator implements PasswordAuthenticator, AutoAuthenti
                 belfiusSignatureCreator.createSignaturePw(
                         challenge2, deviceToken, panNumber, contractNumber, password);
 
-        authenticatorSleepHelper.sleepForMilliseconds(5000); // Entering password
+        humanInteractionDelaySimulator.delayExecution(5000); // Entering password
 
         return doLoginPw(deviceTokenHashed, deviceTokenHashedIosComparison, signaturePw);
     }
@@ -235,7 +235,7 @@ public class BelfiusAuthenticator implements PasswordAuthenticator, AutoAuthenti
 
         sessionStorage.setChallenge(challenge2);
 
-        authenticatorSleepHelper.sleepForMilliseconds(5000); // Entering password
+        humanInteractionDelaySimulator.delayExecution(5000); // Entering password
 
         String signaturePw =
                 belfiusSignatureCreator.createSignaturePw(

@@ -54,7 +54,9 @@ public final class Xs2aDevelopersConstants {
 
     public static class ApiServices {
 
-        public static final String POST_CONSENT = "/berlingroup/v1/consents";
+        public static final String CONSENT = "/berlingroup/v1/consents";
+        public static final String CONSENT_DETAILS = "/berlingroup/v1/consents/{consentId}";
+        public static final String CONSENT_STATUS = "/berlingroup/v1/consents/{consentId}/status";
         public static final String TOKEN = "/berlingroup/v1/token";
         public static final String GET_ACCOUNTS = "/berlingroup/v1/accounts";
         public static final String GET_BALANCES = "/berlingroup/v1/accounts/{accountId}/balances";
@@ -125,6 +127,13 @@ public final class Xs2aDevelopersConstants {
     public static class IdTags {
         public static final String ACCOUNT_ID = "accountId";
         public static final String PAYMENT_ID = "paymentId";
+        public static final String CONSENT_ID = "consentId";
+    }
+
+    public static class StatusValues {
+        public static final String EXPIRED = "expired";
+        public static final String RECEIVED = "received";
+        public static final String VALID = "valid";
     }
 
     public static class Transactions {

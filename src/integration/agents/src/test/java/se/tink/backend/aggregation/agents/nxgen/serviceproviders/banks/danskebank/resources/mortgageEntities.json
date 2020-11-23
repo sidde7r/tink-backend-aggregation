@@ -1,0 +1,50 @@
+{
+    "eupToken": null,
+    "lastUpdated": "0001-01-01T00:00:00",
+    "loans": [
+        {
+            "agreementMark": "",
+            "currencyCode": "DKK",
+            "detailMark": "X",
+            "interestMark": "1",
+            "loanExpirationDate": "",
+            "loanNumber": "006",
+            "loanStatus": "0",
+            "loanType": "015",
+            "loanTypeName": "FlexLån® F5K, 0,126%",
+            "newAgreementOutstandingDebt": 0,
+            "newAgreementPaymentAmount": 0,
+            "newAgreementTypeName": "",
+            "outstandingDebt": 2108000,
+            "paymentAmount": 2297.02,
+            "paymentFrequency": "12",
+            "propertyAddress": "Asdfbzxcv 35",
+            "realEstateNumber": "23452345",
+            "refinanceDate": ""
+        },
+        {
+            "agreementMark": "",
+            "currencyCode": "DKK",
+            "detailMark": "X",
+            "interestMark": "1",
+            "loanExpirationDate": "",
+            "loanNumber": "007",
+            "loanStatus": "0",
+            "loanType": "015",
+            "loanTypeName": "FlexLån® F5K, 0,2088%",
+            "newAgreementOutstandingDebt": 0,
+            "newAgreementPaymentAmount": 0,
+            "newAgreementTypeName": "",
+            "outstandingDebt": 288000,
+            "paymentAmount": 494.21,
+            "paymentFrequency": "12",
+            "propertyAddress": "Asdfbzxcv 35",
+            "realEstateNumber": "23452345",
+            "refinanceDate": ""
+        }
+    ],
+    "responseCode": 200,
+    "responseMessage": null,
+    "statusCode": 200,
+    "traceId": null
+}

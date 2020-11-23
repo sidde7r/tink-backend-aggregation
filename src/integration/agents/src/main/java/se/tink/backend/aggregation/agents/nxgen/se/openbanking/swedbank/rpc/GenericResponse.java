@@ -13,8 +13,12 @@ public class GenericResponse {
 
     @JsonIgnore
     public boolean isKycError() {
-        return containsError(ErrorCodes.KYC_INVALID)
-                || containsError(ErrorCodes.MISSING_BANK_AGREEMENT);
+        return containsError(ErrorCodes.KYC_INVALID);
+    }
+
+    @JsonIgnore
+    public boolean isMissingBankAgreement() {
+        return containsError(ErrorCodes.MISSING_BANK_AGREEMENT);
     }
 
     @JsonIgnore
@@ -33,7 +37,7 @@ public class GenericResponse {
     }
 
     @JsonIgnore
-    public boolean loginInterrupted() {
+    public boolean isLoginInterrupted() {
         return containsError(ErrorCodes.LOGIN_SESSION_INTERRUPTED);
     }
 

@@ -33,7 +33,9 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
+import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.serialization.utils.SerializationUtils;
+import src.integration.nemid.NemIdSupportedLanguageCode;
 
 public class BecApiClientTest {
 
@@ -81,6 +83,7 @@ public class BecApiClientTest {
 
     private BecSecurityHelper securityHelper;
     private TinkHttpClient client;
+    private Catalog catalog;
 
     private RequestBuilder requestBuilder;
 
@@ -88,9 +91,11 @@ public class BecApiClientTest {
     public void setUp() {
         securityHelper = mock(BecSecurityHelper.class);
         client = mock(TinkHttpClient.class, Answers.RETURNS_DEEP_STUBS);
+        catalog = mock(Catalog.class);
         requestBuilder = mock(RequestBuilder.class);
 
-        becApiClient = new BecApiClient(securityHelper, client, new BecUrlConfiguration(PAYLOAD));
+        becApiClient =
+                new BecApiClient(securityHelper, client, new BecUrlConfiguration(PAYLOAD), catalog);
 
         given(client.request(APP_SYNC_URL)).willReturn(requestBuilder);
         given(client.request(NEM_ID_POLL_URL)).willReturn(requestBuilder);
@@ -573,7 +578,8 @@ public class BecApiClientTest {
 
         payloadAndroidEntity.setAppType(BecConstants.Meta.APP_TYPE);
         payloadAndroidEntity.setAppVersion(BecConstants.Meta.APP_VERSION);
-        payloadAndroidEntity.setLocale(BecConstants.Meta.LOCALE);
+        payloadAndroidEntity.setLocale(
+                NemIdSupportedLanguageCode.DEFAULT_LANGUAGE_CODE.getIsoLanguageCode());
         payloadAndroidEntity.setOsVersion(BecConstants.Meta.OS_VERSION);
         payloadAndroidEntity.setDeviceType(BecConstants.Meta.DEVICE_TYPE);
         return payloadAndroidEntity;

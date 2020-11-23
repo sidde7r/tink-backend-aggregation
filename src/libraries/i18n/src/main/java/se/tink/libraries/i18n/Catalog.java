@@ -102,4 +102,8 @@ public class Catalog {
     public String getString(LocalizableEnum localizableEnum) {
         return getString(localizableEnum.getKey().get());
     }
+
+    public I18n getI18n() {
+        return i18n;
+    }
 }

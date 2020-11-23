@@ -5,6 +5,7 @@ junit_test(
     srcs = glob(["DanskeBankAgentTest.java"]),
     data = [
         "//data:aggregation_test",
+        "//data:cryptography_test",
         "//data:provider_configurations",
         "//etc:development",
     ],
@@ -46,10 +47,12 @@ junit_test(
         "//src/integration/amount",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/compliance/account_capabilities",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/core/account",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/source_info",
         "//src/integration/models",
         "//src/libraries/serialization",
         "//third_party:org_assertj_assertj_core",
         "//third_party:org_mockito_mockito_core",
+        "//third_party:pl_pragmatists_junitparams",
         "@aggregation//:com_fasterxml_jackson_core_jackson_core",
     ],
 )

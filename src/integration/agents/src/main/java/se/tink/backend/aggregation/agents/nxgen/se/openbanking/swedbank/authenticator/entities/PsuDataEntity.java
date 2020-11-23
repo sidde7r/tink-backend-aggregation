@@ -1,9 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator.entities;
 
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.RequestValues;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class PsuDataEntity {
-    private String bankID = RequestValues.SWEDBANK_BANKID;
+
+    @JsonProperty("bankID")
+    private String bankId;
+
+    public PsuDataEntity(String bankId) {
+        this.bankId = bankId;
+    }
 }

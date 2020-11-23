@@ -71,7 +71,8 @@ public final class BecAgent extends SubsequentProgressiveGenerationAgent
                 new BecApiClient(
                         securityHelper,
                         this.client,
-                        new BecUrlConfiguration(request.getProvider().getPayload()));
+                        new BecUrlConfiguration(request.getProvider().getPayload()),
+                        catalog);
 
         this.transactionFetcher = new BecAccountTransactionsFetcher(this.apiClient);
         this.investmentRefreshController =

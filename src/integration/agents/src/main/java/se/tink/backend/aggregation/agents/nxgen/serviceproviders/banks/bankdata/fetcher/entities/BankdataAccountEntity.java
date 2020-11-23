@@ -52,7 +52,7 @@ public class BankdataAccountEntity {
                         tinkAccountType,
                         constructUniqueIdentifier(),
                         ExactCurrencyAmount.of(balance, currencyCode))
-                .setAccountNumber(iban)
+                .setAccountNumber(accountNo)
                 .setName(name)
                 .setBankIdentifier(constructUniqueIdentifier())
                 .putInTemporaryStorage(REGISTRATION_NUMBER_TEMP_STORAGE_KEY, regNo)

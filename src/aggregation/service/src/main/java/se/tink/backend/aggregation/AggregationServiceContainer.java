@@ -5,6 +5,9 @@ import com.google.inject.Injector;
 import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
+import java.util.TimeZone;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.cli.AddClientConfigurationsCommand;
 import se.tink.backend.aggregation.configuration.ConfigurationValidator;
 import se.tink.backend.aggregation.configuration.DevelopmentConfigurationSeeder;
@@ -22,6 +25,8 @@ import se.tink.libraries.dropwizard.DropwizardObjectMapperConfigurator;
 import se.tink.libraries.queue.QueueConsumer;
 
 public class AggregationServiceContainer extends Application<AggregationServiceConfiguration> {
+
+    private static final Logger log = LoggerFactory.getLogger(AggregationServiceContainer.class);
 
     public static void main(String[] args) throws Exception {
         new AggregationServiceContainer().run(args);
@@ -44,6 +49,7 @@ public class AggregationServiceContainer extends Application<AggregationServiceC
             AggregationServiceConfiguration aggregationServiceConfiguration,
             Environment environment)
             throws Exception {
+        log.info("Default TimeZone: " + TimeZone.getDefault().getID());
         // Add a dummy health check to avoid an annoying warning on startup.
         environment
                 .healthChecks()

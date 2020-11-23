@@ -39,11 +39,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.red
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.rpc.GetConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.rpc.GetConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.entities.LinkEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.executor.payment.enums.PaymentProduct;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.executor.payment.rpc.CreatePaymentRequest;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.executor.payment.rpc.CreatePaymentResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.executor.payment.rpc.GetPaymentResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.executor.payment.rpc.PaymentStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.entities.PaginationKey;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.entities.TransactionEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.rpc.AccountBalancesResponse;
@@ -419,31 +414,6 @@ public final class RedsysApiClient {
         final RequestBuilder request =
                 createSignedRequest(makeApiUrl(key.getPath()), null, headers);
         return fetchTransactions(request);
-    }
-
-    public CreatePaymentResponse createPayment(
-            CreatePaymentRequest request, PaymentProduct paymentProduct, String scaToken) {
-        final String url = makeApiUrl(Urls.CREATE_PAYMENT, paymentProduct.getProductName());
-        return createSignedRequest(url, request, getTppRedirectHeaders(scaToken))
-                .post(CreatePaymentResponse.class);
-    }
-
-    public GetPaymentResponse fetchPayment(String paymentId, PaymentProduct paymentProduct) {
-        final String url = makeApiUrl(Urls.GET_PAYMENT, paymentProduct.getProductName(), paymentId);
-        return createSignedRequest(url).get(GetPaymentResponse.class);
-    }
-
-    public PaymentStatusResponse fetchPaymentStatus(
-            String paymentId, PaymentProduct paymentProduct) {
-        final String url =
-                makeApiUrl(Urls.PAYMENT_STATUS, paymentProduct.getProductName(), paymentId);
-        return createSignedRequest(url).get(PaymentStatusResponse.class);
-    }
-
-    public void cancelPayment(String paymentId, PaymentProduct paymentProduct) {
-        final String url =
-                makeApiUrl(Urls.PAYMENT_CANCEL, paymentProduct.getProductName(), paymentId);
-        createSignedRequest(url).delete();
     }
 
     public void setPsuIpAddress(String psuIpAddress) {

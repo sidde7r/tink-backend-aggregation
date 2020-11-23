@@ -20,7 +20,6 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.dnb.authenticator.rpc.I
 import se.tink.backend.aggregation.agents.nxgen.no.banks.dnb.authenticator.rpc.InstrumentInfoResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.bankid.BankIdAuthenticatorNO;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
-import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.libraries.i18n.LocalizableKey;
 
 public class DnbAuthenticator implements BankIdAuthenticatorNO {
@@ -208,7 +207,6 @@ public class DnbAuthenticator implements BankIdAuthenticatorNO {
         if (collectBankId.isSuccess()) {
             apiClient.getFinalizeLogon(bankIdReferer);
             apiClient.getFirstRequestAfterLogon(bankIdReferer);
-            verifyThatUserHasAccess();
             return BankIdStatus.DONE;
         }
 
@@ -231,23 +229,6 @@ public class DnbAuthenticator implements BankIdAuthenticatorNO {
                         "user message: %s, error message: %s",
                         collectBankId.getMessage().getUserMessage(),
                         collectBankId.getMessage().getErrorMessage()));
-    }
-
-    private void verifyThatUserHasAccess() {
-        // fetch accounts to check if user has access. Needs to be done in authenticator to set
-        // Credentials status to AUTHENTICATION_ERROR instead of TEMPORARY_ERROR
-        try {
-            apiClient.fetchAccounts();
-        } catch (HttpResponseException e) {
-            if (e.getResponse().getStatus() == 403
-                    && e.getResponse().hasBody()
-                    && e.getResponse()
-                            .getBody(String.class)
-                            .contains(DnbConstants.Messages.NO_ACCESS)) {
-                throw LoginError.NOT_CUSTOMER.exception();
-            }
-            throw e;
-        }
     }
 
     private boolean isTimeout(CollectChallengeResponse collectBankId) {

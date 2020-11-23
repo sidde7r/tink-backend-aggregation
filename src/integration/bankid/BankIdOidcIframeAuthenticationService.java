@@ -16,7 +16,7 @@ public class BankIdOidcIframeAuthenticationService {
 
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final StrongAuthenticationState strongAuthenticationState;
-    private final String callbackUrl;
+    private final String tinkApiUrl;
     private final boolean isInTestContext;
 
     public String displayIframeAndWaitForAuthorizationCode(String iFrameUrl) {
@@ -25,7 +25,7 @@ public class BankIdOidcIframeAuthenticationService {
                 new URL(Urls.getBankIdIframePage(isInTestContext))
                         .queryParam(QueryParamKeys.STATE, strongAuthenticationState.getState())
                         .queryParam(QueryParamKeys.IFRAME_URL, iFrameUrl)
-                        .queryParam(QueryParamKeys.CALLBACK_URL, callbackUrl);
+                        .queryParam(QueryParamKeys.CALLBACK_URL, getBankIDCallbackUrl());
 
         supplementalInformationHelper.openThirdPartyApp(
                 ThirdPartyAppAuthenticationPayload.of(urlForPageThatWillDisplayIframe));
@@ -42,5 +42,9 @@ public class BankIdOidcIframeAuthenticationService {
         }
 
         return bankIdJsResponse.getCode();
+    }
+
+    private String getBankIDCallbackUrl() {
+        return isInTestContext ? Urls.AGENT_TEST_SERVER_THIRD_PARTY_CALLBACK : tinkApiUrl;
     }
 }

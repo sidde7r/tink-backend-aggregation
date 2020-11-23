@@ -8,6 +8,7 @@ import javax.crypto.spec.SecretKeySpec;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngConstants;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngDirectApiClient;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngStorage;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.entities.AuthenticateTokenResultEntity;
@@ -51,9 +52,14 @@ public abstract class AbstractAgreementStep extends AbstractAuthenticationStep {
 
     private void pinAgreement() {
         String mobileAppId = ingStorage.getMobileAppId();
+
+        // we are getting throttled during BG refreshes
+        IngMiscUtils.sleep(IngConstants.THROTTLING_DELAY);
+
         RemoteProfileMeansResponse profileMeans = getRemoteProfileMeans(mobileAppId);
 
-        IngMiscUtils.sleep(1000);
+        // we are getting throttled during BG refreshes
+        IngMiscUtils.sleep(IngConstants.THROTTLING_DELAY);
 
         RemoteEvidenceSessionResponse evidence = createEvidence(profileMeans, mobileAppId);
 

@@ -16,7 +16,7 @@ import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
-import se.tink.libraries.payment.rpc.Reference;
+import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 @Ignore
 public class SebAgentPaymentTest {
@@ -41,8 +41,8 @@ public class SebAgentPaymentTest {
             doReturn("SE2850000000054400047946").when(creditor).getAccountNumber();
             doReturn("Creditor Name").when(creditor).getName();
 
-            Reference reference = mock(Reference.class);
-            doReturn("Message").when(reference).getValue();
+            RemittanceInformation remittanceInformation = new RemittanceInformation();
+            remittanceInformation.setValue("Message");
 
             Debtor debtor = mock(Debtor.class);
             doReturn(AccountIdentifier.Type.IBAN).when(debtor).getAccountIdentifierType();
@@ -59,7 +59,7 @@ public class SebAgentPaymentTest {
                             .withAmount(amount)
                             .withType(PaymentType.DOMESTIC)
                             .withExecutionDate(executionDate)
-                            .withReference(reference)
+                            .withRemittanceInformation(remittanceInformation)
                             .withCurrency(currency)
                             .build());
         }

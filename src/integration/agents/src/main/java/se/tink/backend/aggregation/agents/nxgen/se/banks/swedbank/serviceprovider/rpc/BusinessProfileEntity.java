@@ -3,4 +3,11 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovid
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class BusinessProfileEntity extends PrivateProfileEntity {}
+public class BusinessProfileEntity extends ProfileEntity {
+    private String activeProfileName;
+
+    @Override
+    public String getHolderName() {
+        return activeProfileName;
+    }
+}

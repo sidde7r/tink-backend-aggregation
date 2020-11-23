@@ -1,0 +1,31 @@
+load("//tools/bzl:junit.bzl", "junit_test")
+
+junit_test(
+    name = "agentplatform",
+    srcs = glob(["**/*.java"]),
+    visibility = ["//visibility:public"],
+    deps = [
+        "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/agents_platform/agents_framework",
+        "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/agents_platform/framework",
+        "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
+        "//src/integration/credentials/src/main/java/se/tink/libraries/credentials/service",
+        "//src/integration/lib",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/agentplatform",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions/agent",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/logmasker",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/utils",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/core/authentication",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/client",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/filter/filterable/request",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/request",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/response",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
+        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/fakelogmasker",
+        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/wiremock",
+        "//third_party:com_github_tomakehurst_wiremock",
+        "//third_party:junit_junit",
+        "//third_party:lombok_libs",
+        "//third_party:org_assertj_assertj_core",
+        "//third_party:org_mockito_mockito_core",
+    ],
+)

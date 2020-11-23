@@ -5,10 +5,9 @@ import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesJsonFileParser;
 import se.tink.backend.aggregation.agents.framework.assertions.entities.AgentContractEntity;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockrefresh.AgentWireMockRefreshTest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingV31Constants;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.MonzoConstants.StorageKeys;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationReader;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.PersistentStorageKeys;
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.enums.MarketCode;
 
@@ -77,9 +76,10 @@ public class MonzoAgentWiremockTest {
                         .dumpContentForContractFile()
                         .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
                         .addPersistentStorageData(
-                                OpenIdConstants.PersistentStorageKeys.AIS_ACCESS_TOKEN, OAUTH_TOKEN)
+                                UkOpenBankingV31Constants.PersistentStorageKeys.AIS_ACCESS_TOKEN,
+                                OAUTH_TOKEN)
                         .addPersistentStorageData(
-                                PersistentStorageKeys.LAST_SCA_TIME,
+                                UkOpenBankingV31Constants.PersistentStorageKeys.LAST_SCA_TIME,
                                 LocalDateTime.now().minusMinutes(6).toString())
                         .addPersistentStorageData(
                                 StorageKeys.RECENT_IDENTITY_DATA, identityDataV31Entity)

@@ -4,8 +4,6 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
-import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field;
@@ -14,6 +12,7 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SupplementalInfoError;
+import se.tink.backend.aggregation.agents.utils.supplementalfields.CommonFields;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.type.AuthenticationControllerType;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
@@ -29,8 +28,6 @@ public class KeyCardAuthenticationController
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final KeyCardAuthenticator authenticator;
     private final int keyCardValueLength;
-
-    private static final String KEYCARD_VALUE_FIELD_KEY = "keyCardValue";
 
     public KeyCardAuthenticationController(
             Catalog catalog,
@@ -85,38 +82,19 @@ public class KeyCardAuthenticationController
             throw SupplementalInfoError.NO_VALID_CODE.exception();
         }
 
-        authenticator.authenticate(supplementalInformation.get(KEYCARD_VALUE_FIELD_KEY));
+        authenticator.authenticate(
+                supplementalInformation.get(CommonFields.KeyCardCode.getFieldKey()));
     }
 
     private Field getKeyCardIndexField(KeyCardInitValues keyCardInitValues) {
-        Optional<String> keyCardId = keyCardInitValues.getCardId();
-        String keyCardCodeIndex = keyCardInitValues.getCardIndex();
-
-        String helpText = catalog.getString("Input the code from your code card");
-        if (keyCardId.isPresent()) {
-            helpText = helpText + String.format(" (%s)", keyCardId.get());
-        }
-
-        return Field.builder()
-                .description(catalog.getString("Key card index"))
-                .name("keyCardIndex")
-                .helpText(helpText)
-                .value(keyCardCodeIndex)
-                .immutable(true)
-                .build();
+        return CommonFields.KeyCardInfo.build(
+                catalog,
+                keyCardInitValues.getCardIndex(),
+                keyCardInitValues.getCardId().orElse(null));
     }
 
     private Field getKeyCardValueField() {
-        return Field.builder()
-                .description(catalog.getString("Key card code"))
-                .name(KEYCARD_VALUE_FIELD_KEY)
-                .numeric(true)
-                .minLength(keyCardValueLength)
-                .maxLength(keyCardValueLength)
-                .hint(StringUtils.repeat("N", keyCardValueLength))
-                .pattern(String.format("([0-9]{%d})", keyCardValueLength))
-                .patternError("The code you entered is not valid")
-                .build();
+        return CommonFields.KeyCardCode.build(catalog, keyCardValueLength);
     }
 
     @Override

@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.bpsondrio;
 
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.entities.ConsentType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.CbiGlobeProviderConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.InstrumentType;
@@ -25,25 +24,17 @@ public class BPSondrioApiClient extends CbiGlobeApiClient {
                 client,
                 persistentStorage,
                 sessionStorage,
-                requestManual,
                 temporaryStorage,
                 InstrumentType.ACCOUNTS,
                 providerConfiguration,
-                psuIpAddress);
+                requestManual ? psuIpAddress : null);
     }
 
     @Override
-    public String createRedirectUrl(String state, ConsentType consentType) {
+    public String createRedirectUrl(String state, ConsentType consentType, String authResult) {
         // '?' and '&' need to be encoded
         return redirectUrl
-                + CbiGlobeUtils.encodeValue(
-                        "?"
-                                + QueryKeys.STATE
-                                + "="
-                                + state
-                                + "&"
-                                + QueryKeys.CODE
-                                + "="
-                                + consentType.getCode());
+                + CbiGlobeUtils.getEncondedRedirectURIQueryParams(
+                        state, consentType.getCode(), authResult);
     }
 }

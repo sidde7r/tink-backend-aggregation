@@ -12,6 +12,7 @@ import se.tink.backend.aggregation.agents.framework.ArgumentManager.UsernameArgu
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.transfer.enums.TransferType;
+import se.tink.libraries.transfer.rpc.RemittanceInformation;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 // DISCLAIMER! Actual money being transferred, run under own responsibility
@@ -53,13 +54,15 @@ public class SebApiAgentDomesticTransferTest {
     }
 
     private Transfer createTransfer() {
+        RemittanceInformation remittanceInformation = new RemittanceInformation();
+        remittanceInformation.setValue("Message");
         Transfer transfer = new Transfer();
         transfer.setAmount(Amount.inSEK(1.0));
         transfer.setSource(new SwedishIdentifier(creditorDebtorManager.get(Arg.DEBTOR_ACCOUNT)));
         transfer.setSourceMessage("Message");
         transfer.setDestination(
                 new SwedishIdentifier(creditorDebtorManager.get(Arg.CREDITOR_ACCOUNT)));
-        transfer.setDestinationMessage("Message");
+        transfer.setRemittanceInformation(remittanceInformation);
         transfer.setType(TransferType.BANK_TRANSFER);
         transfer.setDueDate(new Date());
 

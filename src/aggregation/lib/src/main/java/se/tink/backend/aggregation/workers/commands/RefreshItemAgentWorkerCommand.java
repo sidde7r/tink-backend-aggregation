@@ -154,7 +154,7 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
             } catch (BankServiceException e) {
                 // The way frontend works now the message will not be displayed to the user.
                 context.updateStatus(
-                        CredentialsStatus.UNCHANGED,
+                        CredentialsStatus.TEMPORARY_ERROR,
                         context.getCatalog().getString(e.getUserMessage()));
                 action.unavailable();
                 refreshEventProducer.sendEventForRefreshWithErrorInBankSide(
@@ -167,12 +167,15 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
                         context.getRequest().getCredentials().getUserId(),
                         ADDITIONAL_INFO_ERROR_MAPPER.get(e.getError()),
                         item);
-                log.warn("BankServiceException is received and credentials status set unchanged.");
+                log.warn(
+                        "BankServiceException is received and credentials status set UNCHANGED.",
+                        e);
                 return AgentWorkerCommandResult.ABORT;
             } catch (java.lang.NullPointerException e) {
                 log.warn(
-                        "Couldn't refresh RefreshableItem({}) because of null pointer exception",
-                        item);
+                        "Couldn't refresh RefreshableItem({}) because of NullPointerException.",
+                        item,
+                        e);
                 action.failed();
                 refreshEventProducer.sendEventForRefreshWithErrorInTinkSide(
                         context.getRequest().getProvider().getName(),
@@ -187,9 +190,7 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
                 throw e;
             } catch (Exception e) {
 
-                log.warn(
-                        "Couldn't refresh RefreshableItem({}) with error code: " + e.getMessage(),
-                        item);
+                log.warn("Couldn't refresh RefreshableItem({}) because of exception.", item, e);
                 action.failed();
                 refreshEventProducer.sendEventForRefreshWithErrorInTinkSide(
                         context.getRequest().getProvider().getName(),
@@ -272,12 +273,11 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
         serializer
                 .buildList()
                 .forEach(
-                        entry -> {
-                            eventData.add(
-                                    new Pair<String, Boolean>(
-                                            entry.getName(),
-                                            !entry.getValue().equalsIgnoreCase("null")));
-                        });
+                        entry ->
+                                eventData.add(
+                                        new Pair<String, Boolean>(
+                                                entry.getName(),
+                                                !entry.getValue().equalsIgnoreCase("null"))));
 
         dataTrackerEventProducer.sendDataTrackerEvent(
                 context.getRequest().getCredentials().getProviderName(),

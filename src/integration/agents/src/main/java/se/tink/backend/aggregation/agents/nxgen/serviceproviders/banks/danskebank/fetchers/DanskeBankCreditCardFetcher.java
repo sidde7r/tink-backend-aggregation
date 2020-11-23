@@ -4,6 +4,7 @@ import java.util.Collection;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.mapper.AccountEntityMapper;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.CardsListRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.ListAccountsRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.ListAccountsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
@@ -31,7 +32,13 @@ public class DanskeBankCreditCardFetcher implements AccountFetcher<CreditCardAcc
                         ListAccountsRequest.createFromLanguageCode(
                                 configuration.getLanguageCode()));
 
+        reachCardEndpointsForDebugPurposes();
+
         return accountEntityMapper.toTinkCreditCardAccounts(
                 configuration, listAccountsResponse.getAccounts());
+    }
+
+    private void reachCardEndpointsForDebugPurposes() {
+        this.apiClient.listCards(CardsListRequest.create(configuration.getLanguageCode()));
     }
 }

@@ -47,8 +47,8 @@ public class BelfiusAuthenticatorTest extends BelfiusBaseTest {
                 mock(SupplementalInformationHelper.class);
         final BelfiusSignatureCreator belfiusSignatureCreatorMock =
                 createBelfiusSignatureCreatorMock();
-        final AuthenticatorSleepHelper authenticatorSleepHelperMock =
-                mock(AuthenticatorSleepHelper.class);
+        final HumanInteractionDelaySimulator humanInteractionDelaySimulatorMock =
+                mock(HumanInteractionDelaySimulator.class);
 
         belfiusApiClientMock = createApiClientMock();
 
@@ -60,7 +60,7 @@ public class BelfiusAuthenticatorTest extends BelfiusBaseTest {
                         belfiusSessionStorageMock,
                         supplementalInformationHelperMock,
                         belfiusSignatureCreatorMock,
-                        authenticatorSleepHelperMock);
+                        humanInteractionDelaySimulatorMock);
     }
 
     @Test

@@ -32,6 +32,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v3
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.authenticator.rpc.VerifyPersonalCodeResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.entities.Form;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.executors.rpc.BankPaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.executors.rpc.CompleteTransferRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.executors.rpc.CompleteTransferResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.executors.rpc.ConfirmTransferRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.executors.rpc.ConfirmTransferResponse;
@@ -198,10 +199,11 @@ public class NordeaBaseApiClient {
     }
 
     public FetchAccountTransactionResponse fetchAccountTransactions(
-            TransactionalAccount account, Date fromDate, Date toDate) {
+            TransactionalAccount account, String continuationKey, Date fromDate, Date toDate) {
         final URL url =
                 Urls.getUrl(nordeaConfiguration.getBaseUrl(), Urls.FETCH_TRANSACTIONS)
                         .parameter(IdTags.ACCOUNT_NUMBER, account.getApiIdentifier())
+                        .queryParam(QueryParams.CONTINUATION_KEY, continuationKey)
                         .queryParam(
                                 NordeaBaseConstants.PROUDCT_CODE,
                                 account.getFromTemporaryStorage(NordeaBaseConstants.PROUDCT_CODE))
@@ -215,11 +217,7 @@ public class NordeaBaseApiClient {
         final RequestBuilder request =
                 httpClient.request(url).accept(MediaType.APPLICATION_JSON_TYPE);
 
-        final FetchAccountTransactionResponse accountTransactionResponse =
-                requestRefreshableGet(request, FetchAccountTransactionResponse.class);
-        accountTransactionResponse.setConfiguration(nordeaConfiguration);
-
-        return accountTransactionResponse;
+        return requestRefreshableGet(request, FetchAccountTransactionResponse.class);
     }
 
     public FetchCardsResponse fetchCards() {
@@ -352,21 +350,6 @@ public class NordeaBaseApiClient {
         return requestRefreshablePost(request, BankPaymentResponse.class);
     }
 
-    public PaymentEntity updatePayment(PaymentRequest updateRequest) {
-        final RequestBuilder request =
-                httpClient
-                        .request(
-                                Urls.getUrl(
-                                                nordeaConfiguration.getBaseUrl(),
-                                                Urls.FETCH_PAYMENTS_DETAILS)
-                                        .parameter(
-                                                IdTags.PAYMENT_ID,
-                                                updateRequest.getApiIdentifier()))
-                        .accept(MediaType.APPLICATION_JSON_TYPE)
-                        .body(updateRequest, MediaType.APPLICATION_JSON_TYPE);
-        return requestRefreshablePut(request, PaymentEntity.class);
-    }
-
     public ConfirmTransferResponse confirmBankTransfer(
             ConfirmTransferRequest confirmTransferRequest) {
         final RequestBuilder request =
@@ -378,6 +361,39 @@ public class NordeaBaseApiClient {
                         .body(confirmTransferRequest, MediaType.APPLICATION_JSON_TYPE);
 
         return requestRefreshablePost(request, ConfirmTransferResponse.class);
+    }
+
+    public BankIdAutostartResponse signPayment(
+            InitBankIdAutostartRequest initBankIdAutostartRequest) {
+        final RequestBuilder request =
+                httpClient
+                        .request(
+                                Urls.getUrl(
+                                        nordeaConfiguration.getBaseUrl(),
+                                        Urls.LOGIN_BANKID_AUTOSTART))
+                        .accept(MediaType.APPLICATION_JSON_TYPE)
+                        .body(initBankIdAutostartRequest, MediaType.APPLICATION_JSON_TYPE);
+
+        if (nordeaConfiguration.isBusinessAgent()) {
+            request.headers(NordeaBaseConstants.NORDEA_BUSINESS_HEADERS);
+        }
+
+        return requestRefreshablePost(request, BankIdAutostartResponse.class);
+    }
+
+    public CompleteTransferResponse completeTransfer(
+            String orderRef, CompleteTransferRequest completeTransferRequest) {
+        final RequestBuilder request =
+                httpClient
+                        .request(
+                                Urls.getUrl(
+                                                nordeaConfiguration.getBaseUrl(),
+                                                Urls.COMPLETE_TRANSFER)
+                                        .parameter(IdTags.ORDER_REF, orderRef))
+                        .accept(MediaType.APPLICATION_JSON_TYPE)
+                        .body(completeTransferRequest, MediaType.APPLICATION_JSON_TYPE);
+
+        return requestRefreshablePost(request, CompleteTransferResponse.class);
     }
 
     public SignatureResponse signTransfer(SignatureRequest signatureRequest) {
@@ -403,20 +419,6 @@ public class NordeaBaseApiClient {
                         .accept(MediaType.APPLICATION_JSON_TYPE);
 
         return requestRefreshableGet(request, ResultSignResponse.class);
-    }
-
-    public CompleteTransferResponse completeTransfer(String orderRef) {
-        final RequestBuilder request =
-                httpClient
-                        .request(
-                                Urls.getUrl(
-                                                nordeaConfiguration.getBaseUrl(),
-                                                Urls.COMPLETE_TRANSFER)
-                                        .parameter(IdTags.ORDER_REF, orderRef))
-                        .accept(MediaType.APPLICATION_JSON_TYPE)
-                        .type(MediaType.APPLICATION_JSON_TYPE);
-
-        return requestRefreshablePost(request, CompleteTransferResponse.class);
     }
 
     public void keepAlive() throws SessionException {
@@ -464,18 +466,6 @@ public class NordeaBaseApiClient {
         }
     }
 
-    private <T> T requestRefreshablePut(RequestBuilder request, Class<T> responseType) {
-        try {
-            return request.header(
-                            HttpHeaders.AUTHORIZATION, getTokenType() + ' ' + getAccessToken())
-                    .header(HttpHeaders.ACCEPT_LANGUAGE, HeaderParams.LANGUAGE)
-                    .put(responseType);
-
-        } catch (HttpResponseException hre) {
-            return handleRefreshableRequestAndErrors(hre, request, responseType, HttpMethod.PUT);
-        }
-    }
-
     private <T> T requestRefreshablePatch(RequestBuilder request, Class<T> responseType) {
         try {
             return request.header(
@@ -485,18 +475,6 @@ public class NordeaBaseApiClient {
 
         } catch (HttpResponseException hre) {
             return handleRefreshableRequestAndErrors(hre, request, responseType, HttpMethod.PATCH);
-        }
-    }
-
-    private <T> T requestRefreshableDelete(RequestBuilder request, Class<T> responseType) {
-        try {
-            return request.header(
-                            HttpHeaders.AUTHORIZATION, getTokenType() + ' ' + getAccessToken())
-                    .header(HttpHeaders.ACCEPT_LANGUAGE, HeaderParams.LANGUAGE)
-                    .delete(responseType);
-
-        } catch (HttpResponseException hre) {
-            return handleRefreshableRequestAndErrors(hre, request, responseType, HttpMethod.DELETE);
         }
     }
 
@@ -648,16 +626,5 @@ public class NordeaBaseApiClient {
                 .accept(MediaType.APPLICATION_JSON_TYPE)
                 .body(verifyRequest, MediaType.APPLICATION_JSON_TYPE)
                 .put(VerifyPersonalCodeResponse.class, verifyRequest);
-    }
-
-    public ResultSignResponse cancelSign(String orderRef) {
-        final RequestBuilder request =
-                httpClient
-                        .request(
-                                Urls.getUrl(nordeaConfiguration.getBaseUrl(), Urls.POLL_SIGN)
-                                        .parameter(IdTags.ORDER_REF, orderRef))
-                        .accept(MediaType.APPLICATION_JSON_TYPE);
-
-        return requestRefreshableDelete(request, ResultSignResponse.class);
     }
 }

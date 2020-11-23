@@ -63,7 +63,6 @@ public final class BelfiusConstants {
         public static final String AUTHORIZATION_CODE = "authorization_code";
         public static final String REFRESH_TOKEN = "refresh_token";
         public static final String DATE_FORMAT = "yyyy-MM-dd";
-        public static final String FREE_TEXT = "FREETEXT";
     }
 
     public static class HeaderValues {

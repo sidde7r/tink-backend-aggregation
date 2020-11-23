@@ -4,7 +4,6 @@ import com.google.common.base.CharMatcher;
 import com.google.common.base.Joiner;
 import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
-import com.google.common.base.Strings;
 import com.google.common.collect.Sets;
 import java.util.LinkedHashSet;
 import java.util.Optional;
@@ -28,7 +27,6 @@ public class TransferMessageFormatter {
     private final Catalog catalog;
     private final TransferMessageLengthConfig messageLengthConfig;
     private final Optional<StringNormalizer> stringNormalizer;
-    private static final String TINK_GENERATED_MESSAGE_FORMAT = "TinkGenerated://";
 
     public TransferMessageFormatter(
             Catalog catalog,
@@ -50,72 +48,6 @@ public class TransferMessageFormatter {
         this.catalog = catalog;
         this.messageLengthConfig = bankTransferMessageLengthConfig;
         this.stringNormalizer = Optional.of(bankTransferStringNormalizer);
-    }
-
-    /**
-     * @deprecated Use {@link
-     *     TransferMessageFormatter#getMessagesFromRemittanceInformation(Transfer, boolean)}
-     *     instead.
-     *     <p>Returns formatted source/destination message for a transfer to be commonly used in
-     *     agents, since agents differ on requirements on message strings.
-     * @param isTransferBetweenSameUserAccounts If the transfer source and destination belongs to
-     *     same Tink user
-     * @return Source/destination message that are formatted according to configuration of agent
-     * @throws TransferMessageException When destination message doesn't apply to formatting, we
-     *     throw to be able to tell the user to adjust his/her message. Though for source message
-     *     (internal note) we just shorten it.
-     */
-    @Deprecated
-    public Messages getMessages(Transfer transfer, boolean isTransferBetweenSameUserAccounts)
-            throws TransferMessageException {
-        String destinationMessage =
-                getDestinationMessage(transfer, isTransferBetweenSameUserAccounts);
-        String sourceMessage = getSourceMessage(transfer);
-
-        return new Messages(sourceMessage, destinationMessage);
-    }
-
-    /**
-     * @deprecated Use {@link
-     *     TransferMessageFormatter#getDestinationMessageFromRemittanceInformation(Transfer,
-     *     boolean)} ()} instead.
-     *     <p>Returns formatted destination message for a transfer to be commonly used in agents,
-     *     since agents differ on requirements on message strings.
-     * @param isTransferBetweenSameUserAccounts If the transfer source and destination belongs to
-     *     same Tink user
-     * @return Destination message that is formatted according to configuration of agent
-     * @throws TransferMessageException When destination message doesn't apply to formatting, we
-     *     throw to be able to tell the user to adjust his/her message.
-     */
-    @Deprecated
-    public String getDestinationMessage(
-            Transfer transfer, boolean isTransferBetweenSameUserAccounts)
-            throws TransferMessageException {
-        preconditionIsBankTransfer(transfer);
-
-        int maxLength =
-                messageLengthConfig.getDestinationMessageMaxLength(
-                        isTransferBetweenSameUserAccounts);
-        String destinationMessage = transfer.getDestinationMessage();
-
-        if (transfer.isDestinationMessageGenerated()) {
-            return normalizeAndtrimMessageIfNeeded(destinationMessage, maxLength);
-        }
-
-        if (destinationMessage.length() > maxLength) {
-            throw new TransferMessageException(
-                    catalog.getString(
-                            EndUserMessage.DESTINATION_MESSAGE_TO_LONG.cloneWith(maxLength)),
-                    LogMessage.DESTINATION_MESSAGE_TO_LONG.with(transfer),
-                    InternalStatus.DESTINATION_MESSAGE_TOO_LONG.toString());
-        }
-
-        Set<Character> normalizedCharacters = getCharactersBeingNormalized(destinationMessage);
-        if (!normalizedCharacters.isEmpty()) {
-            return createTransferExecutionException(transfer, normalizedCharacters);
-        }
-
-        return trim(destinationMessage);
     }
 
     /**
@@ -158,12 +90,7 @@ public class TransferMessageFormatter {
         int maxLength =
                 messageLengthConfig.getDestinationMessageMaxLength(
                         isTransferBetweenSameUserAccounts);
-        String destinationMessage =
-                trimGeneratedText(transfer.getRemittanceInformation().getValue());
-
-        if (transfer.isRemittanceInformationGenerated()) {
-            return normalizeAndtrimMessageIfNeeded(destinationMessage, maxLength);
-        }
+        String destinationMessage = transfer.getRemittanceInformation().getValue();
 
         if (destinationMessage.length() > maxLength) {
             throw new TransferMessageException(
@@ -197,10 +124,6 @@ public class TransferMessageFormatter {
 
         int maxLength = messageLengthConfig.getSourceMessageMaxLength();
         String sourceMessage = transfer.getSourceMessage();
-
-        if (transfer.isSourceMessageGenerated()) {
-            return normalizeAndtrimMessageIfNeeded(sourceMessage, maxLength);
-        }
 
         if (sourceMessage.length() > maxLength) {
             throw new TransferMessageException(
@@ -273,18 +196,6 @@ public class TransferMessageFormatter {
         return Joiner.on(" ").join(normalizedCharacters);
     }
 
-    private String normalizeAndtrimMessageIfNeeded(String message, int maxLength) {
-        if (stringNormalizer.isPresent()) {
-            message = stringNormalizer.get().normalize(message);
-        }
-
-        if (message.length() > maxLength) {
-            return message.substring(0, maxLength);
-        }
-
-        return trim(message);
-    }
-
     private void preconditionIsBankTransfer(Transfer transfer) {
         if (!transfer.isOfType(TransferType.BANK_TRANSFER)) {
             throw new IllegalArgumentException(
@@ -354,12 +265,5 @@ public class TransferMessageFormatter {
         public String get() {
             return message;
         }
-    }
-
-    private String trimGeneratedText(String generatedMessage) {
-        if (Strings.isNullOrEmpty(generatedMessage)) {
-            return null;
-        }
-        return generatedMessage.replaceAll("^" + TINK_GENERATED_MESSAGE_FORMAT, "");
     }
 }

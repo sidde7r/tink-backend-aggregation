@@ -21,7 +21,7 @@ bazel_skylib_workspace()
 # Usually this should be set to the version of Bazel used for CI
 load("@bazel_skylib//lib:versions.bzl", "versions")
 
-versions.check("3.0.0", "3.3.1")
+versions.check("3.0.0", "3.4.1")
 
 # rules_pkg
 http_archive(
@@ -145,7 +145,7 @@ go_repository(
 
 git_repository(
     name = "tink_backend",
-    commit = "8b1ae0f89470299b863dbfffdaf336b7210e0bd1",
+    commit = "9d700a54e0d3b102cbef8fc4ed117d23fe0f7074",
     remote = "git@github.com:tink-ab/tink-backend.git",
     shallow_since = "1601479333 +0000",
 )
@@ -153,7 +153,7 @@ git_repository(
 # To be used only by //src/aggregation/lib/src/main/java/se/tink/backend/aggregation/agents_platform/agents_framework
 git_repository(
     name = "tink_backend_for_agents_framework",
-    commit = "b569ad7af323bdb56fa980e50c50dd297227bc89",
+    commit = "3653b9438eb8d7fd6aea27b10f1a8cfe22b71cad",
     remote = "git@github.com:tink-ab/tink-backend.git",
     shallow_since = "1595000000 +0000",
 )
@@ -161,9 +161,9 @@ git_repository(
 # Docker dependencies
 http_archive(
     name = "io_bazel_rules_docker",
-    sha256 = "413bb1ec0895a8d3249a01edf24b82fd06af3c8633c9fb833a0cb1d4b234d46d",
-    strip_prefix = "rules_docker-0.12.0",
-    urls = ["https://github.com/bazelbuild/rules_docker/archive/v0.12.0.tar.gz"],
+    sha256 = "1698624e878b0607052ae6131aa216d45ebb63871ec497f26c67455b34119c80",
+    strip_prefix = "rules_docker-0.15.0",
+    urls = ["https://github.com/bazelbuild/rules_docker/releases/download/v0.15.0/rules_docker-v0.15.0.tar.gz"],
 )
 
 # Google api types.
@@ -639,6 +639,10 @@ agent_platform_deps("@tink_backend_for_agents_framework//src/agents-platform:age
 load("@agents_platform_maven//:defs.bzl", pin_agent_platform = "pinned_maven_install")
 
 pin_agent_platform()
+
+load("@tink_backend_for_agents_framework//src/libraries/cryptography:deps.bzl", "cryptography_lib_deps")
+
+cryptography_lib_deps("@tink_backend_for_agents_framework//src/libraries/cryptography:cryptography_lib_install.json")
 
 # This aims become the singular place for specifying the full collection of direct and transitive
 # dependencies of the aggregation service monolith jar. All aggregation code -- including agent code
@@ -1230,17 +1234,6 @@ maven_install(
         "org.slf4j:log4j-over-slf4j:1.7.29",
         "ch.qos.logback:logback-core:1.2.3",
         "ch.qos.logback:logback-classic:1.2.3",
-    ],
-    fetch_sources = True,
-    repositories = MAVEN_REPOS,
-)
-
-maven_install(
-    name = "standalone_agent_test_deps",
-    artifacts = [
-        "org.springframework:spring-test:5.2.1.RELEASE",
-        "org.mockito:mockito-core:2.10.0",
-        "junit:junit:4.12",
     ],
     fetch_sources = True,
     repositories = MAVEN_REPOS,

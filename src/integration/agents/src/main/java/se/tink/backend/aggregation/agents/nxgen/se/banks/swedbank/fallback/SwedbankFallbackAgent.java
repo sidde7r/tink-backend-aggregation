@@ -12,10 +12,10 @@ import java.time.ZoneId;
 import java.util.Locale;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fallback.configuration.SwedbankFallbackConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fallback.configuration.SwedbankPsd2Configuration;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fallback.filter.SwedbankFallbackHttpFilter;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankAbstractAgent;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.configuration.SwedbankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.utilities.SwedbankDateUtils;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
@@ -39,8 +39,14 @@ public final class SwedbankFallbackAgent extends SwedbankAbstractAgent {
             AgentsServiceConfiguration agentsServiceConfiguration) {
         super(
                 componentProvider,
-                new SwedbankFallbackConfiguration(
-                        componentProvider.getCredentialsRequest().getProvider().getPayload()),
+                new SwedbankConfiguration(
+                        SwedbankFallbackConstants.PROFILE_PARAMETERS.get(
+                                componentProvider
+                                        .getCredentialsRequest()
+                                        .getProvider()
+                                        .getPayload()),
+                        SwedbankFallbackConstants.HOST,
+                        true),
                 new SwedbankFallbackApiClientProvider(agentsServiceConfiguration),
                 new SwedbankDateUtils(ZoneId.of("Europe/Stockholm"), new Locale("sv", "SE")));
 
@@ -56,6 +62,10 @@ public final class SwedbankFallbackAgent extends SwedbankAbstractAgent {
         client.setEidasProxy(agentsServiceConfiguration.getEidasProxy());
         client.addFilter(
                 new SwedbankFallbackHttpFilter(
-                        psd2Configuration, agentsServiceConfiguration, getEidasIdentity(), qSealc));
+                        componentProvider.getRandomValueGenerator(),
+                        psd2Configuration,
+                        agentsServiceConfiguration,
+                        getEidasIdentity(),
+                        qSealc));
     }
 }

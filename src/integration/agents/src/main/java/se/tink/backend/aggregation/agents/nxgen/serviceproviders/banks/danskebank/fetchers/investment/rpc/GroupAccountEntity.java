@@ -1,11 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.investment.rpc;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.lang.invoke.MethodHandles;
 import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConstants;
@@ -17,10 +16,9 @@ import se.tink.backend.aggregation.source_info.AccountSourceInfo;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
+@Getter
+@Slf4j
 public class GroupAccountEntity {
-    @JsonIgnore
-    private static final Logger logger =
-            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private String name;
 
@@ -32,21 +30,7 @@ public class GroupAccountEntity {
     @JsonProperty("displayValue")
     private String displayAccountIdentifier;
 
-    public String getName() {
-        return name;
-    }
-
-    public String getAccountIdentifier() {
-        return accountIdentifier;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public String getDisplayAccountIdentifier() {
-        return displayAccountIdentifier;
-    }
+    private List<CustodyAccountEntity> custodyAccounts;
 
     public InvestmentAccount toInvestmentAccount(
             String currency, List<Portfolio> portfolios, DanskeBankConfiguration configuration) {
@@ -55,7 +39,7 @@ public class GroupAccountEntity {
                                 ? displayAccountIdentifier
                                 : accountIdentifier)
                 .setCashBalance(ExactCurrencyAmount.zero(currency))
-                .setAccountNumber(displayAccountIdentifier)
+                .setAccountNumber(getAccountNumber())
                 .setName(name)
                 .setPortfolios(portfolios)
                 .canExecuteExternalTransfer(AccountCapabilities.Answer.UNKNOWN)
@@ -68,6 +52,16 @@ public class GroupAccountEntity {
                                 .bankProductCode(type)
                                 .build())
                 .build();
+    }
+
+    private String getAccountNumber() {
+        if (displayAccountIdentifier != null) {
+            return displayAccountIdentifier;
+        }
+        return CollectionUtils.emptyIfNull(custodyAccounts).stream()
+                .findFirst()
+                .map(CustodyAccountEntity::getCustodyAccountId)
+                .orElse(accountIdentifier);
     }
 
     public Portfolio toTinkPortfolio(
@@ -93,7 +87,7 @@ public class GroupAccountEntity {
             case DanskeBankConstants.Investment.CUSTODY_ACCOUNT:
                 return Portfolio.Type.DEPOT;
             default:
-                logger.info(
+                log.info(
                         String.format(
                                 "Danske Bank - portfolio info - portfolio name [%s] portfolio type [%s]",
                                 name, type));

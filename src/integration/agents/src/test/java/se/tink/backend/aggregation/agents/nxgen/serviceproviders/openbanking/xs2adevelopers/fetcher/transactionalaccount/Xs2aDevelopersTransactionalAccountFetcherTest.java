@@ -37,7 +37,7 @@ public class Xs2aDevelopersTransactionalAccountFetcherTest {
 
     @Test
     @Parameters(method = "checkingAccountKeysParameters")
-    public void shouldFetchAndMapCheckingTransactionalAccount(String accountType) {
+    public void should_fetch_and_map_checking_transactional_account(String accountType) {
         // given
         GetAccountsResponse getAccountsResponse = getAccountsResponse(accountType);
         AccountEntity accountEntity = getAccountsResponse.getAccounts().get(0);
@@ -58,7 +58,7 @@ public class Xs2aDevelopersTransactionalAccountFetcherTest {
 
     @Test
     @Parameters(method = "savingAccountKeysParameters")
-    public void shouldFetchAndMapSavingTransactionalAccount(String accountType) {
+    public void should_fetch_and_map_saving_transactional_account(String accountType) {
         // given
         GetAccountsResponse getAccountsResponse = getAccountsResponse(accountType);
         AccountEntity accountEntity = getAccountsResponse.getAccounts().get(0);
@@ -78,7 +78,7 @@ public class Xs2aDevelopersTransactionalAccountFetcherTest {
     }
 
     @Test
-    public void shouldNotMapUnknownTypeTransactionalAccount() {
+    public void should_not_map_unknown_type_transactional_account() {
         // given
         GetAccountsResponse getAccountsResponse = getAccountsResponse("UNKNOWN_TYPE");
         AccountEntity accountEntity = getAccountsResponse.getAccounts().get(0);

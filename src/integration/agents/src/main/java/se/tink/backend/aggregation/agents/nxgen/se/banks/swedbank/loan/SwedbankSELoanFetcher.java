@@ -45,19 +45,24 @@ public class SwedbankSELoanFetcher implements AccountFetcher<LoanAccount> {
                 continue;
             }
 
-            fetchLoans(loanAccounts, loanOverviewResponse);
+            fetchLoans(
+                    loanAccounts,
+                    loanOverviewResponse,
+                    bankProfile.getEngagementOverViewResponse());
         }
 
         return loanAccounts;
     }
 
     void fetchLoans(
-            ArrayList<LoanAccount> loanAccounts, LoanOverviewResponse loanOverviewResponse) {
+            ArrayList<LoanAccount> loanAccounts,
+            LoanOverviewResponse loanOverviewResponse,
+            EngagementOverviewResponse engagementOverviewResponse) {
         fetchCollateralLoans(loanAccounts, loanOverviewResponse);
 
         fetchCarLoans(loanAccounts, loanOverviewResponse);
 
-        fetchConsumptionLoans(loanAccounts, loanOverviewResponse);
+        fetchConsumptionLoans(loanAccounts, loanOverviewResponse, engagementOverviewResponse);
     }
 
     private void fetchCollateralLoans(
@@ -90,10 +95,9 @@ public class SwedbankSELoanFetcher implements AccountFetcher<LoanAccount> {
     }
 
     private void fetchConsumptionLoans(
-            ArrayList<LoanAccount> loanAccounts, LoanOverviewResponse loanOverviewResponse) {
-
-        EngagementOverviewResponse engagementOverviewResponse = apiClient.engagementOverview();
-
+            ArrayList<LoanAccount> loanAccounts,
+            LoanOverviewResponse loanOverviewResponse,
+            EngagementOverviewResponse engagementOverviewResponse) {
         // Filter out any account that is present in the
         // engagementOverviewResponse::transactionAccounts list.
         List<LoanAccount> consumptionLoans =

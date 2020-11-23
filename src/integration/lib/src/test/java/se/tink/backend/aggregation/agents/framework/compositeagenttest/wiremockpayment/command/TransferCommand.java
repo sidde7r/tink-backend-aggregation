@@ -7,7 +7,6 @@ import se.tink.backend.aggregation.agents.TransferExecutor;
 import se.tink.backend.aggregation.agents.TransferExecutorNxgen;
 import se.tink.backend.aggregation.agents.agent.Agent;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.base.CompositeAgentTestCommand;
-import se.tink.libraries.transfer.rpc.RemittanceInformation;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 public class TransferCommand implements CompositeAgentTestCommand {
@@ -22,15 +21,6 @@ public class TransferCommand implements CompositeAgentTestCommand {
 
     @Override
     public void execute() throws Exception {
-        for (Transfer transfer : transferList) {
-            if (transfer.getRemittanceInformation() == null) {
-                RemittanceInformation remittanceInformation = new RemittanceInformation();
-                remittanceInformation.setValue(transfer.getDestinationMessage());
-                remittanceInformation.setType(null);
-                transfer.setRemittanceInformation(remittanceInformation);
-            }
-        }
-
         if (agent instanceof TransferExecutor) {
             TransferExecutor transferExecutor = (TransferExecutor) agent;
             transferExecutorExecute(transferExecutor);

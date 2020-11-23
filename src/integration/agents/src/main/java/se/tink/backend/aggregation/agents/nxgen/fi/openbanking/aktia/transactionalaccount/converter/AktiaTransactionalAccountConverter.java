@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.apiclient.dto.data.AccountCategoryCode;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.apiclient.dto.response.AccountSummaryItemDto;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.apiclient.dto.response.TransactionInformationDto;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.apiclient.dto.response.TransactionsAndLockedEventsResponseDto;
@@ -23,7 +22,10 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 @Slf4j
 public class AktiaTransactionalAccountConverter {
 
-    public Optional<TransactionalAccount> toTransactionalAccount(
+    private static final String CURRENT_ACCOUNT = "Current Account";
+    private static final String SAVINGS_ACCOUNT = "Savings Account";
+
+    public static Optional<TransactionalAccount> toTransactionalAccount(
             AccountSummaryItemDto accountSummaryItem) {
         final String iban = accountSummaryItem.getIban();
 
@@ -48,7 +50,7 @@ public class AktiaTransactionalAccountConverter {
                                         .build());
     }
 
-    public TransactionKeyPaginatorResponse<String> toPaginatorResponse(
+    public static TransactionKeyPaginatorResponse<String> toPaginatorResponse(
             TransactionsAndLockedEventsResponseDto responseDto) {
         final List<Transaction> transactions =
                 responseDto.getTransactions().stream()
@@ -63,17 +65,17 @@ public class AktiaTransactionalAccountConverter {
 
     private static Optional<TransactionalAccountType> getAccountType(
             AccountSummaryItemDto accountSummaryItem) {
-        final AccountCategoryCode categoryCode =
-                accountSummaryItem.getAccountType().getCategoryCode();
 
-        if (categoryCode == AccountCategoryCode.OTHER) {
-            log.info("Got 'OTHER' account category code.");
-            return Optional.empty();
-        } else if (categoryCode == AccountCategoryCode.CURRENT_ACCOUNT) {
+        String accountType = accountSummaryItem.getAccountType().getAccountType();
+
+        if (accountType.equals(CURRENT_ACCOUNT)) {
             return Optional.of(TransactionalAccountType.CHECKING);
-        } else {
+        } else if (accountType.equals(SAVINGS_ACCOUNT)) {
             return Optional.of(TransactionalAccountType.SAVINGS);
+        } else {
+            log.info("Got %s account category code.", accountType);
         }
+        return Optional.empty();
     }
 
     private static Transaction convertTransactionInformationDtoToTransaction(

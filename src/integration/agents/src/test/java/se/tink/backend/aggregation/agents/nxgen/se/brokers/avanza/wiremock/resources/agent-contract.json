@@ -4,10 +4,10 @@
     "accountExclusion" : "NONE",
     "exactBalance" : {
       "currencyCode" : "SEK",
+      "doubleValue" : 441878.63,
       "exactValue" : 441878.63,
       "scale" : 2,
-      "unscaledValue" : 44187863,
-      "doubleValue" : 441878.63
+      "unscaledValue" : 44187863
     },
     "currencyCode" : "SEK",
     "bankId" : "1000000",
@@ -38,10 +38,10 @@
     "accountExclusion" : "NONE",
     "exactBalance" : {
       "currencyCode" : "SEK",
+      "doubleValue" : 23364.86,
       "exactValue" : 23364.86,
       "scale" : 2,
-      "unscaledValue" : 2336486,
-      "doubleValue" : 23364.86
+      "unscaledValue" : 2336486
     },
     "currencyCode" : "SEK",
     "bankId" : "1000011",
@@ -72,10 +72,10 @@
     "accountExclusion" : "NONE",
     "exactBalance" : {
       "currencyCode" : "SEK",
+      "doubleValue" : 2154.31,
       "exactValue" : 2154.31,
       "scale" : 2,
-      "unscaledValue" : 215431,
-      "doubleValue" : 2154.31
+      "unscaledValue" : 215431
     },
     "currencyCode" : "SEK",
     "bankId" : "2000040",
@@ -106,10 +106,10 @@
     "accountExclusion" : "NONE",
     "exactBalance" : {
       "currencyCode" : "SEK",
+      "doubleValue" : 0.0,
       "exactValue" : 0.0,
       "scale" : 2,
-      "unscaledValue" : 0,
-      "doubleValue" : 0.0
+      "unscaledValue" : 0
     },
     "currencyCode" : "SEK",
     "bankId" : "7000040",
@@ -140,10 +140,10 @@
     "accountExclusion" : "NONE",
     "exactBalance" : {
       "currencyCode" : "SEK",
+      "doubleValue" : 0.0,
       "exactValue" : 0.0,
       "scale" : 1,
-      "unscaledValue" : 0,
-      "doubleValue" : 0.0
+      "unscaledValue" : 0
     },
     "currencyCode" : "SEK",
     "bankId" : "1000052",
@@ -174,10 +174,10 @@
     "accountExclusion" : "NONE",
     "exactBalance" : {
       "currencyCode" : "SEK",
+      "doubleValue" : 16885.67,
       "exactValue" : 16885.67,
       "scale" : 2,
-      "unscaledValue" : 1688567,
-      "doubleValue" : 16885.67
+      "unscaledValue" : 1688567
     },
     "currencyCode" : "SEK",
     "bankId" : "1000075",
@@ -208,10 +208,10 @@
     "accountExclusion" : "NONE",
     "exactBalance" : {
       "currencyCode" : "SEK",
+      "doubleValue" : 312378.52,
       "exactValue" : 312378.52,
       "scale" : 2,
-      "unscaledValue" : 31237852,
-      "doubleValue" : 312378.52
+      "unscaledValue" : 31237852
     },
     "currencyCode" : "SEK",
     "bankId" : "1000093",
@@ -766,5 +766,25 @@
     "timestamp" : 0,
     "type" : "DEFAULT",
     "upcoming" : false
-  } ]
+  } ],
+  "identityData" : {
+    "nameElements" : [ {
+      "type" : "FULLNAME",
+      "value" : ""
+    } ],
+    "dateOfBirth" : {
+      "year" : 1999,
+      "month" : "SEPTEMBER",
+      "era" : "CE",
+      "monthValue" : 9,
+      "dayOfMonth" : 9,
+      "dayOfWeek" : "THURSDAY",
+      "leapYear" : false,
+      "dayOfYear" : 252,
+      "chronology" : {
+        "id" : "ISO",
+        "calendarType" : "iso8601"
+      }
+    }
+  }
 }

@@ -1,0 +1,18 @@
+{
+  "accounts": [
+    {
+      "currency": "",
+      "_links": {
+        "account": {
+          "href": "/accounts/null"
+        },
+        "balances": {
+          "href": "/accounts/null/balances"
+        },
+        "transactions": {
+          "href": "/accounts/null/transactions"
+        }
+      }
+    }
+  ]
+}

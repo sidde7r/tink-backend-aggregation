@@ -2,6 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.halifax;
 
 final class HalifaxConstants {
 
+    static final String ORGANISATION_ID = "0015800000jfPKvAAM";
+
     class Urls {
 
         class V31 {

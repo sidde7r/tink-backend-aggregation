@@ -1,0 +1,22 @@
+{
+  "transactions": {
+    "booked": [
+      {
+        "transactionAmount": {
+          "currency": "",
+          "amount": ""
+        },
+        "_links": {
+          "transactionDetails": {
+            "href": "/accounts/**HASHED:ha**/transactions/null"
+          }
+        }
+      }
+    ],
+    "_links": {
+      "account": {
+        "href": "/accounts/**HASHED:ha**"
+      }
+    }
+  }
+}

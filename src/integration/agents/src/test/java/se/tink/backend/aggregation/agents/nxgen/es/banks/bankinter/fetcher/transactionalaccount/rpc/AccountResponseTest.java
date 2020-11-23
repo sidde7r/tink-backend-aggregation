@@ -12,12 +12,20 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 public class AccountResponseTest {
 
     @Test
-    public void testAccountResponse() {
+    public void testParsingAccountResponseWithCuentaAsName() {
+        testAccountResponse("3a.movimientos-cabecera-head-datos-detalle.xhtml");
+    }
+
+    @Test
+    public void testParsingAccountResponseWithCompteAsName() {
+        testAccountResponse("3b.movimientos-cabecera-head-datos-detalle.xhtml");
+    }
+
+    private void testAccountResponse(String jsfUpdateResponseFilename) {
         final AccountResponse accountResponse =
                 loadTestResponse("2.get_movimientos_cuenta_0.xhtml", AccountResponse.class);
         final JsfUpdateResponse accountInfo =
-                loadTestResponse(
-                        "3.movimientos-cabecera-head-datos-detalle.xhtml", JsfUpdateResponse.class);
+                loadTestResponse(jsfUpdateResponseFilename, JsfUpdateResponse.class);
 
         final TransactionalAccount account =
                 accountResponse

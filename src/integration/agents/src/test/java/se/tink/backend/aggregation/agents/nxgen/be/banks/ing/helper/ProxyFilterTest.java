@@ -74,6 +74,8 @@ public class ProxyFilterTest {
 
     @Mock private IngCryptoUtils ingCryptoUtils;
 
+    @Mock private IngLoggingAdapter ingLoggingAdapter;
+
     @InjectMocks private ProxyFilter proxyFilter;
 
     private ArgumentCaptor<ByteArrayInputStream> responseBodyArgumentCaptor =

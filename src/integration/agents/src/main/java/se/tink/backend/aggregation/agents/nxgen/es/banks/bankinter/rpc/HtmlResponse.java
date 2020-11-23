@@ -40,7 +40,7 @@ public class HtmlResponse {
     private static final XPathFactory xpathFactory = XPathFactory.newInstance();
     private final DecimalFormat amountFormat;
     private static final Pattern AMOUNT_PATTERN =
-            Pattern.compile("(?<value>[\\+\\-]?[0-9\\.,]+)(?<currency>€|EUROS|\\w{3})?");
+            Pattern.compile("(?<value>[\\+\\-]?[0-9\\.,]+)(?<currency>€|EUROS|\\$|\\w{3})?");
     private static final DateTimeFormatter TRANSACTION_DATE_FORMATTER =
             DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private static final Pattern TRANSACTION_DATE_PATTERN =
@@ -123,6 +123,8 @@ public class HtmlResponse {
             return BankinterConstants.DEFAULT_CURRENCY;
         } else if (currency.equals("€") || currency.equalsIgnoreCase("EUROS")) {
             return "EUR";
+        } else if (currency.equals("$")) {
+            return "USD";
         } else {
             return currency;
         }

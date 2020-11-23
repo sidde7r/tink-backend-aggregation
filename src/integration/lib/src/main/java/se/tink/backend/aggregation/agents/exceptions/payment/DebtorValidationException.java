@@ -3,6 +3,8 @@ package se.tink.backend.aggregation.agents.exceptions.payment;
 import se.tink.libraries.signableoperation.enums.InternalStatus;
 
 public class DebtorValidationException extends PaymentValidationException {
+    public static final String DEFAULT_MESSAGE =
+            "Could not validate the account, you are trying to pay from";
     private static final String IBAN_NOT_VALID =
             "Debtor account number is not in valid IBAN format";
 

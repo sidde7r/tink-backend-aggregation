@@ -32,6 +32,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngUtils;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.rpc.CreateSessionRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.rpc.CreateSessionResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.rpc.PutRestSessionResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.rpc.ErrorCodeMessage;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.rpc.ErrorResponse;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationRequest;
@@ -148,6 +149,9 @@ public class LoginStep extends AbstractAuthenticationStep {
             if (errorResponse.hasErrorField(ErrorCodes.LOGIN_DOCUMENT_FIELD)) {
                 LOGGER.warn("Login document didn't pass server-side validation");
                 throw LoginError.INCORRECT_CREDENTIALS.exception(hre);
+            } else if (errorResponse.hasErrorField(ErrorCodes.BIRTHDAY_FIELD)) {
+                LOGGER.warn("Birthday date didn't pass server-side validation");
+                throw LoginError.INCORRECT_CREDENTIALS.exception(hre);
             }
         } else if (hre.getResponse().getStatus() == HttpStatus.SC_FORBIDDEN) {
             final ErrorResponse errorResponse = hre.getResponse().getBody(ErrorResponse.class);
@@ -164,6 +168,16 @@ public class LoginStep extends AbstractAuthenticationStep {
     private void handlePutSessionErrors(HttpResponseException hre) throws LoginException {
         switch (hre.getResponse().getStatus()) {
             case HttpStatus.SC_FORBIDDEN:
+                ErrorCodeMessage error = hre.getResponse().getBody(ErrorCodeMessage.class);
+                if (error.getErrorCode() == ErrorCodes.ACCOUNT_BLOCKED) {
+                    throw AuthorizationError.ACCOUNT_BLOCKED.exception(
+                            "Account seems to be blocked. Message from the bank: "
+                                    + error.getMessage());
+                } else if (error.getErrorCode() == ErrorCodes.INVALID_PIN) {
+                    throw LoginError.INCORRECT_CHALLENGE_RESPONSE.exception(
+                            "Supplied otp or pinpad code seems to be invalid. Message from the bank: "
+                                    + error.getMessage());
+                }
                 throw LoginError.INCORRECT_CREDENTIALS.exception(hre);
             case HttpStatus.SC_CONFLICT:
                 throw BankServiceError.BANK_SIDE_FAILURE.exception(hre);

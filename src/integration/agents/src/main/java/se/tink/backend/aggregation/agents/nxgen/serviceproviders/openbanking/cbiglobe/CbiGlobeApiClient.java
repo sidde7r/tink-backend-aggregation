@@ -6,7 +6,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
-import org.apache.commons.collections4.CollectionUtils;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.ErrorMessages;
@@ -29,9 +29,9 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.CbiGlobeConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.CbiGlobeProviderConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.InstrumentType;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.exception.NoAccountsException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.rpc.CreatePaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.GetBalancesResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.GetTransactionsResponse;
@@ -47,6 +47,7 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
+@Slf4j
 public class CbiGlobeApiClient {
 
     private final TinkHttpClient client;
@@ -54,7 +55,6 @@ public class CbiGlobeApiClient {
     private final SessionStorage sessionStorage;
     private CbiGlobeConfiguration configuration;
     protected String redirectUrl;
-    private boolean requestManual;
     protected TemporaryStorage temporaryStorage;
     protected InstrumentType instrumentType;
     private CbiGlobeProviderConfiguration providerConfiguration;
@@ -64,7 +64,6 @@ public class CbiGlobeApiClient {
             TinkHttpClient client,
             PersistentStorage persistentStorage,
             SessionStorage sessionStorage,
-            boolean requestManual,
             TemporaryStorage temporaryStorage,
             InstrumentType instrumentType,
             CbiGlobeProviderConfiguration providerConfiguration,
@@ -72,7 +71,6 @@ public class CbiGlobeApiClient {
         this.client = client;
         this.persistentStorage = persistentStorage;
         this.sessionStorage = sessionStorage;
-        this.requestManual = requestManual;
         this.temporaryStorage = temporaryStorage;
         this.instrumentType = instrumentType;
         this.providerConfiguration = providerConfiguration;
@@ -109,8 +107,12 @@ public class CbiGlobeApiClient {
     }
 
     protected RequestBuilder createAccountsRequestWithConsent() {
-        return createRequestInSession(getAccountsUrl())
-                .header(HeaderKeys.CONSENT_ID, persistentStorage.get(StorageKeys.CONSENT_ID));
+        RequestBuilder rb =
+                createRequestInSession(getAccountsUrl())
+                        .header(
+                                HeaderKeys.CONSENT_ID,
+                                persistentStorage.get(StorageKeys.CONSENT_ID));
+        return addPsuIpAddressHeaderIfNeeded(rb);
     }
 
     private URL getAccountsUrl() {
@@ -151,17 +153,19 @@ public class CbiGlobeApiClient {
     }
 
     protected RequestBuilder createConsentRequest(String state, ConsentType consentType) {
-        String fullRedirectUrl = createRedirectUrl(state, consentType);
+        String okFullRedirectUrl = createRedirectUrl(state, consentType, QueryValues.SUCCESS);
+        String nokFullRedirectUrl = createRedirectUrl(state, consentType, QueryValues.FAILURE);
         return createRequestInSession(Urls.CONSENTS)
                 .header(HeaderKeys.ASPSP_PRODUCT_CODE, providerConfiguration.getAspspProductCode())
-                .header(HeaderKeys.TPP_REDIRECT_URI, fullRedirectUrl)
-                .header(HeaderKeys.TPP_NOK_REDIRECT_URI, fullRedirectUrl);
+                .header(HeaderKeys.TPP_REDIRECT_URI, okFullRedirectUrl)
+                .header(HeaderKeys.TPP_NOK_REDIRECT_URI, nokFullRedirectUrl);
     }
 
-    public String createRedirectUrl(String state, ConsentType consentType) {
+    public String createRedirectUrl(String state, ConsentType consentType, String authResult) {
         return new URL(redirectUrl)
                 .queryParam(QueryKeys.STATE, state)
                 .queryParam(QueryKeys.CODE, consentType.getCode())
+                .queryParam(QueryKeys.RESULT, authResult)
                 .get();
     }
 
@@ -181,15 +185,17 @@ public class CbiGlobeApiClient {
     public GetAccountsResponse getAccounts() {
         GetAccountsResponse getAccountsResponse =
                 createAccountsRequestWithConsent().get(GetAccountsResponse.class);
-        if (CollectionUtils.isEmpty(getAccountsResponse.getAccounts())) {
-            throw new NoAccountsException("There are no bank accounts!");
-        }
-
+        getAccountsResponse.getAccounts().removeIf(AccountEntity::isEmptyAccountObject);
+        log.info(
+                "Number of received checking accounts {}",
+                getAccountsResponse.getAccounts().size());
         return getAccountsResponse;
     }
 
     public GetBalancesResponse getBalances(String resourceId) {
-        return createRequestWithConsent(getBalancesUrl().parameter(IdTags.ACCOUNT_ID, resourceId))
+        return addPsuIpAddressHeaderIfNeeded(
+                        createRequestWithConsent(
+                                getBalancesUrl().parameter(IdTags.ACCOUNT_ID, resourceId)))
                 .get(GetBalancesResponse.class);
     }
 
@@ -206,12 +212,15 @@ public class CbiGlobeApiClient {
             String bookingType,
             int page) {
         HttpResponse response =
-                createRequestWithConsent(
-                                getTransactionsUrl().parameter(IdTags.ACCOUNT_ID, apiIdentifier))
-                        .queryParam(QueryKeys.BOOKING_STATUS, bookingType)
-                        .queryParam(QueryKeys.DATE_FROM, fromDate.toString())
-                        .queryParam(QueryKeys.DATE_TO, toDate.toString())
-                        .queryParam(QueryKeys.OFFSET, String.valueOf(page))
+                addPsuIpAddressHeaderIfNeeded(
+                                createRequestWithConsent(
+                                                getTransactionsUrl()
+                                                        .parameter(
+                                                                IdTags.ACCOUNT_ID, apiIdentifier))
+                                        .queryParam(QueryKeys.BOOKING_STATUS, bookingType)
+                                        .queryParam(QueryKeys.DATE_FROM, fromDate.toString())
+                                        .queryParam(QueryKeys.DATE_TO, toDate.toString())
+                                        .queryParam(QueryKeys.OFFSET, String.valueOf(page)))
                         .get(HttpResponse.class);
 
         String totalPages = getTotalPages(response, apiIdentifier);
@@ -221,7 +230,7 @@ public class CbiGlobeApiClient {
         GetTransactionsResponse getTransactionsResponse =
                 response.getBody(GetTransactionsResponse.class);
 
-        if (Objects.nonNull(totalPages) && Integer.valueOf(totalPages) > page) {
+        if (Objects.nonNull(totalPages) && Integer.parseInt(totalPages) > page) {
             getTransactionsResponse.setPageRemaining(true);
         }
         return getTransactionsResponse;
@@ -313,12 +322,6 @@ public class CbiGlobeApiClient {
                 (psuIpAddress != null
                         ? psuIpAddress
                         : sessionStorage.get(HeaderKeys.PSU_IP_ADDRESS));
-        return requestManual
-                ? requestBuilder.header(HeaderKeys.PSU_IP_ADDRESS, originatingUserIPAddress)
-                : requestBuilder;
-    }
-
-    public void invalidateToken() {
-        persistentStorage.remove(StorageKeys.OAUTH_TOKEN);
+        return requestBuilder.header(HeaderKeys.PSU_IP_ADDRESS, originatingUserIPAddress);
     }
 }

@@ -6,14 +6,8 @@ import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.bunq.BunqCo
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.bunq.authenticator.rpc.CreateSessionUserAsPSD2ProviderResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.bunq.authenticator.rpc.CreateSessionUserAsPSD2ProviderResponseWrapper;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.bunq.authenticator.rpc.TokenExchangeResponse;
-import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.bunq.executor.payment.rpc.CreateDraftPaymentRequest;
-import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.bunq.executor.payment.rpc.CreateDraftPaymentResponse;
-import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.bunq.executor.payment.rpc.CreateDraftPaymentResponseWrapper;
-import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.bunq.executor.payment.rpc.GetDraftPaymentResponse;
-import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.bunq.executor.payment.rpc.GetDraftPaymentResponseWrapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.BunqBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.BunqBaseConstants;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.BunqBaseConstants.UrlParameterKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.BunqResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.authenticator.rpc.CreateSessionPSD2ProviderResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.authenticator.rpc.CreateSessionPSD2ProviderResponseWrapper;
@@ -31,10 +25,6 @@ public class BunqApiClient {
     public BunqApiClient(TinkHttpClient client, String baseApiEndpoint) {
         this.baseApiClient = new BunqBaseApiClient(client, baseApiEndpoint);
         this.client = client;
-    }
-
-    public BunqBaseApiClient getBaseApiClient() {
-        return baseApiClient;
     }
 
     public TokenExchangeResponse getAccessToken(
@@ -90,45 +80,5 @@ public class BunqApiClient {
 
     public AccountsResponseWrapper listAccounts(String userId) {
         return baseApiClient.listAccounts(userId);
-    }
-
-    public CreateDraftPaymentResponse createDraftPayment(
-            String userId, String accountId, CreateDraftPaymentRequest createDraftPaymentRequest) {
-        CreateDraftPaymentResponseWrapper response =
-                client.request(
-                                baseApiClient
-                                        .getUrl(Urls.DRAFT_PAYMENT)
-                                        .parameter(UrlParameterKeys.USER_ID, userId)
-                                        .parameter(UrlParameterKeys.ACCOUNT_ID, accountId))
-                        .post(CreateDraftPaymentResponseWrapper.class, createDraftPaymentRequest);
-
-        return Optional.ofNullable(response.getResponse())
-                .map(BunqResponse::getResponseBody)
-                .orElseThrow(
-                        () ->
-                                new IllegalStateException(
-                                        "Could not deserialize CreateDraftPaymentResponse"));
-    }
-
-    public GetDraftPaymentResponse getDraftPayment(
-            String userId, String accountId, long paymentId) {
-
-        GetDraftPaymentResponseWrapper response =
-                client.request(
-                                baseApiClient
-                                        .getUrl(Urls.DRAFT_PAYMENT_SPECIFIC_PAYMENT)
-                                        .parameter(UrlParameterKeys.USER_ID, userId)
-                                        .parameter(UrlParameterKeys.ACCOUNT_ID, accountId)
-                                        .parameter(
-                                                UrlParameterKeys.PAYMENT_ID,
-                                                String.valueOf(paymentId)))
-                        .get(GetDraftPaymentResponseWrapper.class);
-
-        return Optional.ofNullable(response.getResponse())
-                .map(BunqResponse::getResponseBody)
-                .orElseThrow(
-                        () ->
-                                new IllegalStateException(
-                                        "Could not deserialize GetDraftPaymentResponse"));
     }
 }

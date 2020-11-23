@@ -96,7 +96,7 @@ public final class BbvaAgent extends NextGenerationAgent
 
     @Override
     protected Authenticator constructAuthenticator() {
-        return new BbvaAuthenticator(apiClient, sessionStorage, supplementalInformationHelper);
+        return new BbvaAuthenticator(apiClient, supplementalInformationHelper, request);
     }
 
     @Override

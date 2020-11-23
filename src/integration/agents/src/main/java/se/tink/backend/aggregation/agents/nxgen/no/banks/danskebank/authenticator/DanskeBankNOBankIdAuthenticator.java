@@ -346,6 +346,7 @@ public class DanskeBankNOBankIdAuthenticator implements TypedAuthenticator, Auto
     private Optional<String> waitForLogonPackage(WebDriver driver) {
         // Look for the logonPackage in the main dom.
         // `logonPackage` is assigned in the dom by the JavaScript snippet we constructed.
+        waitAfterSubmitingForm(driver);
         driver.switchTo().defaultContent();
         Optional<String> logonPackage =
                 webDriverHelper.waitForElementWithAttribute(
@@ -354,6 +355,11 @@ public class DanskeBankNOBankIdAuthenticator implements TypedAuthenticator, Auto
             log.warn("No logon package, please verify source: {}", driver.getPageSource());
         }
         return logonPackage;
+    }
+
+    private void waitAfterSubmitingForm(WebDriver driver) {
+        webDriverHelper.sleep(2000);
+        log.info("Before switching to default content: {}", driver.getPageSource());
     }
 
     private String authenticateWithBankId(String username, String bankIdPassword)

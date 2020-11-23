@@ -36,6 +36,7 @@ import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.enums.SwedishGiroType;
 import se.tink.libraries.strings.StringUtils;
 import se.tink.libraries.transfer.enums.TransferType;
+import se.tink.libraries.transfer.rpc.RemittanceInformation;
 import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.uuid.UUIDUtils;
 
@@ -259,9 +260,11 @@ public class DemoDataUtils {
             SwedishGiroType giroType,
             int dueInDays,
             TransferType transferType) {
+        RemittanceInformation remittanceInformation = new RemittanceInformation();
+        remittanceInformation.setValue(ocr);
         Transfer transfer = new Transfer();
         transfer.setAmount(Amount.inSEK(amount));
-        transfer.setDestinationMessage(ocr);
+        transfer.setRemittanceInformation(remittanceInformation);
         transfer.setSourceMessage(name);
         transfer.setType(transferType);
         transfer.setDestination(

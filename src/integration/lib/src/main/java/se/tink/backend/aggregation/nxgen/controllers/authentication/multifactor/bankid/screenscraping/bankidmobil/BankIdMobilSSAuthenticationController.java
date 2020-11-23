@@ -11,6 +11,7 @@ import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
+import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.screenscraping.bankidmobil.initializer.MobilInitializer;
 import se.tink.libraries.i18n.Catalog;
@@ -54,12 +55,8 @@ public class BankIdMobilSSAuthenticationController {
         }
 
         if (!isUserAuthenticated(credentials)) {
-            throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception(
-                    "User did not accept bank id");
+            throw BankIdError.TIMEOUT.exception();
         }
-
-        // ITE-1457, remove after investigation
-        log.info("User is supposed to be authenticated. Page source: {}", driver.getPageSource());
     }
 
     private boolean isUserAuthenticated(Credentials credentials) {

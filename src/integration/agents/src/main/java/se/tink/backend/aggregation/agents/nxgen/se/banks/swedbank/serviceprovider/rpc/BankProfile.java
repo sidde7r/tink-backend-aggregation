@@ -1,43 +1,26 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc;
 
-import com.google.common.base.Preconditions;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Map;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.fetchers.transferdestination.rpc.PaymentBaseinfoResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
 @JsonObject
 public class BankProfile {
     private BankEntity bank;
     private Map<String, MenuItemLinkEntity> menuItems;
     private EngagementOverviewResponse engagementOverViewResponse;
     private PaymentBaseinfoResponse paymentBaseinfoResponse;
+    private String selectedProfileId;
 
-    public BankProfile() {}
-
-    public BankProfile(
-            BankEntity bank,
-            Map<String, MenuItemLinkEntity> menuItems,
-            EngagementOverviewResponse engagementOverViewResponse,
-            PaymentBaseinfoResponse paymentBaseinfoResponse) {
-        this.bank = Preconditions.checkNotNull(bank);
-        this.menuItems = Preconditions.checkNotNull(menuItems);
-        this.engagementOverViewResponse = Preconditions.checkNotNull(engagementOverViewResponse);
-        this.paymentBaseinfoResponse = paymentBaseinfoResponse;
-    }
-
-    public BankEntity getBank() {
-        return bank;
-    }
-
-    public Map<String, MenuItemLinkEntity> getMenuItems() {
-        return menuItems;
-    }
-
-    public EngagementOverviewResponse getEngagementOverViewResponse() {
-        return engagementOverViewResponse;
-    }
-
-    public PaymentBaseinfoResponse getPaymentBaseinfoResponse() {
-        return paymentBaseinfoResponse;
+    @JsonIgnore
+    public ProfileEntity getProfile() {
+        return bank.getProfile(selectedProfileId);
     }
 }

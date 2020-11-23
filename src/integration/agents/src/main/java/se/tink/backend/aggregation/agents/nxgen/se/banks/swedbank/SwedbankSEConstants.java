@@ -20,22 +20,34 @@ public class SwedbankSEConstants {
 
     public static final ImmutableMap<String, ProfileParameters> PROFILE_PARAMETERS =
             new ImmutableMap.Builder<String, ProfileParameters>()
-                    .put("swedbank", new ProfileParameters("swedbank", "HhJS3oGdParaOGix", false))
                     .put(
-                            "swedbank-youth",
-                            new ProfileParameters("swedbank-youth", "ap4TcWEoEGV42UVn", false))
+                            "swedbank",
+                            new ProfileParameters(
+                                    "swedbank",
+                                    "xn9oIXqzIhcIvvRu",
+                                    false,
+                                    "SwedbankMOBPrivateIOS/7.26.1_(iOS;_13.3.1)_Apple/iPhone9,3"))
                     .put(
                             "swedbank-business",
-                            new ProfileParameters("swedbank-business", "kZJM0pxnADgWCcHa", false))
+                            new ProfileParameters(
+                                    "swedbank-business",
+                                    "1hZ0nh1Nj3C8uShi",
+                                    false,
+                                    "SwedbankMOBCorporateIOS/3.12.1_(iOS;_13.3.1)_Apple/iPhone9,3"))
                     .put(
                             "savingsbank",
-                            new ProfileParameters("savingsbank", "CB2PGrGdDIJKcrRd", true))
-                    .put(
-                            "savingsbank-youth",
-                            new ProfileParameters("savingsbank-youth", "LFQP9KuzqNBJOosw", true))
+                            new ProfileParameters(
+                                    "savingsbank",
+                                    "AVNZdtbLNGnDvgoH",
+                                    true,
+                                    "SavingbankMOBPrivateIOS/7.26.1_(iOS;_13.3.1)_Apple/iPhone9,3"))
                     .put(
                             "savingsbank-business",
-                            new ProfileParameters("savingsbank-business", "3tw7Anux312vVqZv", true))
+                            new ProfileParameters(
+                                    "savingsbank-business",
+                                    "Nu4lniNtQvtHabvh",
+                                    true,
+                                    "SavingbankMOBCorporateIOS/3.12.1_(iOS;_13.3.1)_Apple/iPhone9,3"))
                     .build();
 
     public static final TypeMapper<InstrumentModule.InstrumentType> INSTRUMENT_TYPE_MAP =
@@ -60,9 +72,7 @@ public class SwedbankSEConstants {
     }
 
     public static class HeaderValues {
-        public static final String APPS_VERSION =
-                "SwedbankMOBPrivateIOS/7.23.0_(iOS;_13.6.1)_Apple/iPhone8,1";
-        public static final String ADRUM = "isMobile:true";
-        public static final String ADRUM_1 = "isAjax:true";
+        public static final String ADRUM = "isAjax:true";
+        public static final String ADRUM_1 = "isMobile:true";
     }
 }

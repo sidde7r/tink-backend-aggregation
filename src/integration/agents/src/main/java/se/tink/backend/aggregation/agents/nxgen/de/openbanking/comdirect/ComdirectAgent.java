@@ -24,6 +24,7 @@ public final class ComdirectAgent extends Xs2aDevelopersAgent {
                 apiClient,
                 persistentStorage,
                 configuration,
-                componentProvider.getLocalDateTimeSource());
+                componentProvider.getLocalDateTimeSource(),
+                credentials);
     }
 }

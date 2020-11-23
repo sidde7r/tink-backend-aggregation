@@ -1,25 +1,26 @@
 package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.barclays;
 
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.UkOpenBankingV31Ais.defaultCreditCardAccountMapper;
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.UkOpenBankingV31Ais.defaultTransactionalAccountMapper;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.UkOpenBankingV31Ais.defaultCreditCardAccountMapper;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.UkOpenBankingV31Ais.defaultTransactionalAccountMapper;
 
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.UkOpenBankingApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.fetcher.UkOpenBankingUpcomingTransactionFetcher;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.IdentityDataFetcher;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingAis;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingAisConfig;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.UkOpenBankingV31Ais;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fetcher.AccountV31Fetcher;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fetcher.CreditCardAccountV31Fetcher;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fetcher.TransactionalAccountV31Fetcher;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper.AccountTypeMapper;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.fetcher.UkOpenBankingUpcomingTransactionFetcher;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.IdentityDataFetcher;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAis;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.UkOpenBankingV31Ais;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.fetcher.AccountV31Fetcher;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.fetcher.CreditCardAccountV31Fetcher;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.fetcher.TransactionalAccountV31Fetcher;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.AccountTypeMapper;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.barclays.fetcher.BarclaysPartyDataFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginator;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.instrumentation.FetcherInstrumentationRegistry;
 
 @RequiredArgsConstructor
 public class BarclaysV31Ais implements UkOpenBankingAis {
@@ -29,7 +30,7 @@ public class BarclaysV31Ais implements UkOpenBankingAis {
 
     @Override
     public AccountFetcher<TransactionalAccount> makeTransactionalAccountFetcher(
-            UkOpenBankingApiClient apiClient) {
+            UkOpenBankingApiClient apiClient, FetcherInstrumentationRegistry instrumentation) {
 
         AccountTypeMapper accountTypeMapper = new AccountTypeMapper(aisConfig);
         BarclaysPartyDataFetcher accountPartyFetcher =
@@ -42,7 +43,8 @@ public class BarclaysV31Ais implements UkOpenBankingAis {
                         apiClient,
                         accountPartyFetcher,
                         accountTypeMapper,
-                        defaultTransactionalAccountMapper()));
+                        defaultTransactionalAccountMapper(),
+                        instrumentation));
     }
 
     @Override
@@ -59,7 +61,7 @@ public class BarclaysV31Ais implements UkOpenBankingAis {
 
     @Override
     public AccountFetcher<CreditCardAccount> makeCreditCardAccountFetcher(
-            UkOpenBankingApiClient apiClient) {
+            UkOpenBankingApiClient apiClient, FetcherInstrumentationRegistry instrumentation) {
 
         AccountTypeMapper accountTypeMapper = new AccountTypeMapper(aisConfig);
         BarclaysPartyDataFetcher accountPartyFetcher =
@@ -72,7 +74,8 @@ public class BarclaysV31Ais implements UkOpenBankingAis {
                         apiClient,
                         accountPartyFetcher,
                         accountTypeMapper,
-                        defaultCreditCardAccountMapper()));
+                        defaultCreditCardAccountMapper(),
+                        instrumentation));
     }
 
     @Override

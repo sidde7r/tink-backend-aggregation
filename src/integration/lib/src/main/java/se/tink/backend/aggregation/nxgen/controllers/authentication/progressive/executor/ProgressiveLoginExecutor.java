@@ -4,6 +4,8 @@ import com.google.common.base.Preconditions;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
@@ -19,6 +21,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
+@Slf4j
 public final class ProgressiveLoginExecutor {
 
     private final SupplementalInformationController supplementalInformationController;
@@ -91,6 +94,9 @@ public final class ProgressiveLoginExecutor {
             SupplementInformationRequester payload) throws SupplementalInfoException {
         if (payload.getFields().isPresent()) {
             final List<Field> fields = payload.getFields().get();
+            log.info(
+                    "Fields for which you are requesting: {}",
+                    fields.stream().map(Field::getName).collect(Collectors.joining(",")));
             return Optional.of(
                     supplementalInformationController.askSupplementalInformation(
                             fields.toArray(new Field[fields.size()])));

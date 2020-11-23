@@ -8,18 +8,20 @@ public class BankIdOidcConstants {
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class Urls {
+        public static final String AGENT_TEST_SERVER_THIRD_PARTY_CALLBACK =
+                "https://127.0.0.1:7357/api/v1/thirdparty/callback";
 
-        private static final String TINK_PRODUCTION_CDN = "https://cdn.tink.se/";
-        private static final String TINK_LOCAL_CDN = "https://127.0.0.1:7357/";
+        private static final String AGENT_TEST_SERVER_BASE = "https://127.0.0.1:7357/";
+        private static final String TINK_PRODUCTION_CDN_BASE = "https://cdn.tink.se/";
 
-        private static final String BANK_ID_IFRAME_PAGE = "bankid/bankid-iframe.html";
+        private static final String BANK_ID_IFRAME_PAGE_PATH = "bankid/bankid-iframe.html";
 
         public static String getBankIdIframePage(boolean isInTestContext) {
-            return getTinkCdnBase(isInTestContext) + BANK_ID_IFRAME_PAGE;
+            return getTinkCdnBase(isInTestContext) + BANK_ID_IFRAME_PAGE_PATH;
         }
 
         private static String getTinkCdnBase(boolean isInTestContext) {
-            return isInTestContext ? TINK_LOCAL_CDN : TINK_PRODUCTION_CDN;
+            return isInTestContext ? AGENT_TEST_SERVER_BASE : TINK_PRODUCTION_CDN_BASE;
         }
     }
 

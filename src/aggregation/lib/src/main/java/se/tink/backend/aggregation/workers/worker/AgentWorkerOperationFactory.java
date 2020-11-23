@@ -51,6 +51,7 @@ import se.tink.backend.aggregation.workers.commands.DebugAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.DecryptCredentialsWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.EncryptCredentialsWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.ExpireSessionAgentWorkerCommand;
+import se.tink.backend.aggregation.workers.commands.FetcherInstrumentationAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.InstantiateAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.KeepAliveAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.LockAgentWorkerCommand;
@@ -271,6 +272,8 @@ public class AgentWorkerOperationFactory {
                             createCommandMetricState(request),
                             agentDataAvailabilityTrackerClient,
                             dataTrackerEventProducer));
+
+            commands.add(new FetcherInstrumentationAgentWorkerCommand(context, itemsToRefresh));
         }
 
         for (RefreshableItem item : nonAccountItems) {

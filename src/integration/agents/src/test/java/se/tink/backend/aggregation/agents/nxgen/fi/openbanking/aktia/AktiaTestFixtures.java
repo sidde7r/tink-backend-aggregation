@@ -316,19 +316,25 @@ public final class AktiaTestFixtures {
     }
 
     public static AccountsSummaryResponse createSuccessfulAccountsSummaryResponse() {
-        return new AccountsSummaryResponse(createAccountsSummaryResponseDto());
+        return new AccountsSummaryResponse(createAccountsSummaryResponseDto("Savings Account"));
+    }
+
+    public static AccountsSummaryResponse createSuccessfulAccountsSummaryResponse(
+            String accountType) {
+        return new AccountsSummaryResponse(createAccountsSummaryResponseDto(accountType));
     }
 
     public static AccountsSummaryResponse createAccountsSummaryResponseWithError() {
         return new AccountsSummaryResponse(createOpenAmErrorResponseDto());
     }
 
-    private static AccountsSummaryResponseDto createAccountsSummaryResponseDto() {
+    private static AccountsSummaryResponseDto createAccountsSummaryResponseDto(String accountType) {
         return SerializationUtils.deserializeFromString(
-                createAccountsSummaryResponseJsonString(), AccountsSummaryResponseDto.class);
+                createAccountsSummaryResponseJsonString(accountType),
+                AccountsSummaryResponseDto.class);
     }
 
-    private static String createAccountsSummaryResponseJsonString() {
+    private static String createAccountsSummaryResponseJsonString(String accountType) {
         return "{"
                 + "   \"frontPageHighlight\":{"
                 + "       \"showHighlight\":false,"
@@ -349,8 +355,10 @@ public final class AktiaTestFixtures {
                 + "               \"iban\":\"FI7340550012203328\","
                 + "               \"bic\":\"HELSFIHH\",\n"
                 + "               \"accountType\":{\n"
-                + "                   \"accountType\":\"Käyttötili\","
-                + "                   \"categoryCode\":\"CURRENT_ACCOUNT\","
+                + "                   \"accountType\": \""
+                + accountType
+                + "\","
+                + "                   \"categoryCode\":\"OTHER\","
                 + "                   \"productCode\":\"1410\","
                 + "                   \"longTermSavings\":false"
                 + "               },"

@@ -2,6 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.revolut;
 
 final class RevolutConstants {
 
+    static final String ORGANISATION_ID = "001580000103UAvAAM";
+
     class Urls {
 
         class V31 {

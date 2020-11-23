@@ -25,8 +25,8 @@ public class NordnetWireMockTest {
                 AgentWireMockRefreshTest.builder(
                                 MarketCode.SE, "nordnet-bankid", wireMockServerFilePath)
                         .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
+                        .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
                         .addCredentialField(Field.Key.USERNAME.getFieldKey(), DUMMY_PSU)
-                        .addRefreshableItems()
                         .build();
 
         final AgentContractEntity expected =

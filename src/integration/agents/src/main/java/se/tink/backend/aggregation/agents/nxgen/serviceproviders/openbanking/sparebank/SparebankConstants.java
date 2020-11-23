@@ -41,8 +41,9 @@ public final class SparebankConstants {
 
     public static class Urls {
         public static final String FETCH_TRANSACTIONS = "/v1/accounts/{resourceId}/transactions";
+        public static final String FETCH_BALANCES = "/v1/accounts/{resourceId}/balances";
         public static final String GET_ACCOUNTS = "/v1/accounts";
-        public static final String GET_SCA_REDIRECT = GET_ACCOUNTS;
+        public static final String GET_SCA_REDIRECT = "/v1/bank-offered-consents";
         public static final String CREATE_PAYMENT = "/v1/payments/{paymentProduct}";
         public static final String GET_PAYMENT = "/v1/payments/{paymentProduct}/{paymentId}";
         public static final String SIGN_PAYMENT =
@@ -54,15 +55,10 @@ public final class SparebankConstants {
     public static class QueryKeys {
         public static final String WITH_BALANCE = "withBalance";
         public static final String LIMIT = "limit";
-        public static final String OFFSET = "offset";
         public static final String BOOKING_STATUS = "bookingStatus";
         public static final String DATE_FROM = "dateFrom";
         public static final String DATE_TO = "dateTo";
         public static final String STATE = "state";
-    }
-
-    public static class CountryCodes {
-        public static final String NORWAY = "NO";
     }
 
     public static class QueryValues {
@@ -102,10 +98,6 @@ public final class SparebankConstants {
         public static final String GRANT_TYPE = "client_credentials";
     }
 
-    public static class SparebankSignSteps {
-        public static final String SAMPLE_STEP = "SAMPLE_STEP";
-    }
-
     public static class IdTags {
         public static final String RESOURCE_ID = "resourceId";
         public static final String PAYMENT_PRODUCT = "paymentProduct";
@@ -113,18 +105,12 @@ public final class SparebankConstants {
     }
 
     public static class StorageKeys {
-        public static final String ACCOUNT_ID = "account_id";
+        public static final String ACCOUNTS = "accounts";
         public static final String TRANSACTIONS_URL = "TRANSACTIONS_URL";
         public static final String SESSION_ID = "SESSION_ID";
         public static final String PSU_ID = "PSU_ID";
         public static final String STATE = "STATE";
-    }
-
-    public static class DatePatterns {
-        public static final String YYYY_MM_DD_PATTERN = "yyyy-MM-dd";
-        public static final String ACCOUNT_ID = "accountId";
-        public static final String PAYMENT_PRODUCT = "paymentProduct";
-        public static final String PAYMENT_ID = "paymentId";
+        public static final String TRANSACTIONS_ALL_FETCHED = "TRANSACTIONS_ALL_FETCHED";
     }
 
     public static class ErrorMessages {

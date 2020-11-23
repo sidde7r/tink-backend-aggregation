@@ -1,12 +1,16 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.google.common.collect.Lists;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.BelfiusConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @JsonObject
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -77,6 +81,20 @@ public class BelfiusRequest {
 
     public List<RequestEntity> getRequests() {
         return this.requests;
+    }
+
+    @JsonIgnore
+    public String urlEncode() {
+        return "request="
+                + urlEncode(SerializationUtils.serializeToString(this)).replace("+", "%20");
+    }
+
+    private static String urlEncode(final String string) {
+        try {
+            return URLEncoder.encode(string, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            throw new IllegalStateException(e);
+        }
     }
 
     public static BelfiusRequest.Builder builder() {

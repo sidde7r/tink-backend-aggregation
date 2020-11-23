@@ -12,6 +12,7 @@ import se.tink.backend.aggregation.agents.general.TransferDestinationPatternBuil
 import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.SwedbankSEConstants.StorageKey;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankDefaultApiClient;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankStorage;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.fetchers.transferdestination.rpc.PaymentBaseinfoResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.BankProfile;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationFetcher;
@@ -22,14 +23,18 @@ public class SwedbankDefaultTransferDestinationFetcher implements TransferDestin
 
     private final SwedbankDefaultApiClient apiClient;
     private final SessionStorage sessionStorage;
+    private final SwedbankStorage swedbankStorage;
     private Boolean hasExtendedUsage;
     private static final Logger log =
             LoggerFactory.getLogger(SwedbankDefaultTransferDestinationFetcher.class);
 
     public SwedbankDefaultTransferDestinationFetcher(
-            SwedbankDefaultApiClient apiClient, SessionStorage sessionStorage) {
+            SwedbankDefaultApiClient apiClient,
+            SessionStorage sessionStorage,
+            SwedbankStorage swedbankStorage) {
         this.apiClient = apiClient;
         this.sessionStorage = sessionStorage;
+        this.swedbankStorage = swedbankStorage;
     }
 
     @Override
@@ -50,7 +55,8 @@ public class SwedbankDefaultTransferDestinationFetcher implements TransferDestin
 
         for (BankProfile bankProfile : apiClient.getBankProfiles()) {
             apiClient.selectProfile(bankProfile);
-            PaymentBaseinfoResponse paymentBaseinfoResponse = apiClient.paymentBaseinfo();
+            PaymentBaseinfoResponse paymentBaseinfoResponse =
+                    swedbankStorage.getBankProfileHandler().getActivePaymentBaseInfo();
 
             paymentSourceAccounts.addAll(paymentBaseinfoResponse.getPaymentSourceAccounts());
             paymentDestinationAccounts.addAll(paymentBaseinfoResponse.getPaymentDestinations());
@@ -84,7 +90,8 @@ public class SwedbankDefaultTransferDestinationFetcher implements TransferDestin
 
         for (BankProfile bankProfile : apiClient.getBankProfiles()) {
             apiClient.selectProfile(bankProfile);
-            PaymentBaseinfoResponse paymentBaseinfoResponse = apiClient.paymentBaseinfo();
+            PaymentBaseinfoResponse paymentBaseinfoResponse =
+                    swedbankStorage.getBankProfileHandler().getActivePaymentBaseInfo();
 
             transferSourceAccounts.addAll(paymentBaseinfoResponse.getTransferSourceAccounts());
             transferDestinationAccounts.addAll(paymentBaseinfoResponse.getTransferDestinations());

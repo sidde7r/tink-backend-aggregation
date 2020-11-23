@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.workers.commands;
 
 import com.google.common.base.Objects;
+import com.google.common.base.Strings;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -72,18 +73,6 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
         Transfer transfer = transferRequest.getTransfer();
         SignableOperation signableOperation = transferRequest.getSignableOperation();
 
-        if (transfer.isDestinationMessageGenerated()) {
-            log.info(
-                    "DestinationMessage contains 'TinkGenerated://' for transfer with transferId: {}",
-                    UUIDUtils.toTinkUUID(transfer.getId()));
-        }
-
-        if (transfer.isRemittanceInformationGenerated()) {
-            log.info(
-                    "RemittanceInformation contains 'TinkGenerated://' for transfer with transferId: {}",
-                    UUIDUtils.toTinkUUID(transfer.getId()));
-        }
-
         // TODO: This (hack) is here to handle direct integration flow, will remove it after the
         // observing that we are receiving RI throw all flows, Jira Ticket:
         // https://tinkab.atlassian.net/browse/PAY1-506
@@ -130,7 +119,9 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
 
                 if (paymentControllerable.getPaymentController().isPresent()) {
                     handlePayment(
-                            paymentControllerable.getPaymentController().get(), transferRequest);
+                            paymentControllerable.getPaymentController().get(),
+                            transfer,
+                            transferRequest.getProvider().getMarket());
                 } else {
                     TransferExecutorNxgen transferExecutorNxgen = (TransferExecutorNxgen) agent;
                     operationStatusMessage = transferExecutorNxgen.execute(transfer);
@@ -249,7 +240,9 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
 
             signableOperation.setStatus(SignableOperationStatuses.CANCELLED);
             signableOperation.setStatusMessage(
-                    catalog.getString("Could not validate the destination account."));
+                    catalog.getString(
+                            getStatusMessage(
+                                    e.getMessage(), CreditorValidationException.DEFAULT_MESSAGE)));
             signableOperation.setInternalStatus(e.getInternalStatus());
             context.updateSignableOperation(signableOperation);
 
@@ -264,7 +257,9 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
 
             signableOperation.setStatus(SignableOperationStatuses.CANCELLED);
             signableOperation.setStatusMessage(
-                    catalog.getString("Could not validate the date you entered for the payment."));
+                    catalog.getString(
+                            getStatusMessage(
+                                    e.getMessage(), DateValidationException.DEFAULT_MESSAGE)));
             signableOperation.setInternalStatus(e.getInternalStatus());
             context.updateSignableOperation(signableOperation);
 
@@ -279,7 +274,9 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
 
             signableOperation.setStatus(SignableOperationStatuses.CANCELLED);
             signableOperation.setStatusMessage(
-                    catalog.getString("Could not execute payment due to insufficient funds."));
+                    catalog.getString(
+                            getStatusMessage(
+                                    e.getMessage(), InsufficientFundsException.DEFAULT_MESSAGE)));
             signableOperation.setInternalStatus(e.getInternalStatus());
             context.updateSignableOperation(signableOperation);
 
@@ -295,7 +292,8 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
             signableOperation.setStatus(SignableOperationStatuses.CANCELLED);
             signableOperation.setStatusMessage(
                     catalog.getString(
-                            "Could not validate the account, you are trying to pay from."));
+                            getStatusMessage(
+                                    e.getMessage(), DebtorValidationException.DEFAULT_MESSAGE)));
             signableOperation.setInternalStatus(e.getInternalStatus());
             context.updateSignableOperation(signableOperation);
 
@@ -310,7 +308,9 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
 
             signableOperation.setStatus(SignableOperationStatuses.CANCELLED);
             signableOperation.setStatusMessage(
-                    catalog.getString("The reference you provided for the payment is not valid."));
+                    catalog.getString(
+                            getStatusMessage(
+                                    e.getMessage(), ReferenceValidationException.DEFAULT_MESSAGE)));
             signableOperation.setInternalStatus(e.getInternalStatus());
             context.updateSignableOperation(signableOperation);
 
@@ -324,7 +324,11 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
                     e.getMessage());
 
             signableOperation.setStatus(SignableOperationStatuses.CANCELLED);
-            signableOperation.setStatusMessage(catalog.getString("Payment authentication failed."));
+            signableOperation.setStatusMessage(
+                    catalog.getString(
+                            getStatusMessage(
+                                    e.getMessage(),
+                                    PaymentAuthenticationException.DEFAULT_MESSAGE)));
             signableOperation.setInternalStatus(e.getInternalStatus());
             context.updateSignableOperation(signableOperation);
 
@@ -338,7 +342,11 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
                     e.getMessage());
 
             signableOperation.setStatus(SignableOperationStatuses.CANCELLED);
-            signableOperation.setStatusMessage(catalog.getString("Payment authorization failed."));
+            signableOperation.setStatusMessage(
+                    catalog.getString(
+                            getStatusMessage(
+                                    e.getMessage(),
+                                    PaymentAuthorizationException.DEFAULT_MESSAGE)));
             signableOperation.setInternalStatus(e.getInternalStatus());
             context.updateSignableOperation(signableOperation);
 
@@ -352,7 +360,10 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
                     e.getMessage());
 
             signableOperation.setStatus(SignableOperationStatuses.CANCELLED);
-            signableOperation.setStatusMessage(catalog.getString("Payment validation failed."));
+            signableOperation.setStatusMessage(
+                    catalog.getString(
+                            getStatusMessage(
+                                    e.getMessage(), PaymentValidationException.DEFAULT_MESSAGE)));
             signableOperation.setInternalStatus(e.getInternalStatus());
             context.updateSignableOperation(signableOperation);
 
@@ -397,13 +408,11 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
         }
     }
 
-    private void handlePayment(PaymentController paymentController, TransferRequest transferRequest)
+    private void handlePayment(
+            PaymentController paymentController, Transfer transfer, String market)
             throws PaymentException {
         PaymentResponse createPaymentResponse =
-                paymentController.create(
-                        PaymentRequest.of(
-                                transferRequest.getTransfer(),
-                                transferRequest.getProvider().getMarket()));
+                paymentController.create(PaymentRequest.of(transfer, market));
 
         log.info("Credentials contain - status: {} before first signing", credentials.getStatus());
 
@@ -464,5 +473,9 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
     private static class MetricName {
         private static final String METRIC = "agent_transfer";
         private static final String EXECUTE_TRANSFER = "execute";
+    }
+
+    private String getStatusMessage(String message, String defaultMessage) {
+        return Strings.isNullOrEmpty(message) ? defaultMessage : message;
     }
 }

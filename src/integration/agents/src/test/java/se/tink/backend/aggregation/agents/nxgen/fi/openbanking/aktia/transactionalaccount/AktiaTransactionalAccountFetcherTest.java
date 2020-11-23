@@ -2,20 +2,17 @@ package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.transactio
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.AktiaTestFixtures.createAccountsSummaryResponseWithError;
 import static se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.AktiaTestFixtures.createSuccessfulAccountsSummaryResponse;
 
 import java.util.Collection;
-import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.apiclient.AktiaApiClient;
-import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.apiclient.dto.response.AccountSummaryItemDto;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.apiclient.response.AccountsSummaryResponse;
-import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.transactionalaccount.converter.AktiaTransactionalAccountConverter;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
 public class AktiaTransactionalAccountFetcherTest {
@@ -24,16 +21,11 @@ public class AktiaTransactionalAccountFetcherTest {
 
     private AktiaApiClient aktiaApiClientMock;
 
-    private AktiaTransactionalAccountConverter transactionalAccountConverterMock;
-
     @Before
     public void setUp() {
         aktiaApiClientMock = mock(AktiaApiClient.class);
-        transactionalAccountConverterMock = mock(AktiaTransactionalAccountConverter.class);
 
-        transactionalAccountFetcher =
-                new AktiaTransactionalAccountFetcher(
-                        aktiaApiClientMock, transactionalAccountConverterMock);
+        transactionalAccountFetcher = new AktiaTransactionalAccountFetcher(aktiaApiClientMock);
     }
 
     @Test
@@ -43,29 +35,23 @@ public class AktiaTransactionalAccountFetcherTest {
                 createSuccessfulAccountsSummaryResponse();
         when(aktiaApiClientMock.getAccountsSummary()).thenReturn(accountsSummaryResponse);
 
-        final TransactionalAccount transactionalAccountMock = mock(TransactionalAccount.class);
-        when(transactionalAccountConverterMock.toTransactionalAccount(
-                        any(AccountSummaryItemDto.class)))
-                .thenReturn(Optional.of(transactionalAccountMock));
-
         // when
         final Collection<TransactionalAccount> resultAccounts =
                 transactionalAccountFetcher.fetchAccounts();
 
         // then
-        assertThat(resultAccounts).containsExactly(transactionalAccountMock);
+        assertThat(resultAccounts.size()).isEqualTo(1);
+        TransactionalAccount transactionalAccount = resultAccounts.iterator().next();
+        assertThat(transactionalAccount.getType()).isEqualTo(AccountTypes.SAVINGS);
+        assertThat(transactionalAccount.getExactBalance().getDoubleValue()).isEqualTo(2.44);
     }
 
     @Test
     public void shouldFetchEmptyAccountsList() {
         // given
         final AccountsSummaryResponse accountsSummaryResponse =
-                createSuccessfulAccountsSummaryResponse();
+                createSuccessfulAccountsSummaryResponse("Other");
         when(aktiaApiClientMock.getAccountsSummary()).thenReturn(accountsSummaryResponse);
-
-        when(transactionalAccountConverterMock.toTransactionalAccount(
-                        any(AccountSummaryItemDto.class)))
-                .thenReturn(Optional.empty());
 
         // when
         final Collection<TransactionalAccount> resultAccounts =

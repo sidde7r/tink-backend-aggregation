@@ -39,7 +39,7 @@ public final class DanskeBankNOAgent extends DanskeBankAgent {
     protected DanskeBankApiClient createApiClient(
             TinkHttpClient client, DanskeBankConfiguration configuration) {
         return new DanskeBankNOApiClient(
-                client, (DanskeBankNOConfiguration) configuration, credentials);
+                client, (DanskeBankNOConfiguration) configuration, credentials, catalog);
     }
 
     @Override

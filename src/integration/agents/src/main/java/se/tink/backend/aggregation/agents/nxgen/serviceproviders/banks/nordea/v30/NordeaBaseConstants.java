@@ -128,6 +128,7 @@ public class NordeaBaseConstants {
     public static class QueryParams {
         public static final String START_DATE = "start_date";
         public static final String END_DATE = "end_date";
+        public static final String CONTINUATION_KEY = "continuation_key";
         public static final String PAGE = "page";
         public static final String PAGE_SIZE = "page_size";
         public static final String PAGE_SIZE_LIMIT =
@@ -165,6 +166,8 @@ public class NordeaBaseConstants {
         public static final String CODE_VERIFIER = "code_verifier";
         public static final String COUNTRY_VALUE = "SE";
         public static final String CLIENT_ID_VALUE = "NDHMSE";
+        public static final String SCOPE_OPENID = "openid ndf agreement offline_access";
+        public static final String CHALLENGE_METHOD = "S256";
     }
 
     public static class IdTags {
@@ -204,12 +207,6 @@ public class NordeaBaseConstants {
         public static final String BANKID_AUTOSTART_SIGN_PENDING = "confirmation_pending";
         public static final String BANKID_AUTOSTART_COMPLETED = "completed";
         public static final String BANKID_AUTOSTART_CANCELLED = "cancelled";
-        public static final String AGREEMENTS_UNAVAILABLE = "agreements_unavailable";
-        public static final String EXTERNAL_AUTHENTICATION_REQUIRED =
-                "external_authentication_required";
-        public static final String AUTHENTICATION_CANCELLED = "authentication_cancelled";
-        public static final String EXTERNAL_AUTHENTICATION_PENDING =
-                "external_authentication_pending";
         public static final String SIGN_PENDING = "SIGN_PENDING";
         public static final String PENDING = "PENDING";
         public static final String CANCELLED = "CANCELLED";
@@ -312,6 +309,8 @@ public class NordeaBaseConstants {
         public static final String INVALID_TOKEN = "invalid_token";
         // refresh token has expired
         public static final String INVALID_GRANT = "invalid_grant";
+        public static final String AUTH_NOT_STARTED = "start_failed";
+        public static final String CHALLENGE_EXPIRED = "challenge_expired";
         public static final String RESOURCE_NOT_FOUND = "resource_not_found";
         public static final String AUTHENTICATION_COLLISION = "authentication_collision";
         public static final String AUTHENTICATION_FAILED = "authentication_failed";

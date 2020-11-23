@@ -5,9 +5,11 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
+import java.util.HashMap;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.Provider;
@@ -19,9 +21,22 @@ import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceErro
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.progressive.ProgressiveAuthAgent;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationPersistedData;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationProcess;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentAuthenticationResult;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentFailedAuthenticationResult;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentSucceededAuthenticationResult;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.steps.AgentAuthenticationProcessStep;
+import se.tink.backend.aggregation.agentsplatform.framework.error.ServerError;
 import se.tink.backend.aggregation.events.LoginAgentEventProducer;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.agentcontext.AgentContextProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.GeneratedValueProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.SupplementalInformationProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.tinkhttpclient.TinkHttpClientProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.SteppableAuthenticationResponse;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.workers.commands.LoginAgentWorkerCommand.MetricName;
 import se.tink.backend.aggregation.workers.commands.state.LoginAgentWorkerCommandState;
 import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
@@ -68,6 +83,56 @@ public class LoginAgentWorkerCommandTest {
 
         objectUnderTest =
                 new LoginAgentWorkerCommand(context, state, metrics, loginAgentEventProducer);
+    }
+
+    @Test
+    public void executeForAgentPlatformAuthenticatorAgentShouldLogin() throws Exception {
+        // given
+        AgentSucceededAuthenticationResult agentSucceededAuthenticationResult =
+                new AgentSucceededAuthenticationResult(
+                        new AgentAuthenticationPersistedData(new HashMap<>()));
+        DummyTestAgentPlatformAuthenticatorAgent agent =
+                createAgentPlatformAuthenticationAgent(agentSucceededAuthenticationResult);
+        prepareStateForLogin(agent);
+        // when
+        AgentWorkerCommandResult result = objectUnderTest.execute();
+        // then
+        verify(metricAction, times(1)).completed();
+        verify(metricActionLoginType, times(1)).completed();
+        Assert.assertEquals(result, AgentWorkerCommandResult.CONTINUE);
+    }
+
+    @Test
+    public void executeForAgentPlatformAuthenticatorAgentShouldAbortLogin() throws Exception {
+        // given
+        AgentFailedAuthenticationResult agentAuthenticationResult =
+                new AgentFailedAuthenticationResult(
+                        new ServerError(), new AgentAuthenticationPersistedData(new HashMap<>()));
+        DummyTestAgentPlatformAuthenticatorAgent agent =
+                createAgentPlatformAuthenticationAgent(agentAuthenticationResult);
+        prepareStateForLogin(agent);
+        // when
+        AgentWorkerCommandResult result = objectUnderTest.execute();
+        // then
+        verify(metricAction, times(1)).unavailable();
+        verify(metricActionLoginType, times(1)).unavailable();
+        Assert.assertEquals(result, AgentWorkerCommandResult.ABORT);
+    }
+
+    private DummyTestAgentPlatformAuthenticatorAgent createAgentPlatformAuthenticationAgent(
+            AgentAuthenticationResult stepResult) {
+        AgentAuthenticationProcess authenticationProcess =
+                Mockito.mock(AgentAuthenticationProcess.class);
+        AgentAuthenticationProcessStep firstStep =
+                Mockito.mock(AgentAuthenticationProcessStep.class);
+        Mockito.when(firstStep.execute(Mockito.any())).thenReturn(stepResult);
+        Mockito.when(authenticationProcess.getStartStep()).thenReturn(firstStep);
+        DummyTestAgentPlatformAuthenticatorAgent agent =
+                Mockito.mock(DummyTestAgentPlatformAuthenticatorAgent.class);
+        Mockito.when(agent.getAuthenticationProcess()).thenReturn(authenticationProcess);
+        Mockito.when(agent.getPersistentStorage()).thenReturn(new PersistentStorage());
+        Mockito.doCallRealMethod().when(agent).accept(Mockito.any());
+        return agent;
     }
 
     @Test
@@ -249,5 +314,13 @@ public class LoginAgentWorkerCommandTest {
         Catalog catalog = mock(Catalog.class);
         when(catalog.getString(any(LocalizableKey.class))).thenReturn("localizedString");
         when(context.getCatalog()).thenReturn(catalog);
+    }
+
+    private AgentComponentProvider createDummyAgentComponentProvider() {
+        return new AgentComponentProvider(
+                Mockito.mock(TinkHttpClientProvider.class),
+                Mockito.mock(SupplementalInformationProvider.class),
+                Mockito.mock(AgentContextProvider.class),
+                Mockito.mock(GeneratedValueProvider.class));
     }
 }

@@ -32,11 +32,15 @@ public class SupplementalInformationFormer {
         return result;
     }
 
-    public Field getField(final Field.Key key) throws IllegalStateException {
-        Field field = supplementalInformation.get(key.getFieldKey());
+    public Field getField(final Field.Key key) {
+        return getField(key.getFieldKey());
+    }
+
+    public Field getField(final String key) {
+        Field field = supplementalInformation.get(key);
         if (field == null) {
             throw new IllegalStateException(
-                    String.format("Missing %s supplemental information", key.getFieldKey()));
+                    String.format("Missing %s supplemental information", key));
         }
         return field;
     }

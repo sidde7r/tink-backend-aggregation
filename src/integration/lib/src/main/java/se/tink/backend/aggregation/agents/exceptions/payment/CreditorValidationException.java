@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.exceptions.payment;
 
 public class CreditorValidationException extends PaymentValidationException {
+    public static final String DEFAULT_MESSAGE = "Could not validate the destination account";
     private static final String IBAN_NOT_VALID =
             "Creditor account number is not in valid IBAN format";
 

@@ -35,8 +35,6 @@ public final class EnterCardConstants {
         public static final URL TOKEN = new URL(Endpoints.BASE_URL + Endpoints.TOKEN);
         public static final URL ACCOUNTS = new URL(Endpoints.BASE_URL + Endpoints.ACCOUNTS);
         public static final URL TRANSACTIONS = new URL(Endpoints.BASE_URL + Endpoints.MOVEMENTS);
-        static final URL PAYMENT_ENDPOINT =
-                new URL(Endpoints.BASE_URL_PAYMENTS + Endpoints.PAYMENT);
     }
 
     public static class Endpoints {
@@ -56,7 +54,6 @@ public final class EnterCardConstants {
         public static final String AUTH_CODE = "AUTHORIZATION_CODE";
         public static final String TOKEN = "TOKEN";
         public static final String ACCOUNT_NUMBER = "ACCOUNT_NUMBER";
-        public static final String E_SIGN_URL = "eSignUrl";
     }
 
     public static class QueryKeys {

@@ -1,11 +1,12 @@
 version: '2'
 services:
   app:
-    image: "gcr.io/tink-containers/bazel:3.3.1"
+    image: "gcr.io/tink-containers/bazel:3.4.1"
     working_dir: /tink-backend
     volumes:
       - "${SSH_AUTH_SOCK}:${SSH_AUTH_SOCK}"
       - ..:/tink-backend
+      - /var/lib/buildkite-agent/.cache/bazel:/root/.cache/bazel
       - /usr/bin/buildkite-agent:/usr/bin/buildkite-agent:ro
       - /var/run/docker.sock:/var/run/docker.sock
       - /usr/bin/docker:/usr/bin/docker:ro

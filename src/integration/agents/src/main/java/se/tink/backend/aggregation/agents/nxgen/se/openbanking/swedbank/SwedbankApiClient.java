@@ -39,7 +39,6 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.executor
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.executor.payment.rpc.GetPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.executor.payment.rpc.GetPaymentStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.executor.payment.rpc.PaymentAuthorisationResponse;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.fetcher.transactionalaccount.entity.account.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.fetcher.transactionalaccount.rpc.AccountBalanceResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.fetcher.transactionalaccount.rpc.FetchAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.fetcher.transactionalaccount.rpc.StatementResponse;
@@ -169,12 +168,6 @@ public final class SwedbankApiClient {
                 .getScaStatus();
     }
 
-    public List<String> mapAccountResponseToIbanList(FetchAccountResponse accounts) {
-        return accounts.getAccountList().stream()
-                .map(AccountEntity::getIban)
-                .collect(Collectors.toList());
-    }
-
     public URL getAuthorizeUrl(String state) {
         HttpResponse response =
                 createRequest(SwedbankConstants.Urls.AUTHORIZATION)
@@ -192,8 +185,12 @@ public final class SwedbankApiClient {
     }
 
     public AuthenticationResponse authenticate(String ssn) {
+
         final AuthorizeRequest authorizeRequest =
-                new AuthorizeRequest(configuration.getClientId(), getRedirectUrl());
+                new AuthorizeRequest(
+                        configuration.getClientId(),
+                        getRedirectUrl(),
+                        credentialsRequest.getProvider().getPayload());
 
         return createRequest(SwedbankConstants.Urls.AUTHORIZATION)
                 .header(HeaderKeys.PSU_ID, ssn)

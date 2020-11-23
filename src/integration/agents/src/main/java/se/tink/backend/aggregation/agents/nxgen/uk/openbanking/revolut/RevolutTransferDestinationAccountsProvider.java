@@ -5,8 +5,8 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.general.models.GeneralAccountEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.UkOpenBankingApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.fetcher.TransferDestinationAccountsProvider;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.fetcher.TransferDestinationAccountsProvider;
 
 @RequiredArgsConstructor
 public class RevolutTransferDestinationAccountsProvider

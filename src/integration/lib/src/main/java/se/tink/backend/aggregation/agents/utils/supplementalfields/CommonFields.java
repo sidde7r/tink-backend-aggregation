@@ -4,6 +4,7 @@ import static java.util.stream.Collectors.joining;
 
 import java.util.List;
 import java.util.stream.IntStream;
+import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.utils.RangeRegex;
 import se.tink.libraries.i18n.Catalog;
@@ -71,6 +72,57 @@ public class CommonFields {
                     .value(value)
                     .helpText(helpText)
                     .build();
+        }
+    }
+
+    public static class KeyCardInfo {
+        private static final String FIELD_KEY = "keyCardInfoField";
+
+        private static final LocalizableKey DESCRIPTION = new LocalizableKey("Key card index");
+        private static final LocalizableKey HELPTEXT =
+                new LocalizableKey("Input the code from your code card");
+
+        public static Field build(Catalog catalog, String codeIndex, String cardId) {
+            String helpText = catalog.getString(HELPTEXT);
+            if (cardId != null) {
+                helpText += " (" + cardId + ")";
+            }
+            return Field.builder()
+                    .immutable(true)
+                    .name(FIELD_KEY)
+                    .description(catalog.getString(DESCRIPTION))
+                    .value(codeIndex)
+                    .helpText(helpText)
+                    .build();
+        }
+    }
+
+    public static class KeyCardCode {
+        private static final String FIELD_KEY = "keyCardValueField";
+
+        private static final LocalizableKey DESCRIPTION = new LocalizableKey("Key card code");
+
+        public static String getFieldKey() {
+            return FIELD_KEY;
+        }
+
+        public static Field build(Catalog catalog) {
+            return commonBuild(catalog).build();
+        }
+
+        public static Field build(Catalog catalog, int expectedLength) {
+            return commonBuild(catalog)
+                    .minLength(expectedLength)
+                    .maxLength(expectedLength)
+                    .hint(StringUtils.repeat("N", expectedLength))
+                    .build();
+        }
+
+        private static Field.Builder commonBuild(Catalog catalog) {
+            return Field.builder()
+                    .name(FIELD_KEY)
+                    .description(catalog.getString(DESCRIPTION))
+                    .numeric(true);
         }
     }
 }

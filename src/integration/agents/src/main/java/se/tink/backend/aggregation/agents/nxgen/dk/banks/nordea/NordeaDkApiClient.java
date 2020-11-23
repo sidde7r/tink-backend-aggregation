@@ -41,20 +41,25 @@ import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestB
 import se.tink.backend.aggregation.nxgen.http.form.Form;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.libraries.i18n.Catalog;
+import src.integration.nemid.NemIdSupportedLanguageCode;
 
 public class NordeaDkApiClient {
 
     private final SessionStorage sessionStorage;
     private final PersistentStorage persistentStorage;
+    private final Catalog catalog;
     protected final TinkHttpClient client;
 
     public NordeaDkApiClient(
             SessionStorage sessionStorage,
             TinkHttpClient client,
-            PersistentStorage persistentStorage) {
+            PersistentStorage persistentStorage,
+            Catalog catalog) {
         this.sessionStorage = sessionStorage;
         this.client = client;
         this.persistentStorage = persistentStorage;
+        this.catalog = catalog;
 
         this.client.addFilter(new ServerErrorFilter());
         this.client.addFilter(new ServerErrorRetryFilter());
@@ -100,8 +105,14 @@ public class NordeaDkApiClient {
                         .withState(state)
                         .withCodeChallenge(codeChallenge)
                         .build();
-        return baseIdentifyRequest(URLs.NORDEA_AUTH_BASE_URL + URLs.NEM_ID_AUTHENTICATION)
+
+        // this value affects the language of nemID notification on user's device
+        String userLanguageForNemIdRequest =
+                NemIdSupportedLanguageCode.getFromCatalogOrDefault(catalog).getIsoLanguageCode();
+
+        return baseIdentifyRequest(URLs.NORDEA_AUTH_BASE_URL + URLs.NEM_ID_AUTHENTICATION, false)
                 .type(MediaType.APPLICATION_JSON)
+                .header(HeaderKeys.ACCEPT_LANGUAGE, userLanguageForNemIdRequest)
                 .post(NemIdParamsResponse.class, request);
     }
 
@@ -171,14 +182,22 @@ public class NordeaDkApiClient {
     }
 
     private RequestBuilder baseIdentifyRequest(String url) {
-        return client.request(url)
-                .header(HeaderKeys.ACCEPT_ENCODING, HeaderValues.BR_GZIP_ENCODING)
-                .header(HeaderKeys.PLATFORM_TYPE, HeaderKeys.PLATFORM_TYPE)
-                .header(HeaderKeys.ACCEPT_LANGUAGE, HeaderValues.ACCEPT_LANGUAGE)
-                .header(HeaderKeys.ORIGIN, "https://identify.nordea.com")
-                .accept(MediaType.WILDCARD)
-                .header(HeaderKeys.HOST, HeaderValues.NORDEA_AUTH_HOST)
-                .header("x-device-ec", "0");
+        return baseIdentifyRequest(url, true);
+    }
+
+    private RequestBuilder baseIdentifyRequest(String url, boolean setDefaultLanguage) {
+        RequestBuilder builder =
+                client.request(url)
+                        .header(HeaderKeys.ACCEPT_ENCODING, HeaderValues.BR_GZIP_ENCODING)
+                        .header(HeaderKeys.PLATFORM_TYPE, HeaderKeys.PLATFORM_TYPE)
+                        .header(HeaderKeys.ORIGIN, "https://identify.nordea.com")
+                        .accept(MediaType.WILDCARD)
+                        .header(HeaderKeys.HOST, HeaderValues.NORDEA_AUTH_HOST)
+                        .header("x-device-ec", "0");
+        if (setDefaultLanguage) {
+            builder.header(HeaderKeys.ACCEPT_LANGUAGE, HeaderValues.ACCEPT_LANGUAGE);
+        }
+        return builder;
     }
 
     private RequestBuilder basePrivateRequest(String url) {

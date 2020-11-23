@@ -15,8 +15,10 @@ import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationReade
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.enums.MarketCode;
 import se.tink.libraries.transfer.enums.TransferType;
+import se.tink.libraries.transfer.rpc.RemittanceInformation;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 public class SwedbankSEAgentWireMockTest {
@@ -37,6 +39,8 @@ public class SwedbankSEAgentWireMockTest {
 
         final AgentWireMockRefreshTest agentWireMockRefreshTest =
                 AgentWireMockRefreshTest.builder(MarketCode.SE, "swedbank-bankid", wireMockFilePath)
+                        .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
+                        .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
                         .withConfigurationFile(configuration)
                         .build();
 
@@ -125,6 +129,8 @@ public class SwedbankSEAgentWireMockTest {
 
     private Transfer createMockedDomesticTransfer() {
 
+        RemittanceInformation remittanceInformation = new RemittanceInformation();
+        remittanceInformation.setValue("642257434400156");
         Transfer transfer = new Transfer();
         transfer.setSource(AccountIdentifier.create(AccountIdentifier.Type.SE, "832791234567890"));
 
@@ -136,7 +142,7 @@ public class SwedbankSEAgentWireMockTest {
                         LocalDate.of(2020, 6, 17)
                                 .atStartOfDay(ZoneId.of("Europe/Stockholm"))
                                 .toInstant()));
-        transfer.setDestinationMessage("642257434400156");
+        transfer.setRemittanceInformation(remittanceInformation);
 
         return transfer;
     }

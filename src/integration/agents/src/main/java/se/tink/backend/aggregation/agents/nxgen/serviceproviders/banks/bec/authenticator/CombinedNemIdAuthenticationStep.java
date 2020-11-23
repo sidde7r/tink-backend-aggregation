@@ -13,7 +13,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.BecAp
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.BecConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authenticator.entities.CodeAppTokenEncryptedPayload;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authenticator.entities.LoggedInEntity;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.NemIdCodeAppConstants;
+import se.tink.backend.aggregation.agents.utils.supplementalfields.DanishFields;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.exception.NemIdException;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.exception.NemIdPollTimeoutException;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationRequest;
@@ -69,16 +69,7 @@ public class CombinedNemIdAuthenticationStep implements AuthenticationStep {
     }
 
     private void displayPrompt(Credentials credentials) {
-        Field field =
-                Field.builder()
-                        .immutable(true)
-                        .description("")
-                        .value(
-                                catalog.getString(
-                                        NemIdCodeAppConstants.UserMessage
-                                                .OPEN_NEM_ID_APP_AND_CLICK_BUTTON))
-                        .name("name")
-                        .build();
+        Field field = DanishFields.NemIdInfo.build(catalog);
 
         credentials.setSupplementalInformation(
                 SerializationUtils.serializeToString(Collections.singletonList(field)));

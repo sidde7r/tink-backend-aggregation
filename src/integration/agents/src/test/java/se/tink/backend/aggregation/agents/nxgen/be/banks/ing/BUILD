@@ -33,6 +33,7 @@ junit_test(
         "//third_party:org_assertj_assertj_core",
         "//third_party:org_bouncycastle_bcprov_jdk15on",
         "//third_party:org_mockito_mockito_core",
+        "//third_party:pl_pragmatists_junitparams",
         "@aggregation//:com_fasterxml_jackson_core_jackson_core",
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
         "@aggregation//:com_google_guava_guava",

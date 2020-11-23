@@ -20,6 +20,7 @@ public class HtmlResponseTest {
 
     @Test
     public void testParseAmount() {
+        assertEquals(34.42, emptyResponse.parseAmount("34,42 $").getDoubleValue(), 0.001);
         assertEquals(1337.42, emptyResponse.parseAmount("1.337,42").getDoubleValue(), 0.001);
         assertEquals(1337.42, emptyResponse.parseAmount("1.337,42 €").getDoubleValue(), 0.001);
         assertEquals(1337.42, emptyResponse.parseAmount("1.337,42 EUROS").getDoubleValue(), 0.001);
@@ -28,10 +29,5 @@ public class HtmlResponseTest {
                 1337.42,
                 emptyResponse.parseAmount("\n     1.337,\n          42     ").getDoubleValue(),
                 0.001);
-    }
-
-    @Test(expected = IllegalStateException.class)
-    public void testParseAmountWithWrongCurrency() {
-        emptyResponse.parseAmount("31.337,42 KPW");
     }
 }

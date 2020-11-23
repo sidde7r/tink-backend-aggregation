@@ -18,6 +18,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v3
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.authenticator.rpc.FetchCodeResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.authenticator.rpc.InitBankIdAutostartRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.authenticator.rpc.MultipleAgreementsResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.rpc.ErrorResponse;
 import se.tink.backend.aggregation.agents.utils.business.OrganisationNumberSeLogger;
 import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
@@ -80,7 +81,19 @@ public class NordeaBankIdAuthenticator implements BankIdAuthenticator<BankIdAuto
                     return BankIdStatus.FAILED_UNKNOWN;
             }
         } catch (HttpResponseException e) {
-            return BankIdStatus.EXPIRED_AUTOSTART_TOKEN;
+            if (e.getResponse().getStatus() == HttpStatus.SC_BAD_REQUEST) {
+                ErrorResponse errorResponse = e.getResponse().getBody(ErrorResponse.class);
+
+                if (errorResponse.isAutostartTokenExpired()) {
+                    return BankIdStatus.EXPIRED_AUTOSTART_TOKEN;
+                }
+
+                if (errorResponse.isBankIdTimeout()) {
+                    return BankIdStatus.TIMEOUT;
+                }
+            }
+
+            throw e;
         }
     }
 
@@ -105,12 +118,13 @@ public class NordeaBankIdAuthenticator implements BankIdAuthenticator<BankIdAuto
         this.nonce = Base64.encodeBase64URLSafeString(RandomUtils.secureRandom(19));
         this.codeChallenge = createCodeChallenge();
 
-        return new InitBankIdAutostartRequest()
-                .setState(state)
-                .setNonce(nonce)
-                .setCodeChallenge(codeChallenge)
-                .setRedirectUri(nordeaConfiguration.getRedirectUri())
-                .setClientId(nordeaConfiguration.getClientId());
+        return InitBankIdAutostartRequest.builder()
+                .state(state)
+                .nonce(nonce)
+                .codeChallenge(codeChallenge)
+                .redirectUri(nordeaConfiguration.getRedirectUri())
+                .clientId(nordeaConfiguration.getClientId())
+                .build();
     }
 
     private String createCodeChallenge() {
@@ -152,6 +166,8 @@ public class NordeaBankIdAuthenticator implements BankIdAuthenticator<BankIdAuto
         try {
             return apiClient.fetchLoginCode(fetchCodeRequest);
         } catch (HttpResponseException e) {
+            handleNotACustomer(e);
+
             verifyIsConflictForBusinessAgentOrThrow(e);
 
             MultipleAgreementsResponse multipleAgreementsResponse =
@@ -161,6 +177,15 @@ public class NordeaBankIdAuthenticator implements BankIdAuthenticator<BankIdAuto
 
             String agreementId = getMatchingAgreementIdOrThrow(multipleAgreementsResponse);
             return apiClient.fetchLoginCodeWithAgreementId(fetchCodeRequest, agreementId);
+        }
+    }
+
+    private void handleNotACustomer(HttpResponseException e) {
+        if (e.getResponse().getStatus() == HttpStatus.SC_NOT_FOUND) {
+            ErrorResponse errorResponse = e.getResponse().getBody(ErrorResponse.class);
+            if (errorResponse.isNotACustomer()) {
+                throw LoginError.NOT_CUSTOMER.exception();
+            }
         }
     }
 

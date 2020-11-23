@@ -8,6 +8,7 @@ import com.google.common.collect.Lists;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Account;
@@ -184,15 +185,45 @@ public class LoanDetailsEntity {
             return Loan.Type.OTHER;
         }
 
-        if (loanName.toLowerCase().contains("bolån")) {
+        if (isMortgage()) {
             return Loan.Type.MORTGAGE;
         }
 
-        if (loanName.toLowerCase().contains("lantbruk")) {
+        if (isBlanco()) {
+            return Loan.Type.BLANCO;
+        }
+
+        if (loanNameContains("bil")) {
+            return Loan.Type.VEHICLE;
+        }
+
+        if (loanNameContains("lantbruk")) {
             return Loan.Type.LAND;
+        }
+
+        if (loanNameContains("företagslån")) {
+            return Loan.Type.OTHER;
         }
 
         log.warn("Unknown loan type: {}", loanName);
         return Loan.Type.OTHER;
+    }
+
+    private boolean isMortgage() {
+        return loanNameContains("bolån")
+                || loanNameContains("borätt")
+                || loanNameContains("villa")
+                || loanNameContains("fastighetslån")
+                || loanNameContains("topplån")
+                || loanNameContains("byggnadslån")
+                || loanNameContains("huslån");
+    }
+
+    private boolean isBlanco() {
+        return loanNameContains("privatlån") || loanNameContains("blanco");
+    }
+
+    private boolean loanNameContains(String searchString) {
+        return StringUtils.containsIgnoreCase(loanName, searchString);
     }
 }

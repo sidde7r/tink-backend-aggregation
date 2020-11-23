@@ -30,7 +30,10 @@ public class CredentialsCrypto {
 
     // according to
     // https://grafana.global-production.tink.network/d/000000054/aggregation-service?editPanel=8&orgId=1&from=now-2d&to=now
-    private static final int CACHE_EXPIRE_TIME = Math.toIntExact(TimeUnit.MINUTES.toSeconds(150));
+    // some refreshes stopped before finalizing DecryptCredentialsWorkerCommand or 500 exception pop
+    // up when finalizing it
+    // which causes the sensitive data to not persistent back to the customer cluster
+    private static final int CACHE_EXPIRE_TIME = Math.toIntExact(TimeUnit.MINUTES.toSeconds(1500));
     public static final MetricId CREDENTIALS_DECRYPT = MetricId.newId("credentials_decrypt");
     public static final MetricId CREDENTIALS_ENCRYPT = MetricId.newId("credentials_encrypt");
 
@@ -194,14 +197,18 @@ public class CredentialsCrypto {
         // read/write logic such that
         // a request will never have stale data in the first place.
         // This cache is read in class `CredentialsCrypto`
-        cacheClient.set(
-                CacheScope.ENCRYPTED_CREDENTIALS_BY_CREDENTIALSID,
-                request.getCredentials().getId(),
-                CACHE_EXPIRE_TIME,
-                serializedEncryptedCredentials);
-        logger.info(
-                "cached sensitive data with timestamp: {}",
-                formatDate(encryptedCredentials.getTimestamp()));
+        try {
+            cacheClient.set(
+                    CacheScope.ENCRYPTED_CREDENTIALS_BY_CREDENTIALSID,
+                    request.getCredentials().getId(),
+                    CACHE_EXPIRE_TIME,
+                    serializedEncryptedCredentials);
+            logger.info(
+                    "cached sensitive data with timestamp: {}",
+                    formatDate(encryptedCredentials.getTimestamp()));
+        } catch (Exception e) {
+            logger.error("Could not cache sensitive data", e);
+        }
 
         cryptoMetrics(CREDENTIALS_ENCRYPT, encryptedCredentials, true);
 
@@ -228,10 +235,13 @@ public class CredentialsCrypto {
     private String pickMostRecentSensitiveData(String cached, String incoming) {
         // Return the other one if one is null.
         if (Strings.isNullOrEmpty(cached)) {
-            logger.info("using incoming sensitive data");
+            logger.info(
+                    "using incoming sensitive data with timestamp: {}",
+                    formatDate(getDate(incoming)));
             return incoming;
         } else if (Strings.isNullOrEmpty(incoming)) {
-            logger.info("using cached sensitive data");
+            logger.info(
+                    "using cached sensitive data with timestamp: {}", formatDate(getDate(cached)));
             return cached;
         }
 
@@ -257,6 +267,15 @@ public class CredentialsCrypto {
 
             return incoming;
         }
+    }
+
+    private Date getDate(String serialized) {
+        if (null == serialized) {
+            return null;
+        }
+        EncryptedPayloadHead deserialized =
+                SerializationUtils.deserializeFromString(serialized, EncryptedPayloadHead.class);
+        return deserialized.getTimestamp();
     }
 
     private String formatDate(Date date) {

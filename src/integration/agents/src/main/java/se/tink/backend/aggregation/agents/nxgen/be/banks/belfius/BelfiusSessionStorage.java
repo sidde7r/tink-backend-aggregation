@@ -52,6 +52,10 @@ public class BelfiusSessionStorage {
         }
     }
 
+    public void setRequestCounterAggregated(String requestCounter) {
+        sessionStorage.put(Storage.REQUEST_COUNTER_AGG, requestCounter);
+    }
+
     public String getSessionId() {
         return this.sessionStorage.get(BelfiusConstants.Storage.SESSION_ID);
     }

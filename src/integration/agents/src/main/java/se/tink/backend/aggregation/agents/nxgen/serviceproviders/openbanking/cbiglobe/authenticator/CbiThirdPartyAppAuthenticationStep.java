@@ -1,13 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator;
 
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import lombok.AllArgsConstructor;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
-import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
+import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.QueryKeys;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.entities.ConsentType;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SupplementInformationRequester;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SupplementalWaitRequest;
@@ -48,7 +50,13 @@ public class CbiThirdPartyAppAuthenticationStep implements AuthenticationStep {
                             .build());
         }
 
-        processThirdPartyCallback();
+        processThirdPartyCallback(request.getCallbackData());
+
+        if (consentType.equals(ConsentType.BALANCE_TRANSACTION)) {
+            userState.finishManualAuthenticationStep();
+            consentManager.storeConsentValidUntilDateInCredentials();
+            return AuthenticationStepResponse.authenticationSucceeded();
+        }
 
         return AuthenticationStepResponse.executeNextStep();
     }
@@ -60,20 +68,22 @@ public class CbiThirdPartyAppAuthenticationStep implements AuthenticationStep {
                 TimeUnit.MINUTES);
     }
 
-    private void processThirdPartyCallback() throws AuthorizationException {
-        if (consentType.equals(ConsentType.BALANCE_TRANSACTION)) {
-            try {
-                if (consentManager.isConsentAccepted()) {
-                    userState.finishManualAuthenticationStep();
-                    consentManager.storeConsentValidUntilDateInCredentials();
-                } else {
-                    throw new SessionException(SessionError.SESSION_EXPIRED);
-                }
-            } catch (SessionException e) {
-                throw new AuthorizationException(
-                        AuthorizationError.UNAUTHORIZED,
-                        "Authorization failed, problem with consents.");
-            }
+    private void processThirdPartyCallback(Map<String, String> callbackData)
+            throws AuthorizationException {
+        String authResult = callbackData.getOrDefault(QueryKeys.RESULT, QueryValues.FAILURE);
+        checkIfConsentRejected(authResult);
+        try {
+            consentManager.isConsentAccepted();
+        } catch (SessionException e) {
+            throw new AuthorizationException(
+                    AuthorizationError.UNAUTHORIZED,
+                    "Authorization failed, problem with consents.");
+        }
+    }
+
+    private void checkIfConsentRejected(String authResult) {
+        if (QueryValues.FAILURE.equals(authResult)) {
+            throw ThirdPartyAppError.CANCELLED.exception();
         }
     }
 
