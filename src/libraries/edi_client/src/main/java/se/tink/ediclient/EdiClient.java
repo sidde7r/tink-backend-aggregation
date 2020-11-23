@@ -67,11 +67,9 @@ public class EdiClient {
 
     public static KeyStore requestOrGetDevCert(File workDir)
             throws KeyStoreException, IOException, CertificateException, NoSuchAlgorithmException {
-        if (!workDir.exists()) {
-            if (!workDir.mkdirs()) {
-                throw new IllegalStateException(
-                        "Could not make working directory; " + workDir.getAbsolutePath());
-            }
+        if (!workDir.exists() && !workDir.mkdirs()) {
+            throw new IllegalStateException(
+                    "Could not make working directory; " + workDir.getAbsolutePath());
         }
         File devCertKeystore = new File(workDir, DEVCERT_P12);
         if (devCertKeystore.exists()) {

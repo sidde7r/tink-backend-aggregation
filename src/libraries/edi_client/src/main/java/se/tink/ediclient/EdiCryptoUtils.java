@@ -57,7 +57,7 @@ class EdiCryptoUtils {
     static String sha256(String in) throws NoSuchAlgorithmException {
         MessageDigest digest = MessageDigest.getInstance("SHA-256");
         byte[] hash = digest.digest(in.getBytes(StandardCharsets.UTF_8));
-        return new String(Hex.encode(hash));
+        return new String(Hex.encode(hash), StandardCharsets.US_ASCII);
     }
 
     public static X509Certificate parseCertificate(byte[] pemData) throws CertificateException {

@@ -39,7 +39,10 @@ class EdiApiClient {
                 LOG.info("Still waiting");
                 try {
                     Thread.sleep(4000);
-                } catch (InterruptedException ignored) {
+                } catch (InterruptedException ex) {
+                    Thread.currentThread().interrupt();
+                    throw new EdiClientException(
+                            "Interrupted while polling eIDAS dev issuer service", ex);
                 }
             } else {
                 LOG.info(response.getStatusLine().toString());
