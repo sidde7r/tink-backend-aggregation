@@ -1,7 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.fetcher;
 
-import static se.tink.libraries.account.AccountIdentifier.Type;
-
 import com.google.common.collect.ImmutableList;
 import java.util.Collection;
 import java.util.List;
@@ -18,6 +16,7 @@ import se.tink.backend.aggregation.agents.general.models.GeneralAccountEntityImp
 import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationFetcher;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.AccountIdentifier.Type;
 
 @RequiredArgsConstructor
 public class UkOpenBankingTransferDestinationFetcher implements TransferDestinationFetcher {
@@ -31,9 +30,8 @@ public class UkOpenBankingTransferDestinationFetcher implements TransferDestinat
                     .add(AccountTypes.CHECKING)
                     .add(AccountTypes.SAVINGS)
                     .build();
-    // Whitelist transfer destination account type
-    // Only NO, SE_BG, BE, SE_PG, IBAN, SE_SHB_INTERNAL, SORT_CODE, SE, SEPA_EUR, FI, TINK
-    private static final ImmutableList<Type> WHITELISTED_TRANSFER_DESTINATION_ACCOUNT_TYPES =
+
+    private static final List<Type> WHITELISTED_TRANSFER_DESTINATION_ACCOUNT_TYPES =
             ImmutableList.<Type>builder()
                     .add(Type.NO)
                     .add(Type.SE_BG)
