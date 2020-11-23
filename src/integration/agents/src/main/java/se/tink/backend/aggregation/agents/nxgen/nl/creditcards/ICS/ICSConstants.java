@@ -28,6 +28,8 @@ public class ICSConstants {
         public static final String RESPONSE_TYPE = "response_type";
         public static final String AUTH_CODE = "code";
         public static final String REFRESH_TOKEN = "refresh_token";
+        public static final String FROM_BOOKING_DATE = "fromBookingDate";
+        public static final String TO_BOOKING_DATE = "toBookingDate";
     }
 
     public static final class QueryValues {
@@ -67,7 +69,6 @@ public class ICSConstants {
         // An RFC4122 UID used as a correlation id. This id is used to track end-to-end interaction
         // between TPP request and response sent by the API platform.
         public static final String X_FAPI_INTERACTION_ID = "x-fapi-interaction-id";
-        public static final String X_JWS_SIGNATURE = "x-jws-signature";
     }
 
     public static final class Permissions {
@@ -110,6 +111,8 @@ public class ICSConstants {
         public static final String STATE = "state";
         public static final String TOKEN = "token";
         public static final String ACCOUNT_ID = "accountId";
+        public static final String TRANSACTION_FROM_DATE = "transactionFromDate";
+        public static final String EXPIRATION_DATE = "expirationDate";
     }
 
     public static class HttpClient {

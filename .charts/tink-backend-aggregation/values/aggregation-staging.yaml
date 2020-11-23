@@ -16,7 +16,6 @@ s3StorageConfiguration:
   agentDebugBucketName: "aggregation-staging-agent-debug-20180917063035423800000001"
 
 agents:
-  icsConfiguration: true
   danskeBankDK: true
   revolutPasswordUK: true
   jyskeBankDK: true

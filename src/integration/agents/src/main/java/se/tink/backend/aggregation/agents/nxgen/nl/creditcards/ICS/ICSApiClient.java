@@ -47,6 +47,7 @@ public class ICSApiClient {
     private final PersistentStorage persistentStorage;
     private final String redirectUri;
     private final ICSConfiguration configuration;
+    private final String customerIpAddress;
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     public ICSApiClient(
@@ -54,12 +55,14 @@ public class ICSApiClient {
             final SessionStorage sessionStorage,
             final PersistentStorage persistentStorage,
             final String redirectUri,
-            final ICSConfiguration configuration) {
+            final ICSConfiguration configuration,
+            final String customerIpAddress) {
         this.client = client;
         this.sessionStorage = sessionStorage;
         this.persistentStorage = persistentStorage;
         this.redirectUri = redirectUri;
         this.configuration = configuration;
+        this.customerIpAddress = customerIpAddress;
 
         this.client.addFilter(new BankServiceInternalErrorFilter());
     }
@@ -105,7 +108,6 @@ public class ICSApiClient {
         final String clientId = getConfiguration().getClientId();
         final String clientSecret = getConfiguration().getClientSecret();
         final String xFinancialID = ICSUtils.getFinancialId();
-        final String xCustomerIPAddress = ICSUtils.getCustomerIpAdress();
         final String xInteractionId = ICSUtils.getInteractionId();
 
         return createRequest(url)
@@ -113,18 +115,10 @@ public class ICSApiClient {
                 .header(HeaderKeys.CLIENT_ID, clientId)
                 .header(HeaderKeys.CLIENT_SECRET, clientSecret)
                 .header(HeaderKeys.X_FAPI_FINANCIAL_ID, xFinancialID)
-                .header(HeaderKeys.X_FAPI_CUSTOMER_IP_ADDRESS, xCustomerIPAddress)
+                .header(HeaderKeys.X_FAPI_CUSTOMER_IP_ADDRESS, customerIpAddress)
                 .header(HeaderKeys.X_FAPI_INTERACTION_ID, xInteractionId)
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON);
-    }
-
-    private RequestBuilder createRequestWithDateInSession(
-            String url, OAuth2Token token, Date fromDate, Date toDate) {
-        RequestBuilder requestBuilder = createRequestInSession(url, token);
-        return requestBuilder
-                .queryParam("fromBookingDate", dateFormat.format(fromDate))
-                .queryParam("toBookingDate", dateFormat.format(toDate));
     }
 
     public AccountSetupResponse setupAccount(OAuth2Token token) {
@@ -139,7 +133,6 @@ public class ICSApiClient {
         final String lastLoggedTime = ICSUtils.getLastLoggedTime(new Date());
 
         return createRequestInSession(Urls.ACCOUNT_SETUP, token)
-                .header(HeaderKeys.X_JWS_SIGNATURE, ICSUtils.getJWSSignature(request))
                 .header(HeaderKeys.X_FAPI_CUSTOMER_LAST_LOGGED_TIME, lastLoggedTime)
                 .post(AccountSetupResponse.class, request);
     }
@@ -195,7 +188,9 @@ public class ICSApiClient {
     public CreditTransactionsResponse getTransactionsByDate(
             String accountId, Date fromDate, Date toDate) {
         final String url = String.format(Urls.TRANSACTIONS, accountId);
-        return createRequestWithDateInSession(url, getToken(), fromDate, toDate)
+        return createRequestInSession(url, getToken())
+                .queryParam(QueryKeys.FROM_BOOKING_DATE, dateFormat.format(fromDate))
+                .queryParam(QueryKeys.TO_BOOKING_DATE, dateFormat.format(toDate))
                 .get(CreditTransactionsResponse.class);
     }
 }

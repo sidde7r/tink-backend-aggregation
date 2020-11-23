@@ -37,7 +37,6 @@ public final class ICSAgent extends NextGenerationAgent
         implements RefreshCreditCardAccountsExecutor {
 
     private final ICSApiClient apiClient;
-    private final String redirectUri;
 
     private final CreditCardRefreshController creditCardRefreshController;
 
@@ -47,7 +46,6 @@ public final class ICSAgent extends NextGenerationAgent
             AgentsServiceConfiguration agentsServiceConfiguration) {
         super(request, context, agentsServiceConfiguration.getSignatureKeyPair());
         configureHttpClient(client);
-        redirectUri = request.getProvider().getPayload().split(" ")[1];
 
         final AgentConfiguration<ICSConfiguration> agentConfiguration =
                 getAgentConfigurationController().getAgentConfiguration(ICSConfiguration.class);
@@ -56,9 +54,15 @@ public final class ICSAgent extends NextGenerationAgent
 
         client.setEidasProxy(agentsServiceConfiguration.getEidasProxy());
 
+        final String customerIpAddress = request.isManual() ? userIp : "";
         apiClient =
                 new ICSApiClient(
-                        client, sessionStorage, persistentStorage, redirectUri, icsConfiguration);
+                        client,
+                        sessionStorage,
+                        persistentStorage,
+                        agentConfiguration.getRedirectUrl(),
+                        icsConfiguration,
+                        customerIpAddress);
 
         creditCardRefreshController = constructCreditCardRefreshController();
     }
@@ -81,7 +85,7 @@ public final class ICSAgent extends NextGenerationAgent
                 new OAuth2AuthenticationController(
                         persistentStorage,
                         supplementalInformationHelper,
-                        new ICSOAuthAuthenticator(apiClient, sessionStorage),
+                        new ICSOAuthAuthenticator(apiClient, sessionStorage, persistentStorage),
                         credentials,
                         strongAuthenticationState);
 
@@ -111,7 +115,7 @@ public final class ICSAgent extends NextGenerationAgent
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
                         new TransactionDatePaginationController<>(
-                                new ICSCreditCardFetcher(apiClient)),
+                                new ICSCreditCardFetcher(apiClient, persistentStorage)),
                         null));
     }
 
