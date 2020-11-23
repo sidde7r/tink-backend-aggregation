@@ -10,11 +10,15 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbank
 
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
+import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesJsonFileParser;
+import se.tink.backend.aggregation.agents.framework.assertions.entities.AgentContractEntity;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.AgentWireMockPaymentTest;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.command.PaymentGBCommand;
+import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockrefresh.AgentWireMockRefreshTest;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationReader;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
+import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.enums.MarketCode;
 import se.tink.libraries.payment.rpc.Payment;
 
@@ -94,6 +98,36 @@ public class SantanderAgentWiremockTest {
                 .addCallbackData("error", "access_denied")
                 .addPayment(payment)
                 .buildWithoutLogin(PaymentGBCommand.class);
+    }
+
+    @Test
+    public void testManualRefresh() throws Exception {
+
+        // given
+        final String wireMockFilePath = RESOURCES_PATH + "uk-santander-manual-refresh.aap";
+        final String contractFilePath = RESOURCES_PATH + "uk-santander-contract.json";
+
+        final AgentsServiceConfiguration configuration =
+                AgentsServiceConfigurationReader.read(CONFIGURATION_PATH);
+        final AgentWireMockRefreshTest agentWireMockRefreshTest =
+                AgentWireMockRefreshTest.builder(MarketCode.UK, PROVIDER_NAME, wireMockFilePath)
+                        .withConfigurationFile(configuration)
+                        .addCallbackData("code", "DUMMY_AUTH_CODE")
+                        .addRefreshableItems(RefreshableItem.CHECKING_ACCOUNTS)
+                        .addRefreshableItems(RefreshableItem.SAVING_ACCOUNTS)
+                        .addRefreshableItems(RefreshableItem.TRANSFER_DESTINATIONS)
+                        .withHttpDebugTrace()
+                        .build();
+
+        final AgentContractEntity expected =
+                new AgentContractEntitiesJsonFileParser()
+                        .parseContractOnBasisOfFile(contractFilePath);
+
+        // when
+        agentWireMockRefreshTest.executeRefresh();
+
+        // then
+        agentWireMockRefreshTest.assertExpectedData(expected);
     }
 
     private static AgentsServiceConfiguration readAgentConfiguration() throws Exception {
