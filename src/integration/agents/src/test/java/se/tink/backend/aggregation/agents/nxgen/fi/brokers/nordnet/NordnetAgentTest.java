@@ -33,7 +33,7 @@ public class NordnetAgentTest {
     public void setup() {
         manager.before();
         bankIdBuilder =
-                new AgentIntegrationTest.Builder("fi", "nordnet-bankid")
+                new AgentIntegrationTest.Builder("fi", "fi-nordnet-bankid")
                         .addCredentialField(Field.Key.USERNAME, manager.get(Arg.USERNAME))
                         .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
                         .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
@@ -41,7 +41,7 @@ public class NordnetAgentTest {
                         .saveCredentialsAfter(true);
 
         passwordBuilder =
-                new AgentIntegrationTest.Builder("fi", "nordnet-password")
+                new AgentIntegrationTest.Builder("fi", "fi-nordnet-password")
                         .addCredentialField(Field.Key.USERNAME, manager.get(Arg.USERNAME))
                         .addCredentialField(Field.Key.PASSWORD, manager.get(Arg.PASSWORD))
                         .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
