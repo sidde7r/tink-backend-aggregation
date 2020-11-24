@@ -75,7 +75,12 @@ public class DanskeBankAccountLoanFetcher implements AccountFetcher<LoanAccount>
                         DanskeBankPredicates.knownLoanAccountProducts(
                                         configuration.getLoanAccountTypes())
                                 .negate())
-                .forEach(a -> logger.info("Unknown loan account type: " + a.getAccountType()));
+                .forEach(
+                        a ->
+                                logger.info(
+                                        "Unknown loan account: apiIdentifier = {}, accountProduct = {}",
+                                        a.getAccountNoInt(),
+                                        a.getAccountProduct()));
     }
 
     private Collection<LoanAccount> fetchMortgages() {
