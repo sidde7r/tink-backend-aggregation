@@ -2,8 +2,6 @@ package se.tink.backend.aggregation.queue;
 
 import com.google.inject.Inject;
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.RejectedExecutionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,10 +28,6 @@ public class AutomaticRefreshQueueHandler implements QueueMessageAction {
     private final MetricRegistry metricRegistry;
     private ClientConfigurationProvider clientConfigurationProvider;
     private final MetricId metricId = MetricId.newId("aggregation_queue_consumes_by_provider");
-
-    private static final ConcurrentHashMap<String, LocalDateTime> rateLimitNotifications =
-            new ConcurrentHashMap<>();
-    private static final int RATE_LIMIT_MINUTES = 5;
 
     @Inject
     public AutomaticRefreshQueueHandler(
