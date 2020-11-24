@@ -271,7 +271,9 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
                         .orElseGet(() -> new PrintStream(System.out));
 
         registerJacksonModule(new VavrModule());
-        responseStatusHandler = new DefaultResponseStatusHandler();
+        responseStatusHandler =
+                new DefaultResponseStatusHandler(
+                        this.provider != null ? this.provider.getName() : null);
         this.logMasker = logMasker;
         this.loggingMode = loggingMode;
 

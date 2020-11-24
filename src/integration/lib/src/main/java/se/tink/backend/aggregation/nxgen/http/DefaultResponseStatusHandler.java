@@ -4,8 +4,19 @@ import se.tink.backend.aggregation.nxgen.http.handler.HttpResponseStatusHandler;
 import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
+import se.tink.libraries.rate_limit_service.RateLimitService;
 
 public class DefaultResponseStatusHandler implements HttpResponseStatusHandler {
+
+    private final String providerName;
+
+    public DefaultResponseStatusHandler(String providerName) {
+        this.providerName = providerName;
+    }
+
+    public DefaultResponseStatusHandler() {
+        this.providerName = null;
+    }
 
     @Override
     public void handleResponse(HttpRequest httpRequest, HttpResponse httpResponse) {
@@ -13,6 +24,9 @@ public class DefaultResponseStatusHandler implements HttpResponseStatusHandler {
         // force us
         // to handle invalid responses in a unified way (try/catch).
         if (httpResponse.getStatus() >= 400) {
+            if (httpResponse.getStatus() == 429) {
+                RateLimitService.INSTANCE.notifyRateLimitExceeded(providerName);
+            }
             throw new HttpResponseException(
                     detailedExceptionMessage(httpResponse), httpRequest, httpResponse);
         }
