@@ -9,9 +9,10 @@ import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.result.error.AgentPlatformAuthenticationProcessException;
 import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
 import se.tink.backend.aggregation.agents.exceptions.agent.AgentException;
-import se.tink.backend.aggregation.agentsplatform.framework.error.AuthenticationError;
-import se.tink.backend.aggregation.agentsplatform.framework.error.AuthorizationError;
-import se.tink.backend.aggregation.agentsplatform.framework.error.ServerError;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AuthenticationError;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AuthorizationError;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.error.ServerError;
+import se.tink.backend.aggregation.agentsplatform.framework.error.Error;
 import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.metrics.MetricAction;
 import se.tink.backend.aggregation.workers.metrics.MetricActionIface;
@@ -61,7 +62,7 @@ public class AgentPlatformAuthenticationProcessExceptionHandlerTest {
     @Test
     public void shouldHandleAgentPlatformAuthenticationError() {
         // given
-        AuthenticationError error = new AuthenticationError();
+        AuthenticationError error = new AuthenticationError(Mockito.mock(Error.class));
         AgentPlatformAuthenticationProcessException ex =
                 Mockito.mock(AgentPlatformAuthenticationProcessException.class);
         Mockito.when(ex.getSourceAgentPlatformError()).thenReturn(error);

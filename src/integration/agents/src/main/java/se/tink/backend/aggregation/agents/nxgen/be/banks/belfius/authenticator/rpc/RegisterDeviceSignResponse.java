@@ -5,11 +5,11 @@ import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.BelfiusConstants;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.auth.UnknownDeviceRegistrationError;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc.BelfiusResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc.MessageResponse;
-import se.tink.backend.aggregation.agentsplatform.framework.error.AgentBankApiError;
-import se.tink.backend.aggregation.agentsplatform.framework.error.IncorrectCardReaderResponseCodeError;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AgentBankApiError;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.error.DeviceRegistrationError;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.error.IncorrectCardReaderResponseCodeError;
 
 public class RegisterDeviceSignResponse extends BelfiusResponse {
     public void validate() throws AuthenticationException {
@@ -51,7 +51,7 @@ public class RegisterDeviceSignResponse extends BelfiusResponse {
             } else if (StringUtils.containsIgnoreCase(
                     messageResponse.getMessageDetail(),
                     BelfiusConstants.ErrorCodes.DEVICE_REGISTRATION_ERROR)) {
-                return Optional.of(new UnknownDeviceRegistrationError());
+                return Optional.of(new DeviceRegistrationError());
             }
         }
         return Optional.empty();

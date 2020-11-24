@@ -19,7 +19,7 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentFailedAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentProceedNextStepAuthenticationResult;
-import se.tink.backend.aggregation.agentsplatform.framework.error.AuthenticationError;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AuthenticationError;
 
 public class SoftLoginStepTest extends BaseStep {
 

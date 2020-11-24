@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.agentplatform.authentication.result.e
 
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.agent.AgentError;
-import se.tink.backend.aggregation.agentsplatform.framework.error.AgentBankApiError;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AgentBankApiError;
 
 public class AgentPlatformAuthenticationProcessException extends AuthenticationException {
 

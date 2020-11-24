@@ -15,7 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ber
 import se.tink.backend.aggregation.agentsplatform.agentsframework.common.AgentExtendedClientInfo;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.http.AgentHttpClient;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.http.AgentSimpleExternalApiCall;
-import se.tink.backend.aggregation.agentsplatform.framework.http.ExternalApiCallResult;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.http.ExternalApiCallResult;
 
 public class KbcFetchConsentExternalApiCall
         extends AgentSimpleExternalApiCall<

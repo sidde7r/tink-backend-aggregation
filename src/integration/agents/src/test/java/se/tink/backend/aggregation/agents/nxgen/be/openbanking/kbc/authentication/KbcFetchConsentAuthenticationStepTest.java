@@ -16,7 +16,7 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.steps.AgentAuthenticationProcessStep;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.userinteraction.fielddefinition.IbanFieldDefinition;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.RedirectPreparationRedirectUrlStep;
-import se.tink.backend.aggregation.agentsplatform.framework.http.ExternalApiCallResult;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.http.ExternalApiCallResult;
 
 public class KbcFetchConsentAuthenticationStepTest {
 
@@ -40,7 +40,9 @@ public class KbcFetchConsentAuthenticationStepTest {
                 .thenReturn(Optional.of(consent));
         Mockito.when(
                         fetchConsentExternalApiCall.execute(
-                                Mockito.eq(fetchConsentExternalApiCallParameters)))
+                                Mockito.eq(fetchConsentExternalApiCallParameters),
+                                Mockito.any(),
+                                Mockito.any()))
                 .thenReturn(fetchConsentExternalApiCallResult);
         AgentUserInteractionAuthenticationProcessRequest authenticationProcessRequest =
                 Mockito.mock(AgentUserInteractionAuthenticationProcessRequest.class);

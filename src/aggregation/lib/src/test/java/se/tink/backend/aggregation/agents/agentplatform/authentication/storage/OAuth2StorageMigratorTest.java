@@ -52,10 +52,10 @@ public class OAuth2StorageMigratorTest {
                 redirectTokensAuthenticationPersistedData.getRedirectTokens().get();
         Assertions.assertThat(redirectTokens.getAccessToken().getBody())
                 .isEqualTo(oAuth2Token.getAccessToken().getBytes());
-        Assertions.assertThat(redirectTokens.getAccessToken().getExpiresInMillis())
-                .isEqualTo(oAuth2Token.getExpiresInSeconds() * 1000);
-        Assertions.assertThat(redirectTokens.getAccessToken().getIssuedAtInMillis())
-                .isEqualTo(oAuth2Token.getIssuedAt() * 1000);
+        Assertions.assertThat(redirectTokens.getAccessToken().getExpiresInSeconds())
+                .isEqualTo(oAuth2Token.getExpiresInSeconds());
+        Assertions.assertThat(redirectTokens.getAccessToken().getIssuedAtInSeconds())
+                .isEqualTo(oAuth2Token.getIssuedAt());
         Assertions.assertThat(redirectTokens.getRefreshToken()).isNull();
     }
 
