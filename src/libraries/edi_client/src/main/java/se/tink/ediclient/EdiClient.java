@@ -24,6 +24,7 @@ import java.security.interfaces.RSAPublicKey;
 import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.Locale;
+import java.util.function.Consumer;
 import org.bouncycastle.operator.OperatorCreationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,8 +69,7 @@ public class EdiClient {
     public static KeyStore requestOrGetDevCert(File workDir)
             throws KeyStoreException, IOException, CertificateException, NoSuchAlgorithmException {
         if (!workDir.exists() && !workDir.mkdirs()) {
-            throw new IllegalStateException(
-                    "Could not make working directory; " + workDir.getAbsolutePath());
+            LOG.warn("Could not make working directory; " + workDir.getAbsolutePath());
         }
         File devCertKeystore = new File(workDir, DEVCERT_P12);
         if (devCertKeystore.exists()) {
@@ -94,11 +94,30 @@ public class EdiClient {
             LOG.info("saving key store");
             try (FileOutputStream keystoreOutputStream = new FileOutputStream(devCertKeystore)) {
                 newKeyStore.store(keystoreOutputStream, DEFAULT_KEYSTORE_PWD);
+            } catch (IOException ex) {
+                LOG.info("IOException saving keystore", ex);
+                logCouldNotSaveKeystoreMessage(LOG::error);
+
+                // Use println here to make message more visible in IDE
+                Runtime.getRuntime()
+                        .addShutdownHook(
+                                new Thread(
+                                        () -> logCouldNotSaveKeystoreMessage(System.out::println)));
             }
             return newKeyStore;
         } catch (Exception ex) {
             throw new IllegalStateException("Exception thrown issuing dev cert", ex);
         }
+    }
+
+    private static void logCouldNotSaveKeystoreMessage(Consumer<String> print) {
+        print.accept("====>");
+        print.accept("====> Could not save keystore. The test will proceed, but you will have");
+        print.accept("====> to issue a new one in the next test run.");
+        print.accept("====>");
+        print.accept("====> You can issue one manually with:");
+        print.accept("====>     bazel run //src/libraries/edi_client:issue");
+        print.accept("====>");
     }
 
     private static KeyStore loadExistingKeystore(File devCertKeystore)
