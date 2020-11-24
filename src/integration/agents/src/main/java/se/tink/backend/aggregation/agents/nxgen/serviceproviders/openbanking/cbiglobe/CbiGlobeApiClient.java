@@ -45,7 +45,6 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @Slf4j
 public class CbiGlobeApiClient {
@@ -303,18 +302,6 @@ public class CbiGlobeApiClient {
         return createRequestInSession(
                         Urls.FETCH_PAYMENT_STATUS.parameter(IdTags.PAYMENT_ID, uniqueId))
                 .get(CreatePaymentResponse.class);
-    }
-
-    public GetAccountsResponse fetchAccounts() {
-        GetAccountsResponse getAccountsResponse =
-                SerializationUtils.deserializeFromString(
-                        persistentStorage.get(StorageKeys.ACCOUNTS), GetAccountsResponse.class);
-
-        if (getAccountsResponse == null) {
-            getAccountsResponse = getAccounts();
-            persistentStorage.put(StorageKeys.ACCOUNTS, getAccountsResponse);
-        }
-        return getAccountsResponse;
     }
 
     protected RequestBuilder addPsuIpAddressHeaderIfNeeded(RequestBuilder requestBuilder) {

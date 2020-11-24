@@ -108,7 +108,7 @@ public class ConsentManagerTest {
     public void createTransactionsConsentShouldCallApiClientAndStartManualAuthentication() {
         // given
         ConsentResponse consentResponse = new ConsentResponse(null, CONSENT_ID, null);
-        when(apiClient.fetchAccounts())
+        when(userState.getAccountsResponseFromStorage())
                 .thenReturn(
                         new GetAccountsResponse(
                                 Collections.singletonList(new AccountEntity("123"))));
