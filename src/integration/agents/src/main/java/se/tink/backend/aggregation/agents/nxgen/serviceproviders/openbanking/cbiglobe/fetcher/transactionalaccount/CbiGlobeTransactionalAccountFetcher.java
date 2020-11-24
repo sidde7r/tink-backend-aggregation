@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cb
 
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeApiClient;
@@ -36,6 +37,9 @@ public class CbiGlobeTransactionalAccountFetcher
         GetAccountsResponse getAccountsResponse =
                 SerializationUtils.deserializeFromString(
                         persistentStorage.get(StorageKeys.ACCOUNTS), GetAccountsResponse.class);
+        if (getAccountsResponse == null) {
+            return Collections.emptyList();
+        }
         return getAccountsResponse.getAccounts().stream()
                 .map(acc -> acc.toTinkAccount(apiClient.getBalances(acc.getResourceId())))
                 .map(Optional::get)

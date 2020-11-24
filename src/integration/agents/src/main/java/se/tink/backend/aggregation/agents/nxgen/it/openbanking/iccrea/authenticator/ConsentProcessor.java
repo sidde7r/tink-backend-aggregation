@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.iccrea.authenticator;
 
 import lombok.AllArgsConstructor;
-import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.iccrea.authenticator.rpc.ConsentScaResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.ConsentManager;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.ConsentResponse;
@@ -11,8 +10,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 public class ConsentProcessor {
     private ConsentManager consentManager;
 
-    public void processConsent(String username, String password, ConsentScaResponse consentResponse)
-            throws LoginException {
+    public void processConsent(
+            String username, String password, ConsentScaResponse consentResponse) {
         ConsentResponse updateConsentResponse =
                 consentManager.updateAuthenticationMethod(getPushOtpMethodId(consentResponse));
 
