@@ -18,7 +18,6 @@ import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
 import se.tink.libraries.account_data_cache.FilterReason;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.DataFetchingRestrictions;
 
 public class DataFetchingRestrictionWorkerCommand extends AgentWorkerCommand {
@@ -26,7 +25,6 @@ public class DataFetchingRestrictionWorkerCommand extends AgentWorkerCommand {
             LoggerFactory.getLogger(DataFetchingRestrictionWorkerCommand.class);
     private final AgentWorkerCommandContext context;
     private final ControllerWrapper controllerWrapper;
-    private final AccountInformationServiceEventsProducer accountInformationServiceEventsProducer;
 
     public DataFetchingRestrictionWorkerCommand(
             AgentWorkerCommandContext context,
@@ -34,7 +32,6 @@ public class DataFetchingRestrictionWorkerCommand extends AgentWorkerCommand {
             AccountInformationServiceEventsProducer accountInformationServiceEventsProducer) {
         this.context = context;
         this.controllerWrapper = controllerWrapper;
-        this.accountInformationServiceEventsProducer = accountInformationServiceEventsProducer;
     }
 
     @Override
@@ -62,37 +59,13 @@ public class DataFetchingRestrictionWorkerCommand extends AgentWorkerCommand {
                                 });
 
                 registerAccountFilter(restrictedAccounts, restrictedAccountTypes);
-                sendEvents(restrictedAccounts);
             }
-            sendRestrictAccounts(restrictedAccountTypes);
+            sendRestrictAccountsRequest(restrictedAccountTypes);
 
         } catch (RuntimeException e) {
             log.warn("Could not execute DataFetchingRestrictionWorkerCommand", e);
         }
         return AgentWorkerCommandResult.CONTINUE;
-    }
-
-    private void sendEvents(List<Account> restrictedAccounts) {
-        sendAccountAggregationRestrictedEvents(restrictedAccounts);
-    }
-
-    private void sendAccountAggregationRestrictedEvents(List<Account> restrictedAccounts) {
-        CredentialsRequest request = context.getRequest();
-        if (request.getProvider() == null) {
-            return;
-        }
-        restrictedAccounts.forEach(
-                restrictedAccount ->
-                        accountInformationServiceEventsProducer
-                                .sendAccountAggregationRestrictedEvent(
-                                        context.getClusterId(),
-                                        context.getAppId(),
-                                        request.getUser().getId(),
-                                        request.getProvider(),
-                                        context.getCorrelationId(),
-                                        request.getCredentials().getId(),
-                                        restrictedAccount.getId(),
-                                        restrictedAccount.getType().name()));
     }
 
     private boolean allowRefreshRegardlessOfRestrictions() {
@@ -116,7 +89,7 @@ public class DataFetchingRestrictionWorkerCommand extends AgentWorkerCommand {
                         FilterReason.DATA_FETCHING_RESTRICTIONS);
     }
 
-    private void sendRestrictAccounts(List<AccountTypes> restrictedAccountTypes) {
+    private void sendRestrictAccountsRequest(List<AccountTypes> restrictedAccountTypes) {
         Credentials credentials = context.getRequest().getCredentials();
         log.info(
                 "Sending Restrict Accounts under credentialsId: {}, for the following account types: {}",
