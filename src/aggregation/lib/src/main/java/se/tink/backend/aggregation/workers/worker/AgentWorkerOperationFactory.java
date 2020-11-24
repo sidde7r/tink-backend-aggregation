@@ -63,6 +63,7 @@ import se.tink.backend.aggregation.workers.commands.RefreshItemAgentWorkerComman
 import se.tink.backend.aggregation.workers.commands.ReportProviderMetricsAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.ReportProviderTransferMetricsAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.RequestUserOptInAccountsAgentWorkerCommand;
+import se.tink.backend.aggregation.workers.commands.SendAccountRestrictionEventsWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.SendAccountSourceInfoEventWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.SendAccountsHoldersToUpdateServiceAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.SendAccountsToDataAvailabilityTrackerAgentWorkerCommand;
@@ -305,10 +306,13 @@ public class AgentWorkerOperationFactory {
                             accountInformationServiceEventsProducer,
                             controllerWrapper,
                             false));
-            commands.add(
-                    new DataFetchingRestrictionWorkerCommand(
-                            context, controllerWrapper, accountInformationServiceEventsProducer));
+            commands.add(new DataFetchingRestrictionWorkerCommand(context, controllerWrapper));
             commands.add(new AccountWhitelistRestrictionWorkerCommand(context, request));
+            // SendAccountRestrictionEventsWorkerCommand should be added after all restrictions on
+            // accounts have been made
+            commands.add(
+                    new SendAccountRestrictionEventsWorkerCommand(
+                            context, accountInformationServiceEventsProducer));
             commands.add(
                     new SendAccountsToUpdateServiceAgentWorkerCommand(
                             context, createCommandMetricState(request)));
@@ -456,10 +460,13 @@ public class AgentWorkerOperationFactory {
                         accountInformationServiceEventsProducer,
                         controllerWrapper,
                         false));
-        commands.add(
-                new DataFetchingRestrictionWorkerCommand(
-                        context, controllerWrapper, accountInformationServiceEventsProducer));
+        commands.add(new DataFetchingRestrictionWorkerCommand(context, controllerWrapper));
         commands.add(new AccountWhitelistRestrictionWorkerCommand(context, request));
+        // SendAccountRestrictionEventsWorkerCommand should be added after all restrictions on
+        // accounts have been made
+        commands.add(
+                new SendAccountRestrictionEventsWorkerCommand(
+                        context, accountInformationServiceEventsProducer));
         commands.addAll(
                 createOrderedRefreshableItemsCommands(
                         request, context, request.getItemsToRefresh(), controllerWrapper));
@@ -614,12 +621,13 @@ public class AgentWorkerOperationFactory {
                                 accountInformationServiceEventsProducer,
                                 controllerWrapper,
                                 false));
-                commands.add(
-                        new DataFetchingRestrictionWorkerCommand(
-                                context,
-                                controllerWrapper,
-                                accountInformationServiceEventsProducer));
+                commands.add(new DataFetchingRestrictionWorkerCommand(context, controllerWrapper));
                 commands.add(new AccountWhitelistRestrictionWorkerCommand(context, request));
+                // SendAccountRestrictionEventsWorkerCommand should be added after all restrictions
+                // on accounts have been made
+                commands.add(
+                        new SendAccountRestrictionEventsWorkerCommand(
+                                context, accountInformationServiceEventsProducer));
                 commands.addAll(
                         createOrderedRefreshableItemsCommands(
                                 request,
@@ -689,10 +697,13 @@ public class AgentWorkerOperationFactory {
                             accountInformationServiceEventsProducer,
                             controllerWrapper,
                             false));
-            commands.add(
-                    new DataFetchingRestrictionWorkerCommand(
-                            context, controllerWrapper, accountInformationServiceEventsProducer));
+            commands.add(new DataFetchingRestrictionWorkerCommand(context, controllerWrapper));
             commands.add(new AccountWhitelistRestrictionWorkerCommand(context, request));
+            // SendAccountRestrictionEventsWorkerCommand should be added after all restrictions on
+            // accounts have been made
+            commands.add(
+                    new SendAccountRestrictionEventsWorkerCommand(
+                            context, accountInformationServiceEventsProducer));
             commands.addAll(
                     createOrderedRefreshableItemsCommands(
                             request,
@@ -1377,9 +1388,7 @@ public class AgentWorkerOperationFactory {
                             accountInformationServiceEventsProducer,
                             controllerWrapper,
                             false));
-            commands.add(
-                    new DataFetchingRestrictionWorkerCommand(
-                            context, controllerWrapper, accountInformationServiceEventsProducer));
+            commands.add(new DataFetchingRestrictionWorkerCommand(context, controllerWrapper));
             // If this is an optIn request we request the caller do supply supplemental information
             // with the
             // accounts they want to whitelist.
@@ -1396,6 +1405,11 @@ public class AgentWorkerOperationFactory {
 
             // Update the accounts on system side
             commands.add(new AccountWhitelistRestrictionWorkerCommand(context, request));
+            // SendAccountRestrictionEventsWorkerCommand should be added after all restrictions on
+            // accounts have been made
+            commands.add(
+                    new SendAccountRestrictionEventsWorkerCommand(
+                            context, accountInformationServiceEventsProducer));
             commands.add(
                     new SendAccountsToUpdateServiceAgentWorkerCommand(
                             context, createCommandMetricState(request)));

@@ -51,8 +51,6 @@ public class DataFetchingRestrictionWorkerCommandTest {
     @Mock private ControllerWrapper controllerWrapper;
     @Mock private AgentsServiceConfiguration agentsServiceConfiguration;
 
-    @Mock private AccountInformationServiceEventsProducer accountInformationServiceEventsProducer;
-
     @Before
     public void init() {
         request = new RefreshInformationRequest();
@@ -106,8 +104,7 @@ public class DataFetchingRestrictionWorkerCommandTest {
                         DataFetchingRestrictions.RESTRICT_FETCHING_CHECKING_ACCOUNTS,
                         DataFetchingRestrictions.RESTRICT_FETCHING_CHECKING_TRANSACTIONS));
         DataFetchingRestrictionWorkerCommand command =
-                new DataFetchingRestrictionWorkerCommand(
-                        context, controllerWrapper, accountInformationServiceEventsProducer);
+                new DataFetchingRestrictionWorkerCommand(context, controllerWrapper);
 
         // when
         AgentWorkerCommandResult result = command.doExecute();
@@ -123,8 +120,7 @@ public class DataFetchingRestrictionWorkerCommandTest {
         // given
         request.setDataFetchingRestrictions(Collections.emptyList());
         DataFetchingRestrictionWorkerCommand command =
-                new DataFetchingRestrictionWorkerCommand(
-                        context, controllerWrapper, accountInformationServiceEventsProducer);
+                new DataFetchingRestrictionWorkerCommand(context, controllerWrapper);
 
         // when
         AgentWorkerCommandResult result = command.doExecute();
@@ -144,8 +140,7 @@ public class DataFetchingRestrictionWorkerCommandTest {
                         DataFetchingRestrictions.RESTRICT_FETCHING_CHECKING_ACCOUNTS,
                         DataFetchingRestrictions.RESTRICT_FETCHING_CHECKING_TRANSACTIONS));
         DataFetchingRestrictionWorkerCommand command =
-                new DataFetchingRestrictionWorkerCommand(
-                        context, controllerWrapper, accountInformationServiceEventsProducer);
+                new DataFetchingRestrictionWorkerCommand(context, controllerWrapper);
         feedContextWithAccountData(); // feed with accounts & transactions
 
         // when
@@ -168,8 +163,7 @@ public class DataFetchingRestrictionWorkerCommandTest {
                         DataFetchingRestrictions.RESTRICT_FETCHING_CHECKING_ACCOUNTS,
                         DataFetchingRestrictions.RESTRICT_FETCHING_CHECKING_TRANSACTIONS));
         DataFetchingRestrictionWorkerCommand command =
-                new DataFetchingRestrictionWorkerCommand(
-                        context, controllerWrapper, accountInformationServiceEventsProducer);
+                new DataFetchingRestrictionWorkerCommand(context, controllerWrapper);
         feedContextWithAccountData(); // feed with accounts & transactions
 
         // when

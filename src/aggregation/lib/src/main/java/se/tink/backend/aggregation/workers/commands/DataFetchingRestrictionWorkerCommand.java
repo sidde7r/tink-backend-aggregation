@@ -13,7 +13,6 @@ import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.RestrictAccountsRequest;
-import se.tink.backend.aggregation.events.AccountInformationServiceEventsProducer;
 import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
@@ -27,9 +26,7 @@ public class DataFetchingRestrictionWorkerCommand extends AgentWorkerCommand {
     private final ControllerWrapper controllerWrapper;
 
     public DataFetchingRestrictionWorkerCommand(
-            AgentWorkerCommandContext context,
-            ControllerWrapper controllerWrapper,
-            AccountInformationServiceEventsProducer accountInformationServiceEventsProducer) {
+            AgentWorkerCommandContext context, ControllerWrapper controllerWrapper) {
         this.context = context;
         this.controllerWrapper = controllerWrapper;
     }

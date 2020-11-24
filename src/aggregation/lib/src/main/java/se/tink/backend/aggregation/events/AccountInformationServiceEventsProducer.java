@@ -16,7 +16,6 @@ import se.tink.backend.aggregation.source_info.AccountSourceInfo;
 import se.tink.eventproducerservice.events.grpc.AccountHoldersRefreshedEventProto;
 import se.tink.eventproducerservice.events.grpc.AccountSourceInfoEventProto;
 import se.tink.eventproducerservice.events.grpc.Psd2PaymentAccountClassificationEventProto;
-import se.tink.libraries.account_data_cache.FilterReason;
 import se.tink.libraries.event_producer_service_client.grpc.EventProducerServiceClient;
 import se.tink.libraries.serialization.proto.utils.ProtobufTypeUtil;
 
@@ -102,7 +101,7 @@ public class AccountInformationServiceEventsProducer {
             String credentialsId,
             String accountId,
             String accountType,
-            FilterReason filterReason) {
+            String filterReason) {
         if (!eventsEnabled) {
             return;
         }

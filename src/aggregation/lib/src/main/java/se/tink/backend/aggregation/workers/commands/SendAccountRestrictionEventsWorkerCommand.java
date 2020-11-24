@@ -58,7 +58,7 @@ public class SendAccountRestrictionEventsWorkerCommand extends AgentWorkerComman
                 request.getCredentials().getId(),
                 restrictedAccount.getId(),
                 restrictedAccount.getType().name(),
-                filterReason);
+                filterReason.name());
     }
 
     @Override
