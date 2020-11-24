@@ -17,6 +17,7 @@ import se.tink.backend.aggregation.events.AccountInformationServiceEventsProduce
 import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
+import se.tink.libraries.account_data_cache.FilterReason;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.DataFetchingRestrictions;
 
@@ -110,7 +111,9 @@ public class DataFetchingRestrictionWorkerCommand extends AgentWorkerCommand {
                 restrictedAccountTypes);
         this.context
                 .getAccountDataCache()
-                .addFilter(account -> !restrictedAccountTypes.contains(account.getType()));
+                .addFilter(
+                        account -> !restrictedAccountTypes.contains(account.getType()),
+                        FilterReason.DATA_FETCHING_RESTRICTIONS);
     }
 
     private void sendRestrictAccounts(List<AccountTypes> restrictedAccountTypes) {

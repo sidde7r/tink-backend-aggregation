@@ -17,6 +17,7 @@ import se.tink.backend.aggregation.events.AccountInformationServiceEventsProduce
 import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
+import se.tink.libraries.account_data_cache.FilterReason;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class Psd2PaymentAccountRestrictionWorkerCommand extends AgentWorkerCommand {
@@ -91,7 +92,9 @@ public class Psd2PaymentAccountRestrictionWorkerCommand extends AgentWorkerComma
                         context.getRequest().getCredentials().getId());
                 this.context
                         .getAccountDataCache()
-                        .addFilter(a -> !shouldFilterRestrictedAccount(a));
+                        .addFilter(
+                                a -> !shouldFilterRestrictedAccount(a),
+                                FilterReason.DATA_FETCHING_RESTRICTIONS);
             }
         } catch (RuntimeException e) {
             log.warn("Could not execute Psd2PaymentAccountRestrictionWorkerCommand", e);

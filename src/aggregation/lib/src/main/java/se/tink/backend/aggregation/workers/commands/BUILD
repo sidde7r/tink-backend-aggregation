@@ -76,6 +76,7 @@ java_library(
         "//src/integration/transfer:enums",
         "//src/integration/transfer:rpc",
         "//src/integration/user:rpc",
+        "//src/libraries/account_data_cache",
         "//src/libraries/account_identifier",
         "//src/libraries/date",
         "//src/libraries/i18n",

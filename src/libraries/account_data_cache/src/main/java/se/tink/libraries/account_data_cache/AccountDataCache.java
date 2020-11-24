@@ -11,6 +11,7 @@ import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Account;
@@ -20,7 +21,7 @@ import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
 
 public class AccountDataCache {
     private final Map<String, AccountData> accountDataByBankAccountId;
-    private final List<Predicate<Account>> accountFilters;
+    private final List<Pair<Predicate<Account>, FilterReason>> accountFilters;
     private static final Logger LOGGER = LoggerFactory.getLogger(AccountDataCache.class);
 
     public AccountDataCache() {
@@ -33,8 +34,8 @@ public class AccountDataCache {
         this.accountFilters.clear();
     }
 
-    public void addFilter(Predicate<Account> predicate) {
-        accountFilters.add(predicate);
+    public void addFilter(Predicate<Account> predicate, FilterReason filterReason) {
+        accountFilters.add(Pair.of(predicate, filterReason));
     }
 
     private Optional<AccountData> getAccountData(String bankAccountId) {
@@ -88,7 +89,10 @@ public class AccountDataCache {
                 .filter(
                         accountData ->
                                 accountFilters.stream()
-                                        .allMatch(filter -> filter.test(accountData.getAccount())));
+                                        .allMatch(
+                                                pair ->
+                                                        pair.getLeft()
+                                                                .test(accountData.getAccount())));
     }
 
     public List<AccountData> getFilteredAccountData() {
@@ -102,6 +106,27 @@ public class AccountDataCache {
                                 Objects.equals(
                                         filteredAccount.getAccount().getBankId(), bankAccountId))
                 .findFirst();
+    }
+
+    public List<Pair<AccountData, FilterReason>> getFilteredOutAccountDataWithFilterReason() {
+        List<Pair<AccountData, FilterReason>> filteredOutAccountData = new ArrayList<>();
+        accountDataByBankAccountId
+                .values()
+                .forEach(
+                        accountData ->
+                                accountFilters.forEach(
+                                        accountFilterData -> {
+                                            Predicate<Account> filter = accountFilterData.getLeft();
+                                            FilterReason filterReason =
+                                                    accountFilterData.getRight();
+                                            boolean shouldFilterOut =
+                                                    !filter.test(accountData.getAccount());
+                                            if (shouldFilterOut) {
+                                                filteredOutAccountData.add(
+                                                        Pair.of(accountData, filterReason));
+                                            }
+                                        }));
+        return filteredOutAccountData;
     }
 
     // Returns only AccountData that is both filtered and has been processed (see

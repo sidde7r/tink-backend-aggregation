@@ -29,6 +29,7 @@ import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account_data_cache.FilterReason;
 import se.tink.libraries.pair.Pair;
 
 /** TODO adding metrics if necessary */
@@ -110,7 +111,9 @@ public class RequestUserOptInAccountsAgentWorkerCommand extends AgentWorkerComma
     private void filterOptInAccounts(List<String> optInAccountUniqueIds) {
         this.context
                 .getAccountDataCache()
-                .addFilter(account -> optInAccountUniqueIds.contains(account.getBankId()));
+                .addFilter(
+                        account -> optInAccountUniqueIds.contains(account.getBankId()),
+                        FilterReason.OPT_IN);
     }
 
     private AgentWorkerCommandResult handleEmptyRequestAccountsCase(

@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.rpc.WhitelistRequest;
 import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
+import se.tink.libraries.account_data_cache.FilterReason;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.enums.TinkFeature;
 
@@ -42,7 +43,9 @@ public class AccountWhitelistRestrictionWorkerCommand extends AgentWorkerCommand
     @Override
     protected AgentWorkerCommandResult doExecute() throws Exception {
         // Always filter excluded accounts.
-        this.context.getAccountDataCache().addFilter(this::filterExcludedAccounts);
+        this.context
+                .getAccountDataCache()
+                .addFilter(this::filterExcludedAccounts, FilterReason.ACCOUNT_EXCLUSION_FEATURE);
 
         if (!(refreshInformationRequest instanceof WhitelistRequest)) {
             // No additional filtering for non-whitelist requests.
@@ -57,7 +60,9 @@ public class AccountWhitelistRestrictionWorkerCommand extends AgentWorkerCommand
             return AgentWorkerCommandResult.CONTINUE;
         }
 
-        this.context.getAccountDataCache().addFilter(this::filterNonWhitelistedAccounts);
+        this.context
+                .getAccountDataCache()
+                .addFilter(this::filterNonWhitelistedAccounts, FilterReason.OPT_IN);
 
         return AgentWorkerCommandResult.CONTINUE;
     }
