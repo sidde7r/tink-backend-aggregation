@@ -15,19 +15,11 @@ import se.tink.libraries.user.rpc.User;
 public class Transaction extends AggregationTransaction {
     private final boolean pending;
     private final String externalId;
+    private final FieldsMigrations fieldsMigrations;
 
     protected Transaction(
             ExactCurrencyAmount amount, Date date, String description, boolean pending) {
-        this(amount, date, description, pending, null);
-    }
-
-    protected Transaction(
-            ExactCurrencyAmount amount,
-            Date date,
-            String description,
-            boolean pending,
-            String rawDetails) {
-        this(amount, date, description, pending, rawDetails, null, TransactionTypes.DEFAULT, null);
+        this(amount, date, description, pending, null, null, TransactionTypes.DEFAULT, null, null);
     }
 
     protected Transaction(
@@ -38,10 +30,12 @@ public class Transaction extends AggregationTransaction {
             String rawDetails,
             String externalId,
             TransactionTypes type,
+            FieldsMigrations fieldsMigrations,
             Map<TransactionPayloadTypes, String> payload) {
         super(amount, date, description, rawDetails, type, payload);
         this.pending = pending;
         this.externalId = externalId;
+        this.fieldsMigrations = fieldsMigrations;
     }
 
     public static Builder builder() {
@@ -64,6 +58,10 @@ public class Transaction extends AggregationTransaction {
         if (!Strings.isNullOrEmpty(getExternalId())) {
             transaction.setPayload(TransactionPayloadTypes.EXTERNAL_ID, getExternalId());
         }
+        if (null != fieldsMigrations && fieldsMigrations.isNotEmpty()) {
+            transaction.setPayload(
+                    TransactionPayloadTypes.FIELD_MAPPER_MIGRATIONS, fieldsMigrations.toJSON());
+        }
 
         return transaction;
     }
@@ -71,6 +69,7 @@ public class Transaction extends AggregationTransaction {
     public static class Builder extends AggregationTransaction.Builder {
         private boolean pending;
         private String externalId;
+        private FieldsMigrations fieldsMigrations;
 
         @Deprecated
         @Override
@@ -117,6 +116,11 @@ public class Transaction extends AggregationTransaction {
             return this;
         }
 
+        public Builder setFieldsMigrations(FieldsMigrations fieldsMigrations) {
+            this.fieldsMigrations = fieldsMigrations;
+            return this;
+        }
+
         @Override
         public Builder setRawDetails(Object rawDetails) {
             return (Builder) super.setRawDetails(rawDetails);
@@ -146,6 +150,7 @@ public class Transaction extends AggregationTransaction {
                     getRawDetails(),
                     getExternalId(),
                     getType(),
+                    fieldsMigrations,
                     getPayload());
         }
     }
