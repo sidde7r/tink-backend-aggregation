@@ -1,20 +1,17 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.ubi.authenticator;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
-import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.ubi.UbiConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.CbiUserState;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.ConsentManager;
@@ -42,19 +39,6 @@ public class TransactionConsentDecoupledStepTest {
         this.step =
                 new TransactionConsentDecoupledStep(
                         consentManager, strongAuthenticationState, userState);
-    }
-
-    @Test
-    public void executeShouldThrowExceptionIfCredentialsEmpty() {
-        // given
-        Credentials emptyCredentials = new Credentials();
-
-        // when
-        Throwable thrown =
-                catchThrowable(() -> step.execute(new AuthenticationRequest(emptyCredentials)));
-
-        // then
-        Assertions.assertThat(thrown).isInstanceOf(LoginException.class);
     }
 
     @Test

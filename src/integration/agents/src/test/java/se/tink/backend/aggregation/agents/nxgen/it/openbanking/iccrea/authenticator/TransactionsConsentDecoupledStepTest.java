@@ -43,19 +43,6 @@ public class TransactionsConsentDecoupledStepTest {
     }
 
     @Test
-    public void executeShouldThrowExceptionIfCredentialsEmpty() {
-        // given
-        Credentials emptyCredentials = new Credentials();
-
-        // when
-        Throwable thrown =
-                catchThrowable(() -> step.execute(new AuthenticationRequest(emptyCredentials)));
-
-        // then
-        Assertions.assertThat(thrown).isInstanceOf(LoginException.class);
-    }
-
-    @Test
     public void executeShouldExecuteConsentManagerAndReturnAuthenticationSucceeded()
             throws AuthenticationException, AuthorizationException {
         // given
