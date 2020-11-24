@@ -1,7 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
+
 import org.junit.Assert;
 import org.junit.Test;
+import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.rpc.ErrorResponse;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -31,6 +35,17 @@ public class ErrorResponseTest {
                     + "    ]\n"
                     + "}";
 
+    private static final String INVALID_BANKGIRO_ACCOUNT_RESPONSE =
+            "{\n"
+                    + "\"http_status\": 400,\n"
+                    + "\"error\": \"BESE1008\",\n"
+                    + "\"error_description\": \"Invalid bankgiro account\",\n"
+                    + "\"details\": [{\n"
+                    + "\"more_info\": \"bad_request: Invalid bankgiro account\",\n"
+                    + "\"reason\": \"BESE1008\"\n"
+                    + "}]\n"
+                    + "}";
+
     @Test
     public void testErrorResponseDeser() {
         ErrorResponse errorResponse =
@@ -45,5 +60,26 @@ public class ErrorResponseTest {
                 SerializationUtils.deserializeFromString(
                         USER_UNAUTHORIZED_BANK_RESPONSE, ErrorResponse.class);
         Assert.assertTrue(errorResponse.isUserUnauthorizedError());
+    }
+
+    @Test
+    public void testErrorInvalidBankgiroAccount() {
+        ErrorResponse errorResponse =
+                SerializationUtils.deserializeFromString(
+                        INVALID_BANKGIRO_ACCOUNT_RESPONSE, ErrorResponse.class);
+        Assert.assertTrue(errorResponse.isInvalidBankgiroAccount());
+    }
+
+    @Test
+    public void testInvalidBankgiroErrorThrowsInvalidDestException() {
+        ErrorResponse errorResponse =
+                SerializationUtils.deserializeFromString(
+                        INVALID_BANKGIRO_ACCOUNT_RESPONSE, ErrorResponse.class);
+        Throwable thrown = catchThrowable(errorResponse::throwAppropriateErrorIfAny);
+        assertThat(thrown).isInstanceOf(TransferExecutionException.class);
+        assertThat(((TransferExecutionException) thrown).getUserMessage())
+                .isEqualTo("Invalid destination account");
+        assertThat(((TransferExecutionException) thrown).getInternalStatus().toString())
+                .isEqualTo("INVALID_DESTINATION_ACCOUNT");
     }
 }
