@@ -145,4 +145,8 @@ public final class CbiGlobeConstants {
         public static final int MAX_RETRIES = 5;
         public static final int RETRY_SLEEP_MILLISECONDS = 1000;
     }
+
+    public static class HttpClientParams {
+        public static final int CLIENT_TIMEOUT = 60 * 1000;
+    }
 }

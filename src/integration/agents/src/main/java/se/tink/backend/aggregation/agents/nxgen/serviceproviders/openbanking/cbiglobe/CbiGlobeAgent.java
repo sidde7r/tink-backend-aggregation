@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.HttpClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.HttpClientParams;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.CbiGlobeAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.CbiUserState;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.CbiGlobeConfiguration;
@@ -52,8 +53,8 @@ public abstract class CbiGlobeAgent extends SubsequentProgressiveGenerationAgent
 
     public CbiGlobeAgent(AgentComponentProvider agentComponentProvider) {
         super(agentComponentProvider);
-        this.psuIpAddress = userIp;
-        this.providerConfiguration =
+        psuIpAddress = userIp;
+        providerConfiguration =
                 PayloadParser.parse(
                         request.getProvider().getPayload(), CbiGlobeProviderConfiguration.class);
         temporaryStorage = new TemporaryStorage();
@@ -61,8 +62,8 @@ public abstract class CbiGlobeAgent extends SubsequentProgressiveGenerationAgent
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
         userState = new CbiUserState(persistentStorage, credentials);
         authenticator = getAuthenticator();
-
-        applyFilters(this.client);
+        client.setTimeout(HttpClientParams.CLIENT_TIMEOUT);
+        applyFilters(client);
     }
 
     protected CbiGlobeProviderConfiguration getProviderConfiguration() {

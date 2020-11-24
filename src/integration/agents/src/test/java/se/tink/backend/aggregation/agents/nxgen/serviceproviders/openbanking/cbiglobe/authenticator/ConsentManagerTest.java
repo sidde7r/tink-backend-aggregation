@@ -329,8 +329,7 @@ public class ConsentManagerTest {
         return new Object[] {
             new HttpResponseException(MessageCodes.CONSENT_INVALID.name(), request, response),
             new HttpResponseException(MessageCodes.CONSENT_EXPIRED.name(), request, response),
-            new HttpResponseException(MessageCodes.RESOURCE_UNKNOWN.name(), request, response),
-            new HttpResponseException(MessageCodes.CONSENT_ALREADY_IN_USE.name(), request, response)
+            new HttpResponseException(MessageCodes.RESOURCE_UNKNOWN.name(), request, response)
         };
     }
 }
