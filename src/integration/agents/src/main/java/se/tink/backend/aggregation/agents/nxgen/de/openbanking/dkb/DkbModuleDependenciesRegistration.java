@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb;
 
+import java.util.Map;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.authenticator.DkbAuthApiClient;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.authenticator.DkbAuthRequestsFactory;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.authenticator.DkbAuthenticator;
@@ -18,15 +20,9 @@ public class DkbModuleDependenciesRegistration extends ModuleDependenciesRegistr
             TinkHttpClient tinkHttpClient,
             SessionStorage sessionStorage,
             PersistentStorage persistentStorage,
-            DkbConfiguration configuration,
-            SupplementalInformationHelper supplementalInformationHelper,
-            DkbUserIpInformation dkbUserIpInformation,
-            Catalog catalog) {
+            Map<Class<?>, Object> beans) {
         registerExternalDependencies(tinkHttpClient, sessionStorage, persistentStorage);
-        registerBean(DkbConfiguration.class, configuration);
-        registerBean(SupplementalInformationHelper.class, supplementalInformationHelper);
-        registerBean(DkbUserIpInformation.class, dkbUserIpInformation);
-        registerBean(Catalog.class, catalog);
+        beans.forEach(this::registerBean);
     }
 
     @Override
@@ -60,6 +56,7 @@ public class DkbModuleDependenciesRegistration extends ModuleDependenciesRegistr
                 new DkbAuthenticator(
                         getBean(DkbAuthApiClient.class),
                         getBean(DkbSupplementalDataProvider.class),
-                        getBean(DkbStorage.class)));
+                        getBean(DkbStorage.class),
+                        getBean(Credentials.class)));
     }
 }
