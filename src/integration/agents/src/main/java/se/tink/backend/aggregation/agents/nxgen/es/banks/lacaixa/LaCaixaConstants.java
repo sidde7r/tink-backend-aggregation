@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa;
 
+import java.util.Arrays;
+import java.util.List;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapper;
@@ -29,16 +31,35 @@ public final class LaCaixaConstants {
 
     public static final TypeMapper<LoanDetails.Type> LOAN_TYPE_MAPPER =
             TypeMapper.<LoanDetails.Type>builder()
-                    .put(LoanDetails.Type.MORTGAGE, "10045")
-                    .put(
-                            LoanDetails.Type.BLANCO,
-                            "12142", // personal
-                            "11410", // online
-                            "21919", // "canal"
-                            "14090", // micro personal
-                            "11407", // consumer loan
-                            "10097") // consumer loan
+                    .put(LoanDetails.Type.MORTGAGE, "10045", "10043")
+                    .put(LoanDetails.Type.VEHICLE, "10179")
+                    .put(LoanDetails.Type.BLANCO, BlancoLoanTypes.getAllKeysOfBlancoLoanType())
                     .build();
+
+    public enum BlancoLoanTypes {
+        CONSUMER_LOAN("11407", "10097", "17240", "21919"),
+        EXPRESS_LOAN("12805"),
+        ICO_LOANS("24634"),
+        MICROCREDITS("14090", "12739"),
+        ONLINE("11410"),
+        PERSONAL("10052", "12142", "22896");
+
+        private final List<String> keys;
+
+        BlancoLoanTypes(String... keys) {
+            this.keys = Arrays.asList(keys);
+        }
+
+        public List<String> getKeys() {
+            return keys;
+        }
+
+        public static String[] getAllKeysOfBlancoLoanType() {
+            return Arrays.stream(values())
+                    .flatMap(blancoLoanTypes -> blancoLoanTypes.getKeys().stream())
+                    .toArray(String[]::new);
+        }
+    }
 
     public static class LoanTypeName {
         private LoanTypeName() {}
