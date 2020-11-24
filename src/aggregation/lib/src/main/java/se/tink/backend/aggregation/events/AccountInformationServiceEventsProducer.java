@@ -92,6 +92,25 @@ public class AccountInformationServiceEventsProducer {
         }
     }
 
+    public void sendAccountAggregationRestrictedEvent(
+            String clusterId,
+            String appId,
+            String userId,
+            Provider provider,
+            String correlationId,
+            String credentialsId,
+            String accountId,
+            String accountType) {
+        if (!eventsEnabled) {
+            return;
+        }
+        // here we would send event
+        // right now waiting on solving this
+        // https://tink.slack.com/archives/CSK4994QH/p1606146061216800
+        // and this is merged https://github.com/tink-ab/tink-backend-aggregation/pull/9529
+        log.info("Sending AggregationRestrictedEvent");
+    }
+
     public void sendPsd2PaymentAccountClassificationEvent(
             String clusterId,
             String appId,

@@ -63,6 +63,7 @@ import se.tink.backend.aggregation.workers.commands.RefreshItemAgentWorkerComman
 import se.tink.backend.aggregation.workers.commands.ReportProviderMetricsAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.ReportProviderTransferMetricsAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.RequestUserOptInAccountsAgentWorkerCommand;
+import se.tink.backend.aggregation.workers.commands.SendAccountSourceInfoEventWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.SendAccountsHoldersToUpdateServiceAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.SendAccountsToDataAvailabilityTrackerAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.SendAccountsToUpdateServiceAgentWorkerCommand;
@@ -293,6 +294,9 @@ public class AgentWorkerOperationFactory {
         // We need to reselect and send accounts to system
         if (shouldAddExtraCommands.test(request.getProvider())) {
             commands.add(
+                    new SendAccountSourceInfoEventWorkerCommand(
+                            context, accountInformationServiceEventsProducer));
+            commands.add(
                     new Psd2PaymentAccountRestrictionWorkerCommand(
                             context,
                             request,
@@ -301,7 +305,9 @@ public class AgentWorkerOperationFactory {
                             accountInformationServiceEventsProducer,
                             controllerWrapper,
                             false));
-            commands.add(new DataFetchingRestrictionWorkerCommand(context, controllerWrapper));
+            commands.add(
+                    new DataFetchingRestrictionWorkerCommand(
+                            context, controllerWrapper, accountInformationServiceEventsProducer));
             commands.add(new AccountWhitelistRestrictionWorkerCommand(context, request));
             commands.add(
                     new SendAccountsToUpdateServiceAgentWorkerCommand(
@@ -439,6 +445,9 @@ public class AgentWorkerOperationFactory {
         commands.addAll(
                 createRefreshAccountsCommands(request, context, request.getItemsToRefresh()));
         commands.add(
+                new SendAccountSourceInfoEventWorkerCommand(
+                        context, accountInformationServiceEventsProducer));
+        commands.add(
                 new Psd2PaymentAccountRestrictionWorkerCommand(
                         context,
                         request,
@@ -447,7 +456,9 @@ public class AgentWorkerOperationFactory {
                         accountInformationServiceEventsProducer,
                         controllerWrapper,
                         false));
-        commands.add(new DataFetchingRestrictionWorkerCommand(context, controllerWrapper));
+        commands.add(
+                new DataFetchingRestrictionWorkerCommand(
+                        context, controllerWrapper, accountInformationServiceEventsProducer));
         commands.add(new AccountWhitelistRestrictionWorkerCommand(context, request));
         commands.addAll(
                 createOrderedRefreshableItemsCommands(
@@ -592,6 +603,9 @@ public class AgentWorkerOperationFactory {
                         createRefreshAccountsCommands(
                                 request, context, RefreshableItem.REFRESHABLE_ITEMS_ALL));
                 commands.add(
+                        new SendAccountSourceInfoEventWorkerCommand(
+                                context, accountInformationServiceEventsProducer));
+                commands.add(
                         new Psd2PaymentAccountRestrictionWorkerCommand(
                                 context,
                                 request,
@@ -600,7 +614,11 @@ public class AgentWorkerOperationFactory {
                                 accountInformationServiceEventsProducer,
                                 controllerWrapper,
                                 false));
-                commands.add(new DataFetchingRestrictionWorkerCommand(context, controllerWrapper));
+                commands.add(
+                        new DataFetchingRestrictionWorkerCommand(
+                                context,
+                                controllerWrapper,
+                                accountInformationServiceEventsProducer));
                 commands.add(new AccountWhitelistRestrictionWorkerCommand(context, request));
                 commands.addAll(
                         createOrderedRefreshableItemsCommands(
@@ -660,6 +678,9 @@ public class AgentWorkerOperationFactory {
                     createRefreshAccountsCommands(
                             request, context, RefreshableItem.REFRESHABLE_ITEMS_ALL));
             commands.add(
+                    new SendAccountSourceInfoEventWorkerCommand(
+                            context, accountInformationServiceEventsProducer));
+            commands.add(
                     new Psd2PaymentAccountRestrictionWorkerCommand(
                             context,
                             request,
@@ -668,7 +689,9 @@ public class AgentWorkerOperationFactory {
                             accountInformationServiceEventsProducer,
                             controllerWrapper,
                             false));
-            commands.add(new DataFetchingRestrictionWorkerCommand(context, controllerWrapper));
+            commands.add(
+                    new DataFetchingRestrictionWorkerCommand(
+                            context, controllerWrapper, accountInformationServiceEventsProducer));
             commands.add(new AccountWhitelistRestrictionWorkerCommand(context, request));
             commands.addAll(
                     createOrderedRefreshableItemsCommands(
@@ -1343,6 +1366,9 @@ public class AgentWorkerOperationFactory {
             commands.addAll(createRefreshAccountsCommands(request, context, accountItems));
 
             commands.add(
+                    new SendAccountSourceInfoEventWorkerCommand(
+                            context, accountInformationServiceEventsProducer));
+            commands.add(
                     new Psd2PaymentAccountRestrictionWorkerCommand(
                             context,
                             request,
@@ -1351,7 +1377,9 @@ public class AgentWorkerOperationFactory {
                             accountInformationServiceEventsProducer,
                             controllerWrapper,
                             false));
-            commands.add(new DataFetchingRestrictionWorkerCommand(context, controllerWrapper));
+            commands.add(
+                    new DataFetchingRestrictionWorkerCommand(
+                            context, controllerWrapper, accountInformationServiceEventsProducer));
             // If this is an optIn request we request the caller do supply supplemental information
             // with the
             // accounts they want to whitelist.

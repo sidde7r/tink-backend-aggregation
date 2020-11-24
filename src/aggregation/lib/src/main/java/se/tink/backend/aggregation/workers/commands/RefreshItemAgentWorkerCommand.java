@@ -117,23 +117,14 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
 
     @Override
     protected AgentWorkerCommandResult doExecute() throws Exception {
-        try {
+        if (isNotAllowedToRefreshItem()) {
             log.info(
-                    "[Restrict] Restrictions for credentialsId: {} are: {}",
-                    context.getRequest().getCredentials().getId(),
-                    dataFetchingRestrictions);
-            if (isNotAllowedToRefreshItem()) {
-                log.info(
-                        "Item: {} is restricted from refresh - restrictions: {}, credentialsId: {}",
-                        item,
-                        dataFetchingRestrictions,
-                        context.getRequest().getCredentials().getId());
-                return AgentWorkerCommandResult.CONTINUE;
-            }
-        } catch (RuntimeException e) {
-            log.warn("[Restrict] Failed: ", e);
+                    "Item: {} is restricted from refresh - restrictions: {}, credentialsId: {}",
+                    item,
+                    dataFetchingRestrictions,
+                    context.getRequest().getCredentials().getId());
+            return AgentWorkerCommandResult.CONTINUE;
         }
-
         metrics.start(AgentWorkerOperationMetricType.EXECUTE_COMMAND);
         try {
             MetricAction action =
@@ -212,7 +203,12 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
     }
 
     private boolean isNotAllowedToRefreshItem() {
-        return customerDataFetchingRestrictions.shouldBeRestricted(item, dataFetchingRestrictions);
+        boolean allowRefreshRegardlessOfRestrictions =
+                context.getAgentsServiceConfiguration()
+                        .isFeatureEnabled("allowRefreshRegardlessOfRestrictions");
+        return !allowRefreshRegardlessOfRestrictions
+                && customerDataFetchingRestrictions.shouldBeRestricted(
+                        item, dataFetchingRestrictions);
     }
 
     private boolean isAbleToRefreshItem(Agent agent, RefreshableItem item) {

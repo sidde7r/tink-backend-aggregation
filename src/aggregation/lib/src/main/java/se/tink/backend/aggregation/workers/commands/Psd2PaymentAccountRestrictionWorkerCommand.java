@@ -101,7 +101,6 @@ public class Psd2PaymentAccountRestrictionWorkerCommand extends AgentWorkerComma
 
     private void sendEvents(Account account) {
         sendPsd2PaymentAccountClassificationEvent(account);
-        sendSourceInfoEvent(account);
     }
 
     private void sendPsd2PaymentAccountClassificationEvent(Account account) {
@@ -126,22 +125,6 @@ public class Psd2PaymentAccountRestrictionWorkerCommand extends AgentWorkerComma
                                         account.getType().name(),
                                         classification.name(),
                                         account.getCapabilities()));
-    }
-
-    private void sendSourceInfoEvent(Account account) {
-        CredentialsRequest request = context.getRequest();
-        if (request.getProvider() == null) {
-            return;
-        }
-        accountInformationServiceEventsProducer.sendAccountSourceInfoEvent(
-                context.getClusterId(),
-                context.getAppId(),
-                request.getUser().getId(),
-                request.getProvider(),
-                context.getCorrelationId(),
-                request.getCredentials().getId(),
-                account.getId(),
-                account.getSourceInfo());
     }
 
     private void removeRestrictedAccounts(List<Account> restrictedAccounts) {
