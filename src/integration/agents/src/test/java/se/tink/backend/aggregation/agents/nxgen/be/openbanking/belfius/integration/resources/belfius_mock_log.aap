@@ -63,7 +63,7 @@ Content-Length: 686
 REQUEST 4
 GET https://psd2.b2b.belfius.be:8443/accounts/f2533843-785d-4499-b92f-61711101feed/transactions
 Accept-Language: fr
-Accept: application/vnd.belfius.api+json; version=1
+Accept: application/vnd.belfius.api+json; version=1.2
 Client-ID: DUMMY_ID
 redirect-uri: https://api.tink.se/api/v1/credentials/third-party/callback
 Request-ID: 00000000-0000-4000-0000-000000000000
@@ -84,7 +84,7 @@ Transfer-Encoding: chunked
 REQUEST 5
 GET https://psd2.b2b.belfius.be:8443/accounts/f2533843-785d-4499-b92f-61711101feed/transactions?next=DUMMY_NEXT_PAGE_KEY
 Accept-Language: fr
-Accept: application/vnd.belfius.api+json; version=1
+Accept: application/vnd.belfius.api+json; version=1.2
 Client-ID: DUMMY_ID
 redirect-uri: https://api.tink.se/api/v1/credentials/third-party/callback
 Request-ID: 00000000-0000-4000-0000-000000000000
@@ -105,7 +105,7 @@ Transfer-Encoding: chunked
 REQUEST 6
 GET https://psd2.b2b.belfius.be:8443/accounts/f2533843-785d-4499-b92f-61711101feed/transactions?next=DUMMY_NEXT_PAGE_KEY2
 Accept-Language: fr
-Accept: application/vnd.belfius.api+json; version=1
+Accept: application/vnd.belfius.api+json; version=1.2
 Client-ID: DUMMY_ID
 redirect-uri: https://api.tink.se/api/v1/credentials/third-party/callback
 Request-ID: 00000000-0000-4000-0000-000000000000

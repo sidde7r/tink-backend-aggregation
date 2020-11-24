@@ -72,7 +72,7 @@ public final class BelfiusConstants {
         public static final String CONSENT_VERSION = "2";
         public static final String TOKEN_VERSION = "1.1";
         public static final String ACCOUNT_VERSION = "1";
-        public static final String TRANSACTION_VERSION = "1";
+        public static final String TRANSACTION_VERSION = "1.2";
         public static final String PAYMENT_VERSION = "1";
         public static final String CONSENT_ACCEPT = BASE_ACCEPT + CONSENT_VERSION;
         public static final String TOKEN_ACCEPT = BASE_ACCEPT + TOKEN_VERSION;
