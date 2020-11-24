@@ -18,10 +18,11 @@ public class AuthenticationEntity {
     private String multistepProcessId;
     private String authenticationState;
 
-    public AuthenticationEntity(String username, String password, String multistepProcessId) {
+    public AuthenticationEntity(
+            String username, String password, String multistepProcessId, boolean withOtp) {
         this.userID = LoginParameter.USER_VALUE_PREFIX + username;
         this.consumerID = LoginParameter.CONSUMER_ID;
-        this.authenticationType = LoginParameter.AUTH_TYPE;
+        this.authenticationType = withOtp ? LoginParameter.AUTH_OTP_TYPE : LoginParameter.AUTH_TYPE;
         this.authenticationData =
                 Collections.singletonList(
                         new AuthenticationDataEntity(password, getDataId(multistepProcessId)));
@@ -31,10 +32,9 @@ public class AuthenticationEntity {
     public AuthenticationEntity(String username, String multistepProcessId) {
         this.userID = LoginParameter.USER_VALUE_PREFIX + username;
         this.consumerID = LoginParameter.CONSUMER_ID;
-        this.authenticationType = LoginParameter.AUTH_TYPE;
+        this.authenticationType = LoginParameter.AUTH_OTP_TYPE;
         this.multistepProcessId = multistepProcessId;
         this.authenticationState = AuthenticationStates.GO_ON;
-        this.authenticationData = Collections.emptyList();
     }
 
     private String getDataId(String multistepProcessId) {

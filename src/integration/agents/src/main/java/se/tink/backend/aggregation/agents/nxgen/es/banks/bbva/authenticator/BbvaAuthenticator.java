@@ -41,7 +41,7 @@ public class BbvaAuthenticator implements MultiFactorAuthenticator {
             throws AuthenticationException, AuthorizationException {
         String username = BbvaUtils.formatUsername(credentials.getField(CredentialKeys.USERNAME));
         String password = credentials.getField(CredentialKeys.PASSWORD);
-        final LoginRequest loginRequest = new LoginRequest(username, password, null);
+        final LoginRequest loginRequest = new LoginRequest(username, password, null, false);
         try {
             LoginResponse loginResponse = apiClient.login(loginRequest);
             String authenticationState = loginResponse.getAuthenticationState();
@@ -67,7 +67,7 @@ public class BbvaAuthenticator implements MultiFactorAuthenticator {
         String multistepId =
                 StringUtils.firstNonEmpty(
                         loginOtpResponse.getMultistepProcessId(), multistepProcessId);
-        final LoginRequest otpRequest = new LoginRequest(username, otpCode, multistepId);
+        final LoginRequest otpRequest = new LoginRequest(username, otpCode, multistepId, true);
         log.info("Otp code has been sent to the verification");
         apiClient.sendOTP(otpRequest);
     }
