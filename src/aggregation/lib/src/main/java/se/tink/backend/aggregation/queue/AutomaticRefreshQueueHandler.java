@@ -2,6 +2,8 @@ package se.tink.backend.aggregation.queue;
 
 import com.google.inject.Inject;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.RejectedExecutionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +19,7 @@ import se.tink.libraries.metrics.core.MetricId;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 import se.tink.libraries.queue.sqs.EncodingHandler;
 import se.tink.libraries.queue.sqs.QueueMessageAction;
+import se.tink.libraries.rate_limit_service.RateLimitService;
 
 public class AutomaticRefreshQueueHandler implements QueueMessageAction {
     private AgentWorker agentWorker;
@@ -27,6 +30,10 @@ public class AutomaticRefreshQueueHandler implements QueueMessageAction {
     private final MetricRegistry metricRegistry;
     private ClientConfigurationProvider clientConfigurationProvider;
     private final MetricId metricId = MetricId.newId("aggregation_queue_consumes_by_provider");
+
+    private static final ConcurrentHashMap<String, LocalDateTime> rateLimitNotifications =
+            new ConcurrentHashMap<>();
+    private static final int RATE_LIMIT_MINUTES = 5;
 
     @Inject
     public AutomaticRefreshQueueHandler(
@@ -45,6 +52,13 @@ public class AutomaticRefreshQueueHandler implements QueueMessageAction {
     @Override
     public void handle(String message) throws IOException, RejectedExecutionException {
         RefreshInformation refreshInformation = encodingHandler.decode(message);
+        String providerName = refreshInformation.getRequest().getProvider().getName();
+        if (RateLimitService.INSTANCE.hasReceivedRateLimitNotificationRecently(providerName)) {
+            throw new RejectedExecutionException(
+                    String.format(
+                            "Provider %s was rate limited recently. Rejecting execution to requeue.",
+                            providerName));
+        }
         metricRegistry
                 .meter(
                         metricId.label(
