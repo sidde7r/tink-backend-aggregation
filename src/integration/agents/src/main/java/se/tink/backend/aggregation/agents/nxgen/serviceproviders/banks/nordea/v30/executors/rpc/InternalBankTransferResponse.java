@@ -4,12 +4,12 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Date;
-import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.NordeaBaseConstants.PaymentStatus;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.rpc.ErrorResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class InternalBankTransferResponse {
+public class InternalBankTransferResponse extends ErrorResponse {
     @JsonProperty private String id;
     @JsonProperty private String from;
 
@@ -37,17 +37,9 @@ public class InternalBankTransferResponse {
 
     @JsonProperty private String currency;
 
-    @JsonProperty("error_description")
-    private String errorDescription;
-
     @JsonIgnore
     public boolean isTransferAccepted() {
         return status.equalsIgnoreCase(PaymentStatus.PAID)
                 || status.equalsIgnoreCase(PaymentStatus.CONFIRMED);
-    }
-
-    @JsonIgnore
-    public Optional<String> getErrorMessage() {
-        return Optional.ofNullable(errorDescription);
     }
 }

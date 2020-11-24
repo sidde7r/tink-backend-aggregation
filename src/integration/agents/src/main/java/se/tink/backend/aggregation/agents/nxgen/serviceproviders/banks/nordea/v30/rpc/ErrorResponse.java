@@ -12,6 +12,7 @@ import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionE
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException.EndUserMessage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.NordeaBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.NordeaBaseConstants.ErrorCodes;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.NordeaBaseConstants.ErrorMessages;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
@@ -164,6 +165,13 @@ public class ErrorResponse {
     }
 
     @JsonIgnore
+    public boolean isInvalidBankgiroAccount() {
+        return HttpStatus.SC_BAD_REQUEST == httpStatus
+                && ErrorCodes.INVALID_BANKGIRO_ACCOUNT.equalsIgnoreCase(error)
+                && ErrorMessages.INVALID_BANKGIRO_ACCOUNT.equalsIgnoreCase(errorDescription);
+    }
+
+    @JsonIgnore
     public boolean needsToRefreshToken() {
         return tokenRequired() || isInvalidAccessToken();
     }
@@ -212,6 +220,10 @@ public class ErrorResponse {
         }
         if (isUserUnauthorizedError()) {
             throw userUnauthorizedError();
+        }
+
+        if (isInvalidBankgiroAccount()) {
+            throw invalidDestError();
         }
     }
 
