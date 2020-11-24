@@ -180,19 +180,19 @@ public class AgentLoginEventPublisherService {
                             .put(
                                     SessionError.CONSENT_EXPIRED,
                                     AgentLoginCompletedEventProto.AgentLoginCompletedEvent
-                                            .LoginResult.BANK_SERVICE_ERROR_CONSENT_EXPIRED)
+                                            .LoginResult.SESSION_ERROR_CONSENT_EXPIRED)
                             .put(
                                     SessionError.CONSENT_INVALID,
                                     AgentLoginCompletedEventProto.AgentLoginCompletedEvent
-                                            .LoginResult.BANK_SERVICE_ERROR_CONSENT_INVALID)
+                                            .LoginResult.SESSION_ERROR_CONSENT_INVALID)
                             .put(
                                     SessionError.CONSENT_REVOKED,
                                     AgentLoginCompletedEventProto.AgentLoginCompletedEvent
-                                            .LoginResult.BANK_SERVICE_ERROR_CONSENT_REVOKED)
+                                            .LoginResult.SESSION_ERROR_CONSENT_REVOKED)
                             .put(
                                     SessionError.CONSENT_REVOKED_BY_USER,
                                     AgentLoginCompletedEventProto.AgentLoginCompletedEvent
-                                            .LoginResult.BANK_SERVICE_ERROR_CONSENT_REVOKED_BY_USER)
+                                            .LoginResult.SESSION_ERROR_CONSENT_REVOKED_BY_USER)
                             .build();
 
     private static final ImmutableMap<
@@ -265,19 +265,19 @@ public class AgentLoginEventPublisherService {
                             .put(
                                     BankServiceError.CONSENT_EXPIRED,
                                     AgentLoginCompletedEventProto.AgentLoginCompletedEvent
-                                            .LoginResult.BANK_SERVICE_ERROR_CONSENT_EXPIRED)
+                                            .LoginResult.SESSION_ERROR_CONSENT_EXPIRED)
                             .put(
                                     BankServiceError.CONSENT_INVALID,
                                     AgentLoginCompletedEventProto.AgentLoginCompletedEvent
-                                            .LoginResult.BANK_SERVICE_ERROR_CONSENT_INVALID)
+                                            .LoginResult.SESSION_ERROR_CONSENT_INVALID)
                             .put(
                                     BankServiceError.CONSENT_REVOKED_BY_USER,
                                     AgentLoginCompletedEventProto.AgentLoginCompletedEvent
-                                            .LoginResult.BANK_SERVICE_ERROR_CONSENT_REVOKED_BY_USER)
+                                            .LoginResult.SESSION_ERROR_CONSENT_REVOKED_BY_USER)
                             .put(
                                     BankServiceError.CONSENT_REVOKED,
                                     AgentLoginCompletedEventProto.AgentLoginCompletedEvent
-                                            .LoginResult.BANK_SERVICE_ERROR_CONSENT_REVOKED)
+                                            .LoginResult.SESSION_ERROR_CONSENT_REVOKED)
                             .put(
                                     BankServiceError.MULTIPLE_LOGIN,
                                     AgentLoginCompletedEventProto.AgentLoginCompletedEvent
