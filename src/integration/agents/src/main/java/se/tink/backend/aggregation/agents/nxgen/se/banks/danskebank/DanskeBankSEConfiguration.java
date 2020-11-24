@@ -94,33 +94,50 @@ public class DanskeBankSEConfiguration implements DanskeBankConfiguration {
                 .add("2B5")
                 .add("2B6")
                 .add("2B7")
+                .add("2B8")
                 .add("2B9")
+                .add("2B0")
                 .add("2CY")
+                .add("2CZ")
+                .add("2DE")
                 .add("2EH")
                 .add("2EX")
                 .add("3BG")
                 .add("3BH")
+                .add("62C")
                 .build();
     }
 
     @Override
     public List<String> getSavingsAccountTypes() {
         return ImmutableList.<String>builder()
+                .add("2AN")
                 .add("2BP")
                 .add("2CF")
                 .add("2C2")
                 .add("2DC")
+                .add("2DD")
                 .add("2DH")
+                .add("2DI")
                 .add("2EK")
+                .add("2SF")
                 .add("3CA")
+                .add("3CB")
                 .build();
     }
 
     @Override
     public Map<String, Loan.Type> getLoanAccountTypes() {
         return ImmutableMap.<String, Loan.Type>builder()
+                .put("2AT", Loan.Type.OTHER)
+                .put("2CK", Loan.Type.MORTGAGE)
+                .put("2DG", Loan.Type.OTHER)
                 .put("3AC", Loan.Type.MORTGAGE)
+                .put("3AN", Loan.Type.MORTGAGE)
+                .put("3AS", Loan.Type.OTHER)
+                .put("3AT", Loan.Type.OTHER)
                 .put("3BJ", Loan.Type.MORTGAGE)
+                .put("3BK", Loan.Type.MORTGAGE)
                 .build();
     }
 
