@@ -349,6 +349,11 @@ public class NordeaBaseConstants {
                 "An unexpected execution error has occurred".toLowerCase();
         public static final String USER_UNAUTHORIZED = "error_core_unauthorized";
         public static final String USER_UNAUTHORIZED_MESSAGE = "User not authorised to operation";
+        public static final String INVALID_BANKGIRO_ACCOUNT = "BESE1008";
+    }
+
+    public static class ErrorMessages {
+        public static final String INVALID_BANKGIRO_ACCOUNT = "Invalid bankgiro account";
     }
 
     public static class LogTags {
