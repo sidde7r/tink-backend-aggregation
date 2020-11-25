@@ -253,7 +253,11 @@ public class KbcApiClient {
     private <T> T decodeAndDecryptResponse(
             HttpResponse httpResponse, Class<T> responseClass, final byte[] cipherKey) {
         String responseBody = httpResponse.getBody(String.class);
-        logger.info("Response body (first 1000 chars):[" + responseBody.substring(0, 1001) + "]");
+        logger.info(
+                "Response body (first 1000 chars):["
+                        + responseBody.substring(
+                                0, responseBody.length() >= 1000 ? 1000 : responseBody.length())
+                        + "]");
         byte[] cipherBytes = EncodingUtils.decodeBase64String(responseBody);
         byte[] decryptedResponse =
                 AES.decryptCbc(cipherKey, getCipherIv(cipherBytes), getCipherBody(cipherBytes));
@@ -306,7 +310,12 @@ public class KbcApiClient {
                 request != null && encryptAndEncodeRequest
                         ? encryptAndEncodeRequest(request, cipherKey)
                         : SerializationUtils.serializeToString(request);
-        logger.info("Request body (first 1000 chars):[" + completeRequest.substring(0, 1001) + "]");
+        logger.info(
+                "Request body (first 1000 chars):["
+                        + completeRequest.substring(
+                                0,
+                                completeRequest.length() >= 1000 ? 1000 : completeRequest.length())
+                        + "]");
         return request != null
                 ? client.request(url.get())
                         .header(KbcConstants.Headers.ACCEPT_LANG_KEY, requestLocale)
