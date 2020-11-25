@@ -38,9 +38,10 @@ public class SendAccountSourceInfoEventWorkerCommand extends AgentWorkerCommand 
     private void sendSourceInfoEvent(Account account) {
         CredentialsRequest request = context.getRequest();
         AccountSourceInfo accountSourceInfo = account.getSourceInfo();
-        if (Objects.isNull(accountSourceInfo.getBankAccountType())
-                && Objects.isNull(accountSourceInfo.getBankProductCode())
-                && Objects.isNull(accountSourceInfo.getBankProductName())) {
+        if (Objects.isNull(accountSourceInfo)
+                || Objects.isNull(accountSourceInfo.getBankAccountType())
+                        && Objects.isNull(accountSourceInfo.getBankProductCode())
+                        && Objects.isNull(accountSourceInfo.getBankProductName())) {
             return; // don't send source info if there is none
         }
         if (request.getProvider() == null) {
