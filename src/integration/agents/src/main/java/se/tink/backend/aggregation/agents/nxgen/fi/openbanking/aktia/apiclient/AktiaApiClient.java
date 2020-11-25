@@ -5,6 +5,8 @@ import javax.ws.rs.core.MediaType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.HttpStatus;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.apiclient.dto.request.OtpAuthenticationRequestDto;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.apiclient.dto.request.TokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.apiclient.dto.response.AccountsSummaryResponseDto;
@@ -24,6 +26,7 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
@@ -46,13 +49,23 @@ public class AktiaApiClient {
     public TokenResponseDto retrieveAccessToken(String username, String password) {
         final TokenRequest tokenRequest = new TokenRequest(username, password);
 
-        return httpClient
-                .request(createAuthUrl())
-                .body(tokenRequest, MediaType.APPLICATION_FORM_URLENCODED)
-                .header(
-                        HttpHeaders.AUTHORIZATION,
-                        "Basic " + aktiaConfiguration.getBasicAuthHeaderValue())
-                .post(TokenResponseDto.class);
+        try {
+            return httpClient
+                    .request(createAuthUrl())
+                    .body(tokenRequest, MediaType.APPLICATION_FORM_URLENCODED)
+                    .header(
+                            HttpHeaders.AUTHORIZATION,
+                            "Basic " + aktiaConfiguration.getBasicAuthHeaderValue())
+                    .post(TokenResponseDto.class);
+        } catch (HttpResponseException exception) {
+            HttpResponse response = exception.getResponse();
+            String exceptionMessage = response.getBody(String.class);
+            if (exceptionMessage.contains("invalid_grant")
+                    && (response.getStatus() == HttpStatus.SC_BAD_REQUEST)) {
+                throw LoginError.INCORRECT_CREDENTIALS.exception();
+            }
+            throw exception;
+        }
     }
 
     public LoginDetailsResponse getLoginDetails() {

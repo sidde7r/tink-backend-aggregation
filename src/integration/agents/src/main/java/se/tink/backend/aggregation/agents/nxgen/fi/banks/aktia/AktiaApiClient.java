@@ -7,6 +7,7 @@ import javax.ws.rs.core.MultivaluedMap;
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.AktiaConstants.ErrorCodes;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.AktiaConstants.Url;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.authenticator.rpc.AuthenticationIdResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.authenticator.rpc.AuthenticationInitResponse;
@@ -81,7 +82,9 @@ public class AktiaApiClient {
             }
 
             String loginStatus = getFirstHeader(response, AktiaConstants.HttpHeaders.LOGIN_STATUS);
-            if (AktiaConstants.ErrorCodes.INVALID_CREDENTIALS.equalsIgnoreCase(loginStatus)) {
+            String exceptionBody = response.getBody(String.class);
+            if (AktiaConstants.ErrorCodes.INVALID_CREDENTIALS.equalsIgnoreCase(loginStatus)
+                    || exceptionBody.contains(ErrorCodes.INVALID_GRANT)) {
                 throw LoginError.INCORRECT_CREDENTIALS.exception(hre);
             }
 
