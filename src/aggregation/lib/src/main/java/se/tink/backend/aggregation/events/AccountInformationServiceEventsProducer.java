@@ -13,6 +13,8 @@ import se.tink.backend.agents.rpc.HolderRole;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
 import se.tink.backend.aggregation.source_info.AccountSourceInfo;
+import se.tink.eventproducerservice.events.grpc.AccountAggregationRestrictedEventProto;
+import se.tink.eventproducerservice.events.grpc.AccountAggregationRestrictedEventProto.AccountAggregationRestrictedEvent;
 import se.tink.eventproducerservice.events.grpc.AccountHoldersRefreshedEventProto;
 import se.tink.eventproducerservice.events.grpc.AccountSourceInfoEventProto;
 import se.tink.eventproducerservice.events.grpc.Psd2PaymentAccountClassificationEventProto;
@@ -105,11 +107,31 @@ public class AccountInformationServiceEventsProducer {
         if (!eventsEnabled) {
             return;
         }
-        // here we would send event
-        // right now waiting on solving this
-        // https://tink.slack.com/archives/CSK4994QH/p1606146061216800
-        // and this is merged https://github.com/tink-ab/tink-backend-aggregation/pull/9529
         log.info("Sending AggregationRestrictedEvent");
+        try {
+            AccountAggregationRestrictedEvent event =
+                    AccountAggregationRestrictedEventProto.AccountAggregationRestrictedEvent
+                            .newBuilder()
+                            .setClusterId(clusterId)
+                            .setAppId(appId)
+                            .setUserId(userId)
+                            .setProviderName(provider.getName())
+                            .setCorrelationId(correlationId)
+                            .setCredentialsId(credentialsId)
+                            .setAccountId(accountId)
+                            .setAccountType(accountType)
+                            .setRestrictionReason(filterReason)
+                            .build();
+            eventProducerServiceClient.postEventFireAndForget(Any.pack(event));
+
+        } catch (RuntimeException e) {
+            log.warn(
+                    "Could not produce event: AccountAggregationRestrictedEvent for (userId, credentialsId, correlationId): ({}, {}, {})",
+                    userId,
+                    credentialsId,
+                    correlationId,
+                    e);
+        }
     }
 
     public void sendPsd2PaymentAccountClassificationEvent(
