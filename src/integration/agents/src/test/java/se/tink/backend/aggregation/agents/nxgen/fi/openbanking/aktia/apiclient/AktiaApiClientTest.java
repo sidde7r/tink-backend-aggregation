@@ -32,6 +32,7 @@ import javax.ws.rs.core.MediaType;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
+import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.apiclient.dto.request.OtpAuthenticationRequestDto;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.apiclient.dto.request.TokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.apiclient.dto.response.OtpAuthenticationResponseDto;
@@ -45,6 +46,8 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class AktiaApiClientTest {
@@ -92,6 +95,21 @@ public class AktiaApiClientTest {
         final String expectedTokenRequest = getTokenRequest();
         final String actualTokenRequest = tokenRequestCaptor.getValue().getBodyValue();
         assertThat(actualTokenRequest).isEqualTo(expectedTokenRequest);
+    }
+
+    @Test
+    public void shouldThrowIncorrectCredentialsException() {
+        // given
+        setupHttpClientMockForAuthException();
+        // then
+        Throwable thrown =
+                catchThrowable(
+                        () -> aktiaApiClient.retrieveAccessToken(USERNAME, CORRECT_PASSWORD));
+
+        // then
+        assertThat(thrown)
+                .isExactlyInstanceOf(LoginException.class)
+                .hasMessage("Cause: LoginError.INCORRECT_CREDENTIALS");
     }
 
     @Test
@@ -231,6 +249,25 @@ public class AktiaApiClientTest {
         when(httpClientMock.request(new URL(AUTH_TOKEN_URL))).thenReturn(requestBuilderMock);
 
         return requestBuilderMock;
+    }
+
+    private void setupHttpClientMockForAuthException() {
+        final RequestBuilder requestBuilderMock = mock(RequestBuilder.class);
+        when(requestBuilderMock.header(
+                        HttpHeaders.AUTHORIZATION, "Basic " + BASIC_AUTH_HEADER_VALUE))
+                .thenReturn(requestBuilderMock);
+
+        HttpResponse httpResponse = mock(HttpResponse.class);
+
+        when(httpResponse.getStatus()).thenReturn(400);
+        when(httpResponse.getBody(String.class))
+                .thenReturn(
+                        "{\n"
+                                + "  \"error_description\": \"Resource owner authentication failed\",\n"
+                                + "  \"error\": \"invalid_grant\"\n"
+                                + "}");
+        when(httpClientMock.request(new URL(AUTH_TOKEN_URL)))
+                .thenThrow(new HttpResponseException(null, httpResponse));
     }
 
     private RequestBuilder setUpHttpClientMockForApi(String urlString, Object response) {
