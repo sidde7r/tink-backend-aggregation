@@ -89,8 +89,7 @@ public class GroupAccountEntity {
     }
 
     private Portfolio.Type getTinkPortfolioType() {
-        if (type != null
-                && DanskeBankConstants.Investment.CUSTODY_ACCOUNT.equals(type.toLowerCase())) {
+        if (DanskeBankConstants.Investment.CUSTODY_ACCOUNT.equalsIgnoreCase(type)) {
             return Portfolio.Type.DEPOT;
         }
         log.info(
