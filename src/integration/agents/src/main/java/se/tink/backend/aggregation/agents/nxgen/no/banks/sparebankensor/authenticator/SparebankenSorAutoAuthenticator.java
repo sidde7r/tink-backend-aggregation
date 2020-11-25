@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.authenticator;
 
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.SparebankenSorApiClient;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.SparebankenSorConstants;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.SparebankenSorConstants.Storage;
@@ -36,6 +37,8 @@ public class SparebankenSorAutoAuthenticator implements AutoAuthenticator {
             String evryToken = deviceAuthenticationResponse.getDeviceToken();
             sessionStorage.put(Storage.EVRY_TOKEN, evryToken);
             executeLogin(evryToken);
+        } catch (IllegalStateException e) {
+            throw SessionError.SESSION_EXPIRED.exception(e);
         } finally {
             encapClient.saveDevice();
         }

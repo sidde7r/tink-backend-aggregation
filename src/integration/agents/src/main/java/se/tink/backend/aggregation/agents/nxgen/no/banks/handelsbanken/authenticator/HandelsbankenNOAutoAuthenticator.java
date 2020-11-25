@@ -41,6 +41,8 @@ public class HandelsbankenNOAutoAuthenticator implements AutoAuthenticator {
                 throw SessionError.SESSION_EXPIRED.exception();
             }
             executeLogin(evryToken);
+        } catch (IllegalStateException e) {
+            throw SessionError.SESSION_EXPIRED.exception(e);
         } finally {
             encapClient.saveDevice();
         }

@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.utils.authentication.encap3;
 import com.google.common.base.Strings;
 import java.util.Objects;
 import java.util.UUID;
-import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
@@ -12,7 +11,6 @@ import se.tink.backend.aggregation.nxgen.storage.Storage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 // This storage is designed to be compatible with the old encap client.
-@Slf4j
 public class EncapStorage {
     private final PersistentStorage persistentStorage;
     private boolean hasInitiated;
@@ -64,19 +62,18 @@ public class EncapStorage {
     }
 
     private boolean isValid() {
-        return !(checkIsNullOrEmptyAndLog(deviceHash, "DeviceHash")
-                || checkIsNullOrEmptyAndLog(deviceUuid, "DeviceUuid")
-                || checkIsNullOrEmptyAndLog(hardwareId, "HardwareId")
-                || checkIsNullOrEmptyAndLog(saltHash, "SaltHash")
-                || checkIsNullOrEmptyAndLog(username, "Username")
-                || checkIsNullOrEmptyAndLog(clientSaltKeyId, "ClientSaltKeyId")
-                || checkIsNullOrEmptyAndLog(clientSaltKey, "ClientSaltKey")
-                || checkIsNullOrEmptyAndLog(registrationId, "RegistrationId")
-                || checkIsNullOrEmptyAndLog(signingKeyPhrase, "SigningKeyPhrase")
-                || checkIsNullOrEmptyAndLog(samUserId, "SamUserId")
-                || checkIsNullOrEmptyAndLog(authenticationKey, "AuthenticationKey")
-                || checkIsNullOrEmptyAndLog(
-                        authenticationKeyWithoutPin, "AuthenticationKeyWithoutPin"));
+        return !(Strings.isNullOrEmpty(deviceHash)
+                || Strings.isNullOrEmpty(deviceUuid)
+                || Strings.isNullOrEmpty(hardwareId)
+                || Strings.isNullOrEmpty(saltHash)
+                || Strings.isNullOrEmpty(username)
+                || Strings.isNullOrEmpty(clientSaltKeyId)
+                || Strings.isNullOrEmpty(clientSaltKey)
+                || Strings.isNullOrEmpty(registrationId)
+                || Strings.isNullOrEmpty(signingKeyPhrase)
+                || Strings.isNullOrEmpty(samUserId)
+                || Strings.isNullOrEmpty(authenticationKey)
+                || Strings.isNullOrEmpty(authenticationKeyWithoutPin));
     }
 
     public boolean load() {
@@ -85,20 +82,17 @@ public class EncapStorage {
         }
 
         if (!persistentStorage.containsKey(EncapConstants.Storage.PERSISTENT_STORAGE_KEY)) {
-            log.error("Persistent storage does not contain PERSISTENT_STORAGE_KEY");
             return false;
         }
 
         String storageData = persistentStorage.get(EncapConstants.Storage.PERSISTENT_STORAGE_KEY);
         if (Strings.isNullOrEmpty(storageData)) {
-            log.error("Storage data is null or empty");
             return false;
         }
 
         Storage storageStructure =
                 SerializationUtils.deserializeFromString(storageData, SessionStorage.class);
         if (Objects.isNull(storageStructure)) {
-            log.error("Storage structure is null");
             return false;
         }
 
@@ -144,15 +138,6 @@ public class EncapStorage {
 
         // Check that everything is populated
         return isValid();
-    }
-
-    private boolean checkIsNullOrEmptyAndLog(String value, String name) {
-        // Wiski revert this after getting some more information about errors
-        if (Strings.isNullOrEmpty(value)) {
-            log.error("{} is null or empty", name);
-            return true;
-        }
-        return false;
     }
 
     public void save() {
