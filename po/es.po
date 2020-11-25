@@ -1482,7 +1482,7 @@ msgid "CodigoAlfa"
 msgstr "CodigoAlfa"
 
 msgid "CodigoFamilia"
-msgstr "CodigoFamilia\n"
+msgstr "CodigoFamilia"
 
 msgid "CodigoSubFamilia"
 msgstr "CodigoSubFamilia"
@@ -1512,7 +1512,7 @@ msgid "DataInicio"
 msgstr "DataInicio"
 
 msgid "DataFim"
-msgstr "DataFim\n"
+msgstr "DataFim"
 
 msgid "uuid"
 msgstr "uuid"
