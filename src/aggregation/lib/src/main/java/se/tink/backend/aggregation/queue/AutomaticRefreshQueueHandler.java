@@ -45,22 +45,23 @@ public class AutomaticRefreshQueueHandler implements QueueMessageAction {
 
     @Override
     public void handle(String message) throws IOException, RejectedExecutionException {
-        RefreshInformation refreshInformation = encodingHandler.decode(message);
-        String providerName = refreshInformation.getRequest().getProvider().getName();
-        if (RateLimitService.INSTANCE.hasReceivedRateLimitNotificationRecently(providerName)) {
-            throw new RejectedExecutionException(
-                    String.format(
-                            "Provider %s was rate limited recently. Rejecting execution to requeue.",
-                            providerName));
-        }
-        metricRegistry
-                .meter(
-                        metricId.label(
-                                "provider",
-                                refreshInformation.getRequest().getProvider().getName()))
-                .inc();
-
         try {
+            RefreshInformation refreshInformation = encodingHandler.decode(message);
+            MDC.setContextMap(refreshInformation.getMDCContext());
+            String providerName = refreshInformation.getRequest().getProvider().getName();
+            if (RateLimitService.INSTANCE.hasReceivedRateLimitNotificationRecently(providerName)) {
+                throw new RejectedExecutionException(
+                        String.format(
+                                "Provider %s was rate limited recently. Rejecting execution to requeue.",
+                                providerName));
+            }
+            metricRegistry
+                    .meter(
+                            metricId.label(
+                                    "provider",
+                                    refreshInformation.getRequest().getProvider().getName()))
+                    .inc();
+
             ClientInfo clientInfo = null;
             if (refreshInformation.getClientName() != null) {
                 clientInfo =
@@ -94,7 +95,6 @@ public class AutomaticRefreshQueueHandler implements QueueMessageAction {
                     AgentWorkerRefreshOperationCreatorWrapper.of(
                             agentWorkerCommandFactory, refreshInformation.getRequest(), clientInfo);
 
-            MDC.setContextMap(refreshInformation.getMDCContext());
             agentWorker.executeAutomaticRefresh(agentWorkerRefreshOperationCreatorWrapper);
         } catch (RejectedExecutionException rejectedExecution) {
             throw rejectedExecution;
