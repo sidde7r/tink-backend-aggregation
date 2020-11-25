@@ -1,14 +1,12 @@
 package se.tink.backend.aggregation.workers.commands;
 
 import com.google.common.collect.ImmutableMap;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
@@ -42,20 +40,7 @@ public class DataFetchingRestrictionWorkerCommand extends AgentWorkerCommand {
 
             List<AccountTypes> restrictedAccountTypes = getRestrictedAccountTypes(dfRestrictions);
             if (allowRefreshRegardlessOfRestrictions()) {
-                List<Account> restrictedAccounts = new ArrayList<>();
-                this.context
-                        .getAccountDataCache()
-                        .getFilteredAccountData()
-                        .forEach(
-                                accountData -> { // we can't register the filter yet as we need to
-                                    // figure out which accounts have been restricted
-                                    Account account = accountData.getAccount();
-                                    if (restrictedAccountTypes.contains(account.getType())) {
-                                        restrictedAccounts.add(account);
-                                    }
-                                });
-
-                registerAccountFilter(restrictedAccounts, restrictedAccountTypes);
+                registerAccountFilter(restrictedAccountTypes);
             }
             sendRestrictAccountsRequest(restrictedAccountTypes);
 
@@ -70,11 +55,7 @@ public class DataFetchingRestrictionWorkerCommand extends AgentWorkerCommand {
                 .isFeatureEnabled("allowRefreshRegardlessOfRestrictions");
     }
 
-    private void registerAccountFilter(
-            List<Account> restrictedAccounts, List<AccountTypes> restrictedAccountTypes) {
-        if (restrictedAccounts.isEmpty()) {
-            return;
-        }
+    private void registerAccountFilter(List<AccountTypes> restrictedAccountTypes) {
         log.info(
                 "Applying account restriction filter for credentialsId: {}, restricted AccountTypes: {}",
                 context.getRequest().getCredentials().getId(),
