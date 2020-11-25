@@ -24,11 +24,13 @@ public class DefaultResponseStatusHandler implements HttpResponseStatusHandler {
         // force us
         // to handle invalid responses in a unified way (try/catch).
         if (httpResponse.getStatus() >= 400) {
+            HttpResponseException ex =
+                    new HttpResponseException(
+                            detailedExceptionMessage(httpResponse), httpRequest, httpResponse);
             if (httpResponse.getStatus() == 429) {
-                RateLimitService.INSTANCE.notifyRateLimitExceeded(providerName);
+                RateLimitService.INSTANCE.notifyRateLimitExceeded(providerName, ex);
             }
-            throw new HttpResponseException(
-                    detailedExceptionMessage(httpResponse), httpRequest, httpResponse);
+            throw ex;
         }
     }
 

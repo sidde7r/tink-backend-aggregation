@@ -29,9 +29,13 @@ public enum RateLimitService {
         return false;
     }
 
-    public void notifyRateLimitExceeded(String providerName) {
+    public void notifyRateLimitExceeded(String providerName, Exception ex) {
         if (providerName != null) {
-            logger.warn("Received notification that provider {} was rate limited", providerName);
+            logger.warn(
+                    String.format(
+                            "Received notification that provider %s was rate limited",
+                            providerName),
+                    ex);
             rateLimitNotifications.put(providerName, LocalDateTime.now());
         }
     }
