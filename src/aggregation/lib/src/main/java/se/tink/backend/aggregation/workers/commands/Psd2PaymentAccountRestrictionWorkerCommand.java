@@ -17,6 +17,7 @@ import se.tink.backend.aggregation.events.AccountInformationServiceEventsProduce
 import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
+import se.tink.libraries.account_data_cache.FilterReason;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class Psd2PaymentAccountRestrictionWorkerCommand extends AgentWorkerCommand {
@@ -91,7 +92,9 @@ public class Psd2PaymentAccountRestrictionWorkerCommand extends AgentWorkerComma
                         context.getRequest().getCredentials().getId());
                 this.context
                         .getAccountDataCache()
-                        .addFilter(a -> !shouldFilterRestrictedAccount(a));
+                        .addFilter(
+                                a -> !shouldFilterRestrictedAccount(a),
+                                FilterReason.DATA_FETCHING_RESTRICTIONS_PSD2_PAD);
             }
         } catch (RuntimeException e) {
             log.warn("Could not execute Psd2PaymentAccountRestrictionWorkerCommand", e);
@@ -101,7 +104,6 @@ public class Psd2PaymentAccountRestrictionWorkerCommand extends AgentWorkerComma
 
     private void sendEvents(Account account) {
         sendPsd2PaymentAccountClassificationEvent(account);
-        sendSourceInfoEvent(account);
     }
 
     private void sendPsd2PaymentAccountClassificationEvent(Account account) {
@@ -126,22 +128,6 @@ public class Psd2PaymentAccountRestrictionWorkerCommand extends AgentWorkerComma
                                         account.getType().name(),
                                         classification.name(),
                                         account.getCapabilities()));
-    }
-
-    private void sendSourceInfoEvent(Account account) {
-        CredentialsRequest request = context.getRequest();
-        if (request.getProvider() == null) {
-            return;
-        }
-        accountInformationServiceEventsProducer.sendAccountSourceInfoEvent(
-                context.getClusterId(),
-                context.getAppId(),
-                request.getUser().getId(),
-                request.getProvider(),
-                context.getCorrelationId(),
-                request.getCredentials().getId(),
-                account.getId(),
-                account.getSourceInfo());
     }
 
     private void removeRestrictedAccounts(List<Account> restrictedAccounts) {

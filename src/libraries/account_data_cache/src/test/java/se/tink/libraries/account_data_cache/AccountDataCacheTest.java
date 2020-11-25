@@ -47,7 +47,8 @@ public class AccountDataCacheTest {
     public void testFilteredCache() {
         AccountDataCache accountDataCache = new AccountDataCache();
 
-        accountDataCache.addFilter(this::restrictDummyAccount0);
+        accountDataCache.addFilter(
+                this::restrictDummyAccount0, FilterReason.DATA_FETCHING_RESTRICTIONS_ACCOUNT_TYPE);
 
         Account account0 = mockAccount(DUMMY_ACCOUNT_ID_0);
         Account account1 = mockAccount(DUMMY_ACCOUNT_ID_1);

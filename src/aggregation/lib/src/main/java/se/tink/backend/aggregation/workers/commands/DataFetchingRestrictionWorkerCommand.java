@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.RestrictAccounts
 import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
+import se.tink.libraries.account_data_cache.FilterReason;
 import se.tink.libraries.credentials.service.DataFetchingRestrictions;
 
 public class DataFetchingRestrictionWorkerCommand extends AgentWorkerCommand {
@@ -31,37 +32,66 @@ public class DataFetchingRestrictionWorkerCommand extends AgentWorkerCommand {
     @Override
     protected AgentWorkerCommandResult doExecute() throws Exception {
         try {
-            Credentials credentials = context.getRequest().getCredentials();
             List<DataFetchingRestrictions> dfRestrictions =
                     context.getRequest().getDataFetchingRestrictions();
             if (dfRestrictions.isEmpty()) {
                 return AgentWorkerCommandResult.CONTINUE;
             }
 
-            List<AccountTypes> restrictedAccountTypes =
-                    dfRestrictions.stream()
-                            .map(this::mapToAccountType)
-                            .filter(Objects::nonNull)
-                            .collect(Collectors.toList());
-            if (hasCheckingRestriction(dfRestrictions)) {
-                restrictedAccountTypes.add(AccountTypes.OTHER);
+            List<AccountTypes> restrictedAccountTypes = getRestrictedAccountTypes(dfRestrictions);
+            if (allowRefreshRegardlessOfRestrictions()) {
+                registerAccountFilter(restrictedAccountTypes);
             }
+            sendRestrictAccountsRequest(restrictedAccountTypes);
 
-            log.info(
-                    "Sending Restrict Accounts under credentialsId: {}, for the following account types: {}",
-                    credentials.getId(),
-                    restrictedAccountTypes);
-
-            controllerWrapper.restrictAccounts(
-                    new RestrictAccountsRequest()
-                            .setUserId(credentials.getUserId())
-                            .setCredentialsId(credentials.getId())
-                            .setAccountTypes(restrictedAccountTypes));
         } catch (RuntimeException e) {
-            // don't fail refresh if sending information about restricted accounts failed
-            log.warn("Execution of DataFetchingRestrictionWorkerCommand failed", e);
+            log.warn("Could not execute DataFetchingRestrictionWorkerCommand", e);
         }
         return AgentWorkerCommandResult.CONTINUE;
+    }
+
+    private boolean allowRefreshRegardlessOfRestrictions() {
+        return context.getAgentsServiceConfiguration()
+                .isFeatureEnabled("allowRefreshRegardlessOfRestrictions");
+    }
+
+    private void registerAccountFilter(List<AccountTypes> restrictedAccountTypes) {
+        log.info(
+                "Applying account restriction filter for credentialsId: {}, restricted AccountTypes: {}",
+                context.getRequest().getCredentials().getId(),
+                restrictedAccountTypes);
+        this.context
+                .getAccountDataCache()
+                .addFilter(
+                        account -> !restrictedAccountTypes.contains(account.getType()),
+                        FilterReason.DATA_FETCHING_RESTRICTIONS_ACCOUNT_TYPE);
+    }
+
+    private void sendRestrictAccountsRequest(List<AccountTypes> restrictedAccountTypes) {
+        Credentials credentials = context.getRequest().getCredentials();
+        log.info(
+                "Sending Restrict Accounts under credentialsId: {}, for the following account types: {}",
+                credentials.getId(),
+                restrictedAccountTypes);
+
+        controllerWrapper.restrictAccounts(
+                new RestrictAccountsRequest()
+                        .setUserId(credentials.getUserId())
+                        .setCredentialsId(credentials.getId())
+                        .setAccountTypes(restrictedAccountTypes));
+    }
+
+    private List<AccountTypes> getRestrictedAccountTypes(
+            List<DataFetchingRestrictions> dfRestrictions) {
+        List<AccountTypes> restrictedAccountTypes =
+                dfRestrictions.stream()
+                        .map(this::mapToAccountType)
+                        .filter(Objects::nonNull)
+                        .collect(Collectors.toList());
+        if (hasCheckingRestriction(dfRestrictions)) {
+            restrictedAccountTypes.add(AccountTypes.OTHER);
+        }
+        return restrictedAccountTypes;
     }
 
     private boolean hasCheckingRestriction(List<DataFetchingRestrictions> dfRestrictions) {

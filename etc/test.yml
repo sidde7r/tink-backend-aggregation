@@ -24,6 +24,7 @@ agentsServiceConfiguration:
   featureFlags:
     beProxy: false
     esProxy: false
+    allowRefreshRegardlessOfRestrictions: true
   integrations:
     6f4c3c0062b145918fc69afd621be0f1:
       tink:

@@ -63,6 +63,8 @@ import se.tink.backend.aggregation.workers.commands.RefreshItemAgentWorkerComman
 import se.tink.backend.aggregation.workers.commands.ReportProviderMetricsAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.ReportProviderTransferMetricsAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.RequestUserOptInAccountsAgentWorkerCommand;
+import se.tink.backend.aggregation.workers.commands.SendAccountRestrictionEventsWorkerCommand;
+import se.tink.backend.aggregation.workers.commands.SendAccountSourceInfoEventWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.SendAccountsHoldersToUpdateServiceAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.SendAccountsToDataAvailabilityTrackerAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.SendAccountsToUpdateServiceAgentWorkerCommand;
@@ -293,6 +295,9 @@ public class AgentWorkerOperationFactory {
         // We need to reselect and send accounts to system
         if (shouldAddExtraCommands.test(request.getProvider())) {
             commands.add(
+                    new SendAccountSourceInfoEventWorkerCommand(
+                            context, accountInformationServiceEventsProducer));
+            commands.add(
                     new Psd2PaymentAccountRestrictionWorkerCommand(
                             context,
                             request,
@@ -303,6 +308,11 @@ public class AgentWorkerOperationFactory {
                             false));
             commands.add(new DataFetchingRestrictionWorkerCommand(context, controllerWrapper));
             commands.add(new AccountWhitelistRestrictionWorkerCommand(context, request));
+            // SendAccountRestrictionEventsWorkerCommand should be added after all restrictions on
+            // accounts have been made
+            commands.add(
+                    new SendAccountRestrictionEventsWorkerCommand(
+                            context, accountInformationServiceEventsProducer));
             commands.add(
                     new SendAccountsToUpdateServiceAgentWorkerCommand(
                             context, createCommandMetricState(request)));
@@ -439,6 +449,9 @@ public class AgentWorkerOperationFactory {
         commands.addAll(
                 createRefreshAccountsCommands(request, context, request.getItemsToRefresh()));
         commands.add(
+                new SendAccountSourceInfoEventWorkerCommand(
+                        context, accountInformationServiceEventsProducer));
+        commands.add(
                 new Psd2PaymentAccountRestrictionWorkerCommand(
                         context,
                         request,
@@ -449,6 +462,11 @@ public class AgentWorkerOperationFactory {
                         false));
         commands.add(new DataFetchingRestrictionWorkerCommand(context, controllerWrapper));
         commands.add(new AccountWhitelistRestrictionWorkerCommand(context, request));
+        // SendAccountRestrictionEventsWorkerCommand should be added after all restrictions on
+        // accounts have been made
+        commands.add(
+                new SendAccountRestrictionEventsWorkerCommand(
+                        context, accountInformationServiceEventsProducer));
         commands.addAll(
                 createOrderedRefreshableItemsCommands(
                         request, context, request.getItemsToRefresh(), controllerWrapper));
@@ -592,6 +610,9 @@ public class AgentWorkerOperationFactory {
                         createRefreshAccountsCommands(
                                 request, context, RefreshableItem.REFRESHABLE_ITEMS_ALL));
                 commands.add(
+                        new SendAccountSourceInfoEventWorkerCommand(
+                                context, accountInformationServiceEventsProducer));
+                commands.add(
                         new Psd2PaymentAccountRestrictionWorkerCommand(
                                 context,
                                 request,
@@ -602,6 +623,11 @@ public class AgentWorkerOperationFactory {
                                 false));
                 commands.add(new DataFetchingRestrictionWorkerCommand(context, controllerWrapper));
                 commands.add(new AccountWhitelistRestrictionWorkerCommand(context, request));
+                // SendAccountRestrictionEventsWorkerCommand should be added after all restrictions
+                // on accounts have been made
+                commands.add(
+                        new SendAccountRestrictionEventsWorkerCommand(
+                                context, accountInformationServiceEventsProducer));
                 commands.addAll(
                         createOrderedRefreshableItemsCommands(
                                 request,
@@ -660,6 +686,9 @@ public class AgentWorkerOperationFactory {
                     createRefreshAccountsCommands(
                             request, context, RefreshableItem.REFRESHABLE_ITEMS_ALL));
             commands.add(
+                    new SendAccountSourceInfoEventWorkerCommand(
+                            context, accountInformationServiceEventsProducer));
+            commands.add(
                     new Psd2PaymentAccountRestrictionWorkerCommand(
                             context,
                             request,
@@ -670,6 +699,11 @@ public class AgentWorkerOperationFactory {
                             false));
             commands.add(new DataFetchingRestrictionWorkerCommand(context, controllerWrapper));
             commands.add(new AccountWhitelistRestrictionWorkerCommand(context, request));
+            // SendAccountRestrictionEventsWorkerCommand should be added after all restrictions on
+            // accounts have been made
+            commands.add(
+                    new SendAccountRestrictionEventsWorkerCommand(
+                            context, accountInformationServiceEventsProducer));
             commands.addAll(
                     createOrderedRefreshableItemsCommands(
                             request,
@@ -1343,6 +1377,9 @@ public class AgentWorkerOperationFactory {
             commands.addAll(createRefreshAccountsCommands(request, context, accountItems));
 
             commands.add(
+                    new SendAccountSourceInfoEventWorkerCommand(
+                            context, accountInformationServiceEventsProducer));
+            commands.add(
                     new Psd2PaymentAccountRestrictionWorkerCommand(
                             context,
                             request,
@@ -1368,6 +1405,11 @@ public class AgentWorkerOperationFactory {
 
             // Update the accounts on system side
             commands.add(new AccountWhitelistRestrictionWorkerCommand(context, request));
+            // SendAccountRestrictionEventsWorkerCommand should be added after all restrictions on
+            // accounts have been made
+            commands.add(
+                    new SendAccountRestrictionEventsWorkerCommand(
+                            context, accountInformationServiceEventsProducer));
             commands.add(
                     new SendAccountsToUpdateServiceAgentWorkerCommand(
                             context, createCommandMetricState(request)));
