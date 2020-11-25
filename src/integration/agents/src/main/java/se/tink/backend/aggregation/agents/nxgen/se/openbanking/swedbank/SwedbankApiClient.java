@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank;
 
 import java.security.cert.CertificateException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.Date;
@@ -208,7 +208,7 @@ public final class SwedbankApiClient {
     public ConsentRequest createConsentRequest() {
         return new ConsentRequest<>(
                 false,
-                LocalDateTime.now()
+                LocalDate.now()
                         .plusDays(SwedbankConstants.TimeValues.CONSENT_DURATION_IN_DAYS)
                         .toString(),
                 SwedbankConstants.BodyParameter.FREQUENCY_PER_DAY,
@@ -219,7 +219,7 @@ public final class SwedbankApiClient {
     public ConsentRequest createConsentRequest(List<String> list) {
         return new ConsentRequest<>(
                 true,
-                LocalDateTime.now()
+                LocalDate.now()
                         .plusDays(SwedbankConstants.TimeValues.CONSENT_DURATION_IN_DAYS)
                         .toString(),
                 SwedbankConstants.BodyParameter.FREQUENCY_PER_DAY,

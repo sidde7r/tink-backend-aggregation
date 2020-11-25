@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 
 import lombok.Getter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentConstants;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingV31PaymentConstants;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 @Getter
@@ -30,11 +29,9 @@ public class UkOpenBankingPisConfiguration implements UkOpenBankingPisConfig {
     @Override
     public URL getDomesticPaymentConsentURL(String consentId) {
         return pisBaseURL
-                .concat(
-                        UkOpenBankingV31PaymentConstants.ApiServices.Domestic
-                                .PAYMENT_CONSENT_STATUS)
+                .concat(UkOpenBankingPaymentConstants.ApiServices.Domestic.PAYMENT_CONSENT_STATUS)
                 .parameter(
-                        UkOpenBankingV31PaymentConstants.ApiServices.UrlParameterKeys.CONSENT_ID,
+                        UkOpenBankingPaymentConstants.ApiServices.UrlParameterKeys.CONSENT_ID,
                         consentId);
     }
 
@@ -45,7 +42,7 @@ public class UkOpenBankingPisConfiguration implements UkOpenBankingPisConfig {
                         UkOpenBankingPaymentConstants.ApiServices.Domestic
                                 .PAYMENT_FUNDS_CONFIRMATION)
                 .parameter(
-                        UkOpenBankingV31PaymentConstants.ApiServices.UrlParameterKeys.CONSENT_ID,
+                        UkOpenBankingPaymentConstants.ApiServices.UrlParameterKeys.CONSENT_ID,
                         consentId);
     }
 
@@ -59,7 +56,7 @@ public class UkOpenBankingPisConfiguration implements UkOpenBankingPisConfig {
         return pisBaseURL
                 .concat(UkOpenBankingPaymentConstants.ApiServices.Domestic.PAYMENT_STATUS)
                 .parameter(
-                        UkOpenBankingV31PaymentConstants.ApiServices.UrlParameterKeys.PAYMENT_ID,
+                        UkOpenBankingPaymentConstants.ApiServices.UrlParameterKeys.PAYMENT_ID,
                         domesticPaymentId);
     }
 
@@ -73,10 +70,10 @@ public class UkOpenBankingPisConfiguration implements UkOpenBankingPisConfig {
     public URL getDomesticScheduledPaymentConsentURL(String consentId) {
         return pisBaseURL
                 .concat(
-                        UkOpenBankingV31PaymentConstants.ApiServices.DomesticScheduled
+                        UkOpenBankingPaymentConstants.ApiServices.DomesticScheduled
                                 .PAYMENT_CONSENT_STATUS)
                 .parameter(
-                        UkOpenBankingV31PaymentConstants.ApiServices.UrlParameterKeys.CONSENT_ID,
+                        UkOpenBankingPaymentConstants.ApiServices.UrlParameterKeys.CONSENT_ID,
                         consentId);
     }
 
@@ -91,7 +88,7 @@ public class UkOpenBankingPisConfiguration implements UkOpenBankingPisConfig {
         return pisBaseURL
                 .concat(UkOpenBankingPaymentConstants.ApiServices.DomesticScheduled.PAYMENT_STATUS)
                 .parameter(
-                        UkOpenBankingV31PaymentConstants.ApiServices.UrlParameterKeys.PAYMENT_ID,
+                        UkOpenBankingPaymentConstants.ApiServices.UrlParameterKeys.PAYMENT_ID,
                         paymentId);
     }
 }

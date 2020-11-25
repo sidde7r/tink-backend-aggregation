@@ -9,6 +9,7 @@ java_library(
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/worker",
         "//src/integration/credentials/src/main/java/se/tink/libraries/credentials/service",
         "//src/libraries/queue_sqs",
+        "//src/libraries/rate_limit_service",
         "//src/libraries/serialization",
         "//third_party:com_fasterxml_jackson_core_jackson_databind",
         "//third_party:com_google_inject_guice",

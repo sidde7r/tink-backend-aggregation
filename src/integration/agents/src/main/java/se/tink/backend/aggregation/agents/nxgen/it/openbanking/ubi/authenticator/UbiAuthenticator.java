@@ -4,6 +4,7 @@ import java.util.List;
 import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.ubi.UbiConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.AccountFetchingStep;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.AccountsConsentRequestParamsProvider;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.CbiGlobeAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.CbiThirdPartyAppAuthenticationStep;
@@ -40,34 +41,45 @@ public class UbiAuthenticator extends CbiGlobeAuthenticator {
     protected List<AuthenticationStep> getManualAuthenticationSteps() {
         if (manualAuthenticationSteps.isEmpty()) {
             manualAuthenticationSteps.add(new UbiAuthenticationMethodChoiceStep(catalog));
-
-            manualAuthenticationSteps.add(
-                    new UbiUsernamePasswordAuthenticationStep(
-                            consentManager,
-                            strongAuthenticationState,
-                            supplementalRequester,
-                            catalog));
-
-            manualAuthenticationSteps.add(
-                    new CbiThirdPartyAppAuthenticationStep(
-                            new AccountsConsentRequestParamsProvider(
-                                    this, consentManager, strongAuthenticationState),
-                            ConsentType.ACCOUNT,
-                            consentManager,
-                            userState,
-                            strongAuthenticationState));
-
-            manualAuthenticationSteps.add(
-                    new CbiThirdPartyAppAuthenticationStep(
-                            new TransactionsConsentRequestParamsProvider(
-                                    this, consentManager, strongAuthenticationState),
-                            ConsentType.BALANCE_TRANSACTION,
-                            consentManager,
-                            userState,
-                            strongAuthenticationState));
+            addDecoupledManualSteps();
+            addRedirectManualSteps();
         }
 
         return manualAuthenticationSteps;
+    }
+
+    private void addDecoupledManualSteps() {
+        manualAuthenticationSteps.add(
+                new AccountConsentDecoupledStep(
+                        consentManager, strongAuthenticationState, supplementalRequester, catalog));
+
+        manualAuthenticationSteps.add(new AccountFetchingStep(apiClient, userState));
+
+        manualAuthenticationSteps.add(
+                new TransactionConsentDecoupledStep(
+                        consentManager, strongAuthenticationState, userState));
+    }
+
+    private void addRedirectManualSteps() {
+        manualAuthenticationSteps.add(
+                new CbiThirdPartyAppAuthenticationStep(
+                        new AccountsConsentRequestParamsProvider(
+                                this, consentManager, strongAuthenticationState),
+                        ConsentType.ACCOUNT,
+                        consentManager,
+                        userState,
+                        strongAuthenticationState));
+
+        manualAuthenticationSteps.add(new AccountFetchingStep(apiClient, userState));
+
+        manualAuthenticationSteps.add(
+                new CbiThirdPartyAppAuthenticationStep(
+                        new TransactionsConsentRequestParamsProvider(
+                                this, consentManager, strongAuthenticationState),
+                        ConsentType.BALANCE_TRANSACTION,
+                        consentManager,
+                        userState,
+                        strongAuthenticationState));
     }
 
     @Override

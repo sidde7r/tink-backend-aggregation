@@ -273,7 +273,9 @@ public class LegacyTinkHttpClient extends LegacyFilterable<TinkHttpClient>
         setUserAgent(DEFAULTS.DEFAULT_USER_AGENT);
 
         registerJacksonModule(new VavrModule());
-        responseStatusHandler = new DefaultResponseStatusHandler();
+        responseStatusHandler =
+                new DefaultResponseStatusHandler(
+                        this.provider != null ? this.provider.getName() : null);
     }
 
     public LegacyTinkHttpClient() {

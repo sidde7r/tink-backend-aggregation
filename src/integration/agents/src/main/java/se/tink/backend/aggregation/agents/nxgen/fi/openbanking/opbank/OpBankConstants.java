@@ -5,6 +5,7 @@ import java.time.temporal.TemporalUnit;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccountTypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
+import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public final class OpBankConstants {
 
@@ -28,8 +29,12 @@ public final class OpBankConstants {
         public static final String OAUTH_TOKEN = BASE_URL + "/oauth/token";
         public static final String ACCOUNTS_AUTHORIZATION =
                 BASE_URL + "/accounts-psd2/v1/authorizations";
-        public static final String GET_ACCOUNTS = BASE_URL + "/accounts-psd2/v1/accounts";
-        public static final String GET_TRANSACTIONS = GET_ACCOUNTS + "/{accountId}/transactions";
+        public static final URL GET_ACCOUNTS = new URL(BASE_URL + "/accounts-psd2/v1/accounts");
+        public static final URL GET_ACCOUNT_TRANSACTIONS =
+                new URL(GET_ACCOUNTS + "/{accountId}/transactions");
+        public static final URL GET_CREDIT_CARDS = new URL(BASE_URL + "/accounts-psd2/v1/cards");
+        public static final URL GET_CREDIT_CARD_TRANSACTIONS =
+                new URL(GET_CREDIT_CARDS + "/{cardId}/transactions");
 
         public static final String AUTHORIZATION_URL = "https://authorize.op.fi/oauth/authorize";
     }
@@ -37,10 +42,12 @@ public final class OpBankConstants {
     public static class StorageKeys {
         public static final String OAUTH_TOKEN = PersistentStorageKeys.OAUTH_2_TOKEN;
         public static final String ACCOUNT_ID = "accountId";
+        public static final String CARD_ID = "cardId";
     }
 
     public static class IdTags {
         public static final String ACCOUNT_ID = "accountId";
+        public static final String CARD_ID = "cardId";
     }
 
     public static class HeaderKeys {

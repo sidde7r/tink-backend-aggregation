@@ -70,7 +70,7 @@ public class CbiGlobeAuthenticatorTest {
                 (List<AuthenticationStep>) authenticator.authenticationSteps();
 
         // then
-        assertThat(authenticationSteps.size()).isEqualTo(2);
+        assertThat(authenticationSteps.size()).isEqualTo(3);
     }
 
     @Test

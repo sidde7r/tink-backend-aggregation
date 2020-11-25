@@ -17,6 +17,7 @@ import se.tink.libraries.metrics.core.MetricId;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 import se.tink.libraries.queue.sqs.EncodingHandler;
 import se.tink.libraries.queue.sqs.QueueMessageAction;
+import se.tink.libraries.rate_limit_service.RateLimitService;
 
 public class AutomaticRefreshQueueHandler implements QueueMessageAction {
     private AgentWorker agentWorker;
@@ -45,6 +46,13 @@ public class AutomaticRefreshQueueHandler implements QueueMessageAction {
     @Override
     public void handle(String message) throws IOException, RejectedExecutionException {
         RefreshInformation refreshInformation = encodingHandler.decode(message);
+        String providerName = refreshInformation.getRequest().getProvider().getName();
+        if (RateLimitService.INSTANCE.hasReceivedRateLimitNotificationRecently(providerName)) {
+            throw new RejectedExecutionException(
+                    String.format(
+                            "Provider %s was rate limited recently. Rejecting execution to requeue.",
+                            providerName));
+        }
         metricRegistry
                 .meter(
                         metricId.label(

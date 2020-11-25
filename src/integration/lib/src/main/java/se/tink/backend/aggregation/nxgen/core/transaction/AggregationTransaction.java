@@ -69,6 +69,7 @@ public abstract class AggregationTransaction {
         return payload;
     }
 
+    // todo: bszum: pass flag instead of User here
     public Transaction toSystemTransaction(User user) {
         Transaction transaction = new Transaction();
 

@@ -64,7 +64,7 @@ public class ConsentManager {
     }
 
     public ConsentResponse createTransactionsConsent(String state) {
-        GetAccountsResponse getAccountsResponse = apiClient.fetchAccounts();
+        GetAccountsResponse getAccountsResponse = userState.getAccountsResponseFromStorage();
         ConsentRequest consentRequestBalancesTransactions =
                 createConsentRequestBalancesTransactions(getAccountsResponse);
 
@@ -132,8 +132,7 @@ public class ConsentManager {
     private boolean isConsentsProblem(String message) {
         return message.contains(MessageCodes.CONSENT_INVALID.name())
                 || message.contains(MessageCodes.CONSENT_EXPIRED.name())
-                || message.contains(MessageCodes.RESOURCE_UNKNOWN.name())
-                || message.contains(MessageCodes.CONSENT_ALREADY_IN_USE.name());
+                || message.contains(MessageCodes.RESOURCE_UNKNOWN.name());
     }
 
     public ConsentResponse updateAuthenticationMethod() {
@@ -213,8 +212,6 @@ public class ConsentManager {
             log.warn("Authorization failed, consents status is not accepted.", e);
             throw LoginError.INCORRECT_CHALLENGE_RESPONSE.exception(e);
         }
-
-        userState.finishManualAuthenticationStep();
     }
 
     private Retryer<ConsentStatus> getApprovalStatusRetryer() {

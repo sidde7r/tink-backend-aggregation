@@ -39,11 +39,9 @@ public class OpBankTransactionalAccountFetcher
         URL url =
                 Optional.ofNullable(nextUrl)
                         .orElse(
-                                new URL(Urls.GET_TRANSACTIONS)
-                                        .parameter(
-                                                IdTags.ACCOUNT_ID,
-                                                account.getFromTemporaryStorage(
-                                                        StorageKeys.ACCOUNT_ID)));
+                                Urls.GET_ACCOUNT_TRANSACTIONS.parameter(
+                                        IdTags.ACCOUNT_ID,
+                                        account.getFromTemporaryStorage(StorageKeys.ACCOUNT_ID)));
 
         return apiClient.getTransactions(url);
     }

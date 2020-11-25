@@ -45,11 +45,17 @@ i18n_java_source(
     lang = "fi",
 )
 
+i18n_java_source(
+    name = "i18n_es",
+    lang = "es",
+)
+
 java_library(
     name = "i18n",
     srcs = [
         "//po:i18n_da",
         "//po:i18n_de",
+        "//po:i18n_es",
         "//po:i18n_fi",
         "//po:i18n_fr",
         "//po:i18n_it",

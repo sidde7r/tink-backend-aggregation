@@ -1,13 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis;
 
-public interface UkOpenBankingPaymentConstants {
+public class UkOpenBankingPaymentConstants {
 
-    class HttpHeaders {
-        public static final String X_IDEMPOTENCY_KEY = "x-idempotency-key";
-        public static final String X_JWS_SIGNATURE = "x-jws-signature";
+    public static class HttpHeaders {
+        static final String X_IDEMPOTENCY_KEY = "x-idempotency-key";
+        static final String X_JWS_SIGNATURE = "x-jws-signature";
     }
 
-    class ApiServices {
+    public static class ApiServices {
         public static final String PAYMENTS = "/payments";
 
         public static class Domestic {
@@ -34,18 +34,18 @@ public interface UkOpenBankingPaymentConstants {
         }
     }
 
-    class JWTSignatureHeaders {
-        public static class HEADERS {
-            public static final String IAT = "http://openbanking.org.uk/iat";
-            public static final String ISS = "http://openbanking.org.uk/iss";
+    public static class JWTSignatureHeaders {
+        public static class Headers {
+            static final String IAT = "http://openbanking.org.uk/iat";
+            static final String ISS = "http://openbanking.org.uk/iss";
             public static final String TAN = "http://openbanking.org.uk/tan";
-            public static final String B64 = "b64";
-            public static final String CRIT = "crit";
+            static final String B64 = "b64";
+            static final String CRIT = "crit";
         }
 
-        public static class PAYLOAD {
+        public static class Payload {
             public static final String DATA = "Data";
-            public static final String RISK = "Risk";
+            static final String RISK = "Risk";
         }
     }
 }

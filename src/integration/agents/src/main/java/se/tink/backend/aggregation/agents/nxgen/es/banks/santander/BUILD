@@ -27,6 +27,7 @@ java_library(
         "//src/libraries/date",
         "//src/libraries/serialization",
         "//src/libraries/strings",
+        "//third_party:com_google_inject_guice",
         "//third_party:com_sun_jersey_jersey_core",
         "//third_party:commons_httpclient_commons_httpclient",
         "//third_party:org_apache_httpcomponents_httpcore",

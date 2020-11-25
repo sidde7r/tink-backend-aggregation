@@ -5,11 +5,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.api.client.repackaged.com.google.common.base.Strings;
 import lombok.Getter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.executors.entities.PermissionsEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.rpc.ErrorResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 @Getter
-public class BankPaymentResponse {
+public class BankPaymentResponse extends ErrorResponse {
     @JsonProperty private String id;
     @JsonProperty private String from;
 

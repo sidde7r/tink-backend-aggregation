@@ -2,40 +2,115 @@ package se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.authenticato
 
 import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbConstants.MAX_CONSENT_VALIDITY_DAYS;
 
+import com.google.common.base.Strings;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
+import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.CredentialsTypes;
+import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
-import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbStorage;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.authenticator.AutoAuthenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
 @Slf4j
-public class DkbAuthenticator implements PasswordAuthenticator {
+public class DkbAuthenticator implements AutoAuthenticator, MultiFactorAuthenticator {
 
     private final DkbAuthApiClient authApiClient;
     private final DkbSupplementalDataProvider supplementalDataProvider;
     private final DkbStorage storage;
+    private final Credentials credentials;
 
     public DkbAuthenticator(
             DkbAuthApiClient authApiClient,
             DkbSupplementalDataProvider supplementalDataProvider,
-            DkbStorage storage) {
+            DkbStorage storage,
+            Credentials credentials) {
         this.authApiClient = authApiClient;
         this.supplementalDataProvider = supplementalDataProvider;
         this.storage = storage;
+        this.credentials = credentials;
     }
 
     @Override
-    public void authenticate(String username, String password)
-            throws AuthenticationException, AuthorizationException {
+    public CredentialsTypes getType() {
+        return CredentialsTypes.PASSWORD;
+    }
+
+    @Override
+    public void authenticate(Credentials credentials) {
+        String username = credentials.getField(Field.Key.USERNAME);
+        String password = credentials.getField(Field.Key.PASSWORD);
+
+        if (Strings.isNullOrEmpty(username) || Strings.isNullOrEmpty(password)) {
+            throw LoginError.INCORRECT_CREDENTIALS.exception();
+        }
+
         getWso2Token();
         authenticateUser(username, password);
         getConsent();
+    }
+
+    @Override
+    public void autoAuthenticate() {
+        if (!storage.getConsentId().isPresent()) {
+            throw SessionError.SESSION_EXPIRED.exception();
+        }
+
+        // Check validity of wsoToken, one that allows developer portal application to use APIs
+        // If not valid, get a new one
+        if (!storage.getWso2OAuthToken().isValid()) {
+            getWso2Token();
+        }
+
+        Optional<Consent> maybeConsent = Optional.empty();
+        // Check two things at once. It can throw in case of oauth token expiry (token for
+        // retrieving end user data). It doesn't come with expiresAt, so we need to check it by
+        // doing.
+        try {
+            maybeConsent = getExistingConsent();
+        } catch (HttpResponseException e) {
+            if (e.getResponse().getStatus() == 401
+                    && e.getResponse().hasBody()
+                    && e.getResponse().getBody(String.class).contains("TOKEN_EXPIRED")) {
+                getNewAccessTokenForAutoAuthentication();
+                maybeConsent = getExistingConsent();
+            }
+        }
+
+        Consent consent = maybeConsent.orElseThrow(SessionError.SESSION_EXPIRED::exception);
+        if (consent.isExpired()) {
+            throw SessionError.CONSENT_EXPIRED.exception();
+        }
+        if (consent.isRevokedByPsu()) {
+            throw SessionError.CONSENT_REVOKED_BY_USER.exception();
+        }
+        if (!consent.isValid()) {
+            throw SessionError.SESSION_EXPIRED.exception();
+        }
+    }
+
+    private void getNewAccessTokenForAutoAuthentication() {
+        String username = credentials.getField(Field.Key.USERNAME);
+        String password = credentials.getField(Field.Key.PASSWORD);
+        // We try to get a new access token by authenticating with credentials only.
+        // This should not trigger second factor.
+        AuthResult authResult = authenticate1stFactor(username, password);
+        // Give up on autoAuthentication if process not finished, ie. requiring 2nd factor.
+        if (!authResult.isAuthenticated()) {
+            throw SessionError.SESSION_EXPIRED.exception(
+                    "Failed to gather new oauth token during auto authentication.");
+        } else {
+            // Save new accessToken so it will be used for subsequent calls.
+            storage.setAccessToken(authResult.toOAuth2Token());
+        }
     }
 
     private void getWso2Token() throws LoginException {
@@ -116,14 +191,15 @@ public class DkbAuthenticator implements PasswordAuthenticator {
     }
 
     private void getConsent() throws AuthenticationException {
-        Consent consent = getExistingConsent().orElseGet(this::createNewConsent);
+        Consent consent =
+                getExistingConsent().filter(Consent::isValid).orElseGet(this::createNewConsent);
         if (consent.isNotAuthorized()) {
             authorizeConsent(consent.getConsentId());
         }
     }
 
     private Optional<Consent> getExistingConsent() {
-        return storage.getConsentId().map(authApiClient::getConsent).filter(Consent::isValid);
+        return storage.getConsentId().map(authApiClient::getConsent);
     }
 
     private Consent createNewConsent() {

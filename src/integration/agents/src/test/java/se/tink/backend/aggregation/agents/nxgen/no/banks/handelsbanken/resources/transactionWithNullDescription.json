@@ -1,0 +1,32 @@
+{
+    "accountNumber": "123456789",
+    "accountingDate": 1577055600000,
+    "accountingDate_iso8601": "2019-12-23T00:00:00+0100",
+    "amount": -450.0,
+    "amounts": {
+        "executed": {
+            "currency": "NOK",
+            "value": -450.0
+        }
+    },
+    "id": "CDB1234567891DE064D8380",
+    "links": {
+        "details": {
+            "href": "/transactions/enc!!hlXG_vxcvbxcvbkjxhcvbhxcvbhxcvbjkxeu9P/details",
+            "verbs": [
+                "GET"
+            ]
+        },
+        "self": {
+            "href": "/transactions/enc!!hlXG_vxcvbxcvbkjxhcvbhxcvbhxcvbjkxNUCbtW8ieu9P",
+            "verbs": [
+                "GET"
+            ]
+        }
+    },
+    "reserved": false,
+    "sequenceNumber": 380,
+    "type": "default",
+    "typeCode": 53,
+    "typeText": "PRIS"
+}

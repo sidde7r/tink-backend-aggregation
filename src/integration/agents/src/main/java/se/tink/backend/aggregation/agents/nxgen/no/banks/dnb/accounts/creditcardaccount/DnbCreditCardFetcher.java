@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.collections4.CollectionUtils;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.dnb.DnbApiClient;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.dnb.DnbExceptionsHelper;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.dnb.accounts.creditcardaccount.entities.CardEntity;
@@ -22,7 +23,7 @@ public class DnbCreditCardFetcher implements AccountFetcher<CreditCardAccount> {
 
         try {
             List<String> cardIds =
-                    apiClient.listCards().getCreditCards().stream()
+                    CollectionUtils.emptyIfNull(apiClient.listCards().getCreditCards()).stream()
                             .filter(CardEntity::isActive)
                             .map(CardEntity::getCardid)
                             .collect(Collectors.toList());
