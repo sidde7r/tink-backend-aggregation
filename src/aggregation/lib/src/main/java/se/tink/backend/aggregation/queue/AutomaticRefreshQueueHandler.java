@@ -100,6 +100,8 @@ public class AutomaticRefreshQueueHandler implements QueueMessageAction {
             throw rejectedExecution;
         } catch (Exception e) {
             logger.error("Something went wrong with an automatic refresh from sqs.", e);
+        } finally {
+            MDC.clear();
         }
     }
 }
