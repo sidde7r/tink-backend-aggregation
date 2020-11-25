@@ -8,6 +8,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConstants.Account;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConstants.Market;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
@@ -40,7 +41,7 @@ public class GroupAccountEntity {
                                 : accountIdentifier)
                 .setCashBalance(ExactCurrencyAmount.zero(currency))
                 .setAccountNumber(getAccountNumber())
-                .setName(name)
+                .setName(getProperName(configuration))
                 .setPortfolios(portfolios)
                 .canExecuteExternalTransfer(AccountCapabilities.Answer.UNKNOWN)
                 .canReceiveExternalTransfer(AccountCapabilities.Answer.UNKNOWN)
@@ -52,6 +53,15 @@ public class GroupAccountEntity {
                                 .bankProductCode(type)
                                 .build())
                 .build();
+    }
+
+    private String getProperName(DanskeBankConfiguration configuration) {
+        if (configuration.getMarketCode().equals(Market.DK_MARKET)
+                && type.equals(Account.CUSTODY_ACCOUNT_TYPE)
+                && name.equals(Account.EN_CUSTODY_ACCOUNT_NAME)) {
+            return Account.DA_CUSTODY_ACCOUNT_NAME;
+        }
+        return name;
     }
 
     private String getAccountNumber() {

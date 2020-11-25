@@ -148,6 +148,9 @@ public class DanskeBankConstants {
     public static class Account {
         static final String CREDIT_CARD_CODE = "101";
         static final String ALL_INVESTMENTS_GROUP = "Group";
+        public static final String CUSTODY_ACCOUNT_TYPE = "CustodyAccount";
+        public static final String EN_CUSTODY_ACCOUNT_NAME = "Custody Account";
+        public static final String DA_CUSTODY_ACCOUNT_NAME = "Opbevaringsdepot";
     }
 
     public static class Investment {

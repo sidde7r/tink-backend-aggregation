@@ -42,7 +42,7 @@
                         "type": "CustodyAccount",
                         "displayValue": "123456789",
                         "value": "D123456789",
-                        "name": "Opbevaringsdepot"
+                        "name": "Custody Account"
                     },
                     {
                         "custodyAccounts": [
