@@ -23,11 +23,12 @@ public class TransactionsResponse extends TransactionsKeyPaginatorBaseResponse {
 
     @Override
     public String nextKey() {
-        return Optional.ofNullable(getTransactions())
-                .map(TransactionsBaseEntity::getBooked)
-                .orElse(Collections.emptyList())
-                .get(getTransactions().getBooked().size() - 1)
-                .getEntryReference();
+
+        return Optional.ofNullable(getTransactions()).map(TransactionsBaseEntity::getBooked)
+                .orElse(Collections.emptyList()).stream()
+                .findFirst()
+                .map(BookedTransactionBaseEntity::getEntryReference)
+                .orElse(null);
     }
 
     @Override
