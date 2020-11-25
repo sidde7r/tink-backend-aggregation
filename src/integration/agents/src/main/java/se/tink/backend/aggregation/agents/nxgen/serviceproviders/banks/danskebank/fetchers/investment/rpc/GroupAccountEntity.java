@@ -36,7 +36,7 @@ public class GroupAccountEntity {
     public InvestmentAccount toInvestmentAccount(
             String currency, List<Portfolio> portfolios, DanskeBankConfiguration configuration) {
         return InvestmentAccount.builder(
-                        configuration.getMarketCode().equals(Market.SE_MARKET)
+                        Market.SE_MARKET.equals(configuration.getMarketCode())
                                 ? displayAccountIdentifier
                                 : accountIdentifier)
                 .setCashBalance(ExactCurrencyAmount.zero(currency))
@@ -56,9 +56,9 @@ public class GroupAccountEntity {
     }
 
     private String getProperName(DanskeBankConfiguration configuration) {
-        if (configuration.getMarketCode().equals(Market.DK_MARKET)
-                && type.equals(Account.CUSTODY_ACCOUNT_TYPE)
-                && name.equals(Account.EN_CUSTODY_ACCOUNT_NAME)) {
+        if (Market.DK_MARKET.equals(configuration.getMarketCode())
+                && Account.CUSTODY_ACCOUNT_TYPE.equals(type)
+                && Account.EN_CUSTODY_ACCOUNT_NAME.equals(name)) {
             return Account.DA_CUSTODY_ACCOUNT_NAME;
         }
         return name;
@@ -81,7 +81,7 @@ public class GroupAccountEntity {
         portfolio.setRawType(type);
         portfolio.setType(getTinkPortfolioType());
         portfolio.setUniqueIdentifier(
-                configuration.getMarketCode().equals(Market.SE_MARKET)
+                Market.SE_MARKET.equals(configuration.getMarketCode())
                         ? displayAccountIdentifier
                         : accountIdentifier);
         portfolio.setTotalProfit(response.getPerformance().doubleValue());
@@ -89,19 +89,14 @@ public class GroupAccountEntity {
     }
 
     private Portfolio.Type getTinkPortfolioType() {
-        if (type == null) {
-            return Portfolio.Type.OTHER;
+        if (type != null
+                && DanskeBankConstants.Investment.CUSTODY_ACCOUNT.equals(type.toLowerCase())) {
+            return Portfolio.Type.DEPOT;
         }
-
-        switch (type.toLowerCase()) {
-            case DanskeBankConstants.Investment.CUSTODY_ACCOUNT:
-                return Portfolio.Type.DEPOT;
-            default:
-                log.info(
-                        String.format(
-                                "Danske Bank - portfolio info - portfolio name [%s] portfolio type [%s]",
-                                name, type));
-                return Portfolio.Type.OTHER;
-        }
+        log.info(
+                String.format(
+                        "Danske Bank - portfolio info - portfolio name [%s] portfolio type [%s]",
+                        name, type));
+        return Portfolio.Type.OTHER;
     }
 }
