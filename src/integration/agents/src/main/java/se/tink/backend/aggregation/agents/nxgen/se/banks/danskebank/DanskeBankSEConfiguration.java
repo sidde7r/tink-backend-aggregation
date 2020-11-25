@@ -20,7 +20,7 @@ public class DanskeBankSEConfiguration implements DanskeBankConfiguration {
     private static final String SECURITY_SYSTEM = "SV";
     private static final String CLIENT_ID = "5ec4b8ad-a93d-43e1-831c-8e78ee6e661a";
     private static final String CLIENT_SECRET =
-            "pPhT5uRfHtZAagpRxUBnB8nTpqaOzqpEcnc2Lr3mFCzr8SQ2yt";
+            "2cAZCUQGWxm6Eb11pRHBW7CeOgveV9A8cQivaviQHt5qCE156h";
     private static final String APP_VERSION_HEADER = "MobileBank ios SE 17798";
     private static final String DEVICE_SERIAL_NO_KEY = "x-device-serial-no";
     private static final String STEP_UP_TOKEN_KEY = "x-stepup-token";
