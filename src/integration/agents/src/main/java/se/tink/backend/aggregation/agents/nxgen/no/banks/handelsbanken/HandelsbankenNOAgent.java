@@ -168,8 +168,4 @@ public final class HandelsbankenNOAgent extends NextGenerationAgent
     protected SessionHandler constructSessionHandler() {
         return new HandelsbankenNOSessionHandler(apiClient);
     }
-
-    void populateSessionStorage(String key, String value) {
-        this.sessionStorage.put(key, value);
-    }
 }

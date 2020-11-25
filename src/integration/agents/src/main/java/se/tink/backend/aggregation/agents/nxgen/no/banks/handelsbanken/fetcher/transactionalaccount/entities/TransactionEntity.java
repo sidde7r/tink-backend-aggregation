@@ -78,7 +78,10 @@ public class TransactionEntity {
     public Transaction toTinkTransaction() {
         Transaction.Builder transactionBuilder =
                 Transaction.builder()
-                        .setDescription(getTinkFormattedDescription(description.trim()))
+                        .setDescription(
+                                description == null
+                                        ? null
+                                        : getTinkFormattedDescription(description))
                         .setAmount(
                                 ExactCurrencyAmount.of(amount, amounts.getExecuted().getCurrency()))
                         .setDate(accountingDate)
@@ -96,15 +99,16 @@ public class TransactionEntity {
      */
     @JsonIgnore
     public static String getTinkFormattedDescription(String rawDescription) {
+        String trimmedRawDescription = rawDescription.trim();
         String prefixRegex = "^(\\*\\d{4}\\s)?\\d{2}\\.\\d{2}\\s(\\w{3}\\s\\d+\\.\\d{2}\\s)?";
         String suffixRegex = "\\sKurs:\\s\\d+.\\d{4}$";
 
-        String prefixModifiedDescription = rawDescription.replaceAll(prefixRegex, "");
+        String prefixModifiedDescription = trimmedRawDescription.replaceAll(prefixRegex, "");
 
-        if (!prefixModifiedDescription.equalsIgnoreCase(rawDescription)) {
+        if (!prefixModifiedDescription.equalsIgnoreCase(trimmedRawDescription)) {
             return prefixModifiedDescription.replaceAll(suffixRegex, "");
         }
 
-        return rawDescription;
+        return trimmedRawDescription;
     }
 }

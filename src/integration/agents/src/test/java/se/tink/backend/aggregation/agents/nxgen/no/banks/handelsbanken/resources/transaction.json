@@ -1,0 +1,33 @@
+{
+    "accountNumber": "654454566464645",
+    "accountingDate": 1576450800000,
+    "accountingDate_iso8601": "2019-12-16T00:00:00+0100",
+    "amount": -20000.0,
+    "amounts": {
+        "executed": {
+            "currency": "NOK",
+            "value": -20000.0
+        }
+    },
+    "description": " Nettgiro til: Asdzxcv Betalt: 16.12.19",
+    "id": "CDB6544545664646454E420397390",
+    "links": {
+        "details": {
+            "href": "/transactions/enc!!lsNv1sjfdghksjdhfkgsjkdfgkjhs4evkelli9bk9H4IN/details",
+            "verbs": [
+                "GET"
+            ]
+        },
+        "self": {
+            "href": "/transactions/enc!!lsNv1sjfdghksjdhfkgsjkdfgkjhs4evkelli9bk9H4IN",
+            "verbs": [
+                "GET"
+            ]
+        }
+    },
+    "reserved": false,
+    "sequenceNumber": 390,
+    "type": "payment",
+    "typeCode": 201,
+    "typeText": "NETTGIRO MED KID FORFALL I DAG"
+}

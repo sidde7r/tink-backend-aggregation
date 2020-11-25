@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken;
+package se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.agent;
 
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
