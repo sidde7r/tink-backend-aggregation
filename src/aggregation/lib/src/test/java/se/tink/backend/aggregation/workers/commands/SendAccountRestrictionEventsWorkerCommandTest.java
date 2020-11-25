@@ -87,7 +87,7 @@ public class SendAccountRestrictionEventsWorkerCommandTest {
         context.getAccountDataCache()
                 .addFilter(
                         a -> a.getType() != AccountTypes.CHECKING,
-                        FilterReason.DATA_FETCHING_RESTRICTIONS);
+                        FilterReason.DATA_FETCHING_RESTRICTIONS_ACCOUNT_TYPE);
         context.getAccountDataCache()
                 .addFilter(a -> !a.getBankId().equals("s1"), FilterReason.OPT_IN);
         SendAccountRestrictionEventsWorkerCommand command =
@@ -114,8 +114,8 @@ public class SendAccountRestrictionEventsWorkerCommandTest {
         List<String> values = argument.getAllValues();
         assertThat(values)
                 .containsExactlyInAnyOrder(
-                        FilterReason.DATA_FETCHING_RESTRICTIONS.name(),
-                        FilterReason.DATA_FETCHING_RESTRICTIONS.name(),
+                        FilterReason.DATA_FETCHING_RESTRICTIONS_ACCOUNT_TYPE.name(),
+                        FilterReason.DATA_FETCHING_RESTRICTIONS_ACCOUNT_TYPE.name(),
                         FilterReason.OPT_IN.name());
     }
 

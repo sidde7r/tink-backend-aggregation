@@ -94,7 +94,7 @@ public class Psd2PaymentAccountRestrictionWorkerCommand extends AgentWorkerComma
                         .getAccountDataCache()
                         .addFilter(
                                 a -> !shouldFilterRestrictedAccount(a),
-                                FilterReason.DATA_FETCHING_RESTRICTIONS);
+                                FilterReason.DATA_FETCHING_RESTRICTIONS_PSD2_PAD);
             }
         } catch (RuntimeException e) {
             log.warn("Could not execute Psd2PaymentAccountRestrictionWorkerCommand", e);

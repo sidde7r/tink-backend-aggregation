@@ -83,7 +83,7 @@ public class DataFetchingRestrictionWorkerCommand extends AgentWorkerCommand {
                 .getAccountDataCache()
                 .addFilter(
                         account -> !restrictedAccountTypes.contains(account.getType()),
-                        FilterReason.DATA_FETCHING_RESTRICTIONS);
+                        FilterReason.DATA_FETCHING_RESTRICTIONS_ACCOUNT_TYPE);
     }
 
     private void sendRestrictAccountsRequest(List<AccountTypes> restrictedAccountTypes) {
