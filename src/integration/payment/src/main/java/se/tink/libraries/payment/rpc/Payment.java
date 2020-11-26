@@ -16,6 +16,7 @@ import se.tink.libraries.enums.MarketCode;
 import se.tink.libraries.pair.Pair;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.enums.PaymentType;
+import se.tink.libraries.payments.common.model.PaymentScheme;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 public class Payment {
@@ -54,6 +55,7 @@ public class Payment {
     private PaymentStatus status;
     private PaymentType type;
     private String currency;
+    private PaymentScheme paymentScheme;
     /** @deprecated (20200828, remittanceInforation should be used instead, to be removed later) */
     @Deprecated private Reference reference;
 
@@ -72,6 +74,7 @@ public class Payment {
         this.reference = builder.reference;
         this.id = UUID.randomUUID();
         this.remittanceInformation = builder.remittanceInformation;
+        this.paymentScheme = builder.paymentScheme;
     }
 
     /*
@@ -171,6 +174,10 @@ public class Payment {
         return reference;
     }
 
+    public PaymentScheme getPaymentScheme() {
+        return paymentScheme;
+    }
+
     public RemittanceInformation getRemittanceInformation() {
         return remittanceInformation;
     }
@@ -235,6 +242,7 @@ public class Payment {
         @Deprecated private Reference reference;
 
         private RemittanceInformation remittanceInformation;
+        private PaymentScheme paymentScheme;
 
         public Builder withCreditor(Creditor creditor) {
             this.creditor = creditor;
@@ -295,6 +303,11 @@ public class Payment {
         @Deprecated
         public Builder withReference(Reference reference) {
             this.reference = reference;
+            return this;
+        }
+
+        public Builder withPaymentScheme(PaymentScheme paymentScheme) {
+            this.paymentScheme = paymentScheme;
             return this;
         }
 
