@@ -7,11 +7,7 @@ junit_test(
         exclude = ["agent/**/*.java"],
     ),
     data = [
-        "//:agent_test_data",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/banks/n26/resources",
-    ],
-    tags = [
-        "external",
     ],
     visibility = ["//visibility:public"],
     deps = [

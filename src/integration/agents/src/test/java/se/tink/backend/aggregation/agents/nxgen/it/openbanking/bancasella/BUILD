@@ -5,6 +5,8 @@ junit_test(
     srcs = glob(["**/*.java"]),
     data = ["//:agent_test_data"],
     tags = [
+        "external",
+        "manual",
     ],
     visibility = ["//visibility:public"],
     deps = [

@@ -4,7 +4,6 @@ junit_test(
     name = "cmcic",
     srcs = glob(["**/*.java"]),
     data = [
-        "//data:aggregation_test",
     ],
     visibility = ["//visibility:public"],
     deps = [

@@ -5,9 +5,6 @@ junit_test(
     srcs = glob(["*.java"]),
     data = [
         "//data:agents",
-        "//data:aggregation_test",
-        "//data:provider_configurations",
-        "//etc:development",
     ],
     visibility = ["//visibility:public"],
     runtime_deps = ["//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/uk/openbanking/starling"],

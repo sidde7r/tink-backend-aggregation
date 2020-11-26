@@ -2,10 +2,12 @@ load("//tools/bzl:junit.bzl", "junit_test")
 
 junit_test(
     name = "sodexo",
-    srcs = glob(["**/*.java"]),
+    srcs = glob(
+        ["**/*.java"],
+        exclude = ["agent/**/*.java"],
+    ),
     data = [
         "resource",
-        "//:agent_test_data",
     ],
     visibility = ["//visibility:public"],
     deps = [

@@ -28,12 +28,10 @@ junit_test(
         exclude = ["manual/**/*.java"],
     ),
     data = [
-        "//data:aggregation_test",
         "//data:provider_configurations",
     ],
     visibility = ["//visibility:public"],
     runtime_deps = [
-        "//third_party:asm_asm",
     ],
     deps = [
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/amex",

@@ -26,12 +26,9 @@ junit_test(
         exclude = ["agents/**/*.java"],
     ),
     data = [
-        "//data:aggregation_test",
-        "//data:provider_configurations",
     ],
     visibility = ["//visibility:public"],
     runtime_deps = [
-        "//third_party:asm_asm",
     ],
     deps = [
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/agents_platform/agents_framework",

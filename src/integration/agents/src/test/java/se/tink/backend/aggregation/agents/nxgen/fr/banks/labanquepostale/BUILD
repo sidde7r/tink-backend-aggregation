@@ -35,10 +35,6 @@ junit_test(
         ],
     ),
     data = [
-        "//etc:development",
-    ],
-    tags = [
-        "external",
     ],
     visibility = ["//visibility:public"],
     deps = [

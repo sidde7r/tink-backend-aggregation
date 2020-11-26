@@ -29,9 +29,6 @@ junit_test(
         ["**/*.java"],
         exclude = ["agent/*.java"],
     ),
-    tags = [
-        "external",
-    ],
     visibility = ["//visibility:public"],
     deps = [
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/fi/openbanking/danskebank",

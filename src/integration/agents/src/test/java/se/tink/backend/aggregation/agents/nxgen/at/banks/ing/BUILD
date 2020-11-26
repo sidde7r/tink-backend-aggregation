@@ -9,6 +9,10 @@ junit_test(
         "//data:provider_configurations",
         "//etc:development",
     ],
+    tags = [
+        "external",
+        "manual",
+    ],
     visibility = ["//visibility:public"],
     deps = [
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",

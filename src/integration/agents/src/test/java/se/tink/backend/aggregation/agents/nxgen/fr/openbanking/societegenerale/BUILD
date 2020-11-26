@@ -10,7 +10,6 @@ junit_test(
         ],
     ),
     data = [
-        "//data:aggregation_test",
     ],
     visibility = ["//visibility:public"],
     deps = [

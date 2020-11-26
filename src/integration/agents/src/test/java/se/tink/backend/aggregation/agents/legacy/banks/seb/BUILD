@@ -4,10 +4,6 @@ junit_test(
     name = "seb",
     srcs = glob(["**/*.java"]),
     data = [
-        "//data:agents",
-        "//data:aggregation_test",
-        "//data:provider_configurations",
-        "//etc:development",
     ],
     visibility = ["//visibility:public"],
     deps = [

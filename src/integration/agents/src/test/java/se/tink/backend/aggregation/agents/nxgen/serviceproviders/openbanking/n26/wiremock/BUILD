@@ -4,9 +4,6 @@ junit_test(
     name = "n26_mock",
     srcs = glob(["*.java"]),
     data = [
-        "//data:aggregation_test",
-        "//data:provider_configurations",
-        "//etc:development",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/n26/wiremock/resources",
     ],
     visibility = ["//visibility:public"],

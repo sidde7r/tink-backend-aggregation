@@ -4,9 +4,6 @@ junit_test(
     name = "filter",
     srcs = glob(["*.java"]),
     data = [
-        "//data:aggregation_test",
-        "//data:provider_configurations",
-        "//etc:development",
     ],
     visibility = ["//visibility:public"],
     deps = [

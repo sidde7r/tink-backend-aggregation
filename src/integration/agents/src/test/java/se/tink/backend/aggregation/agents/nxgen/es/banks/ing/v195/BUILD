@@ -4,9 +4,6 @@ junit_test(
     name = "v195",
     srcs = glob(["**/*.java"]),
     data = [
-        "//data:aggregation_test",
-        "//data:provider_configurations",
-        "//etc:development",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/es/banks/ing/v195/resources",
     ],
     visibility = ["//visibility:public"],
