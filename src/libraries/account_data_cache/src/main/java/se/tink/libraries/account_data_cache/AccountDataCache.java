@@ -125,10 +125,13 @@ public class AccountDataCache {
                                             filterReasons.add(filterReason);
                                         }
                                     });
-                            filteredOutAccountData.add(Pair.of(accountData, filterReasons));
+                            if (!filterReasons.isEmpty()) {
+                                filteredOutAccountData.add(Pair.of(accountData, filterReasons));
+                            }
                         });
         LOGGER.info(
-                "getFilteredOutAccountDataWithFilterReason:size {}", filteredOutAccountData.size());
+                "getFilteredOutAccountDataWithFilterReason - size {}",
+                filteredOutAccountData.size());
         return filteredOutAccountData;
     }
 
