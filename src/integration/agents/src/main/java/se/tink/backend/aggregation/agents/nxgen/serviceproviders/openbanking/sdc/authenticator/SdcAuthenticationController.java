@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sdc.authenticator;
 
 import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -77,6 +78,7 @@ public class SdcAuthenticationController
                 stringStringMap.orElseThrow(LoginError.INCORRECT_CREDENTIALS::exception);
 
         String code = callbackData.getOrDefault("code", null);
+        checkForErrorsInCallback(callbackData);
         Preconditions.checkNotNull(code);
 
         OAuth2Token accessToken = authenticator.exchangeAuthorizationCode(code);
@@ -86,6 +88,15 @@ public class SdcAuthenticationController
 
         authenticator.useAccessToken(accessToken);
         return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.DONE);
+    }
+
+    private void checkForErrorsInCallback(Map<String, String> callbackData) {
+        String errorType = callbackData.get("error");
+        if (!Strings.isNullOrEmpty(errorType)) {
+            String errorDescription = callbackData.get("error_description");
+            throw LoginError.DEFAULT_MESSAGE.exception(
+                    errorType + " received in callback data with description: " + errorDescription);
+        }
     }
 
     public ThirdPartyAppAuthenticationPayload getAppPayload() {
