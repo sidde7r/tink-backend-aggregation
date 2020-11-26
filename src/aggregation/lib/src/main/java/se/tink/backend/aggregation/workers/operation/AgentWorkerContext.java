@@ -450,6 +450,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         updateAccountRequest.setAvailableBalance(account.getAvailableBalance());
         updateAccountRequest.setCreditLimit(account.getCreditLimit());
         updateAccountRequest.setOperationId(request.getOperationId());
+        updateAccountRequest.setCorrelationId(getCorrelationId());
 
         Account updatedAccount;
         try {
