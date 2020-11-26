@@ -323,11 +323,11 @@ def main():
 
         # Check if there are any providers in the metrics that don't have an corresponding component
         # OBS! Do not change order of the comparison since it gives what is available in the first set but not the last
-        missing_components = set(provider_logins.keys()).difference(set(components.keys()))
-        if missing_components != set():
-            if create_missing_components(missing_components, group_id) == 422:
-                logger.info("Rate limited by Statuspage, waiting...")
-                time.sleep(5)
+        # missing_components = set(provider_logins.keys()).difference(set(components.keys()))
+        # if missing_components != set():
+        #     if create_missing_components(missing_components, group_id) == 422:
+        #         logger.info("Rate limited by Statuspage, waiting...")
+        #         time.sleep(5)
 
     logger.info("Cronjob ran successfully")
     return 0
