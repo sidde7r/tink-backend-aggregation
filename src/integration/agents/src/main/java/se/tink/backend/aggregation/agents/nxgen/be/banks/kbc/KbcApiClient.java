@@ -253,15 +253,11 @@ public class KbcApiClient {
     private <T> T decodeAndDecryptResponse(
             HttpResponse httpResponse, Class<T> responseClass, final byte[] cipherKey) {
         String responseBody = httpResponse.getBody(String.class);
-        logger.info(
-                "Response body (first 1000 chars):["
-                        + responseBody.substring(
-                                0, responseBody.length() >= 1000 ? 1000 : responseBody.length())
-                        + "]");
         byte[] cipherBytes = EncodingUtils.decodeBase64String(responseBody);
         byte[] decryptedResponse =
                 AES.decryptCbc(cipherKey, getCipherIv(cipherBytes), getCipherBody(cipherBytes));
         String response = new String(decryptedResponse, Charsets.UTF_8);
+        logBody("Response body", response);
         return deserializeFromString(response, responseClass);
     }
 
@@ -310,12 +306,7 @@ public class KbcApiClient {
                 request != null && encryptAndEncodeRequest
                         ? encryptAndEncodeRequest(request, cipherKey)
                         : SerializationUtils.serializeToString(request);
-        logger.info(
-                "Request body (first 1000 chars):["
-                        + completeRequest.substring(
-                                0,
-                                completeRequest.length() >= 1000 ? 1000 : completeRequest.length())
-                        + "]");
+        logBody("Request body", SerializationUtils.serializeToString(request));
         return request != null
                 ? client.request(url.get())
                         .header(KbcConstants.Headers.ACCEPT_LANG_KEY, requestLocale)
@@ -803,5 +794,12 @@ public class KbcApiClient {
                 post(Url.ASSETS_DETAIL, assetJarsDto, AssetsDetailResponse.class, cipherKey);
         verifyDoubleZeroResponseCode(response.getHeader());
         return response;
+    }
+
+    private void logBody(String messageDescription, String body) {
+        logger.info(
+                messageDescription
+                        + " (first 1000 chars):["
+                        + body.substring(0, body.length() >= 1000 ? 1000 : body.length()));
     }
 }
