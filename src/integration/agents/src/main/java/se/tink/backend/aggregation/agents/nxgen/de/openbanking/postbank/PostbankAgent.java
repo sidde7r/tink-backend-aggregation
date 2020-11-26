@@ -34,7 +34,8 @@ public final class PostbankAgent extends DeutscheBankAgent {
     @Override
     protected Authenticator constructAuthenticator() {
         final PostbankAuthenticator postbankAuthenticator =
-                new PostbankAuthenticator((PostbankApiClient) apiClient, persistentStorage);
+                new PostbankAuthenticator(
+                        (PostbankApiClient) apiClient, persistentStorage, credentials);
 
         PostbankAuthenticationController postbankAuthenticationController =
                 new PostbankAuthenticationController(

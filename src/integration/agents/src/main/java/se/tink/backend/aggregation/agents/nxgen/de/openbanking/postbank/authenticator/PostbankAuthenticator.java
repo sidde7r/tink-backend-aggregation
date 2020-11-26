@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authent
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
@@ -9,7 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.Postbank
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenticator.rpc.AuthorisationResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.StorageKeys;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.rpc.ConsentStatusResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.rpc.ConsentDetailsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.authenticator.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
@@ -20,6 +21,7 @@ public final class PostbankAuthenticator implements AutoAuthenticator {
 
     private final PostbankApiClient apiClient;
     private final PersistentStorage persistentStorage;
+    private final Credentials credentials;
 
     AuthorisationResponse init(String username, String password)
             throws AuthenticationException, AuthorizationException {
@@ -51,9 +53,15 @@ public final class PostbankAuthenticator implements AutoAuthenticator {
 
     @Override
     public void autoAuthenticate() {
-        ConsentStatusResponse consentStatus = apiClient.getConsentStatus();
-        if (!consentStatus.isValid()) {
+        ConsentDetailsResponse consentDetailsResponse = apiClient.getConsentDetails();
+        if (!consentDetailsResponse.isValid()) {
             throw SessionError.SESSION_EXPIRED.exception();
         }
+        credentials.setSessionExpiryDate(consentDetailsResponse.getValidUntil());
+    }
+
+    public void storeConsentDetails() {
+        ConsentDetailsResponse consentDetailsResponse = apiClient.getConsentDetails();
+        credentials.setSessionExpiryDate(consentDetailsResponse.getValidUntil());
     }
 }

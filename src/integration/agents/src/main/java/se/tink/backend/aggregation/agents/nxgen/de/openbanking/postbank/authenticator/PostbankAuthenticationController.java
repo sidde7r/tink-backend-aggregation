@@ -89,6 +89,15 @@ public class PostbankAuthenticationController implements TypedAuthenticator {
                             initValues.getLinks().getScaStatus().getHref());
         }
 
+        authenticateUsingChosenScaMethod(credentials, username, initValues, chosenScaMethod);
+        authenticator.storeConsentDetails();
+    }
+
+    private void authenticateUsingChosenScaMethod(
+            Credentials credentials,
+            String username,
+            AuthorisationResponse initValues,
+            ScaMethod chosenScaMethod) {
         switch (chosenScaMethod.getAuthenticationType().toUpperCase()) {
             case PUSH_OTP:
                 finishWithAcceptingPush(initValues, username, credentials);
