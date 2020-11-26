@@ -203,6 +203,12 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
     }
 
     private boolean isNotAllowedToRefreshItem() {
+        // if non-account then we just want to fetch if it's not restricted
+        if (!RefreshableItem.isAccount(item)) {
+            return customerDataFetchingRestrictions.shouldBeRestricted(
+                    item, dataFetchingRestrictions);
+        }
+        // if account then we may want to fetch regardless if it's restricted (to send some events)
         boolean allowRefreshRegardlessOfRestrictions =
                 context.getAgentsServiceConfiguration()
                         .isFeatureEnabled("allowRefreshRegardlessOfRestrictions");
