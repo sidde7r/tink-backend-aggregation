@@ -36,7 +36,7 @@ public class FabricPaymentExecutor implements PaymentExecutor, FetchablePaymentE
 
     private final FabricApiClient apiClient;
     private final List<PaymentResponse> paymentResponses = new ArrayList<>();
-    private final SessionStorage sessionStorage;
+    private final FabricPaymentSessionStorage sessionStorage;
     private final StrongAuthenticationState strongAuthenticationState;
     private final FabricPaymentController fabricPaymentController;
     private static final Logger logger = LoggerFactory.getLogger(FabricPaymentExecutor.class);
@@ -47,7 +47,7 @@ public class FabricPaymentExecutor implements PaymentExecutor, FetchablePaymentE
             SessionStorage sessionStorage,
             StrongAuthenticationState strongAuthenticationState) {
         this.apiClient = apiClient;
-        this.sessionStorage = sessionStorage;
+        this.sessionStorage = new FabricPaymentSessionStorage(sessionStorage);
         this.strongAuthenticationState = strongAuthenticationState;
         this.fabricPaymentController =
                 new FabricPaymentController(
@@ -72,6 +72,7 @@ public class FabricPaymentExecutor implements PaymentExecutor, FetchablePaymentE
         sessionStorage.put(
                 FabricConstants.HeaderKeys.PSU_IP_ADDRESS, paymentRequest.getOriginatingUserIp());
 
+        sessionStorage.updatePaymentProductIfNeeded(paymentRequest.getPayment());
         AccountEntity creditorEntity = AccountEntity.creditorOf(paymentRequest);
         AccountEntity debtorEntity = AccountEntity.debtorOf(paymentRequest);
         InstructedAmountEntity instructedAmountEntity = InstructedAmountEntity.of(paymentRequest);
