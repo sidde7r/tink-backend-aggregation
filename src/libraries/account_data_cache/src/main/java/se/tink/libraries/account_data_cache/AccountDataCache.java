@@ -108,24 +108,27 @@ public class AccountDataCache {
                 .findFirst();
     }
 
-    public List<Pair<AccountData, FilterReason>> getFilteredOutAccountDataWithFilterReason() {
-        List<Pair<AccountData, FilterReason>> filteredOutAccountData = new ArrayList<>();
+    public List<Pair<AccountData, List<FilterReason>>> getFilteredOutAccountDataWithFilterReason() {
+        List<Pair<AccountData, List<FilterReason>>> filteredOutAccountData = new ArrayList<>();
         accountDataByBankAccountId
                 .values()
                 .forEach(
-                        accountData ->
-                                accountFilters.forEach(
-                                        accountFilterData -> {
-                                            Predicate<Account> filter = accountFilterData.getLeft();
-                                            FilterReason filterReason =
-                                                    accountFilterData.getRight();
-                                            boolean shouldFilterOut =
-                                                    !filter.test(accountData.getAccount());
-                                            if (shouldFilterOut) {
-                                                filteredOutAccountData.add(
-                                                        Pair.of(accountData, filterReason));
-                                            }
-                                        }));
+                        accountData -> {
+                            List<FilterReason> filterReasons = new ArrayList<>();
+                            accountFilters.forEach(
+                                    accountFilterData -> {
+                                        Predicate<Account> filter = accountFilterData.getLeft();
+                                        FilterReason filterReason = accountFilterData.getRight();
+                                        boolean shouldFilterOut =
+                                                !filter.test(accountData.getAccount());
+                                        if (shouldFilterOut) {
+                                            filterReasons.add(filterReason);
+                                        }
+                                    });
+                            filteredOutAccountData.add(Pair.of(accountData, filterReasons));
+                        });
+        LOGGER.info(
+                "getFilteredOutAccountDataWithFilterReason:size {}", filteredOutAccountData.size());
         return filteredOutAccountData;
     }
 

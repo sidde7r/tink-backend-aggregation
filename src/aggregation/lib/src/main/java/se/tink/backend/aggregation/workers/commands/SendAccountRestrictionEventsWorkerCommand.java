@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.workers.commands;
 
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Account;
@@ -32,11 +33,13 @@ public class SendAccountRestrictionEventsWorkerCommand extends AgentWorkerComman
                             filteredOutAccountData -> {
                                 Account filteredOutAccount =
                                         filteredOutAccountData.getLeft().getAccount();
-                                FilterReason filterReason = filteredOutAccountData.getRight();
-                                sendAccountAggregationRestrictedEvent(
-                                        filteredOutAccount, filterReason);
+                                List<FilterReason> filterReasons =
+                                        filteredOutAccountData.getRight();
+                                filterReasons.forEach(
+                                        reason ->
+                                                sendAccountAggregationRestrictedEvent(
+                                                        filteredOutAccount, reason));
                             });
-
         } catch (RuntimeException e) {
             log.warn("Could not execute SendAccountRestrictionEventsWorkerCommand", e);
         }
@@ -45,6 +48,9 @@ public class SendAccountRestrictionEventsWorkerCommand extends AgentWorkerComman
 
     private void sendAccountAggregationRestrictedEvent(
             Account restrictedAccount, FilterReason filterReason) {
+        log.info(
+                "Preparing to send AccountAggregationRestrictedEvent for {}",
+                restrictedAccount.getId());
         CredentialsRequest request = context.getRequest();
         if (request.getProvider() == null) {
             return;
