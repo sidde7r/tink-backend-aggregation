@@ -27,6 +27,7 @@ public class SendAccountRestrictionEventsWorkerCommand extends AgentWorkerComman
     @Override
     protected AgentWorkerCommandResult doExecute() throws Exception {
         try {
+            log.info("Executing SendAccountRestrictionEventsWorkerCommand");
             context.getAccountDataCache()
                     .getFilteredOutAccountDataWithFilterReason()
                     .forEach(
