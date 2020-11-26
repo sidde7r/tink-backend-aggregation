@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.utils.authentication.encap3;
 import com.google.common.base.Strings;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.stream.Stream;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
@@ -62,18 +63,20 @@ public class EncapStorage {
     }
 
     private boolean isValid() {
-        return !(Strings.isNullOrEmpty(deviceHash)
-                || Strings.isNullOrEmpty(deviceUuid)
-                || Strings.isNullOrEmpty(hardwareId)
-                || Strings.isNullOrEmpty(saltHash)
-                || Strings.isNullOrEmpty(username)
-                || Strings.isNullOrEmpty(clientSaltKeyId)
-                || Strings.isNullOrEmpty(clientSaltKey)
-                || Strings.isNullOrEmpty(registrationId)
-                || Strings.isNullOrEmpty(signingKeyPhrase)
-                || Strings.isNullOrEmpty(samUserId)
-                || Strings.isNullOrEmpty(authenticationKey)
-                || Strings.isNullOrEmpty(authenticationKeyWithoutPin));
+        return Stream.of(
+                        deviceHash,
+                        deviceUuid,
+                        hardwareId,
+                        saltHash,
+                        username,
+                        clientSaltKeyId,
+                        clientSaltKey,
+                        registrationId,
+                        signingKeyPhrase,
+                        samUserId,
+                        authenticationKey,
+                        authenticationKeyWithoutPin)
+                .noneMatch(Strings::isNullOrEmpty);
     }
 
     public boolean load() {
