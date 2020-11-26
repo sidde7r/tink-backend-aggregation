@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.utils.authentication.encap3;
 
-import java.util.Optional;
 import javax.annotation.Nullable;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.contexts.CompositeAgentContext;
@@ -117,8 +116,8 @@ public class EncapClient {
     public DeviceAuthenticationResponse authenticateDevice(
             AuthenticationMethod authenticationMethod, @Nullable String authenticationId) {
         if (!storage.load()) {
-            log.error("Storage is not valid.");
-            throw LoginError.DEFAULT_MESSAGE.exception();
+            log.error("Storage is not valid");
+            throw new IllegalStateException("Storage is not valid");
         }
 
         String username = storage.getUsername();
@@ -152,22 +151,11 @@ public class EncapClient {
 
     private void logAndThrowErrorIfIdentificationResponseIsInvalid(
             IdentificationResponse identificationResponse) {
-        // (Wiski) delete this logging logic after getting some more information about these errors
         if (!identificationResponse.isValid()) {
-            logIdentificationResponse(identificationResponse, "invalid");
-            throw LoginError.DEFAULT_MESSAGE.exception();
+            log.error(
+                    "IdentificationResponse is not valid: {}", identificationResponse.getResult());
+            throw new IllegalStateException("IdentificationResponse is not valid");
         }
-        logIdentificationResponse(identificationResponse, "valid");
-    }
-
-    private void logIdentificationResponse(
-            IdentificationResponse identificationResponse, String validity) {
-        log.info(
-                "IdentificationResponse is {}.\nCode: {}\nOutdated: {}\nResult: {}",
-                validity,
-                identificationResponse.getCode(),
-                identificationResponse.isOutdated(),
-                Optional.ofNullable(identificationResponse.getResult()).orElse(null));
     }
 
     public void saveDevice() {

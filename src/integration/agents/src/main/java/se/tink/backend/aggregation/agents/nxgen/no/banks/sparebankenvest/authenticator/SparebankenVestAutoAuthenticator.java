@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.authen
 
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.SparebankenVestApiClient;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.SparebankenVestConstants.Storage;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.authenticator.entities.SecurityParamsRequestBody;
@@ -56,6 +57,8 @@ public class SparebankenVestAutoAuthenticator implements AutoAuthenticator {
             securityParamsRequestBody =
                     SparebankenVestAuthUtils.createSecurityParamsRequestBody(htmlResponseString);
             apiClient.finalizeLogin(securityParamsRequestBody);
+        } catch (IllegalStateException e) {
+            throw SessionError.SESSION_EXPIRED.exception(e);
         } finally {
             encapClient.saveDevice();
         }
