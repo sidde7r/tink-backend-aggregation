@@ -14,9 +14,14 @@ public enum Capability {
     CREDIT_CARDS,
     LOANS,
     INVESTMENTS,
-    PAYMENTS,
+    PAYMENTS, // backwards compatibility, deprecated in favour of granular PIS capabilities
     IDENTITY_DATA,
     LIST_BENEFICIARIES,
     CREATE_BENEFICIARIES,
-    CREATE_BENEFICIARIES_IN_PAYMENT
+    CREATE_BENEFICIARIES_IN_PAYMENT,
+    PIS_SEPA,
+    PIS_SEPA_ICT,
+    PIS_SE_BG,
+    PIS_SE_PG,
+    PIS_UK_FASTER_PAYMENT
 }
