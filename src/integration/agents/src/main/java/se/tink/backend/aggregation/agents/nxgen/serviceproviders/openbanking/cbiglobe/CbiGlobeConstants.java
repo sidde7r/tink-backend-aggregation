@@ -82,6 +82,7 @@ public final class CbiGlobeConstants {
         public static final String OFFSET = "offset";
         public static final String SCOPE = "scope";
         public static final String RESULT = "result";
+        public static final String LIMIT = "limit";
     }
 
     public static class QueryValues {
