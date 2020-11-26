@@ -10,12 +10,20 @@ public enum BankServiceError implements AgentError {
     ACCESS_EXCEEDED(
             new LocalizableKey(
                     "The maximum allowed number of requests to the bank service has been exceeded; please try again later.")),
-    // This should probably be a (checked) authorization error, but it's not supported by
-    // OAuth2Authenticator
+
+    /** @deprecated use SessionError instead */
+    @Deprecated
     CONSENT_EXPIRED(new LocalizableKey("The consent has been expired. ")),
+    /** @deprecated use SessionError instead */
+    @Deprecated
     CONSENT_INVALID(new LocalizableKey("The consent is invalid. ")),
+    /** @deprecated use SessionError instead */
+    @Deprecated
     CONSENT_REVOKED_BY_USER(new LocalizableKey("The consent has been revoked by the user. ")),
+    /** @deprecated use SessionError instead */
+    @Deprecated
     CONSENT_REVOKED(new LocalizableKey("The consent has been revoked by the bank. ")),
+
     MULTIPLE_LOGIN(
             new LocalizableKey(
                     "You were automatically logged out because you logged in to another channel; Logout is done for your security.")),
