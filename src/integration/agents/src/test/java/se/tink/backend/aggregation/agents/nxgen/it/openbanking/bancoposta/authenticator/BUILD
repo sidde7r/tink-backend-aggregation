@@ -1,16 +1,9 @@
 load("//tools/bzl:junit.bzl", "junit_test")
 
 junit_test(
-    name = "bancoposta",
-    srcs = glob(
-        ["**/*.java"],
-        exclude = ["authenticator/**/*.java"],
-    ),
-    data = ["//:agent_test_data"],
-    tags = [
-        "external",
-        "manual",
-    ],
+    name = "bancoposta_authenticator",
+    srcs = glob(["**/*.java"]),
+    data = [],
     visibility = ["//visibility:public"],
     deps = [
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/it/openbanking/bancoposta",

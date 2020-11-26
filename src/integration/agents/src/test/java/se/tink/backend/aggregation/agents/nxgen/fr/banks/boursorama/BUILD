@@ -9,9 +9,6 @@ junit_test(
     data = [
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/fr/banks/boursorama/resources",
     ],
-    tags = [
-        "external",
-    ],
     visibility = ["//visibility:public"],
     deps = [
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/fr/banks/boursorama",

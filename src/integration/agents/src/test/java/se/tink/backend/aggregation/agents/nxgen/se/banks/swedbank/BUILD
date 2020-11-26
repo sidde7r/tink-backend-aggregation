@@ -3,7 +3,7 @@ load("//tools/bzl:junit_old.bzl", "junit_test")
 junit_test(
     name = "swedbank",
     srcs = glob(["**/*.java"]),
-    data = ["//:agent_test_data"],
+    data = [],
     visibility = ["//visibility:public"],
     deps = [
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/se/banks/swedbank",

@@ -1,15 +1,18 @@
 load("//tools/bzl:junit.bzl", "junit_test")
 
 junit_test(
-    name = "danskebank",
+    name = "bpcegroup_agents",
     srcs = glob(["**/*.java"]),
-    data = [],
-    visibility = ["//visibility:public"],
-    runtime_deps = [
-        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/se/banks/danskebank",
+    data = [
+        "//:agent_test_data",
     ],
+    tags = [
+        "external",
+        "manual",
+    ],
+    visibility = ["//visibility:public"],
     deps = [
-        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/se/banks/danskebank",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/fr/openbanking/bpcegroup",
         "//src/integration/amount",
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/credentials:service",
@@ -17,6 +20,7 @@ junit_test(
         "//src/integration/lib",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/configuration",
+        "//src/integration/payment:rpc",
         "//src/integration/transfer:enums",
         "//src/integration/transfer:rpc",
         "//src/integration/user:rpc",

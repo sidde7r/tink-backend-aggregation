@@ -7,7 +7,6 @@ junit_test(
         exclude = ["manual/**/*.java"],
     ),
     data = [
-        "//data:aggregation_test",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/be/banks/ing/resources",
     ],
     visibility = ["//visibility:public"],

@@ -23,10 +23,6 @@ junit_test(
         exclude = ["agent/**/*.java"],
     ),
     data = [
-        "//data:aggregation_test",
-        "//data:provider_configurations",
-    ],
-    tags = [
     ],
     visibility = ["//visibility:public"],
     deps = [

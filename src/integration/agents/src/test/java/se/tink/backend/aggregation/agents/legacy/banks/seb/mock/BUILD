@@ -5,9 +5,6 @@ junit_test(
     srcs = glob(["*.java"]),
     data = [
         "//data",
-        "//data:aggregation_test",
-        "//data:provider_configurations",
-        "//etc:development",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/legacy/banks/seb/mock/resources",
     ],
     visibility = ["//visibility:public"],

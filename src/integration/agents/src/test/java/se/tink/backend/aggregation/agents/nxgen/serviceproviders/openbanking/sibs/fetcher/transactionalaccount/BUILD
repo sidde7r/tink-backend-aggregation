@@ -4,9 +4,6 @@ junit_test(
     name = "transactionalaccount",
     srcs = glob(["*.java"]),
     data = [
-        "//data:aggregation_test",
-        "//data:provider_configurations",
-        "//etc:development",
     ],
     visibility = ["//visibility:public"],
     deps = [

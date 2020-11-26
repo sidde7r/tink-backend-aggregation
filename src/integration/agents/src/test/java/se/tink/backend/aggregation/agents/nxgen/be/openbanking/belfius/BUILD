@@ -4,8 +4,6 @@ junit_test(
     name = "belfius",
     srcs = glob(["**/*.java"]),
     data = [
-        "//data:aggregation_test",
-        "//etc:development",
     ],
     visibility = ["//visibility:public"],
     deps = [

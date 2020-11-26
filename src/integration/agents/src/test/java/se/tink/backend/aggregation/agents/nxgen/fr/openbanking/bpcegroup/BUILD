@@ -4,9 +4,12 @@ junit_test(
     name = "bpcegroup",
     srcs = glob(
         ["**/*.java"],
-        exclude = ["integration/**/*.java"],
+        exclude = [
+            "integration/**/*.java",
+            "agents/**/*.java",
+        ],
     ),
-    data = ["//:agent_test_data"],
+    data = [],
     visibility = ["//visibility:public"],
     deps = [
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/fr/openbanking/bpcegroup",

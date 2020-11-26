@@ -4,9 +4,6 @@ junit_test(
     name = "cbiglobe",
     srcs = glob(["**/*.java"]),
     data = [
-        "//data:aggregation_test",
-        "//data:provider_configurations",
-        "//etc:development",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/cbiglobe/resources",
     ],
     visibility = ["//visibility:public"],

@@ -4,9 +4,6 @@ junit_test(
     name = "boursorama_mock",
     srcs = glob(["*.java"]),
     data = [
-        "//data:aggregation_test",
-        "//data:provider_configurations",
-        "//etc:development",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/fr/openbanking/boursorama/integration/resources",
     ],
     visibility = ["//visibility:public"],

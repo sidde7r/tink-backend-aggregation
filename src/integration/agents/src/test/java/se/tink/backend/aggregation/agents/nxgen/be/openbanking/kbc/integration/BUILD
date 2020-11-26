@@ -4,9 +4,6 @@ junit_test(
     name = "kbc_mock",
     srcs = glob(["*.java"]),
     data = [
-        "//data:aggregation_test",
-        "//data:provider_configurations",
-        "//etc:development",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/be/openbanking/kbc/integration/resources",
     ],
     visibility = ["//visibility:public"],
