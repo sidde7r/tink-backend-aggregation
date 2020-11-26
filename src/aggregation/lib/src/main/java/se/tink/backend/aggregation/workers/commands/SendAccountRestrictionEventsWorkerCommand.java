@@ -28,6 +28,11 @@ public class SendAccountRestrictionEventsWorkerCommand extends AgentWorkerComman
     protected AgentWorkerCommandResult doExecute() throws Exception {
         try {
             log.info("Executing SendAccountRestrictionEventsWorkerCommand");
+            log.info(
+                    " FilteredOutAccountData - size: {}",
+                    context.getAccountDataCache()
+                            .getFilteredOutAccountDataWithFilterReason()
+                            .size());
             context.getAccountDataCache()
                     .getFilteredOutAccountDataWithFilterReason()
                     .forEach(
@@ -41,7 +46,7 @@ public class SendAccountRestrictionEventsWorkerCommand extends AgentWorkerComman
                                                 sendAccountAggregationRestrictedEvent(
                                                         filteredOutAccount, reason));
                             });
-        } catch (RuntimeException e) {
+        } catch (Exception e) {
             log.warn("Could not execute SendAccountRestrictionEventsWorkerCommand", e);
         }
         return AgentWorkerCommandResult.CONTINUE;
