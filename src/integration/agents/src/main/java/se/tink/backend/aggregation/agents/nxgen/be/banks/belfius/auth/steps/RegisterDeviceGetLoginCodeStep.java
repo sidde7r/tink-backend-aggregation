@@ -18,7 +18,7 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.steps.AgentAuthenticationProcessStep;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.userinteraction.fielddefinition.CardReaderLoginDescriptionAgentField;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.userinteraction.fielddefinition.CardReaderLoginInputAgentField;
-import se.tink.backend.aggregation.agentsplatform.framework.error.InvalidCredentialsError;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.error.InvalidCredentialsError;
 
 @RequiredArgsConstructor
 @Slf4j

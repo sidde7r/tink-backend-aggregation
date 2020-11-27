@@ -43,7 +43,7 @@ public abstract class BerlinGroupAgentPlatformStorageApiClient<T extends BerlinG
                 redirectTokens.getAccessToken().getTokenType(),
                 new String(redirectTokens.getAccessToken().getBody(), StandardCharsets.UTF_8),
                 new String(redirectTokens.getRefreshToken().getBody(), StandardCharsets.UTF_8),
-                redirectTokens.getAccessToken().getExpiresInMillis() * 1000L,
+                redirectTokens.getAccessToken().getExpiresInSeconds(),
                 0L);
     }
 }

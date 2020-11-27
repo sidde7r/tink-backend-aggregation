@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.workers.commands;
 
-import jdk.nashorn.internal.ir.annotations.Ignore;
+import org.junit.Ignore;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.AgentPlatformAuthenticator;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationProcess;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentProgressiveGenerationAgent;

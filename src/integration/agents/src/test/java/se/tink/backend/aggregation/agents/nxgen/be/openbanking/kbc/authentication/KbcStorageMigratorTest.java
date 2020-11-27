@@ -65,15 +65,15 @@ public class KbcStorageMigratorTest {
                                 .getRedirectTokens()
                                 .get()
                                 .getAccessToken()
-                                .getIssuedAtInMillis())
-                .isEqualTo(oAuth2Token.getIssuedAt() * 1000);
+                                .getIssuedAtInSeconds())
+                .isEqualTo(oAuth2Token.getIssuedAt());
         Assertions.assertThat(
                         redirectTokensAuthenticationPersistedData
                                 .getRedirectTokens()
                                 .get()
                                 .getAccessToken()
-                                .getExpiresInMillis())
-                .isEqualTo(oAuth2Token.getExpiresInSeconds() * 1000);
+                                .getExpiresInSeconds())
+                .isEqualTo(oAuth2Token.getExpiresInSeconds());
         Assertions.assertThat(
                         redirectTokensAuthenticationPersistedData
                                 .getRedirectTokens()

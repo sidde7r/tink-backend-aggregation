@@ -10,7 +10,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.UserInteractionService;
-import se.tink.backend.aggregation.agents.agentplatform.authentication.result.error.AgentPlatformAuthenticationProcessError;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.storage.PersistentStorageService;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationPersistedData;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationProcessState;
@@ -23,7 +22,7 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentUserInteractionDefinitionResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.userinteraction.AgentFieldValue;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.userinteraction.fielddefinition.AgentUsernameFieldDefinition;
-import se.tink.backend.aggregation.agentsplatform.framework.error.InvalidCredentialsError;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.error.InvalidCredentialsError;
 
 public class AgentAuthenticationResultAggregationHandlerTest {
 
@@ -62,7 +61,7 @@ public class AgentAuthenticationResultAggregationHandlerTest {
 
     @Test
     public void
-            forSuccessAuthenticationShouldStoreAuthenticationPersistentDataAndReturnErrorHandlingResult() {
+            forInvalidCredentialsErrorShouldStoreAuthenticationPersistentDataAndReturnErrorHandlingResult() {
         // given
         Map<String, String> data = new HashMap<>();
         AgentAuthenticationPersistedData agentAuthenticationPersistedData =
@@ -77,9 +76,8 @@ public class AgentAuthenticationResultAggregationHandlerTest {
         Mockito.verify(persistentStorageService)
                 .writeToAgentPersistentStorage(agentAuthenticationPersistedData);
         Assert.assertTrue(result.getAuthenticationError().isPresent());
-        Assert.assertEquals(
-                new AgentPlatformAuthenticationProcessError(new InvalidCredentialsError()),
-                result.getAuthenticationError().get());
+        Assertions.assertThat(result.getAuthenticationError().get().getAgentBankApiError())
+                .isExactlyInstanceOf(InvalidCredentialsError.class);
         Assert.assertTrue(result.isFinalResult());
     }
 

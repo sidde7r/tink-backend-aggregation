@@ -2,9 +2,11 @@ package se.tink.backend.aggregation.workers.commands.migrations.implementations.
 
 import org.assertj.core.api.AbstractAssert;
 import org.assertj.core.util.Preconditions;
+import org.junit.Ignore;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.AccountTypes;
 
+@Ignore
 public class NordeaMigrationAccountAssertion
         extends AbstractAssert<NordeaMigrationAccountAssertion, Account> {
 

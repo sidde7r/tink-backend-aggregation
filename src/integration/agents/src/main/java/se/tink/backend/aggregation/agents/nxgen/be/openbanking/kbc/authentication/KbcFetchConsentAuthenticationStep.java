@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.steps.AgentAuthenticationProcessStep;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.userinteraction.fielddefinition.IbanFieldDefinition;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.RedirectPreparationRedirectUrlStep;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.http.AuthenticationPersistedDataCookieStoreAccessorFactory;
 
 @AllArgsConstructor
 public class KbcFetchConsentAuthenticationStep
@@ -45,7 +46,11 @@ public class KbcFetchConsentAuthenticationStep
                         redirectUrl.toString(),
                         psuIpAddress);
         return fetchConsentExternalApiCall
-                .execute(fetchConsentExternalApiCallParameters)
+                .execute(
+                        fetchConsentExternalApiCallParameters,
+                        null,
+                        AuthenticationPersistedDataCookieStoreAccessorFactory.create(
+                                authenticationProcessRequest.getAuthenticationPersistedData()))
                 .getResponse()
                 .get();
     }

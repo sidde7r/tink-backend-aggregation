@@ -2,10 +2,10 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import se.tink.backend.aggregation.agentsplatform.framework.error.AccountBlockedError;
-import se.tink.backend.aggregation.agentsplatform.framework.error.AgentBankApiError;
-import se.tink.backend.aggregation.agentsplatform.framework.error.InvalidCredentialsError;
-import se.tink.backend.aggregation.agentsplatform.framework.error.SessionExpiredError;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AccountBlockedError;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AgentBankApiError;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.error.InvalidCredentialsError;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.error.SessionExpiredError;
 
 @AllArgsConstructor
 @Getter

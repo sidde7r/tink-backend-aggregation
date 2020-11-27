@@ -2,11 +2,14 @@ package se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.authenticati
 
 import com.github.tomakehurst.wiremock.client.WireMock;
 import java.time.LocalDate;
+import java.util.HashMap;
 import org.assertj.core.api.Assertions;
 import org.junit.Assert;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.agentplatform.AgentPlatformHttpClient;
-import se.tink.backend.aggregation.agentsplatform.framework.http.ExternalApiCallResult;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationPersistedData;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.http.AuthenticationPersistedDataCookieStoreAccessorFactory;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.http.ExternalApiCallResult;
 import se.tink.backend.aggregation.wiremock.WireMockIntegrationTest;
 
 public class KbcFetchConsentExternalApiCallTest extends WireMockIntegrationTest {
@@ -40,7 +43,12 @@ public class KbcFetchConsentExternalApiCallTest extends WireMockIntegrationTest 
                         new AgentPlatformHttpClient(httpClient), getOrigin());
 
         // when
-        ExternalApiCallResult<String> result = objectUnderTest.execute(inputParameters);
+        ExternalApiCallResult<String> result =
+                objectUnderTest.execute(
+                        inputParameters,
+                        null,
+                        AuthenticationPersistedDataCookieStoreAccessorFactory.create(
+                                new AgentAuthenticationPersistedData(new HashMap<>())));
 
         // then
         Assert.assertTrue(result.getResponse().isPresent());

@@ -42,8 +42,7 @@ public class OAuth2StorageMigrator implements AgentPlatformStorageMigrator {
         return Token.builder()
                 .tokenType(oAuth2Token.getTokenType())
                 .body(oAuth2Token.getAccessToken())
-                .expiresIn(
-                        oAuth2Token.getIssuedAt() * 1000, oAuth2Token.getExpiresInSeconds() * 1000)
+                .expiresIn(oAuth2Token.getIssuedAt(), oAuth2Token.getExpiresInSeconds())
                 .build();
     }
 }

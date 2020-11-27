@@ -153,7 +153,7 @@ git_repository(
 # To be used only by //src/aggregation/lib/src/main/java/se/tink/backend/aggregation/agents_platform/agents_framework
 git_repository(
     name = "tink_backend_for_agents_framework",
-    commit = "3653b9438eb8d7fd6aea27b10f1a8cfe22b71cad",
+    commit = "3f7ab50b4119953d4614bbe671a70041373b1e75",
     remote = "git@github.com:tink-ab/tink-backend.git",
     shallow_since = "1595000000 +0000",
 )
@@ -1207,7 +1207,7 @@ pin_jetty_server9()
 maven_install(
     name = "lombok",
     artifacts = [
-        "org.projectlombok:lombok:1.18.10",
+        "org.projectlombok:lombok:1.18.16",
     ],
     fetch_sources = True,
     repositories = MAVEN_REPOS,
