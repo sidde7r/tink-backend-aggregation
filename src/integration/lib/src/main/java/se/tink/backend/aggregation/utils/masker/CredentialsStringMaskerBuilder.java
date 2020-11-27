@@ -4,6 +4,8 @@ import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Sets;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -64,8 +66,24 @@ public class CredentialsStringMaskerBuilder implements StringMaskerBuilder {
             }
         }
 
+        // Add url encoded versions of all strings
+        List<String> escapedValues =
+                valuesToMask.stream()
+                        .map(this::getEscapedString)
+                        .filter(s -> !valuesToMask.contains(s))
+                        .collect(Collectors.toList());
+
+        valuesToMask.addAll(escapedValues);
         return ImmutableList.sortedCopyOf(
                 MaskingConstants.SENSITIVE_VALUES_SORTING_COMPARATOR, valuesToMask);
+    }
+
+    private String getEscapedString(final String value) {
+        try {
+            return URLEncoder.encode(value, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            throw new IllegalStateException(e);
+        }
     }
 
     private Optional<String> getNonEmptyPropertyValue(CredentialsProperty property) {

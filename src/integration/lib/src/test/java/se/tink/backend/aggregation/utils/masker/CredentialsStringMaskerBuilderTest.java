@@ -9,6 +9,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -29,9 +31,11 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class CredentialsStringMaskerBuilderTest {
 
-    public static final String PASSWORD = "abc123";
+    public static final String PASSWORD = "abc123!";
+    public static final String ESCAPED_PASSWORD = "abc123%21";
     public static final String USER_ID = "ööö";
     public static final String USERNAME = "user@test.se";
+    public static final String ESCAPED_USERNAME = "user%40test.se";
     public static PersistentStorage persistentStorage;
     public static final ImmutableMap<String, String> sessionStorage =
             ImmutableMap.<String, String>builder()
@@ -78,7 +82,7 @@ public class CredentialsStringMaskerBuilderTest {
                         stringMasker.getValuesToMask().stream()
                                 .map(Pattern::toString)
                                 .collect(ImmutableList.toImmutableList()))
-                .containsExactly(PASSWORD);
+                .contains(PASSWORD, ESCAPED_PASSWORD);
     }
 
     @Test
@@ -93,7 +97,7 @@ public class CredentialsStringMaskerBuilderTest {
                         stringMasker.getValuesToMask().stream()
                                 .map(Pattern::toString)
                                 .collect(ImmutableList.toImmutableList()))
-                .containsExactly(USERNAME);
+                .containsExactly(ESCAPED_USERNAME, USERNAME);
     }
 
     @Test
@@ -227,9 +231,24 @@ public class CredentialsStringMaskerBuilderTest {
                 JsonFlattener.flattenJsonToMap(sensitivePayloadAsString);
         Set<String> sensitiveValuesToCompare = new HashSet<>(sensitiveValuesOriginalMap.values());
         Arrays.stream(extraValues).forEach(sensitiveValuesToCompare::add);
+        List<String> escapedValues =
+                sensitiveValuesToCompare.stream()
+                        .map(this::getEscapedString)
+                        .filter(s -> !sensitiveValuesToCompare.contains(s))
+                        .collect(Collectors.toList());
+
+        sensitiveValuesToCompare.addAll(escapedValues);
         return sensitiveValuesToCompare.stream()
                 .sorted(MaskingConstants.SENSITIVE_VALUES_SORTING_COMPARATOR)
                 .collect(Collectors.toList());
+    }
+
+    private String getEscapedString(final String value) {
+        try {
+            return URLEncoder.encode(value, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            throw new IllegalStateException(e);
+        }
     }
 
     private static Credentials mockCredentials() {
