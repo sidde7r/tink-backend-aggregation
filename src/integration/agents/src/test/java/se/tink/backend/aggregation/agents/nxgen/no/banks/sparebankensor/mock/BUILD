@@ -8,6 +8,7 @@ junit_test(
         "//data:provider_configurations",
         "//etc:development",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/no/banks/sparebankensor/mock/resources",
+        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/utils/authentication/encap/mock/resources",
     ],
     visibility = ["//visibility:public"],
     runtime_deps = ["//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/no/banks/sparebankensor"],

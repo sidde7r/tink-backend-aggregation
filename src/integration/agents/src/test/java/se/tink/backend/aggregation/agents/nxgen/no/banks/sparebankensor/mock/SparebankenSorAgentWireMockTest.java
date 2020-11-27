@@ -14,6 +14,11 @@ public class SparebankenSorAgentWireMockTest {
 
     @Test
     public void testRefresh() throws Exception {
+
+        // given
+        final String encapMockFilePath =
+                "src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/utils/authentication/encap/mock/resources/encap_mock_log.aap";
+
         // given
         final String wireMockFilePath =
                 "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/no/banks/sparebankensor/mock/resources/sparebanken_sor_mock_log.aap";
@@ -26,6 +31,7 @@ public class SparebankenSorAgentWireMockTest {
 
         final AgentWireMockRefreshTest agentWireMockRefreshTest =
                 AgentWireMockRefreshTest.builder(NO, "no-sparebankensor-bankid", wireMockFilePath)
+                        .addAnotherWireMockFile(encapMockFilePath)
                         .addCredentialField(USERNAME.getFieldKey(), givenUserName)
                         .addCredentialField(MOBILENUMBER.getFieldKey(), givenMobileNumber)
                         .addCallbackData("activationCode", "25818567")
