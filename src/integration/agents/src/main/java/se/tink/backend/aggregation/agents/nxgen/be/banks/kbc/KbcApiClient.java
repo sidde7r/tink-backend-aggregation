@@ -141,6 +141,9 @@ public class KbcApiClient {
                 case KbcConstants.ErrorCodes.AUTHENTICATION_ERROR:
                     throw LoginError.INCORRECT_CREDENTIALS.exception();
 
+                case KbcConstants.ErrorCodes.INVALID_SIGN_CODE_LAST_TRY:
+                    throw LoginError.INCORRECT_CREDENTIALS_LAST_ATTEMPT.exception();
+
                 default:
                     throwInvalidResultCodeError(header, resultValue, "");
             }

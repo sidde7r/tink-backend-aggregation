@@ -154,6 +154,7 @@ public class KbcConstants {
 
     public static class ErrorCodes {
         public static final String AUTHENTICATION_ERROR = "02";
+        public static final String INVALID_SIGN_CODE_LAST_TRY = "10";
     }
 
     public static class PairTypeTypes {
