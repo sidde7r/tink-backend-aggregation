@@ -2,6 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovid
 
 import java.util.List;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field.Key;
@@ -27,6 +29,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovide
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.fetchers.transferdestination.SwedbankDefaultTransferDestinationFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.interfaces.SwedbankApiClientProvider;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
+import se.tink.backend.aggregation.configuration.agentsservice.PasswordBasedProxyConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -49,6 +52,8 @@ public abstract class SwedbankAbstractAgent extends NextGenerationAgent
                 RefreshCreditCardAccountsExecutor,
                 RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor {
+
+    private static final Logger log = LoggerFactory.getLogger(SwedbankAbstractAgent.class);
 
     protected final SwedbankConfiguration swedbankConfiguration;
     protected final SwedbankDefaultApiClient apiClient;
@@ -83,6 +88,22 @@ public abstract class SwedbankAbstractAgent extends NextGenerationAgent
     public void setConfiguration(final AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
         transferDestinationRefreshController = constructTransferDestinationRefreshController();
+    }
+
+    protected void configureProxy(final AgentsServiceConfiguration agentsServiceConfiguration) {
+        if (agentsServiceConfiguration.isFeatureEnabled("swedbankExtProxy")) {
+            final PasswordBasedProxyConfiguration proxyConfiguration =
+                    agentsServiceConfiguration.getCountryProxy(
+                            "se", credentials.getUserId().hashCode());
+            client.setProductionProxy(
+                    proxyConfiguration.getHost(),
+                    proxyConfiguration.getUsername(),
+                    proxyConfiguration.getPassword());
+            log.info(
+                    "Using proxy {} with username {}",
+                    proxyConfiguration.getHost(),
+                    proxyConfiguration.getUsername());
+        }
     }
 
     @Override

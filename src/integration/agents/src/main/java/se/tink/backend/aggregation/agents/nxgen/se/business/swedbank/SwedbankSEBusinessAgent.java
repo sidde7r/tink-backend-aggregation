@@ -17,6 +17,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovide
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.fetchers.transactional.SwedbankDefaultTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.business.swedbank.fetchers.transactional.SwedbankSEBusinessTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.business.swedbank.profile.SwedbankBusinessProfileSelector;
+import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
@@ -64,5 +65,11 @@ public final class SwedbankSEBusinessAgent extends SwedbankAbstractAgent {
                 updateController,
                 transactionalFetcher,
                 transactionFetcherController);
+    }
+
+    @Override
+    public void setConfiguration(AgentsServiceConfiguration configuration) {
+        super.setConfiguration(configuration);
+        configureProxy(configuration);
     }
 }
