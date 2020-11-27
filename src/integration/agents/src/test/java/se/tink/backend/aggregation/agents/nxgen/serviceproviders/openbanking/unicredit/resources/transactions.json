@@ -1,0 +1,42 @@
+{
+    "account": {
+        "iban": "IT35T02111112225548848",
+        "currency": "EUR"
+    },
+    "transactions": {
+        "booked": [
+            {
+                "valueDate": "2012-01-01",
+                "transactionId": "234523452345",
+                "transactionAmount": {
+                    "amount": "-10.000",
+                    "currency": "EUR"
+                },
+                "bookingDate": "2012-01-02",
+                "remittanceInformationUnstructured": "Booken Transaction info",
+                "checkId": "0"
+            }
+        ],
+        "pending": [
+            {
+                "valueDate": "2012-01-01",
+                "transactionId": "234523452345",
+                "transactionAmount": {
+                    "amount": "-10.000",
+                    "currency": "EUR"
+                },
+                "bookingDate": "2012-01-02",
+                "remittanceInformationUnstructured": "Pending Transaction Info",
+                "checkId": "0"
+            }
+        ],
+        "_links": {
+            "next": {
+                "href": "http://example.com/hydrogen/v1/accounts/1234/transactions?dateFrom=1970-01-01&dateTo=2020-11-27&entryReferenceFrom=1234111&bookingStatus=booked&sessionId=zxcv-asdf"
+            },
+            "account": {
+                "href": "**HASHED:fI**/hydrogen/v1/accounts/1234"
+            }
+        }
+    }
+}

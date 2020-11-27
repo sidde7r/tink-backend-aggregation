@@ -24,8 +24,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticato
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.account.AccountIdentifier;
@@ -112,15 +110,11 @@ public abstract class UnicreditBaseAgent extends NextGenerationAgent
         final UnicreditTransactionalAccountFetcher accountFetcher =
                 new UnicreditTransactionalAccountFetcher(apiClient);
         final UnicreditTransactionalAccountTransactionFetcher transactionFetcher =
-                new UnicreditTransactionalAccountTransactionFetcher(apiClient);
+                new UnicreditTransactionalAccountTransactionFetcher(
+                        apiClient, transactionPaginationHelper);
 
         return new TransactionalAccountRefreshController(
-                metricRefreshController,
-                updateController,
-                accountFetcher,
-                new TransactionFetcherController<>(
-                        this.transactionPaginationHelper,
-                        new TransactionKeyPaginationController<>(transactionFetcher)));
+                metricRefreshController, updateController, accountFetcher, transactionFetcher);
     }
 
     @Override

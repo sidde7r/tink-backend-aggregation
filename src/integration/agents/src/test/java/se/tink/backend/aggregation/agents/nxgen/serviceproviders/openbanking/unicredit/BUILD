@@ -3,6 +3,9 @@ load("//tools/bzl:junit.bzl", "junit_test")
 junit_test(
     name = "unicredit",
     srcs = glob(["**/*.java"]),
+    data = [
+        "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/unicredit/resources",
+    ],
     tags = [
     ],
     visibility = ["//visibility:public"],
