@@ -21,6 +21,7 @@ junit_test(
         "//src/integration/models",
         "//src/libraries/account_data_cache",
         "//third_party:junit_junit",
+        "//third_party:org_apache_commons_commons_lang3",
         "//third_party:org_assertj_assertj_core",
         "//third_party:org_mockito_mockito_core",
     ],
