@@ -13,6 +13,9 @@ public class TypeValuePair {
     @JsonProperty("V")
     private String value;
 
+    @JsonProperty("E")
+    private String identifier;
+
     public String getType() {
         return type;
     }
