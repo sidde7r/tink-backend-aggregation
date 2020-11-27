@@ -28,7 +28,6 @@ import se.tink.libraries.i18n.Catalog;
 public class KeyCardAndSmsOtpAuthenticationController<T> implements MultiFactorAuthenticator {
     private static final Logger LOGGER =
             LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    private static final String KEYCARD_VALUE_FIELD_KEY = "keyCardValue";
     private static final String OTP_VALUE_FIELD_KEY = "otpValue";
     private final Catalog catalog;
     private final SupplementalInformationHelper supplementalInformationHelper;
@@ -91,7 +90,8 @@ public class KeyCardAndSmsOtpAuthenticationController<T> implements MultiFactorA
             throw SupplementalInfoError.NO_VALID_CODE.exception();
         }
 
-        keyCarduthenticator.authenticate(supplementalInformation.get(KEYCARD_VALUE_FIELD_KEY));
+        keyCarduthenticator.authenticate(
+                supplementalInformation.get(CommonFields.KeyCardCode.getFieldKey()));
     }
 
     private Field getKeyCardIndexField(KeyCardInitValues keyCardInitValues) {
