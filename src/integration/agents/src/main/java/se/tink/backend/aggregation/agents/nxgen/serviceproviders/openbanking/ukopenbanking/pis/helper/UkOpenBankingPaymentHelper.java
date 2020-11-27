@@ -127,7 +127,7 @@ public class UkOpenBankingPaymentHelper {
                                                                 .second
                                                                 .toString())));
 
-        if (translatedPaymentType == PaymentType.DOMESTIC && isFutureDatePayment(payment)) {
+        if (isFutureDatePayment(payment)) {
             return PaymentType.DOMESTIC_FUTURE;
         }
 
