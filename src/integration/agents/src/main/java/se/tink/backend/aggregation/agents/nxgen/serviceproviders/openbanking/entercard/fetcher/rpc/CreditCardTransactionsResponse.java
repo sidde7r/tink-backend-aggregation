@@ -38,8 +38,9 @@ public class CreditCardTransactionsResponse implements TransactionKeyPaginatorRe
 
     @Override
     public TransactionKey nextKey() {
-        return canFetchMore().get()
-                ? new TransactionKey(metadata.getOffset() * metadata.getResultCount())
-                : null;
+        if (!canFetchMore().orElse(false)) {
+            return null; // This must be an exception
+        }
+        return new TransactionKey(metadata.getOffset() * metadata.getResultCount());
     }
 }

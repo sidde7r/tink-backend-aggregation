@@ -343,6 +343,7 @@ public class AgentWorkerOperationFactory {
             // Todo: Remove this once it has been verified that no consumer sends in an empty/null
             // list.
             // Instead it should abort if it's empty (empty list == do nothing).
+            log.info("createOperationRefresh called with empty list of itemsToRefresh");
             request.setItemsToRefresh(RefreshableItem.REFRESHABLE_ITEMS_ALL);
         }
 
