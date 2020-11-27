@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb;
 
+import java.util.Date;
 import javax.ws.rs.core.MediaType;
 import lombok.AllArgsConstructor;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
@@ -25,7 +26,6 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.dat
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
-import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.date.ThreadSafeDateFormat;
@@ -95,22 +95,20 @@ public class DnbApiClient {
         }
     }
 
-    public CardTransactionResponse fetchCardTransactions(String consentId, String cardAccountId) {
-        return commonFetchTransactions(
-                        consentId,
+    public CardTransactionResponse fetchCardTransactions(
+            String consentId, String cardAccountId, Date fromDate, Date toDate) {
+        return createRequest(
                         new URL(Urls.CARD_TRANSACTION).parameter(IdTags.ACCOUNT_ID, cardAccountId))
-                .getBody(CardTransactionResponse.class);
+                .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BOTH)
+                .queryParam(
+                        QueryKeys.FROM_DATE, ThreadSafeDateFormat.FORMATTER_DAILY.format(fromDate))
+                .queryParam(QueryKeys.TO_DATE, ThreadSafeDateFormat.FORMATTER_DAILY.format(toDate))
+                .header(HeaderKeys.CONSENT_ID, consentId)
+                .get(CardTransactionResponse.class);
     }
 
     public TransactionResponse fetchTransactions(String consentId, String accountId) {
-        return commonFetchTransactions(
-                        consentId,
-                        new URL(Urls.TRANSACTIONS).parameter(IdTags.ACCOUNT_ID, accountId))
-                .getBody(TransactionResponse.class);
-    }
-
-    private HttpResponse commonFetchTransactions(String consentId, URL url) {
-        return createRequest(url)
+        return createRequest(new URL(Urls.TRANSACTIONS).parameter(IdTags.ACCOUNT_ID, accountId))
                 .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BOTH)
                 .queryParam(QueryKeys.FROM_DATE, "1970-01-01")
                 .queryParam(
@@ -118,7 +116,7 @@ public class DnbApiClient {
                         ThreadSafeDateFormat.FORMATTER_DAILY.format(
                                 localDateTimeSource.getInstant()))
                 .header(HeaderKeys.CONSENT_ID, consentId)
-                .get(HttpResponse.class);
+                .get(TransactionResponse.class);
     }
 
     public TransactionResponse fetchNextTransactions(String consentId, String nextUrl) {

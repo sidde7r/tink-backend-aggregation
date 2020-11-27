@@ -10,6 +10,8 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import com.google.common.collect.ImmutableList;
 import java.nio.file.Paths;
 import java.util.Collection;
+import java.util.Date;
+import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.DnbApiClient;
@@ -17,7 +19,7 @@ import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.DnbStorage;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.fetcher.data.entity.TransactionEntity;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.fetcher.data.rpc.CardTransactionResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.fetcher.mapper.DnbTransactionMapper;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.libraries.serialization.utils.SerializationUtils;
@@ -28,6 +30,8 @@ public class DnbCardTransactionFetcherTest {
             "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/no/openbanking/dnb/resources";
     private static final String TEST_CONSENT_ID = "test_consent_id";
     private static final String TEST_CARD_ID = "test_card_id";
+    private static final Date TEST_DATE_FROM = new Date();
+    private static final Date TEST_DATE_TO = new Date();
 
     private DnbStorage mockStorage;
     private DnbApiClient mockApiClient;
@@ -50,11 +54,13 @@ public class DnbCardTransactionFetcherTest {
     }
 
     @Test
-    public void shouldAlwaysReturnPageWithNoNextKeyAndExpectedNumberOfTransactions() {
+    public void shouldAlwaysReturnPageWithCanFetchMoreAndExpectedNumberOfTransactions() {
         // given
         given(testCardAccount.getApiIdentifier()).willReturn(TEST_CARD_ID);
         given(mockStorage.getConsentId()).willReturn(TEST_CONSENT_ID);
-        given(mockApiClient.fetchCardTransactions(TEST_CONSENT_ID, TEST_CARD_ID))
+        given(
+                        mockApiClient.fetchCardTransactions(
+                                TEST_CONSENT_ID, TEST_CARD_ID, TEST_DATE_FROM, TEST_DATE_TO))
                 .willReturn(getCardTransactionsResponse());
 
         Transaction dummyTransaction = mock(Transaction.class);
@@ -64,16 +70,18 @@ public class DnbCardTransactionFetcherTest {
                 .willReturn(testMappedTransactions);
 
         // when
-        TransactionKeyPaginatorResponse<String> pageOfTransactions =
-                cardTransactionFetcher.getTransactionsFor(testCardAccount, null);
+        PaginatorResponse pageOfTransactions =
+                cardTransactionFetcher.getTransactionsFor(
+                        testCardAccount, TEST_DATE_FROM, TEST_DATE_TO);
 
         // then
-        assertThat(pageOfTransactions.nextKey()).isNull();
+        assertThat(pageOfTransactions.canFetchMore()).isEqualTo(Optional.of(true));
         assertThat(pageOfTransactions.getTinkTransactions()).hasSameSizeAs(testMappedTransactions);
 
         verify(testCardAccount).getApiIdentifier();
         verify(mockStorage).getConsentId();
-        verify(mockApiClient).fetchCardTransactions(TEST_CONSENT_ID, TEST_CARD_ID);
+        verify(mockApiClient)
+                .fetchCardTransactions(TEST_CONSENT_ID, TEST_CARD_ID, TEST_DATE_FROM, TEST_DATE_TO);
         verify(mockTransactionMapper).toTinkTransactions(any(TransactionEntity.class));
         verifyNoMoreInteractionsOnAllMocks();
     }

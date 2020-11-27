@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb;
 
+import java.time.temporal.ChronoUnit;
+
 public final class DnbConstants {
     private DnbConstants() {
         throw new AssertionError();
@@ -55,6 +57,12 @@ public final class DnbConstants {
         public static final int CONSENT_DAYS_VALID = 89;
         public static final boolean RECURRING = true;
         public static final boolean COMBINED_SERVICE = false;
+    }
+
+    public static class CreditCardFetcherValues {
+        public static final int EMPTY_PAGES_LIMIT = 4;
+        public static final int AT_A_TIME = 1;
+        public static final ChronoUnit TIME_UNIT = ChronoUnit.MONTHS;
     }
 
     public static class IdTags {
