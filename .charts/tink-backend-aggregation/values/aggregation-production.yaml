@@ -200,6 +200,8 @@ clients:
     aggregatorIdentifier: "BNL Gruppo BNP Paribas"
   it-bnp-bnl-production:
     aggregatorIdentifier: "BNL Gruppo BNP Paribas"
+  it-bancoposta-production:
+    aggregatorIdentifier: "BancoPosta"
   it-poste-testing:
     aggregatorIdentifier: "Poste Italiane"
   kbc-production:
