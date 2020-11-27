@@ -126,12 +126,15 @@ public class AccountDataCache {
                                         }
                                     });
                             if (!filterReasons.isEmpty()) {
+                                LOGGER.info("Non empty filterReasons: {}", filterReasons);
                                 filteredOutAccountData.add(Pair.of(accountData, filterReasons));
                             }
                         });
         LOGGER.info(
-                "getFilteredOutAccountDataWithFilterReason - size {}",
-                filteredOutAccountData.size());
+                "getFilteredOutAccountDataWithFilterReason - size {}, filters size {}, filterReasons {}",
+                filteredOutAccountData.size(),
+                accountFilters.size(),
+                accountFilters.stream().map(Pair::getRight).collect(Collectors.toList()));
         return filteredOutAccountData;
     }
 
