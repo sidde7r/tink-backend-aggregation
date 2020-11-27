@@ -34,6 +34,7 @@ import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.ServiceUnavailableBankServiceErrorFilter;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -52,6 +53,7 @@ public class OpBankApiClient {
 
     public OpBankApiClient(TinkHttpClient client, PersistentStorage persistentStorage) {
         this.client = client;
+        this.client.addFilter(new ServiceUnavailableBankServiceErrorFilter());
         this.persistentStorage = persistentStorage;
     }
 
