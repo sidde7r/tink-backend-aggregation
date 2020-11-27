@@ -30,6 +30,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovide
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.configuration.SwedbankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.utilities.SwedbankDateUtils;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.profile.SwedbankPrivateProfileSelector;
+import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.einvoice.EInvoiceRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
@@ -38,6 +39,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.http.MultiIpGateway;
 
 @AgentCapabilities({
     CHECKING_ACCOUNTS,
@@ -60,7 +62,9 @@ public class SwedbankSEAgent extends SwedbankAbstractAgent
     private EInvoiceRefreshController eInvoiceRefreshController;
 
     @Inject
-    public SwedbankSEAgent(AgentComponentProvider componentProvider) {
+    public SwedbankSEAgent(
+            AgentComponentProvider componentProvider,
+            AgentsServiceConfiguration agentsServiceConfiguration) {
         super(
                 componentProvider,
                 new SwedbankConfiguration(
@@ -89,6 +93,10 @@ public class SwedbankSEAgent extends SwedbankAbstractAgent
         investmentRefreshController =
                 new InvestmentRefreshController(
                         metricRefreshController, updateController, investmentFetcher);
+
+        final MultiIpGateway gateway =
+                new MultiIpGateway(client, credentials.getUserId(), credentials.getId());
+        gateway.setMultiIpGateway(agentsServiceConfiguration.getIntegrations());
     }
 
     @Override
