@@ -28,11 +28,12 @@ public class UnicreditTransactionalAccountTransactionFetcher
     public List<AggregationTransaction> fetchTransactionsFor(TransactionalAccount account) {
         List<AggregationTransaction> transactions = Lists.newArrayList();
 
-        Optional<Date> contentWithRefreshDate =
+        Optional<Date> dateOfLastFetchedTransactions =
                 transactionPaginationHelper.getContentWithRefreshDate(account);
 
         TransactionsResponse transactionsResponse =
-                apiClient.getTransactionsFor(account, contentWithRefreshDate.orElse(new Date(0)));
+                apiClient.getTransactionsFor(
+                        account, dateOfLastFetchedTransactions.orElse(new Date(0)));
         transactions.addAll(transactionsResponse.getTinkTransactions());
 
         while (transactionsResponse.nextKey() != null) {

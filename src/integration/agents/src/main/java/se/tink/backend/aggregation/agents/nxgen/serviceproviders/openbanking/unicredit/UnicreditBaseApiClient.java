@@ -86,10 +86,6 @@ public class UnicreditBaseApiClient {
         return new URL(consentResponse.getScaRedirect());
     }
 
-    protected String getTransactionsDateFrom() {
-        return QueryValues.TRANSACTION_FROM_DATE;
-    }
-
     protected String getScaRedirectUrlFromCreatePaymentResponse(
             CreatePaymentResponse createPaymentResponse) {
         return createPaymentResponse.getScaRedirect();
