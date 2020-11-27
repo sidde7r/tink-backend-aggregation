@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -58,6 +59,31 @@ public class AccountDataCacheTest {
 
         Assert.assertEquals(accountDataCache.getFilteredAccounts().size(), 1);
         assertThat(accountDataCache.getFilteredAccounts()).containsExactlyInAnyOrder(account1);
+    }
+
+    @Test
+    public void testFilteredOutAccountDataWithFilterReason() {
+        AccountDataCache accountDataCache = new AccountDataCache();
+
+        accountDataCache.addFilter(
+                this::restrictDummyAccount0, FilterReason.DATA_FETCHING_RESTRICTIONS_ACCOUNT_TYPE);
+        accountDataCache.addFilter(this::restrictDummyAccount0, FilterReason.OPT_IN);
+
+        Account account0 = mockAccount(DUMMY_ACCOUNT_ID_0);
+        Account account1 = mockAccount(DUMMY_ACCOUNT_ID_1);
+
+        accountDataCache.cacheAccount(account0);
+        accountDataCache.cacheAccount(account1);
+
+        List<Pair<AccountData, List<FilterReason>>> filteredOut =
+                accountDataCache.getFilteredOutAccountDataWithFilterReason();
+
+        Assert.assertEquals(filteredOut.size(), 1);
+        Assert.assertEquals(
+                filteredOut.get(0).getLeft().getAccount().getBankId(), DUMMY_ACCOUNT_ID_0);
+        assertThat(filteredOut.get(0).getRight())
+                .containsExactlyInAnyOrder(
+                        FilterReason.DATA_FETCHING_RESTRICTIONS_ACCOUNT_TYPE, FilterReason.OPT_IN);
     }
 
     @Test
