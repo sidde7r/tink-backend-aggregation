@@ -5,6 +5,7 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.MORTGAGE_AGGREGATION;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
 
+import com.google.inject.Inject;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
@@ -47,6 +48,7 @@ public final class HandelsbankenNOAgent extends NextGenerationAgent
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final LoanRefreshController loanRefreshController;
 
+    @Inject
     public HandelsbankenNOAgent(AgentComponentProvider agentComponentProvider) {
         super(agentComponentProvider);
         configureHttpClient(client);

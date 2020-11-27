@@ -27,6 +27,7 @@ java_library(
         "//src/libraries/i18n",
         "//src/libraries/serialization",
         "//third_party:com_google_http_client_google_http_client",
+        "//third_party:com_google_inject_guice",
         "//third_party:com_sun_jersey_jersey_core",
         "//third_party:commons_codec_commons_codec",
         "//third_party:lombok_libs",
