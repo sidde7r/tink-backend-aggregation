@@ -14,7 +14,8 @@ import se.tink.backend.aggregation.utils.deviceprofile.DeviceProfile;
 
 public class MockEncapMessageUtils extends BaseEncapMessageUtils {
 
-    private static final String MORE_REQUESTS_TO_ENCAP_CLIENT_THAN_EXPECTED = "More requests to Encap client than expected";
+    private static final String MORE_REQUESTS_TO_ENCAP_CLIENT_THAN_EXPECTED =
+            "More requests to Encap client than expected";
 
     private int counter = 0;
     private int hexCounter = 0;

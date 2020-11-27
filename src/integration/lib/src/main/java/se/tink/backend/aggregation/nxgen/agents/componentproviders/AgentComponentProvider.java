@@ -110,6 +110,7 @@ public final class AgentComponentProvider
         return generatedValueProvider.getRandomValueGenerator();
     }
 
+    // Should not take parameters - some refactor is needed for that case.
     @Override
     public EncapClient getEncapClient(
             PersistentStorage persistentStorage,
