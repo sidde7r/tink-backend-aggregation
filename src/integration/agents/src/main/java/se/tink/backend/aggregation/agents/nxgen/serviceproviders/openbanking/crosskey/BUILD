@@ -27,6 +27,7 @@ java_library(
         "//src/integration/payment:enums",
         "//src/integration/payment:rpc",
         "//src/libraries/account_identifier",
+        "//src/libraries/date",
         "//src/libraries/serialization",
         "//src/libraries/strings",
         "//third_party:com_sun_jersey_jersey_core",

@@ -11,10 +11,10 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cro
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.configuration.CrosskeyBaseConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.configuration.CrosskeyMarketConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.executor.payment.CrossKeyPaymentExecutor;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.creditcardaccount.CreditCardAccountFetcher;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.creditcardaccount.CreditCardTransactionFetcher;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.transactionalaccount.TransactionalAccountAccountFetcher;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.transactionalaccount.TransactionalAccountTransactionFetcher;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.creditcardaccount.CrossKeyCreditCardAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.creditcardaccount.CrossKeyCreditCardTransactionFetcher;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.transactionalaccount.CrossKeyTransactionalAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.transactionalaccount.CrossKeyTransactionalAccountTransactionFetcher;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
@@ -25,6 +25,8 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
@@ -46,15 +48,8 @@ public abstract class CrosskeyBaseAgent extends NextGenerationAgent
         super(request, context, signatureKeyPair);
 
         apiClient = new CrosskeyBaseApiClient(client, sessionStorage, marketConfiguration);
-
-        creditCardRefreshController =
-                new CreditCardRefreshController(
-                        metricRefreshController,
-                        updateController,
-                        new CreditCardAccountFetcher(apiClient),
-                        new CreditCardTransactionFetcher(apiClient));
-
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
+        creditCardRefreshController = getCreditCardRefreshController();
     }
 
     @Override
@@ -107,14 +102,6 @@ public abstract class CrosskeyBaseAgent extends NextGenerationAgent
         return transactionalAccountRefreshController.fetchSavingsTransactions();
     }
 
-    private TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
-        return new TransactionalAccountRefreshController(
-                metricRefreshController,
-                updateController,
-                new TransactionalAccountAccountFetcher(apiClient),
-                new TransactionalAccountTransactionFetcher(apiClient));
-    }
-
     @Override
     protected SessionHandler constructSessionHandler() {
         return SessionHandler.alwaysFail();
@@ -150,5 +137,27 @@ public abstract class CrosskeyBaseAgent extends NextGenerationAgent
                         sessionStorage);
 
         return Optional.of(new PaymentController(crossKeyPaymentExecutor, crossKeyPaymentExecutor));
+    }
+
+    protected TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
+        return new TransactionalAccountRefreshController(
+                metricRefreshController,
+                updateController,
+                new CrossKeyTransactionalAccountFetcher(apiClient),
+                new TransactionFetcherController<>(
+                        transactionPaginationHelper,
+                        new TransactionDatePaginationController<>(
+                                new CrossKeyTransactionalAccountTransactionFetcher(apiClient))));
+    }
+
+    protected CreditCardRefreshController getCreditCardRefreshController() {
+        return new CreditCardRefreshController(
+                metricRefreshController,
+                updateController,
+                new CrossKeyCreditCardAccountFetcher(apiClient),
+                new TransactionFetcherController<>(
+                        transactionPaginationHelper,
+                        new TransactionDatePaginationController<>(
+                                new CrossKeyCreditCardTransactionFetcher(apiClient))));
     }
 }

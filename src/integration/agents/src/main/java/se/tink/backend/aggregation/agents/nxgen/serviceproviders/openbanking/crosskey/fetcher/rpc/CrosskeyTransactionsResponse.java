@@ -13,16 +13,18 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cro
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.entities.transaction.TransactionEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.entities.transaction.TransactionTypeEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 @JsonObject
 @JsonNaming(PropertyNamingStrategy.UpperCamelCaseStrategy.class)
-public class CrosskeyTransactionsResponse {
+public class CrosskeyTransactionsResponse implements PaginatorResponse {
 
     private TransactionDataEntity data;
     private LinksEntity links;
     private MetaEntity meta;
 
+    @JsonIgnore private boolean canFetchMore = true;
     @JsonIgnore private TransactionTypeEntity transactionType;
 
     public Collection<? extends Transaction> getTinkCreditCardTransactions() {
@@ -32,11 +34,20 @@ public class CrosskeyTransactionsResponse {
                 .collect(Collectors.toList());
     }
 
+    @Override
     public Collection<? extends Transaction> getTinkTransactions() {
         return Optional.ofNullable(data).map(TransactionDataEntity::getTransactions)
                 .orElse(Collections.emptyList()).stream()
                 .map(TransactionEntity::constructTransactionalAccountTransaction)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Optional<Boolean> canFetchMore() {
+        if (data == null || data.getTransactions().size() == 0) {
+            return Optional.empty();
+        }
+        return Optional.of(canFetchMore);
     }
 
     public CrosskeyTransactionsResponse setTransactionType(TransactionTypeEntity transactionType) {

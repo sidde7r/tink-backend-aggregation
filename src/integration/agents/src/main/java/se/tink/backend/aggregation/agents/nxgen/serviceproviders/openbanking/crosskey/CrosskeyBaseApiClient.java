@@ -2,17 +2,23 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cr
 
 import java.nio.charset.StandardCharsets;
 import java.security.cert.CertificateException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.Base64;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Optional;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants.ErrorMessages;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants.Format;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants.OIDCValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants.StorageKeys;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants.TransactionsFetching;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants.UrlParameters;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.authenticator.entities.accessconsents.AccessConsentRequest;
@@ -40,6 +46,7 @@ import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfigura
 import se.tink.backend.aggregation.eidassigner.QsealcAlg;
 import se.tink.backend.aggregation.eidassigner.QsealcSignerImpl;
 import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
@@ -47,6 +54,7 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.libraries.date.DateFormat;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class CrosskeyBaseApiClient {
@@ -62,6 +70,8 @@ public class CrosskeyBaseApiClient {
     private final String xFapiFinancialId;
     private String certificateSerialNumber;
 
+    private Date minimalFetchDate;
+
     public CrosskeyBaseApiClient(
             TinkHttpClient client,
             SessionStorage sessionStorage,
@@ -72,6 +82,14 @@ public class CrosskeyBaseApiClient {
         this.baseAuthUrl = marketConfiguration.getBaseAuthURL();
         this.baseApiUrl = marketConfiguration.getBaseApiURL();
         this.xFapiFinancialId = marketConfiguration.getFinancialId();
+
+        try {
+            minimalFetchDate =
+                    new SimpleDateFormat(Format.TRANSACTION_DATE_FETCHER)
+                            .parse(TransactionsFetching.EARLIEST_DATE_STRING);
+        } catch (ParseException e) {
+            throw new IllegalStateException("Could not parse MINIMAL_DATE_STRING");
+        }
     }
 
     public CrosskeyBaseConfiguration getConfiguration() {
@@ -186,24 +204,15 @@ public class CrosskeyBaseApiClient {
         return createRequestInSession(url).get(CrosskeyAccountBalancesResponse.class);
     }
 
-    public CrosskeyTransactionsResponse fetchCreditCardTransactions(CreditCardAccount account) {
-        final URL url =
-                new URL(baseApiUrl + CrosskeyBaseConstants.Urls.ACCOUNT_TRANSACTIONS)
-                        .parameter(UrlParameters.ACCOUNT_ID, account.getApiIdentifier());
-
-        return createRequestInSession(url)
-                .get(CrosskeyTransactionsResponse.class)
+    public CrosskeyTransactionsResponse fetchCreditCardTransactions(
+            CreditCardAccount account, Date fromDate, Date toDate) {
+        return fetchTransactions(account.getApiIdentifier(), fromDate, toDate)
                 .setTransactionType(TransactionTypeEntity.CREDIT);
     }
 
-    public CrosskeyTransactionsResponse fetchTransactionalAccountTransactions(
-            TransactionalAccount account) {
-        final URL url =
-                new URL(baseApiUrl + CrosskeyBaseConstants.Urls.ACCOUNT_TRANSACTIONS)
-                        .parameter(UrlParameters.ACCOUNT_ID, account.getApiIdentifier());
-
-        return createRequestInSession(url)
-                .get(CrosskeyTransactionsResponse.class)
+    public PaginatorResponse fetchTransactionalAccountTransactions(
+            TransactionalAccount account, Date fromDate, Date toDate) {
+        return fetchTransactions(account.getApiIdentifier(), fromDate, toDate)
                 .setTransactionType(TransactionTypeEntity.DEBIT);
     }
 
@@ -217,6 +226,32 @@ public class CrosskeyBaseApiClient {
                 .queryParam(QueryKeys.REFRESH_TOKEN, refreshToken)
                 .post(TokenResponse.class)
                 .toTinkToken();
+    }
+
+    private CrosskeyTransactionsResponse fetchTransactions(
+            String apiIdentifier, Date fromDate, Date toDate) {
+        String fromBookingDateTime;
+        if (fromDate.before(minimalFetchDate)) {
+            fromBookingDateTime = TransactionsFetching.EARLIEST_DATE_STRING;
+        } else {
+            fromBookingDateTime =
+                    DateFormat.formatDateTime(
+                            removeTimeFromDate(fromDate),
+                            Format.TRANSACTION_DATE_FETCHER,
+                            DateFormat.Zone.UTC);
+        }
+        String toBookingDateTime =
+                DateFormat.formatDateTime(
+                        removeTimeFromDate(toDate),
+                        Format.TRANSACTION_DATE_FETCHER,
+                        DateFormat.Zone.UTC);
+
+        final URL url =
+                new URL(baseApiUrl + CrosskeyBaseConstants.Urls.ACCOUNT_TRANSACTIONS)
+                        .parameter(UrlParameters.ACCOUNT_ID, apiIdentifier)
+                        .queryParam(UrlParameters.FROM_BOOKING_DATE, fromBookingDateTime)
+                        .queryParam(UrlParameters.TO_BOOKING_DATE, toBookingDateTime);
+        return createRequestInSession(url).get(CrosskeyTransactionsResponse.class);
     }
 
     private OAuth2Token getTokenFromSession() {
@@ -389,5 +424,15 @@ public class CrosskeyBaseApiClient {
                         CrosskeyBaseConstants.HeaderKeys.X_IDEMPOTENCY_KEY,
                         Psd2Headers.getRequestId())
                 .get(CrosskeyPaymentDetails.class);
+    }
+
+    private Date removeTimeFromDate(Date date) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        return cal.getTime();
     }
 }
