@@ -121,11 +121,11 @@ public abstract class BaseEncapMessageUtils implements EncapMessageUtils {
     public String buildRegistrationMessage() {
         Map<String, String> queryPairs = new HashMap<>();
 
-        queryPairs.put("applicationId", EncapConstants.Message.APPLICATION_ID);
+        queryPairs.put(EncapConstants.MessageConstants.APPLICATION_ID, EncapConstants.Message.APPLICATION_ID);
         populateDeviceInformation(queryPairs);
-        queryPairs.put("hexAPNToken", EncapConstants.Message.HEX_APN_TOKEN);
+        queryPairs.put(EncapConstants.MessageConstants.HEX_APN_TOKEN, EncapConstants.Message.HEX_APN_TOKEN);
         populateMetaInformation(queryPairs);
-        queryPairs.put("operation", EncapConstants.Message.OPERATION_REGISTER);
+        queryPairs.put(EncapConstants.MessageConstants.OPERATION, EncapConstants.Message.OPERATION_REGISTER);
 
         return getUrlEncodedQueryParams(queryPairs);
     }
@@ -181,12 +181,12 @@ public abstract class BaseEncapMessageUtils implements EncapMessageUtils {
 
         Map<String, String> queryPairs = new HashMap<>();
 
-        queryPairs.put("activatedAuthMethods", activatedMethodsRequest);
+        queryPairs.put(EncapConstants.MessageConstants.ACTIVATED_AUTH_METHODS, activatedMethodsRequest);
         populateDeviceInformation(queryPairs);
         populateMetaInformation(queryPairs);
-        queryPairs.put("operation", EncapConstants.Message.OPERATION_ACTIVATE);
-        queryPairs.put("registrationId", storage.getRegistrationId());
-        queryPairs.put("saltHash", storage.getSaltHash());
+        queryPairs.put(EncapConstants.MessageConstants.OPERATION, EncapConstants.Message.OPERATION_ACTIVATE);
+        queryPairs.put(EncapConstants.Storage.REGISTRATION_ID, storage.getRegistrationId());
+        queryPairs.put(EncapConstants.Storage.B64_SALT_HASH, storage.getSaltHash());
 
         // Prepending string because the queryPairs map only handles unique keys
         return getUrlEncodedQueryParams(queryPairs);
@@ -197,15 +197,15 @@ public abstract class BaseEncapMessageUtils implements EncapMessageUtils {
         Map<String, String> queryPairs = new HashMap<>();
 
         if (!Strings.isNullOrEmpty(authenticationId)) {
-            queryPairs.put("clientData", authenticationId);
+            queryPairs.put(EncapConstants.MessageConstants.CLIENT_DATA, authenticationId);
         }
-        queryPairs.put("clientOnly", EncapConstants.Message.CLIENT_ONLY);
-        queryPairs.put("clientSaltCurrentKeyId", storage.getClientSaltKeyId());
+        queryPairs.put(EncapConstants.MessageConstants.CLIENT_ONLY, EncapConstants.Message.CLIENT_ONLY);
+        queryPairs.put(EncapConstants.Storage.CLIENT_SALT_CURRENT_KEY_ID, storage.getClientSaltKeyId());
         populateDeviceInformation(queryPairs);
         populateMetaInformation(queryPairs);
-        queryPairs.put("operation", EncapConstants.Message.OPERATION_IDENTIFY);
-        queryPairs.put("purpose", EncapConstants.Message.PURPOSE);
-        queryPairs.put("registrationId", storage.getRegistrationId());
+        queryPairs.put(EncapConstants.MessageConstants.OPERATION, EncapConstants.Message.OPERATION_IDENTIFY);
+        queryPairs.put(EncapConstants.MessageConstants.PURPOSE, EncapConstants.Message.PURPOSE);
+        queryPairs.put(EncapConstants.Storage.REGISTRATION_ID, storage.getRegistrationId());
 
         return getUrlEncodedQueryParams(queryPairs);
     }
@@ -233,14 +233,14 @@ public abstract class BaseEncapMessageUtils implements EncapMessageUtils {
 
         Map<String, String> queryPairs = new HashMap<>();
 
-        queryPairs.put("b64ResponseCurrent", challengeResponse);
+        queryPairs.put(EncapConstants.MessageConstants.B64_RESPONSE_CURRENT, challengeResponse);
         populateDeviceInformation(queryPairs);
-        queryPairs.put("hexAPNToken", EncapConstants.Message.HEX_APN_TOKEN);
+        queryPairs.put(EncapConstants.MessageConstants.HEX_APN_TOKEN, EncapConstants.Message.HEX_APN_TOKEN);
         populateMetaInformation(queryPairs);
-        queryPairs.put("operation", EncapConstants.Message.OPERATION_AUTHENTICATE);
-        queryPairs.put("registrationId", storage.getRegistrationId());
-        queryPairs.put("saltHash1", storage.getSaltHash());
-        queryPairs.put("usedAuthMethod", usedAuthMethod);
+        queryPairs.put(EncapConstants.MessageConstants.OPERATION, EncapConstants.Message.OPERATION_AUTHENTICATE);
+        queryPairs.put(EncapConstants.Storage.REGISTRATION_ID, storage.getRegistrationId());
+        queryPairs.put(EncapConstants.Storage.SALT_HASH_1, storage.getSaltHash());
+        queryPairs.put(EncapConstants.MessageConstants.USED_AUTH_METHOD, usedAuthMethod);
 
         return getUrlEncodedQueryParams(queryPairs);
     }

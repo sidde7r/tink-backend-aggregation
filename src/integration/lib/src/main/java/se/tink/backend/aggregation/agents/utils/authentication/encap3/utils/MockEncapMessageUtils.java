@@ -14,6 +14,8 @@ import se.tink.backend.aggregation.utils.deviceprofile.DeviceProfile;
 
 public class MockEncapMessageUtils extends BaseEncapMessageUtils {
 
+    private static final String MORE_REQUESTS_TO_ENCAP_CLIENT_THAN_EXPECTED = "More requests to Encap client than expected";
+
     private int counter = 0;
     private int hexCounter = 0;
     private int randomKeyCounter = 0;
@@ -51,7 +53,7 @@ public class MockEncapMessageUtils extends BaseEncapMessageUtils {
             case 9:
                 return getUrlDecoder().decode("MDmN_8KKYOY_GMyGbyuhuZ821GDIDrdbYY-uxFPxzvc=");
             default:
-                throw new IllegalStateException("More requests to Encap client than expected");
+                throw new IllegalStateException(MORE_REQUESTS_TO_ENCAP_CLIENT_THAN_EXPECTED);
         }
     }
 
@@ -65,7 +67,7 @@ public class MockEncapMessageUtils extends BaseEncapMessageUtils {
             case 2:
                 return "83954748";
             default:
-                throw new IllegalStateException("More requests to Encap client than expected");
+                throw new IllegalStateException(MORE_REQUESTS_TO_ENCAP_CLIENT_THAN_EXPECTED);
         }
     }
 
@@ -85,7 +87,7 @@ public class MockEncapMessageUtils extends BaseEncapMessageUtils {
                         getPrivateKey(
                                 "MIGGAgEAMBAGByqGSM49AgEGBSuBBAAaBG8wbQIBAQQdPfv/pLqJnDKwTQTu/p2CWpkMeCOnhqhQo2KZ9u6gBwYFK4EEABqhQAM+AAQB5ox/urHbeQ4nuQEehqUlnNx4gHIvN2amS/t7jAUBGEFLRcmedOdFMFyETQFd8qh8g1/4j2FfAgz6KKs="));
             default:
-                throw new IllegalStateException("More requests to Encap client than expected");
+                throw new IllegalStateException(MORE_REQUESTS_TO_ENCAP_CLIENT_THAN_EXPECTED);
         }
     }
 
@@ -109,7 +111,7 @@ public class MockEncapMessageUtils extends BaseEncapMessageUtils {
             case 2:
                 return "ftSwMeOtT83X/1NgRk1z+jNdUm1mbv/DIU0oKzXE0/hbiG6xY6Z11Kdtpb0eGIO6jUY+Fm1owfWaFR16Vp2pU8e7BF7pFf2vhrhea9tSExPT9sshc3DQdZO6NUUwQY4AZd5/35tsbcGd/OXQk+H6w0lYfOcIltH6XkPteuYjZ7xq2XVOEOd7ylv4o6zpKKQ1s0kfrXK98CAOaGdcbf+Kpo5TtajdZkU7jNtxlaRwHZP+CINIcSkw+4seQ0zEyaeJ4/IaAXiDjwf0J+1KmDD3BS06UJNWjpdIXhphNElX69/hkvEqf+Jie6JP03vm+Dl6zzku5YWi97zMuMugoeEjMg==";
             default:
-                throw new IllegalStateException("More requests to Encap client than expected");
+                throw new IllegalStateException(MORE_REQUESTS_TO_ENCAP_CLIENT_THAN_EXPECTED);
         }
     }
 }
