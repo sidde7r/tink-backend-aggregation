@@ -204,6 +204,8 @@ clients:
     aggregatorIdentifier: "BancoPosta"
   it-poste-testing:
     aggregatorIdentifier: "Poste Italiane"
+  it-postepay-production:
+    aggregatorIdentifier: "PostePay"
   kbc-production:
     aggregatorIdentifier: "KBC"
   kbc-testing:
