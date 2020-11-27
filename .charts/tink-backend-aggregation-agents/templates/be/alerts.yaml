@@ -40,3 +40,47 @@ spec:
         summary: Refresh success rate is below 90% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
           the last 30 minutes.
         tags: {{ .Values.minionsTags }}
+
+    ### Provider level fails
+    - alert: HighProviderErrorRatioBE
+      expr: |
+        # Never triggers on providers that did less than 10 operations past 60
+        # minutes. This filters out small providers which are less critical to fix
+        # quickly.
+        sum(increase(tink_executions_total{market="BE", provider_type!="test"}[1h])) BY (provider) > 10 and
+        # Providers where over 50% of the requests have failed.
+        ratio:tink_provider_errors:delta60m > 50
+      for: 15m
+      labels:
+        severity: urgent
+        priority: P1
+        who: integration
+      annotations:
+        description: {{ .Values.kibanaLink }}
+          {{ .Values.grafanaLink }}
+        summary: Provider <{ $labels.provider }> has failed over 50%
+          of its operations the past 60 minutes
+        tags: {{ .Values.minionsTags }}
+
+    ### Agent level login failures
+    - alert: HighProviderFailedLoginRatioBE
+      expr: |
+        # Never trigger on agents with less than 40 login attempts past 60 minutes.
+        # This filters out small agents which are less critical to fix quickly
+        sum(increase(tink_agent_login_total{action="login", market="BE", provider_type!="test"}[1h])) BY (className,provider) > 40 and
+        # Agents where more than 20% of the login attempts fail.
+        sum(increase(tink_agent_login_total{action="login",outcome="failed", market="BE"}[30m])) BY (className,provider) / sum(increase(tink_agent_login_total{action="login", market="BE"}[30m])) BY (className,provider) > 0.20
+      for: 30m
+      labels:
+        severity: urgent
+        priority: P1
+        who: integration
+      annotations:
+        description: To learn more check out the metric `tink_agent_login_total`. This
+          alert never triggers on agents that did less than 10 operations in the
+          past 60 minutes.
+          {{ .Values.kibanaLink }}
+          {{ .Values.grafanaLink }}
+        summary: Agent <{ $labels.className }> has failed over 20%
+          of its login attempts the past 60 minutes.
+        tags: {{ .Values.minionsTags }}
