@@ -86,10 +86,12 @@ public final class BodyParserImpl implements BodyParser {
                 !Strings.isNullOrEmpty(pair.getName()), "The provided form body is invalid.");
 
         try {
-            return URLEncoder.encode(pair.getName(), URL_ENCODING)
-                    + "="
-                    + URLEncoder.encode(pair.getValue(), URL_ENCODING);
-
+            String encodedName = URLEncoder.encode(pair.getName(), URL_ENCODING) + "=";
+            if (pair.getValue() == null) {
+                return encodedName;
+            } else {
+                return encodedName + URLEncoder.encode(pair.getValue(), URL_ENCODING);
+            }
         } catch (UnsupportedEncodingException e) {
             throw new IllegalStateException(e);
         }

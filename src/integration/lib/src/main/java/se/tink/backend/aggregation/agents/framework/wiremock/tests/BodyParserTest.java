@@ -105,8 +105,8 @@ public final class BodyParserTest {
                 aPerfectlyValidBody, MediaType.APPLICATION_FORM_URLENCODED);
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void invalidForm_emptyValue_ThrowException() {
+    @Test
+    public void correctForm_emptyValue_ThrowException() {
 
         final BodyParser bodyParser = new BodyParserImpl();
         final String aPerfectlyValidBody = "not-form";
