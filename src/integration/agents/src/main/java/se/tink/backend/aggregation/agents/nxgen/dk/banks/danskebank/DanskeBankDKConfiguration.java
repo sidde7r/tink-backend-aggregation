@@ -3,20 +3,30 @@ package se.tink.backend.aggregation.agents.nxgen.dk.banks.danskebank;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
+import lombok.RequiredArgsConstructor;
+import org.xnap.commons.i18n.I18n;
 import se.tink.backend.aggregation.agents.models.Loan;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConstants;
 import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
+import se.tink.libraries.i18n.Catalog;
 
+@RequiredArgsConstructor
 public class DanskeBankDKConfiguration implements DanskeBankConfiguration {
-    private static final String APP_CULTURE = "en-GB";
+
+    private final Catalog catalog;
+
+    private static final String EN_APP_CULTURE = "en-DK";
+    private static final String DA_APP_CULTURE = "da-DK";
     private static final String APP_NAME = "com.danskebank.mobilebank3dk";
     private static final String APP_REFERER = "MobileBanking3 DK";
     private static final String APP_VERSION = "0.43.0";
     private static final String BRAND = "DB";
-    private static final String LANGUAGE_CODE = "DA";
+    private static final String DA_LANGUAGE_CODE = "DA";
+    private static final String EN_LANGUAGE_CODE = "EN";
     private static final String MARKET_CODE = "DK";
     private static final String APP_VERSION_HEADER = "MobileBank ios DK 17798";
     private static final String DEVICE_SERIAL_NO_KEY = "x-device-serial-no";
@@ -42,7 +52,9 @@ public class DanskeBankDKConfiguration implements DanskeBankConfiguration {
 
     @Override
     public String getAppCulture() {
-        return APP_CULTURE;
+        return EN_LANGUAGE_CODE.equalsIgnoreCase(getLanguageCode())
+                ? EN_APP_CULTURE
+                : DA_APP_CULTURE;
     }
 
     @Override
@@ -67,7 +79,14 @@ public class DanskeBankDKConfiguration implements DanskeBankConfiguration {
 
     @Override
     public String getLanguageCode() {
-        return LANGUAGE_CODE;
+        String userLanguageCode =
+                Optional.ofNullable(catalog.getI18n())
+                        .map(I18n::getLocale)
+                        .map(Locale::getLanguage)
+                        .orElse(DA_LANGUAGE_CODE);
+        return EN_LANGUAGE_CODE.equalsIgnoreCase(userLanguageCode)
+                ? EN_LANGUAGE_CODE
+                : DA_LANGUAGE_CODE;
     }
 
     @Override
