@@ -86,10 +86,6 @@ public class UnicreditBaseApiClient {
         return new URL(consentResponse.getScaRedirect());
     }
 
-    protected String getTransactionsDateFrom() {
-        return QueryValues.TRANSACTION_FROM_DATE;
-    }
-
     protected String getScaRedirectUrlFromCreatePaymentResponse(
             CreatePaymentResponse createPaymentResponse) {
         return createPaymentResponse.getScaRedirect();
@@ -174,7 +170,7 @@ public class UnicreditBaseApiClient {
                 .get(AccountDetailsResponse.class);
     }
 
-    public TransactionsResponse getTransactionsFor(TransactionalAccount account) {
+    public TransactionsResponse getTransactionsFor(TransactionalAccount account, Date dateFrom) {
         URL transactionsUrl =
                 new URL(providerConfiguration.getBaseUrl() + Endpoints.TRANSACTIONS)
                         .parameter(PathParameters.ACCOUNT_ID, account.getApiIdentifier());
@@ -182,7 +178,9 @@ public class UnicreditBaseApiClient {
         RequestBuilder transactionRequestBuilder =
                 createRequestInSession(transactionsUrl)
                         .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BOTH)
-                        .queryParam(QueryKeys.DATE_FROM, getTransactionsDateFrom())
+                        .queryParam(
+                                QueryKeys.DATE_FROM,
+                                ThreadSafeDateFormat.FORMATTER_DAILY.format(dateFrom))
                         .queryParam(
                                 QueryKeys.DATE_TO,
                                 ThreadSafeDateFormat.FORMATTER_DAILY.format(new Date()));
