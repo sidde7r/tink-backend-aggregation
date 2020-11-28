@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.minpension.authenticato
 import se.tink.backend.aggregation.agents.nxgen.se.banks.minpension.authenticator.rpc.InitBankIdResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.minpension.authenticator.rpc.PollBankIdResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.minpension.authenticator.rpc.UserTOCResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.minpension.fetcher.pension.rpc.PensionAccountsResponse;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
@@ -37,7 +38,7 @@ public class MinPensionApiClient {
     }
 
     public UserTOCResponse fetchUserTOCStatus() {
-        return client.request(Urls.FETCH_ACCOUNT)
+        return client.request(Urls.FETCH_USER)
                 .accept(MediaType.APPLICATION_JSON)
                 .header(HeaderKeys.USER_AGENT, HeaderValues.USER_AGENT)
                 .options(UserTOCResponse.class);
@@ -48,5 +49,12 @@ public class MinPensionApiClient {
                 .accept(MediaType.TEXT_PLAIN)
                 .header(HeaderKeys.USER_AGENT, HeaderValues.USER_AGENT)
                 .get(String.class);
+    }
+
+    public PensionAccountsResponse fetchPensionAccounts() {
+        return client.request(Urls.FETCH_PENSION_ACCOUNTS)
+                .accept(MediaType.APPLICATION_JSON)
+                .header(HeaderKeys.USER_AGENT, HeaderValues.USER_AGENT)
+                .get(PensionAccountsResponse.class);
     }
 }
