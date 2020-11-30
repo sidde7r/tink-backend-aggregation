@@ -36,13 +36,13 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc.SessionOpen
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc.StartFlowRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.sessionhandler.rpc.KeepAliveRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.sessionhandler.rpc.TechnicalResponse;
-import se.tink.backend.aggregation.agentsplatform.framework.http.HttpClient;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.http.AgentHttpClient;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @AllArgsConstructor
 public class AgentPlatformBelfiusApiClient {
 
-    private final HttpClient client;
+    private final AgentHttpClient client;
     private final String locale;
 
     public void requestConfigIos() {
@@ -56,7 +56,8 @@ public class AgentPlatformBelfiusApiClient {
                                 "User-Agent",
                                 "Belfius%20Mobile/192811614 CFNetwork/974.2.1 Darwin/18.0.0")
                         .build(),
-                String.class);
+                String.class,
+                null);
     }
 
     public SessionOpenedResponse openSession(String machineId) {
@@ -273,7 +274,7 @@ public class AgentPlatformBelfiusApiClient {
                         .header("Accept", MediaType.WILDCARD);
         BelfiusConstants.HEADERS.forEach((name, val) -> builder.header(name, val));
 
-        String responseBody = client.exchange(builder.body(body), String.class).getBody();
+        String responseBody = client.exchange(builder.body(body), String.class, null).getBody();
         T response = SerializationUtils.deserializeFromString(responseBody, c);
         MessageResponse.validate(response);
         return response;

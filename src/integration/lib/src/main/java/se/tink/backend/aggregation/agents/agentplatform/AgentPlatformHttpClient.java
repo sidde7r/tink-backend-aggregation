@@ -26,7 +26,6 @@ public class AgentPlatformHttpClient implements AgentHttpClient {
         this.tinkHttpClient = tinkHttpClient;
     }
 
-    @Override
     public <T> ResponseEntity<T> exchange(RequestEntity<?> requestEntity, Class<T> responseType) {
         RequestBuilder requestBuilder =
                 tinkHttpClient
