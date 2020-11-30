@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.kbc;
 
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CREDIT_CARDS;
-import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.INVESTMENTS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
 
 import com.google.api.client.repackaged.com.google.common.base.Strings;
@@ -40,7 +39,7 @@ import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.TimeoutRetryF
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-@AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, CREDIT_CARDS, INVESTMENTS})
+@AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, CREDIT_CARDS})
 public final class KbcAgent
         extends SubsequentGenerationAgent<AutoAuthenticationProgressiveController>
         implements RefreshCreditCardAccountsExecutor,
