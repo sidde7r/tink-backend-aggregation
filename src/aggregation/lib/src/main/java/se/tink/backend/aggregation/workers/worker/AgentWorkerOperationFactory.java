@@ -304,8 +304,7 @@ public class AgentWorkerOperationFactory {
                             regulatoryRestrictions,
                             psd2PaymentAccountClassifier,
                             accountInformationServiceEventsProducer,
-                            controllerWrapper,
-                            false));
+                            controllerWrapper));
             commands.add(new DataFetchingRestrictionWorkerCommand(context, controllerWrapper));
             commands.add(new AccountWhitelistRestrictionWorkerCommand(context, request));
             // SendAccountRestrictionEventsWorkerCommand should be added after all restrictions on
@@ -459,8 +458,7 @@ public class AgentWorkerOperationFactory {
                         regulatoryRestrictions,
                         psd2PaymentAccountClassifier,
                         accountInformationServiceEventsProducer,
-                        controllerWrapper,
-                        false));
+                        controllerWrapper));
         commands.add(new DataFetchingRestrictionWorkerCommand(context, controllerWrapper));
         commands.add(new AccountWhitelistRestrictionWorkerCommand(context, request));
         // SendAccountRestrictionEventsWorkerCommand should be added after all restrictions on
@@ -620,8 +618,7 @@ public class AgentWorkerOperationFactory {
                                 regulatoryRestrictions,
                                 psd2PaymentAccountClassifier,
                                 accountInformationServiceEventsProducer,
-                                controllerWrapper,
-                                false));
+                                controllerWrapper));
                 commands.add(new DataFetchingRestrictionWorkerCommand(context, controllerWrapper));
                 commands.add(new AccountWhitelistRestrictionWorkerCommand(context, request));
                 // SendAccountRestrictionEventsWorkerCommand should be added after all restrictions
@@ -696,8 +693,7 @@ public class AgentWorkerOperationFactory {
                             regulatoryRestrictions,
                             psd2PaymentAccountClassifier,
                             accountInformationServiceEventsProducer,
-                            controllerWrapper,
-                            false));
+                            controllerWrapper));
             commands.add(new DataFetchingRestrictionWorkerCommand(context, controllerWrapper));
             commands.add(new AccountWhitelistRestrictionWorkerCommand(context, request));
             // SendAccountRestrictionEventsWorkerCommand should be added after all restrictions on
@@ -1387,8 +1383,7 @@ public class AgentWorkerOperationFactory {
                             regulatoryRestrictions,
                             psd2PaymentAccountClassifier,
                             accountInformationServiceEventsProducer,
-                            controllerWrapper,
-                            false));
+                            controllerWrapper));
             commands.add(new DataFetchingRestrictionWorkerCommand(context, controllerWrapper));
             // If this is an optIn request we request the caller do supply supplemental information
             // with the

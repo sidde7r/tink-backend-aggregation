@@ -29,7 +29,6 @@ public class Psd2PaymentAccountRestrictionWorkerCommand extends AgentWorkerComma
     private final Psd2PaymentAccountClassifier psd2PaymentAccountClassifier;
     private final AccountInformationServiceEventsProducer accountInformationServiceEventsProducer;
     private final ControllerWrapper controllerWrapper;
-    private final boolean shouldRemoveAlreadyAggregatedAccounts;
 
     public Psd2PaymentAccountRestrictionWorkerCommand(
             AgentWorkerCommandContext context,
@@ -37,15 +36,13 @@ public class Psd2PaymentAccountRestrictionWorkerCommand extends AgentWorkerComma
             RegulatoryRestrictions regulatoryRestrictions,
             Psd2PaymentAccountClassifier psd2PaymentAccountClassifier,
             AccountInformationServiceEventsProducer accountInformationServiceEventsProducer,
-            ControllerWrapper controllerWrapper,
-            boolean shouldRemoveAlreadyAggregatedAccounts) {
+            ControllerWrapper controllerWrapper) {
         this.context = context;
         this.refreshInformationRequest = request;
         this.regulatoryRestrictions = regulatoryRestrictions;
         this.psd2PaymentAccountClassifier = psd2PaymentAccountClassifier;
         this.accountInformationServiceEventsProducer = accountInformationServiceEventsProducer;
         this.controllerWrapper = controllerWrapper;
-        this.shouldRemoveAlreadyAggregatedAccounts = shouldRemoveAlreadyAggregatedAccounts;
     }
 
     private boolean shouldFilterRestrictedAccount(Account account) {
@@ -83,9 +80,7 @@ public class Psd2PaymentAccountRestrictionWorkerCommand extends AgentWorkerComma
                                 }
                                 sendEvents(account);
                             });
-            if (shouldRemoveAlreadyAggregatedAccounts) {
-                removeRestrictedAccounts(restrictedAccounts);
-            }
+            removeRestrictedAccounts(restrictedAccounts);
             if (!restrictedAccounts.isEmpty()) {
                 log.info(
                         "Applying PSD2 payment account restriction filter for credentialsId: {}",
