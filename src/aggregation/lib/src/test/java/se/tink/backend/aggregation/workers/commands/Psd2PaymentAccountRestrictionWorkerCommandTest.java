@@ -117,8 +117,7 @@ public class Psd2PaymentAccountRestrictionWorkerCommandTest {
                         new RegulatoryRestrictions(regulatoryRestrictionsMetrics),
                         Psd2PaymentAccountClassifier.create(),
                         mock(AccountInformationServiceEventsProducer.class),
-                        controllerWrapper,
-                        true);
+                        controllerWrapper);
     }
 
     private CredentialsRequest prepareCredentialsRequest(
