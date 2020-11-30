@@ -54,4 +54,8 @@ public class CrosskeyTransactionsResponse implements PaginatorResponse {
         this.transactionType = transactionType;
         return this;
     }
+
+    public void setCanFetchMoreFalse() {
+        canFetchMore = false;
+    }
 }

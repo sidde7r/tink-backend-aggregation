@@ -1,0 +1,11 @@
+{
+  "Code": "403 Forbidden",
+  "Id": "9bf3bce7-baf5-4d06-b931-a8c5a42df863",
+  "Message": "The request transaction interval [2020-06-30T00:00Z to 2020-12-31T00:00Z] is not inside the interval limits [2020-08-30T09:33:36.863Z to 2020-12-31T09:33:36.863Z] for this level of authentication [SCA: false]",
+  "Errors": [
+    {
+      "ErrorCode": "UK.OBIE.Reauthenticate",
+      "Message": "The request transaction interval [2020-06-30T00:00Z to 2020-12-31T00:00Z] is not inside the interval limits [2020-08-30T09:33:36.863Z to 2020-12-31T09:33:36.863Z] for this level of authentication [SCA: false]"
+    }
+  ]
+}

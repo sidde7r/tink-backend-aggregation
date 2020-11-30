@@ -114,10 +114,6 @@ public abstract class CrosskeyBaseConstants {
         public static final String DEBIT = "Debit";
     }
 
-    public static class TransactionsFetching {
-        public static final String EARLIEST_DATE_STRING = "2010-11-26T13:06:00.258";
-    }
-
     public static class Format {
         public static final String TRANSACTION_TIMESTAMP = "yyyy-MM-dd'T'HH:mm:ssX";
         public static final String TRANSACTION_DATE_FETCHER = "yyyy-MM-dd'T'HH:mm:ss";

@@ -1,15 +1,18 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey;
 
 import java.nio.charset.StandardCharsets;
-import java.security.cert.CertificateException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Base64;
-import java.util.Calendar;
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants.Format;
@@ -18,7 +21,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cro
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants.StorageKeys;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants.TransactionsFetching;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants.UrlParameters;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.authenticator.entities.accessconsents.AccessConsentRequest;
@@ -33,6 +35,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cro
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.configuration.CrosskeyBaseConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.configuration.CrosskeyMarketConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.executor.payment.rpc.CrosskeyPaymentDetails;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.entities.transaction.TransactionExceptionEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.entities.transaction.TransactionTypeEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.rpc.CrosskeyAccountBalancesResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.rpc.CrosskeyAccountsResponse;
@@ -41,149 +44,59 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cro
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.utils.JwtUtils;
 import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
-import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils;
-import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
-import se.tink.backend.aggregation.eidassigner.QsealcAlg;
-import se.tink.backend.aggregation.eidassigner.QsealcSignerImpl;
-import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
+import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
+import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import se.tink.libraries.date.DateFormat;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class CrosskeyBaseApiClient {
 
     private final TinkHttpClient client;
     private final SessionStorage sessionStorage;
-    private CrosskeyBaseConfiguration configuration;
-    private String redirectUrl;
-    private EidasProxyConfiguration eidasProxyConfiguration;
-    private EidasIdentity eidasIdentity;
+    private final QsealcSigner qsealcSigner;
+    private final CrosskeyBaseConfiguration configuration;
+    private final String redirectUrl;
     private final String baseAuthUrl;
     private final String baseApiUrl;
     private final String xFapiFinancialId;
-    private String certificateSerialNumber;
-
-    private Date minimalFetchDate;
+    private final String certificateSerialNumber;
 
     public CrosskeyBaseApiClient(
             TinkHttpClient client,
             SessionStorage sessionStorage,
-            CrosskeyMarketConfiguration marketConfiguration) {
+            CrosskeyMarketConfiguration marketConfiguration,
+            AgentConfiguration<CrosskeyBaseConfiguration> agentConfiguration,
+            QsealcSigner qsealcSigner,
+            String certificateSerialNumber) {
         this.client = client;
-        client.setTimeout(60 * 1000);
         this.sessionStorage = sessionStorage;
         this.baseAuthUrl = marketConfiguration.getBaseAuthURL();
         this.baseApiUrl = marketConfiguration.getBaseApiURL();
         this.xFapiFinancialId = marketConfiguration.getFinancialId();
-
-        try {
-            minimalFetchDate =
-                    new SimpleDateFormat(Format.TRANSACTION_DATE_FETCHER)
-                            .parse(TransactionsFetching.EARLIEST_DATE_STRING);
-        } catch (ParseException e) {
-            throw new IllegalStateException("Could not parse MINIMAL_DATE_STRING");
-        }
-    }
-
-    public CrosskeyBaseConfiguration getConfiguration() {
-        return Optional.ofNullable(configuration)
-                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
-    }
-
-    public String getRedirectUrl() {
-        return Optional.ofNullable(redirectUrl)
-                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
-    }
-
-    public void setConfiguration(
-            AgentConfiguration<CrosskeyBaseConfiguration> agentConfiguration,
-            EidasProxyConfiguration eidasProxyConfiguration,
-            EidasIdentity eidasIdentity) {
+        this.qsealcSigner = qsealcSigner;
         this.configuration = agentConfiguration.getProviderSpecificConfiguration();
-        this.redirectUrl = agentConfiguration.getRedirectUrl();
-        this.eidasProxyConfiguration = eidasProxyConfiguration;
-        this.eidasIdentity = eidasIdentity;
-        this.client.setEidasProxy(eidasProxyConfiguration);
-        try {
-            this.certificateSerialNumber =
-                    CertificateUtils.getSerialNumber(agentConfiguration.getQsealc(), 10);
-        } catch (CertificateException e) {
-            throw new IllegalStateException(ErrorMessages.INVALID_CONFIGURATION, e);
-        }
+        redirectUrl = agentConfiguration.getRedirectUrl();
+        this.certificateSerialNumber = certificateSerialNumber;
     }
 
-    private RequestBuilder createRequest(URL url) {
-        return client.request(url)
-                .header(HeaderKeys.ACCEPT, MediaType.APPLICATION_JSON)
-                .header(HeaderKeys.CONTENT_TYPE, MediaType.APPLICATION_JSON);
-    }
-
-    private RequestBuilder createRequestInSession(URL url) {
-        final String clientSecret = getConfiguration().getClientSecret();
-
-        return createRequest(url)
-                .addBearerToken(getTokenFromSession())
-                .header(HeaderKeys.X_API_KEY, clientSecret)
-                .header(HeaderKeys.X_FAPI_FINANCIAL_ID, xFapiFinancialId);
-    }
-
-    private RequestBuilder createAuthorizationRequest(
-            InitialTokenResponse clientCredentials, URL url) {
-        final String clientSecret = getConfiguration().getClientSecret();
-
-        return createRequest(url)
-                .addBearerToken(clientCredentials.toTinkToken())
-                .header(HeaderKeys.X_API_KEY, clientSecret)
-                .header(HeaderKeys.X_FAPI_FINANCIAL_ID, xFapiFinancialId);
-    }
-
-    private RequestBuilder createTokenRequest(URL url) {
-        final String clientId = getConfiguration().getClientId();
-
-        return client.request(url)
-                .header(HeaderKeys.ACCEPT, MediaType.APPLICATION_JSON)
-                .header(HeaderKeys.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
-                .queryParam(QueryKeys.CLIENT_ID, clientId);
-    }
-
-    public InitialTokenResponse getClientCredentialsToken() {
-        final String clientSecret = getConfiguration().getClientSecret();
-        final URL url = new URL(baseApiUrl + CrosskeyBaseConstants.Urls.TOKEN);
-
-        return createTokenRequest(url)
-                .type(MediaType.APPLICATION_FORM_URLENCODED)
-                .header(HeaderKeys.X_API_KEY, clientSecret)
-                .queryParam(QueryKeys.GRANT_TYPE, QueryValues.CLIENT_CREDENTIALS)
-                .queryParam(QueryKeys.SCOPE, OIDCValues.SCOPE_ALL)
-                .post(InitialTokenResponse.class);
-    }
-
-    private AccessConsentResponse getAccessConsent(InitialTokenResponse clientCredentials) {
-        final String url = baseApiUrl + CrosskeyBaseConstants.Urls.ACCOUNT_ACCESS_CONSENTS;
-
-        final AccessConsentRequest accessConsentRequest =
-                new AccessConsentRequest(
-                        new RequestDataEntity(
-                                "", Arrays.asList(OIDCValues.CONSENT_PERMISSIONS), "", ""),
-                        new RiskEntity());
-
-        return createAuthorizationRequest(clientCredentials, new URL(url))
-                .post(AccessConsentResponse.class, accessConsentRequest);
+    public void setConfiguration(AgentsServiceConfiguration configuration) {
+        client.setEidasProxy(configuration.getEidasProxy());
     }
 
     public OAuth2Token getToken(String code) {
-        final String redirectUri = getRedirectUrl();
         final URL url = new URL(baseApiUrl + CrosskeyBaseConstants.Urls.TOKEN);
 
         return createTokenRequest(url)
-                .queryParam(QueryKeys.REDIRECT_URI, redirectUri)
+                .queryParam(QueryKeys.REDIRECT_URI, redirectUrl)
                 .queryParam(QueryKeys.GRANT_TYPE, QueryValues.AUTHORIZATION_CODE)
                 .queryParam(QueryKeys.CODE, code)
                 .post(TokenResponse.class)
@@ -217,95 +130,30 @@ public class CrosskeyBaseApiClient {
     }
 
     public OAuth2Token getRefreshToken(String refreshToken) {
-        final String redirectUri = getRedirectUrl();
         final URL url = new URL(baseApiUrl + CrosskeyBaseConstants.Urls.TOKEN);
 
         return createTokenRequest(url)
-                .queryParam(QueryKeys.REDIRECT_URI, redirectUri)
+                .queryParam(QueryKeys.REDIRECT_URI, redirectUrl)
                 .queryParam(QueryKeys.GRANT_TYPE, QueryValues.REFRESH_TOKEN)
                 .queryParam(QueryKeys.REFRESH_TOKEN, refreshToken)
                 .post(TokenResponse.class)
                 .toTinkToken();
     }
 
-    private CrosskeyTransactionsResponse fetchTransactions(
-            String apiIdentifier, Date fromDate, Date toDate) {
-        String fromBookingDateTime;
-        if (fromDate.before(minimalFetchDate)) {
-            fromBookingDateTime = TransactionsFetching.EARLIEST_DATE_STRING;
-        } else {
-            fromBookingDateTime =
-                    DateFormat.formatDateTime(
-                            removeTimeFromDate(fromDate),
-                            Format.TRANSACTION_DATE_FETCHER,
-                            DateFormat.Zone.UTC);
-        }
-        String toBookingDateTime =
-                DateFormat.formatDateTime(
-                        removeTimeFromDate(toDate),
-                        Format.TRANSACTION_DATE_FETCHER,
-                        DateFormat.Zone.UTC);
+    public InitialTokenResponse getClientCredentialsToken() {
+        final String clientSecret = configuration.getClientSecret();
+        final URL url = new URL(baseApiUrl + CrosskeyBaseConstants.Urls.TOKEN);
 
-        final URL url =
-                new URL(baseApiUrl + CrosskeyBaseConstants.Urls.ACCOUNT_TRANSACTIONS)
-                        .parameter(UrlParameters.ACCOUNT_ID, apiIdentifier)
-                        .queryParam(UrlParameters.FROM_BOOKING_DATE, fromBookingDateTime)
-                        .queryParam(UrlParameters.TO_BOOKING_DATE, toBookingDateTime);
-        return createRequestInSession(url).get(CrosskeyTransactionsResponse.class);
-    }
-
-    private OAuth2Token getTokenFromSession() {
-        return sessionStorage
-                .get(StorageKeys.TOKEN, OAuth2Token.class)
-                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_TOKEN));
+        return createTokenRequest(url)
+                .type(MediaType.APPLICATION_FORM_URLENCODED)
+                .header(HeaderKeys.X_API_KEY, clientSecret)
+                .queryParam(QueryKeys.GRANT_TYPE, QueryValues.CLIENT_CREDENTIALS)
+                .queryParam(QueryKeys.SCOPE, OIDCValues.SCOPE_ALL)
+                .post(InitialTokenResponse.class);
     }
 
     public void setTokenToSession(OAuth2Token accessToken) {
         sessionStorage.put(StorageKeys.TOKEN, accessToken);
-    }
-
-    private JwtPaymentConsentHeader getJwtHeader() {
-        return new JwtPaymentConsentHeader(
-                OIDCValues.B_64,
-                certificateSerialNumber,
-                OIDCValues.ALG,
-                Arrays.asList(OIDCValues.B_64_STR, OIDCValues.IAT, OIDCValues.ISS, OIDCValues.TAN),
-                // -3 since it is sometimes rounds up to future..
-                Instant.now().getEpochSecond() - 3,
-                baseApiUrl,
-                getConfiguration().getClientId());
-    }
-
-    private <Header, Payload> String createJwsHeader(Header header, Payload payload) {
-        final String serializedToJsonPayload = SerializationUtils.serializeToString(payload);
-
-        final String serializedToJsonHeader = SerializationUtils.serializeToString(header);
-
-        final String headerBase64 =
-                Base64.getUrlEncoder()
-                        .encodeToString(serializedToJsonHeader.getBytes(StandardCharsets.UTF_8));
-
-        final String headerBase64WithPayload =
-                String.format("%s.%s", headerBase64, serializedToJsonPayload);
-
-        final String signedBase64HeadersAndPayload =
-                QsealcSignerImpl.build(
-                                eidasProxyConfiguration.toInternalConfig(),
-                                QsealcAlg.EIDAS_RSA_SHA256,
-                                eidasIdentity)
-                        .getSignatureBase64(headerBase64WithPayload.getBytes());
-
-        return String.format("%s..%s", headerBase64, signedBase64HeadersAndPayload);
-    }
-
-    private RequestBuilder getPaymentConsent(String jwsHeaderValue) {
-        final URL url = new URL(baseApiUrl + CrosskeyBaseConstants.Urls.PAYMENT_ACCESS_CONSENTS);
-
-        return createPaymentConsent(url)
-                .header(
-                        CrosskeyBaseConstants.HeaderKeys.X_IDEMPOTENCY_KEY,
-                        Psd2Headers.getRequestId())
-                .header(HeaderKeys.X_JWS_SIGNATURE, jwsHeaderValue);
     }
 
     public CrosskeyPaymentDetails createPaymentConsent(
@@ -329,11 +177,16 @@ public class CrosskeyBaseApiClient {
                 .post(CrosskeyPaymentDetails.class);
     }
 
-    private RequestBuilder createPaymentConsent(URL url) {
+    public CrosskeyPaymentDetails fetchPayment(String paymentId) {
+        final URL url =
+                new URL(baseApiUrl + Urls.FETCH_PAYMENT)
+                        .parameter(UrlParameters.INTERNATIONAL_PAYMENT_ID, paymentId);
+
         return createRequestInSession(url)
                 .header(
-                        CrosskeyBaseConstants.HeaderKeys.X_FAPI_INTERACTION_ID,
-                        Psd2Headers.getRequestId());
+                        CrosskeyBaseConstants.HeaderKeys.X_IDEMPOTENCY_KEY,
+                        Psd2Headers.getRequestId())
+                .get(CrosskeyPaymentDetails.class);
     }
 
     public URL getPisAuthorizeUrl(String state) {
@@ -364,17 +217,151 @@ public class CrosskeyBaseApiClient {
         return getAuthorizeUrl(state, oidcRequest, OIDCValues.SCOPE_ACCOUNTS);
     }
 
+    private RequestBuilder createRequest(URL url) {
+        return client.request(url)
+                .header(HeaderKeys.ACCEPT, MediaType.APPLICATION_JSON)
+                .header(HeaderKeys.CONTENT_TYPE, MediaType.APPLICATION_JSON);
+    }
+
+    private RequestBuilder createRequestInSession(URL url) {
+        final String clientSecret = configuration.getClientSecret();
+
+        return createRequest(url)
+                .addBearerToken(getTokenFromSession())
+                .header(HeaderKeys.X_API_KEY, clientSecret)
+                .header(HeaderKeys.X_FAPI_FINANCIAL_ID, xFapiFinancialId);
+    }
+
+    private RequestBuilder createAuthorizationRequest(
+            InitialTokenResponse clientCredentials, URL url) {
+        final String clientSecret = configuration.getClientSecret();
+
+        return createRequest(url)
+                .addBearerToken(clientCredentials.toTinkToken())
+                .header(HeaderKeys.X_API_KEY, clientSecret)
+                .header(HeaderKeys.X_FAPI_FINANCIAL_ID, xFapiFinancialId);
+    }
+
+    private RequestBuilder createTokenRequest(URL url) {
+        final String clientId = configuration.getClientId();
+
+        return client.request(url)
+                .header(HeaderKeys.ACCEPT, MediaType.APPLICATION_JSON)
+                .header(HeaderKeys.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
+                .queryParam(QueryKeys.CLIENT_ID, clientId);
+    }
+
+    private AccessConsentResponse getAccessConsent(InitialTokenResponse clientCredentials) {
+        final String url = baseApiUrl + CrosskeyBaseConstants.Urls.ACCOUNT_ACCESS_CONSENTS;
+
+        final AccessConsentRequest accessConsentRequest =
+                new AccessConsentRequest(
+                        new RequestDataEntity(
+                                "", Arrays.asList(OIDCValues.CONSENT_PERMISSIONS), "", ""),
+                        new RiskEntity());
+
+        return createAuthorizationRequest(clientCredentials, new URL(url))
+                .post(AccessConsentResponse.class, accessConsentRequest);
+    }
+
+    private CrosskeyTransactionsResponse fetchTransactions(
+            String apiIdentifier, Date fromDate, Date toDate) {
+
+        String fromBookingDateTime = formatAndSetZeroTime(fromDate);
+
+        String toBookingDateTime = formatAndSetZeroTime(toDate);
+
+        CrosskeyTransactionsResponse response;
+        try {
+            response =
+                    createRequestInSession(
+                                    prepareTransactionUrl(
+                                            fromBookingDateTime, toBookingDateTime, apiIdentifier))
+                            .get(CrosskeyTransactionsResponse.class);
+        } catch (HttpResponseException exception) {
+            HttpResponse exceptionResponse = exception.getResponse();
+            if (exceptionResponse.getStatus() == 403) {
+                TransactionExceptionEntity responseBody =
+                        exceptionResponse.getBody(TransactionExceptionEntity.class);
+                fromBookingDateTime = extractMinimalTransactionDateFromException(responseBody);
+                response =
+                        createRequestInSession(
+                                        prepareTransactionUrl(
+                                                fromBookingDateTime,
+                                                toBookingDateTime,
+                                                apiIdentifier))
+                                .get(CrosskeyTransactionsResponse.class);
+                response.setCanFetchMoreFalse();
+            } else {
+                throw exception;
+            }
+        }
+        return response;
+    }
+
+    private OAuth2Token getTokenFromSession() {
+        return sessionStorage
+                .get(StorageKeys.TOKEN, OAuth2Token.class)
+                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_TOKEN));
+    }
+
+    private JwtPaymentConsentHeader getJwtHeader() {
+        return new JwtPaymentConsentHeader(
+                OIDCValues.B_64,
+                certificateSerialNumber,
+                OIDCValues.ALG,
+                Arrays.asList(OIDCValues.B_64_STR, OIDCValues.IAT, OIDCValues.ISS, OIDCValues.TAN),
+                // -3 since it is sometimes rounds up to future..
+                Instant.now().getEpochSecond() - 3,
+                baseApiUrl,
+                configuration.getClientId());
+    }
+
+    private <Header, Payload> String createJwsHeader(Header header, Payload payload) {
+        final String serializedToJsonPayload = SerializationUtils.serializeToString(payload);
+
+        final String serializedToJsonHeader = SerializationUtils.serializeToString(header);
+
+        final String headerBase64 =
+                Base64.getUrlEncoder()
+                        .encodeToString(serializedToJsonHeader.getBytes(StandardCharsets.UTF_8));
+
+        final String headerBase64WithPayload =
+                String.format("%s.%s", headerBase64, serializedToJsonPayload);
+
+        final String signedBase64HeadersAndPayload =
+                qsealcSigner.getSignatureBase64(headerBase64WithPayload.getBytes());
+
+        return String.format("%s..%s", headerBase64, signedBase64HeadersAndPayload);
+    }
+
+    private RequestBuilder getPaymentConsent(String jwsHeaderValue) {
+        final URL url = new URL(baseApiUrl + CrosskeyBaseConstants.Urls.PAYMENT_ACCESS_CONSENTS);
+
+        return createPaymentConsent(url)
+                .header(
+                        CrosskeyBaseConstants.HeaderKeys.X_IDEMPOTENCY_KEY,
+                        Psd2Headers.getRequestId())
+                .header(HeaderKeys.X_JWS_SIGNATURE, jwsHeaderValue);
+    }
+
+    private RequestBuilder createPaymentConsent(URL url) {
+        return createRequestInSession(url)
+                .header(
+                        CrosskeyBaseConstants.HeaderKeys.X_FAPI_INTERACTION_ID,
+                        Psd2Headers.getRequestId());
+    }
+
     private URL getAuthorizeUrl(String state, String oidcRequest, String scope) {
 
-        final String clientId = getConfiguration().getClientId();
-        final String clientSecret = getConfiguration().getClientSecret();
-        final String redirectUri = getRedirectUrl();
+        final String clientId = configuration.getClientId();
+        final String clientSecret = configuration.getClientSecret();
 
         return client.request(baseAuthUrl + CrosskeyBaseConstants.Urls.OAUTH)
                 .header(HeaderKeys.X_API_KEY, clientSecret)
                 .queryParam(QueryKeys.REQUEST, oidcRequest)
                 .queryParam(QueryKeys.RESPONSE_TYPE, QueryValues.RESPONSE_TYPE)
-                .queryParam(QueryKeys.REDIRECT_URI, redirectUri)
+                .queryParam(QueryKeys.REDIRECT_URI, redirectUrl)
                 .queryParam(QueryKeys.CLIENT_ID, clientId)
                 .queryParam(QueryKeys.STATE, state)
                 .queryParam(QueryKeys.NONCE, state)
@@ -385,24 +372,20 @@ public class CrosskeyBaseApiClient {
     private String getOIDCRequest(
             String state, String scope, String tokenIdPrefix, String consentId) {
 
-        final String clientId = getConfiguration().getClientId();
-        final String redirectUri = getRedirectUrl();
+        final String clientId = configuration.getClientId();
+
         final JwtHeader jwtHeader = new JwtHeader(OIDCValues.ALG, OIDCValues.TYP);
         final JwtAuthPayload jwtAuthPayload =
                 new JwtAuthPayload(
                         scope,
                         new IdTokenClaim(tokenIdPrefix + consentId, false),
                         clientId,
-                        redirectUri,
+                        redirectUrl,
                         state,
                         state,
                         clientId);
 
-        return JwtUtils.toOidcBase64(
-                eidasProxyConfiguration.toInternalConfig(),
-                jwtHeader,
-                eidasIdentity,
-                jwtAuthPayload);
+        return JwtUtils.toOidcBase64(qsealcSigner, jwtHeader, jwtAuthPayload);
     }
 
     private String getConsentIdFromStorage() {
@@ -414,25 +397,40 @@ public class CrosskeyBaseApiClient {
                 .getConsentId();
     }
 
-    public CrosskeyPaymentDetails fetchPayment(String paymentId) {
-        final URL url =
-                new URL(baseApiUrl + Urls.FETCH_PAYMENT)
-                        .parameter(UrlParameters.INTERNATIONAL_PAYMENT_ID, paymentId);
-
-        return createRequestInSession(url)
-                .header(
-                        CrosskeyBaseConstants.HeaderKeys.X_IDEMPOTENCY_KEY,
-                        Psd2Headers.getRequestId())
-                .get(CrosskeyPaymentDetails.class);
+    private String formatAndSetZeroTime(Date date) {
+        LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        return formatAndSetZeroTime(localDate);
     }
 
-    private Date removeTimeFromDate(Date date) {
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(date);
-        cal.set(Calendar.HOUR_OF_DAY, 0);
-        cal.set(Calendar.MINUTE, 0);
-        cal.set(Calendar.SECOND, 0);
-        cal.set(Calendar.MILLISECOND, 0);
-        return cal.getTime();
+    private String formatAndSetZeroTime(LocalDate localDate) {
+        return localDate
+                .atTime(0, 0)
+                .format(DateTimeFormatter.ofPattern(Format.TRANSACTION_DATE_FETCHER));
+    }
+
+    private URL prepareTransactionUrl(
+            String fromBookingDateTime, String toBookingDateTime, String apiIdentifier) {
+        return new URL(baseApiUrl + CrosskeyBaseConstants.Urls.ACCOUNT_TRANSACTIONS)
+                .parameter(UrlParameters.ACCOUNT_ID, apiIdentifier)
+                .queryParam(UrlParameters.TO_BOOKING_DATE, toBookingDateTime)
+                .queryParam(UrlParameters.FROM_BOOKING_DATE, fromBookingDateTime);
+    }
+
+    private String extractMinimalTransactionDateFromException(
+            TransactionExceptionEntity exception) {
+        Pattern pattern = Pattern.compile("\\d{4}-\\d{2}-\\d{2}");
+        String exceptionMessage = exception.getMessage();
+        Matcher matcher = pattern.matcher(exceptionMessage);
+        List<String> allGroups = new LinkedList<>();
+        while (matcher.find()) {
+            allGroups.add(matcher.group());
+        }
+        if (allGroups.size() < 4) {
+            throw new IllegalStateException(
+                    String.format("Unknown exception message: %s", exceptionMessage));
+        }
+        return LocalDate.parse(allGroups.get(2))
+                .atTime(0, 0)
+                .format(DateTimeFormatter.ofPattern(Format.TRANSACTION_DATE_FETCHER));
     }
 }

@@ -1,12 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey;
 
+import java.security.cert.CertificateException;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
-import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.authenticator.CrosskeyBaseAuthCodeAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.configuration.CrosskeyBaseConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.configuration.CrosskeyMarketConfiguration;
@@ -16,9 +17,11 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cro
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.transactionalaccount.CrossKeyTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.transactionalaccount.CrossKeyTransactionalAccountTransactionFetcher;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
+import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
-import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
+import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
@@ -29,7 +32,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public abstract class CrosskeyBaseAgent extends NextGenerationAgent
         implements RefreshCreditCardAccountsExecutor,
@@ -39,15 +41,33 @@ public abstract class CrosskeyBaseAgent extends NextGenerationAgent
     protected final CrosskeyBaseApiClient apiClient;
     private final CreditCardRefreshController creditCardRefreshController;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
+    private final AgentConfiguration<CrosskeyBaseConfiguration> agentConfiguration;
 
     public CrosskeyBaseAgent(
-            CredentialsRequest request,
-            AgentContext context,
-            SignatureKeyPair signatureKeyPair,
+            AgentComponentProvider componentProvider,
+            QsealcSigner qsealcSigner,
             CrosskeyMarketConfiguration marketConfiguration) {
-        super(request, context, signatureKeyPair);
+        super(componentProvider);
+        agentConfiguration =
+                getAgentConfigurationController()
+                        .getAgentConfiguration(CrosskeyBaseConfiguration.class);
 
-        apiClient = new CrosskeyBaseApiClient(client, sessionStorage, marketConfiguration);
+        String certificateSerialNumber;
+        try {
+            certificateSerialNumber =
+                    CertificateUtils.getSerialNumber(agentConfiguration.getQsealc(), 10);
+        } catch (CertificateException e) {
+            throw new IllegalStateException(ErrorMessages.INVALID_CONFIGURATION, e);
+        }
+
+        apiClient =
+                new CrosskeyBaseApiClient(
+                        client,
+                        sessionStorage,
+                        marketConfiguration,
+                        agentConfiguration,
+                        qsealcSigner,
+                        certificateSerialNumber);
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
         creditCardRefreshController = getCreditCardRefreshController();
     }
@@ -55,13 +75,7 @@ public abstract class CrosskeyBaseAgent extends NextGenerationAgent
     @Override
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
-        apiClient.setConfiguration(
-                getAgentConfiguration(), configuration.getEidasProxy(), getEidasIdentity());
-    }
-
-    private AgentConfiguration<CrosskeyBaseConfiguration> getAgentConfiguration() {
-        return getAgentConfigurationController()
-                .getAgentConfiguration(CrosskeyBaseConfiguration.class);
+        apiClient.setConfiguration(configuration);
     }
 
     @Override
