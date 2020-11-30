@@ -13,17 +13,22 @@ import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.danskebank.authenticator.DanskebankAuthenticationController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.UkOpenBankingBaseAgent;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.authenticator.OpenIdAisAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.configuration.UkOpenBankingClientConfigurationAdapter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAis;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.creditcards.CreditCardAccountMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.transactionalaccounts.TransactionalAccountMapper;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticationController;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 
 public abstract class DanskeBankV31EUBaseAgent extends NextGenerationAgent
@@ -172,6 +177,28 @@ public abstract class DanskeBankV31EUBaseAgent extends NextGenerationAgent
                     agentConfig);
             this.creditCardAccountMapper = creditCardAccountMapper;
             this.transactionalAccountMapper = transactionalAccountMapper;
+        }
+
+        @Override
+        public Authenticator constructAuthenticator() {
+            final OpenIdAuthenticationController openIdAuthenticationController =
+                    new DanskebankAuthenticationController(
+                            this.persistentStorage,
+                            this.supplementalInformationHelper,
+                            this.apiClient,
+                            new OpenIdAisAuthenticator(this.apiClient),
+                            this.credentials,
+                            this.strongAuthenticationState,
+                            this.request.getCallbackUri(),
+                            aisConfig.getAppToAppURL(),
+                            this.randomValueGenerator);
+
+            return new AutoAuthenticationController(
+                    this.request,
+                    this.systemUpdater,
+                    new ThirdPartyAppAuthenticationController<>(
+                            openIdAuthenticationController, this.supplementalInformationHelper),
+                    openIdAuthenticationController);
         }
 
         @Override

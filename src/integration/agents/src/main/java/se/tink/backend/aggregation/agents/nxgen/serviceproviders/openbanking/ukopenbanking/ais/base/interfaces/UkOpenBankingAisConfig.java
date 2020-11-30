@@ -17,6 +17,8 @@ public interface UkOpenBankingAisConfig {
 
     URL createConsentRequestURL();
 
+    URL getConsentDetailsRequestURL(String consentId);
+
     <T extends AccountPermissionResponse> Class<T> getIntentIdResponseType();
 
     String getInitialTransactionsPaginationKey(String accountId);

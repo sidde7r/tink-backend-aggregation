@@ -48,10 +48,10 @@ public class OpenIdAuthenticationController
     private static final int DEFAULT_TOKEN_LIFETIME = 90;
     private static final TemporalUnit DEFAULT_TOKEN_LIFETIME_UNIT = ChronoUnit.DAYS;
 
-    private final PersistentStorage persistentStorage;
+    protected final PersistentStorage persistentStorage;
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final OpenIdApiClient apiClient;
-    private final OpenIdAuthenticator authenticator;
+    protected final OpenIdAuthenticator authenticator;
     private final Credentials credentials;
     private final int tokenLifetime;
     private final TemporalUnit tokenLifetimeUnit;
