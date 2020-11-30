@@ -3,8 +3,6 @@ package se.tink.backend.aggregation.cli;
 import com.google.inject.Injector;
 import io.dropwizard.setup.Bootstrap;
 import net.sourceforge.argparse4j.inf.Namespace;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.configuration.models.AggregationServiceConfiguration;
 import se.tink.backend.aggregation.controllers.ProvisionClientController;
 import se.tink.backend.aggregation.storage.database.repositories.AggregatorConfigurationsRepository;
@@ -14,7 +12,6 @@ import se.tink.backend.aggregation.storage.database.repositories.CryptoConfigura
 
 public class AddClientConfigurationsCommand
         extends AggregationServiceContextCommand<AggregationServiceConfiguration> {
-    private static final Logger log = LoggerFactory.getLogger(AddClientConfigurationsCommand.class);
 
     public AddClientConfigurationsCommand() {
         super("add-client-configuration", "Adds a new client to the configuration databases.");
