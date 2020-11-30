@@ -23,10 +23,13 @@ public final class LaCaixaConstants {
     public static final AccountTypeMapper ACCOUNT_TYPE_MAPPER =
             AccountTypeMapper.builder()
                     .put(AccountTypes.SAVINGS, AccountFlag.PSD2_PAYMENT_ACCOUNT, "LIBRETA")
+                    .put(AccountTypes.SAVINGS, "LIBRETA ESTRELLA")
                     .put(
                             AccountTypes.CHECKING,
                             AccountFlag.PSD2_PAYMENT_ACCOUNT,
-                            "CUENTA CORRIENTE")
+                            "CUENTA CORRIENTE",
+                            "SERVICIO FAMILIAR",
+                            "CUENTA NO RESIDENTE")
                     .build();
 
     public static final TypeMapper<LoanDetails.Type> LOAN_TYPE_MAPPER =
@@ -40,7 +43,7 @@ public final class LaCaixaConstants {
         CONSUMER_LOAN("11407", "10097", "17240", "21919"),
         EXPRESS_LOAN("12805"),
         ICO_LOANS("24634"),
-        MICROCREDITS("14090", "12739"),
+        MICROCREDITS("14090", "12739", "18873", "14091"),
         ONLINE("11410"),
         PERSONAL("10052", "12142", "22896");
 
