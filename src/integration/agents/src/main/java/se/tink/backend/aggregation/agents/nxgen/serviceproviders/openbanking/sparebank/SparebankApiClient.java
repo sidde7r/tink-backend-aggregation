@@ -57,6 +57,14 @@ public class SparebankApiClient {
         persistentStorage.put(StorageKeys.ACCOUNTS, accountResponse);
     }
 
+    public void storeBalanceResponse(String resourceId, BalanceResponse balanceResponse) {
+        persistentStorage.put(resourceId, balanceResponse);
+    }
+
+    private void removeBalanceResponseFromStorage(String resourceId) {
+        persistentStorage.remove(resourceId);
+    }
+
     public void clearSessionData() {
         persistentStorage.remove(StorageKeys.ACCOUNTS);
         persistentStorage.remove(StorageKeys.SESSION_ID);
@@ -75,6 +83,10 @@ public class SparebankApiClient {
 
     public Optional<AccountResponse> getStoredAccounts() {
         return persistentStorage.get(StorageKeys.ACCOUNTS, AccountResponse.class);
+    }
+
+    private Optional<BalanceResponse> getStoredBalanceResponse(String resourceId) {
+        return persistentStorage.get(resourceId, BalanceResponse.class);
     }
 
     private RequestBuilder createRequest(URL url) {
@@ -97,17 +109,21 @@ public class SparebankApiClient {
         Optional<AccountResponse> maybeAccounts = getStoredAccounts();
         if (maybeAccounts.isPresent()) {
             return maybeAccounts.get();
-        } else {
-            AccountResponse accountResponse =
-                    createRequest(new URL(apiConfiguration.getBaseUrl() + Urls.GET_ACCOUNTS))
-                            .queryParam(QueryKeys.WITH_BALANCE, "false")
-                            .get(AccountResponse.class);
-            storeAccounts(accountResponse);
-            return accountResponse;
         }
+        AccountResponse accountResponse =
+                createRequest(new URL(apiConfiguration.getBaseUrl() + Urls.GET_ACCOUNTS))
+                        .queryParam(QueryKeys.WITH_BALANCE, "false")
+                        .get(AccountResponse.class);
+        storeAccounts(accountResponse);
+        return accountResponse;
     }
 
     public BalanceResponse fetchBalances(String resourceId) {
+        Optional<BalanceResponse> maybeBalanceResponse = getStoredBalanceResponse(resourceId);
+        if (maybeBalanceResponse.isPresent()) {
+            removeBalanceResponseFromStorage(resourceId);
+            return maybeBalanceResponse.get();
+        }
         return createRequest(
                         new URL(apiConfiguration.getBaseUrl() + Urls.FETCH_BALANCES)
                                 .parameter(IdTags.RESOURCE_ID, resourceId))

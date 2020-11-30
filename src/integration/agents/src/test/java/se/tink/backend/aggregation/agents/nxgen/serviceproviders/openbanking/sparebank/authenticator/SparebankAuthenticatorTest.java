@@ -6,13 +6,19 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
+import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.authenticator.rpc.ScaResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.fetcher.transactionalaccount.rpc.AccountResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.fetcher.transactionalaccount.rpc.BalanceResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.util.AccountTestData;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -65,6 +71,53 @@ public class SparebankAuthenticatorTest {
         URL url = authenticator.buildAuthorizeUrl("");
 
         assertEquals(new URL("http://example.com"), url.getUrl());
+    }
+
+    // isTppSessionStillValid tests
+
+    @Test
+    public void shouldReturnFalseWhenThereAreNoStoredAccounts() {
+        // given & when
+        boolean result = authenticator.isTppSessionStillValid();
+
+        // then
+        assertThat(result).isFalse();
+        verify(apiClient).getStoredAccounts();
+        verifyNoMoreInteractions(apiClient);
+    }
+
+    @Test
+    public void shouldReturnFalseWhenAccountsListIsEmpty() {
+        // given
+        when(apiClient.getStoredAccounts()).thenReturn(Optional.of(new AccountResponse()));
+
+        // when
+        boolean result = authenticator.isTppSessionStillValid();
+
+        // then
+        assertThat(result).isFalse();
+        verify(apiClient).getStoredAccounts();
+        verifyNoMoreInteractions(apiClient);
+    }
+
+    @Test
+    public void shouldReturnTrueWhenSessionIsStillValid() {
+        // given
+        AccountResponse accountResponse = AccountTestData.getAccountResponse();
+        BalanceResponse balanceResponse = AccountTestData.getBalanceResponse();
+        when(apiClient.getStoredAccounts()).thenReturn(Optional.of(accountResponse));
+        when(apiClient.fetchBalances(accountResponse.getAccounts().get(0).getResourceId()))
+                .thenReturn(balanceResponse);
+
+        // when
+        boolean result = authenticator.isTppSessionStillValid();
+
+        // then
+        assertThat(result).isTrue();
+        verify(apiClient).getStoredAccounts();
+        verify(apiClient)
+                .storeBalanceResponse(
+                        accountResponse.getAccounts().get(0).getResourceId(), balanceResponse);
     }
 
     private String getScaResponseString() {

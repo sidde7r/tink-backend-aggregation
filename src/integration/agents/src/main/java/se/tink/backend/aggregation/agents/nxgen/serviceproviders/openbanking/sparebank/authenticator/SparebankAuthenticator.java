@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.spa
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.authenticator.rpc.ScaResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.fetcher.transactionalaccount.rpc.AccountResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.fetcher.transactionalaccount.rpc.BalanceResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
@@ -57,14 +58,19 @@ public class SparebankAuthenticator {
 
     boolean isTppSessionStillValid() {
         Optional<AccountResponse> maybeAccounts = apiClient.getStoredAccounts();
-        if (!maybeAccounts.isPresent() || maybeAccounts.get().getAccounts().size() == 0) {
+        if (!maybeAccounts.isPresent() || maybeAccounts.get().getAccounts().isEmpty()) {
             return false;
         }
         try {
             // ITE-1648 No other way to validate the session (that I know of) than to run true
             // operation.
-            // This limits number of background refreshes we can make.
-            apiClient.fetchBalances(maybeAccounts.get().getAccounts().get(0).getResourceId());
+            // We fetch first account balance and store it, then when actual balance fetching occurs
+            // we retrieve balance for first account from storage and remove it. This logic helps us
+            // to limit balance fetching request and in result increase the number of background
+            // refreshes
+            String resourceId = maybeAccounts.get().getAccounts().get(0).getResourceId();
+            BalanceResponse balanceResponse = apiClient.fetchBalances(resourceId);
+            apiClient.storeBalanceResponse(resourceId, balanceResponse);
             return true;
         } catch (HttpResponseException e) {
             if (isExceptionWithScaRedirect(e)) {
