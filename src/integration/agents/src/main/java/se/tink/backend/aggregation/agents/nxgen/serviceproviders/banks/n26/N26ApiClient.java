@@ -161,9 +161,17 @@ public class N26ApiClient {
     public SavingsAccountResponse fetchSavingsAccounts() {
         TokenEntity token = getToken();
         String bearer = N26Constants.BEARER_TOKEN + token.getAccessToken();
+        HttpResponse response =
+                getRequest(N26Constants.URLS.SAVINGS, MediaType.APPLICATION_JSON_TYPE, bearer)
+                        .get(HttpResponse.class);
 
-        return getRequest(N26Constants.URLS.SAVINGS, MediaType.APPLICATION_JSON_TYPE, bearer)
-                .get(SavingsAccountResponse.class);
+        // N26 decided to send response with Content-Type =
+        // text/plain,application/json;charset=UTF-8 . It leads to parsing exception. That's why
+        // this header is removed and added application/json before deserialization
+
+        response.getHeaders().remove("Content-Type");
+        response.getHeaders().add("Content-Type", MediaType.APPLICATION_JSON);
+        return response.getBody(SavingsAccountResponse.class);
     }
 
     public MeResponse fetchIdentityData() {
