@@ -3,8 +3,6 @@ package se.tink.backend.aggregation.storage.database.providers;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import java.util.Map;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.cluster.exceptions.ClientNotValid;
 import se.tink.backend.aggregation.cluster.exceptions.ClusterNotValid;
 import se.tink.backend.aggregation.storage.database.models.ClientConfiguration;
@@ -14,8 +12,6 @@ public class ClientConfigurationProvider {
     private final Map<String, ClientConfiguration> clientConfigurationsByClientKey;
     // introduce a map that use client name (which is in db that is the same as cluster-id)
     private final Map<String, ClientConfiguration> clientConfigurationsByName;
-
-    private static final Logger log = LoggerFactory.getLogger(ClientConfigurationProvider.class);
 
     @Inject
     ClientConfigurationProvider(
