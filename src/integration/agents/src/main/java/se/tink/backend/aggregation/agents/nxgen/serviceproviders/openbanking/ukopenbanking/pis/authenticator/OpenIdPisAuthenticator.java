@@ -57,6 +57,13 @@ public class OpenIdPisAuthenticator implements OpenIdAuthenticator {
         return ClientMode.PAYMENTS;
     }
 
+    /**
+     * For fixing the Barclays unstable issue; No-sleep retry had been tested but working not well;
+     * No-sleep retry will get continuous rejection; Jira had been raised on UKOB directory by other
+     * TPPs
+     *
+     * @param paymentRequest the Payment Request from Aggregation
+     */
     private void createConsentWithRetry(PaymentRequest paymentRequest) {
         for (int i = 0; i < 3; i++) {
             try {
