@@ -36,4 +36,8 @@ public class DanskebankV31Constant {
             }
         }
     }
+
+    public static class ErrorCode {
+        public static final String UNEXPETED_ERROR = "UK.OBIE.UnexpectedError";
+    }
 }

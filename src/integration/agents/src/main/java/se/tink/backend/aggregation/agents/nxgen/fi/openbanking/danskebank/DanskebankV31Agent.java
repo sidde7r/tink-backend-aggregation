@@ -5,16 +5,21 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
 
 import com.google.inject.Inject;
+import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.danskebank.mapper.DanskeFiIdentifierMapper;
+import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.danskebank.rcp.ErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.danskebank.DanskeBankV31EUBaseAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.danskebank.DanskebankAisConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.danskebank.DanskebankV31Constant.ErrorCode;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.danskebank.DanskebankV31Constant.Url.V31;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.creditcards.CreditCardAccountMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.creditcards.DefaultCreditCardBalanceMapper;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.libraries.enums.MarketCode;
 import se.tink.libraries.mapper.PrioritizedValueExtractor;
 
@@ -41,5 +46,20 @@ public final class DanskebankV31Agent extends DanskeBankV31EUBaseAgent {
         return new CreditCardAccountMapper(
                 new DefaultCreditCardBalanceMapper(prioritizedValueExtractor),
                 new DanskeFiIdentifierMapper(prioritizedValueExtractor));
+    }
+
+    @Override
+    public FetchAccountsResponse fetchCheckingAccounts() {
+        try {
+            return super.fetchCheckingAccounts();
+        } catch (HttpResponseException e) {
+            ErrorResponse errorResponse = e.getResponse().getBody(ErrorResponse.class);
+            if (e.getResponse().getStatus() == 500
+                    && errorResponse.getErrors().get(0).getErrorCode()
+                            == ErrorCode.UNEXPETED_ERROR) {
+                throw BankServiceError.BANK_SIDE_FAILURE.exception();
+            }
+            throw e;
+        }
     }
 }
