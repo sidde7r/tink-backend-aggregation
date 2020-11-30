@@ -63,7 +63,7 @@ public final class DanskeBankDKAgent extends DanskeBankAgent
                 request,
                 context,
                 signatureKeyPair,
-                new DanskeBankDKConfiguration(),
+                new DanskeBankDKConfiguration(context.getCatalog()),
                 new DkAccountEntityMapper());
         // DK fetches loans at a separate loan endpoint
         this.loanRefreshController =
