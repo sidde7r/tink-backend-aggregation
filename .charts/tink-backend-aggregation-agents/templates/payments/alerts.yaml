@@ -37,7 +37,8 @@ spec:
         summary: Threshold exceed for ( <{ $labels.className }> ) for transfers with outcome ( <{ $labels.outcome }> ).
 
     - alert: TransferFailedOutcomeThresholdIsPassedForSwedenTier1Banks
-      expr: sum by (className, outcome) (increase(tink_agent_transfer_total{market="SE", className=~".*(nordea|seb|swedbank|handelsbanken).*", outcome="failed"}[1h])) >= 8
+      expr: (sum by (className) (increase(tink_agent_transfer_total{market="SE", className=~".*(nordea|seb|swedbank|handelsbanken).*", outcome="failed"}[1h]))
+            / sum by (className) (increase(tink_agent_transfer_total{market="SE", className=~".*(nordea|seb|swedbank|handelsbanken).*"}[1h]))) > 0.12 and sum by (className) (increase(tink_agent_transfer_total{market="SE", className=~".*(nordea|seb|swedbank|handelsbanken).*"}[1h])) > 100
       labels:
         severity: urgent
         who: payments
