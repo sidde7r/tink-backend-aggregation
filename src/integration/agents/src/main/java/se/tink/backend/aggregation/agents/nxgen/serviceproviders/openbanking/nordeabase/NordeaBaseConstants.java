@@ -1,10 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccountTypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.account.enums.AccountFlag;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class NordeaBaseConstants {
     public static final TransactionalAccountTypeMapper ACCOUNT_TYPE_MAPPER =
             TransactionalAccountTypeMapper.builder()
@@ -18,10 +21,7 @@ public final class NordeaBaseConstants {
                             "Savings")
                     .build();
 
-    private NordeaBaseConstants() {
-        throw new AssertionError();
-    }
-
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class Urls {
         public static final String BASE_URL = "https://open.nordea.com/personal";
         public static final URL AUTHORIZE = new URL(BASE_URL + ApiService.AUTHORIZE);
@@ -46,10 +46,12 @@ public final class NordeaBaseConstants {
                 new URL(BASE_CORPORATE_URL + ApiService.GET_CORPORATE_TRANSACTIONS);
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class TransactionalAccounts {
         public static final String PERSONAL_ACCOUNT = "PERSONKONTO";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class ApiService {
         private static final String V_4 = "/v4";
         private static final String V_5 = "/v5";
@@ -72,10 +74,12 @@ public final class NordeaBaseConstants {
         public static final String GET_TOKEN_DECOUPLED = "/token";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class StorageKeys {
         public static final String ACCOUNT_ID = "account_id";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class QueryKeys {
         public static final String CLIENT_ID = "client_id";
         public static final String STATE = "state";
@@ -87,6 +91,7 @@ public final class NordeaBaseConstants {
         public static final String CONTINUATION_KEY = "continuation_key";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class QueryValues {
 
         public static final String DEFAULT_LANGUAGE = "en";
@@ -97,6 +102,7 @@ public final class NordeaBaseConstants {
                         + "ACCOUNTS_DETAILS,ACCOUNTS_TRANSACTIONS,PAYMENTS_MULTIPLE,CARDS_INFORMATION,CARDS_TRANSACTIONS";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class HeaderKeys {
         public static final String AUTHORIZATION = "Authorization";
         public static final String X_CLIENT_ID = "X-IBM-Client-Id";
@@ -108,10 +114,12 @@ public final class NordeaBaseConstants {
         public static final String LOCATION = "Location";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class HeaderValues {
         public static final String HOST = "open.nordea.com";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class BodyValues {
         public static final String ALL_ACCOUNTS = "ALL";
         public static final boolean SKIP_ACCOUNT_SELECTION = true;
@@ -119,6 +127,7 @@ public final class NordeaBaseConstants {
         public static final int FETCH_NUMBER_OF_MONTHS = 12;
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class Signature {
         public static final String DELIMITER_NEXT_LINE = "\n";
         public static final String DELIMITER_COMMA = ",";
@@ -140,6 +149,7 @@ public final class NordeaBaseConstants {
         public static final String ORIGINATING_DATE = "x-nordea-originating-date: ";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class FormKeys {
         public static final String GRANT_TYPE = "grant_type";
         public static final String CODE = "code";
@@ -147,11 +157,13 @@ public final class NordeaBaseConstants {
         public static final String REFRESH_TOKEN = "refresh_token";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class FormValues {
         public static final String AUTHORIZATION_CODE = "authorization_code";
         public static final String REFRESH_TOKEN = "refresh_token";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class IdTags {
         public static final String ACCOUNT_ID = "accountId";
         public static final String PAYMENT_ID = "paymentId";
@@ -159,6 +171,7 @@ public final class NordeaBaseConstants {
         public static final String CARD_ID = "cardId";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class ErrorMessages {
         public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
         public static final String PAYMENT_TYPE_NOT_FOUND =
@@ -173,27 +186,38 @@ public final class NordeaBaseConstants {
                 "Invalid Configuration: %s cannot be empty";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class ErrorCodes {
         public static final String TOKEN_EXPIRED = "error.token.expired";
         public static final String SESSION_CANCELLED = "error.session.cancelled";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class StatusResponse {
         public static final String RESERVED = "reserved";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class AccountTypesResponse {
         public static final String BBAN_SE = "BBAN_SE";
         public static final String IBAN = "iban";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public class Scopes {
         public static final String AIS = "AIS";
         public static final String PIS = "PIS";
         public static final String CARDS_INFORMATION = "CARDS_INFORMATION";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class CallbackParams {
         public static final String HTTP_MESSAGE = "httpMessage";
+    }
+
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class Filters {
+        public static final int NUMBER_OF_RETRIES = 5;
+        public static final long MS_TO_WAIT = 4000;
     }
 }

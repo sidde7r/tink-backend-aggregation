@@ -54,7 +54,13 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.AccessExceededFilter;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.BadGatewayFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.ServiceUnavailableBankServiceErrorFilter;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.TimeoutFilter;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.randomretry.RateLimitRetryFilter;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.BadGatewayRetryFilter;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.TimeoutRetryFilter;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -67,23 +73,42 @@ public class NordeaBaseApiClient implements TokenInterface {
     protected final PersistentStorage persistentStorage;
     protected NordeaBaseConfiguration configuration;
     protected String redirectUrl;
-    private QsealcSigner qsealcSigner;
-    private boolean corporate;
+    private final QsealcSigner qsealcSigner;
+    private final boolean corporate;
     private GetAccountsResponse cachedAccounts;
 
     public NordeaBaseApiClient(
             TinkHttpClient client,
             PersistentStorage persistentStorage,
             QsealcSigner qsealcSigner,
+            String providerName,
             boolean corporate) {
         this.client = client;
         this.persistentStorage = persistentStorage;
+        this.qsealcSigner = qsealcSigner;
+        this.corporate = corporate;
+        configureFilters(providerName);
+    }
 
+    private void configureFilters(String providerName) {
         this.client.addFilter(new BankSideFailureFilter());
         this.client.addFilter(new BankSideRetryFilter());
         this.client.addFilter(new ServiceUnavailableBankServiceErrorFilter());
-        this.qsealcSigner = qsealcSigner;
-        this.corporate = corporate;
+        this.client.addFilter(new TimeoutFilter());
+        this.client.addFilter(
+                new TimeoutRetryFilter(
+                        NordeaBaseConstants.Filters.NUMBER_OF_RETRIES,
+                        NordeaBaseConstants.Filters.MS_TO_WAIT));
+        this.client.addFilter(new BadGatewayFilter());
+        this.client.addFilter(
+                new BadGatewayRetryFilter(
+                        NordeaBaseConstants.Filters.NUMBER_OF_RETRIES,
+                        NordeaBaseConstants.Filters.MS_TO_WAIT));
+        this.client.addFilter(new AccessExceededFilter(providerName));
+        this.client.addFilter(
+                new RateLimitRetryFilter(
+                        NordeaBaseConstants.Filters.NUMBER_OF_RETRIES,
+                        NordeaBaseConstants.Filters.MS_TO_WAIT));
     }
 
     public NordeaBaseConfiguration getConfiguration() {
