@@ -20,6 +20,7 @@ public enum RegisterEnvironment {
                 .orElse(UNKNOWN);
     }
 
+    @Override
     public String toString() {
         return name;
     }
