@@ -19,7 +19,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fro
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.transfer.dto.TrustedBeneficiariesResponseDto;
 import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
-import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2TokenStorage;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -45,9 +44,7 @@ public class LclApiClient implements FrAispApiClient {
     public TokenResponseDto retrieveAccessToken(String code) {
         final RetrieveTokenRequest request =
                 new RetrieveTokenRequest(
-                        CertificateUtils.getOrganizationIdentifier(agentConfiguration.getQwac()),
-                        agentConfiguration.getRedirectUrl(),
-                        code);
+                        LclAgent.CLIENT_ID, agentConfiguration.getRedirectUrl(), code);
 
         return sendTokenRequestAndGetResponse(request);
     }
@@ -56,10 +53,7 @@ public class LclApiClient implements FrAispApiClient {
     public Optional<TokenResponseDto> refreshAccessToken(String refreshToken) {
         try {
             final RefreshTokenRequest request =
-                    new RefreshTokenRequest(
-                            CertificateUtils.getOrganizationIdentifier(
-                                    agentConfiguration.getQwac()),
-                            refreshToken);
+                    new RefreshTokenRequest(LclAgent.CLIENT_ID, refreshToken);
             final TokenResponseDto response = sendTokenRequestAndGetResponse(request);
 
             return Optional.ofNullable(response);
