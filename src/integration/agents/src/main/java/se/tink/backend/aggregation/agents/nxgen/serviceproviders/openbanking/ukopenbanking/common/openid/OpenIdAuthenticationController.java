@@ -64,7 +64,7 @@ public class OpenIdAuthenticationController
 
     private final RandomValueGenerator randomValueGenerator;
     private final String callbackUri;
-    private OAuth2Token clientOAuth2Token;
+    protected OAuth2Token clientOAuth2Token;
     private final URL appToAppRedirectURL;
 
     public OpenIdAuthenticationController(
@@ -203,6 +203,8 @@ public class OpenIdAuthenticationController
             throw new IllegalStateException("Client access token is not valid.");
         }
 
+        instantiateAuthFilter(clientOAuth2Token);
+
         return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.WAITING);
     }
 
@@ -217,8 +219,6 @@ public class OpenIdAuthenticationController
                         authenticator.getClientCredentialScope(),
                         callbackUri,
                         appToAppRedirectURL);
-
-        instantiateAuthFilter(clientOAuth2Token);
 
         // Let the agent add to or change the URL before we send it to the front-end.
         authorizeUrl =

@@ -7,7 +7,6 @@ import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingV31PaymentConstants;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.dto.common.FundsConfirmationResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.core.account.GenericTypeMapper;
@@ -60,13 +59,6 @@ public class UkOpenBankingPaymentHelper {
         return getPaymentId(paymentRequest)
                 .map(apiClientWrapper::getPayment)
                 .orElseGet(() -> apiClientWrapper.getPaymentConsent(getConsentId(paymentRequest)));
-    }
-
-    public Optional<FundsConfirmationResponse> fetchFundsConfirmation(
-            PaymentRequest paymentRequest) {
-        final ApiClientWrapper apiClientWrapper = getApiClientWrapper(paymentRequest.getPayment());
-
-        return apiClientWrapper.getFundsConfirmation(getConsentId(paymentRequest));
     }
 
     public PaymentResponse executePayment(

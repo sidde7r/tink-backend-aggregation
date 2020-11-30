@@ -31,8 +31,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.configuration.SoftwareStatementAssertion;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.signer.EidasJwtSigner;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.signer.iface.JwtSigner;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.configuration.UkOpenBankingPisConfig;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
@@ -348,15 +348,16 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
 
         UkOpenBankingPaymentApiClient paymentApiClient = createPaymentApiClient();
 
-        UkOpenBankingExecutor paymentExecutor =
-                new UkOpenBankingExecutor(
+        UkOpenBankingPaymentExecutor paymentExecutor =
+                new UkOpenBankingPaymentExecutor(
                         softwareStatement,
                         providerConfiguration,
                         paymentApiClient,
                         supplementalInformationHelper,
                         credentials,
                         strongAuthenticationState,
-                        randomValueGenerator);
+                        randomValueGenerator,
+                        persistentStorage);
 
         return Optional.of(new PaymentController(paymentExecutor, paymentExecutor));
     }

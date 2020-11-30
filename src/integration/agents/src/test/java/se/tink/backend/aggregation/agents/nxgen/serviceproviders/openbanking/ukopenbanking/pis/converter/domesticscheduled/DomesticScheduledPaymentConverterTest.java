@@ -1,19 +1,18 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.converter.domesticscheduled;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentTestFixtures.createDomesticScheduledPaymentConsentResponse;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentTestFixtures.createDomesticScheduledPaymentResponse;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentTestFixtures.createPaymentResponse;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentTestFixtures.createPaymentResponseForConsent;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingTestValidator.validatePaymentResponsesForDomesticScheduledPaymentsAreEqual;
 
 import org.junit.Before;
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.converter.common.ConverterTestBase;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.dto.domesticscheduled.DomesticScheduledPaymentConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.dto.domesticscheduled.DomesticScheduledPaymentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 
-public class DomesticScheduledPaymentConverterTest extends ConverterTestBase {
+public class DomesticScheduledPaymentConverterTest {
 
     private DomesticScheduledPaymentConverter domesticScheduledPaymentConverter;
 
@@ -36,7 +35,7 @@ public class DomesticScheduledPaymentConverterTest extends ConverterTestBase {
         // then
         final PaymentResponse expected = createPaymentResponseForConsent();
 
-        validatePaymentResponsesAreEqual(returned, expected);
+        validatePaymentResponsesForDomesticScheduledPaymentsAreEqual(returned, expected);
     }
 
     @Test
@@ -52,14 +51,6 @@ public class DomesticScheduledPaymentConverterTest extends ConverterTestBase {
         // then
         final PaymentResponse expected = createPaymentResponse();
 
-        validatePaymentResponsesAreEqual(returned, expected);
-    }
-
-    private static void validatePaymentResponsesAreEqual(
-            PaymentResponse returned, PaymentResponse expected) {
-        validatePaymentsAreEqual(returned.getPayment(), expected.getPayment());
-        assertThat(returned.getPayment().getExecutionDate())
-                .isEqualTo(expected.getPayment().getExecutionDate());
-        assertThat(returned.getStorage()).isEqualTo(expected.getStorage());
+        validatePaymentResponsesForDomesticScheduledPaymentsAreEqual(returned, expected);
     }
 }

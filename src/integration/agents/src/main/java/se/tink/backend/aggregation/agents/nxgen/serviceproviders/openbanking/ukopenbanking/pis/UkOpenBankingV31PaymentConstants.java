@@ -39,15 +39,6 @@ public class UkOpenBankingV31PaymentConstants {
         private Storage() {}
     }
 
-    public static class Step {
-
-        public static final String AUTHORIZE = "AUTHORIZE";
-        static final String SUFFICIENT_FUNDS = "SUFFICIENT_FUNDS";
-        static final String EXECUTE_PAYMENT = "EXECUTE_PAYMENT";
-
-        private Step() {}
-    }
-
     public static class PaymentStatusCode {
 
         public static final String AWAITING_AUTHORISATION = "AwaitingAuthorisation";

@@ -6,10 +6,12 @@ import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
 import java.time.Clock;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.ZoneOffset;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.dto.common.CreditorAccount;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.dto.common.DebtorAccount;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.dto.common.FundsConfirmationResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.dto.common.InstructedAmount;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.dto.common.RemittanceInformation;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.dto.domestic.DomesticPaymentConsentResponse;
@@ -22,8 +24,11 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.dto.domesticscheduled.DomesticScheduledPaymentInitiation;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.dto.domesticscheduled.DomesticScheduledPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.dto.domesticscheduled.DomesticScheduledPaymentResponseData;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.entity.ExecutorSignStep;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
+import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.storage.Storage;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
@@ -46,33 +51,18 @@ public class UkOpenBankingPaymentTestFixtures {
 
     private static final String ACCOUNT_NUMBER = "12345678901234";
     private static final String REMITTANCE_INFORMATION = "DUMMY_REMITTANCE_INFORMATION";
+    private static final String CONSENT_RESPONSE_STATUS = "AwaitingAuthorisation";
     private static final String RESPONSE_STATUS = "Authorised";
     private static final String RESPONSE_STATUS_FOR_SCHEDULED_PAYMENTS = "InitiationPending";
     private static final String EXECUTION_DATE_TIME = "2020-12-20T12:23:45Z";
     private static final LocalDate EXECUTION_DATE =
             LocalDate.parse(EXECUTION_DATE_TIME, ISO_OFFSET_DATE_TIME);
     private static final String SCHEME_NAME = "UK.OBIE.SortCodeAccountNumber";
+    private static final String PROVIDER_NAME = "uk-dummy-prov";
+    private static final Instant NOW = Instant.now();
 
     public static Payment createPayment() {
-        final Payment paymentMock = createTodayPayment(EXECUTION_DATE);
-        final Debtor debtorMock = createDebtor();
-        final Creditor creditorMock = createCreditor();
-        final se.tink.libraries.transfer.rpc.RemittanceInformation
-                unstructuredRemittanceInformationMock = createUnstructuredRemittanceInformation();
-        final ExactCurrencyAmount exactCurrencyAmountMock = createExactCurrencyAmount();
-
-        when(paymentMock.getDebtor()).thenReturn(debtorMock);
-        when(paymentMock.getCreditor()).thenReturn(creditorMock);
-        when(paymentMock.getRemittanceInformation())
-                .thenReturn(unstructuredRemittanceInformationMock);
-        when(paymentMock.getExactCurrencyAmountFromField()).thenReturn(exactCurrencyAmountMock);
-        when(paymentMock.getCurrency()).thenReturn(CURRENCY);
-        when(paymentMock.getUniqueId()).thenReturn(INSTRUCTION_ID);
-        when(paymentMock.getUniqueIdForUKOPenBanking()).thenReturn(INSTRUCTION_ID);
-        when(paymentMock.getExactCurrencyAmount()).thenReturn(exactCurrencyAmountMock);
-        when(paymentMock.getStatus()).thenReturn(PaymentStatus.PENDING);
-
-        return paymentMock;
+        return createPaymentWithStatus(PaymentStatus.PENDING);
     }
 
     public static DebtorAccount createDebtorAccount() {
@@ -106,6 +96,10 @@ public class UkOpenBankingPaymentTestFixtures {
         final AccountIdentifier accountIdentifierMock = createAccountIdentifier();
 
         return new Debtor(accountIdentifierMock);
+    }
+
+    public static PaymentRequest createDomesticPaymentRequestForNotExecutedPayment() {
+        return createDomesticPaymentRequestForNotExecutedPayment(createClockMock());
     }
 
     public static PaymentRequest createDomesticPaymentRequestForNotExecutedPayment(
@@ -150,14 +144,10 @@ public class UkOpenBankingPaymentTestFixtures {
         return paymentRequestMock;
     }
 
-    public static FundsConfirmationResponse createFundsConfirmationResponse() {
-        return mock(FundsConfirmationResponse.class);
-    }
-
     public static PaymentResponse createPaymentResponseForConsent() {
         final PaymentResponse paymentResponseMock = mock(PaymentResponse.class);
         final Storage storage = createStorageWithConsentId();
-        final Payment paymentMock = createPayment();
+        final Payment paymentMock = createPaymentForConsent();
 
         when(paymentResponseMock.getStorage()).thenReturn(storage);
         when(paymentResponseMock.getPayment()).thenReturn(paymentMock);
@@ -193,6 +183,8 @@ public class UkOpenBankingPaymentTestFixtures {
                 createDomesticPaymentConsentResponseData();
 
         when(domesticPaymentConsentResponseMock.getData()).thenReturn(responseDataMock);
+        when(domesticPaymentConsentResponseMock.hasStatusAwaitingAuthorisation())
+                .thenReturn(Boolean.TRUE);
 
         return domesticPaymentConsentResponseMock;
     }
@@ -220,13 +212,55 @@ public class UkOpenBankingPaymentTestFixtures {
         return domesticScheduledPaymentConsentResponseMock;
     }
 
+    public static Credentials createCredentials() {
+        final Credentials credentialsMock = mock(Credentials.class);
+
+        when(credentialsMock.getProviderName()).thenReturn(PROVIDER_NAME);
+
+        return credentialsMock;
+    }
+
+    public static Clock createClockMock() {
+        final Clock clockMock = mock(Clock.class);
+
+        when(clockMock.instant()).thenReturn(NOW);
+        when(clockMock.getZone()).thenReturn(ZoneOffset.UTC);
+
+        return clockMock;
+    }
+
+    static PaymentMultiStepRequest createPaymentMultiStepRequestForExecutePaymentStep() {
+        return createPaymentMultiStepRequest(ExecutorSignStep.EXECUTE_PAYMENT.name());
+    }
+
+    static OAuth2Token createOAuth2Token() {
+        final OAuth2Token tokenMock = mock(OAuth2Token.class);
+
+        when(tokenMock.isValid()).thenReturn(Boolean.TRUE);
+
+        return tokenMock;
+    }
+
+    private static PaymentMultiStepRequest createPaymentMultiStepRequest(String step) {
+        final PaymentMultiStepRequest paymentMultiStepRequestMock =
+                mock(PaymentMultiStepRequest.class);
+        final Storage storage = createStorageWithConsentId();
+        final Payment paymentMock = createPayment();
+
+        when(paymentMultiStepRequestMock.getStep()).thenReturn(step);
+        when(paymentMultiStepRequestMock.getStorage()).thenReturn(storage);
+        when(paymentMultiStepRequestMock.getPayment()).thenReturn(paymentMock);
+
+        return paymentMultiStepRequestMock;
+    }
+
     private static Payment createTodayPayment(Clock clockMock) {
         final LocalDate executionDate = LocalDate.now(clockMock);
 
-        return createTodayPayment(executionDate);
+        return createPayment(executionDate);
     }
 
-    private static Payment createTodayPayment(LocalDate executionDate) {
+    private static Payment createPayment(LocalDate executionDate) {
         final Payment paymentMock = mock(Payment.class);
 
         when(paymentMock.getCreditorAndDebtorAccountType())
@@ -329,7 +363,7 @@ public class UkOpenBankingPaymentTestFixtures {
                 createDomesticScheduledPaymentInitiation();
 
         when(responseDataMock.getInitiation()).thenReturn(initiationMock);
-        when(responseDataMock.getStatus()).thenReturn(RESPONSE_STATUS);
+        when(responseDataMock.getStatus()).thenReturn(CONSENT_RESPONSE_STATUS);
         when(responseDataMock.getConsentId()).thenReturn(CONSENT_ID);
 
         return responseDataMock;
@@ -354,7 +388,7 @@ public class UkOpenBankingPaymentTestFixtures {
         final DomesticPaymentInitiation initiationMock = createDomesticPaymentInitiation();
 
         when(responseDataMock.getInitiation()).thenReturn(initiationMock);
-        when(responseDataMock.getStatus()).thenReturn(RESPONSE_STATUS);
+        when(responseDataMock.getStatus()).thenReturn(CONSENT_RESPONSE_STATUS);
         when(responseDataMock.getConsentId()).thenReturn(CONSENT_ID);
 
         return responseDataMock;
@@ -409,5 +443,31 @@ public class UkOpenBankingPaymentTestFixtures {
         storage.put(UkOpenBankingV31PaymentConstants.Storage.PAYMENT_ID, PAYMENT_ID);
 
         return storage;
+    }
+
+    private static Payment createPaymentWithStatus(PaymentStatus paymentStatus) {
+        final Payment paymentMock = createPayment(EXECUTION_DATE);
+        final Debtor debtorMock = createDebtor();
+        final Creditor creditorMock = createCreditor();
+        final se.tink.libraries.transfer.rpc.RemittanceInformation
+                unstructuredRemittanceInformationMock = createUnstructuredRemittanceInformation();
+        final ExactCurrencyAmount exactCurrencyAmountMock = createExactCurrencyAmount();
+
+        when(paymentMock.getDebtor()).thenReturn(debtorMock);
+        when(paymentMock.getCreditor()).thenReturn(creditorMock);
+        when(paymentMock.getRemittanceInformation())
+                .thenReturn(unstructuredRemittanceInformationMock);
+        when(paymentMock.getExactCurrencyAmountFromField()).thenReturn(exactCurrencyAmountMock);
+        when(paymentMock.getCurrency()).thenReturn(CURRENCY);
+        when(paymentMock.getUniqueId()).thenReturn(INSTRUCTION_ID);
+        when(paymentMock.getUniqueIdForUKOPenBanking()).thenReturn(INSTRUCTION_ID);
+        when(paymentMock.getExactCurrencyAmount()).thenReturn(exactCurrencyAmountMock);
+        when(paymentMock.getStatus()).thenReturn(paymentStatus);
+
+        return paymentMock;
+    }
+
+    private static Payment createPaymentForConsent() {
+        return createPaymentWithStatus(PaymentStatus.CREATED);
     }
 }
