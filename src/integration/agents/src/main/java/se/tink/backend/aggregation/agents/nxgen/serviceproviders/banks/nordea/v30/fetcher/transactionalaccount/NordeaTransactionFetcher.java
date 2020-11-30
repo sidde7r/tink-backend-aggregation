@@ -2,7 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.NordeaBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.NordeaConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.fetcher.transactionalaccount.rpc.FetchAccountTransactionResponse;
@@ -15,6 +17,7 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 public class NordeaTransactionFetcher implements TransactionDatePaginator<TransactionalAccount> {
     private final NordeaBaseApiClient apiClient;
     private final NordeaConfiguration nordeaConfiguration;
+    private Set<String> transactionIdsSeen = new HashSet<>();
 
     public NordeaTransactionFetcher(
             NordeaBaseApiClient apiClient, NordeaConfiguration nordeaConfiguration) {
@@ -39,7 +42,7 @@ public class NordeaTransactionFetcher implements TransactionDatePaginator<Transa
                     apiClient.fetchAccountTransactions(account, continuationKey, fromDate, toDate);
             tinkTransactions.addAll(
                     transactionsResponse.toTinkTransactions(
-                            nordeaConfiguration, skipPendingTransactions));
+                            nordeaConfiguration, skipPendingTransactions, transactionIdsSeen));
 
             continuationKey = transactionsResponse.getContinuationKey();
         } while (continuationKey != null);

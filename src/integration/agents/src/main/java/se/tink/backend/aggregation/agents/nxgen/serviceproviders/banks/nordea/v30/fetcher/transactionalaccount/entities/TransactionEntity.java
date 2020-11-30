@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Strings;
 import java.util.Date;
+import java.util.Set;
 import org.apache.commons.lang.StringUtils;
 import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.NordeaConfiguration;
@@ -58,6 +59,15 @@ public class TransactionEntity {
         }
 
         return transaction.build();
+    }
+
+    @JsonIgnore
+    public boolean hasSeenTransactionBefore(Set<String> transactionIdsSeen) {
+        if (transactionIdsSeen.contains(transactionId)) {
+            return true;
+        }
+        transactionIdsSeen.add(transactionId);
+        return false;
     }
 
     @JsonIgnore
