@@ -55,8 +55,9 @@ public class SendAccountRestrictionEventsWorkerCommand extends AgentWorkerComman
     private void sendAccountAggregationRestrictedEvent(
             Account restrictedAccount, FilterReason filterReason) {
         log.info(
-                "Preparing to send AccountAggregationRestrictedEvent for {}",
-                restrictedAccount.getId());
+                "Preparing to send AccountAggregationRestrictedEvent for {} with reason: {}",
+                restrictedAccount.getId(),
+                filterReason.name());
         CredentialsRequest request = context.getRequest();
         if (request.getProvider() == null) {
             return;
