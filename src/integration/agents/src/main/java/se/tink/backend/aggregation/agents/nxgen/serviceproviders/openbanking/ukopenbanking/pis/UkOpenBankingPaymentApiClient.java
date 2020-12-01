@@ -12,18 +12,23 @@ import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.configuration.ClientInfo;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.configuration.SoftwareStatementAssertion;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.entities.ClientMode;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.signer.iface.JwtSigner;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.signer.iface.JwtSigner.Algorithm;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentConstants.HttpHeaders;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentConstants.JWTSignatureHeaders.Headers;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentConstants.JWTSignatureHeaders.Payload;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.configuration.UkOpenBankingPisConfig;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.dto.common.FundsConfirmationResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.dto.domestic.DomesticPaymentConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.dto.domestic.DomesticPaymentConsentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.dto.domestic.DomesticPaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.dto.domestic.DomesticPaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.dto.domesticscheduled.DomesticScheduledPaymentConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.dto.domesticscheduled.DomesticScheduledPaymentConsentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.dto.domesticscheduled.DomesticScheduledPaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.dto.domesticscheduled.DomesticScheduledPaymentResponse;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
+import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -64,7 +69,8 @@ public class UkOpenBankingPaymentApiClient extends OpenIdApiClient {
         this.pisConfig = pisConfig;
     }
 
-    public DomesticPaymentConsentResponse createDomesticPaymentConsent(Object request) {
+    public DomesticPaymentConsentResponse createDomesticPaymentConsent(
+            DomesticPaymentConsentRequest request) {
         return createPisRequestWithJwsHeader(pisConfig.createDomesticPaymentConsentURL(), request)
                 .post(DomesticPaymentConsentResponse.class, request);
     }
@@ -74,14 +80,9 @@ public class UkOpenBankingPaymentApiClient extends OpenIdApiClient {
                 .get(DomesticPaymentConsentResponse.class);
     }
 
-    public DomesticPaymentResponse executeDomesticPayment(Object request) {
+    public DomesticPaymentResponse executeDomesticPayment(DomesticPaymentRequest request) {
         return createPisRequestWithJwsHeader(pisConfig.createDomesticPaymentURL(), request)
                 .post(DomesticPaymentResponse.class, request);
-    }
-
-    public FundsConfirmationResponse getDomesticFundsConfirmation(String consentId) {
-        return createPisRequest(pisConfig.getDomesticFundsConfirmationURL(consentId))
-                .get(FundsConfirmationResponse.class);
     }
 
     public DomesticPaymentResponse getDomesticPayment(String paymentId) {
@@ -90,7 +91,7 @@ public class UkOpenBankingPaymentApiClient extends OpenIdApiClient {
     }
 
     public DomesticScheduledPaymentConsentResponse createDomesticScheduledPaymentConsent(
-            Object request) {
+            DomesticScheduledPaymentConsentRequest request) {
         return createPisRequestWithJwsHeader(
                         pisConfig.createDomesticScheduledPaymentConsentURL(), request)
                 .post(DomesticScheduledPaymentConsentResponse.class, request);
@@ -102,7 +103,8 @@ public class UkOpenBankingPaymentApiClient extends OpenIdApiClient {
                 .get(DomesticScheduledPaymentConsentResponse.class);
     }
 
-    public DomesticScheduledPaymentResponse executeDomesticScheduledPayment(Object request) {
+    public DomesticScheduledPaymentResponse executeDomesticScheduledPayment(
+            DomesticScheduledPaymentRequest request) {
         return createPisRequestWithJwsHeader(pisConfig.createDomesticScheduledPaymentURL(), request)
                 .post(DomesticScheduledPaymentResponse.class, request);
     }
@@ -110,6 +112,10 @@ public class UkOpenBankingPaymentApiClient extends OpenIdApiClient {
     public DomesticScheduledPaymentResponse getDomesticScheduledPayment(String paymentId) {
         return createPisRequest(pisConfig.getDomesticScheduledPayment(paymentId))
                 .get(DomesticScheduledPaymentResponse.class);
+    }
+
+    OAuth2Token requestClientCredentials() {
+        return super.requestClientCredentials(ClientMode.PAYMENTS);
     }
 
     private RequestBuilder createPisRequest(URL url) {

@@ -2,18 +2,18 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.util.concurrent.Uninterruptibles;
 import java.time.Clock;
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.Optional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.concurrent.TimeUnit;
+import lombok.extern.slf4j.Slf4j;
+import org.assertj.core.util.VisibleForTesting;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.entity.ErrorEntity;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
-import se.tink.backend.aggregation.agents.exceptions.payment.InsufficientFundsException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationCancelledByUserException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationFailedByUserException;
@@ -23,11 +23,11 @@ import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedExce
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticationController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.configuration.ClientInfo;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.configuration.SoftwareStatementAssertion;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingV31PaymentConstants.Step;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.authenticator.OpenIdPisAuthenticationController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.authenticator.OpenIdPisAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.converter.domestic.DomesticPaymentConverter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.converter.domesticscheduled.DomesticScheduledPaymentConverter;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.dto.common.FundsConfirmationResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.entity.ExecutorSignStep;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.helper.ApiClientWrapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.helper.DomesticPaymentApiClientWrapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.helper.DomesticScheduledPaymentApiClientWrapper;
@@ -47,50 +47,32 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepReq
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
-import se.tink.backend.aggregation.nxgen.controllers.signing.SigningStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
+import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
-import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
-public class UkOpenBankingExecutor implements PaymentExecutor, FetchablePaymentExecutor {
-    private static final Logger log = LoggerFactory.getLogger(UkOpenBankingExecutor.class);
+@Slf4j
+public class UkOpenBankingPaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
+
+    @VisibleForTesting static final String CLIENT_TOKEN = "CLIENT_OAUTH2_TOKEN";
 
     private final SoftwareStatementAssertion softwareStatement;
     private final ClientInfo clientInfo;
     private final UkOpenBankingPaymentApiClient apiClient;
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final Credentials credentials;
-    private final URL appToAppRedirectURL;
     private final StrongAuthenticationState strongAuthenticationState;
     private final RandomValueGenerator randomValueGenerator;
     private final UkOpenBankingPaymentHelper ukOpenBankingPaymentHelper;
+    private final PersistentStorage persistentStorage;
 
-    public UkOpenBankingExecutor(
-            SoftwareStatementAssertion softwareStatement,
-            ClientInfo clientInfo,
-            UkOpenBankingPaymentApiClient apiClient,
-            SupplementalInformationHelper supplementalInformationHelper,
-            Credentials credentials,
-            StrongAuthenticationState strongAuthenticationState,
-            RandomValueGenerator randomValueGenerator) {
-
-        this(
-                softwareStatement,
-                clientInfo,
-                apiClient,
-                supplementalInformationHelper,
-                credentials,
-                strongAuthenticationState,
-                randomValueGenerator,
-                null);
-    }
-
-    private UkOpenBankingExecutor(
+    public UkOpenBankingPaymentExecutor(
             SoftwareStatementAssertion softwareStatement,
             ClientInfo clientInfo,
             UkOpenBankingPaymentApiClient apiClient,
@@ -98,17 +80,18 @@ public class UkOpenBankingExecutor implements PaymentExecutor, FetchablePaymentE
             Credentials credentials,
             StrongAuthenticationState strongAuthenticationState,
             RandomValueGenerator randomValueGenerator,
-            URL appToAppRedirectURL) {
+            PersistentStorage persistentStorage) {
+
         this.softwareStatement = softwareStatement;
         this.clientInfo = clientInfo;
         this.apiClient = apiClient;
         this.supplementalInformationHelper = supplementalInformationHelper;
         this.credentials = credentials;
-        this.appToAppRedirectURL = appToAppRedirectURL;
         this.strongAuthenticationState = strongAuthenticationState;
         this.randomValueGenerator = randomValueGenerator;
         this.ukOpenBankingPaymentHelper =
                 new UkOpenBankingPaymentHelper(this.createApiClientWrapperMap(), Clock.systemUTC());
+        this.persistentStorage = persistentStorage;
     }
 
     @Override
@@ -116,35 +99,55 @@ public class UkOpenBankingExecutor implements PaymentExecutor, FetchablePaymentE
         UkOpenBankingPisUtils.validateRemittanceWithProviderOrThrow(
                 credentials.getProviderName(),
                 paymentRequest.getPayment().getRemittanceInformation());
-        return authenticateAndCreatePisConsent(paymentRequest);
+
+        fetchAndStoreClientToken();
+
+        return createConsentWithRetry(paymentRequest);
     }
 
-    private PaymentResponse authenticateAndCreatePisConsent(PaymentRequest paymentRequest)
+    /**
+     * For fixing the Barclays unstable issue; No-sleep retry had been tested but working not well;
+     * No-sleep retry will get continuous rejection; Jira had been raised on UKOB directory by other
+     * TPPs
+     */
+    private PaymentResponse createConsentWithRetry(PaymentRequest paymentRequest) {
+        for (int i = 0; i < 3; i++) {
+            try {
+                return ukOpenBankingPaymentHelper.createConsent(paymentRequest);
+            } catch (HttpResponseException e) {
+                Uninterruptibles.sleepUninterruptibly(2000 * i, TimeUnit.MILLISECONDS);
+            }
+        }
+
+        return ukOpenBankingPaymentHelper.createConsent(paymentRequest);
+    }
+
+    private void fetchAndStoreClientToken() {
+        final OAuth2Token clientOAuth2Token = retrieveClientToken();
+
+        persistentStorage.put(CLIENT_TOKEN, clientOAuth2Token);
+
+        apiClient.instantiatePisAuthFilter(clientOAuth2Token);
+    }
+
+    private PaymentMultiStepResponse authenticate(PaymentMultiStepRequest paymentMultiStepRequest)
             throws PaymentAuthorizationException {
 
-        OpenIdPisAuthenticator paymentAuthenticator =
-                new OpenIdPisAuthenticator(
-                        apiClient,
-                        ukOpenBankingPaymentHelper,
-                        softwareStatement,
-                        clientInfo,
-                        paymentRequest);
+        final String intentId = paymentMultiStepRequest.getStorage().get("consentId");
 
-        // Do not use the real PersistentStorage because we don't want to overwrite the AIS auth
-        // token.
-        PersistentStorage dummyStorage = new PersistentStorage();
+        OpenIdPisAuthenticator paymentAuthenticator =
+                new OpenIdPisAuthenticator(apiClient, softwareStatement, clientInfo, intentId);
 
         OpenIdAuthenticationController openIdAuthenticationController =
-                new OpenIdAuthenticationController(
-                        dummyStorage,
+                new OpenIdPisAuthenticationController(
                         supplementalInformationHelper,
                         apiClient,
                         paymentAuthenticator,
                         credentials,
                         strongAuthenticationState,
                         null,
-                        appToAppRedirectURL,
-                        randomValueGenerator);
+                        randomValueGenerator,
+                        getClientTokenFromStorage());
 
         ThirdPartyAppAuthenticationController<String> thirdPartyAppAuthenticationController =
                 new ThirdPartyAppAuthenticationController<>(
@@ -186,16 +189,18 @@ public class UkOpenBankingExecutor implements PaymentExecutor, FetchablePaymentE
             throw UkOpenBankingPisUtils.createFailedTransferException();
         }
 
-        return paymentAuthenticator.getPaymentResponse();
+        return new PaymentMultiStepResponse(
+                paymentMultiStepRequest,
+                ExecutorSignStep.EXECUTE_PAYMENT.name(),
+                new ArrayList<>());
     }
 
     private boolean hasWellKnownOpenIdError(UkOpenBankingPaymentApiClient apiClient) {
-        if (!apiClient.getErrorEntity().isPresent()) {
-            return false;
-        }
-
-        ErrorEntity errorEntity = apiClient.getErrorEntity().get();
-        return isKnownOpenIdError(errorEntity.getErrorType());
+        return apiClient
+                .getErrorEntity()
+                .map(ErrorEntity::getErrorType)
+                .map(UkOpenBankingPaymentExecutor::isKnownOpenIdError)
+                .orElse(Boolean.FALSE);
     }
 
     /**
@@ -203,7 +208,7 @@ public class UkOpenBankingExecutor implements PaymentExecutor, FetchablePaymentE
      * documentation access_denied means that resource owner (end user) did not provide consent.
      * login_required means that user didn't authenticate at all.
      */
-    private boolean isKnownOpenIdError(String errorType) {
+    private static boolean isKnownOpenIdError(String errorType) {
         return UkOpenBankingV31PaymentConstants.Errors.ACCESS_DENIED.equalsIgnoreCase(errorType)
                 || UkOpenBankingV31PaymentConstants.Errors.LOGIN_REQUIRED.equalsIgnoreCase(
                         errorType);
@@ -217,80 +222,18 @@ public class UkOpenBankingExecutor implements PaymentExecutor, FetchablePaymentE
     @Override
     public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest)
             throws PaymentException {
-        switch (paymentMultiStepRequest.getStep()) {
-            case SigningStepConstants.STEP_INIT:
-                return init(paymentMultiStepRequest);
 
-            case UkOpenBankingV31PaymentConstants.Step.AUTHORIZE:
-                return authorized(paymentMultiStepRequest);
+        final ExecutorSignStep step = ExecutorSignStep.of(paymentMultiStepRequest.getStep());
+        switch (step) {
+            case AUTHENTICATE:
+                return authenticate(paymentMultiStepRequest);
 
-            case UkOpenBankingV31PaymentConstants.Step.SUFFICIENT_FUNDS:
-                return sufficientFunds(paymentMultiStepRequest);
-
-            case UkOpenBankingV31PaymentConstants.Step.EXECUTE_PAYMENT:
+            case EXECUTE_PAYMENT:
                 return executePayment(paymentMultiStepRequest);
             default:
-                throw new IllegalStateException(
-                        String.format("Unknown step %s", paymentMultiStepRequest.getStep()));
+                throw new IllegalArgumentException(
+                        "Unknown step: " + paymentMultiStepRequest.getStep());
         }
-    }
-
-    private PaymentMultiStepResponse init(PaymentMultiStepRequest paymentMultiStepRequest)
-            throws PaymentException {
-
-        switch (paymentMultiStepRequest.getPayment().getStatus()) {
-            case CREATED:
-                // Directly executing the payment after authorizing the payment consent
-                // successfully. Steps for funds check needs to be done before authorizing the
-                // consent.  Step.AUTHORIZE
-                return new PaymentMultiStepResponse(
-                        paymentMultiStepRequest, Step.EXECUTE_PAYMENT, new ArrayList<>());
-            case REJECTED:
-                throw new PaymentAuthorizationException(
-                        "Payment is rejected", new IllegalStateException("Payment is rejected"));
-            case PENDING:
-                return new PaymentMultiStepResponse(
-                        paymentMultiStepRequest,
-                        UkOpenBankingV31PaymentConstants.Step.SUFFICIENT_FUNDS,
-                        new ArrayList<>());
-            default:
-                throw new IllegalStateException(
-                        String.format(
-                                "Unknown status %s",
-                                paymentMultiStepRequest.getPayment().getStatus()));
-        }
-    }
-
-    private PaymentMultiStepResponse authorized(PaymentMultiStepRequest paymentMultiStepRequest) {
-        String step =
-                Optional.of(
-                                ukOpenBankingPaymentHelper
-                                        .fetchPaymentIfAlreadyExecutedOrGetConsent(
-                                                paymentMultiStepRequest))
-                        .map(p -> p.getPayment().getStatus())
-                        .filter(s -> s == PaymentStatus.PENDING)
-                        .map(s -> UkOpenBankingV31PaymentConstants.Step.SUFFICIENT_FUNDS)
-                        .orElse(UkOpenBankingV31PaymentConstants.Step.AUTHORIZE);
-
-        return new PaymentMultiStepResponse(paymentMultiStepRequest, step, new ArrayList<>());
-    }
-
-    private PaymentMultiStepResponse sufficientFunds(
-            PaymentMultiStepRequest paymentMultiStepRequest) throws PaymentException {
-
-        final Optional<FundsConfirmationResponse> maybeFundsConfirmation =
-                ukOpenBankingPaymentHelper.fetchFundsConfirmation(paymentMultiStepRequest);
-
-        if (maybeFundsConfirmation.isPresent()
-                && !maybeFundsConfirmation.get().isFundsAvailable()) {
-            throw new InsufficientFundsException(
-                    "Insufficient funds", "", new IllegalStateException("Insufficient funds"));
-        }
-
-        return new PaymentMultiStepResponse(
-                paymentMultiStepRequest,
-                UkOpenBankingV31PaymentConstants.Step.EXECUTE_PAYMENT,
-                new ArrayList<>());
     }
 
     private PaymentMultiStepResponse executePayment(PaymentMultiStepRequest paymentMultiStepRequest)
@@ -349,5 +292,23 @@ public class UkOpenBankingExecutor implements PaymentExecutor, FetchablePaymentE
                         this.apiClient, new DomesticScheduledPaymentConverter()),
                 PaymentType.SEPA,
                 domesticPaymentApiClientWrapper);
+    }
+
+    private OAuth2Token retrieveClientToken() {
+        final OAuth2Token clientOAuth2Token = apiClient.requestClientCredentials();
+        if (!clientOAuth2Token.isValid()) {
+            throw new IllegalArgumentException("Client access token is not valid.");
+        }
+
+        return clientOAuth2Token;
+    }
+
+    private OAuth2Token getClientTokenFromStorage() {
+        return persistentStorage
+                .get(CLIENT_TOKEN, OAuth2Token.class)
+                .orElseThrow(
+                        () ->
+                                new IllegalArgumentException(
+                                        "Client token not found in the storage"));
     }
 }

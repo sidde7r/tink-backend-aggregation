@@ -1,13 +1,38 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.converter.common;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+import org.assertj.core.api.AssertionsForClassTypes;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.payment.rpc.Payment;
 
-public abstract class ConverterTestBase {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class UkOpenBankingTestValidator {
 
-    protected static void validatePaymentsAreEqual(Payment returned, Payment expected) {
+    public static void validatePaymentResponsesForDomesticPaymentAreEqual(
+            PaymentResponse returned, PaymentResponse expected) {
+        validatePaymentsAreEqual(returned.getPayment(), expected.getPayment());
+        assertThat(returned.getStorage()).isEqualTo(expected.getStorage());
+    }
+
+    public static void validatePaymentResponsesForDomesticScheduledPaymentsAreEqual(
+            PaymentResponse returned, PaymentResponse expected) {
+        validatePaymentsAreEqual(returned.getPayment(), expected.getPayment());
+        AssertionsForClassTypes.assertThat(returned.getPayment().getExecutionDate())
+                .isEqualTo(expected.getPayment().getExecutionDate());
+        AssertionsForClassTypes.assertThat(returned.getStorage()).isEqualTo(expected.getStorage());
+    }
+
+    public static void validateAccountIdentifiersAreEqual(
+            AccountIdentifier returned, AccountIdentifier expected) {
+        assertThat(returned.getIdentifier()).isEqualTo(expected.getIdentifier());
+        assertThat(returned.getType()).isEqualTo(expected.getType());
+    }
+
+    private static void validatePaymentsAreEqual(Payment returned, Payment expected) {
         validateAccountIdentifiersAreEqual(
                 returned.getCreditor().getAccountIdentifier(),
                 expected.getCreditor().getAccountIdentifier());
@@ -31,11 +56,5 @@ public abstract class ConverterTestBase {
         assertThat(returned.getStatus()).isEqualTo(expected.getStatus());
         assertThat(returned.getRemittanceInformation())
                 .isEqualTo(expected.getRemittanceInformation());
-    }
-
-    protected static void validateAccountIdentifiersAreEqual(
-            AccountIdentifier returned, AccountIdentifier expected) {
-        assertThat(returned.getIdentifier()).isEqualTo(expected.getIdentifier());
-        assertThat(returned.getType()).isEqualTo(expected.getType());
     }
 }

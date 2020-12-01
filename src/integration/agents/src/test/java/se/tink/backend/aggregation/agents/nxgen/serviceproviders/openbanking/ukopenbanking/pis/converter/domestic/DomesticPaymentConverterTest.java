@@ -13,10 +13,11 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbank
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentTestFixtures.createPaymentResponse;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentTestFixtures.createPaymentResponseForConsent;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentTestFixtures.createRemittanceInformation;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingTestValidator.validateAccountIdentifiersAreEqual;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingTestValidator.validatePaymentResponsesForDomesticPaymentAreEqual;
 
 import org.junit.Before;
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.converter.common.ConverterTestBase;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.dto.common.CreditorAccount;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.dto.common.DebtorAccount;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.dto.common.InstructedAmount;
@@ -28,7 +29,7 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
 
-public class DomesticPaymentConverterTest extends ConverterTestBase {
+public class DomesticPaymentConverterTest {
 
     private DomesticPaymentConverter domesticPaymentConverter;
 
@@ -195,7 +196,7 @@ public class DomesticPaymentConverterTest extends ConverterTestBase {
         // then
         final PaymentResponse expected = createPaymentResponseForConsent();
 
-        validatePaymentResponsesAreEqual(returned, expected);
+        validatePaymentResponsesForDomesticPaymentAreEqual(returned, expected);
     }
 
     @Test
@@ -210,12 +211,6 @@ public class DomesticPaymentConverterTest extends ConverterTestBase {
         // then
         final PaymentResponse expected = createPaymentResponse();
 
-        validatePaymentResponsesAreEqual(returned, expected);
-    }
-
-    private static void validatePaymentResponsesAreEqual(
-            PaymentResponse returned, PaymentResponse expected) {
-        validatePaymentsAreEqual(returned.getPayment(), expected.getPayment());
-        assertThat(returned.getStorage()).isEqualTo(expected.getStorage());
+        validatePaymentResponsesForDomesticPaymentAreEqual(returned, expected);
     }
 }
