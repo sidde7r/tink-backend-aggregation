@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.no.banks.danskebank.authenticat
 import com.google.common.base.Strings;
 import java.util.Base64;
 import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -14,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field;
+import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
@@ -42,8 +44,10 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.selenium.WebDriverHelper;
 
+@RequiredArgsConstructor
 public class DanskeBankNOBankIdAuthenticator implements TypedAuthenticator, AutoAuthenticator {
     private static final Logger log =
             LoggerFactory.getLogger(DanskeBankNOBankIdAuthenticator.class);
@@ -55,21 +59,8 @@ public class DanskeBankNOBankIdAuthenticator implements TypedAuthenticator, Auto
     private final String deviceId;
     private final DanskeBankConfiguration configuration;
     private final WebDriverHelper webDriverHelper;
-
-    public DanskeBankNOBankIdAuthenticator(
-            DanskeBankNOApiClient apiClient,
-            PersistentStorage persistentStorage,
-            Credentials credentials,
-            String deviceId,
-            DanskeBankConfiguration configuration,
-            WebDriverHelper webDriverHelper) {
-        this.apiClient = apiClient;
-        this.persistentStorage = persistentStorage;
-        this.credentials = credentials;
-        this.deviceId = deviceId;
-        this.configuration = configuration;
-        this.webDriverHelper = webDriverHelper;
-    }
+    private final SupplementalRequester supplementalRequester;
+    private final Catalog catalog;
 
     @Override
     public CredentialsTypes getType() {
@@ -388,7 +379,12 @@ public class DanskeBankNOBankIdAuthenticator implements TypedAuthenticator, Auto
 
             BankIdIframeSSAuthenticationController bankIdIframeSSAuthenticationController =
                     new BankIdIframeSSAuthenticationController(
-                            webDriverHelper, driver, iframeInitializer);
+                            webDriverHelper,
+                            driver,
+                            iframeInitializer,
+                            credentials,
+                            supplementalRequester,
+                            catalog);
             bankIdIframeSSAuthenticationController.doLogin(bankIdPassword);
 
             // Page reload (destroy the iframe).

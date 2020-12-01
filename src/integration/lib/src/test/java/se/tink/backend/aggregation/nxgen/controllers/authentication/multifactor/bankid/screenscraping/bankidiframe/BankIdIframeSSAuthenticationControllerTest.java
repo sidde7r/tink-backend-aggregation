@@ -7,7 +7,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.Optional;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
@@ -17,13 +17,18 @@ import org.mockito.Mockito;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
+import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.screenscraping.bankidiframe.initializer.IframeInitializer;
+import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.selenium.WebDriverHelper;
 import se.tink.libraries.selenium.exceptions.HtmlElementNotFoundException;
+import se.tink.libraries.selenium.exceptions.ScreenScrapingException;
 
 public class BankIdIframeSSAuthenticationControllerTest {
+
     private BankIdIframeSSAuthenticationController controller;
     private IframeInitializer iframeInitializer;
     private WebDriverHelper webDriverHelper;
@@ -34,7 +39,7 @@ public class BankIdIframeSSAuthenticationControllerTest {
     private WebElement selectAuthenticationButton;
     private WebElement passwordInputMock;
     private WebElement authenticationInputMock;
-    private WebElement iframeMock;
+    private WebElement referenceWordsSpanMock;
 
     private static final By FORM_XPATH = By.xpath("//form");
     private static final By PASSWORD_INPUT_XPATH =
@@ -46,9 +51,14 @@ public class BankIdIframeSSAuthenticationControllerTest {
                     "//ul/child::li/child::button[span[contains(text(),'mobil') and contains(text(),'BankID')]]");
     private static final By AUTHENTICATION_INPUT_XPATH =
             By.xpath("//form//input[@type='password'][@maxlength]");
+    private static final By REFERENCE_WORDS_XPATH =
+            By.xpath("//span[@data-bind='text: reference']");
 
     private static final By IFRAME_XPATH = By.tagName("iframe");
-    private static String PASSWORD_INPUT = "PASSWORD-INPUT";
+    private static final String PASSWORD_INPUT = "PASSWORD-INPUT";
+    private static final String TEST_PASSWORD = "PASSWORD-EXAMPLE";
+    private static final String REFERENCE_WORDS = "TEST TESTO";
+    private static final String REFERENCE_WORDS_EXCEPTION_MESSAGE = "Couldn't find reference words";
 
     @Before
     public void init() {
@@ -58,7 +68,12 @@ public class BankIdIframeSSAuthenticationControllerTest {
         inOrder = Mockito.inOrder(iframeInitializer, driver, webDriverHelper);
         controller =
                 new BankIdIframeSSAuthenticationController(
-                        webDriverHelper, driver, iframeInitializer);
+                        webDriverHelper,
+                        driver,
+                        iframeInitializer,
+                        new Credentials(),
+                        mock(SupplementalRequester.class),
+                        mock(Catalog.class));
         initializeWebElements();
     }
 
@@ -73,19 +88,25 @@ public class BankIdIframeSSAuthenticationControllerTest {
         given(webDriverHelper.getElement(driver, BANK_ID_MOBIL_BUTTON)).willReturn(buttonbankId);
 
         // iframe mock
-        iframeMock = mock(WebElement.class);
+        WebElement iframeMock = mock(WebElement.class);
         given(webDriverHelper.getElement(driver, IFRAME_XPATH)).willReturn(iframeMock);
 
         // password input
         passwordInputMock = mock(WebElement.class);
         given(webDriverHelper.checkIfElementEnabledIfNotWait(passwordInputMock)).willReturn(true);
         given(driver.findElements(PASSWORD_INPUT_XPATH))
-                .willReturn(Arrays.asList(passwordInputMock));
+                .willReturn(Collections.singletonList(passwordInputMock));
 
         // authentication input
         authenticationInputMock = mock(WebElement.class);
         given(webDriverHelper.waitForElement(driver, AUTHENTICATION_INPUT_XPATH))
                 .willReturn(Optional.of(authenticationInputMock));
+
+        // reference words
+        referenceWordsSpanMock = mock(WebElement.class);
+        given(webDriverHelper.waitForElement(driver, REFERENCE_WORDS_XPATH))
+                .willReturn(Optional.of(referenceWordsSpanMock));
+        given(referenceWordsSpanMock.getText()).willReturn(REFERENCE_WORDS);
     }
 
     @Test
@@ -120,8 +141,7 @@ public class BankIdIframeSSAuthenticationControllerTest {
 
         given(webDriverHelper.checkIfElementEnabledIfNotWait(passwordInputMock)).willReturn(false);
         // when
-        Throwable throwable =
-                Assertions.catchThrowable(() -> controller.doLogin("PASSWORD-EXAMPLE"));
+        Throwable throwable = Assertions.catchThrowable(() -> controller.doLogin(TEST_PASSWORD));
         // then
         assertThat(throwable)
                 .isInstanceOf(LoginException.class)
@@ -137,8 +157,7 @@ public class BankIdIframeSSAuthenticationControllerTest {
                 .willThrow(HtmlElementNotFoundException.class);
 
         // when
-        Throwable throwable =
-                Assertions.catchThrowable(() -> controller.doLogin("PASSWORD-EXAMPLE"));
+        Throwable throwable = Assertions.catchThrowable(() -> controller.doLogin(TEST_PASSWORD));
 
         // then
         assertThat(throwable).isInstanceOf(LoginException.class);
@@ -151,7 +170,7 @@ public class BankIdIframeSSAuthenticationControllerTest {
         given(authenticationInputMock.isEnabled()).willReturn(false);
 
         // when
-        controller.doLogin("PASSWORD-EXAMPLE");
+        controller.doLogin(TEST_PASSWORD);
 
         // then
         verify(webDriverHelper, never()).getElement(driver, AUTHENTICATION_LIST_BUTTON_XPATH);
@@ -164,9 +183,38 @@ public class BankIdIframeSSAuthenticationControllerTest {
         given(authenticationInputMock.isEnabled()).willReturn(true);
 
         // when
-        controller.doLogin("PASSWORD-EXAMPLE");
+        controller.doLogin(TEST_PASSWORD);
 
         // then
         verify(webDriverHelper, times(1)).waitForElement(driver, AUTHENTICATION_LIST_BUTTON_XPATH);
+    }
+
+    @Test
+    public void doLoginShouldThrowExceptionWhenReferenceWordsAreNotFound() {
+        // given
+        given(webDriverHelper.waitForElement(driver, REFERENCE_WORDS_XPATH))
+                .willReturn(Optional.empty());
+
+        // when
+        Throwable throwable = Assertions.catchThrowable(() -> controller.doLogin(TEST_PASSWORD));
+
+        // then
+        assertThat(throwable)
+                .isInstanceOf(ScreenScrapingException.class)
+                .hasMessage(REFERENCE_WORDS_EXCEPTION_MESSAGE);
+    }
+
+    @Test
+    public void doLoginShouldThrowExceptionWhenReferenceWordsTextIsNull() {
+        // given
+        given(referenceWordsSpanMock.getText()).willReturn(null);
+
+        // when
+        Throwable throwable = Assertions.catchThrowable(() -> controller.doLogin(TEST_PASSWORD));
+
+        // then
+        assertThat(throwable)
+                .isInstanceOf(ScreenScrapingException.class)
+                .hasMessage(REFERENCE_WORDS_EXCEPTION_MESSAGE);
     }
 }
