@@ -38,6 +38,10 @@ public abstract class NordeaBaseAgent extends NextGenerationAgent {
                 .getAgentConfiguration(NordeaBaseConfiguration.class);
     }
 
+    protected String getProviderName() {
+        return this.provider != null ? this.provider.getName() : null;
+    }
+
     @Override
     protected abstract Authenticator constructAuthenticator();
 

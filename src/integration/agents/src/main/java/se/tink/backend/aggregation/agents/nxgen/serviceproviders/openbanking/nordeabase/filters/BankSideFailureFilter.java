@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.filters;
 
+import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.rpc.NordeaErrorResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
@@ -21,9 +22,13 @@ public class BankSideFailureFilter extends Filter {
     }
 
     public static boolean isBankSideFailure(HttpResponse response) {
-        if (response.getStatus() == 500 && response.hasBody()) {
+        int status = response.getStatus();
+        if ((status == HttpStatus.SC_INTERNAL_SERVER_ERROR || status == HttpStatus.SC_UNAUTHORIZED)
+                && response.hasBody()) {
             NordeaErrorResponse nordeaErrorResponse = getBodyAsExpectedType(response);
-            return nordeaErrorResponse != null && nordeaErrorResponse.isBankSideFailure();
+            return nordeaErrorResponse != null
+                    && (nordeaErrorResponse.isBankSideFailure()
+                            || nordeaErrorResponse.isFetchCertificateFailure());
         }
         return false;
     }

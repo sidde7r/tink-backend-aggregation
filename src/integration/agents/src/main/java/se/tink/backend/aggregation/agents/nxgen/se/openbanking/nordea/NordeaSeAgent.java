@@ -53,8 +53,8 @@ public final class NordeaSeAgent extends NordeaBaseAgent
     @Inject
     public NordeaSeAgent(AgentComponentProvider componentProvider, QsealcSigner qsealcSigner) {
         super(componentProvider);
-
-        apiClient = new NordeaSeApiClient(client, persistentStorage, qsealcSigner);
+        apiClient =
+                new NordeaSeApiClient(client, persistentStorage, qsealcSigner, getProviderName());
         this.creditCardRefreshController = getCreditCardRefreshController();
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }

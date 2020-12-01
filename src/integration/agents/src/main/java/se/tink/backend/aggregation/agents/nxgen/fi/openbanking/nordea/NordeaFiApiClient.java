@@ -8,7 +8,10 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 public final class NordeaFiApiClient extends NordeaBaseApiClient {
 
     public NordeaFiApiClient(
-            TinkHttpClient client, PersistentStorage persistentStorage, QsealcSigner qsealcSigner) {
-        super(client, persistentStorage, qsealcSigner, false);
+            TinkHttpClient client,
+            PersistentStorage persistentStorage,
+            QsealcSigner qsealcSigner,
+            String providerName) {
+        super(client, persistentStorage, qsealcSigner, providerName, false);
     }
 }
