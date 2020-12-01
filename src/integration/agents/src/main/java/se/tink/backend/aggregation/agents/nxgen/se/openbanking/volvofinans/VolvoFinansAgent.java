@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.volvofinans.authe
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.volvofinans.configuration.VolvoFinansConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.volvofinans.fetcher.transactionalaccount.VolvoFinansCreditCardAccountsFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.volvofinans.fetcher.transactionalaccount.VolvoFinansCreditCardTransactionsFetcher;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.volvofinans.filter.VolvofinansRetryFilter;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -22,6 +23,9 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCa
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
+import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.BadGatewayFilter;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.BankServiceInternalErrorFilter;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 @AgentCapabilities({CREDIT_CARDS})
@@ -37,12 +41,22 @@ public final class VolvoFinansAgent extends NextGenerationAgent
             AgentsServiceConfiguration agentsServiceConfiguration) {
         super(request, context, agentsServiceConfiguration.getSignatureKeyPair());
 
+        configureHttpClient(this.client);
         apiClient = new VolvoFinansApiClient(client, persistentStorage);
 
         this.creditCardRefreshController = getCreditCardRefreshController();
         apiClient.setConfiguration(
                 getAgentConfiguration(), agentsServiceConfiguration.getEidasProxy());
         this.client.setEidasProxy(agentsServiceConfiguration.getEidasProxy());
+    }
+
+    private void configureHttpClient(TinkHttpClient client) {
+        client.addFilter(new BadGatewayFilter());
+        client.addFilter(new BankServiceInternalErrorFilter());
+        client.addFilter(
+                new VolvofinansRetryFilter(
+                        VolvoFinansConstants.RetryFilter.NUM_TIMEOUT_RETRIES,
+                        VolvoFinansConstants.RetryFilter.RETRY_SLEEP_MILLISECONDS));
     }
 
     protected AgentConfiguration<VolvoFinansConfiguration> getAgentConfiguration() {
