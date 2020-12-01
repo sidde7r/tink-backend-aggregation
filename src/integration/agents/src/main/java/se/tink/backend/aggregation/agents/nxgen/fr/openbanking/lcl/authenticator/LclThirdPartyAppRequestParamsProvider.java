@@ -19,7 +19,7 @@ public class LclThirdPartyAppRequestParamsProvider
     public URL getAuthorizeUrl(String state) {
         return new URL("https://psu.lcl.fr/authorize")
                 .queryParam("response_type", "code")
-                .queryParam("client_id", LclAgent.BASE_URL)
+                .queryParam("client_id", LclAgent.CLIENT_ID)
                 .queryParam("redirect_uri", agentConfiguration.getRedirectUrl())
                 .queryParam("scope", "aisp")
                 .queryParam("state", state);
