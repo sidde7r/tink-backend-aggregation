@@ -18,6 +18,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 import org.apache.curator.framework.CuratorFramework;
+import org.assertj.core.api.Assertions;
 import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -611,5 +612,17 @@ public final class NewAgentTestContext extends AgentContext {
     public void setProviderSessionCache(String value, int expiredTimeInSeconds) {
         agentTestServerClient.setProviderSessionCache(
                 provider.getFinancialInstitutionId(), value, expiredTimeInSeconds);
+    }
+
+    public void validateCredentials() {
+        Assertions.assertThat(credential).isNotNull();
+        Assertions.assertThat(provider).isNotNull();
+        if (provider.getAccessType() == Provider.AccessType.OPEN_BANKING) {
+            Assertions.assertThat(credential.getSessionExpiryDate())
+                    .withFailMessage(
+                            "Credentials session expiry date must not be null for provider with access type %s",
+                            provider.getAccessType())
+                    .isNotNull();
+        }
     }
 }
