@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.volvofinans.authe
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.volvofinans.configuration.VolvoFinansConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.volvofinans.fetcher.transactionalaccount.VolvoFinansCreditCardAccountsFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.volvofinans.fetcher.transactionalaccount.VolvoFinansCreditCardTransactionsFetcher;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.volvofinans.filter.VolvofinansRetryFilter;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -52,6 +53,10 @@ public final class VolvoFinansAgent extends NextGenerationAgent
     private void configureHttpClient(TinkHttpClient client) {
         client.addFilter(new BadGatewayFilter());
         client.addFilter(new BankServiceInternalErrorFilter());
+        client.addFilter(
+                new VolvofinansRetryFilter(
+                        VolvoFinansConstants.RetryFilter.NUM_TIMEOUT_RETRIES,
+                        VolvoFinansConstants.RetryFilter.RETRY_SLEEP_MILLISECONDS));
     }
 
     protected AgentConfiguration<VolvoFinansConfiguration> getAgentConfiguration() {

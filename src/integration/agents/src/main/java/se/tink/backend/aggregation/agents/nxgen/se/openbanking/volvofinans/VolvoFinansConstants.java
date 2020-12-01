@@ -81,4 +81,9 @@ public final class VolvoFinansConstants {
         public static final String STATUS_ENABLED = "enabled";
         public static final String STATUS_EXPECTED = "expected";
     }
+
+    public static class RetryFilter {
+        public static final int NUM_TIMEOUT_RETRIES = 3;
+        public static final int RETRY_SLEEP_MILLISECONDS = 5000;
+    }
 }
