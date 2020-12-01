@@ -64,7 +64,7 @@ public class LoanEntity {
                                 .withAccountName(loanTypeName)
                                 .addIdentifier(
                                         AccountIdentifier.create(
-                                                AccountIdentifier.Type.NO, getAccountNumber()))
+                                                AccountIdentifier.Type.DK, getAccountNumber()))
                                 .setProductName(loanTypeName)
                                 .build())
                 .build();
