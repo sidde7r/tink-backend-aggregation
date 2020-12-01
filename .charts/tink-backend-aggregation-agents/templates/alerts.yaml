@@ -10,10 +10,10 @@ spec:
   - alert: BankServerUnavailableForLogin
     expr: |
       # Unavailable outcome above 50%
-      (sum(increase(tink_agent_login_total{action=~"login|is-logged-in", outcome=~"unavailable", market!~"DE|DK|ES|GB|IT|NL|NO|SE"}[30m])) by (action,className)
-          / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market!~"DE|DK|ES|GB|IT|NL|NO|SE"}[30m])) by (action,className) > 0.50)
+      (sum(increase(tink_agent_login_total{action=~"login|is-logged-in", outcome=~"unavailable", market!~"AT|BE|DE|DK|ES|FI|FR|GB|IT|NL|NO|PT|SE|"}[30m])) by (action,className)
+          / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market!~"AT|BE|DE|DK|ES|FI|FR|GB|IT|NL|NO|PT|SE|"}[30m])) by (action,className) > 0.50)
       # At least this many attempts.
-      and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market!~"DE|DK|ES|GB|IT|NL|NO|SE"}[30m])) by (action,className) > 10
+      and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market!~"AT|BE|DE|DK|ES|FI|FR|GB|IT|NL|NO|PT|SE|"}[30m])) by (action,className) > 10
     for: 5m
     labels:
       severity: ping
@@ -28,10 +28,10 @@ spec:
   - alert: BankServerUnavailableForRefresh
     expr: |
       # Unavailable outcome above 50%
-      (sum(increase(tink_agent_refresh_total{outcome=~"unavailable", market!~"DE|DK|ES|GB|IT|NL|NO|SE"}[30m])) by (className)
-          / sum(increase(tink_agent_refresh_total{market!~"DE|DK|ES|GB|IT|NL|NO|SE"}[30m])) by (className) > 0.50)
+      (sum(increase(tink_agent_refresh_total{outcome=~"unavailable", market!~"AT|BE|DE|DK|ES|FI|FR|GB|IT|NL|NO|PT|SE|"}[30m])) by (className)
+          / sum(increase(tink_agent_refresh_total{market!~"AT|BE|DE|DK|ES|FI|FR|GB|IT|NL|NO|PT|SE|"}[30m])) by (className) > 0.50)
       # At least this many attempts.
-      and sum(increase(tink_agent_refresh_total{market!~"DE|DK|ES|GB|IT|NL|NO|SE"}[30m])) by (className) > 10
+      and sum(increase(tink_agent_refresh_total{market!~"AT|BE|DE|DK|ES|FI|FR|GB|IT|NL|NO|PT|SE|"}[30m])) by (className) > 10
     for: 5m
     labels:
       severity: ping
