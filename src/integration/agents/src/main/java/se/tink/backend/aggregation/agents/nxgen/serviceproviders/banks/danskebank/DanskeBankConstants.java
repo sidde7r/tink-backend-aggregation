@@ -162,6 +162,10 @@ public class DanskeBankConstants {
         public static final int INSTRUMENT_TYPE_STRUCTURED_PRODUCT = 5;
     }
 
+    public static class Loan {
+        public static final int NUMBER_OF_MONTHS_PER_YEAR = 12;
+    }
+
     public static class SecuritySystem {
         public static final String SERVICE_CODE_SC = "SC";
         public static final String SERVICE_CODE_NS = "NS";
