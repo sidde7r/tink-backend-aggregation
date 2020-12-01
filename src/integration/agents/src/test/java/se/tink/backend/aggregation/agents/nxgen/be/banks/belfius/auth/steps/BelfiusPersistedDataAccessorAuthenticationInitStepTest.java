@@ -4,7 +4,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.HashMap;
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.auth.persistence.BelfiusAuthenticationData;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.persistence.BelfiusAuthenticationData;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.steps.AutoAuthenticationInitStep;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.steps.BelfiusAuthenticationInitStep;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.steps.UsernameAndPasswordGetStep;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationPersistedData;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationProcessStepIdentifier;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.request.AgentStartAuthenticationProcessRequest;

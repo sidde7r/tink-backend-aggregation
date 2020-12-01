@@ -18,8 +18,8 @@ import se.tink.backend.aggregation.agents.agentplatform.authentication.AgentPlat
 import se.tink.backend.aggregation.agents.agentplatform.authentication.ObjectMapperFactory;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.storage.AgentPlatformStorageMigration;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.storage.AgentPlatformStorageMigrator;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.auth.BefiusAuthenticationConfig;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.auth.persistence.BelfiusAgentPlatformStorageMigrator;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.BefiusAuthenticationConfig;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.persistence.BelfiusAgentPlatformStorageMigrator;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.fetcher.credit.BelfiusCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.fetcher.transactional.BelfiusTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.sessionhandler.BelfiusSessionHandler;
