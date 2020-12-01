@@ -112,6 +112,8 @@ public class AccountInformationServiceEventsProducer {
             AccountAggregationRestrictedEvent event =
                     AccountAggregationRestrictedEventProto.AccountAggregationRestrictedEvent
                             .newBuilder()
+                            .setTimestamp(ProtobufTypeUtil.toProtobufTimestamp(Instant.now()))
+                            .setMarketCode(provider.getMarket())
                             .setClusterId(clusterId)
                             .setAppId(appId)
                             .setUserId(userId)
