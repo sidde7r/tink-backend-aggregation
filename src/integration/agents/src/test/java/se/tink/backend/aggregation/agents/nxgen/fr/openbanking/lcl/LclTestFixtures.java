@@ -36,7 +36,7 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class LclTestFixtures {
 
-    public static final String CLIENT_ID = "PSDSE-FINA-44059";
+    public static final String CLIENT_ID = "PSDSE-FINA-44059_1";
     public static final String SERVER_URL = "https://psd.lcl.fr";
     public static final String REDIRECT_URL = "https://redirect-url";
     public static final String ACCESS_TOKEN = "DUMMY_ACCESS_TOKEN";

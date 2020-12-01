@@ -6892,6 +6892,10 @@ agentsServiceConfiguration:
         clientId: lfbank-5Km6qwEBBmo9x2M8wI1L8259
         clientSecret: 0946af6ee9c7c22a1f1cf356ce37277a90dadf67
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+    lcl:
+      tink:
+        redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
+        qsealcKeyId: https://cdn.tink.se/eidas/tink-qsealc.pem
     milleniumbcp:
       tink:
         aspspCode: BCPPT

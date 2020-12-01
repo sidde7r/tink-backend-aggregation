@@ -58,7 +58,7 @@ public class LclHeaderValueProviderTest {
         final String returnedResponse = lclHeaderValueProvider.getDigestHeaderValue(requestBody);
 
         // then
-        final String expectedResponse = "SHA-256=5d7KvuzT1CjnotzEOFHJSYhPBgPx0Y6SSAd7mn48F8A=";
+        final String expectedResponse = "SHA-256=RGpM4Lo75KJEw1qbUbD1AR39R3R7NsA3VLid9WXaYf4=";
         assertThat(returnedResponse).isEqualTo(expectedResponse);
     }
 
