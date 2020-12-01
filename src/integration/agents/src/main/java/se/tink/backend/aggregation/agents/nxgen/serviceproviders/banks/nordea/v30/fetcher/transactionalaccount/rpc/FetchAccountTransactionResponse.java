@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.Getter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.NordeaConfiguration;
@@ -23,8 +24,11 @@ public class FetchAccountTransactionResponse {
 
     @JsonIgnore
     public List<Transaction> toTinkTransactions(
-            NordeaConfiguration nordeaConfiguration, boolean skipPendingTransactions) {
+            NordeaConfiguration nordeaConfiguration,
+            boolean skipPendingTransactions,
+            Set<String> transactionIdsSeen) {
         return getTransactions().stream()
+                .filter(transaction -> !transaction.hasSeenTransactionBefore(transactionIdsSeen))
                 .map(te -> te.toTinkTransaction(nordeaConfiguration))
                 .filter(transaction -> !(skipPendingTransactions && transaction.isPending()))
                 .collect(Collectors.toList());

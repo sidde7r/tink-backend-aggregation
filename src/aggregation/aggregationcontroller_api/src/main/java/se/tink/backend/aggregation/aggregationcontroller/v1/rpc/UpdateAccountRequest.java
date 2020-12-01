@@ -14,6 +14,7 @@ public class UpdateAccountRequest {
     private ExactCurrencyAmount availableBalance;
     private ExactCurrencyAmount creditLimit;
     private String operationId;
+    private String correlationId;
 
     public String getCredentialsId() {
         return credentialsId;
@@ -72,5 +73,13 @@ public class UpdateAccountRequest {
 
     public void setOperationId(String operationId) {
         this.operationId = operationId;
+    }
+
+    public String getCorrelationId() {
+        return correlationId;
+    }
+
+    public void setCorrelationId(String correlationId) {
+        this.correlationId = correlationId;
     }
 }

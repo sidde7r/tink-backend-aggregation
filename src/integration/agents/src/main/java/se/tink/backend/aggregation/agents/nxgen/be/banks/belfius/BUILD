@@ -26,6 +26,7 @@ java_library(
         "//src/libraries/account_identifier",
         "//src/libraries/pair",
         "//src/libraries/serialization",
+        "//third_party:com_google_inject_guice",
         "//third_party:com_sun_jersey_jersey_core",
         "//third_party:lombok_libs",
         "//third_party:org_apache_commons_commons_collections4",
