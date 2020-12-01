@@ -460,6 +460,7 @@ featureFlags:
   esProxy: true
   beProxy: true
   createBeneficiary: true
+  allowRefreshRegardlessOfRestrictions: true
 
 providerConfigurationServiceConfiguration:
   enabled: true
