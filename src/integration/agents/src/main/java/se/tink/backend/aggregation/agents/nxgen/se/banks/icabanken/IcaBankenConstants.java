@@ -54,8 +54,6 @@ public class IcaBankenConstants {
         public static final URL DELETE_UNSIGNED_TRANSFER =
                 new URL(HOST + "/api/assignments/bundle/{transferId}");
         public static final URL EINVOICES = new URL(HOST + "/api/egiro/invoices");
-        public static final URL INIT_EINVOICE_SIGN =
-                new URL(HOST + "/api/egiro/recipient/bankId/init/{invoiceId}");
         public static final URL EVALUATED_POLICIES =
                 new URL(HOST + "/api/authorization/evaluatedpolicies");
         public static final URL CUSTOMER = new URL(HOST + "/api/customer");
