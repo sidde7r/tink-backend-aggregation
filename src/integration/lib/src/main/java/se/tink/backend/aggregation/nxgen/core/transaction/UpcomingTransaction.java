@@ -13,7 +13,6 @@ import se.tink.libraries.amount.Amount;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.transfer.rpc.Transfer;
-import se.tink.libraries.user.rpc.User;
 import se.tink.libraries.uuid.UUIDUtils;
 
 public final class UpcomingTransaction extends AggregationTransaction {
@@ -45,8 +44,8 @@ public final class UpcomingTransaction extends AggregationTransaction {
     }
 
     @Override
-    public Transaction toSystemTransaction(User user) {
-        Transaction transaction = super.toSystemTransaction(user);
+    public Transaction toSystemTransaction(boolean multiCurrencyEnabled) {
+        Transaction transaction = super.toSystemTransaction(multiCurrencyEnabled);
 
         transaction.setPending(true);
 

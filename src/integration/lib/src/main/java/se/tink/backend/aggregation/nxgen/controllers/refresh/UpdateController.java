@@ -89,7 +89,7 @@ public class UpdateController {
         return Pair.of(
                 account.toSystemAccount(user, provider),
                 transactions.stream()
-                        .map(t -> t.toSystemTransaction(user))
+                        .map(t -> t.toSystemTransaction(user.isMultiCurrencyEnabled()))
                         .collect(Collectors.toList()));
     }
 
@@ -103,7 +103,7 @@ public class UpdateController {
         return Pair.of(
                 account.toSystemAccount(user, provider),
                 transactions.stream()
-                        .map(t -> t.toSystemTransaction(user))
+                        .map(t -> t.toSystemTransaction(user.isMultiCurrencyEnabled()))
                         .collect(Collectors.toList()));
     }
 }

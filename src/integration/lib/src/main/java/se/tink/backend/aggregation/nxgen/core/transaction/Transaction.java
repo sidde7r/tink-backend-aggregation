@@ -10,7 +10,6 @@ import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
 import se.tink.backend.aggregation.agents.models.TransactionTypes;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.amount.ExactCurrencyAmount;
-import se.tink.libraries.user.rpc.User;
 
 public class Transaction extends AggregationTransaction {
     private final boolean pending;
@@ -50,9 +49,10 @@ public class Transaction extends AggregationTransaction {
         return externalId;
     }
 
-    public se.tink.backend.aggregation.agents.models.Transaction toSystemTransaction(User user) {
+    public se.tink.backend.aggregation.agents.models.Transaction toSystemTransaction(
+            boolean multiCurrencyEnabled) {
         se.tink.backend.aggregation.agents.models.Transaction transaction =
-                super.toSystemTransaction(user);
+                super.toSystemTransaction(multiCurrencyEnabled);
 
         transaction.setPending(isPending());
         if (!Strings.isNullOrEmpty(getExternalId())) {

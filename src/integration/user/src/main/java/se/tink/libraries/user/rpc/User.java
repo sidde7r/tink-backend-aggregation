@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.google.common.collect.Lists;
 import java.util.Date;
 import java.util.List;
+import se.tink.libraries.enums.FeatureFlags;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.uuid.UUIDUtils;
 
@@ -85,5 +86,10 @@ public class User {
     @JsonIgnore
     public boolean isDebug() {
         return debugUntil != null && debugUntil.after(new Date());
+    }
+
+    @JsonIgnore
+    public boolean isMultiCurrencyEnabled() {
+        return FeatureFlags.FeatureFlagGroup.MULTI_CURRENCY_FOR_POCS.isFlagInGroup(getFlags());
     }
 }

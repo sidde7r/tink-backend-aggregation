@@ -16,9 +16,7 @@ import se.tink.backend.aggregation.agents.models.TransactionTypes;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.date.DateUtils;
-import se.tink.libraries.enums.FeatureFlags;
 import se.tink.libraries.serialization.utils.SerializationUtils;
-import se.tink.libraries.user.rpc.User;
 
 public abstract class AggregationTransaction {
     private static final TypeReference<HashMap<String, String>> HASH_MAP_REFERENCE =
@@ -69,8 +67,7 @@ public abstract class AggregationTransaction {
         return payload;
     }
 
-    // todo: bszum: pass flag instead of User here
-    public Transaction toSystemTransaction(User user) {
+    public Transaction toSystemTransaction(boolean multiCurrencyEnabled) {
         Transaction transaction = new Transaction();
 
         transaction.setAmount(getExactAmount().getDoubleValue());
@@ -78,9 +75,6 @@ public abstract class AggregationTransaction {
         transaction.setDate(getDate());
         transaction.setType(getType());
 
-        boolean multiCurrencyEnabled =
-                FeatureFlags.FeatureFlagGroup.MULTI_CURRENCY_FOR_POCS.isFlagInGroup(
-                        user.getFlags());
         if (!Strings.isNullOrEmpty(getRawDetails()) || multiCurrencyEnabled) {
             transaction.setPayload(
                     TransactionPayloadTypes.DETAILS,

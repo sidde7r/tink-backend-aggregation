@@ -12,7 +12,6 @@ import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCard;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.amount.ExactCurrencyAmount;
-import se.tink.libraries.user.rpc.User;
 
 public final class CreditCardTransaction extends Transaction {
     private final CreditCardAccount creditAccount;
@@ -48,9 +47,10 @@ public final class CreditCardTransaction extends Transaction {
     }
 
     @Override
-    public se.tink.backend.aggregation.agents.models.Transaction toSystemTransaction(User user) {
+    public se.tink.backend.aggregation.agents.models.Transaction toSystemTransaction(
+            boolean multiCurrencyEnabled) {
         se.tink.backend.aggregation.agents.models.Transaction transaction =
-                super.toSystemTransaction(user);
+                super.toSystemTransaction(multiCurrencyEnabled);
 
         getCreditAccount()
                 .ifPresent(
