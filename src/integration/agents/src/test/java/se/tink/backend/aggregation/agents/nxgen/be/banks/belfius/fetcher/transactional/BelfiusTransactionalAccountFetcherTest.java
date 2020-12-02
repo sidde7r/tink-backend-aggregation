@@ -23,7 +23,6 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.serialization.utils.SerializationUtils;
-import se.tink.libraries.user.rpc.User;
 
 public class BelfiusTransactionalAccountFetcherTest {
 
@@ -114,16 +113,14 @@ public class BelfiusTransactionalAccountFetcherTest {
                         .collect(Collectors.toList());
 
         assertThat(collect.size()).isEqualTo(8);
-        assertThat(collect.get(0).toSystemTransaction(new User()).getAmount()).isEqualTo(-5510.08);
-        assertThat(collect.get(1).toSystemTransaction(new User()).getAmount())
-                .isEqualTo(-5123510.08);
-        assertThat(collect.get(2).toSystemTransaction(new User()).getAmount()).isEqualTo(5510.08);
-        assertThat(collect.get(3).toSystemTransaction(new User()).getAmount())
-                .isEqualTo(5123510.08);
-        assertThat(collect.get(4).toSystemTransaction(new User()).getAmount()).isEqualTo(-103.6);
-        assertThat(collect.get(5).toSystemTransaction(new User()).getAmount()).isEqualTo(103.6);
-        assertThat(collect.get(6).toSystemTransaction(new User()).getAmount()).isEqualTo(103.6012);
-        assertThat(collect.get(7).toSystemTransaction(new User()).getAmount()).isEqualTo(-0.35);
+        assertThat(collect.get(0).toSystemTransaction(false).getAmount()).isEqualTo(-5510.08);
+        assertThat(collect.get(1).toSystemTransaction(false).getAmount()).isEqualTo(-5123510.08);
+        assertThat(collect.get(2).toSystemTransaction(false).getAmount()).isEqualTo(5510.08);
+        assertThat(collect.get(3).toSystemTransaction(false).getAmount()).isEqualTo(5123510.08);
+        assertThat(collect.get(4).toSystemTransaction(false).getAmount()).isEqualTo(-103.6);
+        assertThat(collect.get(5).toSystemTransaction(false).getAmount()).isEqualTo(103.6);
+        assertThat(collect.get(6).toSystemTransaction(false).getAmount()).isEqualTo(103.6012);
+        assertThat(collect.get(7).toSystemTransaction(false).getAmount()).isEqualTo(-0.35);
     }
 
     @Test
@@ -139,8 +136,8 @@ public class BelfiusTransactionalAccountFetcherTest {
                         .collect(Collectors.toList());
 
         assertThat(collect.size()).isEqualTo(1);
-        assertThat(collect.get(0).toSystemTransaction(new User()).getAmount()).isEqualTo(-0.10);
-        assertThat(collect.get(0).toSystemTransaction(new User()).getDescription())
+        assertThat(collect.get(0).toSystemTransaction(false).getAmount()).isEqualTo(-0.10);
+        assertThat(collect.get(0).toSystemTransaction(false).getDescription())
                 .isEqualTo(ProductList.RandomTestData.BENEFICIARY_NAME);
     }
 }

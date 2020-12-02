@@ -11,7 +11,6 @@ import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
 import se.tink.backend.aggregation.agents.models.TransactionTypes;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction.Builder;
 import se.tink.libraries.amount.ExactCurrencyAmount;
-import se.tink.libraries.user.rpc.User;
 
 public class AggregationTransactionTest {
 
@@ -45,7 +44,7 @@ public class AggregationTransactionTest {
                         .build();
 
         se.tink.backend.aggregation.agents.models.Transaction systemTransaction =
-                transaction.toSystemTransaction(new User());
+                transaction.toSystemTransaction(false);
 
         assertEquals(
                 "[{\"v1\":{\"originalDate\":1500000}}]",
@@ -62,7 +61,7 @@ public class AggregationTransactionTest {
                         .build();
 
         se.tink.backend.aggregation.agents.models.Transaction systemTransaction =
-                transaction.toSystemTransaction(new User());
+                transaction.toSystemTransaction(false);
 
         assertEquals(
                 null,
@@ -76,7 +75,7 @@ public class AggregationTransactionTest {
         Transaction transaction = transactionBuilder().build();
 
         se.tink.backend.aggregation.agents.models.Transaction systemTransaction =
-                transaction.toSystemTransaction(new User());
+                transaction.toSystemTransaction(false);
 
         assertEquals(
                 null,
