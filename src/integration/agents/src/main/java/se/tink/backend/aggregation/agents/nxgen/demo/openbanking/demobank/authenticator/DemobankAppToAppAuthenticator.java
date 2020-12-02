@@ -1,9 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator;
 
 import java.util.Optional;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankApiClient;
+import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.a2a.rpc.CollectTicketResponse;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.a2a.rpc.CreateTicketRequest;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.a2a.rpc.CreateTicketResponse;
@@ -14,6 +16,8 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload.Android;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload.Desktop;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload.Ios;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.OpenBankingTokenExpirationDateHelper;
+import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.libraries.i18n.LocalizableKey;
 
 public class DemobankAppToAppAuthenticator
@@ -24,18 +28,19 @@ public class DemobankAppToAppAuthenticator
     private final String password;
     private final String callbackUri;
     private final String state;
+    private final Credentials credentials;
 
     private CreateTicketResponse createTicketResponse = null;
 
     public DemobankAppToAppAuthenticator(
             DemobankApiClient apiClient,
-            String username,
-            String password,
+            Credentials credentials,
             String callbackUri,
             String state) {
         this.apiClient = apiClient;
-        this.username = username;
-        this.password = password;
+        this.credentials = credentials;
+        this.username = credentials.getField("username");
+        this.password = credentials.getField("password");
         this.callbackUri = callbackUri;
         this.state = state;
     }
@@ -88,7 +93,13 @@ public class DemobankAppToAppAuthenticator
                 }
             };
         } else {
-            apiClient.setTokenToSession(response.getOAuthToken());
+            OAuth2Token token = response.getOAuthToken();
+            credentials.setSessionExpiryDate(
+                    OpenBankingTokenExpirationDateHelper.getExpirationDateFrom(
+                            token,
+                            DemobankConstants.DEFAULT_OB_TOKEN_LIFETIME,
+                            DemobankConstants.DEFAULT_OB_TOKEN_LIFETIME_UNIT));
+            apiClient.setTokenToSession(token);
             return new ThirdPartyAppResponse<CreateTicketResponse>() {
                 @Override
                 public ThirdPartyAppStatus getStatus() {

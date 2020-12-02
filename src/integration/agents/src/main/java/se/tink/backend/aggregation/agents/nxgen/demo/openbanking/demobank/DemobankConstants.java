@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank;
 
+import java.time.temporal.ChronoUnit;
 import se.tink.backend.aggregation.nxgen.core.account.AccountHolderType;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 
@@ -10,6 +11,9 @@ public class DemobankConstants {
                     .put(AccountHolderType.BUSINESS, "BUSINESS")
                     .put(AccountHolderType.CORPORATE, "CORPORATE")
                     .build();
+
+    public static final ChronoUnit DEFAULT_OB_TOKEN_LIFETIME_UNIT = ChronoUnit.DAYS;
+    public static final int DEFAULT_OB_TOKEN_LIFETIME = 90;
 
     public static class Urls {
         public static final String BASE_URL = "https://demobank.production.global.tink.se";

@@ -190,8 +190,7 @@ public final class DemobankAgent extends NextGenerationAgent
         DemobankAppToAppAuthenticator authenticator =
                 new DemobankAppToAppAuthenticator(
                         apiClient,
-                        credentials.getField("username"),
-                        credentials.getField("password"),
+                        credentials,
                         getCallbackUri(),
                         strongAuthenticationState.getState());
         return new AutoAuthenticationController(
