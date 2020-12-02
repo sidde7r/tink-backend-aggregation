@@ -43,7 +43,7 @@ public class CbiThirdPartyAppAuthenticationStep implements AuthenticationStep {
         String codeValue =
                 request.getCallbackData().getOrDefault(QueryKeys.CODE, consentType.getCode());
 
-        if (!codeValue.equalsIgnoreCase(consentType.getCode())) {
+        if (!codeValue.contains(consentType.getCode())) {
             return AuthenticationStepResponse.requestForSupplementInformation(
                     new SupplementInformationRequester.Builder()
                             .withSupplementalWaitRequest(getWaitingConfiguration())

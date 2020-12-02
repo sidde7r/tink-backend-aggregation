@@ -1,0 +1,135 @@
+
+REQUEST 1
+POST https://cbiglobeopenbankingapigateway.nexi.it/auth/oauth/v2/token?grant_type=client_credentials&scope=production
+Content-Type: application/x-www-form-urlencoded
+Authorization: Basic ZHVtbXlDbGllbnRJZDpkdW1teUNsaWVudFNlY3JldA==
+
+RESPONSE 1
+200
+Date: Mon, 30 Nov 2020 16:08:04 GMT
+Date: Mon, 30 Nov 2020 16:08:04 GMT
+Server: Apache-Coyote/1.1
+Pragma: no-cache
+Cache-Control: no-store
+Content-Type: application/json;charset=utf-8
+
+{"access_token":"dummyToken", "token_type":"Bearer", "expires_in":0, "scope":"production"}
+
+REQUEST 2
+POST https://cbiglobeopenbankingapigateway.nexi.it/platform/enabler/psd2orchestrator/ais/2.3.2/consents
+Content-Type: application/json
+Authorization: Bearer dummyToken
+aspsp-code: 03032
+aspsp-product-code: PR
+tpp-redirect-uri: https://127.0.0.1:7357/api/v1/thirdparty/callback?state=00000000-0000-4000-0000-000000000000&code=acc&result=success
+tpp-nok-redirect-uri: https://127.0.0.1:7357/api/v1/thirdparty/callback?state=00000000-0000-4000-0000-000000000000&code=acc&result=failure
+
+{"access":{"balances":null,"transactions":null,"availableAccounts":"allAccounts"},"combinedServiceIndicator":"true","frequencyPerDay":"1","recurringIndicator":"false"}
+
+RESPONSE 2
+201
+aspsp-sca-approach: ***
+x-request-id: ef35e409-5803-4147-80d2-c8c5761e4b2d
+Content-Type: application/json
+
+{"consentStatus":"received","consentId":"dummyConsentId","_links":{"scaRedirect":{"href":"https://api.credem.it/sca/pages/sca/home.xhtml?token=LzY5K2E2WE1zTkM0eGxnRU5WL3BER2ZZZEtoeSt2djI1WTdGeUI3RE8rMWhwaE5pSXZWd01pNURickQ0Q0pUNENjZHhkY3ZZTE14QwpQM1IrUktaSW9QMjlFdUVYRk5xdHZQVndrZ1NyaHUzOHo4UHpTK2pLSVlzdENGZjhWU1Vr"},"self":{"href":"/consents/3f31f883-e7db-4bbe-979b-ecb836b26631"}}}
+
+REQUEST 3
+GET https://cbiglobeopenbankingapigateway.nexi.it/platform/enabler/psd2orchestrator/ais/2.3.2/consents/dummyConsentId
+Content-Type: application/json
+Authorization: Bearer dummyToken
+aspsp-code: 03032
+
+RESPONSE 3
+200
+Content-Type: application/json
+
+{"access":{"availableAccounts":"allAccounts"},"recurringIndicator":"false","frequencyPerDay":"1","lastActionDate":"2020-11-30","consentStatus":"valid","scaStatus":"VERIFIED"}
+
+REQUEST 4
+GET https://cbiglobeopenbankingapigateway.nexi.it/platform/enabler/psd2orchestrator/ais/2.3.2/accounts
+Content-Type: application/json
+Authorization: Bearer dummyToken
+aspsp-code: 03032
+consent-id: dummyConsentId
+psu-ip-address: 127.0.0.1
+
+RESPONSE 4
+200
+Content-Type: application/json
+
+{"accounts":[{"iban":"dummyIban","bban":"dummyBban","currency":"EUR","resourceId":"dummyAccountId","name":"dummyName","product":"dummyProduct","bic":"dummyBic","usage":"PRIV","_links":{"account":{"href":"/accounts/dummyResourceId"},"balances":{"href":"/accounts/dummyResourceId/balances"},"transactions":{"href":"/accounts/dummyResourceId/transactions"}}}]}
+
+REQUEST 5
+POST https://cbiglobeopenbankingapigateway.nexi.it/platform/enabler/psd2orchestrator/ais/2.3.2/consents
+Content-Type: application/json
+Authorization: Bearer dummyToken
+aspsp-code: 03032
+aspsp-product-code: PR
+tpp-redirect-uri: https://127.0.0.1:7357/api/v1/thirdparty/callback?state=00000000-0000-4000-0000-000000000000&code=trans&result=success
+tpp-nok-redirect-uri: https://127.0.0.1:7357/api/v1/thirdparty/callback?state=00000000-0000-4000-0000-000000000000&code=trans&result=failure
+
+{"access":{"balances":[{"accountId":"dummyAccountId","iban":"dummyIban"}],"transactions":[{"accountId":"dummyAccountId","iban":"dummyIban"}],"availableAccounts":null},"combinedServiceIndicator":"true","frequencyPerDay":"4","recurringIndicator":"true"}
+
+RESPONSE 5
+201
+Content-Type: application/json
+
+{"consentStatus":"received","consentId":"dummyConsentId2","_links":{"scaRedirect":{"href":"https://api.credem.it/sca/pages/sca/home.xhtml?token=SzlrcnJ6NkVpNDZwTExYWFpxMlFnWmVxNldKSllnMjZaeXFxak1VVG5hRTdOaEhxanJhWEJBcVZQeFp2MHRuQ3ZZQXBELytmTXZDUApKYzhzY0xMNy9XR3hUTTJKdkdqWTBtd0xVOHJhUjVTMXpKVmMzZjZab0Y1UWFyMU81cU9R"},"self":{"href":"/consents/dummyConsentId2"}}}
+
+REQUEST 6
+GET https://cbiglobeopenbankingapigateway.nexi.it/platform/enabler/psd2orchestrator/ais/2.3.2/consents/dummyConsentId2
+Content-Type: application/json
+Authorization: Bearer dummyToken
+aspsp-code: 03032
+
+RESPONSE 6
+200
+Content-Type: application/json
+
+{"access":{"balances":[{"iban":"dummyIban"}],"transactions":[{"iban":"dummyIban"}]},"recurringIndicator":"true","validUntil":"2021-02-27","frequencyPerDay":"4","consentStatus":"valid","scaStatus":"VERIFIED"}
+
+REQUEST 7
+GET https://cbiglobeopenbankingapigateway.nexi.it/platform/enabler/psd2orchestrator/ais/2.3.2/accounts/dummyAccountId/balances
+Content-Type: application/json
+Authorization: Bearer dummyToken
+aspsp-code: 03032
+consent-id: dummyConsentId2
+psu-ip-address: 127.0.0.1
+
+RESPONSE 7
+200
+Content-Type: application/json
+
+{"account":{"iban":"dummyIban","bban":"dummyBban","currency":"EUR"},"balances":[{"balanceAmount":{"currency":"EUR","amount":"90.11"},"balanceType":"authorised","referenceDate":"2020-11-30"},{"balanceAmount":{"currency":"EUR","amount":"90.11"},"balanceType":"closingBooked","referenceDate":"2020-11-30"},{"balanceAmount":{"currency":"EUR","amount":"90.11"},"balanceType":"expected","referenceDate":"2020-11-30"}]}
+
+REQUEST 8
+GET https://cbiglobeopenbankingapigateway.nexi.it/platform/enabler/psd2orchestrator/ais/2.4.0/accounts/dummyAccountId/transactions?booking_status=both&offset=1
+Content-Type: application/json
+Authorization: Bearer dummyToken
+aspsp-code: 03032
+consent-id: dummyConsentId2
+psu-ip-address: 127.0.0.1
+
+RESPONSE 8
+200
+cpaas-total-pages: 2
+cpaas-total-elements: 7
+Content-Type: application/json
+
+{"account":{"iban":"**HASHED:oq**","bban":"**HASHED:qf**","currency":"EUR"},"transactions":{"booked":[{"transactionId":"**HASHED:Q7**$000000058-20201104-7000200-001","bookingDate":"2020-11-04","valueDate":"2020-10-31","transactionAmount":{"currency":"EUR","amount":"5.00"},"remittanceInformationUnstructured":"RICARICA-RIMBORSO CANONE                                                                                                                    ","additionalInformation":"          ","_links":{"transactionDetails":{"href":"/accounts/**HASHED:Q7**/transactions/**HASHED:Q7**$000000058-20201104-7000200-001"}}},{"transactionId":"**HASHED:Q7**$900005890-20201104-0002294-001","bookingDate":"2020-11-04","valueDate":"2020-10-31","transactionAmount":{"currency":"EUR","amount":"-6.00"},"remittanceInformationUnstructured":"CANONE GESTIONE C/C periodicita' mensile                                                                                                    ","additionalInformation":"          ","_links":{"transactionDetails":{"href":"/accounts/**HASHED:Q7**/transactions/**HASHED:Q7**$900005890-20201104-0002294-001"}}},{"transactionId":"**HASHED:Q7**$000000058-20201019-7000793-001","bookingDate":"2020-10-19","valueDate":"2020-10-16","transactionAmount":{"currency":"EUR","amount":"0.11"},"remittanceInformationUnstructured":"BONIFICO A CREDITO FRANCESCO COLLO TRASFERIMENTO DI DENARO RIF. 3989636890703268482230001600IT                                              ","additionalInformation":"          ","_links":{"transactionDetails":{"href":"/accounts/**HASHED:Q7**/transactions/**HASHED:Q7**$000000058-20201019-7000793-001"}}},{"transactionId":"**HASHED:Q7**$000000058-20201008-7000699-001","bookingDate":"2020-10-08","valueDate":"2020-09-30","transactionAmount":{"currency":"EUR","amount":"5.00"},"remittanceInformationUnstructured":"RICARICA-RIMBORSO CANONE                                                                                                                    ","additionalInformation":"          ","_links":{"transactionDetails":{"href":"/accounts/**HASHED:Q7**/transactions/**HASHED:Q7**$000000058-20201008-7000699-001"}}},{"transactionId":"**HASHED:Q7**$900005890-20201008-0002741-001","bookingDate":"2020-10-08","valueDate":"2020-09-30","transactionAmount":{"currency":"EUR","amount":"-6.00"},"remittanceInformationUnstructured":"CANONE GESTIONE C/C periodicita' mensile                                                                                                    ","additionalInformation":"          ","_links":{"transactionDetails":{"href":"/accounts/**HASHED:Q7**/transactions/**HASHED:Q7**$900005890-20201008-0002741-001"}}},{"transactionId":"**HASHED:Q7**$000000058-20200904-7000285-001","bookingDate":"2020-09-04","valueDate":"2020-08-31","transactionAmount":{"currency":"EUR","amount":"5.00"},"remittanceInformationUnstructured":"RICARICA-RIMBORSO CANONE                                                                                                                    ","additionalInformation":"          ","_links":{"transactionDetails":{"href":"/accounts/**HASHED:Q7**/transactions/**HASHED:Q7**$000000058-20200904-7000285-001"}}},{"transactionId":"**HASHED:Q7**$900005890-20200904-0002241-001","bookingDate":"2020-09-04","valueDate":"2020-08-31","transactionAmount":{"currency":"EUR","amount":"-6.00"},"remittanceInformationUnstructured":"CANONE GESTIONE C/C periodicita' mensile                                                                                                    ","additionalInformation":"          ","_links":{"transactionDetails":{"href":"/accounts/**HASHED:Q7**/transactions/**HASHED:Q7**$900005890-20200904-0002241-001"}}}],"_links":{"account":{"href":"/accounts/**HASHED:Q7**"}}},"balances":[{"balanceAmount":{"currency":"EUR","amount":"90.11"},"balanceType":"closingBooked","referenceDate":"2020-11-30"}]}
+
+REQUEST 9
+GET https://cbiglobeopenbankingapigateway.nexi.it/platform/enabler/psd2orchestrator/ais/2.4.0/accounts/dummyAccountId/transactions?booking_status=both&offset=2
+Content-Type: application/json
+Authorization: Bearer dummyToken
+aspsp-code: 03032
+consent-id: dummyConsentId2
+psu-ip-address: 127.0.0.1
+
+RESPONSE 9
+200
+Content-Type: application/json
+
+{"account":{"iban":"**HASHED:oq**","bban":"**HASHED:qf**","currency":"EUR"},"transactions":{"booked":[{"transactionId":"**HASHED:Q7**$000000058-20201104-7000200-001","bookingDate":"2020-11-04","valueDate":"2020-10-31","transactionAmount":{"currency":"EUR","amount":"5.00"},"remittanceInformationUnstructured":"RICARICA-RIMBORSO CANONE                                                                                                                    ","additionalInformation":"          ","_links":{"transactionDetails":{"href":"/accounts/**HASHED:Q7**/transactions/**HASHED:Q7**$000000058-20201104-7000200-001"}}},{"transactionId":"**HASHED:Q7**$900005890-20201104-0002294-001","bookingDate":"2020-11-04","valueDate":"2020-10-31","transactionAmount":{"currency":"EUR","amount":"-6.00"},"remittanceInformationUnstructured":"CANONE GESTIONE C/C periodicita' mensile                                                                                                    ","additionalInformation":"          ","_links":{"transactionDetails":{"href":"/accounts/**HASHED:Q7**/transactions/**HASHED:Q7**$900005890-20201104-0002294-001"}}},{"transactionId":"**HASHED:Q7**$000000058-20201019-7000793-001","bookingDate":"2020-10-19","valueDate":"2020-10-16","transactionAmount":{"currency":"EUR","amount":"0.11"},"remittanceInformationUnstructured":"BONIFICO A CREDITO FRANCESCO COLLO TRASFERIMENTO DI DENARO RIF. 3989636890703268482230001600IT                                              ","additionalInformation":"          ","_links":{"transactionDetails":{"href":"/accounts/**HASHED:Q7**/transactions/**HASHED:Q7**$000000058-20201019-7000793-001"}}},{"transactionId":"**HASHED:Q7**$000000058-20201008-7000699-001","bookingDate":"2020-10-08","valueDate":"2020-09-30","transactionAmount":{"currency":"EUR","amount":"5.00"},"remittanceInformationUnstructured":"RICARICA-RIMBORSO CANONE                                                                                                                    ","additionalInformation":"          ","_links":{"transactionDetails":{"href":"/accounts/**HASHED:Q7**/transactions/**HASHED:Q7**$000000058-20201008-7000699-001"}}},{"transactionId":"**HASHED:Q7**$900005890-20201008-0002741-001","bookingDate":"2020-10-08","valueDate":"2020-09-30","transactionAmount":{"currency":"EUR","amount":"-6.00"},"remittanceInformationUnstructured":"CANONE GESTIONE C/C periodicita' mensile                                                                                                    ","additionalInformation":"          ","_links":{"transactionDetails":{"href":"/accounts/**HASHED:Q7**/transactions/**HASHED:Q7**$900005890-20201008-0002741-001"}}},{"transactionId":"**HASHED:Q7**$000000058-20200904-7000285-001","bookingDate":"2020-09-04","valueDate":"2020-08-31","transactionAmount":{"currency":"EUR","amount":"5.00"},"remittanceInformationUnstructured":"RICARICA-RIMBORSO CANONE                                                                                                                    ","additionalInformation":"          ","_links":{"transactionDetails":{"href":"/accounts/**HASHED:Q7**/transactions/**HASHED:Q7**$000000058-20200904-7000285-001"}}},{"transactionId":"**HASHED:Q7**$900005890-20200904-0002241-001","bookingDate":"2020-09-04","valueDate":"2020-08-31","transactionAmount":{"currency":"EUR","amount":"-6.00"},"remittanceInformationUnstructured":"CANONE GESTIONE C/C periodicita' mensile                                                                                                    ","additionalInformation":"          ","_links":{"transactionDetails":{"href":"/accounts/**HASHED:Q7**/transactions/**HASHED:Q7**$900005890-20200904-0002241-001"}}}],"_links":{"account":{"href":"/accounts/**HASHED:Q7**"}}},"balances":[{"balanceAmount":{"currency":"EUR","amount":"90.11"},"balanceType":"closingBooked","referenceDate":"2020-11-30"}]}
+
