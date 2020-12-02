@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.common.base.Preconditions;
 import java.lang.invoke.MethodHandles;
 import java.util.Optional;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Account;
@@ -169,6 +170,9 @@ public class AccountEntity implements GeneralAccountEntity {
             case "CHECKING":
                 account.setType(AccountTypes.CHECKING);
                 break;
+            case "UNKNOWN":
+                setTypeForAccountTypeUnknown(account);
+                break;
             default:
                 logger.info("unknown_account_type {}", SerializationUtils.serializeToString(this));
                 account.setType(AccountTypes.OTHER);
@@ -192,6 +196,18 @@ public class AccountEntity implements GeneralAccountEntity {
         }
 
         return account;
+    }
+
+    private void setTypeForAccountTypeUnknown(Account account) {
+        // Our ambassador has confirmed that accounts called Aktielikvid doesn't hold investments,
+        // only balance to buy stocks/funds with. Therefore map it as a savings account.
+        if (StringUtils.containsIgnoreCase(accountName, "aktielikvid")) {
+            account.setType(AccountTypes.SAVINGS);
+        } else {
+            logger.info(
+                    "Account with type UNKNOWN and accountName {} mapped as OTHER", accountName);
+            account.setType(AccountTypes.OTHER);
+        }
     }
 
     /*
