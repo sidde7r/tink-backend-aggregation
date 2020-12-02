@@ -12,6 +12,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/compliance/account_classification/psd2_payment_account/result",
         "//src/integration/models",
         "//src/integration/transfer:rpc",
+        "//src/libraries/jersey_utils",
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",
         "//third_party:com_google_guava_guava",
         "//third_party:lombok_libs",
