@@ -188,14 +188,11 @@ public class DnbApiClient {
                                 DnbConstants.Header.REQUEST_WITH_VALUE)
                         .get(HttpResponse.class);
 
-        // ITE-1726, adding logs for 302 redirect, that the httpClient is set not to follow
-        // Need to see at least the location header to understand where they would redirect me,
-        // before changing anything about it
         if (httpResponse.getStatus() == 302) {
+            // Known redirects are handled by DnbRedirectFilter
             log.warn(
                     "Card list response was a redirect, that we don't handle, with location "
                             + httpResponse.getHeaders().getFirst("Location"));
-            // Return empty lists in such case, for the time being
             return new ListCardResponse();
         }
 
