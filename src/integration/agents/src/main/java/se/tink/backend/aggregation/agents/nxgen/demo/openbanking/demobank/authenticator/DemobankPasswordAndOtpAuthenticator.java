@@ -7,12 +7,13 @@ import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankApiClient;
+import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.OpenBankingTokenExpirationDateHelper;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 
 public class DemobankPasswordAndOtpAuthenticator implements MultiFactorAuthenticator {
-
     private DemobankApiClient apiClient;
     private SupplementalInformationController supplementalInformationController;
 
@@ -54,6 +55,11 @@ public class DemobankPasswordAndOtpAuthenticator implements MultiFactorAuthentic
                         .toOAuth2Token();
 
         this.apiClient.setTokenToSession(token);
+        credentials.setSessionExpiryDate(
+                OpenBankingTokenExpirationDateHelper.getExpirationDateFrom(
+                        token,
+                        DemobankConstants.DEFAULT_OB_TOKEN_LIFETIME,
+                        DemobankConstants.DEFAULT_OB_TOKEN_LIFETIME_UNIT));
     }
 
     @Override

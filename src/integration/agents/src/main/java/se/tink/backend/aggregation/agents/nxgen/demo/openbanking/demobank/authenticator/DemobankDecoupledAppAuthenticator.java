@@ -18,10 +18,13 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankApiClient;
+import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.a2a.rpc.CollectTicketResponse;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.a2a.rpc.CreateTicketResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.OpenBankingTokenExpirationDateHelper;
+import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class DemobankDecoupledAppAuthenticator implements TypedAuthenticator, Authenticator {
@@ -43,10 +46,17 @@ public class DemobankDecoupledAppAuthenticator implements TypedAuthenticator, Au
                 this.apiClient.initDecoupledAppToApp(
                         credentials.getField(Key.USERNAME), credentials.getField("code"));
         displayVerificationCode(credentials);
-        awaitConfirmation(response.getTicket());
+        OAuth2Token token = awaitConfirmation(response.getTicket());
+
+        credentials.setSessionExpiryDate(
+                OpenBankingTokenExpirationDateHelper.getExpirationDateFrom(
+                        token,
+                        DemobankConstants.DEFAULT_OB_TOKEN_LIFETIME,
+                        DemobankConstants.DEFAULT_OB_TOKEN_LIFETIME_UNIT));
+        apiClient.setTokenToSession(token);
     }
 
-    private void awaitConfirmation(String ticket) throws LoginException {
+    private OAuth2Token awaitConfirmation(String ticket) throws LoginException {
         try {
             CollectTicketResponse response =
                     RetryerBuilder.<CollectTicketResponse>newBuilder()
@@ -58,7 +68,8 @@ public class DemobankDecoupledAppAuthenticator implements TypedAuthenticator, Au
                             .build()
                             .call(() -> apiClient.collectAppToApp(ticket));
             if ("CONFIRMED".equals(response.getStatus())) {
-                apiClient.setTokenToSession(response.getOAuthToken());
+                return response.getOAuthToken();
+
             } else {
                 throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception();
             }
