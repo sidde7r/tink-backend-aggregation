@@ -97,6 +97,7 @@ import se.tink.libraries.event_producer_service_client.grpc.EventProducerService
 import se.tink.libraries.event_producer_service_client.grpc.EventProducerServiceEndpointConfiguration;
 import se.tink.libraries.events.api.EventSubmitter;
 import se.tink.libraries.events.guice.mock.MockEventSubmitter;
+import se.tink.libraries.http.client.LoggingFilter;
 import se.tink.libraries.http.client.RequestTracingFilter;
 import se.tink.libraries.jersey.guice.JerseyResourceRegistrar;
 import se.tink.libraries.jersey.logging.AccessLoggingFilter;
@@ -256,8 +257,10 @@ public class AggregationDecoupledModule extends AbstractModule {
                         AccessLoggingFilter.class,
                         AggregationLoggerRequestFilter.class,
                         RequestTracingFilter.class,
-                        ServerTracingFilter.class)
+                        ServerTracingFilter.class,
+                        LoggingFilter.class)
                 .addResponseFilters(
+                        LoggingFilter.class,
                         AccessLoggingFilter.class,
                         RequestTracingFilter.class,
                         ServerTracingFilter.class)

@@ -34,6 +34,7 @@ import se.tink.backend.aggregation.workers.worker.conditions.IsPrevGenProvider;
 import se.tink.backend.aggregation.workers.worker.conditions.annotation.ShouldAddExtraCommands;
 import se.tink.backend.integration.tpp_secrets_service.client.ManagedTppSecretsServiceClient;
 import se.tink.backend.integration.tpp_secrets_service.client.TppSecretsServiceClientImpl;
+import se.tink.libraries.http.client.LoggingFilter;
 import se.tink.libraries.http.client.RequestTracingFilter;
 import se.tink.libraries.jersey.guice.JerseyResourceRegistrar;
 import se.tink.libraries.jersey.logging.AccessLoggingFilter;
@@ -96,8 +97,10 @@ public class AggregationModule extends AbstractModule {
                         AccessLoggingFilter.class,
                         AggregationLoggerRequestFilter.class,
                         RequestTracingFilter.class,
-                        ServerTracingFilter.class)
+                        ServerTracingFilter.class,
+                        LoggingFilter.class)
                 .addResponseFilters(
+                        LoggingFilter.class,
                         AccessLoggingFilter.class,
                         RequestTracingFilter.class,
                         ServerTracingFilter.class)
