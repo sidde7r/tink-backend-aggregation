@@ -1,0 +1,190 @@
+{
+    "accounts" : [ {
+        "accountNumber" : "dummyIban",
+        "accountExclusion" : "NONE",
+        "exactBalance" : {
+            "currencyCode" : "EUR",
+            "doubleValue" : 90.11,
+            "exactValue" : 90.11,
+            "unscaledValue" : 9011,
+            "scale" : 2
+        },
+        "currencyCode" : "EUR",
+        "availableBalance" : {
+            "currencyCode" : "EUR",
+            "doubleValue" : 90.11,
+            "exactValue" : 90.11,
+            "unscaledValue" : 9011,
+            "scale" : 2
+        },
+        "bankId" : "dummyIban",
+        "excluded" : false,
+        "favored" : false,
+        "name" : "dummyName",
+        "ownership" : 1.0,
+        "type" : "CHECKING",
+        "userModifiedExcluded" : false,
+        "userModifiedName" : false,
+        "userModifiedType" : false,
+        "identifiers" : "[]",
+        "closed" : false,
+        "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
+        "availableCredit" : 0.0,
+        "balance" : 90.11
+    } ],
+    "transactions" : [ {
+        "amount" : 5.0,
+        "date" : 1604142000000,
+        "description" : "RICARICA-RIMBORSO CANONE",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false
+    }, {
+        "amount" : -6.0,
+        "date" : 1604142000000,
+        "description" : "CANONE GESTIONE C/C periodicita' mensile",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false
+    }, {
+        "amount" : 0.11,
+        "date" : 1602842400000,
+        "description" : "BONIFICO A CREDITO FRANCESCO COLLO TRASFERIMENTO DI DENARO RIF. 3989636890703268482230001600IT",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false
+    }, {
+        "amount" : 5.0,
+        "date" : 1601460000000,
+        "description" : "RICARICA-RIMBORSO CANONE",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false
+    }, {
+        "amount" : -6.0,
+        "date" : 1601460000000,
+        "description" : "CANONE GESTIONE C/C periodicita' mensile",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false
+    }, {
+        "amount" : 5.0,
+        "date" : 1598868000000,
+        "description" : "RICARICA-RIMBORSO CANONE",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false
+    }, {
+        "amount" : -6.0,
+        "date" : 1598868000000,
+        "description" : "CANONE GESTIONE C/C periodicita' mensile",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false
+    }, {
+        "amount" : 5.0,
+        "date" : 1604142000000,
+        "description" : "RICARICA-RIMBORSO CANONE",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false
+    }, {
+        "amount" : -6.0,
+        "date" : 1604142000000,
+        "description" : "CANONE GESTIONE C/C periodicita' mensile",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false
+    }, {
+        "amount" : 0.11,
+        "date" : 1602842400000,
+        "description" : "BONIFICO A CREDITO FRANCESCO COLLO TRASFERIMENTO DI DENARO RIF. 3989636890703268482230001600IT",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false
+    }, {
+        "amount" : 5.0,
+        "date" : 1601460000000,
+        "description" : "RICARICA-RIMBORSO CANONE",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false
+    }, {
+        "amount" : -6.0,
+        "date" : 1601460000000,
+        "description" : "CANONE GESTIONE C/C periodicita' mensile",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false
+    }, {
+        "amount" : 5.0,
+        "date" : 1598868000000,
+        "description" : "RICARICA-RIMBORSO CANONE",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false
+    }, {
+        "amount" : -6.0,
+        "date" : 1598868000000,
+        "description" : "CANONE GESTIONE C/C periodicita' mensile",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false
+    } ]
+}
