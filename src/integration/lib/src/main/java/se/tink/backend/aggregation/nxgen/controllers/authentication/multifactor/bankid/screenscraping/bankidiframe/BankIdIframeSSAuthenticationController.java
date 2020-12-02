@@ -67,7 +67,8 @@ public class BankIdIframeSSAuthenticationController {
         credentials.setSupplementalInformation(
                 SerializationUtils.serializeToString(
                         Collections.singletonList(
-                                NorwegianFields.BankIdInfo.build(catalog, getReferenceWords()))));
+                                NorwegianFields.BankIdReferenceInfo.build(
+                                        catalog, getReferenceWords()))));
         credentials.setStatus(CredentialsStatus.AWAITING_SUPPLEMENTAL_INFORMATION);
 
         supplementalRequester.requestSupplementalInformation(credentials, true);

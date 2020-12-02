@@ -127,7 +127,8 @@ public class BankIdAuthenticationControllerNO
         credentials.setSupplementalInformation(
                 SerializationUtils.serializeToString(
                         Lists.newArrayList(
-                                NorwegianFields.BankIdInfo.build(catalog, bankIdReference))));
+                                NorwegianFields.BankIdReferenceInfo.build(
+                                        catalog, bankIdReference))));
         credentials.setStatus(CredentialsStatus.AWAITING_SUPPLEMENTAL_INFORMATION);
 
         supplementalRequester.requestSupplementalInformation(credentials, true);

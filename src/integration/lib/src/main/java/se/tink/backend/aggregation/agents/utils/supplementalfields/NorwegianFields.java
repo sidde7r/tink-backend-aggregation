@@ -6,7 +6,7 @@ import se.tink.libraries.i18n.LocalizableKey;
 
 public class NorwegianFields {
 
-    public static class BankIdInfo {
+    public static class BankIdReferenceInfo {
         private static final String FIELD_KEY = "name";
         private static final String DESCRIPTION = "Reference";
         private static final LocalizableKey HELP_TEXT =
