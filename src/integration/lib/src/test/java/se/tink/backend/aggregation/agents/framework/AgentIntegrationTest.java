@@ -658,6 +658,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
             saveCredentials(agent);
         }
 
+        context.validateCredentials();
         context.validateFetchedData(validator);
         context.printCollectedData();
         if (!Strings.isNullOrEmpty(credentialName)) {
