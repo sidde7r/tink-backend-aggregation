@@ -23,8 +23,5 @@ build --host_force_python=PY2
 test --host_force_python=PY2
 run --host_force_python=PY2
 
-# Error prone that ships with bazel v.3.4.1 is strict, temporary bypass
-build --javacopt=-XepAllErrorsAsWarnings
-
 # If you would like to add more configuration, you can create user.bazelrc and add it there
 try-import user.bazelrc
