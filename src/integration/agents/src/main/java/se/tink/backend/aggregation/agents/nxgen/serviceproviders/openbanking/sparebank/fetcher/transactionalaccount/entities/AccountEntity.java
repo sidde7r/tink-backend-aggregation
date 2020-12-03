@@ -47,8 +47,6 @@ public class AccountEntity {
                 .setApiIdentifier(resourceId)
                 .setBankIdentifier(resourceId)
                 .addHolderName(Optional.ofNullable(name).orElse(""))
-                .putInTemporaryStorage(
-                        SparebankConstants.StorageKeys.TRANSACTIONS_URL, getTransactionLink())
                 .build();
     }
 

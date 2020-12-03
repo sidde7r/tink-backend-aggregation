@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Optional;
 import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankConstants;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.account.identifiers.NorwegianIdentifier;
@@ -34,7 +33,5 @@ public class CustomAsserts {
         assertThat(account.getApiIdentifier()).isEqualTo(apiIdentifier);
         assertThat(Optional.ofNullable(account.getHolderName()).map(h -> h.toString()).orElse(null))
                 .isEqualTo(holderName);
-        assertThat(account.getFromTemporaryStorage(SparebankConstants.StorageKeys.TRANSACTIONS_URL))
-                .isEqualTo(transactionLink);
     }
 }

@@ -4,21 +4,22 @@ import static io.vavr.Predicates.not;
 
 import com.google.common.base.Strings;
 import io.vavr.control.Try;
+import java.time.Instant;
 import java.util.Optional;
+import lombok.AllArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.authenticator.rpc.ScaResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.fetcher.transactionalaccount.rpc.AccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.fetcher.transactionalaccount.rpc.BalanceResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
+@AllArgsConstructor
 public class SparebankAuthenticator {
     private final SparebankApiClient apiClient;
-
-    public SparebankAuthenticator(SparebankApiClient apiClient) {
-        this.apiClient = apiClient;
-    }
+    private final SparebankStorage storage;
 
     public URL buildAuthorizeUrl(String state) {
         return Try.of(() -> apiClient.getScaRedirect(state))
@@ -43,21 +44,22 @@ public class SparebankAuthenticator {
                 && e.getResponse().getBody(String.class).contains("scaRedirect");
     }
 
-    void setUpPsuAndSession(String psuId, String tppSessionId) {
-        apiClient.setPsuId(psuId);
-        apiClient.setTppSessionId(tppSessionId);
+    void storeSessionData(String psuId, String tppSessionId) {
+        storage.storePsuId(psuId);
+        storage.storeTppSessionId(tppSessionId);
+        storage.storeConsentCreationTimestamp(Instant.now().toEpochMilli());
     }
 
     void clearSessionData() {
-        apiClient.clearSessionData();
+        storage.clearSessionData();
     }
 
     boolean psuAndSessionPresent() {
-        return apiClient.getPsuId().isPresent() && apiClient.getSessionId().isPresent();
+        return storage.getPsuId().isPresent() && storage.getSessionId().isPresent();
     }
 
     boolean isTppSessionStillValid() {
-        Optional<AccountResponse> maybeAccounts = apiClient.getStoredAccounts();
+        Optional<AccountResponse> maybeAccounts = storage.getStoredAccounts();
         if (!maybeAccounts.isPresent() || maybeAccounts.get().getAccounts().isEmpty()) {
             return false;
         }
@@ -70,7 +72,7 @@ public class SparebankAuthenticator {
             // refreshes
             String resourceId = maybeAccounts.get().getAccounts().get(0).getResourceId();
             BalanceResponse balanceResponse = apiClient.fetchBalances(resourceId);
-            apiClient.storeBalanceResponse(resourceId, balanceResponse);
+            storage.storeBalanceResponse(resourceId, balanceResponse);
             return true;
         } catch (HttpResponseException e) {
             if (isExceptionWithScaRedirect(e)) {

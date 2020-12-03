@@ -15,6 +15,7 @@ import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.authenticator.rpc.ScaResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.fetcher.transactionalaccount.rpc.AccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.fetcher.transactionalaccount.rpc.BalanceResponse;
@@ -27,12 +28,14 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 public class SparebankAuthenticatorTest {
 
     private SparebankApiClient apiClient;
+    private SparebankStorage storage;
     private SparebankAuthenticator authenticator;
 
     @Before
     public void setup() {
         apiClient = mock(SparebankApiClient.class);
-        authenticator = new SparebankAuthenticator(apiClient);
+        storage = mock(SparebankStorage.class);
+        authenticator = new SparebankAuthenticator(apiClient, storage);
     }
 
     @Test
@@ -82,21 +85,21 @@ public class SparebankAuthenticatorTest {
 
         // then
         assertThat(result).isFalse();
-        verify(apiClient).getStoredAccounts();
+        verify(storage).getStoredAccounts();
         verifyNoMoreInteractions(apiClient);
     }
 
     @Test
     public void shouldReturnFalseWhenAccountsListIsEmpty() {
         // given
-        when(apiClient.getStoredAccounts()).thenReturn(Optional.of(new AccountResponse()));
+        when(storage.getStoredAccounts()).thenReturn(Optional.of(new AccountResponse()));
 
         // when
         boolean result = authenticator.isTppSessionStillValid();
 
         // then
         assertThat(result).isFalse();
-        verify(apiClient).getStoredAccounts();
+        verify(storage).getStoredAccounts();
         verifyNoMoreInteractions(apiClient);
     }
 
@@ -105,7 +108,7 @@ public class SparebankAuthenticatorTest {
         // given
         AccountResponse accountResponse = AccountTestData.getAccountResponse();
         BalanceResponse balanceResponse = AccountTestData.getBalanceResponse();
-        when(apiClient.getStoredAccounts()).thenReturn(Optional.of(accountResponse));
+        when(storage.getStoredAccounts()).thenReturn(Optional.of(accountResponse));
         when(apiClient.fetchBalances(accountResponse.getAccounts().get(0).getResourceId()))
                 .thenReturn(balanceResponse);
 
@@ -114,8 +117,8 @@ public class SparebankAuthenticatorTest {
 
         // then
         assertThat(result).isTrue();
-        verify(apiClient).getStoredAccounts();
-        verify(apiClient)
+        verify(storage).getStoredAccounts();
+        verify(storage)
                 .storeBalanceResponse(
                         accountResponse.getAccounts().get(0).getResourceId(), balanceResponse);
     }

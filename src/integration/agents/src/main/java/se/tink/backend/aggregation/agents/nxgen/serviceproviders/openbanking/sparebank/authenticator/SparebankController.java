@@ -1,8 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.authenticator;
 
+import java.time.LocalDate;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import lombok.RequiredArgsConstructor;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.authenticator.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticator;
@@ -16,6 +19,7 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.i18n.LocalizableKey;
 
+@RequiredArgsConstructor
 public class SparebankController implements AutoAuthenticator, ThirdPartyAppAuthenticator<String> {
 
     private static final String FIELD_PSU_ID = "psu-id";
@@ -25,16 +29,9 @@ public class SparebankController implements AutoAuthenticator, ThirdPartyAppAuth
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final SparebankAuthenticator authenticator;
     private final StrongAuthenticationState strongAuthenticationState;
-    private String errorMessage;
+    private final Credentials credentials;
 
-    public SparebankController(
-            final SupplementalInformationHelper supplementalInformationHelper,
-            final SparebankAuthenticator authenticator,
-            StrongAuthenticationState strongAuthenticationState) {
-        this.supplementalInformationHelper = supplementalInformationHelper;
-        this.authenticator = authenticator;
-        this.strongAuthenticationState = strongAuthenticationState;
-    }
+    private String errorMessage;
 
     @Override
     public void autoAuthenticate() {
@@ -60,9 +57,10 @@ public class SparebankController implements AutoAuthenticator, ThirdPartyAppAuth
         if (maybeSupplementalInformation.isPresent()) {
             Map<String, String> supplementalInformation = maybeSupplementalInformation.get();
             if (supplementalInfoContainsRequiredFields(supplementalInformation)) {
-                authenticator.setUpPsuAndSession(
+                authenticator.storeSessionData(
                         supplementalInformation.get(FIELD_PSU_ID),
                         supplementalInformation.get(FIELD_TPP_SESSION_ID));
+                credentials.setSessionExpiryDate(LocalDate.now().plusDays(90));
                 return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.DONE);
             } else {
                 errorMessage = supplementalInformation.get(FIELD_MESSAGE);

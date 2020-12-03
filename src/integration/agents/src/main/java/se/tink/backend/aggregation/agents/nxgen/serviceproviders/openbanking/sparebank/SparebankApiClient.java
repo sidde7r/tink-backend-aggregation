@@ -6,7 +6,6 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Base64;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -15,12 +14,14 @@ import javax.ws.rs.core.MediaType;
 import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankConstants.HEADERS_TO_SIGN;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankConstants.HeaderKeys;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankConstants.IdTags;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankConstants.QueryKeys;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.authenticator.rpc.ScaResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.configuration.SparebankApiConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.fetcher.card.rpc.CardResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.fetcher.card.rpc.CardTransactionResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.fetcher.transactionalaccount.rpc.AccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.fetcher.transactionalaccount.rpc.BalanceResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.fetcher.transactionalaccount.rpc.TransactionResponse;
@@ -33,61 +34,15 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.libraries.date.ThreadSafeDateFormat;
 
 @RequiredArgsConstructor
 public class SparebankApiClient {
 
     private final TinkHttpClient client;
-    private final PersistentStorage persistentStorage;
     private final EidasProxyConfiguration eidasProxyConfiguration;
     private final EidasIdentity eidasIdentity;
     private final SparebankApiConfiguration apiConfiguration;
-
-    public void setPsuId(String psuId) {
-        persistentStorage.put(StorageKeys.PSU_ID, psuId);
-    }
-
-    public void setTppSessionId(String tppSessionId) {
-        persistentStorage.put(StorageKeys.SESSION_ID, tppSessionId);
-    }
-
-    private void storeAccounts(AccountResponse accountResponse) {
-        persistentStorage.put(StorageKeys.ACCOUNTS, accountResponse);
-    }
-
-    public void storeBalanceResponse(String resourceId, BalanceResponse balanceResponse) {
-        persistentStorage.put(resourceId, balanceResponse);
-    }
-
-    private void removeBalanceResponseFromStorage(String resourceId) {
-        persistentStorage.remove(resourceId);
-    }
-
-    public void clearSessionData() {
-        persistentStorage.remove(StorageKeys.ACCOUNTS);
-        persistentStorage.remove(StorageKeys.SESSION_ID);
-        persistentStorage.remove(StorageKeys.PSU_ID);
-        persistentStorage.remove(StorageKeys.STATE);
-        persistentStorage.remove(StorageKeys.TRANSACTIONS_ALL_FETCHED);
-    }
-
-    public Optional<String> getPsuId() {
-        return Optional.ofNullable(persistentStorage.get(StorageKeys.PSU_ID));
-    }
-
-    public Optional<String> getSessionId() {
-        return Optional.ofNullable(persistentStorage.get(StorageKeys.SESSION_ID));
-    }
-
-    public Optional<AccountResponse> getStoredAccounts() {
-        return persistentStorage.get(StorageKeys.ACCOUNTS, AccountResponse.class);
-    }
-
-    private Optional<BalanceResponse> getStoredBalanceResponse(String resourceId) {
-        return persistentStorage.get(resourceId, BalanceResponse.class);
-    }
+    private final SparebankStorage storage;
 
     private RequestBuilder createRequest(URL url) {
         return createRequest(url, Optional.empty());
@@ -100,13 +55,13 @@ public class SparebankApiClient {
     }
 
     public ScaResponse getScaRedirect(String state) throws HttpResponseException {
-        persistentStorage.put(StorageKeys.STATE, state);
+        storage.storeState(state);
         return createRequest(new URL(apiConfiguration.getBaseUrl() + Urls.GET_SCA_REDIRECT))
                 .post(ScaResponse.class);
     }
 
     public AccountResponse fetchAccounts() {
-        Optional<AccountResponse> maybeAccounts = getStoredAccounts();
+        Optional<AccountResponse> maybeAccounts = storage.getStoredAccounts();
         if (maybeAccounts.isPresent()) {
             return maybeAccounts.get();
         }
@@ -114,14 +69,15 @@ public class SparebankApiClient {
                 createRequest(new URL(apiConfiguration.getBaseUrl() + Urls.GET_ACCOUNTS))
                         .queryParam(QueryKeys.WITH_BALANCE, "false")
                         .get(AccountResponse.class);
-        storeAccounts(accountResponse);
+        storage.storeAccounts(accountResponse);
         return accountResponse;
     }
 
     public BalanceResponse fetchBalances(String resourceId) {
-        Optional<BalanceResponse> maybeBalanceResponse = getStoredBalanceResponse(resourceId);
+        Optional<BalanceResponse> maybeBalanceResponse =
+                storage.getStoredBalanceResponse(resourceId);
         if (maybeBalanceResponse.isPresent()) {
-            removeBalanceResponseFromStorage(resourceId);
+            storage.removeBalanceResponseFromStorage(resourceId);
             return maybeBalanceResponse.get();
         }
         return createRequest(
@@ -131,17 +87,63 @@ public class SparebankApiClient {
     }
 
     public TransactionResponse fetchTransactions(String resourceId) {
+        return fetchTransactions(Urls.FETCH_TRANSACTIONS, resourceId, TransactionResponse.class);
+    }
+
+    public TransactionResponse fetchNextTransactions(String path) {
+        return createRequest(new URL(apiConfiguration.getBaseUrl() + path))
+                .get(TransactionResponse.class);
+    }
+
+    public CardResponse fetchCards() {
+        Optional<CardResponse> maybeCards = storage.getStoredCards();
+        if (maybeCards.isPresent()) {
+            return maybeCards.get();
+        }
+        CardResponse cardResponse =
+                createRequest(new URL(apiConfiguration.getBaseUrl() + Urls.GET_CARDS))
+                        .queryParam(QueryKeys.WITH_BALANCE, "false")
+                        .header(HeaderKeys.X_ACCEPT_FIX, HeaderValues.X_ACCEPT_FIX)
+                        .get(CardResponse.class);
+        storage.storeCards(cardResponse);
+        return cardResponse;
+    }
+
+    public BalanceResponse fetchCardBalances(String resourceId) {
+        Optional<BalanceResponse> maybeBalanceResponse =
+                storage.getStoredBalanceResponse(resourceId);
+        if (maybeBalanceResponse.isPresent()) {
+            storage.removeBalanceResponseFromStorage(resourceId);
+            return maybeBalanceResponse.get();
+        }
+        return createRequest(
+                        new URL(apiConfiguration.getBaseUrl() + Urls.GET_CARD_BALANCES)
+                                .parameter(IdTags.RESOURCE_ID, resourceId))
+                .get(BalanceResponse.class);
+    }
+
+    public CardTransactionResponse fetchCardTransactions(String resourceId) {
+        return fetchTransactions(
+                Urls.GET_CARD_TRANSACTIONS, resourceId, CardTransactionResponse.class);
+    }
+
+    public CardTransactionResponse fetchNextCardTransactions(String path) {
+        return createRequest(new URL(apiConfiguration.getBaseUrl() + path))
+                .get(CardTransactionResponse.class);
+    }
+
+    private <T> T fetchTransactions(
+            String transactionUrl, String resourceId, Class<T> responseClass) {
         LocalDate fromDate;
-        LocalDate toDate = LocalDate.now();
-        if (persistentStorage.get(StorageKeys.TRANSACTIONS_ALL_FETCHED, String.class).isPresent()) {
+        if (storage.isStoredConsentTooOldForFullFetch()) {
             fromDate = LocalDate.now().minusDays(89);
         } else {
             fromDate = LocalDate.of(1970, 1, 1);
-            persistentStorage.put(StorageKeys.TRANSACTIONS_ALL_FETCHED, "true");
         }
+        LocalDate toDate = LocalDate.now();
 
         return createRequest(
-                        new URL(apiConfiguration.getBaseUrl() + Urls.FETCH_TRANSACTIONS)
+                        new URL(apiConfiguration.getBaseUrl() + transactionUrl)
                                 .parameter(IdTags.RESOURCE_ID, resourceId))
                 .queryParam(
                         SparebankConstants.QueryKeys.DATE_FROM,
@@ -155,37 +157,13 @@ public class SparebankApiClient {
                 .queryParam(
                         SparebankConstants.QueryKeys.BOOKING_STATUS,
                         SparebankConstants.QueryValues.BOOKING_STATUS)
-                .get(TransactionResponse.class);
-    }
-
-    public TransactionResponse fetchTransactions(String resourceId, Date fromDate, Date toDate) {
-        return createRequest(
-                        new URL(apiConfiguration.getBaseUrl() + Urls.FETCH_TRANSACTIONS)
-                                .parameter(IdTags.RESOURCE_ID, resourceId))
-                .queryParam(
-                        SparebankConstants.QueryKeys.DATE_FROM,
-                        ThreadSafeDateFormat.FORMATTER_DAILY.format(fromDate))
-                .queryParam(
-                        SparebankConstants.QueryKeys.DATE_TO,
-                        ThreadSafeDateFormat.FORMATTER_DAILY.format(toDate))
-                .queryParam(
-                        SparebankConstants.QueryKeys.LIMIT,
-                        SparebankConstants.QueryValues.TRANSACTION_LIMIT)
-                .queryParam(
-                        SparebankConstants.QueryKeys.BOOKING_STATUS,
-                        SparebankConstants.QueryValues.BOOKING_STATUS)
-                .get(TransactionResponse.class);
-    }
-
-    public TransactionResponse fetchNextTransactions(String path) {
-        return createRequest(new URL(apiConfiguration.getBaseUrl() + path))
-                .get(TransactionResponse.class);
+                .get(responseClass);
     }
 
     private Map<String, Object> getHeaders(String requestId, Optional<String> digest) {
         String tppRedirectUrl =
                 new URL(apiConfiguration.getRedirectUrl())
-                        .queryParam(QueryKeys.STATE, persistentStorage.get(StorageKeys.STATE))
+                        .queryParam(QueryKeys.STATE, storage.getState())
                         .toString();
 
         Map<String, Object> headers = new HashMap<>();
@@ -203,8 +181,9 @@ public class SparebankApiClient {
         }
 
         digest.ifPresent(digestString -> headers.put(HeaderKeys.DIGEST, digestString));
-        getSessionId().ifPresent(sessionId -> headers.put(HeaderKeys.TPP_SESSION_ID, sessionId));
-        getPsuId().ifPresent(psuId -> headers.put(HeaderKeys.PSU_ID, psuId));
+        storage.getSessionId()
+                .ifPresent(sessionId -> headers.put(HeaderKeys.TPP_SESSION_ID, sessionId));
+        storage.getPsuId().ifPresent(psuId -> headers.put(HeaderKeys.PSU_ID, psuId));
 
         return headers;
     }

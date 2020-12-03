@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sp
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class TransactionalLinksEntity {
+public class LinksEntity {
     private LinkEntity next;
 
     public boolean hasNextLink() {
