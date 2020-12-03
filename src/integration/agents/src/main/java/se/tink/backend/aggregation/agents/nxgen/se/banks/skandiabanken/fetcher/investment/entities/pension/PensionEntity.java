@@ -80,7 +80,7 @@ public class PensionEntity {
     public InvestmentAccount toTinkInvestmentAccount() {
         return InvestmentAccount.builder(getNumber().replaceAll("[^\\d]", ""))
                 .setAccountNumber(getNumber())
-                .setName(displayName)
+                .setName(displayTypeName)
                 .setHolderName(getHolderName())
                 .setPortfolios(getPortfolio())
                 .setCashBalance(
