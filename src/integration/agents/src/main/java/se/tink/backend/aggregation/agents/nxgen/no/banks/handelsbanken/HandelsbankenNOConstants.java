@@ -49,7 +49,7 @@ public class HandelsbankenNOConstants {
                 getNetbankEndpoint(
                         "/secesb/rest/era-alp/loanmod/accounts?type=loan&includerepaymentplandetails=true")),
         LOAN_DETAILS(getNetbankEndpoint("/secesb/rest/era-alp%s")),
-        KEEP_ALIVE(getNetbankEndpoint("/secesb/rest/esb/v1/keepalive")),
+        USER_SETTINGS(getNetbankEndpoint("/secesb/rest/era/usersettings/SMARTbankMobile")),
         INIT_INVESTOR_LOGIN(getNetbankEndpoint("/secesb/rest/era/ssotoken/so")),
         CUSTOMER_PORTAL_LOGIN(getCustomerPortalEndpoint("/idp/profile/SAML2/Unsolicited/SSO")),
         INVESTOR_LOGIN(getInvestorEndpoint("/saml/sp/profile/post/acs")),
@@ -279,6 +279,7 @@ public class HandelsbankenNOConstants {
                 ImmutableMap.<String, LoanDetails.Type>builder()
                         .put("bolig", LoanDetails.Type.MORTGAGE)
                         .put("år annu ek", LoanDetails.Type.MORTGAGE)
+                        .put("Lån annuitet", LoanDetails.Type.MORTGAGE)
                         .build();
     }
 
