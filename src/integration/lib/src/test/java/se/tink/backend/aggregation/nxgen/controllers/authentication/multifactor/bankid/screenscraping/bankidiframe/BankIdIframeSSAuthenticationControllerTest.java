@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.screenscraping.bankidiframe;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -23,6 +24,7 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.screenscraping.bankidiframe.initializer.IframeInitializer;
 import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.i18n.LocalizableKey;
 import se.tink.libraries.selenium.WebDriverHelper;
 import se.tink.libraries.selenium.exceptions.HtmlElementNotFoundException;
 import se.tink.libraries.selenium.exceptions.ScreenScrapingException;
@@ -59,6 +61,7 @@ public class BankIdIframeSSAuthenticationControllerTest {
     private static final String TEST_PASSWORD = "PASSWORD-EXAMPLE";
     private static final String REFERENCE_WORDS = "TEST TESTO";
     private static final String REFERENCE_WORDS_EXCEPTION_MESSAGE = "Couldn't find reference words";
+    private static final String TEST_STRING = "Test translated string";
 
     @Before
     public void init() {
@@ -66,6 +69,8 @@ public class BankIdIframeSSAuthenticationControllerTest {
         webDriverHelper = mock(WebDriverHelper.class);
         iframeInitializer = mock(IframeInitializer.class);
         inOrder = Mockito.inOrder(iframeInitializer, driver, webDriverHelper);
+        Catalog catalog = mock(Catalog.class);
+        given(catalog.getString(any(LocalizableKey.class))).willReturn(TEST_STRING);
         controller =
                 new BankIdIframeSSAuthenticationController(
                         webDriverHelper,
@@ -73,7 +78,7 @@ public class BankIdIframeSSAuthenticationControllerTest {
                         iframeInitializer,
                         new Credentials(),
                         mock(SupplementalRequester.class),
-                        mock(Catalog.class));
+                        catalog);
         initializeWebElements();
     }
 
