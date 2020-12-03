@@ -52,9 +52,4 @@ public class UkOpenBankingV31PaymentConstants {
 
         private FormValues() {}
     }
-
-    public static class Errors {
-        public static final String ACCESS_DENIED = "access_denied";
-        static final String LOGIN_REQUIRED = "login_required";
-    }
 }

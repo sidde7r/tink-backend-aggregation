@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.configuration.ClientInfo;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.configuration.SoftwareStatementAssertion;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.entities.ClientMode;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.entities.AuthorizeRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.signer.iface.JwtSigner;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.signer.iface.JwtSigner.Algorithm;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentConstants.HttpHeaders;
@@ -114,7 +115,27 @@ public class UkOpenBankingPaymentApiClient extends OpenIdApiClient {
                 .get(DomesticScheduledPaymentResponse.class);
     }
 
-    OAuth2Token requestClientCredentials() {
+    public URL buildAuthorizeUrl(
+            String state, String callbackUrl, ClientInfo clientInfo, String intentId) {
+        final String nonce = randomValueGenerator.generateRandomHexEncoded(8);
+        final URL authorizeUrl =
+                super.buildAuthorizeUrl(state, nonce, ClientMode.PAYMENTS, callbackUrl, null);
+
+        return authorizeUrl.queryParam(
+                "request",
+                AuthorizeRequest.create()
+                        .withClientInfo(clientInfo)
+                        .withPaymentsScope()
+                        .withSoftwareStatement(softwareStatement)
+                        .withRedirectUrl(getRedirectUrl())
+                        .withState(state)
+                        .withNonce(nonce)
+                        .withWellKnownConfiguration(getWellKnownConfiguration())
+                        .withIntentId(intentId)
+                        .build(getSigner()));
+    }
+
+    public OAuth2Token requestClientCredentials() {
         return super.requestClientCredentials(ClientMode.PAYMENTS);
     }
 

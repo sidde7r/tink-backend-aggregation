@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Objects;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.entities.TokenValidationResult;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -62,12 +63,12 @@ public class IdTokenValidator {
         return this;
     }
 
-    public boolean execute() {
+    public TokenValidationResult execute() {
         String[] parts = idToken.split("\\.");
 
         if (parts.length != 3) {
             handleError("Invalid format");
-            return false;
+            return TokenValidationResult.FAILURE;
         }
 
         IdTokenHeader header =
@@ -86,12 +87,12 @@ public class IdTokenValidator {
                                 + ", kid:"
                                 + header.getKid()
                                 + ")");
-                return false;
+                return TokenValidationResult.FAILURE;
             }
         } catch (Exception ex) {
             /* any exception has to be caught in case of logging mode */
             handleError(ex.getMessage(), ex);
-            return false;
+            return TokenValidationResult.FAILURE;
         }
 
         if (atHashValidation) {
@@ -106,7 +107,7 @@ public class IdTokenValidator {
             guardValidateHash(state, header.getAlg(), payload.getSHash(), "Invalid s_hash");
         }
 
-        return true;
+        return TokenValidationResult.SUCCESS;
     }
 
     private void guardValidateHash(String source, String alg, String hash, String errorMessage) {

@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.entities.TokenValidationResult;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.validator.IdTokenValidator.ValidatorMode;
 
 public class IdTokenValidatorTest {
@@ -125,11 +126,11 @@ public class IdTokenValidatorTest {
 
     @Test
     public void shouldValidateAtHashSuccess() {
-        boolean result =
+        TokenValidationResult result =
                 new IdTokenValidator(ID_TOKEN_WITH_AT_HASH, publicKeyMap)
                         .withAtHashValidation("most-secure-access-token")
                         .execute();
-        assertThat(result).isTrue();
+        assertThat(result).isEqualTo(TokenValidationResult.SUCCESS);
     }
 
     @Test
@@ -148,11 +149,11 @@ public class IdTokenValidatorTest {
 
     @Test
     public void shouldValidateCHashSuccess() {
-        boolean result =
+        TokenValidationResult result =
                 new IdTokenValidator(ID_TOKEN_WITH_C_HASH, publicKeyMap)
                         .withCHashValidation("so-so-secure-access-code")
                         .execute();
-        assertThat(result).isTrue();
+        assertThat(result).isEqualTo(TokenValidationResult.SUCCESS);
     }
 
     @Test
@@ -171,11 +172,11 @@ public class IdTokenValidatorTest {
 
     @Test
     public void shouldValidateSHashSuccess() {
-        boolean result =
+        TokenValidationResult result =
                 new IdTokenValidator(ID_TOKEN_WITH_S_HASH, publicKeyMap)
                         .withSHashValidation("that-is-a-state")
                         .execute();
-        assertThat(result).isTrue();
+        assertThat(result).isEqualTo(TokenValidationResult.SUCCESS);
     }
 
     @Test
@@ -194,8 +195,9 @@ public class IdTokenValidatorTest {
 
     @Test
     public void shouldValidateSignatureOnly() {
-        boolean result = new IdTokenValidator(TOKEN_WITHOUT_HASHES, publicKeyMap).execute();
-        assertThat(result).isTrue();
+        TokenValidationResult result =
+                new IdTokenValidator(TOKEN_WITHOUT_HASHES, publicKeyMap).execute();
+        assertThat(result).isEqualTo(TokenValidationResult.SUCCESS);
     }
 
     @Test
@@ -212,12 +214,12 @@ public class IdTokenValidatorTest {
 
     @Test
     public void shouldValidateSignatureWrongSignatureLoggingMode() {
-        boolean result =
+        TokenValidationResult result =
                 new IdTokenValidator(TOKEN_WRONG_SIGNATURE, publicKeyMap)
                         .withMode(ValidatorMode.LOGGING)
                         .execute();
 
-        assertThat(result).isFalse();
+        assertThat(result).isEqualTo(TokenValidationResult.FAILURE);
     }
 
     @Test
@@ -232,9 +234,9 @@ public class IdTokenValidatorTest {
 
     @Test
     public void shouldValidatePS384() {
-        boolean result = new IdTokenValidator(TOKEN_PS384, publicKeyMap).execute();
+        TokenValidationResult result = new IdTokenValidator(TOKEN_PS384, publicKeyMap).execute();
 
-        assertThat(result).isTrue();
+        assertThat(result).isEqualTo(TokenValidationResult.SUCCESS);
     }
 
     @Test
@@ -249,11 +251,11 @@ public class IdTokenValidatorTest {
 
     @Test
     public void shouldValidateNoKeyAvailableLoggingMode() {
-        boolean result =
+        TokenValidationResult result =
                 new IdTokenValidator(TOKEN_WRONG_KEY, publicKeyMap)
                         .withMode(ValidatorMode.LOGGING)
                         .execute();
 
-        assertThat(result).isFalse();
+        assertThat(result).isEqualTo(TokenValidationResult.FAILURE);
     }
 }
