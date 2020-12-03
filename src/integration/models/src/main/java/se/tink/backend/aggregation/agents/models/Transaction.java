@@ -7,8 +7,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.MoreObjects;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.uuid.UUIDUtils;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -32,6 +34,10 @@ public class Transaction implements Comparable<Transaction>, Cloneable {
     private TransactionTypes type;
     private String userId;
     private boolean upcoming;
+    private Map<TransactionExternalSystemIdType, String> externalSystemIds;
+    private boolean mutable;
+    private ExactCurrencyAmount transactionAmount;
+    private List<TransactionDate> transactionDates;
 
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
@@ -185,6 +191,39 @@ public class Transaction implements Comparable<Transaction>, Cloneable {
         this.upcoming = upcoming;
     }
 
+    public Map<TransactionExternalSystemIdType, String> getExternalSystemIds() {
+        return externalSystemIds;
+    }
+
+    public void setExternalSystemIds(
+            Map<TransactionExternalSystemIdType, String> externalSystemIds) {
+        this.externalSystemIds = externalSystemIds;
+    }
+
+    public boolean isMutable() {
+        return mutable;
+    }
+
+    public void setMutable(boolean mutable) {
+        this.mutable = mutable;
+    }
+
+    public ExactCurrencyAmount getTransactionAmount() {
+        return transactionAmount;
+    }
+
+    public void setTransactionAmount(ExactCurrencyAmount transactionAmount) {
+        this.transactionAmount = transactionAmount;
+    }
+
+    public List<TransactionDate> getTransactionDates() {
+        return transactionDates;
+    }
+
+    public void setTransactionDates(List<TransactionDate> transactionDates) {
+        this.transactionDates = transactionDates;
+    }
+
     public static boolean deepEquals(Transaction first, Transaction second) {
         if (first == null || second == null) {
             return false;
@@ -204,7 +243,11 @@ public class Transaction implements Comparable<Transaction>, Cloneable {
                 && Objects.equals(first.description, second.description)
                 && Objects.equals(first.payloadSerialized, second.payloadSerialized)
                 && first.type == second.type
-                && Objects.equals(first.userId, second.userId);
+                && Objects.equals(first.userId, second.userId)
+                && Objects.equals(first.externalSystemIds, second.externalSystemIds)
+                && Objects.equals(first.mutable, second.mutable)
+                && Objects.equals(first.transactionAmount, second.transactionAmount)
+                && Objects.equals(first.transactionDates, second.transactionDates);
     }
 
     @Override
@@ -222,6 +265,10 @@ public class Transaction implements Comparable<Transaction>, Cloneable {
                 .add("type", type)
                 .add("userId", userId)
                 .add("upcoming", upcoming)
+                .add("externalSystemIds", externalSystemIds)
+                .add("mutable", mutable)
+                .add("transactionAmount", transactionAmount)
+                .add("transactionDates", transactionDates)
                 .toString();
     }
 }

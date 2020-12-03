@@ -87,6 +87,8 @@ public class Account implements Cloneable {
     // se.tink.backend.aggregation.agents.utils.mappers.CoreAccountMapper#fromAggregation
     private AccountSourceInfo sourceInfo;
 
+    private List<Balance> balances;
+
     public Account() {
         this.id = UUIDUtils.generateUUID();
         this.ownership = 1;
@@ -650,5 +652,13 @@ public class Account implements Cloneable {
 
     public void setAccountHolder(AccountHolder accountHolder) {
         this.accountHolder = accountHolder;
+    }
+
+    public List<Balance> getBalances() {
+        return balances;
+    }
+
+    public void setBalances(List<Balance> balances) {
+        this.balances = balances;
     }
 }
