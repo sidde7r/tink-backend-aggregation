@@ -15,7 +15,7 @@ spec:
       for: 5m
       labels:
         severity: urgent
-        who: integration
+        who: integration-fluffy
       annotations:
         description: {{ .Values.kibanaLink }}
           {{ .Values.grafanaLink }}
@@ -34,7 +34,7 @@ spec:
       for: 5m
       labels:
         severity: urgent
-        who: integration
+        who: integration-fluffy
       annotations:
         description: {{ .Values.kibanaLink }}
           {{ .Values.grafanaLink }}
@@ -54,7 +54,7 @@ spec:
       labels:
         severity: urgent
         priority: P1
-        who: integration
+        who: integration-fluffy
       annotations:
         description: {{ .Values.kibanaLink }}
           {{ .Values.grafanaLink }}
@@ -73,7 +73,7 @@ spec:
       labels:
         severity: urgent
         priority: P1
-        who: integration
+        who: integration-fluffy
       annotations:
         description: {{ .Values.kibanaLink }}
           {{ .Values.grafanaLink }}
@@ -91,7 +91,7 @@ spec:
       for: 30m
       labels:
         severity: urgent
-        who: integration
+        who: integration-fluffy
       annotations:
         description: To learn more check out the metric `tink_agent_login_total`. This
           alert never triggers on agents that did less than 10 operations in the
@@ -114,7 +114,7 @@ spec:
       for: 15m
       labels:
         severity: ping
-        who: integration
+        who: integration-fluffy
       annotations:
         description: Investigate further in https://kibana.global.tink.network/goto/e0e04ba547d2d76936afa0788febabc8
           (and possibly add the provider in search query). This alert never triggers
