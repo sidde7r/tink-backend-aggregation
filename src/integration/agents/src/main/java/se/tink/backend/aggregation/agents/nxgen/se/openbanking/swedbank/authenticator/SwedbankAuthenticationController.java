@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
+import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants;
@@ -109,11 +110,18 @@ public class SwedbankAuthenticationController
     @Override
     public AuthenticationResponse init(String ssn) {
         this.ssn = ssn;
-        AuthenticationResponse authenticationResponse = authenticator.init(ssn);
-        this.autoStartToken =
-                Optional.ofNullable(authenticationResponse.getChallengeData())
-                        .map(ChallengeDataEntity::getAutoStartToken);
-        return authenticationResponse;
+        try {
+            AuthenticationResponse authenticationResponse = authenticator.init(ssn);
+            this.autoStartToken =
+                    Optional.ofNullable(authenticationResponse.getChallengeData())
+                            .map(ChallengeDataEntity::getAutoStartToken);
+            return authenticationResponse;
+        } catch (HttpResponseException e) {
+            if (getBankIdStatusBasedOnError(e) == BankIdStatus.INTERRUPTED) {
+                throw BankIdError.ALREADY_IN_PROGRESS.exception();
+            }
+            throw e;
+        }
     }
 
     @Override
