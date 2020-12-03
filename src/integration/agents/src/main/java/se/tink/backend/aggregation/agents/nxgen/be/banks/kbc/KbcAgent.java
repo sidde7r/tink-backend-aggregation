@@ -1,34 +1,29 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.kbc;
 
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
-import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CREDIT_CARDS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
 
 import com.google.api.client.repackaged.com.google.common.base.Strings;
+import com.google.inject.Inject;
 import java.util.Locale;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
-import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
-import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.authenticator.KbcAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.fetchers.KbcCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.fetchers.KbcInvestmentAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.fetchers.KbcTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.filters.KbcHttpFilter;
 import se.tink.backend.aggregation.agents.progressive.ProgressiveAuthAgent;
-import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentGenerationAgent;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.ProductionAgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.progressive.AutoAuthenticationProgressiveController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.ProgressiveAuthController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.SteppableAuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.SteppableAuthenticationResponse;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
@@ -37,35 +32,31 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.TimeoutRetryFilter;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
-@AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, CREDIT_CARDS})
+@AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS})
 public final class KbcAgent
         extends SubsequentGenerationAgent<AutoAuthenticationProgressiveController>
-        implements RefreshCreditCardAccountsExecutor,
-                RefreshCheckingAccountsExecutor,
+        implements RefreshCheckingAccountsExecutor,
                 RefreshInvestmentAccountsExecutor,
                 RefreshSavingsAccountsExecutor,
                 ProgressiveAuthAgent {
 
     private final KbcApiClient apiClient;
     private final String kbcLanguage;
-    private KbcHttpFilter httpFilter;
-    private final CreditCardRefreshController creditCardRefreshController;
+    private final KbcHttpFilter httpFilter;
     private final InvestmentRefreshController investmentRefreshController;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
     private final AutoAuthenticationProgressiveController progressiveAuthenticator;
 
-    public KbcAgent(
-            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(ProductionAgentComponentProvider.create(request, context, signatureKeyPair));
+    @Inject
+    public KbcAgent(AgentComponentProvider agentComponentProvider) {
+        super(agentComponentProvider);
+        this.apiClient = new KbcApiClient(client);
+        this.httpFilter = new KbcHttpFilter();
         configureHttpClient(client);
         kbcLanguage = getKbcLanguage(request.getUser().getLocale());
 
-        this.apiClient = new KbcApiClient(client);
-
-        this.creditCardRefreshController = constructCreditCardRefreshController();
         this.investmentRefreshController = constructInvestmentRefreshController();
         this.transactionalAccountRefreshController =
                 constructTransactionalAccountRefreshController();
@@ -83,7 +74,6 @@ public final class KbcAgent
     }
 
     protected void configureHttpClient(TinkHttpClient client) {
-        httpFilter = new KbcHttpFilter();
         client.addFilter(httpFilter);
         client.addFilter(
                 new TimeoutRetryFilter(
@@ -124,23 +114,6 @@ public final class KbcAgent
                         transactionPaginationHelper,
                         new TransactionKeyPaginationController<>(accountFetcher),
                         accountFetcher));
-    }
-
-    @Override
-    public FetchAccountsResponse fetchCreditCardAccounts() {
-        return creditCardRefreshController.fetchCreditCardAccounts();
-    }
-
-    @Override
-    public FetchTransactionsResponse fetchCreditCardTransactions() {
-        return creditCardRefreshController.fetchCreditCardTransactions();
-    }
-
-    private CreditCardRefreshController constructCreditCardRefreshController() {
-        KbcCreditCardFetcher creditCardFetcher =
-                new KbcCreditCardFetcher(apiClient, sessionStorage);
-        return new CreditCardRefreshController(
-                metricRefreshController, updateController, creditCardFetcher, creditCardFetcher);
     }
 
     @Override
