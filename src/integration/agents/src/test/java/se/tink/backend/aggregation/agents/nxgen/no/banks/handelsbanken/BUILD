@@ -1,7 +1,7 @@
 load("//tools/bzl:junit.bzl", "junit_test")
 
 junit_test(
-    name = "handelsbanken",
+    name = "handelsbanken-unit",
     srcs = glob(
         ["**/*.java"],
         exclude = ["agent/*.java"],

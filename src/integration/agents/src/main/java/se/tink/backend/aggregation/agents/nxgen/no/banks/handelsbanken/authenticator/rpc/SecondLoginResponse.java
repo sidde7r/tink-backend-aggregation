@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.authenticator.rpc;
 
 import lombok.Getter;
-import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.authenticator.entities.AgreementEntity;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.authenticator.entities.CustomerEntity;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.authenticator.entities.SessionEntity;
@@ -16,7 +16,7 @@ public class SecondLoginResponse {
 
     public SecondLoginResponse throwErrorIfAgreementIsInactive() {
         if (!this.agreement.isActive()) {
-            throw BankIdError.AUTHORIZATION_REQUIRED.exception();
+            throw LoginError.NO_ACCESS_TO_MOBILE_BANKING.exception();
         }
         return this;
     }

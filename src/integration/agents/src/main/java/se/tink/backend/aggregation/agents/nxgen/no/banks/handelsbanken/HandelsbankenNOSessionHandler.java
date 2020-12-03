@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 public class HandelsbankenNOSessionHandler implements SessionHandler {
     private final HandelsbankenNOApiClient apiClient;
 
-    public HandelsbankenNOSessionHandler(HandelsbankenNOApiClient apiClient) {
+    HandelsbankenNOSessionHandler(HandelsbankenNOApiClient apiClient) {
         this.apiClient = apiClient;
     }
 
@@ -21,7 +21,7 @@ public class HandelsbankenNOSessionHandler implements SessionHandler {
     @Override
     public void keepAlive() throws SessionException {
         try {
-            apiClient.extendSession();
+            apiClient.fetchUserSettings();
         } catch (HttpResponseException e) {
             throw SessionError.SESSION_EXPIRED.exception(e);
         }

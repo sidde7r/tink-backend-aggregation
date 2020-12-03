@@ -197,10 +197,10 @@ public class HandelsbankenNOApiClient {
         AccountFetchingResponse accountsResponse =
                 requestInSession(Url.ACCOUNTS.get()).get(AccountFetchingResponse.class);
 
-        List<AccountEntity> accountList = accountsResponse.getAccounts();
-        this.accountList = accountList;
+        List<AccountEntity> accounts = accountsResponse.getAccounts();
+        this.accountList = accounts;
 
-        return accountList;
+        return accounts;
     }
 
     public HttpResponse fetchTransactions(String uri, int number, int index) {
@@ -217,12 +217,8 @@ public class HandelsbankenNOApiClient {
                 .get(LoanDetailsResponse.class);
     }
 
-    public HttpResponse extendSession() {
-        return requestInSession(Url.KEEP_ALIVE.get())
-                .queryParam(
-                        HandelsbankenNOConstants.QueryParamPairs.KEEP_ALIVE.getKey(),
-                        HandelsbankenNOConstants.QueryParamPairs.KEEP_ALIVE.getValue())
-                .post(HttpResponse.class);
+    HttpResponse fetchUserSettings() {
+        return requestInSession(Url.USER_SETTINGS.get()).get(HttpResponse.class);
     }
 
     public InitInvestmentsLoginResponse initInvestmentLogin() {

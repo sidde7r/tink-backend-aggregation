@@ -37,15 +37,13 @@ public class HandelsbankenNOLoanAccountFetcherTest {
     private static final long INITIAL_BALANCE = 4234234;
     private static final String ID = "8923454567";
     private static final String ACCOUNT_NUMBER = "8923454567";
-    private static final String ACCOUNT_DESCRIPTION = "Lån annuitet";
+    private static final String ACCOUNT_DESCRIPTION = "Renteståttelån serie";
     private static final String MORTGAGE_ACCOUNT_DESCRIPTION = "Bolig eiendomskreditt ann";
     private static final String MORTGAGE_ACCOUNT_DESCRIPTION2 = "Fast 7 år annu ek";
     private static final String MORTGAGE_ACCOUNT_DESCRIPTION3 = "Fast 5år annu ek";
+    private static final String MORTGAGE_ACCOUNT_DESCRIPTION4 = "Lån annuitet";
     private static final String REPAYMENT_PLAN = "repayment_plan";
     private static final String TYPE = "loan";
-    private static final String CAPABILITIES = "capabilities";
-    private static final String DETAILS = "details";
-    private static final String ID_MODULE = "idModule";
     private static final String NOK = "NOK";
     private static final String REPAYMENT_PLAN_FOR_LOAN_ACCOUNT_PATH =
             "loanmod/accounts/enc!!1wgjSvWweNFwenfuw@#$eerfnVPuSYsOx_LW-WLn7rfergergt33Pe9_v0LJEWNewfnuwehiS/repayment_plan";
@@ -92,12 +90,7 @@ public class HandelsbankenNOLoanAccountFetcherTest {
         result = (List<LoanAccount>) handelsbankenNOLoanAccountFetcher.fetchAccounts();
 
         // Then
-        assertThat(expected.get(0))
-                .isEqualToIgnoringGivenFields(result.get(0), DETAILS, ID_MODULE, CAPABILITIES);
-        assertThat(result.get(0).getDetails())
-                .isEqualToComparingFieldByField(expected.get(0).getDetails());
-        assertThat(result.get(0).getIdModule())
-                .isEqualToComparingFieldByField(expected.get(0).getIdModule());
+        assertThat(expected.get(0)).isEqualToComparingFieldByFieldRecursively(result.get(0));
     }
 
     @Test
@@ -117,6 +110,9 @@ public class HandelsbankenNOLoanAccountFetcherTest {
                                                 getLinks(getLinkEntity())),
                                         getLoanAccountEntity(
                                                 MORTGAGE_ACCOUNT_DESCRIPTION3,
+                                                getLinks(getLinkEntity())),
+                                        getLoanAccountEntity(
+                                                MORTGAGE_ACCOUNT_DESCRIPTION4,
                                                 getLinks(getLinkEntity())))));
 
         when(handelsbankenNOApiClient.fetchLoanDetails(REPAYMENT_PLAN_FOR_LOAN_ACCOUNT_PATH))
@@ -149,21 +145,22 @@ public class HandelsbankenNOLoanAccountFetcherTest {
                                 INTEREST_RATE,
                                 INSTALMENT,
                                 INITIAL_BALANCE,
-                                MORTGAGE_ACCOUNT_DESCRIPTION3));
+                                MORTGAGE_ACCOUNT_DESCRIPTION3),
+                        getLoanAccount(
+                                LoanDetails.Type.MORTGAGE,
+                                INTEREST_RATE,
+                                INSTALMENT,
+                                INITIAL_BALANCE,
+                                MORTGAGE_ACCOUNT_DESCRIPTION4));
 
         // When
         result = (List<LoanAccount>) handelsbankenNOLoanAccountFetcher.fetchAccounts();
 
         // Then
         assertThat(result.size()).isEqualTo(expected.size());
+        assertThat(result).hasSameElementsAs(expected);
         for (int i = 0; i < result.size(); i++) {
-            assertThat(result.get(i))
-                    .isEqualToIgnoringGivenFields(
-                            expected.get(i), DETAILS, ID_MODULE, CAPABILITIES);
-            assertThat(result.get(i).getDetails())
-                    .isEqualToComparingFieldByField(expected.get(i).getDetails());
-            assertThat(result.get(i).getIdModule())
-                    .isEqualToComparingFieldByField(expected.get(i).getIdModule());
+            assertThat(result.get(i)).isEqualToComparingFieldByFieldRecursively(expected.get(i));
         }
     }
 
@@ -190,12 +187,7 @@ public class HandelsbankenNOLoanAccountFetcherTest {
         result = (List<LoanAccount>) handelsbankenNOLoanAccountFetcher.fetchAccounts();
 
         // Then
-        assertThat(expected.get(0))
-                .isEqualToIgnoringGivenFields(result.get(0), DETAILS, ID_MODULE, CAPABILITIES);
-        assertThat(result.get(0).getDetails())
-                .isEqualToComparingFieldByField(expected.get(0).getDetails());
-        assertThat(result.get(0).getIdModule())
-                .isEqualToComparingFieldByField(expected.get(0).getIdModule());
+        assertThat(expected.get(0)).isEqualToComparingFieldByFieldRecursively(result.get(0));
     }
 
     @Test
@@ -220,12 +212,7 @@ public class HandelsbankenNOLoanAccountFetcherTest {
         result = (List<LoanAccount>) handelsbankenNOLoanAccountFetcher.fetchAccounts();
 
         // Then
-        assertThat(expected.get(0))
-                .isEqualToIgnoringGivenFields(result.get(0), DETAILS, ID_MODULE, CAPABILITIES);
-        assertThat(result.get(0).getDetails())
-                .isEqualToComparingFieldByField(expected.get(0).getDetails());
-        assertThat(result.get(0).getIdModule())
-                .isEqualToComparingFieldByField(expected.get(0).getIdModule());
+        assertThat(expected.get(0)).isEqualToComparingFieldByFieldRecursively(result.get(0));
     }
 
     @Test
@@ -246,12 +233,7 @@ public class HandelsbankenNOLoanAccountFetcherTest {
         result = (List<LoanAccount>) handelsbankenNOLoanAccountFetcher.fetchAccounts();
 
         // Then
-        assertThat(expected.get(0))
-                .isEqualToIgnoringGivenFields(result.get(0), DETAILS, ID_MODULE, CAPABILITIES);
-        assertThat(result.get(0).getDetails())
-                .isEqualToComparingFieldByField(expected.get(0).getDetails());
-        assertThat(result.get(0).getIdModule())
-                .isEqualToComparingFieldByField(expected.get(0).getIdModule());
+        assertThat(expected.get(0)).isEqualToComparingFieldByFieldRecursively(result.get(0));
     }
 
     @Test
@@ -272,12 +254,7 @@ public class HandelsbankenNOLoanAccountFetcherTest {
         result = (List<LoanAccount>) handelsbankenNOLoanAccountFetcher.fetchAccounts();
 
         // Then
-        assertThat(expected.get(0))
-                .isEqualToIgnoringGivenFields(result.get(0), DETAILS, ID_MODULE, CAPABILITIES);
-        assertThat(result.get(0).getDetails())
-                .isEqualToComparingFieldByField(expected.get(0).getDetails());
-        assertThat(result.get(0).getIdModule())
-                .isEqualToComparingFieldByField(expected.get(0).getIdModule());
+        assertThat(expected.get(0)).isEqualToComparingFieldByFieldRecursively(result.get(0));
     }
 
     @Test
@@ -298,12 +275,7 @@ public class HandelsbankenNOLoanAccountFetcherTest {
         result = (List<LoanAccount>) handelsbankenNOLoanAccountFetcher.fetchAccounts();
 
         // Then
-        assertThat(expected.get(0))
-                .isEqualToIgnoringGivenFields(result.get(0), DETAILS, ID_MODULE, CAPABILITIES);
-        assertThat(result.get(0).getDetails())
-                .isEqualToComparingFieldByField(expected.get(0).getDetails());
-        assertThat(result.get(0).getIdModule())
-                .isEqualToComparingFieldByField(expected.get(0).getIdModule());
+        assertThat(expected.get(0)).isEqualToComparingFieldByFieldRecursively(result.get(0));
     }
 
     @Test
@@ -326,12 +298,7 @@ public class HandelsbankenNOLoanAccountFetcherTest {
         result = (List<LoanAccount>) handelsbankenNOLoanAccountFetcher.fetchAccounts();
 
         // Then
-        assertThat(expected.get(0))
-                .isEqualToIgnoringGivenFields(result.get(0), DETAILS, ID_MODULE, CAPABILITIES);
-        assertThat(result.get(0).getDetails())
-                .isEqualToComparingFieldByField(expected.get(0).getDetails());
-        assertThat(result.get(0).getIdModule())
-                .isEqualToComparingFieldByField(expected.get(0).getIdModule());
+        assertThat(expected.get(0)).isEqualToComparingFieldByFieldRecursively(result.get(0));
     }
 
     @Test
@@ -355,12 +322,7 @@ public class HandelsbankenNOLoanAccountFetcherTest {
         result = (List<LoanAccount>) handelsbankenNOLoanAccountFetcher.fetchAccounts();
 
         // Then
-        assertThat(expected.get(0))
-                .isEqualToIgnoringGivenFields(result.get(0), DETAILS, ID_MODULE, CAPABILITIES);
-        assertThat(result.get(0).getDetails())
-                .isEqualToComparingFieldByField(expected.get(0).getDetails());
-        assertThat(result.get(0).getIdModule())
-                .isEqualToComparingFieldByField(expected.get(0).getIdModule());
+        assertThat(expected.get(0)).isEqualToComparingFieldByFieldRecursively(result.get(0));
     }
 
     private LoanAccount getLoanAccount(
