@@ -8,6 +8,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -65,6 +66,7 @@ public abstract class Account {
     protected AccountSourceInfo sourceInfo;
     protected final List<Holder> holders;
     protected AccountHolderType holderType;
+    protected List<Balance> balances;
 
     protected Account(AccountBuilder<? extends Account, ?> builder, BalanceModule balanceModule) {
         this(
@@ -95,6 +97,7 @@ public abstract class Account {
         this.payload = builder.getPayload();
         this.capabilities = builder.getCapabilities();
         this.sourceInfo = builder.getSourceInfo();
+        this.balances = builder.getBalances();
     }
 
     // This will be removed as part of the improved step builder + agent builder refactoring project
@@ -123,6 +126,8 @@ public abstract class Account {
         Preconditions.checkState(
                 !Strings.isNullOrEmpty(uniqueIdentifier),
                 "Unique identifier was empty after sanitation.");
+        // USE NEXTGEN BUILDER
+        this.balances = new ArrayList<>();
     }
 
     protected Account(StepBuilder<? extends Account, ?> builder) {
@@ -288,6 +293,13 @@ public abstract class Account {
                     holders.stream().map(Holder::toSystemHolder).collect(Collectors.toList()));
             account.setAccountHolder(accountHolder);
         }
+
+        account.setBalances(
+                balances != null
+                        ? balances.stream()
+                                .map(Balance::toSystemBalance)
+                                .collect(Collectors.toList())
+                        : ImmutableList.of());
         return account;
     }
 
@@ -339,6 +351,10 @@ public abstract class Account {
         }
 
         return SerializationUtils.serializeToString(payload);
+    }
+
+    public List<Balance> getBalances() {
+        return balances;
     }
 
     // This will be removed as part of the improved step builder + agent builder refactoring project
