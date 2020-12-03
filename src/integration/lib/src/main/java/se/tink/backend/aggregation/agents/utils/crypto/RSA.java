@@ -125,6 +125,10 @@ public class RSA {
         return encrypt("RSA/ECB/OAEPWithSHA-1AndMGF1Padding", publicKey, data);
     }
 
+    public static byte[] encryptNoneOaepSha1Mgf1(RSAPublicKey publicKey, byte[] data) {
+        return encrypt("RSA/NONE/OAEPWithSHA-1AndMGF1Padding", publicKey, data);
+    }
+
     public static byte[] encryptNonePkcs1(RSAPublicKey publicKey, byte[] data) {
         return encrypt("RSA/NONE/PKCS1Padding", publicKey, data);
     }

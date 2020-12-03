@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.Optional;
 import org.junit.Assert;
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.authenticator.rpc.EbankingUsersResponse;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.authenticator.rpc.legacy.EbankingUsersResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.fetchers.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.fetchers.rpc.UpcomingTransactionsResponse;
 import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;

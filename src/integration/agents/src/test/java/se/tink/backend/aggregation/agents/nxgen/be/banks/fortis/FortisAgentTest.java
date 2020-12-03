@@ -29,6 +29,18 @@ public class FortisAgentTest {
         builder.build().testRefresh();
     }
 
+    @Test
+    public void testRegisterAndRefreshHelloBank() throws Exception {
+        AgentIntegrationTest.Builder builder =
+                new AgentIntegrationTest.Builder("be", "be-hellobank-cardreader")
+                        .addCredentialField(Field.Key.USERNAME, manager.get(Arg.CARDNUMBER))
+                        .addCredentialField("clientnumber", manager.get(Arg.CLIENTNUMBER))
+                        .loadCredentialsBefore(true)
+                        .expectLoggedIn(false)
+                        .saveCredentialsAfter(true);
+        builder.build().testRefresh();
+    }
+
     @AfterClass
     public static void afterClass() {
         ArgumentManager.afterClass();
