@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cb
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
@@ -20,6 +21,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 
 @AllArgsConstructor
+@Slf4j
 public class CbiThirdPartyAppAuthenticationStep implements AuthenticationStep {
 
     private final CbiThirdPartyAppRequestParamsProvider thirdPartyAppRequestParamsProvider;
@@ -70,7 +72,9 @@ public class CbiThirdPartyAppAuthenticationStep implements AuthenticationStep {
 
     private void processThirdPartyCallback(Map<String, String> callbackData)
             throws AuthorizationException {
-        String authResult = callbackData.getOrDefault(QueryKeys.RESULT, QueryValues.FAILURE);
+        log.info("Received callback with query params data: " + callbackData);
+
+        String authResult = callbackData.getOrDefault(QueryKeys.RESULT, QueryValues.SUCCESS);
         checkIfConsentRejected(authResult);
         try {
             consentManager.isConsentAccepted();
