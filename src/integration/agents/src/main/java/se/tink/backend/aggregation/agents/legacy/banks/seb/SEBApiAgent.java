@@ -938,7 +938,7 @@ public final class SEBApiAgent extends AbstractAgent
                 case FAILED_UNKNOWN:
                     switch (authenticationResponse.getHintCode().toLowerCase()) {
                         case "seb_unknown_bankid":
-                            throw LoginError.NOT_SUPPORTED.exception(
+                            throw BankIdError.BANK_ID_UNAUTHORIZED_ISSUER.exception(
                                     UserMessage.SEB_UNKNOWN_BANKID.getKey());
                         default:
                             throw new IllegalStateException(
