@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.nxgen.core.transaction;
 import static org.junit.Assert.assertEquals;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -28,7 +29,10 @@ public class AggregationTransactionTest {
                         "externalId",
                         TransactionTypes.PAYMENT,
                         null,
-                        payloads);
+                        payloads,
+                        new HashMap<>(),
+                        false,
+                        new ArrayList<>());
 
         assertEquals("details", transaction.getPayload().get(TransactionPayloadTypes.DETAILS));
     }

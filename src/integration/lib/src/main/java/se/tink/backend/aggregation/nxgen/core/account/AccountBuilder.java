@@ -31,6 +31,7 @@ public abstract class AccountBuilder<A extends Account, B extends BuildStep<A, B
     private AccountCapabilities capabilities = AccountCapabilities.createDefault();
     private AccountSourceInfo sourceInfo;
     private AccountHolderType holderType;
+    private final List<Balance> balances = new ArrayList<>();
 
     protected abstract B buildStep();
 
@@ -127,6 +128,20 @@ public abstract class AccountBuilder<A extends Account, B extends BuildStep<A, B
         return buildStep();
     }
 
+    @Override
+    public B addBalances(@Nonnull List<Balance> balances) {
+        Preconditions.checkNotNull(balances, "balances list must not be null.");
+
+        this.balances.addAll(balances);
+        return buildStep();
+    }
+
+    @Override
+    public B addBalances(@Nonnull Balance... balances) {
+        Preconditions.checkNotNull(balances, "balances Array must not be null.");
+        return this.addBalances(Arrays.asList(balances));
+    }
+
     IdModule getIdModule() {
         return idModule;
     }
@@ -166,5 +181,9 @@ public abstract class AccountBuilder<A extends Account, B extends BuildStep<A, B
 
     public AccountSourceInfo getSourceInfo() {
         return sourceInfo;
+    }
+
+    public List<Balance> getBalances() {
+        return balances;
     }
 }
