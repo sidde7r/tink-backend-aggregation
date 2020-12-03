@@ -96,10 +96,14 @@ public class UnicreditBaseApiClient {
     }
 
     protected RequestBuilder createRequest(URL url) {
+        return createRequestBuilder(url)
+                .header(HeaderKeys.PSU_IP_ADDRESS, headerValues.getUserIp());
+    }
+
+    protected RequestBuilder createRequestBuilder(URL url) {
         return client.request(url)
                 .accept(MediaType.APPLICATION_JSON)
-                .type(MediaType.APPLICATION_JSON)
-                .header(HeaderKeys.PSU_IP_ADDRESS, headerValues.getUserIp());
+                .type(MediaType.APPLICATION_JSON);
     }
 
     private RequestBuilder createRequestInSession(URL url) {
@@ -202,7 +206,7 @@ public class UnicreditBaseApiClient {
                         .orElse(HeaderValues.PSU_IP_ADDRESS);
 
         CreatePaymentResponse createPaymentResponse =
-                createRequest(
+                createRequestBuilder(
                                 new URL(
                                                 providerConfiguration.getBaseUrl()
                                                         + Endpoints.PAYMENT_INITIATION)
@@ -238,7 +242,7 @@ public class UnicreditBaseApiClient {
                 Optional.ofNullable(sessionStorage.get(HeaderKeys.PSU_IP_ADDRESS))
                         .orElse(HeaderValues.PSU_IP_ADDRESS);
 
-        return createRequest(
+        return createRequestBuilder(
                         new URL(providerConfiguration.getBaseUrl() + Endpoints.FETCH_PAYMENT)
                                 .parameter(
                                         PathParameters.PAYMENT_PRODUCT,
