@@ -45,9 +45,6 @@ public class TransactionFetcherController<A extends Account> implements Transact
         transactions.addAll(fetchUpcomingTransactionsFor(account));
         do {
             PaginatorResponse response = paginator.fetchTransactionsFor(account);
-            if (response == null) {
-                continue;
-            }
 
             Collection<? extends Transaction> transactionsToAdd = response.getTinkTransactions();
             if (transactionsToAdd != null) {
