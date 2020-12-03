@@ -13,6 +13,7 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.INVESTMENTS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.LOANS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.MORTGAGE_AGGREGATION;
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.PIS_SEPA;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.TRANSFERS;
 
@@ -76,7 +77,8 @@ import se.tink.libraries.identitydata.NameElement;
     IDENTITY_DATA,
     TRANSFERS,
     INVESTMENTS,
-    MORTGAGE_AGGREGATION
+    MORTGAGE_AGGREGATION,
+    PIS_SEPA
 })
 public final class RedirectAuthenticationDemoAgent extends NextGenerationDemoAgent
         implements RefreshTransferDestinationExecutor {

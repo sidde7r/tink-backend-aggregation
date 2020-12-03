@@ -34,7 +34,17 @@ public class CapabilitiesExtractor {
                     new Mapping(RefreshBeneficiariesExecutor.class, Capability.LIST_BENEFICIARIES),
                     new Mapping(
                             CreateBeneficiariesCapabilityExecutor.class,
-                            Capability.CREATE_BENEFICIARIES));
+                            Capability.CREATE_BENEFICIARIES),
+                    new Mapping(TransferExecutor.class, Capability.PIS_SEPA),
+                    new Mapping(TransferExecutorNxgen.class, Capability.PIS_SEPA),
+                    new Mapping(TransferExecutor.class, Capability.PIS_SE_BG),
+                    new Mapping(TransferExecutorNxgen.class, Capability.PIS_SE_BG),
+                    new Mapping(TransferExecutor.class, Capability.PIS_SE_PG),
+                    new Mapping(TransferExecutorNxgen.class, Capability.PIS_SE_PG),
+                    new Mapping(TransferExecutor.class, Capability.PIS_SEPA_ICT),
+                    new Mapping(TransferExecutorNxgen.class, Capability.PIS_SEPA_ICT),
+                    new Mapping(TransferExecutor.class, Capability.PIS_UK_FASTER_PAYMENT),
+                    new Mapping(TransferExecutorNxgen.class, Capability.PIS_UK_FASTER_PAYMENT));
 
     public static Set<Capability> readCapabilities(Class<? extends Agent> klass) {
         AgentCapabilities capabilities = klass.getAnnotation(AgentCapabilities.class);
