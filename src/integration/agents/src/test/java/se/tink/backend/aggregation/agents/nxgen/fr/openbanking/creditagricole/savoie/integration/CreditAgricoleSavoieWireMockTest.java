@@ -67,7 +67,7 @@ public class CreditAgricoleSavoieWireMockTest {
                 AgentWireMockPaymentTest.builder(
                                 MarketCode.FR, "fr-creditagricolesavoie-ob", wireMockFilePath)
                         .withConfigurationFile(configuration)
-                        .addPayment(createMockedDomesticPayment())
+                        .withPayment(createMockedDomesticPayment())
                         .withAgentModule(new CreditAgricoleSavoieWireMockTestModule())
                         .buildWithoutLogin(PaymentCommand.class);
 

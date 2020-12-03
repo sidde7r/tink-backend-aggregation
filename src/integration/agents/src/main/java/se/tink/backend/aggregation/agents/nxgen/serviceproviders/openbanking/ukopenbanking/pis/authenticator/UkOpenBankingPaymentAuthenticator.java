@@ -22,7 +22,6 @@ import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionE
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticationValidator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.configuration.ClientInfo;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentApiClient;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
@@ -36,7 +35,7 @@ public class UkOpenBankingPaymentAuthenticator {
 
     @VisibleForTesting static final long WAIT_FOR_MINUTES = 9L;
 
-    private final UkOpenBankingPaymentApiClient apiClient;
+    private final UkOpenBankingPisAuthApiClient apiClient;
     private final OpenIdAuthenticationValidator authenticationValidator;
     private final UkOpenBankingAuthenticationErrorMatcher authenticationErrorMatcher;
     private final StrongAuthenticationState strongAuthenticationState;

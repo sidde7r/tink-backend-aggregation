@@ -3,20 +3,23 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentTestFixtures.AUTH_CODE;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentTestFixtures.CONSENT_ID;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentTestFixtures.INSTRUCTION_ID;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentTestFixtures.PAYMENT_ID;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentTestFixtures.createClockMock;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentTestFixtures.createCredentials;
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentTestFixtures.createDomesticPaymentConsentResponse;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentTestFixtures.createDomesticPaymentRequestForAlreadyExecutedPayment;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentTestFixtures.createDomesticPaymentRequestForNotExecutedPayment;
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentTestFixtures.createDomesticScheduledPaymentResponse;
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentTestFixtures.createOAuth2Token;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentTestFixtures.createPaymentMultiStepRequestFoAuthenticateStep;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentTestFixtures.createPaymentMultiStepRequestForExecutePaymentStep;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentTestFixtures.createPaymentResponse;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentTestFixtures.createPaymentResponseForConsent;
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingTestValidator.validatePaymentResponsesForDomesticPaymentAreEqual;
 
+import java.time.Clock;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Credentials;
@@ -24,23 +27,20 @@ import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizatio
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.authenticator.UkOpenBankingPaymentAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.authenticator.UkOpenBankingPisAuthFilterInstantiator;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.dto.domestic.DomesticPaymentConsentRequest;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.dto.domestic.DomesticPaymentConsentResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.dto.domesticscheduled.DomesticScheduledPaymentRequest;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.dto.domesticscheduled.DomesticScheduledPaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.UkOpenBankingPaymentApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.entity.ExecutorSignStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
-import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 
 public class UkOpenBankingPaymentExecutorTest {
 
     private UkOpenBankingPaymentExecutor ukOpenBankingPaymentExecutor;
     private UkOpenBankingPaymentApiClient apiClientMock;
     private UkOpenBankingPisAuthFilterInstantiator authFilterInstantiatorMock;
+    private Clock clockMock;
 
     @Before
     public void setUp() throws PaymentAuthorizationException {
@@ -56,6 +56,8 @@ public class UkOpenBankingPaymentExecutorTest {
                         credentialsMock,
                         paymentAuthenticatorMock,
                         authFilterInstantiatorMock);
+
+        clockMock = createClockMock();
     }
 
     @Test
@@ -63,22 +65,55 @@ public class UkOpenBankingPaymentExecutorTest {
         // given
         final PaymentRequest paymentRequestMock =
                 createDomesticPaymentRequestForNotExecutedPayment();
-        final DomesticPaymentConsentResponse paymentConsentResponseMock =
-                createDomesticPaymentConsentResponse();
-        final OAuth2Token clientTokenMock = createOAuth2Token();
+        final PaymentResponse paymentConsentResponseMock = createPaymentResponseForConsent();
 
-        when(apiClientMock.requestClientCredentials()).thenReturn(clientTokenMock);
-        when(apiClientMock.createDomesticPaymentConsent(any(DomesticPaymentConsentRequest.class)))
+        when(apiClientMock.createPaymentConsent(paymentRequestMock))
                 .thenReturn(paymentConsentResponseMock);
 
         // when
-        final PaymentResponse returned = ukOpenBankingPaymentExecutor.create(paymentRequestMock);
+        ukOpenBankingPaymentExecutor.create(paymentRequestMock);
 
         // then
-        final PaymentResponse expected = createPaymentResponseForConsent();
-
-        validatePaymentResponsesForDomesticPaymentAreEqual(returned, expected);
+        verify(apiClientMock).createPaymentConsent(any(PaymentRequest.class));
         verify(authFilterInstantiatorMock).instantiateAuthFilterWithClientToken();
+    }
+
+    @Test
+    public void shouldFetchPaymentIfPresent() {
+        // given
+        final PaymentRequest paymentRequestMock =
+                createDomesticPaymentRequestForAlreadyExecutedPayment(this.clockMock);
+        final PaymentResponse paymentResponseMock = createPaymentResponse();
+
+        when(apiClientMock.getPayment(PAYMENT_ID)).thenReturn(paymentResponseMock);
+
+        // when
+        final PaymentResponse returnedResponse =
+                ukOpenBankingPaymentExecutor.fetch(paymentRequestMock);
+
+        // then
+        assertThat(returnedResponse).isEqualTo(paymentResponseMock);
+        verify(apiClientMock).getPayment(PAYMENT_ID);
+        verify(apiClientMock, times(0)).getPaymentConsent(CONSENT_ID);
+    }
+
+    @Test
+    public void shouldFetchPaymentConsentIfPaymentNotPresent() {
+        // given
+        final PaymentRequest paymentRequestMock =
+                createDomesticPaymentRequestForAlreadyExecutedPayment(this.clockMock);
+        final PaymentResponse paymentResponseMock = createPaymentResponse();
+
+        when(apiClientMock.getPaymentConsent(CONSENT_ID)).thenReturn(paymentResponseMock);
+
+        // when
+        final PaymentResponse returnedResponse =
+                ukOpenBankingPaymentExecutor.fetch(paymentRequestMock);
+
+        // then
+        assertThat(returnedResponse).isEqualTo(paymentResponseMock);
+        verify(apiClientMock).getPayment(PAYMENT_ID);
+        verify(apiClientMock).getPaymentConsent(CONSENT_ID);
     }
 
     @Test
@@ -100,10 +135,8 @@ public class UkOpenBankingPaymentExecutorTest {
         final PaymentMultiStepRequest request =
                 createPaymentMultiStepRequestForExecutePaymentStep();
 
-        final DomesticScheduledPaymentResponse responseMock =
-                createDomesticScheduledPaymentResponse();
-        when(apiClientMock.executeDomesticScheduledPayment(
-                        any(DomesticScheduledPaymentRequest.class)))
+        final PaymentResponse responseMock = createPaymentResponse();
+        when(apiClientMock.executePayment(request, CONSENT_ID, INSTRUCTION_ID, INSTRUCTION_ID))
                 .thenReturn(responseMock);
 
         // when

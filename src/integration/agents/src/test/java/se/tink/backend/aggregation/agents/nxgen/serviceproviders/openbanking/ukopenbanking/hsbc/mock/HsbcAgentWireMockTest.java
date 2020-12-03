@@ -29,7 +29,7 @@ public class HsbcAgentWireMockTest {
                 AgentWireMockPaymentTest.builder(MarketCode.UK, "uk-hsbc-oauth2", wireMockFilePath)
                         .withConfigurationFile(configuration)
                         .withHttpDebugTrace()
-                        .addPayment(createMockedDomesticPayment())
+                        .withPayment(createMockedDomesticPayment())
                         .addCallbackData("code", "DUMMY_AUTH_CODE")
                         .buildWithoutLogin(PaymentCommand.class);
 

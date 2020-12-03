@@ -33,7 +33,6 @@ import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizatio
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationTimeOutException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticationValidator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.configuration.ClientInfo;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentApiClient;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
@@ -49,7 +48,7 @@ public class UkOpenBankingPaymentAuthenticatorTest {
     @Before
     public void setUp() {
         final ClientInfo clientInfoMock = createClientInfo();
-        final UkOpenBankingPaymentApiClient apiClientMock = createApiClientMock(clientInfoMock);
+        final UkOpenBankingPisAuthApiClient apiClientMock = createApiClientMock(clientInfoMock);
         final OpenIdAuthenticationValidator authenticationValidatorMock =
                 mock(OpenIdAuthenticationValidator.class);
         final StrongAuthenticationState strongAuthenticationStateMock =
@@ -303,9 +302,9 @@ public class UkOpenBankingPaymentAuthenticatorTest {
         assertThat(actualPayload.getDesktop().getUrl()).isEqualTo(AUTHORIZE_URL);
     }
 
-    private static UkOpenBankingPaymentApiClient createApiClientMock(ClientInfo clientInfoMock) {
-        final UkOpenBankingPaymentApiClient apiClientMock =
-                mock(UkOpenBankingPaymentApiClient.class);
+    private static UkOpenBankingPisAuthApiClient createApiClientMock(ClientInfo clientInfoMock) {
+        final UkOpenBankingPisAuthApiClient apiClientMock =
+                mock(UkOpenBankingPisAuthApiClient.class);
 
         when(apiClientMock.buildAuthorizeUrl(STATE, CALLBACK_URL, clientInfoMock, CONSENT_ID))
                 .thenReturn(new URL(AUTHORIZE_URL));

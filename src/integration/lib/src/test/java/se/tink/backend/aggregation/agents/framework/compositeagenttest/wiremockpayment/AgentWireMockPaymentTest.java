@@ -6,7 +6,6 @@ import com.google.common.collect.ImmutableSet;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Module;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +17,7 @@ import se.tink.backend.aggregation.agents.framework.compositeagenttest.base.modu
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.command.LoginCommand;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.module.AgentFactoryWireMockModule;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.module.PaymentRequestModule;
+import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.module.TransferRequestModule;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.module.VerdictModule;
 import se.tink.backend.aggregation.agents.framework.wiremock.WireMockTestServer;
 import se.tink.backend.aggregation.agents.framework.wiremock.configuration.provider.socket.MutableFakeBankSocket;
@@ -44,8 +44,8 @@ public final class AgentWireMockPaymentTest {
             Map<String, String> callbackData,
             Map<String, String> persistentStorageData,
             TestModule agentModule,
-            List<Payment> paymentList,
-            List<Transfer> transfersList,
+            Payment payment,
+            Transfer transfer,
             List<Class<? extends CompositeAgentTestCommand>> commandSequence,
             boolean httpDebugTrace) {
 
@@ -71,7 +71,8 @@ public final class AgentWireMockPaymentTest {
                                 persistentStorageData),
                         new RefreshRequestModule(
                                 RefreshableItem.REFRESHABLE_ITEMS_ALL, true, false, false),
-                        new PaymentRequestModule(paymentList, transfersList),
+                        new PaymentRequestModule(payment),
+                        new TransferRequestModule(transfer),
                         new VerdictModule(),
                         new AgentFactoryWireMockModule(
                                 MutableFakeBankSocket.of("localhost:" + server.getHttpsPort()),
@@ -120,10 +121,10 @@ public final class AgentWireMockPaymentTest {
         private final Map<String, String> credentialFields;
         private final Map<String, String> callbackData;
         private final Map<String, String> persistentStorageData;
-        private final List<Payment> paymentList;
-        private final List<Transfer> transferList;
         private boolean httpDebugTrace = false;
 
+        private Payment payment;
+        private Transfer transfer;
         private AgentsServiceConfiguration configuration;
         private TestModule agentTestModule;
 
@@ -135,8 +136,6 @@ public final class AgentWireMockPaymentTest {
             this.credentialFields = new HashMap<>();
             this.callbackData = new HashMap<>();
             this.persistentStorageData = new HashMap<>();
-            this.paymentList = new ArrayList<>();
-            this.transferList = new ArrayList<>();
         }
 
         /**
@@ -212,18 +211,16 @@ public final class AgentWireMockPaymentTest {
         /**
          * Add payment to be executed by the agent.
          *
-         * <p>Can be called multiple times to add several items.
-         *
          * @param payment Payment request
          * @return This builder.
          */
-        public Builder addPayment(Payment payment) {
-            this.paymentList.add(payment);
+        public Builder withPayment(Payment payment) {
+            this.payment = payment;
             return this;
         }
 
-        public Builder addTransfer(Transfer transfer) {
-            this.transferList.add(transfer);
+        public Builder withTransfer(Transfer transfer) {
+            this.transfer = transfer;
             return this;
         }
         /**
@@ -253,8 +250,8 @@ public final class AgentWireMockPaymentTest {
                     callbackData,
                     persistentStorageData,
                     agentTestModule,
-                    paymentList,
-                    transferList,
+                    payment,
+                    transfer,
                     of(command),
                     httpDebugTrace);
         }
@@ -276,8 +273,8 @@ public final class AgentWireMockPaymentTest {
                     callbackData,
                     persistentStorageData,
                     agentTestModule,
-                    paymentList,
-                    transferList,
+                    payment,
+                    transfer,
                     of(LoginCommand.class, command),
                     httpDebugTrace);
         }

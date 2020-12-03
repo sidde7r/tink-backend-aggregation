@@ -1,7 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.manual;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.UUID;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -45,7 +43,7 @@ public class LclAgentPaymentTest {
         builder.build().testTinkLinkPayment(createRealDomesticPayment());
     }
 
-    private List<Payment> createRealDomesticPayment() {
+    private Payment createRealDomesticPayment() {
         RemittanceInformation remittanceInformation = new RemittanceInformation();
         remittanceInformation.setType(RemittanceInformationType.UNSTRUCTURED);
         remittanceInformation.setValue("Test");
@@ -57,15 +55,14 @@ public class LclAgentPaymentTest {
                 new IbanIdentifier(
                         creditorDebtorManager.get(LclAgentPaymentTest.Arg.DEBTOR_ACCOUNT));
 
-        return Collections.singletonList(
-                new Payment.Builder()
-                        .withCreditor(new Creditor(creditorAccountIdentifier))
-                        .withDebtor(new Debtor(debtorAccountIdentifier))
-                        .withExactCurrencyAmount(ExactCurrencyAmount.inEUR(1))
-                        .withCurrency("EUR")
-                        .withRemittanceInformation(remittanceInformation)
-                        .withUniqueId(UUID.randomUUID().toString())
-                        .build());
+        return new Payment.Builder()
+                .withCreditor(new Creditor(creditorAccountIdentifier))
+                .withDebtor(new Debtor(debtorAccountIdentifier))
+                .withExactCurrencyAmount(ExactCurrencyAmount.inEUR(1))
+                .withCurrency("EUR")
+                .withRemittanceInformation(remittanceInformation)
+                .withUniqueId(UUID.randomUUID().toString())
+                .build();
     }
 
     private enum Arg implements ArgumentManager.ArgumentManagerEnum {

@@ -41,6 +41,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/utils",
         "//src/integration/models",
+        "//src/integration/payment:rpc",
         "//src/integration/signableoperation/src/main/java/se/tink/libraries/signableoperation/enums",
         "//src/integration/transfer:enums",
         "//src/integration/transfer:rpc",

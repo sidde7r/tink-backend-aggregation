@@ -61,7 +61,7 @@ public class N26AgentWireMockTest {
                 AgentWireMockPaymentTest.builder(MarketCode.FR, "fr-n26-ob", wireMockFilePath)
                         .withConfigurationFile(configuration)
                         .addCallbackData("tokenId", "DUMMY_TOKEN_ID")
-                        .addPayment(createMockedDomesticPayment())
+                        .withPayment(createMockedDomesticPayment())
                         .buildWithoutLogin(PaymentCommand.class);
 
         // when / then (execution and assertion currently done in the same step)

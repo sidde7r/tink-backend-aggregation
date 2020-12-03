@@ -1,8 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.ubi;
 
 import java.time.LocalDate;
-import java.util.Collections;
-import java.util.List;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
@@ -41,7 +39,7 @@ public class UbiAgentPaymentTest {
         builder.build().testTinkLinkPayment(createRealDomesticPayment());
     }
 
-    private List<Payment> createRealDomesticPayment() {
+    private Payment createRealDomesticPayment() {
         AccountIdentifier creditorAccountIdentifier =
                 new IbanIdentifier(creditorDebtorManager.get(Arg.CREDITOR_ACCOUNT));
         Creditor creditor = new Creditor(creditorAccountIdentifier, "Creditor Name");
@@ -56,15 +54,14 @@ public class UbiAgentPaymentTest {
         String currency = "EUR";
         remittanceInformation.setValue("Ubi");
 
-        return Collections.singletonList(
-                new Payment.Builder()
-                        .withCreditor(creditor)
-                        .withDebtor(debtor)
-                        .withAmount(amount)
-                        .withExecutionDate(executionDate)
-                        .withCurrency(currency)
-                        .withRemittanceInformation(remittanceInformation)
-                        .build());
+        return new Payment.Builder()
+                .withCreditor(creditor)
+                .withDebtor(debtor)
+                .withAmount(amount)
+                .withExecutionDate(executionDate)
+                .withCurrency(currency)
+                .withRemittanceInformation(remittanceInformation)
+                .build();
     }
 
     private enum Arg implements ArgumentManager.ArgumentManagerEnum {

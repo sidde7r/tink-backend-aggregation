@@ -1,8 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.manual;
 
 import java.time.LocalDate;
-import java.util.Collections;
-import java.util.List;
 import java.util.UUID;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -44,7 +42,7 @@ public class SocieteGeneraleAgentPaymentTest {
         builder.build().testTinkLinkPayment(createRealDomesticPayment());
     }
 
-    private List<Payment> createRealDomesticPayment() {
+    private Payment createRealDomesticPayment() {
         AccountIdentifier creditorAccountIdentifier =
                 new IbanIdentifier(
                         creditorDebtorManager.get(
@@ -59,17 +57,16 @@ public class SocieteGeneraleAgentPaymentTest {
 
         Amount amount = Amount.inEUR(1);
         LocalDate executionDate = LocalDate.now();
-        return Collections.singletonList(
-                new Payment.Builder()
-                        .withCreditor(creditor)
-                        .withDebtor(debtor)
-                        .withAmount(amount)
-                        .withExecutionDate(executionDate)
-                        .withRemittanceInformation(
-                                RemittanceInformationUtils
-                                        .generateUnstructuredRemittanceInformation("Message"))
-                        .withUniqueId(UUID.randomUUID().toString())
-                        .build());
+        return new Payment.Builder()
+                .withCreditor(creditor)
+                .withDebtor(debtor)
+                .withAmount(amount)
+                .withExecutionDate(executionDate)
+                .withRemittanceInformation(
+                        RemittanceInformationUtils.generateUnstructuredRemittanceInformation(
+                                "Message"))
+                .withUniqueId(UUID.randomUUID().toString())
+                .build();
     }
 
     private enum Arg implements ArgumentManager.ArgumentManagerEnum {

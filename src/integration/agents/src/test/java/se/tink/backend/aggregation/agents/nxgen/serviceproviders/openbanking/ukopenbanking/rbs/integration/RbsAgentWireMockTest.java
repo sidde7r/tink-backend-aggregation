@@ -76,7 +76,7 @@ public class RbsAgentWireMockTest {
         return AgentWireMockPaymentTest.builder(MarketCode.UK, PROVIDER_NAME, wireMockFilePath)
                 .withConfigurationFile(readAgentConfiguration())
                 .addCallbackData("code", "DUMMY_AUTH_CODE")
-                .addPayment(createDomesticPayment())
+                .withPayment(createDomesticPayment())
                 .buildWithoutLogin(PaymentGBCommand.class);
     }
 
@@ -87,7 +87,7 @@ public class RbsAgentWireMockTest {
         return AgentWireMockPaymentTest.builder(MarketCode.UK, PROVIDER_NAME, wireMockFilePath)
                 .withConfigurationFile(readAgentConfiguration())
                 .addCallbackData("error", "access_denied")
-                .addPayment(createDomesticPayment())
+                .withPayment(createDomesticPayment())
                 .buildWithoutLogin(PaymentGBCommand.class);
     }
 

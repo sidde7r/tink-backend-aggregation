@@ -83,7 +83,7 @@ public class SantanderAgentWiremockTest {
         return AgentWireMockPaymentTest.builder(MarketCode.UK, PROVIDER_NAME, wireMockFilePath)
                 .withConfigurationFile(readAgentConfiguration())
                 .addCallbackData("code", AUTH_CODE)
-                .addPayment(payment)
+                .withPayment(payment)
                 .buildWithoutLogin(PaymentGBCommand.class);
     }
 
@@ -96,7 +96,7 @@ public class SantanderAgentWiremockTest {
                 .withConfigurationFile(readAgentConfiguration())
                 .addCallbackData("state", STATE)
                 .addCallbackData("error", "access_denied")
-                .addPayment(payment)
+                .withPayment(payment)
                 .buildWithoutLogin(PaymentGBCommand.class);
     }
 

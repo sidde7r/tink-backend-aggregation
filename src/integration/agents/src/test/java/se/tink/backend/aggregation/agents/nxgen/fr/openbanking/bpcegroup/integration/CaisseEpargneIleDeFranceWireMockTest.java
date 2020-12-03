@@ -34,7 +34,7 @@ public class CaisseEpargneIleDeFranceWireMockTest {
                 AgentWireMockPaymentTest.builder(
                                 MarketCode.FR, "fr-caisseepargneiledefrance-ob", wireMockFilePath)
                         .withConfigurationFile(configuration)
-                        .addPayment(createMockedDomesticPayment())
+                        .withPayment(createMockedDomesticPayment())
                         .withAgentModule(new BpceGroupWireMockTestModule())
                         .buildWithoutLogin(PaymentCommand.class);
 

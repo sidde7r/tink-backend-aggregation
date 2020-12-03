@@ -19,6 +19,9 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/filter/filters",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/filter/filters/iface",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/instrumentation",
+        "//src/integration/payment:enums",
+        "//src/integration/payment:rpc",
         "//src/libraries/account_identifier",
+        "//third_party:com_google_guava_guava",
     ],
 )

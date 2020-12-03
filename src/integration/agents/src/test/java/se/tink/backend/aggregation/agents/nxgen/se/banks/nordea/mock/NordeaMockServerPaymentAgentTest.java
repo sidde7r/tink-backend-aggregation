@@ -34,7 +34,7 @@ public class NordeaMockServerPaymentAgentTest {
         final AgentWireMockPaymentTest agentWireMockPaymentTest =
                 AgentWireMockPaymentTest.builder(SE, "nordea-bankid", wireMockFilePath)
                         .withConfigurationFile(configuration)
-                        .addTransfer(createMockPayment())
+                        .withTransfer(createMockPayment())
                         .withHttpDebugTrace()
                         .buildWithoutLogin(TransferCommand.class);
 
