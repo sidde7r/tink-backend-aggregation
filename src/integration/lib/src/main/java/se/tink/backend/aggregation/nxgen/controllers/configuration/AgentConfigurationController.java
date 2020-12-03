@@ -413,7 +413,7 @@ public final class AgentConfigurationController implements AgentConfigurationCon
                                                         + clientConfigClass.toString()
                                                         + " is missing"
                                                         + getSecretsServiceParamsString()
-                                                        + ". In the development.yml file."));
+                                                        + ". In the development.yml and test.yml file."));
 
         extractSensitiveValues(clientConfigurationAsObject);
 
