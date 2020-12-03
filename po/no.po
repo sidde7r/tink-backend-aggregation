@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: VERSION\n"
-"POT-Creation-Date: 2020-11-13 14:48+0000\n"
-"PO-Revision-Date: 2020-11-13 14:48+0000\n"
+"POT-Creation-Date: 2020-12-03 10:57+0000\n"
+"PO-Revision-Date: 2020-12-03 10:57+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE TEAM <EMAIL@ADDRESS>\n"
 "Language: no\n"
@@ -280,3 +280,6 @@ msgstr "Autentiseringsfeil."
 
 msgid "The activation code you entered is not valid."
 msgstr "Aktiveringskoden du har oppgitt er ugyldig."
+
+msgid "Reference"
+msgstr "Referanse"

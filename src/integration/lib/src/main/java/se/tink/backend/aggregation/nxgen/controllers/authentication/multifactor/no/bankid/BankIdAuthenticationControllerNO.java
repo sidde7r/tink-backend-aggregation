@@ -26,6 +26,7 @@ import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
+import se.tink.backend.aggregation.agents.utils.supplementalfields.NorwegianFields;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.type.AuthenticationControllerType;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
@@ -110,7 +111,7 @@ public class BankIdAuthenticationControllerNO
                 case TIMEOUT:
                     throw BankIdError.TIMEOUT.exception();
                 default:
-                    logger.warn(String.format("Unknown Norweigan BankIdStatus (%s)", status));
+                    logger.warn(String.format("Unknown Norwegian BankIdStatus (%s)", status));
                     throw BankIdError.UNKNOWN.exception();
             }
 
@@ -118,24 +119,16 @@ public class BankIdAuthenticationControllerNO
         }
 
         logger.info(
-                String.format("Norweigan BankID timed out internally, last status: %s", status));
+                String.format("Norwegian BankID timed out internally, last status: %s", status));
         throw BankIdError.TIMEOUT.exception();
     }
 
     private void displayBankIdReference(Credentials credentials, String bankIdReference) {
-        Field field =
-                Field.builder()
-                        .name("name")
-                        .immutable(true)
-                        .description("Reference")
-                        .value(bankIdReference)
-                        .helpText(
-                                catalog.getString(
-                                        "Continue by clicking update when you have verified the reference and signed with Mobile BankID."))
-                        .build();
-
         credentials.setSupplementalInformation(
-                SerializationUtils.serializeToString(Lists.newArrayList(field)));
+                SerializationUtils.serializeToString(
+                        Lists.newArrayList(
+                                NorwegianFields.BankIdReferenceInfo.build(
+                                        catalog, bankIdReference))));
         credentials.setStatus(CredentialsStatus.AWAITING_SUPPLEMENTAL_INFORMATION);
 
         supplementalRequester.requestSupplementalInformation(credentials, true);

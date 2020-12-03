@@ -51,7 +51,9 @@ public final class DanskeBankNOAgent extends DanskeBankAgent {
                         credentials,
                         deviceId,
                         configuration,
-                        new WebDriverHelper());
+                        new WebDriverHelper(),
+                        supplementalRequester,
+                        catalog);
         return new AutoAuthenticationController(
                 request,
                 systemUpdater,
