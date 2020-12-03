@@ -135,9 +135,9 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
             } catch (BankServiceException e) {
                 handleFailedRefreshDueToBankError(action, e);
                 return AgentWorkerCommandResult.ABORT;
-            } catch (NullPointerException e) {
+            } catch (RuntimeException e) {
                 log.warn(
-                        "Couldn't refresh RefreshableItem({}) because of NullPointerException.",
+                        "Couldn't refresh RefreshableItem({}) because of RuntimeException.",
                         item,
                         e);
                 handleFailedRefreshDueToTinkException(
@@ -173,24 +173,25 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
         return false;
     }
 
+    /*
+     * returns if refresh was fully successful
+     */
     private boolean executeRefresh(Agent agent) throws Exception {
-        boolean fullSuccessfulRefresh = true;
         if (agent instanceof DeprecatedRefreshExecutor) {
             ((DeprecatedRefreshExecutor) agent).refresh();
+            return true;
         } else {
-            fullSuccessfulRefresh =
-                    RefreshExecutorUtils.executeSegregatedRefresher(agent, item, context);
+            return RefreshExecutorUtils.executeSegregatedRefresher(agent, item, context);
         }
-        return fullSuccessfulRefresh;
     }
 
     private void markRefreshAsSuccessful(
             MetricAction action, Agent agent, boolean fullSuccessfulRefresh) {
         if (isAbleToRefreshItem(agent, item)) {
-            if (!fullSuccessfulRefresh) {
-                action.partiallyCompleted();
-            } else {
+            if (fullSuccessfulRefresh) {
                 action.completed();
+            } else {
+                action.partiallyCompleted();
             }
         }
     }
@@ -204,7 +205,7 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
         AdditionalInfo errorInfo = ADDITIONAL_INFO_ERROR_MAPPER.get(e.getError());
         RefreshEvent refreshEvent = getRefreshEvent(errorInfo);
         refreshEventProducer.sendEventForRefreshWithErrorInBankSide(refreshEvent);
-        log.warn("BankServiceException is received and credentials status set UNCHANGED.", e);
+        log.warn("BankServiceException is received and credentials status set TEMPORARY_ERROR.", e);
     }
 
     private void handleFailedRefreshDueToTinkException(
