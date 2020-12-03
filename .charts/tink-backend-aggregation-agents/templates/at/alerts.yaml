@@ -16,7 +16,7 @@ spec:
       for: 5m
       labels:
         severity: ping
-        who: integration
+        who: integration-minions
       annotations:
         description: {{ .Values.kibanaLink }}
           {{ .Values.grafanaLink }}
@@ -34,7 +34,7 @@ spec:
       for: 5m
       labels:
         severity: ping
-        who: integration
+        who: integration-minions
       annotations:
         description: {{ .Values.kibanaLink }}
           {{ .Values.grafanaLink }}
@@ -55,7 +55,7 @@ spec:
       labels:
         severity: urgent
         priority: P3
-        who: integration
+        who: integration-minions
       annotations:
         description: {{ .Values.kibanaLink }}
           {{ .Values.grafanaLink }}
@@ -75,7 +75,7 @@ spec:
       labels:
         severity: urgent
         priority: P3
-        who: integration
+        who: integration-minions
       annotations:
         description: To learn more check out the metric `tink_agent_login_total`. This
           alert never triggers on agents that did less than 10 operations in the
