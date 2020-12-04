@@ -21,6 +21,7 @@ java_library(
         "//third_party:com_google_code_findbugs_jsr305",
         "//third_party:com_google_guava_guava",
         "//third_party:io_vavr",
+        "//third_party:lombok_libs",
         "//third_party:org_slf4j_slf4j_api",
         "@tink_backend//src/libraries/strings",
     ],
