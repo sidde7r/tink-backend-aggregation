@@ -10,29 +10,26 @@ import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModulesForDecoupledMode;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModulesForProductionMode;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.UkOpenBankingBaseAgent;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.configuration.UkOpenBankingClientConfigurationAdapter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAis;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingConstants.PartyEndpoint;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.module.JwtSignerModule;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.module.UkOpenBankingLocalKeySignerModuleForDecoupledMode;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.module.UkOpenBankingModule;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.UKOpenBankingAis;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.UkOpenBankingV31Ais;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.signer.iface.JwtSigner;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.configuration.UkOpenBankingPisConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.tesco.TescoConstants.Urls.V31;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 
-@AgentDependencyModulesForProductionMode(
-        modules = {UkOpenBankingModule.class, JwtSignerModule.class})
+@AgentDependencyModulesForProductionMode(modules = {TescoModule.class, JwtSignerModule.class})
 @AgentDependencyModulesForDecoupledMode(
         modules = UkOpenBankingLocalKeySignerModuleForDecoupledMode.class)
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, CREDIT_CARDS})
 public final class TescoV31Agent extends UkOpenBankingBaseAgent {
 
     private static final UkOpenBankingAisConfig aisConfig;
-    private final LocalDateTimeSource localDateTimeSource;
 
     static {
         aisConfig =
@@ -51,11 +48,16 @@ public final class TescoV31Agent extends UkOpenBankingBaseAgent {
                 jwtSigner,
                 aisConfig,
                 new UkOpenBankingPisConfiguration(ORG_ID, V31.PIS_API_URL, V31.WELL_KNOWN_URL));
-        this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
     }
 
     @Override
     protected UkOpenBankingAis makeAis() {
         return new UkOpenBankingV31Ais(aisConfig, persistentStorage, localDateTimeSource);
+    }
+
+    @Override
+    protected Class<? extends UkOpenBankingClientConfigurationAdapter>
+            getClientConfigurationFormat() {
+        return TescoClientConfiguration.class;
     }
 }
