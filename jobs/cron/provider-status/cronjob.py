@@ -69,6 +69,9 @@ def is_valid_prometheus_response(response):
 def group_by_market(providers):
     metric_by_market = defaultdict(dict)
     for provider in providers:
+        # This provider has weird metrics 
+        if provider["metric"]["provider"] == "nl-ics-oauth2":
+            continue
         # Metric by market holds the provider metrics by market.
         # Here we update the market by adding the provider together with the calculated value.
         # The calculated value is the number instances where the provider is circuit
