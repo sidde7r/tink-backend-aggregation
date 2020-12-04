@@ -1,9 +1,5 @@
 package se.tink.libraries.http.client;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonParseException;
-import com.google.gson.JsonParser;
 import com.sun.jersey.spi.container.ContainerRequest;
 import com.sun.jersey.spi.container.ContainerRequestFilter;
 import com.sun.jersey.spi.container.ContainerResponse;
@@ -13,12 +9,9 @@ import java.util.stream.Collectors;
 import javax.ws.rs.core.MultivaluedMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.libraries.http.client.masker.SensitiveDataMasker;
 
 public class LoggingFilter implements ContainerRequestFilter, ContainerResponseFilter {
-
     private static final Logger logger = LoggerFactory.getLogger(LoggingFilter.class);
-    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
     @Override
     public ContainerRequest filter(ContainerRequest request) {
@@ -29,7 +22,6 @@ public class LoggingFilter implements ContainerRequestFilter, ContainerResponseF
                 request.setEntityInputStream(new ByteArrayInputStream(rawBody));
             }
             String body = rawBody == null ? null : new String(rawBody);
-            body = SensitiveDataMasker.mask(body);
             String headers = formatHeaders(request.getRequestHeaders());
 
             logger.info(
@@ -38,7 +30,7 @@ public class LoggingFilter implements ContainerRequestFilter, ContainerResponseF
                     request.getRequestUri(),
                     headers,
                     request.getMediaType(),
-                    prettify(body));
+                    body);
         } catch (RuntimeException e) {
             logger.error("sth bad happened when logging incoming request", e);
         }
@@ -56,22 +48,11 @@ public class LoggingFilter implements ContainerRequestFilter, ContainerResponseF
                     response.getStatus(),
                     headers,
                     request.getMediaType(),
-                    prettify(body));
+                    body);
         } catch (RuntimeException e) {
             logger.error("sth bad happened when logging incoming request", e);
         }
         return response;
-    }
-
-    private String prettify(String uglyString) {
-        if (uglyString == null) {
-            return null;
-        }
-        try {
-            return GSON.toJson(new JsonParser().parse(uglyString));
-        } catch (JsonParseException e) {
-            return uglyString;
-        }
     }
 
     private String formatHeaders(MultivaluedMap headers) {
