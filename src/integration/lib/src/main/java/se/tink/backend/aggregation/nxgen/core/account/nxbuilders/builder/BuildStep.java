@@ -6,7 +6,6 @@ import javax.annotation.Nullable;
 import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.account.AccountHolderType;
-import se.tink.backend.aggregation.nxgen.core.account.Balance;
 import se.tink.backend.aggregation.nxgen.core.account.entity.Holder;
 import se.tink.backend.aggregation.source_info.AccountSourceInfo;
 import se.tink.libraries.account.enums.AccountFlag;
@@ -92,8 +91,4 @@ public interface BuildStep<A extends Account, B extends BuildStep<A, B>> {
     B canReceiveExternalTransfer(AccountCapabilities.Answer canReceiveExternalTransfer);
 
     B sourceInfo(AccountSourceInfo sourceInfo);
-
-    B addBalances(@Nonnull List<Balance> balances);
-
-    B addBalances(@Nonnull Balance... balances);
 }
