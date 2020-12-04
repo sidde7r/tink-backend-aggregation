@@ -4,7 +4,6 @@ import static se.tink.backend.aggregation.agents.exceptions.bankservice.BankServ
 import static se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError.NO_BANK_SERVICE;
 
 import com.google.common.base.Strings;
-import java.security.PublicKey;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalUnit;
@@ -24,8 +23,6 @@ import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.entities.ClientMode;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.validator.IdTokenValidator;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.validator.IdTokenValidator.ValidatorMode;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.authenticator.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticator;
@@ -64,8 +61,8 @@ public class OpenIdAuthenticationController
 
     private final RandomValueGenerator randomValueGenerator;
     private final String callbackUri;
-    protected OAuth2Token clientOAuth2Token;
     private final URL appToAppRedirectURL;
+    private final OpenIdAuthenticationValidator authenticationValidator;
 
     public OpenIdAuthenticationController(
             PersistentStorage persistentStorage,
@@ -76,7 +73,8 @@ public class OpenIdAuthenticationController
             StrongAuthenticationState strongAuthenticationState,
             String callbackUri,
             URL appToAppRedirectURL,
-            RandomValueGenerator randomValueGenerator) {
+            RandomValueGenerator randomValueGenerator,
+            OpenIdAuthenticationValidator authenticationValidator) {
         this(
                 persistentStorage,
                 supplementalInformationHelper,
@@ -88,7 +86,8 @@ public class OpenIdAuthenticationController
                 DEFAULT_TOKEN_LIFETIME,
                 DEFAULT_TOKEN_LIFETIME_UNIT,
                 appToAppRedirectURL,
-                randomValueGenerator);
+                randomValueGenerator,
+                authenticationValidator);
     }
 
     private OpenIdAuthenticationController(
@@ -102,7 +101,8 @@ public class OpenIdAuthenticationController
             int tokenLifetime,
             TemporalUnit tokenLifetimeUnit,
             URL appToAppRedirectURL,
-            RandomValueGenerator randomValueGenerator) {
+            RandomValueGenerator randomValueGenerator,
+            OpenIdAuthenticationValidator authenticationValidator) {
         this.persistentStorage = persistentStorage;
         this.supplementalInformationHelper = supplementalInformationHelper;
         this.apiClient = apiClient;
@@ -117,6 +117,7 @@ public class OpenIdAuthenticationController
         this.strongAuthenticationState = strongAuthenticationState.getState();
         this.randomValueGenerator = randomValueGenerator;
         this.appToAppRedirectURL = appToAppRedirectURL;
+        this.authenticationValidator = authenticationValidator;
     }
 
     @Override
@@ -197,11 +198,10 @@ public class OpenIdAuthenticationController
 
     @Override
     public ThirdPartyAppResponse<String> init() {
-        clientOAuth2Token =
+        OAuth2Token clientOAuth2Token =
                 apiClient.requestClientCredentials(authenticator.getClientCredentialScope());
-        if (!clientOAuth2Token.isValid()) {
-            throw new IllegalStateException("Client access token is not valid.");
-        }
+
+        authenticationValidator.validateClientToken(clientOAuth2Token);
 
         instantiateAuthFilter(clientOAuth2Token);
 
@@ -278,27 +278,14 @@ public class OpenIdAuthenticationController
                 getCallbackElement(callbackData, OpenIdConstants.CallbackParams.ID_TOKEN);
 
         if (idToken.isPresent()) {
-            validateIdToken(idToken.get(), code, state);
+            authenticationValidator.validateIdToken(idToken.get(), code, state);
         } else {
             log.warn("ID Token (code and state) validation - no token provided");
         }
 
         OAuth2Token oAuth2Token = apiClient.exchangeAccessCode(code);
 
-        if (!oAuth2Token.isValid()) {
-            throw new IllegalStateException("Invalid access token.");
-        }
-
-        if (!oAuth2Token.isBearer()) {
-            throw new IllegalStateException(
-                    String.format("Unknown token type '%s'.", oAuth2Token.getTokenType()));
-        }
-
-        if (oAuth2Token.getIdToken() != null) {
-            validateIdToken(oAuth2Token.getIdToken(), oAuth2Token.getAccessToken());
-        } else {
-            log.warn("ID Token (access token) validation - no token provided");
-        }
+        authenticationValidator.validateAccessToken(oAuth2Token);
 
         credentials.setSessionExpiryDate(
                 OpenBankingTokenExpirationDateHelper.getExpirationDateFrom(
@@ -310,39 +297,6 @@ public class OpenIdAuthenticationController
         instantiateAuthFilter(oAuth2Token);
 
         return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.DONE);
-    }
-
-    private void validateIdToken(String idToken, String code, String state) {
-        Optional<Map<String, PublicKey>> publicKeys = apiClient.getJwkPublicKeys();
-        if (publicKeys.isPresent()) {
-            boolean valid =
-                    new IdTokenValidator(idToken, publicKeys.get())
-                            .withCHashValidation(code)
-                            .withSHashValidation(state)
-                            .withMode(ValidatorMode.LOGGING)
-                            .execute();
-            if (valid) {
-                log.info("ID Token (code and state) validation successful");
-            }
-        } else {
-            log.warn("ID Token (code and state) validation not possible - no public keys");
-        }
-    }
-
-    private void validateIdToken(String idToken, String accessToken) {
-        Optional<Map<String, PublicKey>> publicKeys = apiClient.getJwkPublicKeys();
-        if (publicKeys.isPresent()) {
-            boolean valid =
-                    new IdTokenValidator(idToken, publicKeys.get())
-                            .withAtHashValidation(accessToken)
-                            .withMode(ValidatorMode.LOGGING)
-                            .execute();
-            if (valid) {
-                log.info("ID Token (access token) validation successful");
-            }
-        } else {
-            log.warn("ID Token (access token) validation not possible - no public keys");
-        }
     }
 
     private void saveStrongAuthenticationTime() {
@@ -360,14 +314,7 @@ public class OpenIdAuthenticationController
     }
 
     private void instantiateAuthFilter(OAuth2Token oAuth2Token) {
-        switch (authenticator.getClientCredentialScope()) {
-            case PAYMENTS:
-                apiClient.instantiatePisAuthFilter(oAuth2Token);
-                break;
-            case ACCOUNTS:
-            default:
-                apiClient.instantiateAisAuthFilter(oAuth2Token);
-        }
+        apiClient.instantiateAisAuthFilter(oAuth2Token);
     }
 
     @Override

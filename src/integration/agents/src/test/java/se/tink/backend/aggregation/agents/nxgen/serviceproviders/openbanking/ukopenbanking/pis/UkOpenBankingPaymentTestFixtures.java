@@ -4,12 +4,16 @@ import static java.time.format.DateTimeFormatter.ISO_OFFSET_DATE_TIME;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import com.google.common.collect.ImmutableMap;
 import java.math.BigDecimal;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
+import java.util.Map;
 import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.configuration.ClientInfo;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.dto.common.CreditorAccount;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.dto.common.DebtorAccount;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.dto.common.InstructedAmount;
@@ -25,9 +29,11 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.dto.domesticscheduled.DomesticScheduledPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.dto.domesticscheduled.DomesticScheduledPaymentResponseData;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.entity.ExecutorSignStep;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
+import se.tink.backend.aggregation.nxgen.controllers.signing.SigningStepConstants;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.storage.Storage;
 import se.tink.libraries.account.AccountIdentifier;
@@ -48,6 +54,11 @@ public class UkOpenBankingPaymentTestFixtures {
     public static final String NAME = "DUMMY_NAME";
     public static final String AMOUNT = "10.23";
     public static final String CURRENCY = "GBP";
+    public static final String AUTHORIZE_URL = "https://authorize-url";
+    public static final String CALLBACK_URL = "https://callback-url";
+    public static final String STATE = "DUMMY_STATE";
+    public static final String AUTH_CODE = "DUMMY_AUTH_CODE";
+    public static final String SUPPLEMENTAL_KEY = "DUMMY_SUPPLEMENTAL_KEY";
 
     private static final String ACCOUNT_NUMBER = "12345678901234";
     private static final String REMITTANCE_INFORMATION = "DUMMY_REMITTANCE_INFORMATION";
@@ -60,6 +71,8 @@ public class UkOpenBankingPaymentTestFixtures {
     private static final String SCHEME_NAME = "UK.OBIE.SortCodeAccountNumber";
     private static final String PROVIDER_NAME = "uk-dummy-prov";
     private static final Instant NOW = Instant.now();
+    private static final String CLIENT_ID = "DUMMY_CLIENT_ID";
+    private static final String ID_TOKEN = "DUMMY_ID_TOKEN";
 
     public static Payment createPayment() {
         return createPaymentWithStatus(PaymentStatus.PENDING);
@@ -227,6 +240,57 @@ public class UkOpenBankingPaymentTestFixtures {
         when(clockMock.getZone()).thenReturn(ZoneOffset.UTC);
 
         return clockMock;
+    }
+
+    public static ClientInfo createClientInfo() {
+        final ClientInfo clientInfoMock = mock(ClientInfo.class);
+
+        when(clientInfoMock.getClientId()).thenReturn(CLIENT_ID);
+
+        return clientInfoMock;
+    }
+
+    public static StrongAuthenticationState createStrongAuthenticationState() {
+        final StrongAuthenticationState strongAuthenticationStateMock =
+                mock(StrongAuthenticationState.class);
+
+        when(strongAuthenticationStateMock.getState()).thenReturn(STATE);
+        when(strongAuthenticationStateMock.getSupplementalKey()).thenReturn(SUPPLEMENTAL_KEY);
+
+        return strongAuthenticationStateMock;
+    }
+
+    public static Map<String, String> createCorrectCallbackData() {
+        return ImmutableMap.of(
+                OpenIdConstants.CallbackParams.CODE, AUTH_CODE,
+                OpenIdConstants.CallbackParams.ID_TOKEN, ID_TOKEN,
+                OpenIdConstants.Params.STATE, STATE);
+    }
+
+    public static Map<String, String> createCallbackDataWithNoCode() {
+        return ImmutableMap.of(
+                OpenIdConstants.CallbackParams.ID_TOKEN, ID_TOKEN,
+                OpenIdConstants.Params.STATE, STATE);
+    }
+
+    public static Map<String, String> createCallbackDataWithErrorAndDescription() {
+        return ImmutableMap.of(
+                OpenIdConstants.CallbackParams.ERROR, OpenIdConstants.Errors.ACCESS_DENIED,
+                OpenIdConstants.CallbackParams.ERROR_DESCRIPTION,
+                        OpenIdConstants.Errors.ACCESS_DENIED,
+                OpenIdConstants.Params.STATE, STATE);
+    }
+
+    public static Map<String, String> createCallbackDataWithErrorAndNoDescription() {
+        return ImmutableMap.of(
+                OpenIdConstants.CallbackParams.ERROR,
+                OpenIdConstants.Errors.ACCESS_DENIED,
+                OpenIdConstants.Params.STATE,
+                STATE);
+    }
+
+    static PaymentMultiStepRequest createPaymentMultiStepRequestFoAuthenticateStep() {
+        return createPaymentMultiStepRequest(SigningStepConstants.STEP_INIT);
     }
 
     static PaymentMultiStepRequest createPaymentMultiStepRequestForExecutePaymentStep() {

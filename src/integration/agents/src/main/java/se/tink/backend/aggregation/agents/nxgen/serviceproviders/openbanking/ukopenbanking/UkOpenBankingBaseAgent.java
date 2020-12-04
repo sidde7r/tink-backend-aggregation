@@ -27,12 +27,16 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.tls.TlsConfigurationSetter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.FinancialOrganisationIdFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticationController;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticationValidator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.configuration.ClientInfo;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.configuration.SoftwareStatementAssertion;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.signer.EidasJwtSigner;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.signer.iface.JwtSigner;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentExecutor;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.authenticator.UkOpenBankingAuthenticationErrorMatcher;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.authenticator.UkOpenBankingPaymentAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.authenticator.UkOpenBankingPisAuthFilterInstantiator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.configuration.UkOpenBankingPisConfig;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
@@ -337,29 +341,46 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
                 this.strongAuthenticationState,
                 this.request.getCallbackUri(),
                 this.aisConfig.getAppToAppURL(),
-                this.randomValueGenerator);
+                this.randomValueGenerator,
+                new OpenIdAuthenticationValidator(this.apiClient));
     }
 
     @Override
     public Optional<PaymentController> constructPaymentController() {
-        if (pisConfig == null) {
+        if (this.pisConfig == null) {
             return Optional.empty();
         }
 
         UkOpenBankingPaymentApiClient paymentApiClient = createPaymentApiClient();
+        OpenIdAuthenticationValidator authenticationValidator =
+                new OpenIdAuthenticationValidator(paymentApiClient);
+        UkOpenBankingPisAuthFilterInstantiator authFilterInstantiator =
+                new UkOpenBankingPisAuthFilterInstantiator(
+                        paymentApiClient, authenticationValidator);
+        UkOpenBankingPaymentAuthenticator paymentAuthenticator =
+                createPaymentAuthenticator(paymentApiClient, authenticationValidator);
 
         UkOpenBankingPaymentExecutor paymentExecutor =
                 new UkOpenBankingPaymentExecutor(
-                        softwareStatement,
-                        providerConfiguration,
                         paymentApiClient,
-                        supplementalInformationHelper,
-                        credentials,
-                        strongAuthenticationState,
-                        randomValueGenerator,
-                        persistentStorage);
+                        this.credentials,
+                        paymentAuthenticator,
+                        authFilterInstantiator);
 
         return Optional.of(new PaymentController(paymentExecutor, paymentExecutor));
+    }
+
+    private UkOpenBankingPaymentAuthenticator createPaymentAuthenticator(
+            UkOpenBankingPaymentApiClient paymentApiClient,
+            OpenIdAuthenticationValidator authenticationValidator) {
+        return new UkOpenBankingPaymentAuthenticator(
+                paymentApiClient,
+                authenticationValidator,
+                new UkOpenBankingAuthenticationErrorMatcher(),
+                this.strongAuthenticationState,
+                this.supplementalInformationHelper,
+                this.request.getCallbackUri(),
+                this.providerConfiguration);
     }
 
     private UkOpenBankingPaymentApiClient createPaymentApiClient() {

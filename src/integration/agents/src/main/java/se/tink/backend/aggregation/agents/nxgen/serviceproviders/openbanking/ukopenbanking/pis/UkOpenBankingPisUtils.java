@@ -11,14 +11,6 @@ public class UkOpenBankingPisUtils {
     private static final List<String> HSBC_FAMILY =
             Arrays.asList("uk-hsbc-oauth2", "uk-firstdirect-oauth2");
 
-    static TransferExecutionException createFailedTransferException() {
-        return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                .setMessage(
-                        "Payment failed - authorisation of payment failed, needs further investigation.")
-                .setEndUserMessage("Authorisation of payment failed.")
-                .build();
-    }
-
     static void validateRemittanceWithProviderOrThrow(
             String providerName, RemittanceInformation remittanceInformation) {
         if (HSBC_FAMILY.contains(providerName)
