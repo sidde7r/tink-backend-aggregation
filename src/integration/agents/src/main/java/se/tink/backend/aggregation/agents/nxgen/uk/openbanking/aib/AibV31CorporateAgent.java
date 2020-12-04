@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.aib;
 
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CREDIT_CARDS;
-import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.IDENTITY_DATA;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.TRANSFERS;
 
@@ -22,28 +21,26 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.configuration.UkOpenBankingPisConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.aib.AibConstants.Urls.V31;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 
 @AgentDependencyModulesForProductionMode(
         modules = {UkOpenBankingModule.class, JwtSignerModule.class})
 @AgentDependencyModulesForDecoupledMode(
         modules = UkOpenBankingLocalKeySignerModuleForDecoupledMode.class)
-@AgentCapabilities({CHECKING_ACCOUNTS, CREDIT_CARDS, SAVINGS_ACCOUNTS, IDENTITY_DATA, TRANSFERS})
-public final class AibV31Agent extends UkOpenBankingBaseAgent {
+@AgentCapabilities({CHECKING_ACCOUNTS, CREDIT_CARDS, SAVINGS_ACCOUNTS, TRANSFERS})
+public final class AibV31CorporateAgent extends UkOpenBankingBaseAgent {
     private static final UkOpenBankingAisConfig aisConfig;
-    private final LocalDateTimeSource localDateTimeSource;
 
     static {
         aisConfig =
                 UKOpenBankingAis.builder()
                         .withApiBaseURL(V31.AIS_API_URL)
-                        .withWellKnownURL(V31.WELL_KNOWN_PERSONAL_URL)
+                        .withWellKnownURL(V31.WELL_KNOWN_CORPORATE_URL)
                         .withOrganisationId(AibConstants.ORGANISATION_ID)
                         .build();
     }
 
     @Inject
-    public AibV31Agent(AgentComponentProvider componentProvider, JwtSigner jwtSigner) {
+    public AibV31CorporateAgent(AgentComponentProvider componentProvider, JwtSigner jwtSigner) {
         super(
                 componentProvider,
                 jwtSigner,
@@ -52,7 +49,6 @@ public final class AibV31Agent extends UkOpenBankingBaseAgent {
                         AibConstants.ORGANISATION_ID,
                         V31.PIS_API_URL,
                         V31.WELL_KNOWN_PERSONAL_URL));
-        this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
     }
 
     @Override
