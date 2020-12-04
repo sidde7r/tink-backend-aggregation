@@ -14,8 +14,7 @@ import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator.SwedbankAuthenticationController;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator.SwedbankAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator.SwedbankDecoupledAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator.SwedbankPaymentAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.configuration.SwedbankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.executor.payment.SwedbankPaymentExecutor;
@@ -38,7 +37,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDe
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.BankServiceInternalErrorFilter;
 
-/** This agent is not ready for production. Its for test and documentation of the flow. */
 @AgentDependencyModules(modules = QSealcSignerModuleRSASHA256.class)
 @AgentCapabilities({CHECKING_ACCOUNTS})
 public final class SwedbankAgent extends NextGenerationAgent
@@ -84,23 +82,18 @@ public final class SwedbankAgent extends NextGenerationAgent
 
     @Override
     protected Authenticator constructAuthenticator() {
-
-        SwedbankAuthenticator authenticator =
-                new SwedbankAuthenticator(apiClient, persistentStorage);
-
-        SwedbankAuthenticationController swedbankAuthenticationController =
-                new SwedbankAuthenticationController(
-                        persistentStorage, supplementalRequester, authenticator, credentials);
+        BankIdAuthenticationController bankIdAuthenticationController =
+                new BankIdAuthenticationController<>(
+                        supplementalRequester,
+                        new SwedbankDecoupledAuthenticator(apiClient),
+                        persistentStorage,
+                        credentials);
 
         return new AutoAuthenticationController(
                 request,
-                context,
-                new BankIdAuthenticationController<>(
-                        supplementalRequester,
-                        swedbankAuthenticationController,
-                        persistentStorage,
-                        credentials),
-                swedbankAuthenticationController);
+                systemUpdater,
+                bankIdAuthenticationController,
+                bankIdAuthenticationController);
     }
 
     @Override
@@ -132,7 +125,7 @@ public final class SwedbankAgent extends NextGenerationAgent
         return new TransactionalAccountRefreshController(
                 metricRefreshController,
                 updateController,
-                new SwedbankTransactionalAccountFetcher(apiClient),
+                new SwedbankTransactionalAccountFetcher(apiClient, persistentStorage),
                 new SwedbankTransactionFetcher(apiClient, supplementalInformationHelper));
     }
 
