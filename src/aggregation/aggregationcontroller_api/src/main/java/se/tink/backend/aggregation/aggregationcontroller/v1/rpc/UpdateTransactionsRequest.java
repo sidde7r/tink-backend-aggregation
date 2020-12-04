@@ -6,10 +6,11 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.google.common.base.MoreObjects;
 import java.util.List;
 import se.tink.backend.aggregation.agents.models.Transaction;
+import se.tink.libraries.jersey.utils.SafelyLoggable;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(Include.NON_NULL)
-public class UpdateTransactionsRequest {
+public class UpdateTransactionsRequest implements SafelyLoggable {
     private List<Transaction> transactions;
     private String user;
     private String credentials;
@@ -73,6 +74,11 @@ public class UpdateTransactionsRequest {
                 .add("operationId", operationId)
                 .add("market", market)
                 .toString();
+    }
+
+    @Override
+    public String toSafeString() {
+        return toString();
     }
 
     public CredentialsRequestType getRequestType() {

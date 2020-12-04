@@ -43,6 +43,7 @@ import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpsertRegulatory
 import se.tink.backend.aggregation.configuration.models.AccountInformationServiceConfiguration;
 import se.tink.backend.system.rpc.UpdateFraudDetailsRequest;
 import se.tink.libraries.http.client.WebResourceFactory;
+import se.tink.libraries.jersey.utils.ClientLoggingFilter;
 import se.tink.libraries.jersey.utils.JerseyUtils;
 import se.tink.libraries.signableoperation.rpc.SignableOperation;
 
@@ -81,6 +82,7 @@ public class AggregationControllerAggregationClientImpl
                         EMPTY_PASSWORD,
                         hostConfiguration.isDisablerequestcompression(),
                         this.config);
+        client.addFilter(new ClientLoggingFilter());
 
         JerseyUtils.registerAPIAccessToken(client, hostConfiguration.getApiToken());
 
@@ -135,7 +137,6 @@ public class AggregationControllerAggregationClientImpl
     @Override
     public Response updateTransactionsAsynchronously(
             HostConfiguration hostConfiguration, UpdateTransactionsRequest request) {
-        log.info(".updateTransactionsAsynchronously request: {}", request.toString());
         return requestExecuter(
                 () ->
                         getProcessService(hostConfiguration)
