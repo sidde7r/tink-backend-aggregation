@@ -1,16 +1,18 @@
 package se.tink.backend.aggregation.aggregationcontroller.v1.rpc;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.google.common.base.MoreObjects;
 import se.tink.libraries.enums.StatisticGenerationMode;
 import se.tink.libraries.enums.StatisticMode;
+import se.tink.libraries.jersey.utils.SafelyLoggable;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class GenerateStatisticsAndActivitiesRequest {
+public class GenerateStatisticsAndActivitiesRequest implements SafelyLoggable {
     private String credentialsId;
     private StatisticMode mode;
     private boolean userTriggered = false;
     private boolean takeReadlock = true;
-
     private String userId;
     private StatisticGenerationMode statisticGenerationMode = StatisticGenerationMode.REWRITE;
 
@@ -60,5 +62,18 @@ public class GenerateStatisticsAndActivitiesRequest {
 
     public void setStatisticGenerationMode(StatisticGenerationMode statisticGenerationMode) {
         this.statisticGenerationMode = statisticGenerationMode;
+    }
+
+    @JsonIgnore
+    @Override
+    public String toSafeString() {
+        return MoreObjects.toStringHelper(this)
+                .add("credentialsId", credentialsId)
+                .add("mode", mode)
+                .add("userTriggered", userTriggered)
+                .add("takeReadlock", takeReadlock)
+                .add("userId", userId)
+                .add("statisticGenerationMode", statisticGenerationMode)
+                .toString();
     }
 }
