@@ -74,7 +74,12 @@ public class DanskeBankNOBankIdAuthenticator implements TypedAuthenticator, Auto
 
         String username = credentials.getField(Field.Key.USERNAME);
         String serviceCode = credentials.getField(Field.Key.PASSWORD);
-        if (Strings.isNullOrEmpty(username) || Strings.isNullOrEmpty(serviceCode)) {
+        String deviceSerialNumber =
+                this.persistentStorage.get(DanskeBankConstants.Persist.DEVICE_SERIAL_NUMBER);
+
+        if (Strings.isNullOrEmpty(username)
+                || Strings.isNullOrEmpty(serviceCode)
+                || Strings.isNullOrEmpty(deviceSerialNumber)) {
             throw SessionError.SESSION_EXPIRED.exception();
         }
 
@@ -85,18 +90,14 @@ public class DanskeBankNOBankIdAuthenticator implements TypedAuthenticator, Auto
             throw SessionError.SESSION_EXPIRED.exception(e);
         }
 
-        String otpChallenge = getPinnedDeviceOtpChallenge();
-        authenticateWithOtpChallenge(username, otpChallenge);
+        String otpChallenge = getPinnedDeviceOtpChallenge(deviceSerialNumber);
+        authenticateWithOtpChallenge(username, deviceSerialNumber, otpChallenge);
     }
 
-    private String getPinnedDeviceOtpChallenge() throws SessionException {
+    private String getPinnedDeviceOtpChallenge(String deviceSerialNumber) throws SessionException {
         CheckDeviceResponse checkDeviceResponse;
         try {
-            checkDeviceResponse =
-                    this.apiClient.checkDevice(
-                            this.persistentStorage.get(
-                                    DanskeBankConstants.Persist.DEVICE_SERIAL_NUMBER),
-                            null);
+            checkDeviceResponse = this.apiClient.checkDevice(deviceSerialNumber, null);
         } catch (HttpResponseException e) {
             HttpResponse response = e.getResponse();
             if (response.getStatus() != 401) {
@@ -122,7 +123,8 @@ public class DanskeBankNOBankIdAuthenticator implements TypedAuthenticator, Auto
         return moreInformationEntity.getOtpChallenge();
     }
 
-    private void authenticateWithOtpChallenge(String username, String otpChallenge)
+    private void authenticateWithOtpChallenge(
+            String username, String deviceSerialNumber, String otpChallenge)
             throws SessionException {
         String checkChallengeWithDeviceInfo = this.getStepupDynamicJs();
 
@@ -193,10 +195,7 @@ public class DanskeBankNOBankIdAuthenticator implements TypedAuthenticator, Auto
             try {
                 // Make final check to confirm with step up token
                 CheckDeviceResponse checkDeviceResponse =
-                        this.apiClient.checkDevice(
-                                this.persistentStorage.get(
-                                        DanskeBankConstants.Persist.DEVICE_SERIAL_NUMBER),
-                                trustedStepUpToken);
+                        this.apiClient.checkDevice(deviceSerialNumber, trustedStepUpToken);
 
                 if (checkDeviceResponse.getError() != null) {
                     throw SessionError.SESSION_EXPIRED.exception();
