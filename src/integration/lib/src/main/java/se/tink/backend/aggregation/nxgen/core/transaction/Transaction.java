@@ -5,7 +5,9 @@ import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
+import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType;
 import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
 import se.tink.backend.aggregation.agents.models.TransactionTypes;
 import se.tink.libraries.amount.Amount;
@@ -17,8 +19,26 @@ public class Transaction extends AggregationTransaction {
     private final FieldsMigrations fieldsMigrations;
 
     protected Transaction(
-            ExactCurrencyAmount amount, Date date, String description, boolean pending) {
-        this(amount, date, description, pending, null, null, TransactionTypes.DEFAULT, null, null);
+            ExactCurrencyAmount amount,
+            Date date,
+            String description,
+            boolean pending,
+            Map<TransactionExternalSystemIdType, String> externalSystemIds,
+            Boolean mutable,
+            List<TransactionDate> transactionDates) {
+        this(
+                amount,
+                date,
+                description,
+                pending,
+                null,
+                null,
+                TransactionTypes.DEFAULT,
+                null,
+                null,
+                externalSystemIds,
+                mutable,
+                transactionDates);
     }
 
     protected Transaction(
@@ -30,8 +50,20 @@ public class Transaction extends AggregationTransaction {
             String externalId,
             TransactionTypes type,
             FieldsMigrations fieldsMigrations,
-            Map<TransactionPayloadTypes, String> payload) {
-        super(amount, date, description, rawDetails, type, payload);
+            Map<TransactionPayloadTypes, String> payload,
+            Map<TransactionExternalSystemIdType, String> externalSystemIds,
+            Boolean mutable,
+            List<TransactionDate> transactionDates) {
+        super(
+                amount,
+                date,
+                description,
+                rawDetails,
+                type,
+                payload,
+                externalSystemIds,
+                mutable,
+                transactionDates);
         this.pending = pending;
         this.externalId = externalId;
         this.fieldsMigrations = fieldsMigrations;
@@ -151,7 +183,10 @@ public class Transaction extends AggregationTransaction {
                     getExternalId(),
                     getType(),
                     fieldsMigrations,
-                    getPayload());
+                    getPayload(),
+                    getExternalSystemIds(),
+                    getMutable(),
+                    getTransactionDates());
         }
     }
 }
