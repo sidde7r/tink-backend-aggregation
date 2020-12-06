@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cr
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
@@ -418,19 +419,18 @@ public class CrosskeyBaseApiClient {
 
     private String extractMinimalTransactionDateFromException(
             TransactionExceptionEntity exception) {
-        Pattern pattern = Pattern.compile("\\d{4}-\\d{2}-\\d{2}");
+        Pattern pattern = Pattern.compile("\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}");
         String exceptionMessage = exception.getMessage();
         Matcher matcher = pattern.matcher(exceptionMessage);
         List<String> allGroups = new LinkedList<>();
         while (matcher.find()) {
             allGroups.add(matcher.group());
         }
-        if (allGroups.size() < 4) {
+        if (allGroups.size() < 2) {
             throw new IllegalStateException(
                     String.format("Unknown exception message: %s", exceptionMessage));
         }
-        return LocalDate.parse(allGroups.get(2))
-                .atTime(0, 0)
+        return LocalDateTime.parse(allGroups.get(0))
                 .format(DateTimeFormatter.ofPattern(Format.TRANSACTION_DATE_FETCHER));
     }
 }
