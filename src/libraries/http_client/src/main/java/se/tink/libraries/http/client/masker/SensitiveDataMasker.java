@@ -29,7 +29,14 @@ public class SensitiveDataMasker {
         X_PATHS_FOR_SENSITIVE_FIELDS.forEach(
                 xpath -> {
                     try {
-                        parsed.map(xpath, (o, configuration) -> String.format(MASK, hash(o)));
+                        parsed.map(
+                                xpath,
+                                (o, configuration) -> {
+                                    if (o == null) {
+                                        return null;
+                                    }
+                                    return String.format(MASK, hash(o));
+                                });
                     } catch (PathNotFoundException ignored) {
                         // ignored
                     }
