@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank;
 
+import com.google.common.base.Strings;
 import java.security.cert.CertificateException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -69,7 +70,6 @@ public final class SwedbankApiClient {
     private final SwedbankConfiguration configuration;
     private final String redirectUrl;
     private final String signingKeyId;
-    private FetchAccountResponse accounts;
     private final CredentialsRequest credentialsRequest;
 
     public SwedbankApiClient(
@@ -145,16 +145,16 @@ public final class SwedbankApiClient {
     }
 
     public FetchAccountResponse fetchAccounts() {
-        if (accounts == null) {
-            accounts =
-                    createRequestInSession(SwedbankConstants.Urls.ACCOUNTS, true)
-                            .queryParam(QueryKeys.APP_ID, getConfiguration().getClientId())
-                            .get(FetchAccountResponse.class);
-        }
-        return accounts;
+        return createRequestInSession(SwedbankConstants.Urls.ACCOUNTS, true)
+                .queryParam(QueryKeys.APP_ID, getConfiguration().getClientId())
+                .get(FetchAccountResponse.class);
     }
 
-    public boolean checkIfConsentIsApproved(String consentId) {
+    public boolean isConsentValid() {
+        String consentId = persistentStorage.get(StorageKeys.CONSENT);
+        if (Strings.isNullOrEmpty(consentId)) {
+            return false;
+        }
         return createRequestInSession(
                         Urls.CONSENT_STATUS.parameter(UrlParameters.CONSENT_ID, consentId), false)
                 .get(ConsentResponse.class)

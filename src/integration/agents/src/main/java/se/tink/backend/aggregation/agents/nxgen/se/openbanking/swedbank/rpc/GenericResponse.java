@@ -47,6 +47,22 @@ public class GenericResponse {
     }
 
     @JsonIgnore
+    public boolean isConsentInvalid() {
+        return containsError(ErrorCodes.CONSENT_INVALID)
+                || containsError(ErrorCodes.CONSENT_UNKNOWN);
+    }
+
+    @JsonIgnore
+    public boolean isConsentExpired() {
+        return containsError(ErrorCodes.CONSENT_EXPIRED);
+    }
+
+    @JsonIgnore
+    public boolean isResourceUnknown() {
+        return containsError(ErrorCodes.RESOURCE_UNKNOWN);
+    }
+
+    @JsonIgnore
     private boolean containsError(String errorCode) {
         return ListUtils.emptyIfNull(tppMessages).stream()
                 .anyMatch(

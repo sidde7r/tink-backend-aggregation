@@ -192,6 +192,10 @@ public final class SwedbankConstants {
         public static final String USER_CANCEL = "USER_CANCEL";
         public static final String LOGIN_SESSION_INTERRUPTED = "Other login session is ongoing";
         public static final String EMPTY_USER_ID = "Mandatory header value is empty: PSU-ID";
+        public static final String CONSENT_INVALID = "CONSENT_INVALID";
+        public static final String CONSENT_EXPIRED = "CONSENT_EXPIRED";
+        public static final String CONSENT_UNKNOWN = "CONSENT_UNKNOWN";
+        public static final String RESOURCE_UNKNOWN = "RESOURCE_UNKNOWN";
     }
 
     public static final class AccountIdentifierPrefix {

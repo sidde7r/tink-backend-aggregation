@@ -25,8 +25,8 @@ public class SwedbankAgentTest {
                         .expectLoggedIn(false)
                         .setFinancialInstitutionId("swedbank")
                         .setAppId("tink")
-                        .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(false);
+                        .loadCredentialsBefore(true)
+                        .saveCredentialsAfter(true);
     }
 
     @Test
