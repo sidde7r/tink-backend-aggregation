@@ -1,11 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis;
 
-import com.google.common.collect.ImmutableMap;
 import com.google.common.util.concurrent.Uninterruptibles;
-import java.time.Clock;
 import java.util.ArrayList;
-import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
@@ -13,13 +12,8 @@ import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.authenticator.UkOpenBankingPaymentAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.authenticator.UkOpenBankingPisAuthFilterInstantiator;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.converter.domestic.DomesticPaymentConverter;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.converter.domesticscheduled.DomesticScheduledPaymentConverter;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.UkOpenBankingPaymentApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.entity.ExecutorSignStep;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.helper.ApiClientWrapper;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.helper.DomesticPaymentApiClientWrapper;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.helper.DomesticScheduledPaymentApiClientWrapper;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.helper.UkOpenBankingPaymentHelper;
 import se.tink.backend.aggregation.agents.utils.remittanceinformation.RemittanceInformationValidator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepRequest;
@@ -35,32 +29,17 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.libraries.payment.enums.PaymentStatus;
-import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 @Slf4j
+@RequiredArgsConstructor
 public class UkOpenBankingPaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
 
     private final UkOpenBankingPaymentApiClient apiClient;
     private final Credentials credentials;
-    private final UkOpenBankingPaymentHelper ukOpenBankingPaymentHelper;
     private final UkOpenBankingPaymentAuthenticator authenticator;
     private final UkOpenBankingPisAuthFilterInstantiator authFilterInstantiator;
-
-    public UkOpenBankingPaymentExecutor(
-            UkOpenBankingPaymentApiClient apiClient,
-            Credentials credentials,
-            UkOpenBankingPaymentAuthenticator authenticator,
-            UkOpenBankingPisAuthFilterInstantiator authFilterInstantiator) {
-
-        this.apiClient = apiClient;
-        this.credentials = credentials;
-        this.ukOpenBankingPaymentHelper =
-                new UkOpenBankingPaymentHelper(this.createApiClientWrapperMap(), Clock.systemUTC());
-        this.authenticator = authenticator;
-        this.authFilterInstantiator = authFilterInstantiator;
-    }
 
     @Override
     public PaymentResponse create(PaymentRequest paymentRequest) throws PaymentException {
@@ -82,18 +61,20 @@ public class UkOpenBankingPaymentExecutor implements PaymentExecutor, FetchableP
     private PaymentResponse createConsentWithRetry(PaymentRequest paymentRequest) {
         for (int i = 0; i < 3; i++) {
             try {
-                return ukOpenBankingPaymentHelper.createConsent(paymentRequest);
+                return apiClient.createPaymentConsent(paymentRequest);
             } catch (HttpResponseException e) {
                 Uninterruptibles.sleepUninterruptibly(2000 * i, TimeUnit.MILLISECONDS);
             }
         }
 
-        return ukOpenBankingPaymentHelper.createConsent(paymentRequest);
+        return apiClient.createPaymentConsent(paymentRequest);
     }
 
     @Override
     public PaymentResponse fetch(PaymentRequest paymentRequest) {
-        return ukOpenBankingPaymentHelper.fetchPaymentIfAlreadyExecutedOrGetConsent(paymentRequest);
+        return getPaymentId(paymentRequest)
+                .map(apiClient::getPayment)
+                .orElseGet(() -> apiClient.getPaymentConsent(getConsentId(paymentRequest)));
     }
 
     @Override
@@ -139,8 +120,11 @@ public class UkOpenBankingPaymentExecutor implements PaymentExecutor, FetchableP
         String instructionIdentification = paymentMultiStepRequest.getPayment().getUniqueId();
 
         PaymentResponse paymentResponse =
-                ukOpenBankingPaymentHelper.executePayment(
-                        paymentMultiStepRequest, endToEndIdentification, instructionIdentification);
+                apiClient.executePayment(
+                        paymentMultiStepRequest,
+                        getConsentId(paymentMultiStepRequest),
+                        endToEndIdentification,
+                        instructionIdentification);
 
         // Should be handled on a higher level than here, but don't want to pollute the
         // payment controller with TransferExecutionException usage. Ticket PAY2-188 will
@@ -172,17 +156,21 @@ public class UkOpenBankingPaymentExecutor implements PaymentExecutor, FetchableP
                 "fetchMultiple not yet implemented for " + this.getClass().getName());
     }
 
-    private Map<PaymentType, ApiClientWrapper> createApiClientWrapperMap() {
-        final DomesticPaymentApiClientWrapper domesticPaymentApiClientWrapper =
-                new DomesticPaymentApiClientWrapper(this.apiClient, new DomesticPaymentConverter());
+    private static Optional<String> getPaymentId(PaymentRequest paymentRequest) {
+        return Optional.ofNullable(
+                paymentRequest
+                        .getStorage()
+                        .get(UkOpenBankingV31PaymentConstants.Storage.PAYMENT_ID));
+    }
 
-        return ImmutableMap.of(
-                PaymentType.DOMESTIC,
-                domesticPaymentApiClientWrapper,
-                PaymentType.DOMESTIC_FUTURE,
-                new DomesticScheduledPaymentApiClientWrapper(
-                        this.apiClient, new DomesticScheduledPaymentConverter()),
-                PaymentType.SEPA,
-                domesticPaymentApiClientWrapper);
+    public static String getConsentId(PaymentRequest paymentRequest) {
+        final Optional<String> maybeConsentId =
+                Optional.ofNullable(
+                        paymentRequest
+                                .getStorage()
+                                .get(UkOpenBankingV31PaymentConstants.Storage.CONSENT_ID));
+
+        return maybeConsentId.orElseThrow(
+                () -> new IllegalArgumentException(("consentId cannot be null or empty!")));
     }
 }

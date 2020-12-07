@@ -35,7 +35,7 @@ public class SEBWireMockPaymentTest {
                 AgentWireMockPaymentTest.builder(MarketCode.SE, "se-seb-ob", wireMockFilePath)
                         .withConfigurationFile(configuration)
                         .withHttpDebugTrace()
-                        .addPayment(createMockedDomesticPayment())
+                        .withPayment(createMockedDomesticPayment())
                         .addCredentialField(Field.Key.USERNAME.getFieldKey(), "197710120000")
                         .buildWithLogin(PaymentCommand.class);
 
@@ -56,7 +56,7 @@ public class SEBWireMockPaymentTest {
                 AgentWireMockPaymentTest.builder(MarketCode.SE, "se-seb-ob", wireMockFilePath)
                         .withConfigurationFile(configuration)
                         .withHttpDebugTrace()
-                        .addPayment(createTransfer())
+                        .withPayment(createTransfer())
                         .addCredentialField(Field.Key.USERNAME.getFieldKey(), "197710120000")
                         .buildWithLogin(PaymentCommand.class);
 

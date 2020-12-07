@@ -14,27 +14,26 @@ import java.util.Map;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.configuration.ClientInfo;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.dto.common.CreditorAccount;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.dto.common.DebtorAccount;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.dto.common.InstructedAmount;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.dto.common.RemittanceInformation;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.dto.domestic.DomesticPaymentConsentResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.dto.domestic.DomesticPaymentConsentResponseData;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.dto.domestic.DomesticPaymentInitiation;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.dto.domestic.DomesticPaymentResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.dto.domestic.DomesticPaymentResponseData;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.dto.domesticscheduled.DomesticScheduledPaymentConsentResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.dto.domesticscheduled.DomesticScheduledPaymentConsentResponseData;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.dto.domesticscheduled.DomesticScheduledPaymentInitiation;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.dto.domesticscheduled.DomesticScheduledPaymentResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.dto.domesticscheduled.DomesticScheduledPaymentResponseData;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.dto.CreditorAccount;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.dto.DebtorAccount;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.dto.InstructedAmount;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.dto.RemittanceInformation;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domestic.dto.DomesticPaymentConsentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domestic.dto.DomesticPaymentConsentResponseData;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domestic.dto.DomesticPaymentInitiation;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domestic.dto.DomesticPaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domestic.dto.DomesticPaymentResponseData;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domesticscheduled.dto.DomesticScheduledPaymentConsentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domesticscheduled.dto.DomesticScheduledPaymentConsentResponseData;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domesticscheduled.dto.DomesticScheduledPaymentInitiation;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domesticscheduled.dto.DomesticScheduledPaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domesticscheduled.dto.DomesticScheduledPaymentResponseData;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.entity.ExecutorSignStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.signing.SigningStepConstants;
-import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.storage.Storage;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
@@ -289,20 +288,33 @@ public class UkOpenBankingPaymentTestFixtures {
                 STATE);
     }
 
+    public static Payment createTodayPayment(Clock clockMock) {
+        final LocalDate executionDate = LocalDate.now(clockMock);
+
+        return createPayment(executionDate);
+    }
+
+    public static Payment createFutureDatePayment(Clock clockMock) {
+        final Payment paymentMock = mock(Payment.class);
+
+        when(paymentMock.getCreditorAndDebtorAccountType())
+                .thenReturn(
+                        new Pair<>(
+                                AccountIdentifier.Type.SORT_CODE,
+                                AccountIdentifier.Type.SORT_CODE));
+
+        final LocalDate executionDate = LocalDate.now(clockMock).plusDays(1L);
+        when(paymentMock.getExecutionDate()).thenReturn(executionDate);
+
+        return paymentMock;
+    }
+
     static PaymentMultiStepRequest createPaymentMultiStepRequestFoAuthenticateStep() {
         return createPaymentMultiStepRequest(SigningStepConstants.STEP_INIT);
     }
 
     static PaymentMultiStepRequest createPaymentMultiStepRequestForExecutePaymentStep() {
         return createPaymentMultiStepRequest(ExecutorSignStep.EXECUTE_PAYMENT.name());
-    }
-
-    static OAuth2Token createOAuth2Token() {
-        final OAuth2Token tokenMock = mock(OAuth2Token.class);
-
-        when(tokenMock.isValid()).thenReturn(Boolean.TRUE);
-
-        return tokenMock;
     }
 
     private static PaymentMultiStepRequest createPaymentMultiStepRequest(String step) {
@@ -318,12 +330,6 @@ public class UkOpenBankingPaymentTestFixtures {
         return paymentMultiStepRequestMock;
     }
 
-    private static Payment createTodayPayment(Clock clockMock) {
-        final LocalDate executionDate = LocalDate.now(clockMock);
-
-        return createPayment(executionDate);
-    }
-
     private static Payment createPayment(LocalDate executionDate) {
         final Payment paymentMock = mock(Payment.class);
 
@@ -333,21 +339,6 @@ public class UkOpenBankingPaymentTestFixtures {
                                 AccountIdentifier.Type.SORT_CODE,
                                 AccountIdentifier.Type.SORT_CODE));
 
-        when(paymentMock.getExecutionDate()).thenReturn(executionDate);
-
-        return paymentMock;
-    }
-
-    private static Payment createFutureDatePayment(Clock clockMock) {
-        final Payment paymentMock = mock(Payment.class);
-
-        when(paymentMock.getCreditorAndDebtorAccountType())
-                .thenReturn(
-                        new Pair<>(
-                                AccountIdentifier.Type.SORT_CODE,
-                                AccountIdentifier.Type.SORT_CODE));
-
-        final LocalDate executionDate = LocalDate.now(clockMock).plusDays(1L);
         when(paymentMock.getExecutionDate()).thenReturn(executionDate);
 
         return paymentMock;

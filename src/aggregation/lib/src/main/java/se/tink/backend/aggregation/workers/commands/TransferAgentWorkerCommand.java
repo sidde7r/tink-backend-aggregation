@@ -13,6 +13,7 @@ import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.PaymentControllerable;
 import se.tink.backend.aggregation.agents.TransferExecutor;
 import se.tink.backend.aggregation.agents.TransferExecutorNxgen;
+import se.tink.backend.aggregation.agents.TypedPaymentControllerable;
 import se.tink.backend.aggregation.agents.agent.Agent;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
@@ -115,6 +116,19 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
             if (agent instanceof TransferExecutor) {
                 TransferExecutor transferExecutor = (TransferExecutor) agent;
                 transferExecutor.execute(transfer);
+            } else if (agent instanceof TypedPaymentControllerable) {
+                TypedPaymentControllerable paymentControllerable =
+                        (TypedPaymentControllerable) agent;
+                handlePayment(
+                        paymentControllerable
+                                .getPaymentController(
+                                        PaymentRequest.of(
+                                                        transfer,
+                                                        transferRequest.getProvider().getMarket())
+                                                .getPayment())
+                                .get(),
+                        transfer,
+                        transferRequest.getProvider().getMarket());
             } else if (agent instanceof PaymentControllerable) {
                 PaymentControllerable paymentControllerable = (PaymentControllerable) agent;
 

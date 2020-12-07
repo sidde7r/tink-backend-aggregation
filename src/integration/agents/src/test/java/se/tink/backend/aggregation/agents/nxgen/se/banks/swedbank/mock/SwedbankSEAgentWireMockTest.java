@@ -93,7 +93,7 @@ public class SwedbankSEAgentWireMockTest {
                 AgentWireMockPaymentTest.builder(MarketCode.SE, "swedbank-bankid", wireMockFilePath)
                         .withConfigurationFile(configuration)
                         .withHttpDebugTrace()
-                        .addTransfer(createMockedDomesticTransfer())
+                        .withTransfer(createMockedDomesticTransfer())
                         .buildWithLogin(TransferCommand.class);
 
         agentWireMockPaymentTest.executePayment();
@@ -116,7 +116,7 @@ public class SwedbankSEAgentWireMockTest {
                                 MarketCode.SE, "savingsbank-bankid", wireMockFilePath)
                         .withConfigurationFile(configuration)
                         .withHttpDebugTrace()
-                        .addTransfer(createMockedDomesticTransfer())
+                        .withTransfer(createMockedDomesticTransfer())
                         .buildWithLogin(TransferCommand.class);
         try {
             agentWireMockPaymentTest.executePayment();

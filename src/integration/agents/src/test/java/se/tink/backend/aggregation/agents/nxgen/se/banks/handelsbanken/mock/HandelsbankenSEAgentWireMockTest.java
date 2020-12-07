@@ -50,7 +50,7 @@ public class HandelsbankenSEAgentWireMockTest {
                 AgentWireMockPaymentTest.builder(
                                 MarketCode.SE, "handelsbanken-bankid", wireMockFilePath)
                         .withHttpDebugTrace()
-                        .addTransfer(createMockedDomesticTransfer())
+                        .withTransfer(createMockedDomesticTransfer())
                         .buildWithLogin(TransferCommand.class);
 
         agentWireMockPaymentTest.executePayment();

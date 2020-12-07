@@ -1,8 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.firstdirect;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
@@ -43,30 +41,24 @@ public class FirstDirectAgentTest {
         builder.build().testGenericPaymentUKOB(createMockedDomesticPayment());
     }
 
-    private List<Payment> createMockedDomesticPayment() {
-
-        List<Payment> payments = new ArrayList<>();
+    private Payment createMockedDomesticPayment() {
         ExactCurrencyAmount amount = ExactCurrencyAmount.of("1.00", "GBP");
         LocalDate executionDate = LocalDate.now();
         String currency = "GBP";
 
-        payments.add(
-                new Payment.Builder()
-                        .withCreditor(
-                                new Creditor(
-                                        AccountIdentifier.create(
-                                                AccountIdentifier.Type.SORT_CODE,
-                                                DESTINATION_IDENTIFIER),
-                                        "Unknown Person"))
-                        .withExactCurrencyAmount(amount)
-                        .withExecutionDate(executionDate)
-                        .withCurrency(currency)
-                        .withRemittanceInformation(
-                                RemittanceInformationUtils
-                                        .generateUnstructuredRemittanceInformation("Message"))
-                        .withUniqueId(RandomUtils.generateRandomHexEncoded(15))
-                        .build());
-
-        return payments;
+        return new Payment.Builder()
+                .withCreditor(
+                        new Creditor(
+                                AccountIdentifier.create(
+                                        AccountIdentifier.Type.SORT_CODE, DESTINATION_IDENTIFIER),
+                                "Unknown Person"))
+                .withExactCurrencyAmount(amount)
+                .withExecutionDate(executionDate)
+                .withCurrency(currency)
+                .withRemittanceInformation(
+                        RemittanceInformationUtils.generateUnstructuredRemittanceInformation(
+                                "Message"))
+                .withUniqueId(RandomUtils.generateRandomHexEncoded(15))
+                .build();
     }
 }

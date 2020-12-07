@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking;
 
+import com.google.common.collect.ImmutableMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.Account;
@@ -13,6 +15,7 @@ import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
+import se.tink.backend.aggregation.agents.TypedPaymentControllerable;
 import se.tink.backend.aggregation.agents.contexts.EidasContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingV31Constants;
@@ -32,12 +35,19 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.configuration.SoftwareStatementAssertion;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.signer.EidasJwtSigner;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.signer.iface.JwtSigner;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentExecutor;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingRequestBuilder;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.authenticator.UkOpenBankingAuthenticationErrorMatcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.authenticator.UkOpenBankingPaymentAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.authenticator.UkOpenBankingPisAuthApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.authenticator.UkOpenBankingPisAuthFilterInstantiator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.UkOpenBankingPaymentApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.UkOpenBankingPaymentHelper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.configuration.UkOpenBankingPisConfig;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domestic.DomesticPaymentApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domestic.converter.DomesticPaymentConverter;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domesticscheduled.DomesticScheduledPaymentApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domesticscheduled.converter.DomesticScheduledPaymentConverter;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
@@ -64,13 +74,16 @@ import se.tink.backend.aggregation.nxgen.instrumentation.FetcherInstrumentationR
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SortCodeIdentifier;
 import se.tink.libraries.identitydata.IdentityData;
+import se.tink.libraries.payment.enums.PaymentType;
+import se.tink.libraries.payment.rpc.Payment;
 
 public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
         implements RefreshTransferDestinationExecutor,
                 RefreshCreditCardAccountsExecutor,
                 RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor,
-                RefreshIdentityDataExecutor {
+                RefreshIdentityDataExecutor,
+                TypedPaymentControllerable {
     private final JwtSigner jwtSigner;
 
     protected UkOpenBankingApiClient apiClient;
@@ -346,19 +359,30 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
     }
 
     @Override
-    public Optional<PaymentController> constructPaymentController() {
+    public Optional<PaymentController> getPaymentController(Payment payment) {
+        if (paymentController == null) {
+            paymentController = constructPaymentController(payment).orElse(null);
+        }
+
+        return Optional.ofNullable(paymentController);
+    }
+
+    public Optional<PaymentController> constructPaymentController(Payment payment) {
         if (this.pisConfig == null) {
             return Optional.empty();
         }
 
-        UkOpenBankingPaymentApiClient paymentApiClient = createPaymentApiClient();
+        UkOpenBankingPisAuthApiClient authApiClient = createAuthApiClient();
         OpenIdAuthenticationValidator authenticationValidator =
-                new OpenIdAuthenticationValidator(paymentApiClient);
+                new OpenIdAuthenticationValidator(authApiClient);
         UkOpenBankingPisAuthFilterInstantiator authFilterInstantiator =
-                new UkOpenBankingPisAuthFilterInstantiator(
-                        paymentApiClient, authenticationValidator);
+                new UkOpenBankingPisAuthFilterInstantiator(authApiClient, authenticationValidator);
         UkOpenBankingPaymentAuthenticator paymentAuthenticator =
-                createPaymentAuthenticator(paymentApiClient, authenticationValidator);
+                createPaymentAuthenticator(authApiClient, authenticationValidator);
+
+        UkOpenBankingRequestBuilder requestBuilder = createRequestBuilder(authApiClient);
+        UkOpenBankingPaymentApiClient paymentApiClient =
+                createPaymentApiClient(requestBuilder, payment);
 
         UkOpenBankingPaymentExecutor paymentExecutor =
                 new UkOpenBankingPaymentExecutor(
@@ -370,8 +394,19 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
         return Optional.of(new PaymentController(paymentExecutor, paymentExecutor));
     }
 
+    private UkOpenBankingPisAuthApiClient createAuthApiClient() {
+        return new UkOpenBankingPisAuthApiClient(
+                client,
+                jwtSigner,
+                softwareStatement,
+                getAgentConfiguration().getRedirectUrl(),
+                providerConfiguration,
+                randomValueGenerator,
+                pisConfig);
+    }
+
     private UkOpenBankingPaymentAuthenticator createPaymentAuthenticator(
-            UkOpenBankingPaymentApiClient paymentApiClient,
+            UkOpenBankingPisAuthApiClient paymentApiClient,
             OpenIdAuthenticationValidator authenticationValidator) {
         return new UkOpenBankingPaymentAuthenticator(
                 paymentApiClient,
@@ -383,14 +418,44 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
                 this.providerConfiguration);
     }
 
-    private UkOpenBankingPaymentApiClient createPaymentApiClient() {
-        return new UkOpenBankingPaymentApiClient(
+    private UkOpenBankingRequestBuilder createRequestBuilder(
+            UkOpenBankingPisAuthApiClient authApiClient) {
+        return new UkOpenBankingRequestBuilder(
                 client,
+                authApiClient,
                 jwtSigner,
                 softwareStatement,
-                getAgentConfiguration().getRedirectUrl(),
-                providerConfiguration,
                 randomValueGenerator,
                 pisConfig);
+    }
+
+    private UkOpenBankingPaymentApiClient createPaymentApiClient(
+            UkOpenBankingRequestBuilder requestBuilder, Payment payment) {
+        final PaymentType paymentType = UkOpenBankingPaymentHelper.getPaymentType(payment);
+
+        Map<PaymentType, UkOpenBankingPaymentApiClient> apiClientMap =
+                createApiClientMap(requestBuilder);
+
+        return Optional.ofNullable(apiClientMap.get(paymentType))
+                .orElseThrow(
+                        () ->
+                                new IllegalArgumentException(
+                                        (String.format("Unknown type: %s", paymentType))));
+    }
+
+    private Map<PaymentType, UkOpenBankingPaymentApiClient> createApiClientMap(
+            UkOpenBankingRequestBuilder requestBuilder) {
+        final UkOpenBankingPaymentApiClient domesticPaymentApiClient =
+                new DomesticPaymentApiClient(
+                        requestBuilder, new DomesticPaymentConverter(), pisConfig);
+
+        return ImmutableMap.of(
+                PaymentType.DOMESTIC,
+                domesticPaymentApiClient,
+                PaymentType.DOMESTIC_FUTURE,
+                new DomesticScheduledPaymentApiClient(
+                        requestBuilder, new DomesticScheduledPaymentConverter(), pisConfig),
+                PaymentType.SEPA,
+                domesticPaymentApiClient);
     }
 }

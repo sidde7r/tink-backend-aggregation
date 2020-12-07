@@ -83,7 +83,6 @@ public class AccountsItemEntity {
                                 .withAccountName(name)
                                 .addIdentifier(new IbanIdentifier(bicFi, accountId.getIban()))
                                 .build())
-                .addHolderName(name)
                 .setApiIdentifier(resourceId)
                 .build();
     }

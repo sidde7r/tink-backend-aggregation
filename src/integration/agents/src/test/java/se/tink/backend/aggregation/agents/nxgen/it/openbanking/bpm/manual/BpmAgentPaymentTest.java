@@ -1,8 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.bpm.manual;
 
 import java.time.LocalDate;
-import java.util.Collections;
-import java.util.List;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
@@ -43,7 +41,7 @@ public class BpmAgentPaymentTest {
         builder.build().testTinkLinkPayment(createRealDomesticPayment());
     }
 
-    private List<Payment> createRealDomesticPayment() {
+    private Payment createRealDomesticPayment() {
         RemittanceInformation remittanceInformation = new RemittanceInformation();
         remittanceInformation.setValue("BpmAgent");
         AccountIdentifier creditorAccountIdentifier =
@@ -58,15 +56,14 @@ public class BpmAgentPaymentTest {
         LocalDate executionDate = LocalDate.now();
         String currency = "EUR";
 
-        return Collections.singletonList(
-                new Payment.Builder()
-                        .withCreditor(creditor)
-                        .withDebtor(debtor)
-                        .withAmount(amount)
-                        .withExecutionDate(executionDate)
-                        .withCurrency(currency)
-                        .withRemittanceInformation(remittanceInformation)
-                        .build());
+        return new Payment.Builder()
+                .withCreditor(creditor)
+                .withDebtor(debtor)
+                .withAmount(amount)
+                .withExecutionDate(executionDate)
+                .withCurrency(currency)
+                .withRemittanceInformation(remittanceInformation)
+                .build();
     }
 
     private enum Arg implements ArgumentManager.ArgumentManagerEnum {

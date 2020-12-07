@@ -1,7 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.agent;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.UUID;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -44,7 +42,7 @@ public class BoursoramaAgentPaymentTest {
         builder.build().testTinkLinkPayment(createRealDomesticPayment());
     }
 
-    private List<Payment> createRealDomesticPayment() {
+    private Payment createRealDomesticPayment() {
         AccountIdentifier creditorAccountIdentifier =
                 new IbanIdentifier(
                         creditorDebtorManager.get(BoursoramaAgentPaymentTest.Arg.CREDITOR_ACCOUNT));
@@ -53,17 +51,16 @@ public class BoursoramaAgentPaymentTest {
                 new IbanIdentifier(
                         creditorDebtorManager.get(BoursoramaAgentPaymentTest.Arg.DEBTOR_ACCOUNT));
 
-        return Collections.singletonList(
-                new Payment.Builder()
-                        .withCreditor(new Creditor(creditorAccountIdentifier))
-                        .withDebtor(new Debtor(debtorAccountIdentifier))
-                        .withExactCurrencyAmount(ExactCurrencyAmount.inEUR(1))
-                        .withCurrency("EUR")
-                        .withRemittanceInformation(
-                                RemittanceInformationUtils
-                                        .generateUnstructuredRemittanceInformation("Message"))
-                        .withUniqueId(UUID.randomUUID().toString())
-                        .build());
+        return new Payment.Builder()
+                .withCreditor(new Creditor(creditorAccountIdentifier))
+                .withDebtor(new Debtor(debtorAccountIdentifier))
+                .withExactCurrencyAmount(ExactCurrencyAmount.inEUR(1))
+                .withCurrency("EUR")
+                .withRemittanceInformation(
+                        RemittanceInformationUtils.generateUnstructuredRemittanceInformation(
+                                "Message"))
+                .withUniqueId(UUID.randomUUID().toString())
+                .build();
     }
 
     private enum Arg implements ArgumentManager.ArgumentManagerEnum {

@@ -62,9 +62,9 @@ public abstract class SubsequentGenerationAgent<Auth> extends SuperAbstractAgent
     protected final String appId;
     protected final StrongAuthenticationState strongAuthenticationState;
 
+    protected PaymentController paymentController;
     private TransferController transferController;
     private SessionController sessionController;
-    private PaymentController paymentController;
     private Optional<CreateBeneficiaryController> createBeneficiaryController = Optional.empty();
 
     protected SubsequentGenerationAgent(final AgentComponentProvider componentProvider) {

@@ -24,7 +24,6 @@ public class DankeBankMockServerPaymentAgentTest {
 
     @Test
     public void testPayment() throws Exception {
-
         // given
         final String wireMockFilePath =
                 "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/banks/danskebank/mock/resources/se-danskebank-bankid-pis.aap";
@@ -35,8 +34,26 @@ public class DankeBankMockServerPaymentAgentTest {
         final AgentWireMockPaymentTest agentWireMockPaymentTest =
                 AgentWireMockPaymentTest.builder(SE, "se-danskebank-bankid", wireMockFilePath)
                         .withConfigurationFile(configuration)
-                        .addTransfer(createMockedDomesticTransfer())
-                        .addTransfer(createMockedNonNullDueDatePayment())
+                        .withTransfer(createMockedDomesticTransfer())
+                        .withHttpDebugTrace()
+                        .buildWithoutLogin(TransferCommand.class);
+
+        agentWireMockPaymentTest.executePayment();
+    }
+
+    @Test
+    public void testPaymentWithNonNullDueDate() throws Exception {
+        // given
+        final String wireMockFilePath =
+                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/banks/danskebank/mock/resources/se-danskebank-bankid-pis.aap";
+
+        final AgentsServiceConfiguration configuration =
+                AgentsServiceConfigurationReader.read(CONFIGURATION_PATH);
+
+        final AgentWireMockPaymentTest agentWireMockPaymentTest =
+                AgentWireMockPaymentTest.builder(SE, "se-danskebank-bankid", wireMockFilePath)
+                        .withConfigurationFile(configuration)
+                        .withTransfer(createMockedNonNullDueDatePayment())
                         .withHttpDebugTrace()
                         .buildWithoutLogin(TransferCommand.class);
 

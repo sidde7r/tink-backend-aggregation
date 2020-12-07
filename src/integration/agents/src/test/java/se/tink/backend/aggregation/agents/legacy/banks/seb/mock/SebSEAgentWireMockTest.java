@@ -36,7 +36,7 @@ public class SebSEAgentWireMockTest {
                 AgentWireMockPaymentTest.builder(MarketCode.SE, "seb-bankid", wireMockFilePath)
                         .withConfigurationFile(configuration)
                         .withHttpDebugTrace()
-                        .addTransfer(createTransfer())
+                        .withTransfer(createTransfer())
                         .addCredentialField(Field.Key.USERNAME.getFieldKey(), "197710120000")
                         .buildWithLogin(TransferCommand.class);
 

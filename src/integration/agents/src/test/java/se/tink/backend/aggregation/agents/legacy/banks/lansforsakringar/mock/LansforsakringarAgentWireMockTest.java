@@ -32,7 +32,7 @@ public class LansforsakringarAgentWireMockTest {
                                 MarketCode.SE, "lansforsakringar-bankid", wireMockFilePath)
                         .withConfigurationFile(configuration)
                         .withHttpDebugTrace()
-                        .addTransfer(createMockedDomesticTransfer())
+                        .withTransfer(createMockedDomesticTransfer())
                         .buildWithLogin(TransferCommand.class);
 
         agentWireMockPaymentTest.executePayment();

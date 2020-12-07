@@ -62,7 +62,7 @@ public class FabricMockServerAgentTest {
         final AgentWireMockPaymentTest agentWireMockPaymentTest =
                 AgentWireMockPaymentTest.builder(IT, "it-bancasella-ob", wireMockFilePath)
                         .withConfigurationFile(configuration)
-                        .addPayment(createMockedDomesticPayment())
+                        .withPayment(createMockedDomesticPayment())
                         .withHttpDebugTrace()
                         .buildWithoutLogin(PaymentCommand.class);
 

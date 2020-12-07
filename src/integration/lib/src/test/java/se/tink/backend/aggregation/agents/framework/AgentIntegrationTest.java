@@ -35,6 +35,7 @@ import se.tink.backend.aggregation.agents.RefreshExecutorUtils;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.TransferExecutor;
 import se.tink.backend.aggregation.agents.TransferExecutorNxgen;
+import se.tink.backend.aggregation.agents.TypedPaymentControllerable;
 import se.tink.backend.aggregation.agents.agent.Agent;
 import se.tink.backend.aggregation.agents.agentfactory.iface.AgentFactory;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.AgentPlatformAuthenticationExecutor;
@@ -361,61 +362,58 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         log.info("Done with refresh.");
     }
 
-    protected void doGenericPaymentBankTransferUKOB(Agent agent, List<Payment> paymentList)
-            throws Exception {
-        if (agent instanceof PaymentControllerable) {
-            log.info("Executing transfer for UkOpenbanking Agent");
-            PaymentController paymentController =
-                    ((PaymentControllerable) agent)
-                            .getPaymentController()
-                            .orElseThrow(Exception::new);
-
-            for (Payment payment : paymentList) {
-                log.info("Executing bank transfer.");
-
-                PaymentResponse createPaymentResponse =
-                        paymentController.create(new PaymentRequest(payment));
-
-                Storage storage = Storage.copyOf(createPaymentResponse.getStorage());
-
-                PaymentMultiStepResponse signPaymentMultiStepResponse =
-                        paymentController.sign(PaymentMultiStepRequest.of(createPaymentResponse));
-
-                Map<String, String> map;
-                List<Field> fields;
-                String nextStep = signPaymentMultiStepResponse.getStep();
-
-                while (!AuthenticationStepConstants.STEP_FINALIZE.equals(nextStep)) {
-                    fields = signPaymentMultiStepResponse.getFields();
-                    map = Collections.emptyMap();
-
-                    signPaymentMultiStepResponse =
-                            paymentController.sign(
-                                    new PaymentMultiStepRequest(
-                                            payment,
-                                            storage,
-                                            nextStep,
-                                            fields,
-                                            new ArrayList<>(map.values())));
-                    nextStep = signPaymentMultiStepResponse.getStep();
-                }
-
-                PaymentResponse paymentResponse =
-                        paymentController.fetch(
-                                PaymentMultiStepRequest.of(signPaymentMultiStepResponse));
-                PaymentStatus statusResult = paymentResponse.getPayment().getStatus();
-
-                Assert.assertTrue(
-                        statusResult.equals(PaymentStatus.SIGNED)
-                                || statusResult.equals(PaymentStatus.PAID));
-
-                log.info("Done with bank transfer.");
-            }
-        } else {
+    protected void doGenericPaymentBankTransferUKOB(Agent agent, Payment payment) throws Exception {
+        if (!(agent instanceof TypedPaymentControllerable)) {
             throw new AssertionError(
                     String.format(
                             "%s does not implement a transfer executor interface.",
                             agent.getClass().getSimpleName()));
+        }
+
+        log.info("Executing transfer for UkOpenbanking Agent");
+        PaymentController paymentController =
+                ((TypedPaymentControllerable) agent)
+                        .getPaymentController(payment)
+                        .orElseThrow(Exception::new);
+
+        log.info("Executing bank transfer.");
+
+        PaymentResponse createPaymentResponse =
+                paymentController.create(new PaymentRequest(payment));
+
+        Storage storage = Storage.copyOf(createPaymentResponse.getStorage());
+
+        PaymentMultiStepResponse signPaymentMultiStepResponse =
+                paymentController.sign(PaymentMultiStepRequest.of(createPaymentResponse));
+
+        Map<String, String> map;
+        List<Field> fields;
+        String nextStep = signPaymentMultiStepResponse.getStep();
+
+        while (!AuthenticationStepConstants.STEP_FINALIZE.equals(nextStep)) {
+            fields = signPaymentMultiStepResponse.getFields();
+            map = Collections.emptyMap();
+
+            signPaymentMultiStepResponse =
+                    paymentController.sign(
+                            new PaymentMultiStepRequest(
+                                    payment,
+                                    storage,
+                                    nextStep,
+                                    fields,
+                                    new ArrayList<>(map.values())));
+            nextStep = signPaymentMultiStepResponse.getStep();
+
+            PaymentResponse paymentResponse =
+                    paymentController.fetch(
+                            PaymentMultiStepRequest.of(signPaymentMultiStepResponse));
+            PaymentStatus statusResult = paymentResponse.getPayment().getStatus();
+
+            Assert.assertTrue(
+                    statusResult.equals(PaymentStatus.SIGNED)
+                            || statusResult.equals(PaymentStatus.PAID));
+
+            log.info("Done with bank transfer.");
         }
     }
 
@@ -525,61 +523,43 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         }
     }
 
-    protected void doTinkLinkPaymentBankTransfer(Agent agent, List<Payment> paymentList)
-            throws Exception {
+    protected void doTinkLinkPaymentBankTransfer(
+            PaymentController paymentController, Payment payment) throws Exception {
+        log.info("Executing bank transfer.");
 
-        if (agent instanceof PaymentControllerable) {
-            PaymentController paymentController =
-                    ((PaymentControllerable) agent)
-                            .getPaymentController()
-                            .orElseThrow(
-                                    () ->
-                                            new IllegalStateException(
-                                                    "Agent doesn't implement constructPaymentController method."));
+        PaymentResponse createPaymentResponse =
+                paymentController.create(new PaymentRequest(payment, originatingUserIp));
 
-            log.info("Executing bank transfer.");
+        PaymentMultiStepResponse signPaymentMultiStepResponse =
+                paymentController.sign(PaymentMultiStepRequest.of(createPaymentResponse));
 
-            PaymentResponse createPaymentResponse =
-                    paymentController.create(
-                            new PaymentRequest(paymentList.get(0), originatingUserIp));
+        Map<String, String> map;
+        List<Field> fields;
+        String nextStep = signPaymentMultiStepResponse.getStep();
+        Payment paymentFromResponse = signPaymentMultiStepResponse.getPayment();
+        Storage storage = signPaymentMultiStepResponse.getStorage();
 
-            PaymentMultiStepResponse signPaymentMultiStepResponse =
-                    paymentController.sign(PaymentMultiStepRequest.of(createPaymentResponse));
+        while (!AuthenticationStepConstants.STEP_FINALIZE.equals(nextStep)) {
+            fields = signPaymentMultiStepResponse.getFields();
+            map = Collections.emptyMap();
 
-            Map<String, String> map;
-            List<Field> fields;
-            String nextStep = signPaymentMultiStepResponse.getStep();
-            Payment payment = signPaymentMultiStepResponse.getPayment();
-            Storage storage = signPaymentMultiStepResponse.getStorage();
-
-            while (!AuthenticationStepConstants.STEP_FINALIZE.equals(nextStep)) {
-                fields = signPaymentMultiStepResponse.getFields();
-                map = Collections.emptyMap();
-
-                signPaymentMultiStepResponse =
-                        paymentController.sign(
-                                new PaymentMultiStepRequest(
-                                        payment,
-                                        storage,
-                                        nextStep,
-                                        fields,
-                                        new ArrayList<>(map.values())));
-                nextStep = signPaymentMultiStepResponse.getStep();
-                payment = signPaymentMultiStepResponse.getPayment();
-                storage = signPaymentMultiStepResponse.getStorage();
-            }
-
-            PaymentStatus statusResult = payment.getStatus();
-            Assert.assertEquals(statusResult, PaymentStatus.SIGNED);
-
-            log.info("Done with bank transfer.");
-
-        } else {
-            throw new AssertionError(
-                    String.format(
-                            "%s does not implement a transfer executor interface.",
-                            agent.getClass().getSimpleName()));
+            signPaymentMultiStepResponse =
+                    paymentController.sign(
+                            new PaymentMultiStepRequest(
+                                    paymentFromResponse,
+                                    storage,
+                                    nextStep,
+                                    fields,
+                                    new ArrayList<>(map.values())));
+            nextStep = signPaymentMultiStepResponse.getStep();
+            paymentFromResponse = signPaymentMultiStepResponse.getPayment();
+            storage = signPaymentMultiStepResponse.getStorage();
         }
+
+        PaymentStatus statusResult = paymentFromResponse.getStatus();
+        Assert.assertEquals(statusResult, PaymentStatus.SIGNED);
+
+        log.info("Done with bank transfer.");
     }
 
     private void doBankTransfer(Agent agent, Transfer transfer) throws Exception {
@@ -783,15 +763,33 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         context.printCollectedData();
     }
 
-    public void testTinkLinkPayment(List<Payment> paymentList) throws Exception {
+    public void testTinkLinkPayment(Payment payment) throws Exception {
         initiateCredentials();
         RefreshInformationRequest credentialsRequest = createRefreshInformationRequest();
         readConfigurationFile();
         Agent agent = createAgent(credentialsRequest);
 
         try {
-            if (agent instanceof PaymentControllerable) {
-                doTinkLinkPaymentBankTransfer(agent, paymentList);
+            if (agent instanceof TypedPaymentControllerable) {
+                PaymentController paymentController =
+                        ((TypedPaymentControllerable) agent)
+                                .getPaymentController(payment)
+                                .orElseThrow(
+                                        () ->
+                                                new IllegalStateException(
+                                                        "Agent doesn't implement constructPaymentController method."));
+
+                doTinkLinkPaymentBankTransfer(paymentController, payment);
+            } else if (agent instanceof PaymentControllerable) {
+                PaymentController paymentController =
+                        ((PaymentControllerable) agent)
+                                .getPaymentController()
+                                .orElseThrow(
+                                        () ->
+                                                new IllegalStateException(
+                                                        "Agent doesn't implement constructPaymentController method."));
+
+                doTinkLinkPaymentBankTransfer(paymentController, payment);
             } else {
                 throw new NotImplementedException(
                         String.format("%s", agent.getAgentClass().getSimpleName()));
@@ -943,29 +941,23 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         context.printCollectedData();
     }
 
-    public void testGenericPaymentUKOB(List<Payment> paymentList) throws Exception {
+    public void testGenericPaymentUKOB(Payment payment) throws Exception {
         initiateCredentials();
         readConfigurationFile();
         Agent agent = createAgent(createRefreshInformationRequest());
-        try {
-            // login(agent);
-            if (agent instanceof PaymentControllerable) {
-                doGenericPaymentBankTransferUKOB(agent, paymentList);
-            } else {
-                throw new NotImplementedException(
-                        String.format("%s", agent.getAgentClass().getSimpleName()));
-            }
-            if (configuration.getTestConfiguration().isDebugOutputEnabled()) {
-                printMaskedDebugLog(agent);
-            }
-            Assert.assertTrue("Expected to be logged in.", !expectLoggedIn || keepAlive(agent));
 
-            if (doLogout) {
-                logout(agent);
-            }
-        } finally {
-            saveCredentials(agent);
+        doGenericPaymentBankTransferUKOB(agent, payment);
+
+        if (configuration.getTestConfiguration().isDebugOutputEnabled()) {
+            printMaskedDebugLog(agent);
         }
+        Assert.assertTrue("Expected to be logged in.", !expectLoggedIn || keepAlive(agent));
+
+        if (doLogout) {
+            logout(agent);
+        }
+
+        saveCredentials(agent);
 
         context.printCollectedData();
     }

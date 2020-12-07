@@ -2,13 +2,12 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 
 import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticationValidator;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentApiClient;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 
 @RequiredArgsConstructor
 public class UkOpenBankingPisAuthFilterInstantiator {
 
-    private final UkOpenBankingPaymentApiClient apiClient;
+    private final UkOpenBankingPisAuthApiClient apiClient;
     private final OpenIdAuthenticationValidator authenticationValidator;
 
     public void instantiateAuthFilterWithClientToken() {

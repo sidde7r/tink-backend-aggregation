@@ -73,7 +73,7 @@ public class BarclaysAgentWireMockTest {
                                 MarketCode.UK, "uk-barclays-oauth2", wireMockFilePath)
                         .withConfigurationFile(configuration)
                         .addCallbackData("code", "DUMMY_AUTH_CODE")
-                        .addPayment(createMockedDomesticPayment())
+                        .withPayment(createMockedDomesticPayment())
                         .buildWithoutLogin(PaymentGBCommand.class);
 
         // when / then (execution and assertion currently done in the same step)

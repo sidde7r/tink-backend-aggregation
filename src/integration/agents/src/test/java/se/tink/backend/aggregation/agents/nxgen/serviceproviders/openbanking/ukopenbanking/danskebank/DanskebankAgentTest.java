@@ -2,8 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
@@ -48,36 +46,26 @@ public class DanskebankAgentTest {
         builder.build().testGenericPaymentUKOB(createMockedDomesticPayment());
     }
 
-    private List<Payment> createMockedDomesticPayment() {
-
-        List<Payment> payments = new ArrayList<>();
-
+    private Payment createMockedDomesticPayment() {
         BigDecimal d = new BigDecimal(1);
 
         ExactCurrencyAmount amount = new ExactCurrencyAmount(d, "GBP");
         LocalDate executionDate = LocalDate.now();
         String currency = "GBP";
 
-        payments.add(
-                new Payment.Builder()
-                        .withCreditor(
-                                new Creditor(
-                                        AccountIdentifier.create(
-                                                Type.SORT_CODE, DESTINATION_IDENTIFIER),
-                                        "Unknown Person"))
-                        .withDebtor(
-                                new Debtor(
-                                        AccountIdentifier.create(
-                                                Type.SORT_CODE, SOURCE_IDENTIFIER)))
-                        .withExactCurrencyAmount(amount)
-                        .withExecutionDate(executionDate)
-                        .withCurrency(currency)
-                        .withRemittanceInformation(
-                                RemittanceInformationUtils
-                                        .generateUnstructuredRemittanceInformation("Message"))
-                        .withUniqueId(RandomUtils.generateRandomHexEncoded(15))
-                        .build());
-
-        return payments;
+        return new Payment.Builder()
+                .withCreditor(
+                        new Creditor(
+                                AccountIdentifier.create(Type.SORT_CODE, DESTINATION_IDENTIFIER),
+                                "Unknown Person"))
+                .withDebtor(new Debtor(AccountIdentifier.create(Type.SORT_CODE, SOURCE_IDENTIFIER)))
+                .withExactCurrencyAmount(amount)
+                .withExecutionDate(executionDate)
+                .withCurrency(currency)
+                .withRemittanceInformation(
+                        RemittanceInformationUtils.generateUnstructuredRemittanceInformation(
+                                "Message"))
+                .withUniqueId(RandomUtils.generateRandomHexEncoded(15))
+                .build();
     }
 }
