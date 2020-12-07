@@ -1,39 +1,29 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.authenticator;
 
 import java.util.Map;
+import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.StorageKeys;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarStorageHelper;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
+@RequiredArgsConstructor
 public class LansforsakringarAuthenticator implements OAuth2Authenticator {
 
     private final LansforsakringarApiClient apiClient;
-    private final SessionStorage sessionStorage;
-    private final PersistentStorage persistentStorage;
-
-    public LansforsakringarAuthenticator(
-            LansforsakringarApiClient apiClient,
-            SessionStorage sessionStorage,
-            PersistentStorage persistentStorage) {
-        this.apiClient = apiClient;
-        this.sessionStorage = sessionStorage;
-        this.persistentStorage = persistentStorage;
-    }
+    private final LansforsakringarStorageHelper storageHelper;
 
     @Override
     public URL buildAuthorizeUrl(String state) {
         ConsentResponse consent = apiClient.getConsent();
-        persistentStorage.put(StorageKeys.CONSENT_ID, consent.getConsentId());
+        storageHelper.setConsentId(consent.getConsentId());
 
         return apiClient.buildAuthorizeUrl(state, consent.getAuthorisationId());
     }
@@ -46,14 +36,14 @@ public class LansforsakringarAuthenticator implements OAuth2Authenticator {
     @Override
     public OAuth2Token refreshAccessToken(String refreshToken)
             throws BankServiceException, SessionException {
-        final OAuth2Token accessToken = apiClient.refreshToken(refreshToken);
-        sessionStorage.put(LansforsakringarConstants.StorageKeys.ACCESS_TOKEN, accessToken);
-        return accessToken;
+        final OAuth2Token oAuth2Token = apiClient.refreshToken(refreshToken);
+        storageHelper.setOAuth2Token(oAuth2Token);
+        return oAuth2Token;
     }
 
     @Override
     public void useAccessToken(OAuth2Token accessToken) {
-        sessionStorage.put(LansforsakringarConstants.StorageKeys.ACCESS_TOKEN, accessToken);
+        storageHelper.setOAuth2Token(accessToken);
     }
 
     @Override

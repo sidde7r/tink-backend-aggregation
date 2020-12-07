@@ -23,6 +23,9 @@ public class LansforsakringarTransactionFetcher<T extends Account>
     public TransactionKeyPaginatorResponse<String> getTransactionsFor(T account, String key) {
         return Optional.ofNullable(key)
                 .map(apiClient::getTransactionsForKey)
-                .orElseGet(() -> apiClient.getTransactionsForAccount(account, localDateTimeSource));
+                .orElseGet(
+                        () ->
+                                apiClient.getTransactionsForAccount(
+                                        account.getApiIdentifier(), localDateTimeSource));
     }
 }

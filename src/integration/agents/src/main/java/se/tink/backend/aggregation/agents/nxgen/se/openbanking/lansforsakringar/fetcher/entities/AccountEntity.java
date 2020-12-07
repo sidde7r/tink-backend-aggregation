@@ -5,7 +5,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Strings;
 import java.util.List;
 import java.util.Optional;
+import lombok.Getter;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.fetcher.rpc.GetBalancesResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
@@ -19,6 +21,7 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 @JsonObject
 public class AccountEntity {
 
+    @Getter
     @JsonProperty("_links")
     private LinksEntity links;
 
@@ -26,40 +29,18 @@ public class AccountEntity {
 
     private List<String> allowedTransactionTypes;
     private String href;
-    private List<BalanceEntity> balances;
     private String bban;
     private String currency;
     private String name;
     private String product;
-    private String resourceId;
 
-    @JsonIgnore
-    public LinksEntity getLinks() {
-        return links;
-    }
-
-    public List<String> getAllowedTransactionTypes() {
-        return allowedTransactionTypes;
-    }
-
-    public String getHref() {
-        return href;
-    }
+    @Getter private String resourceId;
 
     private String getPan() {
         return pan.stream()
                 .findFirst()
                 .orElseThrow(() -> new IllegalStateException("No pan found in the response"))
                 .replace("*", "");
-    }
-
-    private ExactCurrencyAmount getBalance() {
-        return balances.stream()
-                .filter(BalanceEntity::isAvailableBalance)
-                .findFirst()
-                .map(BalanceEntity::getBalanceAmount)
-                .map(BalanceAmountEntity::getAmount)
-                .orElseThrow(() -> new IllegalStateException("No balance found in the response"));
     }
 
     private String getName() {
@@ -84,12 +65,12 @@ public class AccountEntity {
     }
 
     @JsonIgnore
-    public Optional<TransactionalAccount> toTinkAccount() {
+    public Optional<TransactionalAccount> toTinkAccount(GetBalancesResponse balancesResponse) {
 
         return TransactionalAccount.nxBuilder()
                 .withType(getAccountTyoe())
                 .withoutFlags()
-                .withBalance(BalanceModule.of(getBalance()))
+                .withBalance(BalanceModule.of(balancesResponse.getBalance()))
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(bban)
@@ -103,13 +84,13 @@ public class AccountEntity {
                 .build();
     }
 
-    public CreditCardAccount toTinkCreditCardAccount() {
+    public CreditCardAccount toTinkCreditCardAccount(GetBalancesResponse balancesResponse) {
         return CreditCardAccount.nxBuilder()
                 .withCardDetails(
                         CreditCardModule.builder()
                                 .withCardNumber(getPan())
                                 .withBalance(ExactCurrencyAmount.zero(currency))
-                                .withAvailableCredit(getBalance())
+                                .withAvailableCredit(balancesResponse.getBalance())
                                 .withCardAlias(getName())
                                 .build())
                 .withPaymentAccountFlag()
