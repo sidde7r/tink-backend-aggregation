@@ -7,15 +7,10 @@ import com.google.common.collect.Maps;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.models.Transaction;
-import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType;
 import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
 import se.tink.backend.aggregation.agents.models.TransactionTypes;
 import se.tink.libraries.amount.Amount;
@@ -32,9 +27,6 @@ public abstract class AggregationTransaction {
     private final String rawDetails;
     private final TransactionTypes type;
     private final Map<TransactionPayloadTypes, String> payload;
-    private final Map<TransactionExternalSystemIdType, String> externalSystemIds;
-    private final Boolean mutable;
-    private final List<TransactionDate> transactionDates;
 
     protected AggregationTransaction(
             ExactCurrencyAmount amount,
@@ -42,19 +34,13 @@ public abstract class AggregationTransaction {
             String description,
             String rawDetails,
             TransactionTypes type,
-            Map<TransactionPayloadTypes, String> payload,
-            Map<TransactionExternalSystemIdType, String> externalSystemIds,
-            Boolean mutable,
-            List<TransactionDate> transactionDates) {
+            Map<TransactionPayloadTypes, String> payload) {
         this.amount = amount;
         this.date = date;
         this.description = description;
         this.rawDetails = rawDetails;
         this.type = type;
         this.payload = payload;
-        this.externalSystemIds = externalSystemIds;
-        this.mutable = mutable;
-        this.transactionDates = transactionDates;
     }
 
     public ExactCurrencyAmount getExactAmount() {
@@ -81,24 +67,7 @@ public abstract class AggregationTransaction {
         return payload;
     }
 
-    public ExactCurrencyAmount getAmount() {
-        return amount;
-    }
-
-    public Map<TransactionExternalSystemIdType, String> getExternalSystemIds() {
-        return externalSystemIds;
-    }
-
-    public Boolean getMutable() {
-        return mutable;
-    }
-
-    public List<TransactionDate> getTransactionDates() {
-        return transactionDates;
-    }
-
     public Transaction toSystemTransaction(boolean multiCurrencyEnabled) {
-
         Transaction transaction = new Transaction();
 
         transaction.setAmount(getExactAmount().getDoubleValue());
@@ -114,19 +83,6 @@ public abstract class AggregationTransaction {
         if (payload != null) {
             payload.forEach((key, value) -> transaction.setPayload(key, value));
         }
-
-        transaction.setMutable(Boolean.TRUE.equals(getMutable()));
-        transaction.setExternalSystemIds(
-                getExternalSystemIds() != null
-                        ? getExternalSystemIds().entrySet().stream()
-                                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))
-                        : null);
-        transaction.setTransactionDates(
-                getTransactionDates() != null
-                        ? getTransactionDates().stream()
-                                .map(TransactionDate::toSystemModel)
-                                .collect(Collectors.toList())
-                        : null);
 
         return transaction;
     }
@@ -158,9 +114,6 @@ public abstract class AggregationTransaction {
         private String rawDetails;
         private TransactionTypes type = TransactionTypes.DEFAULT;
         private Map<TransactionPayloadTypes, String> payload = Maps.newHashMap();
-        private Map<TransactionExternalSystemIdType, String> externalSystemIds = Maps.newHashMap();
-        private Boolean mutable;
-        private List<TransactionDate> transactionDates = new ArrayList<>();
 
         @Deprecated
         public Builder setAmount(Amount amount) {
@@ -239,46 +192,6 @@ public abstract class AggregationTransaction {
         public Builder setPayload(TransactionPayloadTypes key, String value) {
             payload.put(key, value);
             return this;
-        }
-
-        public Builder addExternalSystemIds(TransactionExternalSystemIdType key, String value) {
-            this.externalSystemIds.put(key, value);
-            return this;
-        }
-
-        public Builder setExternalSystemIds(
-                Map<TransactionExternalSystemIdType, String> externalSystemIds) {
-            Preconditions.checkNotNull(externalSystemIds, "ExternalSystemIds must not be null.");
-            this.externalSystemIds.putAll(externalSystemIds);
-            return this;
-        }
-
-        public Map<TransactionExternalSystemIdType, String> getExternalSystemIds() {
-            return externalSystemIds;
-        }
-
-        public Builder setMutable(Boolean mutable) {
-            this.mutable = mutable;
-            return this;
-        }
-
-        public Boolean getMutable() {
-            return mutable;
-        }
-
-        public Builder addTransactionDates(List<TransactionDate> transactionDates) {
-            Preconditions.checkNotNull(transactionDates, "TransactionDates must not be null.");
-            this.transactionDates.addAll(transactionDates);
-            return this;
-        }
-
-        public Builder addTransactionDates(TransactionDate... transactionDates) {
-            Preconditions.checkNotNull(transactionDates, "TransactionDates must not be null.");
-            return this.addTransactionDates(Arrays.asList(transactionDates));
-        }
-
-        public List<TransactionDate> getTransactionDates() {
-            return transactionDates;
         }
 
         public abstract AggregationTransaction build();
