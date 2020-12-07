@@ -1,5 +1,6 @@
 package se.tink.libraries.http.client.masker;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableSet;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
@@ -22,8 +23,8 @@ public class SensitiveDataMasker {
                     "accounts..balance");
 
     public static String mask(String json) {
-        if (json == null) {
-            return null;
+        if (Strings.isNullOrEmpty(json)) {
+            return json;
         }
         DocumentContext parsed = JsonPath.parse(json);
         X_PATHS_FOR_SENSITIVE_FIELDS.forEach(
