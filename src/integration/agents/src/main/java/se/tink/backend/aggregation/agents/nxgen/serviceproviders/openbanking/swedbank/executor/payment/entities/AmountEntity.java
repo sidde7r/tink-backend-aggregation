@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.math.BigDecimal;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
-import se.tink.libraries.amount.Amount;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.strings.StringUtils;
 
@@ -29,8 +28,8 @@ public class AmountEntity {
     }
 
     @JsonIgnore
-    public Amount toTinkAmount() {
-        return Amount.valueOf(currency, Double.valueOf(getParsedAmount() * 100).longValue(), 2);
+    public ExactCurrencyAmount toTinkAmount() {
+        return new ExactCurrencyAmount(BigDecimal.valueOf(getParsedAmount()), currency);
     }
 
     @JsonIgnore

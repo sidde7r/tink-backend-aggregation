@@ -35,7 +35,7 @@ public class CreatePaymentResponse {
                         .withStatus(
                                 SwedbankPaymentStatus.fromString(transactionStatus)
                                         .getTinkPaymentStatus())
-                        .withAmount(amount.toTinkAmount())
+                        .withExactCurrencyAmount(amount.toTinkAmount())
                         .withCurrency(amount.getCurrency())
                         .withCreditor(
                                 creditor.toTinkCreditor(accountTypePair.getCreditorAccountType()))
