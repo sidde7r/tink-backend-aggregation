@@ -48,6 +48,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domestic.converter.DomesticPaymentConverter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domesticscheduled.DomesticScheduledPaymentApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domesticscheduled.converter.DomesticScheduledPaymentConverter;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.validator.DefaultUkOpenBankingPaymentRequestValidator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.validator.UkOpenBankingPaymentRequestValidator;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
@@ -105,6 +107,18 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
 
     private FetcherInstrumentationRegistry fetcherInstrumentation;
 
+    private UkOpenBankingPaymentRequestValidator paymentRequestValidator;
+
+    public UkOpenBankingBaseAgent(
+            AgentComponentProvider componentProvider,
+            JwtSigner jwtSigner,
+            UkOpenBankingAisConfig aisConfig,
+            UkOpenBankingPisConfig pisConfig,
+            UkOpenBankingPaymentRequestValidator paymentRequestValidator) {
+        this(componentProvider, jwtSigner, aisConfig, pisConfig);
+        this.paymentRequestValidator = paymentRequestValidator;
+    }
+
     public UkOpenBankingBaseAgent(
             AgentComponentProvider componentProvider,
             JwtSigner jwtSigner,
@@ -117,9 +131,6 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
         this.randomValueGenerator = componentProvider.getRandomValueGenerator();
         this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
         this.fetcherInstrumentation = new FetcherInstrumentationRegistry();
-
-        addFilter(new ServiceUnavailableBankServiceErrorFilter());
-        addFilter(new FinancialOrganisationIdFilter(aisConfig.getOrganisationId()));
     }
 
     public UkOpenBankingBaseAgent(
@@ -163,13 +174,16 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
 
         this.transactionalAccountRefreshController =
                 constructTransactionalAccountRefreshController();
+
+        addFilter(new ServiceUnavailableBankServiceErrorFilter());
+        addFilter(new FinancialOrganisationIdFilter(aisConfig.getOrganisationId()));
     }
 
     private void configureTls(UkOpenBankingClientConfigurationAdapter ukOpenBankingConfiguration) {
         Optional<TlsConfigurationSetter> tlsConfigurationSetter =
                 ukOpenBankingConfiguration.getTlsConfigurationOverride();
 
-        /* Theres a bug in Apache http client prior to 4.5 that breaks verification chain when there
+        /* There's a bug in Apache http client prior to 4.5 that breaks verification chain when there
         is more than one trust store added. Therefore UK certs must be set only if we use custom
         tls config (no eidas proxy and its certificates at all).
         https://tink.slack.com/archives/CSURV2YDA/p1604673821171200
@@ -387,9 +401,9 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
         UkOpenBankingPaymentExecutor paymentExecutor =
                 new UkOpenBankingPaymentExecutor(
                         paymentApiClient,
-                        this.credentials,
                         paymentAuthenticator,
-                        authFilterInstantiator);
+                        authFilterInstantiator,
+                        getPaymentRequestValidator());
 
         return Optional.of(new PaymentController(paymentExecutor, paymentExecutor));
     }
@@ -457,5 +471,11 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
                         requestBuilder, new DomesticScheduledPaymentConverter(), pisConfig),
                 PaymentType.SEPA,
                 domesticPaymentApiClient);
+    }
+
+    private UkOpenBankingPaymentRequestValidator getPaymentRequestValidator() {
+        return Objects.isNull(paymentRequestValidator)
+                ? new DefaultUkOpenBankingPaymentRequestValidator()
+                : paymentRequestValidator;
     }
 }

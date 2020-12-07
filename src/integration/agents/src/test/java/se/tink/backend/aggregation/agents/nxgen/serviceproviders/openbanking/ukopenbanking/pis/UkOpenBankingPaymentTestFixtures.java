@@ -11,7 +11,6 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
 import java.util.Map;
-import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.configuration.ClientInfo;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.dto.CreditorAccount;
@@ -68,7 +67,6 @@ public class UkOpenBankingPaymentTestFixtures {
     private static final LocalDate EXECUTION_DATE =
             LocalDate.parse(EXECUTION_DATE_TIME, ISO_OFFSET_DATE_TIME);
     private static final String SCHEME_NAME = "UK.OBIE.SortCodeAccountNumber";
-    private static final String PROVIDER_NAME = "uk-dummy-prov";
     private static final Instant NOW = Instant.now();
     private static final String CLIENT_ID = "DUMMY_CLIENT_ID";
     private static final String ID_TOKEN = "DUMMY_ID_TOKEN";
@@ -125,8 +123,7 @@ public class UkOpenBankingPaymentTestFixtures {
         return paymentRequestMock;
     }
 
-    public static PaymentRequest createDomesticPaymentRequestForAlreadyExecutedPayment(
-            Clock clockMock) {
+    static PaymentRequest createDomesticPaymentRequestForAlreadyExecutedPayment(Clock clockMock) {
         final PaymentRequest paymentRequestMock =
                 createDomesticPaymentRequestForNotExecutedPayment(clockMock);
 
@@ -142,16 +139,6 @@ public class UkOpenBankingPaymentTestFixtures {
 
         when(paymentRequestMock.getPayment()).thenReturn(paymentMock);
         setConsentId(paymentRequestMock);
-
-        return paymentRequestMock;
-    }
-
-    public static PaymentRequest createDomesticScheduledPaymentRequestForAlreadyExecutedPayment(
-            Clock clockMock) {
-        final PaymentRequest paymentRequestMock =
-                createDomesticScheduledPaymentRequestForNotExecutedPayment(clockMock);
-
-        setPaymentIdAndConsentId(paymentRequestMock);
 
         return paymentRequestMock;
     }
@@ -222,14 +209,6 @@ public class UkOpenBankingPaymentTestFixtures {
         when(domesticScheduledPaymentConsentResponseMock.getData()).thenReturn(responseDataMock);
 
         return domesticScheduledPaymentConsentResponseMock;
-    }
-
-    public static Credentials createCredentials() {
-        final Credentials credentialsMock = mock(Credentials.class);
-
-        when(credentialsMock.getProviderName()).thenReturn(PROVIDER_NAME);
-
-        return credentialsMock;
     }
 
     public static Clock createClockMock() {

@@ -54,7 +54,9 @@ public final class UkOpenBankingTestValidator {
                 .isEqualTo(expected.getUniqueIdForUKOPenBanking());
         assertThat(returned.getExactCurrencyAmount()).isEqualTo(expected.getExactCurrencyAmount());
         assertThat(returned.getStatus()).isEqualTo(expected.getStatus());
-        assertThat(returned.getRemittanceInformation())
-                .isEqualTo(expected.getRemittanceInformation());
+        assertThat(returned.getRemittanceInformation().getType())
+                .isEqualTo(expected.getRemittanceInformation().getType());
+        assertThat(returned.getRemittanceInformation().getValue())
+                .isEqualTo(expected.getRemittanceInformation().getValue());
     }
 }

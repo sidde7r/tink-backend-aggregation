@@ -6,7 +6,6 @@ import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
@@ -14,7 +13,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.authenticator.UkOpenBankingPisAuthFilterInstantiator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.UkOpenBankingPaymentApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.entity.ExecutorSignStep;
-import se.tink.backend.aggregation.agents.utils.remittanceinformation.RemittanceInformationValidator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.validator.UkOpenBankingPaymentRequestValidator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepResponse;
@@ -29,23 +28,19 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.libraries.payment.enums.PaymentStatus;
-import se.tink.libraries.transfer.enums.RemittanceInformationType;
-import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 @Slf4j
 @RequiredArgsConstructor
 public class UkOpenBankingPaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
 
     private final UkOpenBankingPaymentApiClient apiClient;
-    private final Credentials credentials;
     private final UkOpenBankingPaymentAuthenticator authenticator;
     private final UkOpenBankingPisAuthFilterInstantiator authFilterInstantiator;
+    private final UkOpenBankingPaymentRequestValidator paymentRequestValidator;
 
     @Override
     public PaymentResponse create(PaymentRequest paymentRequest) throws PaymentException {
-        UkOpenBankingPisUtils.validateRemittanceWithProviderOrThrow(
-                credentials.getProviderName(),
-                paymentRequest.getPayment().getRemittanceInformation());
+        paymentRequestValidator.validate(paymentRequest);
 
         authFilterInstantiator.instantiateAuthFilterWithClientToken();
 
@@ -111,10 +106,6 @@ public class UkOpenBankingPaymentExecutor implements PaymentExecutor, FetchableP
 
     private PaymentMultiStepResponse executePayment(PaymentMultiStepRequest paymentMultiStepRequest)
             throws PaymentException {
-        RemittanceInformation remittanceInformation =
-                paymentMultiStepRequest.getPayment().getRemittanceInformation();
-        RemittanceInformationValidator.validateSupportedRemittanceInformationTypesOrThrow(
-                remittanceInformation, null, RemittanceInformationType.UNSTRUCTURED);
         String endToEndIdentification =
                 paymentMultiStepRequest.getPayment().getUniqueIdForUKOPenBanking();
         String instructionIdentification = paymentMultiStepRequest.getPayment().getUniqueId();
