@@ -92,32 +92,41 @@ public class EdiClient {
 
             KeyStore newKeyStore = issue();
             LOG.info("saving key store");
-            try (FileOutputStream keystoreOutputStream = new FileOutputStream(devCertKeystore)) {
-                newKeyStore.store(keystoreOutputStream, DEFAULT_KEYSTORE_PWD);
-            } catch (IOException ex) {
-                LOG.info("IOException saving keystore", ex);
-                logCouldNotSaveKeystoreMessage(LOG::error);
-
-                // Use println here to make message more visible in IDE
-                Runtime.getRuntime()
-                        .addShutdownHook(
-                                new Thread(
-                                        () -> logCouldNotSaveKeystoreMessage(System.out::println)));
-            }
+            trySaveKeystore(devCertKeystore, newKeyStore);
             return newKeyStore;
         } catch (Exception ex) {
             throw new IllegalStateException("Exception thrown issuing dev cert", ex);
         }
     }
 
-    private static void logCouldNotSaveKeystoreMessage(Consumer<String> print) {
-        print.accept("====>");
-        print.accept("====> Could not save keystore. The test will proceed, but you will have");
-        print.accept("====> to issue a new one in the next test run.");
-        print.accept("====>");
-        print.accept("====> You can issue one manually with:");
-        print.accept("====>     bazel run //src/libraries/edi_client:issue");
-        print.accept("====>");
+    private static void trySaveKeystore(File saveAs, KeyStore newKeyStore)
+            throws KeyStoreException, NoSuchAlgorithmException, CertificateException {
+        try (FileOutputStream keystoreOutputStream = new FileOutputStream(saveAs)) {
+            newKeyStore.store(keystoreOutputStream, DEFAULT_KEYSTORE_PWD);
+        } catch (IOException ex) {
+            LOG.info("IOException saving keystore", ex);
+            printCouldNotSaveKeystoreMessage(LOG::error);
+
+            // Use println here to make message more visible in IDE
+            Runtime.getRuntime()
+                    .addShutdownHook(
+                            new Thread(
+                                    () -> printCouldNotSaveKeystoreMessage(System.out::println)));
+        }
+    }
+
+    private static final String ARROW_PREFIX = "====>";
+
+    private static void printCouldNotSaveKeystoreMessage(Consumer<String> print) {
+        print.accept(ARROW_PREFIX);
+        print.accept(
+                ARROW_PREFIX
+                        + " Could not save keystore. The test will proceed, but you will have");
+        print.accept(ARROW_PREFIX + " to issue a new one in the next test run.");
+        print.accept(ARROW_PREFIX);
+        print.accept(ARROW_PREFIX + " You can issue one manually with:");
+        print.accept(ARROW_PREFIX + "     bazel run //src/libraries/edi_client:issue");
+        print.accept(ARROW_PREFIX);
     }
 
     private static KeyStore loadExistingKeystore(File devCertKeystore)

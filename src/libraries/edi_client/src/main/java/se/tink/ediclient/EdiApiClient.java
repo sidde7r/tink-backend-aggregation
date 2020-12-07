@@ -27,28 +27,29 @@ class EdiApiClient {
         String hexModulus = modulus.toString(16);
 
         while (true) {
-            CloseableHttpClient httpClient = HttpClients.createDefault();
-            HttpGet request = new HttpGet(EDI_BASE_URL + "/search/mod/" + hexModulus);
-            HttpResponse response = httpClient.execute(request);
-            if (response.getStatusLine().getStatusCode() == 200) {
-                LOG.info("got a cert!");
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                response.getEntity().writeTo(baos);
-                return baos.toByteArray();
-            } else if (response.getStatusLine().getStatusCode() == 404) {
-                LOG.info("Still waiting");
-                try {
-                    Thread.sleep(4000);
-                } catch (InterruptedException ex) {
-                    Thread.currentThread().interrupt();
+            try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
+                HttpGet request = new HttpGet(EDI_BASE_URL + "/search/mod/" + hexModulus);
+                HttpResponse response = httpClient.execute(request);
+                if (response.getStatusLine().getStatusCode() == 200) {
+                    LOG.info("got a cert!");
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    response.getEntity().writeTo(baos);
+                    return baos.toByteArray();
+                } else if (response.getStatusLine().getStatusCode() == 404) {
+                    LOG.info("Still waiting");
+                    try {
+                        Thread.sleep(4000);
+                    } catch (InterruptedException ex) {
+                        Thread.currentThread().interrupt();
+                        throw new EdiClientException(
+                                "Interrupted while polling eIDAS dev issuer service", ex);
+                    }
+                } else {
+                    LOG.info(response.getStatusLine().toString());
                     throw new EdiClientException(
-                            "Interrupted while polling eIDAS dev issuer service", ex);
+                            "Error response from eIDAS dev issuer service: "
+                                    + response.getStatusLine());
                 }
-            } else {
-                LOG.info(response.getStatusLine().toString());
-                throw new EdiClientException(
-                        "Error response from eIDAS dev issuer service: "
-                                + response.getStatusLine().toString());
             }
         }
     }
