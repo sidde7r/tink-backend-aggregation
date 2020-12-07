@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.ArrayList;
 import java.util.List;
 import se.tink.backend.aggregation.agents.exceptions.payment.DateValidationException;
+import se.tink.backend.aggregation.agents.exceptions.payment.DuplicatePaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.SebConstants.ErrorMessages;
@@ -53,7 +54,7 @@ public class PaymentStatusResponse {
             } else if (isDueDateNotBusinessDayError()) {
                 throw DateValidationException.paymentDateNotBusinessDayException();
             } else if (isSimilarPaymentError()) {
-                throw PaymentRejectedException.similarPaymentException();
+                throw new DuplicatePaymentException();
             } else if (isServiceUnavailableError()) {
                 throw PaymentRejectedException.bankPaymentServiceUnavailable();
             } else {
