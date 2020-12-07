@@ -212,8 +212,8 @@ public final class SwedbankConstants {
     public enum HeadersToSign {
         X_REQUEST_ID("x-request-id"),
         TPP_REDIRECT_URI("tpp-redirect-uri"),
-        DATE("date"),
-        DIGEST("digest");
+        DATE(HeaderKeys.DATE),
+        DIGEST(HeaderKeys.DIGEST);
         private String header;
 
         HeadersToSign(String header) {

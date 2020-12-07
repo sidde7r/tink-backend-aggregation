@@ -8,9 +8,10 @@ import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.payment.enums.PaymentType;
 
 public enum SwedbankPaymentType {
-    SeDomesticCreditTransfers("se-domestic-credit-transfers", PaymentType.DOMESTIC),
-    SeInternationalCreditTransfers("se-international-credit-transfers", PaymentType.INTERNATIONAL),
-    Undefined("undefined", PaymentType.UNDEFINED);
+    SE_DOMESTIC_CREDIT_TRANSFERS("se-domestic-credit-transfers", PaymentType.DOMESTIC),
+    SE_INTERNATIONAL_CREDIT_TRANSFERS(
+            "se-international-credit-transfers", PaymentType.INTERNATIONAL),
+    UNDEFINED("undefined", PaymentType.UNDEFINED);
 
     private String text;
     private PaymentType paymentType;
@@ -44,13 +45,13 @@ public enum SwedbankPaymentType {
             accountIdentifiersToPaymentTypeMapper =
                     GenericTypeMapper.<SwedbankPaymentType, AccountTypePair>genericBuilder()
                             .put(
-                                    SwedbankPaymentType.SeDomesticCreditTransfers,
+                                    SwedbankPaymentType.SE_DOMESTIC_CREDIT_TRANSFERS,
                                     new AccountTypePair(Type.SE, Type.SE),
                                     new AccountTypePair(Type.SE, Type.IBAN),
                                     new AccountTypePair(Type.SE, Type.SE_BG),
                                     new AccountTypePair(Type.SE, Type.SE_PG))
                             .put(
-                                    SwedbankPaymentType.SeInternationalCreditTransfers,
+                                    SwedbankPaymentType.SE_INTERNATIONAL_CREDIT_TRANSFERS,
                                     new AccountTypePair(Type.IBAN, Type.IBAN))
                             .build();
 }

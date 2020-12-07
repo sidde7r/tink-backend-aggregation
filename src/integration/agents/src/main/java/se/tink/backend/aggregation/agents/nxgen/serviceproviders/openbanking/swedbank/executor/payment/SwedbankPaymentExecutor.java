@@ -82,7 +82,8 @@ public class SwedbankPaymentExecutor implements PaymentExecutor, FetchablePaymen
         PaymentResponse paymentResponse =
                 apiClient
                         .createPayment(
-                                createPaymentRequest, SwedbankPaymentType.SeDomesticCreditTransfers)
+                                createPaymentRequest,
+                                SwedbankPaymentType.SE_DOMESTIC_CREDIT_TRANSFERS)
                         .toTinkPaymentResponse(
                                 creditor, debtor, amount, paymentType, accountTypePair);
 
@@ -96,13 +97,13 @@ public class SwedbankPaymentExecutor implements PaymentExecutor, FetchablePaymen
         return apiClient
                 .getPayment(
                         paymentRequest.getPayment().getUniqueId(),
-                        SwedbankPaymentType.SeDomesticCreditTransfers)
+                        SwedbankPaymentType.SE_DOMESTIC_CREDIT_TRANSFERS)
                 .toTinkPaymentResponse(
                         paymentRequest.getPayment(),
                         apiClient
                                 .getPaymentStatus(
                                         paymentRequest.getPayment().getUniqueId(),
-                                        SwedbankPaymentType.SeDomesticCreditTransfers)
+                                        SwedbankPaymentType.SE_DOMESTIC_CREDIT_TRANSFERS)
                                 .getTransactionStatus());
     }
 
@@ -115,14 +116,14 @@ public class SwedbankPaymentExecutor implements PaymentExecutor, FetchablePaymen
         PaymentAuthorisationResponse paymentAuthorisationResponse =
                 apiClient.startPaymentAuthorisation(
                         payment.getUniqueId(),
-                        SwedbankPaymentType.SeDomesticCreditTransfers,
+                        SwedbankPaymentType.SE_DOMESTIC_CREDIT_TRANSFERS,
                         state);
         paymentAuthenticator.openThirdPartyApp(
                 paymentAuthorisationResponse.getAuthorizationUrl(), state);
 
         GetPaymentStatusResponse getPaymentStatusResponse =
                 apiClient.getPaymentStatus(
-                        payment.getUniqueId(), SwedbankPaymentType.SeDomesticCreditTransfers);
+                        payment.getUniqueId(), SwedbankPaymentType.SE_DOMESTIC_CREDIT_TRANSFERS);
 
         payment.setStatus(
                 SwedbankPaymentStatus.fromString(getPaymentStatusResponse.getTransactionStatus())
