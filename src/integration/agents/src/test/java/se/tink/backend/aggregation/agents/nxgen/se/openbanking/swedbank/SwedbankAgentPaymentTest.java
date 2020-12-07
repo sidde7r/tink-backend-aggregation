@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank;
+package se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank;
 
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
