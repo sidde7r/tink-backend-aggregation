@@ -15,8 +15,8 @@ allErrorsAuth: outcome!~"cancelled|unavailable|failed"
 
 agentErrorsRefresh: outcome!~"failed"
 bankErrorsRefresh: outcome!~"unavailable"
-allErrorsRefresh: outcome!~"failed|unavailable|partially_completed"
 partiallyCompletedErrorRefresh: outcome!~"partially_completed"
+allErrorsRefresh: outcome!~"failed|unavailable|partially_completed"
 
 allLoginActions: action=~"login-auto|login-manual|login-cron|is-logged-in|persist-login-session"
 

@@ -336,11 +336,12 @@ public final class RefreshExecutorUtils {
                         .collect(Collectors.toList());
 
         if (!accountTypesExceptCheckingAccounts.isEmpty()) {
-            log.warn(
+            log.error(
                     "[Refresh Executor Utils] Agent {} is asked to fetch checking accounts,"
                             + " But the agent also fetched {} types of accounts",
                     agent.getAgentClass().getName(),
                     accountTypesExceptCheckingAccounts);
+            throw new IllegalStateException("Agent fetched other account types as checking");
         }
     }
 }
