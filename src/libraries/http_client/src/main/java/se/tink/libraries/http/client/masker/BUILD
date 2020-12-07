@@ -5,7 +5,6 @@ java_library(
     srcs = glob(["**/*.java"]),
     visibility = ["//visibility:public"],
     deps = [
-        "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/agents_platform/framework",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/crypto/hash",
         "//src/libraries/request_tracing",
         "//third_party:com_sun_jersey_jersey_client",
@@ -15,5 +14,6 @@ java_library(
         "//third_party:org_slf4j_slf4j_api",
         "@aggregation//:com_google_code_gson_gson",
         "@aggregation//:com_google_guava_guava",
+        "@aggregation//:com_jayway_jsonpath_json_path",
     ],
 )

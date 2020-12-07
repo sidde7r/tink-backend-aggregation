@@ -1,9 +1,9 @@
 package se.tink.libraries.http.client.masker;
 
-import agents_platform_framework.com.jayway.jsonpath.DocumentContext;
-import agents_platform_framework.com.jayway.jsonpath.JsonPath;
-import agents_platform_framework.com.jayway.jsonpath.PathNotFoundException;
 import com.google.common.collect.ImmutableSet;
+import com.jayway.jsonpath.DocumentContext;
+import com.jayway.jsonpath.JsonPath;
+import com.jayway.jsonpath.PathNotFoundException;
 import java.util.Set;
 import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 
