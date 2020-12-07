@@ -62,7 +62,6 @@ public class Account implements Identifiable, Cloneable {
     private String financialInstitutionId;
     private ExactCurrencyAmount availableBalance;
     private ExactCurrencyAmount creditLimit;
-    private List<Balance> balances;
 
     @Override
     public Account clone() throws CloneNotSupportedException {
@@ -459,13 +458,5 @@ public class Account implements Identifiable, Cloneable {
 
     public void setCreditLimit(ExactCurrencyAmount creditLimit) {
         this.creditLimit = creditLimit;
-    }
-
-    public List<Balance> getBalances() {
-        return balances;
-    }
-
-    public void setBalances(List<Balance> balances) {
-        this.balances = balances;
     }
 }
