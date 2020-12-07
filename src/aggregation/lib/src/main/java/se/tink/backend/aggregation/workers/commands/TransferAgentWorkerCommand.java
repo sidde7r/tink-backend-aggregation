@@ -19,6 +19,7 @@ import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceExce
 import se.tink.backend.aggregation.agents.exceptions.payment.CreditorValidationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.DateValidationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.DebtorValidationException;
+import se.tink.backend.aggregation.agents.exceptions.payment.DuplicatePaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.InsufficientFundsException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
@@ -350,6 +351,21 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
             signableOperation.setInternalStatus(e.getInternalStatus());
             context.updateSignableOperation(signableOperation);
 
+            return AgentWorkerCommandResult.ABORT;
+        } catch (DuplicatePaymentException e) {
+            metricAction.cancelled();
+            log.info(
+                    "[transferId: {}] Could not execute payment, duplicate payment detected. {}",
+                    UUIDUtils.toTinkUUID(transfer.getId()),
+                    e.getMessage());
+
+            signableOperation.setStatus(SignableOperationStatuses.CANCELLED);
+            signableOperation.setStatusMessage(
+                    catalog.getString(
+                            getStatusMessage(
+                                    e.getMessage(), DuplicatePaymentException.DEFAULT_MESSAGE)));
+            signableOperation.setInternalStatus(e.getInternalStatus());
+            context.updateSignableOperation(signableOperation);
             return AgentWorkerCommandResult.ABORT;
         } catch (PaymentValidationException e) {
             metricAction.cancelled();
