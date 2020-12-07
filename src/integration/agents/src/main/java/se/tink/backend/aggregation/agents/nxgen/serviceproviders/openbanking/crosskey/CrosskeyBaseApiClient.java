@@ -431,6 +431,7 @@ public class CrosskeyBaseApiClient {
                     String.format("Unknown exception message: %s", exceptionMessage));
         }
         return LocalDateTime.parse(allGroups.get(0))
+                .plusSeconds(1)
                 .format(DateTimeFormatter.ofPattern(Format.TRANSACTION_DATE_FETCHER));
     }
 }
