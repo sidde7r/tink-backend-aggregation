@@ -108,6 +108,7 @@ public class EdiClient {
             printCouldNotSaveKeystoreMessage(LOG::error);
 
             // Use println here to make message more visible in IDE
+            // NOSONAR
             Runtime.getRuntime()
                     .addShutdownHook(
                             new Thread(
