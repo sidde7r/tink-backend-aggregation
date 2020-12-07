@@ -4,8 +4,11 @@ import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType;
 import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
 import se.tink.backend.aggregation.agents.models.TransactionTypes;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCard;
@@ -23,8 +26,11 @@ public final class CreditCardTransaction extends Transaction {
             String description,
             boolean pending,
             CreditCardAccount creditAccount,
-            CreditCard creditCard) {
-        super(amount, date, description, pending);
+            CreditCard creditCard,
+            Map<TransactionExternalSystemIdType, String> externalSystemIds,
+            Boolean mutable,
+            List<TransactionDate> transactionDates) {
+        super(amount, date, description, pending, externalSystemIds, mutable, transactionDates);
         this.creditAccount = creditAccount;
         this.creditCard = creditCard;
     }
@@ -148,7 +154,10 @@ public final class CreditCardTransaction extends Transaction {
                     getDescription(),
                     isPending(),
                     getCreditAccount(),
-                    getCreditCard());
+                    getCreditCard(),
+                    getExternalSystemIds(),
+                    getMutable(),
+                    getTransactionDates());
         }
     }
 }

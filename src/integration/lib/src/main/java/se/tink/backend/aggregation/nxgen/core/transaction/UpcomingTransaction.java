@@ -4,9 +4,11 @@ import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.models.Transaction;
+import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType;
 import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
 import se.tink.backend.aggregation.agents.models.TransactionTypes;
 import se.tink.libraries.amount.Amount;
@@ -19,8 +21,24 @@ public final class UpcomingTransaction extends AggregationTransaction {
     private final Transfer upcomingTransfer;
 
     protected UpcomingTransaction(
-            ExactCurrencyAmount amount, Date date, String description, Transfer upcomingTransfer) {
-        this(amount, date, description, upcomingTransfer, null, TransactionTypes.DEFAULT, null);
+            ExactCurrencyAmount amount,
+            Date date,
+            String description,
+            Transfer upcomingTransfer,
+            Map<TransactionExternalSystemIdType, String> externalSystemIds,
+            Boolean mutable,
+            List<TransactionDate> transactionDates) {
+        this(
+                amount,
+                date,
+                description,
+                upcomingTransfer,
+                null,
+                TransactionTypes.DEFAULT,
+                null,
+                externalSystemIds,
+                mutable,
+                transactionDates);
     }
 
     protected UpcomingTransaction(
@@ -30,8 +48,20 @@ public final class UpcomingTransaction extends AggregationTransaction {
             Transfer upcomingTransfer,
             String rawDetails,
             TransactionTypes type,
-            Map<TransactionPayloadTypes, String> payload) {
-        super(amount, date, description, rawDetails, type, payload);
+            Map<TransactionPayloadTypes, String> payload,
+            Map<TransactionExternalSystemIdType, String> externalSystemIds,
+            Boolean mutable,
+            List<TransactionDate> transactionDates) {
+        super(
+                amount,
+                date,
+                description,
+                rawDetails,
+                type,
+                payload,
+                externalSystemIds,
+                mutable,
+                transactionDates);
         this.upcomingTransfer = upcomingTransfer;
     }
 
@@ -136,7 +166,10 @@ public final class UpcomingTransaction extends AggregationTransaction {
                     upcomingTransfer,
                     getRawDetails(),
                     getType(),
-                    getPayload());
+                    getPayload(),
+                    getExternalSystemIds(),
+                    getMutable(),
+                    getTransactionDates());
         }
     }
 }
