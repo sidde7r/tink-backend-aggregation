@@ -254,6 +254,10 @@ public class NordeaExecutorHelper {
                     throw ErrorResponse.bankIdTimedOut();
                 }
 
+                if (error.isAutostartTokenExpired()) {
+                    throw ErrorResponse.bankIdTimedOut();
+                }
+
                 log.error(e.getMessage(), e);
                 throw ErrorResponse.signTransferFailedError();
             }
