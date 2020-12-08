@@ -27,7 +27,7 @@ spec:
     {{- if .Values.Environment }}
     {{- if eq .Values.Environment "production" }}
     - alert: TransferFailedOutcomeThresholdIsPassedForSwedenTier2Banks
-      expr: sum by (className, outcome) (increase(tink_agent_transfer_total{market="SE", className!~".*(nordea|seb|swedbank|handelsbanken).*", outcome="failed"}[1h])) >= 8
+      expr: sum by (className, outcome) (increase(tink_agent_transfer_total{market="SE", className!~".*(nordea|seb|swedbank|handelsbanken).*", outcome="failed"}[30m])) >= 10
       labels:
         severity: urgent
         who: payments
