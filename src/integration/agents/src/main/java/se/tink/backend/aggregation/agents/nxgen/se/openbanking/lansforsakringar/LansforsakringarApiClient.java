@@ -40,7 +40,6 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public final class LansforsakringarApiClient {
 
@@ -49,7 +48,7 @@ public final class LansforsakringarApiClient {
     private final TinkHttpClient client;
     private final Credentials credentials;
     private final LansforsakringarStorageHelper storageHelper;
-    private final CredentialsRequest credentialsRequest;
+    private final LansforsakringarUserIpInformation userIpInformation;
 
     private LansforsakringarConfiguration configuration;
     private String redirectUrl;
@@ -58,11 +57,11 @@ public final class LansforsakringarApiClient {
             TinkHttpClient client,
             Credentials credentials,
             LansforsakringarStorageHelper storageHelper,
-            CredentialsRequest credentialsRequest) {
+            LansforsakringarUserIpInformation userIpInformation) {
         this.client = client;
         this.credentials = credentials;
         this.storageHelper = storageHelper;
-        this.credentialsRequest = credentialsRequest;
+        this.userIpInformation = userIpInformation;
     }
 
     public Credentials getCredentials() {
@@ -101,11 +100,8 @@ public final class LansforsakringarApiClient {
 
     private void setPsuIp(RequestBuilder builder) {
         // LF API does not want to receive PSU_IP_ADDRESS for BG Refreshes
-        if (credentialsRequest.isManual()) {
-            String originatingUserIp = credentialsRequest.getOriginatingUserIp();
-            String psuIp =
-                    originatingUserIp == null ? HeaderValues.PSU_IP_ADDRESS : originatingUserIp;
-            builder.header(HeaderKeys.PSU_IP_ADDRESS, psuIp);
+        if (userIpInformation.isManualRequest()) {
+            builder.header(HeaderKeys.PSU_IP_ADDRESS, userIpInformation.getUserIp());
         }
     }
 
