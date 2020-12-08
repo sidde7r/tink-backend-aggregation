@@ -10,6 +10,7 @@ import java.util.Objects;
 import java.util.Optional;
 import javax.ws.rs.core.MediaType;
 import lombok.Getter;
+import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.entity.ErrorEntity;
@@ -45,7 +46,7 @@ public class OpenIdApiClient {
     private WellKnownResponse cachedWellKnownResponse;
     private Map<String, PublicKey> cachedJwkPublicKeys;
 
-    @Getter private OpenIdAuthenticatedHttpFilter aisAuthFilter;
+    @Getter @Setter private OpenIdAuthenticatedHttpFilter aisAuthFilter;
 
     @Getter private OpenIdAuthenticatedHttpFilter pisAuthFilter;
 

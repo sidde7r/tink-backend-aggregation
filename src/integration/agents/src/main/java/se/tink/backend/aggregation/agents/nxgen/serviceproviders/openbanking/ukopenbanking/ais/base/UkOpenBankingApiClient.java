@@ -188,7 +188,19 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
     }
 
     public String fetchIntentIdString() {
-        return aisConfig.getIntentId(
-                this.createAccountIntentId(aisConfig.getIntentIdResponseType()));
+        String intentId =
+                aisConfig.getIntentId(
+                        this.createAccountIntentId(aisConfig.getIntentIdResponseType()));
+
+        persistentStorage.put(
+                UkOpenBankingV31Constants.PersistentStorageKeys.AIS_ACCOUNT_CONSENT_ID, intentId);
+
+        return intentId;
+    }
+
+    public AccountPermissionResponse fetchIntentDetails(String consentId) {
+        return createAisRequest(aisConfig.getConsentDetailsRequestURL(consentId))
+                .type(MediaType.APPLICATION_JSON_TYPE)
+                .get(AccountPermissionResponse.class);
     }
 }

@@ -41,6 +41,7 @@ public class UkOpenBankingV31Constants implements UkOpenBankingConstants {
 
     public static final class ApiServices extends UkOpenBankingConstants.ApiServices {
         public static final String CONSENT_REQUEST = "/account-access-consents";
+        public static final String CONSENT_DETAILS_REQUEST = "/account-access-consents/%s";
     }
 
     public static class Links {
@@ -87,5 +88,6 @@ public class UkOpenBankingV31Constants implements UkOpenBankingConstants {
         public static final String AIS_ACCESS_TOKEN = "open_id_ais_access_token";
         public static final String LAST_SCA_TIME = "last_SCA_time";
         static final String AIS_ACCOUNT_PERMISSIONS_GRANTED = "ais_account_permissions_granted";
+        public static final String AIS_ACCOUNT_CONSENT_ID = "ais_account_consent_id";
     }
 }

@@ -65,6 +65,13 @@ public class UKOpenBankingAis implements UkOpenBankingAisConfig {
     }
 
     @Override
+    public URL getConsentDetailsRequestURL(String consentId) {
+        return apiBaseURL.concat(
+                String.format(
+                        UkOpenBankingV31Constants.ApiServices.CONSENT_DETAILS_REQUEST, consentId));
+    }
+
+    @Override
     public URL getUpcomingTransactionRequestURL(String accountId) {
         return apiBaseURL.concat(
                 String.format(ApiServices.ACCOUNT_UPCOMING_TRANSACTIONS_REQUEST, accountId));
