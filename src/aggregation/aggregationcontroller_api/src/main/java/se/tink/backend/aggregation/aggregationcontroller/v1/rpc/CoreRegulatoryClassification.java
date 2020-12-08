@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Preconditions;
 import java.util.Optional;
 
@@ -20,5 +21,10 @@ public class CoreRegulatoryClassification {
     public void setPsd2(CorePsd2Classification psd2) {
         Preconditions.checkNotNull(psd2);
         this.psd2 = psd2;
+    }
+
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this).add("psd2", psd2).toString();
     }
 }
