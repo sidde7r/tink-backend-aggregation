@@ -29,9 +29,8 @@ public class LansforsakringarStorageHelper {
         persistentStorage.put(resourceId, balanceResponse);
     }
 
-    public Optional<String> getConsentId() {
-        return Optional.ofNullable(
-                persistentStorage.get(LansforsakringarConstants.StorageKeys.CONSENT_ID));
+    public String getConsentId() {
+        return persistentStorage.get(LansforsakringarConstants.StorageKeys.CONSENT_ID);
     }
 
     public Optional<OAuth2Token> getOAuth2Token() {
