@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.authenticator.rpc.AccountPermissionResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticatedHttpFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticationController;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticationValidator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticator;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
@@ -30,7 +31,8 @@ public class DanskebankAuthenticationController extends OpenIdAuthenticationCont
             StrongAuthenticationState strongAuthenticationState,
             String callbackUri,
             URL appToAppRedirectURL,
-            RandomValueGenerator randomValueGenerator) {
+            RandomValueGenerator randomValueGenerator,
+            OpenIdAuthenticationValidator openIdAuthenticationValidator) {
         super(
                 persistentStorage,
                 supplementalInformationHelper,
@@ -40,7 +42,8 @@ public class DanskebankAuthenticationController extends OpenIdAuthenticationCont
                 strongAuthenticationState,
                 callbackUri,
                 appToAppRedirectURL,
-                randomValueGenerator);
+                randomValueGenerator,
+                openIdAuthenticationValidator);
 
         this.apiClient = apiClient;
     }
