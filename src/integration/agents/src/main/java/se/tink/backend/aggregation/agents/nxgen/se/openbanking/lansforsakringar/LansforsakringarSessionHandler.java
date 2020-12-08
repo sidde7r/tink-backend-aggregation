@@ -42,7 +42,7 @@ public class LansforsakringarSessionHandler implements SessionHandler {
             storageHelper.storeBalanceResponse(resourceId, balanceResponse);
             return;
         } catch (BankServiceException e) {
-            log.warn("Error when fetching transactions for account - in session handler", e);
+            log.warn("Error when fetching balance for account - in session handler", e);
         }
         clearDataFromStorage();
         throw SessionError.SESSION_EXPIRED.exception();
