@@ -17,4 +17,6 @@ public interface MetricActionIface {
     void cancelled();
 
     void unavailable();
+
+    void partiallyCompleted();
 }

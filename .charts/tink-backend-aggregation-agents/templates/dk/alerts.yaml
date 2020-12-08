@@ -1804,3 +1804,81 @@ spec:
         summary: Refresh unavailable rate is below 15% because of all issues ( <{ $value }> ) for <{ $labels.className }>
           the last 30 minutes.
         tags: {{ .Values.teletubbiesTags }}
+
+    ###############################################
+    ### AllErrors - Partially Completed Refresh ###
+    ###############################################
+
+    - alert: AgentRefreshesBelow60Greater50DueToPartiallyCompletedErrorWithRateLimitDK
+      expr: |
+        (sum by (className) (tink_agent_refresh_total{provider_type!="test", {{ .Values.partiallyCompletedErrorRefresh }}, market="DK"}))
+            / (sum by (className) (tink_agent_refresh_total{provider_type!="test", market="DK"})) < 0.6
+        and (sum by (className) (tink_agent_refresh_total{provider_type!="test", {{ .Values.partiallyCompletedErrorRefresh }}, market="DK"}))
+            / (sum by (className) (tink_agent_refresh_total{provider_type!="test", market="DK"})) >= 0.5
+         and sum by (className) (tink_agent_refresh_total{provider_type!="test", market="DK"}) > 4
+      for: 5m
+      labels:
+        severity: urgent
+        priority: P4
+        who: integration-teletubbies
+      annotations:
+        description: {{ .Values.kibanaLink }}
+          {{ .Values.grafanaLink }}
+        summary: Refresh unavailable rate is between 50 - 60% because of all issues ( <{ $value }> ) for <{ $labels.className }>
+          the last 30 minutes.
+        tags: {{ .Values.teletubbiesTags }}
+
+    - alert: AgentRefreshesBelow50Greater40DueToPartiallyCompletedErrorWithRateLimitDK
+      expr: |
+        (sum by (className) (tink_agent_refresh_total{provider_type!="test", {{ .Values.partiallyCompletedErrorRefresh }}, market="DK"}))
+            / (sum by (className) (tink_agent_refresh_total{provider_type!="test", market="DK"})) < 0.5
+        and (sum by (className) (tink_agent_refresh_total{provider_type!="test", {{ .Values.partiallyCompletedErrorRefresh }}, market="DK"}))
+            / (sum by (className) (tink_agent_refresh_total{provider_type!="test", market="DK"})) >= 0.4
+         and sum by (className) (tink_agent_refresh_total{provider_type!="test", market="DK"}) > 4
+      for: 5m
+      labels:
+        severity: urgent
+        priority: P3
+        who: integration-teletubbies
+      annotations:
+        description: {{ .Values.kibanaLink }}
+          {{ .Values.grafanaLink }}
+        summary: Refresh unavailable rate is between 40 - 50% because of all issues ( <{ $value }> ) for <{ $labels.className }>
+          the last 30 minutes.
+        tags: {{ .Values.teletubbiesTags }}
+
+    - alert: AgentRefreshesBelow40Greater30DueToPartiallyCompletedErrorWithRateLimitDK
+      expr: |
+        (sum by (className) (tink_agent_refresh_total{provider_type!="test", {{ .Values.partiallyCompletedErrorRefresh }}, market="DK"}))
+            / (sum by (className) (tink_agent_refresh_total{provider_type!="test", market="DK"})) < 0.4
+        and (sum by (className) (tink_agent_refresh_total{provider_type!="test", {{ .Values.partiallyCompletedErrorRefresh }}, market="DK"}))
+            / (sum by (className) (tink_agent_refresh_total{provider_type!="test", market="DK"})) >= 0.3
+         and sum by (className) (tink_agent_refresh_total{provider_type!="test", market="DK"}) > 4
+      for: 5m
+      labels:
+        severity: urgent
+        priority: P2
+        who: integration-teletubbies
+      annotations:
+        description: {{ .Values.kibanaLink }}
+          {{ .Values.grafanaLink }}
+        summary: Refresh unavailable rate is between 30 - 40% because of all issues ( <{ $value }> ) for <{ $labels.className }>
+          the last 30 minutes.
+        tags: {{ .Values.teletubbiesTags }}
+
+    - alert: AgentRefreshesBelow30DueToPartiallyCompletedErrorWithRateLimitDK
+      expr: |
+        (sum by (className) (tink_agent_refresh_total{provider_type!="test", {{ .Values.partiallyCompletedErrorRefresh }}, market="DK"}))
+            / (sum by (className) (tink_agent_refresh_total{provider_type!="test", market="DK"})) < 0.3
+         and sum by (className) (tink_agent_refresh_total{provider_type!="test", market="DK"}) > 4
+      for: 5m
+      labels:
+        severity: urgent
+        priority: P1
+        who: integration-teletubbies
+      annotations:
+        description: {{ .Values.kibanaLink }}
+          {{ .Values.grafanaLink }}
+        summary: Refresh unavailable rate is below 30% because of all issues ( <{ $value }> ) for <{ $labels.className }>
+          the last 30 minutes.
+        tags: {{ .Values.teletubbiesTags }}
