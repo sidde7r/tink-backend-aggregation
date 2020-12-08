@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.tools.validator;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableSet;
+import java.util.Collections;
 import java.util.Set;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.tools.ClientConfigurationMetaInfoHandler;
@@ -25,7 +27,18 @@ public class ClientConfigurationValidator {
             Set<String> sensitiveSecretsNames,
             Set<String> excludedSensitiveSecretsNames,
             Set<String> agentConfigParamNames,
-            Set<String> excludedAgentConfigParamNames) {
+            Set<String> excludedAgentConfigParamNames,
+            String nonUniqueProviderNames) {
+        if (!Strings.isNullOrEmpty(nonUniqueProviderNames)) {
+            return new SecretsNamesValidationResponse(
+                    Collections.emptySet(),
+                    Collections.emptySet(),
+                    Collections.emptySet(),
+                    Collections.emptySet(),
+                    Collections.emptySet(),
+                    Collections.emptySet(),
+                    nonUniqueProviderNames);
+        }
         Set<String> invalidSecretsFields =
                 getInvalidSecretsFields(secretsNames, excludedSecretsNames);
         Set<String> missingSecretsFields =
@@ -51,7 +64,8 @@ public class ClientConfigurationValidator {
                 invalidSensitiveSecretsFields,
                 missingSensitiveSecretsFields,
                 invalidAgentConfigParamFields,
-                missingAgentConfigParamFields);
+                missingAgentConfigParamFields,
+                "");
     }
 
     private Set<String> getMissingSecretsFields(
