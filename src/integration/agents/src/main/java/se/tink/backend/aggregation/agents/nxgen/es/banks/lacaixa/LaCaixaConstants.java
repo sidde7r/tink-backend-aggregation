@@ -88,8 +88,8 @@ public final class LaCaixaConstants {
         private static final String BASE = "https://loapp.caixabank.es/xmlapps/rest/";
 
         public static final URL INIT_LOGIN =
-                new URL(BASE + "login/loginInicio"); // Gets session id. Needed before login.
-        public static final URL SUBMIT_LOGIN = new URL(BASE + "login/loginResultado");
+                new URL(BASE + "login/inicio"); // Gets session id. Needed before login.
+        public static final URL SUBMIT_LOGIN = new URL(BASE + "login/login");
         public static final URL LOGOUT = new URL(BASE + "login/logout");
         public static final URL KEEP_ALIVE = new URL(BASE + "smartContent/consultaFoto");
 
@@ -116,16 +116,6 @@ public final class LaCaixaConstants {
         public static final URL FUND_DETAILS = new URL(BASE + "fondos/detalleFondos");
 
         public static final URL USER_DATA = new URL(BASE + "login/loginDatosUsuario");
-
-        public static final URL INIT_ENROLMENT =
-                new URL(BASE + "login/enrolmentDispositivo/autorizacion/inicio");
-        public static final URL INIT_AUTH_SIGNATURE =
-                new URL(BASE + "autorizacion/pushAutDiferido");
-        public static final URL VERIFY_AUTH_SIGNATURE =
-                new URL(BASE + "autorizacion/verificaFirmaOperacion");
-        public static final URL AUTHORIZE_SCA = new URL(BASE + "autorizacion/autorizacionSCA");
-        public static final URL FINALIZE_ENROLMENT =
-                new URL(BASE + "login/enrolmentDispositivo/autorizacion/resultado");
     }
 
     public static class DefaultRequestParams {
@@ -151,11 +141,6 @@ public final class LaCaixaConstants {
 
         public static final String INSTALLATION_ID_PREFIX = "cIAPPLPh9,3";
         public static final String DEVICE_NAME = "Tink";
-        public static final String SCA_TYPE_APP = "MOTP";
-        public static final String SCA_TYPE_PASSWORD = "PIN1_SCA";
-        public static final String SCA_TYPE_SMS = "OTPSMS";
-        public static final String SCA_TYPE_CODECARD = "TCO";
-        public static final String SIGNING_URL = "caixabanksign://app2app";
     }
 
     public static class QueryParams {
@@ -174,15 +159,6 @@ public final class LaCaixaConstants {
         private TemporaryStorage() {}
 
         public static final String ACCOUNT_REFERENCE = "accountRef";
-        public static final String SCA_SMS = "scaSms";
-        public static final String CODE_CARD = "codeCard";
-        public static final String ENROLMENT_CODE = "enrolmentCode";
-    }
-
-    public static class PersistentStorage {
-        private PersistentStorage() {}
-
-        public static final String SCA_UNFINISHED = "scaUnfinished";
     }
 
     public static class StatusCodes {
@@ -206,13 +182,5 @@ public final class LaCaixaConstants {
         private LiquidationSimulation() {}
 
         public static final String TRUE = "S";
-    }
-
-    public static class CaixaPayloadValues {
-        private CaixaPayloadValues() {}
-
-        public static final String ANDROID_PACKAGE_NAME = "es.caixabank.caixabanksign";
-        public static final String IOS_APP_STORE_URL =
-                "https://apps.apple.com/es/app/caixabank-sign/id1328811481";
     }
 }

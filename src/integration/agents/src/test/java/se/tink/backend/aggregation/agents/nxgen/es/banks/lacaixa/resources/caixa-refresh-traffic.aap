@@ -15,7 +15,7 @@ Content-Type: application/json; charset=utf-8
 {"codigo":null,"mensaje":"Sesión expirada"}
 
 REQUEST 2
-POST https://loapp.caixabank.es/xmlapps/rest/login/loginInicio
+POST https://loapp.caixabank.es/xmlapps/rest/login/inicio
 Content-Type: application/json
 Accept: application/json
 X-Aggregator: Tink Testing
@@ -30,7 +30,7 @@ Content-Type: application/json; charset=utf-8
 {"iteraciones":1,"semilla":"A19C0EA01EDD8A38","operacion":"+","constante":"0000000000000000"}
 
 REQUEST 3
-POST https://loapp.caixabank.es/xmlapps/rest/login/loginResultado
+POST https://loapp.caixabank.es/xmlapps/rest/login/login
 Content-Type: application/json
 Accept: application/json
 X-Aggregator: Tink Testing
