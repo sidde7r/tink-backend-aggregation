@@ -46,7 +46,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.TimeoutFilter;
-import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
 
 @AgentCapabilities({
     CHECKING_ACCOUNTS,
@@ -77,16 +76,7 @@ public final class LaCaixaAgent extends SubsequentProgressiveGenerationAgent
         super(componentProvider);
         configureHttpClient(client);
         apiClient = new LaCaixaApiClient(client, getInstallationId(request.getCredentials()));
-        authenticator =
-                new LaCaixaMultifactorAuthenticator(
-                        catalog,
-                        apiClient,
-                        componentProvider.getCredentialsRequest(),
-                        supplementalInformationFormer,
-                        componentProvider.getSupplementalInformationHelper(),
-                        new TemporaryStorage(),
-                        persistentStorage,
-                        context.getLogMasker());
+        authenticator = new LaCaixaMultifactorAuthenticator(apiClient, context.getLogMasker());
 
         LaCaixaInvestmentFetcher investmentFetcher = new LaCaixaInvestmentFetcher(apiClient);
         investmentRefreshController =
