@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field;
@@ -16,6 +17,7 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
@@ -34,9 +36,11 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.au
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.i18n.Catalog;
 
+@Slf4j
 public class SparkassenAuthenticator implements MultiFactorAuthenticator, AutoAuthenticator {
     private static final String VALID = "valid";
     private static final String FINALISED = "finalised";
@@ -71,13 +75,17 @@ public class SparkassenAuthenticator implements MultiFactorAuthenticator, AutoAu
     public void autoAuthenticate()
             throws SessionException, LoginException, BankServiceException, AuthorizationException {
         String consentId = persistentStorage.getConsentId();
-
         try {
             if (Strings.isNullOrEmpty(consentId) || !isConsentValid(consentId)) {
                 throw SessionError.SESSION_EXPIRED.exception();
             }
-        } catch (RuntimeException e) {
-            throw SessionError.SESSION_EXPIRED.exception();
+        } catch (HttpResponseException e) {
+            log.info("Caught exception during autoAuth, finishing with TEMP_ERROR", e);
+            if (e.getResponse().getStatus() == 503) {
+                throw BankServiceError.NO_BANK_SERVICE.exception(e);
+            } else {
+                throw e;
+            }
         }
     }
 

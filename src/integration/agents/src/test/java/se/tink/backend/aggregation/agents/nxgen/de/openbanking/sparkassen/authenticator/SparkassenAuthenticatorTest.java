@@ -46,6 +46,7 @@ import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenApiClient;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenPersistentStorage;
@@ -54,6 +55,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authen
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.FinalizeAuthorizationResponse;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.i18n.Catalog;
@@ -123,11 +125,13 @@ public class SparkassenAuthenticatorTest {
     }
 
     @Test
-    public void shouldThrowSessionExceptionWhenCheckingConsentValidtyThrowsException() {
+    public void shouldThrowBankExceptionWhenCheckingConsentValidtyReturns503() {
         // given
         persistentStorage.saveConsentId(TEST_CONSENT_ID);
+        HttpResponse mockHttpResponse = mock(HttpResponse.class);
+        when(mockHttpResponse.getStatus()).thenReturn(503);
         when(apiClient.getConsentStatus(TEST_CONSENT_ID))
-                .thenThrow(new IllegalStateException("Whatever"));
+                .thenThrow(new HttpResponseException(null, mockHttpResponse));
 
         // when
         Throwable throwable = catchThrowable(authenticator::autoAuthenticate);
@@ -135,7 +139,25 @@ public class SparkassenAuthenticatorTest {
         // then
         verify(apiClient).getConsentStatus(any());
         verifyNoMoreInteractions(apiClient);
-        assertThat(throwable).isInstanceOf(SessionException.class);
+        assertThat(throwable)
+                .isInstanceOf(BankServiceException.class)
+                .hasMessage("Cause: BankServiceError.NO_BANK_SERVICE");
+    }
+
+    @Test
+    public void shouldRethrowExceptionWhenCheckingConsentValidtyThrowsException() {
+        // given
+        persistentStorage.saveConsentId(TEST_CONSENT_ID);
+        RuntimeException exception = new RuntimeException();
+        when(apiClient.getConsentStatus(TEST_CONSENT_ID)).thenThrow(exception);
+
+        // when
+        Throwable throwable = catchThrowable(authenticator::autoAuthenticate);
+
+        // then
+        verify(apiClient).getConsentStatus(any());
+        verifyNoMoreInteractions(apiClient);
+        assertThat(throwable).isEqualTo(exception);
     }
 
     private Object[] possibleWrongCredentialTypes() {
