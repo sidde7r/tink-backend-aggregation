@@ -95,7 +95,7 @@ public class WebDriverHelper {
             for (By by : byArray) {
                 List<WebElement> elements = driver.findElements(by);
                 if (!elements.isEmpty()) {
-                    return elements.stream().filter(WebElement::isDisplayed).findFirst();
+                    return elements.stream().findFirst();
                 }
             }
         }
