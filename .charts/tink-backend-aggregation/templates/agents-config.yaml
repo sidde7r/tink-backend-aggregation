@@ -101,6 +101,9 @@ data:
         {{- if $featureFlagsConfig.allowRefreshRegardlessOfRestrictions }}
           allowRefreshRegardlessOfRestrictions: {{ $featureFlagsConfig.allowRefreshRegardlessOfRestrictions | default false }}
         {{- end }}
+        {{- if $featureFlagsConfig.supportIndividualAccountsRefresh }}
+          supportIndividualAccountsRefresh: {{ $featureFlagsConfig.supportIndividualAccountsRefresh | default false }}
+        {{- end }}
 
       integrations:
         {{- if $agentsConfig.collectorSubscriptionKey }}

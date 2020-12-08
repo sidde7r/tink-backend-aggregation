@@ -29,7 +29,7 @@ public class SendAccountRestrictionEventsWorkerCommand extends AgentWorkerComman
         try {
             log.info("Executing SendAccountRestrictionEventsWorkerCommand");
             log.info(
-                    " FilteredOutAccountData - size: {}",
+                    "FilteredOutAccountData - size: {}",
                     context.getAccountDataCache()
                             .getFilteredOutAccountDataWithFilterReason()
                             .size());
