@@ -52,7 +52,7 @@ public class BecApiClientTest {
 
     private static final String DEVICE_ID = "deviceId";
 
-    private static final String WRONG_CREDENTIALS = "wrong credentials";
+    private static final String WRONG_CREDENTIALS = "Cause: LoginError.INCORRECT_CREDENTIALS";
 
     private static final String URL_PREFIX = "https://eticket";
     private static final String APP_SYNC_URL =

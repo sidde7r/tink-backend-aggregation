@@ -428,7 +428,7 @@ public class BecApiClient {
                 // option is registered it might result in such a message in this place.
                 throw new NemIdException(NemIdError.CODEAPP_NOT_REGISTERED);
             } else {
-                throw LoginError.INCORRECT_CREDENTIALS.exception(e.getMessage());
+                throw LoginError.INCORRECT_CREDENTIALS.exception(e);
             }
         }
     }
