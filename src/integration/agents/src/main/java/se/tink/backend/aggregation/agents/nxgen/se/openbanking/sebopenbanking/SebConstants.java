@@ -41,6 +41,8 @@ public abstract class SebConstants {
         public static final String SIMILAR_PAYMENT_ERROR_MESSAGE =
                 "A similar payment is already in upcoming events.";
         public static final String PAYMENT_SERVICE_UNAVAILABLE = "Service unavailable.";
+        public static final String UNSTRUCTURED_REMITTANCE_INFO_REQUIRED =
+                "Bank Giro account does not accept OCR number, you have to enter message instead.";
     }
 
     public static class IdTags {

@@ -8,10 +8,12 @@ import se.tink.backend.aggregation.agents.exceptions.payment.DateValidationExcep
 import se.tink.backend.aggregation.agents.exceptions.payment.DuplicatePaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
+import se.tink.backend.aggregation.agents.exceptions.payment.ReferenceValidationException;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.SebConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.executor.payment.SebPaymentStatus;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.executor.payment.entities.LinksEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.libraries.signableoperation.enums.InternalStatus;
 
 @JsonObject
 public class PaymentStatusResponse {
@@ -57,6 +59,9 @@ public class PaymentStatusResponse {
                 throw new DuplicatePaymentException();
             } else if (isServiceUnavailableError()) {
                 throw PaymentRejectedException.bankPaymentServiceUnavailable();
+            } else if (isUnstructuredRemittanceInformationRequiredError()) {
+                throw new ReferenceValidationException(
+                        getErrorMessage(), InternalStatus.INVALID_DESTINATION_MESSAGE_TYPE);
             } else {
                 throw new PaymentRejectedException(getErrorMessage());
             }
@@ -94,6 +99,15 @@ public class PaymentStatusResponse {
                 .anyMatch(
                         tppMessage ->
                                 tppMessage.contains(ErrorMessages.PAYMENT_SERVICE_UNAVAILABLE));
+    }
+
+    @JsonIgnore
+    public boolean isUnstructuredRemittanceInformationRequiredError() {
+        return tppMessages.stream()
+                .anyMatch(
+                        tppMessage ->
+                                tppMessage.contains(
+                                        ErrorMessages.UNSTRUCTURED_REMITTANCE_INFO_REQUIRED));
     }
 
     @JsonIgnore
