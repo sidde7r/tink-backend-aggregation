@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.google.common.base.MoreObjects;
 import java.net.URI;
+import se.tink.backend.aggregation.utils.StringMasker;
 
 /**
  * Fields used for creating TransferDestination: uri, name Other fields for returning responses to
@@ -84,7 +85,7 @@ public class TransferDestination {
                 .add("balance", balance)
                 .add("matchesMultiple", matchesMultiple)
                 .add("displayBankName", displayBankName)
-                .add("displayAccountNumber", displayAccountNumber == null ? null : "***")
+                .add("displayAccountNumber", StringMasker.mask(displayAccountNumber))
                 .add("type", type)
                 .toString();
     }

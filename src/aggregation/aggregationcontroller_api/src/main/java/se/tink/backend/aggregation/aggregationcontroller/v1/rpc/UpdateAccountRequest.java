@@ -88,14 +88,14 @@ public class UpdateAccountRequest implements SafelyLoggable {
     @Override
     public String toSafeString() {
         return MoreObjects.toStringHelper(this)
-                .add(" account", account)
-                .add(" accountFeatures", accountFeatures)
-                .add(" user", user)
-                .add(" credentialsId", credentialsId)
-                .add(" availableBalance", availableBalance == null ? null : "***")
-                .add(" creditLimit", creditLimit == null ? null : "***")
-                .add(" operationId", operationId)
-                .add(" correlationId", correlationId)
+                .add("account", account)
+                .add("accountFeatures", accountFeatures)
+                .add("user", user)
+                .add("credentialsId", credentialsId)
+                .add("availableBalance", availableBalance == null ? null : "***")
+                .add("creditLimit", creditLimit == null ? null : "***")
+                .add("operationId", operationId)
+                .add("correlationId", correlationId)
                 .toString();
     }
 }

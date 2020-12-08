@@ -52,7 +52,7 @@ public class UpdateAccountHolderRequest implements SafelyLoggable {
     @Override
     public String toSafeString() {
         return MoreObjects.toStringHelper(this)
-                .add("accountHolder", accountHolder)
+                .add("accountHolder", accountHolder == null ? null : "***")
                 .add("appId", appId)
                 .add("userId", userId)
                 .toString();

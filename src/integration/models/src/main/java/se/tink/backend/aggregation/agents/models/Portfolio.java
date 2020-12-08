@@ -88,7 +88,7 @@ public class Portfolio {
     public String toString() {
         return MoreObjects.toStringHelper(this)
                 .add("uniqueIdentifier", uniqueIdentifier)
-                .add("totalProfit", totalProfit == null ? null : "***")
+                .add("totalProfit", totalProfit)
                 .add("cashValue", cashValue == null ? null : "***")
                 .add("totalValue", totalValue == null ? null : "***")
                 .add("type", type)
