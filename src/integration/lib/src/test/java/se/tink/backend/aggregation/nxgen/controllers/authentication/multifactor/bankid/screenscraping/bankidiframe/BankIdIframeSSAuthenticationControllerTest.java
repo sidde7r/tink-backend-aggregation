@@ -5,7 +5,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import java.util.Collections;
@@ -22,6 +21,8 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.screenscraping.WebScrapingConstants.Xpath;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.screenscraping.bankidiframe.initializer.IframeInitializer;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.i18n.LocalizableKey;
@@ -37,24 +38,10 @@ public class BankIdIframeSSAuthenticationControllerTest {
     private InOrder inOrder;
     private PhantomJSDriver driver;
 
-    private WebElement buttonbankId;
+    private WebElement buttonBankId;
     private WebElement selectAuthenticationButton;
     private WebElement passwordInputMock;
-    private WebElement authenticationInputMock;
     private WebElement referenceWordsSpanMock;
-
-    private static final By FORM_XPATH = By.xpath("//form");
-    private static final By PASSWORD_INPUT_XPATH =
-            By.xpath("//form//input[@type='password'][@maxlength]");
-    private static final By AUTHENTICATION_LIST_BUTTON_XPATH =
-            By.xpath("//button[@class='link' and span[contains(text(),'BankID')]]");
-    private static final By BANK_ID_MOBIL_BUTTON =
-            By.xpath(
-                    "//ul/child::li/child::button[span[contains(text(),'mobil') and contains(text(),'BankID')]]");
-    private static final By AUTHENTICATION_INPUT_XPATH =
-            By.xpath("//form//input[@type='password'][@maxlength]");
-    private static final By REFERENCE_WORDS_XPATH =
-            By.xpath("//span[@data-bind='text: reference']");
 
     private static final By IFRAME_XPATH = By.tagName("iframe");
     private static final String PASSWORD_INPUT = "PASSWORD-INPUT";
@@ -83,14 +70,27 @@ public class BankIdIframeSSAuthenticationControllerTest {
     }
 
     private void initializeWebElements() {
+        // bank id mobil input
+        given(webDriverHelper.waitForElement(driver, Xpath.MOBILE_BANK_ID_INPUT_XPATH))
+                .willReturn(Optional.of(mock(WebElement.class)));
+
+        // bank id app title or input
+        given(
+                        webDriverHelper.waitForOneOfElements(
+                                driver,
+                                Xpath.BANK_ID_APP_TITLE_XPATH,
+                                Xpath.BANK_ID_PASSWORD_INPUT_XPATH))
+                .willReturn(Optional.of(mock(WebElement.class)));
+
         // authentication list button
         selectAuthenticationButton = mock(WebElement.class);
-        given(webDriverHelper.waitForElement(driver, AUTHENTICATION_LIST_BUTTON_XPATH))
+        given(webDriverHelper.waitForElement(driver, Xpath.AUTHENTICATION_LIST_BUTTON_XPATH))
                 .willReturn(Optional.ofNullable(selectAuthenticationButton));
 
-        // bank id mobil
-        buttonbankId = mock(WebElement.class);
-        given(webDriverHelper.getElement(driver, BANK_ID_MOBIL_BUTTON)).willReturn(buttonbankId);
+        // bank id mobil button
+        buttonBankId = mock(WebElement.class);
+        given(webDriverHelper.getElement(driver, Xpath.BANK_ID_MOBIL_BUTTON))
+                .willReturn(buttonBankId);
 
         // iframe mock
         WebElement iframeMock = mock(WebElement.class);
@@ -99,54 +99,142 @@ public class BankIdIframeSSAuthenticationControllerTest {
         // password input
         passwordInputMock = mock(WebElement.class);
         given(webDriverHelper.checkIfElementEnabledIfNotWait(passwordInputMock)).willReturn(true);
-        given(driver.findElements(PASSWORD_INPUT_XPATH))
+        given(driver.findElements(Xpath.PASSWORD_INPUT_XPATH))
                 .willReturn(Collections.singletonList(passwordInputMock));
-
-        // authentication input
-        authenticationInputMock = mock(WebElement.class);
-        given(webDriverHelper.waitForElement(driver, AUTHENTICATION_INPUT_XPATH))
-                .willReturn(Optional.of(authenticationInputMock));
 
         // reference words
         referenceWordsSpanMock = mock(WebElement.class);
-        given(webDriverHelper.waitForElement(driver, REFERENCE_WORDS_XPATH))
+        given(webDriverHelper.waitForElement(driver, Xpath.REFERENCE_WORDS_XPATH))
                 .willReturn(Optional.of(referenceWordsSpanMock));
         given(referenceWordsSpanMock.getText()).willReturn(REFERENCE_WORDS);
     }
 
     @Test
-    public void authenticateShouldFinishWithoutError() throws AuthenticationException {
-        // given
-        given(authenticationInputMock.isEnabled()).willReturn(true);
-        // when
+    public void shouldAuthenticateWithoutErrorUsingMobileBankId() throws AuthenticationException {
+        // given & when
         controller.doLogin(PASSWORD_INPUT);
+
         // then
 
         // initialize bank id iframe
         inOrder.verify(iframeInitializer).initializeBankIdAuthentication();
 
-        // List authentication methods
-        inOrder.verify(webDriverHelper).waitForElement(driver, AUTHENTICATION_LIST_BUTTON_XPATH);
-        inOrder.verify(webDriverHelper).clickButton(selectAuthenticationButton);
+        // check if it is mobile bank id
+        inOrder.verify(webDriverHelper).waitForElement(driver, Xpath.MOBILE_BANK_ID_INPUT_XPATH);
 
-        // Choose Bank Id Mobil
-        inOrder.verify(webDriverHelper).getElement(driver, BANK_ID_MOBIL_BUTTON);
-        inOrder.verify(webDriverHelper).clickButton(buttonbankId);
-        inOrder.verify(webDriverHelper).submitForm(driver, FORM_XPATH);
+        // submit form
+        inOrder.verify(webDriverHelper).submitForm(driver, Xpath.FORM_XPATH);
+
+        // display reference words
+        inOrder.verify(webDriverHelper).waitForElement(driver, Xpath.REFERENCE_WORDS_XPATH);
 
         // wait for user accepting bank id and submit bank Id password
+        verifyWaitForUserInteractionAndSendBankIdPasswordInOrder();
+
+        inOrder.verifyNoMoreInteractions();
+        verify(webDriverHelper, never())
+                .waitForElement(driver, Xpath.AUTHENTICATION_LIST_BUTTON_XPATH);
+    }
+
+    private void verifyWaitForUserInteractionAndSendBankIdPasswordInOrder() {
         inOrder.verify(webDriverHelper).switchToIframe(driver);
-        inOrder.verify(driver).findElements(PASSWORD_INPUT_XPATH);
+        inOrder.verify(driver).findElements(Xpath.PASSWORD_INPUT_XPATH);
         inOrder.verify(webDriverHelper).checkIfElementEnabledIfNotWait(passwordInputMock);
+        inOrder.verify(webDriverHelper).sendInputValue(passwordInputMock, PASSWORD_INPUT);
+        inOrder.verify(webDriverHelper).submitForm(driver, Xpath.FORM_XPATH);
+    }
+
+    @Test
+    public void shouldAuthenticateWithoutErrorUsingBankIdApp() throws AuthenticationException {
+        // given
+        given(webDriverHelper.waitForElement(driver, Xpath.MOBILE_BANK_ID_INPUT_XPATH))
+                .willReturn(Optional.empty());
+
+        // when
+        controller.doLogin(PASSWORD_INPUT);
+
+        // then
+
+        // initialize bank id iframe
+        inOrder.verify(iframeInitializer).initializeBankIdAuthentication();
+
+        // check if it is mobile bank id
+        inOrder.verify(webDriverHelper).waitForElement(driver, Xpath.MOBILE_BANK_ID_INPUT_XPATH);
+
+        // check if it is bank id app
+        inOrder.verify(webDriverHelper)
+                .waitForOneOfElements(
+                        driver, Xpath.BANK_ID_APP_TITLE_XPATH, Xpath.BANK_ID_PASSWORD_INPUT_XPATH);
+
+        // wait for user accepting bank id and submit bank Id password
+        verifyWaitForUserInteractionAndSendBankIdPasswordInOrder();
+
+        inOrder.verifyNoMoreInteractions();
+        verify(webDriverHelper, never())
+                .waitForElement(driver, Xpath.AUTHENTICATION_LIST_BUTTON_XPATH);
+    }
+
+    @Test
+    public void shouldChangeAuthenticationToMobileBankIdAndAuthenticateWithoutErrors()
+            throws AuthenticationException {
+        // given
+        makeMobileBankIbAndBankIdAppReturnOptionalEmpty();
+
+        // when
+        controller.doLogin(PASSWORD_INPUT);
+
+        // then
+
+        // initialize bank id iframe
+        inOrder.verify(iframeInitializer).initializeBankIdAuthentication();
+
+        // check if it is mobile bank id
+        inOrder.verify(webDriverHelper).waitForElement(driver, Xpath.MOBILE_BANK_ID_INPUT_XPATH);
+
+        // check if it is bank id app
+        inOrder.verify(webDriverHelper)
+                .waitForOneOfElements(
+                        driver, Xpath.BANK_ID_APP_TITLE_XPATH, Xpath.BANK_ID_PASSWORD_INPUT_XPATH);
+
+        // get list of authentication methods and choose mobile bank id
+        verify(webDriverHelper).waitForElement(driver, Xpath.AUTHENTICATION_LIST_BUTTON_XPATH);
+        verify(webDriverHelper).clickButton(selectAuthenticationButton);
+
+        verify(webDriverHelper).getElement(driver, Xpath.BANK_ID_MOBIL_BUTTON);
+        verify(webDriverHelper).clickButton(buttonBankId);
+
+        // submit form
+        inOrder.verify(webDriverHelper).submitForm(driver, Xpath.FORM_XPATH);
+
+        // display reference words
+        inOrder.verify(webDriverHelper).waitForElement(driver, Xpath.REFERENCE_WORDS_XPATH);
+
+        // wait for user accepting bank id and submit bank Id password
+        verifyWaitForUserInteractionAndSendBankIdPasswordInOrder();
+
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    private void makeMobileBankIbAndBankIdAppReturnOptionalEmpty() {
+        given(webDriverHelper.waitForElement(driver, Xpath.MOBILE_BANK_ID_INPUT_XPATH))
+                .willReturn(Optional.empty());
+
+        given(
+                        webDriverHelper.waitForOneOfElements(
+                                driver,
+                                Xpath.BANK_ID_APP_TITLE_XPATH,
+                                Xpath.BANK_ID_PASSWORD_INPUT_XPATH))
+                .willReturn(Optional.empty());
     }
 
     @Test
     public void doLoginShouldThrowExceptionWhenNoPasswordInputAvailable() {
         // given
-
         given(webDriverHelper.checkIfElementEnabledIfNotWait(passwordInputMock)).willReturn(false);
+
         // when
         Throwable throwable = Assertions.catchThrowable(() -> controller.doLogin(TEST_PASSWORD));
+
         // then
         assertThat(throwable)
                 .isInstanceOf(LoginException.class)
@@ -154,50 +242,44 @@ public class BankIdIframeSSAuthenticationControllerTest {
     }
 
     @Test
-    public void doLoginShouldThrowLoginExceptionWhenNotAuthenticationInputFound() {
+    public void
+            doLoginShouldThrowNoAvailableScaMethodsExceptionWhenAuthenticationListButtonIsNotFound() {
         // given
-        given(webDriverHelper.waitForElement(driver, AUTHENTICATION_INPUT_XPATH))
+        makeMobileBankIbAndBankIdAppReturnOptionalEmpty();
+
+        given(webDriverHelper.waitForElement(driver, Xpath.AUTHENTICATION_LIST_BUTTON_XPATH))
                 .willReturn(Optional.empty());
-        given(webDriverHelper.getElement(driver, BANK_ID_MOBIL_BUTTON))
+
+        // when
+        Throwable throwable = Assertions.catchThrowable(() -> controller.doLogin(TEST_PASSWORD));
+
+        // then
+        assertThat(throwable)
+                .isInstanceOf(LoginException.class)
+                .hasMessage(LoginError.NO_AVAILABLE_SCA_METHODS.exception().getMessage());
+    }
+
+    @Test
+    public void doLoginShouldThrowNotSupportedLoginExceptionWhenNoAuthenticationInputFound() {
+        // given
+        makeMobileBankIbAndBankIdAppReturnOptionalEmpty();
+
+        given(webDriverHelper.getElement(driver, Xpath.BANK_ID_MOBIL_BUTTON))
                 .willThrow(HtmlElementNotFoundException.class);
 
         // when
         Throwable throwable = Assertions.catchThrowable(() -> controller.doLogin(TEST_PASSWORD));
 
         // then
-        assertThat(throwable).isInstanceOf(LoginException.class);
-    }
-
-    @Test
-    public void doLoginShouldNotCallAuthenticationsListMethodIfDefaultBankIdMobilIsChosen()
-            throws AuthenticationException {
-        // given
-        given(authenticationInputMock.isEnabled()).willReturn(false);
-
-        // when
-        controller.doLogin(TEST_PASSWORD);
-
-        // then
-        verify(webDriverHelper, never()).getElement(driver, AUTHENTICATION_LIST_BUTTON_XPATH);
-    }
-
-    @Test
-    public void doLoginShouldCallCheckAuthenticationsListMeyhodIfDefaultBankIdMobilIsNotChosen()
-            throws AuthenticationException {
-        // given
-        given(authenticationInputMock.isEnabled()).willReturn(true);
-
-        // when
-        controller.doLogin(TEST_PASSWORD);
-
-        // then
-        verify(webDriverHelper, times(1)).waitForElement(driver, AUTHENTICATION_LIST_BUTTON_XPATH);
+        assertThat(throwable)
+                .isInstanceOf(LoginException.class)
+                .hasMessage(LoginError.NOT_SUPPORTED.exception().getMessage());
     }
 
     @Test
     public void doLoginShouldThrowExceptionWhenReferenceWordsAreNotFound() {
         // given
-        given(webDriverHelper.waitForElement(driver, REFERENCE_WORDS_XPATH))
+        given(webDriverHelper.waitForElement(driver, Xpath.REFERENCE_WORDS_XPATH))
                 .willReturn(Optional.empty());
 
         // when

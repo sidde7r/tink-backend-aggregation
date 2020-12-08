@@ -1,8 +1,8 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.screenscraping.bankidiframe.initializer;
 
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.screenscraping.WebScrapingConstants.Xpath;
 import se.tink.libraries.selenium.WebDriverHelper;
 import se.tink.libraries.selenium.exceptions.HtmlElementNotFoundException;
 import se.tink.libraries.selenium.exceptions.ScreenScrapingException;
@@ -11,9 +11,6 @@ public class BankIdIframeInitializer implements IframeInitializer {
     private final String username;
     private final WebDriver driver;
     private final WebDriverHelper webDriverHelper;
-
-    private static final By USERNAME_XPATH = By.xpath("//form//input[@maxlength='11']");
-    private static final By FORM_XPATH = By.xpath("//form");
 
     public BankIdIframeInitializer(
             String username, WebDriver driver, WebDriverHelper webDriverHelper) {
@@ -28,12 +25,12 @@ public class BankIdIframeInitializer implements IframeInitializer {
         webDriverHelper.sleep(5000);
 
         try {
-            WebElement input = webDriverHelper.getElement(driver, USERNAME_XPATH);
+            WebElement input = webDriverHelper.getElement(driver, Xpath.USERNAME_XPATH);
             webDriverHelper.sendInputValue(input, username);
         } catch (HtmlElementNotFoundException ex) {
             throw new ScreenScrapingException("Bank Id template not loaded");
         }
 
-        webDriverHelper.submitForm(driver, FORM_XPATH);
+        webDriverHelper.submitForm(driver, Xpath.FORM_XPATH);
     }
 }

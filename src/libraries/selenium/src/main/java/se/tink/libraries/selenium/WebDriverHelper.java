@@ -90,6 +90,18 @@ public class WebDriverHelper {
         return Optional.empty();
     }
 
+    public Optional<WebElement> waitForOneOfElements(WebDriver driver, By... byArray) {
+        for (int i = 0; i < 5; i++, sleep(WAIT_FOR_RENDER_MILLIS)) {
+            for (By by : byArray) {
+                List<WebElement> elements = driver.findElements(by);
+                if (!elements.isEmpty()) {
+                    return elements.stream().filter(WebElement::isDisplayed).findFirst();
+                }
+            }
+        }
+        return Optional.empty();
+    }
+
     public Optional<String> waitForElementWithAttribute(
             WebDriver driver, By elementPath, String attributeKey) {
         for (int i = 0; i < 10; i++, sleep(WAIT_FOR_RENDER_MILLIS)) {

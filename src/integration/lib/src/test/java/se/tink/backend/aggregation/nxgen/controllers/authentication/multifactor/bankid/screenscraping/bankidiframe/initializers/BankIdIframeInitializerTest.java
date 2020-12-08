@@ -9,10 +9,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.Mockito;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.screenscraping.WebScrapingConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.screenscraping.bankidiframe.initializer.BankIdIframeInitializer;
 import se.tink.libraries.selenium.WebDriverHelper;
 import se.tink.libraries.selenium.exceptions.HtmlElementNotFoundException;
@@ -25,8 +25,6 @@ public class BankIdIframeInitializerTest {
     private BankIdIframeInitializer objUnderTest;
     private InOrder inOrder;
 
-    private static final By USERNAME_XPATH = By.xpath("//form//input[@maxlength='11']");
-    private static final By FORM_XPATH = By.xpath("//form");
     private static final String DUMMY_USERNAME = "dummy_username";
 
     @Before
@@ -41,20 +39,22 @@ public class BankIdIframeInitializerTest {
     @Test
     public void authenticateShouldFinishWithoutError() {
         // given
-        given(webDriverHelper.getElement(driver, USERNAME_XPATH)).willReturn(usernameInput);
+        given(webDriverHelper.getElement(driver, WebScrapingConstants.Xpath.USERNAME_XPATH))
+                .willReturn(usernameInput);
         // when
         objUnderTest.initializeBankIdAuthentication();
         // then
         inOrder.verify(webDriverHelper).switchToIframe(driver);
-        inOrder.verify(webDriverHelper).getElement(driver, USERNAME_XPATH);
+        inOrder.verify(webDriverHelper)
+                .getElement(driver, WebScrapingConstants.Xpath.USERNAME_XPATH);
         inOrder.verify(webDriverHelper).sendInputValue(usernameInput, DUMMY_USERNAME);
-        inOrder.verify(webDriverHelper).submitForm(driver, FORM_XPATH);
+        inOrder.verify(webDriverHelper).submitForm(driver, WebScrapingConstants.Xpath.FORM_XPATH);
     }
 
     @Test
     public void initializeBankIdAuthenticationShouldThrowExceptionWhenBankIdTemplateNotLoaded() {
         // given
-        given(webDriverHelper.getElement(driver, USERNAME_XPATH))
+        given(webDriverHelper.getElement(driver, WebScrapingConstants.Xpath.USERNAME_XPATH))
                 .willThrow(HtmlElementNotFoundException.class);
         // when
         Throwable throwable =
