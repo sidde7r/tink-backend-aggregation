@@ -36,18 +36,14 @@ public abstract class PaymentConverterBase {
 
     private static final TypeMapper<PaymentStatus> PAYMENT_STATUS_TYPE_MAPPER =
             TypeMapper.<PaymentStatus>builder()
-                    .put(
-                            PaymentStatus.PENDING,
-                            "Consumed",
-                            "Authorised",
-                            "Pending",
-                            "AcceptedSettlementInProcess")
+                    .put(PaymentStatus.PENDING, "Consumed", "Authorised", "Pending")
                     .put(PaymentStatus.CREATED, "AwaitingAuthorisation")
                     .put(PaymentStatus.REJECTED, "Rejected")
                     .put(
                             PaymentStatus.PAID,
                             "AcceptedSettlementCompleted",
-                            "AcceptedCreditSettlementCompleted")
+                            "AcceptedCreditSettlementCompleted",
+                            "AcceptedSettlementInProcess")
                     .build();
 
     public DebtorAccount getDebtorAccount(Payment payment) {
