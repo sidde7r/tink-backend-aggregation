@@ -1,5 +1,6 @@
 package se.tink.libraries.account.rpc;
 
+import com.google.common.base.MoreObjects;
 import java.util.Date;
 
 public class AccountDetails {
@@ -40,5 +41,15 @@ public class AccountDetails {
 
     public void setNextDayOfTermsChange(Date nextDayOfTermsChange) {
         this.nextDayOfTermsChange = nextDayOfTermsChange;
+    }
+
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this)
+                .add("interest", interest == null ? null : "***")
+                .add("numMonthsBound", numMonthsBound)
+                .add("type", type)
+                .add("nextDayOfTermsChange", nextDayOfTermsChange)
+                .toString();
     }
 }

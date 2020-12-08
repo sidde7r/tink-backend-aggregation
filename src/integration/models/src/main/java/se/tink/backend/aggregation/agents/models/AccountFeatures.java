@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.models;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.collect.ImmutableList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -61,5 +62,13 @@ public class AccountFeatures {
 
     public void setPortfolios(List<Portfolio> portfolios) {
         this.portfolios = portfolios;
+    }
+
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this)
+                .add("loans", loans)
+                .add("portfolios", portfolios)
+                .toString();
     }
 }

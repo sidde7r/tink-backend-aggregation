@@ -1,12 +1,14 @@
 package se.tink.backend.aggregation.aggregationcontroller.v1.rpc;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.google.common.base.MoreObjects;
 import se.tink.backend.aggregation.agents.models.AccountFeatures;
 import se.tink.libraries.account.rpc.Account;
 import se.tink.libraries.amount.ExactCurrencyAmount;
+import se.tink.libraries.jersey.utils.SafelyLoggable;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class UpdateAccountRequest {
+public class UpdateAccountRequest implements SafelyLoggable {
     private Account account;
     private AccountFeatures accountFeatures;
     private String user;
@@ -81,5 +83,19 @@ public class UpdateAccountRequest {
 
     public void setCorrelationId(String correlationId) {
         this.correlationId = correlationId;
+    }
+
+    @Override
+    public String toSafeString() {
+        return MoreObjects.toStringHelper(this)
+                .add(" account", account)
+                .add(" accountFeatures", accountFeatures)
+                .add(" user", user)
+                .add(" credentialsId", credentialsId)
+                .add(" availableBalance", availableBalance == null ? null : "***")
+                .add(" creditLimit", creditLimit == null ? null : "***")
+                .add(" operationId", operationId)
+                .add(" correlationId", correlationId)
+                .toString();
     }
 }

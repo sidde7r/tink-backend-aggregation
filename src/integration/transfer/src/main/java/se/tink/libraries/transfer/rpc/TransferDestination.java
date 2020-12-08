@@ -83,6 +83,9 @@ public class TransferDestination {
                 .add("name", name)
                 .add("balance", balance)
                 .add("matchesMultiple", matchesMultiple)
+                .add("displayBankName", displayBankName)
+                .add("displayAccountNumber", displayAccountNumber == null ? null : "***")
+                .add("type", type)
                 .toString();
     }
 }

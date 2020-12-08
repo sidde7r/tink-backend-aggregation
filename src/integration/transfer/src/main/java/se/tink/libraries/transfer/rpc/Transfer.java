@@ -215,7 +215,7 @@ public class Transfer implements UuidIdentifiable, Serializable, Cloneable {
                 dueDate != null ? ThreadSafeDateFormat.FORMATTER_DAILY.format(dueDate) : null;
 
         return MoreObjects.toStringHelper(this.getClass())
-                .add("amount", amount)
+                .add("amount", amount == null ? null : "***")
                 .add("sourceAccount", sourceAccount)
                 .add("sourceMessage", sourceMessage)
                 .add("destinationAccount", destinationAccount)

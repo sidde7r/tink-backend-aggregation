@@ -1,8 +1,10 @@
 package se.tink.backend.aggregation.aggregationcontroller.v1.rpc;
 
+import com.google.common.base.MoreObjects;
 import java.util.List;
+import se.tink.libraries.jersey.utils.SafelyLoggable;
 
-public class OptOutAccountsRequest {
+public class OptOutAccountsRequest implements SafelyLoggable {
     private List<String> accountIds;
     private String credentialsId;
     private String userId;
@@ -41,5 +43,14 @@ public class OptOutAccountsRequest {
 
     public void setAccountIds(List<String> accountIds) {
         this.accountIds = accountIds;
+    }
+
+    @Override
+    public String toSafeString() {
+        return MoreObjects.toStringHelper(this)
+                .add("accountIds", accountIds)
+                .add("credentialsId", credentialsId)
+                .add("userId", userId)
+                .toString();
     }
 }

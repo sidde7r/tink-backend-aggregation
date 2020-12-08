@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.models;
 
 import com.fasterxml.uuid.Generators;
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Preconditions;
 import java.io.Serializable;
 import java.util.Date;
@@ -336,5 +337,31 @@ public class Loan implements Comparable<Loan>, Serializable {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this)
+                .add("accountId", accountId)
+                .add("id", id)
+                .add("userId", userId)
+                .add("credentialsId", credentialsId)
+                .add("initialBalance", initialBalance == null ? null : "***")
+                .add("initialDate", initialDate == null ? null : "***")
+                .add("numMonthsBound", numMonthsBound)
+                .add("name", name)
+                .add("interest", interest)
+                .add("balance", balance == null ? null : "***")
+                .add("amortized", amortized)
+                .add("nextDayOfTermsChange", nextDayOfTermsChange)
+                .add("serializedLoanResponse", serializedLoanResponse)
+                .add("updated", updated)
+                .add("providerName", providerName)
+                .add("type", type)
+                .add("loanNumber", loanNumber)
+                .add("monthlyAmortization", monthlyAmortization)
+                .add("loanDetails", loanDetails)
+                .add("userModifiedType", userModifiedType)
+                .toString();
     }
 }
