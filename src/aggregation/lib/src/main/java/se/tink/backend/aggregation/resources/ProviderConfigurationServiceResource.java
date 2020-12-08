@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.client.provider_configuration.ProviderConfigu
 import se.tink.backend.aggregation.client.provider_configuration.rpc.ProviderConfiguration;
 import se.tink.backend.aggregation.configuration.models.ProviderConfigurationServiceConfiguration;
 import se.tink.libraries.http.client.WebResourceFactory;
+import se.tink.libraries.jersey.utils.ClientLoggingFilter;
 import se.tink.libraries.jersey.utils.JerseyUtils;
 
 public class ProviderConfigurationServiceResource implements ProviderConfigurationService {
@@ -35,6 +36,7 @@ public class ProviderConfigurationServiceResource implements ProviderConfigurati
                         configuration.getHost() + ":" + configuration.getPort()));
 
         this.client = JerseyUtils.getClient(configuration.getPinnedCertificates());
+        client.addFilter(new ClientLoggingFilter());
 
         logger.debug(
                 String.format(
