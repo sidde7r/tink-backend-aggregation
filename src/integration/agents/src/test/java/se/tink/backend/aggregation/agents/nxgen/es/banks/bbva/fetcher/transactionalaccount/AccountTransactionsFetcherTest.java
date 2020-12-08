@@ -15,6 +15,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
+import org.assertj.core.util.Strings;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,6 +24,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.AccountEn
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.ParticipantsDataEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.ProductEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.rpc.AccountTransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.rpc.BbvaErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.rpc.FinancialDashboardResponse;
 import se.tink.backend.aggregation.nxgen.core.account.entity.Holder;
 import se.tink.backend.aggregation.nxgen.core.account.entity.Holder.Role;
@@ -177,6 +179,83 @@ public class AccountTransactionsFetcherTest {
         when(accountEntity.getAccountNumber()).thenReturn(null);
 
         Assert.assertEquals(accountEntity.getAccountNumber(), null);
+    }
+
+    @Test
+    public void shouldFetchAccountDateTransactions() throws IOException {
+        final AccountTransactionsResponse transactions =
+                loadSampleData("date_transactions.json", AccountTransactionsResponse.class);
+
+        when(apiClient.fetchAccountTransactions(any(), any())).thenReturn(transactions);
+
+        AccountTransactionsResponse response = apiClient.fetchAccountTransactions(any(), any());
+
+        Assert.assertEquals(response.getPagination().getNumPages(), 2);
+        Assert.assertTrue(response.getPagination().getNextPage(), true);
+    }
+
+    @Test
+    public void shouldFetchAccountDateTransactionsWithPagination() throws IOException {
+        final AccountTransactionsResponse transactions =
+                loadSampleData("date_transactions.json", AccountTransactionsResponse.class);
+        final AccountTransactionsResponse transactionsNextPage =
+                loadSampleData(
+                        "date_transactions_next_page.json", AccountTransactionsResponse.class);
+
+        when(apiClient.fetchAccountTransactions(any(), any())).thenReturn(transactions);
+        AccountTransactionsResponse response = apiClient.fetchAccountTransactions(any(), any());
+        when(apiClient.fetchAccountTransactions(any(), any())).thenReturn(transactionsNextPage);
+
+        AccountTransactionsResponse newResponse = null;
+        if (!response.getPagination().getNextPage().isEmpty()) {
+            newResponse = apiClient.fetchAccountTransactions(any(), any());
+        }
+
+        assert newResponse != null;
+        Assert.assertEquals(newResponse.getPagination().getNumPages(), 2);
+        Assert.assertEquals(newResponse.getAccountTransactions().size(), 1);
+        Assert.assertTrue(Strings.isNullOrEmpty(newResponse.getPagination().getNextPage()));
+    }
+
+    @Test
+    public void shouldThrowHttpOtpResponseException() throws IOException {
+        HttpResponse httpResponse = mockResponse(401, "otp_error.json");
+        HttpResponseException httpResponseException = new HttpResponseException(null, httpResponse);
+
+        when(apiClient.fetchAccountTransactions(any(), any())).thenThrow(httpResponseException);
+
+        Throwable throwable =
+                catchThrowable(() -> apiClient.fetchAccountTransactions(any(), any()));
+
+        Assert.assertEquals(throwable, httpResponseException);
+    }
+
+    @Test
+    public void shouldThrowUnknownHttpResponseException() throws IOException {
+        HttpResponse httpResponse = mockResponse(500, "service_unavailable.json");
+        HttpResponseException httpResponseException = new HttpResponseException(null, httpResponse);
+
+        when(apiClient.fetchAccountTransactions(any(), any())).thenThrow(httpResponseException);
+
+        Throwable throwable =
+                catchThrowable(() -> apiClient.fetchAccountTransactions(any(), any()));
+
+        BbvaErrorResponse error =
+                httpResponseException.getResponse().getBody(BbvaErrorResponse.class);
+        Assert.assertEquals(throwable, httpResponseException);
+        Assert.assertEquals(error.getHttpStatus(), 500);
+        Assert.assertEquals(error.getErrorCode(), "451");
+        Assert.assertEquals(
+                error.getErrorMessage(),
+                "Error al recuperar la información de perfilado del servicio");
+    }
+
+    private HttpResponse mockResponse(int status, String path) throws IOException {
+        HttpResponse mocked = mock(HttpResponse.class);
+        when(mocked.getStatus()).thenReturn(status);
+        when(mocked.getBody(BbvaErrorResponse.class))
+                .thenReturn(loadSampleData(path, BbvaErrorResponse.class));
+        return mocked;
     }
 
     private HttpResponse mockResponse(int status) {

@@ -26,8 +26,8 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 @Slf4j
 public class BbvaAuthenticator implements MultiFactorAuthenticator {
     private final BbvaApiClient apiClient;
-    private SupplementalInformationHelper supplementalInformationHelper;
-    private CredentialsRequest request;
+    private final SupplementalInformationHelper supplementalInformationHelper;
+    private final CredentialsRequest request;
 
     public BbvaAuthenticator(
             BbvaApiClient apiClient,
@@ -49,7 +49,7 @@ public class BbvaAuthenticator implements MultiFactorAuthenticator {
             String authenticationState = loginResponse.getAuthenticationState();
             log.info("Authentication state: {}", authenticationState);
             if (isTwoFactorAuthenticationNeeded(authenticationState)) {
-                processOtpLogin(loginResponse.getMultistepProcessId(), username);
+                loginWithOtp(loginResponse.getMultistepProcessId(), username);
             }
         } catch (HttpResponseException ex) {
             mapHttpErrors(ex);
@@ -61,7 +61,7 @@ public class BbvaAuthenticator implements MultiFactorAuthenticator {
         return CredentialsTypes.PASSWORD;
     }
 
-    private void processOtpLogin(String multistepProcessId, String username) {
+    private void loginWithOtp(String multistepProcessId, String username) {
         log.info("Process Otp has been started");
         final LoginRequest loginOtpRequest = new LoginRequest(username, multistepProcessId);
         LoginResponse loginOtpResponse = apiClient.login(loginOtpRequest);
@@ -70,8 +70,7 @@ public class BbvaAuthenticator implements MultiFactorAuthenticator {
                 StringUtils.firstNonEmpty(
                         loginOtpResponse.getMultistepProcessId(), multistepProcessId);
         final LoginRequest otpRequest = new LoginRequest(username, otpCode, multistepId, true);
-        log.info("Otp code has been sent to the verification");
-        apiClient.sendOTP(otpRequest);
+        apiClient.login(otpRequest);
     }
 
     private boolean isTwoFactorAuthenticationNeeded(String authenticationState) {
