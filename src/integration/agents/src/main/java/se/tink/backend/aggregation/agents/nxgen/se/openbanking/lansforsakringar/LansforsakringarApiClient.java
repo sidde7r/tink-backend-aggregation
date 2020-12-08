@@ -16,7 +16,6 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.PaymentTypes;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.QueryValues;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.authenticator.rpc.AuthenticateResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.authenticator.rpc.ConsentResponse;
@@ -32,41 +31,37 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.executor.payment.rpc.GetDomesticPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.executor.payment.rpc.GetPaymentStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.fetcher.rpc.GetAccountsResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.fetcher.rpc.GetBalancesResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.fetcher.rpc.GetTransactionsResponse;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
-import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public final class LansforsakringarApiClient {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LansforsakringarApiClient.class);
 
     private final TinkHttpClient client;
-    private final SessionStorage sessionStorage;
+    private final Credentials credentials;
+    private final LansforsakringarStorageHelper storageHelper;
+    private final LansforsakringarUserIpInformation userIpInformation;
+
     private LansforsakringarConfiguration configuration;
     private String redirectUrl;
-    private final Credentials credentials;
-    private final PersistentStorage persistentStorage;
-    private final String originatingUserIp;
 
     LansforsakringarApiClient(
             TinkHttpClient client,
-            SessionStorage sessionStorage,
             Credentials credentials,
-            PersistentStorage persistentStorage,
-            String originatingUserIp) {
+            LansforsakringarStorageHelper storageHelper,
+            LansforsakringarUserIpInformation userIpInformation) {
         this.client = client;
-        this.sessionStorage = sessionStorage;
         this.credentials = credentials;
-        this.persistentStorage = persistentStorage;
-        this.originatingUserIp = originatingUserIp;
+        this.storageHelper = storageHelper;
+        this.userIpInformation = userIpInformation;
     }
 
     public Credentials getCredentials() {
@@ -91,15 +86,23 @@ public final class LansforsakringarApiClient {
     }
 
     public RequestBuilder createRequest(URL url) {
-        return client.request(url)
-                .accept(MediaType.APPLICATION_JSON)
-                .type(MediaType.APPLICATION_JSON)
-                .header(
-                        HeaderKeys.PSU_IP_ADDRESS,
-                        originatingUserIp == null ? HeaderValues.PSU_IP_ADDRESS : originatingUserIp)
-                .header(HeaderKeys.PSU_USER_AGENT, HeaderValues.PSU_USER_AGENT)
-                .header(HeaderKeys.TPP_NOK_REDIRECT_URI, getRedirectUrl())
-                .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID());
+        RequestBuilder builder =
+                client.request(url)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .type(MediaType.APPLICATION_JSON)
+                        .header(HeaderKeys.PSU_USER_AGENT, HeaderValues.PSU_USER_AGENT)
+                        .header(HeaderKeys.TPP_NOK_REDIRECT_URI, getRedirectUrl())
+                        .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID());
+        setPsuIp(builder);
+
+        return builder;
+    }
+
+    private void setPsuIp(RequestBuilder builder) {
+        // LF API does not want to receive PSU_IP_ADDRESS for BG Refreshes
+        if (userIpInformation.isManualRequest()) {
+            builder.header(HeaderKeys.PSU_IP_ADDRESS, userIpInformation.getUserIp());
+        }
     }
 
     private RequestBuilder createRequestInSession(URL url) {
@@ -111,24 +114,7 @@ public final class LansforsakringarApiClient {
     }
 
     public ConsentResponse getConsent() {
-
         return createRequest(new URL(LansforsakringarConstants.Urls.CONSENT))
-                .header(
-                        LansforsakringarConstants.HeaderKeys.PSU_ID,
-                        getCredentials().getField(Field.Key.USERNAME))
-                .header(
-                        LansforsakringarConstants.HeaderKeys.PSU_ID_TYPE,
-                        LansforsakringarConstants.HeaderValues.PSU_ID_TYPE)
-                .header(LansforsakringarConstants.HeaderKeys.TPP_REDIRECT_URI, getRedirectUrl())
-                .header(LansforsakringarConstants.HeaderKeys.TPP_EXPLICIT_AUTH_PREFERRED, false)
-                .post(ConsentResponse.class, LansforsakringarConstants.BodyValues.EMPTY_BODY);
-    }
-
-    public ConsentResponse authorizeConsent(String consentId) {
-
-        return createRequest(
-                        new URL(LansforsakringarConstants.Urls.CONSENT_PROVIDED)
-                                .parameter(LansforsakringarConstants.IdTags.CONSENT_ID, consentId))
                 .header(
                         LansforsakringarConstants.HeaderKeys.PSU_ID,
                         getCredentials().getField(Field.Key.USERNAME))
@@ -195,29 +181,52 @@ public final class LansforsakringarApiClient {
     }
 
     public GetAccountsResponse getAccounts() {
-        return createRequestInSession(Urls.GET_ACCOUNTS)
+        Optional<GetAccountsResponse> maybeAccounts = storageHelper.getStoredAccounts();
+        if (maybeAccounts.isPresent()) {
+            return maybeAccounts.get();
+        }
+
+        GetAccountsResponse getAccountsResponse =
+                createRequestInSession(Urls.GET_ACCOUNTS)
+                        .header(HeaderKeys.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
+                        .header(HeaderKeys.CONSENT_ID, storageHelper.getConsentId())
+                        .header(HeaderKeys.CACHE_CONTROL, HeaderValues.NO_CACHE)
+                        .get(GetAccountsResponse.class);
+
+        storageHelper.storeAccounts(getAccountsResponse);
+        return getAccountsResponse;
+    }
+
+    public GetBalancesResponse getBalances(String resourceId) {
+        Optional<GetBalancesResponse> maybeBalanceResponse =
+                storageHelper.getStoredBalanceResponse(resourceId);
+        if (maybeBalanceResponse.isPresent()) {
+            storageHelper.removeBalanceResponseFromStorage(resourceId);
+            return maybeBalanceResponse.get();
+        }
+
+        URL balancesUrl = new URL(Urls.GET_BALANCES).parameter(IdTags.ACCOUNT_ID, resourceId);
+
+        return createRequestInSession(balancesUrl)
                 .header(HeaderKeys.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
-                .header(HeaderKeys.CONSENT_ID, persistentStorage.get(StorageKeys.CONSENT_ID))
+                .header(HeaderKeys.CONSENT_ID, storageHelper.getConsentId())
                 .header(HeaderKeys.CACHE_CONTROL, HeaderValues.NO_CACHE)
-                .queryParam(QueryKeys.WITH_BALANCE, QueryValues.TRUE)
-                .get(GetAccountsResponse.class);
+                .get(GetBalancesResponse.class);
     }
 
     public TransactionKeyPaginatorResponse<String> getTransactionsForKey(String key) {
         return createRequestInSession(Urls.BASE_API_URL + key)
-                .header(HeaderKeys.CONSENT_ID, persistentStorage.get(StorageKeys.CONSENT_ID))
+                .header(HeaderKeys.CONSENT_ID, storageHelper.getConsentId())
                 .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BOTH)
                 .get(GetTransactionsResponse.class);
     }
 
-    public <T extends Account> TransactionKeyPaginatorResponse<String> getTransactionsForAccount(
-            T account, LocalDateTimeSource localDateTimeSource) {
-        final URL url =
-                new URL(Urls.GET_TRANSACTIONS)
-                        .parameter(IdTags.ACCOUNT_ID, account.getApiIdentifier());
+    public TransactionKeyPaginatorResponse<String> getTransactionsForAccount(
+            String apiIdentifier, LocalDateTimeSource localDateTimeSource) {
+        final URL url = new URL(Urls.GET_TRANSACTIONS).parameter(IdTags.ACCOUNT_ID, apiIdentifier);
 
         return createRequestInSession(url)
-                .header(HeaderKeys.CONSENT_ID, persistentStorage.get(StorageKeys.CONSENT_ID))
+                .header(HeaderKeys.CONSENT_ID, storageHelper.getConsentId())
                 .queryParam(
                         QueryKeys.DATE_FROM,
                         localDateTimeSource
@@ -230,8 +239,8 @@ public final class LansforsakringarApiClient {
     }
 
     private OAuth2Token getTokenFromStorage() {
-        return sessionStorage
-                .get(StorageKeys.ACCESS_TOKEN, OAuth2Token.class)
+        return storageHelper
+                .getOAuth2Token()
                 .orElseThrow(
                         () -> {
                             LOGGER.warn(ErrorMessages.MISSING_TOKEN);

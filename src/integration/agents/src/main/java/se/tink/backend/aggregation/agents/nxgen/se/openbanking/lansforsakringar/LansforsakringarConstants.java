@@ -40,6 +40,7 @@ public abstract class LansforsakringarConstants {
         public static final String CONSENT_PROVIDED = BASE_API_URL + Endpoints.CONSENT_PROVIDED;
         public static final String SCA_STATUS = BASE_API_URL + Endpoints.SCA_STATUS;
         public static final String GET_ACCOUNTS = BASE_API_URL + Endpoints.GET_ACCOUNTS;
+        public static final String GET_BALANCES = BASE_API_URL + Endpoints.GET_BALANCES;
         public static final String GET_TRANSACTIONS = BASE_API_URL + Endpoints.GET_TRANSACTIONS;
         public static final String CREATE_PAYMENT = BASE_API_URL + Endpoints.CREATE_PAYMENT;
         public static final String GET_PAYMENT = BASE_API_URL + Endpoints.GET_PAYMENT;
@@ -58,6 +59,8 @@ public abstract class LansforsakringarConstants {
         public static final String SCA_STATUS =
                 "/openbanking/sec/v2/consents/{consentId}/authorisations/{authorizationId}";
         public static final String GET_ACCOUNTS = "/openbanking/ais/v1/accounts";
+        public static final String GET_BALANCES =
+                "/openbanking/ais/v1/accounts/{accountId}/balances";
         public static final String GET_TRANSACTIONS =
                 "/openbanking/ais/v1/accounts/{accountId}/transactions";
         public static final String CREATE_PAYMENT = "/openbanking/pis/v2/payments/{paymentType}";
@@ -69,8 +72,6 @@ public abstract class LansforsakringarConstants {
     }
 
     public static class StorageKeys {
-        public static final String ACCESS_TOKEN = "access-token";
-        public static final String AUTHORIZATION_ID = "authorisationId";
         public static final String CONSENT_ID = "consentId";
         public static final String ACCOUNTS = "accounts";
     }
@@ -78,7 +79,6 @@ public abstract class LansforsakringarConstants {
     public static class QueryKeys {
         public static final String DATE_FROM = "dateFrom";
         public static final String BOOKING_STATUS = "bookingStatus";
-        public static final String WITH_BALANCE = "withBalance";
         public static final String CLIENT_ID = "client_id";
         public static final String RESPONSE_TYPE = "response_type";
         public static final String AUTHORIZATION_ID = "AuthorisationID";
@@ -88,7 +88,6 @@ public abstract class LansforsakringarConstants {
 
     public static class QueryValues {
         public static final String BOTH = "both";
-        public static final String TRUE = "true";
         public static final String RESPONSE_TYPE = "code";
     }
 
@@ -109,7 +108,6 @@ public abstract class LansforsakringarConstants {
 
     public static class HeaderValues {
         // TODO: We need to support these PSU headers in production.
-        public static final String PSU_IP_ADDRESS = "127.0.0.1";
         public static final String PSU_USER_AGENT = "Desktop Mode";
         public static final String PSU_ID_TYPE = "SSSN";
         public static final String NO_CACHE = "no-cache";

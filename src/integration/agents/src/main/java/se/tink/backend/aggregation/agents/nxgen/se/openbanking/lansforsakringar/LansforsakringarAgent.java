@@ -50,6 +50,7 @@ public final class LansforsakringarAgent extends NextGenerationAgent
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final CreditCardRefreshController creditCardRefreshController;
     private final LocalDateTimeSource localDateTimeSource;
+    private final LansforsakringarStorageHelper storageHelper;
 
     @Inject
     public LansforsakringarAgent(
@@ -58,22 +59,16 @@ public final class LansforsakringarAgent extends NextGenerationAgent
         super(componentProvider);
         configureHttpClient(client);
         this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
+        this.storageHelper = new LansforsakringarStorageHelper(persistentStorage);
 
         apiClient =
                 new LansforsakringarApiClient(
-                        client,
-                        sessionStorage,
-                        credentials,
-                        persistentStorage,
-                        request.getOriginatingUserIp());
+                        client, credentials, storageHelper, getUserIpInformation());
 
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
         creditCardRefreshController = getCreditCardRefreshController();
+        setAgentConfiguration();
 
-        final AgentConfiguration<LansforsakringarConfiguration> agentConfiguration =
-                getAgentConfigurationController()
-                        .getAgentConfiguration(LansforsakringarConfiguration.class);
-        apiClient.setConfiguration(agentConfiguration);
         this.client.setEidasProxy(agentsServiceConfiguration.getEidasProxy());
     }
 
@@ -86,11 +81,22 @@ public final class LansforsakringarAgent extends NextGenerationAgent
         client.addFilter(new ServerFaultFilter());
     }
 
+    private LansforsakringarUserIpInformation getUserIpInformation() {
+        return new LansforsakringarUserIpInformation(request.isManual(), userIp);
+    }
+
+    private void setAgentConfiguration() {
+        final AgentConfiguration<LansforsakringarConfiguration> agentConfiguration =
+                getAgentConfigurationController()
+                        .getAgentConfiguration(LansforsakringarConfiguration.class);
+        apiClient.setConfiguration(agentConfiguration);
+    }
+
     @Override
     protected Authenticator constructAuthenticator() {
 
         LansforsakringarAuthenticator lansforsakringarAuthenticator =
-                new LansforsakringarAuthenticator(apiClient, sessionStorage, persistentStorage);
+                new LansforsakringarAuthenticator(apiClient, storageHelper);
         OAuth2AuthenticationController oAuth2AuthenticationController =
                 new LansforsakringarAuthController(
                         persistentStorage,
@@ -171,7 +177,7 @@ public final class LansforsakringarAgent extends NextGenerationAgent
 
     @Override
     protected SessionHandler constructSessionHandler() {
-        return new LansforsakringarSessionHandler(apiClient, persistentStorage, sessionStorage);
+        return new LansforsakringarSessionHandler(apiClient, storageHelper);
     }
 
     @Override
