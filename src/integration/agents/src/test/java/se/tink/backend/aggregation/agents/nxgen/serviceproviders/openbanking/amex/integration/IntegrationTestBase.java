@@ -32,7 +32,6 @@ import se.tink.backend.aggregation.fakelogmasker.FakeLogMasker;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.agentcontext.factory.AgentContextProviderFactory;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.agentcontext.factory.AgentContextProviderFactoryImpl;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.encapclient.MockEncapClientProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.GeneratedValueProviderImpl;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.ActualLocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGeneratorImpl;
@@ -75,8 +74,7 @@ public abstract class IntegrationTestBase {
                 agentContextProviderFactory.createAgentContextProvider(
                         credentialsRequest, agentContext),
                 new GeneratedValueProviderImpl(
-                        new ActualLocalDateTimeSource(), new RandomValueGeneratorImpl()),
-                new MockEncapClientProvider());
+                        new ActualLocalDateTimeSource(), new RandomValueGeneratorImpl()));
     }
 
     CredentialsRequest createCredentialsRequest() {

@@ -9,8 +9,6 @@ import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConf
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.agentcontext.AgentContextProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.agentcontext.AgentContextProviderImpl;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.encapclient.EncapClientProvider;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.encapclient.MockEncapClientProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.GeneratedValueProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.GeneratedValueProviderImpl;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.ConstantLocalDateTimeSource;
@@ -25,7 +23,6 @@ public final class AgentWireMockComponentProviderModule extends AbstractModule {
 
     private final TinkHttpClientProvider wireMockTinkHttpClientProvider;
     private final SupplementalInformationProvider mockSupplementalInformationProvider;
-    private final EncapClientProvider mockEncapClientProvider;
     private final GeneratedValueProvider generatedValueProvider;
     private final FakeBankSocket fakeBankSocket;
 
@@ -41,7 +38,6 @@ public final class AgentWireMockComponentProviderModule extends AbstractModule {
                         request, agentContext, configuration.getSignatureKeyPair(), fakeBankSocket);
         this.mockSupplementalInformationProvider =
                 new MockSupplementalInformationProvider(wireMockConfiguration.getCallbackData());
-        this.mockEncapClientProvider = new MockEncapClientProvider();
         this.generatedValueProvider =
                 new GeneratedValueProviderImpl(
                         new ConstantLocalDateTimeSource(), new MockRandomValueGenerator());
@@ -53,7 +49,6 @@ public final class AgentWireMockComponentProviderModule extends AbstractModule {
 
         bind(TinkHttpClientProvider.class).toInstance(wireMockTinkHttpClientProvider);
         bind(SupplementalInformationProvider.class).toInstance(mockSupplementalInformationProvider);
-        bind(EncapClientProvider.class).toInstance(mockEncapClientProvider);
         bind(AgentContextProvider.class).to(AgentContextProviderImpl.class);
         bind(GeneratedValueProvider.class).toInstance(generatedValueProvider);
 

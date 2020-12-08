@@ -8,6 +8,7 @@ import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesJsonFileParser;
 import se.tink.backend.aggregation.agents.framework.assertions.entities.AgentContractEntity;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockrefresh.AgentWireMockRefreshTest;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.mock.module.SparebankenSorWireMockTestModule;
 import se.tink.libraries.credentials.service.RefreshableItem;
 
 public class SparebankenSorAgentWireMockTest {
@@ -38,6 +39,7 @@ public class SparebankenSorAgentWireMockTest {
                         .addRefreshableItems(RefreshableItem.CHECKING_ACCOUNTS)
                         .withHttpDebugTrace()
                         .withRequestFlagCreate(true)
+                        .withAgentModule(new SparebankenSorWireMockTestModule())
                         .build();
 
         final AgentContractEntity expected =

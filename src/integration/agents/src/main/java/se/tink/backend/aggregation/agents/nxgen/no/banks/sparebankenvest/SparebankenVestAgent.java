@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
+import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.authenticator.SparebankenVestAutoAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.authenticator.SparebankenVestOneTimeActivationCodeAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.fetcher.creditcard.SparebankenVestCreditCardAccountFetcher;
@@ -24,6 +25,8 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.fetcher
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.fetcher.transactionalaccount.SparebankenVestTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.session.SparebankenVestSessionHandler;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.EncapClient;
+import se.tink.backend.aggregation.agents.utils.authentication.encap3.module.EncapClientModule;
+import se.tink.backend.aggregation.agents.utils.authentication.encap3.module.EncapClientProvider;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -43,6 +46,7 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.utils.deviceprofile.DeviceProfileConfiguration;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, CREDIT_CARDS, LOANS})
+@AgentDependencyModules(modules = EncapClientModule.class)
 public final class SparebankenVestAgent extends NextGenerationAgent
         implements RefreshLoanAccountsExecutor,
                 RefreshCreditCardAccountsExecutor,
@@ -56,12 +60,14 @@ public final class SparebankenVestAgent extends NextGenerationAgent
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
     @Inject
-    public SparebankenVestAgent(AgentComponentProvider agentComponentProvider) {
+    public SparebankenVestAgent(
+            AgentComponentProvider agentComponentProvider,
+            EncapClientProvider encapClientProvider) {
         super(agentComponentProvider);
         configureHttpClient(client);
         this.apiClient = new SparebankenVestApiClient(client);
         this.encapClient =
-                agentComponentProvider.getEncapClient(
+                encapClientProvider.getEncapClient(
                         persistentStorage,
                         new SparebankenVestEncapConfiguration(),
                         DeviceProfileConfiguration.IOS_STABLE,

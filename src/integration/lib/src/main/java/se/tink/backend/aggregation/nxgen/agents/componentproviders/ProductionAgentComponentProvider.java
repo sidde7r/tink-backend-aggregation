@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.nxgen.agents.componentproviders;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.agentcontext.AgentContextProviderImpl;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.encapclient.Encap3ClientProviderImpl;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.GeneratedValueProviderImpl;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.ActualLocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGeneratorImpl;
@@ -28,7 +27,6 @@ public final class ProductionAgentComponentProvider {
                 new SupplementalInformationProviderImpl(context, request),
                 new AgentContextProviderImpl(request, context),
                 new GeneratedValueProviderImpl(
-                        new ActualLocalDateTimeSource(), new RandomValueGeneratorImpl()),
-                new Encap3ClientProviderImpl());
+                        new ActualLocalDateTimeSource(), new RandomValueGeneratorImpl()));
     }
 }

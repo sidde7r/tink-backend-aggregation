@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.nxgen.agents.componentproviders.encapclient;
+package se.tink.backend.aggregation.agents.utils.authentication.encap3.module;
 
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.EncapClient;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.EncapConfiguration;

@@ -1,19 +1,16 @@
-package se.tink.backend.aggregation.nxgen.agents.componentproviders.encapclient;
-
-import static se.tink.backend.aggregation.utils.deviceprofile.DeviceProfileConfiguration.IOS_ENCAP_MOCK;
+package se.tink.backend.aggregation.agents.utils.authentication.encap3.module;
 
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.EncapClient;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.EncapConfiguration;
-import se.tink.backend.aggregation.agents.utils.authentication.encap3.storage.MockEncapStorage;
+import se.tink.backend.aggregation.agents.utils.authentication.encap3.storage.EncapStorage;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.utils.EncapMessageUtils;
+import se.tink.backend.aggregation.agents.utils.authentication.encap3.utils.EncapMessageUtilsImpl;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.utils.EncapSoapUtils;
-import se.tink.backend.aggregation.agents.utils.authentication.encap3.utils.MockEncapConfiguration;
-import se.tink.backend.aggregation.agents.utils.authentication.encap3.utils.MockEncapMessageUtils;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.utils.deviceprofile.DeviceProfile;
 
-public final class MockEncapClientProvider implements EncapClientProvider {
+public final class Encap3ClientProviderImpl implements EncapClientProvider {
 
     private EncapClient encapClient;
 
@@ -25,17 +22,13 @@ public final class MockEncapClientProvider implements EncapClientProvider {
             TinkHttpClient httpClient) {
         if (encapClient == null) {
             httpClient.disableSignatureRequestHeader();
-            MockEncapStorage storage = new MockEncapStorage(persistentStorage);
-
-            // I do not like the solution below - all the values should be injected.
-            // It should be a part of different PR to change that.
-            EncapConfiguration mockConfiguration = new MockEncapConfiguration();
-            EncapSoapUtils soapUtils = new EncapSoapUtils(mockConfiguration, storage);
+            EncapStorage storage = new EncapStorage(persistentStorage);
+            EncapSoapUtils soapUtils = new EncapSoapUtils(configuration, storage);
             EncapMessageUtils messageUtils =
-                    new MockEncapMessageUtils(
-                            mockConfiguration, storage, httpClient, IOS_ENCAP_MOCK);
+                    new EncapMessageUtilsImpl(configuration, storage, httpClient, deviceProfile);
             encapClient = new EncapClient(storage, soapUtils, messageUtils);
         }
+
         return encapClient;
     }
 }

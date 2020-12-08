@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
+import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.authenticator.SparebankenSorAutoAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.authenticator.SparebankenSorMultiFactorAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.authenticator.rpc.FirstLoginRequest;
@@ -25,6 +26,8 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.fetcher.
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.fetcher.transactionalaccount.SparebankenSorTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.filters.AddRefererFilter;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.EncapClient;
+import se.tink.backend.aggregation.agents.utils.authentication.encap3.module.EncapClientModule;
+import se.tink.backend.aggregation.agents.utils.authentication.encap3.module.EncapClientProvider;
 import se.tink.backend.aggregation.agents.utils.encoding.messagebodywriter.NoEscapeOfBackslashMessageBodyWriter;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
@@ -48,6 +51,7 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
  * config - Add rules to appstore monitor
  */
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, CREDIT_CARDS, LOANS})
+@AgentDependencyModules(modules = EncapClientModule.class)
 public final class SparebankenSorAgent extends NextGenerationAgent
         implements RefreshLoanAccountsExecutor,
                 RefreshCreditCardAccountsExecutor,
@@ -60,13 +64,15 @@ public final class SparebankenSorAgent extends NextGenerationAgent
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
     @Inject
-    public SparebankenSorAgent(AgentComponentProvider agentComponentProvider) {
+    public SparebankenSorAgent(
+            AgentComponentProvider agentComponentProvider,
+            EncapClientProvider encapClientProvider) {
         super(agentComponentProvider);
         configureHttpClient(client);
         apiClient = new SparebankenSorApiClient(client, sessionStorage);
 
         this.encapClient =
-                agentComponentProvider.getEncapClient(
+                encapClientProvider.getEncapClient(
                         persistentStorage,
                         new SparebankenSorEncapConfiguration(),
                         SparebankenSorConstants.DEVICE_PROFILE,
