@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
@@ -227,15 +228,19 @@ public final class LansforsakringarApiClient {
 
         return createRequestInSession(url)
                 .header(HeaderKeys.CONSENT_ID, storageHelper.getConsentId())
-                .queryParam(
-                        QueryKeys.DATE_FROM,
-                        localDateTimeSource
-                                .now()
-                                .minusMonths(LansforsakringarConstants.MONTHS_TO_FETCH)
-                                .toLocalDate()
-                                .toString())
+                .queryParam(QueryKeys.DATE_FROM, getDateFromForTransactions(localDateTimeSource))
                 .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BOTH)
                 .get(GetTransactionsResponse.class);
+    }
+
+    private String getDateFromForTransactions(LocalDateTimeSource localDateTimeSource) {
+        LocalDateTime now = localDateTimeSource.now();
+        if (userIpInformation.isManualRequest()) {
+            now = now.minusMonths(LansforsakringarConstants.MONTHS_TO_FETCH);
+        } else {
+            now = now.minusDays(LansforsakringarConstants.DAYS_TO_FETCH_BG);
+        }
+        return now.toLocalDate().toString();
     }
 
     private OAuth2Token getTokenFromStorage() {
