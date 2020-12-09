@@ -1,10 +1,9 @@
 package se.tink.backend.aggregation.agents.utils.authentication.encap3;
 
 import javax.annotation.Nullable;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import se.tink.backend.aggregation.agents.contexts.CompositeAgentContext;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
-import se.tink.backend.aggregation.agents.utils.authentication.encap3.EncapConstants.Urls;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.entities.IdentificationEntity;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.entities.RegistrationResultEntity;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.enums.AuthenticationMethod;
@@ -13,60 +12,28 @@ import se.tink.backend.aggregation.agents.utils.authentication.encap3.models.Dev
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.rpc.IdentificationResponse;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.rpc.RegistrationResponse;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.rpc.SamlResponse;
+import se.tink.backend.aggregation.agents.utils.authentication.encap3.storage.BaseEncapStorage;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.utils.EncapMessageUtils;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.utils.EncapSoapUtils;
-import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
-import se.tink.backend.aggregation.logmasker.LogMaskerImpl;
-import se.tink.backend.aggregation.nxgen.http.NextGenTinkHttpClient;
-import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
-import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.backend.aggregation.utils.deviceprofile.DeviceProfile;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
 @Slf4j
+@RequiredArgsConstructor
 public class EncapClient {
-    private final TinkHttpClient httpClient;
-    private final EncapStorage storage;
+    private final BaseEncapStorage storage;
     private final EncapSoapUtils soapUtils;
     private final EncapMessageUtils messageUtils;
-
-    public EncapClient(
-            CompositeAgentContext context,
-            CredentialsRequest request,
-            SignatureKeyPair signatureKeyPair,
-            PersistentStorage persistentStorage,
-            EncapConfiguration configuration,
-            DeviceProfile deviceProfile) {
-
-        this.httpClient =
-                NextGenTinkHttpClient.builder(
-                                context.getLogMasker(),
-                                LogMaskerImpl.shouldLog(request.getProvider()))
-                        .setAggregatorInfo(context.getAggregatorInfo())
-                        .setMetricRegistry(context.getMetricRegistry())
-                        .setLogOutputStream(context.getLogOutputStream())
-                        .setSignatureKeyPair(signatureKeyPair)
-                        .setProvider(request.getProvider())
-                        .build();
-
-        // Encap does not like our signature header :(
-        this.httpClient.disableSignatureRequestHeader();
-
-        this.storage = new EncapStorage(persistentStorage);
-        this.soapUtils = new EncapSoapUtils(configuration, storage);
-        this.messageUtils =
-                new EncapMessageUtils(configuration, storage, httpClient, deviceProfile);
-    }
 
     public DeviceRegistrationResponse registerDevice(String username, String activationCode) {
         storage.seedStorage(username);
 
         String authenticationBody = soapUtils.buildAuthSessionCreateRequest();
-        messageUtils.encryptSoapAndSend(Urls.SOAP_AUTHENTICATION, authenticationBody);
+        messageUtils.encryptSoapAndSend(
+                EncapConstants.Urls.SOAP_AUTHENTICATION, authenticationBody);
 
         String activationBody = soapUtils.buildActivationSessionUpdateRequest(activationCode);
         final String soapResponse =
-                messageUtils.encryptSoapAndSend(Urls.SOAP_ACTIVATION, activationBody);
+                messageUtils.encryptSoapAndSend(
+                        EncapConstants.Urls.SOAP_ACTIVATION, activationBody);
 
         String activationSessionId = EncapSoapUtils.getActivationSessionId(soapResponse);
 
@@ -88,7 +55,8 @@ public class EncapClient {
                 soapUtils.buildActivationCreateRequest(
                         username, activationSessionId, samlObjectB64);
         String activateDeviceSoapResponse =
-                messageUtils.encryptSoapAndSend(Urls.SOAP_ACTIVATION, activateDeviceBody);
+                messageUtils.encryptSoapAndSend(
+                        EncapConstants.Urls.SOAP_ACTIVATION, activateDeviceBody);
 
         return createDeviceRegistrationResponse(activateDeviceSoapResponse);
     }
@@ -123,7 +91,8 @@ public class EncapClient {
         String username = storage.getUsername();
 
         String authenticationBody = soapUtils.buildAuthSessionCreateRequest();
-        messageUtils.encryptSoapAndSend(Urls.SOAP_AUTHENTICATION, authenticationBody);
+        messageUtils.encryptSoapAndSend(
+                EncapConstants.Urls.SOAP_AUTHENTICATION, authenticationBody);
 
         String identificationMessage = messageUtils.buildIdentificationMessage(authenticationId);
         IdentificationResponse identificationResponse =
@@ -144,7 +113,8 @@ public class EncapClient {
         String authenticateDeviceBody =
                 soapUtils.buildAuthSessionReadRequest(username, samlObjectB64);
         String soapResponse =
-                messageUtils.encryptSoapAndSend(Urls.SOAP_AUTHENTICATION, authenticateDeviceBody);
+                messageUtils.encryptSoapAndSend(
+                        EncapConstants.Urls.SOAP_AUTHENTICATION, authenticateDeviceBody);
 
         return createDeviceAuthenticationResponse(soapResponse);
     }

@@ -1,0 +1,1040 @@
+REQUEST 1
+GET https://nettbank.sor.no/smbmobile/2811/appversion_ios.json
+Accept: */*
+X-Aggregator: Tink Testing
+
+RESPONSE 1
+200
+Date: Wed, 23 Sep 2020 05:56:04 GMT
+Last-Modified: Thu, 17 Sep 2020 07:11:28 GMT
+Accept-Ranges: bytes
+Vary: Accept-Encoding,User-Agent
+Cache-Control: no-cache, no-store, private, must-revalidate, max-age=0
+Pragma: no-cache
+Expires: 0
+Keep-Alive: timeout=5, max=300
+Connection: Keep-Alive
+Set-Cookie:	JSESSIONID=0000SXe7JT3V4OT-OX3ZFmLS4wW:892844872p1; path=/; secure; HttpOnly
+Strict-Transport-Security: max-age=31536000;
+
+{
+
+  "minimumOsForAppUpdate": "10.0.0",
+
+  "minimum": "1.46.0",
+
+  "upgradeDate": "2019-08-28",
+
+  "appUrl": "https://apps.apple.com/no/app/sparebanken-s%C3%B8r-mobilbank/id1230457332",
+
+  "osVersion": {
+
+    "minimum": "10.0.0",
+
+    "updateDate": "2018-09-27",
+
+    "reminderDays": 3,
+
+    "timesWithoutDismissAction": 3,
+
+    "recommendedMessage": {
+
+      "nb_NO": {
+
+        "title": "Oppdatering anbefales",
+
+        "message": "Av sikkerhetsmessige grunner støtter vi bare %@ og nyere etter %@. For å kunne laste ned nye versjoner av appen, som gir tilgang til forbedringer og ny funksjonalitet, må du oppdatere iOS, eventuelt bytte til en mobil som støtter et nyere operativsytem.",
+
+        "cancelAction": "Ok"
+
+      },
+
+      "en_US": {
+
+        "title": "Update recommended",
+
+        "message": "For security reasons we will only support %@ and newer after %@. To keep the app updated, you must update iOS or change to a phone that support a newer operating system",
+
+        "cancelAction": "Ok"
+
+      }
+
+    },
+
+    "requiredMessage": {
+
+      "nb_NO": {
+
+        "title": "Oppdater iOS",
+
+        "message": "Av sikkerhetsmessige grunner støtter vi nå bare %@ og nyere. For å kunne laste ned nye versjoner av appen, som gir tilgang til forbedringer og ny funksjonalitet, må du oppdatere iOS, eventuelt bytte til en mobil som støtter et nyere operativsytem.",
+
+        "cancelAction": "Ok",
+
+        "dismissAction": "Ikke vis igjen"
+
+      },
+
+      "en_US": {
+
+        "title": "Update iOS",
+
+        "message": "For security reasons we will only support %@ and newer. To keep the app updated, you must update iOS or change to a phone that support a newer operating system",
+
+        "cancelAction": "Ok",
+
+        "dismissAction": "Don't show again"
+
+      }
+
+    }
+
+  }
+
+}
+
+
+
+REQUEST 2
+GET https://nettbank.sor.no/secesb/rest/era/era/public/customers/01059344907/mobile?number=+4745916225&orgid=2811
+Accept: application/json
+Content-Type: application/json
+X-EVRY-CLIENT-CLIENTNAME: SMARTbankMobile
+X-Aggregator: Tink Testing
+
+RESPONSE 2
+200
+Date: Wed, 23 Sep 2020 05:56:04 GMT
+Cache-Control: no-cache, no-store
+Expires: Mon, 01 Jan 2001 05:00:00 GMT
+Pragma: no-cache
+Content-Length: 14
+Keep-Alive: timeout=5, max=300
+Connection: Keep-Alive
+Content-Type: application/json
+Content-Language: en-US
+Set-Cookie: ***
+Set-Cookie:	JSESSIONID=0000SXe7JT3V4OT-OX3ZFmLS4wW:892844872p1; path=/; secure; HttpOnly
+Strict-Transport-Security: max-age=31536000;
+
+{"valid":true}
+
+REQUEST 3
+GET https://nettbank.sor.no/authenticate/login/bankidmobile?configKey=smbmactivate2811&userId=01059344907&phoneNumber=45916225
+Accept: */*
+X-Aggregator: Tink Testing
+
+RESPONSE 3
+200
+Date: Wed, 23 Sep 2020 05:56:05 GMT
+Cache-Control: no-store
+Keep-Alive: timeout=5, max=300
+Connection: Keep-Alive
+Transfer-Encoding: chunked
+Content-Type: text/html;charset=UTF-8
+Content-Language: en-US
+Strict-Transport-Security: max-age=31536000;
+
+<!DOCTYPE html>
+
+<html><head id="j_idt41">
+
+	<title>
+
+	</title>
+
+		<link rel="shortcut icon" href="/authenticate/css/internal/bankid_default/favicon.ico" />
+
+		<link rel="stylesheet" type="text/css" href="/authenticate/css/internal/bidm.css" />
+
+		<script type="text/javascript" src="/authenticate/scripts/bidm/bidm.js?v=1"></script>
+
+
+
+	<meta name="viewport" content="width=device-width" />
+
+	<meta name="format-detection" content="telephone=no" />
+
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+
+
+
+	<script type="text/javascript" src="/authenticate/scripts/edited-fields.js"></script><script type="text/javascript" src="/authenticate/login/javax.faces.resource/jsf.js;jsessionid=0000SXe7JT3V4OT-OX3ZFmLS4wW:892844872p1?ln=javax.faces"></script></head><body onload="">
+
+
+
+		<div class="bidm_app" data-page-type="login">
+
+			<div class="bidm_live_region" aria-live="assertive" aria-atomic="true" role="log" aria-relevant="additions"></div>
+
+			<div class="bidm_wrapper">
+
+				<div class="bidm_frame">
+
+					<div class="bidm_wrapper-inner">
+
+						<header class="bidm_header">
+
+						<div class="bidm_table">
+
+							<div class="bidm_left">
+
+								<div class="bidm_logo-wrapper">
+
+									<img class="bidm_logo" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iOTEiIGhlaWdodD0iMjgiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHRpdGxlPmJhbmtpZC1tb2JpbF9sb2dvPC90aXRsZT48ZyBmaWxsPSJub25lIj48cmVjdCBmaWxsPSIjRjhGOEY4IiB4PSI1MSIgeT0iMjUiIHdpZHRoPSI0MCIgaGVpZ2h0PSIzIi8+PGcgZmlsbD0iIzU1NSI+PHBhdGggZD0iTTYuNDI4IDE2aC00Ljg1NmMtLjMxNSAwLS41NzEtLjIzNi0uNTcxLS41Mjl2LS45NDNjMC0uMjkyLjI1Ni0uNTI5LjU3MS0uNTI5aDQuODU3Yy4zMTUgMCAuNTcxLjIzNy41NzEuNTI5di45NDNjLS4wMDEuMjkzLS4yNTYuNTI5LS41NzIuNTI5IiBpZD0iU2hhcGUiLz48cGF0aCBkPSJNMjIuNDI5IDE2aC00Ljg1N2MtLjMxNSAwLS41NzEtLjIzNi0uNTcxLS41Mjl2LS45NDNjMC0uMjkyLjI1Ni0uNTI5LjU3MS0uNTI5aDQuODU3Yy4zMTUgMCAuNTcxLjIzNy41NzEuNTI5di45NDNjMCAuMjkzLS4yNTYuNTI5LS41NzEuNTI5IiBpZD0iU2hhcGUiLz48cGF0aCBkPSJNMTQuNDMgOGgtNC44NTljLS4zMTUgMC0uNTctLjIzNi0uNTctLjUyOHYtLjk0M2MwLS4yOTIuMjU2LS41MjkuNTctLjUyOWg0Ljg1OWMuMzE1IDAgLjU3LjIzNy41Ny41Mjl2Ljk0MmMwIC4yOTItLjI1NS41MjktLjU3LjUyOSIgaWQ9IlNoYXBlIi8+PHBhdGggZD0iTTIyLjQyOSA4aC00Ljg1N2MtLjMxNSAwLS41NzEtLjIzNi0uNTcxLS41Mjh2LS45NDNjMC0uMjkyLjI1Ni0uNTI5LjU3MS0uNTI5aDQuODU3Yy4zMTUgMCAuNTcxLjIzNy41NzEuNTI5di45NDJjMCAuMjkyLS4yNTYuNTI5LS41NzEuNTI5IiBpZD0iU2hhcGUiLz48cGF0aCBkPSJNNi40MjggNGgtNC44NTZjLS4zMTUgMC0uNTcxLS4yMzctLjU3MS0uNTI4di0uOTQ0YzAtLjI5Mi4yNTYtLjUyOC41NzEtLjUyOGg0Ljg1N2MuMzE1IDAgLjU3MS4yMzYuNTcxLjUyOHYuOTQ0Yy0uMDAxLjI5MS0uMjU2LjUyOC0uNTcyLjUyOCIgaWQ9IlNoYXBlIi8+PHBhdGggZD0iTTIyLjQyOSA0aC00Ljg1N2MtLjMxNSAwLS41NzEtLjIzNy0uNTcxLS41Mjh2LS45NDRjMC0uMjkyLjI1Ni0uNTI4LjU3MS0uNTI4aDQuODU3Yy4zMTUgMCAuNTcxLjIzNi41NzEuNTI4di45NDRjMCAuMjkxLS4yNTYuNTI4LS41NzEuNTI4IiBpZD0iU2hhcGUiLz48cGF0aCBkPSJNNi40MjggMTJoLTQuODU2Yy0uMzE1IDAtLjU3MS0uMjM3LS41NzEtLjUyOHYtLjk0NGMwLS4yOTIuMjU2LS41MjguNTcxLS41MjhoNC44NTdjLjMxNSAwIC41NzEuMjM2LjU3MS41Mjh2Ljk0NGMtLjAwMS4yOTEtLjI1Ni41MjgtLjU3Mi41MjgiIGlkPSJTaGFwZSIvPjxwYXRoIGQ9Ik0xNC40MyAxMmgtNC44NTljLS4zMTUgMC0uNTctLjIzNy0uNTctLjUyOHYtLjk0NGMwLS4yOTIuMjU2LS41MjguNTctLjUyOGg0Ljg1OWMuMzE1IDAgLjU3LjIzNi41Ny41Mjh2Ljk0NGMwIC4yOTEtLjI1NS41MjgtLjU3LjUyOCIvPjwvZz48ZyBmaWxsPSIjNTU1Ij48cGF0aCBkPSJNODAuNTc4IDE0LjUxOWguMDE0bC0uMDE0LTEyLjA0MiA0LjQ2My4wMDFjMi4xNDMgMCAzLjQ1OCAxLjE5MSAzLjQ1OCAzLjU0MnY0Ljk3OGMwIDIuMzQ0LTEuMjkgMy41MTUtMy40NTggMy41MTVsLTQuNDYzLjAwNHptNC4zOTggMS40ODFjMy4xNTQgMCA1LjAyNC0xLjc0IDUuMDI0LTUuMTh2LTQuNjM5YzAtMy41MDEtMS45NzYtNS4xNzktNS4wNTYtNS4xNzlsLTQuOTY2LS4wMDJjLS4yNjUgMC0uNDk3LjA5Ni0uNjg5LjI4OC0uMTkyLjE5NC0uMjg5LjQzLS4yODkuNzAzdjEzLjAxN2MwIC4yNzMuMDk3LjUxMS4yODkuNzAzLjE5Mi4xOS40MjMuMjg5LjY4OS4yODloNC45OTh6Ii8+PHBhdGggZD0iTTc2LjYgMTUuMjU2YzAgLjIwNi0uMDc3LjM4Mi0uMjM1LjUyNi0uMTU4LjE0NC0uMzQ3LjIxNy0uNTcxLjIxNy0uMjE3IDAtLjQwNC0uMDcyLS41Ni0uMjE3LS4xNTgtLjE0NS0uMjM1LS4zMi0uMjM1LS41MjZ2LTEzLjUxMmMwLS4yMDUuMDc3LS4zOC4yMzUtLjUyNi4xNTYtLjE0NS4zNDMtLjIxNy41Ni0uMjE3LjIyMyAwIC40MTQuMDcyLjU3MS4yMTcuMTU4LjE0Ni4yMzUuMzIxLjIzNS41MjZ2MTMuNTEyeiIvPjxwYXRoIGQ9Ik03MyAxNS4yNThjMCAuNDk1LS4yNTMuNzQyLS43NTguNzQyLS4yMDEgMC0uMzc4LS4wNy0uNTI5LS4yMTNsLTQuNjEtNC4zNjRjLS40MTIuNDI1LS45MjYuODk0LTEuNTQ3IDEuNDF2Mi40MTljMCAuMjA1LS4wNzcuMzgyLS4yMzIuNTI0LS4xNTUuMTQ1LS4zMzcuMjE3LS41NDUuMjE3LS4yMTcgMC0uNC0uMDcyLS41NTMtLjIxNy0uMTUxLS4xNDMtLjIyNy0uMzE4LS4yMjctLjUyM3YtMTMuNTEzYzAtLjIwNC4wNzYtLjM3OC4yMjctLjUyMy4xNTItLjE0NC4zMzUtLjIxNy41NTMtLjIxNy4yMDkgMCAuMzkuMDcyLjU0NS4yMTcuMTU1LjE0NS4yMzIuMzIuMjMyLjUyM3Y5LjA4MWw2LjE1Ni01LjgxM2MuMTUyLS4xNDcuMzI3LS4yMjIuNTI5LS4yMjIuNTA1IDAgLjc1OC4yNDguNzU4Ljc0IDAgLjIxOC0uMDc1LjM5OC0uMjI4LjUzOWwtNC41NjQgNC4zMzMgNC41NjQgNC4zMjNjLjE1Mi4xMzkuMjI4LjMyLjIyOC41MzYiLz48cGF0aCBkPSJNNjEuOTk5IDE1LjI3NGMwIC4yMDEtLjA3Ny4zNzMtLjIzMi41MTMtLjE1Ni4xNDItLjM0LjIxMy0uNTU0LjIxMy0uNTE3IDAtLjc3Ni0uMjQzLS43NzYtLjcyNnYtNy4xOTNjMC0uNDQyLS4xNjctLjgyMy0uNTA0LTEuMTQxLS4zMzUtLjMxNy0uNzQyLS40NzctMS4yMjQtLjQ3N2gtMy40Yy0uNDcyIDAtLjg3Ni4xNTktMS4yMTEuNDc3LS4zMzYuMzE4LS41MDQuNjk4LS41MDQgMS4xNDF2Ny4xOTNjMCAuMjAxLS4wNzkuMzczLS4yMzguNTEzLS4xNTguMTQyLS4zNDQuMjEzLS41NTkuMjEzLS4yMiAwLS40MS0uMDcxLS41NjQtLjIxMy0uMTU2LS4xNC0uMjMyLS4zMTItLjIzMi0uNTEzdi03LjE5M2MwLS44NTEuMzI1LTEuNTc3Ljk3NS0yLjE3OC42NDktLjYwMiAxLjQyOS0uOTAzIDIuMzM2LS45MDNoMy40Yy45MDkgMCAxLjY4NS4zMDEgMi4zMjcuOTAzLjY0My42MDEuOTYzIDEuMzI3Ljk2MyAyLjE3OHY3LjE5M2gtLjAwMXoiLz48cGF0aCBkPSJNNDguNTk1IDEyLjkxNnYtMi4wODFjLTIuMDk1LS4wMTQtMy45NTUtLjA2OS00LjU3NS4xMDUtMS4yNC4zNDUtMS41OTQgMS4xMDgtMS41OTQgMS45NzYgMCAuNDQ0LjE1MS44MjYuNDUzIDEuMTQzLjMwMi4zMTkuNjY5LjQ3OCAxLjEwMi40NzhoMy4wNmMuNDI1IDAgLjc5MS0uMTU4IDEuMDk1LS40NzguMzA3LS4zMTguNDU5LS42OTkuNDU5LTEuMTQzem0xLjQwNS4wMDRjMCAuODUtLjI4OSAxLjU3NS0uODY3IDIuMTc3LS41NzguNjAyLTEuMjc2LjkwMy0yLjA5My45MDNoLTMuMDZjLS44MjQgMC0xLjUyNy0uMzAxLTIuMTA4LS45MDUtLjU4Mi0uNjAyLS44NzItMS4zMjgtLjg3Mi0yLjE3OSAwLTEuNDQ3Ljc4MS0yLjYzNyAyLjM0Mi0zLjIyLjc1MS0uMjc3IDIuMzkzLS4yMjMgNS4yNTMtLjIwMnYtMS40MjFjMC0uNDQtLjE1Mi0uODE5LS40NTgtMS4xMzYtLjMwNS0uMzE2LS42Ny0uNDc1LTEuMDk1LS40NzVoLTMuMDZjLS4zMTUgMC0uNjI2LjA5OS0uODY3LjI2OC0uMjUuMTc3LS40NC40Ni0uNi42OTUtLjExNi4xNjktLjI4My4yMS0uNDgzLjIxLS4xOTMgMC0uMzU4LS4wNzMtLjQ5OC0uMjIyLS4xMzktLjE0OS0uMjEtLjMyMy0uMjEtLjUyMyAwLS4zNzkuMjUtLjcyMy43MDgtMS4xMzguNjE3LS41NiAxLjI5NC0uNzUyIDEuOTQ5LS43NTJoMy4wNmMuODE2IDAgMS41MTUuMzAxIDIuMDkzLjkwMy41NzkuNjAxLjg2NyAxLjMyNy44NjcgMi4xNzd2NC44NDF6Ii8+PHBhdGggZD0iTTM3LjQzOCAxMi44NnYtNC45MzZjMC0uNDUxLS4xNjgtLjgzOC0uNTA1LTEuMTYzLS4zMzUtLjMyMy0uNzQyLS40ODYtMS4yMjMtLjQ4NmgtMy40Yy0uNDc0IDAtLjg3Ny4xNjItMS4yMTMuNDg2LS4zMzYuMzI0LS41MDMuNzEyLS41MDMgMS4xNjN2NC45MzVjMCAuNDU3LjE2Ny44NDcuNTAzIDEuMTY4LjMzNS4zMi43MzkuNDggMS4yMTMuNDhoMy40Yy40OCAwIC44ODgtLjE2IDEuMjIzLS40ODYuMzM3LS4zMjMuNTA1LS43MTEuNTA1LTEuMTYxem0xLjU2MiAwYzAgLjg2Ny0uMzIxIDEuNjA2LS45NjMgMi4yMTktLjY0My42MTMtMS40MTkuOTItMi4zMjYuOTJoLTMuNGMtLjkwOCAwLTEuNjg2LS4zMDctMi4zMzYtLjkyMS0uNjUtLjYxMy0uOTc1LTEuMzUzLS45NzUtMi4yMnYtMTEuMTE4YzAtLjIwNC4wNzctLjM3OC4yMzItLjUyMy4xNTYtLjE0NC4zNDQtLjIxNy41NjUtLjIxNy4yMTUgMCAuNC4wNzIuNTU4LjIxNy4xNTkuMTQ0LjIzOS4zMTkuMjM5LjUyM3YzLjQ5Yy41MDktLjI5NiAxLjA4MS0uNDQ0IDEuNzE2LS40NDRoMy40Yy45MDcgMCAxLjY4My4zMDcgMi4zMjYuOTIuNjQyLjYxMi45NjMgMS4zNTMuOTYzIDIuMjE5djQuOTM1eiIvPjwvZz48cGF0aCBkPSJNNTYgMjRjMCAxLS45NDEgMS0uOTQxIDFoLTIuMDU4djEuNXMwIC41LS41MDEuNS0uNS0uNS0uNS0uNXYtMy41YzAtMSAuOTE1LTEgMS4wMDEtMWgyLjA1OGMuOTQxIDAgLjk0MSAxIC45NDEgMXYxem0tMS4wMDEtLjUyOWMwLS40NzEtLjM3NS0uNDcxLS41LS40NzFoLTEuNDk5djFoMS40OTljLjEyNSAwIC41LS4wNTcuNS0uNTI5em03LjAwMSAzLjAyOXMwIC41MTctLjUuNTE3LS41LS41MTctLjUtLjUxN3YtMS41aC0zdjEuNXMwIC41MTctLjUuNTE3LS41LS41MTctLjUtLjUxN3YtMy41YzAtMSAuNjg1LTEgMS0xaDNjLjMxNSAwIDEgMCAxIDF2My41em0tMS0yLjQ5MnYtLjU1MWMwLS40NDktLjUtLjQ0OS0uNS0uNDQ5aC0ycy0uNS0uMTAzLS41LjQ0OXYuNTUxaDN6IiBmaWxsPSIjNzM3MzczIi8+PHBhdGggZD0iTTczIDI2LjVzMCAuNS0uNDk0LjUtLjUwNi0uNS0uNTA2LS41di0zYzAtLjQ0LS41MDItLjUtLjUwMi0uNWgtMS4wMTZzLS40ODIuMDYtLjQ4Mi41djNzMCAuNS0uNTM0LjUtLjQ2Ni0uNS0uNDY2LS41bC4wNTQtM3MtLjA1NC0uNS0uNjA5LS41aC0uOTQ1Yy0uNDk3IDAtLjQ5Ny41LS40OTcuNXYzczAgLjUtLjUwMy41LS41LS41LS41LS41di0zLjQ0czAtMS4wNiAxLjAwMy0xLjA2aDIuMDUxcy40MTIgMCAuNDEyLjVjMCAwIC4xMzQtLjUuNTM0LS41IDAgMCAxIC4wMDMgMiAwczEgMSAxIDF2My41eiIgZmlsbD0iIzczNzM3MyIvPjxwYXRoIGQ9Ik03OCAyNS45MjNzMCAxLjA3Ny0xLjAwOCAxLjA3N2gtMmMtLjk5MiAwLS45OTItMS0uOTkyLTF2LTNzMC0xIC45OTItMWgyYzEuMDA4IDAgMS4wMDggMSAxLjAwOCAxdjIuOTIzem0tMS0uMjg3di0yLjI3YzAtLjEwMi0uMDM2LS4xODgtLjEwOS0uMjU5LS4wNzItLjA3MS0uMTU5LS4xMDYtLjI2MS0uMTA2aC0xLjI2MWMtLjEwMSAwLS4xODguMDM1LS4yNjEuMTA2LS4wNzIuMDcxLS4xMDkuMTU3LS4xMDkuMjU5djIuMjdjMCAuMTAyLjAzNi4xODguMTA5LjI1OS4wNzIuMDcxLjE1OS4xMDYuMjYxLjEwNmgxLjI2MWMuMTAxIDAgLjE4OC0uMDM1LjI2MS0uMTA2LjA3Mi0uMDcxLjEwOS0uMTU3LjEwOS0uMjU5eiIgZmlsbD0iIzczNzM3MyIvPjxwYXRoIGQ9Ik04MyAyNS45MjNjMCAuMy0uMTEzLjU1NC0uMzM4Ljc2NC0uMjI1LjIwOS0uNDk0LjMxNC0uODA3LjMxNGgtMi41MjFjLS4wOTIgMC0uMTcxLS4wMy0uMjM2LS4wODktLjA2NS0uMDU5LS4wOTgtLjEzMi0uMDk4LS4yMTh2LTQuMzg2YzAtLjA4Ni4wMzMtLjE1OS4wOTgtLjIxOHMuMTQ0LS4wODkuMjM2LS4wODloMi41MjFjLjMxMiAwIC41ODEuMTA1LjgwNy4zMTYuMjI1LjIxLjMzOC40NjUuMzM4Ljc2NXYuNjQ5YzAgLjMwMi0uMTE0LjU1OS0uMzQyLjc3MS4yMjguMjEyLjM0Mi40NjguMzQyLjc3MXYuNjUyem0tMS0yLjIxNXYtLjQxNWMwLS4wODItLjAzNS0uMTUxLS4xMDYtLjIwOC0uMDcxLS4wNTctLjE1Ni0uMDg1LS4yNTYtLjA4NWgtMS42Mzh2MWgxLjYzOGMuMSAwIC4xODUtLjAyOC4yNTYtLjA4NS4wNzEtLjA1Ny4xMDYtLjEyNi4xMDYtLjIwOHptMCAyLjAwMXYtLjQxNmMwLS4wOC0uMDM1LS4xNDktLjEwNi0uMjA2LS4wNzEtLjA1Ny0uMTU2LS4wODYtLjI1Ni0uMDg2aC0xLjYzOHYxaDEuNjM4Yy4xIDAgLjE4NS0uMDI5LjI1Ni0uMDg2LjA3MS0uMDU3LjEwNi0uMTI2LjEwNi0uMjA2eiIgZmlsbD0iIzczNzM3MyIvPjxwYXRoIGQ9Ik04NSAyNi41czAgLjUtLjQ2NS41LS41MzUtLjUtLjUzNS0uNXYtNGMwLS4wODYuMDctLjUuNTM1LS41cy40NjUuNDE0LjQ2NS41djR6IiBmaWxsPSIjNzM3MzczIi8+PHBhdGggZD0iTTg5LjUgMjdoLTIuNWMtMSAwLTEtLjctMS0xdi0zLjVzMC0uNS41LS41LjUuNS41LjV2M3MwIC41LjUuNWgyLjAzM3MuNDY3LjA0Ni40NjcuNWMwIC41LS41LjUtLjUuNXoiIGZpbGw9IiM3MzczNzMiLz48cGF0aCBkPSJNNjAuNTYxIDIxLjU2MmMtLjI5My4yOTItLjY0Ni40MzgtMS4wNjEuNDM4LS40MTUgMC0uNzY5LS4xNDYtMS4wNjEtLjQzOC0uMjkzLS4yOTItLjQzOS0uNjQ1LS40MzktMS4wNTggMC0uNDE0LjE0Ni0uNzY4LjQzOS0xLjA2Mi4yOTMtLjI5NC42NDYtLjQ0MiAxLjA2MS0uNDQyLjQxNSAwIC43NjkuMTQ3IDEuMDYxLjQ0Mi4yOTMuMjk0LjQzOS42NDkuNDM5IDEuMDYyIDAgLjQxNC0uMTQ2Ljc2Ny0uNDM5IDEuMDU4em0tMS4wNjEtLjU2MmMuMjc2IDAgLjUtLjIyNC41LS41cy0uMjI0LS41LS41LS41LS41LjIyNC0uNS41LjIyNC41LjUuNXoiIGZpbGw9IiM3MzczNzMiLz48L2c+PC9zdmc+" alt="BankID logo" title="BankID logo" />
+
+											<h1 tabindex="1025" class="bidm_title">Identifisering</h1>
+
+								</div>
+
+							</div>
+
+							<div class="bidm_right">
+
+								<button class="bidm_close" title="Avbryt" type="button" tabindex="1050">
+
+									<span class="bidm_label">Avbryt</span> <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTEiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHRpdGxlPmljb19jbG9zZTwvdGl0bGU+PHBhdGggZD0iTTEgMy45OTlsNC41IDQuNSA0LjUtNC41IDEgMS00LjUgNC41IDQuNSA0LjVzLS45NTcgMS4wNTEtMSAxYy0xLjIyNi0xLjQ0OS00LjUtNC41LTQuNS00LjVsLTQuNSA0LjUtMS0xIDQuNS00LjUtNC41LTQuNSAxLTF6IiBmaWxsPSIjNTU1Ii8+PC9zdmc+" alt="" />
+
+								</button>
+
+							</div>
+
+						</div>
+
+						</header>
+
+						<section class="bidm_body">
+
+						<div class="bidm_vertical">
+
+							<div class="bidm_horizontal">
+
+								<div class="bidm_content">
+
+									<form class="bidm_outer-form">
+
+										<div class="bidm_label-wrapper">
+
+											<label class="bidm_login-label" for="bidm_phone">
+
+											Mobilnummer og fødselsdato
+
+											</label>
+
+											<button title="Hjelp" class="bidm_help" type="button" tabindex="2000">
+
+												<img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgiIGhlaWdodD0iMTgiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHRpdGxlPmljb19oZWxwPC90aXRsZT48ZyBmaWxsPSJub25lIj48cGF0aCBkPSJNMTcuNSA5YzAtNC42OTQtMy44MDYtOC41LTguNS04LjVzLTguNSAzLjgwNi04LjUgOC41IDMuODA2IDguNSA4LjUgOC41IDguNS0zLjgwNiA4LjUtOC41eiIgc3Ryb2tlPSIjMDA3OEJEIi8+PHBhdGggZD0iTTggMTJoMnYyaC0ydi0yem0uNzU4LThjMSAwIDEuODMxLjIzOSAyLjQ5My43MTcuNjYyLjQ3OC45OTIgMS4xODYuOTkyIDIuMTI0IDAgLjU3NS0uMTQ0IDEuMDYtLjQzMSAxLjQ1NC0uMTY4LjIzOS0uNDkxLjU0NC0uOTY5LjkxNmwtLjQ3MS4zNjVjLS4yNTcuMTk5LS4yNjguNDMxLS4zNTIuNjk3LS4wNTMuMTY4LS4wOTEuMzU3LS4wOTYuNzExaC0xLjkzM2MuMDI3LS43NDguMDg4LTEuMTkzLjIwMy0xLjQ3OC4xMTUtLjI4NS40MTItLjYxNC44OS0uOTg2bC40ODUtLjM3OGMuMTU5LS4xMTkuMjg4LS4yNS4zODUtLjM5Mi4xNzctLjI0My4yNjYtLjUxMS4yNjYtLjgwMyAwLS4zMzYtLjA5OC0uNjQzLS4yOTUtLjkxOS0uMTk3LS4yNzctLjU1Ny0uNDE1LTEuMDc5LS40MTUtLjUxMyAwLS44NzcuMTctMS4wOTIuNTExLS4yMTUuMzQxLS4yNTQuNDU2LS4yNTQuODIzaC0xLjkxOGMuMDUzLTEuMjYxLjQyNS0xLjkxNiAxLjI1My0yLjQ0My41MjItLjMzNiAxLjE2NC0uNTA1IDEuOTI1LS41MDV6IiBmaWxsPSIjMDA3OEJEIi8+PC9nPjwvc3ZnPg==" />
+
+											</button>
+
+										</div>
+
+										<div class="bidm_form">
+
+											<div class="bidm_input">
+
+												<div class="bidm_error-wrapper">
+
+													<div class="bidm_error-container">
+
+														<div class="bidm_error">
+
+															<div class="bidm_arrow">
+
+															</div>
+
+															<div class="bidm_error-content">
+
+																<img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgiIGhlaWdodD0iMTgiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHRpdGxlPmljb193YXJuaW5nPC90aXRsZT48ZyBmaWxsPSJub25lIj48cGF0aCBkPSJNLjE3IDE1LjcwNmw4LjA5MS0xNC4xNzJjLjQwNy0uNzEyIDEuMDcyLS43MTIgMS40NzggMGw4LjA5MSAxNC4xNzJjLjQwNy43MTIuMDYyIDEuMjk0LS43NjggMS4yOTRoLTE2LjEyM2MtLjgyOSAwLTEuMTc1LS41ODEtLjc2OS0xLjI5NHoiIGZpbGw9IiNDRDA5MjAiLz48cGF0aCBkPSJNOCA2aDJ2My4wMjFsLS40ODMgMi45NzloLTEuMDA1bC0uNTEyLTIuOTc5di0zLjAyMXptMCA3aDJ2MmgtMnYtMnoiIGZpbGw9IiNmZmYiLz48L2c+PC9zdmc+" />
+
+
+
+																<div class="bidm_text">Mobilnummer må være 8 siffer</div>
+
+															</div>
+
+														</div>
+
+													</div>
+
+												</div>
+
+												<div class="bidm_wrapper">
+
+													<div class="bidm_input-block">
+
+														<div class="bidm_input-wrapper">
+
+															<input id="bidm_phone" class="bidm_phone" type="tel" maxlength="8" placeholder="8 siffer" tabindex="2200" autocomplete="off" autocorrect="off" autocapitalize="off" aria-invalid="true" aria-required="true" />
+
+
+
+															<div class="bidm_phone bidm_placeholder">8 siffer</div>
+
+														</div>
+
+													</div>
+
+													<div class="bidm_input-block">
+
+														<div class="bidm_input-wrapper">
+
+															<input id="bidm_birth" class="bidm_birth" type="tel" maxlength="6" placeholder="ddmmåå" tabindex="2500" autocomplete="off" autocorrect="off" autocapitalize="off" aria-invalid="true" aria-required="true" />
+
+
+
+															<div class="bidm_birth bidm_placeholder">ddmmåå</div>
+
+														</div>
+
+													</div>
+
+												</div>
+
+											</div>
+
+											<div class="bidm_button-wrapper">
+
+												<button type="submit" title="Neste" id="bidm_next_button" class="bidm_next bidm_inactive" aria-disabled="true" tabindex="2700" action="bidmobPage1Action">
+
+													<img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMTkiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHRpdGxlPmljb19hcnJvd19yaWdodDwvdGl0bGU+PHBhdGggZD0iTTE5IDExbC01IDUgMiAyIDgtOC41MzEtOC04LjQ2OS0yIDIgNSA1aC0xOXYzaDE5eiIgZmlsbD0iI2ZmZiIvPjwvc3ZnPg==" alt="Neste" />
+
+												</button>
+
+											</div>
+
+										</div><table>
+
+<tbody>
+
+<tr>
+
+<td>
+
+											<div id="evry_bidm_error_wrapper" class="bidmob-error-msg-div"></td>
+
+</tr>
+
+<tr>
+
+</tr>
+
+<tr>
+
+<td>
+
+											</div></td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+
+
+
+
+									</form>
+
+								</div>
+
+							</div>
+
+						</div>
+
+						</section>
+
+						<div class="bidm_dialog" role="dialog" aria-labelledby="bidm_dialog-header">
+
+							<div class="bidm_row">
+
+								<div class="bidm_cell">
+
+									<div class="bidm_center">
+
+										<div class="bidm_content-wrapper">
+
+											<div class="bidm_dialog-header">
+
+												<h1 tabindex="5000" class="bidm_title" id="bidm_dialog-header">Hjelp: Mobil og fødselsdato</h1>
+
+											</div>
+
+											<div class="bidm_dialog-body bidm_scroll" tabindex="5100">
+
+												<p>Legg inn mobilnummeret ditt, 8 siffer uten mellomrom.</p>
+
+
+
+												<p>Fødselsdato skrives med 6 siffer uten punktum og
+
+													komma.</p>
+
+											</div>
+
+											<div class="bidm_dialog-close">
+
+												<button class="bidm_close" title="Lukk dialog" type="button" tabindex="5900">
+
+													<span class="bidm_label">Lukk</span> <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTEiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHRpdGxlPmljb19jbG9zZTwvdGl0bGU+PHBhdGggZD0iTTEgMy45OTlsNC41IDQuNSA0LjUtNC41IDEgMS00LjUgNC41IDQuNSA0LjVzLS45NTcgMS4wNTEtMSAxYy0xLjIyNi0xLjQ0OS00LjUtNC41LTQuNS00LjVsLTQuNSA0LjUtMS0xIDQuNS00LjUtNC41LTQuNSAxLTF6IiBmaWxsPSIjNTU1Ii8+PC9zdmc+" />
+
+												</button>
+
+											</div>
+
+										</div>
+
+									</div>
+
+								</div>
+
+							</div>
+
+						</div>
+
+					</div>
+
+				</div>
+
+			</div>
+
+		</div>
+
+<form id="form1" name="form1" method="post" action="/authenticate/login/bankidmobile;jsessionid=0000SXe7JT3V4OT-OX3ZFmLS4wW:892844872p1?execution=e1s1" enctype="application/x-www-form-urlencoded" style="display:none;">
+
+<input type="hidden" name="form1" value="form1" />
+
+<input id="phonenumber" type="hidden" name="phonenumber" value="45916225" /><input id="birthdate" type="hidden" name="birthdate" value="110583" /><input id="rememberMeCheckbox" type="checkbox" name="rememberMeCheckbox" style="display:none" onclick="mojarra.ab(this,event,'valueChange','@this',0)" /><input id="nextBtn" type="submit" name="nextBtn" value="" style="display:none" /><input id="cancelBtn" type="submit" name="cancelBtn" value="" style="display:none" /><input type="hidden" name="javax.faces.ViewState" id="javax.faces.ViewState" value="e1s1" />
+
+</form>
+
+
+
+
+
+		<script>
+
+			setTimeout(function(){
+
+				var bidm_phone = document.getElementById('bidm_phone');
+
+				var bidm_birth = document.getElementById('bidm_birth');
+
+				var bidm_next_button = document.getElementById('bidm_next_button');
+
+
+
+				if(bidm_phone && bidm_birth && bidm_next_button){
+
+
+
+					if(bidm_phone.value){
+
+						if(bidm_birth.value){
+
+							bidm_next_button.focus();
+
+						}
+
+						else{
+
+							bidm_birth.focus();
+
+						}
+
+					}
+
+					else if(bidm_birth.value){
+
+						bidm_phone.focus();
+
+					}
+
+
+
+				}
+
+
+
+			}, 50);
+
+		</script>
+
+
+
+		<a href="/authenticate/login/timeout?configKey=smbmactivate2811&amp;orgId=2844&amp;sessionID=SXe7JT3V4OT-OX3ZFmLS4wW" id="sessionTimeoutButton" style="display: none;"></a>
+
+
+
+		<script>
+
+			function sessionTimeout(){
+
+				var timeout = 1800;
+
+				if(timeout!=null && timeout > 0 && !isNaN(timeout)){
+
+					timeout = timeout*1000;
+
+					setTimeout(function(){document.getElementById('sessionTimeoutButton').click();}, timeout);
+
+				}
+
+			}
+
+
+
+			sessionTimeout();
+
+		</script></body>
+
+</html>
+
+REQUEST 4
+POST https://nettbank.sor.no/authenticate/login/bankidmobile;jsessionid=0000SXe7JT3V4OT-OX3ZFmLS4wW:892844872p1?execution=e1s1
+Origin: https://nettbank.sor.no
+Content-Type: application/x-www-form-urlencoded
+X-Aggregator: Tink Testing
+
+birthdate=010593&javax.faces.ViewState=e1s1&phonenumber=45916225&form1=form1&nextBtn=
+
+RESPONSE 4
+200
+Date: Wed, 23 Sep 2020 05:56:05 GMT
+Cache-Control: no-store
+Keep-Alive: timeout=5, max=300
+Connection: Keep-Alive
+Transfer-Encoding: chunked
+Content-Type: text/html;charset=UTF-8
+Content-Language: en-US
+Strict-Transport-Security: max-age=31536000;
+
+<!DOCTYPE html>
+
+<html><head id="j_idt34">
+
+	<title>
+
+	</title>
+
+		<link rel="shortcut icon" href="/authenticate/css/internal/bankid_default/favicon.ico" />
+
+		<link rel="stylesheet" type="text/css" href="/authenticate/css/internal/bidm.css" />
+
+		<script type="text/javascript" src="/authenticate/scripts/bidm/bidm.js?v=1"></script>
+
+
+
+	<meta name="viewport" content="width=device-width" />
+
+	<meta name="format-detection" content="telephone=no" />
+
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+
+
+
+	<script type="text/javascript" src="/authenticate/scripts/edited-fields.js"></script></head><body onload="">
+
+
+
+		<div class="bidm_app" data-page-type="reference">
+
+			<div class="bidm_wrapper">
+
+				<div class="bidm_frame">
+
+					<div class="bidm_wrapper-inner">
+
+						<header class="bidm_header">
+
+						<div class="bidm_table">
+
+							<div class="bidm_left">
+
+								<div class="bidm_logo-wrapper">
+
+									<img class="bidm_logo" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iOTEiIGhlaWdodD0iMjgiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHRpdGxlPmJhbmtpZC1tb2JpbF9sb2dvPC90aXRsZT48ZyBmaWxsPSJub25lIj48cmVjdCBmaWxsPSIjRjhGOEY4IiB4PSI1MSIgeT0iMjUiIHdpZHRoPSI0MCIgaGVpZ2h0PSIzIi8+PGcgZmlsbD0iIzU1NSI+PHBhdGggZD0iTTYuNDI4IDE2aC00Ljg1NmMtLjMxNSAwLS41NzEtLjIzNi0uNTcxLS41Mjl2LS45NDNjMC0uMjkyLjI1Ni0uNTI5LjU3MS0uNTI5aDQuODU3Yy4zMTUgMCAuNTcxLjIzNy41NzEuNTI5di45NDNjLS4wMDEuMjkzLS4yNTYuNTI5LS41NzIuNTI5IiBpZD0iU2hhcGUiLz48cGF0aCBkPSJNMjIuNDI5IDE2aC00Ljg1N2MtLjMxNSAwLS41NzEtLjIzNi0uNTcxLS41Mjl2LS45NDNjMC0uMjkyLjI1Ni0uNTI5LjU3MS0uNTI5aDQuODU3Yy4zMTUgMCAuNTcxLjIzNy41NzEuNTI5di45NDNjMCAuMjkzLS4yNTYuNTI5LS41NzEuNTI5IiBpZD0iU2hhcGUiLz48cGF0aCBkPSJNMTQuNDMgOGgtNC44NTljLS4zMTUgMC0uNTctLjIzNi0uNTctLjUyOHYtLjk0M2MwLS4yOTIuMjU2LS41MjkuNTctLjUyOWg0Ljg1OWMuMzE1IDAgLjU3LjIzNy41Ny41Mjl2Ljk0MmMwIC4yOTItLjI1NS41MjktLjU3LjUyOSIgaWQ9IlNoYXBlIi8+PHBhdGggZD0iTTIyLjQyOSA4aC00Ljg1N2MtLjMxNSAwLS41NzEtLjIzNi0uNTcxLS41Mjh2LS45NDNjMC0uMjkyLjI1Ni0uNTI5LjU3MS0uNTI5aDQuODU3Yy4zMTUgMCAuNTcxLjIzNy41NzEuNTI5di45NDJjMCAuMjkyLS4yNTYuNTI5LS41NzEuNTI5IiBpZD0iU2hhcGUiLz48cGF0aCBkPSJNNi40MjggNGgtNC44NTZjLS4zMTUgMC0uNTcxLS4yMzctLjU3MS0uNTI4di0uOTQ0YzAtLjI5Mi4yNTYtLjUyOC41NzEtLjUyOGg0Ljg1N2MuMzE1IDAgLjU3MS4yMzYuNTcxLjUyOHYuOTQ0Yy0uMDAxLjI5MS0uMjU2LjUyOC0uNTcyLjUyOCIgaWQ9IlNoYXBlIi8+PHBhdGggZD0iTTIyLjQyOSA0aC00Ljg1N2MtLjMxNSAwLS41NzEtLjIzNy0uNTcxLS41Mjh2LS45NDRjMC0uMjkyLjI1Ni0uNTI4LjU3MS0uNTI4aDQuODU3Yy4zMTUgMCAuNTcxLjIzNi41NzEuNTI4di45NDRjMCAuMjkxLS4yNTYuNTI4LS41NzEuNTI4IiBpZD0iU2hhcGUiLz48cGF0aCBkPSJNNi40MjggMTJoLTQuODU2Yy0uMzE1IDAtLjU3MS0uMjM3LS41NzEtLjUyOHYtLjk0NGMwLS4yOTIuMjU2LS41MjguNTcxLS41MjhoNC44NTdjLjMxNSAwIC41NzEuMjM2LjU3MS41Mjh2Ljk0NGMtLjAwMS4yOTEtLjI1Ni41MjgtLjU3Mi41MjgiIGlkPSJTaGFwZSIvPjxwYXRoIGQ9Ik0xNC40MyAxMmgtNC44NTljLS4zMTUgMC0uNTctLjIzNy0uNTctLjUyOHYtLjk0NGMwLS4yOTIuMjU2LS41MjguNTctLjUyOGg0Ljg1OWMuMzE1IDAgLjU3LjIzNi41Ny41Mjh2Ljk0NGMwIC4yOTEtLjI1NS41MjgtLjU3LjUyOCIvPjwvZz48ZyBmaWxsPSIjNTU1Ij48cGF0aCBkPSJNODAuNTc4IDE0LjUxOWguMDE0bC0uMDE0LTEyLjA0MiA0LjQ2My4wMDFjMi4xNDMgMCAzLjQ1OCAxLjE5MSAzLjQ1OCAzLjU0MnY0Ljk3OGMwIDIuMzQ0LTEuMjkgMy41MTUtMy40NTggMy41MTVsLTQuNDYzLjAwNHptNC4zOTggMS40ODFjMy4xNTQgMCA1LjAyNC0xLjc0IDUuMDI0LTUuMTh2LTQuNjM5YzAtMy41MDEtMS45NzYtNS4xNzktNS4wNTYtNS4xNzlsLTQuOTY2LS4wMDJjLS4yNjUgMC0uNDk3LjA5Ni0uNjg5LjI4OC0uMTkyLjE5NC0uMjg5LjQzLS4yODkuNzAzdjEzLjAxN2MwIC4yNzMuMDk3LjUxMS4yODkuNzAzLjE5Mi4xOS40MjMuMjg5LjY4OS4yODloNC45OTh6Ii8+PHBhdGggZD0iTTc2LjYgMTUuMjU2YzAgLjIwNi0uMDc3LjM4Mi0uMjM1LjUyNi0uMTU4LjE0NC0uMzQ3LjIxNy0uNTcxLjIxNy0uMjE3IDAtLjQwNC0uMDcyLS41Ni0uMjE3LS4xNTgtLjE0NS0uMjM1LS4zMi0uMjM1LS41MjZ2LTEzLjUxMmMwLS4yMDUuMDc3LS4zOC4yMzUtLjUyNi4xNTYtLjE0NS4zNDMtLjIxNy41Ni0uMjE3LjIyMyAwIC40MTQuMDcyLjU3MS4yMTcuMTU4LjE0Ni4yMzUuMzIxLjIzNS41MjZ2MTMuNTEyeiIvPjxwYXRoIGQ9Ik03MyAxNS4yNThjMCAuNDk1LS4yNTMuNzQyLS43NTguNzQyLS4yMDEgMC0uMzc4LS4wNy0uNTI5LS4yMTNsLTQuNjEtNC4zNjRjLS40MTIuNDI1LS45MjYuODk0LTEuNTQ3IDEuNDF2Mi40MTljMCAuMjA1LS4wNzcuMzgyLS4yMzIuNTI0LS4xNTUuMTQ1LS4zMzcuMjE3LS41NDUuMjE3LS4yMTcgMC0uNC0uMDcyLS41NTMtLjIxNy0uMTUxLS4xNDMtLjIyNy0uMzE4LS4yMjctLjUyM3YtMTMuNTEzYzAtLjIwNC4wNzYtLjM3OC4yMjctLjUyMy4xNTItLjE0NC4zMzUtLjIxNy41NTMtLjIxNy4yMDkgMCAuMzkuMDcyLjU0NS4yMTcuMTU1LjE0NS4yMzIuMzIuMjMyLjUyM3Y5LjA4MWw2LjE1Ni01LjgxM2MuMTUyLS4xNDcuMzI3LS4yMjIuNTI5LS4yMjIuNTA1IDAgLjc1OC4yNDguNzU4Ljc0IDAgLjIxOC0uMDc1LjM5OC0uMjI4LjUzOWwtNC41NjQgNC4zMzMgNC41NjQgNC4zMjNjLjE1Mi4xMzkuMjI4LjMyLjIyOC41MzYiLz48cGF0aCBkPSJNNjEuOTk5IDE1LjI3NGMwIC4yMDEtLjA3Ny4zNzMtLjIzMi41MTMtLjE1Ni4xNDItLjM0LjIxMy0uNTU0LjIxMy0uNTE3IDAtLjc3Ni0uMjQzLS43NzYtLjcyNnYtNy4xOTNjMC0uNDQyLS4xNjctLjgyMy0uNTA0LTEuMTQxLS4zMzUtLjMxNy0uNzQyLS40NzctMS4yMjQtLjQ3N2gtMy40Yy0uNDcyIDAtLjg3Ni4xNTktMS4yMTEuNDc3LS4zMzYuMzE4LS41MDQuNjk4LS41MDQgMS4xNDF2Ny4xOTNjMCAuMjAxLS4wNzkuMzczLS4yMzguNTEzLS4xNTguMTQyLS4zNDQuMjEzLS41NTkuMjEzLS4yMiAwLS40MS0uMDcxLS41NjQtLjIxMy0uMTU2LS4xNC0uMjMyLS4zMTItLjIzMi0uNTEzdi03LjE5M2MwLS44NTEuMzI1LTEuNTc3Ljk3NS0yLjE3OC42NDktLjYwMiAxLjQyOS0uOTAzIDIuMzM2LS45MDNoMy40Yy45MDkgMCAxLjY4NS4zMDEgMi4zMjcuOTAzLjY0My42MDEuOTYzIDEuMzI3Ljk2MyAyLjE3OHY3LjE5M2gtLjAwMXoiLz48cGF0aCBkPSJNNDguNTk1IDEyLjkxNnYtMi4wODFjLTIuMDk1LS4wMTQtMy45NTUtLjA2OS00LjU3NS4xMDUtMS4yNC4zNDUtMS41OTQgMS4xMDgtMS41OTQgMS45NzYgMCAuNDQ0LjE1MS44MjYuNDUzIDEuMTQzLjMwMi4zMTkuNjY5LjQ3OCAxLjEwMi40NzhoMy4wNmMuNDI1IDAgLjc5MS0uMTU4IDEuMDk1LS40NzguMzA3LS4zMTguNDU5LS42OTkuNDU5LTEuMTQzem0xLjQwNS4wMDRjMCAuODUtLjI4OSAxLjU3NS0uODY3IDIuMTc3LS41NzguNjAyLTEuMjc2LjkwMy0yLjA5My45MDNoLTMuMDZjLS44MjQgMC0xLjUyNy0uMzAxLTIuMTA4LS45MDUtLjU4Mi0uNjAyLS44NzItMS4zMjgtLjg3Mi0yLjE3OSAwLTEuNDQ3Ljc4MS0yLjYzNyAyLjM0Mi0zLjIyLjc1MS0uMjc3IDIuMzkzLS4yMjMgNS4yNTMtLjIwMnYtMS40MjFjMC0uNDQtLjE1Mi0uODE5LS40NTgtMS4xMzYtLjMwNS0uMzE2LS42Ny0uNDc1LTEuMDk1LS40NzVoLTMuMDZjLS4zMTUgMC0uNjI2LjA5OS0uODY3LjI2OC0uMjUuMTc3LS40NC40Ni0uNi42OTUtLjExNi4xNjktLjI4My4yMS0uNDgzLjIxLS4xOTMgMC0uMzU4LS4wNzMtLjQ5OC0uMjIyLS4xMzktLjE0OS0uMjEtLjMyMy0uMjEtLjUyMyAwLS4zNzkuMjUtLjcyMy43MDgtMS4xMzguNjE3LS41NiAxLjI5NC0uNzUyIDEuOTQ5LS43NTJoMy4wNmMuODE2IDAgMS41MTUuMzAxIDIuMDkzLjkwMy41NzkuNjAxLjg2NyAxLjMyNy44NjcgMi4xNzd2NC44NDF6Ii8+PHBhdGggZD0iTTM3LjQzOCAxMi44NnYtNC45MzZjMC0uNDUxLS4xNjgtLjgzOC0uNTA1LTEuMTYzLS4zMzUtLjMyMy0uNzQyLS40ODYtMS4yMjMtLjQ4NmgtMy40Yy0uNDc0IDAtLjg3Ny4xNjItMS4yMTMuNDg2LS4zMzYuMzI0LS41MDMuNzEyLS41MDMgMS4xNjN2NC45MzVjMCAuNDU3LjE2Ny44NDcuNTAzIDEuMTY4LjMzNS4zMi43MzkuNDggMS4yMTMuNDhoMy40Yy40OCAwIC44ODgtLjE2IDEuMjIzLS40ODYuMzM3LS4zMjMuNTA1LS43MTEuNTA1LTEuMTYxem0xLjU2MiAwYzAgLjg2Ny0uMzIxIDEuNjA2LS45NjMgMi4yMTktLjY0My42MTMtMS40MTkuOTItMi4zMjYuOTJoLTMuNGMtLjkwOCAwLTEuNjg2LS4zMDctMi4zMzYtLjkyMS0uNjUtLjYxMy0uOTc1LTEuMzUzLS45NzUtMi4yMnYtMTEuMTE4YzAtLjIwNC4wNzctLjM3OC4yMzItLjUyMy4xNTYtLjE0NC4zNDQtLjIxNy41NjUtLjIxNy4yMTUgMCAuNC4wNzIuNTU4LjIxNy4xNTkuMTQ0LjIzOS4zMTkuMjM5LjUyM3YzLjQ5Yy41MDktLjI5NiAxLjA4MS0uNDQ0IDEuNzE2LS40NDRoMy40Yy45MDcgMCAxLjY4My4zMDcgMi4zMjYuOTIuNjQyLjYxMi45NjMgMS4zNTMuOTYzIDIuMjE5djQuOTM1eiIvPjwvZz48cGF0aCBkPSJNNTYgMjRjMCAxLS45NDEgMS0uOTQxIDFoLTIuMDU4djEuNXMwIC41LS41MDEuNS0uNS0uNS0uNS0uNXYtMy41YzAtMSAuOTE1LTEgMS4wMDEtMWgyLjA1OGMuOTQxIDAgLjk0MSAxIC45NDEgMXYxem0tMS4wMDEtLjUyOWMwLS40NzEtLjM3NS0uNDcxLS41LS40NzFoLTEuNDk5djFoMS40OTljLjEyNSAwIC41LS4wNTcuNS0uNTI5em03LjAwMSAzLjAyOXMwIC41MTctLjUuNTE3LS41LS41MTctLjUtLjUxN3YtMS41aC0zdjEuNXMwIC41MTctLjUuNTE3LS41LS41MTctLjUtLjUxN3YtMy41YzAtMSAuNjg1LTEgMS0xaDNjLjMxNSAwIDEgMCAxIDF2My41em0tMS0yLjQ5MnYtLjU1MWMwLS40NDktLjUtLjQ0OS0uNS0uNDQ5aC0ycy0uNS0uMTAzLS41LjQ0OXYuNTUxaDN6IiBmaWxsPSIjNzM3MzczIi8+PHBhdGggZD0iTTczIDI2LjVzMCAuNS0uNDk0LjUtLjUwNi0uNS0uNTA2LS41di0zYzAtLjQ0LS41MDItLjUtLjUwMi0uNWgtMS4wMTZzLS40ODIuMDYtLjQ4Mi41djNzMCAuNS0uNTM0LjUtLjQ2Ni0uNS0uNDY2LS41bC4wNTQtM3MtLjA1NC0uNS0uNjA5LS41aC0uOTQ1Yy0uNDk3IDAtLjQ5Ny41LS40OTcuNXYzczAgLjUtLjUwMy41LS41LS41LS41LS41di0zLjQ0czAtMS4wNiAxLjAwMy0xLjA2aDIuMDUxcy40MTIgMCAuNDEyLjVjMCAwIC4xMzQtLjUuNTM0LS41IDAgMCAxIC4wMDMgMiAwczEgMSAxIDF2My41eiIgZmlsbD0iIzczNzM3MyIvPjxwYXRoIGQ9Ik03OCAyNS45MjNzMCAxLjA3Ny0xLjAwOCAxLjA3N2gtMmMtLjk5MiAwLS45OTItMS0uOTkyLTF2LTNzMC0xIC45OTItMWgyYzEuMDA4IDAgMS4wMDggMSAxLjAwOCAxdjIuOTIzem0tMS0uMjg3di0yLjI3YzAtLjEwMi0uMDM2LS4xODgtLjEwOS0uMjU5LS4wNzItLjA3MS0uMTU5LS4xMDYtLjI2MS0uMTA2aC0xLjI2MWMtLjEwMSAwLS4xODguMDM1LS4yNjEuMTA2LS4wNzIuMDcxLS4xMDkuMTU3LS4xMDkuMjU5djIuMjdjMCAuMTAyLjAzNi4xODguMTA5LjI1OS4wNzIuMDcxLjE1OS4xMDYuMjYxLjEwNmgxLjI2MWMuMTAxIDAgLjE4OC0uMDM1LjI2MS0uMTA2LjA3Mi0uMDcxLjEwOS0uMTU3LjEwOS0uMjU5eiIgZmlsbD0iIzczNzM3MyIvPjxwYXRoIGQ9Ik04MyAyNS45MjNjMCAuMy0uMTEzLjU1NC0uMzM4Ljc2NC0uMjI1LjIwOS0uNDk0LjMxNC0uODA3LjMxNGgtMi41MjFjLS4wOTIgMC0uMTcxLS4wMy0uMjM2LS4wODktLjA2NS0uMDU5LS4wOTgtLjEzMi0uMDk4LS4yMTh2LTQuMzg2YzAtLjA4Ni4wMzMtLjE1OS4wOTgtLjIxOHMuMTQ0LS4wODkuMjM2LS4wODloMi41MjFjLjMxMiAwIC41ODEuMTA1LjgwNy4zMTYuMjI1LjIxLjMzOC40NjUuMzM4Ljc2NXYuNjQ5YzAgLjMwMi0uMTE0LjU1OS0uMzQyLjc3MS4yMjguMjEyLjM0Mi40NjguMzQyLjc3MXYuNjUyem0tMS0yLjIxNXYtLjQxNWMwLS4wODItLjAzNS0uMTUxLS4xMDYtLjIwOC0uMDcxLS4wNTctLjE1Ni0uMDg1LS4yNTYtLjA4NWgtMS42Mzh2MWgxLjYzOGMuMSAwIC4xODUtLjAyOC4yNTYtLjA4NS4wNzEtLjA1Ny4xMDYtLjEyNi4xMDYtLjIwOHptMCAyLjAwMXYtLjQxNmMwLS4wOC0uMDM1LS4xNDktLjEwNi0uMjA2LS4wNzEtLjA1Ny0uMTU2LS4wODYtLjI1Ni0uMDg2aC0xLjYzOHYxaDEuNjM4Yy4xIDAgLjE4NS0uMDI5LjI1Ni0uMDg2LjA3MS0uMDU3LjEwNi0uMTI2LjEwNi0uMjA2eiIgZmlsbD0iIzczNzM3MyIvPjxwYXRoIGQ9Ik04NSAyNi41czAgLjUtLjQ2NS41LS41MzUtLjUtLjUzNS0uNXYtNGMwLS4wODYuMDctLjUuNTM1LS41cy40NjUuNDE0LjQ2NS41djR6IiBmaWxsPSIjNzM3MzczIi8+PHBhdGggZD0iTTg5LjUgMjdoLTIuNWMtMSAwLTEtLjctMS0xdi0zLjVzMC0uNS41LS41LjUuNS41LjV2M3MwIC41LjUuNWgyLjAzM3MuNDY3LjA0Ni40NjcuNWMwIC41LS41LjUtLjUuNXoiIGZpbGw9IiM3MzczNzMiLz48cGF0aCBkPSJNNjAuNTYxIDIxLjU2MmMtLjI5My4yOTItLjY0Ni40MzgtMS4wNjEuNDM4LS40MTUgMC0uNzY5LS4xNDYtMS4wNjEtLjQzOC0uMjkzLS4yOTItLjQzOS0uNjQ1LS40MzktMS4wNTggMC0uNDE0LjE0Ni0uNzY4LjQzOS0xLjA2Mi4yOTMtLjI5NC42NDYtLjQ0MiAxLjA2MS0uNDQyLjQxNSAwIC43NjkuMTQ3IDEuMDYxLjQ0Mi4yOTMuMjk0LjQzOS42NDkuNDM5IDEuMDYyIDAgLjQxNC0uMTQ2Ljc2Ny0uNDM5IDEuMDU4em0tMS4wNjEtLjU2MmMuMjc2IDAgLjUtLjIyNC41LS41cy0uMjI0LS41LS41LS41LS41LjIyNC0uNS41LjIyNC41LjUuNXoiIGZpbGw9IiM3MzczNzMiLz48L2c+PC9zdmc+" alt="BankID logo" title="BankID logo" />
+
+
+
+									<h1 tabindex="1025" class="bidm_title">Identifisering</h1>
+
+								</div>
+
+							</div>
+
+							<div class="bidm_right">
+
+								<button class="bidm_close" title="Avbryt" type="button" tabindex="1050">
+
+									<span class="bidm_label">Avbryt</span> <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTEiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHRpdGxlPmljb19jbG9zZTwvdGl0bGU+PHBhdGggZD0iTTEgMy45OTlsNC41IDQuNSA0LjUtNC41IDEgMS00LjUgNC41IDQuNSA0LjVzLS45NTcgMS4wNTEtMSAxYy0xLjIyNi0xLjQ0OS00LjUtNC41LTQuNS00LjVsLTQuNSA0LjUtMS0xIDQuNS00LjUtNC41LTQuNSAxLTF6IiBmaWxsPSIjNTU1Ii8+PC9zdmc+" alt="" />
+
+								</button>
+
+							</div>
+
+						</div>
+
+						</header>
+
+						<section class="bidm_body">
+
+						<div class="bidm_vertical">
+
+							<div class="bidm_horizontal">
+
+								<div class="bidm_content">
+
+										<div class="bidm_label-wrapper">
+
+											<button title="Hjelp" class="bidm_help" type="button" tabindex="2500">
+
+												<img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgiIGhlaWdodD0iMTgiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHRpdGxlPmljb19oZWxwPC90aXRsZT48ZyBmaWxsPSJub25lIj48cGF0aCBkPSJNMTcuNSA5YzAtNC42OTQtMy44MDYtOC41LTguNS04LjVzLTguNSAzLjgwNi04LjUgOC41IDMuODA2IDguNSA4LjUgOC41IDguNS0zLjgwNiA4LjUtOC41eiIgc3Ryb2tlPSIjMDA3OEJEIi8+PHBhdGggZD0iTTggMTJoMnYyaC0ydi0yem0uNzU4LThjMSAwIDEuODMxLjIzOSAyLjQ5My43MTcuNjYyLjQ3OC45OTIgMS4xODYuOTkyIDIuMTI0IDAgLjU3NS0uMTQ0IDEuMDYtLjQzMSAxLjQ1NC0uMTY4LjIzOS0uNDkxLjU0NC0uOTY5LjkxNmwtLjQ3MS4zNjVjLS4yNTcuMTk5LS4yNjguNDMxLS4zNTIuNjk3LS4wNTMuMTY4LS4wOTEuMzU3LS4wOTYuNzExaC0xLjkzM2MuMDI3LS43NDguMDg4LTEuMTkzLjIwMy0xLjQ3OC4xMTUtLjI4NS40MTItLjYxNC44OS0uOTg2bC40ODUtLjM3OGMuMTU5LS4xMTkuMjg4LS4yNS4zODUtLjM5Mi4xNzctLjI0My4yNjYtLjUxMS4yNjYtLjgwMyAwLS4zMzYtLjA5OC0uNjQzLS4yOTUtLjkxOS0uMTk3LS4yNzctLjU1Ny0uNDE1LTEuMDc5LS40MTUtLjUxMyAwLS44NzcuMTctMS4wOTIuNTExLS4yMTUuMzQxLS4yNTQuNDU2LS4yNTQuODIzaC0xLjkxOGMuMDUzLTEuMjYxLjQyNS0xLjkxNiAxLjI1My0yLjQ0My41MjItLjMzNiAxLjE2NC0uNTA1IDEuOTI1LS41MDV6IiBmaWxsPSIjMDA3OEJEIi8+PC9nPjwvc3ZnPg==" alt="" />
+
+											</button>
+
+											<h2 id="bidm_ref-label" tabindex="2250" class="bidm_label">Referanseord</h2>
+
+										</div>
+
+										<div class="bidm_ref-wrapper">
+
+											<div class="bidm_ref-word">MEKTIG PENGE</div>
+
+										</div>
+
+
+
+									<div class="bidm_illustration">
+
+										<div class="bidm_wrapper">
+
+											<img class="bidm_icon" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAiIGhlaWdodD0iNTAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHRpdGxlPmljb19iaW1vdHA8L3RpdGxlPjxnIGZpbGw9Im5vbmUiPjxyZWN0IGZpbGw9IiMwMDc4QkQiIHdpZHRoPSIzMCIgaGVpZ2h0PSI1MCIgcng9IjIiLz48cmVjdCBmaWxsPSIjZmZmIiB4PSIyIiB5PSI4IiB3aWR0aD0iMjYiIGhlaWdodD0iMzQiIHJ4PSIxIi8+PHJlY3QgZmlsbD0iI2ZmZiIgeD0iMTIiIHk9IjQ0IiB3aWR0aD0iNiIgaGVpZ2h0PSI0IiByeD0iMSIvPjwvZz48L3N2Zz4=" title="Venter på bekreftelse" alt="Venter på bekreftelse" />
+
+											<img class="bidm_spinner" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHRpdGxlPmljb19zcGlubmVyPC90aXRsZT48ZyBmaWxsPSJub25lIj48cGF0aCBkPSJNMTAgMXYyYzMuODYgMCA3IDMuMTQgNyA3IDAgMy44NTktMy4xNCA3LTcgN3YyYzQuOTcgMCA5LTQuMDMgOS05IDAtNC45NzEtNC4wMy05LTktOSIgZmlsbD0iI2ZmZiIvPjxwYXRoIGQ9Ik0xMCAzdi0yYy00Ljk3MSAwLTkgNC4wMjktOSA5IDAgNC45NyA0LjAyOSA5IDkgOXYtMmMtMy44NiAwLTctMy4xNDEtNy03IDAtMy44NiAzLjE0LTcgNy03eiIgZmlsbD0iIzAwNzhCRCIvPjwvZz48L3N2Zz4=" alt="" title="Venter på bekreftelse" /> <img class="bidm_spinner bidm_no-animation" src="data:image/gif;base64,R0lGODlhFAAUAMQAAP///+v1++n1+9/v993t99nr9dfr9dPp9dXp9dHn883l88nj8cfh8cHf77/d77XZ7bHX663V63a53Wqz22ix21qr11Kl1Uah0Uaf0TOZzBiJxw6DxQqBwwiBwwh+wwB6wSH/C05FVFNDQVBFMi4wAwEAAAAh+QQJDQAAACwKAAEACQASAAAFQOCnVRBgml/6ZckpMNL2cc9pBtjnKbaZZz1AQBYJSj6WIEMUFKSaz95SY0T2hp+i7WfD6Xiv2KwGUK1aqFHJFgIAIfkECQ0AAAAsAwADABAAEAAABVAgII7kaJTo6HhKimJf5pbB9kUzKX1WPjIfjU8k+HyGgOJxCBQOdz1f7TaEyQCMSwAVgLEAA85nI2EIBAyJjfMYJTLGeDyTQEEqGqOmAimFAAAh+QQJDQAAACwAAAoAEwAJAAAFTCDwfQJgnqgpjID2MWkMMJ8GWJ8kp9JnAZHPJrAzBTafiCnzwRQBmE/mpPA0ialA1KNAPThCCUMgYEiQnEcswRy5R5lEEVJx1SqQVAgAIfkECQ0AAAAsAAADABEAEAAABVAgICJiaZ6A4kloC2Qf5p7RtwWzaX1sXmofhq/0+QiGouIRCRQid71h7YZ8xaqqGO4UwFBMD45NwhAIGJLNh3MwJWDFeDGTaEEqwI+mAimFAAAh+QQJDQAAACwAAAEACgASAAAFQiAgjlClfSOQZF+Lig/3bRIjiIr3YUEKsBgfIDLr+SwfiRBwYixbNyF02VwilULixugDLnM77ig2q0VFK9crVTqFAAAh+QQJDQAAACwAAAEAEQAQAAAFTyAgjlClfZ9WQWObZGgcZ0n7cN8mMYLASJsPpyBSeD6YQEsUwEhGMMxyKorklNSl5fPMLk8M7xIlELfI5hE4Ldp209YNNh1lA4wTOwDBDgEAIfkECQ0AAAAsAAABABMACQAABUsgII5QpX2fVkFjKyYZKstZ4gIP920SIwgMyebDebQUng8mcAtgPh7FKIa5tZ4ZUWTHtIoCwwjA8pF4W5KPBXBinEeMFAAleIsEqBAAIfkECQ0AAAAsAwABABAAEAAABVEgIEKV9n1aBYkskGRnHGcJO3DfJjGCwEibD+fBamACLVEA8/EoklARMxOFBoKRalLysWhbDNSXJTiNReXPGRDWrLne8fWTHV8+1POC81wTRCEAOw==" alt="" title="Venter på bekreftelse" />
+
+										</div>
+
+									</div>
+
+									<div class="bidm_instructions">
+
+										<div class="bidm_what">Følg instruksene på din mobil</div>
+
+									</div>
+
+								</div>
+
+							</div>
+
+						</div>
+
+						</section>
+
+						<div class="bidm_dialog" role="dialog" aria-labelledby="bidm_dialog-header">
+
+							<div class="bidm_row">
+
+								<div class="bidm_cell">
+
+									<div class="bidm_center">
+
+										<div class="bidm_content-wrapper">
+
+											<div class="bidm_dialog-header">
+
+												<h1 tabindex="5000" class="bidm_title" id="bidm_dialog-header">Hjelp: Referanseord</h1>
+
+											</div>
+
+											<div class="bidm_dialog-body bidm_scroll" tabindex="5100">
+
+												<p>Bekreft at referanseord vist i BankID-klient er lik
+
+													på din mobil.</p>
+
+											</div>
+
+											<div class="bidm_dialog-close">
+
+												<button class="bidm_close" title="Lukk dialog" type="button" tabindex="5900">
+
+													<span class="bidm_label">Lukk</span> <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTEiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHRpdGxlPmljb19jbG9zZTwvdGl0bGU+PHBhdGggZD0iTTEgMy45OTlsNC41IDQuNSA0LjUtNC41IDEgMS00LjUgNC41IDQuNSA0LjVzLS45NTcgMS4wNTEtMSAxYy0xLjIyNi0xLjQ0OS00LjUtNC41LTQuNS00LjVsLTQuNSA0LjUtMS0xIDQuNS00LjUtNC41LTQuNSAxLTF6IiBmaWxsPSIjNTU1Ii8+PC9zdmc+" />
+
+												</button>
+
+											</div>
+
+										</div>
+
+									</div>
+
+								</div>
+
+							</div>
+
+						</div>
+
+					</div>
+
+				</div>
+
+			</div>
+
+		</div>
+
+<form id="bidmobStep2Form" name="bidmobStep2Form" method="post" action="/authenticate/login/bankidmobile;jsessionid=0000SXe7JT3V4OT-OX3ZFmLS4wW:892844872p1?execution=e1s2" enctype="application/x-www-form-urlencoded" style="display:none;">
+
+<input type="hidden" name="bidmobStep2Form" value="bidmobStep2Form" />
+
+<input id="synchronizedFlowBtn" type="submit" name="synchronizedFlowBtn" value="" style="display:none" /><input id="completeBtn" type="submit" name="completeBtn" value="" style="display:none" /><input id="errorBtn" type="submit" name="errorBtn" value="" style="display:none" /><input id="timeoutBtn" type="submit" name="timeoutBtn" value="" style="display:none" /><input id="cancelBtn" type="submit" name="cancelBtn" value="" style="display:none" /><input type="hidden" name="javax.faces.ViewState" id="javax.faces.ViewState" value="e1s2" />
+
+</form>
+
+
+
+		<script type="text/javascript" src="/authenticate/scripts/jquery-3.1.1.min.js"></script>
+
+
+
+		<script type="application/javascript">
+
+
+
+			$(document).ready(function() {
+
+
+
+				if(true){
+
+
+
+			        var intervalTimer = setInterval(function() {
+
+			        	$.post( 'https://nettbank.sor.no/authenticate/login/rest/bankidmobilestatus.json;jsessionid=0000SXe7JT3V4OT-OX3ZFmLS4wW:892844872p1', function( data ) {
+
+			        		}).done(function(data) {
+
+
+
+			                    if (data.status === 'COMPLETE') {
+
+			                    	clearTimeout(timeoutTimer);
+
+			                    	setTimeout(function(){document.getElementById("completeBtn").click();}, 100);
+
+			                    	clearInterval(intervalTimer);
+
+			                    }
+
+			                    if (data.status === 'ERROR') {
+
+			                    	clearTimeout(timeoutTimer);
+
+			                    	setTimeout(function(){document.getElementById("errorBtn").click();}, 100);
+
+			                    	clearInterval(intervalTimer);
+
+			                    }
+
+			        		})
+
+			        		.fail(function(jqXHR, textStatus, error) {
+
+
+
+		                    	clearTimeout(timeoutTimer);
+
+		                    	setTimeout(function(){document.getElementById("errorBtn").click();}, 100);
+
+		                    	clearInterval(intervalTimer);
+
+			     			});
+
+			        }, 1000);
+
+
+
+			        var timeoutTimer = setTimeout(function() {
+
+
+
+			        	clearInterval(intervalTimer);
+
+			        	setTimeout(function(){document.getElementById("timeoutBtn").click();}, 100);
+
+			        }, 95000);
+
+				}
+
+
+
+				else{
+
+					setTimeout(function(){document.getElementById("synchronizedFlowBtn").click();}, 100);
+
+				}
+
+		    });
+
+
+
+		</script>
+
+
+
+        <a href="/authenticate/login/timeout?configKey=smbmactivate2811&amp;orgId=2844&amp;sessionID=Sr1MwA-g9v1Q5_QZwCLsQgf" id="sessionTimeoutButton" style="display: none;"></a>
+
+
+		<script>
+
+			function sessionTimeout(){
+
+				var timeout = 1800;
+
+				if(timeout!=null && timeout > 0 && !isNaN(timeout)){
+
+					timeout = timeout*1000;
+
+					setTimeout(function(){document.getElementById('sessionTimeoutButton').click();}, timeout);
+
+				}
+
+			}
+
+
+
+			sessionTimeout();
+
+		</script></body>
+
+</html>
+
+REQUEST 5
+POST https://nettbank.sor.no/authenticate/login/rest/bankidmobilestatus.json;jsessionid=0000SXe7JT3V4OT-OX3ZFmLS4wW:892844872p1
+Accept: */*
+Origin: https://nettbank.sor.no
+X-Requested-With: XMLHttpRequest
+X-Aggregator: Tink Testing
+
+RESPONSE 5
+200
+Date: Wed, 23 Sep 2020 05:56:29 GMT
+Content-Length: 21
+Keep-Alive: timeout=5, max=300
+Connection: Keep-Alive
+Content-Type: application/json
+Content-Language: en-US
+Strict-Transport-Security: max-age=31536000;
+
+{"status":"COMPLETE"}
+
+REQUEST 6
+POST https://nettbank.sor.no/authenticate/login/bankidmobile;jsessionid=0000SXe7JT3V4OT-OX3ZFmLS4wW:892844872p1?execution=e1s2
+Origin: https://nettbank.sor.no
+Content-Type: application/x-www-form-urlencoded
+X-Aggregator: Tink Testing
+
+javax.faces.ViewState=e1s2&bidmobStep2Form=bidmobStep2Form&completeBtn=
+
+RESPONSE 6
+200
+Date: Wed, 23 Sep 2020 05:56:30 GMT
+Cache-Control: no-store
+invalidate_session: ***
+Keep-Alive: timeout=5, max=300
+Connection: Keep-Alive
+Transfer-Encoding: chunked
+Content-Type: text/html;charset=UTF-8
+Content-Language: en-US
+Strict-Transport-Security: max-age=31536000;
+
+<!DOCTYPE html>
+
+<html><head id="j_idt2">
+
+	<title>
+
+	</title>
+
+
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+
+	<meta name="format-detection" content="telephone=no" />
+
+		<link rel="shortcut icon" href="/hb-doc/cssnb/loginService/smbmactivate2811/images/favicon.ico" />
+
+
+
+	<link rel="stylesheet" type="text/css" href="/authenticate/css/internal/site.css" />
+
+
+
+	<link rel="stylesheet" type="text/css" href="/hb-doc/cssnb/loginService/smbmactivate2811/loginservice.css" />
+
+			<link rel="stylesheet" type="text/css" href="/hb-doc/cssnb/loginService/smbmactivate2811/loginservice.css" /></head><body onload="performRedirect()">
+
+
+
+	<div class="redirect-main">
+
+		<div class="redirect-spinner">
+
+			<div class="ui-align-center redirect-spinner-div">
+
+			    <div class="ui-loader ui-loader-bouncers">
+
+			        <div class="ui-spinner-bouncer1"></div>
+
+			        <div class="ui-spinner-bouncer2"></div>
+
+			        <div class="ui-spinner-bouncer3"></div>
+
+			    </div>
+
+			    <br />Vennligst vent
+
+			</div>
+
+		</div>
+
+	</div>
+
+
+
+		<script type="text/javascript">
+
+			function performRedirect(){
+
+				document.location.href = 'nativeapp://authenticate/complete?so=03111013011500553b6jdP3wSjw8Cawm3ekMGWo60iKUJ17qig/zI6DbhkvEJnX2cH7EkaopvixQSxe4Yc7XSYR5CCkaXbyV5H5feBoIpSgJfDYtVW4UlotibDBriqKQOXD2EKZgR1iepRsiVv2w0JyauTKmejEy0AEjTho60iKUJ17qig/zI6DbhkvGOtIilCde6ooP8yOg24ZLxvVmCPT+hSeuu3PPAmkIda2LpkDb+6UgfCL8s9yA5ZIXF0ENArt30kpc/pOoKtdQzlRBoCahkDKNYF+u/8V4x+vwFhKci5kvsYZVu7MbRdXY6Bsm7AKVRRT2fs9POJLlkve4fEVIVzhiHSu0smvM1pAUGZaB4V3OsjUobDHlfoFM=xLG7FyrJG3KL7cyJ5OjwA4cI7LGcPhoNUhKTgBP0ktWohOGEWvoxxbqxy/SR5VK4+HKhwqVgUebMEElpmcMCGeO9mulAdttnz0Sw9eE56qYxijq3jr3FNEftVRcRD5T0120to0RByNvYS5c6RJ/7mqf6RBfpM/mHQiSQ6up9LsA=&locale=nb_NO_2844';
+
+			}
+
+		</script></body>
+
+</html>
+
+REQUEST 7
+POST https://nettbank.sor.no/secesb/rest/esb/v1/login
+Accept: application/json
+Content-Type: application/json
+X-EVRY-CLIENT-CLIENTNAME: SMARTbankMobile
+X-Aggregator: Tink Testing
+
+{"credentials":{"token":"03111013011500553b6jdP3wSjw8Cawm3ekMGWo60iKUJ17qig/zI6DbhkvEJnX2cH7EkaopvixQSxe4Yc7XSYR5CCkaXbyV5H5feBoIpSgJfDYtVW4UlotibDBriqKQOXD2EKZgR1iepRsiVv2w0JyauTKmejEy0AEjTho60iKUJ17qig/zI6DbhkvGOtIilCde6ooP8yOg24ZLxvVmCPT+hSeuu3PPAmkIda2LpkDb+6UgfCL8s9yA5ZIXF0ENArt30kpc/pOoKtdQzlRBoCahkDKNYF+u/8V4x+vwFhKci5kvsYZVu7MbRdXY6Bsm7AKVRRT2fs9POJLlkve4fEVIVzhiHSu0smvM1pAUGZaB4V3OsjUobDHlfoFM=xLG7FyrJG3KL7cyJ5OjwA4cI7LGcPhoNUhKTgBP0ktWohOGEWvoxxbqxy/SR5VK4+HKhwqVgUebMEElpmcMCGeO9mulAdttnz0Sw9eE56qYxijq3jr3FNEftVRcRD5T0120to0RByNvYS5c6RJ/7mqf6RBfpM/mHQiSQ6up9LsA=","tokenType":"EvrySO"},"tokenProtocolVersions":["ATP-1.0"]}
+
+RESPONSE 7
+200
+Date: Wed, 23 Sep 2020 05:56:30 GMT
+Cache-Control: no-cache,no-store
+Content-Length: 397
+Expires: Thu, 01 Dec 1994 16:00:00 GMT
+Keep-Alive: timeout=5, max=300
+Connection: Keep-Alive
+Content-Type: application/json
+Content-Language: en-US
+Set-Cookie:	JSESSIONID=0000SXe7JT3V4OT-OX3ZFmLS4wW:892844872p1; path=/; secure; HttpOnly
+Set-Cookie: ***
+Strict-Transport-Security: max-age=31536000;
+
+{"protocolVersion":"ATP-1.0","accessToken":"eyJWZXJzaW9uIjoiQVRQLTEuMCIsImFsZyI6Im5vbmUifQ.eyJTZWNyZXQiOiJyaDcyd05ZcjllUDRLeVZkY2JhWnFVclM4SzBna1ZudmRSNE5idUxacjZvIiwiVGltZU9mTGFzdEFjY2VzcyI6MTYwNjIxOTg5NjI5MSwiVHlwZSI6IkFjY2Vzc1Rva2VuIiwiVGltZU9mTG9naW4iOjE2MDYyMTk4OTYyOTEsIlNlc3Npb25JRCI6IjY1MDAwY2U4LTYzYzctNDRhMC04ZjY4LTE5MTA3ZDJiYTdlNyJ9.","sessionId":"5000ce8-63c7-44a0-8f68-19107d2ba7e7"}
+
+REQUEST 8
+POST https://nettbank.sor.no/secesb/rest/era/login
+Accept: application/json
+Content-Type: application/json
+X-EVRY-CLIENT-CLIENTNAME: SMARTbankMobile
+X-EVRY-CLIENT-ACCESSTOKEN: eyJWZXJzaW9uIjoiQVRQLTEuMCIsImFsZyI6Im5vbmUifQ.eyJTZWNyZXQiOiJyaDcyd05ZcjllUDRLeVZkY2JhWnFVclM4SzBna1ZudmRSNE5idUxacjZvIiwiVGltZU9mTGFzdEFjY2VzcyI6MTYwNjIxOTg5NjI5MSwiVHlwZSI6IkFjY2Vzc1Rva2VuIiwiVGltZU9mTG9naW4iOjE2MDYyMTk4OTYyOTEsIlNlc3Npb25JRCI6IjY1MDAwY2U4LTYzYzctNDRhMC04ZjY4LTE5MTA3ZDJiYTdlNyJ9.
+X-Aggregator: Tink Testing
+
+RESPONSE 8
+200
+Date: Wed, 23 Sep 2020 05:56:30 GMT
+X-EVRY-ESB-ACCESSTOKEN: eyJWZXJzaW9uIjoiQVRQLTEuMCIsImFsZyI6Im5vbmUifQ.eyJTZWNyZXQiOiJ6RmJqaXdVUGpkbGxyaWRrSlhidnZvM1NWSFNqQy1XQVFNN3FvZjlVdWI4IiwiVGltZU9mTGFzdEFjY2VzcyI6MTYwNjE0NzgyNjI2OCwiVHlwZSI6IkFjY2Vzc1Rva2VuIiwiVGltZU9mTG9naW4iOjE2MDYxNDc4MjYxODgsIlNlc3Npb25JRCI6IjFhZTNkNTA4LTY4NDMtNDczMS05MDFlLTYzNWMxY2M4ZjU3MyJ9.
+Cache-Control: no-cache, no-store
+Expires: Mon, 01 Jan 2001 05:00:00 GMT
+Pragma: no-cache
+Content-Length: 249
+Keep-Alive: timeout=5, max=300
+Connection: Keep-Alive
+Content-Type: application/json
+Content-Language: en-US
+Set-Cookie:	JSESSIONID=0000SXe7JT3V4OT-OX3ZFmLS4wW:892844872p1; path=/; secure; HttpOnly
+Set-Cookie: ***
+Strict-Transport-Security: max-age=31536000;
+
+{"session":{"loginContext":"private","authLevel":"8","authMethod":"bidmob","bankIdOrgId":"6001"},"customer":{"profitCenter":"7100","segment":"adult","brand":"standard","amlStatus":"ok","state":"real"},"agreement":{"isActive":true,"isUnlocked":true}}
+
+REQUEST 9
+POST https://nettbank.sor.no/secesb/rest/era/sam/sms
+Accept: application/json
+Content-Type: application/json
+X-EVRY-CLIENT-CLIENTNAME: SMARTbankMobile
+X-Aggregator: Tink Testing
+
+{"type":"SAM","mobile":{"number":"+4745916225"},"locale":"en_SE"}
+
+RESPONSE 9
+200
+Date: Wed, 23 Sep 2020 05:56:30 GMT
+X-EVRY-ESB-ACCESSTOKEN: eyJWZXJzaW9uIjoiQVRQLTEuMCIsImFsZyI6Im5vbmUifQ.eyJTZWNyZXQiOiJ6RmJqaXdVUGpkbGxyaWRrSlhidnZvM1NWSFNqQy1XQVFNN3FvZjlVdWI4IiwiVGltZU9mTGFzdEFjY2VzcyI6MTYwNjE0NzgyNjI2OCwiVHlwZSI6IkFjY2Vzc1Rva2VuIiwiVGltZU9mTG9naW4iOjE2MDYxNDc4MjYxODgsIlNlc3Npb25JRCI6IjFhZTNkNTA4LTY4NDMtNDczMS05MDFlLTYzNWMxY2M4ZjU3MyJ9.
+Cache-Control: no-cache, no-store
+Expires: Mon, 01 Jan 2001 05:00:00 GMT
+Pragma: no-cache
+Content-Length: 0
+Keep-Alive: timeout=5, max=300
+Connection: Keep-Alive
+Content-Language: en-US
+Strict-Transport-Security: max-age=31536000;
+
+REQUEST 15
+GET https://nettbank.sor.no/secesb/rest/era/accounts
+Accept: application/json
+Content-Type: application/json
+X-EVRY-CLIENT-CLIENTNAME: SMARTbankMobile
+X-Aggregator: Tink Testing
+
+RESPONSE 15
+200
+Date: Wed, 23 Sep 2020 05:57:17 GMT
+X-EVRY-ESB-ACCESSTOKEN: eyJWZXJzaW9uIjoiQVRQLTEuMCIsImFsZyI6Im5vbmUifQ.eyJTZWNyZXQiOiJ6RmJqaXdVUGpkbGxyaWRrSlhidnZvM1NWSFNqQy1XQVFNN3FvZjlVdWI4IiwiVGltZU9mTGFzdEFjY2VzcyI6MTYwNjE0NzgyNjI2OCwiVHlwZSI6IkFjY2Vzc1Rva2VuIiwiVGltZU9mTG9naW4iOjE2MDYxNDc4MjYxODgsIlNlc3Npb25JRCI6IjFhZTNkNTA4LTY4NDMtNDczMS05MDFlLTYzNWMxY2M4ZjU3MyJ9.
+Cache-Control: no-cache, no-store
+Expires: Mon, 01 Jan 2001 05:00:00 GMT
+Pragma: no-cache
+Content-Length: 22991
+Keep-Alive: timeout=5, max=300
+Connection: Keep-Alive
+Content-Type: application/json
+Content-Language: en-US
+Strict-Transport-Security: max-age=31536000;
+
+{"list": [{"id": "30002429299", "accountNumber": "30002429299", "bban": "30002429299", "iban": "NO5730002429299", "customerRole": "DISPOSAL", "owner": {"name": "Owner A", "customerNumber": "01059344907"}, "displayName": "Owner A", "accountName": {"accountDescription": "Bedriftskonto"}, "properties": {"currencyCode": "NOK", "status": "ACTIVE", "type": "spending"}, "accountBalance": {"availableBalance": 10844.940, "accountingBalance": 10844.940, "creditLine": 0.000, "blockedAmount": 0.000 }, "rights": {"accessPermission": true, "paymentFrom": true, "transferFrom": true, "transferTo": true, "createPaymentAgreement": true, "createAutopaymentAgreement": true }, "links": {"detailsclassic": {"href": "/accounts/enc!!2xyWyKzpUnj4BCTPeW7_4FUftwc1TQheMTnjMLnAPSNx4ks1IfKgXkID0ZUiLOgc/detailsclassic", "verbs": ["GET"] }, "immediatefees": {"href": "/accounts/enc!!2xyWyKzpUnj4BCTPeW7_4FUftwc1TQheMTnjMLnAPSNx4ks1IfKgXkID0ZUiLOgc/immediatefees", "verbs": ["GET"] }, "linkedservices": {"href": "/accounts/enc!!2xyWyKzpUnj4BCTPeW7_4FUftwc1TQheMTnjMLnAPSNx4ks1IfKgXkID0ZUiLOgc/linkedservices", "verbs": ["GET"] }, "balance": {"href": "/accounts/enc!!2xyWyKzpUnj4BCTPeW7_4FUftwc1TQheMTnjMLnAPSNx4ks1IfKgXkID0ZUiLOgc/balance", "verbs": ["GET"] }, "authorizedcustomers": {"href": "/accounts/enc!!2xyWyKzpUnj4BCTPeW7_4FUftwc1TQheMTnjMLnAPSNx4ks1IfKgXkID0ZUiLOgc/authorizedcustomers", "verbs": ["GET"] }, "payments": {"href": "/accounts/enc!!2xyWyKzpUnj4BCTPeW7_4FUftwc1TQheMTnjMLnAPSNx4ks1IfKgXkID0ZUiLOgc/payments", "verbs": ["GET"] }, "freewithdrawallimitations": {"href": "/accounts/enc!!2xyWyKzpUnj4BCTPeW7_4FUftwc1TQheMTnjMLnAPSNx4ks1IfKgXkID0ZUiLOgc/details/freewithdrawallimitations", "verbs": ["GET"] }, "self": {"href": "/accounts/enc!!2xyWyKzpUnj4BCTPeW7_4FUftwc1TQheMTnjMLnAPSNx4ks1IfKgXkID0ZUiLOgc", "verbs": ["GET"] }, "details": {"href": "/accounts/enc!!2xyWyKzpUnj4BCTPeW7_4FUftwc1TQheMTnjMLnAPSNx4ks1IfKgXkID0ZUiLOgc/details", "verbs": ["GET"] }, "stakeholders": {"href": "/accounts/enc!!2xyWyKzpUnj4BCTPeW7_4FUftwc1TQheMTnjMLnAPSNx4ks1IfKgXkID0ZUiLOgc/stakeholders", "verbs": ["GET"] }, "transactions": {"href": "/accounts/enc!!2xyWyKzpUnj4BCTPeW7_4FUftwc1TQheMTnjMLnAPSNx4ks1IfKgXkID0ZUiLOgc/transactions", "verbs": ["GET"] }, "interests": {"href": "/accounts/enc!!2xyWyKzpUnj4BCTPeW7_4FUftwc1TQheMTnjMLnAPSNx4ks1IfKgXkID0ZUiLOgc/interests", "verbs": ["GET"] } } }, {"id": "30003806959", "accountNumber": "30003806959", "bban": "30003806959", "iban": "NO2130003806959", "customerRole": "OWNER", "owner": {"name": "Owner B", "customerNumber": "01059344907"}, "displayName": "Ekstra penger - Felles", "accountName": {"alias": "Ekstra penger - Felles", "accountDescription": "Brukskonto knif"}, "properties": {"currencyCode": "NOK", "status": "ACTIVE", "type": "spending"}, "accountBalance": {"availableBalance": 5.630, "accountingBalance": 5.630, "creditLine": 0.000, "blockedAmount": 0.000 }, "rights": {"accessPermission": true, "paymentFrom": true, "transferFrom": true, "transferTo": true, "createPaymentAgreement": true, "createAutopaymentAgreement": true }, "links": {"immediatefees": {"href": "/accounts/enc!!Tnj1B5YqBhHxjz5WFawlvkKg0-3s0-2rPQf0oMwlU7Zvein-03MCNe-0DsGE19fm/immediatefees", "verbs": ["GET"] }, "authorizedcustomers": {"href": "/accounts/enc!!Tnj1B5YqBhHxjz5WFawlvkKg0-3s0-2rPQf0oMwlU7Zvein-03MCNe-0DsGE19fm/authorizedcustomers", "verbs": ["GET"] }, "payments": {"href": "/accounts/enc!!Tnj1B5YqBhHxjz5WFawlvkKg0-3s0-2rPQf0oMwlU7Zvein-03MCNe-0DsGE19fm/payments", "verbs": ["GET"] }, "validateclosing": {"href": "/accounts/enc!!Tnj1B5YqBhHxjz5WFawlvkKg0-3s0-2rPQf0oMwlU7Zvein-03MCNe-0DsGE19fm/validateclosing", "verbs": ["GET"] }, "stakeholders": {"href": "/accounts/enc!!Tnj1B5YqBhHxjz5WFawlvkKg0-3s0-2rPQf0oMwlU7Zvein-03MCNe-0DsGE19fm/stakeholders", "verbs": ["GET"] }, "transactions": {"href": "/accounts/enc!!Tnj1B5YqBhHxjz5WFawlvkKg0-3s0-2rPQf0oMwlU7Zvein-03MCNe-0DsGE19fm/transactions", "verbs": ["GET"] }, "detailsclassic": {"href": "/accounts/enc!!Tnj1B5YqBhHxjz5WFawlvkKg0-3s0-2rPQf0oMwlU7Zvein-03MCNe-0DsGE19fm/detailsclassic", "verbs": ["GET"] }, "linkedservices": {"href": "/accounts/enc!!Tnj1B5YqBhHxjz5WFawlvkKg0-3s0-2rPQf0oMwlU7Zvein-03MCNe-0DsGE19fm/linkedservices", "verbs": ["GET"] }, "balance": {"href": "/accounts/enc!!Tnj1B5YqBhHxjz5WFawlvkKg0-3s0-2rPQf0oMwlU7Zvein-03MCNe-0DsGE19fm/balance", "verbs": ["GET"] }, "freewithdrawallimitations": {"href": "/accounts/enc!!Tnj1B5YqBhHxjz5WFawlvkKg0-3s0-2rPQf0oMwlU7Zvein-03MCNe-0DsGE19fm/details/freewithdrawallimitations", "verbs": ["GET"] }, "self": {"href": "/accounts/enc!!Tnj1B5YqBhHxjz5WFawlvkKg0-3s0-2rPQf0oMwlU7Zvein-03MCNe-0DsGE19fm", "verbs": ["GET"] }, "details": {"href": "/accounts/enc!!Tnj1B5YqBhHxjz5WFawlvkKg0-3s0-2rPQf0oMwlU7Zvein-03MCNe-0DsGE19fm/details", "verbs": ["GET"] }, "interests": {"href": "/accounts/enc!!Tnj1B5YqBhHxjz5WFawlvkKg0-3s0-2rPQf0oMwlU7Zvein-03MCNe-0DsGE19fm/interests", "verbs": ["GET"] } } }, {"id": "30002743279", "accountNumber": "30002743279", "bban": "30002743279", "iban": "NO0930002743279", "customerRole": "OWNER", "owner": {"name": "Owner B", "customerNumber": "01059344907"}, "displayName": "Lån og faste kostnader - Felles", "accountName": {"alias": "Lån og faste kostnader - Felles", "accountDescription": "Brukskonto knif"}, "properties": {"currencyCode": "NOK", "status": "ACTIVE", "type": "spending"}, "accountBalance": {"availableBalance": 127.430, "accountingBalance": 127.430, "creditLine": 0.000, "blockedAmount": 0.000 }, "rights": {"accessPermission": true, "paymentFrom": true, "transferFrom": true, "transferTo": true, "createPaymentAgreement": true, "createAutopaymentAgreement": true }, "links": {"immediatefees": {"href": "/accounts/enc!!rFSHN-ztI4zIrhw-HXXx-4jPNJNzSiTjdZtw8m1dQWyRzZJNxSfKir1fXhpYNCwZ/immediatefees", "verbs": ["GET"] }, "authorizedcustomers": {"href": "/accounts/enc!!rFSHN-ztI4zIrhw-HXXx-4jPNJNzSiTjdZtw8m1dQWyRzZJNxSfKir1fXhpYNCwZ/authorizedcustomers", "verbs": ["GET"] }, "payments": {"href": "/accounts/enc!!rFSHN-ztI4zIrhw-HXXx-4jPNJNzSiTjdZtw8m1dQWyRzZJNxSfKir1fXhpYNCwZ/payments", "verbs": ["GET"] }, "validateclosing": {"href": "/accounts/enc!!rFSHN-ztI4zIrhw-HXXx-4jPNJNzSiTjdZtw8m1dQWyRzZJNxSfKir1fXhpYNCwZ/validateclosing", "verbs": ["GET"] }, "stakeholders": {"href": "/accounts/enc!!rFSHN-ztI4zIrhw-HXXx-4jPNJNzSiTjdZtw8m1dQWyRzZJNxSfKir1fXhpYNCwZ/stakeholders", "verbs": ["GET"] }, "transactions": {"href": "/accounts/enc!!rFSHN-ztI4zIrhw-HXXx-4jPNJNzSiTjdZtw8m1dQWyRzZJNxSfKir1fXhpYNCwZ/transactions", "verbs": ["GET"] }, "detailsclassic": {"href": "/accounts/enc!!rFSHN-ztI4zIrhw-HXXx-4jPNJNzSiTjdZtw8m1dQWyRzZJNxSfKir1fXhpYNCwZ/detailsclassic", "verbs": ["GET"] }, "linkedservices": {"href": "/accounts/enc!!rFSHN-ztI4zIrhw-HXXx-4jPNJNzSiTjdZtw8m1dQWyRzZJNxSfKir1fXhpYNCwZ/linkedservices", "verbs": ["GET"] }, "balance": {"href": "/accounts/enc!!rFSHN-ztI4zIrhw-HXXx-4jPNJNzSiTjdZtw8m1dQWyRzZJNxSfKir1fXhpYNCwZ/balance", "verbs": ["GET"] }, "freewithdrawallimitations": {"href": "/accounts/enc!!rFSHN-ztI4zIrhw-HXXx-4jPNJNzSiTjdZtw8m1dQWyRzZJNxSfKir1fXhpYNCwZ/details/freewithdrawallimitations", "verbs": ["GET"] }, "self": {"href": "/accounts/enc!!rFSHN-ztI4zIrhw-HXXx-4jPNJNzSiTjdZtw8m1dQWyRzZJNxSfKir1fXhpYNCwZ", "verbs": ["GET"] }, "details": {"href": "/accounts/enc!!rFSHN-ztI4zIrhw-HXXx-4jPNJNzSiTjdZtw8m1dQWyRzZJNxSfKir1fXhpYNCwZ/details", "verbs": ["GET"] }, "interests": {"href": "/accounts/enc!!rFSHN-ztI4zIrhw-HXXx-4jPNJNzSiTjdZtw8m1dQWyRzZJNxSfKir1fXhpYNCwZ/interests", "verbs": ["GET"] } } }, {"id": "30004254445", "accountNumber": "30004254445", "bban": "30004254445", "iban": "NO2530004254445", "customerRole": "OWNER", "owner": {"name": "Owner B", "customerNumber": "01059344907"}, "displayName": "Grønt fleksilån knif", "accountName": {"accountDescription": "Grønt fleksilån knif"}, "properties": {"currencyCode": "NOK", "status": "ACTIVE", "type": "unknown"}, "accountBalance": {"availableBalance": 16248.430, "accountingBalance": -4033751.570, "creditLine": -4050000.000, "blockedAmount": 0.000 }, "rights": {"accessPermission": true, "paymentFrom": true, "transferFrom": true, "transferTo": true, "createPaymentAgreement": true, "createAutopaymentAgreement": true }, "links": {"detailsclassic": {"href": "/accounts/enc!!sifCtLSQicOD7mnXY8xwckUhg8Z72khK-O6OoH-ziCzN0PpPeFoHVSTk8yg0jehj/detailsclassic", "verbs": ["GET"] }, "immediatefees": {"href": "/accounts/enc!!sifCtLSQicOD7mnXY8xwckUhg8Z72khK-O6OoH-ziCzN0PpPeFoHVSTk8yg0jehj/immediatefees", "verbs": ["GET"] }, "linkedservices": {"href": "/accounts/enc!!sifCtLSQicOD7mnXY8xwckUhg8Z72khK-O6OoH-ziCzN0PpPeFoHVSTk8yg0jehj/linkedservices", "verbs": ["GET"] }, "balance": {"href": "/accounts/enc!!sifCtLSQicOD7mnXY8xwckUhg8Z72khK-O6OoH-ziCzN0PpPeFoHVSTk8yg0jehj/balance", "verbs": ["GET"] }, "authorizedcustomers": {"href": "/accounts/enc!!sifCtLSQicOD7mnXY8xwckUhg8Z72khK-O6OoH-ziCzN0PpPeFoHVSTk8yg0jehj/authorizedcustomers", "verbs": ["GET"] }, "payments": {"href": "/accounts/enc!!sifCtLSQicOD7mnXY8xwckUhg8Z72khK-O6OoH-ziCzN0PpPeFoHVSTk8yg0jehj/payments", "verbs": ["GET"] }, "self": {"href": "/accounts/enc!!sifCtLSQicOD7mnXY8xwckUhg8Z72khK-O6OoH-ziCzN0PpPeFoHVSTk8yg0jehj", "verbs": ["GET"] }, "details": {"href": "/accounts/enc!!sifCtLSQicOD7mnXY8xwckUhg8Z72khK-O6OoH-ziCzN0PpPeFoHVSTk8yg0jehj/details", "verbs": ["GET"] }, "stakeholders": {"href": "/accounts/enc!!sifCtLSQicOD7mnXY8xwckUhg8Z72khK-O6OoH-ziCzN0PpPeFoHVSTk8yg0jehj/stakeholders", "verbs": ["GET"] }, "transactions": {"href": "/accounts/enc!!sifCtLSQicOD7mnXY8xwckUhg8Z72khK-O6OoH-ziCzN0PpPeFoHVSTk8yg0jehj/transactions", "verbs": ["GET"] }, "interests": {"href": "/accounts/enc!!sifCtLSQicOD7mnXY8xwckUhg8Z72khK-O6OoH-ziCzN0PpPeFoHVSTk8yg0jehj/interests", "verbs": ["GET"] } } }, {"id": "30008215061", "accountNumber": "30008215061", "bban": "30008215061", "iban": "NO7330008215061", "customerRole": "OWNER", "owner": {"name": "Owner B", "customerNumber": "01059344907"}, "displayName": "Lån pant bolig", "accountName": {"accountDescription": "Lån pant bolig"}, "properties": {"currencyCode": "NOK", "status": "ACTIVE", "type": "loan"}, "accountBalance": {"accountingBalance": -2035652.000 }, "rights": {"accessPermission": true, "paymentFrom": false, "transferFrom": false, "transferTo": false, "createPaymentAgreement": false, "createAutopaymentAgreement": false }, "links": {"linkedservices": {"href": "/accounts/enc!!iKJu8Sngfqbf6qdthAD1NbZki7nHSblqW_2OlarihdbrZKRgiZJvh1f4hhUnv4HP/linkedservices", "verbs": ["GET"] }, "authorizedcustomers": {"href": "/accounts/enc!!iKJu8Sngfqbf6qdthAD1NbZki7nHSblqW_2OlarihdbrZKRgiZJvh1f4hhUnv4HP/authorizedcustomers", "verbs": ["GET"] }, "payments": {"href": "/accounts/enc!!iKJu8Sngfqbf6qdthAD1NbZki7nHSblqW_2OlarihdbrZKRgiZJvh1f4hhUnv4HP/payments", "verbs": ["GET"] }, "self": {"href": "/accounts/enc!!iKJu8Sngfqbf6qdthAD1NbZki7nHSblqW_2OlarihdbrZKRgiZJvh1f4hhUnv4HP", "verbs": ["GET"] }, "loandetails": {"href": "/accounts/enc!!iKJu8Sngfqbf6qdthAD1NbZki7nHSblqW_2OlarihdbrZKRgiZJvh1f4hhUnv4HP/loandetails", "verbs": ["GET"] }, "details": {"href": "/accounts/enc!!iKJu8Sngfqbf6qdthAD1NbZki7nHSblqW_2OlarihdbrZKRgiZJvh1f4hhUnv4HP/details", "verbs": ["GET"] }, "stakeholders": {"href": "/accounts/enc!!iKJu8Sngfqbf6qdthAD1NbZki7nHSblqW_2OlarihdbrZKRgiZJvh1f4hhUnv4HP/stakeholders", "verbs": ["GET"] }, "transactions": {"href": "/accounts/enc!!iKJu8Sngfqbf6qdthAD1NbZki7nHSblqW_2OlarihdbrZKRgiZJvh1f4hhUnv4HP/transactions", "verbs": ["GET"] } } }, {"id": "30003806916", "accountNumber": "30003806916", "bban": "30003806916", "iban": "NO1830003806916", "customerRole": "OWNER", "owner": {"name": "Owner B", "customerNumber": "01059344907"}, "displayName": "Sparekonto - Asfalt", "accountName": {"alias": "Sparekonto - Asfalt", "accountDescription": "Sparekonto knif"}, "properties": {"currencyCode": "NOK", "status": "ACTIVE", "type": "spending"}, "accountBalance": {"availableBalance": 4.420, "accountingBalance": 4.420, "creditLine": 0.000, "blockedAmount": 0.000 }, "rights": {"accessPermission": true, "paymentFrom": true, "transferFrom": true, "transferTo": true, "createPaymentAgreement": true, "createAutopaymentAgreement": true }, "links": {"immediatefees": {"href": "/accounts/enc!!3n7T5zbmuInoNFOiAya1rvtRU1CrbE_UCZPtdn1lnIt_8PEYdJkKhk-6imifMDoU/immediatefees", "verbs": ["GET"] }, "authorizedcustomers": {"href": "/accounts/enc!!3n7T5zbmuInoNFOiAya1rvtRU1CrbE_UCZPtdn1lnIt_8PEYdJkKhk-6imifMDoU/authorizedcustomers", "verbs": ["GET"] }, "payments": {"href": "/accounts/enc!!3n7T5zbmuInoNFOiAya1rvtRU1CrbE_UCZPtdn1lnIt_8PEYdJkKhk-6imifMDoU/payments", "verbs": ["GET"] }, "validateclosing": {"href": "/accounts/enc!!3n7T5zbmuInoNFOiAya1rvtRU1CrbE_UCZPtdn1lnIt_8PEYdJkKhk-6imifMDoU/validateclosing", "verbs": ["GET"] }, "stakeholders": {"href": "/accounts/enc!!3n7T5zbmuInoNFOiAya1rvtRU1CrbE_UCZPtdn1lnIt_8PEYdJkKhk-6imifMDoU/stakeholders", "verbs": ["GET"] }, "transactions": {"href": "/accounts/enc!!3n7T5zbmuInoNFOiAya1rvtRU1CrbE_UCZPtdn1lnIt_8PEYdJkKhk-6imifMDoU/transactions", "verbs": ["GET"] }, "detailsclassic": {"href": "/accounts/enc!!3n7T5zbmuInoNFOiAya1rvtRU1CrbE_UCZPtdn1lnIt_8PEYdJkKhk-6imifMDoU/detailsclassic", "verbs": ["GET"] }, "linkedservices": {"href": "/accounts/enc!!3n7T5zbmuInoNFOiAya1rvtRU1CrbE_UCZPtdn1lnIt_8PEYdJkKhk-6imifMDoU/linkedservices", "verbs": ["GET"] }, "balance": {"href": "/accounts/enc!!3n7T5zbmuInoNFOiAya1rvtRU1CrbE_UCZPtdn1lnIt_8PEYdJkKhk-6imifMDoU/balance", "verbs": ["GET"] }, "freewithdrawallimitations": {"href": "/accounts/enc!!3n7T5zbmuInoNFOiAya1rvtRU1CrbE_UCZPtdn1lnIt_8PEYdJkKhk-6imifMDoU/details/freewithdrawallimitations", "verbs": ["GET"] }, "self": {"href": "/accounts/enc!!3n7T5zbmuInoNFOiAya1rvtRU1CrbE_UCZPtdn1lnIt_8PEYdJkKhk-6imifMDoU", "verbs": ["GET"] }, "details": {"href": "/accounts/enc!!3n7T5zbmuInoNFOiAya1rvtRU1CrbE_UCZPtdn1lnIt_8PEYdJkKhk-6imifMDoU/details", "verbs": ["GET"] }, "interests": {"href": "/accounts/enc!!3n7T5zbmuInoNFOiAya1rvtRU1CrbE_UCZPtdn1lnIt_8PEYdJkKhk-6imifMDoU/interests", "verbs": ["GET"] } } }, {"id": "30003804107", "accountNumber": "30003804107", "bban": "30003804107", "iban": "NO0730003804107", "customerRole": "OWNER", "owner": {"name": "Owner B", "customerNumber": "01059344907"}, "displayName": "Regninger og variable kost - Felles", "accountName": {"alias": "Regninger og variable kost - Felles", "accountDescription": "Brukskonto knif"}, "properties": {"currencyCode": "NOK", "status": "ACTIVE", "type": "spending"}, "accountBalance": {"availableBalance": 50.480, "accountingBalance": 50.480, "creditLine": 0.000, "blockedAmount": 0.000 }, "rights": {"accessPermission": true, "paymentFrom": true, "transferFrom": true, "transferTo": true, "createPaymentAgreement": true, "createAutopaymentAgreement": true }, "links": {"immediatefees": {"href": "/accounts/enc!!F-acxCEHnN9nLJ5HhTvH21H7JBbWWjBA2mcZvW_TdxGaU3GSHCRjfZxPnFmTyOm6/immediatefees", "verbs": ["GET"] }, "authorizedcustomers": {"href": "/accounts/enc!!F-acxCEHnN9nLJ5HhTvH21H7JBbWWjBA2mcZvW_TdxGaU3GSHCRjfZxPnFmTyOm6/authorizedcustomers", "verbs": ["GET"] }, "payments": {"href": "/accounts/enc!!F-acxCEHnN9nLJ5HhTvH21H7JBbWWjBA2mcZvW_TdxGaU3GSHCRjfZxPnFmTyOm6/payments", "verbs": ["GET"] }, "validateclosing": {"href": "/accounts/enc!!F-acxCEHnN9nLJ5HhTvH21H7JBbWWjBA2mcZvW_TdxGaU3GSHCRjfZxPnFmTyOm6/validateclosing", "verbs": ["GET"] }, "stakeholders": {"href": "/accounts/enc!!F-acxCEHnN9nLJ5HhTvH21H7JBbWWjBA2mcZvW_TdxGaU3GSHCRjfZxPnFmTyOm6/stakeholders", "verbs": ["GET"] }, "transactions": {"href": "/accounts/enc!!F-acxCEHnN9nLJ5HhTvH21H7JBbWWjBA2mcZvW_TdxGaU3GSHCRjfZxPnFmTyOm6/transactions", "verbs": ["GET"] }, "detailsclassic": {"href": "/accounts/enc!!F-acxCEHnN9nLJ5HhTvH21H7JBbWWjBA2mcZvW_TdxGaU3GSHCRjfZxPnFmTyOm6/detailsclassic", "verbs": ["GET"] }, "linkedservices": {"href": "/accounts/enc!!F-acxCEHnN9nLJ5HhTvH21H7JBbWWjBA2mcZvW_TdxGaU3GSHCRjfZxPnFmTyOm6/linkedservices", "verbs": ["GET"] }, "balance": {"href": "/accounts/enc!!F-acxCEHnN9nLJ5HhTvH21H7JBbWWjBA2mcZvW_TdxGaU3GSHCRjfZxPnFmTyOm6/balance", "verbs": ["GET"] }, "freewithdrawallimitations": {"href": "/accounts/enc!!F-acxCEHnN9nLJ5HhTvH21H7JBbWWjBA2mcZvW_TdxGaU3GSHCRjfZxPnFmTyOm6/details/freewithdrawallimitations", "verbs": ["GET"] }, "self": {"href": "/accounts/enc!!F-acxCEHnN9nLJ5HhTvH21H7JBbWWjBA2mcZvW_TdxGaU3GSHCRjfZxPnFmTyOm6", "verbs": ["GET"] }, "details": {"href": "/accounts/enc!!F-acxCEHnN9nLJ5HhTvH21H7JBbWWjBA2mcZvW_TdxGaU3GSHCRjfZxPnFmTyOm6/details", "verbs": ["GET"] }, "interests": {"href": "/accounts/enc!!F-acxCEHnN9nLJ5HhTvH21H7JBbWWjBA2mcZvW_TdxGaU3GSHCRjfZxPnFmTyOm6/interests", "verbs": ["GET"] } } }, {"id": "30003804077", "accountNumber": "30003804077", "bban": "30003804077", "iban": "NO4130003804077", "customerRole": "OWNER", "owner": {"name": "Owner B", "customerNumber": "01059344907"}, "displayName": "Ole Martin - Bruk", "accountName": {"alias": "Ole Martin - Bruk", "accountDescription": "Brukskonto knif"}, "properties": {"currencyCode": "NOK", "status": "ACTIVE", "type": "spending"}, "accountBalance": {"availableBalance": 172.730, "accountingBalance": 401.730, "creditLine": 0.000, "blockedAmount": 0.000 }, "rights": {"accessPermission": true, "paymentFrom": true, "transferFrom": true, "transferTo": true, "createPaymentAgreement": true, "createAutopaymentAgreement": true }, "links": {"immediatefees": {"href": "/accounts/enc!!EVjMSjWyGhAkYxlEemwsx82vEIvGlCf49bqvp6hCk0Zz14i936gUzE3FxSl_6KDU/immediatefees", "verbs": ["GET"] }, "authorizedcustomers": {"href": "/accounts/enc!!EVjMSjWyGhAkYxlEemwsx82vEIvGlCf49bqvp6hCk0Zz14i936gUzE3FxSl_6KDU/authorizedcustomers", "verbs": ["GET"] }, "payments": {"href": "/accounts/enc!!EVjMSjWyGhAkYxlEemwsx82vEIvGlCf49bqvp6hCk0Zz14i936gUzE3FxSl_6KDU/payments", "verbs": ["GET"] }, "validateclosing": {"href": "/accounts/enc!!EVjMSjWyGhAkYxlEemwsx82vEIvGlCf49bqvp6hCk0Zz14i936gUzE3FxSl_6KDU/validateclosing", "verbs": ["GET"] }, "stakeholders": {"href": "/accounts/enc!!EVjMSjWyGhAkYxlEemwsx82vEIvGlCf49bqvp6hCk0Zz14i936gUzE3FxSl_6KDU/stakeholders", "verbs": ["GET"] }, "transactions": {"href": "/accounts/enc!!EVjMSjWyGhAkYxlEemwsx82vEIvGlCf49bqvp6hCk0Zz14i936gUzE3FxSl_6KDU/transactions", "verbs": ["GET"] }, "detailsclassic": {"href": "/accounts/enc!!EVjMSjWyGhAkYxlEemwsx82vEIvGlCf49bqvp6hCk0Zz14i936gUzE3FxSl_6KDU/detailsclassic", "verbs": ["GET"] }, "linkedservices": {"href": "/accounts/enc!!EVjMSjWyGhAkYxlEemwsx82vEIvGlCf49bqvp6hCk0Zz14i936gUzE3FxSl_6KDU/linkedservices", "verbs": ["GET"] }, "balance": {"href": "/accounts/enc!!EVjMSjWyGhAkYxlEemwsx82vEIvGlCf49bqvp6hCk0Zz14i936gUzE3FxSl_6KDU/balance", "verbs": ["GET"] }, "freewithdrawallimitations": {"href": "/accounts/enc!!EVjMSjWyGhAkYxlEemwsx82vEIvGlCf49bqvp6hCk0Zz14i936gUzE3FxSl_6KDU/details/freewithdrawallimitations", "verbs": ["GET"] }, "self": {"href": "/accounts/enc!!EVjMSjWyGhAkYxlEemwsx82vEIvGlCf49bqvp6hCk0Zz14i936gUzE3FxSl_6KDU", "verbs": ["GET"] }, "details": {"href": "/accounts/enc!!EVjMSjWyGhAkYxlEemwsx82vEIvGlCf49bqvp6hCk0Zz14i936gUzE3FxSl_6KDU/details", "verbs": ["GET"] }, "interests": {"href": "/accounts/enc!!EVjMSjWyGhAkYxlEemwsx82vEIvGlCf49bqvp6hCk0Zz14i936gUzE3FxSl_6KDU/interests", "verbs": ["GET"] } } }, {"id": "30003804085", "accountNumber": "30003804085", "bban": "30003804085", "iban": "NO1930003804085", "customerRole": "OWNER", "owner": {"name": "Owner B", "customerNumber": "01059344907"}, "displayName": "Mat - Felles", "accountName": {"alias": "Mat - Felles", "accountDescription": "Brukskonto knif"}, "properties": {"currencyCode": "NOK", "status": "ACTIVE", "type": "spending"}, "accountBalance": {"availableBalance": 9680.210, "accountingBalance": 9680.210, "creditLine": 0.000, "blockedAmount": 0.000 }, "rights": {"accessPermission": true, "paymentFrom": true, "transferFrom": true, "transferTo": true, "createPaymentAgreement": true, "createAutopaymentAgreement": true }, "links": {"immediatefees": {"href": "/accounts/enc!!TjxyAQjP5XkQ1XenWcJFr_5TD4KQd4RWU6ToLI6jAKwaPY2k5AwD8MZRbUfqjkYa/immediatefees", "verbs": ["GET"] }, "authorizedcustomers": {"href": "/accounts/enc!!TjxyAQjP5XkQ1XenWcJFr_5TD4KQd4RWU6ToLI6jAKwaPY2k5AwD8MZRbUfqjkYa/authorizedcustomers", "verbs": ["GET"] }, "payments": {"href": "/accounts/enc!!TjxyAQjP5XkQ1XenWcJFr_5TD4KQd4RWU6ToLI6jAKwaPY2k5AwD8MZRbUfqjkYa/payments", "verbs": ["GET"] }, "validateclosing": {"href": "/accounts/enc!!TjxyAQjP5XkQ1XenWcJFr_5TD4KQd4RWU6ToLI6jAKwaPY2k5AwD8MZRbUfqjkYa/validateclosing", "verbs": ["GET"] }, "stakeholders": {"href": "/accounts/enc!!TjxyAQjP5XkQ1XenWcJFr_5TD4KQd4RWU6ToLI6jAKwaPY2k5AwD8MZRbUfqjkYa/stakeholders", "verbs": ["GET"] }, "transactions": {"href": "/accounts/enc!!TjxyAQjP5XkQ1XenWcJFr_5TD4KQd4RWU6ToLI6jAKwaPY2k5AwD8MZRbUfqjkYa/transactions", "verbs": ["GET"] }, "detailsclassic": {"href": "/accounts/enc!!TjxyAQjP5XkQ1XenWcJFr_5TD4KQd4RWU6ToLI6jAKwaPY2k5AwD8MZRbUfqjkYa/detailsclassic", "verbs": ["GET"] }, "linkedservices": {"href": "/accounts/enc!!TjxyAQjP5XkQ1XenWcJFr_5TD4KQd4RWU6ToLI6jAKwaPY2k5AwD8MZRbUfqjkYa/linkedservices", "verbs": ["GET"] }, "balance": {"href": "/accounts/enc!!TjxyAQjP5XkQ1XenWcJFr_5TD4KQd4RWU6ToLI6jAKwaPY2k5AwD8MZRbUfqjkYa/balance", "verbs": ["GET"] }, "freewithdrawallimitations": {"href": "/accounts/enc!!TjxyAQjP5XkQ1XenWcJFr_5TD4KQd4RWU6ToLI6jAKwaPY2k5AwD8MZRbUfqjkYa/details/freewithdrawallimitations", "verbs": ["GET"] }, "self": {"href": "/accounts/enc!!TjxyAQjP5XkQ1XenWcJFr_5TD4KQd4RWU6ToLI6jAKwaPY2k5AwD8MZRbUfqjkYa", "verbs": ["GET"] }, "details": {"href": "/accounts/enc!!TjxyAQjP5XkQ1XenWcJFr_5TD4KQd4RWU6ToLI6jAKwaPY2k5AwD8MZRbUfqjkYa/details", "verbs": ["GET"] }, "interests": {"href": "/accounts/enc!!TjxyAQjP5XkQ1XenWcJFr_5TD4KQd4RWU6ToLI6jAKwaPY2k5AwD8MZRbUfqjkYa/interests", "verbs": ["GET"] } } }, {"id": "30003804093", "accountNumber": "30003804093", "bban": "30003804093", "iban": "NO9430003804093", "customerRole": "OWNER", "owner": {"name": "Owner B", "customerNumber": "01059344907"}, "displayName": "Reise - Felles", "accountName": {"alias": "Reise - Felles", "accountDescription": "Sparekonto knif"}, "properties": {"currencyCode": "NOK", "status": "ACTIVE", "type": "spending"}, "accountBalance": {"availableBalance": 30.720, "accountingBalance": 30.720, "creditLine": 0.000, "blockedAmount": 0.000 }, "rights": {"accessPermission": true, "paymentFrom": true, "transferFrom": true, "transferTo": true, "createPaymentAgreement": true, "createAutopaymentAgreement": true }, "links": {"immediatefees": {"href": "/accounts/enc!!N36n6QE76G5pxJa4ZFzBRSEHFfnFsV4X4gaUewciH4ZjHN18DfipWT-MOlM1yTJJ/immediatefees", "verbs": ["GET"] }, "authorizedcustomers": {"href": "/accounts/enc!!N36n6QE76G5pxJa4ZFzBRSEHFfnFsV4X4gaUewciH4ZjHN18DfipWT-MOlM1yTJJ/authorizedcustomers", "verbs": ["GET"] }, "payments": {"href": "/accounts/enc!!N36n6QE76G5pxJa4ZFzBRSEHFfnFsV4X4gaUewciH4ZjHN18DfipWT-MOlM1yTJJ/payments", "verbs": ["GET"] }, "validateclosing": {"href": "/accounts/enc!!N36n6QE76G5pxJa4ZFzBRSEHFfnFsV4X4gaUewciH4ZjHN18DfipWT-MOlM1yTJJ/validateclosing", "verbs": ["GET"] }, "stakeholders": {"href": "/accounts/enc!!N36n6QE76G5pxJa4ZFzBRSEHFfnFsV4X4gaUewciH4ZjHN18DfipWT-MOlM1yTJJ/stakeholders", "verbs": ["GET"] }, "transactions": {"href": "/accounts/enc!!N36n6QE76G5pxJa4ZFzBRSEHFfnFsV4X4gaUewciH4ZjHN18DfipWT-MOlM1yTJJ/transactions", "verbs": ["GET"] }, "detailsclassic": {"href": "/accounts/enc!!N36n6QE76G5pxJa4ZFzBRSEHFfnFsV4X4gaUewciH4ZjHN18DfipWT-MOlM1yTJJ/detailsclassic", "verbs": ["GET"] }, "linkedservices": {"href": "/accounts/enc!!N36n6QE76G5pxJa4ZFzBRSEHFfnFsV4X4gaUewciH4ZjHN18DfipWT-MOlM1yTJJ/linkedservices", "verbs": ["GET"] }, "balance": {"href": "/accounts/enc!!N36n6QE76G5pxJa4ZFzBRSEHFfnFsV4X4gaUewciH4ZjHN18DfipWT-MOlM1yTJJ/balance", "verbs": ["GET"] }, "freewithdrawallimitations": {"href": "/accounts/enc!!N36n6QE76G5pxJa4ZFzBRSEHFfnFsV4X4gaUewciH4ZjHN18DfipWT-MOlM1yTJJ/details/freewithdrawallimitations", "verbs": ["GET"] }, "self": {"href": "/accounts/enc!!N36n6QE76G5pxJa4ZFzBRSEHFfnFsV4X4gaUewciH4ZjHN18DfipWT-MOlM1yTJJ", "verbs": ["GET"] }, "details": {"href": "/accounts/enc!!N36n6QE76G5pxJa4ZFzBRSEHFfnFsV4X4gaUewciH4ZjHN18DfipWT-MOlM1yTJJ/details", "verbs": ["GET"] }, "interests": {"href": "/accounts/enc!!N36n6QE76G5pxJa4ZFzBRSEHFfnFsV4X4gaUewciH4ZjHN18DfipWT-MOlM1yTJJ/interests", "verbs": ["GET"] } } } ] }
+
+REQUEST 16
+GET https://nettbank.sor.no/secesb/rest/era/creditcardaccounts
+Accept: application/json
+Content-Type: application/json
+X-EVRY-CLIENT-CLIENTNAME: SMARTbankMobile
+X-Aggregator: Tink Testing
+
+RESPONSE 16
+200
+Date: Wed, 23 Sep 2020 05:57:18 GMT
+X-EVRY-ESB-ACCESSTOKEN: eyJWZXJzaW9uIjoiQVRQLTEuMCIsImFsZyI6Im5vbmUifQ.eyJTZWNyZXQiOiJ6RmJqaXdVUGpkbGxyaWRrSlhidnZvM1NWSFNqQy1XQVFNN3FvZjlVdWI4IiwiVGltZU9mTGFzdEFjY2VzcyI6MTYwNjE0NzgyNjI2OCwiVHlwZSI6IkFjY2Vzc1Rva2VuIiwiVGltZU9mTG9naW4iOjE2MDYxNDc4MjYxODgsIlNlc3Npb25JRCI6IjFhZTNkNTA4LTY4NDMtNDczMS05MDFlLTYzNWMxY2M4ZjU3MyJ9.
+Cache-Control: no-cache, no-store
+Expires: Mon, 01 Jan 2001 05:00:00 GMT
+Pragma: no-cache
+Content-Length: 11
+Keep-Alive: timeout=5, max=300
+Connection: Keep-Alive
+Content-Type: application/json
+Content-Language: en-US
+Strict-Transport-Security: max-age=31536000;
+
+{"list":[]}

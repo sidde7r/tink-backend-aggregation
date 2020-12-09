@@ -5,6 +5,7 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.MORTGAGE_AGGREGATION;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
 
+import com.google.inject.Inject;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
@@ -13,7 +14,7 @@ import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
-import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
+import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.authenticator.HandelsbankenNOAutoAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.authenticator.HandelsbankenNOMultiFactorAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.fetcher.investment.HandelsbankenNOInvestmentFetcher;
@@ -22,8 +23,10 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.fetcher.t
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.fetcher.transactionalaccount.HandelsbankenNOTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.filters.HandelsbankenNORetryFilter;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.EncapClient;
-import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
+import se.tink.backend.aggregation.agents.utils.authentication.encap3.module.EncapClientModule;
+import se.tink.backend.aggregation.agents.utils.authentication.encap3.module.EncapClientProvider;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.bankid.BankIdAuthenticationControllerNO;
@@ -35,33 +38,34 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.TimeoutRetryFilter;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, LOANS, MORTGAGE_AGGREGATION})
+@AgentDependencyModules(modules = EncapClientModule.class)
 public final class HandelsbankenNOAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor,
                 RefreshLoanAccountsExecutor {
 
     private final HandelsbankenNOApiClient apiClient;
-    private EncapClient encapClient;
+    private final EncapClient encapClient;
     private final InvestmentRefreshController investmentRefreshController;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final LoanRefreshController loanRefreshController;
 
+    @Inject
     public HandelsbankenNOAgent(
-            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
+            AgentComponentProvider agentComponentProvider,
+            EncapClientProvider encapClientProvider) {
+        super(agentComponentProvider);
         configureHttpClient(client);
         apiClient = new HandelsbankenNOApiClient(client, sessionStorage);
+
         encapClient =
-                new EncapClient(
-                        context,
-                        request,
-                        signatureKeyPair,
+                encapClientProvider.getEncapClient(
                         persistentStorage,
                         new HandelsbankenNOEncapConfiguration(),
-                        HandelsbankenNOConstants.DEVICE_PROFILE);
+                        HandelsbankenNOConstants.DEVICE_PROFILE,
+                        client);
 
         investmentRefreshController =
                 new InvestmentRefreshController(

@@ -1,0 +1,94 @@
+{
+  "accounts": [
+    {
+      "accountNumber": "30002429299",
+      "currencyCode": "NOK",
+      "bankId": "30002429299",
+      "name": "Owner A",
+      "type": "CHECKING",
+      "closed": false,
+      "holderName": "Owner A",
+      "balance": 10844.940
+    },
+    {
+      "accountNumber": "30003806959",
+      "currencyCode": "NOK",
+      "bankId": "30003806959",
+      "name": "Ekstra penger - Felles",
+      "type": "CHECKING",
+      "closed": false,
+      "holderName": "Owner B",
+      "balance": 5.630
+    },
+    {
+      "accountNumber": "30002743279",
+      "currencyCode": "NOK",
+      "bankId": "30002743279",
+      "name": "Lån og faste kostnader - Felles",
+      "type": "CHECKING",
+      "closed": false,
+      "holderName": "Owner B",
+      "balance": 127.430
+    },
+    {
+      "accountNumber": "30004254445",
+      "currencyCode": "NOK",
+      "bankId": "30004254445",
+      "name": "Grønt fleksilån knif",
+      "type": "CHECKING",
+      "closed": false,
+      "holderName": "Owner B",
+      "balance": 16248.430
+    },
+    {
+      "accountNumber": "30003806916",
+      "currencyCode": "NOK",
+      "bankId": "30003806916",
+      "name": "Sparekonto - Asfalt",
+      "type": "CHECKING",
+      "closed": false,
+      "holderName": "Owner B",
+      "balance": 4.420
+    },
+    {
+      "accountNumber": "30003804107",
+      "currencyCode": "NOK",
+      "bankId": "30003804107",
+      "name": "Regninger og variable kost - Felles",
+      "type": "CHECKING",
+      "closed": false,
+      "holderName": "Owner B",
+      "balance": 50.480
+    },
+    {
+      "accountNumber": "30003804077",
+      "currencyCode": "NOK",
+      "bankId": "30003804077",
+      "name": "Ole Martin - Bruk",
+      "type": "CHECKING",
+      "closed": false,
+      "holderName": "Owner B",
+      "balance": 172.730
+    },
+    {
+      "accountNumber": "30003804085",
+      "currencyCode": "NOK",
+      "bankId": "30003804085",
+      "name": "Mat - Felles",
+      "type": "CHECKING",
+      "closed": false,
+      "holderName": "Owner B",
+      "balance": 9680.210
+    },
+    {
+      "accountNumber": "30003804093",
+      "currencyCode": "NOK",
+      "bankId": "30003804093",
+      "name": "Reise - Felles",
+      "type": "CHECKING",
+      "closed": false,
+      "holderName": "Owner B",
+      "balance": 30.720
+    }
+  ]
+}

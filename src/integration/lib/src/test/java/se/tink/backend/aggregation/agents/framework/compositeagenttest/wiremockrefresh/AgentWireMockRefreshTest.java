@@ -13,6 +13,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import org.apache.commons.collections4.ListUtils;
 import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -141,10 +142,12 @@ public final class AgentWireMockRefreshTest {
                                 .orElseGet(Collections::emptyList)));
         Assert.assertTrue(
                 AgentContractEntitiesAsserts.areListsMatchingVerbose(
-                        expected.getAccounts(), context.getUpdatedAccounts()));
+                        ListUtils.emptyIfNull(expected.getAccounts()),
+                        ListUtils.emptyIfNull(context.getUpdatedAccounts())));
         Assert.assertTrue(
                 AgentContractEntitiesAsserts.areListsMatchingVerbose(
-                        expected.getTransactions(), context.getTransactions()));
+                        ListUtils.emptyIfNull(expected.getTransactions()),
+                        ListUtils.emptyIfNull(context.getTransactions())));
     }
 
     /**

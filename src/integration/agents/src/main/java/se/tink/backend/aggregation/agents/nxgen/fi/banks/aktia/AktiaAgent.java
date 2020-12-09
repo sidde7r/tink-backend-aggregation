@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
+import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.AktiaConstants.InstanceStorage;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.authenticator.AktiaAutoAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.authenticator.AktiaEncapConfiguration;
@@ -21,8 +22,9 @@ import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.authenticator.Akt
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.authenticator.entities.UserAccountInfo;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.fetcher.transactionalaccount.AktiaTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.EncapClient;
+import se.tink.backend.aggregation.agents.utils.authentication.encap3.module.EncapClientModule;
+import se.tink.backend.aggregation.agents.utils.authentication.encap3.module.EncapClientProvider;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
-import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -38,6 +40,7 @@ import se.tink.backend.aggregation.nxgen.storage.Storage;
 import se.tink.libraries.identitydata.IdentityData;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, IDENTITY_DATA})
+@AgentDependencyModules(modules = EncapClientModule.class)
 public final class AktiaAgent extends NextGenerationAgent
         implements RefreshIdentityDataExecutor,
                 RefreshCheckingAccountsExecutor,
@@ -50,23 +53,21 @@ public final class AktiaAgent extends NextGenerationAgent
 
     @Inject
     public AktiaAgent(
-            final AgentComponentProvider componentProvider,
+            AgentComponentProvider agentComponentProvider,
             AgentsServiceConfiguration agentsServiceConfiguration,
-            SignatureKeyPair signatureKeyPair) {
-        super(componentProvider);
+            EncapClientProvider encapClientProvider) {
+        super(agentComponentProvider);
         configureHttpClient(client, agentsServiceConfiguration);
 
         this.apiClient = new AktiaApiClient(client);
         this.instanceStorage = new Storage();
 
         this.encapClient =
-                new EncapClient(
-                        componentProvider.getContext(),
-                        request,
-                        signatureKeyPair,
+                encapClientProvider.getEncapClient(
                         persistentStorage,
                         new AktiaEncapConfiguration(),
-                        AktiaConstants.DEVICE_PROFILE);
+                        AktiaConstants.DEVICE_PROFILE,
+                        client);
 
         this.transactionalAccountRefreshController =
                 constructTransactionalAccountRefreshController();

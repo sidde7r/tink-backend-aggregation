@@ -11,19 +11,19 @@ import org.w3c.dom.Node;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.EncapConfiguration;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.EncapConstants;
-import se.tink.backend.aggregation.agents.utils.authentication.encap3.EncapStorage;
+import se.tink.backend.aggregation.agents.utils.authentication.encap3.storage.BaseEncapStorage;
 import se.tink.backend.aggregation.agents.utils.soap.SoapParser;
 
 public class EncapSoapUtils {
     private final EncapConfiguration configuration;
-    private final EncapStorage storage;
+    private final BaseEncapStorage storage;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(EncapSoapUtils.class);
     private static final String MESSAGE_TAG = "Message";
     private static final String ERROR_CODE_TAG = "ErrorCode";
     private static final String ACTIVATION_SESSION_ID_TAG = "ns2:activationSessionId";
 
-    public EncapSoapUtils(EncapConfiguration configuration, EncapStorage storage) {
+    public EncapSoapUtils(EncapConfiguration configuration, BaseEncapStorage storage) {
         this.configuration = configuration;
         this.storage = storage;
     }

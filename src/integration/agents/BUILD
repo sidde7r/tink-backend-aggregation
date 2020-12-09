@@ -27,6 +27,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/encoding",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/jersey/filter",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/log",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/soap",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/annotations",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/agents",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/agentsservice",
