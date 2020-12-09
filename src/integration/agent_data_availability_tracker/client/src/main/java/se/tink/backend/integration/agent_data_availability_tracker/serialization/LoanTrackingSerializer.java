@@ -1,4 +1,4 @@
-package se.tink.backend.integration.agent_data_availability_tracker.client.serialization;
+package se.tink.backend.integration.agent_data_availability_tracker.serialization;
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.models.Loan;

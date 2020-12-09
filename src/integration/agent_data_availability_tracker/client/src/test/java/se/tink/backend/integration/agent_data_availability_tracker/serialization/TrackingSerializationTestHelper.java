@@ -1,9 +1,9 @@
-package se.tink.backend.integration.agent_data_availability_tracker.client.serialization;
+package se.tink.backend.integration.agent_data_availability_tracker.serialization;
 
 import com.google.common.collect.ImmutableSet;
 import java.util.List;
 import java.util.stream.Collectors;
-import se.tink.backend.integration.agent_data_availability_tracker.client.serialization.TrackingList.Builder;
+import se.tink.backend.integration.agent_data_availability_tracker.serialization.TrackingList.Builder;
 
 public class TrackingSerializationTestHelper {
 

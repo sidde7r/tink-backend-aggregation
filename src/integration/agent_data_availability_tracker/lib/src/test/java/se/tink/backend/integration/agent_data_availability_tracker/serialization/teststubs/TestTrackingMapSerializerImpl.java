@@ -1,8 +1,8 @@
-package se.tink.backend.integration.agent_data_availability_tracker.client.serialization.teststubs;
+package se.tink.backend.integration.agent_data_availability_tracker.serialization.teststubs;
 
-import se.tink.backend.integration.agent_data_availability_tracker.client.serialization.TrackingList;
-import se.tink.backend.integration.agent_data_availability_tracker.client.serialization.TrackingList.Builder;
-import se.tink.backend.integration.agent_data_availability_tracker.client.serialization.TrackingMapSerializer;
+import se.tink.backend.integration.agent_data_availability_tracker.serialization.TrackingList;
+import se.tink.backend.integration.agent_data_availability_tracker.serialization.TrackingList.Builder;
+import se.tink.backend.integration.agent_data_availability_tracker.serialization.TrackingMapSerializer;
 
 public class TestTrackingMapSerializerImpl extends TrackingMapSerializer {
 

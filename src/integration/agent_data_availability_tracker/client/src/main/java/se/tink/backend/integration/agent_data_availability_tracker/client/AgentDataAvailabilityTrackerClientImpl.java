@@ -14,10 +14,10 @@ import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.IdentityData;
 import se.tink.backend.integration.agent_data_availability_tracker.api.AgentDataAvailabilityTrackerServiceGrpc;
 import se.tink.backend.integration.agent_data_availability_tracker.api.TrackAccountRequest;
 import se.tink.backend.integration.agent_data_availability_tracker.api.Void;
-import se.tink.backend.integration.agent_data_availability_tracker.client.serialization.AccountTrackingSerializer;
-import se.tink.backend.integration.agent_data_availability_tracker.client.serialization.IdentityDataSerializer;
-import se.tink.backend.integration.agent_data_availability_tracker.client.serialization.LoanTrackingSerializer;
-import se.tink.backend.integration.agent_data_availability_tracker.client.serialization.PortfolioTrackingSerializer;
+import se.tink.backend.integration.agent_data_availability_tracker.serialization.AccountTrackingSerializer;
+import se.tink.backend.integration.agent_data_availability_tracker.serialization.IdentityDataSerializer;
+import se.tink.backend.integration.agent_data_availability_tracker.serialization.LoanTrackingSerializer;
+import se.tink.backend.integration.agent_data_availability_tracker.serialization.PortfolioTrackingSerializer;
 import se.tink.libraries.dropwizard_lifecycle.ManagedSafeStop;
 
 public class AgentDataAvailabilityTrackerClientImpl extends ManagedSafeStop
@@ -37,6 +37,7 @@ public class AgentDataAvailabilityTrackerClientImpl extends ManagedSafeStop
     private final AbstractExecutionThreadService service;
 
     /** Construct client for accessing RouteGuide server at {@code host:port}. */
+
     @Inject
     private AgentDataAvailabilityTrackerClientImpl(final ManagedChannel channel) {
         this.channel = channel;

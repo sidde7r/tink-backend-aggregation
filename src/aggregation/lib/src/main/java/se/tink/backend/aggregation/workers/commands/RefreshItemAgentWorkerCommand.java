@@ -44,7 +44,7 @@ import se.tink.backend.aggregation.workers.operation.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
 import se.tink.backend.aggregation.workers.operation.type.AgentWorkerOperationMetricType;
 import se.tink.backend.integration.agent_data_availability_tracker.client.AgentDataAvailabilityTrackerClient;
-import se.tink.backend.integration.agent_data_availability_tracker.client.serialization.IdentityDataSerializer;
+import se.tink.backend.integration.agent_data_availability_tracker.serialization.IdentityDataSerializer;
 import se.tink.eventproducerservice.events.grpc.RefreshResultEventProto.RefreshResultEvent.AdditionalInfo;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.DataFetchingRestrictions;

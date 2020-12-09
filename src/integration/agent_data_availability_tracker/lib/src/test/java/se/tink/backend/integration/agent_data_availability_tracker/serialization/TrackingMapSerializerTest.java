@@ -1,11 +1,11 @@
-package se.tink.backend.integration.agent_data_availability_tracker.client.serialization;
+package se.tink.backend.integration.agent_data_availability_tracker.serialization;
 
 import com.google.common.collect.ImmutableSet;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.junit.Assert;
 import org.junit.Test;
-import se.tink.backend.integration.agent_data_availability_tracker.client.serialization.teststubs.TestTrackingMapSerializerImpl;
+import se.tink.backend.integration.agent_data_availability_tracker.serialization.teststubs.TestTrackingMapSerializerImpl;
 
 public class TrackingMapSerializerTest {
 

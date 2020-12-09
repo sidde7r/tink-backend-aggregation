@@ -4,8 +4,8 @@ import io.dropwizard.lifecycle.Managed;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.models.AccountFeatures;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.IdentityData;
-import se.tink.backend.integration.agent_data_availability_tracker.client.serialization.AccountTrackingSerializer;
-import se.tink.backend.integration.agent_data_availability_tracker.client.serialization.IdentityDataSerializer;
+import se.tink.backend.integration.agent_data_availability_tracker.serialization.AccountTrackingSerializer;
+import se.tink.backend.integration.agent_data_availability_tracker.serialization.IdentityDataSerializer;
 
 public interface AgentDataAvailabilityTrackerClient extends Managed {
 

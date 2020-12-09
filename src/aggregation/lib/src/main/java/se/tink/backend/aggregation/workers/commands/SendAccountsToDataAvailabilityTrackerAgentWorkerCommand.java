@@ -17,7 +17,7 @@ import se.tink.backend.aggregation.workers.operation.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
 import se.tink.backend.aggregation.workers.operation.type.AgentWorkerOperationMetricType;
 import se.tink.backend.integration.agent_data_availability_tracker.client.AgentDataAvailabilityTrackerClient;
-import se.tink.backend.integration.agent_data_availability_tracker.client.serialization.AccountTrackingSerializer;
+import se.tink.backend.integration.agent_data_availability_tracker.serialization.AccountTrackingSerializer;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.metrics.core.MetricId;
 import se.tink.libraries.pair.Pair;
