@@ -40,7 +40,6 @@ public final class IcaBankenConstants {
         private StorageKeys() {}
 
         public static final String TOKEN = "OAUTH_TOKEN";
-        public static final String LAST_USED_REFRESH_TOKEN = "last_refresh_token";
     }
 
     public static class QueryKeys {

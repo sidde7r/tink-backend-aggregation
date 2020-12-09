@@ -21,7 +21,6 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.IcaBank
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.IcaBankenConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.IcaBankenConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.IcaBankenConstants.QueryValues;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.IcaBankenConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.authenticator.rpc.AccountsErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.authenticator.rpc.AuthorizationRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.authenticator.rpc.RefreshTokenRequest;
@@ -107,8 +106,6 @@ public class IcaBankenAuthenticator implements OAuth2Authenticator {
     public OAuth2Token refreshAccessToken(String refreshToken)
             throws SessionException, BankServiceException {
 
-        logIfRefreshTokenWasUsedBefore(refreshToken);
-
         RefreshTokenRequest request =
                 RefreshTokenRequest.builder()
                         .setClientId(clientId)
@@ -139,14 +136,6 @@ public class IcaBankenAuthenticator implements OAuth2Authenticator {
         }
 
         return response.toOauthToken();
-    }
-
-    private void logIfRefreshTokenWasUsedBefore(String refreshToken) {
-        String lastUsedRefreshToken = persistentStorage.get(StorageKeys.LAST_USED_REFRESH_TOKEN);
-        if (refreshToken.equals(lastUsedRefreshToken)) {
-            logger.info("Using a refresh token that has already been consumed.");
-        }
-        persistentStorage.put(StorageKeys.LAST_USED_REFRESH_TOKEN, refreshToken);
     }
 
     @Override
