@@ -1,4 +1,3 @@
-
 package se.tink.backend.aggregation.agents.agentfactory;
 
 import static java.util.stream.Collectors.groupingBy;

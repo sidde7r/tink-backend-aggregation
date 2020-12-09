@@ -96,8 +96,7 @@ public class SendAccountsToDataAvailabilityTrackerAgentWorkerCommand extends Age
         AccountTrackingSerializer serializer =
                 SerializationUtils.serializeAccount(account, features);
 
-        agentDataAvailabilityTrackerClient.sendAccount(
-                agentName, provider, market, serializer);
+        agentDataAvailabilityTrackerClient.sendAccount(agentName, provider, market, serializer);
 
         List<Pair<String, Boolean>> eventData = new ArrayList<>();
 

@@ -64,11 +64,11 @@ public class AgentDataAvailabilityTrackerClientTest {
 
         for (int i = 0; i < 50; i++) {
             AccountTrackingSerializer serializer =
-                    se.tink.backend.integration.agent_data_availability_tracker.serialization.SerializationUtils
-                            .serializeAccount(buildAccount(),  new AccountFeatures());
+                    se.tink.backend.integration.agent_data_availability_tracker.serialization
+                            .SerializationUtils.serializeAccount(
+                            buildAccount(), new AccountFeatures());
 
-            client.sendAccount(
-                    "TestBank", "test-test", "SE", serializer);
+            client.sendAccount("TestBank", "test-test", "SE", serializer);
         }
 
         System.out.println("Sent 50 accounts.");

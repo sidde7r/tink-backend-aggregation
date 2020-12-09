@@ -31,7 +31,6 @@ public class AgentDataAvailabilityTrackerClientImpl extends ManagedSafeStop
     private final AbstractExecutionThreadService service;
 
     /** Construct client for accessing RouteGuide server at {@code host:port}. */
-
     @Inject
     private AgentDataAvailabilityTrackerClientImpl(final ManagedChannel channel) {
         this.channel = channel;

@@ -293,8 +293,7 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
         log.info("Sending Identity to AgentDataAvailabilityTracker");
 
         IdentityDataSerializer serializer =
-                SerializationUtils.serializeIdentityData(
-                        context.getAggregationIdentityData());
+                SerializationUtils.serializeIdentityData(context.getAggregationIdentityData());
 
         agentDataAvailabilityTrackerClient.sendIdentityData(
                 agentName, provider, market, serializer);

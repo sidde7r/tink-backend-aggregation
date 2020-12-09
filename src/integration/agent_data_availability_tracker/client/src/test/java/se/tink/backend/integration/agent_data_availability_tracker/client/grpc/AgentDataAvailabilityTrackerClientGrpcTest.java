@@ -35,8 +35,7 @@ public final class AgentDataAvailabilityTrackerClientGrpcTest {
 
         // when
         AccountTrackingSerializer serializer =
-                SerializationUtils
-                        .serializeAccount(account, accountFeatures);
+                SerializationUtils.serializeAccount(account, accountFeatures);
 
         client.sendAccount("TestBank", "test-test", "SE", serializer);
 

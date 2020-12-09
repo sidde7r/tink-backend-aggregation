@@ -10,10 +10,7 @@ public class AgentDataAvailabilityTrackerClientMockImpl
 
     @Override
     public void sendAccount(
-            String agent,
-            String provider,
-            String market,
-            TrackingMapSerializer serializer) {}
+            String agent, String provider, String market, TrackingMapSerializer serializer) {}
 
     @Override
     public void sendIdentityData(
