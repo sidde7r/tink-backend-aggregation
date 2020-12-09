@@ -11,6 +11,7 @@ import se.tink.libraries.payment.enums.PaymentType;
 public abstract class LansforsakringarConstants {
 
     public static final int MONTHS_TO_FETCH = 13;
+    public static final int DAYS_TO_FETCH_BG = 89;
     public static final int MAX_NUM_RETRIES = 3;
     public static final int RETRY_SLEEP_MILLIS_SECONDS = 2000;
 
