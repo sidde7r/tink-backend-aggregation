@@ -1,13 +1,13 @@
 package se.tink.backend.aggregation.agents.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import java.time.LocalDateTime;
+import se.tink.libraries.chrono.AvailableDateInformation;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TransactionDate {
 
     private TransactionDateType type;
-    private LocalDateTime value;
+    private AvailableDateInformation value;
 
     public TransactionDateType getType() {
         return type;
@@ -17,11 +17,11 @@ public class TransactionDate {
         this.type = type;
     }
 
-    public LocalDateTime getValue() {
+    public AvailableDateInformation getValue() {
         return value;
     }
 
-    public void setValue(LocalDateTime value) {
+    public void setValue(AvailableDateInformation value) {
         this.value = value;
     }
 }

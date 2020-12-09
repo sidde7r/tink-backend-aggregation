@@ -1,10 +1,10 @@
 package se.tink.backend.aggregation.nxgen.core.transaction;
 
-import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import se.tink.backend.aggregation.agents.models.TransactionDateType;
+import se.tink.libraries.chrono.AvailableDateInformation;
 
 @Builder
 @Getter
@@ -12,7 +12,7 @@ import se.tink.backend.aggregation.agents.models.TransactionDateType;
 public class TransactionDate {
 
     private TransactionDateType type;
-    private LocalDateTime value;
+    private AvailableDateInformation value;
 
     public static se.tink.backend.aggregation.agents.models.TransactionDate toSystemModel(
             TransactionDate source) {
