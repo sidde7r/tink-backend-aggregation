@@ -25,6 +25,7 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 public class SwedbankTransactionalAccountFetcher implements AccountFetcher<TransactionalAccount> {
     private final SwedbankApiClient apiClient;
     private final PersistentStorage persistentStorage;
+    private FetchAccountResponse fetchAccountResponse;
 
     public SwedbankTransactionalAccountFetcher(
             SwedbankApiClient apiClient, PersistentStorage persistentStorage) {
@@ -69,7 +70,10 @@ public class SwedbankTransactionalAccountFetcher implements AccountFetcher<Trans
 
     private FetchAccountResponse getAccounts() {
         try {
-            return apiClient.fetchAccounts();
+            if (fetchAccountResponse == null) {
+                fetchAccountResponse = apiClient.fetchAccounts();
+            }
+            return fetchAccountResponse;
         } catch (HttpResponseException e) {
             handleFetchAccountError(e);
             throw e;
