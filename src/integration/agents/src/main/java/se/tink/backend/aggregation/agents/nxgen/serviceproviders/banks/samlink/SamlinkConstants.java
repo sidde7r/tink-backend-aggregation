@@ -134,7 +134,11 @@ public class SamlinkConstants {
         MAX_DEVICE_LIMIT_REACHED(
                 "SettingsServiceException.MAX_DEVICE_LIMIT_REACHED",
                 ErrorMessage.DEVICE_PINNING_FAILED,
-                AuthorizationError.ACCOUNT_BLOCKED);
+                AuthorizationError.ACCOUNT_BLOCKED),
+        VALIDATION_ERROR(
+                "CodedError.VALIDATION_ERROR",
+                ErrorMessage.CONTRACT_MISSING,
+                LoginError.INCORRECT_CREDENTIALS);
 
         private final String errorCode;
         private final LocalizableKey errorMessage;
