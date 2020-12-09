@@ -58,7 +58,7 @@ public final class DnbAgent extends NextGenerationAgent
                         componentProvider.getRandomValueGenerator(),
                         componentProvider.getLocalDateTimeSource());
         transactionalRefreshController = constructTransactionalRefreshController();
-        cardRefreshController = constructCardAccountRefreshController();
+        cardRefreshController = constructCardAccountRefreshController(componentProvider);
     }
 
     private DnbHeaderValues setupHeaderValues(AgentComponentProvider componentProvider) {
@@ -84,7 +84,8 @@ public final class DnbAgent extends NextGenerationAgent
                                         storage, apiClient, new DnbTransactionMapper()))));
     }
 
-    private CreditCardRefreshController constructCardAccountRefreshController() {
+    private CreditCardRefreshController constructCardAccountRefreshController(
+            AgentComponentProvider componentProvider) {
         return new CreditCardRefreshController(
                 metricRefreshController,
                 updateController,
@@ -93,7 +94,10 @@ public final class DnbAgent extends NextGenerationAgent
                         transactionPaginationHelper,
                         new TransactionDatePaginationController<>(
                                 new DnbCardTransactionFetcher(
-                                        storage, apiClient, new DnbTransactionMapper()),
+                                        storage,
+                                        apiClient,
+                                        new DnbTransactionMapper(),
+                                        componentProvider.getCredentialsRequest().isManual()),
                                 DnbConstants.CreditCardFetcherValues.EMPTY_PAGES_LIMIT,
                                 DnbConstants.CreditCardFetcherValues.AT_A_TIME,
                                 DnbConstants.CreditCardFetcherValues.TIME_UNIT)));
