@@ -19,6 +19,7 @@ public class DnbCardTransactionFetcher implements TransactionDatePaginator<Credi
     private final DnbStorage storage;
     private final DnbApiClient apiClient;
     private final DnbTransactionMapper transactionMapper;
+    private final boolean isManualRefresh;
 
     @Override
     public PaginatorResponse getTransactionsFor(
@@ -29,6 +30,8 @@ public class DnbCardTransactionFetcher implements TransactionDatePaginator<Credi
         Collection<Transaction> tinkTransactions =
                 transactionMapper.toTinkTransactions(cardTransactionResponse.getCardTransactions());
 
-        return PaginatorResponseImpl.create(tinkTransactions, true);
+        // Allow to fetch more only in case of manual refresh (user present), to not exhaust 4-a-day
+        // limit with just card transactions
+        return PaginatorResponseImpl.create(tinkTransactions, isManualRefresh);
     }
 }

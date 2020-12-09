@@ -40,6 +40,7 @@ public class DnbCardTransactionFetcherTest {
     private DnbCardTransactionFetcher cardTransactionFetcher;
 
     private CreditCardAccount testCardAccount;
+    private Collection<Transaction> testMappedTransactions;
 
     @Before
     public void setup() {
@@ -47,15 +48,8 @@ public class DnbCardTransactionFetcherTest {
         mockApiClient = mock(DnbApiClient.class);
         mockTransactionMapper = mock(DnbTransactionMapper.class);
 
-        cardTransactionFetcher =
-                new DnbCardTransactionFetcher(mockStorage, mockApiClient, mockTransactionMapper);
-
         testCardAccount = mock(CreditCardAccount.class);
-    }
 
-    @Test
-    public void shouldAlwaysReturnPageWithCanFetchMoreAndExpectedNumberOfTransactions() {
-        // given
         given(testCardAccount.getApiIdentifier()).willReturn(TEST_CARD_ID);
         given(mockStorage.getConsentId()).willReturn(TEST_CONSENT_ID);
         given(
@@ -64,10 +58,18 @@ public class DnbCardTransactionFetcherTest {
                 .willReturn(getCardTransactionsResponse());
 
         Transaction dummyTransaction = mock(Transaction.class);
-        Collection<Transaction> testMappedTransactions =
-                ImmutableList.of(dummyTransaction, dummyTransaction);
+        testMappedTransactions = ImmutableList.of(dummyTransaction, dummyTransaction);
         given(mockTransactionMapper.toTinkTransactions(any(TransactionEntity.class)))
                 .willReturn(testMappedTransactions);
+    }
+
+    @Test
+    public void
+            shouldAlwaysReturnPageWithCanFetchMoreAndExpectedNumberOfTransactionsWhenManualRefresh() {
+        // given
+        cardTransactionFetcher =
+                new DnbCardTransactionFetcher(
+                        mockStorage, mockApiClient, mockTransactionMapper, true);
 
         // when
         PaginatorResponse pageOfTransactions =
@@ -76,6 +78,30 @@ public class DnbCardTransactionFetcherTest {
 
         // then
         assertThat(pageOfTransactions.canFetchMore()).isEqualTo(Optional.of(true));
+        assertThat(pageOfTransactions.getTinkTransactions()).hasSameSizeAs(testMappedTransactions);
+
+        verify(testCardAccount).getApiIdentifier();
+        verify(mockStorage).getConsentId();
+        verify(mockApiClient)
+                .fetchCardTransactions(TEST_CONSENT_ID, TEST_CARD_ID, TEST_DATE_FROM, TEST_DATE_TO);
+        verify(mockTransactionMapper).toTinkTransactions(any(TransactionEntity.class));
+        verifyNoMoreInteractionsOnAllMocks();
+    }
+
+    @Test
+    public void shouldNeverAllowForMorePagesWhenAutoRefresh() {
+        // given
+        cardTransactionFetcher =
+                new DnbCardTransactionFetcher(
+                        mockStorage, mockApiClient, mockTransactionMapper, false);
+
+        // when
+        PaginatorResponse pageOfTransactions =
+                cardTransactionFetcher.getTransactionsFor(
+                        testCardAccount, TEST_DATE_FROM, TEST_DATE_TO);
+
+        // then
+        assertThat(pageOfTransactions.canFetchMore()).isEqualTo(Optional.of(false));
         assertThat(pageOfTransactions.getTinkTransactions()).hasSameSizeAs(testMappedTransactions);
 
         verify(testCardAccount).getApiIdentifier();
