@@ -17,27 +17,14 @@ public class AgentDataAvailabilityTrackerClientMockImpl
             String agent,
             String provider,
             String market,
-            Account account,
-            AccountFeatures features) {}
+            AccountTrackingSerializer serializer) {}
 
     @Override
     public void sendIdentityData(
             final String agent,
             final String provider,
             final String market,
-            final se.tink.backend.aggregation.aggregationcontroller.v1.rpc.IdentityData
-                    identityData) {}
-
-    @Override
-    public AccountTrackingSerializer serializeAccount(
-            final Account account, final AccountFeatures features) {
-        return new AccountTrackingSerializer(new Account());
-    }
-
-    @Override
-    public IdentityDataSerializer serializeIdentityData(final IdentityData identityData) {
-        return new IdentityDataSerializer(new IdentityData());
-    }
+            final IdentityDataSerializer identityDataSerializer) {}
 
     @Override
     public void endStreamBlocking() throws InterruptedException {}

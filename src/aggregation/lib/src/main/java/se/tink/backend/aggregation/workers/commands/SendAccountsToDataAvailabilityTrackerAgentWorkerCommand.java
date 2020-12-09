@@ -18,6 +18,7 @@ import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
 import se.tink.backend.aggregation.workers.operation.type.AgentWorkerOperationMetricType;
 import se.tink.backend.integration.agent_data_availability_tracker.client.AgentDataAvailabilityTrackerClient;
 import se.tink.backend.integration.agent_data_availability_tracker.serialization.AccountTrackingSerializer;
+import se.tink.backend.integration.agent_data_availability_tracker.serialization.SerializationUtils;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.metrics.core.MetricId;
 import se.tink.libraries.pair.Pair;
@@ -92,11 +93,11 @@ public class SendAccountsToDataAvailabilityTrackerAgentWorkerCommand extends Age
     }
 
     private void processForDataTracker(final Account account, final AccountFeatures features) {
-        agentDataAvailabilityTrackerClient.sendAccount(
-                agentName, provider, market, account, features);
-
         AccountTrackingSerializer serializer =
-                agentDataAvailabilityTrackerClient.serializeAccount(account, features);
+                SerializationUtils.serializeAccount(account, features);
+
+        agentDataAvailabilityTrackerClient.sendAccount(
+                agentName, provider, market, serializer);
 
         List<Pair<String, Boolean>> eventData = new ArrayList<>();
 

@@ -110,39 +110,17 @@ public class AgentDataAvailabilityTrackerClientImpl extends ManagedSafeStop
         }
     }
 
-    public AccountTrackingSerializer serializeAccount(
-            final Account account, final AccountFeatures features) {
-        AccountTrackingSerializer serializer = new AccountTrackingSerializer(account);
-
-        if (features.getPortfolios() != null) {
-            features.getPortfolios().stream()
-                    .map(PortfolioTrackingSerializer::new)
-                    .forEach(e -> serializer.addChild("portfolios", e));
-        }
-
-        if (features.getLoans() != null) {
-            features.getLoans().stream()
-                    .map(LoanTrackingSerializer::new)
-                    .forEach(e -> serializer.addChild("loans", e));
-        }
-
-        return serializer;
-    }
-
     public void sendAccount(
             final String agent,
             final String provider,
             final String market,
-            final Account account,
-            final AccountFeatures features) {
+            final AccountTrackingSerializer serializer) {
 
         TrackAccountRequest.Builder requestBuilder =
                 TrackAccountRequest.newBuilder()
                         .setAgent(agent)
                         .setProvider(provider)
                         .setMarket(market);
-
-        AccountTrackingSerializer serializer = serializeAccount(account, features);
 
         // TODO: Unwrapped serialization such that builder.setAll can be used instead of loop
         serializer
@@ -156,15 +134,11 @@ public class AgentDataAvailabilityTrackerClientImpl extends ManagedSafeStop
         accountDeque.add(requestBuilder.build());
     }
 
-    public IdentityDataSerializer serializeIdentityData(final IdentityData identityData) {
-        return new IdentityDataSerializer(identityData);
-    }
-
     public void sendIdentityData(
             final String agent,
             final String provider,
             final String market,
-            final IdentityData identityData) {
+            final IdentityDataSerializer identityDataSerializer) {
 
         TrackAccountRequest.Builder requestBuilder =
                 TrackAccountRequest.newBuilder()
@@ -172,9 +146,7 @@ public class AgentDataAvailabilityTrackerClientImpl extends ManagedSafeStop
                         .setProvider(provider)
                         .setMarket(market);
 
-        IdentityDataSerializer serializer = serializeIdentityData(identityData);
-
-        serializer
+        identityDataSerializer
                 .buildList()
                 .forEach(
                         entry ->
