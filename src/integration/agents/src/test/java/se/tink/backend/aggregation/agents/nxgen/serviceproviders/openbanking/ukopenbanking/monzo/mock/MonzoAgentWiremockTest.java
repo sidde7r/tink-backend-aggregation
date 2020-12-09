@@ -1,15 +1,28 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.monzo.mock;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.monzo.mock.MonzoAgentWiremockTestFixtures.AUTH_CODE;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.monzo.mock.MonzoAgentWiremockTestFixtures.PROVIDER_NAME;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.monzo.mock.MonzoAgentWiremockTestFixtures.STATE;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.monzo.mock.MonzoAgentWiremockTestFixtures.createDomesticPayment;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.monzo.mock.MonzoAgentWiremockTestFixtures.createFarFutureDomesticPayment;
+
 import java.time.LocalDateTime;
 import org.junit.Test;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
 import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesJsonFileParser;
 import se.tink.backend.aggregation.agents.framework.assertions.entities.AgentContractEntity;
+import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.AgentWireMockPaymentTest;
+import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.command.PaymentGBCommand;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockrefresh.AgentWireMockRefreshTest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingV31Constants;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.MonzoConstants.StorageKeys;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationReader;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.enums.MarketCode;
+import se.tink.libraries.payment.rpc.Payment;
 
 public class MonzoAgentWiremockTest {
 
@@ -17,9 +30,78 @@ public class MonzoAgentWiremockTest {
             "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/monzo/mock/resources/";
     static final String configFilePath = RESOURCES_PATH + "configuration.yml";
 
-    private static final String PROVIDER_NAME = "uk-monzo-oauth2";
     private static final String OAUTH_TOKEN =
             "{\"expires_in\" : 999999999, \"issuedAt\": 1598516000, \"token_type\":\"bearer\",  \"access_token\":\"DUMMY_OAUTH2_TOKEN\", \"refreshToken\":\"DUMMY_REFRESH_TOKEN\"}";
+
+    @Test
+    public void testPaymentSuccessfulPayment() throws Exception {
+        // given
+        final String wireMockFilePath =
+                RESOURCES_PATH + "monzo_payment_successful_case_mock_log.aap";
+        final Payment payment = createDomesticPayment();
+        final AgentWireMockPaymentTest agentWireMockPaymentTest =
+                createAgentWireMockPaymentTestWithAuthCodeCallbackData(wireMockFilePath, payment);
+
+        // when
+        agentWireMockPaymentTest.executePayment();
+    }
+
+    @Test
+    public void testPaymentFailedCase() throws Exception {
+        // given
+        final String wireMockFilePath = RESOURCES_PATH + "monzo_payment_failed_case_mock_log.aap";
+        final Payment payment = createFarFutureDomesticPayment();
+        final AgentWireMockPaymentTest agentWireMockPaymentTest =
+                createAgentWireMockPaymentTestWithAuthCodeCallbackData(wireMockFilePath, payment);
+
+        // when
+        final Throwable thrown = catchThrowable(agentWireMockPaymentTest::executePayment);
+
+        // then
+        assertThat(thrown)
+                .isExactlyInstanceOf(HttpResponseException.class)
+                .hasNoCause()
+                .hasMessage(
+                        "Response statusCode: 400 with body: {\"Code\":\"400\",\"Message\":\"There is something wrong with the request parameters provided\",\"Errors\":[{\"ErrorCode\":\"UK.OBIE.Field.InvalidDate\",\"Message\":\"The date field data.initiation.requestedExecutionDateTime is invalid\"}]}");
+    }
+
+    @Test
+    public void testPaymentCancelledCase() throws Exception {
+        // given
+        final Payment payment = createDomesticPayment();
+        final AgentWireMockPaymentTest agentWireMockPaymentTest =
+                createAgentWireMockPaymentTestWithErrorCallbackData(payment);
+
+        // when
+        final Throwable thrown = catchThrowable(agentWireMockPaymentTest::executePayment);
+
+        // then
+        assertThat(thrown)
+                .isExactlyInstanceOf(PaymentAuthorizationException.class)
+                .hasNoCause()
+                .hasMessage("Payment was not authorised. Please try again.");
+    }
+
+    private static AgentWireMockPaymentTest createAgentWireMockPaymentTestWithAuthCodeCallbackData(
+            String wireMockFilePath, Payment payment) throws Exception {
+        return AgentWireMockPaymentTest.builder(MarketCode.UK, PROVIDER_NAME, wireMockFilePath)
+                .withConfigurationFile(AgentsServiceConfigurationReader.read(configFilePath))
+                .addCallbackData("code", AUTH_CODE)
+                .withPayment(payment)
+                .buildWithoutLogin(PaymentGBCommand.class);
+    }
+
+    private static AgentWireMockPaymentTest createAgentWireMockPaymentTestWithErrorCallbackData(
+            Payment payment) throws Exception {
+        final String wireMockFilePath = RESOURCES_PATH + "monzo_payment_canceled_case_mock_log.aap";
+
+        return AgentWireMockPaymentTest.builder(MarketCode.UK, PROVIDER_NAME, wireMockFilePath)
+                .withConfigurationFile(AgentsServiceConfigurationReader.read(configFilePath))
+                .addCallbackData("state", STATE)
+                .addCallbackData("error", "access_denied")
+                .withPayment(payment)
+                .buildWithoutLogin(PaymentGBCommand.class);
+    }
 
     @Test
     public void manualRefreshAll() throws Exception {

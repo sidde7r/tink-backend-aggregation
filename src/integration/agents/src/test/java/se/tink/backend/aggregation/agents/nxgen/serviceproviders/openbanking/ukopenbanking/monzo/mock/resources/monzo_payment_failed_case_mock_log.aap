@@ -1,0 +1,61 @@
+REQUEST 1
+GET https://api.monzo.com/open-banking/.well-known/openid-configuration
+X-Aggregator: Tink Testing
+x-fapi-financial-id: 001580000103U9RAAU
+
+RESPONSE 1
+200
+Date: Mon, 07 Dec 2020 15:22:01 GMT
+Content-Type: application/json
+Transfer-Encoding: chunked
+Connection: keep-alive
+Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+X-Content-Type-Options: nosniff
+Server: cloudflare
+
+{"issuer":"https://api.monzo.com/open-banking/","registration_endpoint":"https://openbanking.monzo.com/oauth2/register","authorization_endpoint":"https://verify.monzo.com/open-banking/authorize","token_endpoint":"https://openbanking.monzo.com/oauth2/token","token_endpoint_auth_methods_supported":["client_secret_post","tls_client_auth"],"jwks_uri":"https://keystore.openbanking.org.uk/001580000103U9RAAU/KM71NjuERWSOVWbve6UWqg.jwks","scopes_supported":["payments","openid","accounts"],"claims_supported":["openbanking_intent_id","sub","acr"],"response_types_supported":["code id_token"],"subject_types_supported":["public"],"grant_types_supported":["authorization_code","client_credentials","refresh_token"],"id_token_signing_alg_values_supported":["PS256"],"id_token_encryption_alg_values_supported":["RS256","PS256"],"response_modes_supported":["fragment"],"request_object_signing_alg_values_supported":["RS256","PS256"],"request_parameter_supported":true,"claims_parameter_supported":true}
+
+REQUEST 2
+POST https://openbanking.monzo.com/oauth2/token
+Content-Type: application/x-www-form-urlencoded
+Accept: application/json
+X-Aggregator: Tink Testing
+x-fapi-financial-id: 001580000103U9RAAU
+
+grant_type=client_credentials&scope=payments&redirect_uri=https%3A%2F%2F127.0.0.1%3A7357%2Fapi%2Fv1%2Fthirdparty%2Fcallback&client_id=dummyClientId
+
+RESPONSE 2
+200
+Cache-Control: no-cache
+Content-Length: 316
+Content-Type: application/json; charset=UTF-8
+Date: Mon, 07 Dec 2020 15:22:01 GMT
+Pragma: no-cache
+X-Fapi-Financial-Id: 001580000103U9RAAU
+X-Fapi-Interaction-Id: 00000000-0000-4000-0000-000000000000
+
+{"token_type":"Bearer","access_token":"DUMMY_ACCESS_TOKEN","expires_in":3600,"scope":""}
+
+REQUEST 3
+POST https://openbanking.monzo.com/open-banking/v3.1/pisp/domestic-scheduled-payment-consents
+Accept: application/json
+Content-Type: application/json
+X-Aggregator: Tink Testing
+x-idempotency-key: 0000000000000000
+Authorization: Bearer DUMMY_ACCESS_TOKEN
+x-fapi-financial-id: 001580000103U9RAAU
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+x-jws-signature: RkFLRV9TSUdOQVRVUkUK
+
+{"Risk":{"PaymentContextCode":"Other"},"Data":{"Permission":"Create","ReadRefundAccount":"Yes","Initiation":{"RemittanceInformation":{"Unstructured":"UK Demo","Reference":"UK Demo"},"InstructionIdentification":"ba609c915c584e47a05b53c4de13bef4","CreditorAccount":{"SchemeName":"UK.OBIE.SortCodeAccountNumber","Identification":"12345678901234","Name":"Dummy creditor name"},"InstructedAmount":{"Amount":"10.00","Currency":"GBP"},"RequestedExecutionDateTime":"2120-11-02T00:00:00Z"}}}
+
+RESPONSE 3
+400
+Content-Length: 656
+Content-Type: application/json; charset=UTF-8
+Date: Thu, 03 Dec 2020 08:06:42 GMT
+X-Fapi-Financial-Id: 001580000103U9RAAU
+X-Fapi-Interaction-Id: 00000000-0000-4000-0000-000000000000
+X-Jws-Signature: RkFLRV9TSUdOQVRVUkUK
+
+{"Code":"400","Message":"There is something wrong with the request parameters provided","Errors":[{"ErrorCode":"UK.OBIE.Field.InvalidDate","Message":"The date field data.initiation.requestedExecutionDateTime is invalid"}]}
