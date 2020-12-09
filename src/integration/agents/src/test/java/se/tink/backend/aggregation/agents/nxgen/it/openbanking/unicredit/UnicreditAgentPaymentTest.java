@@ -15,6 +15,7 @@ import se.tink.libraries.amount.Amount;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
+import se.tink.libraries.payments.common.model.PaymentScheme;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 @Ignore
@@ -73,6 +74,7 @@ public class UnicreditAgentPaymentTest {
                 .withExecutionDate(executionDate)
                 .withCurrency(currency)
                 .withRemittanceInformation(remittanceInformation)
+                .withPaymentScheme(PaymentScheme.SEPA_INSTANT_CREDIT_TRANSFER)
                 .build();
     }
 

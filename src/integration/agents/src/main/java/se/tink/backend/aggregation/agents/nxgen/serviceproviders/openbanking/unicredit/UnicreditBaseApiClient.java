@@ -212,8 +212,11 @@ public class UnicreditBaseApiClient {
                                                         + Endpoints.PAYMENT_INITIATION)
                                         .parameter(
                                                 PathParameters.PAYMENT_PRODUCT,
-                                                UnicreditPaymentProduct.SEPA_CREDIT_TRANSFERS
-                                                        .toString()))
+                                                sessionStorage.getOrDefault(
+                                                        PathParameters.PAYMENT_PRODUCT,
+                                                        UnicreditPaymentProduct
+                                                                .SEPA_CREDIT_TRANSFERS
+                                                                .toString())))
                         .header(HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId())
                         .header(HeaderKeys.PSU_IP_ADDRESS, psuIpAddress)
                         .header(HeaderKeys.PSU_ID_TYPE, providerConfiguration.getPsuIdType())
@@ -246,7 +249,10 @@ public class UnicreditBaseApiClient {
                         new URL(providerConfiguration.getBaseUrl() + Endpoints.FETCH_PAYMENT)
                                 .parameter(
                                         PathParameters.PAYMENT_PRODUCT,
-                                        UnicreditPaymentProduct.SEPA_CREDIT_TRANSFERS.toString())
+                                        sessionStorage.getOrDefault(
+                                                PathParameters.PAYMENT_PRODUCT,
+                                                UnicreditPaymentProduct.SEPA_CREDIT_TRANSFERS
+                                                        .toString()))
                                 .parameter(PathParameters.PAYMENT_ID, paymentId))
                 .header(HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId())
                 .header(HeaderKeys.PSU_IP_ADDRESS, psuIpAddress)

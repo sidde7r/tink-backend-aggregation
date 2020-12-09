@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uni
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.executor.payment.entity.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.executor.payment.entity.AmountEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.executor.payment.enums.UnicreditPaymentProduct;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.executor.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.utils.remittanceinformation.RemittanceInformationValidator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepConstants;
@@ -33,6 +34,7 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Payment;
+import se.tink.libraries.payments.common.model.PaymentScheme;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
@@ -47,7 +49,12 @@ public class UnicreditPaymentExecutor implements PaymentExecutor, FetchablePayme
     @Override
     public PaymentResponse create(PaymentRequest paymentRequest) {
         sessionStorage.put(HeaderKeys.PSU_IP_ADDRESS, paymentRequest.getOriginatingUserIp());
-
+        if (PaymentScheme.SEPA_INSTANT_CREDIT_TRANSFER
+                == paymentRequest.getPayment().getPaymentScheme()) {
+            this.sessionStorage.put(
+                    UnicreditConstants.PathParameters.PAYMENT_PRODUCT,
+                    UnicreditPaymentProduct.INSTANT_SEPA_CREDIT_TRANSFERS.toString());
+        }
         PaymentType type =
                 UnicreditConstants.PAYMENT_TYPE_MAPPER
                         .translate(paymentRequest.getPayment().getCreditorAndDebtorAccountType())
