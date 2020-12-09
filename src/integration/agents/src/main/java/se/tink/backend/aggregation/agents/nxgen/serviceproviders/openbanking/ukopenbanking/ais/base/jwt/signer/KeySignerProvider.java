@@ -29,9 +29,7 @@ public final class KeySignerProvider implements Provider<JwtSigner> {
                     "e643eb7981d24acfb47834ef338a4e2a", // oxford-prod
                     "c859501868b742b6bebd7a3f7911cd85", // oxford-preprod
                     "bb9275c6890a413398d92116047ebfb2", // kirkby-staging,
-                    "bb7defc66be94f6ca35cb069135d350a", // kirkby-production
-                    "aec3753f2f7d42ffb0fd71740f029992", // one of paypals appId
-                    "19808b8ac56149e5bd079a9621987ece" // dyme appId
+                    "bb7defc66be94f6ca35cb069135d350a" // kirkby-production
                     );
     private final AgentComponentProvider agentComponentProvider;
     private final UkOpenBankingClientConfigurationAdapter configuration;
