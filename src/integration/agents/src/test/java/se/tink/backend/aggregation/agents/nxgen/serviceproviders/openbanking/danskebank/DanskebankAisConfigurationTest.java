@@ -41,7 +41,7 @@ public class DanskebankAisConfigurationTest {
         assertThat(result.isAccountPartiesEndpointEnabled()).isEqualTo(false);
         assertThat(result.isAccountPartyEndpointEnabled()).isEqualTo(false);
         assertThat(result.getAppToAppURL()).isEqualTo(new URL(APP_TO_APP_URL));
-        assertThat(result.getAdditionalPermissions())
+        assertThat(result.getPermissions())
                 .containsOnly("additional permission 1", "additional permission 2");
         assertThat(result.getApiBaseURL()).isEqualTo(new URL(API_BASE_URL));
     }

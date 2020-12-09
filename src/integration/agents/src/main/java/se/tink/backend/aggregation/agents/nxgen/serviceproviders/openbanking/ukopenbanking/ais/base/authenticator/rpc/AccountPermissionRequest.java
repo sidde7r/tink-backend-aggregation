@@ -19,8 +19,8 @@ public class AccountPermissionRequest {
         this.risk = risk;
     }
 
-    public static AccountPermissionRequest create(Set<String> additionalPermissions) {
+    public static AccountPermissionRequest create(Set<String> permissions) {
         return new AccountPermissionRequest(
-                AccountPermissionDataEntity.create(additionalPermissions), new RiskEntity());
+                AccountPermissionDataEntity.create(permissions), new RiskEntity());
     }
 }
