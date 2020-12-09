@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: VERSION\n"
-"POT-Creation-Date: 2020-11-13 14:47+0000\n"
-"PO-Revision-Date: 2020-11-13 14:47+0000\n"
+"POT-Creation-Date: 2020-12-03 10:57+0000\n"
+"PO-Revision-Date: 2020-12-03 10:57+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE TEAM <EMAIL@ADDRESS>\n"
 "Language: es\n"
@@ -1482,7 +1482,7 @@ msgid "CodigoAlfa"
 msgstr "CodigoAlfa"
 
 msgid "CodigoFamilia"
-msgstr "CodigoFamilia"
+msgstr "CodigoFamilia\n"
 
 msgid "CodigoSubFamilia"
 msgstr "CodigoSubFamilia"
@@ -1512,7 +1512,7 @@ msgid "DataInicio"
 msgstr "DataInicio"
 
 msgid "DataFim"
-msgstr "DataFim"
+msgstr "DataFim\n"
 
 msgid "uuid"
 msgstr "uuid"
