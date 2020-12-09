@@ -1,6 +1,8 @@
 package se.tink.backend.integration.agent_data_availability_tracker.serialization;
 
 import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.integration.agent_data_availability_tracker.common.TrackingList;
+import se.tink.backend.integration.agent_data_availability_tracker.common.TrackingMapSerializer;
 import se.tink.libraries.account.AccountIdentifier;
 
 public class AccountTrackingSerializer extends TrackingMapSerializer {

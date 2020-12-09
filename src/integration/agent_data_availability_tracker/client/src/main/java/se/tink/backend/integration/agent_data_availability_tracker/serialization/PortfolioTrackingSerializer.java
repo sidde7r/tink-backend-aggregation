@@ -3,6 +3,8 @@ package se.tink.backend.integration.agent_data_availability_tracker.serializatio
 import java.util.Collections;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.models.Portfolio;
+import se.tink.backend.integration.agent_data_availability_tracker.common.TrackingList;
+import se.tink.backend.integration.agent_data_availability_tracker.common.TrackingMapSerializer;
 
 public class PortfolioTrackingSerializer extends TrackingMapSerializer {
 

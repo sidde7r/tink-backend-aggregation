@@ -1,6 +1,8 @@
 package se.tink.backend.integration.agent_data_availability_tracker.serialization;
 
 import se.tink.backend.aggregation.agents.models.Instrument;
+import se.tink.backend.integration.agent_data_availability_tracker.common.TrackingList;
+import se.tink.backend.integration.agent_data_availability_tracker.common.TrackingMapSerializer;
 
 public class InstrumentTrackingSerializer extends TrackingMapSerializer {
 

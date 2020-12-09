@@ -2,6 +2,8 @@ package se.tink.backend.integration.agent_data_availability_tracker.serializatio
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.models.Loan;
+import se.tink.backend.integration.agent_data_availability_tracker.common.TrackingList;
+import se.tink.backend.integration.agent_data_availability_tracker.common.TrackingMapSerializer;
 
 public class LoanTrackingSerializer extends TrackingMapSerializer {
     private static final String LOAN_ENTITY_NAME = "Loan";

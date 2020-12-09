@@ -5,6 +5,7 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.models.Instrument;
+import se.tink.backend.integration.agent_data_availability_tracker.common.FieldEntry;
 
 public class InstrumentTrackingSerializerTest {
 

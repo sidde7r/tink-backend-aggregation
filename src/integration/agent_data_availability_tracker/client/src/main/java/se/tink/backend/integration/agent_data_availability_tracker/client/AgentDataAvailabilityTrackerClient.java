@@ -1,11 +1,7 @@
 package se.tink.backend.integration.agent_data_availability_tracker.client;
 
 import io.dropwizard.lifecycle.Managed;
-import se.tink.backend.agents.rpc.Account;
-import se.tink.backend.aggregation.agents.models.AccountFeatures;
-import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.IdentityData;
-import se.tink.backend.integration.agent_data_availability_tracker.serialization.AccountTrackingSerializer;
-import se.tink.backend.integration.agent_data_availability_tracker.serialization.IdentityDataSerializer;
+import se.tink.backend.integration.agent_data_availability_tracker.common.TrackingMapSerializer;
 
 public interface AgentDataAvailabilityTrackerClient extends Managed {
 
@@ -15,13 +11,13 @@ public interface AgentDataAvailabilityTrackerClient extends Managed {
             final String agent,
             final String provider,
             final String market,
-            final AccountTrackingSerializer serializer);
+            final TrackingMapSerializer serializer);
 
     void sendIdentityData(
             final String agent,
             final String provider,
             final String market,
-            final IdentityDataSerializer identityDataSerializer);
+            final TrackingMapSerializer identityDataSerializer);
 
     void endStreamBlocking() throws InterruptedException;
 

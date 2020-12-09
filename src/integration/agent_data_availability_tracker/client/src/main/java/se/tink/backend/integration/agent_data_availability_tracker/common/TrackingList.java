@@ -1,4 +1,4 @@
-package se.tink.backend.integration.agent_data_availability_tracker.serialization;
+package se.tink.backend.integration.agent_data_availability_tracker.common;
 
 import com.google.common.base.Strings;
 import java.util.ArrayList;
@@ -28,7 +28,7 @@ public class TrackingList {
 
     public static class Builder {
 
-        static final String VALUE_NOT_LISTED = "VALUE_NOT_LISTED";
+        public static final String VALUE_NOT_LISTED = "VALUE_NOT_LISTED";
 
         private final String keyBase;
         private final List<FieldEntry> fields;

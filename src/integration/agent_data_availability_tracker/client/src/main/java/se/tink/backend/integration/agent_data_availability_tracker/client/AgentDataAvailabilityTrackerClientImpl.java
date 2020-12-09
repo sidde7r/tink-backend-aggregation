@@ -8,16 +8,10 @@ import io.grpc.stub.StreamObserver;
 import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.agents.rpc.Account;
-import se.tink.backend.aggregation.agents.models.AccountFeatures;
-import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.IdentityData;
 import se.tink.backend.integration.agent_data_availability_tracker.api.AgentDataAvailabilityTrackerServiceGrpc;
 import se.tink.backend.integration.agent_data_availability_tracker.api.TrackAccountRequest;
 import se.tink.backend.integration.agent_data_availability_tracker.api.Void;
-import se.tink.backend.integration.agent_data_availability_tracker.serialization.AccountTrackingSerializer;
-import se.tink.backend.integration.agent_data_availability_tracker.serialization.IdentityDataSerializer;
-import se.tink.backend.integration.agent_data_availability_tracker.serialization.LoanTrackingSerializer;
-import se.tink.backend.integration.agent_data_availability_tracker.serialization.PortfolioTrackingSerializer;
+import se.tink.backend.integration.agent_data_availability_tracker.common.TrackingMapSerializer;
 import se.tink.libraries.dropwizard_lifecycle.ManagedSafeStop;
 
 public class AgentDataAvailabilityTrackerClientImpl extends ManagedSafeStop
@@ -114,7 +108,7 @@ public class AgentDataAvailabilityTrackerClientImpl extends ManagedSafeStop
             final String agent,
             final String provider,
             final String market,
-            final AccountTrackingSerializer serializer) {
+            final TrackingMapSerializer serializer) {
 
         TrackAccountRequest.Builder requestBuilder =
                 TrackAccountRequest.newBuilder()
@@ -138,7 +132,7 @@ public class AgentDataAvailabilityTrackerClientImpl extends ManagedSafeStop
             final String agent,
             final String provider,
             final String market,
-            final IdentityDataSerializer identityDataSerializer) {
+            final TrackingMapSerializer identityDataSerializer) {
 
         TrackAccountRequest.Builder requestBuilder =
                 TrackAccountRequest.newBuilder()

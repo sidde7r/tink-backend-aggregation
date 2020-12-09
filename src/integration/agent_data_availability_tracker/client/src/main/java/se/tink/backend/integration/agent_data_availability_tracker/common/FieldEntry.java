@@ -1,4 +1,4 @@
-package se.tink.backend.integration.agent_data_availability_tracker.serialization;
+package se.tink.backend.integration.agent_data_availability_tracker.common;
 
 public class FieldEntry {
     String name;

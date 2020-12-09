@@ -6,6 +6,8 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.models.Loan;
+import se.tink.backend.integration.agent_data_availability_tracker.common.FieldEntry;
+import se.tink.backend.integration.agent_data_availability_tracker.common.TrackingList;
 
 public class LoanTrackingSerializerTest {
 
