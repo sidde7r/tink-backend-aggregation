@@ -273,7 +273,10 @@ public class CbiGlobeApiClient {
 
     public CreatePaymentResponse createPayment(CreatePaymentRequest createPaymentRequest) {
         RequestBuilder requestBuilder =
-                createRequestInSession(Urls.PAYMENT)
+                createRequestInSession(
+                                Urls.PAYMENT.parameter(
+                                        IdTags.PAYMENT_PRODUCT,
+                                        sessionStorage.get(StorageKeys.PAYMENT_PRODUCT)))
                         .header(
                                 HeaderKeys.ASPSP_PRODUCT_CODE,
                                 providerConfiguration.getAspspProductCode())
@@ -291,7 +294,12 @@ public class CbiGlobeApiClient {
 
     public CreatePaymentResponse getPayment(String uniqueId) {
         RequestBuilder requestBuilder =
-                createRequestInSession(Urls.FETCH_PAYMENT.parameter(IdTags.PAYMENT_ID, uniqueId))
+                createRequestInSession(
+                                Urls.FETCH_PAYMENT
+                                        .parameter(IdTags.PAYMENT_ID, uniqueId)
+                                        .parameter(
+                                                IdTags.PAYMENT_PRODUCT,
+                                                sessionStorage.get(StorageKeys.PAYMENT_PRODUCT)))
                         .header(
                                 HeaderKeys.ASPSP_PRODUCT_CODE,
                                 providerConfiguration.getAspspProductCode());
@@ -300,7 +308,11 @@ public class CbiGlobeApiClient {
 
     public CreatePaymentResponse getPaymentStatus(String uniqueId) {
         return createRequestInSession(
-                        Urls.FETCH_PAYMENT_STATUS.parameter(IdTags.PAYMENT_ID, uniqueId))
+                        Urls.FETCH_PAYMENT_STATUS
+                                .parameter(IdTags.PAYMENT_ID, uniqueId)
+                                .parameter(
+                                        IdTags.PAYMENT_PRODUCT,
+                                        sessionStorage.get(StorageKeys.PAYMENT_PRODUCT)))
                 .get(CreatePaymentResponse.class);
     }
 

@@ -45,6 +45,7 @@ import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.pair.Pair;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.enums.PaymentType;
+import se.tink.libraries.payments.common.model.PaymentScheme;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
@@ -70,6 +71,9 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
         this.sessionStorage = sessionStorage;
         this.strongAuthenticationState = strongAuthenticationState;
         this.provider = provider;
+        this.sessionStorage.put(
+                CbiGlobeConstants.StorageKeys.PAYMENT_PRODUCT,
+                CbiGlobeConstants.PaymentProduct.SEPA_CREDIT_TRANSFERS);
     }
 
     @Override
@@ -79,7 +83,12 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
         sessionStorage.put(QueryKeys.STATE, strongAuthenticationState.getState());
         sessionStorage.put(
                 CbiGlobeConstants.HeaderKeys.PSU_IP_ADDRESS, paymentRequest.getOriginatingUserIp());
-
+        if (PaymentScheme.SEPA_INSTANT_CREDIT_TRANSFER
+                == paymentRequest.getPayment().getPaymentScheme()) {
+            this.sessionStorage.put(
+                    StorageKeys.PAYMENT_PRODUCT,
+                    CbiGlobeConstants.PaymentProduct.INSTANT_SEPA_CREDIT_TRANSFERS);
+        }
         AccountEntity creditorEntity = AccountEntity.creditorOf(paymentRequest);
         AccountEntity debtorEntity = AccountEntity.debtorOf(paymentRequest);
         InstructedAmountEntity instructedAmountEntity = InstructedAmountEntity.of(paymentRequest);
@@ -134,7 +143,7 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
     public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest)
             throws PaymentException {
 
-        PaymentMultiStepResponse paymentMultiStepResponse = null;
+        PaymentMultiStepResponse paymentMultiStepResponse;
         String redirectUrl = sessionStorage.get(StorageKeys.LINK);
         if (redirectUrl != null) { // dont redirect if CBI globe dont provide redirect URL.
             openThirdPartyApp(new URL(redirectUrl));
