@@ -225,7 +225,7 @@ public class NordeaExecutorHelper {
         }
     }
 
-    private CompleteTransferResponse poll(String orderRef, String signingOrderId) {
+    protected CompleteTransferResponse poll(String orderRef, String signingOrderId) {
         for (int i = 1; i < NordeaBaseConstants.Transfer.MAX_POLL_ATTEMPTS; i++) {
             // sleep before so when a time out occur the bankId signing is canceled after polling
             Uninterruptibles.sleepUninterruptibly(2000, TimeUnit.MILLISECONDS);
