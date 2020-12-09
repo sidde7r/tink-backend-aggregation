@@ -24,7 +24,7 @@
             "balances": [
                 {
                     "balanceAmount": {
-                        "amount": "9990.00",
+                        "amount": "4321.00",
                         "currency": "NOK"
                     },
                     "balanceType": "forwardAvailable"
@@ -63,7 +63,7 @@
             "balances": [
                 {
                     "balanceAmount": {
-                        "amount": "9990.00",
+                        "amount": "1234.00",
                         "currency": "NOK"
                     },
                     "balanceType": "forwardAvailable"

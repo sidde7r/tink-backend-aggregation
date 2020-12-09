@@ -20,7 +20,8 @@ public class SparebankStorage {
     private static final String STATE = "STATE";
     private static final String CONSENT_CREATED_TIMESTAMP = "CONSENT_CREATED_TIMESTAMP";
 
-    private static final int MAX_AGE_IN_MINUTES = 55;
+    private static final int TIME_LIMIT_FOR_FULL_FETCH_IN_MINUTES =
+            55; // True value is 60, we leave 5 min buffer for ourselves
 
     public final PersistentStorage persistentStorage;
 
@@ -57,12 +58,7 @@ public class SparebankStorage {
     }
 
     public void clearSessionData() {
-        persistentStorage.remove(ACCOUNTS);
-        persistentStorage.remove(CARDS);
-        persistentStorage.remove(SESSION_ID);
-        persistentStorage.remove(PSU_ID);
-        persistentStorage.remove(STATE);
-        persistentStorage.remove(CONSENT_CREATED_TIMESTAMP);
+        persistentStorage.clear();
     }
 
     public String getState() {
@@ -97,7 +93,7 @@ public class SparebankStorage {
         Optional<Long> consentCreationTimestamp = getConsentCreationTimestamp();
         return !consentCreationTimestamp.isPresent()
                 || LocalDateTime.now()
-                        .minusMinutes(MAX_AGE_IN_MINUTES)
+                        .minusMinutes(TIME_LIMIT_FOR_FULL_FETCH_IN_MINUTES)
                         .isAfter(
                                 LocalDateTime.ofInstant(
                                         Instant.ofEpochMilli(consentCreationTimestamp.get()),

@@ -15,7 +15,7 @@ public class SpareBank1OstlandetAgentTest {
                         .expectLoggedIn(false)
                         .setFinancialInstitutionId("sparebank1")
                         .setAppId("tink")
-                        .loadCredentialsBefore(true)
+                        .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);
     }
 

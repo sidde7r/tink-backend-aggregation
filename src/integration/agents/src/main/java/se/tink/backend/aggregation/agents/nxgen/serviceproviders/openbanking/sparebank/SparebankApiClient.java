@@ -68,6 +68,7 @@ public class SparebankApiClient {
         AccountResponse accountResponse =
                 createRequest(new URL(apiConfiguration.getBaseUrl() + Urls.GET_ACCOUNTS))
                         .queryParam(QueryKeys.WITH_BALANCE, "false")
+                        .header(HeaderKeys.X_ACCEPT_FIX, HeaderValues.X_ACCEPT_FIX_LONGER_NAMES)
                         .get(AccountResponse.class);
         storage.storeAccounts(accountResponse);
         return accountResponse;
@@ -87,7 +88,8 @@ public class SparebankApiClient {
     }
 
     public TransactionResponse fetchTransactions(String resourceId) {
-        return fetchTransactions(Urls.FETCH_TRANSACTIONS, resourceId, TransactionResponse.class);
+        return fetchTransactions(Urls.FETCH_TRANSACTIONS, resourceId)
+                .get(TransactionResponse.class);
     }
 
     public TransactionResponse fetchNextTransactions(String path) {
@@ -102,8 +104,7 @@ public class SparebankApiClient {
         }
         CardResponse cardResponse =
                 createRequest(new URL(apiConfiguration.getBaseUrl() + Urls.GET_CARDS))
-                        .queryParam(QueryKeys.WITH_BALANCE, "false")
-                        .header(HeaderKeys.X_ACCEPT_FIX, HeaderValues.X_ACCEPT_FIX)
+                        .header(HeaderKeys.X_ACCEPT_FIX, HeaderValues.X_ACCEPT_FIX_LONGER_NAMES)
                         .get(CardResponse.class);
         storage.storeCards(cardResponse);
         return cardResponse;
@@ -123,8 +124,9 @@ public class SparebankApiClient {
     }
 
     public CardTransactionResponse fetchCardTransactions(String resourceId) {
-        return fetchTransactions(
-                Urls.GET_CARD_TRANSACTIONS, resourceId, CardTransactionResponse.class);
+        return fetchTransactions(Urls.GET_CARD_TRANSACTIONS, resourceId)
+                .header(HeaderKeys.X_ACCEPT_FIX, HeaderValues.X_ACCEPT_FIX_AMOUNT_SWITCH)
+                .get(CardTransactionResponse.class);
     }
 
     public CardTransactionResponse fetchNextCardTransactions(String path) {
@@ -132,8 +134,7 @@ public class SparebankApiClient {
                 .get(CardTransactionResponse.class);
     }
 
-    private <T> T fetchTransactions(
-            String transactionUrl, String resourceId, Class<T> responseClass) {
+    private RequestBuilder fetchTransactions(String transactionUrl, String resourceId) {
         LocalDate fromDate;
         if (storage.isStoredConsentTooOldForFullFetch()) {
             fromDate = LocalDate.now().minusDays(89);
@@ -156,8 +157,7 @@ public class SparebankApiClient {
                         SparebankConstants.QueryValues.TRANSACTION_LIMIT)
                 .queryParam(
                         SparebankConstants.QueryKeys.BOOKING_STATUS,
-                        SparebankConstants.QueryValues.BOOKING_STATUS)
-                .get(responseClass);
+                        SparebankConstants.QueryValues.BOOKING_STATUS);
     }
 
     private Map<String, Object> getHeaders(String requestId, Optional<String> digest) {

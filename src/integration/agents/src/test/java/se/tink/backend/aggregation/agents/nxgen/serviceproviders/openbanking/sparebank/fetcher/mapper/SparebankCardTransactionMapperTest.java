@@ -21,7 +21,7 @@ public class SparebankCardTransactionMapperTest {
 
     private SparebankCardTransactionMapper transactionMapper;
 
-    CardTransactionsEntity testTransactionEntity;
+    private CardTransactionsEntity testTransactionEntity;
 
     @Before
     public void setup() {

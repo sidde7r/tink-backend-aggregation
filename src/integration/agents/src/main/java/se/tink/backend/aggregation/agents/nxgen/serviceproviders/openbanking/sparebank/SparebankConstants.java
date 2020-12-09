@@ -94,8 +94,13 @@ public final class SparebankConstants {
     }
 
     public static class HeaderValues {
-        public static final String X_ACCEPT_FIX =
-                "longer-names, cardaccount-switch-originalamount-and-transactionamount";
+        // Special headers to use future fixes early,
+        // https://psd2.sr-bank.no/portal-sandbox/documentation
+        // (Section Future Breaking Change)
+        // This should be removed once API is updated and this behaviours are defaults
+        public static final String X_ACCEPT_FIX_LONGER_NAMES = "longer-names";
+        public static final String X_ACCEPT_FIX_AMOUNT_SWITCH =
+                "cardaccount-switch-originalamount-and-transactionamount";
     }
 
     public static class FormKeys {
