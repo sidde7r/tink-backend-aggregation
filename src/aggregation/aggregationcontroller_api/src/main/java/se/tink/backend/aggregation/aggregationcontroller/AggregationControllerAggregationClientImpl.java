@@ -379,9 +379,6 @@ public class AggregationControllerAggregationClientImpl
             }
         }
 
-        log.warn(
-                "Error during the operation {} and stopping (error message: Unreachable code)",
-                name);
         throw new IllegalStateException("Unreachable code");
     }
 }
