@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="nb">
+
+<head>
+    <link rel="stylesheet" type="text/css" href="/jsclient21/css/bid_201910240825.css">
+    <meta name="viewport" content="initial-scale=1.0">
+    <meta charset="iso-8859-1">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="SKYPE_TOOLBAR" content="SKYPE_TOOLBAR_PARSER_COMPATIBLE">
+    <script src="data:text/javascript;base64,"></script>
+    <title>BankID - Identifisering</title>
+</head>
+
+<body>
+    <div class="live_region assertive" aria-live="assertive" aria-atomic="true" role="alert"
+        aria-relevant="additions text" data-bind="text: text"></div>
+    <div class="live_region polite" aria-live="polite" aria-atomic="true" role="alert" aria-relevant="additions text"
+        data-bind="text: text"></div>
+    <script type="text/javascript" src="https://csfe.bankid.no/jsclient21/error.js"></script>
+    <script type="text/javascript"
+        data-conf="uufjzZuhOQVX9th8osSmgCoAAACdSVwzDP1282xg0se5XXd0kizUDOtmh5kcRTENSUb7DHVPoSmqTdvGh_b8D1IeX1yhBVtxymdqgn964Od3ADEKyF0PgqJwmGJuOjPTKLRN5htkZLN7GcrEC3njoLQJ87DRKU6YG23jOr0pHhjQiIjjR7sMJM47O_VWxHpQt-MGXQvv5mel4Tncf9Tx9PFnBkldUoBHNlWXTvj3STI_SU1DUMeVJ7swx44V5zz4f3dEJbSQluOK06eWow6sy5dRgHEOByXnW_DUsQ-u2Y4js2c2AnFKLeHFFHvS99DAIxaDvOLN7M27ERkvXVPkbC0tUjHzCIoEFxpdKtI3mKCHqwyLEG0ixe1jiaCOXDv4osvzLXdt4YOOT85c5qko3w-6YdY0domDYlYUanuhxO4SoWnokAQfEAouhUhKcwtTSZlo2Y8slC05JfkysyifN-oPDMl2oKPsb_6jllc_sS6XbqtYlZRZKhJZwny08Z1a0Nc8N-0hWIfrMl1E7jQ4APKIVSJGcRZG7SQh_9aNhK6fKx5roFdgG8DYDEo9h_nMG6h1J3GaQ9o25u6kYIZssl27j_WJGEwNB76Ipubkc7Xb0Pel9mhs_FGtfYhp8gaGMZvyyE_H3sdOfUJ8DRWGJ906lWmVJiRBG-5UsDMQoYpWzP-Nlhx2wW3x7IQF1Tr7TbybAFnpEBR8ZqlN27LRekNsr5uUWTOqz0aIm22zV4ebxsAogDHXnKeWfZpoBsgFbR026Otilr6TgKnG1b_3vwxu7QPvedMC0M-VhVUg0h8f8eeRe7Kjo8rpZoC8HETfEi2vgwd6n9SirkpX9oQeWrPGPTnVtNmzTp_6deOGEek-DRo5kRahqZM96MaeWuv0SSebQpDUJ6YHJsirT9wEIeII8Ym1kZU0oqOeecUlCRYA3_N8mchqLLZDGhgqqLBq7ILgNwjH8l5QnQEwriM_6uOZj3eKE0EnqJw9WFheZymLlKioMiSmH4H2nTvVORqd1Fci54Z14I2VNQLfueKhICXii23FxmXSreAmKpcH1jSzkpc4dK4yjhwDy2Sj-A6WkIbeaUdGvYb3T3IBv8_Rix8R7kyVr6N_14nyO_4TRTY_fZLk2OgF-FMZD7RWIQacxHuogouGJYLn245R8psRp-934dJxR_l-epBed-qJdTynuP5qxU68HMtrkXSFXPKjfvqD7xUzBPySUc-dey5zH6USkyAPV2VjrtM-UO8OqAxrRByLo6QzC7w-Xdjy5Ipf6Vn-9FFN1Ou4B7PkLQTs_NVvUwHIhOaL0LDOfO4fiToHrUcwghUELC9NskFrtTFQgRw-VN7SFAhtZLpn0IcwuodkphA7JaLD3tJNw0EmGEvL7jgUZ-HaIbJvz8kL7ja9VH2RS_57FqvRhRY17rf6T8h3H90QVruhLHibysOI73t4pfuBBCHLad1XoftERY5O4VuJt8RVF6b2we5GLRMu56TbxvW5PvDKj60huo6Sx2_uHg"
+        src="https://csfe.bankid.no/CentralServerFEJS/b/KgAAAA4oyboLO_DYf18n7IL1l-qLWuFlIXKyzP7gKQ0Rh-W12JvVXqmFmWcGRYLWgj0KjVK2ExX42ouvD5teR-Vppfe5rOdQczA"></script>
+    <div class="full_width_height" data-collect-as="mainbody">
+        <div class="layout">
+            <header class="layout__header" data-bind="attr: {'data-layout': header}">
+                <div class="viewport layout__header__viewport layout__header__viewport--left"
+                    data-container="header_left">
+                    <div data-container="" class="header-footer__wrapper lm_view lm_center"
+                        data-collect-as="headerFooterWrapper" data-bind="css: { lm_left: $data.outOfView }">
+                        <div data-container="" class="header-footer__container" data-collect-as="headerFooterContainer"
+                            data-bind="css: { 'header-footer__container--fill': $data.fill }">
+                            <div class="logo_wrapper" data-collect-as="bidlogo" data-bind="css: { 'crop': $data.crop }">
+                                <div class="img_wrapper"><img
+                                        data-bind="attr: {src: src, 'data-svg': svg, alt: title, title: title}"
+                                        src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA5MiAxNSIgd2lkdGg9IjkyIiBoZWlnaHQ9IjE1Ij4KICAgIDxnIGZpbGw9IiM1NTU1NTUiPgogICAgICAgIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDI4IDEpIj4KICAgICAgICAgICAgPHBhdGggZD0iTTI5Ljg3IDRIMjMuMmMtLjEgMC0uMi4xLS4yLjN2OS40YzAgLjIuMS4zLjMuM2gxLjRjLjEgMCAuMy0uMS4zLS4zVjZoNC42cy42NS4wNSAxIC40Yy4zNS4zNS40IDEgLjQgMXY2LjNjMCAuMi4xLjMuMy4zaDEuNGMuMSAwIC4zLS4xLjMtLjNWNy41YzAtMS0uNC0xLjktMS0yLjUtLjYtLjYtMS4yMi0xLTIuMTMtMXpNMjAgNWMuNy43Ljk5IDEuNS45OSAyLjR2NmMwIC4zLS4zLjYtLjYuNkgxNGMtMS42OCAwLTMtMS40LTMtMy4xQzExIDkuMiAxMi4zMiA4IDE0IDhoNXYtLjZzLS4wNS0uNjUtLjQtMWMtLjM1LS4zNS0xLS40LTEtLjRoLTUuM2MtLjIgMC0uMy0uMS0uMy0uM1Y0LjNjMC0uMi4xLS4zLjMtLjNoNS4zM2MuOSAwIDEuNjkuMyAyLjM4IDF6bS0uOTkgNUgxNGExIDEgMCAwIDAtMSAxYzAgLjUuNSAxIDEgMWg1LjAydi0yek01MC43IDBoLTEuNGMtLjIgMC0uMy4xLS4zLjN2MTMuNGMwIC4yLjEuMy4zLjNoMS40Yy4yIDAgLjMtLjEuMy0uM1YuM2MwLS4yLS4xLS4zLS4zLS4zek02NCA1LjV2Mi45YzAgMy42LTEuOSA1LjYtNS4zIDUuNmgtNS40Yy0uMSAwLS4zLS4xLS4zLS4zVi4zYzAtLjIuMS0uMy4zLS4zaDUuNEM2MiAwIDY0IDIgNjQgNS41em0tMi0uMUM2MiAzLjIgNjAuOSAyIDU4LjggMkg1NXYxMGgzLjhjMi4xIDAgMy4yLTEuMiAzLjItMy40VjUuNHpNOSA1Yy43LjcgMSAxLjUgMSAyLjR2My4xYzAgMS0uMyAxLjgtMSAyLjVzLTEuNSAxLTIuNCAxSC4zYy0uMiAwLS4zLS4xLS4zLS4zVi4zQzAgLjEuMSAwIC4zIDBoMS40Yy4yIDAgLjMuMS4zLjN2My42czAgLjEuMS4xaDQuNGMxIDAgMS44LjMgMi41IDF6TTggNy41YzAtLjQtLjEtLjgtLjQtMS4xLS4zLS4zLS42LS40LTEtLjRIMnY2aDQuNWMuNCAwIC44LS4xIDEuMS0uNC4zLS4zLjQtLjYuNC0xVjcuNXptMjkuMy41SDM3Vi4zYzAtLjItLjEtLjMtLjMtLjNoLTEuNGMtLjEgMC0uMy4xLS4zLjN2MTMuNGMwIC4yLjEuMy4zLjNoMS40Yy4xIDAgLjMtLjEuMy0uM1YxMGguNGw0LjcgMy45Yy4xIDAgLjEuMS4yLjFINDRjLjEgMCAuMy0uMS4zLS4zIDAtLjEgMC0uMi0uMS0uMkwzOSA5LjJWOWw1LjItNC41Yy4xIDAgLjEtLjEuMS0uMiAwLS4yLS4xLS4zLS4zLS4zaC0xLjhjLS4xIDAtLjEgMC0uMi4xTDM3LjMgOHoiLz4KICAgICAgICA8L2c+CiAgICAgICAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMCAxKSI+CiAgICAgICAgICAgIDxwYXRoIGQ9Ik0yMS43IDEyaC01LjRjLS4yIDAtLjMuMS0uMy4zdjEuNGMwIC4yLjEuMy4zLjNoNS40Yy4yIDAgLjMtLjEuMy0uM3YtMS40YzAtLjItLjEtLjMtLjMtLjN6bS0xNiAwSC4zYy0uMiAwLS4zLjEtLjMuM3YxLjRjMCAuMi4xLjMuMy4zaDUuNGMuMiAwIC4zLS4xLjMtLjN2LTEuNGMwLS4yLS4xLS4zLS4zLS4zem04LTRIOC4zYy0uMiAwLS4zLjEtLjMuM3YxLjRjMCAuMi4xLjMuMy4zaDUuNGMuMiAwIC4zLS4xLjMtLjNWOC4zYzAtLjItLjEtLjMtLjMtLjN6bS04IDBILjNjLS4yIDAtLjMuMS0uMy4zdjEuNGMwIC4yLjEuMy4zLjNoNS40Yy4yIDAgLjMtLjEuMy0uM1Y4LjNjMC0uMi0uMS0uMy0uMy0uM3ptMTYtNGgtNS40Yy0uMiAwLS4zLjEtLjMuM3YxLjRjMCAuMi4xLjMuMy4zaDUuNGMuMiAwIC4zLS4xLjMtLjNWNC4zYzAtLjEtLjEtLjMtLjMtLjN6bS04IDBIOC4zYy0uMiAwLS4zLjEtLjMuM3YxLjRjMCAuMi4xLjMuMy4zaDUuNGMuMiAwIC4zLS4xLjMtLjNWNC4zYzAtLjEtLjEtLjMtLjMtLjN6bTgtNGgtNS40Yy0uMiAwLS4zLjEtLjMuM3YxLjRjMCAuMi4xLjMuMy4zaDUuNGMuMiAwIC4zLS4xLjMtLjNWLjNjMC0uMi0uMS0uMy0uMy0uM3ptLTE2IDBILjNDLjEgMCAwIC4xIDAgLjN2MS40YzAgLjIuMS4zLjMuM2g1LjRjLjIgMCAuMy0uMS4zLS4zVi4zYzAtLjItLjEtLjMtLjMtLjN6Ii8+CiAgICAgICAgPC9nPgogICAgPC9nPgo8L3N2Zz4="
+                                        data-svg="bankid_logo" alt="BankID logo" title="BankID logo"></div>
+                            </div>
+                        </div>
+                        <div data-container="" class="header-footer__container header-footer__container--fill"
+                            data-collect-as="headerFooterContainer"
+                            data-bind="css: { 'header-footer__container--fill': $data.fill }">
+                            <div class="title_wrapper" data-bind="if: text" data-collect-as="title">
+                                <div class="title_wrapper__container">
+                                    <h1 class="title_wrapper__headline"
+                                        data-bind=" attr: { id: $data.id, tabindex: $data.tabIndex }, css: { double: subtext } "
+                                        tabindex="1010"><span class="title_wrapper__headline__title"
+                                            data-bind="text: text">Identifisering</span><span
+                                            class="title_wrapper__headline__subtitle"
+                                            data-bind="text: subtext, visible: subtext" style="display: none;"></span>
+                                    </h1>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div data-container="" class="header-footer__wrapper lm_view lm_left"
+                        data-collect-as="headerFooterWrapper" data-bind="css: { lm_left: $data.outOfView }">
+                        <div data-container="" class="header-footer__container" data-collect-as="headerFooterContainer"
+                            data-bind="css: { 'header-footer__container--fill': $data.fill }">
+                            <div class="button_icon_wrapper" data-collect-as="buttonIcon"><button
+                                    class="buttonIcon nooutline"
+                                    data-bind=" visible: isVisible, css: { 'nooutline': nooutline, 'disabled': isDisabledOrInvalid, 'active': $data.isActive, 'pageback': isPageBack }, attr: { id : id, title: title, 'data-type': type, 'disabled': isDisabled, 'aria-disabled': isDisabledOrInvalid, 'type': buttonType, 'tabindex': $data.tabIndex, 'aria-pressed': $data.isActive, 'aria-expanded': $data.isExpanded, 'aria-haspopup': $data.hasPopup, 'aria-label: $data.ariaLabel }, click: onClick "
+                                    title="Tilbake" data-type="back" type="button" tabindex="1000"><span class="label"
+                                        data-bind="text: label, visible: label" style="display: none;"></span><img
+                                        alt="" class="svg" data-bind="attr: {src : src, 'data-svg': svg}"
+                                        src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMTkiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHRpdGxlPmljb19hcnJvd19sZWZ0PC90aXRsZT48cGF0aCBkPSJNNSAxMWw1IDUtMiAyLTgtOC41MzEgOC04LjQ2OSAyIDItNSA1aDE5djNoLTE5eiIgZmlsbD0iIzAwNzhCRCIvPjwvc3ZnPg=="></button>
+                            </div>
+                        </div>
+                        <div data-container="" class="header-footer__container header-footer__container--fill"
+                            data-collect-as="headerFooterContainer"
+                            data-bind="css: { 'header-footer__container--fill': $data.fill }">
+                            <div class="title_wrapper" data-bind="if: text" data-collect-as="title">
+                                <div class="title_wrapper__container">
+                                    <h1 class="title_wrapper__headline"
+                                        data-bind=" attr: { id: $data.id, tabindex: $data.tabIndex }, css: { double: subtext } "
+                                        tabindex="1010"><span class="title_wrapper__headline__title"
+                                            data-bind="text: text">Identifisering</span><span
+                                            class="title_wrapper__headline__subtitle"
+                                            data-bind="text: subtext, visible: subtext" style="display: none;"></span>
+                                    </h1>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="viewport layout__header__viewport layout__header__viewport--right"
+                    data-container="header_right">
+                    <div data-container="" class="header-footer__wrapper lm_view lm_center"
+                        data-collect-as="headerFooterWrapper" data-bind="css: { lm_left: $data.outOfView }">
+                        <div data-container="" class="header-footer__container" data-collect-as="headerFooterContainer"
+                            data-bind="css: { 'header-footer__container--fill': $data.fill }">
+                            <div class="button_icon_wrapper" data-collect-as="buttonIcon"><button class="buttonIcon"
+                                    data-bind=" visible: isVisible, css: { 'nooutline': nooutline, 'disabled': isDisabledOrInvalid, 'active': $data.isActive, 'pageback': isPageBack }, attr: { id : id, title: title, 'data-type': type, 'disabled': isDisabled, 'aria-disabled': isDisabledOrInvalid, 'type': buttonType, 'tabindex': $data.tabIndex, 'aria-pressed': $data.isActive, 'aria-expanded': $data.isExpanded, 'aria-haspopup': $data.hasPopup, 'aria-label: $data.ariaLabel }, click: onClick "
+                                    title="Åpne meny" data-type="menu" type="button" tabindex="1020"
+                                    aria-expanded="false" aria-haspopup="true" aria-label="Meny"><span class="label"
+                                        data-bind="text: label, visible: label">Meny</span><img alt="" class="svg"
+                                        data-bind="attr: {src : src, 'data-svg': svg}"
+                                        src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTUiIGhlaWdodD0iMTAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHRpdGxlPmljb19tZW51PC90aXRsZT48cGF0aCBkPSJNMCA4djJoMTV2LTJoLTE1em0wLTR2MmgxNXYtMmgtMTV6bTAtNHYyaDE1di0yaC0xNXoiIGZpbGw9IiM1NTUiLz48L3N2Zz4="></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div data-container="" class="header-footer__wrapper lm_view lm_left"
+                        data-collect-as="headerFooterWrapper" data-bind="css: { lm_left: $data.outOfView }">
+                        <div data-container="" class="header-footer__container" data-collect-as="headerFooterContainer"
+                            data-bind="css: { 'header-footer__container--fill': $data.fill }">
+                            <div class="button_icon_wrapper" data-collect-as="buttonIcon"><button
+                                    class="buttonIcon nooutline"
+                                    data-bind=" visible: isVisible, css: { 'nooutline': nooutline, 'disabled': isDisabledOrInvalid, 'active': $data.isActive, 'pageback': isPageBack }, attr: { id : id, title: title, 'data-type': type, 'disabled': isDisabled, 'aria-disabled': isDisabledOrInvalid, 'type': buttonType, 'tabindex': $data.tabIndex, 'aria-pressed': $data.isActive, 'aria-expanded': $data.isExpanded, 'aria-haspopup': $data.hasPopup, 'aria-label: $data.ariaLabel }, click: onClick "
+                                    title="Lukk" data-type="close" type="button" tabindex="3100"><span class="label"
+                                        data-bind="text: label, visible: label" style="display: none;"></span><img
+                                        alt="" class="svg" data-bind="attr: {src : src, 'data-svg': svg}"
+                                        src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIiIGhlaWdodD0iMTIiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHRpdGxlPmljb19jbG9zZV93aGl0ZTwvdGl0bGU+PHBhdGggZD0iTTIgMGw0IDQgNC00IDIgMi00IDMuOTk5IDQgNC4wMDEtMiAyLTQtNC00IDQtMi0yIDQtNC4wMDEtNC0zLjk5OSAyLTJ6IiBmaWxsPSIjZmZmIi8+PC9zdmc+"></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <main class="body" role="main">
+                <div class="viewport animate" data-container="body">
+                    <div class="scroller padding block_vertical_center full_width_height lm_view lm_left"
+                        data-collect-as="view"
+                        data-bind="css: { lm_left: $data.outOfView }, attr: { 'data-type': $data.type, tabindex: $data.tabIndex }"
+                        data-type="error">
+                        <div data-container=""></div>
+                    </div>
+                    <div class="scroller padding block_vertical_center full_width_height lm_view lm_left"
+                        data-collect-as="view"
+                        data-bind="css: { lm_left: $data.outOfView }, attr: { 'data-type': $data.type, tabindex: $data.tabIndex }"
+                        data-type="info">
+                        <div data-container=""></div>
+                    </div>
+                    <div class="lm_view padding block_vertical_center lm_left" data-collect-as="view_noscroll"
+                        data-bind="css: { lm_left: $data.outOfView }, attr: { 'data-type': $data.type }"
+                        data-type="changepassword">
+                        <div data-container=""></div>
+                    </div>
+                    <div class="scroller padding block_vertical_center full_width_height lm_view lm_left"
+                        data-collect-as="view"
+                        data-bind="css: { lm_left: $data.outOfView }, attr: { 'data-type': $data.type, tabindex: $data.tabIndex }"
+                        data-type="loading_documents">
+                        <div data-container=""></div>
+                    </div>
+                    <div class="lm_view padding block_vertical_center lm_center" data-collect-as="view_noscroll"
+                        data-bind="css: { lm_left: $data.outOfView }, attr: { 'data-type': $data.type }"
+                        data-type="userid">
+                        <div data-container="">
+                            <form class="form_wrapper"
+                                data-bind="submit: $data.onSubmit, attr: { data-info-has-content: $data.hasInfoContent, data-message-has-content: $data.hasMessageContent }"
+                                data-collect-as="form" data-container="" autocomplete="off">
+                                <div class="row label" data-bind="hidden: isHidden()" data-collect-as="rowLabel"><label
+                                        data-bind="text: text, attr: {'for': id}"
+                                        for="ymRfvvADPwlbVabPuKCF_2">Fødselsnummer</label>
+                                    <div class="help_wrapper" data-container="help"><button type="button"
+                                            data-type="help" data-collect-as="helpIcon" aria-haspopup="true"
+                                            data-bind="attr:{ 'data-type': svg, title: title, disabled: $data.disabled, tabindex: $data.tabIndex, 'aria-expanded': $data.isExpanded }, click: $root.onClick"
+                                            title="Åpne hjelpedialogen" tabindex="2000" aria-expanded="false"><img
+                                                alt="" data-bind="attr: { src: src, 'class': svg, 'data-svg': svg }"
+                                                src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgiIGhlaWdodD0iMTgiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHRpdGxlPmljb19oZWxwPC90aXRsZT48ZyBmaWxsPSJub25lIj48cGF0aCBkPSJNMTcuNSA5YzAtNC42OTQtMy44MDYtOC41LTguNS04LjVzLTguNSAzLjgwNi04LjUgOC41IDMuODA2IDguNSA4LjUgOC41IDguNS0zLjgwNiA4LjUtOC41eiIgc3Ryb2tlPSIjMDA3OEJEIi8+PHBhdGggZD0iTTggMTJoMnYyaC0ydi0yem0uNzU4LThjMSAwIDEuODMxLjIzOSAyLjQ5My43MTcuNjYyLjQ3OC45OTIgMS4xODYuOTkyIDIuMTI0IDAgLjU3NS0uMTQ0IDEuMDYtLjQzMSAxLjQ1NC0uMTY4LjIzOS0uNDkxLjU0NC0uOTY5LjkxNmwtLjQ3MS4zNjVjLS4yNTcuMTk5LS4yNjguNDMxLS4zNTIuNjk3LS4wNTMuMTY4LS4wOTEuMzU3LS4wOTYuNzExaC0xLjkzM2MuMDI3LS43NDguMDg4LTEuMTkzLjIwMy0xLjQ3OC4xMTUtLjI4NS40MTItLjYxNC44OS0uOTg2bC40ODUtLjM3OGMuMTU5LS4xMTkuMjg4LS4yNS4zODUtLjM5Mi4xNzctLjI0My4yNjYtLjUxMS4yNjYtLjgwMyAwLS4zMzYtLjA5OC0uNjQzLS4yOTUtLjkxOS0uMTk3LS4yNzctLjU1Ny0uNDE1LTEuMDc5LS40MTUtLjUxMyAwLS44NzcuMTctMS4wOTIuNTExLS4yMTUuMzQxLS4yNTQuNDU2LS4yNTQuODIzaC0xLjkxOGMuMDUzLTEuMjYxLjQyNS0xLjkxNiAxLjI1My0yLjQ0My41MjItLjMzNiAxLjE2NC0uNTA1IDEuOTI1LS41MDV6IiBmaWxsPSIjMDA3OEJEIi8+PC9nPjwvc3ZnPg=="
+                                                class="help" data-svg="help"></button></div>
+                                </div>
+                                <div class="row form" data-collect-as="rowPid" data-container="">
+                                    <div class="input_wrapper" data-collect-as="inputWrapper"
+                                        data-bind="hidden: isHidden()">
+                                        <div class="label"
+                                            data-bind="css: {error: $data.err, active: hasFocus, disabled: disabled }, attr: {'for': id, 'aria-disabled': disabled}"
+                                            data-container="" for="ymRfvvADPwlbVabPuKCF_2">
+                                            <div class="icon" data-bind="visible: src" data-collect-as="icon">
+                                                <div><img alt="" data-bind="attr: { src: src, title: $data.title }"
+                                                        src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjIiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHRpdGxlPmljb191c2VyaWQ8L3RpdGxlPjxnIGZpbGw9IiMwMDc4QkQiPjxwYXRoIGQ9Ik0yMCAyMmMwLTUuNTIzLTQuNDc3LTEwLTEwLTEwcy0xMCA0LjQ3Ny0xMCAxMGgyMHoiLz48Y2lyY2xlIGN4PSIxMCIgY3k9IjUiIHI9IjUiLz48L2c+PC9zdmc+"
+                                                        title=""></div>
+                                            </div>
+                                            <div class="input" data-collect-as="input"
+                                                data-bind="css: { disabled: disabled }">
+                                                <div class="wrp"><input
+                                                        data-bind=" attr: { maxlength: maxlength, type: type, id: id, 'data-type': dataType, disabled: disabled, 'aria-disabled': disabled, 'pattern': pattern, 'inputmode': 'numeric', 'max': $data.max, 'min': $data.min, 'step': $data.step, 'tabindex': $data.tabIndex, 'aria-invalid': isInvalid, 'aria-label': label }, value: val, valueUpdate: valueUpdate, css: { error: $data.err, hasFocus: hasFocus, hideCaret: $data.hideCaret, hasValue: hasValue }, event: { focus: onFocus, blur: onBlur }"
+                                                        autocomplete="off" autocapitalize="off" autocorrect="off"
+                                                        formnovalidate="" required="" maxlength="11" type="tel"
+                                                        id="ymRfvvADPwlbVabPuKCF_2" pattern="[0-9]*" tabindex="2000"
+                                                        aria-invalid="true">
+                                                    <div aria-hidden="true" class="placeholder"
+                                                        data-bind="text: placeholder"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="button_icon_wrapper" data-collect-as="buttonIcon"><button
+                                            class="buttonIcon disabled"
+                                            data-bind=" visible: isVisible, css: { 'nooutline': nooutline, 'disabled': isDisabledOrInvalid, 'active': $data.isActive, 'pageback': isPageBack }, attr: { id : id, title: title, 'data-type': type, 'disabled': isDisabled, 'aria-disabled': isDisabledOrInvalid, 'type': buttonType, 'tabindex': $data.tabIndex, 'aria-pressed': $data.isActive, 'aria-expanded': $data.isExpanded, 'aria-haspopup': $data.hasPopup, 'aria-label: $data.ariaLabel }, click: onClick "
+                                            title="Neste" data-type="call_to_action" aria-disabled="true" type="submit"
+                                            tabindex="2300"><span class="label" data-bind="text: label, visible: label"
+                                                style="display: none;"></span><img alt="" class="svg"
+                                                data-bind="attr: {src : src, 'data-svg': svg}"
+                                                src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMTkiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHRpdGxlPmljb19hcnJvd19yaWdodDwvdGl0bGU+PHBhdGggZD0iTTE5IDExbC01IDUgMiAyIDgtOC41MzEtOC04LjQ2OS0yIDIgNSA1aC0xOXYzaDE5eiIgZmlsbD0iI2ZmZiIvPjwvc3ZnPg=="></button>
+                                    </div>
+                                </div>
+                                <div class="row message" data-bind="visible: text, css: {error: $data.err}"
+                                    data-collect-as="rowMessage"><span data-bind="html: text">11 siffer</span></div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="full_width_height content_layout lm_view lm_left"
+                        data-collect-as="viewHeaderBodyFooterLayout"
+                        data-bind="css: { lm_left: $data.outOfView }, attr: { 'data-has-header': header.isVisible, 'data-has-footer': footer.isVisible, 'data-type': $data.type }"
+                        data-type="ha_list">
+                        <div class="view full_width_height">
+                            <div class="content header" data-bind="visible: header.isVisible" data-container="header"
+                                style="display: none;"></div>
+                            <div class="full_width content body scroll_indicator">
+                                <div class="full_width_height block_vertical_center">
+                                    <div class="full_width" data-container="body"></div>
+                                </div>
+                            </div>
+                            <div class="content footer" data-bind="visible: footer.isVisible" style="display: none;">
+                                <div class="document_presentation" data-container="footer"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="lm_view padding block_vertical_center lm_left" data-collect-as="view_noscroll"
+                        data-bind="css: { lm_left: $data.outOfView }, attr: { 'data-type': $data.type }" data-type="ha">
+                        <div data-container=""></div>
+                    </div>
+                    <div class="scroller padding block_vertical_center full_width_height lm_view lm_left"
+                        data-collect-as="view"
+                        data-bind="css: { lm_left: $data.outOfView }, attr: { 'data-type': $data.type, tabindex: $data.tabIndex }"
+                        data-type="idle_screen">
+                        <div data-container=""></div>
+                    </div>
+                    <div class="lm_view padding block_vertical_center lm_left" data-collect-as="view_noscroll"
+                        data-bind="css: { lm_left: $data.outOfView }, attr: { 'data-type': $data.type }"
+                        data-type="password">
+                        <div data-container=""></div>
+                    </div>
+                    <div class="scroller padding block_vertical_center full_width_height lm_view lm_left"
+                        data-collect-as="view"
+                        data-bind="css: { lm_left: $data.outOfView }, attr: { 'data-type': $data.type, tabindex: $data.tabIndex }"
+                        data-type="document_list">
+                        <div data-container=""></div>
+                    </div>
+                    <div class="full_width_height lm_view lm_right"
+                        data-bind=" attr: { 'data-type': $data.type, 'data-document-footer-toolbar': $data.hasDocumentFooterToolbar, 'data-document-footer-understanding': $data.hasDocumentFooterUnderstanding } "
+                        data-collect-as="view-document" data-container="" data-type="document"></div>
+                    <div class="scroller padding block_vertical_center full_width_height lm_view lm_left"
+                        data-collect-as="view"
+                        data-bind="css: { lm_left: $data.outOfView }, attr: { 'data-type': $data.type, tabindex: $data.tabIndex }"
+                        data-type="document_controller">
+                        <div data-container=""></div>
+                    </div>
+                </div>
+            </main>
+            <footer class="layout__footer" data-bind="attr: {'data-layout': footer}">
+                <div class="viewport layout__footer__viewport layout__footer__viewport--left"
+                    data-container="footer_left">
+                    <div data-container="" class="header-footer__wrapper lm_view lm_center"
+                        data-collect-as="headerFooterWrapper" data-bind="css: { lm_left: $data.outOfView }">
+                        <div data-container="" class="header-footer__container" data-collect-as="headerFooterContainer"
+                            data-bind="css: { 'header-footer__container--fill': $data.fill }">
+                            <div class="button_icon_wrapper" data-collect-as="buttonIcon"><button class="buttonIcon"
+                                    data-bind=" visible: isVisible, css: { 'nooutline': nooutline, 'disabled': isDisabledOrInvalid, 'active': $data.isActive, 'pageback': isPageBack }, attr: { id : id, title: title, 'data-type': type, 'disabled': isDisabled, 'aria-disabled': isDisabledOrInvalid, 'type': buttonType, 'tabindex': $data.tabIndex, 'aria-pressed': $data.isActive, 'aria-expanded': $data.isExpanded, 'aria-haspopup': $data.hasPopup, 'aria-label: $data.ariaLabel }, click: onClick "
+                                    title="Åpne sertifikater" data-type="certificate" type="button" tabindex="3010"
+                                    aria-expanded="false" aria-haspopup="true" aria-label="Sertifikater"><span
+                                        class="label" data-bind="text: label, visible: label"
+                                        style="display: none;"></span><img alt="" class="svg"
+                                        data-bind="attr: {src : src, 'data-svg': svg}"
+                                        src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTUiIGhlaWdodD0iMTgiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHRpdGxlPmljb19jZXJ0aWZpY2F0ZTwvdGl0bGU+PGcgZmlsbD0ibm9uZSI+PHBhdGggZD0iTTAgNi4yMDZjMCA0LjEzNyAzLjE5MiA5LjM0IDcuNSAxMS4zNzcgNC4yOTgtMi4wMzIgNy41LTcuMjQgNy41LTExLjM3N3YtNi4yMDZoLTE1djYuMjA2eiIgZmlsbD0iIzU1NSIvPjxwYXRoIGQ9Ik0xMC41IDMuNWwxIDEtNCA0LTEgMS0xLTEtMi0yIDEtMSAyIDIgNC00eiIgZmlsbD0iI2ZmZiIvPjwvZz48L3N2Zz4="></button>
+                            </div>
+                        </div>
+                        <div data-container="" class="header-footer__container header-footer__container--fill"
+                            data-collect-as="headerFooterContainer"
+                            data-bind="css: { 'header-footer__container--fill': $data.fill }">
+                            <div class="signature" data-collect-as="signature" data-bind="hidden: $data.hidden"
+                                style="">
+                                <div class="signature__container">
+                                    <div class="title" data-bind="text: title">BankID brukersted</div>
+                                    <div class="text" data-bind="text: text">Danske Bank</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="viewport layout__footer__viewport layout__footer__viewport--right"
+                    data-container="footer_right">
+                    <div data-container="" class="header-footer__wrapper lm_view lm_left"
+                        data-collect-as="headerFooterWrapper" data-bind="css: { lm_left: $data.outOfView }">
+                        <div data-container="" class="header-footer__container" data-collect-as="headerFooterContainer"
+                            data-bind="css: { 'header-footer__container--fill': $data.fill }"><label
+                                data-collect-as="buttonLabel" data-bind="visible: text, text: text, attr: {for: id}"
+                                class="buttonLabel" for="iibjXOzxjIkwyqLVNNhj_0" style="display: none;"></label></div>
+                        <div data-container="" class="header-footer__container" data-collect-as="headerFooterContainer"
+                            data-bind="css: { 'header-footer__container--fill': $data.fill }">
+                            <div class="button_icon_wrapper" data-collect-as="buttonIcon"><button class="buttonIcon"
+                                    data-bind=" visible: isVisible, css: { 'nooutline': nooutline, 'disabled': isDisabledOrInvalid, 'active': $data.isActive, 'pageback': isPageBack }, attr: { id : id, title: title, 'data-type': type, 'disabled': isDisabled, 'aria-disabled': isDisabledOrInvalid, 'type': buttonType, 'tabindex': $data.tabIndex, 'aria-pressed': $data.isActive, 'aria-expanded': $data.isExpanded, 'aria-haspopup': $data.hasPopup, 'aria-label: $data.ariaLabel }, click: onClick "
+                                    id="iibjXOzxjIkwyqLVNNhj_0" title="Neste" data-type="call_to_action" type="submit"
+                                    tabindex="3020"><span class="label" data-bind="text: label, visible: label"
+                                        style="display: none;"></span><img alt="" class="svg"
+                                        data-bind="attr: {src : src, 'data-svg': svg}"
+                                        src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMTkiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHRpdGxlPmljb19hcnJvd19yaWdodDwvdGl0bGU+PHBhdGggZD0iTTE5IDExbC01IDUgMiAyIDgtOC41MzEtOC04LjQ2OS0yIDIgNSA1aC0xOXYzaDE5eiIgZmlsbD0iI2ZmZiIvPjwvc3ZnPg=="></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div data-container="" class="header-footer__wrapper lm_view lm_center"
+                        data-collect-as="headerFooterWrapper" data-bind="css: { lm_left: $data.outOfView }">
+                        <div data-container="" class="header-footer__container" data-collect-as="headerFooterContainer"
+                            data-bind="css: { 'header-footer__container--fill': $data.fill }">
+                            <div class="button_icon_wrapper" data-collect-as="buttonIcon"><button class="buttonIcon"
+                                    data-bind=" visible: isVisible, css: { 'nooutline': nooutline, 'disabled': isDisabledOrInvalid, 'active': $data.isActive, 'pageback': isPageBack }, attr: { id : id, title: title, 'data-type': type, 'disabled': isDisabled, 'aria-disabled': isDisabledOrInvalid, 'type': buttonType, 'tabindex': $data.tabIndex, 'aria-pressed': $data.isActive, 'aria-expanded': $data.isExpanded, 'aria-haspopup': $data.hasPopup, 'aria-label: $data.ariaLabel }, click: onClick "
+                                    title="Åpne meldingen" data-type="broadcast" type="button" tabindex="3020"
+                                    aria-expanded="false" aria-haspopup="true" aria-label="Melding"
+                                    style="display: none;"><span class="label" data-bind="text: label, visible: label"
+                                        style="display: none;"></span><img alt="" class="svg"
+                                        data-bind="attr: {src : src, 'data-svg': svg}"
+                                        src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgiIGhlaWdodD0iMTgiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHRpdGxlPmljb19icm9hZGNhc3Q8L3RpdGxlPjxnIGZpbGw9Im5vbmUiPjxwYXRoIGQ9Ik0xOCA5YzAtNC45NzEtNC4wMjktOS05LTlzLTkgNC4wMjktOSA5IDQuMDI5IDkgOSA5IDktNC4wMjkgOS05eiIgZmlsbD0iIzU1NSIgLz48Y2lyY2xlIGZpbGw9IiNmZmYiIGN4PSI5IiBjeT0iNCIgcj0iMSIvPjxwYXRoIGQ9Ik04IDE0di02aDJ2NmgxdjFoLTR2LTFoMXptLTEtN3YxaDN2LTFoLTN6IiBmaWxsPSIjZmZmIi8+PC9nPjwvc3ZnPg=="></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div data-container="" class="header-footer__wrapper lm_view lm_left"
+                        data-collect-as="headerFooterWrapper" data-bind="css: { lm_left: $data.outOfView }">
+                        <div data-container="" class="header-footer__container" data-collect-as="headerFooterContainer"
+                            data-bind="css: { 'header-footer__container--fill': $data.fill }">
+                            <div class="button_icon_wrapper" data-collect-as="buttonIcon"><button class="buttonIcon"
+                                    data-bind=" visible: isVisible, css: { 'nooutline': nooutline, 'disabled': isDisabledOrInvalid, 'active': $data.isActive, 'pageback': isPageBack }, attr: { id : id, title: title, 'data-type': type, 'disabled': isDisabled, 'aria-disabled': isDisabledOrInvalid, 'type': buttonType, 'tabindex': $data.tabIndex, 'aria-pressed': $data.isActive, 'aria-expanded': $data.isExpanded, 'aria-haspopup': $data.hasPopup, 'aria-label: $data.ariaLabel }, click: onClick "
+                                    title="Åpne BankID-historikk" data-type="history" type="button" tabindex="3020"
+                                    aria-expanded="false" aria-haspopup="true" aria-label="BankID-historikk"
+                                    style="display: none;"><span class="label" data-bind="text: label, visible: label"
+                                        style="display: none;"></span><img alt="" class="svg"
+                                        data-bind="attr: {src : src, 'data-svg': svg}"
+                                        src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgiIGhlaWdodD0iMTgiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHRpdGxlPmljb19jbG9jazwvdGl0bGU+PHBhdGggZD0iTTE4IDljMC00Ljk3MS00LjAyOS05LTktOXMtOSA0LjAyOS05IDkgNC4wMjkgOSA5IDkgOS00LjAyOSA5LTl6bS04LTd2NmgzdjJoLTV2LThoMnoiIGZpbGw9IiM1NTUiLz48L3N2Zz4="
+                                        data-svg="clock"></button></div>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+    <script>window.dLUXnIrpGdLhvulCFlKZ_1 = true;</script>
+</body>
+
+</html>
