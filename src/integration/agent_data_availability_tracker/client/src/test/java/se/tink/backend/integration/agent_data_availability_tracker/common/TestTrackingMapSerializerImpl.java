@@ -1,8 +1,6 @@
-package se.tink.backend.integration.agent_data_availability_tracker.serialization.teststubs;
+package se.tink.backend.integration.agent_data_availability_tracker.common;
 
-import se.tink.backend.integration.agent_data_availability_tracker.common.TrackingList;
 import se.tink.backend.integration.agent_data_availability_tracker.common.TrackingList.Builder;
-import se.tink.backend.integration.agent_data_availability_tracker.common.TrackingMapSerializer;
 
 public class TestTrackingMapSerializerImpl extends TrackingMapSerializer {
 
