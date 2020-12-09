@@ -24,14 +24,16 @@ import se.tink.backend.aggregation.agents.utils.authentication.encap3.rpc.Encryp
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.rpc.EncryptedSoapResponse;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.rpc.RequestBody;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.storage.BaseEncapStorage;
+import se.tink.backend.aggregation.agents.utils.crypto.EllipticCurve;
 import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
+import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.utils.deviceprofile.DeviceProfile;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
-public abstract class BaseEncapMessageUtils implements EncapMessageUtils {
+public class BaseEncapMessageUtils implements EncapMessageUtils {
 
     protected final TinkHttpClient httpClient;
     protected final EncapConfiguration configuration;
@@ -51,14 +53,6 @@ public abstract class BaseEncapMessageUtils implements EncapMessageUtils {
         this.deviceProfile = deviceProfile;
         this.applicationHash = buildApplicationHashAsB64String();
     }
-
-    protected abstract byte[] prepareRandomKey(int size);
-
-    protected abstract String generateRandomHex();
-
-    protected abstract KeyPair generateEcKeyPair();
-
-    protected abstract String getEmk(byte[] randKey);
 
     private String buildApplicationHashAsB64String() {
         byte[] hash = Hash.sha256(configuration.getAppId());
@@ -369,5 +363,21 @@ public abstract class BaseEncapMessageUtils implements EncapMessageUtils {
         String jsonString = decodedResponse.replaceFirst("^\\)]}'", "");
 
         return SerializationUtils.deserializeFromString(jsonString, responseType);
+    }
+
+    protected byte[] prepareRandomKey(int size) {
+        return RandomUtils.secureRandom(size);
+    }
+
+    protected String generateRandomHex() {
+        return RandomUtils.generateRandomHexEncoded(4).toUpperCase();
+    }
+
+    protected KeyPair generateEcKeyPair() {
+        return EllipticCurve.generateKeyPair("sect233k1");
+    }
+
+    protected String getEmk(byte[] randKey) {
+        return EncapCryptoUtils.computeRsaEMK(configuration.getRsaPubKeyString(), randKey);
     }
 }
