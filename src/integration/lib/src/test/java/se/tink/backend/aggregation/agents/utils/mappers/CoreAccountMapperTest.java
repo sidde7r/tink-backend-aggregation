@@ -62,7 +62,7 @@ public class CoreAccountMapperTest {
         account.setFlags(ImmutableList.of(AccountFlag.BUSINESS));
 
         se.tink.backend.agents.rpc.CreditLine cl = new se.tink.backend.agents.rpc.CreditLine();
-        cl.setType(se.tink.backend.agents.rpc.CreditLineType.TMP_POC_EXAMPLE);
+        cl.setType(se.tink.backend.agents.rpc.CreditLineType.AVAILABLE);
         cl.setIncludedInBalance(true);
         cl.setAmount(new ExactCurrencyAmount(new BigDecimal(BigInteger.valueOf(1000), 2), "SEK"));
         se.tink.backend.agents.rpc.Balance balance = new se.tink.backend.agents.rpc.Balance();
@@ -90,6 +90,6 @@ public class CoreAccountMapperTest {
         assertEquals(1000, coreCreditLine.getAmount().getUnscaledValue());
         assertEquals(2, coreCreditLine.getAmount().getScale());
         assertEquals("SEK", coreCreditLine.getAmount().getCurrencyCode());
-        assertEquals(CreditLineType.TMP_POC_EXAMPLE, coreCreditLine.getType());
+        assertEquals(CreditLineType.AVAILABLE, coreCreditLine.getType());
     }
 }
