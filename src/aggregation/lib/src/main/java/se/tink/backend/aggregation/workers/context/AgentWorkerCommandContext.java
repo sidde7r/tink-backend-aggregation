@@ -12,7 +12,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.curator.framework.CuratorFramework;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,8 +35,8 @@ import se.tink.backend.aggregation.controllers.ProviderSessionCacheController;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
 import se.tink.backend.aggregation.events.AccountInformationServiceEventsProducer;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerContext;
+import se.tink.backend.aggregation.workers.refresh.individual_refresh.IndividualAccountRefreshUtil;
 import se.tink.libraries.credentials.service.CredentialsRequest;
-import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.identitydata.IdentityData;
 import se.tink.libraries.metrics.core.MetricId;
 import se.tink.libraries.metrics.registry.MetricRegistry;
@@ -198,19 +197,12 @@ public class AgentWorkerCommandContext extends AgentWorkerContext {
         processAccountsRequest.setCredentialsId(credentials.getId());
         processAccountsRequest.setUserId(request.getUser().getId());
         processAccountsRequest.setOperationId(request.getOperationId());
-        processAccountsRequest.setRequestedAccountIds(getRequestedAccountId());
+        processAccountsRequest.setRequestedAccountIds(
+                Lists.newArrayList(
+                        IndividualAccountRefreshUtil.getRequestedAccountIds(
+                                request, getAccountDataCache().getProcessedAccounts())));
 
         controllerWrapper.processAccounts(processAccountsRequest);
-    }
-
-    private List<String> getRequestedAccountId() {
-        if (!(request instanceof RefreshInformationRequest)) {
-            return Collections.emptyList();
-        }
-        Set<String> accountIds = ((RefreshInformationRequest) request).getRequestedAccountIds();
-        return CollectionUtils.isEmpty(accountIds)
-                ? Collections.emptyList()
-                : Lists.newArrayList(accountIds);
     }
 
     public CuratorFramework getCoordinationClient() {
