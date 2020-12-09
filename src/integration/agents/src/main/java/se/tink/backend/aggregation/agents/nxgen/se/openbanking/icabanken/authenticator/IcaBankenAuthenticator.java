@@ -99,9 +99,6 @@ public class IcaBankenAuthenticator implements OAuth2Authenticator {
                         .build();
 
         TokenResponse response = apiClient.exchangeAuthorizationCode(request);
-        persistentStorage.put(IcaBankenConstants.StorageKeys.TOKEN, response.toOauthToken());
-
-        verifyValidCustomerStatusOrThrow();
 
         return response.toOauthToken();
     }
@@ -141,10 +138,6 @@ public class IcaBankenAuthenticator implements OAuth2Authenticator {
             throw e;
         }
 
-        persistentStorage.put(IcaBankenConstants.StorageKeys.TOKEN, response.toOauthToken());
-
-        verifyValidCustomerStatusOrThrow();
-
         return response.toOauthToken();
     }
 
@@ -157,7 +150,11 @@ public class IcaBankenAuthenticator implements OAuth2Authenticator {
     }
 
     @Override
-    public void useAccessToken(OAuth2Token accessToken) {}
+    public void useAccessToken(OAuth2Token accessToken) {
+        persistentStorage.put(IcaBankenConstants.StorageKeys.TOKEN, accessToken);
+
+        verifyValidCustomerStatusOrThrow();
+    }
 
     @Override
     public void handleSpecificCallbackDataError(Map<String, String> callbackData)
