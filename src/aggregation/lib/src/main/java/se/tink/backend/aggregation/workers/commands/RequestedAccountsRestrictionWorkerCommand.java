@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.workers.commands;
 
 import java.util.Set;
+import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
@@ -27,9 +28,11 @@ public class RequestedAccountsRestrictionWorkerCommand extends AgentWorkerComman
         try {
             CredentialsRequest request = context.getRequest();
             if (request instanceof RefreshInformationRequest) {
-                Set<String> getRequestedAccountIds =
+                Set<String> requestedAccountIds =
                         ((RefreshInformationRequest) request).getRequestedAccountIds();
-                registerAccountFilter(getRequestedAccountIds);
+                if (!CollectionUtils.isEmpty(requestedAccountIds)) {
+                    registerAccountFilter(requestedAccountIds);
+                }
             }
         } catch (RuntimeException e) {
             log.warn("Could not execute RequestedAccountsRestrictionWorkerCommand", e);
