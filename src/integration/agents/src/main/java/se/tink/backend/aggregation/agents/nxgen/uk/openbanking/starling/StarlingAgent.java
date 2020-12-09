@@ -19,7 +19,10 @@ import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.agentplatform.AgentPlatformHttpClient;
+import se.tink.backend.aggregation.agents.agentplatform.authentication.AgentPlatformAuthenticator;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.OAuth2AuthenticationConfig;
+import se.tink.backend.aggregation.agents.agentplatform.authentication.storage.AgentPlatformStorageMigration;
+import se.tink.backend.aggregation.agents.agentplatform.authentication.storage.AgentPlatformStorageMigrator;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.configuration.StarlingConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.configuration.entity.ClientConfigurationEntity;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.executor.transfer.StarlingTransferExecutor;
@@ -46,7 +49,9 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController
 public final class StarlingAgent extends SubsequentProgressiveGenerationAgent
         implements RefreshTransferDestinationExecutor,
                 RefreshCheckingAccountsExecutor,
-                RefreshSavingsAccountsExecutor {
+                RefreshSavingsAccountsExecutor,
+                AgentPlatformAuthenticator,
+                AgentPlatformStorageMigration {
     private StarlingApiClient apiClient;
     private final TransferDestinationRefreshController transferDestinationRefreshController;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
@@ -75,7 +80,7 @@ public final class StarlingAgent extends SubsequentProgressiveGenerationAgent
                         aisConfiguration,
                         redirectUrl,
                         strongAuthenticationState);
-        apiClient = new StarlingApiClient(client, authenticator);
+        apiClient = new StarlingApiClient(client, persistentStorage);
         transferDestinationRefreshController = constructTransferDestinationRefreshController();
         transactionalAccountRefreshController =
                 constructTransactionalAccountRefreshController(
@@ -166,5 +171,10 @@ public final class StarlingAgent extends SubsequentProgressiveGenerationAgent
 
     public boolean isBackgroundRefreshPossible() {
         return true;
+    }
+
+    @Override
+    public AgentPlatformStorageMigrator getMigrator() {
+        return new StarlingAgentPlatformStorageMigrator();
     }
 }

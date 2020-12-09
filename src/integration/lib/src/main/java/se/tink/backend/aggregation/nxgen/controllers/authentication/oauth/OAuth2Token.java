@@ -74,6 +74,10 @@ public class OAuth2Token {
         return clientSpecificProperties.get(property);
     }
 
+    public long getIssuedAt() {
+        return issuedAt;
+    }
+
     private static long getCurrentEpoch() {
         return System.currentTimeMillis() / 1000L;
     }

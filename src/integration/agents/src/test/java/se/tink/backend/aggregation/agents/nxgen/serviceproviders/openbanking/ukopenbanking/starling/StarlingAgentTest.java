@@ -21,7 +21,7 @@ public class StarlingAgentTest {
                 .saveCredentialsAfter(true)
                 .expectLoggedIn(false)
                 .setFinancialInstitutionId(STARLING_FINANCIAL_INSTITUTION_ID)
-                .setAppId("paypal")
+                .setAppId("tink")
                 .build()
                 .testRefresh();
     }
