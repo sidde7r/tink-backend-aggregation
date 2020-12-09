@@ -5,12 +5,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.VolvoFinansConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.SavingsAccount;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
+import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
@@ -44,13 +46,31 @@ public class SavingsAccountEntity {
     private String bankgiroInbetalning;
     private String ocrnummerInbetalning;
 
-    public TransactionalAccount toTinkAccount() {
-        return SavingsAccount.builder(
-                        AccountTypes.SAVINGS, accountNumber, ExactCurrencyAmount.inSEK(balance))
-                .setBankIdentifier(accountId)
-                .setAccountNumber(accountNumber)
-                .setName(name)
-                .setHolderName(getHolderName())
+    public Optional<TransactionalAccount> toTinkAccount() {
+        return TransactionalAccount.nxBuilder()
+                .withType(TransactionalAccountType.SAVINGS)
+                .withoutFlags()
+                .withBalance(buildBalance())
+                .withId(buildId())
+                .addHolderName(getHolderName())
+                .setApiIdentifier(accountId)
+                .build();
+    }
+
+    private BalanceModule buildBalance() {
+        return BalanceModule.builder()
+                .withBalance(ExactCurrencyAmount.inSEK(balance))
+                .setInterestRate(interestRate) // interest came as decimal without %
+                .build();
+    }
+
+    private IdModule buildId() {
+        return IdModule.builder()
+                .withUniqueIdentifier(accountId)
+                .withAccountNumber(accountNumber)
+                .withAccountName(name)
+                .addIdentifier(AccountIdentifier.create(AccountIdentifier.Type.TINK, accountNumber))
+                .setProductName(product)
                 .build();
     }
 
@@ -61,7 +81,7 @@ public class SavingsAccountEntity {
     }
 
     @JsonIgnore
-    private HolderName getHolderName() {
+    private String getHolderName() {
         return Optional.ofNullable(accountHolders).orElseGet(Collections::emptyList).stream()
                 .filter(
                         holder ->
@@ -70,6 +90,7 @@ public class SavingsAccountEntity {
                 .findFirst()
                 .map(AccountHolderEntity::getName)
                 .map(HolderName::new)
+                .map(Object::toString)
                 .orElse(null);
     }
 

@@ -10,7 +10,6 @@ import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
-import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
@@ -41,7 +40,6 @@ import se.tink.libraries.identitydata.countries.SeIdentityData;
 public final class VolvoFinansAgent extends NextGenerationAgent
         implements RefreshIdentityDataExecutor,
                 RefreshCreditCardAccountsExecutor,
-                RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor {
 
     private final VolvoFinansApiClient apiClient;
@@ -72,16 +70,6 @@ public final class VolvoFinansAgent extends NextGenerationAgent
                 new VolvoFinansBankIdAutenticator(apiClient, sessionStorage),
                 persistentStorage,
                 credentials);
-    }
-
-    @Override
-    public FetchAccountsResponse fetchCheckingAccounts() {
-        return transactionalAccountRefreshController.fetchCheckingAccounts();
-    }
-
-    @Override
-    public FetchTransactionsResponse fetchCheckingTransactions() {
-        return transactionalAccountRefreshController.fetchCheckingTransactions();
     }
 
     @Override

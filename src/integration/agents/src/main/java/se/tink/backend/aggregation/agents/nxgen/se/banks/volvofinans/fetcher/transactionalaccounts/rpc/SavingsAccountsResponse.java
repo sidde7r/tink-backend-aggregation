@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.fetcher.tr
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.fetcher.transactionalaccounts.entities.SavingsAccountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -15,6 +16,8 @@ public class SavingsAccountsResponse extends ArrayList<SavingsAccountEntity> {
                 // only fetch accounts where user is account holder/main applicant (HUVUDSOKANDE)
                 .filter(SavingsAccountEntity::isAccountHolder)
                 .map(SavingsAccountEntity::toTinkAccount)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .collect(Collectors.toList());
     }
 }
