@@ -124,7 +124,8 @@ public class FabricApiClient {
                         new URL(Urls.INITIATE_A_PAYMENT_URL)
                                 .parameter(
                                         FabricConstants.PathParameterKeys.PAYMENT_PRODUCT,
-                                        FabricConstants.PathParameterValues.PAYMENT_PRODUCT))
+                                        sessionStorage.get(
+                                                FabricConstants.PathParameterKeys.PAYMENT_PRODUCT)))
                 .type(MediaType.APPLICATION_JSON)
                 .header(HeaderKeys.TPP_REDIRECT_PREFERED, HeaderValues.TPP_REDIRECT_PREFERED)
                 .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
@@ -142,7 +143,8 @@ public class FabricApiClient {
                         new URL(Urls.GET_PAYMENT_URL)
                                 .parameter(
                                         FabricConstants.PathParameterKeys.PAYMENT_PRODUCT,
-                                        FabricConstants.PathParameterValues.PAYMENT_PRODUCT)
+                                        sessionStorage.get(
+                                                FabricConstants.PathParameterKeys.PAYMENT_PRODUCT))
                                 .parameter(FabricConstants.PathParameterKeys.PAYMENT_ID, paymentId))
                 .type(MediaType.APPLICATION_JSON)
                 .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
@@ -155,7 +157,8 @@ public class FabricApiClient {
                         new URL(Urls.GET_PAYMENT_STATUS_URL)
                                 .parameter(
                                         FabricConstants.PathParameterKeys.PAYMENT_PRODUCT,
-                                        FabricConstants.PathParameterValues.PAYMENT_PRODUCT)
+                                        sessionStorage.get(
+                                                FabricConstants.PathParameterKeys.PAYMENT_PRODUCT))
                                 .parameter(FabricConstants.PathParameterKeys.PAYMENT_ID, paymentId))
                 .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
                 .header(HeaderKeys.PSU_IP_ADDRESS, getPsuIpAddress())
@@ -168,7 +171,9 @@ public class FabricApiClient {
                                 new URL(Urls.GET_PAYMENT_AUTHORIZATIONS_URL)
                                         .parameter(
                                                 FabricConstants.PathParameterKeys.PAYMENT_PRODUCT,
-                                                FabricConstants.PathParameterValues.PAYMENT_PRODUCT)
+                                                sessionStorage.get(
+                                                        FabricConstants.PathParameterKeys
+                                                                .PAYMENT_PRODUCT))
                                         .parameter(
                                                 FabricConstants.PathParameterKeys.PAYMENT_ID,
                                                 paymentId))
@@ -187,7 +192,8 @@ public class FabricApiClient {
                         new URL(Urls.GET_PAYMENT_AUTHORIZATION_STATUS_URL)
                                 .parameter(
                                         FabricConstants.PathParameterKeys.PAYMENT_PRODUCT,
-                                        FabricConstants.PathParameterValues.PAYMENT_PRODUCT)
+                                        sessionStorage.get(
+                                                FabricConstants.PathParameterKeys.PAYMENT_PRODUCT))
                                 .parameter(FabricConstants.PathParameterKeys.PAYMENT_ID, paymentId)
                                 .parameter(
                                         FabricConstants.PathParameterKeys.PAYMENT_AUTHORIZATION_ID,

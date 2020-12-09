@@ -123,7 +123,8 @@ public class FabricConstants {
     }
 
     public static class PathParameterValues {
-        public static final String PAYMENT_PRODUCT = "sepa-credit-transfers";
+        public static final String PAYMENT_PRODUCT_SEPA_CREDIT = "sepa-credit-transfers";
+        public static final String PAYMENT_PRODUCT_SEPA_INSTANT = "instant-sepa-credit-transfers";
         public static final String PAYMENT_TYPE = "payments";
     }
 
