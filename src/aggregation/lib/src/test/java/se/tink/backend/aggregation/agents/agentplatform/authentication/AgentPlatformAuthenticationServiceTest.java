@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.agentplatform.authentication;
 
 import com.google.common.collect.Lists;
+import java.time.Instant;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,6 +10,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.result.error.AgentPlatformAuthenticationProcessException;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.storage.PersistentStorageService;
 import se.tink.backend.aggregation.agents.exceptions.agent.AgentException;
@@ -27,6 +30,7 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.userinteraction.fielddefinition.AgentFieldDefinition;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.ServerError;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class AgentPlatformAuthenticationServiceTest {
 
@@ -35,14 +39,21 @@ public class AgentPlatformAuthenticationServiceTest {
     private AgentAuthenticationProcess agentAuthenticationProcess;
     private UserInteractionService userInteractionService;
     private PersistentStorage persistentStorage;
+    private CredentialsRequest credentialsRequest;
+    private Credentials credentials;
 
     @Before
     public void init() {
         userInteractionService = Mockito.mock(UserInteractionService.class);
         persistentStorage = new PersistentStorage();
+        credentials = Mockito.mock(Credentials.class);
+        credentialsRequest = Mockito.mock(CredentialsRequest.class);
+        Mockito.when(credentialsRequest.getCredentials()).thenReturn(credentials);
         objectUnderTest =
                 new AgentPlatformAuthenticationService(
-                        userInteractionService, new PersistentStorageService(persistentStorage));
+                        userInteractionService,
+                        new PersistentStorageService(persistentStorage),
+                        credentialsRequest);
         agentPlatformAuthenticator = Mockito.mock(AgentPlatformAuthenticator.class);
         agentAuthenticationProcess = Mockito.mock(AgentAuthenticationProcess.class);
         Mockito.when(agentPlatformAuthenticator.getAuthenticationProcess())
@@ -77,6 +88,7 @@ public class AgentPlatformAuthenticationServiceTest {
 
         Map<String, String> persistentData = new HashMap<>();
         persistentData.put("key", "value");
+        Instant sessionExpiryDate = Instant.now();
         AgentAuthenticationProcessStep lastStep =
                 createAuthenticationStep(
                         new AgentUserInteractionAuthenticationProcessRequest(
@@ -85,6 +97,7 @@ public class AgentPlatformAuthenticationServiceTest {
                                 new AgentAuthenticationProcessState(new HashMap<>()),
                                 agentFieldValues),
                         new AgentSucceededAuthenticationResult(
+                                sessionExpiryDate,
                                 new AgentAuthenticationPersistedData(persistentData)));
         Mockito.when(agentAuthenticationProcess.nextStep(Mockito.eq(lastStepIdentifier)))
                 .thenReturn(lastStep);
@@ -94,6 +107,7 @@ public class AgentPlatformAuthenticationServiceTest {
 
         // then
         Assertions.assertThat(persistentStorage.get("key")).isNotNull();
+        Mockito.verify(credentials).setSessionExpiryDate(Date.from(sessionExpiryDate));
     }
 
     @Test

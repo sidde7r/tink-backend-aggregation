@@ -25,7 +25,8 @@ public class AgentPlatformAuthenticationExecutor {
         new AgentPlatformAuthenticationService(
                         new UserInteractionService(
                                 supplementalInformationController, credentialsRequest),
-                        persistentStorageService)
+                        persistentStorageService,
+                        credentialsRequest)
                 .authenticate(agentPlatformAuthenticator);
         if (agentPlatformAuthenticator.isBackgroundRefreshPossible()) {
             credentialsRequest.getCredentials().setType(CredentialsTypes.PASSWORD);

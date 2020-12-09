@@ -96,7 +96,9 @@ public class AgentAuthenticationResultAggregationHandler
     public void visit(AgentSucceededAuthenticationResult arg) {
         Optional.ofNullable(arg.getAuthenticationPersistedData())
                 .ifPresent(data -> persistentStorageService.writeToAgentPersistentStorage(data));
-        handlingResult = AgentAuthenticationResultHandlingResult.authenticationSuccess();
+        handlingResult =
+                AgentAuthenticationResultHandlingResult.authenticationSuccess(
+                        arg.getSessionExpiryDate());
     }
 
     @Override
