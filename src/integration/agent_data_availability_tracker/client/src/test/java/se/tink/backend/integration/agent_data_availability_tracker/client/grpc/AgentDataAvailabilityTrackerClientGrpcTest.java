@@ -13,6 +13,8 @@ import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.models.AccountFeatures;
 import se.tink.backend.integration.agent_data_availability_tracker.client.AgentDataAvailabilityTrackerClient;
 import se.tink.backend.integration.agent_data_availability_tracker.client.AgentDataAvailabilityTrackerClientImpl;
+import se.tink.backend.integration.agent_data_availability_tracker.serialization.AccountTrackingSerializer;
+import se.tink.backend.integration.agent_data_availability_tracker.serialization.SerializationUtils;
 
 public final class AgentDataAvailabilityTrackerClientGrpcTest {
 
@@ -32,7 +34,10 @@ public final class AgentDataAvailabilityTrackerClientGrpcTest {
         client.start();
 
         // when
-        client.sendAccount("TestBank", "test-test", "SE", account, accountFeatures);
+        AccountTrackingSerializer serializer =
+                SerializationUtils.serializeAccount(account, accountFeatures);
+
+        client.sendAccount("TestBank", "test-test", "SE", serializer);
 
         // then
         Assert.assertEquals("TestBank", future.get());

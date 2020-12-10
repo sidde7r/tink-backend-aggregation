@@ -8,16 +8,10 @@ import io.grpc.stub.StreamObserver;
 import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.agents.rpc.Account;
-import se.tink.backend.aggregation.agents.models.AccountFeatures;
-import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.IdentityData;
 import se.tink.backend.integration.agent_data_availability_tracker.api.AgentDataAvailabilityTrackerServiceGrpc;
 import se.tink.backend.integration.agent_data_availability_tracker.api.TrackAccountRequest;
 import se.tink.backend.integration.agent_data_availability_tracker.api.Void;
-import se.tink.backend.integration.agent_data_availability_tracker.client.serialization.AccountTrackingSerializer;
-import se.tink.backend.integration.agent_data_availability_tracker.client.serialization.IdentityDataSerializer;
-import se.tink.backend.integration.agent_data_availability_tracker.client.serialization.LoanTrackingSerializer;
-import se.tink.backend.integration.agent_data_availability_tracker.client.serialization.PortfolioTrackingSerializer;
+import se.tink.backend.integration.agent_data_availability_tracker.common.TrackingMapSerializer;
 import se.tink.libraries.dropwizard_lifecycle.ManagedSafeStop;
 
 public class AgentDataAvailabilityTrackerClientImpl extends ManagedSafeStop
@@ -109,39 +103,17 @@ public class AgentDataAvailabilityTrackerClientImpl extends ManagedSafeStop
         }
     }
 
-    public AccountTrackingSerializer serializeAccount(
-            final Account account, final AccountFeatures features) {
-        AccountTrackingSerializer serializer = new AccountTrackingSerializer(account);
-
-        if (features.getPortfolios() != null) {
-            features.getPortfolios().stream()
-                    .map(PortfolioTrackingSerializer::new)
-                    .forEach(e -> serializer.addChild("portfolios", e));
-        }
-
-        if (features.getLoans() != null) {
-            features.getLoans().stream()
-                    .map(LoanTrackingSerializer::new)
-                    .forEach(e -> serializer.addChild("loans", e));
-        }
-
-        return serializer;
-    }
-
     public void sendAccount(
             final String agent,
             final String provider,
             final String market,
-            final Account account,
-            final AccountFeatures features) {
+            final TrackingMapSerializer serializer) {
 
         TrackAccountRequest.Builder requestBuilder =
                 TrackAccountRequest.newBuilder()
                         .setAgent(agent)
                         .setProvider(provider)
                         .setMarket(market);
-
-        AccountTrackingSerializer serializer = serializeAccount(account, features);
 
         // TODO: Unwrapped serialization such that builder.setAll can be used instead of loop
         serializer
@@ -155,15 +127,11 @@ public class AgentDataAvailabilityTrackerClientImpl extends ManagedSafeStop
         accountDeque.add(requestBuilder.build());
     }
 
-    public IdentityDataSerializer serializeIdentityData(final IdentityData identityData) {
-        return new IdentityDataSerializer(identityData);
-    }
-
     public void sendIdentityData(
             final String agent,
             final String provider,
             final String market,
-            final IdentityData identityData) {
+            final TrackingMapSerializer identityDataSerializer) {
 
         TrackAccountRequest.Builder requestBuilder =
                 TrackAccountRequest.newBuilder()
@@ -171,9 +139,7 @@ public class AgentDataAvailabilityTrackerClientImpl extends ManagedSafeStop
                         .setProvider(provider)
                         .setMarket(market);
 
-        IdentityDataSerializer serializer = serializeIdentityData(identityData);
-
-        serializer
+        identityDataSerializer
                 .buildList()
                 .forEach(
                         entry ->

@@ -15,6 +15,7 @@ import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.models.AccountFeatures;
 import se.tink.backend.integration.agent_data_availability_tracker.client.configuration.AgentDataAvailabilityTrackerConfiguration;
 import se.tink.backend.integration.agent_data_availability_tracker.module.TlsChannelProvider;
+import se.tink.backend.integration.agent_data_availability_tracker.serialization.AccountTrackingSerializer;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountFlag;
 import se.tink.libraries.serialization.utils.SerializationUtils;
@@ -62,9 +63,12 @@ public class AgentDataAvailabilityTrackerClientTest {
     private void spamClientRunnable() {
 
         for (int i = 0; i < 50; i++) {
+            AccountTrackingSerializer serializer =
+                    se.tink.backend.integration.agent_data_availability_tracker.serialization
+                            .SerializationUtils.serializeAccount(
+                            buildAccount(), new AccountFeatures());
 
-            client.sendAccount(
-                    "TestBank", "test-test", "SE", buildAccount(), new AccountFeatures());
+            client.sendAccount("TestBank", "test-test", "SE", serializer);
         }
 
         System.out.println("Sent 50 accounts.");
