@@ -1,0 +1,6 @@
+{
+    "name": "tanField",
+    "description": "TAN",
+    "helpText": "Confirm by entering the generated TAN.",
+    "minLength": 1
+}
