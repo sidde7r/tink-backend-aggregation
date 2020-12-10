@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.GetAccountsResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.utls.CbiGlobeUtils;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginator;
@@ -41,7 +42,12 @@ public class CbiGlobeTransactionalAccountFetcher
             return Collections.emptyList();
         }
         return getAccountsResponse.getAccounts().stream()
-                .map(acc -> acc.toTinkAccount(apiClient.getBalances(acc.getResourceId())))
+                .map(
+                        acc ->
+                                acc.toTinkAccount(
+                                        apiClient.getBalances(
+                                                CbiGlobeUtils.encodeBlankSpaces(
+                                                        acc.getResourceId()))))
                 .map(Optional::get)
                 .collect(Collectors.toList());
     }
@@ -63,6 +69,10 @@ public class CbiGlobeTransactionalAccountFetcher
         LocalDate toDate = LocalDate.now();
         LocalDate fromDate = toDate.minusDays(TRANSACTIONS_DAYS_BACK);
         return apiClient.getTransactions(
-                account.getApiIdentifier(), fromDate, toDate, this.queryValue, page);
+                CbiGlobeUtils.encodeBlankSpaces(account.getApiIdentifier()),
+                fromDate,
+                toDate,
+                this.queryValue,
+                page);
     }
 }
