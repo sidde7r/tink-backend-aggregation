@@ -25,7 +25,7 @@ public class AgentDataAvailabilityTrackerClientTest {
 
     private CountDownLatch latch;
 
-    private AgentDataAvailabilityTrackerClient client;
+    private AsAgentDataAvailabilityTrackerClientImpl client;
 
     @Before
     public void setup() throws Exception {
@@ -34,7 +34,7 @@ public class AgentDataAvailabilityTrackerClientTest {
                 SerializationUtils.deserializeFromString(
                         config, AgentDataAvailabilityTrackerConfiguration.class);
         Injector injector = Guice.createInjector(new TestModule(configuration));
-        client = injector.getInstance(AgentDataAvailabilityTrackerClient.class);
+        client = injector.getInstance(AsAgentDataAvailabilityTrackerClientImpl.class);
         client.start();
     }
 
@@ -104,8 +104,6 @@ public class AgentDataAvailabilityTrackerClientTest {
 
         @Override
         protected void configure() {
-            bind(AgentDataAvailabilityTrackerClient.class)
-                    .to(SaAgentDataAvailabilityTrackerClientImpl.class);
             bind(ManagedChannel.class).toProvider(TlsChannelProvider.class);
             bind(AgentDataAvailabilityTrackerConfiguration.class).toInstance(configuration);
         }

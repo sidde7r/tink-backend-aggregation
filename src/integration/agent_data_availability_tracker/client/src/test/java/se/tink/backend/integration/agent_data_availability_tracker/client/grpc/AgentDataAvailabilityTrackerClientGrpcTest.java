@@ -12,7 +12,7 @@ import org.junit.Test;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.models.AccountFeatures;
 import se.tink.backend.integration.agent_data_availability_tracker.client.AgentDataAvailabilityTrackerClient;
-import se.tink.backend.integration.agent_data_availability_tracker.client.SaAgentDataAvailabilityTrackerClientImpl;
+import se.tink.backend.integration.agent_data_availability_tracker.client.AsAgentDataAvailabilityTrackerClientImpl;
 import se.tink.backend.integration.agent_data_availability_tracker.serialization.AccountTrackingSerializer;
 import se.tink.backend.integration.agent_data_availability_tracker.serialization.SerializationUtils;
 
@@ -29,8 +29,8 @@ public final class AgentDataAvailabilityTrackerClientGrpcTest {
         serverService.start();
 
         final Injector injector = Guice.createInjector(new TestModule(serverService));
-        final AgentDataAvailabilityTrackerClient client =
-                injector.getInstance(AgentDataAvailabilityTrackerClient.class);
+        final AsAgentDataAvailabilityTrackerClientImpl client =
+                injector.getInstance(AsAgentDataAvailabilityTrackerClientImpl.class);
         client.start();
 
         // when
@@ -54,7 +54,7 @@ public final class AgentDataAvailabilityTrackerClientGrpcTest {
         @Override
         protected void configure() {
             bind(AgentDataAvailabilityTrackerClient.class)
-                    .to(SaAgentDataAvailabilityTrackerClientImpl.class)
+                    .to(AsAgentDataAvailabilityTrackerClientImpl.class)
                     .in(Scopes.SINGLETON);
             bind(ManagedChannel.class).toProvider(PlaintextChannelProvider.class);
             bind(InetSocketAddress.class)

@@ -1,6 +1,16 @@
 package se.tink.backend.aggregation.lifecycle;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.doCallRealMethod;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import com.codahale.metrics.MetricRegistry;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -34,7 +44,7 @@ import se.tink.backend.aggregation.configuration.DevelopmentConfigurationSeeder;
 import se.tink.backend.aggregation.configuration.models.AggregationServiceConfiguration;
 import se.tink.backend.aggregation.storage.database.daos.CryptoConfigurationDao;
 import se.tink.backend.aggregation.workers.worker.AgentWorker;
-import se.tink.backend.integration.agent_data_availability_tracker.client.AgentDataAvailabilityTrackerClient;
+import se.tink.backend.integration.agent_data_availability_tracker.client.AsAgentDataAvailabilityTrackerClient;
 import se.tink.backend.integration.tpp_secrets_service.client.ManagedTppSecretsServiceClient;
 import se.tink.libraries.draining.DrainModeTask;
 import se.tink.libraries.queue.QueueConsumer;
@@ -89,8 +99,8 @@ public class LifecycleTest {
         makeStartStopNoOp(agentWorker);
         when(injector.getInstance(AgentWorker.class)).thenReturn(agentWorker);
 
-        AgentDataAvailabilityTrackerClient agentDataAvailabilityTrackerClient =
-                setUpInjectorMock(injector, AgentDataAvailabilityTrackerClient.class);
+        AsAgentDataAvailabilityTrackerClient agentDataAvailabilityTrackerClient =
+                setUpInjectorMock(injector, AsAgentDataAvailabilityTrackerClient.class);
         makeStartStopNoOp(agentDataAvailabilityTrackerClient);
 
         AggregationServiceContainer actualAggregationContainer = new AggregationServiceContainer();

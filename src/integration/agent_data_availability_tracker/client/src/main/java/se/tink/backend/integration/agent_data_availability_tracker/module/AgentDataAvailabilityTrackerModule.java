@@ -5,8 +5,8 @@ import com.google.inject.Scopes;
 import io.grpc.ManagedChannel;
 import java.util.Objects;
 import se.tink.backend.integration.agent_data_availability_tracker.client.AgentDataAvailabilityTrackerClient;
-import se.tink.backend.integration.agent_data_availability_tracker.client.SaAgentDataAvailabilityTrackerClientImpl;
 import se.tink.backend.integration.agent_data_availability_tracker.client.AgentDataAvailabilityTrackerClientMockImpl;
+import se.tink.backend.integration.agent_data_availability_tracker.client.AsAgentDataAvailabilityTrackerClientImpl;
 import se.tink.backend.integration.agent_data_availability_tracker.client.configuration.AgentDataAvailabilityTrackerConfiguration;
 
 public class AgentDataAvailabilityTrackerModule extends AbstractModule {
@@ -25,12 +25,10 @@ public class AgentDataAvailabilityTrackerModule extends AbstractModule {
         bind(ManagedChannel.class).toProvider(TlsChannelProvider.class);
 
         if (Objects.nonNull(configuration) && configuration.isValid()) {
-
             bind(AgentDataAvailabilityTrackerClient.class)
-                    .to(SaAgentDataAvailabilityTrackerClientImpl.class)
+                    .to(AsAgentDataAvailabilityTrackerClientImpl.class)
                     .in(Scopes.SINGLETON);
         } else {
-
             bind(AgentDataAvailabilityTrackerClient.class)
                     .to(AgentDataAvailabilityTrackerClientMockImpl.class)
                     .in(Scopes.SINGLETON);
