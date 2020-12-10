@@ -104,7 +104,6 @@ public class AgentDataAvailabilityTrackerClientImpl implements AgentDataAvailabi
                         .setProvider(provider)
                         .setMarket(market);
 
-        // TODO: Unwrapped serialization such that builder.setAll can be used instead of loop
         serializer
                 .buildList()
                 .forEach(
