@@ -115,7 +115,7 @@ public final class SecretsNamesValidationResponse {
                             + "\n");
         }
         if (!nonUniqueProviderNames.isEmpty()) {
-            sb.append("It should find 1 provider " + nonUniqueProviderNames + "\n");
+            sb.append("It should find 1 open banking provider " + nonUniqueProviderNames + "\n");
         }
         return sb.toString();
     }
