@@ -68,7 +68,8 @@ public class EdiClient {
     }
 
     public static KeyStore requestOrGetDevCert(File workDir)
-            throws KeyStoreException, IOException, CertificateException, NoSuchAlgorithmException, NoSuchProviderException {
+            throws KeyStoreException, IOException, CertificateException, NoSuchAlgorithmException,
+                    NoSuchProviderException {
         if (!workDir.exists() && !workDir.mkdirs()) {
             LOG.warn("Could not make working directory; " + workDir.getAbsolutePath());
         }
@@ -131,7 +132,8 @@ public class EdiClient {
     }
 
     private static KeyStore loadExistingKeystore(File devCertKeystore)
-            throws KeyStoreException, IOException, NoSuchAlgorithmException, CertificateException, NoSuchProviderException {
+            throws KeyStoreException, IOException, NoSuchAlgorithmException, CertificateException,
+                    NoSuchProviderException {
         KeyStore keyStore = KeyStore.getInstance("PKCS12", "BC");
         try (FileInputStream keyStoreStream = new FileInputStream(devCertKeystore)) {
             keyStore.load(keyStoreStream, DEFAULT_KEYSTORE_PWD);
@@ -140,7 +142,8 @@ public class EdiClient {
     }
 
     public static KeyStore requestOrGetDevCert()
-            throws KeyStoreException, IOException, CertificateException, NoSuchAlgorithmException, NoSuchProviderException {
+            throws KeyStoreException, IOException, CertificateException, NoSuchAlgorithmException,
+                    NoSuchProviderException {
         return requestOrGetDevCert(getDefaultWorkDir());
     }
 
