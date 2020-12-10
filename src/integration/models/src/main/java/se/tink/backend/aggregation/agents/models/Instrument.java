@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.google.common.base.MoreObjects;
 import java.math.BigDecimal;
 import java.util.Optional;
 import se.tink.libraries.amount.ExactCurrencyAmount;
@@ -161,6 +162,25 @@ public class Instrument {
     @JsonIgnore
     public void setProfitFromAmount(ExactCurrencyAmount profit) {
         this.profit = getAmountValueFromExactAmount(profit);
+    }
+
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this)
+                .add("uniqueIdentifier", uniqueIdentifier)
+                .add("isin", isin)
+                .add("marketPlace", marketPlace)
+                .add("averageAcquisitionPrice", averageAcquisitionPrice)
+                .add("currency", currency)
+                .add("marketValue", marketValue == null ? null : "***")
+                .add("name", name)
+                .add("price", price == null ? null : "***")
+                .add("quantity", quantity)
+                .add("profit", profit == null ? null : "***")
+                .add("ticker", ticker)
+                .add("type", type)
+                .add("rawType", rawType)
+                .toString();
     }
 
     public enum Type {

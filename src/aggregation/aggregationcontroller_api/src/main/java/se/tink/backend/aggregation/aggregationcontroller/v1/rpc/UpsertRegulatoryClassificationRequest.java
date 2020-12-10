@@ -1,6 +1,9 @@
 package se.tink.backend.aggregation.aggregationcontroller.v1.rpc;
 
-public class UpsertRegulatoryClassificationRequest {
+import com.google.common.base.MoreObjects;
+import se.tink.libraries.jersey.utils.SafelyLoggable;
+
+public class UpsertRegulatoryClassificationRequest implements SafelyLoggable {
     private String appId;
     private String userId;
     private String accountId;
@@ -45,5 +48,16 @@ public class UpsertRegulatoryClassificationRequest {
 
     public void setCredentialsId(String credentialsId) {
         this.credentialsId = credentialsId;
+    }
+
+    @Override
+    public String toSafeString() {
+        return MoreObjects.toStringHelper(this)
+                .add("appId", appId)
+                .add("userId", userId)
+                .add("accountId", accountId)
+                .add("credentialsId", credentialsId)
+                .add("classification", classification)
+                .toString();
     }
 }

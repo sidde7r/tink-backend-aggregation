@@ -2,19 +2,21 @@ package se.tink.backend.aggregation.aggregationcontroller.v1.rpc;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.google.common.base.MoreObjects;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import java.util.List;
 import java.util.Map;
 import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
 import se.tink.libraries.account.rpc.Account;
+import se.tink.libraries.jersey.utils.SafelyLoggable;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonAutoDetect(
         fieldVisibility = JsonAutoDetect.Visibility.ANY,
         getterVisibility = JsonAutoDetect.Visibility.NONE,
         setterVisibility = JsonAutoDetect.Visibility.NONE)
-public class UpdateTransferDestinationPatternsRequest {
+public class UpdateTransferDestinationPatternsRequest implements SafelyLoggable {
 
     private String userId;
     private List<AccountWithDestinations> destinationsBySouce;
@@ -63,8 +65,25 @@ public class UpdateTransferDestinationPatternsRequest {
         this.credentialsId = credentialsId;
     }
 
+    @Override
+    public String toSafeString() {
+        return MoreObjects.toStringHelper(this)
+                .add("userId", userId)
+                .add("destinationsBySouce", destinationsBySouce)
+                .add("credentialsId", credentialsId)
+                .toString();
+    }
+
     private static class AccountWithDestinations {
         public Account account;
         public List<TransferDestinationPattern> destinations;
+
+        @Override
+        public String toString() {
+            return MoreObjects.toStringHelper(this)
+                    .add("account", account)
+                    .add("destinations", destinations)
+                    .toString();
+        }
     }
 }

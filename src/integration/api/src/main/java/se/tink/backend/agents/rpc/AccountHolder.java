@@ -1,5 +1,6 @@
 package se.tink.backend.agents.rpc;
 
+import com.google.common.base.MoreObjects;
 import java.util.List;
 import java.util.Objects;
 
@@ -45,5 +46,14 @@ public class AccountHolder {
     @Override
     public int hashCode() {
         return Objects.hash(accountId, type, identities);
+    }
+
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this)
+                .add("accountId", accountId)
+                .add("type", type)
+                .add("identities", identities)
+                .toString();
     }
 }

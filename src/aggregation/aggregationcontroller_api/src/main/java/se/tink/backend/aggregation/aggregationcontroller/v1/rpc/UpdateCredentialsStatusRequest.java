@@ -1,10 +1,12 @@
 package se.tink.backend.aggregation.aggregationcontroller.v1.rpc;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.google.common.base.MoreObjects;
 import se.tink.libraries.credentials.rpc.Credentials;
+import se.tink.libraries.jersey.utils.SafelyLoggable;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class UpdateCredentialsStatusRequest {
+public class UpdateCredentialsStatusRequest implements SafelyLoggable {
     private Credentials credentials;
     private boolean updateContextTimestamp;
     private String userDeviceId;
@@ -80,5 +82,19 @@ public class UpdateCredentialsStatusRequest {
 
     public String getOperationId() {
         return operationId;
+    }
+
+    @Override
+    public String toSafeString() {
+        return MoreObjects.toStringHelper(this)
+                .add("credentials", credentials)
+                .add("updateContextTimestamp", updateContextTimestamp)
+                .add("userDeviceId", userDeviceId)
+                .add("userId", userId)
+                .add("isManual", isManual)
+                .add("refreshId", refreshId)
+                .add("requestType", requestType)
+                .add("operationId", operationId)
+                .toString();
     }
 }
