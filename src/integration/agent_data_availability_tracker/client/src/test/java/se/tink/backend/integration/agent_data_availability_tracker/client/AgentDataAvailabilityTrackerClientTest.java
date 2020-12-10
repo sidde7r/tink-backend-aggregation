@@ -105,7 +105,7 @@ public class AgentDataAvailabilityTrackerClientTest {
         @Override
         protected void configure() {
             bind(AgentDataAvailabilityTrackerClient.class)
-                    .to(AgentDataAvailabilityTrackerClientImpl.class);
+                    .to(SaAgentDataAvailabilityTrackerClientImpl.class);
             bind(ManagedChannel.class).toProvider(TlsChannelProvider.class);
             bind(AgentDataAvailabilityTrackerConfiguration.class).toInstance(configuration);
         }

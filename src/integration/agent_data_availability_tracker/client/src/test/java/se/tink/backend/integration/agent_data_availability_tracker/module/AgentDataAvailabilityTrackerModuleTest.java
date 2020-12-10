@@ -7,7 +7,7 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import org.junit.Test;
 import se.tink.backend.integration.agent_data_availability_tracker.client.AgentDataAvailabilityTrackerClient;
-import se.tink.backend.integration.agent_data_availability_tracker.client.AgentDataAvailabilityTrackerClientImpl;
+import se.tink.backend.integration.agent_data_availability_tracker.client.SaAgentDataAvailabilityTrackerClientImpl;
 import se.tink.backend.integration.agent_data_availability_tracker.client.AgentDataAvailabilityTrackerClientMockImpl;
 import se.tink.backend.integration.agent_data_availability_tracker.client.configuration.AgentDataAvailabilityTrackerConfiguration;
 import se.tink.libraries.serialization.utils.SerializationUtils;
@@ -40,6 +40,6 @@ public final class AgentDataAvailabilityTrackerModuleTest {
         AgentDataAvailabilityTrackerClient client =
                 injector.getInstance(AgentDataAvailabilityTrackerClient.class);
 
-        assertThat(client, instanceOf(AgentDataAvailabilityTrackerClientImpl.class));
+        assertThat(client, instanceOf(SaAgentDataAvailabilityTrackerClientImpl.class));
     }
 }

@@ -14,7 +14,7 @@ import se.tink.backend.integration.agent_data_availability_tracker.api.Void;
 import se.tink.backend.integration.agent_data_availability_tracker.common.TrackingMapSerializer;
 import se.tink.libraries.dropwizard_lifecycle.ManagedSafeStop;
 
-public class AgentDataAvailabilityTrackerClientImpl extends ManagedSafeStop
+public class SaAgentDataAvailabilityTrackerClientImpl extends ManagedSafeStop
         implements AgentDataAvailabilityTrackerClient {
 
     private static final Logger log =
@@ -32,7 +32,7 @@ public class AgentDataAvailabilityTrackerClientImpl extends ManagedSafeStop
 
     /** Construct client for accessing RouteGuide server at {@code host:port}. */
     @Inject
-    private AgentDataAvailabilityTrackerClientImpl(final ManagedChannel channel) {
+    private SaAgentDataAvailabilityTrackerClientImpl(final ManagedChannel channel) {
         this.channel = channel;
         accountDeque = new AccountDeque();
         service =
