@@ -11,6 +11,7 @@ import java.io.ByteArrayInputStream;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.MultivaluedMap;
 import lombok.extern.slf4j.Slf4j;
+import se.tink.libraries.jersey.utils.masker.ClientSensitiveDataMasker;
 
 @Slf4j
 public class ClientLoggingFilter extends ClientFilter {
@@ -49,6 +50,7 @@ public class ClientLoggingFilter extends ClientFilter {
             response.setEntityInputStream(new ByteArrayInputStream(rawBody));
         }
         String body = rawBody == null ? null : new String(rawBody);
+        body = ClientSensitiveDataMasker.mask(body);
 
         return sb.append("status: ")
                 .append(response.getStatus())
