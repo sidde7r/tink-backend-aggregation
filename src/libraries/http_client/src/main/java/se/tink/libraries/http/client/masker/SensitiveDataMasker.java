@@ -20,7 +20,11 @@ public class SensitiveDataMasker {
                     "accounts..accountNumber",
                     "accounts..holderName",
                     "accounts..availableCredit",
-                    "accounts..balance");
+                    "accounts..balance",
+                    "accounts..identifiers",
+                    "accounts..bankId",
+                    "credentials.fields",
+                    "signableOperation.signableObject");
 
     public static String mask(String json) {
         if (Strings.isNullOrEmpty(json)) {
