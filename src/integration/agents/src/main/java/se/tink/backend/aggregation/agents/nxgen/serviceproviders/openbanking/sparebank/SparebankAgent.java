@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank;
 
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CREDIT_CARDS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
 
 import java.security.cert.CertificateException;
@@ -10,12 +11,17 @@ import java.util.stream.Stream;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.authenticator.SparebankAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.authenticator.SparebankController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.configuration.SparebankApiConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.fetcher.card.SparebankCardFetcher;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.fetcher.card.SparebankCardTransactionFetcher;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.fetcher.mapper.SparebankCardMapper;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.fetcher.mapper.SparebankCardTransactionMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.fetcher.transactionalaccount.SparebankAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.fetcher.transactionalaccount.SparebankTransactionFetcher;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
@@ -25,18 +31,23 @@ import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-@AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS})
+@AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, CREDIT_CARDS})
 public final class SparebankAgent extends NextGenerationAgent
-        implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
+        implements RefreshCheckingAccountsExecutor,
+                RefreshSavingsAccountsExecutor,
+                RefreshCreditCardAccountsExecutor {
 
     private final SparebankApiClient apiClient;
+    private final SparebankStorage storage;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
+    private final CreditCardRefreshController creditCardRefreshController;
 
     public SparebankAgent(
             CredentialsRequest request,
@@ -44,14 +55,16 @@ public final class SparebankAgent extends NextGenerationAgent
             AgentsServiceConfiguration agentsServiceConfiguration) {
         super(request, context, agentsServiceConfiguration.getSignatureKeyPair());
 
+        storage = new SparebankStorage(persistentStorage);
         apiClient =
                 new SparebankApiClient(
                         client,
-                        persistentStorage,
                         agentsServiceConfiguration.getEidasProxy(),
                         this.getEidasIdentity(),
-                        getApiConfiguration());
+                        getApiConfiguration(),
+                        storage);
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
+        creditCardRefreshController = getCreditCardRefreshController();
     }
 
     public AgentConfiguration<SparebankConfiguration> getAgentConfiguration() {
@@ -87,8 +100,9 @@ public final class SparebankAgent extends NextGenerationAgent
         final SparebankController controller =
                 new SparebankController(
                         supplementalInformationHelper,
-                        new SparebankAuthenticator(apiClient),
-                        strongAuthenticationState);
+                        new SparebankAuthenticator(apiClient, storage),
+                        strongAuthenticationState,
+                        credentials);
 
         return new AutoAuthenticationController(
                 request,
@@ -140,5 +154,32 @@ public final class SparebankAgent extends NextGenerationAgent
 
     private List<String> splitPayload(String payload) {
         return Stream.of(payload.split(SparebankConstants.REGEX)).collect(Collectors.toList());
+    }
+
+    private CreditCardRefreshController getCreditCardRefreshController() {
+        final SparebankCardFetcher cardFetcher =
+                new SparebankCardFetcher(apiClient, new SparebankCardMapper());
+
+        final SparebankCardTransactionFetcher transactionFetcher =
+                new SparebankCardTransactionFetcher(
+                        apiClient, new SparebankCardTransactionMapper());
+
+        return new CreditCardRefreshController(
+                metricRefreshController,
+                updateController,
+                cardFetcher,
+                new TransactionFetcherController<>(
+                        transactionPaginationHelper,
+                        new TransactionKeyPaginationController<>(transactionFetcher)));
+    }
+
+    @Override
+    public FetchAccountsResponse fetchCreditCardAccounts() {
+        return creditCardRefreshController.fetchCreditCardAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCreditCardTransactions() {
+        return creditCardRefreshController.fetchCreditCardTransactions();
     }
 }

@@ -4,6 +4,7 @@ junit_test(
     name = "sparebank",
     srcs = glob(["**/*.java"]),
     data = [
+        "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/sparebank/resources",
     ],
     visibility = ["//visibility:public"],
     deps = [

@@ -16,7 +16,7 @@ public class SpareBank1SRAgentTest {
                         .setFinancialInstitutionId("sparebank1")
                         .setAppId("tink")
                         .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(false);
+                        .saveCredentialsAfter(true);
     }
 
     @Test

@@ -43,6 +43,10 @@ public final class SparebankConstants {
         public static final String FETCH_TRANSACTIONS = "/v1/accounts/{resourceId}/transactions";
         public static final String FETCH_BALANCES = "/v1/accounts/{resourceId}/balances";
         public static final String GET_ACCOUNTS = "/v1/accounts";
+        public static final String GET_CARDS = "/v1/card-accounts";
+        public static final String GET_CARD_BALANCES = "/v1/card-accounts/{resourceId}/balances";
+        public static final String GET_CARD_TRANSACTIONS =
+                "/v1/card-accounts/{resourceId}/transactions";
         public static final String GET_SCA_REDIRECT = "/v1/bank-offered-consents";
         public static final String CREATE_PAYMENT = "/v1/payments/{paymentProduct}";
         public static final String GET_PAYMENT = "/v1/payments/{paymentProduct}/{paymentId}";
@@ -86,6 +90,17 @@ public final class SparebankConstants {
         public static final String PSU_ID = "psu-id";
         public static final String DIGEST = "digest";
         public static final String ACCEPT = "accept";
+        public static final String X_ACCEPT_FIX = "x-accept-fix";
+    }
+
+    public static class HeaderValues {
+        // Special headers to use future fixes early,
+        // https://psd2.sr-bank.no/portal-sandbox/documentation
+        // (Section Future Breaking Change)
+        // This should be removed once API is updated and this behaviours are defaults
+        public static final String X_ACCEPT_FIX_LONGER_NAMES = "longer-names";
+        public static final String X_ACCEPT_FIX_AMOUNT_SWITCH =
+                "cardaccount-switch-originalamount-and-transactionamount";
     }
 
     public static class FormKeys {
@@ -102,15 +117,6 @@ public final class SparebankConstants {
         public static final String RESOURCE_ID = "resourceId";
         public static final String PAYMENT_PRODUCT = "paymentProduct";
         public static final String PAYMENT_ID = "paymentId";
-    }
-
-    public static class StorageKeys {
-        public static final String ACCOUNTS = "accounts";
-        public static final String TRANSACTIONS_URL = "TRANSACTIONS_URL";
-        public static final String SESSION_ID = "SESSION_ID";
-        public static final String PSU_ID = "PSU_ID";
-        public static final String STATE = "STATE";
-        public static final String TRANSACTIONS_ALL_FETCHED = "TRANSACTIONS_ALL_FETCHED";
     }
 
     public static class ErrorMessages {

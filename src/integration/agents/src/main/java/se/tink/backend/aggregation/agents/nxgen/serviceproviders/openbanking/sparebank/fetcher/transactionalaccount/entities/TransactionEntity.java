@@ -16,7 +16,7 @@ public class TransactionEntity {
     private List<BookedPendingTransactionEntity> pending = Collections.emptyList();
 
     @JsonProperty("_links")
-    private TransactionalLinksEntity links;
+    private LinksEntity links;
 
     public Collection<Transaction> toTinkTransactions(boolean includePending) {
 
@@ -35,8 +35,6 @@ public class TransactionEntity {
     }
 
     public Optional<String> getNext() {
-        return Optional.ofNullable(links)
-                .map(TransactionalLinksEntity::getNext)
-                .map(LinkEntity::getHref);
+        return Optional.ofNullable(links).map(LinksEntity::getNext).map(LinkEntity::getHref);
     }
 }

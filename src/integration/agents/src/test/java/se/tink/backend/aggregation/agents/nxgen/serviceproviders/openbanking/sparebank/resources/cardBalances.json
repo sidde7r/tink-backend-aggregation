@@ -1,0 +1,22 @@
+{
+    "_links": {
+        "self": {
+            "href": "/v1/card-accounts/TEST_enc!!QhCfLR1Au7ePQVYqH3s-ASDDSFGKLSDGLJSLDKJ/balances",
+            "verbs": [
+                "GET"
+            ]
+        }
+    },
+    "balances": [
+        {
+            "balanceAmount": {
+                "amount": "9990.00",
+                "currency": "NOK"
+            },
+            "balanceType": "forwardAvailable"
+        }
+    ],
+    "cardAccount": {
+        "maskedPan": "123456******1234"
+    }
+}

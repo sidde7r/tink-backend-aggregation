@@ -1,0 +1,82 @@
+{
+    "cardAccounts": [
+        {
+            "_links": {
+                "balances": {
+                    "href": "/v1/card-accounts/TEST_enc!!QhCfLR1Au7ePQVYqH3s-ASDDSFGKLSDGLJSLDKJ/balances",
+                    "verbs": [
+                        "GET"
+                    ]
+                },
+                "self": {
+                    "href": "/v1/card-accounts/TEST_enc!!QhCfLR1Au7ePQVYqH3s-ASDDSFGKLSDGLJSLDKJ",
+                    "verbs": [
+                        "GET"
+                    ]
+                },
+                "transactions": {
+                    "href": "/v1/card-accounts/TEST_enc!!QhCfLR1Au7ePQVYqH3s-ASDDSFGKLSDGLJSLDKJ/transactions?bookingStatus=both",
+                    "verbs": [
+                        "GET"
+                    ]
+                }
+            },
+            "balances": [
+                {
+                    "balanceAmount": {
+                        "amount": "4321.00",
+                        "currency": "NOK"
+                    },
+                    "balanceType": "forwardAvailable"
+                }
+            ],
+            "creditLimit": {
+                "amount": "10000.00",
+                "currency": "NOK"
+            },
+            "currency": "NOK",
+            "maskedPan": "123456******1234",
+            "product": "TEST_SpareBank 1 Mastercard Ung",
+            "resourceId": "TEST_enc!!QhCfLR1Au7ePQVYqH3s-ASDDSFGKLSDGLJSLDKJ"
+        },
+        {
+            "_links": {
+                "balances": {
+                    "href": "/v1/card-accounts/TEST_enc!!QhCfLR1Au7ePQVYqH3s-ASDDSFGKLSDGLJSLDKJ/balances",
+                    "verbs": [
+                        "GET"
+                    ]
+                },
+                "self": {
+                    "href": "/v1/card-accounts/TEST_enc!!QhCfLR1Au7ePQVYqH3s-ASDDSFGKLSDGLJSLDKJ",
+                    "verbs": [
+                        "GET"
+                    ]
+                },
+                "transactions": {
+                    "href": "/v1/card-accounts/TEST_enc!!QhCfLR1Au7ePQVYqH3s-ASDDSFGKLSDGLJSLDKJ/transactions?bookingStatus=both",
+                    "verbs": [
+                        "GET"
+                    ]
+                }
+            },
+            "balances": [
+                {
+                    "balanceAmount": {
+                        "amount": "1234.00",
+                        "currency": "NOK"
+                    },
+                    "balanceType": "forwardAvailable"
+                }
+            ],
+            "creditLimit": {
+                "amount": "10000.00",
+                "currency": "NOK"
+            },
+            "currency": "NOK",
+            "maskedPan": "123456******4321",
+            "product": "TEST_SpareBank 1 Mastercard Ung",
+            "resourceId": "TEST_enc!!QhCfLR1Au7ePQVYqH3s-ASDDSFGKLSDGLzzzLDKJ"
+        }
+    ]
+}

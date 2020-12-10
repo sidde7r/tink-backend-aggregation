@@ -1,0 +1,35 @@
+{
+    "cardAccount": {
+        "maskedPan": "123456******1234"
+    },
+    "cardTransactions": {
+        "_links": {
+            "self": {
+                "href": "/v1/card-accounts/TEST_enc!!QhCfLR1Au7ePQVYqH3s-ASDDSFGKLSDGLJSLDKJ/transactions?limit=499&offset=0&dateFrom=2020-09-09&dateTo=2020-12-07&bookingStatus=both",
+                "verbs": [
+                    "GET"
+                ]
+            }
+        },
+        "booked": [
+            {
+                "bookingDate": "2018-09-01",
+                "transactionAmount": {
+                    "amount": "200.26",
+                    "currency": "NOK"
+                },
+                "transactionDetails": "Details 1234 of booked"
+            }
+        ],
+        "pending": [
+            {
+                "bookingDate": "2018-09-01",
+                "transactionAmount": {
+                    "amount": "100.26",
+                    "currency": "NOK"
+                },
+                "transactionDetails": "Details 1234 of pending"
+            }
+        ]
+    }
+}
