@@ -18,6 +18,7 @@ junit_test(
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/worker",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/worker/conditions/annotation",
         "//src/integration/agent_data_availability_tracker/client/src/main/java/se/tink/backend/integration/agent_data_availability_tracker/client:agent-data-availability-tracker-client",
+        "//src/integration/agent_data_availability_tracker/client/src/main/java/se/tink/backend/integration/agent_data_availability_tracker/common",
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/credentials/src/main/java/se/tink/libraries/credentials/service",
         "//src/integration/enums",

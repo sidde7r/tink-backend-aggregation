@@ -6,8 +6,8 @@ import org.junit.Assert;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.integration.agent_data_availability_tracker.common.FieldEntry;
-import se.tink.backend.integration.agent_data_availability_tracker.common.TrackingList;
+import se.tink.backend.integration.agent_data_availability_tracker.common.serialization.FieldEntry;
+import se.tink.backend.integration.agent_data_availability_tracker.common.serialization.TrackingList;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountFlag;
 

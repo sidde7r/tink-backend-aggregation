@@ -1,4 +1,4 @@
-package se.tink.backend.integration.agent_data_availability_tracker.common;
+package se.tink.backend.integration.agent_data_availability_tracker.common.serialization;
 
 import java.util.ArrayList;
 import java.util.List;

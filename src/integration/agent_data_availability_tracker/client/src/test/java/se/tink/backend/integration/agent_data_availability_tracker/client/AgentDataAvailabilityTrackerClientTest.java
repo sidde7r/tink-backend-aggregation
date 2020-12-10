@@ -13,7 +13,7 @@ import org.junit.Test;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.models.AccountFeatures;
-import se.tink.backend.integration.agent_data_availability_tracker.client.configuration.AgentDataAvailabilityTrackerConfiguration;
+import se.tink.backend.integration.agent_data_availability_tracker.common.configuration.AgentDataAvailabilityTrackerConfiguration;
 import se.tink.backend.integration.agent_data_availability_tracker.module.TlsChannelProvider;
 import se.tink.backend.integration.agent_data_availability_tracker.serialization.AccountTrackingSerializer;
 import se.tink.libraries.account.AccountIdentifier;

@@ -4,10 +4,10 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
 import io.grpc.ManagedChannel;
 import java.util.Objects;
-import se.tink.backend.integration.agent_data_availability_tracker.client.AgentDataAvailabilityTrackerClient;
-import se.tink.backend.integration.agent_data_availability_tracker.client.AgentDataAvailabilityTrackerClientMockImpl;
+import se.tink.backend.integration.agent_data_availability_tracker.common.client.AgentDataAvailabilityTrackerClient;
+import se.tink.backend.integration.agent_data_availability_tracker.common.client.AgentDataAvailabilityTrackerClientMockImpl;
 import se.tink.backend.integration.agent_data_availability_tracker.client.AsAgentDataAvailabilityTrackerClientImpl;
-import se.tink.backend.integration.agent_data_availability_tracker.client.configuration.AgentDataAvailabilityTrackerConfiguration;
+import se.tink.backend.integration.agent_data_availability_tracker.common.configuration.AgentDataAvailabilityTrackerConfiguration;
 
 public class AgentDataAvailabilityTrackerModule extends AbstractModule {
 

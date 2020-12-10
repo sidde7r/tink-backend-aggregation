@@ -1,4 +1,4 @@
-package se.tink.backend.integration.agent_data_availability_tracker.client;
+package se.tink.backend.integration.agent_data_availability_tracker.common.client;
 
 import java.util.concurrent.LinkedBlockingDeque;
 import se.tink.backend.integration.agent_data_availability_tracker.api.TrackAccountRequest;

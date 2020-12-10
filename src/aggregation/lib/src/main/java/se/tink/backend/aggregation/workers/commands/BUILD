@@ -38,6 +38,7 @@ java_library(
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/refresh",
         "//src/integration/agent_data_availability_tracker/client",
         "//src/integration/agent_data_availability_tracker/client:module",
+        "//src/integration/agent_data_availability_tracker/client/src/main/java/se/tink/backend/integration/agent_data_availability_tracker/common",
         "//src/integration/agent_data_availability_tracker/client/src/main/java/se/tink/backend/integration/agent_data_availability_tracker/serialization",
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/credentials:service",

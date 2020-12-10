@@ -6,10 +6,10 @@ import static org.hamcrest.core.IsInstanceOf.instanceOf;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import org.junit.Test;
-import se.tink.backend.integration.agent_data_availability_tracker.client.AgentDataAvailabilityTrackerClient;
-import se.tink.backend.integration.agent_data_availability_tracker.client.AgentDataAvailabilityTrackerClientMockImpl;
+import se.tink.backend.integration.agent_data_availability_tracker.common.client.AgentDataAvailabilityTrackerClient;
+import se.tink.backend.integration.agent_data_availability_tracker.common.client.AgentDataAvailabilityTrackerClientMockImpl;
 import se.tink.backend.integration.agent_data_availability_tracker.client.AsAgentDataAvailabilityTrackerClientImpl;
-import se.tink.backend.integration.agent_data_availability_tracker.client.configuration.AgentDataAvailabilityTrackerConfiguration;
+import se.tink.backend.integration.agent_data_availability_tracker.common.configuration.AgentDataAvailabilityTrackerConfiguration;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public final class AgentDataAvailabilityTrackerModuleTest {

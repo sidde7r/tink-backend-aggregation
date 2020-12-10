@@ -11,7 +11,9 @@ import org.slf4j.LoggerFactory;
 import se.tink.backend.integration.agent_data_availability_tracker.api.AgentDataAvailabilityTrackerServiceGrpc;
 import se.tink.backend.integration.agent_data_availability_tracker.api.TrackAccountRequest;
 import se.tink.backend.integration.agent_data_availability_tracker.api.Void;
-import se.tink.backend.integration.agent_data_availability_tracker.common.TrackingMapSerializer;
+import se.tink.backend.integration.agent_data_availability_tracker.common.serialization.TrackingMapSerializer;
+import se.tink.backend.integration.agent_data_availability_tracker.common.client.AccountDeque;
+import se.tink.backend.integration.agent_data_availability_tracker.common.client.AgentDataAvailabilityTrackerClient;
 import se.tink.libraries.dropwizard_lifecycle.ManagedSafeStop;
 
 public class AsAgentDataAvailabilityTrackerClientImpl extends ManagedSafeStop

@@ -1,6 +1,6 @@
-package se.tink.backend.integration.agent_data_availability_tracker.client;
+package se.tink.backend.integration.agent_data_availability_tracker.common.client;
 
-import se.tink.backend.integration.agent_data_availability_tracker.common.TrackingMapSerializer;
+import se.tink.backend.integration.agent_data_availability_tracker.common.serialization.TrackingMapSerializer;
 
 public interface AgentDataAvailabilityTrackerClient {
 
