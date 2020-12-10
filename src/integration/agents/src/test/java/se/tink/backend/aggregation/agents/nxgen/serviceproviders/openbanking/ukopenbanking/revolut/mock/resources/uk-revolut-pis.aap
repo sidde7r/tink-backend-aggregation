@@ -1,0 +1,270 @@
+
+REQUEST 1
+GET https://oba.revolut.com/openid-configuration
+X-Aggregator: Tink Testing
+x-fapi-financial-id: 001580000103UAvAAM
+
+RESPONSE 1
+200
+Server: nginx
+Date: Mon, 16 Nov 2020 08:15:05 GMT
+Content-Type: application/json
+Vary: Accept-Encoding
+request-id: 16TY9R65W6UD6
+Strict-Transport-Security: max-age=63072000; includeSubdomains;
+X-Frame-Options: DENY
+X-Content-Type-Options: nosniff
+X-Xss-Protection: 1; mode=block
+Referrer-Policy: ***
+Via: 1.1 google
+Alt-Svc: ***
+Transfer-Encoding: chunked
+
+{
+
+    "authorization_endpoint": "https://oba.revolut.com/ui/index.html",
+
+    "claim_types_supported": [
+
+        "normal"
+
+    ],
+
+    "claims_parameter_supported": true,
+
+    "claims_supported": [
+
+        "openbanking_intent_id"
+
+    ],
+
+    "grant_types_supported": [
+
+        "authorization_code",
+
+        "client_credentials"
+
+    ],
+
+    "id_token_signing_alg_values_supported": [
+
+        "PS256"
+
+    ],
+
+    "issuer": "https://oba.revolut.com",
+
+    "jwks_uri": "https://oba.revolut.com/jwk",
+
+    "registration_endpoint": "https://oba.revolut.com/register",
+
+    "request_object_signing_alg_values_supported": [
+
+        "**HASHEDDd**"
+
+    ],
+
+    "request_parameter_supported": true,
+
+    "request_uri_parameter_supported": false,
+
+    "require_request_uri_registration": false,
+
+    "response_modes_supported": [
+
+        "form_post",
+
+        "fragment",
+
+        "query"
+
+    ],
+
+    "response_types_supported": [
+
+        "code id_token"
+
+    ],
+
+    "scopes_supported": [
+
+        "openid",
+
+        "accounts",
+
+        "payments",
+
+        "fundsconfirmations"
+
+    ],
+
+    "subject_types_supported": [
+
+        "public"
+
+    ],
+
+    "token_endpoint": "https://oba-auth.revolut.com/token",
+
+    "token_endpoint_auth_methods_supported": [
+
+        "tls_client_auth"
+
+    ],
+
+    "token_endpoint_auth_signing_alg_values_supported": [
+
+        "**HASHEDDd**"
+
+    ],
+
+    "userinfo_signing_alg_values_supported": [
+
+        "none"
+
+    ]
+
+}
+
+
+
+REQUEST 2
+POST https://oba-auth.revolut.com/token
+Content-Type: application/x-www-form-urlencoded
+Accept: application/json
+X-Aggregator: Tink Testing
+x-fapi-financial-id: 001580000103UAvAAM
+
+grant_type=client_credentials&scope=payments&redirect_uri=https%3A%2F%2Fapi.tink.se%2Fapi%2Fv1%2Fcredentials%2Fthird-party%2Fcallback&client_id=DUMMY_ID
+
+RESPONSE 2
+200
+Server: nginx
+Date: Mon, 16 Nov 2020 08:15:05 GMT
+Content-Type: application/json
+Transfer-Encoding: chunked
+Connection: keep-alive
+Vary: Accept-Encoding
+request-id: 1401I171PGGPU
+Strict-Transport-Security: max-age=63072000; includeSubdomains;
+X-Frame-Options: DENY
+X-Content-Type-Options: nosniff
+X-Xss-Protection: 1; mode=block
+Referrer-Policy: ***
+
+{"access_token":"DUMMY_ACCESS_TOKEN","token_type":"Bearer","expires_in":2399}
+
+REQUEST 3
+POST https://oba.revolut.com/domestic-payment-consents
+Accept: application/json
+Content-Type: application/json
+x-idempotency-key: 0000000000000000
+X-Aggregator: Tink Testing
+x-fapi-financial-id: 001580000103UAvAAM
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+{"Risk":{"PaymentContextCode":"Other"},"Data":{"Initiation":{"InstructionIdentification":"0a44fcefbd524c5383707c3bbb77809a","EndToEndIdentification":"0a44fcefbd524c5383707c3bbb77809","InstructedAmount":{"Amount":"1.00","Currency":"GBP"},"CreditorAccount":{"SchemeName":"UK.OBIE.SortCodeAccountNumber","Identification":"30654138867868","Name":"Amnesty"},"RemittanceInformation":{"Unstructured":"Donation","Reference":"Donation"}}}}
+
+RESPONSE 3
+201
+Server: nginx
+Date: Mon, 16 Nov 2020 08:15:05 GMT
+Content-Type: application/json
+Transfer-Encoding: chunked
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+x-jws-signature: ***
+request-id: 1BIU76AO3E1CC
+Strict-Transport-Security: max-age=63072000; includeSubdomains;
+X-Frame-Options: DENY
+X-Content-Type-Options: nosniff
+X-Xss-Protection: 1; mode=block
+Referrer-Policy: ***
+Via: 1.1 google
+Alt-Svc: ***
+
+{"Data":{"Status":"AwaitingAuthorisation","StatusUpdateDateTime":"2020-11-16T08:15:05.650031Z","CreationDateTime":"2020-11-16T08:15:05.650031Z","ConsentId":"1d955df7-f304-41de-a9bb-a330702f3551","Initiation":{"InstructionIdentification":"0a44fcefbd524c5383707c3bbb77809a","EndToEndIdentification":"0a44fcefbd524c5383707c3bbb77809","InstructedAmount":{"Amount":"1.00","Currency":"GBP"},"CreditorAccount":{"SchemeName":"UK.OBIE.SortCodeAccountNumber","Identification":"30654138867868","Name":"Amnesty"},"RemittanceInformation":{"Unstructured":"Donation","Reference":"Donation"}}},"Risk":{"PaymentContextCode":"Other"},"Links":{"Self":"https://oba.revolut.com/domestic-payment-consents/1d955df7-f304-41de-a9bb-a330702f3551"},"Meta":{"TotalPages":1}}
+
+REQUEST 4
+GET https://oba.revolut.com/jwk
+X-Aggregator: Tink Testing
+x-fapi-financial-id: 001580000103UAvAAM
+
+RESPONSE 4
+200
+Server: nginx
+Date: Mon, 16 Nov 2020 08:15:31 GMT
+Content-Type: application/json
+Vary: Accept-Encoding
+request-id: SWJ12QTYFCEM
+Strict-Transport-Security: max-age=63072000; includeSubdomains;
+X-Frame-Options: DENY
+X-Content-Type-Options: nosniff
+X-Xss-Protection: 1; mode=block
+Referrer-Policy: ***
+Via: 1.1 google
+Alt-Svc: ***
+Transfer-Encoding: chunked
+
+{
+
+    "keys": []
+
+}
+
+
+
+REQUEST 5
+POST https://oba-auth.revolut.com/token
+Content-Type: application/x-www-form-urlencoded
+Accept: application/json
+X-Aggregator: Tink Testing
+x-fapi-financial-id: 001580000103UAvAAM
+
+grant_type=authorization_code&redirect_uri=https%3A%2F%2Fapi.tink.se%2Fapi%2Fv1%2Fcredentials%2Fthird-party%2Fcallback&client_id=DUMMY_ID&code=DUMMY_AUTH_CODE
+
+RESPONSE 5
+200
+Server: nginx
+Date: Mon, 16 Nov 2020 08:15:31 GMT
+Content-Type: application/json
+Transfer-Encoding: chunked
+Connection: keep-alive
+Vary: Accept-Encoding
+request-id: HVAQT5J611KA
+Strict-Transport-Security: max-age=63072000; includeSubdomains;
+X-Frame-Options: DENY
+X-Content-Type-Options: nosniff
+X-Xss-Protection: 1; mode=block
+Referrer-Policy: ***
+
+{"access_token":"DUMMY_ACCESS_TOKEN","token_type":"Bearer","expires_in":7775999,"id_token":"DUMMY_ACCESS_TOKEN"}
+
+REQUEST 6
+POST https://oba.revolut.com/domestic-payments
+Accept: application/json
+Content-Type: application/json
+x-idempotency-key: 0000000000000000
+X-Aggregator: Tink Testing
+x-fapi-financial-id: 001580000103UAvAAM
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+{"Risk":{"PaymentContextCode":"Other"},"Data":{"ConsentId":"1d955df7-f304-41de-a9bb-a330702f3551","Initiation":{"RemittanceInformation":{"Unstructured":"Donation","Reference":"Donation"},"EndToEndIdentification":"0a44fcefbd524c5383707c3bbb77809","InstructionIdentification":"0a44fcefbd524c5383707c3bbb77809a","CreditorAccount":{"SchemeName":"UK.OBIE.SortCodeAccountNumber","Identification":"30654138867868","Name":"Amnesty"},"InstructedAmount":{"Amount":"1.00","Currency":"GBP"}}}}
+
+RESPONSE 6
+201
+Server: nginx
+Date: Mon, 16 Nov 2020 08:15:33 GMT
+Content-Type: application/json
+Transfer-Encoding: chunked
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+x-jws-signature: ***
+request-id: 1M1YL7IDFVA1N
+Strict-Transport-Security: max-age=63072000; includeSubdomains;
+X-Frame-Options: DENY
+X-Content-Type-Options: nosniff
+X-Xss-Protection: 1; mode=block
+Referrer-Policy: ***
+Via: 1.1 google
+Alt-Svc: ***
+
+{"Data":{"DomesticPaymentId":"2cf7553c-3c77-46e8-889b-f9b2c75505c5","Status":"AcceptedSettlementInProcess","StatusUpdateDateTime":"2020-11-16T08:15:33.349108Z","CreationDateTime":"2020-11-16T08:15:33.349108Z","ConsentId":"1d955df7-f304-41de-a9bb-a330702f3551","Initiation":{"CreditorAccount":{"Name":"Amnesty","SchemeName":"UK.OBIE.SortCodeAccountNumber","Identification":"30654138867868"},"InstructedAmount":{"Amount":"1.00","Currency":"GBP"},"RemittanceInformation":{"Reference":"Donation","Unstructured":"Donation"},"EndToEndIdentification":"0a44fcefbd524c5383707c3bbb77809","InstructionIdentification":"0a44fcefbd524c5383707c3bbb77809a"}},"Links":{"Self":"https://oba.revolut.com/domestic-payments/2cf7553c-3c77-46e8-889b-f9b2c75505c5"},"Meta":{"TotalPages":1}}
