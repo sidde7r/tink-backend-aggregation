@@ -1,11 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink;
 
 import com.google.common.base.Strings;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
+import org.apache.commons.httpclient.HttpStatus;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.SamlinkConstants.Header;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.SamlinkConstants.LinkRel;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.SamlinkConstants.ServerError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.authenticator.rpc.LoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.authenticator.rpc.LoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.authenticator.rpc.RegisterDeviceRequest;
@@ -21,12 +25,14 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.f
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.fetcher.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.fetcher.transactionalaccount.rpc.TransactionDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.fetcher.transactionalaccount.rpc.TransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.rpc.ErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.rpc.LinksResponse;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class SamlinkApiClient {
@@ -55,9 +61,20 @@ public class SamlinkApiClient {
             loginRequest.setDeviceId(deviceId).setDeviceToken(deviceToken);
         }
 
-        LoginResponse loginResponse =
-                buildRequest(links.getLinkPath(SamlinkConstants.LinkRel.IDENTIFICATION))
-                        .post(LoginResponse.class, loginRequest);
+        LoginResponse loginResponse;
+        try {
+            loginResponse =
+                    buildRequest(links.getLinkPath(SamlinkConstants.LinkRel.IDENTIFICATION))
+                            .post(LoginResponse.class, loginRequest);
+        } catch (HttpResponseException e) {
+            if (e.getResponse().getStatus() == HttpStatus.SC_UNAUTHORIZED) {
+                Optional<ServerError> errorResponse =
+                        ErrorResponse.fromHttpResponseException(e).toUserError();
+                ServerError serverError = errorResponse.orElseThrow(() -> e);
+                throw serverError.exception();
+            }
+            throw e;
+        }
 
         sessionStorage.storeAccessToken(
                 loginResponse.getTokenType(), loginResponse.getAccessToken());
@@ -104,9 +121,11 @@ public class SamlinkApiClient {
     }
 
     public List<AccountEntity> getAccounts() {
-        return buildAccountRequest(SamlinkConstants.LinkRel.ACCOUNTS)
-                .get(AccountsResponse.class)
-                .getAccounts();
+        String servicesEndpoint = sessionStorage.getServicesEndpoint(LinkRel.ACCOUNTS);
+        if (servicesEndpoint == null) {
+            return new ArrayList<>();
+        }
+        return buildAccountRequest(servicesEndpoint).get(AccountsResponse.class).getAccounts();
     }
 
     public Optional<TransactionsResponse> getTransactions(TransactionalAccount account) {
@@ -142,14 +161,19 @@ public class SamlinkApiClient {
     }
 
     public CreditCardsResponse getCreditCards() {
-        return buildAccountRequest(SamlinkConstants.LinkRel.CARDS).get(CreditCardsResponse.class);
+        String servicesEndpoint =
+                sessionStorage.getServicesEndpoint(SamlinkConstants.LinkRel.CARDS);
+        if (servicesEndpoint == null) {
+            return null;
+        }
+        return buildAccountRequest(servicesEndpoint).get(CreditCardsResponse.class);
     }
 
     // The app requests 999 accounts, I don't see a need to page these
-    private RequestBuilder buildAccountRequest(String relKey) {
+    private RequestBuilder buildAccountRequest(String servicesEndpoint) {
         URL creditCardsUrl =
                 agentConfiguration
-                        .build(sessionStorage.getServicesEndpoint(relKey))
+                        .build(servicesEndpoint)
                         .queryParam(
                                 SamlinkConstants.QueryParams.QUERY_PARAM_LIMIT,
                                 SamlinkConstants.QueryParams.QUERY_PARAM_LIMIT_ACCOUNT_DEFAULT)
