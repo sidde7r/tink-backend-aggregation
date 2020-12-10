@@ -18,7 +18,6 @@ public class AccountTrackingSerializer extends TrackingMapSerializer {
     @Override
     protected TrackingList populateTrackingMap(TrackingList.Builder listBuilder) {
 
-        // TODO: balance, currency, interest, credit
         listBuilder
                 .putRedacted("accountNumber", account.getAccountNumber())
                 .putRedacted("bankId", account.getBankId())
