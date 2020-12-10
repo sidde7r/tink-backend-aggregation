@@ -242,8 +242,19 @@ public class NordeaExecutorHelper {
                 case CANCELLED:
                     throw ErrorResponse.bankIdCancelledError();
                 case TIMEOUT:
-                case EXPIRED_AUTOSTART_TOKEN:
                     throw ErrorResponse.bankIdTimedOut();
+                case EXPIRED_AUTOSTART_TOKEN:
+                    BankIdAutostartResponse signatureResponse = signPayment(signingOrderId);
+                    if (signatureResponse
+                            .getStatus()
+                            .equals(NordeaBankIdStatus.BANKID_AUTOSTART_PENDING)) {
+                        supplementalRequester.openBankId(
+                                signatureResponse.getAutoStartToken(), false);
+                        reference = signatureResponse.getSessionId();
+                    } else {
+                        throw ErrorResponse.signTransferFailedError();
+                    }
+                    break;
                 default:
                     log.warn(String.format("Unknown BankIdStatus (%s)", status));
                     throw ErrorResponse.signTransferFailedError();
