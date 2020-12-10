@@ -6,6 +6,7 @@ java_library(
     data = ["//data:tink_ca"],
     visibility = ["//visibility:public"],
     deps = [
+        "//src/libraries/jersey_utils/src/main/java/se/tink/libraries/jersey/utils/masker",
         "//src/libraries/net/src/main/java/se/tink/libraries/net/client",
         "//src/libraries/net/src/main/java/se/tink/libraries/net/client/handler",
         "//third_party:com_sun_jersey_contribs_jersey_apache_client4",
