@@ -2,13 +2,10 @@ package se.tink.backend.integration.agent_data_availability_tracker.client;
 
 import com.google.inject.Inject;
 import io.grpc.ManagedChannel;
-import se.tink.backend.integration.agent_data_availability_tracker.common.client.AgentDataAvailabilityTrackerClient;
 import se.tink.backend.integration.agent_data_availability_tracker.common.client.AgentDataAvailabilityTrackerClientImpl;
 import se.tink.backend.integration.agent_data_availability_tracker.common.serialization.TrackingMapSerializer;
-import se.tink.libraries.dropwizard_lifecycle.ManagedSafeStop;
 
-public class AsAgentDataAvailabilityTrackerClientImpl extends ManagedSafeStop
-        implements AgentDataAvailabilityTrackerClient {
+public class AsAgentDataAvailabilityTrackerClientImpl extends AsAgentDataAvailabilityTrackerClient {
 
     private final AgentDataAvailabilityTrackerClientImpl agentDataAvailabilityTrackerClient;
 

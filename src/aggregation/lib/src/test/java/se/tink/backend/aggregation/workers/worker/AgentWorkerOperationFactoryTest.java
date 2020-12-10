@@ -44,7 +44,7 @@ import se.tink.backend.aggregation.workers.concurrency.InterProcessSemaphoreMute
 import se.tink.backend.aggregation.workers.operation.AgentWorkerOperation;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerOperation.AgentWorkerOperationState;
 import se.tink.backend.aggregation.workers.worker.conditions.annotation.ShouldAddExtraCommands;
-import se.tink.backend.integration.agent_data_availability_tracker.common.client.AgentDataAvailabilityTrackerClient;
+import se.tink.backend.integration.agent_data_availability_tracker.client.AsAgentDataAvailabilityTrackerClient;
 import se.tink.backend.integration.tpp_secrets_service.client.ManagedTppSecretsServiceClient;
 import se.tink.libraries.cache.CacheClient;
 import se.tink.libraries.credentials.service.CredentialsRequestType;
@@ -282,8 +282,8 @@ public final class AgentWorkerOperationFactoryTest {
             bind(DataTrackerEventProducer.class).toInstance(mock(DataTrackerEventProducer.class));
             bind(LoginAgentEventProducer.class).toInstance(mock(LoginAgentEventProducer.class));
             bind(RefreshEventProducer.class).toInstance(mock(RefreshEventProducer.class));
-            bind(AgentDataAvailabilityTrackerClient.class)
-                    .toInstance(mock(AgentDataAvailabilityTrackerClient.class));
+            bind(AsAgentDataAvailabilityTrackerClient.class)
+                    .toInstance(mock(AsAgentDataAvailabilityTrackerClient.class));
             bind(ManagedTppSecretsServiceClient.class)
                     .toInstance(mock(ManagedTppSecretsServiceClient.class));
             bind(InterProcessSemaphoreMutexFactory.class)

@@ -1,9 +1,9 @@
-package se.tink.backend.integration.agent_data_availability_tracker.common.client;
+package se.tink.backend.integration.agent_data_availability_tracker.client;
 
 import se.tink.backend.integration.agent_data_availability_tracker.common.serialization.TrackingMapSerializer;
 
-public class AgentDataAvailabilityTrackerClientMockImpl
-        implements AgentDataAvailabilityTrackerClient {
+public class AsAgentDataAvailabilityTrackerClientMockImpl
+        extends AsAgentDataAvailabilityTrackerClient {
 
     @Override
     public void beginStream() {}
@@ -26,4 +26,10 @@ public class AgentDataAvailabilityTrackerClientMockImpl
     public boolean sendingRealData() {
         return false;
     }
+
+    @Override
+    public void doStop() throws Exception {}
+
+    @Override
+    public void start() throws Exception {}
 }

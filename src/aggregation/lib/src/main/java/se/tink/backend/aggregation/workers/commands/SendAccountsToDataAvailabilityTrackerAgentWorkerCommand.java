@@ -16,7 +16,7 @@ import se.tink.backend.aggregation.workers.metrics.MetricAction;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
 import se.tink.backend.aggregation.workers.operation.type.AgentWorkerOperationMetricType;
-import se.tink.backend.integration.agent_data_availability_tracker.common.client.AgentDataAvailabilityTrackerClient;
+import se.tink.backend.integration.agent_data_availability_tracker.client.AsAgentDataAvailabilityTrackerClient;
 import se.tink.backend.integration.agent_data_availability_tracker.serialization.AccountTrackingSerializer;
 import se.tink.backend.integration.agent_data_availability_tracker.serialization.SerializationUtils;
 import se.tink.libraries.credentials.service.CredentialsRequest;
@@ -34,7 +34,7 @@ public class SendAccountsToDataAvailabilityTrackerAgentWorkerCommand extends Age
     private final AgentWorkerCommandContext context;
     private final AgentWorkerCommandMetricState metrics;
 
-    private final AgentDataAvailabilityTrackerClient agentDataAvailabilityTrackerClient;
+    private final AsAgentDataAvailabilityTrackerClient agentDataAvailabilityTrackerClient;
     private final DataTrackerEventProducer dataTrackerEventProducer;
 
     private final String agentName;
@@ -44,7 +44,7 @@ public class SendAccountsToDataAvailabilityTrackerAgentWorkerCommand extends Age
     public SendAccountsToDataAvailabilityTrackerAgentWorkerCommand(
             AgentWorkerCommandContext context,
             AgentWorkerCommandMetricState metrics,
-            AgentDataAvailabilityTrackerClient agentDataAvailabilityTrackerClient,
+            AsAgentDataAvailabilityTrackerClient agentDataAvailabilityTrackerClient,
             DataTrackerEventProducer dataTrackerEventProducer) {
         this.context = context;
         this.metrics = metrics.init(this);

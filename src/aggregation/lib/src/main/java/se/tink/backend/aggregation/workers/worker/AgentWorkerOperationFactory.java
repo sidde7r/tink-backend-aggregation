@@ -90,7 +90,7 @@ import se.tink.backend.aggregation.workers.refresh.ProcessableItem;
 import se.tink.backend.aggregation.workers.worker.beneficiary.CreateBeneficiaryAgentWorkerCommandOperation;
 import se.tink.backend.aggregation.workers.worker.conditions.annotation.ShouldAddExtraCommands;
 import se.tink.backend.aggregation.wrappers.CryptoWrapper;
-import se.tink.backend.integration.agent_data_availability_tracker.common.client.AgentDataAvailabilityTrackerClient;
+import se.tink.backend.integration.agent_data_availability_tracker.client.AsAgentDataAvailabilityTrackerClient;
 import se.tink.backend.integration.tpp_secrets_service.client.ManagedTppSecretsServiceClient;
 import se.tink.backend.integration.tpp_secrets_service.client.iface.TppSecretsServiceClient;
 import se.tink.libraries.cache.CacheClient;
@@ -130,7 +130,7 @@ public class AgentWorkerOperationFactory {
     private MetricRegistry metricRegistry;
     private SupplementalInformationController supplementalInformationController;
     private ProviderSessionCacheController providerSessionCacheController;
-    private AgentDataAvailabilityTrackerClient agentDataAvailabilityTrackerClient;
+    private AsAgentDataAvailabilityTrackerClient agentDataAvailabilityTrackerClient;
     private TppSecretsServiceClient tppSecretsServiceClient;
     private InterProcessSemaphoreMutexFactory interProcessSemaphoreMutexFactory;
     private final RegulatoryRestrictions regulatoryRestrictions;
@@ -160,7 +160,7 @@ public class AgentWorkerOperationFactory {
             DataTrackerEventProducer dataTrackerEventProducer,
             LoginAgentEventProducer loginAgentEventProducer,
             RefreshEventProducer refreshEventProducer,
-            AgentDataAvailabilityTrackerClient agentDataAvailabilityTrackerClient,
+            AsAgentDataAvailabilityTrackerClient agentDataAvailabilityTrackerClient,
             ManagedTppSecretsServiceClient tppSecretsServiceClient,
             InterProcessSemaphoreMutexFactory interProcessSemaphoreMutexFactory,
             ProviderTierConfiguration providerTierConfiguration,

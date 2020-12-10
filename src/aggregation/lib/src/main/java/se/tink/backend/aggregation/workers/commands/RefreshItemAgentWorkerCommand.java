@@ -43,7 +43,7 @@ import se.tink.backend.aggregation.workers.metrics.MetricAction;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
 import se.tink.backend.aggregation.workers.operation.type.AgentWorkerOperationMetricType;
-import se.tink.backend.integration.agent_data_availability_tracker.common.client.AgentDataAvailabilityTrackerClient;
+import se.tink.backend.integration.agent_data_availability_tracker.client.AsAgentDataAvailabilityTrackerClient;
 import se.tink.backend.integration.agent_data_availability_tracker.serialization.IdentityDataSerializer;
 import se.tink.backend.integration.agent_data_availability_tracker.serialization.SerializationUtils;
 import se.tink.eventproducerservice.events.grpc.RefreshResultEventProto.RefreshResultEvent.AdditionalInfo;
@@ -62,7 +62,7 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
     private final AgentWorkerCommandContext context;
     private final RefreshableItem item;
     private final AgentWorkerCommandMetricState metrics;
-    private final AgentDataAvailabilityTrackerClient agentDataAvailabilityTrackerClient;
+    private final AsAgentDataAvailabilityTrackerClient agentDataAvailabilityTrackerClient;
     private final DataTrackerEventProducer dataTrackerEventProducer;
     private final RefreshEventProducer refreshEventProducer;
     private final List<DataFetchingRestrictions> dataFetchingRestrictions;
@@ -90,7 +90,7 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
             AgentWorkerCommandContext context,
             RefreshableItem item,
             AgentWorkerCommandMetricState metrics,
-            AgentDataAvailabilityTrackerClient agentDataAvailabilityTrackerClient,
+            AsAgentDataAvailabilityTrackerClient agentDataAvailabilityTrackerClient,
             DataTrackerEventProducer dataTrackerEventProducer,
             RefreshEventProducer refreshEventProducer) {
         this.context = context;
