@@ -22,6 +22,18 @@ public class IndividualAccountRefreshUtil {
      * specified - for Real Time Balance (e.g. individual account refresh) To ensure that System
      * won't close other accounts a proper information in ProcessAccountsRequest.requestedAccountIds
      * needs to be send to System
+     *
+     * <p>Note: Main (tink-backend) will reject all the granular refresh requests that are invalid,
+     * for example: refresh for non-existing accounts only or refresh that can't refresh requested &
+     * existing accounts due to missing Refreshable Item (example: refresh account123 (CHECKING) but
+     * the only RefreshableItem given is SAVING).
+     *
+     * <p>Note: Main (tink-backend) can trim requestedAccountIds that come with the requested - if
+     * any of the accountId given does not exist or is not refreshable (missing RefreshableItem)
+     * then it will be removed. If after that process there are no requestedAccountIds left the
+     * refresh request will be rejected. This means that all received requestedAccountIds in
+     * AggregationService should be able to be refreshed (assuming that they still are available on
+     * the bank side).
      */
     public static Set<String> getRequestedAccountIds(
             CredentialsRequest request, List<Account> processedAccounts) {
