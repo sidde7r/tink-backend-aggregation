@@ -9,6 +9,7 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingV31Constants.Format;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginator;
@@ -118,15 +119,15 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
                 ukOpenBankingAisConfig.getInitialTransactionsPaginationKey(
                                 account.getApiIdentifier())
                         + FROM_BOOKING_DATE_TIME
-                        + DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(
+                        + Format.DATE_FORMAT.format(
                                 localDateTimeSource.now().minusDays(DEFAULT_MAX_ALLOWED_DAYS));
         return fetchTransactions(account, key);
     }
 
     protected String initialisePaginationKeyIfNull(AccountType account, String key) {
         if (key == null) {
-            final OffsetDateTime fromDate =
-                    getLastTransactionsFetchedDate(account.getApiIdentifier());
+            final LocalDateTime fromDate =
+                    getLastTransactionsFetchedDate(account.getApiIdentifier()).toLocalDateTime();
 
             /*
             We need to send in fromDate when fetching transactions to improve the performance
@@ -142,7 +143,7 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
                     ukOpenBankingAisConfig.getInitialTransactionsPaginationKey(
                                     account.getApiIdentifier())
                             + FROM_BOOKING_DATE_TIME
-                            + DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(fromDate);
+                            + Format.DATE_FORMAT.format(fromDate);
         }
         return key;
     }
