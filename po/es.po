@@ -1481,7 +1481,7 @@ msgstr "Pago fallido."
 msgid "CodigoAlfa"
 msgstr "CodigoAlfa"
 
-msgid "CodigoFamilia"
+msgid "CodigoFamilia\n"
 msgstr "CodigoFamilia\n"
 
 msgid "CodigoSubFamilia"
@@ -1511,7 +1511,7 @@ msgstr "ValorLimite"
 msgid "DataInicio"
 msgstr "DataInicio"
 
-msgid "DataFim"
+msgid "DataFim\n"
 msgstr "DataFim\n"
 
 msgid "uuid"
