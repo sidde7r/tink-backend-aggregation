@@ -19,56 +19,71 @@ public class ClientLoggingFilter extends ClientFilter {
 
     @Override
     public ClientResponse handle(ClientRequest request) {
-        logRequest(request);
         ClientResponse response = getNext() == null ? null : getNext().handle(request);
-        logResponse(response);
+        logRequestAndResponse(request, response);
         return response;
     }
 
-    private void logResponse(ClientResponse response) {
-        if (response == null) {
-            return;
-        }
+    private void logRequestAndResponse(ClientRequest request, ClientResponse response) {
         try {
-            byte[] rawBody = response.getEntity(byte[].class);
-            if (rawBody != null) {
-                // Put the body back into the input stream
-                response.setEntityInputStream(new ByteArrayInputStream(rawBody));
-            }
-            String body = rawBody == null ? null : new String(rawBody);
             log.info(
-                    "incoming response:\nstatus: {}\nheaders:{}\nbody:\n{}",
-                    response.getStatus(),
-                    formatHeaders(response.getHeaders()),
-                    prettify(body));
+                    new StringBuilder("OUTGOING REQUEST:\n")
+                            .append(formatRequest(request))
+                            .append("\n\n")
+                            .append("INCOMING RESPONSE:\n")
+                            .append(formatResponse(response))
+                            .toString());
         } catch (RuntimeException e) {
-            log.error("sth bad happened when logging incoming response", e);
+            log.error("sth bad happened when logging outgoing traffic");
         }
     }
 
-    private void logRequest(ClientRequest request) {
-        try {
-            Object entity = request.getEntity();
-            String body = null;
-            if (entity instanceof SafelyLoggable) {
-                body = ((SafelyLoggable) entity).toSafeString();
-            } else if (entity != null) {
-                body =
-                        "the class: "
-                                + entity.getClass().getName()
-                                + " doesnt implement "
-                                + SafelyLoggable.class.getName()
-                                + " interface and cannot be safely printed. If you want to see the body of that request please implement that interface";
-            }
-            log.info(
-                    "outgoing request:\n{} {}\nheaders:{}\nbody:\n{}",
-                    request.getMethod(),
-                    request.getURI(),
-                    formatHeaders(request.getHeaders()),
-                    body);
-        } catch (RuntimeException e) {
-            log.error("sth bad happened when logging outgoing request", e);
+    private StringBuilder formatResponse(ClientResponse response) {
+        if (response == null) {
+            return new StringBuilder(" response is null");
         }
+        StringBuilder sb = new StringBuilder();
+        byte[] rawBody = response.getEntity(byte[].class);
+        if (rawBody != null) {
+            // Put the body back into the input stream
+            response.setEntityInputStream(new ByteArrayInputStream(rawBody));
+        }
+        String body = rawBody == null ? null : new String(rawBody);
+
+        return sb.append("status: ")
+                .append(response.getStatus())
+                .append("\n")
+                .append("headers:\n")
+                .append(formatHeaders(response.getHeaders()))
+                .append("\n")
+                .append("body:\n")
+                .append(prettify(body));
+    }
+
+    private StringBuilder formatRequest(ClientRequest request) {
+        StringBuilder sb =
+                new StringBuilder()
+                        .append(request.getMethod())
+                        .append(" ")
+                        .append(request.getURI())
+                        .append("\n")
+                        .append("headers:\n")
+                        .append(formatHeaders(request.getHeaders()))
+                        .append("\n")
+                        .append("body:\n");
+
+        Object entity = request.getEntity();
+        if (entity instanceof SafelyLoggable) {
+            sb.append(((SafelyLoggable) entity).toSafeString());
+        } else if (entity != null) {
+            sb.append("the class: ")
+                    .append(entity.getClass().getName())
+                    .append(" doesnt implement ")
+                    .append(SafelyLoggable.class.getName())
+                    .append(
+                            " interface and cannot be safely printed. If you want to see the body of that request please implement that interface");
+        }
+        return sb;
     }
 
     private String prettify(String uglyString) {
@@ -87,7 +102,7 @@ public class ClientLoggingFilter extends ClientFilter {
             return null;
         }
 
-        return "\n\t"
+        return "\t"
                 + headers.entrySet().stream()
                         .map(Object::toString)
                         .collect(Collectors.joining("\n\t"));
