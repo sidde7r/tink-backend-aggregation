@@ -14,11 +14,14 @@ public class UserResponse {
         return user;
     }
 
-    public List<String> getAccountIds() {
+    public List<String> getCreditCardAccountIds() {
         if (user == null) {
             throw new IllegalStateException("User response without products, should not happen.");
         }
 
-        return user.getProducts().stream().map(Product::getAccountId).collect(Collectors.toList());
+        return user.getProducts().stream()
+                .filter(Product::isCreditCard)
+                .map(Product::getAccountId)
+                .collect(Collectors.toList());
     }
 }

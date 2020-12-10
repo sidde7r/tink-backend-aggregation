@@ -1,10 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.entercard;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class EnterCardConstants {
 
     public static final String CURRENCY = "SEK";
     static final String SIGNICAT_ID = "sbid-mobil-2014:%s:sv";
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class Urls {
 
         static final String ORDER = "/order";
@@ -18,6 +23,7 @@ public class EnterCardConstants {
         static final String TRANSACTIONS_ENDPOINT = "transactions";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class BankIdProgressStatus {
 
         public static final String COMPLETE = "COMPLETE";
@@ -26,6 +32,7 @@ public class EnterCardConstants {
         public static final String NO_CLIENT = "NO_CLIENT";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     static class AuthenticationErrors {
 
         static final String ACCOUNT_NOT_FOUND = "ACCOUNT_NOT_FOUND";
@@ -36,12 +43,14 @@ public class EnterCardConstants {
         static final String REAUTH_FAILURE = "REAUTH_FAILURE";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class AuthenticationForm {
 
         public static final String RESPONSE_FORM_ID = "responseForm";
         static final String ATTRIBUTE_KEY = "action";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     static class QueryKey {
 
         static final String PREFILLED_MODE = "prefilled.mode";
@@ -51,28 +60,38 @@ public class EnterCardConstants {
         static final String TARGET = "target";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     static class QueryValue {
 
         static final String PREFILLED_MODE = "limited";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     static class HeaderKey {
 
         static final String REFERER = "Referer";
         static final String ORIGIN = "Origin";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     static class HeaderValue {
 
         static final String ACCEPT_LANGUAGE = "sv-se";
         static final String ORIGIN = "https://id.signicat.com";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class TransactionType {
 
         public static final String AUTHORIZATION = "Authorization";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class AccountType {
+        public static final String CARD = "CARD";
+    }
+
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class TimeoutFilter {
         public static final int NUM_TIMEOUT_RETRIES = 3;
         public static final int TIMEOUT_RETRY_SLEEP_MILLISECONDS = 1000;

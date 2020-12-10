@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.entercard.fetcher.rpc;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.entercard.EnterCardConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @SuppressWarnings("unused")
@@ -40,5 +42,10 @@ public class Product {
 
     public Boolean getICInsurancePresent() {
         return isICInsurancePresent;
+    }
+
+    @JsonIgnore
+    public boolean isCreditCard() {
+        return EnterCardConstants.AccountType.CARD.equalsIgnoreCase(type);
     }
 }
