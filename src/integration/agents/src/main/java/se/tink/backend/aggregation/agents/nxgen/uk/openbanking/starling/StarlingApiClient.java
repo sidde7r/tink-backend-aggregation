@@ -1,11 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import org.apache.commons.httpclient.HttpStatus;
+import se.tink.backend.aggregation.agents.agentplatform.authentication.ObjectMapperFactory;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
-import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.StarlingConstants.Url;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.StarlingConstants.UrlParams;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.executor.transfer.entity.TransferStatusEntity;
@@ -22,7 +23,10 @@ import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.rpc.SoleTraderAccountHolderResponse;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transfer.rpc.PayeesResponse;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.oauth.progressive.OAuth2Authenticator;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationPersistedData;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.AgentRedirectTokensAuthenticationPersistedData;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.AgentRedirectTokensAuthenticationPersistedDataAccessorFactory;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.Token;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -31,17 +35,22 @@ import se.tink.backend.aggregation.nxgen.http.request.HttpMethod;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class StarlingApiClient {
 
     private final TinkHttpClient client;
-    private final OAuth2Authenticator authenticator;
+    private final AgentRedirectTokensAuthenticationPersistedData redirectTokensPersistedData;
 
-    public StarlingApiClient(TinkHttpClient client, OAuth2Authenticator authenticator) {
+    public StarlingApiClient(TinkHttpClient client, PersistentStorage persistentStorage) {
         this.client = client;
-        this.authenticator = authenticator;
+        redirectTokensPersistedData =
+                new AgentRedirectTokensAuthenticationPersistedDataAccessorFactory(
+                                new ObjectMapperFactory().getInstance())
+                        .createAgentRedirectTokensAuthenticationPersistedData(
+                                new AgentAuthenticationPersistedData(persistentStorage));
     }
 
     public AccountsResponse fetchAccounts() {
@@ -171,18 +180,12 @@ public class StarlingApiClient {
     }
 
     private OAuth2Token getOAuthToken() {
-        se.tink.backend.aggregation.nxgen.controllers.authentication.oauth.OAuth2Token storedToken =
-                authenticator
-                        .getToken()
-                        .orElseThrow(
-                                () ->
-                                        new IllegalStateException(
-                                                SessionError.SESSION_EXPIRED.exception()));
+        Token accessToken = redirectTokensPersistedData.getRedirectTokens().get().getAccessToken();
         return OAuth2Token.create(
-                storedToken.getTokenType(),
-                storedToken.getAccessToken(),
-                storedToken.getRefreshToken(),
-                storedToken.getExpiresIn());
+                accessToken.getTokenType(),
+                new String(accessToken.getBody(), StandardCharsets.UTF_8),
+                null,
+                accessToken.getExpiresInSeconds());
     }
 
     private static String toFormattedDate(final Date date) {

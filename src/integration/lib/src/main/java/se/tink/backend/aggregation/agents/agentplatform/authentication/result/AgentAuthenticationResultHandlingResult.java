@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.agentplatform.authentication.result;
 
+import java.time.Instant;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.result.error.AgentPlatformAuthenticationProcessError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.request.AgentAuthenticationRequest;
@@ -7,6 +8,8 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 public class AgentAuthenticationResultHandlingResult {
 
     private AgentPlatformAuthenticationProcessError authenticationError;
+
+    private Instant sessionExpiryDate;
 
     private AgentAuthenticationRequest agentAuthenticationNextRequest;
 
@@ -20,10 +23,16 @@ public class AgentAuthenticationResultHandlingResult {
         this.agentAuthenticationNextRequest = agentAuthenticationNextRequest;
     }
 
-    private AgentAuthenticationResultHandlingResult() {}
+    public AgentAuthenticationResultHandlingResult(Instant sessionExpiryDate) {
+        this.sessionExpiryDate = sessionExpiryDate;
+    }
 
     public Optional<AgentPlatformAuthenticationProcessError> getAuthenticationError() {
         return Optional.ofNullable(authenticationError);
+    }
+
+    public Optional<Instant> getSessionExpiryDate() {
+        return Optional.ofNullable(sessionExpiryDate);
     }
 
     public AgentAuthenticationRequest getAgentAuthenticationNextRequest() {
@@ -44,7 +53,8 @@ public class AgentAuthenticationResultHandlingResult {
         return new AgentAuthenticationResultHandlingResult(nextAuthenticationRequest);
     }
 
-    public static AgentAuthenticationResultHandlingResult authenticationSuccess() {
-        return new AgentAuthenticationResultHandlingResult();
+    public static AgentAuthenticationResultHandlingResult authenticationSuccess(
+            final Instant sessionExpiryDate) {
+        return new AgentAuthenticationResultHandlingResult(sessionExpiryDate);
     }
 }

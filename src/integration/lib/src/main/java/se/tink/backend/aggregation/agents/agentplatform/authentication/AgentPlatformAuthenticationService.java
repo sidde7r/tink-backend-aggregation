@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.agentplatform.authentication;
 
+import java.util.Date;
 import lombok.AllArgsConstructor;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.result.AgentAuthenticationResultAggregationHandler;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.result.AgentAuthenticationResultHandlingResult;
@@ -8,12 +9,14 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.request.AgentAuthenticationRequest;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.request.AgentStartAuthenticationProcessRequest;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentAuthenticationResult;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 
 @AllArgsConstructor
 public class AgentPlatformAuthenticationService {
 
     private final UserInteractionService userInteractionService;
     private final PersistentStorageService persistentStorageService;
+    private final CredentialsRequest credentialsRequest;
 
     public void authenticate(final AgentPlatformAuthenticator agentPlatformAuthenticator) {
         AuthenticationExecutor executor =
@@ -30,6 +33,10 @@ public class AgentPlatformAuthenticationService {
             handlingResult = executor.execute(handlingResult.getAgentAuthenticationNextRequest());
         }
         checkForAuthenticationError(handlingResult);
+        handlingResult
+                .getSessionExpiryDate()
+                .map(instant -> Date.from(instant))
+                .ifPresent(date -> credentialsRequest.getCredentials().setSessionExpiryDate(date));
     }
 
     private void checkForAuthenticationError(
