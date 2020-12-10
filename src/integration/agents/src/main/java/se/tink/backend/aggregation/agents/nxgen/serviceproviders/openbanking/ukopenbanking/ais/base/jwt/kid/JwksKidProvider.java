@@ -9,9 +9,11 @@ import java.security.cert.X509Certificate;
 import java.util.NoSuchElementException;
 import java.util.function.Predicate;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.jwt.JwksClient;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
+@Slf4j
 public class JwksKidProvider implements KidProvider {
     private final JwksClient jwksClient;
     private final URL jwksEndpoint;
@@ -40,12 +42,15 @@ public class JwksKidProvider implements KidProvider {
         JWKSet jsonWebKeySet = jwksClient.get(jwksEndpoint);
         JWK jwkPublicKey = JWK.parse(signingCertificate);
         Base64URL thumbprint = jwkPublicKey.computeThumbprint();
-        return List.ofAll(jsonWebKeySet.getKeys())
-                .find(compareThumbprints(thumbprint))
-                .map(JWK::getKeyID)
-                .getOrElseThrow(
-                        () ->
-                                new NoSuchElementException(
-                                        "The JWKS doesn't contain matching thumbprint for given Private Key"));
+        String keyId =
+                List.ofAll(jsonWebKeySet.getKeys())
+                        .find(compareThumbprints(thumbprint))
+                        .map(JWK::getKeyID)
+                        .getOrElseThrow(
+                                () ->
+                                        new NoSuchElementException(
+                                                "The JWKS doesn't contain matching thumbprint for given Private Key"));
+        log.info("KeyId has been found for: {}", keyId);
+        return keyId;
     }
 }
