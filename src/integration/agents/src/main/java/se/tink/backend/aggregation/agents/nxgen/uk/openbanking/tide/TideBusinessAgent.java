@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.tide;
 
-import static se.tink.backend.aggregation.agents.nxgen.uk.openbanking.tide.TideConstants.ORGANISATION_ID;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.IDENTITY_DATA;
 
@@ -18,7 +17,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.UKOpenBankingAis;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.UkOpenBankingV31Ais;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.signer.iface.JwtSigner;
-import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.tide.TideConstants.V31;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 
 @AgentDependencyModulesForProductionMode(
@@ -33,9 +31,9 @@ public class TideBusinessAgent extends UkOpenBankingBaseAgent {
     static {
         aisConfig =
                 UKOpenBankingAis.builder()
-                        .withOrganisationId(ORGANISATION_ID)
-                        .withWellKnownURL(V31.WELL_KNOWN_URL)
-                        .withApiBaseURL(V31.AIS_API_URL)
+                        .withOrganisationId(TideConstants.ORGANISATION_ID)
+                        .withWellKnownURL(TideConstants.WELL_KNOWN_URL)
+                        .withApiBaseURL(TideConstants.AIS_API_URL)
                         .withPartyEndpoints(
                                 PartyEndpoint.IDENTITY_DATA_ENDPOINT_ACCOUNT_ID_PARTY,
                                 PartyEndpoint.IDENTITY_DATA_ENDPOINT_PARTY,

@@ -21,7 +21,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.UkOpenBankingV31Ais;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.signer.iface.JwtSigner;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.configuration.UkOpenBankingPisConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.barclays.BarclaysConstants.Urls.V31;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 
 @AgentDependencyModulesForProductionMode(
@@ -37,8 +36,8 @@ public final class BarclaysV31Agent extends UkOpenBankingBaseAgent {
         aisConfig =
                 UKOpenBankingAis.builder()
                         .withOrganisationId(BarclaysConstants.ORGANISATION_ID)
-                        .withApiBaseURL(V31.AIS_API_URL)
-                        .withWellKnownURL(V31.PERSONAL_WELL_KNOWN_URL)
+                        .withApiBaseURL(BarclaysConstants.AIS_API_URL)
+                        .withWellKnownURL(BarclaysConstants.PERSONAL_WELL_KNOWN_URL)
                         .withPartyEndpoints(
                                 UkOpenBankingConstants.PartyEndpoint
                                         .IDENTITY_DATA_ENDPOINT_ACCOUNT_ID_PARTIES)
@@ -53,8 +52,8 @@ public final class BarclaysV31Agent extends UkOpenBankingBaseAgent {
                 aisConfig,
                 new UkOpenBankingPisConfiguration(
                         BarclaysConstants.ORGANISATION_ID,
-                        V31.PIS_API_URL,
-                        V31.PERSONAL_WELL_KNOWN_URL));
+                        BarclaysConstants.PIS_API_URL,
+                        BarclaysConstants.PERSONAL_WELL_KNOWN_URL));
     }
 
     @Override

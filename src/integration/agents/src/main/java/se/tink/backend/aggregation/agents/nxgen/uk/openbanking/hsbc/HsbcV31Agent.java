@@ -23,7 +23,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.configuration.SoftwareStatementAssertion;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.signer.iface.JwtSigner;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.configuration.UkOpenBankingPisConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.hsbc.HsbcConstants.Urls.V313;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.hsbc.pis.validator.HsbcPaymentRequestValidator;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
@@ -46,17 +45,17 @@ public final class HsbcV31Agent extends UkOpenBankingBaseAgent {
         aisConfig =
                 UKOpenBankingAis.builder()
                         .withOrganisationId(HsbcConstants.ORGANISATION_ID)
-                        .withApiBaseURL(V313.PERSONAL_AIS_API_URL)
-                        .withWellKnownURL(V313.PERSONAL_WELL_KNOWN_URL)
-                        .withAppToAppURL(V313.PERSONAL_APP_TO_APP_AUTH_URL)
+                        .withApiBaseURL(HsbcConstants.PERSONAL_AIS_API_URL)
+                        .withWellKnownURL(HsbcConstants.PERSONAL_WELL_KNOWN_URL)
+                        .withAppToAppURL(HsbcConstants.PERSONAL_APP_TO_APP_AUTH_URL)
                         .withPartyEndpoints(PartyEndpoint.IDENTITY_DATA_ENDPOINT_ACCOUNT_ID_PARTY)
                         .build();
 
         pisConfig =
                 new UkOpenBankingPisConfiguration(
                         HsbcConstants.ORGANISATION_ID,
-                        V313.PERSONAL_PIS_API_URL,
-                        V313.PERSONAL_WELL_KNOWN_URL);
+                        HsbcConstants.PERSONAL_PIS_API_URL,
+                        HsbcConstants.PERSONAL_WELL_KNOWN_URL);
     }
 
     @Inject

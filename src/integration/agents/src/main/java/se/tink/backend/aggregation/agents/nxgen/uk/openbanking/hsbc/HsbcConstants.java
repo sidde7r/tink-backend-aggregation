@@ -4,24 +4,19 @@ final class HsbcConstants {
 
     public static final String ORGANISATION_ID = "00158000016i44JAAQ";
 
-    class Urls {
+    public static final String PERSONAL_AIS_API_URL =
+            "https://api.ob.hsbc.co.uk/obie/open-banking/v3.1/aisp";
+    public static final String PERSONAL_PIS_API_URL =
+            "https://api.ob.hsbc.co.uk/obie/open-banking/v3.1/pisp";
+    public static final String PERSONAL_WELL_KNOWN_URL =
+            "https://ob.hsbc.co.uk/.well-known/openid-configuration";
+    public static final String PERSONAL_APP_TO_APP_AUTH_URL =
+            "https://ob.hsbc.co.uk/obie/open-banking/v1.1/oauth2/authorize";
 
-        class V313 {
-            public static final String PERSONAL_AIS_API_URL =
-                    "https://api.ob.hsbc.co.uk/obie/open-banking/v3.1/aisp";
-            public static final String PERSONAL_PIS_API_URL =
-                    "https://api.ob.hsbc.co.uk/obie/open-banking/v3.1/pisp";
-            public static final String PERSONAL_WELL_KNOWN_URL =
-                    "https://ob.hsbc.co.uk/.well-known/openid-configuration";
-            public static final String PERSONAL_APP_TO_APP_AUTH_URL =
-                    "https://ob.hsbc.co.uk/obie/open-banking/v1.1/oauth2/authorize";
-
-            public static final String BUSINESS_AIS_API_URL =
-                    "https://api.ob.business.hsbc.co.uk/obie/open-banking/v3.1/aisp";
-            public static final String BUSINESS_WELL_KNOWN_URL =
-                    "https://api.ob.business.hsbc.co.uk/.well-known/openid-configuration";
-            public static final String BUSINESS_APP_TO_APP_AUTH_URL =
-                    "https://ob.business.hsbc.co.uk/obie/open-banking/v1.1/oauth2/authorize";
-        }
-    }
+    public static final String BUSINESS_AIS_API_URL =
+            "https://api.ob.business.hsbc.co.uk/obie/open-banking/v3.1/aisp";
+    public static final String BUSINESS_WELL_KNOWN_URL =
+            "https://api.ob.business.hsbc.co.uk/.well-known/openid-configuration";
+    public static final String BUSINESS_APP_TO_APP_AUTH_URL =
+            "https://ob.business.hsbc.co.uk/obie/open-banking/v1.1/oauth2/authorize";
 }

@@ -22,7 +22,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.identifier.DefaultIdentifierMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.signer.iface.JwtSigner;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.configuration.UkOpenBankingPisConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.rbs.RbsConstants.Urls.V31;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.libraries.mapper.PrioritizedValueExtractor;
@@ -43,8 +42,8 @@ public final class RbsV31Agent extends UkOpenBankingBaseAgent {
         aisConfig =
                 UKOpenBankingAis.builder()
                         .withOrganisationId(ORGANISATION_ID)
-                        .withApiBaseURL(V31.AIS_API_URL)
-                        .withWellKnownURL(V31.PERSONAL_WELL_KNOWN_URL)
+                        .withApiBaseURL(RbsConstants.AIS_API_URL)
+                        .withWellKnownURL(RbsConstants.PERSONAL_WELL_KNOWN_URL)
                         .build();
     }
 
@@ -55,7 +54,9 @@ public final class RbsV31Agent extends UkOpenBankingBaseAgent {
                 jwtSigner,
                 aisConfig,
                 new UkOpenBankingPisConfiguration(
-                        ORGANISATION_ID, V31.PIS_API_URL, V31.PERSONAL_WELL_KNOWN_URL));
+                        ORGANISATION_ID,
+                        RbsConstants.PIS_API_URL,
+                        RbsConstants.PERSONAL_WELL_KNOWN_URL));
         this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
     }
 

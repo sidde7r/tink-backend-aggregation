@@ -1,9 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domesticscheduled;
 
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentConstants.CONSENT_ID_KEY;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentConstants.PAYMENT_ID_KEY;
+
 import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingRequestBuilder;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.UkOpenBankingPaymentApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.configuration.UkOpenBankingPisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domesticscheduled.converter.DomesticScheduledPaymentConverter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domesticscheduled.dto.DomesticScheduledPaymentConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domesticscheduled.dto.DomesticScheduledPaymentConsentRequestData;
@@ -14,14 +16,21 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domesticscheduled.dto.DomesticScheduledPaymentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
+import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.payment.rpc.Payment;
 
 @RequiredArgsConstructor
 public class DomesticScheduledPaymentApiClient implements UkOpenBankingPaymentApiClient {
 
+    protected static final String PAYMENT_CONSENT = "/domestic-scheduled-payment-consents";
+    protected static final String PAYMENT_CONSENT_STATUS =
+            "/domestic-scheduled-payment-consents/{consentId}";
+    protected static final String PAYMENT = "/domestic-scheduled-payments";
+    protected static final String PAYMENT_STATUS = "/domestic-scheduled-payments/{paymentId}";
+
     private final UkOpenBankingRequestBuilder requestBuilder;
     private final DomesticScheduledPaymentConverter domesticScheduledPaymentConverter;
-    private final UkOpenBankingPisConfig pisConfig;
+    private final String baseUrl;
 
     @Override
     public PaymentResponse createPaymentConsent(PaymentRequest paymentRequest) {
@@ -30,8 +39,7 @@ public class DomesticScheduledPaymentApiClient implements UkOpenBankingPaymentAp
 
         final DomesticScheduledPaymentConsentResponse response =
                 requestBuilder
-                        .createPisRequestWithJwsHeader(
-                                pisConfig.createDomesticScheduledPaymentConsentURL(), request)
+                        .createPisRequestWithJwsHeader(createUrl(PAYMENT_CONSENT), request)
                         .post(DomesticScheduledPaymentConsentResponse.class, request);
 
         return domesticScheduledPaymentConverter.convertConsentResponseDtoToTinkPaymentResponse(
@@ -42,7 +50,8 @@ public class DomesticScheduledPaymentApiClient implements UkOpenBankingPaymentAp
     public PaymentResponse getPayment(String paymentId) {
         final DomesticScheduledPaymentResponse response =
                 requestBuilder
-                        .createPisRequest(pisConfig.getDomesticScheduledPayment(paymentId))
+                        .createPisRequest(
+                                createUrl(PAYMENT_STATUS).parameter(PAYMENT_ID_KEY, paymentId))
                         .get(DomesticScheduledPaymentResponse.class);
 
         return domesticScheduledPaymentConverter.convertResponseDtoToPaymentResponse(response);
@@ -53,7 +62,8 @@ public class DomesticScheduledPaymentApiClient implements UkOpenBankingPaymentAp
         final DomesticScheduledPaymentConsentResponse response =
                 requestBuilder
                         .createPisRequest(
-                                pisConfig.getDomesticScheduledPaymentConsentURL(consentId))
+                                createUrl(PAYMENT_CONSENT_STATUS)
+                                        .parameter(CONSENT_ID_KEY, consentId))
                         .get(DomesticScheduledPaymentConsentResponse.class);
 
         return domesticScheduledPaymentConverter.convertConsentResponseDtoToTinkPaymentResponse(
@@ -72,8 +82,7 @@ public class DomesticScheduledPaymentApiClient implements UkOpenBankingPaymentAp
 
         final DomesticScheduledPaymentResponse response =
                 requestBuilder
-                        .createPisRequestWithJwsHeader(
-                                pisConfig.createDomesticScheduledPaymentURL(), request)
+                        .createPisRequestWithJwsHeader(createUrl(PAYMENT), request)
                         .post(DomesticScheduledPaymentResponse.class, request);
 
         return domesticScheduledPaymentConverter.convertResponseDtoToPaymentResponse(response);
@@ -121,5 +130,9 @@ public class DomesticScheduledPaymentApiClient implements UkOpenBankingPaymentAp
                         domesticScheduledPaymentConverter.getRequestedExecutionDateTime(payment))
                 .instructionIdentification(instructionIdentification)
                 .build();
+    }
+
+    private URL createUrl(String path) {
+        return new URL(baseUrl + path);
     }
 }

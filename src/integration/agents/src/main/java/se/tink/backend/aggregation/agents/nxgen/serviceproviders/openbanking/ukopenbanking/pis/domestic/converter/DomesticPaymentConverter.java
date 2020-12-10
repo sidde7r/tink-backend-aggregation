@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domestic.converter;
 
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingV31PaymentConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.converter.PaymentConverterBase;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domestic.dto.DomesticPaymentConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domestic.dto.DomesticPaymentConsentResponseData;
@@ -26,8 +26,7 @@ public class DomesticPaymentConverter extends PaymentConverterBase {
         final Payment payment = createPayment(initiation, paymentStatus);
 
         final Storage storage = new Storage();
-        storage.put(
-                UkOpenBankingV31PaymentConstants.Storage.CONSENT_ID, responseData.getConsentId());
+        storage.put(UkOpenBankingPaymentConstants.CONSENT_ID_KEY, responseData.getConsentId());
 
         return new PaymentResponse(payment, storage);
     }
@@ -41,11 +40,9 @@ public class DomesticPaymentConverter extends PaymentConverterBase {
         final Payment payment = createPayment(initiation, paymentStatus);
 
         final Storage storage = new Storage();
+        storage.put(UkOpenBankingPaymentConstants.CONSENT_ID_KEY, responseData.getConsentId());
         storage.put(
-                UkOpenBankingV31PaymentConstants.Storage.CONSENT_ID, responseData.getConsentId());
-        storage.put(
-                UkOpenBankingV31PaymentConstants.Storage.PAYMENT_ID,
-                responseData.getDomesticPaymentId());
+                UkOpenBankingPaymentConstants.PAYMENT_ID_KEY, responseData.getDomesticPaymentId());
 
         return new PaymentResponse(payment, storage);
     }

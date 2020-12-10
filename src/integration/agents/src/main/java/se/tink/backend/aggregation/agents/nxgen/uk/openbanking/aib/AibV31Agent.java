@@ -20,7 +20,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.UkOpenBankingV31Ais;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.signer.iface.JwtSigner;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.configuration.UkOpenBankingPisConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.aib.AibConstants.Urls.V31;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 
@@ -36,8 +35,8 @@ public final class AibV31Agent extends UkOpenBankingBaseAgent {
     static {
         aisConfig =
                 UKOpenBankingAis.builder()
-                        .withApiBaseURL(V31.AIS_API_URL)
-                        .withWellKnownURL(V31.WELL_KNOWN_PERSONAL_URL)
+                        .withApiBaseURL(AibConstants.AIS_API_URL)
+                        .withWellKnownURL(AibConstants.WELL_KNOWN_PERSONAL_URL)
                         .withOrganisationId(AibConstants.ORGANISATION_ID)
                         .build();
     }
@@ -50,8 +49,8 @@ public final class AibV31Agent extends UkOpenBankingBaseAgent {
                 aisConfig,
                 new UkOpenBankingPisConfiguration(
                         AibConstants.ORGANISATION_ID,
-                        V31.PIS_API_URL,
-                        V31.WELL_KNOWN_PERSONAL_URL));
+                        AibConstants.PIS_API_URL,
+                        AibConstants.WELL_KNOWN_PERSONAL_URL));
         this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
     }
 

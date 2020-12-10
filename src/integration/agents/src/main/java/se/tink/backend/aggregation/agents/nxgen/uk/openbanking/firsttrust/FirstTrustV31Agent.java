@@ -20,7 +20,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.UkOpenBankingV31Ais;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.signer.iface.JwtSigner;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.configuration.UkOpenBankingPisConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.firsttrust.FirstTrustConstants.Urls.V31;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 
@@ -38,8 +37,8 @@ public final class FirstTrustV31Agent extends UkOpenBankingBaseAgent {
         aisConfig =
                 UKOpenBankingAis.builder()
                         .withOrganisationId(FirstTrustConstants.ORGANISATION_ID)
-                        .withApiBaseURL(V31.AIS_API_URL)
-                        .withWellKnownURL(V31.WELL_KNOWN_URL)
+                        .withApiBaseURL(FirstTrustConstants.AIS_API_URL)
+                        .withWellKnownURL(FirstTrustConstants.WELL_KNOWN_URL)
                         .build();
     }
 
@@ -50,7 +49,9 @@ public final class FirstTrustV31Agent extends UkOpenBankingBaseAgent {
                 jwtSigner,
                 aisConfig,
                 new UkOpenBankingPisConfiguration(
-                        FirstTrustConstants.ORGANISATION_ID, V31.PIS_API_URL, V31.WELL_KNOWN_URL));
+                        FirstTrustConstants.ORGANISATION_ID,
+                        FirstTrustConstants.PIS_API_URL,
+                        FirstTrustConstants.WELL_KNOWN_URL));
         this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
     }
 

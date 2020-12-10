@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 import java.math.BigDecimal;
 import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingV31PaymentConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.dto.BaseAccount;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.dto.CreditorAccount;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.dto.DebtorAccount;
@@ -45,6 +44,8 @@ public abstract class PaymentConverterBase {
                             "AcceptedCreditSettlementCompleted",
                             "AcceptedSettlementInProcess")
                     .build();
+
+    private static final String PAYMENT_CREDITOR_DEFAULT_NAME = "Payment Receiver";
 
     public DebtorAccount getDebtorAccount(Payment payment) {
         return Optional.ofNullable(payment.getDebtor())
@@ -119,7 +120,7 @@ public abstract class PaymentConverterBase {
         final String schemeName = getSchemeName(creditor.getAccountIdentifierType());
         final String name =
                 StringUtils.isBlank(creditor.getName())
-                        ? UkOpenBankingV31PaymentConstants.FormValues.PAYMENT_CREDITOR_DEFAULT_NAME
+                        ? PAYMENT_CREDITOR_DEFAULT_NAME
                         : creditor.getName();
 
         return CreditorAccount.builder()

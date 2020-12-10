@@ -19,7 +19,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.UKOpenBankingAis;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.UkOpenBankingV31Ais;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.signer.iface.JwtSigner;
-import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.tsb.TsbConstants.Urls.V31;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 
 @AgentDependencyModulesForProductionMode(
@@ -34,9 +33,9 @@ public final class TsbV31BusinessAgent extends UkOpenBankingBaseAgent {
     static {
         aisConfig =
                 UKOpenBankingAis.builder()
-                        .withOrganisationId("0015800001ZEZ3hAAH")
-                        .withApiBaseURL(V31.AIS_API_URL)
-                        .withWellKnownURL(V31.WELL_KNOWN_URL)
+                        .withOrganisationId(TsbConstants.ORGANISATION_ID)
+                        .withApiBaseURL(TsbConstants.AIS_API_URL)
+                        .withWellKnownURL(TsbConstants.WELL_KNOWN_URL)
                         .withAllowedAccountOwnershipType(AccountOwnershipType.BUSINESS)
                         .build();
     }

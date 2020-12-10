@@ -18,7 +18,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.UKOpenBankingAis;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.UkOpenBankingV31Ais;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.signer.iface.JwtSigner;
-import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.hsbc.HsbcConstants.Urls.V313;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 
@@ -36,9 +35,9 @@ public final class HsbcV31BusinessAgent extends UkOpenBankingBaseAgent {
         aisConfig =
                 UKOpenBankingAis.builder()
                         .withOrganisationId(HsbcConstants.ORGANISATION_ID)
-                        .withApiBaseURL(V313.BUSINESS_AIS_API_URL)
-                        .withWellKnownURL(V313.BUSINESS_WELL_KNOWN_URL)
-                        .withAppToAppURL(V313.BUSINESS_APP_TO_APP_AUTH_URL)
+                        .withApiBaseURL(HsbcConstants.BUSINESS_AIS_API_URL)
+                        .withWellKnownURL(HsbcConstants.BUSINESS_WELL_KNOWN_URL)
+                        .withAppToAppURL(HsbcConstants.BUSINESS_APP_TO_APP_AUTH_URL)
                         .withAllowedAccountOwnershipType(AccountOwnershipType.BUSINESS)
                         .build();
     }

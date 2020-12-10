@@ -27,8 +27,8 @@ public class YorkshireAgent extends UkOpenBankingBaseAgent {
         aisConfig =
                 UKOpenBankingAis.builder()
                         .withOrganisationId(YorkshireConstants.ORGANISATION_ID)
-                        .withWellKnownURL(YorkshireConstants.V31.WELL_KNOWN_URL)
-                        .withApiBaseURL(YorkshireConstants.V31.AIS_API_URL)
+                        .withWellKnownURL(YorkshireConstants.WELL_KNOWN_URL)
+                        .withApiBaseURL(YorkshireConstants.AIS_API_URL)
                         .withPartyEndpoints(
                                 PartyEndpoint.IDENTITY_DATA_ENDPOINT_ACCOUNT_ID_PARTY,
                                 PartyEndpoint.IDENTITY_DATA_ENDPOINT_PARTY)

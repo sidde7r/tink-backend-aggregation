@@ -326,18 +326,15 @@ public class UkOpenBankingPaymentTestFixtures {
     private static void setPaymentIdAndConsentId(PaymentRequest paymentRequestMock) {
         final Storage storageMock = mock(Storage.class);
 
-        when(storageMock.get(UkOpenBankingV31PaymentConstants.Storage.PAYMENT_ID))
-                .thenReturn(PAYMENT_ID);
-        when(storageMock.get(UkOpenBankingV31PaymentConstants.Storage.CONSENT_ID))
-                .thenReturn(CONSENT_ID);
+        when(storageMock.get(UkOpenBankingPaymentConstants.PAYMENT_ID_KEY)).thenReturn(PAYMENT_ID);
+        when(storageMock.get(UkOpenBankingPaymentConstants.CONSENT_ID_KEY)).thenReturn(CONSENT_ID);
         when(paymentRequestMock.getStorage()).thenReturn(storageMock);
     }
 
     private static void setConsentId(PaymentRequest paymentRequestMock) {
         final Storage storageMock = mock(Storage.class);
 
-        when(storageMock.get(UkOpenBankingV31PaymentConstants.Storage.CONSENT_ID))
-                .thenReturn(CONSENT_ID);
+        when(storageMock.get(UkOpenBankingPaymentConstants.CONSENT_ID_KEY)).thenReturn(CONSENT_ID);
         when(paymentRequestMock.getStorage()).thenReturn(storageMock);
     }
 
@@ -465,7 +462,7 @@ public class UkOpenBankingPaymentTestFixtures {
     private static Storage createStorageWithConsentId() {
         final Storage storage = new Storage();
 
-        storage.put(UkOpenBankingV31PaymentConstants.Storage.CONSENT_ID, CONSENT_ID);
+        storage.put(UkOpenBankingPaymentConstants.CONSENT_ID_KEY, CONSENT_ID);
 
         return storage;
     }
@@ -473,8 +470,8 @@ public class UkOpenBankingPaymentTestFixtures {
     private static Storage createStorageWithConsentIdAndPaymentId() {
         final Storage storage = new Storage();
 
-        storage.put(UkOpenBankingV31PaymentConstants.Storage.CONSENT_ID, CONSENT_ID);
-        storage.put(UkOpenBankingV31PaymentConstants.Storage.PAYMENT_ID, PAYMENT_ID);
+        storage.put(UkOpenBankingPaymentConstants.CONSENT_ID_KEY, CONSENT_ID);
+        storage.put(UkOpenBankingPaymentConstants.PAYMENT_ID_KEY, PAYMENT_ID);
 
         return storage;
     }

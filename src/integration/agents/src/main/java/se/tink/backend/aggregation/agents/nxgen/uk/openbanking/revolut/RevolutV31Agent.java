@@ -23,7 +23,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.transactionalaccounts.TransactionalAccountBalanceMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.signer.iface.JwtSigner;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.configuration.UkOpenBankingPisConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.revolut.RevolutConstants.Urls.V31;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
@@ -45,8 +44,8 @@ public final class RevolutV31Agent extends UkOpenBankingBaseAgent {
         aisConfig =
                 UKOpenBankingAis.builder()
                         .withOrganisationId(RevolutConstants.ORGANISATION_ID)
-                        .withApiBaseURL(V31.AIS_API_URL)
-                        .withWellKnownURL(V31.WELL_KNOWN_URL)
+                        .withApiBaseURL(RevolutConstants.AIS_API_URL)
+                        .withWellKnownURL(RevolutConstants.WELL_KNOWN_URL)
                         .build();
     }
 
@@ -57,7 +56,9 @@ public final class RevolutV31Agent extends UkOpenBankingBaseAgent {
                 jwtSigner,
                 aisConfig,
                 new UkOpenBankingPisConfiguration(
-                        RevolutConstants.ORGANISATION_ID, V31.PIS_API_URL, V31.WELL_KNOWN_URL));
+                        RevolutConstants.ORGANISATION_ID,
+                        RevolutConstants.PIS_API_URL,
+                        RevolutConstants.WELL_KNOWN_URL));
         this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
     }
 

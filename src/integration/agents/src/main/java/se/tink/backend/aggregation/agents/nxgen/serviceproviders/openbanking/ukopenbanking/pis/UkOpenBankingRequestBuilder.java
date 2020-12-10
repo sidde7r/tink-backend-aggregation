@@ -13,9 +13,7 @@ import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.configuration.SoftwareStatementAssertion;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.signer.iface.JwtSigner;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.signer.iface.JwtSigner.Algorithm;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentConstants.HttpHeaders;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentConstants.JWTSignatureHeaders.Headers;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentConstants.JWTSignatureHeaders.Payload;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.authenticator.UkOpenBankingPisAuthApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.configuration.UkOpenBankingPisConfig;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
@@ -25,6 +23,12 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 @RequiredArgsConstructor
 public class UkOpenBankingRequestBuilder {
+
+    private static final String X_IDEMPOTENCY_KEY_HEADER = "x-idempotency-key";
+    private static final String X_JWS_SIGNATURE_HEADER = "x-jws-signature";
+
+    private static final String DATA_PAYLOAD = "Data";
+    private static final String RISK_PAYLOAD = "Risk";
 
     private static final List<String> POST_BASE64_GROUP =
             Arrays.asList(
@@ -49,9 +53,7 @@ public class UkOpenBankingRequestBuilder {
                 .accept(MediaType.APPLICATION_JSON_TYPE)
                 .addFilter(authApiClient.getPisAuthFilter())
                 .type(MediaType.APPLICATION_JSON_TYPE)
-                .header(
-                        HttpHeaders.X_IDEMPOTENCY_KEY,
-                        randomValueGenerator.generateRandomHexEncoded(8));
+                .header(X_IDEMPOTENCY_KEY_HEADER, randomValueGenerator.generateRandomHexEncoded(8));
     }
 
     public RequestBuilder createPisRequestWithJwsHeader(URL url, Object request) {
@@ -60,10 +62,8 @@ public class UkOpenBankingRequestBuilder {
                 .accept(MediaType.APPLICATION_JSON_TYPE)
                 .addFilter(authApiClient.getPisAuthFilter())
                 .type(MediaType.APPLICATION_JSON_TYPE)
-                .header(
-                        HttpHeaders.X_IDEMPOTENCY_KEY,
-                        randomValueGenerator.generateRandomHexEncoded(8))
-                .header(HttpHeaders.X_JWS_SIGNATURE, createJWTSignature(request));
+                .header(X_IDEMPOTENCY_KEY_HEADER, randomValueGenerator.generateRandomHexEncoded(8))
+                .header(X_JWS_SIGNATURE_HEADER, createJWTSignature(request));
     }
 
     @SuppressWarnings("unchecked")
@@ -84,8 +84,8 @@ public class UkOpenBankingRequestBuilder {
 
         ImmutableMap<String, Object> payloadClaims =
                 ImmutableMap.<String, Object>builder()
-                        .put(Payload.DATA, requestBody.get(Payload.DATA))
-                        .put(Payload.RISK, requestBody.get(Payload.RISK))
+                        .put(DATA_PAYLOAD, requestBody.get(DATA_PAYLOAD))
+                        .put(RISK_PAYLOAD, requestBody.get(RISK_PAYLOAD))
                         .build();
 
         switch (UkOpenBankingV31PaymentConstants.SIGNING_ALGORITHM.valueOf(preferredAlgorithm)) {
@@ -98,7 +98,6 @@ public class UkOpenBankingRequestBuilder {
     }
 
     private String createRs256Signature(Map<String, Object> payloadClaims) {
-
         Map<String, Object> jwtHeaders = new LinkedHashMap<>();
         jwtHeaders.put(Headers.B64, false);
         jwtHeaders.put(Headers.IAT, new Date().getTime() - 1000);

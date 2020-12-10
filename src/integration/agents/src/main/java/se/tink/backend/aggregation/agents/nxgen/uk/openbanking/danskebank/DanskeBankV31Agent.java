@@ -23,7 +23,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.creditcards.DefaultCreditCardBalanceMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.signer.iface.JwtSigner;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.configuration.UkOpenBankingPisConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.danskebank.DanskeBankConstants.Urls.V31;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.libraries.mapper.PrioritizedValueExtractor;
@@ -42,8 +41,8 @@ public final class DanskeBankV31Agent extends UkOpenBankingBaseAgent {
         aisConfig =
                 UKOpenBankingAis.builder()
                         .withOrganisationId(DanskeBankConstants.ORGANISATION_ID)
-                        .withApiBaseURL(V31.AIS_API_URL)
-                        .withWellKnownURL(V31.WELL_KNOWN_URL)
+                        .withApiBaseURL(DanskeBankConstants.AIS_API_URL)
+                        .withWellKnownURL(DanskeBankConstants.WELL_KNOWN_URL)
                         .withPartyEndpoints(PartyEndpoint.IDENTITY_DATA_ENDPOINT_PARTY)
                         .build();
     }
@@ -55,7 +54,9 @@ public final class DanskeBankV31Agent extends UkOpenBankingBaseAgent {
                 jwtSigner,
                 aisConfig,
                 new UkOpenBankingPisConfiguration(
-                        DanskeBankConstants.ORGANISATION_ID, V31.PIS_API_URL, V31.WELL_KNOWN_URL));
+                        DanskeBankConstants.ORGANISATION_ID,
+                        DanskeBankConstants.PIS_API_URL,
+                        DanskeBankConstants.WELL_KNOWN_URL));
         this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
     }
 
