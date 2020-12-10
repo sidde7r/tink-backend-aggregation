@@ -11,6 +11,7 @@ import se.tink.libraries.user.rpc.User;
 public class RefreshInformationRequest extends CredentialsRequest {
     @JsonProperty private boolean manual;
     private Set<RefreshableItem> itemsToRefresh;
+    private Set<String> requestedAccountIds;
     private String refreshId;
 
     public static Builder builder() {
@@ -26,6 +27,7 @@ public class RefreshInformationRequest extends CredentialsRequest {
         private boolean create = false;
         private boolean update = false;
         private boolean forceAuthenticate;
+        private Set<String> requestedAccountIds;
 
         public Builder credentials(Credentials credentials) {
             this.credentials = credentials;
@@ -67,6 +69,11 @@ public class RefreshInformationRequest extends CredentialsRequest {
             return this;
         }
 
+        public Builder requestedAccountIds(Set<String> requestedAccountIds) {
+            this.requestedAccountIds = requestedAccountIds;
+            return this;
+        }
+
         public RefreshInformationRequest build() {
             RefreshInformationRequest refreshInformationRequest = new RefreshInformationRequest();
 
@@ -78,6 +85,7 @@ public class RefreshInformationRequest extends CredentialsRequest {
             refreshInformationRequest.setCreate(create);
             refreshInformationRequest.setUpdate(update);
             refreshInformationRequest.setForceAuthenticate(forceAuthenticate);
+            refreshInformationRequest.setRequestedAccountIds(requestedAccountIds);
             return refreshInformationRequest;
         }
     }
@@ -110,5 +118,13 @@ public class RefreshInformationRequest extends CredentialsRequest {
 
     public void setRefreshId(String refreshId) {
         this.refreshId = refreshId;
+    }
+
+    public Set<String> getRequestedAccountIds() {
+        return requestedAccountIds;
+    }
+
+    public void setRequestedAccountIds(Set<String> requestedAccountIds) {
+        this.requestedAccountIds = requestedAccountIds;
     }
 }

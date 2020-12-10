@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.workers.context;
 
+import com.google.api.client.util.Lists;
 import com.google.common.base.Splitter;
 import java.util.AbstractMap;
 import java.util.Arrays;
@@ -34,6 +35,7 @@ import se.tink.backend.aggregation.controllers.ProviderSessionCacheController;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
 import se.tink.backend.aggregation.events.AccountInformationServiceEventsProducer;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerContext;
+import se.tink.backend.aggregation.workers.refresh.individual_refresh.IndividualAccountRefreshUtil;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.identitydata.IdentityData;
 import se.tink.libraries.metrics.core.MetricId;
@@ -195,6 +197,10 @@ public class AgentWorkerCommandContext extends AgentWorkerContext {
         processAccountsRequest.setCredentialsId(credentials.getId());
         processAccountsRequest.setUserId(request.getUser().getId());
         processAccountsRequest.setOperationId(request.getOperationId());
+        processAccountsRequest.setRequestedAccountIds(
+                Lists.newArrayList(
+                        IndividualAccountRefreshUtil.getRequestedAccountIds(
+                                request, getAccountDataCache().getProcessedAccounts())));
 
         controllerWrapper.processAccounts(processAccountsRequest);
     }

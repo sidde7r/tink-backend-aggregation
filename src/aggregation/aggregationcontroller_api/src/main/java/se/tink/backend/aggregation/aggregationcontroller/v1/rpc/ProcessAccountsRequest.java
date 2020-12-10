@@ -6,6 +6,7 @@ import se.tink.libraries.jersey.utils.SafelyLoggable;
 
 public class ProcessAccountsRequest implements SafelyLoggable {
     private List<String> accountIds;
+    private List<String> requestedAccountIds;
     private String credentialsId;
     private String userId;
     private String operationId;
@@ -46,9 +47,18 @@ public class ProcessAccountsRequest implements SafelyLoggable {
     public String toSafeString() {
         return MoreObjects.toStringHelper(this)
                 .add("accountIds", accountIds)
+                .add("requestedAccountIds", requestedAccountIds)
                 .add("credentialsId", credentialsId)
                 .add("userId", userId)
                 .add("operationId", operationId)
                 .toString();
+    }
+
+    public List<String> getRequestedAccountIds() {
+        return requestedAccountIds;
+    }
+
+    public void setRequestedAccountIds(List<String> requestedAccountIds) {
+        this.requestedAccountIds = requestedAccountIds;
     }
 }
