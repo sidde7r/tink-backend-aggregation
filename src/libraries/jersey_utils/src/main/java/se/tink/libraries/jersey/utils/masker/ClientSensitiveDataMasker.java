@@ -19,6 +19,15 @@ public class ClientSensitiveDataMasker {
                     "balance",
                     "bankId",
                     "identifiers",
+                    "payload",
+                    "exactAvailableCredit",
+                    "exactBalance",
+                    "availableBalance",
+                    "creditLimit",
+                    "bankId",
+                    "transferDestinations",
+                    "holderName",
+                    "accountHolder",
                     "identities");
 
     public static String mask(String json) {
