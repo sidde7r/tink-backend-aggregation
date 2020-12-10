@@ -4,7 +4,7 @@ Demo agent for testing how Tink Link (or other SDKs, python scripts, etc) will d
 
 ## Usage
 
-This agent expects a fake credential with just one field filled, `username`, with a json value, representing one of: 
+This agent expects a fake credential with just one field filled, `fieldsInJson`, with a json value, representing one of: 
  * A single Field
  * A list of Fields
  * A list of lists of Fields
