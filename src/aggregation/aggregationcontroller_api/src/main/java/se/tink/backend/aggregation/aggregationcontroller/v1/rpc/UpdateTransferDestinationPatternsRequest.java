@@ -64,7 +64,7 @@ public class UpdateTransferDestinationPatternsRequest {
     }
 
     private static class AccountWithDestinations {
-        public Account account;
-        public List<TransferDestinationPattern> destinations;
+        private Account account;
+        private List<TransferDestinationPattern> destinations;
     }
 }
