@@ -371,9 +371,9 @@ public class AggregationServiceResource implements AggregationService {
         }
 
         if (!Strings.isNullOrEmpty(providerId)) {
-            nonUniqueProviderNames = " for providerId : " + providerId;
+            nonUniqueProviderNames = "for providerId : " + providerId;
         } else {
-            nonUniqueProviderNames = " for financialInstitutionId : " + financialInstitutionId;
+            nonUniqueProviderNames = "for financialInstitutionId : " + financialInstitutionId;
         }
 
         nonUniqueProviderNames =
