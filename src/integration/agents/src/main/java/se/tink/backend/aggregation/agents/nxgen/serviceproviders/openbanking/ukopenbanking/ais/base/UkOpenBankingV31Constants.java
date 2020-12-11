@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base;
 
-import java.time.format.DateTimeFormatter;
 import java.util.Base64;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingConstants;
 import se.tink.libraries.account.AccountIdentifier;
@@ -90,10 +89,5 @@ public class UkOpenBankingV31Constants implements UkOpenBankingConstants {
         public static final String LAST_SCA_TIME = "last_SCA_time";
         static final String AIS_ACCOUNT_PERMISSIONS_GRANTED = "ais_account_permissions_granted";
         public static final String AIS_ACCOUNT_CONSENT_ID = "ais_account_consent_id";
-    }
-
-    public static class Format {
-        public static final DateTimeFormatter DATE_FORMAT =
-                DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
     }
 }

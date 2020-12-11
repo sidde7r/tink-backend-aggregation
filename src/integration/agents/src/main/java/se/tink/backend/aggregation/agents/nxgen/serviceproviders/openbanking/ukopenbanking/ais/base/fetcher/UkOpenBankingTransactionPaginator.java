@@ -9,7 +9,6 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingV31Constants.Format;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginator;
@@ -35,8 +34,8 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
             50; // Limits number of pages fetched in order to reduce loading.
     private static final long DEFAULT_MAX_ALLOWED_NUMBER_OF_MONTHS = 23;
     // we can decrease this to 15 days also in future.
-    private static final long DEFAULT_MAX_ALLOWED_DAYS = 89;
-    private static final String FROM_BOOKING_DATE_TIME = "?fromBookingDateTime=";
+    protected static final long DEFAULT_MAX_ALLOWED_DAYS = 89;
+    protected static final String FROM_BOOKING_DATE_TIME = "?fromBookingDateTime=";
     private static final String FETCHED_TRANSACTIONS_UNTIL = "fetchedTxUntil:";
     protected final UkOpenBankingApiClient apiClient;
     protected final Class<ResponseType> responseType;
@@ -119,15 +118,15 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
                 ukOpenBankingAisConfig.getInitialTransactionsPaginationKey(
                                 account.getApiIdentifier())
                         + FROM_BOOKING_DATE_TIME
-                        + Format.DATE_FORMAT.format(
+                        + DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(
                                 localDateTimeSource.now().minusDays(DEFAULT_MAX_ALLOWED_DAYS));
         return fetchTransactions(account, key);
     }
 
     protected String initialisePaginationKeyIfNull(AccountType account, String key) {
         if (key == null) {
-            final LocalDateTime fromDate =
-                    getLastTransactionsFetchedDate(account.getApiIdentifier()).toLocalDateTime();
+            final OffsetDateTime fromDate =
+                    getLastTransactionsFetchedDate(account.getApiIdentifier());
 
             /*
             We need to send in fromDate when fetching transactions to improve the performance
@@ -143,7 +142,7 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
                     ukOpenBankingAisConfig.getInitialTransactionsPaginationKey(
                                     account.getApiIdentifier())
                             + FROM_BOOKING_DATE_TIME
-                            + Format.DATE_FORMAT.format(fromDate);
+                            + DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(fromDate);
         }
         return key;
     }
@@ -176,7 +175,7 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
                                         .atOffset(ZoneOffset.UTC));
     }
 
-    private OffsetDateTime getLastTransactionsFetchedDate(String accountId) {
+    protected OffsetDateTime getLastTransactionsFetchedDate(String accountId) {
         final Optional<OffsetDateTime> lastTransactionsFetchedDate =
                 fetchedTransactionsUntil(accountId);
 
