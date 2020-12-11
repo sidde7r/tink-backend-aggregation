@@ -63,7 +63,7 @@ public final class DemobankAgent extends NextGenerationAgent
     public DemobankAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
         this.callbackUri = getCallbackUri();
-        apiClient = new DemobankApiClient(client, sessionStorage, callbackUri);
+        apiClient = new DemobankApiClient(client, persistentStorage, callbackUri);
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
         creditCardRefreshController = constructCreditCardRefreshController();
         client.addFilter(new BankServiceInternalErrorFilter());
@@ -89,7 +89,7 @@ public final class DemobankAgent extends NextGenerationAgent
 
     private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
         final DemobankTransactionalAccountFetcher demobankTransactionalAccountFetcher =
-                new DemobankTransactionalAccountFetcher(apiClient, sessionStorage, provider);
+                new DemobankTransactionalAccountFetcher(apiClient, provider);
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController,
@@ -116,7 +116,7 @@ public final class DemobankAgent extends NextGenerationAgent
 
     @Override
     protected SessionHandler constructSessionHandler() {
-        return new DemobankSessionHandler(sessionStorage);
+        return new DemobankSessionHandler(persistentStorage);
     }
 
     @Override
@@ -152,7 +152,7 @@ public final class DemobankAgent extends NextGenerationAgent
 
     private Authenticator constructPasswordAndOtpAuthenticator() {
         DemobankAutoAuthenticator autoAuthenticator =
-                new DemobankAutoAuthenticator(sessionStorage, apiClient);
+                new DemobankAutoAuthenticator(persistentStorage, apiClient);
         DemobankPasswordAndOtpAuthenticator authenticator =
                 new DemobankPasswordAndOtpAuthenticator(
                         apiClient, supplementalInformationController);
@@ -179,14 +179,14 @@ public final class DemobankAgent extends NextGenerationAgent
         DemobankDecoupledAppAuthenticator demobankDecoupledAppAuthenticator =
                 new DemobankDecoupledAppAuthenticator(apiClient, supplementalRequester);
         DemobankAutoAuthenticator autoAuthenticator =
-                new DemobankAutoAuthenticator(sessionStorage, apiClient);
+                new DemobankAutoAuthenticator(persistentStorage, apiClient);
         return new AutoAuthenticationController(
                 request, systemUpdater, demobankDecoupledAppAuthenticator, autoAuthenticator);
     }
 
     private Authenticator constructApptToAppAuthenticator() {
         DemobankAutoAuthenticator autoAuthenticator =
-                new DemobankAutoAuthenticator(sessionStorage, apiClient);
+                new DemobankAutoAuthenticator(persistentStorage, apiClient);
         DemobankAppToAppAuthenticator authenticator =
                 new DemobankAppToAppAuthenticator(
                         apiClient,
@@ -212,7 +212,7 @@ public final class DemobankAgent extends NextGenerationAgent
                         strongAuthenticationState);
 
         DemobankAutoAuthenticator autoAuthenticator =
-                new DemobankAutoAuthenticator(sessionStorage, apiClient);
+                new DemobankAutoAuthenticator(persistentStorage, apiClient);
 
         return new AutoAuthenticationController(
                 request, context, multiRedirectAuthenticator, autoAuthenticator);

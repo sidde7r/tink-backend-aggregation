@@ -50,7 +50,7 @@ public class DemobankRedirectAuthenticator implements OAuth2Authenticator {
             throws SessionException, BankServiceException {
         try {
             final OAuth2Token token = this.apiClient.refreshToken(refreshToken);
-            apiClient.setTokenToSession(token);
+            apiClient.setTokenToStorage(token);
             return token;
         } catch (HttpResponseException e) {
             if (e.getResponse().getStatus() == 401) {
@@ -62,6 +62,6 @@ public class DemobankRedirectAuthenticator implements OAuth2Authenticator {
 
     @Override
     public void useAccessToken(OAuth2Token accessToken) {
-        apiClient.setTokenToSession(accessToken);
+        apiClient.setTokenToStorage(accessToken);
     }
 }

@@ -10,19 +10,15 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class DemobankTransactionalAccountFetcher
         implements AccountFetcher<TransactionalAccount>,
                 TransactionDatePaginator<TransactionalAccount> {
     private final DemobankApiClient apiClient;
-    private final SessionStorage sessionStorage;
     private final Provider provider;
 
-    public DemobankTransactionalAccountFetcher(
-            DemobankApiClient apiClient, SessionStorage sessionStorage, Provider provider) {
+    public DemobankTransactionalAccountFetcher(DemobankApiClient apiClient, Provider provider) {
         this.apiClient = apiClient;
-        this.sessionStorage = sessionStorage;
         this.provider = provider;
     }
 

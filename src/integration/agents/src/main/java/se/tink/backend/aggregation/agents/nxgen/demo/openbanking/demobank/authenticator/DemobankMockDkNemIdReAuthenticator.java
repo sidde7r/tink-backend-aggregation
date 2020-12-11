@@ -113,7 +113,7 @@ public class DemobankMockDkNemIdReAuthenticator
         persistentStorage.put(
                 PSK_LOGIN_ENTITY, SerializationUtils.serializeToString(encryptionEntity));
 
-        apiClient.setTokenToSession(
+        apiClient.setTokenToStorage(
                 OAuth2Token.createBearer(
                         installIdResponse.getSessionToken(),
                         installIdResponse.getSessionToken(),
@@ -142,7 +142,7 @@ public class DemobankMockDkNemIdReAuthenticator
         NemIdLoginWithInstallIdResponse login =
                 apiClient.nemIdLoginWithInstallId(installIdResponse, token);
 
-        apiClient.setTokenToSession(
+        apiClient.setTokenToStorage(
                 OAuth2Token.createBearer(login.getSessionToken(), login.getSessionToken(), 3600));
     }
 }

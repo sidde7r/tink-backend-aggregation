@@ -54,7 +54,7 @@ public class DemobankPasswordAndOtpAuthenticator implements MultiFactorAuthentic
                                 otp)
                         .toOAuth2Token();
 
-        this.apiClient.setTokenToSession(token);
+        this.apiClient.setTokenToStorage(token);
         credentials.setSessionExpiryDate(
                 OpenBankingTokenExpirationDateHelper.getExpirationDateFrom(
                         token,

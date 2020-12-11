@@ -10,14 +10,15 @@ import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.Demoba
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.authenticator.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class DemobankAutoAuthenticator implements AutoAuthenticator {
-    private final SessionStorage sessionStorage;
+    private final PersistentStorage persistentStorage;
     private final DemobankApiClient apiClient;
 
-    public DemobankAutoAuthenticator(SessionStorage sessionStorage, DemobankApiClient apiClient) {
-        this.sessionStorage = sessionStorage;
+    public DemobankAutoAuthenticator(
+            PersistentStorage persistentStorage, DemobankApiClient apiClient) {
+        this.persistentStorage = persistentStorage;
         this.apiClient = apiClient;
     }
 
@@ -25,20 +26,20 @@ public class DemobankAutoAuthenticator implements AutoAuthenticator {
     public void autoAuthenticate()
             throws SessionException, LoginException, BankServiceException, AuthorizationException {
         OAuth2Token oAuth2Token =
-                sessionStorage
+                persistentStorage
                         .get(DemobankConstants.StorageKeys.OAUTH2_TOKEN, OAuth2Token.class)
                         .orElseThrow(SessionError.SESSION_EXPIRED::exception);
         if (oAuth2Token.hasAccessExpired()) {
             if (!oAuth2Token.canRefresh()) {
-                sessionStorage.remove(DemobankConstants.StorageKeys.OAUTH2_TOKEN);
+                persistentStorage.remove(DemobankConstants.StorageKeys.OAUTH2_TOKEN);
                 throw SessionError.SESSION_EXPIRED.exception();
             }
 
             try {
                 oAuth2Token = apiClient.refreshToken(oAuth2Token.getRefreshToken().get());
-                apiClient.setTokenToSession(oAuth2Token);
+                apiClient.setTokenToStorage(oAuth2Token);
             } catch (HttpResponseException ex) {
-                sessionStorage.remove(DemobankConstants.StorageKeys.OAUTH2_TOKEN);
+                persistentStorage.remove(DemobankConstants.StorageKeys.OAUTH2_TOKEN);
                 throw SessionError.SESSION_EXPIRED.exception();
             }
         }

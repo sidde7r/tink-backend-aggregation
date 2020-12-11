@@ -37,7 +37,7 @@ public class DemobankMockNoBankIdAuthenticator implements BankIdAuthenticatorNO 
                 apiClient.collectBankIdNo(this.ssn, this.sessionId);
         BankIdStatus status = bankIdCollectResponse.getBankIdStatus();
         if (BankIdStatus.DONE.equals(status)) {
-            apiClient.setTokenToSession(
+            apiClient.setTokenToStorage(
                     OAuth2Token.createBearer(
                             bankIdCollectResponse.getToken(),
                             bankIdCollectResponse.getToken(),
