@@ -7,8 +7,6 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.aggregation.agents.exceptions.LoginException;
-import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password.rpc.BindDeviceRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password.rpc.BindDeviceResponse;
@@ -45,7 +43,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeban
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
-import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.libraries.i18n.Catalog;
 
 public class DanskeBankApiClient {
@@ -118,21 +115,12 @@ public class DanskeBankApiClient {
     }
 
     public FinalizeAuthenticationResponse finalizeAuthentication(
-            FinalizeAuthenticationRequest request) throws LoginException {
-        HttpResponse response;
-        try {
-            response =
-                    postRequest(
-                            DanskeBankConstants.Urls.FINALIZE_AUTHENTICATION_URL,
-                            HttpResponse.class,
-                            request);
-        } catch (HttpResponseException e) {
-            if (e.getResponse().getStatus() == 401) {
-                throw LoginError.INCORRECT_CREDENTIALS.exception(e);
-            }
-            throw e;
-        }
-
+            FinalizeAuthenticationRequest request) {
+        final HttpResponse response =
+                postRequest(
+                        DanskeBankConstants.Urls.FINALIZE_AUTHENTICATION_URL,
+                        HttpResponse.class,
+                        request);
         handlePersistentAuthHeader(response);
         String responseBody = response.getBody(String.class);
         return DanskeBankDeserializer.convertStringToObject(

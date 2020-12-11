@@ -283,15 +283,6 @@ public class Account implements Identifiable, Cloneable {
         return accountFlags;
     }
 
-    @Override
-    public String toString() {
-        return MoreObjects.toStringHelper(this.getClass())
-                .add("id", getId())
-                .add("credentialsid", getCredentialsId())
-                .add("userid", getUserId())
-                .toString();
-    }
-
     public List<AccountIdentifier> getIdentifiers() {
         return deserializeIdentifiers();
     }
@@ -467,5 +458,39 @@ public class Account implements Identifiable, Cloneable {
 
     public void setBalances(List<Balance> balances) {
         this.balances = balances;
+    }
+
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this)
+                .add("accountNumber", accountNumber == null ? null : "***")
+                .add("availableCredit", availableCredit == 0 ? 0 : "***")
+                .add("balance", balance == 0 ? 0 : "***")
+                .add("currencyCode", currencyCode)
+                .add("bankId", bankId == null ? null : "***")
+                .add("certainDate", certainDate)
+                .add("credentialsId", credentialsId)
+                .add("excluded", excluded)
+                .add("favored", favored)
+                .add("id", id)
+                .add("name", name)
+                .add("ownership", ownership)
+                .add("payload", payload == null ? null : "***")
+                .add("type", type)
+                .add("userId", userId)
+                .add("userModifiedExcluded", userModifiedExcluded)
+                .add("userModifiedName", userModifiedName)
+                .add("userModifiedType", userModifiedType)
+                .add("identifiers", identifiers == null ? null : "***")
+                .add("transferDestinations", transferDestinations)
+                .add("details", details)
+                .add("holderName", holderName == null ? null : "***")
+                .add("closed", closed)
+                .add("flags", flags)
+                .add("accountExclusion", accountExclusion)
+                .add("financialInstitutionId", financialInstitutionId)
+                .add("availableBalance", availableBalance == null ? null : "***")
+                .add("creditLimit", creditLimit == null ? null : "***")
+                .toString();
     }
 }

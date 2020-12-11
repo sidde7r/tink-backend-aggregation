@@ -1,9 +1,11 @@
 package se.tink.backend.aggregation.aggregationcontroller.v1.rpc;
 
+import com.google.common.base.MoreObjects;
 import java.util.Objects;
 import se.tink.backend.agents.rpc.AccountHolder;
+import se.tink.libraries.jersey.utils.SafelyLoggable;
 
-public class UpdateAccountHolderRequest {
+public class UpdateAccountHolderRequest implements SafelyLoggable {
     private AccountHolder accountHolder;
     private String appId;
     private String userId;
@@ -45,5 +47,14 @@ public class UpdateAccountHolderRequest {
     @Override
     public int hashCode() {
         return Objects.hash(accountHolder, appId, userId);
+    }
+
+    @Override
+    public String toSafeString() {
+        return MoreObjects.toStringHelper(this)
+                .add("accountHolder", accountHolder == null ? null : "***")
+                .add("appId", appId)
+                .add("userId", userId)
+                .toString();
     }
 }

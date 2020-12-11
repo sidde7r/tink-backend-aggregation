@@ -1,10 +1,6 @@
 package se.tink.backend.integration.agent_data_availability_tracker.client;
 
-import se.tink.backend.agents.rpc.Account;
-import se.tink.backend.aggregation.agents.models.AccountFeatures;
-import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.IdentityData;
-import se.tink.backend.integration.agent_data_availability_tracker.client.serialization.AccountTrackingSerializer;
-import se.tink.backend.integration.agent_data_availability_tracker.client.serialization.IdentityDataSerializer;
+import se.tink.backend.integration.agent_data_availability_tracker.common.TrackingMapSerializer;
 
 public class AgentDataAvailabilityTrackerClientMockImpl
         implements AgentDataAvailabilityTrackerClient {
@@ -14,30 +10,14 @@ public class AgentDataAvailabilityTrackerClientMockImpl
 
     @Override
     public void sendAccount(
-            String agent,
-            String provider,
-            String market,
-            Account account,
-            AccountFeatures features) {}
+            String agent, String provider, String market, TrackingMapSerializer serializer) {}
 
     @Override
     public void sendIdentityData(
             final String agent,
             final String provider,
             final String market,
-            final se.tink.backend.aggregation.aggregationcontroller.v1.rpc.IdentityData
-                    identityData) {}
-
-    @Override
-    public AccountTrackingSerializer serializeAccount(
-            final Account account, final AccountFeatures features) {
-        return new AccountTrackingSerializer(new Account());
-    }
-
-    @Override
-    public IdentityDataSerializer serializeIdentityData(final IdentityData identityData) {
-        return new IdentityDataSerializer(new IdentityData());
-    }
+            final TrackingMapSerializer identityDataSerializer) {}
 
     @Override
     public void endStreamBlocking() throws InterruptedException {}

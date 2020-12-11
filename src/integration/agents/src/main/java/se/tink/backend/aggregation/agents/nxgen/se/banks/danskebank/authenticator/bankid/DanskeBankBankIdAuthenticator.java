@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.DanskeBankSEApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.DanskeBankSEConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.DanskeBankSEConstants.Storage;
@@ -27,6 +28,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeban
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class DanskeBankBankIdAuthenticator implements BankIdAuthenticator<String> {
@@ -162,12 +164,25 @@ public class DanskeBankBankIdAuthenticator implements BankIdAuthenticator<String
         if (finalizePackage == null) {
             throw new IllegalStateException("Finalize Package was null, aborting login");
         }
+        FinalizeAuthenticationResponse finalizeAuthenticationResponse;
+        try {
+            // Get encrypted finalize package
+            finalizeAuthenticationResponse =
+                    apiClient.finalizeAuthentication(
+                            FinalizeAuthenticationRequest.createForBankId(finalizePackage));
+            sessionStorage.put(Storage.IDENTITY_INFO, finalizeAuthenticationResponse);
+        } catch (HttpResponseException e) {
+            if (e.getResponse().getStatus() == 401) {
+                finalizeAuthenticationResponse =
+                        e.getResponse().getBody(FinalizeAuthenticationResponse.class);
+                if (finalizeAuthenticationResponse.getSessionStatus() == 520) {
+                    throw LoginError.DEFAULT_MESSAGE.exception(e);
+                }
 
-        // Get encrypted finalize package
-        FinalizeAuthenticationResponse finalizeAuthenticationResponse =
-                apiClient.finalizeAuthentication(
-                        FinalizeAuthenticationRequest.createForBankId(finalizePackage));
-        sessionStorage.put(Storage.IDENTITY_INFO, finalizeAuthenticationResponse);
+                throw LoginError.INCORRECT_CREDENTIALS.exception(e);
+            }
+            throw e;
+        }
         return finalizeAuthenticationResponse;
     }
 }

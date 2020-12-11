@@ -62,7 +62,6 @@ public final class KeySignerProvider implements Provider<JwtSigner> {
         // this is temporary solution, it should be deleted after the Tink and all of our clients
         // migration certificates to the eIDAS proxy
         if (EIDAS_ENABLED_APPS.contains(appId)) {
-            log.info("Initialize eIDAS JWT signer for '{}'", appId);
             X509Certificate certificate =
                     CertificateUtils.getX509CertificatesFromBase64EncodedCert(
                                     agentConfigurationControllerContext
@@ -70,6 +69,10 @@ public final class KeySignerProvider implements Provider<JwtSigner> {
                                             .getAgentConfiguration(UkOpenBankingConfiguration.class)
                                             .getQsealc())
                             .get(0);
+            log.info(
+                    "Initializing eIDAS JWT signer for appId '{}' with '{}' certificate",
+                    appId,
+                    certificate.getSubjectDN().getName());
             KidProvider kidProvider =
                     new JwksKidProvider(
                             new JwksClient(agentComponentProvider.getTinkHttpClient()),
@@ -77,6 +80,7 @@ public final class KeySignerProvider implements Provider<JwtSigner> {
                             certificate);
             return new EidasJwtSigner(kidProvider, createEidasJwsSigner());
         } else {
+            log.info("Initializing JWT signer using secrets appId: {}", appId);
             return new LocalJwtSigner((UkOpenBankingConfiguration) configuration);
         }
     }

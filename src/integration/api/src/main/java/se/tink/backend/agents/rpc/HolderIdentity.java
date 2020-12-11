@@ -1,5 +1,6 @@
 package se.tink.backend.agents.rpc;
 
+import com.google.common.base.MoreObjects;
 import java.util.Objects;
 
 public class HolderIdentity {
@@ -33,5 +34,13 @@ public class HolderIdentity {
     @Override
     public int hashCode() {
         return Objects.hash(name, role);
+    }
+
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this)
+                .add("name", name == null ? null : "***")
+                .add("role", role)
+                .toString();
     }
 }

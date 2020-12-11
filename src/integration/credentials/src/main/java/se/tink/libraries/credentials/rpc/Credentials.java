@@ -289,8 +289,24 @@ public class Credentials implements Cloneable {
     @Override
     public String toString() {
         return MoreObjects.toStringHelper(this.getClass())
-                .add("id", getId())
-                .add("userid", getUserId())
+                .add("debugUntil", debugUntil)
+                .add("providerLatency", providerLatency)
+                .add("sensitiveDataSerialized", sensitiveDataSerialized == null ? null : "***")
+                .add("fieldsSerialized", fieldsSerialized == null ? null : "***")
+                .add("id", id)
+                .add("nextUpdate", nextUpdate)
+                .add("payload", payload == null ? null : "***")
+                .add("providerName", providerName)
+                .add("secretKey", secretKey == null ? null : "***")
+                .add("sessionExpiryDate", sessionExpiryDate)
+                .add("status", status)
+                .add("statusPayload", statusPayload)
+                .add("statusPrompt", statusPrompt)
+                .add("statusUpdated", statusUpdated)
+                .add("supplementalInformation", supplementalInformation == null ? null : "***")
+                .add("type", type)
+                .add("updated", updated)
+                .add("userId", userId)
                 .toString();
     }
 }

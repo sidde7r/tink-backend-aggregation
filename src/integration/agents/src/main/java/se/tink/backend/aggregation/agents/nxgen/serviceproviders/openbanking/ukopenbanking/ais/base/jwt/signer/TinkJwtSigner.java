@@ -6,7 +6,6 @@ import com.nimbusds.jose.JWSHeader;
 import com.nimbusds.jose.JWSObject;
 import com.nimbusds.jose.JWSSigner;
 import com.nimbusds.jose.Payload;
-import java.util.Arrays;
 import java.util.Map;
 import java.util.Objects;
 import net.minidev.json.JSONObject;
@@ -41,8 +40,7 @@ public class TinkJwtSigner {
             signed.sign(this.signer);
             return signed.serialize(this.detachedPayload);
         } catch (JOSEException e) {
-            throw new IllegalStateException(
-                    "Signing request has failed." + Arrays.toString(e.getStackTrace()));
+            throw new IllegalStateException("Signing request has failed.", e);
         }
     }
 

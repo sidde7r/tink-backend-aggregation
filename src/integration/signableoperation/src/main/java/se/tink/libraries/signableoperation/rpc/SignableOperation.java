@@ -2,16 +2,18 @@ package se.tink.libraries.signableoperation.rpc;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableSet;
 import java.util.Date;
 import java.util.UUID;
+import se.tink.libraries.jersey.utils.SafelyLoggable;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.signableoperation.enums.SignableOperationTypes;
 import se.tink.libraries.transfer.rpc.Transfer;
 
-public class SignableOperation {
+public class SignableOperation implements SafelyLoggable {
     private static final ImmutableSet<SignableOperationStatuses> IN_PROGRESS_STATUSES =
             ImmutableSet.of(
                     SignableOperationStatuses.EXECUTING,
@@ -198,5 +200,24 @@ public class SignableOperation {
         INVALID_INPUT,
         TECHNICAL_ERROR,
         USER_VALIDATION_ERROR
+    }
+
+    @Override
+    public String toSafeString() {
+        return MoreObjects.toStringHelper(this)
+                .add("created", created)
+                .add("id", id)
+                .add("status", status)
+                .add("statusDetailsKey", statusDetailsKey)
+                .add("statusMessage", statusMessage)
+                .add("type", type)
+                .add("underlyingId", underlyingId)
+                .add("updated", updated)
+                .add("userId", userId)
+                .add("credentialsId", credentialsId)
+                .add("signableObject", signableObject)
+                .add("internalStatus", internalStatus)
+                .add("correlationId", correlationId)
+                .toString();
     }
 }

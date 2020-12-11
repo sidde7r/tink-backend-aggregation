@@ -1,9 +1,12 @@
 package se.tink.backend.aggregation.aggregationcontroller.v1.rpc;
 
+import com.google.common.base.MoreObjects;
 import java.util.List;
+import se.tink.libraries.jersey.utils.SafelyLoggable;
 
-public class ProcessAccountsRequest {
+public class ProcessAccountsRequest implements SafelyLoggable {
     private List<String> accountIds;
+    private List<String> requestedAccountIds;
     private String credentialsId;
     private String userId;
     private String operationId;
@@ -38,5 +41,24 @@ public class ProcessAccountsRequest {
 
     public void setOperationId(String operationId) {
         this.operationId = operationId;
+    }
+
+    @Override
+    public String toSafeString() {
+        return MoreObjects.toStringHelper(this)
+                .add("accountIds", accountIds)
+                .add("requestedAccountIds", requestedAccountIds)
+                .add("credentialsId", credentialsId)
+                .add("userId", userId)
+                .add("operationId", operationId)
+                .toString();
+    }
+
+    public List<String> getRequestedAccountIds() {
+        return requestedAccountIds;
+    }
+
+    public void setRequestedAccountIds(List<String> requestedAccountIds) {
+        this.requestedAccountIds = requestedAccountIds;
     }
 }

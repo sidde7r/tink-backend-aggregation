@@ -17,6 +17,7 @@ import java.security.KeyPair;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
@@ -60,14 +61,15 @@ public class EdiClient {
         X509Certificate certificate = EdiCryptoUtils.parseCertificate(certPemBytes);
         Certificate[] certChain = new Certificate[1];
         certChain[0] = certificate;
-        KeyStore keyStore = KeyStore.getInstance("PKCS12");
+        KeyStore keyStore = KeyStore.getInstance("PKCS12", "BC");
         keyStore.load(null, DEFAULT_KEYSTORE_PWD);
         keyStore.setKeyEntry(CERT_ALIAS, pair.getPrivate(), null, certChain);
         return keyStore;
     }
 
     public static KeyStore requestOrGetDevCert(File workDir)
-            throws KeyStoreException, IOException, CertificateException, NoSuchAlgorithmException {
+            throws KeyStoreException, IOException, CertificateException, NoSuchAlgorithmException,
+                    NoSuchProviderException {
         if (!workDir.exists() && !workDir.mkdirs()) {
             LOG.warn("Could not make working directory; " + workDir.getAbsolutePath());
         }
@@ -130,8 +132,9 @@ public class EdiClient {
     }
 
     private static KeyStore loadExistingKeystore(File devCertKeystore)
-            throws KeyStoreException, IOException, NoSuchAlgorithmException, CertificateException {
-        KeyStore keyStore = KeyStore.getInstance("PKCS12");
+            throws KeyStoreException, IOException, NoSuchAlgorithmException, CertificateException,
+                    NoSuchProviderException {
+        KeyStore keyStore = KeyStore.getInstance("PKCS12", "BC");
         try (FileInputStream keyStoreStream = new FileInputStream(devCertKeystore)) {
             keyStore.load(keyStoreStream, DEFAULT_KEYSTORE_PWD);
         }
@@ -139,7 +142,8 @@ public class EdiClient {
     }
 
     public static KeyStore requestOrGetDevCert()
-            throws KeyStoreException, IOException, CertificateException, NoSuchAlgorithmException {
+            throws KeyStoreException, IOException, CertificateException, NoSuchAlgorithmException,
+                    NoSuchProviderException {
         return requestOrGetDevCert(getDefaultWorkDir());
     }
 

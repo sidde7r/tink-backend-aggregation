@@ -1,6 +1,9 @@
 package se.tink.backend.aggregation.aggregationcontroller.v1.rpc;
 
-public class UpdateIdentityDataRequest {
+import com.google.common.base.MoreObjects;
+import se.tink.libraries.jersey.utils.SafelyLoggable;
+
+public class UpdateIdentityDataRequest implements SafelyLoggable {
     private IdentityData identityData;
     private String userId;
     private String providerName;
@@ -27,5 +30,14 @@ public class UpdateIdentityDataRequest {
 
     public void setProviderName(String providerName) {
         this.providerName = providerName;
+    }
+
+    @Override
+    public String toSafeString() {
+        return MoreObjects.toStringHelper(this)
+                .add("userId", userId)
+                .add("providerName", providerName)
+                .add("identityData", identityData == null ? null : "***")
+                .toString();
     }
 }

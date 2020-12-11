@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.models;
 
+import com.google.common.base.MoreObjects;
 import java.util.List;
 
 public class Portfolio {
@@ -81,5 +82,18 @@ public class Portfolio {
 
     public void setCashValue(Double cashValue) {
         this.cashValue = cashValue;
+    }
+
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this)
+                .add("uniqueIdentifier", uniqueIdentifier)
+                .add("totalProfit", totalProfit)
+                .add("cashValue", cashValue == null ? null : "***")
+                .add("totalValue", totalValue == null ? null : "***")
+                .add("type", type)
+                .add("rawType", rawType)
+                .add("instruments", instruments)
+                .toString();
     }
 }

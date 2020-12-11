@@ -19,7 +19,7 @@ public class EnterCardAccountFetcher implements AccountFetcher<CreditCardAccount
     public Collection<CreditCardAccount> fetchAccounts() {
         UserResponse response = apiClient.fetchUserDetails();
 
-        return response.getAccountIds().stream()
+        return response.getCreditCardAccountIds().stream()
                 .map(
                         accountId ->
                                 apiClient

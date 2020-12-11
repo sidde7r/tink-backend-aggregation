@@ -26,6 +26,9 @@ public class DanskeBankPasswordErrorHandler {
             case 520:
                 throw LoginError.INCORRECT_CREDENTIALS.exception(hre);
             default:
+                if (response.getStatus() == 401) {
+                    throw LoginError.INCORRECT_CREDENTIALS.exception(hre);
+                }
                 throw hre;
         }
     }

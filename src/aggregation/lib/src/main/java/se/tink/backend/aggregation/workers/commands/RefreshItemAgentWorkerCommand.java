@@ -44,7 +44,8 @@ import se.tink.backend.aggregation.workers.operation.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
 import se.tink.backend.aggregation.workers.operation.type.AgentWorkerOperationMetricType;
 import se.tink.backend.integration.agent_data_availability_tracker.client.AgentDataAvailabilityTrackerClient;
-import se.tink.backend.integration.agent_data_availability_tracker.client.serialization.IdentityDataSerializer;
+import se.tink.backend.integration.agent_data_availability_tracker.serialization.IdentityDataSerializer;
+import se.tink.backend.integration.agent_data_availability_tracker.serialization.SerializationUtils;
 import se.tink.eventproducerservice.events.grpc.RefreshResultEventProto.RefreshResultEvent.AdditionalInfo;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.DataFetchingRestrictions;
@@ -291,12 +292,11 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
 
         log.info("Sending Identity to AgentDataAvailabilityTracker");
 
-        agentDataAvailabilityTrackerClient.sendIdentityData(
-                agentName, provider, market, context.getAggregationIdentityData());
-
         IdentityDataSerializer serializer =
-                agentDataAvailabilityTrackerClient.serializeIdentityData(
-                        context.getAggregationIdentityData());
+                SerializationUtils.serializeIdentityData(context.getAggregationIdentityData());
+
+        agentDataAvailabilityTrackerClient.sendIdentityData(
+                agentName, provider, market, serializer);
 
         List<Pair<String, Boolean>> eventData = new ArrayList<>();
 

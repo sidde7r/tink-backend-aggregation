@@ -53,7 +53,11 @@ public class BankEntity {
     @JsonIgnore
     public Optional<BusinessProfileEntity> getBusinessProfile(String organizationNumber) {
         return ListUtils.emptyIfNull(businessProfiles).stream()
-                .filter(profile -> profile.getCustomerNumber().equalsIgnoreCase(organizationNumber))
+                .filter(
+                        profile ->
+                                profile.getCustomerNumber()
+                                        .replace("-", "")
+                                        .contains(organizationNumber.replace("-", "")))
                 .findFirst();
     }
 }

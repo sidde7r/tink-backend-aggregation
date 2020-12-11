@@ -332,19 +332,55 @@ public class AggregationServiceResource implements AggregationService {
                         .collect(Collectors.toList());
 
         Preconditions.checkState(
-                validateFilteredProviders(filteredProviders),
-                String.format(
-                        "Trying to validate secrets. Should find 1 provider for financialInstituionId : %s, but found instead : %d",
-                        financialInstitutionId, filteredProviders.size()));
+                !allProviders.isEmpty(), "Should find at least 1 provider for all providers");
 
-        return new ClientConfigurationValidator(Provider.of(filteredProviders.get(0)))
+        boolean filteredProvidersValid = validateFilteredProviders(filteredProviders);
+        String nonUniqueProviderNames =
+                getNonUniqueProviderNames(
+                        filteredProvidersValid,
+                        providerId,
+                        financialInstitutionId,
+                        filteredProviders.size());
+
+        ProviderConfiguration filterProvider;
+        if (filteredProvidersValid) {
+            filterProvider = filteredProviders.get(0);
+        } else {
+            filterProvider = allProviders.get(0);
+        }
+        return new ClientConfigurationValidator(Provider.of(filterProvider))
                 .validate(
                         request.getSecretsNames(),
                         request.getExcludedSecretsNames(),
                         request.getSensitiveSecretsNames(),
                         request.getExcludedSensitiveSecretsNames(),
                         request.getAgentConfigParamNames(),
-                        request.getExcludedAgentConfigParamNames());
+                        request.getExcludedAgentConfigParamNames(),
+                        nonUniqueProviderNames);
+    }
+
+    private String getNonUniqueProviderNames(
+            boolean filteredProvidersValid,
+            String providerId,
+            String financialInstitutionId,
+            int numOfFilteredProviders) {
+        String nonUniqueProviderNames = "";
+
+        if (filteredProvidersValid) {
+            return nonUniqueProviderNames;
+        }
+
+        if (!Strings.isNullOrEmpty(providerId)) {
+            nonUniqueProviderNames = "for providerId : " + providerId;
+        } else {
+            nonUniqueProviderNames = "for financialInstitutionId : " + financialInstitutionId;
+        }
+
+        nonUniqueProviderNames =
+                nonUniqueProviderNames
+                        + String.format(" but found instead : %d ", numOfFilteredProviders);
+
+        return nonUniqueProviderNames;
     }
 
     @Override
