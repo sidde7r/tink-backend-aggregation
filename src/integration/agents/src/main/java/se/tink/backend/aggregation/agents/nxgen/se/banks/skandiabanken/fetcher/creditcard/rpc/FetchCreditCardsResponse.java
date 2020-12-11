@@ -1,15 +1,16 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.creditcard.rpc;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import java.util.Collections;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import java.util.List;
+import lombok.Getter;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.creditcard.entities.CardEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 
+@Getter
 @JsonObject
+@JsonNaming(PropertyNamingStrategy.UpperCamelCaseStrategy.class)
 public class FetchCreditCardsResponse {
-    @JsonIgnore
-    public List<CreditCardAccount> toTinkCards() {
-        return Collections.emptyList();
-    }
+
+    private List<CardEntity> cards;
 }
