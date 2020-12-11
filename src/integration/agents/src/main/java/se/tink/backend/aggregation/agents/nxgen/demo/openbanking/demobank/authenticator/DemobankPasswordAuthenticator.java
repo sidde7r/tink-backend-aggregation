@@ -18,6 +18,6 @@ public class DemobankPasswordAuthenticator implements PasswordAuthenticator {
             throws AuthenticationException, AuthorizationException {
 
         OAuth2Token oAuth2Token = apiClient.login(username, password);
-        apiClient.setTokenToSession(oAuth2Token);
+        apiClient.setTokenToStorage(oAuth2Token);
     }
 }

@@ -53,7 +53,7 @@ public class DemobankDecoupledAppAuthenticator implements TypedAuthenticator, Au
                         token,
                         DemobankConstants.DEFAULT_OB_TOKEN_LIFETIME,
                         DemobankConstants.DEFAULT_OB_TOKEN_LIFETIME_UNIT));
-        apiClient.setTokenToSession(token);
+        apiClient.setTokenToStorage(token);
     }
 
     private OAuth2Token awaitConfirmation(String ticket) throws LoginException {

@@ -40,34 +40,31 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class DemobankApiClient {
 
     private final TinkHttpClient client;
-    private final SessionStorage sessionStorage;
+    private final PersistentStorage persistentStorage;
     private final String callbackUri;
 
     public DemobankApiClient(
-            TinkHttpClient client, SessionStorage sessionStorage, String callbackUri) {
+            TinkHttpClient client, PersistentStorage persistentStorage, String callbackUri) {
         this.client = client;
-        this.sessionStorage = sessionStorage;
+        this.persistentStorage = persistentStorage;
         this.callbackUri = callbackUri;
     }
 
-    public void setTokenToSession(OAuth2Token accessToken) {
-        sessionStorage.put(StorageKeys.OAUTH2_TOKEN, accessToken);
+    public void setTokenToStorage(OAuth2Token accessToken) {
+        persistentStorage.put(StorageKeys.OAUTH2_TOKEN, accessToken);
     }
 
     public OAuth2Token getOauth2TokenFromStorage() {
-        return sessionStorage
+        return persistentStorage
                 .get(StorageKeys.OAUTH2_TOKEN, OAuth2Token.class)
-                .orElseThrow(
-                        () ->
-                                new IllegalStateException(
-                                        "Couldn't find token from session storage"));
+                .orElseThrow(() -> new IllegalStateException("Couldn't find token from storage"));
     }
 
     public URL fetchBaseUrl() {

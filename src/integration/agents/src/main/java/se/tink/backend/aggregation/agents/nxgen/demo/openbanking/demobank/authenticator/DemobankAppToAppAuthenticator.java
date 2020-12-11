@@ -99,7 +99,7 @@ public class DemobankAppToAppAuthenticator
                             token,
                             DemobankConstants.DEFAULT_OB_TOKEN_LIFETIME,
                             DemobankConstants.DEFAULT_OB_TOKEN_LIFETIME_UNIT));
-            apiClient.setTokenToSession(token);
+            apiClient.setTokenToStorage(token);
             return new ThirdPartyAppResponse<CreateTicketResponse>() {
                 @Override
                 public ThirdPartyAppStatus getStatus() {
