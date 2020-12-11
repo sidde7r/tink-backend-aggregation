@@ -1,7 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import javax.ws.rs.core.MediaType;
@@ -20,6 +22,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingConstants.PartyEndpoint;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticatorConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.configuration.ClientInfo;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.configuration.SoftwareStatementAssertion;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.signer.iface.JwtSigner;
@@ -59,7 +62,12 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
     }
 
     private <T extends AccountPermissionResponse> T createAccountIntentId(Class<T> responseType) {
-        Set<String> accountPermissions = aisConfig.getPermissions();
+        // Account Permissions are added to persistentStorage
+        Set<String> accountPermissions =
+                new HashSet<>(OpenIdAuthenticatorConstants.ACCOUNT_PERMISSIONS);
+        if (Objects.nonNull(aisConfig.getAdditionalPermissions())) {
+            accountPermissions.addAll(aisConfig.getAdditionalPermissions());
+        }
 
         persistentStorage.put(
                 UkOpenBankingV31Constants.PersistentStorageKeys.AIS_ACCOUNT_PERMISSIONS_GRANTED,
@@ -67,7 +75,7 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
 
         return createAisRequest(aisConfig.createConsentRequestURL())
                 .type(MediaType.APPLICATION_JSON_TYPE)
-                .body(AccountPermissionRequest.create(accountPermissions))
+                .body(AccountPermissionRequest.create(aisConfig.getAdditionalPermissions()))
                 .post(responseType);
     }
 

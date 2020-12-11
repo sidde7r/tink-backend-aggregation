@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingV31Constants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.authenticator.rpc.AccountPermissionResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountOwnershipType;
@@ -13,7 +12,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingConstants.ApiServices;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingConstants.PartyEndpoint;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.authenticator.rpc.AccountPermissionResponseV31;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticatorConstants;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class UKOpenBankingAis implements UkOpenBankingAisConfig {
@@ -23,7 +21,6 @@ public class UKOpenBankingAis implements UkOpenBankingAisConfig {
     private final Set<PartyEndpoint> partyEndpoints;
     private final AccountOwnershipType allowedAccountOwnershipType;
     private final String organisationId;
-    private final Set<String> permissions;
 
     private UKOpenBankingAis(Builder builder) {
         this.apiBaseURL = builder.apiBaseURL;
@@ -32,7 +29,6 @@ public class UKOpenBankingAis implements UkOpenBankingAisConfig {
         this.partyEndpoints = builder.partyEndpoints;
         this.allowedAccountOwnershipType = builder.allowedAccountOwnershipType;
         this.organisationId = builder.organisationId;
-        this.permissions = builder.permissions;
     }
 
     @Override
@@ -112,13 +108,9 @@ public class UKOpenBankingAis implements UkOpenBankingAisConfig {
     }
 
     @Override
-    public Set<String> getPermissions() {
-        return Stream.concat(
-                        this.permissions.stream(),
-                        this.partyEndpoints.stream()
-                                .flatMap(partyEndpoint -> partyEndpoint.getPermissions().stream())
-                                .collect(Collectors.toSet())
-                                .stream())
+    public Set<String> getAdditionalPermissions() {
+        return this.partyEndpoints.stream()
+                .flatMap(partyEndpoint -> partyEndpoint.getPermissions().stream())
                 .collect(Collectors.toSet());
     }
 
@@ -148,8 +140,6 @@ public class UKOpenBankingAis implements UkOpenBankingAisConfig {
         private URL appToAppURL;
         private AccountOwnershipType allowedAccountOwnershipType = AccountOwnershipType.PERSONAL;
         private String organisationId;
-        private Set<String> permissions =
-                new HashSet<>(OpenIdAuthenticatorConstants.ACCOUNT_PERMISSIONS);
 
         private Builder() {}
 
@@ -183,11 +173,6 @@ public class UKOpenBankingAis implements UkOpenBankingAisConfig {
 
         public Builder withOrganisationId(final String organisationId) {
             this.organisationId = organisationId;
-            return this;
-        }
-
-        public Builder withPermissions(final Set<String> permissions) {
-            this.permissions = permissions;
             return this;
         }
 
