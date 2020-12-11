@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey;
 
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants.Transactions;
+
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -284,12 +286,14 @@ public class CrosskeyBaseApiClient {
             if (exceptionResponse.getStatus() == 403) {
                 TransactionExceptionEntity responseBody =
                         exceptionResponse.getBody(TransactionExceptionEntity.class);
-                fromBookingDateTime = extractMinimalTransactionDateFromException(responseBody);
+                LocalDateTime fromDateTime =
+                        extractMinimalTransactionDateFromException(responseBody);
+                LocalDateTime toDateTime = adjustToDateToSuitGivenInterval(fromDateTime);
                 response =
                         createRequestInSession(
                                         prepareTransactionUrl(
-                                                fromBookingDateTime,
-                                                toBookingDateTime,
+                                                formatDateForTransactionFetch(fromDateTime),
+                                                formatDateForTransactionFetch(toDateTime),
                                                 apiIdentifier))
                                 .get(CrosskeyTransactionsResponse.class);
                 response.setCanFetchMoreFalse();
@@ -404,9 +408,7 @@ public class CrosskeyBaseApiClient {
     }
 
     private String formatAndSetZeroTime(LocalDate localDate) {
-        return localDate
-                .atTime(0, 0)
-                .format(DateTimeFormatter.ofPattern(Format.TRANSACTION_DATE_FETCHER));
+        return formatDateForTransactionFetch(localDate.atTime(0, 0));
     }
 
     private URL prepareTransactionUrl(
@@ -417,7 +419,7 @@ public class CrosskeyBaseApiClient {
                 .queryParam(UrlParameters.FROM_BOOKING_DATE, fromBookingDateTime);
     }
 
-    private String extractMinimalTransactionDateFromException(
+    private LocalDateTime extractMinimalTransactionDateFromException(
             TransactionExceptionEntity exception) {
         Pattern pattern = Pattern.compile("\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}");
         String exceptionMessage = exception.getMessage();
@@ -430,8 +432,16 @@ public class CrosskeyBaseApiClient {
             throw new IllegalStateException(
                     String.format("Unknown exception message: %s", exceptionMessage));
         }
-        return LocalDateTime.parse(allGroups.get(0))
-                .plusMinutes(10)
-                .format(DateTimeFormatter.ofPattern(Format.TRANSACTION_DATE_FETCHER));
+        return LocalDateTime.parse(allGroups.get(0)).plusMinutes(Transactions.MINUTES_MARGIN);
+    }
+
+    private LocalDateTime adjustToDateToSuitGivenInterval(LocalDateTime fromDateTime) {
+        return fromDateTime
+                .plusDays(Transactions.DAYS_WINDOW)
+                .minusMinutes(Transactions.MINUTES_MARGIN);
+    }
+
+    private String formatDateForTransactionFetch(LocalDateTime dateTime) {
+        return dateTime.format(DateTimeFormatter.ofPattern(Format.TRANSACTION_DATE_FETCHER));
     }
 }
