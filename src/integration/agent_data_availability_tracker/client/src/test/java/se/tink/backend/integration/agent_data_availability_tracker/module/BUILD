@@ -9,6 +9,9 @@ junit_test(
         "//data:qsealc_crt",
     ],
     visibility = ["//visibility:public"],
+    runtime_deps = [
+        "@aggregation//:io_netty_netty_tcnative_boringssl_static",
+    ],
     deps = [
         "//src/integration/agent_data_availability_tracker/client",
         "//src/integration/agent_data_availability_tracker/client/src/main/java/se/tink/backend/integration/agent_data_availability_tracker/module:agent-data-availability-tracker-module",
