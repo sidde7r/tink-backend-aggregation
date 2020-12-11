@@ -112,6 +112,8 @@ public abstract class CrosskeyBaseConstants {
     public static class Transactions {
         public static final String STATUS_BOOKED = "Booked";
         public static final String DEBIT = "Debit";
+        public static final int MINUTES_MARGIN = 10;
+        public static final int DAYS_WINDOW = 90;
     }
 
     public static class Format {
