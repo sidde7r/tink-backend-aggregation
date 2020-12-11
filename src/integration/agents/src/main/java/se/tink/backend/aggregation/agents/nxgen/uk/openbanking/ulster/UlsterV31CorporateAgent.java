@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.ulster;
 
-import static se.tink.backend.aggregation.agents.nxgen.uk.openbanking.ulster.UlsterConstants.Urls.V31.ORG_ID;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CREDIT_CARDS;
 
@@ -17,7 +16,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.UKOpenBankingAis;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.UkOpenBankingV31Ais;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.signer.iface.JwtSigner;
-import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.ulster.UlsterConstants.Urls.V31;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 
 @AgentDependencyModulesForProductionMode(
@@ -32,9 +30,9 @@ public class UlsterV31CorporateAgent extends UkOpenBankingBaseAgent {
     static {
         aisConfig =
                 UKOpenBankingAis.builder()
-                        .withOrganisationId(ORG_ID)
-                        .withApiBaseURL(V31.AIS_API_URL)
-                        .withWellKnownURL(V31.CORPORATE_WELL_KNOWN_URL)
+                        .withOrganisationId(UlsterConstants.ORG_ID)
+                        .withApiBaseURL(UlsterConstants.AIS_API_URL)
+                        .withWellKnownURL(UlsterConstants.CORPORATE_WELL_KNOWN_URL)
                         .build();
     }
 

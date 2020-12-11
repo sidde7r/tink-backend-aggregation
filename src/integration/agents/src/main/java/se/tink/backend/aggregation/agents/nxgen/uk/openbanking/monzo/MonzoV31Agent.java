@@ -21,7 +21,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.UkOpenBankingV31Ais;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.signer.iface.JwtSigner;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.configuration.UkOpenBankingPisConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.MonzoConstants.Urls;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 
@@ -39,8 +38,8 @@ public final class MonzoV31Agent extends UkOpenBankingBaseAgent {
         aisConfig =
                 UKOpenBankingAis.builder()
                         .withOrganisationId(MonzoConstants.ORGANISATION_ID)
-                        .withApiBaseURL(Urls.AIS_API_URL)
-                        .withWellKnownURL(Urls.WELL_KNOWN_URL)
+                        .withApiBaseURL(MonzoConstants.AIS_API_URL)
+                        .withWellKnownURL(MonzoConstants.WELL_KNOWN_URL)
                         .withPartyEndpoints(PartyEndpoint.IDENTITY_DATA_ENDPOINT_PARTY)
                         .build();
     }
@@ -52,7 +51,9 @@ public final class MonzoV31Agent extends UkOpenBankingBaseAgent {
                 jwtSigner,
                 aisConfig,
                 new UkOpenBankingPisConfiguration(
-                        MonzoConstants.ORGANISATION_ID, Urls.PIS_API_URL, Urls.WELL_KNOWN_URL));
+                        MonzoConstants.ORGANISATION_ID,
+                        MonzoConstants.PIS_API_URL,
+                        MonzoConstants.WELL_KNOWN_URL));
         this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
     }
 

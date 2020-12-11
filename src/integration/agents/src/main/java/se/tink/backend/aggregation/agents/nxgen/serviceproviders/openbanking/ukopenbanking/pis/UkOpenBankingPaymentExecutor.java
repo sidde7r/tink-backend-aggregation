@@ -149,9 +149,7 @@ public class UkOpenBankingPaymentExecutor implements PaymentExecutor, FetchableP
 
     private static Optional<String> getPaymentId(PaymentRequest paymentRequest) {
         return Optional.ofNullable(
-                paymentRequest
-                        .getStorage()
-                        .get(UkOpenBankingV31PaymentConstants.Storage.PAYMENT_ID));
+                paymentRequest.getStorage().get(UkOpenBankingPaymentConstants.PAYMENT_ID_KEY));
     }
 
     public static String getConsentId(PaymentRequest paymentRequest) {
@@ -159,7 +157,7 @@ public class UkOpenBankingPaymentExecutor implements PaymentExecutor, FetchableP
                 Optional.ofNullable(
                         paymentRequest
                                 .getStorage()
-                                .get(UkOpenBankingV31PaymentConstants.Storage.CONSENT_ID));
+                                .get(UkOpenBankingPaymentConstants.CONSENT_ID_KEY));
 
         return maybeConsentId.orElseThrow(
                 () -> new IllegalArgumentException(("consentId cannot be null or empty!")));

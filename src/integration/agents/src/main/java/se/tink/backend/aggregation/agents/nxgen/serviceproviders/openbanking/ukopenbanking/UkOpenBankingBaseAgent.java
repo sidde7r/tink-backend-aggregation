@@ -461,14 +461,16 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
             UkOpenBankingRequestBuilder requestBuilder) {
         final UkOpenBankingPaymentApiClient domesticPaymentApiClient =
                 new DomesticPaymentApiClient(
-                        requestBuilder, new DomesticPaymentConverter(), pisConfig);
+                        requestBuilder, new DomesticPaymentConverter(), pisConfig.getBaseUrl());
 
         return ImmutableMap.of(
                 PaymentType.DOMESTIC,
                 domesticPaymentApiClient,
                 PaymentType.DOMESTIC_FUTURE,
                 new DomesticScheduledPaymentApiClient(
-                        requestBuilder, new DomesticScheduledPaymentConverter(), pisConfig),
+                        requestBuilder,
+                        new DomesticScheduledPaymentConverter(),
+                        pisConfig.getBaseUrl()),
                 PaymentType.SEPA,
                 domesticPaymentApiClient);
     }

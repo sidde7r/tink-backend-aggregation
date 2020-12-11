@@ -24,7 +24,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.configuration.SoftwareStatementAssertion;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.signer.iface.JwtSigner;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.configuration.UkOpenBankingPisConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.firstdirect.FirstDirectConstants.Urls.V313;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.hsbc.HsbcGroupApiClient;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.hsbc.pis.validator.HsbcPaymentRequestValidator;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
@@ -48,15 +47,15 @@ public final class FirstDirectV31Agent extends UkOpenBankingBaseAgent {
         aisConfig =
                 UKOpenBankingAis.builder()
                         .withOrganisationId(FirstDirectConstants.ORGANISATION_ID)
-                        .withApiBaseURL(V313.AIS_API_URL)
-                        .withWellKnownURL(V313.WELL_KNOWN_URL)
+                        .withApiBaseURL(FirstDirectConstants.AIS_API_URL)
+                        .withWellKnownURL(FirstDirectConstants.WELL_KNOWN_URL)
                         .withPartyEndpoints(PartyEndpoint.IDENTITY_DATA_ENDPOINT_ACCOUNT_ID_PARTY)
                         .build();
         pisConfig =
                 new UkOpenBankingPisConfiguration(
                         FirstDirectConstants.ORGANISATION_ID,
-                        V313.PIS_API_URL,
-                        V313.WELL_KNOWN_URL);
+                        FirstDirectConstants.PIS_API_URL,
+                        FirstDirectConstants.WELL_KNOWN_URL);
     }
 
     @Inject

@@ -4,21 +4,16 @@ final class LloydsConstants {
 
     public static final String ORGANISATION_ID = "0015800000jf9GgAAI";
 
-    class Urls {
-
-        class V31 {
-            public static final String AIS_API_URL =
-                    "https://secure-api.lloydsbank.com/prod01/lbg/lyds/open-banking/v3.1/aisp";
-            public static final String PIS_API_URL =
-                    "https://secure-api.lloydsbank.com/prod01/lbg/lyds/open-banking/v3.1/pisp";
-            public static final String APP_TO_APP_AUTH_URL =
-                    "https://authorise-api.lloydsbank.co.uk/prod01/lbg/lyds/personal/oidc-api/v1.1/authorize";
-            public static final String WELL_KNOWN_PERSONAL_URL =
-                    "https://authorise-api.lloydsbank.co.uk/prod01/channel/lyds/personal/.well-known/openid-configuration";
-            public static final String WELL_KNOWN_BUSINESS_URL =
-                    "https://authorise-api.lloydsbank.co.uk/prod01/channel/lyds/business/.well-known/openid-configuration";
-            public static final String WELL_KNOWN_CORPORATE_URL =
-                    "https://authorise-api.lloydsbank.co.uk/prod01/channel/lyds/commercial/.well-known/openid-configuration";
-        }
-    }
+    public static final String AIS_API_URL =
+            "https://secure-api.lloydsbank.com/prod01/lbg/lyds/open-banking/v3.1/aisp";
+    public static final String PIS_API_URL =
+            "https://secure-api.lloydsbank.com/prod01/lbg/lyds/open-banking/v3.1/pisp";
+    public static final String APP_TO_APP_AUTH_URL =
+            "https://authorise-api.lloydsbank.co.uk/prod01/lbg/lyds/personal/oidc-api/v1.1/authorize";
+    public static final String WELL_KNOWN_PERSONAL_URL =
+            "https://authorise-api.lloydsbank.co.uk/prod01/channel/lyds/personal/.well-known/openid-configuration";
+    public static final String WELL_KNOWN_BUSINESS_URL =
+            "https://authorise-api.lloydsbank.co.uk/prod01/channel/lyds/business/.well-known/openid-configuration";
+    public static final String WELL_KNOWN_CORPORATE_URL =
+            "https://authorise-api.lloydsbank.co.uk/prod01/channel/lyds/commercial/.well-known/openid-configuration";
 }

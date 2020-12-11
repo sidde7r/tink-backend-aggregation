@@ -19,7 +19,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.UkOpenBankingV31Ais;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.signer.iface.JwtSigner;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.configuration.UkOpenBankingPisConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.lloyds.LloydsConstants.Urls.V31;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 
@@ -37,9 +36,9 @@ public final class LloydsV31Agent extends UkOpenBankingBaseAgent {
         aisConfig =
                 UKOpenBankingAis.builder()
                         .withOrganisationId(LloydsConstants.ORGANISATION_ID)
-                        .withApiBaseURL(V31.AIS_API_URL)
-                        .withWellKnownURL(V31.WELL_KNOWN_PERSONAL_URL)
-                        .withAppToAppURL(V31.APP_TO_APP_AUTH_URL)
+                        .withApiBaseURL(LloydsConstants.AIS_API_URL)
+                        .withWellKnownURL(LloydsConstants.WELL_KNOWN_PERSONAL_URL)
+                        .withAppToAppURL(LloydsConstants.APP_TO_APP_AUTH_URL)
                         .build();
     }
 
@@ -51,8 +50,8 @@ public final class LloydsV31Agent extends UkOpenBankingBaseAgent {
                 aisConfig,
                 new UkOpenBankingPisConfiguration(
                         LloydsConstants.ORGANISATION_ID,
-                        V31.PIS_API_URL,
-                        V31.WELL_KNOWN_PERSONAL_URL));
+                        LloydsConstants.PIS_API_URL,
+                        LloydsConstants.WELL_KNOWN_PERSONAL_URL));
         this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
     }
 

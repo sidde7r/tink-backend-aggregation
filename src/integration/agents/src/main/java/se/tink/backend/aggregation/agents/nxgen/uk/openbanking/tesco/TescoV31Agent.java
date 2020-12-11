@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.tesco;
 
-import static se.tink.backend.aggregation.agents.nxgen.uk.openbanking.tesco.TescoConstants.Urls.V31.ORG_ID;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CREDIT_CARDS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
@@ -21,7 +20,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.UkOpenBankingV31Ais;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.signer.iface.JwtSigner;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.configuration.UkOpenBankingPisConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.tesco.TescoConstants.Urls.V31;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 
 @AgentDependencyModulesForProductionMode(modules = {TescoModule.class, JwtSignerModule.class})
@@ -35,9 +33,9 @@ public final class TescoV31Agent extends UkOpenBankingBaseAgent {
     static {
         aisConfig =
                 UKOpenBankingAis.builder()
-                        .withOrganisationId(ORG_ID)
-                        .withApiBaseURL(V31.AIS_API_URL)
-                        .withWellKnownURL(V31.WELL_KNOWN_URL)
+                        .withOrganisationId(TescoConstants.ORG_ID)
+                        .withApiBaseURL(TescoConstants.AIS_API_URL)
+                        .withWellKnownURL(TescoConstants.WELL_KNOWN_URL)
                         .withPartyEndpoints(PartyEndpoint.IDENTITY_DATA_ENDPOINT_ACCOUNT_ID_PARTY)
                         .build();
     }
@@ -48,7 +46,10 @@ public final class TescoV31Agent extends UkOpenBankingBaseAgent {
                 componentProvider,
                 jwtSigner,
                 aisConfig,
-                new UkOpenBankingPisConfiguration(ORG_ID, V31.PIS_API_URL, V31.WELL_KNOWN_URL));
+                new UkOpenBankingPisConfiguration(
+                        TescoConstants.ORG_ID,
+                        TescoConstants.PIS_API_URL,
+                        TescoConstants.WELL_KNOWN_URL));
     }
 
     @Override

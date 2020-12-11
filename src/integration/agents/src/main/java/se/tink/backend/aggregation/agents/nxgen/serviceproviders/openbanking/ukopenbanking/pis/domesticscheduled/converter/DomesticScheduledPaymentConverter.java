@@ -4,7 +4,7 @@ import static java.time.format.DateTimeFormatter.ISO_OFFSET_DATE_TIME;
 
 import java.time.LocalDate;
 import java.time.ZoneOffset;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingV31PaymentConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.converter.PaymentConverterBase;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domesticscheduled.dto.DomesticScheduledPaymentConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domesticscheduled.dto.DomesticScheduledPaymentConsentResponseData;
@@ -43,8 +43,7 @@ public class DomesticScheduledPaymentConverter extends PaymentConverterBase {
         final Payment payment = createPayment(initiation, paymentStatus);
 
         final Storage storage = new Storage();
-        storage.put(
-                UkOpenBankingV31PaymentConstants.Storage.CONSENT_ID, responseData.getConsentId());
+        storage.put(UkOpenBankingPaymentConstants.CONSENT_ID_KEY, responseData.getConsentId());
 
         return new PaymentResponse(payment, storage);
     }
@@ -59,10 +58,9 @@ public class DomesticScheduledPaymentConverter extends PaymentConverterBase {
         final Payment payment = createPayment(initiation, paymentStatus);
 
         final Storage storage = new Storage();
+        storage.put(UkOpenBankingPaymentConstants.CONSENT_ID_KEY, responseData.getConsentId());
         storage.put(
-                UkOpenBankingV31PaymentConstants.Storage.CONSENT_ID, responseData.getConsentId());
-        storage.put(
-                UkOpenBankingV31PaymentConstants.Storage.PAYMENT_ID,
+                UkOpenBankingPaymentConstants.PAYMENT_ID_KEY,
                 responseData.getDomesticScheduledPaymentId());
 
         return new PaymentResponse(payment, storage);

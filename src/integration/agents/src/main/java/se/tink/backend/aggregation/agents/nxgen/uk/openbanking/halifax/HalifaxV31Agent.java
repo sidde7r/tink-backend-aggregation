@@ -19,7 +19,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.UkOpenBankingV31Ais;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.signer.iface.JwtSigner;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.configuration.UkOpenBankingPisConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.halifax.HalifaxConstants.Urls.V31;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 
@@ -37,9 +36,9 @@ public final class HalifaxV31Agent extends UkOpenBankingBaseAgent {
         aisConfig =
                 UKOpenBankingAis.builder()
                         .withOrganisationId(HalifaxConstants.ORGANISATION_ID)
-                        .withApiBaseURL(V31.AIS_API_URL)
-                        .withWellKnownURL(V31.WELL_KNOWN_URL)
-                        .withAppToAppURL(V31.APP_TO_APP_AUTH_URL)
+                        .withApiBaseURL(HalifaxConstants.AIS_API_URL)
+                        .withWellKnownURL(HalifaxConstants.WELL_KNOWN_URL)
+                        .withAppToAppURL(HalifaxConstants.APP_TO_APP_AUTH_URL)
                         .build();
     }
 
@@ -50,7 +49,9 @@ public final class HalifaxV31Agent extends UkOpenBankingBaseAgent {
                 jwtSigner,
                 aisConfig,
                 new UkOpenBankingPisConfiguration(
-                        HalifaxConstants.ORGANISATION_ID, V31.PIS_API_URL, V31.WELL_KNOWN_URL));
+                        HalifaxConstants.ORGANISATION_ID,
+                        HalifaxConstants.PIS_API_URL,
+                        HalifaxConstants.WELL_KNOWN_URL));
         this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
     }
 

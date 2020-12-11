@@ -30,26 +30,4 @@ public class UkOpenBankingV31PaymentConstants {
         RS256,
         PS256
     }
-
-    public static class Storage {
-
-        public static final String CONSENT_ID = "consentId";
-        public static final String PAYMENT_ID = "paymentId";
-
-        private Storage() {}
-    }
-
-    public static class PaymentStatusCode {
-
-        public static final String AWAITING_AUTHORISATION = "AwaitingAuthorisation";
-
-        private PaymentStatusCode() {}
-    }
-
-    public static class FormValues {
-
-        public static final String PAYMENT_CREDITOR_DEFAULT_NAME = "Payment Receiver";
-
-        private FormValues() {}
-    }
 }

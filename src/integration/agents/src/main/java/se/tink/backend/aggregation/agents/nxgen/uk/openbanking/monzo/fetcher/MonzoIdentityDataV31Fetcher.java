@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.IdentityDataFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.IdentityDataMapper;
-import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.MonzoConstants.StorageKeys;
+import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.MonzoConstants;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.identitydata.IdentityData;
 
@@ -62,10 +62,11 @@ public class MonzoIdentityDataV31Fetcher implements IdentityDataFetcher {
     }
 
     private Optional<IdentityDataV31Entity> restoreIdentityData() {
-        return persistentStorage.get(StorageKeys.RECENT_IDENTITY_DATA, IdentityDataV31Entity.class);
+        return persistentStorage.get(
+                MonzoConstants.RECENT_IDENTITY_DATA, IdentityDataV31Entity.class);
     }
 
     private void storeIdentityData(IdentityDataV31Entity data) {
-        persistentStorage.put(StorageKeys.RECENT_IDENTITY_DATA, data);
+        persistentStorage.put(MonzoConstants.RECENT_IDENTITY_DATA, data);
     }
 }
