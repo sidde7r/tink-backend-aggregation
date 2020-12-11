@@ -4,6 +4,7 @@ import com.google.common.util.concurrent.Uninterruptibles;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Supplier;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
@@ -44,32 +45,19 @@ public class UkOpenBankingPaymentExecutor implements PaymentExecutor, FetchableP
 
         authFilterInstantiator.instantiateAuthFilterWithClientToken();
 
-        return createConsentWithRetry(paymentRequest);
-    }
-
-    /**
-     * For fixing the Barclays unstable issue; No-sleep retry had been tested but working not well;
-     * No-sleep retry will get continuous rejection; Jira had been raised on UKOB directory by other
-     * TPPs
-     */
-    @SuppressWarnings("UnstableApiUsage")
-    private PaymentResponse createConsentWithRetry(PaymentRequest paymentRequest) {
-        for (int i = 0; i < 3; i++) {
-            try {
-                return apiClient.createPaymentConsent(paymentRequest);
-            } catch (HttpResponseException e) {
-                Uninterruptibles.sleepUninterruptibly(2000 * i, TimeUnit.MILLISECONDS);
-            }
-        }
-
-        return apiClient.createPaymentConsent(paymentRequest);
+        return paymentResponseRetryer(() -> apiClient.createPaymentConsent(paymentRequest));
     }
 
     @Override
     public PaymentResponse fetch(PaymentRequest paymentRequest) {
         return getPaymentId(paymentRequest)
-                .map(apiClient::getPayment)
-                .orElseGet(() -> apiClient.getPaymentConsent(getConsentId(paymentRequest)));
+                .map(id -> paymentResponseRetryer(() -> apiClient.getPayment(id)))
+                .orElseGet(
+                        () ->
+                                paymentResponseRetryer(
+                                        () ->
+                                                apiClient.getPaymentConsent(
+                                                        getConsentId(paymentRequest))));
     }
 
     @Override
@@ -111,11 +99,13 @@ public class UkOpenBankingPaymentExecutor implements PaymentExecutor, FetchableP
         String instructionIdentification = paymentMultiStepRequest.getPayment().getUniqueId();
 
         PaymentResponse paymentResponse =
-                apiClient.executePayment(
-                        paymentMultiStepRequest,
-                        getConsentId(paymentMultiStepRequest),
-                        endToEndIdentification,
-                        instructionIdentification);
+                paymentResponseRetryer(
+                        () ->
+                                apiClient.executePayment(
+                                        paymentMultiStepRequest,
+                                        getConsentId(paymentMultiStepRequest),
+                                        endToEndIdentification,
+                                        instructionIdentification));
 
         // Should be handled on a higher level than here, but don't want to pollute the
         // payment controller with TransferExecutionException usage. Ticket PAY2-188 will
@@ -126,6 +116,24 @@ public class UkOpenBankingPaymentExecutor implements PaymentExecutor, FetchableP
 
         return new PaymentMultiStepResponse(
                 paymentResponse, AuthenticationStepConstants.STEP_FINALIZE, new ArrayList<>());
+    }
+
+    /**
+     * For fixing the Barclays unstable issue; No-sleep retry had been tested but working not well;
+     * No-sleep retry will get continuous rejection; Jira had been raised on UKOB directory by other
+     * TPPs
+     */
+    @SuppressWarnings("UnstableApiUsage")
+    private PaymentResponse paymentResponseRetryer(
+            Supplier<PaymentResponse> paymentResponseSupplier) {
+        for (int i = 0; i < 3; i++) {
+            try {
+                return paymentResponseSupplier.get();
+            } catch (HttpResponseException e) {
+                Uninterruptibles.sleepUninterruptibly(2000 * i, TimeUnit.MILLISECONDS);
+            }
+        }
+        return paymentResponseSupplier.get();
     }
 
     @Override
