@@ -1,0 +1,32 @@
+[
+    [
+        {
+            "immutable": true,
+            "name": "startcodeField",
+            "description": "Startcode First",
+            "value": "995544",
+            "helpText": "Insert your girocard into the TAN-generator and press \"TAN\". Enter the startcode and press \"OK\"."
+        },
+        {
+            "name": "tanField",
+            "description": "TAN",
+            "helpText": "Confirm by entering the generated TAN.",
+            "minLength": 1
+        }
+    ],
+    [
+        {
+            "immutable": true,
+            "name": "startcodeField",
+            "description": "Startcode Second",
+            "value": "112233",
+            "helpText": "Insert your girocard into the TAN-generator and press \"TAN\". Enter the startcode and press \"OK\"."
+        },
+        {
+            "name": "tanField",
+            "description": "TAN",
+            "helpText": "Confirm by entering the generated TAN.",
+            "minLength": 1
+        }
+    ]
+]
