@@ -30,8 +30,8 @@ import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.client
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.client.BoursoramaPostRequestSignFilter;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.client.BoursoramaSignatureHeaderGenerator;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.configuration.BoursoramaConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.entity.IdentityEntity;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.fetcher.BoursoramaTransactionalAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.fetcher.identity.BoursoramaIdentityFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.fetcher.transfer.BoursoramaTransferDestinationFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.payment.BoursoramaPaymentApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.FrOpenBankingPaymentExecutor;
@@ -52,7 +52,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
-import se.tink.libraries.identitydata.IdentityData;
 
 @AgentDependencyModules(modules = QSealcSignerModuleRSASHA256.class)
 @AgentCapabilities({
@@ -72,6 +71,7 @@ public final class BoursoramaAgent extends NextGenerationAgent
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final BoursoramaAuthenticator authenticator;
     private final TransferDestinationRefreshController transferDestinationRefreshController;
+    private final BoursoramaIdentityFetcher identityFetcher;
 
     @Inject
     public BoursoramaAgent(AgentComponentProvider componentProvider, QsealcSigner qsealcSigner) {
@@ -89,6 +89,8 @@ public final class BoursoramaAgent extends NextGenerationAgent
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
 
         this.transferDestinationRefreshController = constructTransferDestinationRefreshController();
+
+        this.identityFetcher = getIdentityFetcher();
     }
 
     @Override
@@ -143,6 +145,10 @@ public final class BoursoramaAgent extends NextGenerationAgent
                         new TransactionDatePaginationController<>(accountFetcher)));
     }
 
+    private BoursoramaIdentityFetcher getIdentityFetcher() {
+        return new BoursoramaIdentityFetcher(apiClient);
+    }
+
     @Override
     protected Authenticator constructAuthenticator() {
 
@@ -169,14 +175,7 @@ public final class BoursoramaAgent extends NextGenerationAgent
 
     @Override
     public FetchIdentityDataResponse fetchIdentityData() {
-        IdentityEntity identityEntity = apiClient.fetchIdentityData();
-
-        return new FetchIdentityDataResponse(
-                IdentityData.builder()
-                        .addFirstNameElement(null)
-                        .addSurnameElement(identityEntity.getConnectedPsu())
-                        .setDateOfBirth(null)
-                        .build());
+        return identityFetcher.fetchIdentity();
     }
 
     @Override
