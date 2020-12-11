@@ -12,7 +12,6 @@ junit_test(
     deps = [
         "//src/integration/account/src/main/java/se/tink/libraries/account/enums",
         "//src/integration/agent_data_availability_tracker/client",
-        "//src/integration/agent_data_availability_tracker/client/src/main/java/se/tink/backend/integration/agent_data_availability_tracker/common",
         "//src/integration/agent_data_availability_tracker/client/src/main/java/se/tink/backend/integration/agent_data_availability_tracker/module:agent-data-availability-tracker-module",
         "//src/integration/agent_data_availability_tracker/client/src/main/java/se/tink/backend/integration/agent_data_availability_tracker/serialization",
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
@@ -22,5 +21,6 @@ junit_test(
         "//third_party:com_google_inject_guice",
         "//third_party:io_dropwizard_dropwizard_lifecycle",
         "@io_grpc_grpc_java//api",
+        "@tink_backend//src/agent-data-availability-tracker/src/main/java/se/tink/backend/agent_data_availability_tracker/client",
     ],
 )

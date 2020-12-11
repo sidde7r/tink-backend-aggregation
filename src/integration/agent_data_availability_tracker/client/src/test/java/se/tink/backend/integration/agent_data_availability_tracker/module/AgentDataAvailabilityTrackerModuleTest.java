@@ -17,7 +17,7 @@ public final class AgentDataAvailabilityTrackerModuleTest {
     @Test
     public void constructingMockImplWorks() {
         AgentDataAvailabilityTrackerConfiguration configuration =
-                new AgentDataAvailabilityTrackerConfiguration();
+                new AgentDataAvailabilityTrackerConfiguration(null, 0, null);
         Injector injector =
                 Guice.createInjector(new AgentDataAvailabilityTrackerModule(configuration));
 

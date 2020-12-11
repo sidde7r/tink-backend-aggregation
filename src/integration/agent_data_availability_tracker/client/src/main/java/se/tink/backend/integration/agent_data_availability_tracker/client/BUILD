@@ -5,7 +5,6 @@ java_library(
     ),
     visibility = ["//visibility:public"],
     deps = [
-        "//src/integration/agent_data_availability_tracker/client/src/main/java/se/tink/backend/integration/agent_data_availability_tracker/common",
         "//src/integration/agent_data_availability_tracker/proto",
         "//src/integration/agent_data_availability_tracker/proto:java_grpc",
         "//src/integration/agent_data_availability_tracker/proto:java_proto",
@@ -14,6 +13,7 @@ java_library(
         "@com_google_guava_guava",
         "@io_grpc_grpc_api",
         "@io_grpc_grpc_java//stub",
+        "@tink_backend//src/agent-data-availability-tracker/src/main/java/se/tink/backend/agent_data_availability_tracker/client",
         "@tink_backend//src/libraries/dropwizard_lifecycle",
     ],
 )

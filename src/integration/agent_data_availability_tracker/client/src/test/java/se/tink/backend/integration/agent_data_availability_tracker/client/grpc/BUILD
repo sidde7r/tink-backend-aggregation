@@ -6,7 +6,6 @@ junit_test(
     visibility = ["//visibility:public"],
     deps = [
         "//src/integration/agent_data_availability_tracker/client",
-        "//src/integration/agent_data_availability_tracker/client/src/main/java/se/tink/backend/integration/agent_data_availability_tracker/common",
         "//src/integration/agent_data_availability_tracker/client/src/main/java/se/tink/backend/integration/agent_data_availability_tracker/serialization",
         "//src/integration/agent_data_availability_tracker/proto:java_grpc",
         "//src/integration/agent_data_availability_tracker/proto:java_proto",
@@ -22,5 +21,6 @@ junit_test(
         "@aggregation//:com_google_guava_guava",
         "@io_grpc_grpc_java//api",
         "@io_grpc_grpc_java//stub",
+        "@tink_backend//src/agent-data-availability-tracker/src/main/java/se/tink/backend/agent_data_availability_tracker/client",
     ],
 )

@@ -38,7 +38,6 @@ java_library(
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/refresh",
         "//src/integration/agent_data_availability_tracker/client",
         "//src/integration/agent_data_availability_tracker/client:module",
-        "//src/integration/agent_data_availability_tracker/client/src/main/java/se/tink/backend/integration/agent_data_availability_tracker/common",
         "//src/integration/agent_data_availability_tracker/client/src/main/java/se/tink/backend/integration/agent_data_availability_tracker/serialization",
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/credentials:service",
@@ -110,6 +109,7 @@ java_library(
         "@com_tink_api_grpc//event_producer_service/events:events_java_proto",
         "@com_tink_api_grpc//event_producer_service/events:events_proto",
         "@maven//:io_prometheus_simpleclient",
+        "@tink_backend//src/agent-data-availability-tracker/src/main/java/se/tink/backend/agent_data_availability_tracker/client",
         "@tink_backend//src/libraries/provider",
     ],
 )

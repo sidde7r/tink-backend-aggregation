@@ -5,12 +5,6 @@ alias(
 )
 
 alias(
-    name = "common",
-    actual = "//src/integration/agent_data_availability_tracker/client/src/main/java/se/tink/backend/integration/agent_data_availability_tracker/common",
-    visibility = ["//visibility:public"],
-)
-
-alias(
     name = "module",
     actual = "//src/integration/agent_data_availability_tracker/client/src/main/java/se/tink/backend/integration/agent_data_availability_tracker/module:agent-data-availability-tracker-module",
     visibility = ["//visibility:public"],
