@@ -4,9 +4,9 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.common.base.MoreObjects;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
 import se.tink.libraries.account.rpc.Account;
 import se.tink.libraries.jersey.utils.SafelyLoggable;
@@ -26,11 +26,12 @@ public class UpdateTransferDestinationPatternsRequest implements SafelyLoggable 
         if (destinationsBySouce == null) {
             return null;
         }
-        Map<Account, List<TransferDestinationPattern>> destinationsBySouce = Maps.newHashMap();
-        for (AccountWithDestinations obj : this.destinationsBySouce) {
-            destinationsBySouce.put(obj.account, obj.destinations);
-        }
-        return destinationsBySouce;
+
+        return this.destinationsBySouce.stream()
+                .collect(
+                        Collectors.toMap(
+                                AccountWithDestinations::getAccount,
+                                AccountWithDestinations::getDestinations));
     }
 
     public void setDestinationsBySouce(
@@ -75,8 +76,16 @@ public class UpdateTransferDestinationPatternsRequest implements SafelyLoggable 
     }
 
     private static class AccountWithDestinations {
-        public Account account;
-        public List<TransferDestinationPattern> destinations;
+        private Account account;
+        private List<TransferDestinationPattern> destinations;
+
+        public Account getAccount() {
+            return account;
+        }
+
+        public List<TransferDestinationPattern> getDestinations() {
+            return destinations;
+        }
 
         @Override
         public String toString() {
