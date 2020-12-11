@@ -23,6 +23,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.configuration.SoftwareStatementAssertion;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.signer.iface.JwtSigner;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.configuration.UkOpenBankingPisConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.hsbc.pis.signature.HsbcSignatureCreator;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.hsbc.pis.validator.HsbcPaymentRequestValidator;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
@@ -53,9 +54,7 @@ public final class HsbcV31Agent extends UkOpenBankingBaseAgent {
 
         pisConfig =
                 new UkOpenBankingPisConfiguration(
-                        HsbcConstants.ORGANISATION_ID,
-                        HsbcConstants.PERSONAL_PIS_API_URL,
-                        HsbcConstants.PERSONAL_WELL_KNOWN_URL);
+                        HsbcConstants.PERSONAL_PIS_API_URL, HsbcConstants.PERSONAL_WELL_KNOWN_URL);
     }
 
     @Inject
@@ -65,7 +64,11 @@ public final class HsbcV31Agent extends UkOpenBankingBaseAgent {
                 jwtSigner,
                 aisConfig,
                 pisConfig,
-                new HsbcPaymentRequestValidator());
+                new HsbcPaymentRequestValidator(),
+                createPisRequestFilter(
+                        new HsbcSignatureCreator(jwtSigner),
+                        jwtSigner,
+                        componentProvider.getRandomValueGenerator()));
         this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
         this.randomValueGenerator = componentProvider.getRandomValueGenerator();
     }

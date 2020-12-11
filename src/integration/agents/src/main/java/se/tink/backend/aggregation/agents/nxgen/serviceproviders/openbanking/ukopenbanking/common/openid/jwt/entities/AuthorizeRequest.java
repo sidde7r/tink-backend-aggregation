@@ -18,6 +18,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.TinkJwt;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.signer.iface.JwtSigner;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.signer.iface.JwtSigner.Algorithm;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.rpc.SigningAlgorithm;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.rpc.WellKnownResponse;
 
 public class AuthorizeRequest {
@@ -120,6 +121,7 @@ public class AuthorizeRequest {
             String preferredAlgorithm =
                     wellKnownConfiguration
                             .getPreferredIdTokenSigningAlg(PREFERRED_ID_TOKEN_SIGNING_ALGORITHM)
+                            .map(SigningAlgorithm::name)
                             .orElseThrow(
                                     () ->
                                             new IllegalStateException(

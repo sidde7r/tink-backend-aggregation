@@ -48,9 +48,9 @@ public final class UlsterV31Agent extends UkOpenBankingBaseAgent {
                 jwtSigner,
                 aisConfig,
                 new UkOpenBankingPisConfiguration(
-                        UlsterConstants.ORG_ID,
-                        UlsterConstants.PIS_API_URL,
-                        UlsterConstants.WELL_KNOWN_URL));
+                        UlsterConstants.PIS_API_URL, UlsterConstants.WELL_KNOWN_URL),
+                createPisRequestFilterUsingPs256WithoutBase64Signature(
+                        jwtSigner, componentProvider.getRandomValueGenerator()));
         this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
     }
 

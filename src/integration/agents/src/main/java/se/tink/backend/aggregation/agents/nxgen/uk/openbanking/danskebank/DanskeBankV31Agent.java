@@ -54,9 +54,9 @@ public final class DanskeBankV31Agent extends UkOpenBankingBaseAgent {
                 jwtSigner,
                 aisConfig,
                 new UkOpenBankingPisConfiguration(
-                        DanskeBankConstants.ORGANISATION_ID,
-                        DanskeBankConstants.PIS_API_URL,
-                        DanskeBankConstants.WELL_KNOWN_URL));
+                        DanskeBankConstants.PIS_API_URL, DanskeBankConstants.WELL_KNOWN_URL),
+                createPisRequestFilterUsingPs256WithoutBase64Signature(
+                        jwtSigner, componentProvider.getRandomValueGenerator()));
         this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
     }
 

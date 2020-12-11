@@ -23,7 +23,7 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbank
 import java.time.Clock;
 import org.junit.Before;
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingRequestBuilder;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.UkOpenBankingRequestBuilder;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domesticscheduled.converter.DomesticScheduledPaymentConverter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domesticscheduled.dto.DomesticScheduledPaymentConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domesticscheduled.dto.DomesticScheduledPaymentConsentResponse;
@@ -90,8 +90,7 @@ public class DomesticScheduledPaymentApiClientTest {
                 .thenReturn(response);
 
         final URL url = new URL(API_BASE_URL + PAYMENT_CONSENT);
-        when(ukOpenBankingRequestBuilder.createPisRequestWithJwsHeader(
-                        eq(url), any(DomesticScheduledPaymentConsentRequest.class)))
+        when(ukOpenBankingRequestBuilder.createPisRequestWithJwsHeader(eq(url)))
                 .thenReturn(requestBuilderMock);
 
         // when
@@ -102,9 +101,7 @@ public class DomesticScheduledPaymentApiClientTest {
                 .post(
                         eq(DomesticScheduledPaymentConsentResponse.class),
                         any(DomesticScheduledPaymentConsentRequest.class));
-        verify(ukOpenBankingRequestBuilder)
-                .createPisRequestWithJwsHeader(
-                        eq(url), any(DomesticScheduledPaymentConsentRequest.class));
+        verify(ukOpenBankingRequestBuilder).createPisRequestWithJwsHeader(eq(url));
         verify(paymentConverter).convertConsentResponseDtoToTinkPaymentResponse(response);
     }
 
@@ -146,8 +143,7 @@ public class DomesticScheduledPaymentApiClientTest {
                 .thenReturn(response);
 
         final URL url = new URL(API_BASE_URL + PAYMENT);
-        when(ukOpenBankingRequestBuilder.createPisRequestWithJwsHeader(
-                        eq(url), any(DomesticScheduledPaymentRequest.class)))
+        when(ukOpenBankingRequestBuilder.createPisRequestWithJwsHeader(eq(url)))
                 .thenReturn(requestBuilderMock);
 
         // when
@@ -158,8 +154,7 @@ public class DomesticScheduledPaymentApiClientTest {
                 .post(
                         eq(DomesticScheduledPaymentResponse.class),
                         any(DomesticScheduledPaymentRequest.class));
-        verify(ukOpenBankingRequestBuilder)
-                .createPisRequestWithJwsHeader(eq(url), any(DomesticScheduledPaymentRequest.class));
+        verify(ukOpenBankingRequestBuilder).createPisRequestWithJwsHeader(eq(url));
         verify(paymentConverter).convertResponseDtoToPaymentResponse(response);
     }
 }

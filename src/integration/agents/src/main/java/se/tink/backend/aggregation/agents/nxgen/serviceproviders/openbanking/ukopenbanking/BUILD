@@ -23,5 +23,6 @@ java_library(
         "//src/integration/payment:rpc",
         "//src/libraries/account_identifier",
         "//third_party:com_google_guava_guava",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
     ],
 )

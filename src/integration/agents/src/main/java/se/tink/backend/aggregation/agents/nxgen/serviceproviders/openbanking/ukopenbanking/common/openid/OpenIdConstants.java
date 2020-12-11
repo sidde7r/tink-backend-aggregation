@@ -1,12 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid;
 
 import com.google.common.collect.ImmutableList;
+import java.util.Arrays;
+import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.entities.TokenEndpointAuthMethod;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.rpc.SigningAlgorithm;
 
 public class OpenIdConstants {
 
-    public static final String HSBC_ORG_ID = "00158000016i44JAAQ";
-    public static final String NATIONWIDE_ORG_ID = "0015800000jf8aKAAQ";
+    static final String NATIONWIDE_ORG_ID = "0015800000jf8aKAAQ";
 
     public static class Scopes {
         public static final String OPEN_ID = "openid";
@@ -14,28 +16,19 @@ public class OpenIdConstants {
         public static final String PAYMENTS = "payments";
     }
 
-    public enum SIGNING_ALGORITHM {
-        RS256,
-        PS256
-    }
-
     public static final ImmutableList<String> MANDATORY_RESPONSE_TYPES =
             ImmutableList.<String>builder().add("code").add(CallbackParams.ID_TOKEN).build();
 
-    public static final ImmutableList<String> PREFERRED_ID_TOKEN_SIGNING_ALGORITHM =
-            ImmutableList.<String>builder()
-                    .add(SIGNING_ALGORITHM.PS256.toString())
-                    .add(SIGNING_ALGORITHM.RS256.toString())
-                    .build();
+    public static final List<SigningAlgorithm> PREFERRED_ID_TOKEN_SIGNING_ALGORITHM =
+            Arrays.asList(SigningAlgorithm.PS256, SigningAlgorithm.RS256);
 
-    public static final ImmutableList<TokenEndpointAuthMethod>
-            PREFERRED_TOKEN_ENDPOINT_AUTH_METHODS =
-                    ImmutableList.<TokenEndpointAuthMethod>builder()
-                            .add(TokenEndpointAuthMethod.CLIENT_SECRET_POST)
-                            .add(TokenEndpointAuthMethod.CLIENT_SECRET_BASIC)
-                            .add(TokenEndpointAuthMethod.PRIVATE_KEY_JWT)
-                            .add(TokenEndpointAuthMethod.TLS_CLIENT_AUTH)
-                            .build();
+    static final ImmutableList<TokenEndpointAuthMethod> PREFERRED_TOKEN_ENDPOINT_AUTH_METHODS =
+            ImmutableList.<TokenEndpointAuthMethod>builder()
+                    .add(TokenEndpointAuthMethod.CLIENT_SECRET_POST)
+                    .add(TokenEndpointAuthMethod.CLIENT_SECRET_BASIC)
+                    .add(TokenEndpointAuthMethod.PRIVATE_KEY_JWT)
+                    .add(TokenEndpointAuthMethod.TLS_CLIENT_AUTH)
+                    .build();
 
     public static class Params {
         public static final String CLIENT_ID = "client_id";
@@ -59,8 +52,8 @@ public class OpenIdConstants {
     }
 
     public static class PersistentStorageKeys {
-        public static final String AIS_ACCESS_TOKEN = "open_id_ais_access_token";
-        public static final String LAST_SCA_TIME = "last_SCA_time";
+        static final String AIS_ACCESS_TOKEN = "open_id_ais_access_token";
+        static final String LAST_SCA_TIME = "last_SCA_time";
     }
 
     public static class HttpHeaders {

@@ -51,9 +51,9 @@ public final class BarclaysV31BusinessAgent extends UkOpenBankingBaseAgent {
                 jwtSigner,
                 aisConfig,
                 new UkOpenBankingPisConfiguration(
-                        BarclaysConstants.ORGANISATION_ID,
-                        BarclaysConstants.PIS_API_URL,
-                        BarclaysConstants.BUSINESS_WELL_KNOWN_URL));
+                        BarclaysConstants.PIS_API_URL, BarclaysConstants.BUSINESS_WELL_KNOWN_URL),
+                createPisRequestFilterUsingPs256WithoutBase64Signature(
+                        jwtSigner, componentProvider.getRandomValueGenerator()));
     }
 
     @Override

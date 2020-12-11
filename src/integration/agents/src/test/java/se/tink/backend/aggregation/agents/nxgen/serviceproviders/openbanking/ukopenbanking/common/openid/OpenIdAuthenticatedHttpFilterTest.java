@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdConstants.HSBC_ORG_ID;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdConstants.HttpHeaders.X_FAPI_FINANCIAL_ID;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdConstants.HttpHeaders.X_FAPI_INTERACTION_ID;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdConstants.NATIONWIDE_ORG_ID;
@@ -19,6 +18,7 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
 public class OpenIdAuthenticatedHttpFilterTest {
 
+    private static final String ORG_ID = "DUMMY_ORG_ID";
     private static final String EXAMPLE_FAPI_INTERACTION_ID =
             "93bac548-d2de-4546-b106-880a5018460d";
     private OAuth2Token accessToken = mock(OAuth2Token.class);
@@ -32,7 +32,7 @@ public class OpenIdAuthenticatedHttpFilterTest {
     public void testNormalUkBankInteractionIdMatching() {
         MultivaluedMap<String, String> responseHeader = new StringKeyIgnoreCaseMultivaluedMap<>();
         MultivaluedMap<String, Object> requestHeader = new OutBoundHeaders();
-        requestHeader.putSingle(X_FAPI_FINANCIAL_ID, HSBC_ORG_ID);
+        requestHeader.putSingle(X_FAPI_FINANCIAL_ID, ORG_ID);
         requestHeader.putSingle(X_FAPI_INTERACTION_ID, EXAMPLE_FAPI_INTERACTION_ID);
 
         responseHeader.putSingle(X_FAPI_INTERACTION_ID, EXAMPLE_FAPI_INTERACTION_ID);
@@ -58,7 +58,7 @@ public class OpenIdAuthenticatedHttpFilterTest {
     public void testNormalUkBankInteractionIdMismatchThrowException() {
         MultivaluedMap<String, String> responseHeader = new StringKeyIgnoreCaseMultivaluedMap<>();
         MultivaluedMap<String, Object> requestHeader = new OutBoundHeaders();
-        requestHeader.putSingle(X_FAPI_FINANCIAL_ID, HSBC_ORG_ID);
+        requestHeader.putSingle(X_FAPI_FINANCIAL_ID, ORG_ID);
         requestHeader.putSingle(X_FAPI_INTERACTION_ID, EXAMPLE_FAPI_INTERACTION_ID);
 
         responseHeader.putSingle(X_FAPI_INTERACTION_ID, "MIS_MATCH_ID");

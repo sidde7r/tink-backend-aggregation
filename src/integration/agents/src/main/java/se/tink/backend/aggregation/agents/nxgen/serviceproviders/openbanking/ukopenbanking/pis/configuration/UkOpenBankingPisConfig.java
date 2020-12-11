@@ -7,6 +7,4 @@ public interface UkOpenBankingPisConfig {
     URL getWellKnownURL();
 
     String getBaseUrl();
-
-    String getOrganisationId();
 }

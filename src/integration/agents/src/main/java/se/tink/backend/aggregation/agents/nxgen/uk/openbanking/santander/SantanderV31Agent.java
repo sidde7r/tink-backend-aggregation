@@ -54,9 +54,9 @@ public final class SantanderV31Agent extends UkOpenBankingBaseAgent {
                 jwtSigner,
                 aisConfig,
                 new UkOpenBankingPisConfiguration(
-                        SantanderConstants.ORGANISATION_ID,
-                        SantanderConstants.PIS_API_URL,
-                        SantanderConstants.WELL_KNOWN_URL));
+                        SantanderConstants.PIS_API_URL, SantanderConstants.WELL_KNOWN_URL),
+                createPisRequestFilterUsingPs256Base64Signature(
+                        jwtSigner, componentProvider.getRandomValueGenerator()));
         this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
     }
 

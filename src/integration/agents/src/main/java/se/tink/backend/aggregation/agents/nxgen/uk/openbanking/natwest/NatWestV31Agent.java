@@ -52,9 +52,9 @@ public final class NatWestV31Agent extends UkOpenBankingBaseAgent {
                 jwtSigner,
                 aisConfig,
                 new UkOpenBankingPisConfiguration(
-                        NatWestConstants.ORGANISATION_ID,
-                        NatWestConstants.PIS_API_URL,
-                        NatWestConstants.PERSONAL_WELL_KNOWN_URL));
+                        NatWestConstants.PIS_API_URL, NatWestConstants.PERSONAL_WELL_KNOWN_URL),
+                createPisRequestFilterUsingPs256WithoutBase64Signature(
+                        jwtSigner, componentProvider.getRandomValueGenerator()));
         this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
     }
 
