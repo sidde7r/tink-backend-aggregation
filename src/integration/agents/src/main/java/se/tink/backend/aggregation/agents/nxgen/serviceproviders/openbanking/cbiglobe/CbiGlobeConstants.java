@@ -51,11 +51,11 @@ public final class CbiGlobeConstants {
         public static final String CONSENTS_STATUS =
                 "/platform/enabler/psd2orchestrator/ais/2.3.2/consents/{consentId}";
         private static final String PAYMENT =
-                "/platform/enabler/psd2orchestrator/pis/2.3.2/payments/sepa-credit-transfers";
+                "/platform/enabler/psd2orchestrator/pis/2.3.2/payments/{payment-product}";
         private static final String FETCH_PAYMENT =
-                "/platform/enabler/psd2orchestrator/pis/2.3.2/payments/sepa-credit-transfers/{payment-id}";
+                "/platform/enabler/psd2orchestrator/pis/2.3.2/payments/{payment-product}/{payment-id}";
         private static final String FETCH_PAYMENT_STATUS =
-                "/platform/enabler/psd2orchestrator/pis/2.3.2/payments/sepa-credit-transfers/{payment-id}/status";
+                "/platform/enabler/psd2orchestrator/pis/2.3.2/payments/{payment-product}/{payment-id}/status";
         public static final String CARD_ACCOUNTS =
                 "/platform/enabler/psd2orchestrator/ais/2.3.2/card-accounts";
         public static final String CARD_BALANCES =
@@ -69,6 +69,7 @@ public final class CbiGlobeConstants {
         public static final String CONSENT_ID = "consent-id";
         public static final String ACCOUNTS = "accounts";
         public static final String LINK = "link";
+        public static final String PAYMENT_PRODUCT = "payment-product";
     }
 
     public static class QueryKeys {
@@ -128,6 +129,7 @@ public final class CbiGlobeConstants {
         public static final String ACCOUNT_ID = "accountId";
         public static final String CONSENT_ID = "consentId";
         public static final String PAYMENT_ID = "payment-id";
+        public static final String PAYMENT_PRODUCT = "payment-product";
     }
 
     public static class PSUAuthenticationStatus {
@@ -140,6 +142,11 @@ public final class CbiGlobeConstants {
 
     public static class PaymentStep {
         public static final String IN_PROGRESS = "IN_PROGRESS";
+    }
+
+    public static class PaymentProduct {
+        public static final String SEPA_CREDIT_TRANSFERS = "sepa-credit-transfers";
+        public static final String INSTANT_SEPA_CREDIT_TRANSFERS = "instant-sepa-credit-transfers";
     }
 
     public static class HttpClient {

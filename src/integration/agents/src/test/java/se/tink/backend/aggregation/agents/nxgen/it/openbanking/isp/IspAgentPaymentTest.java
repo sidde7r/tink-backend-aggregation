@@ -12,6 +12,7 @@ import se.tink.libraries.amount.Amount;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
+import se.tink.libraries.payments.common.model.PaymentScheme;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 public class IspAgentPaymentTest {
@@ -28,6 +29,7 @@ public class IspAgentPaymentTest {
                 new AgentIntegrationTest.Builder("it", "it-isp-oauth2")
                         .setFinancialInstitutionId("isp")
                         .setAppId("tink")
+                        .setClusterId("oxford-preprod")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);
@@ -65,6 +67,7 @@ public class IspAgentPaymentTest {
                 .withExecutionDate(executionDate)
                 .withCurrency(currency)
                 .withRemittanceInformation(remittanceInformation)
+                .withPaymentScheme(PaymentScheme.SEPA_INSTANT_CREDIT_TRANSFER)
                 .build();
     }
 
