@@ -1,38 +1,31 @@
-package se.tink.backend.integration.agent_data_availability_tracker.client;
+package se.tink.backend.integration.agent_data_availability_tracker.common.client;
 
 import com.google.common.util.concurrent.AbstractExecutionThreadService;
-import com.google.inject.Inject;
 import io.grpc.ManagedChannel;
 import io.grpc.StatusRuntimeException;
 import io.grpc.stub.StreamObserver;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.integration.agent_data_availability_tracker.api.AgentDataAvailabilityTrackerServiceGrpc;
 import se.tink.backend.integration.agent_data_availability_tracker.api.TrackAccountRequest;
 import se.tink.backend.integration.agent_data_availability_tracker.api.Void;
-import se.tink.backend.integration.agent_data_availability_tracker.common.TrackingMapSerializer;
-import se.tink.libraries.dropwizard_lifecycle.ManagedSafeStop;
+import se.tink.backend.integration.agent_data_availability_tracker.common.serialization.TrackingMapSerializer;
 
-public class AgentDataAvailabilityTrackerClientImpl extends ManagedSafeStop
-        implements AgentDataAvailabilityTrackerClient {
+public class AgentDataAvailabilityTrackerClientImpl implements AgentDataAvailabilityTrackerClient {
 
     private static final Logger log =
-            LoggerFactory.getLogger(AgentDataAvailabilityTrackerClient.class);
-
+            LoggerFactory.getLogger(AgentDataAvailabilityTrackerClientImpl.class);
     private static final long QUEUE_POLL_WAIT_SECONDS = 2;
-
+    private final AccountDeque accountDeque;
+    private final AbstractExecutionThreadService service;
     private ManagedChannel channel;
+    private StreamObserver<TrackAccountRequest> requestStream;
     private AgentDataAvailabilityTrackerServiceGrpc.AgentDataAvailabilityTrackerServiceStub
             agentctServiceStub;
 
-    private StreamObserver<TrackAccountRequest> requestStream;
-    private final AccountDeque accountDeque;
-    private final AbstractExecutionThreadService service;
-
-    /** Construct client for accessing RouteGuide server at {@code host:port}. */
-    @Inject
-    private AgentDataAvailabilityTrackerClientImpl(final ManagedChannel channel) {
+    public AgentDataAvailabilityTrackerClientImpl(final ManagedChannel channel) {
         this.channel = channel;
         accountDeque = new AccountDeque();
         service =
@@ -46,7 +39,6 @@ public class AgentDataAvailabilityTrackerClientImpl extends ManagedSafeStop
 
     @Override
     public void beginStream() {
-
         log.debug("Open Tracking Stream");
 
         StreamObserver<Void> responseObserver =
@@ -103,19 +95,15 @@ public class AgentDataAvailabilityTrackerClientImpl extends ManagedSafeStop
         }
     }
 
+    @Override
     public void sendAccount(
-            final String agent,
-            final String provider,
-            final String market,
-            final TrackingMapSerializer serializer) {
-
+            String agent, String provider, String market, TrackingMapSerializer serializer) {
         TrackAccountRequest.Builder requestBuilder =
                 TrackAccountRequest.newBuilder()
                         .setAgent(agent)
                         .setProvider(provider)
                         .setMarket(market);
 
-        // TODO: Unwrapped serialization such that builder.setAll can be used instead of loop
         serializer
                 .buildList()
                 .forEach(
@@ -127,12 +115,12 @@ public class AgentDataAvailabilityTrackerClientImpl extends ManagedSafeStop
         accountDeque.add(requestBuilder.build());
     }
 
+    @Override
     public void sendIdentityData(
-            final String agent,
-            final String provider,
-            final String market,
-            final TrackingMapSerializer identityDataSerializer) {
-
+            String agent,
+            String provider,
+            String market,
+            TrackingMapSerializer identityDataSerializer) {
         TrackAccountRequest.Builder requestBuilder =
                 TrackAccountRequest.newBuilder()
                         .setAgent(agent)
@@ -161,17 +149,14 @@ public class AgentDataAvailabilityTrackerClientImpl extends ManagedSafeStop
         return true;
     }
 
-    @Override
-    public void start() throws Exception {
+    public void start() throws TimeoutException {
         agentctServiceStub = AgentDataAvailabilityTrackerServiceGrpc.newStub(channel);
-
         beginStream();
         service.startAsync();
         service.awaitRunning(30, TimeUnit.SECONDS);
     }
 
-    @Override
-    public void doStop() throws Exception {
+    public void stop() throws TimeoutException, InterruptedException {
         log.debug("Received signal to stop.");
         service.stopAsync();
         service.awaitTerminated(60, TimeUnit.SECONDS);

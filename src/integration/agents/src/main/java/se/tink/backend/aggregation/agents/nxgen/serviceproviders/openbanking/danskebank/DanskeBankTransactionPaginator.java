@@ -1,6 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.danskebank;
 
+import java.lang.invoke.MethodHandles;
+import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.fetcher.TransactionConverter;
@@ -22,6 +27,10 @@ public class DanskeBankTransactionPaginator<T, S extends Account>
 
     private static final int RETRY_FAILED_TRANSACTION_MAX_ATTEMPTS = 3;
     private final RetryExecutor retryExecutor = new RetryExecutor();
+    private final UkOpenBankingAisConfig ukOpenBankingAisConfig;
+
+    private static final Logger logger =
+            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     DanskeBankTransactionPaginator(
             UkOpenBankingAisConfig ukOpenBankingAisConfig,
@@ -40,6 +49,7 @@ public class DanskeBankTransactionPaginator<T, S extends Account>
 
         retryExecutor.setRetryPolicy(
                 new RetryPolicy(RETRY_FAILED_TRANSACTION_MAX_ATTEMPTS, BankServiceException.class));
+        this.ukOpenBankingAisConfig = ukOpenBankingAisConfig;
     }
 
     @Override
@@ -67,5 +77,37 @@ public class DanskeBankTransactionPaginator<T, S extends Account>
             }
             throw e;
         }
+    }
+
+    @Override
+    protected String initialisePaginationKeyIfNull(S account, String key) {
+        if (key == null) {
+            final OffsetDateTime fromDate =
+                    getLastTransactionsFetchedDate(account.getApiIdentifier());
+
+            key =
+                    ukOpenBankingAisConfig.getInitialTransactionsPaginationKey(
+                                    account.getApiIdentifier())
+                            + FROM_BOOKING_DATE_TIME
+                            + DateTimeFormatter.ISO_INSTANT.format(fromDate);
+        }
+        return key;
+    }
+
+    @Override
+    protected TransactionKeyPaginatorResponse<String> handle401Or403ResponseErrorStatus(
+            S account, HttpResponseException e) {
+        String key;
+        logger.error(
+                "Trying to fetch transactions again for last 89 days. Got 401 in previous request",
+                e);
+
+        key =
+                ukOpenBankingAisConfig.getInitialTransactionsPaginationKey(
+                                account.getApiIdentifier())
+                        + FROM_BOOKING_DATE_TIME
+                        + DateTimeFormatter.ISO_INSTANT.format(
+                                localDateTimeSource.now().minusDays(DEFAULT_MAX_ALLOWED_DAYS));
+        return fetchTransactions(account, key);
     }
 }

@@ -37,7 +37,7 @@ public interface UkOpenBankingAisConfig {
 
     URL getAppToAppURL();
 
-    Set<String> getPermissions();
+    Set<String> getAdditionalPermissions();
 
     AccountOwnershipType getAllowedAccountOwnershipType();
 

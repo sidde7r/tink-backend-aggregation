@@ -6,10 +6,10 @@ import static org.hamcrest.core.IsInstanceOf.instanceOf;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import org.junit.Test;
-import se.tink.backend.integration.agent_data_availability_tracker.client.AgentDataAvailabilityTrackerClient;
-import se.tink.backend.integration.agent_data_availability_tracker.client.AgentDataAvailabilityTrackerClientImpl;
-import se.tink.backend.integration.agent_data_availability_tracker.client.AgentDataAvailabilityTrackerClientMockImpl;
-import se.tink.backend.integration.agent_data_availability_tracker.client.configuration.AgentDataAvailabilityTrackerConfiguration;
+import se.tink.backend.integration.agent_data_availability_tracker.client.AsAgentDataAvailabilityTrackerClient;
+import se.tink.backend.integration.agent_data_availability_tracker.client.AsAgentDataAvailabilityTrackerClientImpl;
+import se.tink.backend.integration.agent_data_availability_tracker.client.AsAgentDataAvailabilityTrackerClientMockImpl;
+import se.tink.backend.integration.agent_data_availability_tracker.common.configuration.AgentDataAvailabilityTrackerConfiguration;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public final class AgentDataAvailabilityTrackerModuleTest {
@@ -21,10 +21,10 @@ public final class AgentDataAvailabilityTrackerModuleTest {
         Injector injector =
                 Guice.createInjector(new AgentDataAvailabilityTrackerModule(configuration));
 
-        AgentDataAvailabilityTrackerClient client =
-                injector.getInstance(AgentDataAvailabilityTrackerClient.class);
+        AsAgentDataAvailabilityTrackerClient client =
+                injector.getInstance(AsAgentDataAvailabilityTrackerClient.class);
 
-        assertThat(client, instanceOf(AgentDataAvailabilityTrackerClientMockImpl.class));
+        assertThat(client, instanceOf(AsAgentDataAvailabilityTrackerClientMockImpl.class));
     }
 
     @Test
@@ -37,9 +37,9 @@ public final class AgentDataAvailabilityTrackerModuleTest {
         Injector injector =
                 Guice.createInjector(new AgentDataAvailabilityTrackerModule(configuration));
 
-        AgentDataAvailabilityTrackerClient client =
-                injector.getInstance(AgentDataAvailabilityTrackerClient.class);
+        AsAgentDataAvailabilityTrackerClient client =
+                injector.getInstance(AsAgentDataAvailabilityTrackerClient.class);
 
-        assertThat(client, instanceOf(AgentDataAvailabilityTrackerClientImpl.class));
+        assertThat(client, instanceOf(AsAgentDataAvailabilityTrackerClientImpl.class));
     }
 }

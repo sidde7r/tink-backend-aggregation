@@ -15,6 +15,7 @@ java_library(
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/configuration",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/events",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/storage/database/daos",
+        "//src/integration/agent_data_availability_tracker/client/src/main/java/se/tink/backend/integration/agent_data_availability_tracker/common",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/compliance/regulatory_restrictions",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/storage/database/providers",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/storage/debug",

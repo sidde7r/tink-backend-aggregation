@@ -79,9 +79,9 @@ import se.tink.backend.aggregation.workers.operation.AgentWorkerOperation;
 import se.tink.backend.aggregation.workers.worker.AgentWorker;
 import se.tink.backend.aggregation.workers.worker.conditions.IsPrevGenProvider;
 import se.tink.backend.aggregation.workers.worker.conditions.annotation.ShouldAddExtraCommands;
-import se.tink.backend.integration.agent_data_availability_tracker.client.AgentDataAvailabilityTrackerClient;
-import se.tink.backend.integration.agent_data_availability_tracker.client.AgentDataAvailabilityTrackerClientMockImpl;
-import se.tink.backend.integration.agent_data_availability_tracker.client.configuration.AgentDataAvailabilityTrackerConfiguration;
+import se.tink.backend.integration.agent_data_availability_tracker.client.AsAgentDataAvailabilityTrackerClient;
+import se.tink.backend.integration.agent_data_availability_tracker.client.AsAgentDataAvailabilityTrackerClientMockImpl;
+import se.tink.backend.integration.agent_data_availability_tracker.common.configuration.AgentDataAvailabilityTrackerConfiguration;
 import se.tink.backend.integration.tpp_secrets_service.client.ManagedTppSecretsServiceClient;
 import se.tink.backend.integration.tpp_secrets_service.client.TppSecretsServiceClientImpl;
 import se.tink.backend.integration.tpp_secrets_service.client.configuration.TppSecretsServiceConfiguration;
@@ -279,8 +279,8 @@ public class AggregationDecoupledModule extends AbstractModule {
                                 .getAgentsServiceConfiguration()
                                 .getAgentDataAvailabilityTrackerConfiguration());
 
-        bind(AgentDataAvailabilityTrackerClient.class)
-                .to(AgentDataAvailabilityTrackerClientMockImpl.class)
+        bind(AsAgentDataAvailabilityTrackerClient.class)
+                .to(AsAgentDataAvailabilityTrackerClientMockImpl.class)
                 .in(Scopes.SINGLETON);
 
         // FakeQueueModule

@@ -34,8 +34,8 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
             50; // Limits number of pages fetched in order to reduce loading.
     private static final long DEFAULT_MAX_ALLOWED_NUMBER_OF_MONTHS = 23;
     // we can decrease this to 15 days also in future.
-    private static final long DEFAULT_MAX_ALLOWED_DAYS = 89;
-    private static final String FROM_BOOKING_DATE_TIME = "?fromBookingDateTime=";
+    protected static final long DEFAULT_MAX_ALLOWED_DAYS = 89;
+    protected static final String FROM_BOOKING_DATE_TIME = "?fromBookingDateTime=";
     private static final String FETCHED_TRANSACTIONS_UNTIL = "fetchedTxUntil:";
     protected final UkOpenBankingApiClient apiClient;
     protected final Class<ResponseType> responseType;
@@ -175,7 +175,7 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
                                         .atOffset(ZoneOffset.UTC));
     }
 
-    private OffsetDateTime getLastTransactionsFetchedDate(String accountId) {
+    protected OffsetDateTime getLastTransactionsFetchedDate(String accountId) {
         final Optional<OffsetDateTime> lastTransactionsFetchedDate =
                 fetchedTransactionsUntil(accountId);
 

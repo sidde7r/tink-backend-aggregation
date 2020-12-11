@@ -1,4 +1,4 @@
-package se.tink.backend.integration.agent_data_availability_tracker.common;
+package se.tink.backend.integration.agent_data_availability_tracker.common.serialization;
 
 class ChildEntry {
     private final String fieldName;

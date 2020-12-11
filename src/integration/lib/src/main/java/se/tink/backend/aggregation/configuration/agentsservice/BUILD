@@ -3,7 +3,7 @@ java_library(
     srcs = glob(["*.java"]),
     visibility = ["//visibility:public"],
     deps = [
-        "//src/integration/agent_data_availability_tracker/client/src/main/java/se/tink/backend/integration/agent_data_availability_tracker/client/configuration",
+        "//src/integration/agent_data_availability_tracker/client/src/main/java/se/tink/backend/integration/agent_data_availability_tracker/common",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/annotations",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/eidas/proxy",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/integrations",

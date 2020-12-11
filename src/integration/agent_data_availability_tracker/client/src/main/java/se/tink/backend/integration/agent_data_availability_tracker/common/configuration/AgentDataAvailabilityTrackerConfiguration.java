@@ -1,4 +1,4 @@
-package se.tink.backend.integration.agent_data_availability_tracker.client.configuration;
+package se.tink.backend.integration.agent_data_availability_tracker.common.configuration;
 
 import com.google.common.base.Strings;
 import se.tink.backend.aggregation.annotations.JsonObject;

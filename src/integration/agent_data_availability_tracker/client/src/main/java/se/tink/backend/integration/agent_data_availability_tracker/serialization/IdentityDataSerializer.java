@@ -1,8 +1,8 @@
 package se.tink.backend.integration.agent_data_availability_tracker.serialization;
 
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.IdentityData;
-import se.tink.backend.integration.agent_data_availability_tracker.common.TrackingList;
-import se.tink.backend.integration.agent_data_availability_tracker.common.TrackingMapSerializer;
+import se.tink.backend.integration.agent_data_availability_tracker.common.serialization.TrackingList;
+import se.tink.backend.integration.agent_data_availability_tracker.common.serialization.TrackingMapSerializer;
 
 public class IdentityDataSerializer extends TrackingMapSerializer {
 
