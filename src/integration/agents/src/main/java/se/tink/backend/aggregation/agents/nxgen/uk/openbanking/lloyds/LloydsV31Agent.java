@@ -38,7 +38,6 @@ public final class LloydsV31Agent extends UkOpenBankingBaseAgent {
                         .withOrganisationId(LloydsConstants.ORGANISATION_ID)
                         .withApiBaseURL(LloydsConstants.AIS_API_URL)
                         .withWellKnownURL(LloydsConstants.WELL_KNOWN_PERSONAL_URL)
-                        .withAppToAppURL(LloydsConstants.APP_TO_APP_AUTH_URL)
                         .build();
     }
 

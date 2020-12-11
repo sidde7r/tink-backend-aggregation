@@ -61,7 +61,6 @@ public class OpenIdAuthenticationController
 
     private final RandomValueGenerator randomValueGenerator;
     private final String callbackUri;
-    private final URL appToAppRedirectURL;
     private final OpenIdAuthenticationValidator authenticationValidator;
 
     public OpenIdAuthenticationController(
@@ -72,7 +71,6 @@ public class OpenIdAuthenticationController
             Credentials credentials,
             StrongAuthenticationState strongAuthenticationState,
             String callbackUri,
-            URL appToAppRedirectURL,
             RandomValueGenerator randomValueGenerator,
             OpenIdAuthenticationValidator authenticationValidator) {
         this(
@@ -85,7 +83,6 @@ public class OpenIdAuthenticationController
                 callbackUri,
                 DEFAULT_TOKEN_LIFETIME,
                 DEFAULT_TOKEN_LIFETIME_UNIT,
-                appToAppRedirectURL,
                 randomValueGenerator,
                 authenticationValidator);
     }
@@ -100,7 +97,6 @@ public class OpenIdAuthenticationController
             String callbackUri,
             int tokenLifetime,
             TemporalUnit tokenLifetimeUnit,
-            URL appToAppRedirectURL,
             RandomValueGenerator randomValueGenerator,
             OpenIdAuthenticationValidator authenticationValidator) {
         this.persistentStorage = persistentStorage;
@@ -116,7 +112,6 @@ public class OpenIdAuthenticationController
                 strongAuthenticationState.getSupplementalKey();
         this.strongAuthenticationState = strongAuthenticationState.getState();
         this.randomValueGenerator = randomValueGenerator;
-        this.appToAppRedirectURL = appToAppRedirectURL;
         this.authenticationValidator = authenticationValidator;
     }
 
@@ -217,8 +212,7 @@ public class OpenIdAuthenticationController
                         strongAuthenticationState,
                         nonce,
                         authenticator.getClientCredentialScope(),
-                        callbackUri,
-                        appToAppRedirectURL);
+                        callbackUri);
 
         // Let the agent add to or change the URL before we send it to the front-end.
         authorizeUrl =

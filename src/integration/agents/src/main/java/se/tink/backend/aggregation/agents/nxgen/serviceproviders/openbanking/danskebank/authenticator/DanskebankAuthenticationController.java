@@ -30,7 +30,6 @@ public class DanskebankAuthenticationController extends OpenIdAuthenticationCont
             Credentials credentials,
             StrongAuthenticationState strongAuthenticationState,
             String callbackUri,
-            URL appToAppRedirectURL,
             RandomValueGenerator randomValueGenerator,
             OpenIdAuthenticationValidator openIdAuthenticationValidator) {
         super(
@@ -41,7 +40,6 @@ public class DanskebankAuthenticationController extends OpenIdAuthenticationCont
                 credentials,
                 strongAuthenticationState,
                 callbackUri,
-                appToAppRedirectURL,
                 randomValueGenerator,
                 openIdAuthenticationValidator);
 

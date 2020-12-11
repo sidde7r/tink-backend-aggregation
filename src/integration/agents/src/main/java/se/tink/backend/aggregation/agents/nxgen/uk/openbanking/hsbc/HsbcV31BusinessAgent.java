@@ -37,7 +37,6 @@ public final class HsbcV31BusinessAgent extends UkOpenBankingBaseAgent {
                         .withOrganisationId(HsbcConstants.ORGANISATION_ID)
                         .withApiBaseURL(HsbcConstants.BUSINESS_AIS_API_URL)
                         .withWellKnownURL(HsbcConstants.BUSINESS_WELL_KNOWN_URL)
-                        .withAppToAppURL(HsbcConstants.BUSINESS_APP_TO_APP_AUTH_URL)
                         .withAllowedAccountOwnershipType(AccountOwnershipType.BUSINESS)
                         .build();
     }

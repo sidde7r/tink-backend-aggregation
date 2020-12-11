@@ -38,7 +38,6 @@ public final class HalifaxV31Agent extends UkOpenBankingBaseAgent {
                         .withOrganisationId(HalifaxConstants.ORGANISATION_ID)
                         .withApiBaseURL(HalifaxConstants.AIS_API_URL)
                         .withWellKnownURL(HalifaxConstants.WELL_KNOWN_URL)
-                        .withAppToAppURL(HalifaxConstants.APP_TO_APP_AUTH_URL)
                         .build();
     }
 
