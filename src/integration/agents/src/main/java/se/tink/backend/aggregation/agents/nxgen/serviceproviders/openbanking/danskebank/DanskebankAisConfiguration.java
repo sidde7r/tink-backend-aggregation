@@ -67,7 +67,7 @@ public class DanskebankAisConfiguration implements UkOpenBankingAisConfig {
         return appToAppURL;
     }
 
-    public Set<String> getAdditionalPermissions() {
+    public Set<String> getPermissions() {
         return additionalPermissions;
     }
 
