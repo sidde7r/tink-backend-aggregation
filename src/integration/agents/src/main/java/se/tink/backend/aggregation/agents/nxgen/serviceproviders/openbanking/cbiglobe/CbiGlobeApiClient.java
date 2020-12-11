@@ -276,7 +276,10 @@ public class CbiGlobeApiClient {
                 createRequestInSession(
                                 Urls.PAYMENT.parameter(
                                         IdTags.PAYMENT_PRODUCT,
-                                        sessionStorage.get(StorageKeys.PAYMENT_PRODUCT)))
+                                        sessionStorage.getOrDefault(
+                                                StorageKeys.PAYMENT_PRODUCT,
+                                                CbiGlobeConstants.PaymentProduct
+                                                        .SEPA_CREDIT_TRANSFERS)))
                         .header(
                                 HeaderKeys.ASPSP_PRODUCT_CODE,
                                 providerConfiguration.getAspspProductCode())
@@ -299,7 +302,10 @@ public class CbiGlobeApiClient {
                                         .parameter(IdTags.PAYMENT_ID, uniqueId)
                                         .parameter(
                                                 IdTags.PAYMENT_PRODUCT,
-                                                sessionStorage.get(StorageKeys.PAYMENT_PRODUCT)))
+                                                sessionStorage.getOrDefault(
+                                                        StorageKeys.PAYMENT_PRODUCT,
+                                                        CbiGlobeConstants.PaymentProduct
+                                                                .SEPA_CREDIT_TRANSFERS)))
                         .header(
                                 HeaderKeys.ASPSP_PRODUCT_CODE,
                                 providerConfiguration.getAspspProductCode());
@@ -312,7 +318,10 @@ public class CbiGlobeApiClient {
                                 .parameter(IdTags.PAYMENT_ID, uniqueId)
                                 .parameter(
                                         IdTags.PAYMENT_PRODUCT,
-                                        sessionStorage.get(StorageKeys.PAYMENT_PRODUCT)))
+                                        sessionStorage.getOrDefault(
+                                                StorageKeys.PAYMENT_PRODUCT,
+                                                CbiGlobeConstants.PaymentProduct
+                                                        .SEPA_CREDIT_TRANSFERS)))
                 .get(CreatePaymentResponse.class);
     }
 

@@ -71,9 +71,6 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
         this.sessionStorage = sessionStorage;
         this.strongAuthenticationState = strongAuthenticationState;
         this.provider = provider;
-        this.sessionStorage.put(
-                CbiGlobeConstants.StorageKeys.PAYMENT_PRODUCT,
-                CbiGlobeConstants.PaymentProduct.SEPA_CREDIT_TRANSFERS);
     }
 
     @Override
