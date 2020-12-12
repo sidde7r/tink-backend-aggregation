@@ -91,4 +91,9 @@ public final class OpBankConstants {
         public static final int DEFAULT_TOKEN_LIFETIME = 45;
         public static final TemporalUnit DEFAULT_TOKEN_LIFETIME_UNIT = ChronoUnit.DAYS;
     }
+
+    public static class Filters {
+        public static final int NUMBER_OF_RETRIES = 5;
+        public static final long MS_TO_WAIT = 4000;
+    }
 }
