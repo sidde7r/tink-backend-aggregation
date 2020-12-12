@@ -21,6 +21,7 @@ public class TransactionFetchRetryFilter extends AbstractRandomRetryFilter {
         } else if (response.getStatus() == 400 && response.hasBody()) {
             ErrorResponse errorResponse = getBodyAsExpectedType(response);
             return errorResponse != null
+                    && errorResponse.getTppMessages() != null
                     && errorResponse.getTppMessages().stream()
                             .anyMatch(ErrorEntity.PARAMETER_NOT_CONSISTENT::equals);
         } else {
