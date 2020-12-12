@@ -89,7 +89,7 @@ public class DanskeBankTransactionPaginator<T, S extends Account>
                     ukOpenBankingAisConfig.getInitialTransactionsPaginationKey(
                                     account.getApiIdentifier())
                             + FROM_BOOKING_DATE_TIME
-                            + DateTimeFormatter.ISO_INSTANT.format(fromDate);
+                            + DateTimeFormatter.ISO_LOCAL_DATE_TIME.format(fromDate);
         }
         return key;
     }
@@ -106,7 +106,7 @@ public class DanskeBankTransactionPaginator<T, S extends Account>
                 ukOpenBankingAisConfig.getInitialTransactionsPaginationKey(
                                 account.getApiIdentifier())
                         + FROM_BOOKING_DATE_TIME
-                        + DateTimeFormatter.ISO_INSTANT.format(
+                        + DateTimeFormatter.ISO_LOCAL_DATE_TIME.format(
                                 localDateTimeSource.now().minusDays(DEFAULT_MAX_ALLOWED_DAYS));
         return fetchTransactions(account, key);
     }
