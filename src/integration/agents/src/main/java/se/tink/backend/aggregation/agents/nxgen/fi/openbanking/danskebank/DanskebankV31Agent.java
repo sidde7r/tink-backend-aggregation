@@ -53,11 +53,13 @@ public final class DanskebankV31Agent extends DanskeBankV31EUBaseAgent {
         try {
             return super.fetchCheckingAccounts();
         } catch (HttpResponseException e) {
-            ErrorResponse errorResponse = e.getResponse().getBody(ErrorResponse.class);
-            if (e.getResponse().getStatus() == 500
-                    && errorResponse.getErrors().get(0).getErrorCode()
-                            == ErrorCode.UNEXPETED_ERROR) {
-                throw BankServiceError.BANK_SIDE_FAILURE.exception();
+            if (e.getResponse().getStatus() == 500) {
+                ErrorResponse errorResponse = e.getResponse().getBody(ErrorResponse.class);
+                if (!errorResponse.getErrors().isEmpty()
+                        && ErrorCode.UNEXPETED_ERROR.equals(
+                                errorResponse.getErrors().get(0).getErrorCode())) {
+                    throw BankServiceError.BANK_SIDE_FAILURE.exception();
+                }
             }
             throw e;
         }
