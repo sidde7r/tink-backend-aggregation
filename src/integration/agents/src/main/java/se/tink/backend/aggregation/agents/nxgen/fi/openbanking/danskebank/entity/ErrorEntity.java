@@ -7,8 +7,11 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 @JsonNaming(PropertyNamingStrategy.UpperCamelCaseStrategy.class)
+@Getter
 public class ErrorEntity {
 
-    @Getter private String errorCode;
+    private String errorCode;
     private String message;
+    private String path;
+    private String url;
 }
