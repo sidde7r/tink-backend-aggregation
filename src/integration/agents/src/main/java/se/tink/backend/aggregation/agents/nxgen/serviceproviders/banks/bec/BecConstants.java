@@ -95,7 +95,7 @@ public final class BecConstants {
                         NemIdSupportedLanguageCode.EN,
                                 "the required function is not currently available. try again later.",
                         NemIdSupportedLanguageCode.DA,
-                                "den nødvendige funktion er ikke tilgængelig i øjeblikket. Prøv igen senere.");
+                                "funktion er ikke tilgængelig i øjeblikket. Prøv igen senere.");
     }
 
     public static final class StorageKeys {
