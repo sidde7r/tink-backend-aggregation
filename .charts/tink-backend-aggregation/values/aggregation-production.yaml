@@ -461,6 +461,7 @@ featureFlags:
   beProxy: true
   createBeneficiary: true
   allowRefreshRegardlessOfRestrictions: true
+  supportIndividualAccountsRefresh: true
 
 providerConfigurationServiceConfiguration:
   enabled: true
