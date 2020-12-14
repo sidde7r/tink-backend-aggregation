@@ -1,15 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.danskebank;
 
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.ExternalAccountIdentification4Code.BBAN;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.ExternalAccountIdentification4Code.IBAN;
+
 import com.google.common.collect.ImmutableList;
+import java.util.List;
+import javax.annotation.Nonnull;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.enums.MarketCode;
-
-import javax.annotation.Nonnull;
-import java.util.List;
-
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.ExternalAccountIdentification4Code.BBAN;
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.ExternalAccountIdentification4Code.IBAN;
 
 public class DanskebankV31Constant {
 

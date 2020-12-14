@@ -1,6 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.danskebank;
 
 import com.google.common.base.Preconditions;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
+import javax.annotation.Nonnull;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingV31Constants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.authenticator.rpc.AccountPermissionResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountOwnershipType;
@@ -9,11 +13,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.authenticator.rpc.AccountPermissionResponseV31;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.enums.MarketCode;
-
-import javax.annotation.Nonnull;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
 
 public class DanskebankAisConfiguration implements UkOpenBankingAisConfig {
     private final URL apiBaseURL;

@@ -50,7 +50,8 @@ public class UkOpenBankingPisAuthApiClient extends OpenIdApiClient {
     public URL buildAuthorizeUrl(
             String state, String callbackUrl, ClientInfo clientInfo, String intentId) {
         final String nonce = randomValueGenerator.generateRandomHexEncoded(8);
-        final URL authorizeUrl = super.buildAuthorizeUrl(state, nonce, ClientMode.PAYMENTS, callbackUrl);
+        final URL authorizeUrl =
+                super.buildAuthorizeUrl(state, nonce, ClientMode.PAYMENTS, callbackUrl);
 
         return authorizeUrl.queryParam(
                 "request",

@@ -12,14 +12,14 @@ public class UkOpenBankingAisTest {
     @Test
     public void shouldGetAllRequiredPermissionsForChosenPartyEndpoints() {
         // given
-        UKOpenBankingAis withOnePermission =
-                UKOpenBankingAis.builder()
+        UkOpenBankingAisConfiguration withOnePermission =
+                UkOpenBankingAisConfiguration.builder()
                         .withApiBaseURL("apiBaseURL")
                         .withOrganisationId("orgId")
                         .withPartyEndpoints(PartyEndpoint.IDENTITY_DATA_ENDPOINT_PARTY)
                         .build();
-        UKOpenBankingAis withTwoPermissions =
-                UKOpenBankingAis.builder()
+        UkOpenBankingAisConfiguration withTwoPermissions =
+                UkOpenBankingAisConfiguration.builder()
                         .withApiBaseURL("apiBaseURL")
                         .withOrganisationId("orgId")
                         .withPartyEndpoints(
