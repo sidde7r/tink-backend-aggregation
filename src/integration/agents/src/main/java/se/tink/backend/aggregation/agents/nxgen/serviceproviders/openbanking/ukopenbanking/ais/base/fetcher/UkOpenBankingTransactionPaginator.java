@@ -6,6 +6,7 @@ import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingApiClient;
@@ -110,9 +111,9 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
         401 is to cover Danske as they send 401 instead of 403.
          */
         String key;
-        logger.error(
-                "Trying to fetch transactions again for last 89 days. Got 401 in previous request",
-                e);
+        logger.warn(
+                "Trying to fetch transactions again for last 89 days. Got 401 in previous request \n{}",
+                ExceptionUtils.getStackTrace(e));
 
         key =
                 ukOpenBankingAisConfig.getInitialTransactionsPaginationKey(
