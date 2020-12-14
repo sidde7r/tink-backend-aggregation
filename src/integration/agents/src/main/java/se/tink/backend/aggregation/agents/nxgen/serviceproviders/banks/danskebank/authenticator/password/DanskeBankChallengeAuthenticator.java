@@ -205,10 +205,10 @@ public class DanskeBankChallengeAuthenticator
         } catch (ThirdPartyAppException e) {
             switch (e.getError()) {
                 case CANCELLED:
-                    throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception(
+                    throw ThirdPartyAppError.CANCELLED.exception(
                             UserMessage.CODE_APP_REJECTED_ERROR.getKey(), e);
                 case TIMED_OUT:
-                    throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception(
+                    throw ThirdPartyAppError.TIMED_OUT.exception(
                             UserMessage.CODE_APP_TIMEOUT_ERROR.getKey(), e);
                 default:
                     throw new IllegalStateException(
