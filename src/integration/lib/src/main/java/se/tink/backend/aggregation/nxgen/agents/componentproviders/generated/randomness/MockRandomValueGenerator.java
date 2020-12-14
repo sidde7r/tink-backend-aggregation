@@ -50,6 +50,11 @@ public class MockRandomValueGenerator implements RandomValueGenerator {
     }
 
     @Override
+    public double generateRandomDoubleInRange(double minimum, double maximum) {
+        return 0;
+    }
+
+    @Override
     public String generateUuidWithTinkTag() {
         return getUUID().toString();
     }

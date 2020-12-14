@@ -1,15 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.jwt.signer;
 
-import com.google.common.collect.ImmutableSet;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.name.Named;
 import java.security.cert.X509Certificate;
+import java.util.function.Predicate;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.contexts.AgentConfigurationControllerContext;
 import se.tink.backend.aggregation.agents.contexts.EidasContext;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.configuration.UkOpenBankingClientConfigurationAdapter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.configuration.UkOpenBankingConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.jwt.JwksClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.jwt.kid.JwksKidProvider;
@@ -20,19 +19,15 @@ import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConf
 import se.tink.backend.aggregation.configuration.eidas.InternalEidasProxyConfiguration;
 import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 
 @Slf4j
 public final class KeySignerProvider implements Provider<JwtSigner> {
-    private static final ImmutableSet<String> EIDAS_ENABLED_APPS =
-            ImmutableSet.of(
-                    "5f98e87106384b2981c0354a33b51590", // oxford-staging
-                    "e643eb7981d24acfb47834ef338a4e2a", // oxford-prod
-                    "c859501868b742b6bebd7a3f7911cd85", // oxford-preprod
-                    "bb9275c6890a413398d92116047ebfb2", // kirkby-staging,
-                    "bb7defc66be94f6ca35cb069135d350a" // kirkby-production
-                    );
+    private static final int ALLOWED_PERCENT_OF_TRAFFIC = 20;
+    private static final Predicate<RandomValueGenerator> SHOULD_ALLOW =
+            generator -> ALLOWED_PERCENT_OF_TRAFFIC > generator.generateRandomDoubleInRange(0, 100);
     private final AgentComponentProvider agentComponentProvider;
-    private final UkOpenBankingClientConfigurationAdapter configuration;
+    private final UkOpenBankingConfiguration configuration;
     private final AgentConfigurationControllerContext agentConfigurationControllerContext;
     private final InternalEidasProxyConfiguration internalEidasProxyConfiguration;
     private final EidasContext eidasContext;
@@ -41,8 +36,8 @@ public final class KeySignerProvider implements Provider<JwtSigner> {
     private final String eidasCertId;
 
     @Inject
-    private KeySignerProvider(
-            UkOpenBankingClientConfigurationAdapter configuration,
+    KeySignerProvider(
+            UkOpenBankingConfiguration configuration,
             AgentComponentProvider agentComponentProvider,
             AgentsServiceConfiguration agentsServiceConfiguration,
             @Named("eidasCertId") String eidasCertId) {
@@ -59,9 +54,10 @@ public final class KeySignerProvider implements Provider<JwtSigner> {
     @SneakyThrows
     public JwtSigner get() {
         String appId = agentComponentProvider.getContext().getAppId();
-        // this is temporary solution, it should be deleted after the Tink and all of our clients
-        // migration certificates to the eIDAS proxy
-        if (EIDAS_ENABLED_APPS.contains(appId)) {
+        SecretServiceJwtSigner secretServiceJwtSigner = new SecretServiceJwtSigner(configuration);
+        String clusterId = agentComponentProvider.getContext().getClusterId();
+        if (SHOULD_ALLOW.test(agentComponentProvider.getRandomValueGenerator())
+                && (clusterId.equals("oxford-preprod") || clusterId.equals("oxford-staging"))) {
             X509Certificate certificate =
                     CertificateUtils.getX509CertificatesFromBase64EncodedCert(
                                     agentConfigurationControllerContext
@@ -69,19 +65,21 @@ public final class KeySignerProvider implements Provider<JwtSigner> {
                                             .getAgentConfiguration(UkOpenBankingConfiguration.class)
                                             .getQsealc())
                             .get(0);
-            log.info(
-                    "Initializing eIDAS JWT signer for appId '{}' with '{}' certificate",
-                    appId,
-                    certificate.getSubjectDN().getName());
             KidProvider kidProvider =
                     new JwksKidProvider(
                             new JwksClient(agentComponentProvider.getTinkHttpClient()),
                             configuration.getSoftwareStatementAssertions().getJwksEndpoint(),
                             certificate);
-            return new EidasJwtSigner(kidProvider, createEidasJwsSigner());
+            EidasProxyJwtSigner eidasProxyJwtSigner =
+                    new EidasProxyJwtSigner(kidProvider, createEidasJwsSigner());
+            log.info(
+                    "Initializing eIDAS JWT signer for appId '{}' with '{}' certificate",
+                    appId,
+                    certificate.getSubjectDN().getName());
+            return new EidasProxyWithFallbackJwtSigner(eidasProxyJwtSigner, secretServiceJwtSigner);
         } else {
-            log.info("Initializing JWT signer using secrets appId: {}", appId);
-            return new LocalJwtSigner((UkOpenBankingConfiguration) configuration);
+            log.info("Initializing legacy JWT signer for appId '{}'", appId);
+            return secretServiceJwtSigner;
         }
     }
 
