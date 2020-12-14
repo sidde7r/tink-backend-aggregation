@@ -11,6 +11,7 @@ import com.google.common.base.CaseFormat;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import java.util.List;
+import java.util.Optional;
 import se.tink.backend.aggregation.nxgen.core.account.GenericTypeMapper;
 import se.tink.libraries.strings.StringUtils;
 
@@ -130,6 +131,23 @@ public class UkOpenBankingApiDefinitions {
                     ? EntryStatusCode.valueOf(
                             CaseFormat.UPPER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, key))
                     : null;
+        }
+    }
+
+    /**
+     * https://openbankinguk.github.io/read-write-api-site3/v3.1.6/resources-and-data-models/aisp/Transactions.html#mutability
+     */
+    public enum TransactionMutability {
+        MUTABLE,
+        IMMUTABLE;
+
+        @JsonCreator
+        private static TransactionMutability fromString(String key) {
+            return Optional.ofNullable(key).map(k -> valueOf(key.toUpperCase())).orElse(null);
+        }
+
+        public boolean isMutable() {
+            return this == MUTABLE;
         }
     }
 
