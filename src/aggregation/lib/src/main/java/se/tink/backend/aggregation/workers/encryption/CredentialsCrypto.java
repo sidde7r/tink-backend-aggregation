@@ -97,8 +97,8 @@ public class CredentialsCrypto {
                                 CredentialsCryptoV1.DecryptedDataV1 result =
                                         CredentialsCryptoV1.decryptV1(key, v1);
 
-                                // be aware of side-effect here! this is same credentials object as
-                                // on the Request
+                                // be aware of side-effect here! this is same credentials object
+                                // as on the Request
                                 credentials.addSerializedFields(result.getDecryptedFields());
                                 credentials.setSensitivePayloadSerialized(
                                         result.getDecryptedPayload());
@@ -117,22 +117,26 @@ public class CredentialsCrypto {
                         })
                 .setVersion2Handler(
                         v2 -> {
-                            byte[] fieldsKey =
-                                    cryptoWrapper.getCryptoKeyByKeyId(v2.getFields().getKeyId());
-                            byte[] payloadKey =
-                                    v2.getPayload() == null
-                                            ? null
-                                            : cryptoWrapper.getCryptoKeyByKeyId(
-                                                    v2.getPayload().getKeyId());
-
                             try {
-                                CredentialsCryptoV2.DecryptedDataV2 result =
-                                        CredentialsCryptoV2.decryptV2(fieldsKey, payloadKey, v2);
-                                // be aware of side-effect here! this is same credentials object as
-                                // on the Request
-                                credentials.addSerializedFields(result.getDecryptedFields());
-                                credentials.setSensitivePayloadSerialized(
-                                        result.getDecryptedPayload());
+                                if (v2.getFields() != null) {
+                                    int keyId = v2.getFields().getKeyId();
+                                    byte[] fieldsKey = cryptoWrapper.getCryptoKeyByKeyId(keyId);
+                                    String result =
+                                            CredentialsCryptoV2.decryptV2Fields(fieldsKey, v2);
+                                    // be aware of side-effect here! this is same credentials object
+                                    // as on the Request
+                                    credentials.addSerializedFields(result);
+                                }
+
+                                if (v2.getPayload() != null) {
+                                    int keyId = v2.getPayload().getKeyId();
+                                    byte[] payloadKey = cryptoWrapper.getCryptoKeyByKeyId(keyId);
+                                    String result =
+                                            CredentialsCryptoV2.decryptV2Payload(payloadKey, v2);
+                                    // be aware of side-effect here! this is same credentials object
+                                    // as on the Request
+                                    credentials.setSensitivePayloadSerialized(result);
+                                }
 
                                 cryptoMetrics(CREDENTIALS_DECRYPT, v2, true);
                             } catch (Exception e) {
