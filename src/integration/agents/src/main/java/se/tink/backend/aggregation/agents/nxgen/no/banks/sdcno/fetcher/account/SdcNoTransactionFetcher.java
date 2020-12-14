@@ -36,7 +36,22 @@ public class SdcNoTransactionFetcher implements TransactionFetcher<Transactional
 
     @Override
     public List<AggregationTransaction> fetchTransactionsFor(TransactionalAccount account) {
-        getAccountIdData(account);
+        /*
+        The getAccountIdData() method throws an exception when setting some state on bank's side.
+        The exception appears when fetching data from bank to which we do not have ambassador.
+        Currently only Vekselbanken seems to be vulnerable.
+
+        This method does not fetch any significant data from the bank and we do this request to be
+        compliant with behavior of a web app. It may turn out to be redundant.
+
+        Temporarily will catch exception around this method and check if it helps.
+         */
+        try {
+            getAccountIdData(account);
+        } catch (HttpResponseException e) {
+            log.error("Exception appeared setting some state on bank's side.", e);
+        }
+
         SdcAgreement agreement = fetchSdcAgreement();
         SearchTransactionsRequest searchTransactionsRequest =
                 prepareTransactionRequest(account, agreement);
