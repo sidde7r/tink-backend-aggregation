@@ -80,6 +80,8 @@ public final class LaCaixaConstants {
         public static final String NO_OWN_CARDS = "LIT_NO_PERMITE_CONSULTA_TARJETAS";
         public static final String UNAVAILABLE = "0001";
         public static final String NO_ASSOCIATED_ACCOUNTS = "0007";
+        public static final String ACCOUNT_BLOCKED = "0207";
+        public static final String INCORRECT_CREDENTIALS = "0250";
     }
 
     public static class Urls {
@@ -159,12 +161,6 @@ public final class LaCaixaConstants {
         private TemporaryStorage() {}
 
         public static final String ACCOUNT_REFERENCE = "accountRef";
-    }
-
-    public static class StatusCodes {
-        private StatusCodes() {}
-
-        public static final int INCORRECT_USERNAME_PASSWORD = 409; // Conflict
     }
 
     public static class UserData {

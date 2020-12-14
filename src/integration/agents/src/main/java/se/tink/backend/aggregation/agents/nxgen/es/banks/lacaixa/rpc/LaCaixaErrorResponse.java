@@ -3,9 +3,11 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.rpc;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Strings;
+import lombok.Getter;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
+@Getter
 @JsonObject
 public class LaCaixaErrorResponse {
     @JsonProperty("codigo")
@@ -58,5 +60,19 @@ public class LaCaixaErrorResponse {
         return Strings.nullToEmpty(code)
                 .trim()
                 .equalsIgnoreCase(LaCaixaConstants.ErrorCode.UNAVAILABLE);
+    }
+
+    @JsonIgnore
+    public boolean isAccountBlocked() {
+        return Strings.nullToEmpty(code)
+                .trim()
+                .equalsIgnoreCase(LaCaixaConstants.ErrorCode.ACCOUNT_BLOCKED);
+    }
+
+    @JsonIgnore
+    public boolean isIdentificationIncorrect() {
+        return Strings.nullToEmpty(code)
+                .trim()
+                .equalsIgnoreCase(LaCaixaConstants.ErrorCode.INCORRECT_CREDENTIALS);
     }
 }

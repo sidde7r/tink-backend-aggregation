@@ -1,7 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa;
 
 import javax.ws.rs.core.MediaType;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
+import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaConstants.UserData;
@@ -31,12 +34,14 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.rpc.Use
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.rpc.UserDataResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transactionalaccount.rpc.AccountTransactionResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transactionalaccount.rpc.ListAccountsResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.rpc.LaCaixaErrorResponse;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
+@Slf4j
 public class LaCaixaApiClient {
 
     private final TinkHttpClient client;
@@ -62,20 +67,24 @@ public class LaCaixaApiClient {
     }
 
     public StatusResponse login(LoginRequest loginRequest) throws LoginException {
-
         try {
-
             return createRequest(LaCaixaConstants.Urls.SUBMIT_LOGIN)
                     .post(StatusResponse.class, loginRequest);
-
         } catch (HttpResponseException e) {
-            int statusCode = e.getResponse().getStatus();
-
-            if (statusCode == LaCaixaConstants.StatusCodes.INCORRECT_USERNAME_PASSWORD) {
-                throw LoginError.INCORRECT_CREDENTIALS.exception(e);
+            HttpResponse response = e.getResponse();
+            LaCaixaErrorResponse errorResponse = response.getBody(LaCaixaErrorResponse.class);
+            if (response.getStatus() == HttpStatus.SC_CONFLICT) {
+                if (errorResponse.isAccountBlocked()) {
+                    throw AuthorizationError.ACCOUNT_BLOCKED.exception();
+                } else if (errorResponse.isIdentificationIncorrect()) {
+                    throw LoginError.INCORRECT_CREDENTIALS.exception(e);
+                }
             }
-
-            throw e;
+            log.info(
+                    "Unknown error code {} with message {}",
+                    errorResponse.getCode(),
+                    errorResponse.getMessage());
+            throw LoginError.DEFAULT_MESSAGE.exception();
         }
     }
 
