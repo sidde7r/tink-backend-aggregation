@@ -7,6 +7,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.config.AuthenticationType;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.config.SdcNoConfiguration;
@@ -55,6 +56,8 @@ public class PostAuthDriverProcessor {
 
         if (isNotACustomer(errorMessage)) {
             throw LoginError.NOT_CUSTOMER.exception();
+        } else if (isBankError(errorMessage)) {
+            throw BankServiceError.BANK_SIDE_FAILURE.exception();
         } else {
             log.error(
                     "[SDC] Unknown error was found - error: {}, page source: {}",
@@ -70,7 +73,16 @@ public class PostAuthDriverProcessor {
                 .contains(SdcNoConstants.ErrorMessages.NO_ACCOUNT_FOR_BANK_ID.toLowerCase());
     }
 
+    private boolean isBankError(String errorMessage) {
+        return errorMessage
+                .toLowerCase()
+                .contains(SdcNoConstants.ErrorMessages.BANK_TEMPORARY_ERROR.toLowerCase());
+    }
+
     private void checkIfMultipleAgreements() {
+        log.info(
+                "[SDC] Checking for multiple agreements, verify page source: {}",
+                driver.getPageSource());
         WebElement agreementsList = driver.findElement(AGREEMENT_LIST);
         WebElement firstAgreement = agreementsList.findElement(AGREEMENT_LIST_FIRST_OPTION);
         chooseFirstAgreement(firstAgreement);
