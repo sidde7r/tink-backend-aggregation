@@ -1,6 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank;
 
+import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccountTypeMapper;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.libraries.account.enums.AccountFlag;
 import se.tink.libraries.i18n.LocalizableEnum;
 import se.tink.libraries.i18n.LocalizableKey;
 
@@ -240,4 +243,19 @@ public final class SwedbankConstants {
             return this.userMessage;
         }
     }
+
+    public static final TransactionalAccountTypeMapper ACCOUNT_TYPE_MAPPER =
+            TransactionalAccountTypeMapper.builder()
+                    .put(
+                            TransactionalAccountType.CHECKING,
+                            AccountFlag.PSD2_PAYMENT_ACCOUNT,
+                            "Privatkonto",
+                            "Servicekonto")
+                    .put(
+                            TransactionalAccountType.SAVINGS,
+                            "e-sparkonto",
+                            "Framtidskonto",
+                            "Sparkapitalkonto",
+                            "Depåkonto 1")
+                    .build();
 }

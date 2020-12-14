@@ -3,14 +3,16 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sw
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.fetcher.transactionalaccount.entity.balance.BalanceAmount;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.fetcher.transactionalaccount.entity.balance.BalancesItem;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
@@ -73,22 +75,27 @@ public class AccountEntity {
         return balances;
     }
 
-    public Optional<TransactionalAccount> toTinkAccount(List<BalancesItem> balances) {
+    private static final Logger logger = LoggerFactory.getLogger(AccountEntity.class);
 
-        return TransactionalAccount.nxBuilder()
-                .withType(TransactionalAccountType.CHECKING)
-                .withPaymentAccountFlag()
-                .withBalance(BalanceModule.of(getAvailableBalance(balances)))
-                .withId(
-                        IdModule.builder()
-                                .withUniqueIdentifier(bban)
-                                .withAccountNumber(bban)
-                                .withAccountName(getAccountName())
-                                .addIdentifier(new IbanIdentifier(iban))
-                                .build())
-                .putInTemporaryStorage(SwedbankConstants.StorageKeys.ACCOUNT_ID, iban)
-                .setApiIdentifier(resourceId)
-                .build();
+    public Optional<TransactionalAccount> toTinkAccount(List<BalancesItem> balances) {
+        Optional<TransactionalAccount> account =
+                TransactionalAccount.nxBuilder()
+                        .withTypeAndFlagsFrom(SwedbankConstants.ACCOUNT_TYPE_MAPPER, product)
+                        .withBalance(BalanceModule.of(getAvailableBalance(balances)))
+                        .withId(
+                                IdModule.builder()
+                                        .withUniqueIdentifier(bban)
+                                        .withAccountNumber(bban)
+                                        .withAccountName(getAccountName())
+                                        .addIdentifier(new IbanIdentifier(iban))
+                                        .build())
+                        .putInTemporaryStorage(StorageKeys.ACCOUNT_ID, iban)
+                        .setApiIdentifier(resourceId)
+                        .build();
+        if (!account.isPresent()) {
+            logger.warn("Missing product: " + product);
+        }
+        return account;
     }
 
     private ExactCurrencyAmount getAvailableBalance(List<BalancesItem> balances) {
