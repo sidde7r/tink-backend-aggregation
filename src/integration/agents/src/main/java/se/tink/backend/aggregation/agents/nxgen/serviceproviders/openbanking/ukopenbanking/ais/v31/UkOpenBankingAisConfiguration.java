@@ -14,18 +14,16 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.authenticator.rpc.AccountPermissionResponseV31;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
-public class UKOpenBankingAis implements UkOpenBankingAisConfig {
+public class UkOpenBankingAisConfiguration implements UkOpenBankingAisConfig {
     private final URL apiBaseURL;
     private final URL wellKnownURL;
-    private final URL appToAppURL;
     private final Set<PartyEndpoint> partyEndpoints;
     private final AccountOwnershipType allowedAccountOwnershipType;
     private final String organisationId;
 
-    private UKOpenBankingAis(Builder builder) {
+    private UkOpenBankingAisConfiguration(Builder builder) {
         this.apiBaseURL = builder.apiBaseURL;
         this.wellKnownURL = builder.wellKnownURL;
-        this.appToAppURL = builder.appToAppURL;
         this.partyEndpoints = builder.partyEndpoints;
         this.allowedAccountOwnershipType = builder.allowedAccountOwnershipType;
         this.organisationId = builder.organisationId;
@@ -61,7 +59,7 @@ public class UKOpenBankingAis implements UkOpenBankingAisConfig {
 
     @Override
     public URL createConsentRequestURL() {
-        return apiBaseURL.concat(UkOpenBankingV31Constants.ApiServices.CONSENT_REQUEST);
+        return apiBaseURL.concat("/account-access-consents");
     }
 
     @Override
@@ -103,11 +101,6 @@ public class UKOpenBankingAis implements UkOpenBankingAisConfig {
     }
 
     @Override
-    public URL getAppToAppURL() {
-        return this.appToAppURL;
-    }
-
-    @Override
     public Set<String> getAdditionalPermissions() {
         return this.partyEndpoints.stream()
                 .flatMap(partyEndpoint -> partyEndpoint.getPermissions().stream())
@@ -137,7 +130,6 @@ public class UKOpenBankingAis implements UkOpenBankingAisConfig {
         private final Set<PartyEndpoint> partyEndpoints = new HashSet<>();
         private URL apiBaseURL;
         private URL wellKnownURL;
-        private URL appToAppURL;
         private AccountOwnershipType allowedAccountOwnershipType = AccountOwnershipType.PERSONAL;
         private String organisationId;
 
@@ -150,11 +142,6 @@ public class UKOpenBankingAis implements UkOpenBankingAisConfig {
 
         public Builder withWellKnownURL(final String wellKnownURL) {
             this.wellKnownURL = new URL(wellKnownURL);
-            return this;
-        }
-
-        public Builder withAppToAppURL(final String appToAppURL) {
-            this.appToAppURL = new URL(appToAppURL);
             return this;
         }
 
@@ -176,10 +163,10 @@ public class UKOpenBankingAis implements UkOpenBankingAisConfig {
             return this;
         }
 
-        public UKOpenBankingAis build() {
+        public UkOpenBankingAisConfiguration build() {
             Preconditions.checkNotNull(apiBaseURL);
             Preconditions.checkNotNull(organisationId);
-            return new UKOpenBankingAis(this);
+            return new UkOpenBankingAisConfiguration(this);
         }
     }
 }

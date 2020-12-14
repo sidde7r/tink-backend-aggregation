@@ -191,7 +191,6 @@ public abstract class DanskeBankV31EUBaseAgent extends NextGenerationAgent
                             this.credentials,
                             this.strongAuthenticationState,
                             this.request.getCallbackUri(),
-                            aisConfig.getAppToAppURL(),
                             this.randomValueGenerator,
                             new OpenIdAuthenticationValidator(this.apiClient));
 

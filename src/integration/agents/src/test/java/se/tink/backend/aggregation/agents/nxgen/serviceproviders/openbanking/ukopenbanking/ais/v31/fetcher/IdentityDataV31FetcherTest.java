@@ -12,21 +12,21 @@ import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.IdentityDataV31Entity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.UKOpenBankingAis;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.UkOpenBankingAisConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.IdentityDataMapper;
 import se.tink.libraries.identitydata.IdentityData;
 
 public class IdentityDataV31FetcherTest {
 
     private IdentityDataV31Fetcher identityDataV31Fetcher;
-    private UKOpenBankingAis aisConfiguration;
+    private UkOpenBankingAisConfiguration aisConfiguration;
     private UkOpenBankingApiClient apiClient;
     private IdentityDataMapper identityDataMapper;
 
     @Before
     public void setUp() {
         apiClient = mock(UkOpenBankingApiClient.class);
-        aisConfiguration = mock(UKOpenBankingAis.class);
+        aisConfiguration = mock(UkOpenBankingAisConfiguration.class);
         identityDataMapper = mock(IdentityDataMapper.class);
         identityDataV31Fetcher =
                 new IdentityDataV31Fetcher(apiClient, aisConfiguration, identityDataMapper);

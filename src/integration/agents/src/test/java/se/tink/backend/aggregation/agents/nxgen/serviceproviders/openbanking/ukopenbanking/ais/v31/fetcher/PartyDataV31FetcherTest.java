@@ -14,20 +14,20 @@ import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.IdentityDataV31Entity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.UKOpenBankingAis;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.UkOpenBankingAisConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.fixtures.PartyFixtures;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.fixtures.TransactionalAccountFixtures;
 
 public class PartyDataV31FetcherTest {
 
     private PartyDataFetcher partyDataFetcher;
-    private UKOpenBankingAis aisConfiguration;
+    private UkOpenBankingAisConfiguration aisConfiguration;
     private UkOpenBankingApiClient apiClient;
 
     @Before
     public void setUp() {
         apiClient = mock(UkOpenBankingApiClient.class);
-        aisConfiguration = mock(UKOpenBankingAis.class);
+        aisConfiguration = mock(UkOpenBankingAisConfiguration.class);
         partyDataFetcher = new PartyDataV31Fetcher(apiClient, aisConfiguration);
     }
 

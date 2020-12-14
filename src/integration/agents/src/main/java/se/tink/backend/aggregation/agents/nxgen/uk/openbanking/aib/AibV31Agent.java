@@ -12,11 +12,10 @@ import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModul
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModulesForProductionMode;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.UkOpenBankingBaseAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAis;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.module.JwtSignerModule;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.module.UkOpenBankingLocalKeySignerModuleForDecoupledMode;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.module.UkOpenBankingModule;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.UKOpenBankingAis;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.UkOpenBankingAisConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.UkOpenBankingV31Ais;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.signer.iface.JwtSigner;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.configuration.UkOpenBankingPisConfiguration;
@@ -29,12 +28,14 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.dat
         modules = UkOpenBankingLocalKeySignerModuleForDecoupledMode.class)
 @AgentCapabilities({CHECKING_ACCOUNTS, CREDIT_CARDS, SAVINGS_ACCOUNTS, IDENTITY_DATA, TRANSFERS})
 public final class AibV31Agent extends UkOpenBankingBaseAgent {
-    private static final UkOpenBankingAisConfig aisConfig;
+    private static final se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking
+                    .ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig
+            aisConfig;
     private final LocalDateTimeSource localDateTimeSource;
 
     static {
         aisConfig =
-                UKOpenBankingAis.builder()
+                UkOpenBankingAisConfiguration.builder()
                         .withApiBaseURL(AibConstants.AIS_API_URL)
                         .withWellKnownURL(AibConstants.WELL_KNOWN_PERSONAL_URL)
                         .withOrganisationId(AibConstants.ORGANISATION_ID)

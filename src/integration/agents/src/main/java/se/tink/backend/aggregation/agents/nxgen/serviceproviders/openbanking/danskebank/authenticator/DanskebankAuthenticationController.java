@@ -13,7 +13,6 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.ran
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
-import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class DanskebankAuthenticationController extends OpenIdAuthenticationController {
@@ -30,7 +29,6 @@ public class DanskebankAuthenticationController extends OpenIdAuthenticationCont
             Credentials credentials,
             StrongAuthenticationState strongAuthenticationState,
             String callbackUri,
-            URL appToAppRedirectURL,
             RandomValueGenerator randomValueGenerator,
             OpenIdAuthenticationValidator openIdAuthenticationValidator) {
         super(
@@ -41,7 +39,6 @@ public class DanskebankAuthenticationController extends OpenIdAuthenticationCont
                 credentials,
                 strongAuthenticationState,
                 callbackUri,
-                appToAppRedirectURL,
                 randomValueGenerator,
                 openIdAuthenticationValidator);
 

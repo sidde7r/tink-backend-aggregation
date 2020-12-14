@@ -12,7 +12,6 @@ public class DanskebankAisConfigurationTest {
     private static final String API_BASE_URL = "/api/base/url";
     private static final String WELL_KNOWN_URL = "/well/known/url";
     private static final String IDENTITY_DATA_URL = "/identity/data/url";
-    private static final String APP_TO_APP_URL = "/app/to/app/url";
 
     private DanskebankAisConfiguration.Builder builder;
 
@@ -26,7 +25,6 @@ public class DanskebankAisConfigurationTest {
         // given
         builder.withWellKnownURL(new URL(WELL_KNOWN_URL))
                 .withIdentityDataURL(IDENTITY_DATA_URL)
-                .withAppToAppURL(APP_TO_APP_URL)
                 .withAdditionalPermission("additional permission 1")
                 .withAdditionalPermission("additional permission 2")
                 .partyEndpointEnabled(false);
@@ -40,7 +38,6 @@ public class DanskebankAisConfigurationTest {
         assertThat(result.getIdentityDataURL()).isEqualTo(new URL(IDENTITY_DATA_URL));
         assertThat(result.isAccountPartiesEndpointEnabled()).isEqualTo(false);
         assertThat(result.isAccountPartyEndpointEnabled()).isEqualTo(false);
-        assertThat(result.getAppToAppURL()).isEqualTo(new URL(APP_TO_APP_URL));
         assertThat(result.getAdditionalPermissions())
                 .containsOnly("additional permission 1", "additional permission 2");
         assertThat(result.getApiBaseURL()).isEqualTo(new URL(API_BASE_URL));

@@ -35,8 +35,6 @@ public interface UkOpenBankingAisConfig {
 
     boolean isAccountPartyEndpointEnabled();
 
-    URL getAppToAppURL();
-
     Set<String> getAdditionalPermissions();
 
     AccountOwnershipType getAllowedAccountOwnershipType();
