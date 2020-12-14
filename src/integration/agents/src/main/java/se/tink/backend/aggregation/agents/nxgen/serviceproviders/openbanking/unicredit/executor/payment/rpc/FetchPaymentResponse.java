@@ -11,7 +11,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uni
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.executor.payment.enums.UnicreditPaymentStatus;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
-import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Payment;
 
 @JsonObject
@@ -36,7 +35,7 @@ public class FetchPaymentResponse {
     private String requestExecutionTime;
     private String transactionStatus;
 
-    public PaymentResponse toTinkPayment(String paymentId, PaymentType type) {
+    public PaymentResponse toTinkPayment(Payment payment) {
         Payment.Builder buildingPaymentResponse =
                 new Payment.Builder()
                         .withCreditor(creditorAccount.toTinkCreditor())
@@ -44,11 +43,11 @@ public class FetchPaymentResponse {
                         .withAmount(instructedAmount.toTinkAmount())
                         .withExecutionDate(convertToLocalDateViaInstant(requestExecutionDate))
                         .withCurrency(instructedAmount.getCurrency())
-                        .withUniqueId(paymentId)
+                        .withUniqueId(payment.getUniqueId())
                         .withStatus(
                                 UnicreditPaymentStatus.fromString(transactionStatus)
                                         .getPaymentStatus())
-                        .withType(type);
+                        .withType(payment.getType());
 
         Payment tinkPayment = buildingPaymentResponse.build();
 

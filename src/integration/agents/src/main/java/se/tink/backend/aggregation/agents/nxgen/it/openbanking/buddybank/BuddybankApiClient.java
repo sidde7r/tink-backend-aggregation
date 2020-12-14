@@ -18,17 +18,15 @@ import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class BuddybankApiClient extends UnicreditBaseApiClient {
 
     public BuddybankApiClient(
             TinkHttpClient client,
             PersistentStorage persistentStorage,
-            SessionStorage sessionStorage,
             UnicreditProviderConfiguration providerConfiguration,
             UnicreditBaseHeaderValues headerValues) {
-        super(client, persistentStorage, sessionStorage, providerConfiguration, headerValues);
+        super(client, persistentStorage, providerConfiguration, headerValues);
     }
 
     public BuddybankCreateConsentResponse createConsent(String state) {

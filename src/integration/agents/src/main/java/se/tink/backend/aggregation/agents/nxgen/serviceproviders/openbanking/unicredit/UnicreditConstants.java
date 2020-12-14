@@ -2,10 +2,12 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.un
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.executor.payment.enums.UnicreditPaymentProduct;
 import se.tink.backend.aggregation.nxgen.core.account.GenericTypeMapper;
 import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.pair.Pair;
 import se.tink.libraries.payment.enums.PaymentType;
+import se.tink.libraries.payments.common.model.PaymentScheme;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class UnicreditConstants {
@@ -114,4 +116,14 @@ public class UnicreditConstants {
     }
 
     public static final int MAX_NO_OF_TRANSACTIONS_IN_ONE_PAGE = 500;
+
+    public static final GenericTypeMapper<String, PaymentScheme> PAYMENT_PRODUCT_MAPPER =
+            GenericTypeMapper.<String, PaymentScheme>genericBuilder()
+                    .put(
+                            UnicreditPaymentProduct.SEPA_CREDIT_TRANSFERS.toString(),
+                            PaymentScheme.SEPA_CREDIT_TRANSFER)
+                    .put(
+                            UnicreditPaymentProduct.INSTANT_SEPA_CREDIT_TRANSFERS.toString(),
+                            PaymentScheme.SEPA_INSTANT_CREDIT_TRANSFER)
+                    .build();
 }
