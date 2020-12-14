@@ -64,9 +64,8 @@ public class LaCaixaErrorResponse {
 
     @JsonIgnore
     public boolean isAccountBlocked() {
-        return Strings.nullToEmpty(code)
-                .trim()
-                .equalsIgnoreCase(LaCaixaConstants.ErrorCode.ACCOUNT_BLOCKED);
+        return LaCaixaConstants.ErrorCode.ACCOUNT_BLOCKED.contains(
+                Strings.nullToEmpty(code).trim());
     }
 
     @JsonIgnore
