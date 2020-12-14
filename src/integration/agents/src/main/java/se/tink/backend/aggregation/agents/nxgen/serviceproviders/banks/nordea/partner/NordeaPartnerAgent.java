@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner;
 
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.google.inject.Inject;
 import java.time.ZoneId;
 import java.util.Collection;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
@@ -8,7 +9,6 @@ import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
-import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.authenticator.NordeaPartnerAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.authenticator.NordeaPartnerJweHelper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.authenticator.encryption.NordeaPartnerKeystore;
@@ -23,6 +23,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.pa
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
@@ -33,7 +34,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.BankServiceInternalErrorFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.TimeoutRetryFilter;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public abstract class NordeaPartnerAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor,
@@ -46,11 +46,9 @@ public abstract class NordeaPartnerAgent extends NextGenerationAgent
     private NordeaPartnerJweHelper jweHelper;
     protected NordeaPartnerAccountMapper accountMapper;
 
-    public NordeaPartnerAgent(
-            CredentialsRequest request,
-            AgentContext context,
-            AgentsServiceConfiguration agentsServiceConfiguration) {
-        super(request, context, agentsServiceConfiguration.getSignatureKeyPair());
+    @Inject
+    public NordeaPartnerAgent(AgentComponentProvider componentProvider) {
+        super(componentProvider);
         apiClient =
                 new NordeaPartnerApiClient(
                         client,
@@ -71,7 +69,6 @@ public abstract class NordeaPartnerAgent extends NextGenerationAgent
                 new NordeaPartnerKeystore(nordeaConfiguration, context.getClusterId());
         jweHelper = new NordeaPartnerJweHelper(keystore, nordeaConfiguration);
 
-        configureHttpClient(agentsServiceConfiguration);
         apiClient.setConfiguration(nordeaConfiguration);
         apiClient.setJweHelper(jweHelper);
     }
@@ -79,13 +76,17 @@ public abstract class NordeaPartnerAgent extends NextGenerationAgent
     @Override
     protected EidasIdentity getEidasIdentity() {
         if (context.isTestContext()) {
+            // use eidas proxy when running agent test
             return new EidasIdentity(
                     "oxford-preprod", "c859501868b742b6bebd7a3f7911cd85", NordeaPartnerAgent.class);
         }
         return super.getEidasIdentity();
     }
 
-    private void configureHttpClient(AgentsServiceConfiguration configuration) {
+    @Override
+    public void setConfiguration(AgentsServiceConfiguration configuration) {
+        super.setConfiguration(configuration);
+
         if (context.isTestContext()) {
             client.setEidasProxy(configuration.getEidasProxy());
         }
