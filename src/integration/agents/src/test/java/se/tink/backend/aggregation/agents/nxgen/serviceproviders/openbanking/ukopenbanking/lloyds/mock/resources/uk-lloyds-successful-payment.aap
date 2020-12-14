@@ -1,0 +1,192 @@
+
+REQUEST 1
+GET https://authorise-api.lloydsbank.co.uk/prod01/channel/lyds/personal/.well-known/openid-configuration
+X-Aggregator: Tink Testing
+x-fapi-financial-id: 0015800000jf9GgAAI
+
+RESPONSE 1
+200
+X-Backside-Transport: ***
+Content-Type: application/json
+X-Global-Transaction-ID: 6202b6a05fce5e670324cc4b
+X-Aggregator: Tink Testing
+x-fapi-financial-id: 0015800000jf9GgAAI
+True-Client-IP: ***
+Pragma: no-cache
+X-Akamai-CONFIG-LOG-DETAIL: ***
+Akamai-Origin-Hop: ***
+X-Forwarded-For: 54.77.97.26, 23.203.249.46,54.77.97.26
+Cache-Control: no-cache, max-age=0
+X-Client-IP: ***
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Methods: ***
+Access-Control-Allow-Headers: ***
+Access-Control-Expose-Headers: ***
+Content-Length: 1195
+Date: Mon, 07 Dec 2020 16:55:03 GMT
+Connection: keep-alive
+
+{"version":1.1,"issuer":"https://authorise-api.lloydsbank.co.uk/prod01/channel/lyds/personal","authorization_endpoint":"https://authorise-api.lloydsbank.co.uk/prod01/lbg/lyds/personal/oidc-api/v1.1/authorize","token_endpoint":"https://secure-api.lloydsbank.com/prod01/lbg/lyds/oidc-api/v1.1/token","registration_endpoint":"https://secure-api.lloydsbank.com/prod01/lbg/dcr-api/v1.0/register","jwks_uri":"https://keystore.openbanking.org.uk/0015800000jf9GgAAI/2QGUgXr5LAFcTUGkNP657c.jwks","scopes_supported":["openid","accounts","payments","fundsconfirmations","name-verification","eventpolling"],"claims_supported":["iss","iat","sub","acr","openbanking_intent_id","aud","nonce","exp","brand","channel","at_hash"],"response_types_supported":["code id_token","code"],"grant_types_supported":["authorization_code","client_credentials"],"subject_types_supported":["pairwise"],"id_token_signing_alg_values_supported":["PS256"],"request_object_signing_alg_values_supported":["RS256","RS384","RS512","**HASHED:Dd**"],"token_endpoint_auth_methods_supported":["client_secret_basic","**HASHED:7+**"],"claims_parameter_supported":true,"request_parameter_supported":true,"request_uri_parameter_supported":false}
+
+REQUEST 2
+POST https://secure-api.lloydsbank.com/prod01/lbg/lyds/oidc-api/v1.1/token
+Content-Type: application/x-www-form-urlencoded
+Accept: application/json
+X-Aggregator: Tink Testing
+x-fapi-financial-id: 0015800000jf9GgAAI
+
+grant_type=client_credentials&scope=payments&redirect_uri=https%3A%2F%2Fapi.tink.se%2Fapi%2Fv1%2Fcredentials%2Fthird-party%2Fcallback
+
+RESPONSE 2
+200
+X-Backside-Transport: ***
+Content-Type: application/json
+Cache-Control: private, no-store, no-cache, must-revalidate
+Pragma: no-cache
+Content-Security-Policy: ***
+Access-Control-Expose-Headers: ***
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Methods: ***
+Date: Mon, 07 Dec 2020 16:55:04 GMT
+Content-Length: 860
+Connection: keep-alive
+
+{"token_type":"Bearer","access_token":"DUMMY_ACCESS_TOKEN","expires_in":7776000,"consented_on":1607360103,"scope":"payments"}
+
+REQUEST 3
+POST https://secure-api.lloydsbank.com/prod01/lbg/lyds/open-banking/v3.1/pisp/domestic-payment-consents
+Accept: application/json
+Content-Type: application/json
+x-idempotency-key: 0000000000000000
+X-Aggregator: Tink Testing
+x-fapi-financial-id: 0015800000jf9GgAAI
+Authorization: Bearer DUMMY_ACCESS_TOKEN
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+{"Risk":{"PaymentContextCode":"Other"},"Data":{"Initiation":{"RemittanceInformation":{"Unstructured":"DUMMY_REMITTANCE","Reference":"DUMMY_REMITTANCE"},"EndToEndIdentification":"0b57b778df264b21bb3cfab3a20841d","InstructionIdentification":"0b57b778df264b21bb3cfab3a20841d2","CreditorAccount":{"SchemeName":"UK.OBIE.SortCodeAccountNumber","Identification":"12345678912345","Name":"Creditor Name"},"InstructedAmount":{"Amount":"1.00","Currency":"GBP"}}}}
+
+RESPONSE 3
+201
+X-Backside-Transport: ***
+Content-Type: application/json;charset=utf-8
+X-Global-Transaction-ID: 7a41fe235fce5e680c43f591
+X-Aggregator: Tink Testing
+X-Akamai-CONFIG-LOG-DETAIL: ***
+Akamai-Origin-Hop: ***
+X-Forwarded-For: 54.77.97.26,54.77.97.26
+True-Client-IP: ***
+x-lbg-tpp-dn: ***
+x-lbg-ma: ***
+x-lbg-ma-hmac: ***
+X-Client-IP: ***
+IBM-App-User: ***
+Accept: application/json
+x-ibm-client-id: **HASHED:kq**
+x-jws-signature: ***
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Methods: ***
+X-RateLimit-Limit: name=rate-limit,200;
+X-RateLimit-Remaining: name=rate-limit,199;
+Access-Control-Allow-Headers: ***
+Access-Control-Expose-Headers: ***
+Date: Mon, 07 Dec 2020 16:55:05 GMT
+Connection: close
+
+{"Data":{"ConsentId":"b8c7cd82-4147-4b30-8c30-5478140809a9","CreationDateTime":"2020-12-07T16:55:04.600Z","Status":"AwaitingAuthorisation","StatusUpdateDateTime":"2020-12-07T16:55:04.600Z","Initiation":{"InstructionIdentification":"0b57b778df264b21bb3cfab3a20841d2","EndToEndIdentification":"0b57b778df264b21bb3cfab3a20841d","InstructedAmount":{"Amount":"1.00","Currency":"GBP"},"CreditorAccount":{"SchemeName":"UK.OBIE.SortCodeAccountNumber","Identification":"12345678912345","Name":"Creditor Name"},"RemittanceInformation":{"Unstructured":"DUMMY_REMITTANCE","Reference":"DUMMY_REMITTANCE"}}},"Risk":{"PaymentContextCode":"Other"},"Links":{"Self":"https://secure-api.lloydsbank.com/prod01/lbg/lyds/open-banking/v3.1/pisp/domestic-payment-consents/b8c7cd82-4147-4b30-8c30-5478140809a9"},"Meta":{}}
+
+REQUEST 4
+GET https://keystore.openbanking.org.uk/0015800000jf9GgAAI/2QGUgXr5LAFcTUGkNP657c.jwks
+X-Aggregator: Tink Testing
+x-fapi-financial-id: 0015800000jf9GgAAI
+
+RESPONSE 4
+200
+Content-Type: application/jwk+json
+Content-Length: 38233
+Connection: keep-alive
+x-amz-replication-status: ***
+Last-Modified: Mon, 07 Dec 2020 12:05:41 GMT
+x-amz-version-id: ***
+Accept-Ranges: bytes
+Server: AmazonS3
+Date: Mon, 07 Dec 2020 16:56:25 GMT
+ETag: ***
+X-Cache: ***
+Via: 1.1 f715245c12dc1f6bdadc387db50e442c.cloudfront.net (CloudFront)
+X-Amz-Cf-Pop: ***
+X-Amz-Cf-Id: ***
+
+{
+
+  "keys" : []
+
+}
+
+REQUEST 5
+POST https://secure-api.lloydsbank.com/prod01/lbg/lyds/oidc-api/v1.1/token
+Content-Type: application/x-www-form-urlencoded
+Accept: application/json
+X-Aggregator: Tink Testing
+x-fapi-financial-id: 0015800000jf9GgAAI
+
+grant_type=authorization_code&redirect_uri=https%3A%2F%2Fapi.tink.se%2Fapi%2Fv1%2Fcredentials%2Fthird-party%2Fcallback&client_id=DUMMY_CLIENT_ID&client_secret=DUMMY_SECRET&code=DUMMY_AUTH_CODE
+
+RESPONSE 5
+200
+X-Backside-Transport: ***
+Content-Type: application/json
+Cache-Control: private, no-store, no-cache, must-revalidate
+Pragma: no-cache
+Content-Security-Policy: ***
+Access-Control-Expose-Headers: ***
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Methods: ***
+Date: Mon, 07 Dec 2020 16:56:24 GMT
+Content-Length: 2395
+Connection: keep-alive
+
+{"token_type":"Bearer","access_token":"DUMMY_ACCESS_TOKEN","expires_in":7776000,"consented_on":1607360184,"scope":"openid payments","id_token":"DUMMY_TOKEN_ID"}
+
+REQUEST 6
+POST https://secure-api.lloydsbank.com/prod01/lbg/lyds/open-banking/v3.1/pisp/domestic-payments
+Accept: application/json
+Content-Type: application/json
+x-idempotency-key: 0000000000000000
+x-jws-signature: RkFLRV9TSUdOQVRVUkUK
+X-Aggregator: Tink Testing
+x-fapi-financial-id: 0015800000jf9GgAAI
+Authorization: Bearer DUMMY_ACCESS_TOKEN
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+{"Risk":{"PaymentContextCode":"Other"},"Data":{"ConsentId":"b8c7cd82-4147-4b30-8c30-5478140809a9","Initiation":{"RemittanceInformation":{"Unstructured":"DUMMY_REMITTANCE","Reference":"DUMMY_REMITTANCE"},"EndToEndIdentification":"0b57b778df264b21bb3cfab3a20841d","InstructionIdentification":"0b57b778df264b21bb3cfab3a20841d2","CreditorAccount":{"SchemeName":"UK.OBIE.SortCodeAccountNumber","Identification":"12345678912345","Name":"Creditor Name"},"InstructedAmount":{"Amount":"1.00","Currency":"GBP"}}}}
+
+RESPONSE 6
+201
+X-Backside-Transport: ***
+Content-Type: application/json;charset=utf-8
+X-Global-Transaction-ID: ec730e025fce5eb801a9d377
+X-Aggregator: Tink Testing
+X-Akamai-CONFIG-LOG-DETAIL: ***
+Akamai-Origin-Hop: ***
+X-Forwarded-For: 54.77.97.26,54.77.97.26
+True-Client-IP: ***
+x-lbg-tpp-dn: ***
+x-lbg-ma: ***
+x-lbg-ma-hmac: ***
+X-Client-IP: ***
+IBM-App-User: ***
+Accept: application/json
+x-ibm-client-id: **HASHED:kq**
+x-jws-signature: RkFLRV9TSUdOQVRVUkUK
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Methods: ***
+X-RateLimit-Limit: name=rate-limit,200;
+X-RateLimit-Remaining: name=rate-limit,199;
+Access-Control-Allow-Headers: ***
+Access-Control-Expose-Headers: ***
+Date: Mon, 07 Dec 2020 16:56:26 GMT
+Connection: close
+
+{"Data":{"DomesticPaymentId":"bf9d0490-380f-4370-9045-b85bc14a339d","ConsentId":"b8c7cd82-4147-4b30-8c30-5478140809a9","CreationDateTime":"2020-12-07T16:56:25.078Z","Status":"AcceptedSettlementCompleted","StatusUpdateDateTime":"2020-12-07T16:56:26.252Z","Initiation":{"InstructionIdentification":"0b57b778df264b21bb3cfab3a20841d2","EndToEndIdentification":"0b57b778df264b21bb3cfab3a20841d","InstructedAmount":{"Amount":"1.00","Currency":"GBP"},"CreditorAccount":{"SchemeName":"UK.OBIE.SortCodeAccountNumber","Identification":"12345678912345","Name":"Creditor Name"},"RemittanceInformation":{"Unstructured":"DUMMY_REMITTANCE","Reference":"DUMMY_REMITTANCE"}},"Debtor":{"Name":"Unknown Unknown"}},"Links":{"Self":"https://secure-api.lloydsbank.com/prod01/lbg/lyds/open-banking/v3.1/pisp/domestic-payments/bf9d0490-380f-4370-9045-b85bc14a339d"},"Meta":{}}
