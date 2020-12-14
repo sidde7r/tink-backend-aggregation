@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.ErrorMessages;
@@ -98,8 +99,8 @@ public class CbiGlobeAuthenticator extends StatelessProgressiveAuthenticator {
         try {
             return !userState.isManualAuthenticationInProgress()
                     && fetchToken()
-                    && consentManager.isConsentAccepted();
-        } catch (SessionException e) {
+                    && consentManager.verifyIfConsentIsAccepted();
+        } catch (SessionException | LoginException e) {
             return false;
         }
     }

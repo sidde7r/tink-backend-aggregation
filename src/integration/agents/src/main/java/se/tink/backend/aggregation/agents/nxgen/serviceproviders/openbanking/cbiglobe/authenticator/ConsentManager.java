@@ -104,14 +104,8 @@ public class ConsentManager {
         return consentResponse;
     }
 
-    boolean isConsentAccepted() throws SessionException {
-        ConsentStatus consentStatus;
-        try {
-            consentStatus = apiClient.getConsentStatus(StorageKeys.CONSENT_ID);
-        } catch (HttpResponseException e) {
-            handleInvalidConsents(e);
-            throw e;
-        }
+    boolean verifyIfConsentIsAccepted() throws SessionException {
+        ConsentStatus consentStatus = retryCallForConsentStatus();
 
         if (!consentStatus.isAcceptedStatus()) {
             userState.resetAuthenticationState();
@@ -127,6 +121,7 @@ public class ConsentManager {
             userState.resetAuthenticationState();
             throw SessionError.SESSION_EXPIRED.exception();
         }
+        throw e;
     }
 
     private boolean isConsentsProblem(String message) {
@@ -198,19 +193,10 @@ public class ConsentManager {
     }
 
     public void waitForAcceptance() throws LoginException {
-        Retryer<ConsentStatus> approvalStatusRetryer = getApprovalStatusRetryer();
-
-        try {
-            ConsentStatus consentStatus =
-                    approvalStatusRetryer.call(
-                            () -> apiClient.getConsentStatus(StorageKeys.CONSENT_ID));
-            if (!consentStatus.isAcceptedStatus()) {
-                log.warn("Authorization failed, consents status is not accepted.");
-                throw LoginError.INCORRECT_CHALLENGE_RESPONSE.exception();
-            }
-        } catch (ExecutionException | RetryException e) {
-            log.warn("Authorization failed, consents status is not accepted.", e);
-            throw LoginError.INCORRECT_CHALLENGE_RESPONSE.exception(e);
+        ConsentStatus consentStatus = retryCallForConsentStatus();
+        if (!consentStatus.isAcceptedStatus()) {
+            log.warn("Authorization failed, consents status is not accepted.");
+            throw LoginError.INCORRECT_CHALLENGE_RESPONSE.exception();
         }
     }
 
@@ -221,6 +207,20 @@ public class ConsentManager {
                 .withWaitStrategy(WaitStrategies.fixedWait(sleepTime, TimeUnit.MILLISECONDS))
                 .withStopStrategy(StopStrategies.stopAfterAttempt(retryAttempts))
                 .build();
+    }
+
+    public ConsentStatus retryCallForConsentStatus() {
+        Retryer<ConsentStatus> approvalStatusRetryer = getApprovalStatusRetryer();
+        try {
+            return approvalStatusRetryer.call(
+                    () -> apiClient.getConsentStatus(StorageKeys.CONSENT_ID));
+        } catch (ExecutionException | RetryException e) {
+            if (e.getCause() instanceof HttpResponseException) {
+                handleInvalidConsents((HttpResponseException) e.getCause());
+            }
+            log.warn("Authorization failed, consents status is not accepted.", e);
+            throw LoginError.INCORRECT_CHALLENGE_RESPONSE.exception(e);
+        }
     }
 
     public void storeConsentValidUntilDateInCredentials() throws SessionException {
