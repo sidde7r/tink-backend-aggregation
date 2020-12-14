@@ -102,7 +102,7 @@ public class CbiThirdPartyAppAuthenticationStepTest {
                                         ConsentType.ACCOUNT.getCode(),
                                         QueryKeys.RESULT,
                                         QueryValues.SUCCESS));
-        when(consentManager.isConsentAccepted()).thenReturn(true);
+        when(consentManager.verifyIfConsentIsAccepted()).thenReturn(true);
 
         // when
         AuthenticationStepResponse result = accountConsentStep.execute(request);
@@ -110,7 +110,7 @@ public class CbiThirdPartyAppAuthenticationStepTest {
         // then
         verifyNoMoreInteractions(thirdPartyAppRequestParamsProvider);
         verifyNoMoreInteractions(strongAuthenticationState);
-        verify(consentManager).isConsentAccepted();
+        verify(consentManager).verifyIfConsentIsAccepted();
         verifyNoMoreInteractions(userState);
     }
 
@@ -127,7 +127,7 @@ public class CbiThirdPartyAppAuthenticationStepTest {
                                         ConsentType.BALANCE_TRANSACTION.getCode(),
                                         QueryKeys.RESULT,
                                         QueryValues.SUCCESS));
-        when(consentManager.isConsentAccepted()).thenReturn(true);
+        when(consentManager.verifyIfConsentIsAccepted()).thenReturn(true);
 
         // when
         AuthenticationStepResponse result = transactionsConsentStep.execute(request);
@@ -135,7 +135,7 @@ public class CbiThirdPartyAppAuthenticationStepTest {
         // then
         verifyNoMoreInteractions(thirdPartyAppRequestParamsProvider);
         verifyNoMoreInteractions(strongAuthenticationState);
-        verify(consentManager).isConsentAccepted();
+        verify(consentManager).verifyIfConsentIsAccepted();
         verify(userState).finishManualAuthenticationStep();
         assertThat(result.isAuthenticationFinished()).isTrue();
     }
@@ -152,7 +152,7 @@ public class CbiThirdPartyAppAuthenticationStepTest {
                                         ConsentType.BALANCE_TRANSACTION.getCode(),
                                         QueryKeys.RESULT,
                                         QueryValues.FAILURE));
-        when(consentManager.isConsentAccepted()).thenReturn(true);
+        when(consentManager.verifyIfConsentIsAccepted()).thenReturn(true);
 
         // when
         Throwable throwable = catchThrowable(() -> transactionsConsentStep.execute(request));

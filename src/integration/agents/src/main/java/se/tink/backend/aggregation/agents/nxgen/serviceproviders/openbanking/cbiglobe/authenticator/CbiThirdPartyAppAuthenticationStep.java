@@ -77,7 +77,7 @@ public class CbiThirdPartyAppAuthenticationStep implements AuthenticationStep {
         String authResult = callbackData.getOrDefault(QueryKeys.RESULT, QueryValues.SUCCESS);
         checkIfConsentRejected(authResult);
         try {
-            consentManager.isConsentAccepted();
+            consentManager.verifyIfConsentIsAccepted();
         } catch (SessionException e) {
             throw new AuthorizationException(
                     AuthorizationError.UNAUTHORIZED,

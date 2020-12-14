@@ -48,7 +48,7 @@ public class CbiGlobeAuthenticatorTest {
         // given
         when(userState.isManualAuthenticationInProgress()).thenReturn(false);
         when(apiClient.isTokenValid()).thenReturn(true);
-        when(consentManager.isConsentAccepted()).thenReturn(true);
+        when(consentManager.verifyIfConsentIsAccepted()).thenReturn(true);
 
         // when
         Iterable<AuthenticationStep> authenticationSteps = authenticator.authenticationSteps();
@@ -63,7 +63,7 @@ public class CbiGlobeAuthenticatorTest {
         // given
         when(userState.isManualAuthenticationInProgress()).thenReturn(true);
         when(apiClient.isTokenValid()).thenReturn(true);
-        when(consentManager.isConsentAccepted()).thenReturn(true);
+        when(consentManager.verifyIfConsentIsAccepted()).thenReturn(true);
 
         // when
         List<AuthenticationStep> authenticationSteps =
@@ -79,7 +79,7 @@ public class CbiGlobeAuthenticatorTest {
         // given
         when(userState.isManualAuthenticationInProgress()).thenReturn(false);
         when(apiClient.isTokenValid()).thenReturn(true);
-        when(consentManager.isConsentAccepted()).thenReturn(true);
+        when(consentManager.verifyIfConsentIsAccepted()).thenReturn(true);
         when(apiClient.getToken(any(), any()))
                 .thenReturn(new GetTokenResponse("token", 100L, null, null));
 
@@ -90,7 +90,7 @@ public class CbiGlobeAuthenticatorTest {
         assertThat(manualAuthentication).isFalse();
         verify(userState, times(1)).isManualAuthenticationInProgress();
         verify(apiClient, times(1)).isTokenValid();
-        verify(consentManager, times(1)).isConsentAccepted();
+        verify(consentManager, times(1)).verifyIfConsentIsAccepted();
         verify(apiClient, times(0)).getToken(any(), any());
         verify(userState, times(0)).saveToken(any());
     }
@@ -112,7 +112,7 @@ public class CbiGlobeAuthenticatorTest {
         when(userState.isManualAuthenticationInProgress())
                 .thenReturn(isManualAuthenticationInProgress);
         when(apiClient.isTokenValid()).thenReturn(isTokenValid);
-        when(consentManager.isConsentAccepted()).thenReturn(isConsentAccepted);
+        when(consentManager.verifyIfConsentIsAccepted()).thenReturn(isConsentAccepted);
 
         // when
         boolean manualAuthentication = authenticator.isManualAuthentication(null);
@@ -131,7 +131,7 @@ public class CbiGlobeAuthenticatorTest {
         // given
         when(userState.isManualAuthenticationInProgress()).thenReturn(false);
         when(apiClient.isTokenValid()).thenReturn(false);
-        when(consentManager.isConsentAccepted()).thenReturn(isConsentAccepted);
+        when(consentManager.verifyIfConsentIsAccepted()).thenReturn(isConsentAccepted);
         when(apiClient.getToken(any(), any()))
                 .thenReturn(new GetTokenResponse("token", 100L, null, null));
 

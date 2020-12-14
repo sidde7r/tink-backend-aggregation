@@ -129,7 +129,7 @@ public class ConsentManagerTest {
         when(apiClient.getConsentStatus(StorageKeys.CONSENT_ID)).thenReturn(ConsentStatus.VALID);
 
         // when
-        boolean isAccepted = consentManager.isConsentAccepted();
+        boolean isAccepted = consentManager.verifyIfConsentIsAccepted();
 
         // then
         assertThat(isAccepted).isEqualTo(true);
@@ -141,7 +141,7 @@ public class ConsentManagerTest {
         when(apiClient.getConsentStatus(StorageKeys.CONSENT_ID)).thenReturn(ConsentStatus.REJECTED);
 
         // when
-        Throwable thrown = catchThrowable(() -> consentManager.isConsentAccepted());
+        Throwable thrown = catchThrowable(() -> consentManager.verifyIfConsentIsAccepted());
 
         // then
         verify(userState).resetAuthenticationState();
@@ -318,7 +318,7 @@ public class ConsentManagerTest {
         when(ex.getResponse().getBody(String.class)).thenReturn(ex.getMessage());
         when(apiClient.getConsentStatus(StorageKeys.CONSENT_ID)).thenThrow(ex);
         // when
-        Throwable throwable = catchThrowable(() -> consentManager.isConsentAccepted());
+        Throwable throwable = catchThrowable(() -> consentManager.verifyIfConsentIsAccepted());
         // then
         assertThat(throwable).isInstanceOf(SessionException.class);
     }
@@ -331,5 +331,15 @@ public class ConsentManagerTest {
             new HttpResponseException(MessageCodes.CONSENT_EXPIRED.name(), request, response),
             new HttpResponseException(MessageCodes.RESOURCE_UNKNOWN.name(), request, response)
         };
+    }
+
+    @Test
+    public void isConsentAcceptedShoulRetryCallForConsentIfConsentStatusReceived() {
+        // given
+        when(apiClient.getConsentStatus(StorageKeys.CONSENT_ID)).thenReturn(ConsentStatus.RECEIVED);
+        // when
+        Throwable throwable = catchThrowable(() -> consentManager.verifyIfConsentIsAccepted());
+        // then
+        verify(apiClient, times(3)).getConsentStatus(any());
     }
 }
