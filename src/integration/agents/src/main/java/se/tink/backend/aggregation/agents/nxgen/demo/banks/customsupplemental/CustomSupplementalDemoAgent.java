@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.demo.banks.customsupplemental;
 
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
-import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
 
 import com.google.inject.Inject;
 import java.util.Collections;
@@ -15,7 +14,7 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponen
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 
-@AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS})
+@AgentCapabilities({CHECKING_ACCOUNTS})
 public class CustomSupplementalDemoAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor {
 
