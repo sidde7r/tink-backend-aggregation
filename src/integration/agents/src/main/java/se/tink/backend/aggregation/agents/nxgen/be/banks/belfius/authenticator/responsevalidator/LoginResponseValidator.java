@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.BelfiusConstants;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.BelfiusConstants.ErrorCodes;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.rpc.LoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc.MessageResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc.ScreenUpdateResponse;
@@ -20,7 +21,7 @@ public class LoginResponseValidator {
     private static final String WIDGET_ID_REGISTRATION_FLAG_INACTIVE =
             "Container@reuse_LoginPw@mlb_dev_registration_flag_inactive";
 
-    public LoginResponseStatus validate(LoginResponse loginResponse) {
+    public static LoginResponseStatus validate(LoginResponse loginResponse) {
         final LoginResponseStatus loginResponseStatus =
                 checkIfResponseContainsLoginErrors(loginResponse);
 
@@ -79,8 +80,11 @@ public class LoginResponseValidator {
     private static LoginResponseStatus checkMessageResponseForErrors(
             MessageResponse messageResponse) {
         if (!messageResponse
-                .getMessageType()
-                .equalsIgnoreCase(BelfiusConstants.ErrorCodes.ERROR_MESSAGE_TYPE)) {
+                        .getMessageType()
+                        .equalsIgnoreCase(BelfiusConstants.ErrorCodes.ERROR_MESSAGE_TYPE)
+                && !messageResponse
+                        .getMessageType()
+                        .equalsIgnoreCase(ErrorCodes.FATAL_MESSAGE_TYPE)) {
             return LoginResponseStatus.NO_ERRORS;
         }
 
@@ -91,6 +95,11 @@ public class LoginResponseValidator {
         } else if (StringUtils.containsIgnoreCase(
                 messageResponse.getMessageDetail(), BelfiusConstants.ErrorCodes.ACCOUNT_BLOCKED)) {
             return LoginResponseStatus.ACCOUNT_BLOCKED;
+        } else if (StringUtils.containsIgnoreCase(
+                        messageResponse.getMessageContent(), ErrorCodes.UNKNOWN_SESSION)
+                || StringUtils.containsIgnoreCase(
+                        messageResponse.getMessageContent(), ErrorCodes.SESSION_EXPIRED)) {
+            return LoginResponseStatus.SESSION_EXPIRED;
         } else {
             return LoginResponseStatus.NO_ERRORS;
         }
