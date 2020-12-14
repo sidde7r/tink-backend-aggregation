@@ -48,9 +48,9 @@ public final class TsbV31Agent extends UkOpenBankingBaseAgent {
                 jwtSigner,
                 aisConfig,
                 new UkOpenBankingPisConfiguration(
-                        TsbConstants.ORGANISATION_ID,
-                        TsbConstants.PIS_API_URL,
-                        TsbConstants.WELL_KNOWN_URL));
+                        TsbConstants.PIS_API_URL, TsbConstants.WELL_KNOWN_URL),
+                createPisRequestFilterUsingPs256Base64Signature(
+                        jwtSigner, componentProvider.getRandomValueGenerator()));
         this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
     }
 

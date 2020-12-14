@@ -142,7 +142,6 @@ Accept: application/json
 x-fapi-financial-id: 0015800000jfAW1AAM
 x-idempotency-key : 0000000000000000
 X-Aggregator: Tink Testing
-Content-Type: application/json
 
 RESPONSE 7
 200

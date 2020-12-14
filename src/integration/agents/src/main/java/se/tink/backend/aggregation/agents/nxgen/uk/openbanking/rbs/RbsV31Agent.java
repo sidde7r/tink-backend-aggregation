@@ -33,15 +33,13 @@ import se.tink.libraries.mapper.PrioritizedValueExtractor;
 @AgentCapabilities({CHECKING_ACCOUNTS, CREDIT_CARDS, SAVINGS_ACCOUNTS, TRANSFERS})
 public final class RbsV31Agent extends UkOpenBankingBaseAgent {
 
-    private static final String ORGANISATION_ID = "0015800000jfwB4AAI";
-
     private static final UkOpenBankingAisConfig aisConfig;
     private final LocalDateTimeSource localDateTimeSource;
 
     static {
         aisConfig =
                 UKOpenBankingAis.builder()
-                        .withOrganisationId(ORGANISATION_ID)
+                        .withOrganisationId(RbsConstants.ORGANISATION_ID)
                         .withApiBaseURL(RbsConstants.AIS_API_URL)
                         .withWellKnownURL(RbsConstants.PERSONAL_WELL_KNOWN_URL)
                         .build();
@@ -54,9 +52,9 @@ public final class RbsV31Agent extends UkOpenBankingBaseAgent {
                 jwtSigner,
                 aisConfig,
                 new UkOpenBankingPisConfiguration(
-                        ORGANISATION_ID,
-                        RbsConstants.PIS_API_URL,
-                        RbsConstants.PERSONAL_WELL_KNOWN_URL));
+                        RbsConstants.PIS_API_URL, RbsConstants.PERSONAL_WELL_KNOWN_URL),
+                createPisRequestFilterUsingPs256WithoutBase64Signature(
+                        jwtSigner, componentProvider.getRandomValueGenerator()));
         this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
     }
 

@@ -23,7 +23,7 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbank
 import java.time.Clock;
 import org.junit.Before;
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingRequestBuilder;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.UkOpenBankingRequestBuilder;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domestic.converter.DomesticPaymentConverter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domestic.dto.DomesticPaymentConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domestic.dto.DomesticPaymentConsentResponse;
@@ -88,8 +88,7 @@ public class DomesticPaymentApiClientTest {
                 .thenReturn(response);
 
         final URL url = new URL(API_BASE_URL + PAYMENT_CONSENT);
-        when(ukOpenBankingRequestBuilder.createPisRequestWithJwsHeader(
-                        eq(url), any(DomesticPaymentConsentRequest.class)))
+        when(ukOpenBankingRequestBuilder.createPisRequestWithJwsHeader(eq(url)))
                 .thenReturn(requestBuilderMock);
 
         // when
@@ -100,8 +99,7 @@ public class DomesticPaymentApiClientTest {
                 .post(
                         eq(DomesticPaymentConsentResponse.class),
                         any(DomesticPaymentConsentRequest.class));
-        verify(ukOpenBankingRequestBuilder)
-                .createPisRequestWithJwsHeader(eq(url), any(DomesticPaymentConsentRequest.class));
+        verify(ukOpenBankingRequestBuilder).createPisRequestWithJwsHeader(eq(url));
         verify(paymentConverter).convertConsentResponseDtoToTinkPaymentResponse(response);
     }
 
@@ -140,8 +138,7 @@ public class DomesticPaymentApiClientTest {
                 .thenReturn(response);
 
         final URL url = new URL(API_BASE_URL + PAYMENT);
-        when(ukOpenBankingRequestBuilder.createPisRequestWithJwsHeader(
-                        eq(url), any(DomesticPaymentRequest.class)))
+        when(ukOpenBankingRequestBuilder.createPisRequestWithJwsHeader(eq(url)))
                 .thenReturn(requestBuilderMock);
 
         // when
@@ -150,8 +147,7 @@ public class DomesticPaymentApiClientTest {
         // then
         verify(requestBuilderMock)
                 .post(eq(DomesticPaymentResponse.class), any(DomesticPaymentRequest.class));
-        verify(ukOpenBankingRequestBuilder)
-                .createPisRequestWithJwsHeader(eq(url), any(DomesticPaymentRequest.class));
+        verify(ukOpenBankingRequestBuilder).createPisRequestWithJwsHeader(eq(url));
         verify(paymentConverter).convertResponseDtoToPaymentResponse(response);
     }
 }

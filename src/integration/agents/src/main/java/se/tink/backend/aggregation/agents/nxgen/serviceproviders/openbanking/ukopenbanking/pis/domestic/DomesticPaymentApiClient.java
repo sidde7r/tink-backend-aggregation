@@ -4,8 +4,8 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbank
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentConstants.PAYMENT_ID_KEY;
 
 import lombok.RequiredArgsConstructor;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingRequestBuilder;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.UkOpenBankingPaymentApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.UkOpenBankingRequestBuilder;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domestic.converter.DomesticPaymentConverter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domestic.dto.DomesticPaymentConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domestic.dto.DomesticPaymentConsentRequestData;
@@ -22,10 +22,10 @@ import se.tink.libraries.payment.rpc.Payment;
 @RequiredArgsConstructor
 public class DomesticPaymentApiClient implements UkOpenBankingPaymentApiClient {
 
-    protected static final String PAYMENT_CONSENT = "/domestic-payment-consents";
-    protected static final String PAYMENT_STATUS = "/domestic-payments/{paymentId}";
-    protected static final String PAYMENT_CONSENT_STATUS = "/domestic-payment-consents/{consentId}";
-    protected static final String PAYMENT = "/domestic-payments";
+    static final String PAYMENT_CONSENT = "/domestic-payment-consents";
+    static final String PAYMENT_STATUS = "/domestic-payments/{paymentId}";
+    static final String PAYMENT_CONSENT_STATUS = "/domestic-payment-consents/{consentId}";
+    static final String PAYMENT = "/domestic-payments";
 
     private final UkOpenBankingRequestBuilder requestBuilder;
     private final DomesticPaymentConverter domesticPaymentConverter;
@@ -38,7 +38,7 @@ public class DomesticPaymentApiClient implements UkOpenBankingPaymentApiClient {
 
         final DomesticPaymentConsentResponse response =
                 requestBuilder
-                        .createPisRequestWithJwsHeader(createUrl(PAYMENT_CONSENT), consentRequest)
+                        .createPisRequestWithJwsHeader(createUrl(PAYMENT_CONSENT))
                         .post(DomesticPaymentConsentResponse.class, consentRequest);
 
         validateDomesticPaymentConsentResponse(response);
@@ -84,7 +84,7 @@ public class DomesticPaymentApiClient implements UkOpenBankingPaymentApiClient {
 
         final DomesticPaymentResponse response =
                 requestBuilder
-                        .createPisRequestWithJwsHeader(createUrl(PAYMENT), request)
+                        .createPisRequestWithJwsHeader(createUrl(PAYMENT))
                         .post(DomesticPaymentResponse.class, request);
 
         return domesticPaymentConverter.convertResponseDtoToPaymentResponse(response);

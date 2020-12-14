@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableMap;
 import java.util.List;
 import java.util.Map;
@@ -36,18 +37,25 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.signer.EidasJwtSigner;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.signer.iface.JwtSigner;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentExecutor;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingRequestBuilder;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.authenticator.UkOpenBankingAuthenticationErrorMatcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.authenticator.UkOpenBankingPaymentAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.authenticator.UkOpenBankingPisAuthApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.authenticator.UkOpenBankingPisAuthFilterInstantiator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.UkOpenBankingPaymentApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.UkOpenBankingPaymentHelper;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.UkOpenBankingRequestBuilder;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.filter.UkOpenBankingPisRequestFilter;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.signature.UkOpenBankingJwtSignatureHelper;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.signature.UkOpenBankingPs256Base64SignatureCreator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.signature.UkOpenBankingPs256SignatureCreator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.signature.UkOpenBankingPs256WithoutBase64SignatureCreator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.signature.UkOpenBankingRs256SignatureCreator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.configuration.UkOpenBankingPisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domestic.DomesticPaymentApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domestic.converter.DomesticPaymentConverter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domesticscheduled.DomesticScheduledPaymentApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domesticscheduled.converter.DomesticScheduledPaymentConverter;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.storage.UkOpenBankingPaymentStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.validator.DefaultUkOpenBankingPaymentRequestValidator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.validator.UkOpenBankingPaymentRequestValidator;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
@@ -108,14 +116,16 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
     private FetcherInstrumentationRegistry fetcherInstrumentation;
 
     private UkOpenBankingPaymentRequestValidator paymentRequestValidator;
+    private UkOpenBankingPisRequestFilter pisRequestFilter;
 
     public UkOpenBankingBaseAgent(
             AgentComponentProvider componentProvider,
             JwtSigner jwtSigner,
             UkOpenBankingAisConfig aisConfig,
             UkOpenBankingPisConfig pisConfig,
-            UkOpenBankingPaymentRequestValidator paymentRequestValidator) {
-        this(componentProvider, jwtSigner, aisConfig, pisConfig);
+            UkOpenBankingPaymentRequestValidator paymentRequestValidator,
+            UkOpenBankingPisRequestFilter pisRequestFilter) {
+        this(componentProvider, jwtSigner, aisConfig, pisConfig, pisRequestFilter);
         this.paymentRequestValidator = paymentRequestValidator;
     }
 
@@ -123,7 +133,8 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
             AgentComponentProvider componentProvider,
             JwtSigner jwtSigner,
             UkOpenBankingAisConfig aisConfig,
-            UkOpenBankingPisConfig pisConfig) {
+            UkOpenBankingPisConfig pisConfig,
+            UkOpenBankingPisRequestFilter pisRequestFilter) {
         super(componentProvider);
         this.jwtSigner = jwtSigner;
         this.aisConfig = aisConfig;
@@ -131,13 +142,14 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
         this.randomValueGenerator = componentProvider.getRandomValueGenerator();
         this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
         this.fetcherInstrumentation = new FetcherInstrumentationRegistry();
+        this.pisRequestFilter = pisRequestFilter;
     }
 
     public UkOpenBankingBaseAgent(
             AgentComponentProvider componentProvider,
             JwtSigner jwtSigner,
             UkOpenBankingAisConfig aisConfig) {
-        this(componentProvider, jwtSigner, aisConfig, null);
+        this(componentProvider, jwtSigner, aisConfig, null, null);
     }
 
     public void addFilter(Filter filter) {
@@ -161,6 +173,7 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
         softwareStatement = ukOpenBankingConfiguration.getSoftwareStatementAssertions();
         providerConfiguration = ukOpenBankingConfiguration.getProviderConfiguration();
         configureTls(ukOpenBankingConfiguration);
+        setSoftwareIdForSignatureCreator(softwareStatement);
 
         final String redirectUrl = getAgentConfiguration().getRedirectUrl();
 
@@ -382,19 +395,22 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
     }
 
     public Optional<PaymentController> constructPaymentController(Payment payment) {
-        if (this.pisConfig == null) {
+        if (this.pisConfig == null || this.pisRequestFilter == null) {
             return Optional.empty();
         }
 
-        UkOpenBankingPisAuthApiClient authApiClient = createAuthApiClient();
+        UkOpenBankingPaymentStorage paymentStorage = pisRequestFilter.getStorage();
+        UkOpenBankingPisAuthApiClient authApiClient = createAuthApiClient(paymentStorage);
         OpenIdAuthenticationValidator authenticationValidator =
                 new OpenIdAuthenticationValidator(authApiClient);
         UkOpenBankingPisAuthFilterInstantiator authFilterInstantiator =
-                new UkOpenBankingPisAuthFilterInstantiator(authApiClient, authenticationValidator);
+                new UkOpenBankingPisAuthFilterInstantiator(
+                        authApiClient, authenticationValidator, paymentStorage);
         UkOpenBankingPaymentAuthenticator paymentAuthenticator =
                 createPaymentAuthenticator(authApiClient, authenticationValidator);
 
-        UkOpenBankingRequestBuilder requestBuilder = createRequestBuilder(authApiClient);
+        UkOpenBankingRequestBuilder requestBuilder =
+                new UkOpenBankingRequestBuilder(client, pisRequestFilter);
         UkOpenBankingPaymentApiClient paymentApiClient =
                 createPaymentApiClient(requestBuilder, payment);
 
@@ -408,7 +424,8 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
         return Optional.of(new PaymentController(paymentExecutor, paymentExecutor));
     }
 
-    private UkOpenBankingPisAuthApiClient createAuthApiClient() {
+    private UkOpenBankingPisAuthApiClient createAuthApiClient(
+            UkOpenBankingPaymentStorage paymentStorage) {
         return new UkOpenBankingPisAuthApiClient(
                 client,
                 jwtSigner,
@@ -416,7 +433,8 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
                 getAgentConfiguration().getRedirectUrl(),
                 providerConfiguration,
                 randomValueGenerator,
-                pisConfig);
+                pisConfig,
+                paymentStorage);
     }
 
     private UkOpenBankingPaymentAuthenticator createPaymentAuthenticator(
@@ -430,17 +448,6 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
                 this.supplementalInformationHelper,
                 this.request.getCallbackUri(),
                 this.providerConfiguration);
-    }
-
-    private UkOpenBankingRequestBuilder createRequestBuilder(
-            UkOpenBankingPisAuthApiClient authApiClient) {
-        return new UkOpenBankingRequestBuilder(
-                client,
-                authApiClient,
-                jwtSigner,
-                softwareStatement,
-                randomValueGenerator,
-                pisConfig);
     }
 
     private UkOpenBankingPaymentApiClient createPaymentApiClient(
@@ -479,5 +486,44 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
         return Objects.isNull(paymentRequestValidator)
                 ? new DefaultUkOpenBankingPaymentRequestValidator()
                 : paymentRequestValidator;
+    }
+
+    private void setSoftwareIdForSignatureCreator(SoftwareStatementAssertion softwareStatement) {
+        if (Objects.nonNull(pisRequestFilter)) {
+            pisRequestFilter.setSoftwareId(softwareStatement.getSoftwareId());
+        }
+    }
+
+    protected static UkOpenBankingPisRequestFilter createPisRequestFilterUsingPs256Base64Signature(
+            JwtSigner jwtSigner, RandomValueGenerator randomValueGenerator) {
+        return createPisRequestFilter(
+                new UkOpenBankingPs256Base64SignatureCreator(jwtSigner),
+                jwtSigner,
+                randomValueGenerator);
+    }
+
+    protected static UkOpenBankingPisRequestFilter
+            createPisRequestFilterUsingPs256WithoutBase64Signature(
+                    JwtSigner jwtSigner, RandomValueGenerator randomValueGenerator) {
+        return createPisRequestFilter(
+                new UkOpenBankingPs256WithoutBase64SignatureCreator(jwtSigner),
+                jwtSigner,
+                randomValueGenerator);
+    }
+
+    protected static UkOpenBankingPisRequestFilter createPisRequestFilter(
+            UkOpenBankingPs256SignatureCreator ps256SignatureCreator,
+            JwtSigner jwtSigner,
+            RandomValueGenerator randomValueGenerator) {
+        final UkOpenBankingPaymentStorage paymentStorage = new UkOpenBankingPaymentStorage();
+        final UkOpenBankingJwtSignatureHelper jwtSignatureHelper =
+                new UkOpenBankingJwtSignatureHelper(
+                        new ObjectMapper(),
+                        paymentStorage,
+                        new UkOpenBankingRs256SignatureCreator(jwtSigner),
+                        ps256SignatureCreator);
+
+        return new UkOpenBankingPisRequestFilter(
+                jwtSignatureHelper, paymentStorage, randomValueGenerator);
     }
 }

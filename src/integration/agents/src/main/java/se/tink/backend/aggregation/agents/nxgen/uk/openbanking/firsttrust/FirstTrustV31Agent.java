@@ -49,9 +49,9 @@ public final class FirstTrustV31Agent extends UkOpenBankingBaseAgent {
                 jwtSigner,
                 aisConfig,
                 new UkOpenBankingPisConfiguration(
-                        FirstTrustConstants.ORGANISATION_ID,
-                        FirstTrustConstants.PIS_API_URL,
-                        FirstTrustConstants.WELL_KNOWN_URL));
+                        FirstTrustConstants.PIS_API_URL, FirstTrustConstants.WELL_KNOWN_URL),
+                createPisRequestFilterUsingPs256Base64Signature(
+                        jwtSigner, componentProvider.getRandomValueGenerator()));
         this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
     }
 

@@ -47,9 +47,9 @@ public final class TescoV31Agent extends UkOpenBankingBaseAgent {
                 jwtSigner,
                 aisConfig,
                 new UkOpenBankingPisConfiguration(
-                        TescoConstants.ORG_ID,
-                        TescoConstants.PIS_API_URL,
-                        TescoConstants.WELL_KNOWN_URL));
+                        TescoConstants.PIS_API_URL, TescoConstants.WELL_KNOWN_URL),
+                createPisRequestFilterUsingPs256Base64Signature(
+                        jwtSigner, componentProvider.getRandomValueGenerator()));
     }
 
     @Override

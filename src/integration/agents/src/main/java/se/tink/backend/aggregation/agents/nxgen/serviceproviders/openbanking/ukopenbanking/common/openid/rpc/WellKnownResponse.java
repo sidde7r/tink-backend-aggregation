@@ -52,9 +52,10 @@ public class WellKnownResponse {
         return Optional.of(String.join(" ", scopes));
     }
 
-    public Optional<String> getPreferredIdTokenSigningAlg(List<String> supportedAlgs) {
+    public Optional<SigningAlgorithm> getPreferredIdTokenSigningAlg(
+            List<SigningAlgorithm> supportedAlgs) {
         return supportedAlgs.stream()
-                .filter(alg -> idTokenSigningAlgValuesSupported.contains(alg))
+                .filter(alg -> idTokenSigningAlgValuesSupported.contains(alg.name()))
                 .findFirst();
     }
 

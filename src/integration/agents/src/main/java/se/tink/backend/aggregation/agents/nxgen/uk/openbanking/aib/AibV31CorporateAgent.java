@@ -45,9 +45,9 @@ public final class AibV31CorporateAgent extends UkOpenBankingBaseAgent {
                 jwtSigner,
                 aisConfig,
                 new UkOpenBankingPisConfiguration(
-                        AibConstants.ORGANISATION_ID,
-                        AibConstants.PIS_API_URL,
-                        AibConstants.WELL_KNOWN_PERSONAL_URL));
+                        AibConstants.PIS_API_URL, AibConstants.WELL_KNOWN_PERSONAL_URL),
+                createPisRequestFilterUsingPs256Base64Signature(
+                        jwtSigner, componentProvider.getRandomValueGenerator()));
     }
 
     @Override

@@ -57,6 +57,8 @@ public class UkOpenBankingPaymentTestFixtures {
     public static final String STATE = "DUMMY_STATE";
     public static final String AUTH_CODE = "DUMMY_AUTH_CODE";
     public static final String SUPPLEMENTAL_KEY = "DUMMY_SUPPLEMENTAL_KEY";
+    public static final String SIGNATURE = "DUMMY_SIGNATURE";
+    public static final String SOFTWARE_ID = "DUMMY_SOFTWARE_ID";
 
     private static final String ACCOUNT_NUMBER = "12345678901234";
     private static final String REMITTANCE_INFORMATION = "DUMMY_REMITTANCE_INFORMATION";

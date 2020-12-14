@@ -25,6 +25,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.signer.iface.JwtSigner;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.configuration.UkOpenBankingPisConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.hsbc.HsbcGroupApiClient;
+import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.hsbc.pis.signature.HsbcSignatureCreator;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.hsbc.pis.validator.HsbcPaymentRequestValidator;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
@@ -53,9 +54,7 @@ public final class FirstDirectV31Agent extends UkOpenBankingBaseAgent {
                         .build();
         pisConfig =
                 new UkOpenBankingPisConfiguration(
-                        FirstDirectConstants.ORGANISATION_ID,
-                        FirstDirectConstants.PIS_API_URL,
-                        FirstDirectConstants.WELL_KNOWN_URL);
+                        FirstDirectConstants.PIS_API_URL, FirstDirectConstants.WELL_KNOWN_URL);
     }
 
     @Inject
@@ -65,7 +64,11 @@ public final class FirstDirectV31Agent extends UkOpenBankingBaseAgent {
                 jwtSigner,
                 aisConfig,
                 pisConfig,
-                new HsbcPaymentRequestValidator());
+                new HsbcPaymentRequestValidator(),
+                createPisRequestFilter(
+                        new HsbcSignatureCreator(jwtSigner),
+                        jwtSigner,
+                        componentProvider.getRandomValueGenerator()));
         this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
         this.randomValueGenerator = componentProvider.getRandomValueGenerator();
     }

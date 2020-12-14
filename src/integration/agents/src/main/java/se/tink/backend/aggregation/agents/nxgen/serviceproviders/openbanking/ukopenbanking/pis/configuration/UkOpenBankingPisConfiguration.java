@@ -6,15 +6,11 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 @Getter
 public class UkOpenBankingPisConfiguration implements UkOpenBankingPisConfig {
 
-    private final String organisationId;
-
     private final String baseUrl;
 
     private final URL wellKnownURL;
 
-    public UkOpenBankingPisConfiguration(
-            String organisationId, String pisBaseUrl, String wellKnownURL) {
-        this.organisationId = organisationId;
+    public UkOpenBankingPisConfiguration(String pisBaseUrl, String wellKnownURL) {
         this.baseUrl = pisBaseUrl;
         this.wellKnownURL = new URL(wellKnownURL);
     }

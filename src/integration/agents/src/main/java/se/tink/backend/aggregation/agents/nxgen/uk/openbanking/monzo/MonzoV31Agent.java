@@ -51,9 +51,9 @@ public final class MonzoV31Agent extends UkOpenBankingBaseAgent {
                 jwtSigner,
                 aisConfig,
                 new UkOpenBankingPisConfiguration(
-                        MonzoConstants.ORGANISATION_ID,
-                        MonzoConstants.PIS_API_URL,
-                        MonzoConstants.WELL_KNOWN_URL));
+                        MonzoConstants.PIS_API_URL, MonzoConstants.WELL_KNOWN_URL),
+                createPisRequestFilterUsingPs256WithoutBase64Signature(
+                        jwtSigner, componentProvider.getRandomValueGenerator()));
         this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
     }
 
