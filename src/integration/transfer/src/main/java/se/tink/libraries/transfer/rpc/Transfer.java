@@ -26,6 +26,7 @@ import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.date.ThreadSafeDateFormat;
+import se.tink.libraries.payments.common.model.PaymentScheme;
 import se.tink.libraries.transfer.enums.TransferPayloadType;
 import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.iface.UuidIdentifiable;
@@ -66,6 +67,7 @@ public class Transfer implements UuidIdentifiable, Serializable, Cloneable {
     private Date dueDate;
     private String payloadSerialized;
     private String originatingUserIp;
+    private PaymentScheme paymentScheme;
 
     @JsonProperty private RemittanceInformation remittanceInformation;
 
@@ -338,5 +340,13 @@ public class Transfer implements UuidIdentifiable, Serializable, Cloneable {
 
     public void setOriginatingUserIp(String originatingUserIp) {
         this.originatingUserIp = originatingUserIp;
+    }
+
+    public PaymentScheme getPaymentScheme() {
+        return paymentScheme;
+    }
+
+    public void setPaymentScheme(PaymentScheme paymentScheme) {
+        this.paymentScheme = paymentScheme;
     }
 }
