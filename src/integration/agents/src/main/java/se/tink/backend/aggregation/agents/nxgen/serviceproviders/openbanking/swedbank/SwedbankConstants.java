@@ -196,6 +196,7 @@ public final class SwedbankConstants {
         public static final String CONSENT_EXPIRED = "CONSENT_EXPIRED";
         public static final String CONSENT_UNKNOWN = "CONSENT_UNKNOWN";
         public static final String RESOURCE_UNKNOWN = "RESOURCE_UNKNOWN";
+        public static final String USER_INTERUPTION = "USER_INTERUPTION";
     }
 
     public static final class AccountIdentifierPrefix {
