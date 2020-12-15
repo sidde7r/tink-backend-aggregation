@@ -34,6 +34,8 @@ public class SdcNoAgent extends NextGenerationAgent
         bankClient = new SdcNoApiClient(client, configuration);
 
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
+
+        client.addFilter(new PermanentRedirectFilter());
     }
 
     private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
