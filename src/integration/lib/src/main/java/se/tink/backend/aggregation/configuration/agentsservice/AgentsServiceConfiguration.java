@@ -44,7 +44,7 @@ public class AgentsServiceConfiguration {
 
     @JsonProperty
     private AgentDataAvailabilityTrackerConfiguration agentDataAvailabilityTrackerConfiguration =
-            new AgentDataAvailabilityTrackerConfiguration();
+            new AgentDataAvailabilityTrackerConfiguration(null, 0, null);
 
     @JsonProperty
     private TppSecretsServiceConfiguration tppSecretsServiceConfiguration =
