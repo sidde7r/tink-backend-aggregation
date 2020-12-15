@@ -320,15 +320,6 @@ public final class SwedbankApiClient {
                 .post(StatementResponse.class);
     }
 
-    public AuthenticationResponse startAuthorization(String endpoint) {
-        return createRequestInSession(new URL(Urls.BASE.concat(endpoint)), true)
-                .header(HeaderKeys.TPP_REDIRECT_URI, getRedirectUrl())
-                .header(HeaderKeys.TPP_NOK_REDIRECT_URI, getRedirectUrl())
-                .header(HeaderKeys.TPP_REDIRECT_PREFERRED, HeaderValues.TPP_REDIRECT_PREFERRED)
-                .body(new AuthorizeRequest(), MediaType.APPLICATION_JSON_TYPE)
-                .put(AuthenticationResponse.class);
-    }
-
     public AuthenticationResponse startPaymentAuthorization(String endpoint) {
         final AuthorizeRequest authorizeRequest =
                 new AuthorizeRequest(
