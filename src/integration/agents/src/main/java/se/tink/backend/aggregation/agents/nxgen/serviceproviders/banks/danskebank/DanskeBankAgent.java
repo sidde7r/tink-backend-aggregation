@@ -32,6 +32,7 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.ServiceUnavailableBankServiceErrorFilter;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.TimeoutFilter;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public abstract class DanskeBankAgent<MarketSpecificApiClient extends DanskeBankApiClient>
@@ -125,6 +126,7 @@ public abstract class DanskeBankAgent<MarketSpecificApiClient extends DanskeBank
         // (from NextGenerationAgent constructor).
         client.addFilter(new DanskeBankHttpFilter(configuration));
         client.addFilter(new ServiceUnavailableBankServiceErrorFilter());
+        client.addFilter(new TimeoutFilter());
     }
 
     protected abstract MarketSpecificApiClient createApiClient(
