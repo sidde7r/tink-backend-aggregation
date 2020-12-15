@@ -1,8 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc;
 
+import java.text.ParseException;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -11,13 +10,14 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeban
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.rpc.AbstractResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.amount.ExactCurrencyAmount;
+import se.tink.libraries.date.DateFormat;
+import se.tink.libraries.date.ThreadSafeDateFormat;
 
 @JsonObject
 @Slf4j
 public class LoanDetailsResponse extends AbstractResponse {
 
     private static final String ZERO = "0";
-    private static final String DATE_PATTERN = "yyyyMMdd";
 
     @Setter private LoanDetailEntity loanDetail;
     private String loanNumber;
@@ -48,13 +48,11 @@ public class LoanDetailsResponse extends AbstractResponse {
     public LocalDate getNextInterestAdjustmentDate() {
         if (StringUtils.isNotBlank(loanDetail.getNextInterestAdjustmentDate())) {
             try {
-                return LocalDate.parse(
-                        loanDetail.getNextInterestAdjustmentDate(),
-                        DateTimeFormatter.ofPattern(DATE_PATTERN));
-            } catch (DateTimeParseException e) {
-                log.warn(
-                        "Failed to parse nextInterestAdjustmentDate: {}",
-                        loanDetail.getNextInterestAdjustmentDate());
+                return DateFormat.convertToLocalDateViaInstant(
+                        ThreadSafeDateFormat.FORMATTER_INTEGER_DATE.parse(
+                                loanDetail.getNextInterestAdjustmentDate()));
+            } catch (ParseException e) {
+                log.warn("Failed to parse nextInterestAdjustmentDate", e);
             }
         }
         return null;
