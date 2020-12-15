@@ -3,14 +3,10 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.f
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.SebApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.SebConstants;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.fetcher.transactionalaccount.rpc.FetchTransactionsResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebCommonConstants;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.Storage;
 
 public class SebTransactionalAccountFetcher implements AccountFetcher<TransactionalAccount> {
@@ -40,18 +36,5 @@ public class SebTransactionalAccountFetcher implements AccountFetcher<Transactio
                     accountProductMap.put(accountNumber, accountProduct);
                 });
         instanceStorage.put(SebConstants.Storage.ACCOUNT_PRODUCT_MAP, accountProductMap);
-    }
-
-    public FetchTransactionsResponse fetchTransactions(TransactionalAccount account, String key) {
-        URL url =
-                Optional.ofNullable(key)
-                        .map(k -> new URL(SebConstants.Urls.BASE_AIS).concat(k))
-                        .orElse(
-                                new URL(SebConstants.Urls.TRANSACTIONS)
-                                        .parameter(
-                                                SebCommonConstants.IdTags.ACCOUNT_ID,
-                                                account.getApiIdentifier()));
-
-        return apiClient.fetchTransactions(url.toString(), key == null);
     }
 }
