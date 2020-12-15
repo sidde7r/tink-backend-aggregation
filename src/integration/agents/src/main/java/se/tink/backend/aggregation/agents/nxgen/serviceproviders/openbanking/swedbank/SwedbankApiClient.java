@@ -39,8 +39,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swe
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.executor.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.executor.payment.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.executor.payment.rpc.GetPaymentResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.executor.payment.rpc.GetPaymentStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.executor.payment.rpc.PaymentAuthorisationResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.executor.payment.rpc.PaymentStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.fetcher.transactionalaccount.rpc.AccountBalanceResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.fetcher.transactionalaccount.rpc.FetchAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.fetcher.transactionalaccount.rpc.StatementResponse;
@@ -399,14 +399,14 @@ public final class SwedbankApiClient {
                 .get(GetPaymentResponse.class);
     }
 
-    public GetPaymentStatusResponse getPaymentStatus(
+    public PaymentStatusResponse getPaymentStatus(
             String paymentId, SwedbankPaymentType swedbankPaymentType) {
         return getPaymentRequestBuilder(
                         Urls.GET_PAYMENT_STATUS
                                 .parameter(
                                         UrlParameters.PAYMENT_TYPE, swedbankPaymentType.toString())
                                 .parameter(UrlParameters.PAYMENT_ID, paymentId))
-                .get(GetPaymentStatusResponse.class);
+                .get(PaymentStatusResponse.class);
     }
 
     public PaymentAuthorisationResponse startPaymentAuthorisation(
