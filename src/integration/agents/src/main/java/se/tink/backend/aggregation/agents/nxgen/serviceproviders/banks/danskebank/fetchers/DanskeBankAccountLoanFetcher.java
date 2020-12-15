@@ -14,6 +14,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeban
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankPredicates;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.entities.LoanEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.mapper.AccountEntityMapper;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.AccountDetailsRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.AccountDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.ListAccountsRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.ListAccountsResponse;
@@ -33,6 +35,7 @@ public class DanskeBankAccountLoanFetcher implements AccountFetcher<LoanAccount>
     private final String languageCode;
     private final AccountEntityMapper accountEntityMapper;
     private final boolean shouldFetchMortgages;
+    private final String marketCode;
 
     public DanskeBankAccountLoanFetcher(
             DanskeBankApiClient apiClient,
@@ -44,6 +47,7 @@ public class DanskeBankAccountLoanFetcher implements AccountFetcher<LoanAccount>
         this.languageCode = configuration.getLanguageCode();
         this.accountEntityMapper = accountEntityMapper;
         this.shouldFetchMortgages = shouldFetchMortgages;
+        this.marketCode = configuration.getMarketCode();
     }
 
     @Override
@@ -57,6 +61,9 @@ public class DanskeBankAccountLoanFetcher implements AccountFetcher<LoanAccount>
         List<LoanAccount> loans =
                 listAccounts.getAccounts().stream()
                         .filter(AccountEntity::isLoanAccount)
+                        .peek(
+                                accountEntity ->
+                                        fetchLoanAccountDetails(accountEntity.getAccountNoInt()))
                         .map(account -> accountEntityMapper.toLoanAccount(configuration, account))
                         .distinct()
                         .collect(Collectors.toList());
@@ -81,6 +88,23 @@ public class DanskeBankAccountLoanFetcher implements AccountFetcher<LoanAccount>
                                         "Unknown loan account: apiIdentifier = {}, accountProduct = {}",
                                         a.getAccountNoInt(),
                                         a.getAccountProduct()));
+    }
+
+    private AccountDetailsResponse fetchLoanAccountDetails(String accountNumberInternal) {
+        /*
+        For now, try to fetch details and check logs if this endpoint works as expected.
+        The point of using this endpoint is to get interest rate for loans other than mortgage or for mortgages that
+        cannot be accessed through loan details endpoint.
+        Catch RuntimeException if anything goes wrong.
+        Then, Wiski please adjust logic to use these details or delete this method in ITE-1785
+         */
+        try {
+            return apiClient.fetchAccountDetails(
+                    new AccountDetailsRequest(accountNumberInternal, languageCode));
+        } catch (RuntimeException e) {
+            logger.info("Failed to fetch loan account details. ", e);
+        }
+        return null;
     }
 
     private Collection<LoanAccount> fetchMortgages() {
@@ -110,6 +134,6 @@ public class DanskeBankAccountLoanFetcher implements AccountFetcher<LoanAccount>
                         new LoanDetailsRequest(
                                 languageCode, loan.getRealEstateNumber(), loan.getLoanNumber()));
 
-        return loan.toTinkLoan(loanDetailsResponse);
+        return loan.toTinkLoan(loanDetailsResponse, marketCode);
     }
 }

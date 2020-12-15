@@ -8,10 +8,10 @@ import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.xnap.commons.i18n.I18n;
-import se.tink.backend.aggregation.agents.models.Loan;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConstants;
 import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
+import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
 import se.tink.libraries.i18n.Catalog;
 
 @RequiredArgsConstructor
@@ -192,13 +192,13 @@ public class DanskeBankDKConfiguration implements DanskeBankConfiguration {
     }
 
     @Override
-    public Map<String, Loan.Type> getLoanAccountTypes() {
-        return ImmutableMap.<String, Loan.Type>builder()
-                .put("155", Loan.Type.MORTGAGE)
-                .put("165", Loan.Type.MORTGAGE)
-                .put("80X", Loan.Type.MORTGAGE)
-                .put("16L", Loan.Type.BLANCO)
-                .put("094", Loan.Type.VEHICLE)
+    public Map<String, LoanDetails.Type> getLoanAccountTypes() {
+        return ImmutableMap.<String, LoanDetails.Type>builder()
+                .put("155", LoanDetails.Type.MORTGAGE)
+                .put("165", LoanDetails.Type.MORTGAGE)
+                .put("80X", LoanDetails.Type.MORTGAGE)
+                .put("16L", LoanDetails.Type.BLANCO)
+                .put("094", LoanDetails.Type.VEHICLE)
                 .build();
     }
 

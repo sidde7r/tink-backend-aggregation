@@ -5,8 +5,8 @@ import com.google.common.collect.ImmutableMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import se.tink.backend.aggregation.agents.models.Loan;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
+import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
 
 public class DanskeBankSEConfiguration implements DanskeBankConfiguration {
     // == START Standard configuration ==
@@ -131,22 +131,22 @@ public class DanskeBankSEConfiguration implements DanskeBankConfiguration {
     }
 
     @Override
-    public Map<String, Loan.Type> getLoanAccountTypes() {
-        return ImmutableMap.<String, Loan.Type>builder()
-                .put("2AT", Loan.Type.OTHER)
-                .put("2CK", Loan.Type.MORTGAGE)
-                .put("2CL", Loan.Type.BLANCO)
-                .put("2C6", Loan.Type.OTHER)
-                .put("2DG", Loan.Type.OTHER)
-                .put("2DL", Loan.Type.OTHER)
-                .put("3AC", Loan.Type.MORTGAGE)
-                .put("3AN", Loan.Type.MORTGAGE)
-                .put("3AS", Loan.Type.OTHER)
-                .put("3AT", Loan.Type.OTHER)
-                .put("3BJ", Loan.Type.MORTGAGE)
-                .put("3BL", Loan.Type.MORTGAGE)
-                .put("3BM", Loan.Type.MORTGAGE)
-                .put("3BK", Loan.Type.MORTGAGE)
+    public Map<String, LoanDetails.Type> getLoanAccountTypes() {
+        return ImmutableMap.<String, LoanDetails.Type>builder()
+                .put("2AT", LoanDetails.Type.OTHER)
+                .put("2CK", LoanDetails.Type.MORTGAGE)
+                .put("2CL", LoanDetails.Type.BLANCO)
+                .put("2C6", LoanDetails.Type.OTHER)
+                .put("2DG", LoanDetails.Type.OTHER)
+                .put("2DL", LoanDetails.Type.OTHER)
+                .put("3AC", LoanDetails.Type.MORTGAGE)
+                .put("3AN", LoanDetails.Type.MORTGAGE)
+                .put("3AS", LoanDetails.Type.OTHER)
+                .put("3AT", LoanDetails.Type.OTHER)
+                .put("3BJ", LoanDetails.Type.MORTGAGE)
+                .put("3BL", LoanDetails.Type.MORTGAGE)
+                .put("3BM", LoanDetails.Type.MORTGAGE)
+                .put("3BK", LoanDetails.Type.MORTGAGE)
                 .build();
     }
 

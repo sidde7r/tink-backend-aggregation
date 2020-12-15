@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import se.tink.backend.aggregation.agents.models.Loan;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankPredicates;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.AccountEntity;
@@ -77,20 +76,17 @@ public class AccountEntityMapper {
                 .canWithdrawCash(configuration.canWithdrawCash(accountEntity.getAccountProduct()))
                 .sourceInfo(createAccountSourceInfo(accountEntity))
                 .setDetails(
-                        isMortgage(configuration, accountEntity)
-                                ? LoanDetails.builder(LoanDetails.Type.MORTGAGE)
-                                        .setLoanNumber(accountEntity.getAccountNoExt())
-                                        .build()
-                                : null)
+                        LoanDetails.builder(getLoanType(configuration, accountEntity))
+                                .setLoanNumber(accountEntity.getAccountNoExt())
+                                .build())
                 .build();
     }
 
-    private boolean isMortgage(
+    private LoanDetails.Type getLoanType(
             final DanskeBankConfiguration configuration, AccountEntity accountEntity) {
         return configuration
                 .getLoanAccountTypes()
-                .getOrDefault(accountEntity.getAccountProduct(), Loan.Type.OTHER)
-                .equals(Loan.Type.MORTGAGE);
+                .getOrDefault(accountEntity.getAccountProduct(), LoanDetails.Type.DERIVE_FROM_NAME);
     }
 
     public CreditCardAccount toCreditCardAccount(

@@ -5,9 +5,9 @@ import com.google.common.collect.ImmutableMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import se.tink.backend.aggregation.agents.models.Loan;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConstants;
+import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
 
 public class DanskeBankNOConfiguration implements DanskeBankConfiguration {
     private static final String APP_CULTURE = "nb-NO";
@@ -114,14 +114,14 @@ public class DanskeBankNOConfiguration implements DanskeBankConfiguration {
     }
 
     @Override
-    public Map<String, Loan.Type> getLoanAccountTypes() {
-        return ImmutableMap.<String, Loan.Type>builder()
-                .put("1FV", Loan.Type.MORTGAGE)
-                .put("1LC", Loan.Type.MORTGAGE)
-                .put("1LJ", Loan.Type.MORTGAGE)
-                .put("1FP", Loan.Type.MORTGAGE)
-                .put("1LD", Loan.Type.MORTGAGE)
-                .put("1F9", Loan.Type.MORTGAGE)
+    public Map<String, LoanDetails.Type> getLoanAccountTypes() {
+        return ImmutableMap.<String, LoanDetails.Type>builder()
+                .put("1FV", LoanDetails.Type.MORTGAGE)
+                .put("1LC", LoanDetails.Type.MORTGAGE)
+                .put("1LJ", LoanDetails.Type.MORTGAGE)
+                .put("1FP", LoanDetails.Type.MORTGAGE)
+                .put("1LD", LoanDetails.Type.MORTGAGE)
+                .put("1F9", LoanDetails.Type.MORTGAGE)
                 .build();
     }
 

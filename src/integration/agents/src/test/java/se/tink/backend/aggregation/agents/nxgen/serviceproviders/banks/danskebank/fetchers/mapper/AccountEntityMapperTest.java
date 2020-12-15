@@ -9,13 +9,12 @@ import java.util.HashMap;
 import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.models.Loan;
-import se.tink.backend.aggregation.agents.models.Loan.Type;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.AccountEntity;
 import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
+import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails.Type;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -51,7 +50,7 @@ public class AccountEntityMapperTest {
     public void toLoanAccountWhenAccountProductIsMortgageInAgentsConfiguration() {
         // given
         Map<String, Type> accountProductToTypeMapping = new HashMap<>();
-        accountProductToTypeMapping.put("sample account product", Loan.Type.MORTGAGE);
+        accountProductToTypeMapping.put("sample account product", LoanDetails.Type.MORTGAGE);
         // and
         DanskeBankConfiguration configuration =
                 danskeBankConfiguration(accountProductToTypeMapping);

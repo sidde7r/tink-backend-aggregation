@@ -5,11 +5,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Predicate;
-import se.tink.backend.aggregation.agents.models.Loan;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.investment.rpc.GroupAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.investment.rpc.GroupEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.investment.rpc.SecurityEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.AccountEntity;
+import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
 
 public final class DanskeBankPredicates {
     public static Predicate<AccountEntity> knownCheckingAccountProducts(
@@ -23,7 +23,7 @@ public final class DanskeBankPredicates {
     }
 
     public static Predicate<AccountEntity> knownLoanAccountProducts(
-            Map<String, Loan.Type> loanByAccountProduct) {
+            Map<String, LoanDetails.Type> loanByAccountProduct) {
         return accountEntity -> loanByAccountProduct.containsKey(accountEntity.getAccountProduct());
     }
 
