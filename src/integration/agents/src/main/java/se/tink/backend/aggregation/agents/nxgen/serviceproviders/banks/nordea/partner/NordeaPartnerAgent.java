@@ -12,6 +12,7 @@ import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.authenticator.NordeaPartnerAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.authenticator.NordeaPartnerJweHelper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.authenticator.encryption.NordeaPartnerKeystore;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.authenticator.encryption.NordeaPartnerKeystoreProvider;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.configuration.NordeaPartnerConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.fetcher.creditcard.NordeaPartnerCreditCardAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.fetcher.mapper.DefaultPartnerAccountMapper;
@@ -47,7 +48,9 @@ public abstract class NordeaPartnerAgent extends NextGenerationAgent
     protected NordeaPartnerAccountMapper accountMapper;
 
     @Inject
-    public NordeaPartnerAgent(AgentComponentProvider componentProvider) {
+    public NordeaPartnerAgent(
+            AgentComponentProvider componentProvider,
+            NordeaPartnerKeystoreProvider keystoreProvider) {
         super(componentProvider);
         apiClient =
                 new NordeaPartnerApiClient(
@@ -66,7 +69,7 @@ public abstract class NordeaPartnerAgent extends NextGenerationAgent
                                 context.getClusterId(),
                                 NordeaPartnerConfiguration.class);
         NordeaPartnerKeystore keystore =
-                new NordeaPartnerKeystore(nordeaConfiguration, context.getClusterId());
+                keystoreProvider.getKeystore(nordeaConfiguration, context.getClusterId());
         jweHelper = new NordeaPartnerJweHelper(keystore, nordeaConfiguration);
 
         apiClient.setConfiguration(nordeaConfiguration);
