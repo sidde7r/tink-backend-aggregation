@@ -25,6 +25,9 @@ public class BecLoanFetcher implements AccountFetcher<LoanAccount> {
     private final BecApiClient apiClient;
     private final Credentials credentials;
 
+    private static final String UNKNOWN_ERROR_TEMPLATE =
+            BecConstants.Log.LOAN_FAILED + " - Unknown error: [{}] {} HTTP_CODE: {}";
+
     public BecLoanFetcher(BecApiClient apiClient, Credentials credentials) {
         this.apiClient = apiClient;
         this.credentials = credentials;
@@ -54,48 +57,39 @@ public class BecLoanFetcher implements AccountFetcher<LoanAccount> {
                 case HttpStatus.SC_BAD_REQUEST:
                     // Possible that the user did not have mortgage or that details doesn't exist
                     // for any loans.
-                    BecErrorResponse becErrorResponse =
-                            this.apiClient.parseBodyAsError(httpResponse);
+                    BecErrorResponse becErrorResponse = apiClient.parseBodyAsError(httpResponse);
 
-                    if (becErrorResponse.isWithoutMortgage()) {
+                    if (becErrorResponse.isKnownMessage()) {
                         logger.info(
-                                String.format(
-                                        "%s - User does not have any mortgages",
-                                        BecConstants.Log.LOANS),
+                                "{} - {}",
+                                BecConstants.Log.LOANS,
+                                becErrorResponse.getReason(),
                                 hre);
                         return Collections.emptyList();
-                    }
-
-                    if (becErrorResponse.noDetailsExist()) {
-                        logger.info(
-                                String.format(
-                                        "%s - No details for loans exist", BecConstants.Log.LOANS),
+                    } else {
+                        logger.warn(
+                                UNKNOWN_ERROR_TEMPLATE,
+                                becErrorResponse.getAction(),
+                                becErrorResponse.getMessage(),
+                                httpResponse.getStatus(),
                                 hre);
-                        return Collections.emptyList();
+                        throw hre;
                     }
-
-                    // TODO: this is a temporary fix. The endpoint has changed, we have a appstore
-                    // monitor card for this and we are working on upgrading it
-                    if (becErrorResponse.functionIsNotAvailable()) {
-                        logger.info(
-                                String.format(
-                                        "%s - Function not available", BecConstants.Log.LOANS),
-                                hre);
-                        return Collections.emptyList();
-                    }
-
-                    logger.warn(
-                            String.format(
-                                    "%s - Unknown error: [%s] %s",
-                                    BecConstants.Log.LOAN_FAILED,
-                                    becErrorResponse.getAction(),
-                                    becErrorResponse.getMessage()),
-                            hre);
-                    throw hre;
                 case HttpStatus.SC_FORBIDDEN:
-                    // No mortgages in provider
+                    logger.warn(
+                            UNKNOWN_ERROR_TEMPLATE,
+                            "",
+                            hre.getResponse().getBody(String.class),
+                            httpResponse.getStatus(),
+                            hre);
                     return Collections.emptyList();
                 default:
+                    logger.warn(
+                            UNKNOWN_ERROR_TEMPLATE,
+                            "",
+                            hre.getResponse().getBody(String.class),
+                            httpResponse.getStatus(),
+                            hre);
                     throw hre;
             }
         }

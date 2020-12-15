@@ -5,7 +5,6 @@ import java.util.Map;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
-import src.integration.nemid.NemIdSupportedLanguageCode;
 
 public final class BecConstants {
 
@@ -79,23 +78,29 @@ public final class BecConstants {
         static final String QUERY_PARAM_SEARCH_TO_DATE_KEY = "searchToDate";
     }
 
-    public static final class ErrorMessageLocalizedParts {
-        public static final Map<NemIdSupportedLanguageCode, String> NO_MORTGAGE =
-                ImmutableMap.of(
-                        NemIdSupportedLanguageCode.EN,
-                                "you have not taken out a mortgage loan through us",
-                        NemIdSupportedLanguageCode.DA,
-                                "Du har ikke optaget et realkreditlån gennem os");
-        public static final Map<NemIdSupportedLanguageCode, String> LOAN_NO_DETAILS_EXIST =
-                ImmutableMap.of(
-                        NemIdSupportedLanguageCode.EN, "no details exist",
-                        NemIdSupportedLanguageCode.DA, "ingen detaljer findes");
-        public static final Map<NemIdSupportedLanguageCode, String> FUNCTION_NOT_AVAILABLE =
-                ImmutableMap.of(
-                        NemIdSupportedLanguageCode.EN,
-                                "the required function is not currently available. try again later.",
-                        NemIdSupportedLanguageCode.DA,
-                                "funktion er ikke tilgængelig i øjeblikket. Prøv igen senere.");
+    public static final class ErrorMessages {
+
+        public static final Map<String, String> ERROR_MESSAGES_TO_REASON_MAP;
+
+        public static final String NO_MORTGAGES = "User does not have any mortgages";
+
+        public static final String FUNCTION_NOT_AVAILABLE = "Function not available";
+
+        static {
+            ERROR_MESSAGES_TO_REASON_MAP =
+                    ImmutableMap.<String, String>builder()
+                            .put("You have not taken out a mortgage", NO_MORTGAGES)
+                            .put("Du har ikke optaget et realkreditlån", NO_MORTGAGES)
+                            .put("Ingen oplysninger fundet.", NO_MORTGAGES)
+                            .put("The required function is not", FUNCTION_NOT_AVAILABLE)
+                            .put("Den ønskede funktion", FUNCTION_NOT_AVAILABLE)
+                            .build();
+            /*
+            //not existing in Kibana
+            "No details exist."
+            "Ingen detaljer findes."
+             */
+        }
     }
 
     public static final class StorageKeys {
