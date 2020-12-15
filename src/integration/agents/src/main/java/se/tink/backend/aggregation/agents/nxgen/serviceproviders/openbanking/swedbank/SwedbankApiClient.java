@@ -379,7 +379,8 @@ public final class SwedbankApiClient {
 
         return getPaymentRequestBuilder(url)
                 .header(HeaderKeys.TPP_REDIRECT_URI, tppRedirectUrl)
-                .header(HeaderKeys.TPP_NOK_REDIRECT_URI, tppRedirectUrl);
+                .header(HeaderKeys.TPP_NOK_REDIRECT_URI, tppRedirectUrl)
+                .header(HeaderKeys.TPP_REDIRECT_PREFERRED, HeaderValues.TPP_REDIRECT_PREFERRED);
     }
 
     public CreatePaymentResponse createPayment(
