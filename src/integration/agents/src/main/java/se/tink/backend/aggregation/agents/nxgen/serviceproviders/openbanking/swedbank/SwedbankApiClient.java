@@ -329,6 +329,26 @@ public final class SwedbankApiClient {
                 .put(AuthenticationResponse.class);
     }
 
+    public AuthenticationResponse startPaymentAuthorization(String endpoint) {
+        final AuthorizeRequest authorizeRequest =
+                new AuthorizeRequest(
+                        configuration.getClientId(),
+                        getRedirectUrl(),
+                        credentialsRequest.getProvider().getPayload());
+
+        return createRequestInSession(new URL(Urls.BASE.concat(endpoint)), true)
+                .header(HeaderKeys.TPP_REDIRECT_URI, getRedirectUrl())
+                .header(HeaderKeys.TPP_NOK_REDIRECT_URI, getRedirectUrl())
+                .header(HeaderKeys.TPP_REDIRECT_PREFERRED, HeaderValues.TPP_REDIRECT_PREFERRED)
+                .body(new AuthorizeRequest(), MediaType.APPLICATION_JSON_TYPE)
+                .put(AuthenticationResponse.class, authorizeRequest);
+    }
+
+    public AuthenticationResponse getScaResponse(String statusLink) {
+        return createRequestInSession(new URL(Urls.BASE.concat(statusLink)), true)
+                .get(AuthenticationResponse.class);
+    }
+
     public OAuth2Token refreshToken(String refreshToken) {
 
         RefreshTokenRequest request =
