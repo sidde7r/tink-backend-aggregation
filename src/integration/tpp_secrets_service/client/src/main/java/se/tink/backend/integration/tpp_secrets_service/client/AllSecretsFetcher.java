@@ -32,7 +32,12 @@ class AllSecretsFetcher {
 
     public Optional<SecretsEntityCore> getAllSecrets(
             String financialInstitutionId, String appId, String clusterId, String providerId) {
-
+        log.info(
+                "calling SecretService getAllSecrets with params: financialInstitutionId:{}, appId:{}, clusterId:{}, providerId:{}",
+                financialInstitutionId,
+                appId,
+                clusterId,
+                providerId);
         if (!enabled) {
             log.warn(
                     "Trying to call getAllSecrets for an instance of TppSecretsServiceClientImpl when the configuration says it is not enabled.");
