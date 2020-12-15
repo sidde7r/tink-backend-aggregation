@@ -80,7 +80,7 @@ public class DanskeBankTransactionPaginatorTest {
 
         verify(apiClient)
                 .fetchAccountTransactions(
-                        eq("/some/path?fromBookingDateTime=2018-07-02T00:00:00"),
+                        eq("/some/path?fromBookingDateTime=2018-07-02T00:00:00Z"),
                         eq(AccountTransactionsV31Response.class));
 
         assertEquals("2020-06-02T00:00:00", persistentStorageCaptor.getValue());
@@ -101,7 +101,7 @@ public class DanskeBankTransactionPaginatorTest {
 
         verify(apiClient)
                 .fetchAccountTransactions(
-                        eq("/some/path?fromBookingDateTime=2020-03-05T00:00:00"),
+                        eq("/some/path?fromBookingDateTime=2020-03-05T00:00:00Z"),
                         eq(AccountTransactionsV31Response.class));
     }
 
