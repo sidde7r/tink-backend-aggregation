@@ -4,6 +4,7 @@ import java.util.Set;
 import org.hamcrest.core.Is;
 import org.junit.Assert;
 import org.junit.Test;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountOwnershipType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingConstants.PartyEndpoint;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingConstants.PartyEndpoint.PartyPermission;
 
@@ -16,12 +17,16 @@ public class UkOpenBankingAisTest {
                 UkOpenBankingAisConfiguration.builder()
                         .withApiBaseURL("apiBaseURL")
                         .withOrganisationId("orgId")
+                        .withWellKnownURL("wellKnown")
+                        .withAllowedAccountOwnershipType(AccountOwnershipType.PERSONAL)
                         .withPartyEndpoints(PartyEndpoint.IDENTITY_DATA_ENDPOINT_PARTY)
                         .build();
         UkOpenBankingAisConfiguration withTwoPermissions =
                 UkOpenBankingAisConfiguration.builder()
                         .withApiBaseURL("apiBaseURL")
                         .withOrganisationId("orgId")
+                        .withWellKnownURL("wellKnown")
+                        .withAllowedAccountOwnershipType(AccountOwnershipType.PERSONAL)
                         .withPartyEndpoints(
                                 PartyEndpoint.IDENTITY_DATA_ENDPOINT_PARTY,
                                 PartyEndpoint.IDENTITY_DATA_ENDPOINT_ACCOUNT_ID_PARTIES,

@@ -166,6 +166,8 @@ public class UkOpenBankingAisConfiguration implements UkOpenBankingAisConfig {
         public UkOpenBankingAisConfiguration build() {
             Preconditions.checkNotNull(apiBaseURL);
             Preconditions.checkNotNull(organisationId);
+            Preconditions.checkNotNull(allowedAccountOwnershipType);
+            Preconditions.checkNotNull(wellKnownURL);
             return new UkOpenBankingAisConfiguration(this);
         }
     }
