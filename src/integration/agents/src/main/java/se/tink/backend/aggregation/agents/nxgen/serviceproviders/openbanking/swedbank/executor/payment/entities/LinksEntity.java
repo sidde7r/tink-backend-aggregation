@@ -8,6 +8,7 @@ public class LinksEntity {
     private LinkEntity scaRedirect;
     private LinkEntity self;
     private LinkEntity status;
+    private LinkEntity selectAuthenticationMethod;
 
     public LinkEntity getScaStatus() {
         return scaStatus;
@@ -15,5 +16,9 @@ public class LinksEntity {
 
     public LinkEntity getScaRedirect() {
         return scaRedirect;
+    }
+
+    public LinkEntity getSelectAuthenticationMethod() {
+        return selectAuthenticationMethod;
     }
 }
