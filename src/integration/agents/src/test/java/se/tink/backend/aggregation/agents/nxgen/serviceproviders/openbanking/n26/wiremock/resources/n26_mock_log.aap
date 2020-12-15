@@ -1,83 +1,312 @@
 REQUEST 1
-POST https://api.token.io/token-requests
-Authorization: Basic DUMMY_API_KEY
-Content-Type: application/json
-Accept: application/json
-X-Aggregator: Tink Testing
-
-{"requestPayload":{"callbackState":"00000000-0000-4000-0000-000000000000","to":{"id":"DUMMY_MEMBER_ID","alias":{"type":"EIDAS","value":"PSDSE-FINA-44059","realmId":"DUMMY_REALM_ID"}},"accessBody":{"type":["ACCOUNTS","BALANCES","TRANSACTIONS","STANDING_ORDERS","TRANSFER_DESTINATIONS"]},"redirectUrl":"https://127.0.0.1:7357/api/v1/thirdparty/callback","refId":"AAAAAAAAAAAAAAAAAA"}}
+GET https://xs2a.tech26.de/oauth2/authorize
 
 RESPONSE 1
-200
-Content-Type: application/json
-
-{"tokenRequest":{"id":"DUMMY_ACCESS_TOKEN","requestPayload":{"redirectUrl":"https://127.0.0.1:7357/api/v1/thirdparty/callback","to":{"id":"DUMMY_MEMBER_ID","alias":{"type":"EIDAS","value":"PSDSE-FINA-44059","realmId":"DUMMY_REALM_ID"}},"accessBody":{"type":["ACCOUNTS","BALANCES","TRANSACTIONS","STANDING_ORDERS","TRANSFER_DESTINATIONS"]},"callbackState":"00000000-0000-4000-0000-000000000000","refId":"AAAAAAAAAAAAAAAAAA"}}}
+302
+Date: Sun, 10 Jan 2021 09:52:52 GMT
+Date: Sun, 10 Jan 2021 09:52:52 GMT
+Server: envoy
+Expires: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+x-xss-protection: 1; mode=block
+x-xss-protection: 1; mode=block
+x-xss-protection: 1; mode=block
+x-xss-protection: 1; mode=block
+Pragma: no-cache
+Location: https://app.n26.com/login?authType=XS2A&redirect=%2Fopen-banking%3FrequestId%3Dbb7208b6-a9c0-45c0-a394-36cc589e4a50%26state%3D9d7073ad-4599-44c9-9c7b-29d88f32feed%26authType%3DXS2A%26scope%3DDEDICATED_AISP&requestId=requestId&scope=DEDICATED_AISP&state=state
+x-frame-options: DENY
+x-frame-options: DENY
+x-frame-options: SAMEORIGIN
+x-frame-options: DENY
+x-content-type-options: nosniff
+x-content-type-options: nosniff
+x-content-type-options: nosniff
+x-content-type-options: nosniff
+x-request-id: 7de0fd82-b2b2-4828-9838-90679a5ea30c
+x-envoy-upstream-service-time: *** MASKED ***
+Content-Length: 0
 
 REQUEST 2
-GET https://api.token.io/tokens/DUMMY_ACCESS_TOKEN
-Authorization: Basic DUMMY_API_KEY
-Content-Type: application/json
-Accept: application/json
+POST https://xs2a.tech26.de/oauth2/token?role=DEDICATED_AISP
+Content-Type: application/x-www-form-urlencoded
 X-Aggregator: Tink Testing
 
 RESPONSE 2
 200
-Content-Type: application/json
+Date: Sun, 10 Jan 2021 09:53:15 GMT
+Date: Sun, 10 Jan 2021 09:53:15 GMT
+Content-Type: application/json;charset=utf-8
+Server: envoy
+Vary: Accept-Encoding
+Cache-Control: no-store
+x-xss-protection: 1; mode=block
+x-xss-protection: 1; mode=block
+x-xss-protection: 1; mode=block
+x-xss-protection: 1; mode=block
+Pragma: no-cache
+x-frame-options: DENY
+x-frame-options: DENY
+x-frame-options: SAMEORIGIN
+x-frame-options: DENY
+x-content-type-options: nosniff
+x-content-type-options: nosniff
+x-content-type-options: nosniff
+x-content-type-options: nosniff
+x-request-id: ece2a5c1-b256-4c7a-b27e-86de64d9037a
+x-envoy-upstream-service-time: *** MASKED ***
+Transfer-Encoding: chunked
 
-{"token":{"id":"***MASKED***","payload":{"version":"1.0","refId":"refId","issuer":{"id":"issuerId","alias":{"type":"DOMAIN","value":"token.io"}},"from":{"id":"fromId"},"to":{"id":"***MASKED***","alias":{"type":"***MASKED***","value":"***MASKED***","realmId":"***MASKED***"}},"expiresAtMs":"1602869683503","access":{"resources":[{"account":{"accountId":"accountAccountId"}},{"balance":{"accountId":"balanceAccountId"}},{"transactions":{"accountId":"transactionsAccountId"}},{"standingOrders":{"accountId":"standingOrdersAccountId"}},{"transferDestinations":{"accountId":"transferDestinationsAccountId"}}]},"tokenRequestId":"tokenRequestId"},"payloadSignatures":[{"action":"ENDORSED","signature":{"memberId":"memberId","keyId":"keyId","signature":"signature"}},{"action":"ENDORSED","signature":{"memberId":"memberId","keyId":"keyId-9csS-DHKg","signature":"signature-qsYiQDg"}}],"tokenRequestId":"tokenRequestId"}}
+{
+  "access_token": "atkn",
+  "token_type": "bearer",
+  "refresh_token": "rtkn",
+  "expires_in": 899,
+  "host_url": "https://api.tech26.de"
+}
 
 REQUEST 3
-GET https://api.token.io/accounts
-Authorization: Basic DUMMY_API_KEY
+POST https://xs2a.tech26.de/v1/berlin-group/v1/consents
 Content-Type: application/json
-Accept: application/json
+Authorization: Bearer atkn
 X-Aggregator: Tink Testing
-on-behalf-of: DUMMY_ACCESS_TOKEN
 
+{
+  "access": {
+    "allPsd2": "allAccountsWithOwnerName"
+  },
+  "recurringIndicator": true,
+  "frequencyPerDay": 4,
+  "combinedServiceIndicator": false
+}
 RESPONSE 3
-200
+201
+Date: Sun, 10 Jan 2021 09:53:16 GMT
+Date: Sun, 10 Jan 2021 09:53:16 GMT
 Content-Type: application/json
+Server: envoy
+aspsp-sca-approach: *** MASKED ***
+x-content-type-options: nosniff
+x-content-type-options: nosniff
+x-content-type-options: nosniff
+x-frame-options: DENY
+x-frame-options: SAMEORIGIN
+x-frame-options: DENY
+x-xss-protection: 1; mode=block
+x-xss-protection: 1; mode=block
+x-xss-protection: 1; mode=block
+x-request-id: 63393917-88b4-4357-891a-94e30057dbda
+x-envoy-upstream-service-time: *** MASKED ***
+Transfer-Encoding: chunked
 
-{"accounts":[{"id":"DUMMY_ID","name":"Main Account","bankId":"n26","accountFeatures":{"supportsInformation":true,"supportsSendPayment":true,"supportsReceivePayment":true},"accountDetails":{"identifier":"DUMMY_ACCOUNT_ID","type":"CHECKING","status":"active","providerAccountDetails":{"nextGenPsd2AccountDetails":{"iban":"DE62500105177853469928"}}}}]}
+{
+  "consentStatus": "received",
+  "consentId": "consentId",
+  "_links": {
+    "status": {
+      "href": "/v1/berlin-group/v1/consents/consentId/status"
+    },
+    "scaStatus": {
+      "href": "/v1/berlin-group/v1/consents/consentId/authorisations/f9403989-f15b-4362-8040-6d857eda218e"
+    }
+  }
+}
 
 REQUEST 4
-GET https://api.token.io/accounts/DUMMY_ID/balance
-Authorization: Basic DUMMY_API_KEY
-Content-Type: application/json
-Accept: application/json
+GET https://xs2a.tech26.de/v1/berlin-group/v1/consents/consentId
+Authorization: Bearer atkn
 X-Aggregator: Tink Testing
-on-behalf-of: DUMMY_ACCESS_TOKEN
 
 RESPONSE 4
 200
+Date: Sun, 10 Jan 2021 09:53:30 GMT
+Date: Sun, 10 Jan 2021 09:53:30 GMT
 Content-Type: application/json
+Server: envoy
+Vary: Accept-Encoding
+x-content-type-options: nosniff
+x-content-type-options: nosniff
+x-content-type-options: nosniff
+x-frame-options: DENY
+x-frame-options: SAMEORIGIN
+x-frame-options: DENY
+x-xss-protection: 1; mode=block
+x-xss-protection: 1; mode=block
+x-xss-protection: 1; mode=block
+x-request-id: f5841d89-12d0-4dd2-9126-23b9f5b870c2
+x-envoy-upstream-service-time: *** MASKED ***
+Transfer-Encoding: chunked
 
-{"balance":{"accountId":"DUMMY_ID","current":{"currency":"EUR","value":"100.00"},"available":{"currency":"EUR","value":"100.00"},"updatedAtMs":"1593462516560"},"status":"SUCCESSFUL_REQUEST"}
+{
+  "access": {
+    "allPsd2": "allAccountsWithOwnerName"
+  },
+  "recurringIndicator": true,
+  "validUntil": "2020-11-01",
+  "frequencyPerDay": 4,
+  "lastActionDate": "2020-08-03",
+  "consentStatus": "valid",
+  "_links": {
+    "account": {
+      "href": "/v1/berlin-group/v1/accounts"
+    }
+  }
+}
 
 REQUEST 5
-GET https://api.token.io/accounts/DUMMY_ID/transactions?page.limit=50
-Authorization: Basic DUMMY_API_KEY
-Content-Type: application/json
+GET https://xs2a.tech26.de/v1/berlin-group/v1/accounts
 Accept: application/json
+Content-Type: application/json
+Authorization: Bearer atkn
+Consent-Id: consentId
+PSU-IP-ADDRESS: 127.0.0.1
 X-Aggregator: Tink Testing
-on-behalf-of: DUMMY_ACCESS_TOKEN
 
 RESPONSE 5
 200
+Date: Sun, 10 Jan 2021 09:53:30 GMT
+Date: Sun, 10 Jan 2021 09:53:30 GMT
 Content-Type: application/json
+Server: envoy
+Vary: Accept-Encoding
+x-content-type-options: nosniff
+x-content-type-options: nosniff
+x-content-type-options: nosniff
+x-frame-options: DENY
+x-frame-options: SAMEORIGIN
+x-frame-options: DENY
+x-xss-protection: 1; mode=block
+x-xss-protection: 1; mode=block
+x-xss-protection: 1; mode=block
+x-envoy-upstream-service-time: *** MASKED ***
+Transfer-Encoding: chunked
 
-{"transactions":[{"id":"TRANSACTION_ID_2","type":"DEBIT","status":"SUCCESS","amount":{"currency":"EUR","value":"-50.00"},"description":"IKEA","createdAtMs":"1593440053000","providerTransactionDetails":{"nextGenPsd2TransactionDetails":{"debtorAccount":{"iban":"DE62500105177853469928"}}}},{"id":"TRANSACTION_ID_1","type":"CREDIT","status":"SUCCESS","amount":{"currency":"EUR","value":"150.00"},"description":"From Savings to Main Account","createdAtMs":"1593439984418","providerTransactionDetails":{"nextGenPsd2TransactionDetails":{"debtorName":"From Savings to Main Account"}}}],"offset":"DUMMY_OFFSET_1","status":"SUCCESSFUL_REQUEST"}
+{
+  "accounts": [
+    {
+      "resourceId": "resourceId",
+      "iban": "IBAN",
+      "currency": "EUR",
+      "product": "Main Account",
+      "name": "Main Account",
+      "bic": "BIC",
+      "cashAccountType": "CACC",
+      "status": "enabled",
+      "usage": "PRIV",
+      "ownerName": "Owner  Name",
+      "_links": {
+        "balances": {
+          "href": "/v1/berlin-group/v1/accounts/resourceId/balances"
+        },
+        "transactions": {
+          "href": "/v1/berlin-group/v1/accounts/resourceId/transactions"
+        }
+      }
+    }
+  ]
+}
 
 REQUEST 6
-GET https://api.token.io/accounts/DUMMY_ID/transactions?page.limit=50&page.offset=DUMMY_OFFSET_1
-Authorization: Basic DUMMY_API_KEY
-Content-Type: application/json
+GET https://xs2a.tech26.de/v1/berlin-group/v1/accounts/resourceId/balances
 Accept: application/json
+Content-Type: application/json
+Authorization: Bearer atkn
+Consent-Id: consentId
+PSU-IP-ADDRESS: 127.0.0.1
 X-Aggregator: Tink Testing
-on-behalf-of: DUMMY_ACCESS_TOKEN
 
 RESPONSE 6
 200
+Date: Sun, 10 Jan 2021 09:53:31 GMT
+Date: Sun, 10 Jan 2021 09:53:31 GMT
 Content-Type: application/json
+Server: envoy
+Vary: Accept-Encoding
+x-content-type-options: nosniff
+x-content-type-options: nosniff
+x-content-type-options: nosniff
+x-frame-options: DENY
+x-frame-options: SAMEORIGIN
+x-frame-options: DENY
+x-xss-protection: 1; mode=block
+x-xss-protection: 1; mode=block
+x-xss-protection: 1; mode=block
+x-envoy-upstream-service-time: *** MASKED ***
+Transfer-Encoding: chunked
 
-{"transactions":[],"offset":"DUMMY_OFFSET_2","status":"SUCCESSFUL_REQUEST"}
+{
+  "balances": [
+    {
+      "balanceType": "expected",
+      "balanceAmount": {
+        "amount": "96.51",
+        "currency": "EUR"
+      },
+      "lastChangeDateTime": "2021-01-10T09:53:31.539Z",
+      "referenceDate": "2021-01-10"
+    }
+  ],
+  "account": {
+    "iban": "IBAN"
+  }
+}
+
+REQUEST 7
+GET https://xs2a.tech26.de/v1/berlin-group/v1/accounts/resourceId/transactions
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer atkn
+Consent-Id: consentId
+PSU-IP-ADDRESS: 127.0.0.1
+X-Aggregator: Tink Testing
+
+RESPONSE 7
+200
+Date: Sun, 10 Jan 2021 09:53:32 GMT
+Date: Sun, 10 Jan 2021 09:53:32 GMT
+Content-Type: application/json
+Server: envoy
+Vary: Accept-Encoding
+x-content-type-options: nosniff
+x-content-type-options: nosniff
+x-content-type-options: nosniff
+x-frame-options: DENY
+x-frame-options: SAMEORIGIN
+x-frame-options: DENY
+x-xss-protection: 1; mode=block
+x-xss-protection: 1; mode=block
+x-xss-protection: 1; mode=block
+x-envoy-upstream-service-time: *** MASKED ***
+Transfer-Encoding: chunked
+
+{
+  "account": {
+    "iban": "IBAN"
+  },
+  "transactions": {
+    "pending": [],
+    "booked": [
+      {
+        "endToEndId" : "NOTPROVIDED",
+        "bookingDate" : "2020-09-22",
+        "valueDate" : "2020-09-22",
+        "transactionAmount" : {
+          "currency" : "EUR",
+          "amount" : 10
+        },
+        "creditorAccount" : {
+          "iban" : "DE9576040061036235462326"
+        },
+        "debtorName" : "Name Surname",
+        "debtorAccount" : {
+          "iban" : "DE4312030000136235462326"
+        },
+        "remittanceInformationUnstructured" : "asdfzxcv234"
+      }
+    ],
+    "_links": {
+      "account": {
+        "href": "/v1/berlin-group/v1/accounts/138c5e46-c436-4a9b-8ac1-e9227a6754af"
+      }
+    }
+  }
+}

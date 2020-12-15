@@ -1,7 +1,7 @@
 load("//tools/bzl:junit_old.bzl", "junit_test")
 
 junit_test(
-    name = "n26_mock",
+    name = "wiremock",
     srcs = glob(["*.java"]),
     data = [
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/n26/wiremock/resources",

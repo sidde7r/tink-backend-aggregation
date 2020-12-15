@@ -7000,15 +7000,7 @@ agentsServiceConfiguration:
         clientSecret: ''
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
     n26:
-      #These are sandbox values. Go to https://n26.dashboard.token.io/ for production values
       tink:
-        aliasType: EIDAS
-        aliasValue: PSDSE-FINA-44059
-        apiKey: bS12WW13bjFONE5INTdxc1RSdmhhYVlXblZnRjEtNXpLdFhFQXE6Y2Q5M2U5NGMtNmE3MS00ODkzLTgyNDgtM2JmNGU2YmY5NzA4
-        authorizationUrl: https://web-app.sandbox.token.io/app/request-token/{tokenId}
-        baseUrl: https://api.sandbox.token.io
-        memberId: m:vYmwn1N4NH57qsTRvhaaYWnVgF1:5zKtXEAq
-        realmId: m:YxHeCNV2F2fJYyayR8JnCxhSL2q:5zKtXEAq
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
     nagelmackers:
       tink:

@@ -122,6 +122,7 @@ public final class Xs2aDevelopersConstants {
         public static final int FREQUENCY_PER_DAY = 4;
         public static final Boolean TRUE = true;
         public static final String ALL_ACCOUNTS = "allAccounts";
+        public static final String ALL_ACCOUNTS_OWNER_NAME = "allAccountsWithOwnerName";
     }
 
     public static class IdTags {

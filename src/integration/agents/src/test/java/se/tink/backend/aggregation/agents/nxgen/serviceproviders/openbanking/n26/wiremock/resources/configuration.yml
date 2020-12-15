@@ -2,14 +2,7 @@ agentsServiceConfiguration:
   integrations:
     d00a2e3c594d4f27ba3a6352b17909df:
       tink:
-        apiKey: DUMMY_API_KEY
-        memberId: DUMMY_MEMBER_ID
-        realmId: DUMMY_REALM_ID
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
-        baseUrl: https://api.token.io
-        authorizationUrl: https://web-app.token.io/app/request-token/{tokenId}
-        aliasType: EIDAS
-        aliasValue: PSDSE-FINA-44059
   eidasProxy:
     host: https://eidas-proxy.staging.aggregation.tink.network
     localEidasDev: true
