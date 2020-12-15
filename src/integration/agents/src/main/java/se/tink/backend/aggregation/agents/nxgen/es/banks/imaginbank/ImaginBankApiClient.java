@@ -3,9 +3,12 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank;
 import java.lang.invoke.MethodHandles;
 import java.time.LocalDate;
 import javax.ws.rs.core.MediaType;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
+import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.authenticator.rpc.LoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.authenticator.rpc.LoginResponse;
@@ -18,6 +21,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.fetcher.iden
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.fetcher.identitydata.rpc.UserDataResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.fetcher.transactionalaccount.rpc.AccountTransactionResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.fetcher.transactionalaccount.rpc.AccountsResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.rpc.ImaginBankErrorResponse;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
@@ -25,6 +29,7 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
+@Slf4j
 public class ImaginBankApiClient {
     private static final Logger logger =
             LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
@@ -51,20 +56,25 @@ public class ImaginBankApiClient {
     }
 
     public LoginResponse login(LoginRequest loginRequest) throws LoginException {
-
         try {
-
             return createRequest(ImaginBankConstants.Urls.SUBMIT_LOGIN)
                     .post(LoginResponse.class, loginRequest);
 
         } catch (HttpResponseException e) {
-            int statusCode = e.getResponse().getStatus();
-
-            if (statusCode == ImaginBankConstants.StatusCodes.INCORRECT_USERNAME_PASSWORD) {
-                throw LoginError.INCORRECT_CREDENTIALS.exception(e);
+            HttpResponse response = e.getResponse();
+            ImaginBankErrorResponse errorResponse = response.getBody(ImaginBankErrorResponse.class);
+            if (response.getStatus() == HttpStatus.SC_CONFLICT) {
+                if (errorResponse.isAccountBlocked()) {
+                    throw AuthorizationError.ACCOUNT_BLOCKED.exception();
+                } else if (errorResponse.isIdentificationIncorrect()) {
+                    throw LoginError.INCORRECT_CREDENTIALS.exception(e);
+                }
             }
-
-            throw e;
+            log.info(
+                    "Unknown error code {} with message {}",
+                    errorResponse.getCode(),
+                    errorResponse.getMessage());
+            throw LoginError.DEFAULT_MESSAGE.exception();
         }
     }
 

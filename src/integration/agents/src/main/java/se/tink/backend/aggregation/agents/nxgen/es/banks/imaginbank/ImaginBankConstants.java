@@ -1,15 +1,20 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank;
 
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Pattern;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class ImaginBankConstants {
+    private ImaginBankConstants() {}
 
     public static final String CURRENCY = "EUR";
 
     public static class ApiService {
+        ApiService() {}
+
         static final String LOGIN_INIT_PATH = "login/inicio";
         static final String LOGIN_SUBMIT_PATH = "login/login";
         static final String LOGOUT_PATH = "login/logout";
@@ -26,6 +31,8 @@ public class ImaginBankConstants {
     }
 
     public static class Urls {
+        Urls() {}
+
         private static final String BASE = "https://loapp.caixabank.es/xmlapps/rest/";
 
         public static final URL INIT_LOGIN =
@@ -48,6 +55,8 @@ public class ImaginBankConstants {
     }
 
     public static class DefaultRequestParams {
+        DefaultRequestParams() {}
+
         public static final String LANGUAGE_EN = "en";
         public static final String ORIGIN = "13190";
         public static final String CHANNEL = "3";
@@ -59,6 +68,8 @@ public class ImaginBankConstants {
     }
 
     public static class QueryParams {
+        QueryParams() {}
+
         public static final String FROM_BEGIN = "inicio";
         public static final String ACCOUNT_NUMBER = "numeroCuenta";
 
@@ -74,35 +85,50 @@ public class ImaginBankConstants {
     }
 
     public static class TemporaryStorage {
+        TemporaryStorage() {}
+
         public static final String ACCOUNT_REFERENCE = "accountRef";
     }
 
-    public static class StatusCodes {
-        public static final int INCORRECT_USERNAME_PASSWORD = 409; // Conflict
+    public static class ErrorCode {
+        private ErrorCode() {}
+
+        public static final List<String> ACCOUNT_BLOCKED = Arrays.asList("0207", "0246");
+        public static final String INCORRECT_CREDENTIALS = "0250";
     }
 
     public static class TransactionDescriptions {
+        TransactionDescriptions() {}
+
         public static final Pattern CLEAN_TRANSFER_MSG = Pattern.compile("(\\d*-)(.*)$");
         public static final String TRANSFER = "TRANSFER";
     }
 
     public static class CreditCard {
+        CreditCard() {}
+
         public static final String PREPAID = "P";
         public static final String CREDIT = "C";
         public static final String FRACTIONAL_LIST_FILTER = "S";
 
-        public static LocalDate START_DATE = LocalDate.of(2013, 01, 01);
+        public static final LocalDate START_DATE = LocalDate.of(2013, 01, 01);
     }
 
     public static class LogTags {
+        LogTags() {}
+
         public static final LogTag MULTIPLE_ACCOUNTS = LogTag.from("imaginbank_multiple_accounts");
     }
 
     public static class Storage {
+        Storage() {}
+
         public static final String LOGIN_RESPONSE = "loginResponse";
     }
 
     public static class IdentityData {
+        IdentityData() {}
+
         public static final String DNI = "linkDNI";
     }
 }
