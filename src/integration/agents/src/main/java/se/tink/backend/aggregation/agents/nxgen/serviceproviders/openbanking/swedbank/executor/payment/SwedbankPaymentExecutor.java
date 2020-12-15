@@ -17,6 +17,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swe
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.executor.payment.util.SwedbankDateUtil;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.executor.payment.util.SwedbankRemittanceInformationUtil;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.util.AccountTypePair;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepResponse;
@@ -116,7 +117,7 @@ public class SwedbankPaymentExecutor implements PaymentExecutor, FetchablePaymen
                                 .getTransactionStatus());
     }
 
-    /*private PaymentMultiStepResponse signWithRedirectFlow(
+    private PaymentMultiStepResponse signWithRedirectFlow(
             PaymentMultiStepRequest paymentMultiStepRequest) {
         Payment payment = paymentMultiStepRequest.getPayment();
 
@@ -126,7 +127,8 @@ public class SwedbankPaymentExecutor implements PaymentExecutor, FetchablePaymen
                 apiClient.startPaymentAuthorisation(
                         payment.getUniqueId(),
                         SwedbankPaymentType.SE_DOMESTIC_CREDIT_TRANSFERS,
-                        state);
+                        state,
+                        true);
         paymentAuthenticator.openThirdPartyApp(
                 paymentAuthorisationResponse.getScaRedirectUrl(), state);
 
@@ -134,7 +136,7 @@ public class SwedbankPaymentExecutor implements PaymentExecutor, FetchablePaymen
 
         return new PaymentMultiStepResponse(
                 payment, AuthenticationStepConstants.STEP_FINALIZE, new ArrayList<>());
-    }*/
+    }
 
     @Override
     public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest) {
@@ -156,7 +158,8 @@ public class SwedbankPaymentExecutor implements PaymentExecutor, FetchablePaymen
                             apiClient.startPaymentAuthorisation(
                                     paymentId,
                                     SwedbankPaymentType.SE_DOMESTIC_CREDIT_TRANSFERS,
-                                    state);
+                                    state,
+                                    false);
                     bankIdSigner.setAuthenticationResponse(
                             apiClient.startPaymentAuthorization(
                                     paymentAuthorisationResponse.getSelectAuthenticationMethod()));
@@ -168,9 +171,13 @@ public class SwedbankPaymentExecutor implements PaymentExecutor, FetchablePaymen
                 }
             case SigningStepConstants.STEP_SIGN:
                 getSigner().sign(paymentMultiStepRequest);
-                if (getPaymentStatus(paymentId).equals(PaymentStatus.PENDING))
+                if (bankIdSigner.isMissingExtendedBankId()) {
+                    signWithRedirectFlow(paymentMultiStepRequest);
+                } else if (getPaymentStatus(paymentId).equals(PaymentStatus.PENDING)) {
                     nextStep = SigningStepConstants.STEP_INIT;
-                else nextStep = SigningStepConstants.STEP_FINALIZE;
+                } else {
+                    nextStep = SigningStepConstants.STEP_FINALIZE;
+                }
                 break;
             case SigningStepConstants.STEP_FINALIZE:
                 break;

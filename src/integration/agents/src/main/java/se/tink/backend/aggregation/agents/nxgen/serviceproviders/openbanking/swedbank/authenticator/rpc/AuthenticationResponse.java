@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import org.apache.commons.collections4.ListUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.ErrorCodes;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.entities.ChallengeDataEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.entities.LinksEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.entities.TppMessagesEntity;
@@ -35,5 +36,18 @@ public class AuthenticationResponse {
                 .anyMatch(
                         tppMessage ->
                                 ErrorCodes.USER_INTERUPTION.equalsIgnoreCase(tppMessage.getCode()));
+    }
+
+    public boolean isMissingExtendedBankId() {
+        return containsErrorAndMessage(
+                ErrorCodes.MOBILE_ID_EXCEPTION, ErrorMessages.ACTIVATE_EXTENDED_BANKID);
+    }
+
+    private boolean containsErrorAndMessage(String errorCode, String text) {
+        return ListUtils.emptyIfNull(tppMessages).stream()
+                .anyMatch(
+                        tppMessage ->
+                                errorCode.equalsIgnoreCase(tppMessage.getCode())
+                                        && text.equalsIgnoreCase(tppMessage.getText()));
     }
 }

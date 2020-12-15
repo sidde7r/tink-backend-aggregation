@@ -16,6 +16,7 @@ public class SwedbankBankIdSigner implements BankIdSigner<PaymentRequest> {
 
     private SwedbankApiClient apiClient;
     private AuthenticationResponse authenticationResponse;
+    private boolean isMissingExtendedBankId = false;
 
     public SwedbankBankIdSigner(SwedbankApiClient apiClient) {
         this.apiClient = apiClient;
@@ -32,6 +33,11 @@ public class SwedbankBankIdSigner implements BankIdSigner<PaymentRequest> {
 
         if (scaResponse.isInterrupted()) {
             return BankIdStatus.INTERRUPTED;
+        }
+
+        if (scaResponse.isMissingExtendedBankId()) {
+            isMissingExtendedBankId = true;
+            return BankIdStatus.DONE;
         }
 
         switch (scaResponse.getScaStatus().toLowerCase()) {
@@ -57,5 +63,9 @@ public class SwedbankBankIdSigner implements BankIdSigner<PaymentRequest> {
 
     public void setAuthenticationResponse(AuthenticationResponse authenticationResponse) {
         this.authenticationResponse = authenticationResponse;
+    }
+
+    public boolean isMissingExtendedBankId() {
+        return isMissingExtendedBankId;
     }
 }

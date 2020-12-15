@@ -361,7 +361,8 @@ public final class SwedbankApiClient {
                 .header(HeaderKeys.TPP_NOK_REDIRECT_URI, getRedirectUrl());
     }
 
-    private RequestBuilder getPaymentAuthorizationRequestBuilder(URL url, String state) {
+    private RequestBuilder getPaymentAuthorizationRequestBuilder(
+            URL url, String state, boolean isRedirect) {
         String tppRedirectUrl =
                 new URL(getRedirectUrl())
                         .queryParam(QueryKeys.STATE, state)
@@ -371,7 +372,7 @@ public final class SwedbankApiClient {
         return getPaymentRequestBuilder(url)
                 .header(HeaderKeys.TPP_REDIRECT_URI, tppRedirectUrl)
                 .header(HeaderKeys.TPP_NOK_REDIRECT_URI, tppRedirectUrl)
-                .header(HeaderKeys.TPP_REDIRECT_PREFERRED, HeaderValues.TPP_REDIRECT_PREFERRED);
+                .header(HeaderKeys.TPP_REDIRECT_PREFERRED, isRedirect);
     }
 
     public CreatePaymentResponse createPayment(
@@ -422,13 +423,17 @@ public final class SwedbankApiClient {
     }
 
     public PaymentAuthorisationResponse startPaymentAuthorisation(
-            String paymentId, SwedbankPaymentType swedbankPaymentType, String state) {
+            String paymentId,
+            SwedbankPaymentType swedbankPaymentType,
+            String state,
+            boolean isRedirect) {
         return getPaymentAuthorizationRequestBuilder(
                         Urls.INITIATE_PAYMENT_AUTH
                                 .parameter(
                                         UrlParameters.PAYMENT_TYPE, swedbankPaymentType.toString())
                                 .parameter(UrlParameters.PAYMENT_ID, paymentId),
-                        state)
+                        state,
+                        isRedirect)
                 .post(PaymentAuthorisationResponse.class);
     }
 
