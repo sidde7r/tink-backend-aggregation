@@ -31,4 +31,3 @@ junit_test(
         "//third_party:org_mockito_mockito_core",
     ],
 )
-
