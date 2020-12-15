@@ -12,8 +12,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swe
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.executor.payment.enums.SwedbankPaymentType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.executor.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.executor.payment.rpc.CreatePaymentRequest.CreatePaymentRequestBuilder;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.executor.payment.rpc.GetPaymentStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.executor.payment.rpc.PaymentAuthorisationResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.executor.payment.rpc.PaymentStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.executor.payment.util.SwedbankDateUtil;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.executor.payment.util.SwedbankRemittanceInformationUtil;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.util.AccountTypePair;
@@ -117,8 +117,8 @@ public class SwedbankPaymentExecutor implements PaymentExecutor, FetchablePaymen
                                 .getTransactionStatus());
     }
 
-    @Override
-    public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest) {
+    private PaymentMultiStepResponse signWithRedirectFlow(
+            PaymentMultiStepRequest paymentMultiStepRequest) {
         Payment payment = paymentMultiStepRequest.getPayment();
 
         String state = strongAuthenticationState.getState();
@@ -129,18 +129,58 @@ public class SwedbankPaymentExecutor implements PaymentExecutor, FetchablePaymen
                         SwedbankPaymentType.SE_DOMESTIC_CREDIT_TRANSFERS,
                         state);
         paymentAuthenticator.openThirdPartyApp(
-                paymentAuthorisationResponse.getAuthorizationUrl(), state);
+                paymentAuthorisationResponse.getScaRedirectUrl(), state);
 
-        GetPaymentStatusResponse getPaymentStatusResponse =
-                apiClient.getPaymentStatus(
-                        payment.getUniqueId(), SwedbankPaymentType.SE_DOMESTIC_CREDIT_TRANSFERS);
-
-        payment.setStatus(
-                SwedbankPaymentStatus.fromString(getPaymentStatusResponse.getTransactionStatus())
-                        .getTinkPaymentStatus());
+        payment.setStatus(getPaymentStatus(payment.getUniqueId()));
 
         return new PaymentMultiStepResponse(
                 payment, AuthenticationStepConstants.STEP_FINALIZE, new ArrayList<>());
+    }
+
+    @Override
+    public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest) {
+
+        Payment payment = paymentMultiStepRequest.getPayment();
+        String nextStep;
+        nextStep = SigningStepConstants.STEP_FINALIZE;
+        String state = strongAuthenticationState.getState();
+        final String paymentId = payment.getUniqueId();
+
+        switch (paymentMultiStepRequest.getStep()) {
+            case SigningStepConstants.STEP_INIT:
+                PaymentStatusResponse paymentStatusResponse =
+                        apiClient.getPaymentStatus(
+                                paymentId, SwedbankPaymentType.SE_DOMESTIC_CREDIT_TRANSFERS);
+
+                if (paymentStatusResponse.isReadyForSigning()) {
+                    PaymentAuthorisationResponse paymentAuthorisationResponse =
+                            apiClient.startPaymentAuthorisation(
+                                    paymentId,
+                                    SwedbankPaymentType.SE_DOMESTIC_CREDIT_TRANSFERS,
+                                    state);
+                    bankIdSigner.setAuthenticationResponse(
+                            apiClient.startPaymentAuthorization(
+                                    paymentAuthorisationResponse.getSelectAuthenticationMethod()));
+                    nextStep = SigningStepConstants.STEP_SIGN;
+                    break;
+                } else {
+                    return new PaymentMultiStepResponse(
+                            payment, SigningStepConstants.STEP_INIT, new ArrayList<>());
+                }
+            case SigningStepConstants.STEP_SIGN:
+                getSigner().sign(paymentMultiStepRequest);
+                if (getPaymentStatus(paymentId).equals(PaymentStatus.PENDING))
+                    nextStep = SigningStepConstants.STEP_INIT;
+                else nextStep = SigningStepConstants.STEP_FINALIZE;
+                break;
+            case SigningStepConstants.STEP_FINALIZE:
+                break;
+            default:
+                throw new IllegalStateException(
+                        String.format("Unknown step %s", paymentMultiStepRequest.getStep()));
+        }
+        payment.setStatus(getPaymentStatus(paymentId));
+        return new PaymentMultiStepResponse(payment, nextStep, new ArrayList<>());
     }
 
     @Override
