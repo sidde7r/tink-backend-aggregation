@@ -126,7 +126,10 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
         metrics.start(AgentWorkerOperationMetricType.EXECUTE_COMMAND);
         try {
             MetricAction action =
-                    metrics.buildAction(new MetricId.MetricLabels().add("action", METRIC_ACTION));
+                    metrics.buildAction(
+                            new MetricId.MetricLabels()
+                                    .add("action", METRIC_ACTION)
+                                    .add("type", item.name()));
             try {
                 log.info("Refreshing item: {}", item.name());
 
