@@ -73,7 +73,7 @@ public class DanskeBankTransactionPaginator<T, S extends Account>
             return TransactionKeyPaginatorResponseImpl.createEmpty();
         } catch (HttpResponseException e) {
             if (e.getResponse().getStatus() == 401 || e.getResponse().getStatus() == 403) {
-                return handle401Or403ResponseErrorStatus(account, e);
+                return recover401Or403ResponseErrorStatus(account, e);
             }
             throw e;
         }
@@ -95,7 +95,7 @@ public class DanskeBankTransactionPaginator<T, S extends Account>
     }
 
     @Override
-    protected TransactionKeyPaginatorResponse<String> handle401Or403ResponseErrorStatus(
+    protected TransactionKeyPaginatorResponse<String> recover401Or403ResponseErrorStatus(
             S account, HttpResponseException e) {
         String key;
         logger.error(

@@ -1,14 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.fetcher;
 
-import java.lang.invoke.MethodHandles;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
@@ -26,10 +24,9 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
  * @param <AccountType> The type of account to fetch transactions for. eg. TransactionalAccount,
  *     CreditCard, etc.
  */
+@Slf4j
 public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends Account>
         implements TransactionKeyPaginator<AccountType, String> {
-    private static final Logger logger =
-            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private static final int PAGINATION_LIMIT =
             50; // Limits number of pages fetched in order to reduce loading.
@@ -83,9 +80,8 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
         try {
             return fetchTransactions(account, key);
         } catch (HttpResponseException e) {
-
             if (e.getResponse().getStatus() == 401 || e.getResponse().getStatus() == 403) {
-                return handle401Or403ResponseErrorStatus(account, e);
+                return recover401Or403ResponseErrorStatus(account, e);
             }
             throw e;
         }
@@ -101,7 +97,7 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
         return response;
     }
 
-    protected TransactionKeyPaginatorResponse<String> handle401Or403ResponseErrorStatus(
+    protected TransactionKeyPaginatorResponse<String> recover401Or403ResponseErrorStatus(
             AccountType account, HttpResponseException e) {
         /*
         There will be cases when credentials are already created and we try to use refresh tokens
@@ -111,7 +107,7 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
         401 is to cover Danske as they send 401 instead of 403.
          */
         String key;
-        logger.warn(
+        log.warn(
                 "Trying to fetch transactions again for last 89 days. Got 401 in previous request \n{}",
                 ExceptionUtils.getStackTrace(e));
 
@@ -120,7 +116,10 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
                                 account.getApiIdentifier())
                         + FROM_BOOKING_DATE_TIME
                         + DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(
-                                localDateTimeSource.now().minusDays(DEFAULT_MAX_ALLOWED_DAYS));
+                                localDateTimeSource
+                                        .now()
+                                        .atOffset(ZoneOffset.UTC)
+                                        .minusDays(DEFAULT_MAX_ALLOWED_DAYS));
         return fetchTransactions(account, key);
     }
 
