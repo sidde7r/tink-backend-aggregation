@@ -1,10 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.executor.payment.rpc;
 
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.PaymentStatus;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.executor.payment.enums.SwedbankPaymentStatus;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class GetPaymentStatusResponse {
+public class PaymentStatusResponse {
     private String transactionStatus;
 
     public String getTransactionStatus() {
@@ -12,10 +12,6 @@ public class GetPaymentStatusResponse {
     }
 
     public boolean isReadyForSigning() {
-        return transactionStatus.equalsIgnoreCase(PaymentStatus.ACTC);
-    }
-
-    public boolean isPaymentCancelled() {
-        return transactionStatus.equalsIgnoreCase(PaymentStatus.CANC);
+        return SwedbankPaymentStatus.ACCEPTED_TECHNICAL_VALIDATION.isEqualTo(transactionStatus);
     }
 }
