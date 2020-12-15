@@ -97,6 +97,9 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
         signableOperation.setStatus(SignableOperationStatuses.EXECUTING);
         context.updateSignableOperation(signableOperation);
 
+        // temp logger - remove after testing
+        log.info("Payment scheme value at Agg Srv:" + transfer.getPaymentScheme());
+
         if (!(agent instanceof TransferExecutor) && !(agent instanceof TransferExecutorNxgen)) {
             log.error("Agent does not support executing transfers");
             return AgentWorkerCommandResult.ABORT;
