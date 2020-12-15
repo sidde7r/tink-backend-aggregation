@@ -44,7 +44,7 @@ public final class TransactionalAccountRefreshController
 
     private Collection<TransactionalAccount> accounts;
     private Collection<Account> cachedAccounts;
-    private Map<Account, List<Transaction>> cachedTransactions;
+    private Map<Account, List<Transaction>> cachedTransactions = Collections.emptyMap();
 
     private boolean hasRefreshedTransactions = false;
     private boolean hasRefreshedAccounts = false;
@@ -71,7 +71,6 @@ public final class TransactionalAccountRefreshController
     private Map<Account, List<Transaction>> getCachedTransactions() {
         if (!hasRefreshedTransactions) {
             this.cachedTransactions = this.fetchTransactions();
-            hasRefreshedTransactions = true;
         }
         return this.cachedTransactions;
     }
@@ -184,6 +183,8 @@ public final class TransactionalAccountRefreshController
             throw e;
         } finally {
             action.stop();
+            // Temporary fix to avoid fetching transactions twice
+            hasRefreshedTransactions = true;
         }
     }
 
