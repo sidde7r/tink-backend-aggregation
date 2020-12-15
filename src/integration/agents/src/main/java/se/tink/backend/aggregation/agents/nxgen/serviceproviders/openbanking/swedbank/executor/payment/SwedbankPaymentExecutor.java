@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sw
 
 import java.util.ArrayList;
 import java.util.List;
+import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.payment.ReferenceValidationException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.SwedbankPaymentAuthenticator;
@@ -28,8 +29,12 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepReq
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
+import se.tink.backend.aggregation.nxgen.controllers.signing.Signer;
+import se.tink.backend.aggregation.nxgen.controllers.signing.SigningStepConstants;
+import se.tink.backend.aggregation.nxgen.controllers.signing.multifactor.bankid.BankIdSigningController;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.rpc.Payment;
 
 public class SwedbankPaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
@@ -37,14 +42,19 @@ public class SwedbankPaymentExecutor implements PaymentExecutor, FetchablePaymen
     private final SwedbankPaymentAuthenticator paymentAuthenticator;
     private final List<PaymentResponse> createdPaymentsList = new ArrayList<>();
     private final StrongAuthenticationState strongAuthenticationState;
+    private final SupplementalRequester supplementalRequester;
+    private final SwedbankBankIdSigner bankIdSigner;
 
     public SwedbankPaymentExecutor(
             SwedbankApiClient apiClient,
             SwedbankPaymentAuthenticator paymentAuthenticator,
-            StrongAuthenticationState strongAuthenticationState) {
+            StrongAuthenticationState strongAuthenticationState,
+            SupplementalRequester supplementalRequester) {
         this.apiClient = apiClient;
         this.paymentAuthenticator = paymentAuthenticator;
         this.strongAuthenticationState = strongAuthenticationState;
+        this.supplementalRequester = supplementalRequester;
+        this.bankIdSigner = new SwedbankBankIdSigner(this.apiClient);
     }
 
     @Override
@@ -149,5 +159,18 @@ public class SwedbankPaymentExecutor implements PaymentExecutor, FetchablePaymen
     @Override
     public PaymentListResponse fetchMultiple(PaymentListRequest paymentListRequest) {
         return new PaymentListResponse(createdPaymentsList);
+    }
+
+    private PaymentStatus getPaymentStatus(String paymentId) {
+        PaymentStatusResponse paymentStatusResponse =
+                apiClient.getPaymentStatus(
+                        paymentId, SwedbankPaymentType.SE_DOMESTIC_CREDIT_TRANSFERS);
+
+        return SwedbankPaymentStatus.fromString(paymentStatusResponse.getTransactionStatus())
+                .getTinkPaymentStatus();
+    }
+
+    private Signer getSigner() {
+        return new BankIdSigningController(supplementalRequester, bankIdSigner);
     }
 }

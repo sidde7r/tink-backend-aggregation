@@ -126,7 +126,10 @@ public abstract class SwedbankBaseAgent extends NextGenerationAgent
                 new SwedbankPaymentAuthenticator(supplementalInformationHelper);
         SwedbankPaymentExecutor swedbankPaymentExecutor =
                 new SwedbankPaymentExecutor(
-                        apiClient, paymentAuthenticator, strongAuthenticationState);
+                        apiClient,
+                        paymentAuthenticator,
+                        strongAuthenticationState,
+                        supplementalRequester);
 
         return Optional.of(new PaymentController(swedbankPaymentExecutor, swedbankPaymentExecutor));
     }
