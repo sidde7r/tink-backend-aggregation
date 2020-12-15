@@ -1,22 +1,21 @@
-package se.tink.backend.aggregation.agents.nxgen.no.openbanking.gjensidige;
+package se.tink.backend.aggregation.agents.nxgen.no.openbanking.nordeadirect;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 
-@Ignore
-public class GjensidigeAgentTest {
+public class NordeaDirectAgentTest {
 
     private AgentIntegrationTest.Builder builder;
 
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("no", "no-gjensidige-ob")
+                new AgentIntegrationTest.Builder("no", "no-nordeadirect-ob")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(false);
+                        .saveCredentialsAfter(false)
+                        .setAppId("tink");
     }
 
     @Test
