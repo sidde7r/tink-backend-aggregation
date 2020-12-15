@@ -1,15 +1,18 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2.NemIdConstantsV2.HtmlElements.ERROR_MESSAGE;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2.NemIdConstantsV2.HtmlElements.IFRAME;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2.NemIdConstantsV2.HtmlElements.NEMID_APP_BUTTON;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2.NemIdConstantsV2.HtmlElements.NEMID_CODE_CARD;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2.NemIdConstantsV2.HtmlElements.NEMID_CODE_TOKEN;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2.NemIdConstantsV2.HtmlElements.NEMID_TOKEN;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2.NemIdConstantsV2.HtmlElements.OTP_ICON;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2.NemIdConstantsV2.HtmlElements.PASSWORD_INPUT;
@@ -75,10 +78,12 @@ public class NemIdIFrameControllerTest {
     public void setUp() {
         sleeper = mock(Sleeper.class);
 
+        driver = mock(PhantomJSDriver.class, Answers.RETURNS_DEEP_STUBS);
+
         TargetLocator targetLocator = mock(TargetLocator.class);
+        when(targetLocator.frame(any(WebElement.class))).thenReturn(driver);
         Timeouts timeouts = mock(Timeouts.class);
 
-        driver = mock(PhantomJSDriver.class, Answers.RETURNS_DEEP_STUBS);
         given(driver.switchTo()).willReturn(targetLocator);
         given(driver.manage().timeouts()).willReturn(timeouts);
 
@@ -233,10 +238,12 @@ public class NemIdIFrameControllerTest {
 
     @Test
     public void
-            doLoginWithShouldFailWhenOtpIconAndNemIdCodeCardDoesNotAppearAfterEnteringCredentials() {
+            doLoginWithShouldFailWhenOtpIconAndNemIdCodeCardAndNemIdCodeTokenDoesNotAppearAfterEnteringCredentials() {
         // given
         given(webdriverHelper.waitForElement(driver, OTP_ICON)).willReturn(Optional.empty());
         given(webdriverHelper.waitForElement(driver, NEMID_CODE_CARD)).willReturn(Optional.empty());
+        given(webdriverHelper.waitForElement(driver, NEMID_CODE_TOKEN))
+                .willReturn(Optional.empty());
 
         // when
         Throwable throwable = Assertions.catchThrowable(() -> controller.doLoginWith(credentials));
@@ -254,6 +261,8 @@ public class NemIdIFrameControllerTest {
             doLoginWithShouldFailWhenOtpIconDoesNotAppearAndNemIdCodeCardAppearAfterEnteringCredentials() {
         // given
         given(webdriverHelper.waitForElement(driver, OTP_ICON)).willReturn(Optional.empty());
+        given(webdriverHelper.waitForElement(driver, NEMID_CODE_TOKEN))
+                .willReturn(Optional.empty());
         given(webdriverHelper.waitForElement(driver, NEMID_CODE_CARD))
                 .willReturn(Optional.of(nemIdCodeCardMock));
 
@@ -266,6 +275,26 @@ public class NemIdIFrameControllerTest {
         assertThat(throwable)
                 .isInstanceOf(AuthenticationException.class)
                 .hasMessage("[NemId] User has code card.");
+    }
+
+    @Test
+    public void
+            doLoginWithShouldFailWhenOtpIconDoesNotAppearAndNemIdCodeTokenAppearAfterEnteringCredentials() {
+        // given
+        given(webdriverHelper.waitForElement(driver, OTP_ICON)).willReturn(Optional.empty());
+        given(webdriverHelper.waitForElement(driver, NEMID_CODE_CARD)).willReturn(Optional.empty());
+        given(webdriverHelper.waitForElement(driver, NEMID_CODE_TOKEN))
+                .willReturn(Optional.of(nemIdCodeCardMock));
+
+        // when
+        Throwable throwable = Assertions.catchThrowable(() -> controller.doLoginWith(credentials));
+
+        // then
+        verify(sleeper, times(120)).sleepFor(1_000);
+        // and
+        assertThat(throwable)
+                .isInstanceOf(AuthenticationException.class)
+                .hasMessage("[NemId] User has code token.");
     }
 
     @Test
