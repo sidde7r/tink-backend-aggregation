@@ -9,6 +9,7 @@ import static org.mockito.Mockito.when;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
+import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -19,18 +20,25 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.fetcher.rpc.transaction.AccountTransactionsV31Response;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class UkOpenBankingTransactionPaginatorTest {
 
+    private static final TransactionalAccount TRANSACTIONAL_ACCOUNT =
+            TransactionalAccount.builder(
+                            AccountTypes.CHECKING, "UN123", ExactCurrencyAmount.inEUR(123.45))
+                    .setAccountNumber("AN123")
+                    .setBankIdentifier("BI123")
+                    .build();
+
     private UkOpenBankingTransactionPaginator<AccountTransactionsV31Response, TransactionalAccount>
             paginator;
-
     private PersistentStorage persistentStorage;
-
     private UkOpenBankingApiClient apiClient;
-
     private final ArgumentCaptor<String> persistentStorageCaptor =
             ArgumentCaptor.forClass(String.class);
 
@@ -89,21 +97,31 @@ public class UkOpenBankingTransactionPaginatorTest {
 
     @Test
     public void testFetchTransactionsForShortPeriod() {
-        when(persistentStorage.get("fetchedTxUntil:BI123")).thenReturn("2020-06-02T00:00:00");
+        when(persistentStorage.get("fetchedTxUntil:BI123")).thenReturn("2020-06-02T10:10:10");
 
-        TransactionalAccount account =
-                TransactionalAccount.builder(
-                                AccountTypes.CHECKING, "UN123", ExactCurrencyAmount.inEUR(123.45))
-                        .setAccountNumber("AN123")
-                        .setBankIdentifier("BI123")
-                        .build();
-
-        paginator.getTransactionsFor(account, null);
+        paginator.getTransactionsFor(TRANSACTIONAL_ACCOUNT, null);
 
         verify(apiClient)
                 .fetchAccountTransactions(
                         eq("/some/path?fromBookingDateTime=2020-03-05T00:00:00Z"),
                         eq(AccountTransactionsV31Response.class));
+    }
+
+    @Test
+    // should parse localdate as offsetDateTime
+    public void testIFD1810() {
+        // given
+        HttpResponse http403Response = mock(HttpResponse.class);
+        when(http403Response.getStatus()).thenReturn(403);
+
+        // when
+        when(apiClient.fetchAccountTransactions(any(), any()))
+                .thenThrow(new HttpResponseException(mock(HttpRequest.class), http403Response))
+                .thenReturn(new AccountTransactionsV31Response());
+
+        // then
+        Assertions.assertThatCode(() -> paginator.getTransactionsFor(TRANSACTIONAL_ACCOUNT, null))
+                .doesNotThrowAnyException();
     }
 
     private static class DelaySimulatingLocalDateTimeSource implements LocalDateTimeSource {

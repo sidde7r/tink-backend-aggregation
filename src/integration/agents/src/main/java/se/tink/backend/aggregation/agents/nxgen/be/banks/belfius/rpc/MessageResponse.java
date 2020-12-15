@@ -35,7 +35,8 @@ public class MessageResponse extends ResponseEntity {
         MessageResponse erroResponse =
                 response.filter(MessageResponse.class).findFirst().orElse(null);
         if (erroResponse != null) {
-            if (erroResponse.isWrongCredentialsMessage() // Handled in LoginResponse::validate
+            if (erroResponse.isWrongCredentialsMessage()
+                    || erroResponse.isSessionExpiredMessage() // Handled in LoginResponse::validate
                     || erroResponse.isMobileBankingDisabled()) { // Handled in
                 // PrepareLoginResponse::validate
                 return;
