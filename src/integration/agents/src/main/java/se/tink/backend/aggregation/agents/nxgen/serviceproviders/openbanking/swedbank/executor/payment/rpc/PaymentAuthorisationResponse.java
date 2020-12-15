@@ -12,7 +12,11 @@ public class PaymentAuthorisationResponse {
     @JsonProperty("_links")
     private LinksEntity links;
 
-    public URL getAuthorizationUrl() {
+    public String getSelectAuthenticationMethod() {
+        return links.getSelectAuthenticationMethod().getUrl();
+    }
+
+    public URL getScaRedirectUrl() {
         return new URL(links.getScaRedirect().getUrl());
     }
 }
