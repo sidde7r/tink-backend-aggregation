@@ -8,8 +8,10 @@ import java.util.List;
 import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.GetBalancesResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.libraries.account.enums.AccountFlag;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class AccountEntityTest {
@@ -18,7 +20,7 @@ public class AccountEntityTest {
 
     @Before
     public void setup() {
-        accountEntity = new AccountEntity("123", "456", "asdf", "someName");
+        accountEntity = genAccountEntity("dummyCashAccountType");
     }
 
     @Test
@@ -203,5 +205,65 @@ public class AccountEntityTest {
     private BalanceEntity givenForwardAvailableBalance() {
         AmountEntity amountEntity = new AmountEntity("EUR", "5.00");
         return new BalanceEntity(amountEntity, "forwardAvailable");
+    }
+
+    @Test
+    public void toTinkAccountShouldMapAccountToCheckingIfCashAccountTypeNull() {
+        // given
+        List<BalanceEntity> balances = new ArrayList<>();
+        balances.add(givenClosingBookedBalance());
+        GetBalancesResponse getBalancesResponse = new GetBalancesResponse(balances);
+        AccountEntity accountEntityWithNullType = genAccountEntity(null);
+
+        // when
+        Optional<TransactionalAccount> transactionalAccount =
+                accountEntityWithNullType.toTinkAccount(getBalancesResponse);
+        // then
+        assertThat(transactionalAccount.isPresent()).isTrue();
+        assertThat(transactionalAccount.get().getAccountFlags())
+                .contains(AccountFlag.PSD2_PAYMENT_ACCOUNT);
+        assertThat(transactionalAccount.get().getType()).isEqualTo(AccountTypes.CHECKING);
+    }
+
+    @Test
+    public void
+            toTinkAccountShouldMapAccountToSavingIfCashAccountTypeEqualsToSavingAccountTypeEnum() {
+        // given
+        List<BalanceEntity> balances = new ArrayList<>();
+        balances.add(givenClosingBookedBalance());
+        GetBalancesResponse getBalancesResponse = new GetBalancesResponse(balances);
+        AccountEntity savingAccountEntity = genAccountEntity("SVGS");
+
+        // when
+        Optional<TransactionalAccount> transactionalAccount =
+                savingAccountEntity.toTinkAccount(getBalancesResponse);
+        // then
+        assertThat(transactionalAccount.isPresent()).isTrue();
+        assertThat(transactionalAccount.get().getAccountFlags())
+                .contains(AccountFlag.PSD2_PAYMENT_ACCOUNT);
+        assertThat(transactionalAccount.get().getType()).isEqualTo(AccountTypes.SAVINGS);
+    }
+
+    @Test
+    public void
+            toTinkAccountShouldMapAccountToCheckingIfCashAccountTypeEqualsToCheckingAccountTypeEnum() {
+        // given
+        List<BalanceEntity> balances = new ArrayList<>();
+        balances.add(givenClosingBookedBalance());
+        GetBalancesResponse getBalancesResponse = new GetBalancesResponse(balances);
+        AccountEntity checkingAccountEntity = genAccountEntity("CASH");
+
+        // when
+        Optional<TransactionalAccount> transactionalAccount =
+                checkingAccountEntity.toTinkAccount(getBalancesResponse);
+        // then
+        assertThat(transactionalAccount.isPresent()).isTrue();
+        assertThat(transactionalAccount.get().getAccountFlags())
+                .contains(AccountFlag.PSD2_PAYMENT_ACCOUNT);
+        assertThat(transactionalAccount.get().getType()).isEqualTo(AccountTypes.CHECKING);
+    }
+
+    public AccountEntity genAccountEntity(String cashAccountType) {
+        return new AccountEntity("123", "456", "asdf", "someName", cashAccountType);
     }
 }

@@ -1,7 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe;
 
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
+import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccountTypeMapper;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.libraries.account.enums.AccountFlag;
 
 public final class CbiGlobeConstants {
 
@@ -157,4 +160,25 @@ public final class CbiGlobeConstants {
     public static class HttpClientParams {
         public static final int CLIENT_TIMEOUT = 60 * 1000;
     }
+
+    public static final TransactionalAccountTypeMapper ACCOUNT_TYPE_MAPPER =
+            TransactionalAccountTypeMapper.builder()
+                    .put(
+                            TransactionalAccountType.CHECKING,
+                            AccountFlag.PSD2_PAYMENT_ACCOUNT,
+                            "CACC",
+                            "CASH",
+                            "CHAR",
+                            "CISH",
+                            "COMM",
+                            "SLRY",
+                            "TRAN",
+                            "TRAS")
+                    .put(
+                            TransactionalAccountType.SAVINGS,
+                            AccountFlag.PSD2_PAYMENT_ACCOUNT,
+                            "LLSV",
+                            "ONDP",
+                            "SVGS")
+                    .build();
 }

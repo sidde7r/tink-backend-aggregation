@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.GetBalancesResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -25,6 +26,7 @@ public class AccountEntity {
     private String iban;
     private String resourceId;
     private String name;
+    private String cashAccountType;
 
     public AccountEntity(String iban) {
         this.iban = iban;
@@ -40,8 +42,10 @@ public class AccountEntity {
 
     public Optional<TransactionalAccount> toTinkAccount(GetBalancesResponse getBalancesResponse) {
         return TransactionalAccount.nxBuilder()
-                .withType(TransactionalAccountType.CHECKING)
-                .withPaymentAccountFlag()
+                .withTypeAndFlagsFrom(
+                        CbiGlobeConstants.ACCOUNT_TYPE_MAPPER,
+                        Optional.ofNullable(cashAccountType).orElse("CASH"),
+                        TransactionalAccountType.CHECKING)
                 .withBalance(getBalanceModule(getBalancesResponse))
                 .withId(
                         IdModule.builder()
