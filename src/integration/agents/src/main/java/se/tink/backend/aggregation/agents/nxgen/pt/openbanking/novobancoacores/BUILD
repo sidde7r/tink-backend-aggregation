@@ -10,5 +10,6 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/agentcapabilities",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/contexts/agent",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/agentsservice",
+        "//third_party:com_google_inject_guice",
     ],
 )
