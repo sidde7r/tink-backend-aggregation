@@ -262,22 +262,10 @@ public class NordeaBaseConstants {
     }
 
     public static class LogMessages {
-        public static final String EINVOICE_NOT_FOUND =
-                "Could not find the selected invoice in user's bank.";
         public static final String NO_INVESTMENTS = "User has no agreement for investments";
         public static final String NO_CONFIRMED_INVESTMENTS =
                 "User has not confirmed classification for investments";
         public static final String NO_CUSTODY_ACCOUNT = "No account connected to custody account";
-        public static final String EINVOICE_MODIFY_AMOUNT =
-                "Not allowed to update e-invoice amount";
-        public static final String EINVOICE_MODIFY_DESTINATION_MESSAGE =
-                "Not allowed to update e-invoice message";
-        public static final String EINVOICE_MODIFY_DUEDATE =
-                "Not allowed to update e-invoice due date";
-        public static final String EINVOICE_MODIFY_SOURCE =
-                "Not allowed to update e-invoice source";
-        public static final String EINVOICE_MODIFY_DESTINATION =
-                "Not allowed to update e-invoice destination";
         public static final String BANKSIDE_ERROR_WHEN_SEARCHING_OUTBOX =
                 "Error from bank when trying to fetch details about payment outbox";
         public static final String WRONG_TO_ACCOUNT_LENGTH =

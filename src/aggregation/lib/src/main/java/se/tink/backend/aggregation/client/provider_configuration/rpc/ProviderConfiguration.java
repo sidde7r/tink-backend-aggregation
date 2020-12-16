@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.client.provider_configuration.rpc;
 
 import static io.vavr.Predicates.not;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Objects;
 import com.google.common.base.Strings;
@@ -16,6 +17,7 @@ import javax.annotation.Nullable;
 import se.tink.libraries.provider.ProviderDto.ProviderTypes;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ProviderConfiguration {
 
     public enum AccessType {
