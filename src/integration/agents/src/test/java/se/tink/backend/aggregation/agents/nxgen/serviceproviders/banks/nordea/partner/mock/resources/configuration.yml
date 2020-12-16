@@ -1,0 +1,11 @@
+agentsServiceConfiguration:
+  testConfiguration:
+    debugOutput: true
+  integrations:
+    nordeapartner:
+      oxford-preprod:
+        partnerId: "aaaaaaaa-bbbb-4444-aaaa-111122223333"
+        partnerKeystorePassword: "unused - key provider is mocked"
+        baseUrl: "https://private.nd.test.nordea.se/api/dbf/ca/partners-service-common-v2"
+        nordeaEncryptionPublicKey: "unused - key provider is mocked"
+        keyId: "tink-nordea-encrypt"

@@ -1,0 +1,708 @@
+REQUEST 1
+GET https://private.nd.test.nordea.se/api/dbf/ca/partners-service-common-v2/partners/aaaaaaaa-bbbb-4444-aaaa-111122223333/accounts
+Accept: application/json
+Accept-Language: sv-SE
+
+RESPONSE 1
+200
+Server: Apache/2.4.6 (Red Hat Enterprise Linux)
+Content-Type: application/json
+X-Global-Transaction-ID: 000000000000000000000001
+
+{
+	"result": [
+		{
+			"account_id": "NAID-SE-SEK-9901010000",
+			"display_account_number": "990101-0000",
+			"iban": "SE6530000000009901010000",
+			"bic": "NDEASESS",
+			"country_code": "SE",
+			"product_code": "SE4001",
+			"product_name": "PERSONKONTO",
+			"nickname": "PERSONKONTO",
+			"product_type": "Transaktionskonton",
+			"category": "transaction",
+			"account_status": "open",
+			"booked_balance": 83173.48,
+			"credit_limit": 0.0,
+			"available_balance": 83173.48,
+			"currency": "SEK",
+			"roles": [
+				{
+					"name": "SVENSSON,SVEN",
+					"role": "owner"
+				}
+			],
+			"permissions": {
+				"can_view": true,
+				"can_view_transactions": true,
+				"can_pay_from_account": true,
+				"can_transfer_from_account": true,
+				"can_transfer_to_account": true,
+				"can_deposit_to_account": true,
+				"can_pay_pgbg_from_account": true
+			},
+			"transaction_list_search_criteria": {
+				"can_use_start_date": true,
+				"min_start_date": "2019-09-14",
+				"can_use_end_date": true,
+				"can_use_lowest_amount": true,
+				"can_use_highest_amount": true,
+				"can_use_free_text": true,
+				"sort_by_list": [
+					"transaction_date_desc"
+				]
+			}
+		},
+		{
+			"account_id": "NAID-SE-SEK-30080012345",
+			"display_account_number": "3008 00 12345",
+			"iban": "SE3830000000030080012345",
+			"bic": "NDEASESS",
+			"country_code": "SE",
+			"product_code": "SE0039",
+			"product_name": "CHECKKONTO",
+			"nickname": "CHECKKONTO edited",
+			"product_type": "Transaktionskonton",
+			"category": "transaction",
+			"account_status": "open",
+			"booked_balance": 68892.6,
+			"credit_limit": 0.0,
+			"available_balance": 68892.6,
+			"currency": "SEK",
+			"roles": [
+				{
+					"name": "SVENSSON,SVEN",
+					"role": "owner"
+				}
+			],
+			"permissions": {
+				"can_view": true,
+				"can_view_transactions": true,
+				"can_pay_from_account": true,
+				"can_transfer_from_account": true,
+				"can_transfer_to_account": true,
+				"can_deposit_to_account": true,
+				"can_pay_pgbg_from_account": true
+			},
+			"transaction_list_search_criteria": {
+				"can_use_start_date": true,
+				"min_start_date": "2019-09-14",
+				"can_use_end_date": true,
+				"can_use_lowest_amount": true,
+				"can_use_highest_amount": true,
+				"can_use_free_text": true,
+				"sort_by_list": [
+					"transaction_date_desc"
+				]
+			}
+		}
+	],
+	"sub_system_errors": [
+
+	]
+}
+
+REQUEST 4
+GET https://private.nd.test.nordea.se/api/dbf/ca/partners-service-common-v2/partners/aaaaaaaa-bbbb-4444-aaaa-111122223333/cards
+Accept: application/json
+Accept-Language: sv-SE
+
+RESPONSE 4
+200
+Server: Apache/2.4.6 (Red Hat Enterprise Linux)
+Content-Type: application/json
+X-Global-Transaction-ID: 000000000000000000000004
+
+{
+	"cards": [
+		{
+			"card_id": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+			"card_category": "credit",
+			"card_status": "active",
+			"card_expiration": {
+				"date": "2021-02-28",
+				"formatted": "02/21"
+			},
+			"cardholder_name": "SVEN SVENSSON",
+			"cardholder_type": "principal",
+			"principal_cardholder_name": "SVEN SVENSSON",
+			"product_code": "SE200",
+			"country_code": "SE",
+			"currency": "SEK",
+			"nickname": "Sad Card",
+			"credit": {
+				"masked_credit_card_number": "1234 **** **** 1234",
+				"credit_available_balance": -68980.46,
+				"instalment_free_months": []
+			},
+			"permissions": {
+				"transactions": true,
+				"transfer_from_credit": false,
+				"view_pin": true
+			}
+		},
+		{
+			"card_id": "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB",
+			"card_category": "credit",
+			"card_status": "active",
+			"card_expiration": {
+				"date": "2021-02-28",
+				"formatted": "02/21"
+			},
+			"cardholder_name": "SVEN SVENSSON",
+			"cardholder_type": "principal",
+			"principal_cardholder_name": "SVEN SVENSSON",
+			"product_code": "SE260",
+			"country_code": "SE",
+			"currency": "SEK",
+			"nickname": "Happy Card",
+			"credit": {
+				"masked_credit_card_number": "1337 **** **** 1337",
+				"credit_available_balance": 1030968.09,
+				"instalment_free_months": []
+			},
+			"permissions": {
+				"transactions": true,
+				"transfer_from_credit": false,
+				"view_pin": true
+			}
+		}
+	]
+}
+
+REQUEST 5
+GET https://private.nd.test.nordea.se/api/dbf/ca/partners-service-common-v2/partners/aaaaaaaa-bbbb-4444-aaaa-111122223333/accounts/NAID-SE-SEK-9901010000/transactions
+Accept: application/json
+Accept-Language: sv-SE
+
+RESPONSE 5
+200
+Server: Apache/2.4.6 (Red Hat Enterprise Linux)
+Content-Type: application/json
+X-Global-Transaction-ID: 000000000000000000000005
+Transfer-Encoding: chunked
+
+{
+	"result": [
+		{
+			"transaction_id": "B002020-12-142020-12-14-12.26.44.509513",
+			"has_details": true,
+			"booked": true,
+			"amount": -10.14,
+			"currency": "SEK",
+			"booking_date": "2020-12-14",
+			"interest_date": "2020-12-14",
+			"title": "Betalning BG 123-4567 WIREMOCK TEST",
+			"balance_after": 83173.48,
+			"transaction_type": {
+				"transaction_code": "SE00904",
+				"transaction_code_text": "Betalning BG"
+			}
+		},
+		{
+			"transaction_id": "B002020-11-302020-11-30-11.43.40.436046",
+			"has_details": true,
+			"booked": true,
+			"amount": 10.3,
+			"currency": "SEK",
+			"booking_date": "2020-11-30",
+			"interest_date": "2020-11-30",
+			"title": "Retur BG 123-4567",
+			"balance_after": 83364.79,
+			"transaction_type": {
+				"transaction_code": "SE00318",
+				"transaction_code_text": "Retur BG"
+			}
+		},
+		{
+			"transaction_id": "B002020-11-302020-11-30-11.35.52.638821",
+			"has_details": true,
+			"booked": true,
+			"amount": -10.3,
+			"currency": "SEK",
+			"booking_date": "2020-11-30",
+			"interest_date": "2020-11-30",
+			"title": "Betalning BG 123-4567 WIREMOCK TEST",
+			"balance_after": 83354.49,
+			"transaction_type": {
+				"transaction_code": "SE00904",
+				"transaction_code_text": "Betalning BG"
+			}
+		},
+		{
+			"transaction_id": "B002020-11-302020-11-30-10.02.05.321289",
+			"has_details": true,
+			"booked": true,
+			"amount": -10.3,
+			"currency": "SEK",
+			"booking_date": "2020-11-30",
+			"interest_date": "2020-11-30",
+			"title": "Betalning PG 123456-7 WIREMOCK TEST",
+			"balance_after": 83364.79,
+			"transaction_type": {
+				"transaction_code": "SE00905",
+				"transaction_code_text": "Betalning BG"
+			}
+		},
+		{
+			"transaction_id": "B002020-11-272020-11-27-11.31.42.725600",
+			"has_details": true,
+			"booked": true,
+			"amount": 10.27,
+			"currency": "SEK",
+			"booking_date": "2020-11-27",
+			"interest_date": "2020-11-27",
+			"title": "Retur BG 123-4567",
+			"balance_after": 83375.09,
+			"transaction_type": {
+				"transaction_code": "SE00318",
+				"transaction_code_text": "Retur BG"
+			}
+		}
+	],
+	"sub_system_errors": [
+
+	]
+}
+
+REQUEST 16
+GET https://private.nd.test.nordea.se/api/dbf/ca/partners-service-common-v2/partners/aaaaaaaa-bbbb-4444-aaaa-111122223333/accounts/NAID-SE-SEK-30080012345/transactions
+Accept: application/json
+Accept-Language: sv-SE
+
+
+RESPONSE 16
+200
+Server: Apache/2.4.6 (Red Hat Enterprise Linux)
+Content-Type: application/json
+X-Global-Transaction-ID: 000000000000000000000016
+
+{
+	"result": [
+		{
+			"transaction_id": "B052020-10-192020-10-19-12.09.33.960092",
+			"has_details": true,
+			"booked": true,
+			"amount": 88.0,
+			"currency": "SEK",
+			"booking_date": "2020-10-19",
+			"interest_date": "2020-10-20",
+			"title": "Inbetalning mess to rec",
+			"balance_after": 68892.6,
+			"transaction_type": {
+				"transaction_code": "SE00256",
+				"transaction_code_text": "Rättelse Cassanova"
+			}
+		},
+		{
+			"transaction_id": "B052020-10-092020-10-09-05.47.18.059769",
+			"has_details": true,
+			"booked": true,
+			"amount": 102.0,
+			"currency": "SEK",
+			"booking_date": "2020-10-09",
+			"interest_date": "2020-10-12",
+			"title": "Överföring SVENSSON,SVEN",
+			"balance_after": 68804.6,
+			"transaction_type": {
+				"transaction_code": "SE00453",
+				"transaction_code_text": "Kontoöverföring"
+			}
+		},
+		{
+			"transaction_id": "B052020-10-082020-10-08-05.46.22.992202",
+			"has_details": true,
+			"booked": true,
+			"amount": 12.0,
+			"currency": "SEK",
+			"booking_date": "2020-10-08",
+			"interest_date": "2020-10-09",
+			"title": "Inbetalning .",
+			"balance_after": 68702.6,
+			"transaction_type": {
+				"transaction_code": "SE00256",
+				"transaction_code_text": "Rättelse Cassanova"
+			}
+		},
+		{
+			"transaction_id": "B052020-10-082020-10-08-05.46.08.856335",
+			"has_details": true,
+			"booked": true,
+			"amount": 102.0,
+			"currency": "SEK",
+			"booking_date": "2020-10-08",
+			"interest_date": "2020-10-09",
+			"title": "Överföring SVENSSON,SVEN",
+			"balance_after": 68690.6,
+			"transaction_type": {
+				"transaction_code": "SE00453",
+				"transaction_code_text": "Kontoöverföring"
+			}
+		},
+		{
+			"transaction_id": "B052020-10-062020-10-06-06.50.01.567411",
+			"has_details": true,
+			"booked": true,
+			"amount": 16.0,
+			"currency": "SEK",
+			"booking_date": "2020-10-06",
+			"interest_date": "2020-10-07",
+			"title": "Inbetalning R.",
+			"balance_after": 68588.6,
+			"transaction_type": {
+				"transaction_code": "SE00256",
+				"transaction_code_text": "Rättelse Cassanova"
+			}
+		},
+		{
+			"transaction_id": "B052020-10-062020-10-06-05.56.15.689676",
+			"has_details": true,
+			"booked": true,
+			"amount": 12.0,
+			"currency": "SEK",
+			"booking_date": "2020-10-06",
+			"interest_date": "2020-10-07",
+			"title": "Inbetalning .",
+			"balance_after": 68572.6,
+			"transaction_type": {
+				"transaction_code": "SE00256",
+				"transaction_code_text": "Rättelse Cassanova"
+			}
+		},
+		{
+			"transaction_id": "B052020-10-052020-10-05-09.40.23.522801",
+			"has_details": true,
+			"booked": true,
+			"amount": 12.0,
+			"currency": "SEK",
+			"booking_date": "2020-10-05",
+			"interest_date": "2020-10-06",
+			"title": "Inbetalning .",
+			"balance_after": 68560.6,
+			"transaction_type": {
+				"transaction_code": "SE00256",
+				"transaction_code_text": "Rättelse Cassanova"
+			}
+		},
+		{
+			"transaction_id": "B052020-10-052020-10-05-09.40.05.232278",
+			"has_details": true,
+			"booked": true,
+			"amount": 102.0,
+			"currency": "SEK",
+			"booking_date": "2020-10-05",
+			"interest_date": "2020-10-06",
+			"title": "Överföring SVENSSON,SVEN",
+			"balance_after": 68548.6,
+			"transaction_type": {
+				"transaction_code": "SE00453",
+				"transaction_code_text": "Kontoöverföring"
+			}
+		},
+		{
+			"transaction_id": "B052020-10-012020-10-01-09.28.30.903571",
+			"has_details": true,
+			"booked": true,
+			"amount": 12.0,
+			"currency": "SEK",
+			"booking_date": "2020-10-01",
+			"interest_date": "2020-10-02",
+			"title": "Inbetalning .",
+			"balance_after": 68446.6,
+			"transaction_type": {
+				"transaction_code": "SE00256",
+				"transaction_code_text": "Rättelse Cassanova"
+			}
+		},
+		{
+			"transaction_id": "B052020-10-012020-10-01-09.27.50.997082",
+			"has_details": true,
+			"booked": true,
+			"amount": 52.0,
+			"currency": "SEK",
+			"booking_date": "2020-10-01",
+			"interest_date": "2020-10-02",
+			"title": "Överföring SVENSSON|ABCDEF,SVEN",
+			"balance_after": 68434.6,
+			"transaction_type": {
+				"transaction_code": "SE00453",
+				"transaction_code_text": "Kontoöverföring"
+			}
+		},
+		{
+			"transaction_id": "B052020-09-302020-09-30-08.49.34.253004",
+			"has_details": true,
+			"booked": true,
+			"amount": 12.0,
+			"currency": "SEK",
+			"booking_date": "2020-09-30",
+			"interest_date": "2020-10-01",
+			"title": "Inbetalning .",
+			"balance_after": 68382.6,
+			"transaction_type": {
+				"transaction_code": "SE00256",
+				"transaction_code_text": "Rättelse Cassanova"
+			}
+		},
+		{
+			"transaction_id": "B052020-09-302020-09-30-06.59.40.843995",
+			"has_details": true,
+			"booked": true,
+			"amount": 52.0,
+			"currency": "SEK",
+			"booking_date": "2020-09-30",
+			"interest_date": "2020-10-01",
+			"title": "Överföring SVENSSON|ABCDEF,SVEN",
+			"balance_after": 68370.6,
+			"transaction_type": {
+				"transaction_code": "SE00453",
+				"transaction_code_text": "Kontoöverföring"
+			}
+		},
+		{
+			"transaction_id": "B052020-09-292020-09-29-08.37.05.831364",
+			"has_details": true,
+			"booked": true,
+			"amount": 16.0,
+			"currency": "SEK",
+			"booking_date": "2020-09-29",
+			"interest_date": "2020-09-30",
+			"title": "Inbetalning R.",
+			"balance_after": 68318.6,
+			"transaction_type": {
+				"transaction_code": "SE00256",
+				"transaction_code_text": "Rättelse Cassanova"
+			}
+		},
+		{
+			"transaction_id": "B052020-09-292020-09-29-08.27.49.532974",
+			"has_details": true,
+			"booked": true,
+			"amount": 56.0,
+			"currency": "SEK",
+			"booking_date": "2020-09-29",
+			"interest_date": "2020-09-30",
+			"title": "R. SVENSSON|ABCDEF,SVEN",
+			"balance_after": 68302.6,
+			"transaction_type": {
+				"transaction_code": "SE00453",
+				"transaction_code_text": "Kontoöverföring"
+			}
+		},
+		{
+			"transaction_id": "B052020-09-292020-09-29-06.17.45.926630",
+			"has_details": true,
+			"booked": true,
+			"amount": 12.0,
+			"currency": "SEK",
+			"booking_date": "2020-09-29",
+			"interest_date": "2020-09-30",
+			"title": "Inbetalning .",
+			"balance_after": 68246.6,
+			"transaction_type": {
+				"transaction_code": "SE00256",
+				"transaction_code_text": "Rättelse Cassanova"
+			}
+		},
+		{
+			"transaction_id": "B052020-09-292020-09-29-06.17.15.149445",
+			"has_details": true,
+			"booked": true,
+			"amount": 52.0,
+			"currency": "SEK",
+			"booking_date": "2020-09-29",
+			"interest_date": "2020-09-30",
+			"title": "Överföring SVENSSON|ABCDEF,SVEN",
+			"balance_after": 68234.6,
+			"transaction_type": {
+				"transaction_code": "SE00453",
+				"transaction_code_text": "Kontoöverföring"
+			}
+		},
+		{
+			"transaction_id": "B052020-09-282020-09-28-10.29.41.410192",
+			"has_details": true,
+			"booked": true,
+			"amount": 16.0,
+			"currency": "SEK",
+			"booking_date": "2020-09-28",
+			"interest_date": "2020-09-29",
+			"title": "Inbetalning R.",
+			"balance_after": 68182.6,
+			"transaction_type": {
+				"transaction_code": "SE00256",
+				"transaction_code_text": "Rättelse Cassanova"
+			}
+		},
+		{
+			"transaction_id": "B052020-09-282020-09-28-10.19.10.259195",
+			"has_details": true,
+			"booked": true,
+			"amount": 56.0,
+			"currency": "SEK",
+			"booking_date": "2020-09-28",
+			"interest_date": "2020-09-29",
+			"title": "R. SVENSSON|ABCDEF,SVEN",
+			"balance_after": 68166.6,
+			"transaction_type": {
+				"transaction_code": "SE00453",
+				"transaction_code_text": "Kontoöverföring"
+			}
+		},
+		{
+			"transaction_id": "B052020-09-282020-09-28-09.56.05.696480",
+			"has_details": true,
+			"booked": true,
+			"amount": 52.0,
+			"currency": "SEK",
+			"booking_date": "2020-09-28",
+			"interest_date": "2020-09-29",
+			"title": "Överföring SVENSSON|ABCDEF,SVEN",
+			"balance_after": 68110.6,
+			"transaction_type": {
+				"transaction_code": "SE00453",
+				"transaction_code_text": "Kontoöverföring"
+			}
+		},
+		{
+			"transaction_id": "B052020-09-252020-09-25-09.44.17.852679",
+			"has_details": true,
+			"booked": true,
+			"amount": 16.0,
+			"currency": "SEK",
+			"booking_date": "2020-09-25",
+			"interest_date": "2020-09-28",
+			"title": "Inbetalning R.",
+			"balance_after": 68058.6,
+			"transaction_type": {
+				"transaction_code": "SE00256",
+				"transaction_code_text": "Rättelse Cassanova"
+			}
+		},
+		{
+			"transaction_id": "B052020-09-252020-09-25-09.41.37.517792",
+			"has_details": true,
+			"booked": true,
+			"amount": 56.0,
+			"currency": "SEK",
+			"booking_date": "2020-09-25",
+			"interest_date": "2020-09-28",
+			"title": "R. SVENSSON|ABCDEF,SVEN",
+			"balance_after": 68042.6,
+			"transaction_type": {
+				"transaction_code": "SE00453",
+				"transaction_code_text": "Kontoöverföring"
+			}
+		},
+		{
+			"transaction_id": "B052020-09-252020-09-25-08.49.35.616878",
+			"has_details": true,
+			"booked": true,
+			"amount": 12.0,
+			"currency": "SEK",
+			"booking_date": "2020-09-25",
+			"interest_date": "2020-09-28",
+			"title": "Inbetalning .",
+			"balance_after": 67986.6,
+			"transaction_type": {
+				"transaction_code": "SE00256",
+				"transaction_code_text": "Rättelse Cassanova"
+			}
+		},
+		{
+			"transaction_id": "B052020-09-252020-09-25-08.48.36.325640",
+			"has_details": true,
+			"booked": true,
+			"amount": 52.0,
+			"currency": "SEK",
+			"booking_date": "2020-09-25",
+			"interest_date": "2020-09-28",
+			"title": "Överföring SVENSSON|ABCDEF,SVEN",
+			"balance_after": 67974.6,
+			"transaction_type": {
+				"transaction_code": "SE00453",
+				"transaction_code_text": "Kontoöverföring"
+			}
+		}
+	],
+	"sub_system_errors": [
+
+	]
+}
+
+REQUEST 20
+GET https://private.nd.test.nordea.se/api/dbf/ca/partners-service-common-v2/partners/aaaaaaaa-bbbb-4444-aaaa-111122223333/cards/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/transactions?page=1&page_size=50
+Accept: application/json
+Accept-Language: sv-SE
+
+RESPONSE 20
+200
+Server: Apache/2.4.6 (Red Hat Enterprise Linux)
+Content-Type: application/json
+X-Global-Transaction-ID: 000000000000000000000020
+Transfer-Encoding: chunked
+
+{
+    "size": 1,
+    "page": 1,
+    "page_size": 10,
+    "transactions": [
+        {
+            "transaction_id": "-1111111111",
+            "transaction_date": "2018-04-06",
+            "transaction_type": null,
+            "amount": -85.0,
+            "currency": "SEK",
+            "exchange_rate": 0.0,
+            "original_amount": null,
+            "original_currency": null,
+            "title": "Påminnelseavgift",
+            "booked": true,
+            "booking_date": null,
+            "merchant_city": "",
+            "merchant_country": "",
+            "invoiced_date": "9999-12-31",
+            "invoice_status": "invoiced"
+        }
+    ],
+    "billing_period": null
+}
+
+REQUEST 30
+GET https://private.nd.test.nordea.se/api/dbf/ca/partners-service-common-v2/partners/aaaaaaaa-bbbb-4444-aaaa-111122223333/cards/BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB/transactions?page=1&page_size=50
+Accept: application/json
+Accept-Language: sv-SE
+
+RESPONSE 30
+200
+Server: Apache/2.4.6 (Red Hat Enterprise Linux)
+Content-Type: application/json
+X-Global-Transaction-ID: 000000000000000000000030
+Transfer-Encoding: chunked
+
+{
+    "size": 1,
+    "page": 1,
+    "page_size": 10,
+    "transactions": [
+        {
+            "transaction_id": "-2222222222",
+            "transaction_date": "2018-04-05",
+            "transaction_type": null,
+            "amount": -86.0,
+            "currency": "SEK",
+            "exchange_rate": 0.0,
+            "original_amount": null,
+            "original_currency": null,
+            "title": "Påminnelseavgift",
+            "booked": true,
+            "booking_date": null,
+            "merchant_city": "",
+            "merchant_country": "",
+            "invoiced_date": "9999-12-31",
+            "invoice_status": "invoiced"
+        }
+    ],
+    "billing_period": null
+}
