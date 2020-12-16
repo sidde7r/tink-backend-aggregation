@@ -13,6 +13,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
 import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
@@ -25,6 +26,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v3
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.NordeaConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.authenticator.rpc.BankIdAutostartResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.authenticator.rpc.InitBankIdAutostartRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.executors.entities.BankIdAutostartResult;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.executors.entities.ResultsEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.executors.rpc.CompleteTransferRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.executors.rpc.CompleteTransferResponse;
@@ -225,44 +227,88 @@ public class NordeaExecutorHelper {
         }
     }
 
-    private CompleteTransferResponse poll(String orderRef, String signingOrderId) {
+    protected CompleteTransferResponse poll(String orderRef, String signingOrderId) {
+        BankIdAutostartResult bankIdAutostartResult;
+        String reference = orderRef;
+
         for (int i = 1; i < NordeaBaseConstants.Transfer.MAX_POLL_ATTEMPTS; i++) {
-            // sleep before so when a time out occur the bankId signing is canceled after polling
-            Uninterruptibles.sleepUninterruptibly(2000, TimeUnit.MILLISECONDS);
-            try {
-                BankIdAutostartResponse signResponse = apiClient.pollBankIdAutostart(orderRef);
+            bankIdAutostartResult = collect(reference);
 
-                switch (signResponse.getStatus().toLowerCase()) {
-                    case NordeaBankIdStatus.BANKID_AUTOSTART_PENDING:
-                    case NordeaBankIdStatus.BANKID_AUTOSTART_SIGN_PENDING:
-                        break;
-                    case NordeaBankIdStatus.BANKID_AUTOSTART_COMPLETED:
-                        return completeTransfer(signingOrderId, signResponse.getCode());
-                    case NordeaBankIdStatus.BANKID_AUTOSTART_CANCELLED:
-                        throw ErrorResponse.bankIdCancelledError();
-                    default:
+            switch (bankIdAutostartResult.getStatus()) {
+                case DONE:
+                    return completeTransfer(signingOrderId, bankIdAutostartResult.getCode());
+                case WAITING:
+                    log.info("Waiting for BankID");
+                    break;
+                case CANCELLED:
+                    throw ErrorResponse.bankIdCancelledError();
+                case TIMEOUT:
+                    throw ErrorResponse.bankIdTimedOut();
+                case EXPIRED_AUTOSTART_TOKEN:
+                    BankIdAutostartResponse bankIdAutostartResponse = signPayment(signingOrderId);
+                    if (bankIdAutostartResponse
+                            .getStatus()
+                            .equals(NordeaBankIdStatus.BANKID_AUTOSTART_PENDING)) {
+                        supplementalRequester.openBankId(
+                                bankIdAutostartResponse.getAutoStartToken(), false);
+                        reference = bankIdAutostartResponse.getSessionId();
+                    } else {
                         throw ErrorResponse.signTransferFailedError();
-                }
-            } catch (HttpResponseException e) {
-                if (e.getResponse().getStatus() == HttpStatus.SC_CONFLICT) {
-                    throw ErrorResponse.bankIdAlreadyInProgressError(e);
-                }
-
-                ErrorResponse error = ErrorResponse.of(e);
-                if (error.isInvalidAccessToken()) {
-                    // We've polled long enough for access token to be invalid, considered timeout
-                    throw ErrorResponse.bankIdTimedOut();
-                }
-
-                if (error.isAutostartTokenExpired()) {
-                    throw ErrorResponse.bankIdTimedOut();
-                }
-
-                log.error(e.getMessage(), e);
-                throw ErrorResponse.signTransferFailedError();
+                    }
+                    break;
+                default:
+                    log.warn(
+                            String.format(
+                                    "Unknown BankIdStatus (%s)",
+                                    bankIdAutostartResult.getStatus()));
+                    throw ErrorResponse.signTransferFailedError();
             }
+
+            Uninterruptibles.sleepUninterruptibly(2000, TimeUnit.MILLISECONDS);
         }
         throw ErrorResponse.bankIdTimedOut();
+    }
+
+    private BankIdAutostartResult collect(String reference) {
+        try {
+            BankIdAutostartResponse bankIdAutostartResponse =
+                    apiClient.pollBankIdAutostart(reference);
+
+            switch (bankIdAutostartResponse.getStatus().toLowerCase()) {
+                case NordeaBankIdStatus.BANKID_AUTOSTART_PENDING:
+                case NordeaBankIdStatus.BANKID_AUTOSTART_SIGN_PENDING:
+                    return BankIdAutostartResult.builder().status(BankIdStatus.WAITING).build();
+                case NordeaBankIdStatus.BANKID_AUTOSTART_COMPLETED:
+                    return BankIdAutostartResult.builder()
+                            .code(bankIdAutostartResponse.getCode())
+                            .status(BankIdStatus.DONE)
+                            .build();
+                case NordeaBankIdStatus.BANKID_AUTOSTART_CANCELLED:
+                    return BankIdAutostartResult.builder().status(BankIdStatus.CANCELLED).build();
+                default:
+                    return BankIdAutostartResult.builder()
+                            .status(BankIdStatus.FAILED_UNKNOWN)
+                            .build();
+            }
+        } catch (HttpResponseException e) {
+            if (e.getResponse().getStatus() == HttpStatus.SC_CONFLICT) {
+                throw ErrorResponse.bankIdAlreadyInProgressError(e);
+            }
+
+            ErrorResponse error = ErrorResponse.of(e);
+            if (error.isInvalidAccessToken()) {
+                return BankIdAutostartResult.builder().status(BankIdStatus.TIMEOUT).build();
+            }
+
+            if (error.isAutostartTokenExpired()) {
+                return BankIdAutostartResult.builder()
+                        .status(BankIdStatus.EXPIRED_AUTOSTART_TOKEN)
+                        .build();
+            }
+
+            log.error(e.getMessage(), e);
+            throw ErrorResponse.signTransferFailedError();
+        }
     }
 
     private CompleteTransferResponse completeTransfer(String orderRef, String code) {
