@@ -12,7 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.executor.payment.entity.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.executor.payment.entity.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.executor.payment.rpc.CreatePaymentRequest;
@@ -46,7 +45,6 @@ public class UnicreditPaymentExecutor implements PaymentExecutor, FetchablePayme
 
     @Override
     public PaymentResponse create(PaymentRequest paymentRequest) {
-        sessionStorage.put(HeaderKeys.PSU_IP_ADDRESS, paymentRequest.getOriginatingUserIp());
 
         PaymentType type =
                 UnicreditConstants.PAYMENT_TYPE_MAPPER
@@ -91,7 +89,7 @@ public class UnicreditPaymentExecutor implements PaymentExecutor, FetchablePayme
                         .build();
 
         return apiClient
-                .createSepaPayment(request)
+                .createSepaPayment(request, paymentRequest)
                 .toTinkPayment(
                         paymentRequest.getPayment().getDebtor().getAccountNumber(),
                         paymentRequest.getPayment().getCreditor().getAccountNumber(),
@@ -104,10 +102,7 @@ public class UnicreditPaymentExecutor implements PaymentExecutor, FetchablePayme
         Payment payment = paymentMultiStepRequest.getPayment();
 
         PaymentMultiStepResponse paymentMultiStepResponse = null;
-        PaymentResponse paymentResponse =
-                fetchPaymentWithId(
-                        paymentMultiStepRequest.getPayment().getUniqueId(),
-                        paymentMultiStepRequest.getPayment().getType());
+        PaymentResponse paymentResponse = fetchPaymentWithId(paymentMultiStepRequest);
         PaymentStatus paymentStatus = paymentResponse.getPayment().getStatus();
         log.info("Payment id={} sign status={}", payment.getId(), paymentStatus);
 
@@ -124,8 +119,8 @@ public class UnicreditPaymentExecutor implements PaymentExecutor, FetchablePayme
         return paymentMultiStepResponse;
     }
 
-    private PaymentResponse fetchPaymentWithId(String paymentId, PaymentType type) {
-        return apiClient.fetchPayment(paymentId).toTinkPayment(paymentId, type);
+    private PaymentResponse fetchPaymentWithId(PaymentRequest paymentRequest) {
+        return apiClient.fetchPayment(paymentRequest).toTinkPayment(paymentRequest.getPayment());
     }
 
     @Override
@@ -143,10 +138,7 @@ public class UnicreditPaymentExecutor implements PaymentExecutor, FetchablePayme
 
     @Override
     public PaymentResponse fetch(PaymentRequest paymentRequest) {
-        String paymentId = paymentRequest.getPayment().getUniqueId();
-        PaymentType type = paymentRequest.getPayment().getType();
-
-        return apiClient.fetchPayment(paymentId).toTinkPayment(paymentId, type);
+        return apiClient.fetchPayment(paymentRequest).toTinkPayment(paymentRequest.getPayment());
     }
 
     @Override

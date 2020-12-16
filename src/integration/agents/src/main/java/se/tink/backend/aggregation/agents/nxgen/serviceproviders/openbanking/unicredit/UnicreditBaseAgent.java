@@ -60,7 +60,7 @@ public abstract class UnicreditBaseAgent extends NextGenerationAgent
             UnicreditProviderConfiguration providerConfiguration,
             UnicreditBaseHeaderValues headerValues) {
         return new UnicreditBaseApiClient(
-                client, persistentStorage, sessionStorage, providerConfiguration, headerValues);
+                client, persistentStorage, providerConfiguration, headerValues);
     }
 
     @Override
