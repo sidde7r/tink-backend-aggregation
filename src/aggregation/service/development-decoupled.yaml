@@ -133,6 +133,9 @@ logging:
       timeZone: Europe/Stockholm
       logFormat: '%date{"yyyy-MM-dd HH:mm:ss,SSSXXX"} %level [%thread] R:%X{requestId} %logger %message%n%xException'
 
+prometheus:
+  port: 9130
+
 isMultiClientDevelopment: false
 
 provisionClientsConfig:
