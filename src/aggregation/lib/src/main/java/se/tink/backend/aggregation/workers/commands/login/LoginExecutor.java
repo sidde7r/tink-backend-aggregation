@@ -5,114 +5,116 @@ import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.aggregation.agents.agent.Agent;
+import se.tink.backend.aggregation.agents.agentplatform.authentication.AgentPlatformAuthenticationExecutor;
 import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
+import se.tink.backend.aggregation.workers.commands.login.handler.AgentPlatformAgentLoginHandler;
+import se.tink.backend.aggregation.workers.commands.login.handler.CredentialsStatusLoginResultVisitor;
+import se.tink.backend.aggregation.workers.commands.login.handler.DefaultLegacyAgentLoginHandler;
+import se.tink.backend.aggregation.workers.commands.login.handler.LoginHandler;
+import se.tink.backend.aggregation.workers.commands.login.handler.ProgressiveAgentLoginHandler;
+import se.tink.backend.aggregation.workers.commands.login.handler.result.LoginResult;
 import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
-import se.tink.backend.aggregation.workers.metrics.MetricActionIface;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class LoginExecutor {
 
-    private static final Logger log = LoggerFactory.getLogger(LoginExecutor.class);
-    private List<LoginHandler> loginHandlerChain = new LinkedList<>();
-    private List<LoginExceptionHandler> loginExceptionHandlerChain = new LinkedList<>();
-    private AgentWorkerCommandContext context;
-    private SupplementalInformationController supplementalInformationController;
-    private AgentLoginEventPublisherService agentLoginEventPublisherService;
+    private static final Logger LOGGER = LoggerFactory.getLogger(LoginExecutor.class);
+
+    private final MetricsFactory metricsFactory;
+    private final StatusUpdater statusUpdater;
+    private List<LoginHandler> loginHandlers;
+
+    public LoginExecutor(final MetricsFactory metricsFactory, final StatusUpdater statusUpdater) {
+        this(metricsFactory, statusUpdater, new AgentPlatformAuthenticationExecutor());
+    }
 
     public LoginExecutor(
+            MetricsFactory metricsFactory,
             final StatusUpdater statusUpdater,
-            final AgentWorkerCommandContext context,
-            final SupplementalInformationController supplementalInformationController,
-            final AgentLoginEventPublisherService agentLoginEventPublisherService) {
-        this.supplementalInformationController = supplementalInformationController;
-        this.agentLoginEventPublisherService = agentLoginEventPublisherService;
-        this.context = context;
-        initLoginHandlerChain();
-        initLoginExceptionHandlerChain(statusUpdater);
+            final AgentPlatformAuthenticationExecutor agentPlatformAuthenticationExecutor) {
+        this.metricsFactory = metricsFactory;
+        this.statusUpdater = statusUpdater;
+        initLoginHandlers(agentPlatformAuthenticationExecutor);
     }
 
-    private void initLoginHandlerChain() {
-        loginHandlerChain.add(
-                new AgentPlatformAuthenticatorLoginHandler(
-                        supplementalInformationController, agentLoginEventPublisherService));
-        loginHandlerChain.add(
-                new ProgressiveAuthenticatorLoginHandler(
-                        supplementalInformationController, agentLoginEventPublisherService));
-        loginHandlerChain.add(new DefaultAgentLoginController(agentLoginEventPublisherService));
-        loginHandlerChain.add(new LoginFailedHandler());
+    private void initLoginHandlers(
+            final AgentPlatformAuthenticationExecutor agentPlatformAuthenticationExecutor) {
+        loginHandlers = new LinkedList<>();
+        loginHandlers.add(new AgentPlatformAgentLoginHandler(agentPlatformAuthenticationExecutor));
+        loginHandlers.add(new ProgressiveAgentLoginHandler());
+        loginHandlers.add(new DefaultLegacyAgentLoginHandler());
     }
 
-    private void initLoginExceptionHandlerChain(final StatusUpdater statusUpdater) {
-        loginExceptionHandlerChain.add(
-                new AgentPlatformAuthenticationProcessExceptionHandler(
-                        statusUpdater, context, agentLoginEventPublisherService));
-        loginExceptionHandlerChain.add(
-                new BankIdLoginExceptionHandler(
-                        statusUpdater, context, agentLoginEventPublisherService));
-        loginExceptionHandlerChain.add(
-                new BankServiceLoginExceptionHandler(
-                        statusUpdater, context, agentLoginEventPublisherService));
-        loginExceptionHandlerChain.add(
-                new AuthenticationLoginExceptionHandler(
-                        statusUpdater, context, agentLoginEventPublisherService));
-        loginExceptionHandlerChain.add(
-                new AuthorizationLoginExceptionHandler(
-                        statusUpdater, context, agentLoginEventPublisherService));
-        loginExceptionHandlerChain.add(
-                new DefaultLoginExceptionHandler(
-                        statusUpdater, context, agentLoginEventPublisherService));
-    }
-
-    public AgentWorkerCommandResult executeLogin(
-            final Agent agent,
-            final MetricActionIface metricAction,
-            final CredentialsRequest credentialsRequest) {
-        try {
-            log.info(
-                    "LoginExecutor for credentials {}",
-                    Optional.ofNullable(credentialsRequest.getCredentials())
-                            .map(Credentials::getId)
-                            .orElse(null));
-            return processLoginHandlerChain(agent, metricAction, credentialsRequest);
-        } catch (Exception ex) {
-            log.info(
-                    "LoginExecutor-EXCEPTION for credentials {}",
-                    Optional.ofNullable(credentialsRequest.getCredentials())
-                            .map(Credentials::getId)
-                            .orElse(null),
-                    ex);
-            return processLoginExceptionHandlerChain(ex, metricAction);
-        }
-    }
-
-    private AgentWorkerCommandResult processLoginHandlerChain(
-            final Agent agent,
-            final MetricActionIface metricAction,
-            final CredentialsRequest credentialsRequest)
-            throws Exception {
-        for (LoginHandler loginHandler : loginHandlerChain) {
-            Optional<AgentWorkerCommandResult> result =
-                    loginHandler.handleLogin(agent, metricAction, credentialsRequest);
+    public AgentWorkerCommandResult execute(
+            AgentWorkerCommandContext context,
+            SupplementalInformationController supplementalInformationController,
+            DataStudioLoginEventPublisherService dataStudioLoginEventPublisherService) {
+        for (LoginHandler loginHandler : loginHandlers) {
+            Optional<LoginResult> result =
+                    loginHandler.handle(
+                            context.getAgent(),
+                            context.getRequest(),
+                            supplementalInformationController);
             if (result.isPresent()) {
-                return result.get();
+                postLoginActions(
+                        result.get(),
+                        context,
+                        supplementalInformationController,
+                        dataStudioLoginEventPublisherService);
+                return determineAgentWorkerCommandResult(result.get());
             }
         }
-        throw new IllegalStateException("There is no more login handlers to process");
+        throw new IllegalStateException(
+                "Login processor not found for agent type [" + context.getAgent().getClass() + "]");
     }
 
-    private AgentWorkerCommandResult processLoginExceptionHandlerChain(
-            final Exception ex, final MetricActionIface metricAction) {
-        for (LoginExceptionHandler loginExceptionHandler : loginExceptionHandlerChain) {
-            Optional<AgentWorkerCommandResult> result =
-                    loginExceptionHandler.handleLoginException(ex, metricAction);
-            if (result.isPresent()) {
-                return result.get();
-            }
-        }
-        throw new IllegalStateException("There is no more login exception handlers to process");
+    private void postLoginActions(
+            LoginResult loginResult,
+            AgentWorkerCommandContext context,
+            SupplementalInformationController supplementalInformationController,
+            DataStudioLoginEventPublisherService dataStudioLoginEventPublisherService) {
+        logUserInteractionStatus(supplementalInformationController);
+        createLoginMetric(loginResult, context.getRequest(), supplementalInformationController);
+        updateCredentialsStatus(loginResult, context);
+        publishDataStudioLoginEvent(loginResult, dataStudioLoginEventPublisherService);
+    }
+
+    private void updateCredentialsStatus(
+            LoginResult loginResult, AgentWorkerCommandContext context) {
+        loginResult.accept(new CredentialsStatusLoginResultVisitor(statusUpdater, context));
+    }
+
+    private void createLoginMetric(
+            LoginResult loginResult,
+            CredentialsRequest credentialsRequest,
+            SupplementalInformationController supplementalInformationController) {
+        loginResult.accept(
+                new LoginMetricLoginResultVisitor(
+                        metricsFactory.createLoginMetric(
+                                credentialsRequest, supplementalInformationController)));
+    }
+
+    private void publishDataStudioLoginEvent(
+            LoginResult loginResult,
+            DataStudioLoginEventPublisherService dataStudioLoginEventPublisherService) {
+        loginResult.accept(
+                new DataStudioEventPublisherLoginResultVisitor(
+                        dataStudioLoginEventPublisherService));
+    }
+
+    private void logUserInteractionStatus(
+            SupplementalInformationController supplementalInformationController) {
+        LOGGER.info(
+                "Authentication required user intervention: {}",
+                supplementalInformationController.isUsed());
+    }
+
+    private AgentWorkerCommandResult determineAgentWorkerCommandResult(LoginResult loginResult) {
+        AgentWorkerCommandResultLoginResultVisitor agentWorkerCommandResultLoginResultVisitor =
+                new AgentWorkerCommandResultLoginResultVisitor();
+        loginResult.accept(agentWorkerCommandResultLoginResultVisitor);
+        return agentWorkerCommandResultLoginResultVisitor.getResult();
     }
 }

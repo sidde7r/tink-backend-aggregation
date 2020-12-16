@@ -35,8 +35,9 @@ public final class LoginCommand implements CompositeAgentTestCommand {
         }
 
         if (agent instanceof AgentPlatformAuthenticator) {
-            AgentPlatformAuthenticationExecutor.processAuthentication(
-                    agent, credentialsRequest, supplementalInformationController);
+            new AgentPlatformAuthenticationExecutor()
+                    .processAuthentication(
+                            agent, credentialsRequest, supplementalInformationController);
             return;
         } else if (agent instanceof ProgressiveAuthAgent) {
             final ProgressiveLoginExecutor executor =

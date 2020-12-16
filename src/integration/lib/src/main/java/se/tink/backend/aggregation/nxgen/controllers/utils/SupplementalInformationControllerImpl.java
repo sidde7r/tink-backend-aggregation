@@ -28,6 +28,7 @@ public class SupplementalInformationControllerImpl implements SupplementalInform
     private final SupplementalRequester supplementalRequester;
     private final Credentials credentials;
     private final String state;
+    private short interactionCounter = 0;
 
     public SupplementalInformationControllerImpl(
             SupplementalRequester supplementalRequester, Credentials credentials, String state) {
@@ -39,6 +40,7 @@ public class SupplementalInformationControllerImpl implements SupplementalInform
     @Override
     public Optional<Map<String, String>> waitForSupplementalInformation(
             String key, long waitFor, TimeUnit unit) {
+        interactionCounter++;
         return supplementalRequester
                 .waitForSupplementalInformation(key, waitFor, unit)
                 .map(SupplementalInformationControllerImpl::stringToMap);
@@ -52,6 +54,7 @@ public class SupplementalInformationControllerImpl implements SupplementalInform
     @Override
     public Map<String, String> askSupplementalInformation(Field... fields)
             throws SupplementalInfoException {
+        interactionCounter++;
         credentials.setSupplementalInformation(SerializationUtils.serializeToString(fields));
         credentials.setStatus(CredentialsStatus.AWAITING_SUPPLEMENTAL_INFORMATION);
         String names = Arrays.stream(fields).map(Field::getName).collect(Collectors.joining(","));
@@ -86,6 +89,7 @@ public class SupplementalInformationControllerImpl implements SupplementalInform
 
     @Override
     public void openThirdPartyApp(ThirdPartyAppAuthenticationPayload payload) {
+        interactionCounter++;
         Preconditions.checkNotNull(payload);
 
         payload.setState(state);
@@ -98,5 +102,10 @@ public class SupplementalInformationControllerImpl implements SupplementalInform
         logger.info("Opening third party app with deep link URL {}, state {}", deepLinkUrl, state);
 
         supplementalRequester.requestSupplementalInformation(credentials, false);
+    }
+
+    @Override
+    public short getInteractionCounter() {
+        return interactionCounter;
     }
 }
