@@ -1,0 +1,127 @@
+REQUEST 1
+GET https://api.minpension.se/authentication
+Accept: text/plain
+
+RESPONSE 1
+401
+Transfer-Encoding: chunked
+Content-Type: text/plain
+Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+Date: Fri, 04 Dec 2020 15:30:40 GMT
+Connection: keep-alive
+
+Status Code: 401; Unauthorized
+
+REQUEST 2
+POST https://login-api.minpension.se/bankid/authenticate
+Accept: application/json
+Content-Type: application/json
+
+{"ActivateAppOnSameDevice":false}
+
+RESPONSE 2
+200
+Cache-Control: no-store,no-cache
+Pragma: no-cache
+Transfer-Encoding: chunked
+Content-Type: application/json; charset=utf-8
+Vary: Accept-Encoding
+Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+Date: Fri, 04 Dec 2020 15:30:40 GMT
+Connection: keep-alive
+
+{"autoStartToken":"abcdef12-1234-5678-abcd-abcdef123456","orderRef":"abcd1234-abcd-1234-5678-1234abcd5678"}
+
+REQUEST 3
+POST https://login-api.minpension.se/bankid/get-status
+Accept: application/json
+Content-Type: application/json
+
+{"OrderRef":"abcd1234-abcd-1234-5678-1234abcd5678","ActivateAppOnSameDevice":false}
+
+RESPONSE 3 SET POLL_1
+200
+Cache-Control: no-store,no-cache
+Pragma: no-cache
+Transfer-Encoding: chunked
+Content-Type: application/json; charset=utf-8
+Vary: Accept-Encoding
+Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+Date: Fri, 04 Dec 2020 15:30:40 GMT
+Connection: keep-alive
+
+{"authenticationStatus":"AwaitingApp","bankIdUser":null,"errorMessage":null}
+
+REQUEST 8 MATCH POLL_1
+POST https://login-api.minpension.se/bankid/get-status
+Accept: application/json
+Content-Type: application/json
+
+{"OrderRef":"abcd1234-abcd-1234-5678-1234abcd5678","ActivateAppOnSameDevice":false}
+
+RESPONSE 8 SET LOGGED_IN
+200
+Cache-Control: no-cache
+Pragma: no-cache
+Transfer-Encoding: chunked
+Content-Type: application/json; charset=utf-8
+Expires: Thu, 01 Jan 1970 00:00:00 GMT
+Vary: Accept-Encoding
+Set-Cookie: ***
+Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+Date: Fri, 04 Dec 2020 15:30:50 GMT
+Connection: keep-alive
+
+{"authenticationStatus":"Complete","bankIdUser":{"firstname":"FIRST_NAME","lastname":"LAST_NAME"},"errorMessage":null}
+
+REQUEST 9
+GET https://api.minpension.se/account
+Accept: application/json
+
+RESPONSE 9
+200
+Cache-Control: no-store,no-cache
+Pragma: no-cache
+Transfer-Encoding: chunked
+Content-Type: application/json; charset=utf-8
+Vary: Accept-Encoding
+Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+Date: Fri, 04 Dec 2020 15:30:50 GMT
+Connection: keep-alive
+
+{"registrationState":"Valid","registrationReason":"None","registrationTocIsRequired":false,"isRegistered":true,"isInUttagsplanMalgrupp":false,"harGodkantSenasteAnvandaravtal":true}
+
+REQUEST 10
+GET https://api.minpension.se/pensionstillgangar
+Accept: application/json
+
+RESPONSE 10
+200
+Cache-Control: no-store,no-cache
+Pragma: no-cache
+Transfer-Encoding: chunked
+Content-Type: application/json; charset=utf-8
+Vary: Accept-Encoding
+Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+Date: Fri, 04 Dec 2020 15:30:51 GMT
+Connection: keep-alive
+
+{"ap":{"produkttyp":"Ap","summary":{"totalAmount":1000000.0},"apUnderlag":{"intjanandear":2019,"inkomstar":2020,"aktuellUttagsandelAlderspension":0.0,"inkomstpensionsbehallningBelopp":500000.0,"inkomstpensionsbehallningBeslutsdatum":"2020-11-28T00:00:00","inkomstpensionManatligtIntjanande":1000.0,"aktuellUttagsandelPremiepension":null,"premiepensionssaldoBelopp":null,"premiepensionssaldoKursdatum":null,"premiepensionManatligtIntjanande":1000.0,"premiepensionHasEfterlevandeskydd":false,"premiepensionForvaltningstyp":"Fond","ppKontoList":[{"ejPlacerbartKapital":0.0,"fondhandelPagar":false,"forsakringsform":"FondFörePensionstid","kapital":500000.0,"typ":"Huvudkonto","manadsbeloppVidFulltUttag":0.0,"aktuellUttagsnivaProcent":null,"fondList":[{"antalAndelar":1000.0,"avgiftProcent":0.08,"kurs":500.0,"namn":"AP7 Såfa - Statens årskullsförvaltningsalternativ","nummer":100010,"varde":500000.0,"vardedatum":"2020-12-03T00:00:00","isin":null}]}],"avtaladUttagsalderManader":780,"avtaladUttagstidTyp":"Livsvarig","avtaladUttagstidManader":180,"leveransdatum":"2020-12-04T16:30:51.413","apUndantagList":[]}}}
+
+REQUEST 11 MATCH LOGGED_IN
+GET https://api.minpension.se/authentication
+Accept: text/plain
+User-Agent: Mozilla/5.0
+
+RESPONSE 11
+200
+Cache-Control: no-store,no-cache
+Pragma: no-cache
+Transfer-Encoding: chunked
+Content-Type: text/plain; charset=utf-8
+Vary: Accept-Encoding
+Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+Date: Fri, 04 Dec 2020 15:30:51 GMT
+Connection: keep-alive
+
+199012125678
