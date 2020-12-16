@@ -4,7 +4,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticatorConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.configuration.ClientInfo;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.entities.ClientMode;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.entities.AuthorizeRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.rpc.WellKnownResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -39,10 +38,5 @@ public class OpenIdAisAuthenticator implements OpenIdAuthenticator {
                         .withWellKnownConfiguration(wellKnownConfiguration)
                         .withIntentId(intentId)
                         .build(apiClient.getSigner()));
-    }
-
-    @Override
-    public ClientMode getClientCredentialScope() {
-        return ClientMode.ACCOUNTS;
     }
 }
