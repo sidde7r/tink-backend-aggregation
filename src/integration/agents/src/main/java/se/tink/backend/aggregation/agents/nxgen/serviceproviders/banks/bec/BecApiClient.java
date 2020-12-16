@@ -117,7 +117,7 @@ public class BecApiClient {
 
         request.setPayload(payloadAndroidEntity);
 
-        createRequest(this.agentUrl.getAppSync())
+        createRequest(agentUrl.getAppSync())
                 .type(MediaType.APPLICATION_JSON_TYPE)
                 .post(EncryptedResponse.class, request);
     }
@@ -250,7 +250,7 @@ public class BecApiClient {
                     securityHelper.encrypt(
                             SerializationUtils.serializeToString(payloadEntity).getBytes()));
             EncryptedResponse response =
-                    createRequest(this.agentUrl.getPrepareSca())
+                    createRequest(agentUrl.getPrepareSca())
                             .type(MediaType.APPLICATION_JSON_TYPE)
                             .post(EncryptedResponse.class, request);
             String decryptedResponse = securityHelper.decrypt(response.getEncryptedPayload());
@@ -265,7 +265,7 @@ public class BecApiClient {
     public void pollNemId(String token) throws AuthenticationException {
         logger.info("Poll for 2fa approve");
         NemIdPollResponse response =
-                createRequest(this.agentUrl.getNemIdPoll())
+                createRequest(agentUrl.getNemIdPoll())
                         .type(MediaType.APPLICATION_JSON_TYPE)
                         .queryParam("token", token)
                         .get(NemIdPollResponse.class);
@@ -286,11 +286,11 @@ public class BecApiClient {
     }
 
     public FetchAccountResponse fetchAccounts() {
-        return createRequest(this.agentUrl.getFetchAccounts()).get(FetchAccountResponse.class);
+        return createRequest(agentUrl.getFetchAccounts()).get(FetchAccountResponse.class);
     }
 
     public AccountDetailsResponse fetchAccountDetails(String accountId) {
-        return createRequest(this.agentUrl.getFetchAccountDetails())
+        return createRequest(agentUrl.getFetchAccountDetails())
                 .queryParam(BecConstants.Url.ACCOUNT_ID_PARAMETER, accountId)
                 .type(MediaType.APPLICATION_JSON_TYPE)
                 .get(AccountDetailsResponse.class);
@@ -314,7 +314,7 @@ public class BecApiClient {
         fetchAccountTransactionRequest.setSkipMatched(false);
         fetchAccountTransactionRequest.setSearchText("");
 
-        return createRequest(this.agentUrl.getFetchAccountTransactions())
+        return createRequest(agentUrl.getFetchAccountTransactions())
                 .header(BecConstants.Header.PRAGMA_KEY, BecConstants.Header.PRAGMA_VALUE)
                 .type(MediaType.APPLICATION_JSON_TYPE)
                 .post(FetchAccountTransactionsResponse.class, fetchAccountTransactionRequest);
@@ -322,7 +322,7 @@ public class BecApiClient {
 
     public FetchUpcomingPaymentsResponse fetchAccountUpcomingTransactions(Account account) {
 
-        return createRequest(this.agentUrl.getFetchAccountUpcomingTransactions())
+        return createRequest(agentUrl.getFetchAccountUpcomingTransactions())
                 .queryParam(
                         BecConstants.Header.QUERY_PARAM_ACCOUNT_ID_KEY, account.getAccountNumber())
                 .queryParam(BecConstants.Header.QUERY_PARAM_BROWSE_ID_KEY, "")
@@ -338,7 +338,7 @@ public class BecApiClient {
 
     public List<CardEntity> fetchCards() {
         try {
-            return createRequest(this.agentUrl.getFetchCard())
+            return createRequest(agentUrl.getFetchCard())
                     .queryParam(
                             BecConstants.Header.QUERY_PARAM_ICONTYPE_KEY,
                             BecConstants.Header.QUERY_PARAM_ICONTYPE_VALUE)
@@ -361,25 +361,24 @@ public class BecApiClient {
     }
 
     public CardDetailsResponse fetchCardDetails(String urlDetails) {
-        return createRequest(this.agentUrl.getBaseUrl() + urlDetails)
-                .get(CardDetailsResponse.class);
+        return createRequest(agentUrl.getBaseUrl() + urlDetails).get(CardDetailsResponse.class);
     }
 
     public List<MortgageLoanEntity> fetchLoans() {
-        return createRequest(this.agentUrl.getFetchLoan())
+        return createRequest(agentUrl.getFetchLoan())
                 .get(FetchLoanResponse.class)
                 .getMortgageLoanList();
     }
 
     public LoanDetailsResponse fetchLoanDetails(String loanNumber) {
-        return createRequest(this.agentUrl.getFetchLoanDetails())
+        return createRequest(agentUrl.getFetchLoanDetails())
                 .queryParam(BecConstants.Url.LOAN_NUMBER_PARAMETER, loanNumber)
                 .type(MediaType.APPLICATION_JSON_TYPE)
                 .get(LoanDetailsResponse.class);
     }
 
     public FetchInvestmentResponse fetchInvestment() {
-        return createRequest(this.agentUrl.getFetchDepot())
+        return createRequest(agentUrl.getFetchDepot())
                 .queryParam(
                         BecConstants.Header.QUERY_PARAM_VERSION_KEY,
                         BecConstants.Header.QUERY_PARAM_VERSION_VALUE)
@@ -387,7 +386,7 @@ public class BecApiClient {
     }
 
     public DepositDetailsResponse fetchDepositDetail(String urlDetails) {
-        return createRequest(this.agentUrl.getBaseUrl() + urlDetails)
+        return createRequest(agentUrl.getBaseUrl() + urlDetails)
                 .queryParam(
                         BecConstants.Header.QUERY_PARAM_VERSION_KEY,
                         BecConstants.Header.QUERY_PARAM_VERSION_VALUE)
@@ -395,7 +394,7 @@ public class BecApiClient {
     }
 
     public InstrumentDetailsEntity fetchInstrumentDetails(String urlDetails, String accountId) {
-        return createRequest(this.agentUrl.getBaseUrl() + urlDetails)
+        return createRequest(agentUrl.getBaseUrl() + urlDetails)
                 .queryParam(
                         BecConstants.Header.QUERY_PARAM_VERSION_KEY,
                         BecConstants.Header.QUERY_PARAM_FETCH_INSTRUMENTS_VERSION_VALUE)
@@ -404,14 +403,14 @@ public class BecApiClient {
     }
 
     public void logout() {
-        createRequest(this.agentUrl.getLogout()).type(MediaType.APPLICATION_JSON_TYPE).post();
+        createRequest(agentUrl.getLogout()).type(MediaType.APPLICATION_JSON_TYPE).post();
     }
 
     private ScaOptionsEncryptedPayload postScaOptionsAndDecryptResponse(BaseBecRequest request)
             throws NemIdException, LoginException {
         try {
             EncryptedResponse response =
-                    createRequest(this.agentUrl.getPrepareSca())
+                    createRequest(agentUrl.getPrepareSca())
                             .type(MediaType.APPLICATION_JSON_TYPE)
                             .post(EncryptedResponse.class, request);
             String decryptedResponse = securityHelper.decrypt(response.getEncryptedPayload());
@@ -442,7 +441,7 @@ public class BecApiClient {
     }
 
     private RequestBuilder createRequest(String url) {
-        return this.apiClient
+        return apiClient
                 .request(url)
                 .header(BecConstants.Header.PRAGMA_KEY, BecConstants.Header.PRAGMA_VALUE);
     }

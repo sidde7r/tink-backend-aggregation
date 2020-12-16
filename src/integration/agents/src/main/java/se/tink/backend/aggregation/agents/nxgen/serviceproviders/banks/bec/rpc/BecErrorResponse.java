@@ -1,42 +1,27 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.rpc;
 
-import com.google.common.base.Strings;
-import java.util.Map;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.BecConstants.ErrorMessageLocalizedParts;
+import java.util.Optional;
+import lombok.Getter;
+import lombok.Setter;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.BecConstants.ErrorMessages;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import src.integration.nemid.NemIdSupportedLanguageCode;
 
 @JsonObject
+@Getter
 public class BecErrorResponse {
     private String action;
-    private String message;
+    @Setter private String message;
 
-    public String getAction() {
-        return action;
+    public boolean isKnownMessage() {
+        return ErrorMessages.ERROR_MESSAGES_TO_REASON_MAP.keySet().stream()
+                .anyMatch(errorMessage -> message.contains(errorMessage));
     }
 
-    public String getMessage() {
-        return Strings.nullToEmpty(message);
-    }
-
-    public boolean isWithoutMortgage() {
-        return doesMessageContainAnyLocalizedMessagePart(ErrorMessageLocalizedParts.NO_MORTGAGE);
-    }
-
-    public boolean noDetailsExist() {
-        return doesMessageContainAnyLocalizedMessagePart(
-                ErrorMessageLocalizedParts.LOAN_NO_DETAILS_EXIST);
-    }
-
-    public boolean functionIsNotAvailable() {
-        return doesMessageContainAnyLocalizedMessagePart(
-                ErrorMessageLocalizedParts.FUNCTION_NOT_AVAILABLE);
-    }
-
-    private boolean doesMessageContainAnyLocalizedMessagePart(
-            Map<NemIdSupportedLanguageCode, String> localizedErrorParts) {
-        return localizedErrorParts.values().stream()
-                .anyMatch(
-                        errorPart -> getMessage().toLowerCase().contains(errorPart.toLowerCase()));
+    public String getReason() {
+        Optional<String> key =
+                ErrorMessages.ERROR_MESSAGES_TO_REASON_MAP.keySet().stream()
+                        .filter(errorMessage -> message.contains(errorMessage))
+                        .findAny();
+        return key.map(ErrorMessages.ERROR_MESSAGES_TO_REASON_MAP::get).orElse("No reason found");
     }
 }

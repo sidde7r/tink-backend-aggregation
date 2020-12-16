@@ -11,6 +11,7 @@ junit_test(
     visibility = ["//visibility:public"],
     deps = [
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/banks/bec",
+        "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/lib",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/authentication/multifactor/thirdpartyapp/nemid/exception",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/client",
@@ -24,6 +25,7 @@ junit_test(
         "//third_party:com_sun_jersey_jersey_core",
         "//third_party:org_assertj_assertj_core",
         "//third_party:org_mockito_mockito_core",
+        "//third_party:pl_pragmatists_junitparams",
     ],
 )
 
