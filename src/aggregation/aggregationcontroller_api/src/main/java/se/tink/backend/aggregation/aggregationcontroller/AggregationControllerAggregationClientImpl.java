@@ -45,6 +45,8 @@ import se.tink.backend.system.rpc.UpdateFraudDetailsRequest;
 import se.tink.libraries.http.client.WebResourceFactory;
 import se.tink.libraries.jersey.utils.ClientLoggingFilter;
 import se.tink.libraries.jersey.utils.JerseyUtils;
+import se.tink.libraries.metrics.core.MetricId;
+import se.tink.libraries.metrics.registry.MetricRegistry;
 import se.tink.libraries.signableoperation.rpc.SignableOperation;
 
 public class AggregationControllerAggregationClientImpl
@@ -62,12 +64,18 @@ public class AggregationControllerAggregationClientImpl
     private final ClientConfig config;
     private final AccountInformationServiceConfiguration accountInformationServiceConfiguration;
 
+    private final MetricRegistry metricRegistry;
+    private static final MetricId AGGREGATION_CONTROLLER_RETRIES =
+            MetricId.newId("aggregation_controller_retries");
+
     @Inject
     private AggregationControllerAggregationClientImpl(
             ClientConfig custom,
-            AccountInformationServiceConfiguration accountInformationServiceConfiguration) {
+            AccountInformationServiceConfiguration accountInformationServiceConfiguration,
+            MetricRegistry metricRegistry) {
         this.config = custom;
         this.accountInformationServiceConfiguration = accountInformationServiceConfiguration;
+        this.metricRegistry = metricRegistry;
     }
 
     private <T> T buildInterClusterServiceFromInterface(
@@ -337,7 +345,14 @@ public class AggregationControllerAggregationClientImpl
     private <T> T requestExecuter(RequestOperation<T> operation, String name) {
         for (int i = 1; i <= MAXIMUM_RETRY_ATTEMPT; i++) {
             try {
-                return operation.execute();
+                final T successfulResponse = operation.execute();
+                metricRegistry
+                        .meter(
+                                AGGREGATION_CONTROLLER_RETRIES
+                                        .label("operation", name)
+                                        .label("retries", i - 1))
+                        .inc();
+                return successfulResponse;
             } catch (UniformInterfaceException e) {
                 ClientResponse response = e.getResponse();
                 int statusCode = response.getStatus();
@@ -364,6 +379,12 @@ public class AggregationControllerAggregationClientImpl
                             MAXIMUM_RETRY_ATTEMPT,
                             statusCode,
                             errorMessage);
+                    metricRegistry
+                            .meter(
+                                    AGGREGATION_CONTROLLER_RETRIES
+                                            .label("operation", name)
+                                            .label("retries", i))
+                            .inc();
                     throw e;
                 } else {
                     log.warn(
