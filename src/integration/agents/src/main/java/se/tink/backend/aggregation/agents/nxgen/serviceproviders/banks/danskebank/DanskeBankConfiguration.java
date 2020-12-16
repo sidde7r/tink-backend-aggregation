@@ -3,9 +3,9 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeba
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import se.tink.backend.aggregation.agents.models.Loan;
 import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
 import se.tink.backend.aggregation.configuration.agents.ClientConfiguration;
+import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
 
 public interface DanskeBankConfiguration extends ClientConfiguration {
     String getAppVersionHeader();
@@ -50,7 +50,7 @@ public interface DanskeBankConfiguration extends ClientConfiguration {
         return AccountCapabilities.Answer.UNINITIALIZED;
     }
 
-    Map<String, Loan.Type> getLoanAccountTypes();
+    Map<String, LoanDetails.Type> getLoanAccountTypes();
 
     String getStepUpTokenKey();
 

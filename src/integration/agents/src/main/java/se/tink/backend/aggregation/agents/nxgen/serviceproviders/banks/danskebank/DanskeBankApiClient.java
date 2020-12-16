@@ -26,6 +26,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeban
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.investment.rpc.ListSecuritiesResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.investment.rpc.ListSecurityDetailsRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.investment.rpc.ListSecurityDetailsResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.AccountDetailsRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.AccountDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.CardDetailsRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.CardDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.CardsListRequest;
@@ -177,6 +179,10 @@ public class DanskeBankApiClient {
     public LoanDetailsResponse loanDetails(LoanDetailsRequest request) {
         return postRequest(
                 DanskeBankConstants.Urls.LOAN_DETAILS_URL, LoanDetailsResponse.class, request);
+    }
+
+    public AccountDetailsResponse fetchAccountDetails(AccountDetailsRequest request) {
+        return postRequest(Urls.ACCOUNT_DETAILS_URL, AccountDetailsResponse.class, request);
     }
 
     public ListTransactionsResponse listTransactions(ListTransactionsRequest request) {

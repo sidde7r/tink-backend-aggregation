@@ -3,6 +3,9 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeba
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Optional;
+import lombok.Setter;
+import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.LoanDetailsResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
@@ -13,6 +16,7 @@ import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
+@Setter
 public class LoanEntity {
     private String realEstateNumber;
     private String loanNumber;
@@ -42,7 +46,7 @@ public class LoanEntity {
     }
 
     @JsonIgnore
-    public LoanAccount toTinkLoan(LoanDetailsResponse loanDetailsResponse) {
+    public LoanAccount toTinkLoan(LoanDetailsResponse loanDetailsResponse, String marketCode) {
 
         return LoanAccount.nxBuilder()
                 .withLoanDetails(
@@ -55,6 +59,7 @@ public class LoanEntity {
                                 .setNumMonthsBound(
                                         loanDetailsResponse.calculateNumberOfMonthsBound())
                                 .setLoanNumber(loanNumber)
+                                .setInitialBalance(loanDetailsResponse.getPrincipal(currencyCode))
                                 .setSecurity(realEstateNumber)
                                 .build())
                 .withId(
@@ -64,10 +69,17 @@ public class LoanEntity {
                                 .withAccountName(loanTypeName)
                                 .addIdentifier(
                                         AccountIdentifier.create(
-                                                AccountIdentifier.Type.DK, getAccountNumber()))
+                                                getAccountIdentifierType(marketCode),
+                                                getAccountNumber()))
                                 .setProductName(loanTypeName)
                                 .build())
                 .build();
+    }
+
+    @JsonIgnore
+    private AccountIdentifier.Type getAccountIdentifierType(String marketCode) {
+        return Optional.ofNullable(AccountIdentifier.Type.fromScheme(marketCode.toLowerCase()))
+                .orElse(AccountIdentifier.Type.COUNTRY_SPECIFIC);
     }
 
     /**
@@ -88,7 +100,10 @@ public class LoanEntity {
             BigDecimal interest = new BigDecimal(loanDetailsResponse.getLoanDetail().getInterest());
             BigDecimal frequency =
                     new BigDecimal(loanDetailsResponse.getLoanDetail().getPaymentFrequency());
-            BigDecimal cashDebt = new BigDecimal(loanDetailsResponse.getLoanDetail().getCashDebt());
+            BigDecimal cashDebt =
+                    StringUtils.isNotBlank(loanDetailsResponse.getLoanDetail().getCashDebt())
+                            ? new BigDecimal(loanDetailsResponse.getLoanDetail().getCashDebt())
+                            : new BigDecimal(loanDetailsResponse.getLoanDetail().getDebtAmount());
             return interest.multiply(frequency)
                     .divide(cashDebt, 6, RoundingMode.HALF_UP)
                     .doubleValue();
@@ -98,7 +113,7 @@ public class LoanEntity {
     }
 
     @JsonIgnore
-    private ExactCurrencyAmount getBalance() {
+    ExactCurrencyAmount getBalance() {
         ExactCurrencyAmount balance =
                 ExactCurrencyAmount.of(new BigDecimal(outstandingDebt), currencyCode);
         if (balance.getExactValue().compareTo(BigDecimal.ZERO) == 0) {

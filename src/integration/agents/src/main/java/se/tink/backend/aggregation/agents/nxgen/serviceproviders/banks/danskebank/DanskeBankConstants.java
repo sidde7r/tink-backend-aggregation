@@ -68,12 +68,14 @@ public class DanskeBankConstants {
 
         static final String LOAN_DETAILS_URL = E4_BASE_URL + "/realestate/loan/detail";
 
+        static final String ACCOUNT_DETAILS_URL = E4_BASE_URL + "/account/details";
+
         // == END Loans ==
 
         // == START Credit card info ==
 
-        public static final String CARDS_LIST_URL = BASE_URL + "/kk/api/cards/getlist";
-        public static final String CARD_DETAILS_URL = BASE_URL + "/kk/api/cards/getcarddetails";
+        static final String CARDS_LIST_URL = BASE_URL + "/kk/api/cards/getlist";
+        static final String CARD_DETAILS_URL = BASE_URL + "/kk/api/cards/getcarddetails";
 
         // == END Credit card info ==
 
