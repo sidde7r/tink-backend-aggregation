@@ -61,10 +61,10 @@ public class BecLoanFetcher implements AccountFetcher<LoanAccount> {
 
                     if (becErrorResponse.isKnownMessage()) {
                         logger.info(
-                                "{} - {}",
+                                "{} - message: {} reason: {}",
                                 BecConstants.Log.LOANS,
-                                becErrorResponse.getReason(),
-                                hre);
+                                becErrorResponse.getMessage(),
+                                becErrorResponse.getReason());
                         return Collections.emptyList();
                     } else {
                         logger.warn(

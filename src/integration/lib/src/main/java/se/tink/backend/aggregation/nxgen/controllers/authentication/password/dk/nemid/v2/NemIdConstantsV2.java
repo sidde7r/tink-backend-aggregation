@@ -71,6 +71,7 @@ public class NemIdConstantsV2 {
         static final By USERNAME_INPUT = By.cssSelector("input[type=text]");
         static final By ERROR_MESSAGE = By.cssSelector("p.error");
         static final By NEMID_CODE_CARD = By.className("otp__card-number");
+        static final By NEMID_CODE_TOKEN = By.className("otp__token");
         static final By PASSWORD_INPUT = By.cssSelector("input[type=password]");
         static final By SUBMIT_BUTTON = By.cssSelector("button.button--submit");
         static final By NEMID_TOKEN = By.cssSelector("div#tink_nemIdToken");

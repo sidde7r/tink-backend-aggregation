@@ -6,6 +6,7 @@ import static se.tink.backend.aggregation.nxgen.controllers.authentication.passw
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2.NemIdConstantsV2.HtmlElements.IFRAME;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2.NemIdConstantsV2.HtmlElements.NEMID_APP_BUTTON;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2.NemIdConstantsV2.HtmlElements.NEMID_CODE_CARD;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2.NemIdConstantsV2.HtmlElements.NEMID_CODE_TOKEN;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2.NemIdConstantsV2.HtmlElements.NEMID_TOKEN;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2.NemIdConstantsV2.HtmlElements.OTP_ICON;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2.NemIdConstantsV2.HtmlElements.PASSWORD_INPUT;
@@ -184,7 +185,7 @@ public class NemIdIFrameController {
 
         if (!isValid) {
             tryThrowingNoCodeAppException(driver);
-            throwNemidCredentialsError(driver);
+            throwNemIdCredentialsError(driver);
         }
     }
 
@@ -204,8 +205,7 @@ public class NemIdIFrameController {
     }
 
     private boolean isApproveWithKeyAppPageRendered(WebDriver driver) {
-        Optional<WebElement> otpIconPhone = webdriverHelper.waitForElement(driver, OTP_ICON);
-        return otpIconPhone.isPresent();
+        return webdriverHelper.waitForElement(driver, OTP_ICON).isPresent();
     }
 
     private void tryThrowingNoCodeAppException(WebDriver driver) {
@@ -213,18 +213,46 @@ public class NemIdIFrameController {
             throw NemIdError.CODEAPP_NOT_REGISTERED.exception(
                     NEM_ID_PREFIX + " User has code card.");
         }
+        if (isNemIdSuggestingCodeToken(driver)) {
+            throw NemIdError.CODEAPP_NOT_REGISTERED.exception(
+                    NEM_ID_PREFIX + " User has code token.");
+        }
     }
 
     private boolean isNemIdSuggestingCodeCard(WebDriver driver) {
-        Optional<WebElement> webElement = webdriverHelper.waitForElement(driver, NEMID_CODE_CARD);
-        return webElement.isPresent();
+        return webdriverHelper.waitForElement(driver, NEMID_CODE_CARD).isPresent();
     }
 
-    private void throwNemidCredentialsError(WebDriver driver) {
-        log.warn(
-                "{} Can't validate NemId = please verify page source: {}",
-                NEM_ID_PREFIX,
-                driver.getPageSource());
+    private boolean isNemIdSuggestingCodeToken(WebDriver driver) {
+        return webdriverHelper.waitForElement(driver, NEMID_CODE_TOKEN).isPresent();
+    }
+
+    private void throwNemIdCredentialsError(WebDriver driver) {
+        Optional<WebElement> maybeNemIdIframeElement =
+                webdriverHelper.waitForElement(driver, IFRAME);
+        if (maybeNemIdIframeElement.isPresent()) {
+            /*
+            ITE-1859
+            We observe a lot of credential verification errors with empty NemId iframe content in logged page source.
+            This means that iframe is probably not selected by driver (driver.switchTo()) - otherwise we won't see
+            it's <iframe> tag at all. There is no point in code where we deliberately switch to parent window so
+            we have to investigate it.
+            */
+            String currentPageSource = driver.getPageSource();
+            String nemIdIframePageSource =
+                    driver.switchTo().frame(maybeNemIdIframeElement.get()).getPageSource();
+            log.warn(
+                    "{} NemId iframe is not selected, please verify current page source: {} and NemId iframe source: {}",
+                    NEM_ID_PREFIX,
+                    currentPageSource,
+                    nemIdIframePageSource);
+        } else {
+            log.warn(
+                    "{} Can't validate NemId = please verify page source: {}",
+                    NEM_ID_PREFIX,
+                    driver.getPageSource());
+        }
+
         throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception(
                 NEM_ID_PREFIX + " Can't validate NemId credentials.");
     }
