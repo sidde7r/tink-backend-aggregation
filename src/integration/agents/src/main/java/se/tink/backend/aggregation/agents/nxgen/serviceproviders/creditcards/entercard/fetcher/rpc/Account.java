@@ -51,7 +51,7 @@ public class Account {
         return IdModule.builder()
                 .withUniqueIdentifier(getKid())
                 .withAccountNumber(card.getMaskedNr())
-                .withAccountName(card.getCardHolderName())
+                .withAccountName(productName)
                 .addIdentifier(AccountIdentifier.create(Type.PAYMENT_CARD_NUMBER, getKid()))
                 .setProductName(productName)
                 .build();
