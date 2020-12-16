@@ -28,12 +28,12 @@ public class CreatePaymentResponse {
     @JsonIgnore
     public PaymentResponse toTinkPaymentResponse(
             String paymentProduct, PaymentType paymentType, PaymentStatus status) {
-        long unscalledValue =
+        long unscaledValue =
                 Double.valueOf(Double.parseDouble(instructedAmount.getAmount()) * 100).longValue();
 
         ExactCurrencyAmount amount =
                 ExactCurrencyAmount.of(
-                        BigDecimal.valueOf(unscalledValue, 2), instructedAmount.getCurrency());
+                        BigDecimal.valueOf(unscaledValue, 2), instructedAmount.getCurrency());
 
         Payment.Builder buildingPaymentResponse =
                 new Payment.Builder()
