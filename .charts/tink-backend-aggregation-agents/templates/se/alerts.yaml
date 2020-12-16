@@ -91,12 +91,12 @@ spec:
   - alert: RefreshSuccessRateBelow90WithAttemptLimitSE
     expr: |
       # Successful attempts < 90% and >= 80%
-      (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="SE", provider_type!="test"}[30m])) by (className,provider)
-          / sum(increase(tink_agent_refresh_total{market="SE", provider_type!="test"}[30m])) by (className,provider) < 0.90)
-      and (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="SE", provider_type!="test"}[30m])) by (className,provider)
-              / sum(increase(tink_agent_refresh_total{market="SE", provider_type!="test"}[30m])) by (className,provider) >= 0.80)
+      (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="SE", provider_type!="test"}[30m])) by (className,provider,type)
+          / sum(increase(tink_agent_refresh_total{market="SE", provider_type!="test"}[30m])) by (className,provider,type) < 0.90)
+      and (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="SE", provider_type!="test"}[30m])) by (className,provider,type)
+              / sum(increase(tink_agent_refresh_total{market="SE", provider_type!="test"}[30m])) by (className,provider,type) >= 0.80)
       # At least this many attempts.
-        and sum(increase(tink_agent_refresh_total{market="SE", provider_type!="test"}[30m])) by (className,provider) > 40
+        and sum(increase(tink_agent_refresh_total{market="SE", provider_type!="test"}[30m])) by (className,provider,type) > 20
     for: 5m
     labels:
       severity: urgent
@@ -106,18 +106,18 @@ spec:
       description: {{ .Values.kibanaLink }}
         {{ .Values.grafanaLink }}
       summary: Refresh success rate is below 90% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-        the last 30 minutes.
+        the last 30 minutes for <{ $labels.type }>.
       tags: {{ .Values.thundercatsTags }}
 
   - alert: RefreshSuccessRateBelow80WithAttemptLimitSE
     expr: |
       # Successful attempts < 80% and >= 70%
-      (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="SE", provider_type!="test"}[30m])) by (className,provider)
-          / sum(increase(tink_agent_refresh_total{market="SE", provider_type!="test"}[30m])) by (className,provider) < 0.80)
-      and (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="SE", provider_type!="test"}[30m])) by (className,provider)
-              / sum(increase(tink_agent_refresh_total{market="SE", provider_type!="test"}[30m])) by (className,provider) >= 0.70)
+      (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="SE", provider_type!="test"}[30m])) by (className,provider,type)
+          / sum(increase(tink_agent_refresh_total{market="SE", provider_type!="test"}[30m])) by (className,provider,type) < 0.80)
+      and (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="SE", provider_type!="test"}[30m])) by (className,provider,type)
+              / sum(increase(tink_agent_refresh_total{market="SE", provider_type!="test"}[30m])) by (className,provider,type) >= 0.70)
       # At least this many attempts.
-        and sum(increase(tink_agent_refresh_total{market="SE", provider_type!="test"}[30m])) by (className,provider) > 40
+        and sum(increase(tink_agent_refresh_total{market="SE", provider_type!="test"}[30m])) by (className,provider,type) > 20
     for: 5m
     labels:
       severity: urgent
@@ -127,18 +127,18 @@ spec:
       description: {{ .Values.kibanaLink }}
         {{ .Values.grafanaLink }}
       summary: Refresh success rate is below 80% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-        the last 30 minutes.
+        the last 30 minutes for <{ $labels.type }>.
       tags: {{ .Values.thundercatsTags }}
 
   - alert: RefreshSuccessRateBelow70WithAttemptLimitSE
     expr: |
       # Successful attempts < 70% and >= 60%
-      (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="SE", provider_type!="test"}[30m])) by (className,provider)
-          / sum(increase(tink_agent_refresh_total{market="SE", provider_type!="test"}[30m])) by (className,provider) < 0.70)
-      and (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="SE", provider_type!="test"}[30m])) by (className,provider)
-              / sum(increase(tink_agent_refresh_total{market="SE", provider_type!="test"}[30m])) by (className,provider) >= 0.60)
+      (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="SE", provider_type!="test"}[30m])) by (className,provider,type)
+          / sum(increase(tink_agent_refresh_total{market="SE", provider_type!="test"}[30m])) by (className,provider,type) < 0.70)
+      and (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="SE", provider_type!="test"}[30m])) by (className,provider,type)
+              / sum(increase(tink_agent_refresh_total{market="SE", provider_type!="test"}[30m])) by (className,provider,type) >= 0.60)
       # At least this many attempts.
-        and sum(increase(tink_agent_refresh_total{market="SE", provider_type!="test"}[30m])) by (className,provider) > 40
+        and sum(increase(tink_agent_refresh_total{market="SE", provider_type!="test"}[30m])) by (className,provider,type) > 20
     for: 5m
     labels:
       severity: urgent
@@ -148,16 +148,16 @@ spec:
       description: {{ .Values.kibanaLink }}
         {{ .Values.grafanaLink }}
       summary: Refresh success rate is below 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-        the last 30 minutes.
+        the last 30 minutes for <{ $labels.type }>.
       tags: {{ .Values.thundercatsTags }}
 
   - alert: RefreshSuccessRateBelow60WithAttemptLimitSE
     expr: |
       # Successful attempts below 60%
-      (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="SE", provider_type!="test"}[30m])) by (className,provider)
-          / sum(increase(tink_agent_refresh_total{market="SE", provider_type!="test"}[30m])) by (className,provider) < 0.60)
+      (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="SE", provider_type!="test"}[30m])) by (className,provider,type)
+          / sum(increase(tink_agent_refresh_total{market="SE", provider_type!="test"}[30m])) by (className,provider,type) < 0.60)
       # At least this many attempts.
-        and sum(increase(tink_agent_refresh_total{market="SE", provider_type!="test"}[30m])) by (className,provider) > 40
+        and sum(increase(tink_agent_refresh_total{market="SE", provider_type!="test"}[30m])) by (className,provider,type) > 20
     for: 5m
     labels:
       severity: urgent
@@ -167,7 +167,7 @@ spec:
       description: {{ .Values.kibanaLink }}
         {{ .Values.grafanaLink }}
       summary: Refresh success rate is below 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-        the last 30 minutes.
+        the last 30 minutes for <{ $labels.type }>.
       tags: {{ .Values.thundercatsTags }}
 
   ### Bank side failures
