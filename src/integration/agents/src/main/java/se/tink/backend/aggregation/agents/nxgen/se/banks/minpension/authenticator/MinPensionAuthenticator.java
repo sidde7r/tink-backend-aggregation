@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.minpension.authenticator;
 
 import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
@@ -15,16 +16,11 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.minpension.authenticato
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticator;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
+@RequiredArgsConstructor
 public class MinPensionAuthenticator implements BankIdAuthenticator<String> {
     private final MinPensionApiClient minPensionApiClient;
     private final SessionStorage sessionStorage;
     private String autoStartToken;
-
-    public MinPensionAuthenticator(
-            MinPensionApiClient minPensionApiClient, SessionStorage sessionStorage) {
-        this.minPensionApiClient = minPensionApiClient;
-        this.sessionStorage = sessionStorage;
-    }
 
     @Override
     public String init(String ssn)

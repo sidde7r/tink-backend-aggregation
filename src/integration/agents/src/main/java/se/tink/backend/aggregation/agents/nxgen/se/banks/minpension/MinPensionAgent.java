@@ -32,7 +32,7 @@ public class MinPensionAgent extends NextGenerationAgent
         super(componentProvider);
         client.disableAggregatorHeader();
         client.disableSignatureRequestHeader();
-        minPensionApiClient = new MinPensionApiClient(client, sessionStorage);
+        minPensionApiClient = new MinPensionApiClient(client);
 
         final PensionAccountFetcher pensionAccountFetcher =
                 new PensionAccountFetcher(minPensionApiClient);

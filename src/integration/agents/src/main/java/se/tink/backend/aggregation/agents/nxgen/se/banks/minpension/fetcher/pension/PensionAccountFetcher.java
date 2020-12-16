@@ -3,17 +3,15 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.minpension.fetcher.pen
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.minpension.MinPensionApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.minpension.fetcher.pension.rpc.PensionAccountsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 
+@RequiredArgsConstructor
 public class PensionAccountFetcher implements AccountFetcher<InvestmentAccount> {
     private final MinPensionApiClient minPensionApiClient;
-
-    public PensionAccountFetcher(MinPensionApiClient minPensionApiClient) {
-        this.minPensionApiClient = minPensionApiClient;
-    }
 
     @Override
     public Collection<InvestmentAccount> fetchAccounts() {

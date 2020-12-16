@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.minpension;
 
 import javax.ws.rs.core.MediaType;
+import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.minpension.MinPensionConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.minpension.MinPensionConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.minpension.MinPensionConstants.Urls;
@@ -10,16 +11,10 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.minpension.authenticato
 import se.tink.backend.aggregation.agents.nxgen.se.banks.minpension.authenticator.rpc.UserTOCResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.minpension.fetcher.pension.rpc.PensionAccountsResponse;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
+@RequiredArgsConstructor
 public class MinPensionApiClient {
     private final TinkHttpClient client;
-    private final SessionStorage sessionStorage;
-
-    public MinPensionApiClient(TinkHttpClient client, SessionStorage sessionStorage) {
-        this.client = client;
-        this.sessionStorage = sessionStorage;
-    }
 
     public InitBankIdResponse initBankid() {
         return client.request(Urls.INIT_BANKID)
@@ -41,7 +36,7 @@ public class MinPensionApiClient {
         return client.request(Urls.FETCH_USER)
                 .accept(MediaType.APPLICATION_JSON)
                 .header(HeaderKeys.USER_AGENT, HeaderValues.USER_AGENT)
-                .options(UserTOCResponse.class);
+                .get(UserTOCResponse.class);
     }
 
     public String fetchSsn() {
