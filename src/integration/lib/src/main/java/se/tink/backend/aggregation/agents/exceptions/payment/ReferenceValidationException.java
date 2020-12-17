@@ -14,6 +14,10 @@ public class ReferenceValidationException extends PaymentValidationException {
         super(message);
     }
 
+    public ReferenceValidationException(String message, InternalStatus internalStatus) {
+        super(message, internalStatus);
+    }
+
     public ReferenceValidationException(
             String message, String path, InternalStatus internalStatus, Throwable cause) {
         super(message, path, internalStatus, cause);

@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
+import se.tink.backend.aggregation.agents.exceptions.payment.ReferenceValidationException;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.SebApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.SebConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.executor.payment.entities.AmountEntity;
@@ -62,44 +63,10 @@ public class SebPaymentExecutor implements PaymentExecutor, FetchablePaymentExec
                                 type, payment.getCreditor().getAccountIdentifierType())
                         .getValue();
 
-        final DebtorAccountEntity debtorAccountEntity =
-                DebtorAccountEntity.of(paymentRequest.getPayment().getDebtor().getAccountNumber());
-        final CreditorAccountEntity creditorAccountEntity =
-                CreditorAccountEntity.create(
-                        payment.getCreditor().getAccountNumber(), paymentProduct);
-
-        final AmountEntity amountEntity = AmountEntity.of(paymentRequest);
-
-        CreatePaymentRequest createPaymentRequest =
-                new CreatePaymentRequest.Builder()
-                        .withTemplateId(paymentProduct)
-                        .withCreditorAccount(creditorAccountEntity)
-                        .withDebtorAccount(debtorAccountEntity)
-                        .withExecutionDate(
-                                SebPaymentUtil.getExecutionDateOrCurrentDate(
-                                        payment, paymentProduct))
-                        .withAmount(amountEntity)
-                        .withCreditorName(payment.getCreditor().getName())
-                        .build();
-
-        RemittanceInformation remittanceInformation =
-                SebPaymentUtil.validateAndGetRemittanceInformation(paymentProduct, payment);
-        if (RemittanceInformationType.OCR.equals(remittanceInformation.getType())) {
-            createPaymentRequest.setRemittanceInformationStructured(
-                    new RemittanceInformationStructuredEntity()
-                            .createOCRRemittanceInformation(remittanceInformation.getValue()));
-        } else {
-            SebPaymentUtil.validateUnStructuredRemittanceInformation(
-                    payment.getRemittanceInformation().getValue());
-            createPaymentRequest.setRemittanceInformationUnstructured(
-                    payment.getRemittanceInformation().getValue());
-        }
-
-        CreatePaymentResponse createPaymentResponse =
-                apiClient.createPaymentInitiation(createPaymentRequest, paymentProduct);
-
+        CreatePaymentResponse createPaymentResponse = createPayment(paymentRequest, paymentProduct);
         PaymentStatus paymentStatus =
-                getPaymentStatus(createPaymentResponse.getPaymentId(), paymentProduct);
+                getPaymentStatusAfterCreatingPayment(
+                        paymentRequest, createPaymentResponse.getPaymentId(), paymentProduct);
 
         return createPaymentResponse.toTinkPaymentResponse(paymentProduct, type, paymentStatus);
     }
@@ -182,6 +149,69 @@ public class SebPaymentExecutor implements PaymentExecutor, FetchablePaymentExec
                 paymentListRequest.getPaymentRequestList().stream()
                         .map(paymentRequest -> new PaymentResponse(paymentRequest.getPayment()))
                         .collect(Collectors.toList()));
+    }
+
+    private CreatePaymentResponse createPayment(
+            PaymentRequest paymentRequest, String paymentProduct) throws PaymentException {
+        final Payment payment = paymentRequest.getPayment();
+
+        final DebtorAccountEntity debtorAccountEntity =
+                DebtorAccountEntity.of(paymentRequest.getPayment().getDebtor().getAccountNumber());
+        final CreditorAccountEntity creditorAccountEntity =
+                CreditorAccountEntity.create(
+                        payment.getCreditor().getAccountNumber(), paymentProduct);
+
+        final AmountEntity amountEntity = AmountEntity.of(paymentRequest);
+
+        CreatePaymentRequest createPaymentRequest =
+                new CreatePaymentRequest.Builder()
+                        .withTemplateId(paymentProduct)
+                        .withCreditorAccount(creditorAccountEntity)
+                        .withDebtorAccount(debtorAccountEntity)
+                        .withExecutionDate(
+                                SebPaymentUtil.getExecutionDateOrCurrentDate(
+                                        payment, paymentProduct))
+                        .withAmount(amountEntity)
+                        .withCreditorName(payment.getCreditor().getName())
+                        .build();
+
+        RemittanceInformation remittanceInformation =
+                SebPaymentUtil.validateAndGetRemittanceInformation(paymentProduct, payment);
+        if (RemittanceInformationType.OCR.equals(remittanceInformation.getType())) {
+            createPaymentRequest.setRemittanceInformationStructured(
+                    new RemittanceInformationStructuredEntity()
+                            .createOCRRemittanceInformation(remittanceInformation.getValue()));
+        } else {
+            SebPaymentUtil.validateUnStructuredRemittanceInformation(
+                    payment.getRemittanceInformation().getValue());
+            createPaymentRequest.setRemittanceInformationUnstructured(
+                    payment.getRemittanceInformation().getValue());
+        }
+
+        return apiClient.createPaymentInitiation(createPaymentRequest, paymentProduct);
+    }
+
+    private PaymentStatus getPaymentStatusAfterCreatingPayment(
+            PaymentRequest paymentRequest, String paymentId, String paymentProduct)
+            throws PaymentException {
+        getPaymentStatus(paymentId, paymentProduct);
+
+        try {
+            PaymentStatusResponse paymentStatusResponse =
+                    apiClient.getPaymentStatus(paymentId, paymentProduct);
+            return SebPaymentStatus.mapToTinkPaymentStatus(
+                    SebPaymentStatus.fromString(paymentStatusResponse.getTransactionStatus()));
+        } catch (ReferenceValidationException exception) {
+            // Remove the retry when the customers move to RI.
+            // https://tinkab.atlassian.net/browse/PAY1-1216
+            paymentRequest
+                    .getPayment()
+                    .getRemittanceInformation()
+                    .setType(RemittanceInformationType.UNSTRUCTURED);
+            createPayment(paymentRequest, paymentProduct);
+        }
+
+        return getPaymentStatus(paymentId, paymentProduct);
     }
 
     private Signer getSigner() {
