@@ -141,7 +141,7 @@ public final class SparebankenVestAgent extends NextGenerationAgent
         return new TransactionalAccountRefreshController(
                 metricRefreshController,
                 updateController,
-                SparebankenVestTransactionalAccountFetcher.create(apiClient, credentials),
+                SparebankenVestTransactionalAccountFetcher.create(apiClient),
                 transactionFetcherController);
     }
 
