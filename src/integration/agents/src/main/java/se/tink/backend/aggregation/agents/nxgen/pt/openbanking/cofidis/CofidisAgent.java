@@ -2,20 +2,20 @@ package se.tink.backend.aggregation.agents.nxgen.pt.openbanking.cofidis;
 
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.LOANS;
 
+import com.google.inject.Inject;
 import java.util.Collections;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
-import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsProgressiveBaseAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.fetcher.loans.SibsLoansFetcher;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
 @AgentCapabilities({LOANS})
 public final class CofidisAgent extends SibsProgressiveBaseAgent
@@ -23,11 +23,11 @@ public final class CofidisAgent extends SibsProgressiveBaseAgent
 
     private final LoanRefreshController loanRefreshController;
 
+    @Inject
     public CofidisAgent(
-            CredentialsRequest request,
-            AgentContext context,
+            AgentComponentProvider agentComponentProvider,
             AgentsServiceConfiguration configuration) {
-        super(request, context, configuration);
+        super(agentComponentProvider, configuration);
         SibsLoansFetcher fetcher = new SibsLoansFetcher(apiClient, request, userState);
         loanRefreshController =
                 new LoanRefreshController(

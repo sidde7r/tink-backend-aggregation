@@ -35,6 +35,7 @@ java_library(
         "//src/libraries/date",
         "//src/libraries/serialization",
         "//third_party:com_github_rholder_guava_retrying",
+        "//third_party:com_google_inject_guice",
         "//third_party:com_sun_jersey_jersey_core",
         "//third_party:commons_codec_commons_codec",
         "//third_party:org_apache_commons_commons_lang3",
