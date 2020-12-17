@@ -16,7 +16,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.dto.CreditorAccount;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.dto.DebtorAccount;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.dto.InstructedAmount;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.dto.RemittanceInformation;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.dto.RemittanceInformationDto;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domestic.dto.DomesticPaymentConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domestic.dto.DomesticPaymentConsentResponseData;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domestic.dto.DomesticPaymentInitiation;
@@ -42,6 +42,7 @@ import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
+import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 public class UkOpenBankingPaymentTestFixtures {
 
@@ -74,7 +75,43 @@ public class UkOpenBankingPaymentTestFixtures {
     private static final String ID_TOKEN = "DUMMY_ID_TOKEN";
 
     public static Payment createPayment() {
-        return createPaymentWithStatus(PaymentStatus.PENDING);
+        final RemittanceInformation remittanceInformation =
+                createUnstructuredRemittanceInformation();
+        return createPaymentWithRemittanceInfo(remittanceInformation);
+    }
+
+    public static Payment createPaymentWithRemittanceInfo(
+            RemittanceInformation remittanceInformation) {
+        return createPaymentWithStatusAndRemittanceInfo(
+                PaymentStatus.PENDING, remittanceInformation);
+    }
+
+    public static RemittanceInformation createUnstructuredRemittanceInformation() {
+        final RemittanceInformation remittanceInformationMock = mock(RemittanceInformation.class);
+
+        when(remittanceInformationMock.getValue()).thenReturn(REMITTANCE_INFORMATION);
+        when(remittanceInformationMock.getType())
+                .thenReturn(RemittanceInformationType.UNSTRUCTURED);
+
+        return remittanceInformationMock;
+    }
+
+    public static RemittanceInformation createReferenceRemittanceInformation() {
+        final RemittanceInformation remittanceInformationMock = mock(RemittanceInformation.class);
+
+        when(remittanceInformationMock.getValue()).thenReturn(REMITTANCE_INFORMATION);
+        when(remittanceInformationMock.getType()).thenReturn(RemittanceInformationType.REFERENCE);
+
+        return remittanceInformationMock;
+    }
+
+    public static RemittanceInformation createNoTypeRemittanceInformation() {
+        final RemittanceInformation remittanceInformationMock = mock(RemittanceInformation.class);
+
+        when(remittanceInformationMock.getValue()).thenReturn(REMITTANCE_INFORMATION);
+        when(remittanceInformationMock.getType()).thenReturn(null);
+
+        return remittanceInformationMock;
     }
 
     public static DebtorAccount createDebtorAccount() {
@@ -92,8 +129,19 @@ public class UkOpenBankingPaymentTestFixtures {
                 .build();
     }
 
-    public static RemittanceInformation createRemittanceInformation() {
-        return RemittanceInformation.ofUnstructuredAndReference(REMITTANCE_INFORMATION);
+    public static RemittanceInformationDto createNoTypeRemittanceInformationDto() {
+        return RemittanceInformationDto.builder()
+                .reference(REMITTANCE_INFORMATION)
+                .unstructured(REMITTANCE_INFORMATION)
+                .build();
+    }
+
+    public static RemittanceInformationDto createReferenceRemittanceInformationDto() {
+        return RemittanceInformationDto.builder().reference(REMITTANCE_INFORMATION).build();
+    }
+
+    public static RemittanceInformationDto createUnstructuredRemittanceInformationDto() {
+        return RemittanceInformationDto.builder().unstructured(REMITTANCE_INFORMATION).build();
     }
 
     public static InstructedAmount createInstructedAmount() {
@@ -352,18 +400,6 @@ public class UkOpenBankingPaymentTestFixtures {
         return creditorMock;
     }
 
-    private static se.tink.libraries.transfer.rpc.RemittanceInformation
-            createUnstructuredRemittanceInformation() {
-        final se.tink.libraries.transfer.rpc.RemittanceInformation remittanceInformationMock =
-                mock(se.tink.libraries.transfer.rpc.RemittanceInformation.class);
-
-        when(remittanceInformationMock.getValue()).thenReturn(REMITTANCE_INFORMATION);
-        when(remittanceInformationMock.getType())
-                .thenReturn(RemittanceInformationType.UNSTRUCTURED);
-
-        return remittanceInformationMock;
-    }
-
     private static AccountIdentifier createAccountIdentifier() {
         final AccountIdentifier accountIdentifierMock = mock(AccountIdentifier.class);
 
@@ -431,7 +467,8 @@ public class UkOpenBankingPaymentTestFixtures {
         final DomesticPaymentInitiation initiationMock = mock(DomesticPaymentInitiation.class);
         final DebtorAccount debtorAccountMock = createDebtorAccount();
         final CreditorAccount creditorAccountMock = createCreditorAccount();
-        final RemittanceInformation remittanceInformationMock = createRemittanceInformation();
+        final RemittanceInformationDto remittanceInformationMock =
+                createNoTypeRemittanceInformationDto();
         final InstructedAmount instructedAmountMock = createInstructedAmount();
 
         when(initiationMock.getDebtorAccount()).thenReturn(debtorAccountMock);
@@ -448,7 +485,8 @@ public class UkOpenBankingPaymentTestFixtures {
                 mock(DomesticScheduledPaymentInitiation.class);
         final DebtorAccount debtorAccountMock = createDebtorAccount();
         final CreditorAccount creditorAccountMock = createCreditorAccount();
-        final RemittanceInformation remittanceInformationMock = createRemittanceInformation();
+        final RemittanceInformationDto remittanceInformationMock =
+                createNoTypeRemittanceInformationDto();
         final InstructedAmount instructedAmountMock = createInstructedAmount();
 
         when(initiationMock.getDebtorAccount()).thenReturn(debtorAccountMock);
@@ -478,18 +516,16 @@ public class UkOpenBankingPaymentTestFixtures {
         return storage;
     }
 
-    private static Payment createPaymentWithStatus(PaymentStatus paymentStatus) {
+    private static Payment createPaymentWithStatusAndRemittanceInfo(
+            PaymentStatus paymentStatus, RemittanceInformation remittanceInformation) {
         final Payment paymentMock = createPayment(EXECUTION_DATE);
         final Debtor debtorMock = createDebtor();
         final Creditor creditorMock = createCreditor();
-        final se.tink.libraries.transfer.rpc.RemittanceInformation
-                unstructuredRemittanceInformationMock = createUnstructuredRemittanceInformation();
         final ExactCurrencyAmount exactCurrencyAmountMock = createExactCurrencyAmount();
 
         when(paymentMock.getDebtor()).thenReturn(debtorMock);
         when(paymentMock.getCreditor()).thenReturn(creditorMock);
-        when(paymentMock.getRemittanceInformation())
-                .thenReturn(unstructuredRemittanceInformationMock);
+        when(paymentMock.getRemittanceInformation()).thenReturn(remittanceInformation);
         when(paymentMock.getExactCurrencyAmountFromField()).thenReturn(exactCurrencyAmountMock);
         when(paymentMock.getCurrency()).thenReturn(CURRENCY);
         when(paymentMock.getUniqueId()).thenReturn(INSTRUCTION_ID);
@@ -501,6 +537,9 @@ public class UkOpenBankingPaymentTestFixtures {
     }
 
     private static Payment createPaymentForConsent() {
-        return createPaymentWithStatus(PaymentStatus.CREATED);
+        final RemittanceInformation remittanceInformation =
+                createUnstructuredRemittanceInformation();
+        return createPaymentWithStatusAndRemittanceInfo(
+                PaymentStatus.CREATED, remittanceInformation);
     }
 }

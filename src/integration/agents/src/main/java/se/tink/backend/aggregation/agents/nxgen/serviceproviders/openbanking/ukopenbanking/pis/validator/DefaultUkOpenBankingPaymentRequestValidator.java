@@ -17,6 +17,9 @@ public class DefaultUkOpenBankingPaymentRequestValidator
                 paymentRequest.getPayment().getRemittanceInformation();
 
         RemittanceInformationValidator.validateSupportedRemittanceInformationTypesOrThrow(
-                remittanceInformation, null, RemittanceInformationType.UNSTRUCTURED);
+                remittanceInformation,
+                null,
+                RemittanceInformationType.UNSTRUCTURED,
+                RemittanceInformationType.REFERENCE);
     }
 }

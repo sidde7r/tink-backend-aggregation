@@ -7,7 +7,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.dto.CreditorAccount;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.dto.DebtorAccount;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.dto.InstructedAmount;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.dto.RemittanceInformation;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.dto.RemittanceInformationDto;
 import se.tink.backend.aggregation.nxgen.core.account.GenericTypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.libraries.account.AccountIdentifier;
@@ -21,6 +21,7 @@ import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
+import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 public abstract class PaymentConverterBase {
 
@@ -59,13 +60,24 @@ public abstract class PaymentConverterBase {
                 .orElse(null);
     }
 
-    public RemittanceInformation getRemittanceInformation(Payment payment) {
-        final String unstructuredRemittanceInformation =
+    public RemittanceInformationDto getRemittanceInformationDto(Payment payment) {
+        final String value =
                 Optional.ofNullable(payment.getRemittanceInformation())
-                        .map(se.tink.libraries.transfer.rpc.RemittanceInformation::getValue)
+                        .map(RemittanceInformation::getValue)
                         .orElse("");
 
-        return RemittanceInformation.ofUnstructuredAndReference(unstructuredRemittanceInformation);
+        final RemittanceInformationType type =
+                Optional.ofNullable(payment.getRemittanceInformation())
+                        .map(RemittanceInformation::getType)
+                        .orElse(null);
+
+        if (type == RemittanceInformationType.UNSTRUCTURED) {
+            return RemittanceInformationDto.builder().unstructured(value).build();
+        } else if (type == RemittanceInformationType.REFERENCE) {
+            return RemittanceInformationDto.builder().reference(value).build();
+        } else {
+            return RemittanceInformationDto.builder().unstructured(value).reference(value).build();
+        }
     }
 
     public InstructedAmount getInstructedAmount(Payment payment) {

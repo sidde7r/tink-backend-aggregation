@@ -126,8 +126,6 @@ Transfer-Encoding: chunked
 
 }
 
-
-
 REQUEST 2
 POST https://oba-auth.revolut.com/token
 Content-Type: application/x-www-form-urlencoded
@@ -163,7 +161,7 @@ X-Aggregator: Tink Testing
 x-fapi-financial-id: 001580000103UAvAAM
 x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
 
-{"Risk":{"PaymentContextCode":"Other"},"Data":{"Initiation":{"InstructionIdentification":"0a44fcefbd524c5383707c3bbb77809a","EndToEndIdentification":"0a44fcefbd524c5383707c3bbb77809","InstructedAmount":{"Amount":"1.00","Currency":"GBP"},"CreditorAccount":{"SchemeName":"UK.OBIE.SortCodeAccountNumber","Identification":"30654138867868","Name":"Amnesty"},"RemittanceInformation":{"Unstructured":"Donation","Reference":"Donation"}}}}
+{"Risk":{"PaymentContextCode":"Other"},"Data":{"Initiation":{"InstructionIdentification":"0a44fcefbd524c5383707c3bbb77809a","EndToEndIdentification":"0a44fcefbd524c5383707c3bbb77809","InstructedAmount":{"Amount":"1.00","Currency":"GBP"},"CreditorAccount":{"SchemeName":"UK.OBIE.SortCodeAccountNumber","Identification":"30654138867868","Name":"Amnesty"},"RemittanceInformation":{"Unstructured":"Donation"}}}}
 
 RESPONSE 3
 201
@@ -211,8 +209,6 @@ Transfer-Encoding: chunked
 
 }
 
-
-
 REQUEST 5
 POST https://oba-auth.revolut.com/token
 Content-Type: application/x-www-form-urlencoded
@@ -248,7 +244,7 @@ X-Aggregator: Tink Testing
 x-fapi-financial-id: 001580000103UAvAAM
 x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
 
-{"Risk":{"PaymentContextCode":"Other"},"Data":{"ConsentId":"1d955df7-f304-41de-a9bb-a330702f3551","Initiation":{"RemittanceInformation":{"Unstructured":"Donation","Reference":"Donation"},"EndToEndIdentification":"0a44fcefbd524c5383707c3bbb77809","InstructionIdentification":"0a44fcefbd524c5383707c3bbb77809a","CreditorAccount":{"SchemeName":"UK.OBIE.SortCodeAccountNumber","Identification":"30654138867868","Name":"Amnesty"},"InstructedAmount":{"Amount":"1.00","Currency":"GBP"}}}}
+{"Risk":{"PaymentContextCode":"Other"},"Data":{"ConsentId":"1d955df7-f304-41de-a9bb-a330702f3551","Initiation":{"RemittanceInformation":{"Unstructured":"Donation"},"EndToEndIdentification":"0a44fcefbd524c5383707c3bbb77809","InstructionIdentification":"0a44fcefbd524c5383707c3bbb77809a","CreditorAccount":{"SchemeName":"UK.OBIE.SortCodeAccountNumber","Identification":"30654138867868","Name":"Amnesty"},"InstructedAmount":{"Amount":"1.00","Currency":"GBP"}}}}
 
 RESPONSE 6
 201

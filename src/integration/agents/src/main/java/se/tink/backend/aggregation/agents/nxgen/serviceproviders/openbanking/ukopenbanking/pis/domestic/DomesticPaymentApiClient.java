@@ -142,7 +142,8 @@ public class DomesticPaymentApiClient implements UkOpenBankingPaymentApiClient {
                 .debtorAccount(domesticPaymentConverter.getDebtorAccount(payment))
                 .creditorAccount(domesticPaymentConverter.getCreditorAccount(payment))
                 .instructedAmount(domesticPaymentConverter.getInstructedAmount(payment))
-                .remittanceInformation(domesticPaymentConverter.getRemittanceInformation(payment))
+                .remittanceInformation(
+                        domesticPaymentConverter.getRemittanceInformationDto(payment))
                 .instructionIdentification(instructionIdentification)
                 .endToEndIdentification(endToEndIdentification)
                 .build();
