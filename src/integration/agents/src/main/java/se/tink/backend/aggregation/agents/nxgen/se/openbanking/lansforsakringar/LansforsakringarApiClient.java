@@ -4,10 +4,12 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
+import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.FormValues;
@@ -34,12 +36,14 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.fetcher.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.fetcher.rpc.GetBalancesResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.fetcher.rpc.GetTransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.rpc.ErrorResponse;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public final class LansforsakringarApiClient {
@@ -170,15 +174,37 @@ public final class LansforsakringarApiClient {
     }
 
     public OAuth2Token postToken(Object form, URL tokenUrl) {
+        try {
+            return client.request(tokenUrl)
+                    .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID())
+                    .header(HeaderKeys.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_TYPE)
+                    .header(HeaderKeys.CACHE_CONTROL, HeaderValues.NO_CACHE)
+                    .accept(MediaType.APPLICATION_JSON)
+                    .body(form)
+                    .post(AuthenticateResponse.class)
+                    .toTinkToken();
+        } catch (HttpResponseException e) {
+            tryToHandleTokenFetchFailureDueToBankIssuesAndExpiredAuthCode(e);
+            throw e;
+        }
+    }
 
-        return client.request(tokenUrl)
-                .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID())
-                .header(HeaderKeys.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_TYPE)
-                .header(HeaderKeys.CACHE_CONTROL, HeaderValues.NO_CACHE)
-                .accept(MediaType.APPLICATION_JSON)
-                .body(form)
-                .post(AuthenticateResponse.class)
-                .toTinkToken();
+    /*
+    LF has some issues with replying after request is sent. We are trying to retry that multiple times and when
+    finally they replies - we are receiving message that authorization is expired.
+
+    Because our implementation is correct, there is almost no chance that EXPIRED_AUTHORIZATION_CODE message will be returned
+    in the first attempt. It covers only retry situation.
+     */
+    private void tryToHandleTokenFetchFailureDueToBankIssuesAndExpiredAuthCode(
+            HttpResponseException e) {
+        if (e.getResponse().getStatus() == HttpStatus.SC_BAD_REQUEST) {
+            ErrorResponse errorResponse = e.getResponse().getBody(ErrorResponse.class);
+            if (ErrorMessages.EXPIRED_AUTHORIZATION_CODE.equals(
+                    errorResponse.getErrorDescription())) {
+                throw BankServiceError.BANK_SIDE_FAILURE.exception();
+            }
+        }
     }
 
     public GetAccountsResponse getAccounts() {

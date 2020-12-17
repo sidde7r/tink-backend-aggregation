@@ -1,19 +1,18 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.rpc;
 
-import java.util.List;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.authenticator.rpc.TppMessage;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import lombok.Getter;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
+@Getter
+@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 @JsonObject
 public class ErrorResponse {
+    @JsonProperty("error")
+    private String error;
 
-    private List<TppMessage> tppMessages;
-
-    public List<TppMessage> getTppMessages() {
-        return tppMessages;
-    }
-
-    public boolean isAnyServiceBlocked() {
-        return tppMessages.stream().anyMatch(TppMessage::isServiceBlocked);
-    }
+    @JsonProperty("error_description")
+    private String errorDescription;
 }
