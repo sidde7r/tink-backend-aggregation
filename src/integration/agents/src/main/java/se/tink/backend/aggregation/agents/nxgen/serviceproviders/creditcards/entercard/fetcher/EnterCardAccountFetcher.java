@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.entercard.fetcher;
 
 import java.util.Collection;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.entercard.EnterCardApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.entercard.fetcher.rpc.UserResponse;
@@ -25,6 +26,8 @@ public class EnterCardAccountFetcher implements AccountFetcher<CreditCardAccount
                                 apiClient
                                         .fetchCardAccount(accountId)
                                         .toCreditCardAccount(response.getUser(), accountId))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .collect(Collectors.toList());
     }
 }

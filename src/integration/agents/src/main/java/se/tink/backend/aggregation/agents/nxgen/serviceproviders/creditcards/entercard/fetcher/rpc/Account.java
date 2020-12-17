@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.en
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.entercard.EnterCardConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
@@ -27,35 +28,41 @@ public class Account {
     private String kID;
     private String defaultPayableAmount;
     private String kid;
+    private String finAccountStatus;
 
-    public CreditCardAccount toCreditCardAccount(User user, String accountId) {
+    public Optional<CreditCardAccount> toCreditCardAccount(User user, String accountId) {
+
+        if (isAccountClosed()) {
+            return Optional.empty();
+        }
 
         final Card card = getPrimaryCard(user);
 
-        return CreditCardAccount.nxBuilder()
-                .withCardDetails(
-                        CreditCardModule.builder()
-                                .withCardNumber(card.getMaskedNr())
-                                .withBalance(
-                                        ExactCurrencyAmount.of(
-                                                usedCredit, EnterCardConstants.CURRENCY))
-                                .withAvailableCredit(
-                                        ExactCurrencyAmount.of(
-                                                openToBuy, EnterCardConstants.CURRENCY))
-                                .withCardAlias(card.getCardHolderName())
-                                .build())
-                .withInferredAccountFlags()
-                .withId(
-                        IdModule.builder()
-                                .withUniqueIdentifier(getKid())
-                                .withAccountNumber(card.getMaskedNr())
-                                .withAccountName(card.getCardHolderName())
-                                .addIdentifier(
-                                        AccountIdentifier.create(
-                                                Type.PAYMENT_CARD_NUMBER, getKid()))
-                                .setProductName(productName)
-                                .build())
-                .setApiIdentifier(accountId)
+        return Optional.of(
+                CreditCardAccount.nxBuilder()
+                        .withCardDetails(buildCreditCardModule(card))
+                        .withInferredAccountFlags()
+                        .withId(buildIdModule(card))
+                        .setApiIdentifier(accountId)
+                        .build());
+    }
+
+    private IdModule buildIdModule(Card card) {
+        return IdModule.builder()
+                .withUniqueIdentifier(getKid())
+                .withAccountNumber(card.getMaskedNr())
+                .withAccountName(productName)
+                .addIdentifier(AccountIdentifier.create(Type.PAYMENT_CARD_NUMBER, getKid()))
+                .setProductName(productName)
+                .build();
+    }
+
+    private CreditCardModule buildCreditCardModule(Card card) {
+        return CreditCardModule.builder()
+                .withCardNumber(card.getMaskedNr())
+                .withBalance(ExactCurrencyAmount.of(usedCredit, EnterCardConstants.CURRENCY))
+                .withAvailableCredit(ExactCurrencyAmount.of(openToBuy, EnterCardConstants.CURRENCY))
+                .withCardAlias(card.getCardHolderName())
                 .build();
     }
 
@@ -72,5 +79,9 @@ public class Account {
 
     public String getKid() {
         return kid.substring(0, kid.length() - 1);
+    }
+
+    private boolean isAccountClosed() {
+        return EnterCardConstants.AccountStatus.CLOSED.equalsIgnoreCase(finAccountStatus);
     }
 }
