@@ -1,45 +1,22 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.authenticator.rpc;
 
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
+@Getter
+@ToString
+@EqualsAndHashCode
+@NoArgsConstructor
+@AllArgsConstructor
 public class ErrorResponse {
 
     private int errorCode;
     private String errorMessage;
     private String debugMessage;
     private String status;
-
-    public int getErrorCode() {
-        return errorCode;
-    }
-
-    public String getErrorMessage() {
-        return errorMessage;
-    }
-
-    public String getDebugMessage() {
-        return debugMessage;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    @Override
-    public String toString() {
-        return "ErrorResponse{"
-                + "errorCode="
-                + errorCode
-                + ", errorMessage='"
-                + errorMessage
-                + '\''
-                + ", debugMessage='"
-                + debugMessage
-                + '\''
-                + ", status='"
-                + status
-                + '\''
-                + '}';
-    }
 }

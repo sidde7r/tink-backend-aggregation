@@ -24,6 +24,7 @@ import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.authenticator.sec
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.authenticator.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.keycard.KeyCardAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.keycard.KeyCardInitValues;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
 public class JyskeKeyCardAuthenticator implements KeyCardAuthenticator, AutoAuthenticator {
 
@@ -102,8 +103,12 @@ public class JyskeKeyCardAuthenticator implements KeyCardAuthenticator, AutoAuth
                         password,
                         challengeEntity.getSecurityDevice());
 
-        NemIdResponse enrollment;
-        enrollment = apiClient.nemIdEnroll(enrollEntity, token);
+        NemIdResponse enrollment = null;
+        try {
+            enrollment = apiClient.nemIdEnroll(enrollEntity, token);
+        } catch (HttpResponseException httpResponseException) {
+            new JyskeKeyCardExceptionHandler(httpResponseException).handle();
+        }
 
         NemIdInstallIdEntity installIdEntity =
                 new Decryptor(token).read(enrollment, NemIdInstallIdEntity.class);
@@ -125,9 +130,7 @@ public class JyskeKeyCardAuthenticator implements KeyCardAuthenticator, AutoAuth
         String password = credentials.getField(Field.Key.PASSWORD);
 
         Token token =
-                persistentStorage
-                        .getToken()
-                        .orElseThrow(() -> SessionError.SESSION_EXPIRED.exception());
+                persistentStorage.getToken().orElseThrow(SessionError.SESSION_EXPIRED::exception);
         apiClient.nemIdInit(token);
         String installId = persistentStorage.getInstallId();
 

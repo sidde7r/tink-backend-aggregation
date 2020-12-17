@@ -8,9 +8,10 @@ public enum SupplementalInfoError implements AgentError {
     WAIT_TIMEOUT(
             new LocalizableKey(
                     "A supplemental information was not provided within the given time")),
-    NO_VALID_CODE(new LocalizableKey("You have not entered a valid code. Please try again"));
+    NO_VALID_CODE(new LocalizableKey("You have not entered a valid code. Please try again")),
+    UNKNOWN(new LocalizableKey("Unknown error"));
 
-    private LocalizableKey userMessage;
+    private final LocalizableKey userMessage;
 
     SupplementalInfoError(LocalizableKey userMessage) {
         this.userMessage = userMessage;
