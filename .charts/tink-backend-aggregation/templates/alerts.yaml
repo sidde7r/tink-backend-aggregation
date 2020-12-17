@@ -59,7 +59,7 @@ spec:
       description: No messages has been consumed from the Automatic Refresh Queue for the past 15 minutes.
 
   - alert: HighNumberOfRetriesTowardAggregationController
-    expr: sum(increase(tink_aggregation_controller_retries_total{app="aggregation-service", retries!="0"}[15m]))/sum(increase(tink_aggregation_controller_retries_total{app="aggregation-service", retries="0"}[15m])) > 0.1
+    expr: sum(increase(tink_aggregation_controller_retries_total{app="aggregation-service", retries="3"}[15m]))/sum(increase(tink_aggregation_controller_retries_total{app="aggregation-service", retries="0"}[15m])) > 0.1
     for: 5m
     labels:
       severity: urgent
