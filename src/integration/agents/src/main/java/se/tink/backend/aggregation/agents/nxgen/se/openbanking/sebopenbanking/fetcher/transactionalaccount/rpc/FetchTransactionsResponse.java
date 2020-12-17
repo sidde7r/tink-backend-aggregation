@@ -2,13 +2,15 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.f
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.SebApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.fetcher.transactionalaccount.entities.TransactionPaginationLinksEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.fetcher.transactionalaccount.entities.TransactionsEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
 
 @JsonObject
 public class FetchTransactionsResponse {
@@ -27,11 +29,10 @@ public class FetchTransactionsResponse {
 
     @JsonIgnore
     public List<Transaction> getTinkTransactions(SebApiClient apiClient) {
-        return transactions.getTransactions(apiClient);
-    }
-
-    @JsonIgnore
-    public List<UpcomingTransaction> getUpcomingTransactions() {
-        return transactions.getUpcomingTransactions();
+        return Stream.of(
+                        transactions.getPendingTransactions(),
+                        transactions.getTransactions(apiClient))
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList());
     }
 }
