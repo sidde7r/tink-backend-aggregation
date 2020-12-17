@@ -8,6 +8,7 @@ import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.AuthenticationStates;
@@ -74,9 +75,8 @@ public class BbvaAuthenticator implements MultiFactorAuthenticator {
     private boolean isTwoFactorAuthenticationNeeded(String authenticationState) {
         if (!request.isManual()
                 && authenticationState.equalsIgnoreCase(AuthenticationStates.GO_ON)) {
-            // TODO change it in future, throwing RuntimeException only because EVO asked for
-            // TEMPORARY_ERROR instead of AUTHENTICATION_ERROR
-            throw new RuntimeException("SCA request during auto refresh, aborting authentication");
+            throw BankServiceError.SESSION_TERMINATED.exception(
+                    "SCA request during auto refresh, aborting authentication");
         }
         return authenticationState.equalsIgnoreCase(AuthenticationStates.GO_ON)
                 && request.isManual();
