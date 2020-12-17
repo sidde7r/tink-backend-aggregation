@@ -307,6 +307,7 @@ public class Field {
         CORPORATE_ID("psu-corporate-id"),
         NATIONAL_ID_NUMBER("national-id-number"),
         DATE_OF_BIRTH("date-of-birth"),
+        SECURITY_NUMBER("security-number"),
 
         // Supplemental field names.
         ADD_BENEFICIARY_INPUT("addbeneficiaryinput"),
