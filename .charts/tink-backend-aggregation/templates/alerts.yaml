@@ -57,5 +57,15 @@ spec:
       who: aggregation-agent-platform
     annotations:
       description: No messages has been consumed from the Automatic Refresh Queue for the past 15 minutes.
+
+  - alert: HighNumberOfRetriesTowardAggregationController
+    expr: sum(increase(tink_aggregation_controller_retries_total{app="aggregation-service", retries!="0"}[15m]))/sum(increase(tink_aggregation_controller_retries_total{app="aggregation-service", retries="0"}[15m])) > 0.1
+    for: 5m
+    labels:
+      severity: urgent
+      priority: P2
+      who: aggregation-agent-platform
+    annotations:
+      description: At least 10 % of all requests toward Aggregation Controller had to be retried (and possibly timed out)
   {{- end }}
 {{ end }}
