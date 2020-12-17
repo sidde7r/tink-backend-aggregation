@@ -139,6 +139,8 @@ public abstract class LansforsakringarConstants {
         public static final String UNSUPPORTED_PAYMENT_TYPE = "Payment type is not supported.";
         public static final String MISSING_TOKEN = "Failed to retrieve access token.";
         public static final String SERVICE_BLOCKED = "Service_blocked";
+        public static final String EXPIRED_AUTHORIZATION_CODE =
+                "Authorization code is invalid or expired.";
     }
 
     public class IdTags {
