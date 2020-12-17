@@ -1577,11 +1577,11 @@ spec:
 
     - alert: AgentRefreshesBelow60Greater50DueToBankServerErrorWithRateLimitNO
       expr: |
-        (sum by (className) (tink_agent_refresh_total{provider_type!="test", {{ .Values.bankErrorsRefresh }}, market="NO"}))
-            / (sum by (className) (tink_agent_refresh_total{provider_type!="test", market="NO"})) < 0.6
-        and (sum by (className) (tink_agent_refresh_total{provider_type!="test", {{ .Values.bankErrorsRefresh }}, market="NO"}))
-            / (sum by (className) (tink_agent_refresh_total{provider_type!="test", market="NO"})) >= 0.5
-         and sum by (className) (tink_agent_refresh_total{provider_type!="test", market="NO"}) > 4
+        (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.bankErrorsRefresh }}, market="NO"}))
+            / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="NO"})) < 0.6
+        and (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.bankErrorsRefresh }}, market="NO"}))
+            / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="NO"})) >= 0.5
+         and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="NO"}) > 4
       for: 5m
       labels:
         severity: urgent
@@ -1591,16 +1591,16 @@ spec:
         description: {{ .Values.kibanaLink }}
           {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is between 50 - 60% because of bank issues ( <{ $value }> ) for <{ $labels.className }>
-          the last 30 minutes.
+          the last 30 minutes for <{ $labels.type }>
         tags: {{ .Values.teletubbiesTags }}
 
     - alert: AgentRefreshesBelow50Greater40DueToBankServerErrorWithRateLimitNO
       expr: |
-        (sum by (className) (tink_agent_refresh_total{provider_type!="test", {{ .Values.bankErrorsRefresh }}, market="NO"}))
-            / (sum by (className) (tink_agent_refresh_total{provider_type!="test", market="NO"})) < 0.5
-        and (sum by (className) (tink_agent_refresh_total{provider_type!="test", {{ .Values.bankErrorsRefresh }}, market="NO"}))
-            / (sum by (className) (tink_agent_refresh_total{provider_type!="test", market="NO"})) >= 0.4
-         and sum by (className) (tink_agent_refresh_total{provider_type!="test", market="NO"}) > 4
+        (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.bankErrorsRefresh }}, market="NO"}))
+            / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="NO"})) < 0.5
+        and (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.bankErrorsRefresh }}, market="NO"}))
+            / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="NO"})) >= 0.4
+         and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="NO"}) > 4
       for: 5m
       labels:
         severity: urgent
@@ -1610,16 +1610,16 @@ spec:
         description: {{ .Values.kibanaLink }}
           {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is between 40 - 50% because of bank issues ( <{ $value }> ) for <{ $labels.className }>
-          the last 30 minutes.
+          the last 30 minutes for <{ $labels.type }>
         tags: {{ .Values.teletubbiesTags }}
 
     - alert: AgentRefreshesBelow40Greater30DueToBankServerErrorWithRateLimitNO
       expr: |
-        (sum by (className) (tink_agent_refresh_total{provider_type!="test", {{ .Values.bankErrorsRefresh }}, market="NO"}))
-            / (sum by (className) (tink_agent_refresh_total{provider_type!="test", market="NO"})) < 0.4
-        and (sum by (className) (tink_agent_refresh_total{provider_type!="test", {{ .Values.bankErrorsRefresh }}, market="NO"}))
-            / (sum by (className) (tink_agent_refresh_total{provider_type!="test", market="NO"})) >= 0.3
-         and sum by (className) (tink_agent_refresh_total{provider_type!="test", market="NO"}) > 4
+        (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.bankErrorsRefresh }}, market="NO"}))
+            / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="NO"})) < 0.4
+        and (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.bankErrorsRefresh }}, market="NO"}))
+            / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="NO"})) >= 0.3
+         and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="NO"}) > 4
       for: 5m
       labels:
         severity: urgent
@@ -1629,14 +1629,14 @@ spec:
         description: {{ .Values.kibanaLink }}
           {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is between 30 - 40% because of bank issues ( <{ $value }> ) for <{ $labels.className }>
-          the last 30 minutes.
+          the last 30 minutes for <{ $labels.type }>
         tags: {{ .Values.teletubbiesTags }}
 
     - alert: AgentRefreshesBelow30DueToBankServerErrorWithRateLimitNO
       expr: |
-        (sum by (className) (tink_agent_refresh_total{provider_type!="test", {{ .Values.bankErrorsRefresh }}, market="NO"}))
-            / (sum by (className) (tink_agent_refresh_total{provider_type!="test", market="NO"})) < 0.3
-         and sum by (className) (tink_agent_refresh_total{provider_type!="test", market="NO"}) > 4
+        (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.bankErrorsRefresh }}, market="NO"}))
+            / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="NO"})) < 0.3
+         and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="NO"}) > 4
       for: 5m
       labels:
         severity: urgent
@@ -1646,7 +1646,7 @@ spec:
         description: {{ .Values.kibanaLink }}
           {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is below 30% because of bank issues ( <{ $value }> ) for <{ $labels.className }>
-          the last 30 minutes.
+          the last 30 minutes for <{ $labels.type }>
         tags: {{ .Values.teletubbiesTags }}
 
     #########################################
@@ -1655,11 +1655,11 @@ spec:
 
     - alert: AgentRefreshesBelow60Greater50DueToAgentServerErrorWithRateLimitNO
       expr: |
-        (sum by (className) (tink_agent_refresh_total{provider_type!="test", {{ .Values.agentErrorsRefresh }}, market="NO"}))
-            / (sum by (className) (tink_agent_refresh_total{provider_type!="test", market="NO"})) < 0.6
-        and (sum by (className) (tink_agent_refresh_total{provider_type!="test", {{ .Values.agentErrorsRefresh }}, market="NO"}))
-            / (sum by (className) (tink_agent_refresh_total{provider_type!="test", market="NO"})) >= 0.5
-         and sum by (className) (tink_agent_refresh_total{provider_type!="test", market="NO"}) > 4
+        (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.agentErrorsRefresh }}, market="NO"}))
+            / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="NO"})) < 0.6
+        and (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.agentErrorsRefresh }}, market="NO"}))
+            / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="NO"})) >= 0.5
+         and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="NO"}) > 4
       for: 5m
       labels:
         severity: urgent
@@ -1669,16 +1669,16 @@ spec:
         description: {{ .Values.kibanaLink }}
           {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is between 50 - 60% because of agent issues ( <{ $value }> ) for <{ $labels.className }>
-          the last 30 minutes.
+          the last 30 minutes for <{ $labels.type }>
         tags: {{ .Values.teletubbiesTags }}
 
     - alert: AgentRefreshesBelow50Greater40DueToAgentServerErrorWithRateLimitNO
       expr: |
-        (sum by (className) (tink_agent_refresh_total{provider_type!="test", {{ .Values.agentErrorsRefresh }}, market="NO"}))
-            / (sum by (className) (tink_agent_refresh_total{provider_type!="test", market="NO"})) < 0.5
-        and (sum by (className) (tink_agent_refresh_total{provider_type!="test", {{ .Values.agentErrorsRefresh }}, market="NO"}))
-            / (sum by (className) (tink_agent_refresh_total{provider_type!="test", market="NO"})) >= 0.4
-         and sum by (className) (tink_agent_refresh_total{provider_type!="test", market="NO"}) > 4
+        (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.agentErrorsRefresh }}, market="NO"}))
+            / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="NO"})) < 0.5
+        and (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.agentErrorsRefresh }}, market="NO"}))
+            / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="NO"})) >= 0.4
+         and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="NO"}) > 4
       for: 5m
       labels:
         severity: urgent
@@ -1688,16 +1688,16 @@ spec:
         description: {{ .Values.kibanaLink }}
           {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is between 40 - 50% because of agent issues ( <{ $value }> ) for <{ $labels.className }>
-          the last 30 minutes.
+          the last 30 minutes for <{ $labels.type }>
         tags: {{ .Values.teletubbiesTags }}
 
     - alert: AgentRefreshesBelow40Greater30DueToAgentServerErrorWithRateLimitNO
       expr: |
-        (sum by (className) (tink_agent_refresh_total{provider_type!="test", {{ .Values.agentErrorsRefresh }}, market="NO"}))
-            / (sum by (className) (tink_agent_refresh_total{provider_type!="test", market="NO"})) < 0.4
-        and (sum by (className) (tink_agent_refresh_total{provider_type!="test", {{ .Values.agentErrorsRefresh }}, market="NO"}))
-            / (sum by (className) (tink_agent_refresh_total{provider_type!="test", market="NO"})) >= 0.3
-         and sum by (className) (tink_agent_refresh_total{provider_type!="test", market="NO"}) > 4
+        (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.agentErrorsRefresh }}, market="NO"}))
+            / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="NO"})) < 0.4
+        and (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.agentErrorsRefresh }}, market="NO"}))
+            / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="NO"})) >= 0.3
+         and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="NO"}) > 4
       for: 5m
       labels:
         severity: urgent
@@ -1707,14 +1707,14 @@ spec:
         description: {{ .Values.kibanaLink }}
           {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is between 30 - 40% because of agent issues ( <{ $value }> ) for <{ $labels.className }>
-          the last 30 minutes.
+          the last 30 minutes for <{ $labels.type }>
         tags: {{ .Values.teletubbiesTags }}
 
     - alert: AgentRefreshesBelow30DueToAgentServerErrorWithRateLimitNO
       expr: |
-        (sum by (className) (tink_agent_refresh_total{provider_type!="test", {{ .Values.agentErrorsRefresh }}, market="NO"}))
-            / (sum by (className) (tink_agent_refresh_total{provider_type!="test", market="NO"})) < 0.3
-         and sum by (className) (tink_agent_refresh_total{provider_type!="test", market="NO"}) > 4
+        (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.agentErrorsRefresh }}, market="NO"}))
+            / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="NO"})) < 0.3
+         and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="NO"}) > 4
       for: 5m
       labels:
         severity: urgent
@@ -1724,7 +1724,7 @@ spec:
         description: {{ .Values.kibanaLink }}
           {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is below 30% because of agent issues ( <{ $value }> ) for <{ $labels.className }>
-          the last 30 minutes.
+          the last 30 minutes for <{ $labels.type }>
         tags: {{ .Values.teletubbiesTags }}
 
     #################################
@@ -1733,11 +1733,11 @@ spec:
 
     - alert: AgentRefreshesBelow45Greater35DueToAllErrorWithRateLimitNO
       expr: |
-        (sum by (className) (tink_agent_refresh_total{provider_type!="test", {{ .Values.allErrorsRefresh }}, market="NO"}))
-            / (sum by (className) (tink_agent_refresh_total{provider_type!="test", market="NO"})) < 0.45
-        and (sum by (className) (tink_agent_refresh_total{provider_type!="test", {{ .Values.allErrorsRefresh }}, market="NO"}))
-            / (sum by (className) (tink_agent_refresh_total{provider_type!="test", market="NO"})) >= 0.35
-         and sum by (className) (tink_agent_refresh_total{provider_type!="test", market="NO"}) > 4
+        (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.allErrorsRefresh }}, market="NO"}))
+            / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="NO"})) < 0.45
+        and (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.allErrorsRefresh }}, market="NO"}))
+            / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="NO"})) >= 0.35
+         and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="NO"}) > 4
       for: 5m
       labels:
         severity: urgent
@@ -1747,16 +1747,16 @@ spec:
         description: {{ .Values.kibanaLink }}
           {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is between 35 - 45% because of all issues ( <{ $value }> ) for <{ $labels.className }>
-          the last 30 minutes.
+          the last 30 minutes for <{ $labels.type }>
         tags: {{ .Values.teletubbiesTags }}
 
     - alert: AgentRefreshesBelow35Greater25DueToAllErrorWithRateLimitNO
       expr: |
-        (sum by (className) (tink_agent_refresh_total{provider_type!="test", {{ .Values.allErrorsRefresh }}, market="NO"}))
-            / (sum by (className) (tink_agent_refresh_total{provider_type!="test", market="NO"})) < 0.35
-        and (sum by (className) (tink_agent_refresh_total{provider_type!="test", {{ .Values.allErrorsRefresh }}, market="NO"}))
-            / (sum by (className) (tink_agent_refresh_total{provider_type!="test", market="NO"})) >= 0.25
-         and sum by (className) (tink_agent_refresh_total{provider_type!="test", market="NO"}) > 4
+        (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.allErrorsRefresh }}, market="NO"}))
+            / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="NO"})) < 0.35
+        and (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.allErrorsRefresh }}, market="NO"}))
+            / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="NO"})) >= 0.25
+         and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="NO"}) > 4
       for: 5m
       labels:
         severity: urgent
@@ -1766,16 +1766,16 @@ spec:
         description: {{ .Values.kibanaLink }}
           {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is between 25 - 35% because of all issues ( <{ $value }> ) for <{ $labels.className }>
-          the last 30 minutes.
+          the last 30 minutes for <{ $labels.type }>
         tags: {{ .Values.teletubbiesTags }}
 
     - alert: AgentRefreshesBelow25Greater15DueToAllErrorWithRateLimitNO
       expr: |
-        (sum by (className) (tink_agent_refresh_total{provider_type!="test", {{ .Values.allErrorsRefresh }}, market="NO"}))
-            / (sum by (className) (tink_agent_refresh_total{provider_type!="test", market="NO"})) < 0.25
-        and (sum by (className) (tink_agent_refresh_total{provider_type!="test", {{ .Values.allErrorsRefresh }}, market="NO"}))
-            / (sum by (className) (tink_agent_refresh_total{provider_type!="test", market="NO"})) >= 0.15
-         and sum by (className) (tink_agent_refresh_total{provider_type!="test", market="NO"}) > 4
+        (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.allErrorsRefresh }}, market="NO"}))
+            / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="NO"})) < 0.25
+        and (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.allErrorsRefresh }}, market="NO"}))
+            / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="NO"})) >= 0.15
+         and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="NO"}) > 4
       for: 5m
       labels:
         severity: urgent
@@ -1785,14 +1785,14 @@ spec:
         description: {{ .Values.kibanaLink }}
           {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is between 15 - 25% because of all issues ( <{ $value }> ) for <{ $labels.className }>
-          the last 30 minutes.
+          the last 30 minutes for <{ $labels.type }>
         tags: {{ .Values.teletubbiesTags }}
 
     - alert: AgentRefreshesBelow15DueToAllErrorWithRateLimitNO
       expr: |
-        (sum by (className) (tink_agent_refresh_total{provider_type!="test", {{ .Values.allErrorsRefresh }}, market="NO"}))
-            / (sum by (className) (tink_agent_refresh_total{provider_type!="test", market="NO"})) < 0.15
-         and sum by (className) (tink_agent_refresh_total{provider_type!="test", market="NO"}) > 4
+        (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.allErrorsRefresh }}, market="NO"}))
+            / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="NO"})) < 0.15
+         and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="NO"}) > 4
       for: 5m
       labels:
         severity: urgent
@@ -1802,7 +1802,7 @@ spec:
         description: {{ .Values.kibanaLink }}
           {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is below 15% because of all issues ( <{ $value }> ) for <{ $labels.className }>
-          the last 30 minutes.
+          the last 30 minutes for <{ $labels.type }>
         tags: {{ .Values.teletubbiesTags }}
         
     ###############################################
@@ -1811,11 +1811,11 @@ spec:
 
     - alert: AgentRefreshesBelow60Greater50DueToPartiallyCompletedErrorWithRateLimitNO
       expr: |
-        (sum by (className) (tink_agent_refresh_total{provider_type!="test", {{ .Values.partiallyCompletedErrorRefresh }}, market="NO"}))
-            / (sum by (className) (tink_agent_refresh_total{provider_type!="test", market="NO"})) < 0.6
-        and (sum by (className) (tink_agent_refresh_total{provider_type!="test", {{ .Values.partiallyCompletedErrorRefresh }}, market="NO"}))
-            / (sum by (className) (tink_agent_refresh_total{provider_type!="test", market="NO"})) >= 0.5
-         and sum by (className) (tink_agent_refresh_total{provider_type!="test", market="NO"}) > 4
+        (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.partiallyCompletedErrorRefresh }}, market="NO"}))
+            / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="NO"})) < 0.6
+        and (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.partiallyCompletedErrorRefresh }}, market="NO"}))
+            / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="NO"})) >= 0.5
+         and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="NO"}) > 4
       for: 5m
       labels:
         severity: urgent
@@ -1830,11 +1830,11 @@ spec:
 
     - alert: AgentRefreshesBelow50Greater40DueToPartiallyCompletedErrorWithRateLimitNO
       expr: |
-        (sum by (className) (tink_agent_refresh_total{provider_type!="test", {{ .Values.partiallyCompletedErrorRefresh }}, market="NO"}))
-            / (sum by (className) (tink_agent_refresh_total{provider_type!="test", market="NO"})) < 0.5
-        and (sum by (className) (tink_agent_refresh_total{provider_type!="test", {{ .Values.partiallyCompletedErrorRefresh }}, market="NO"}))
-            / (sum by (className) (tink_agent_refresh_total{provider_type!="test", market="NO"})) >= 0.4
-         and sum by (className) (tink_agent_refresh_total{provider_type!="test", market="NO"}) > 4
+        (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.partiallyCompletedErrorRefresh }}, market="NO"}))
+            / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="NO"})) < 0.5
+        and (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.partiallyCompletedErrorRefresh }}, market="NO"}))
+            / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="NO"})) >= 0.4
+         and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="NO"}) > 4
       for: 5m
       labels:
         severity: urgent
@@ -1849,11 +1849,11 @@ spec:
 
     - alert: AgentRefreshesBelow40Greater30DueToPartiallyCompletedErrorWithRateLimitNO
       expr: |
-        (sum by (className) (tink_agent_refresh_total{provider_type!="test", {{ .Values.partiallyCompletedErrorRefresh }}, market="NO"}))
-            / (sum by (className) (tink_agent_refresh_total{provider_type!="test", market="NO"})) < 0.4
-        and (sum by (className) (tink_agent_refresh_total{provider_type!="test", {{ .Values.partiallyCompletedErrorRefresh }}, market="NO"}))
-            / (sum by (className) (tink_agent_refresh_total{provider_type!="test", market="NO"})) >= 0.3
-         and sum by (className) (tink_agent_refresh_total{provider_type!="test", market="NO"}) > 4
+        (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.partiallyCompletedErrorRefresh }}, market="NO"}))
+            / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="NO"})) < 0.4
+        and (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.partiallyCompletedErrorRefresh }}, market="NO"}))
+            / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="NO"})) >= 0.3
+         and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="NO"}) > 4
       for: 5m
       labels:
         severity: urgent
@@ -1868,9 +1868,9 @@ spec:
 
     - alert: AgentRefreshesBelow30DueToPartiallyCompletedErrorWithRateLimitNO
       expr: |
-        (sum by (className) (tink_agent_refresh_total{provider_type!="test", {{ .Values.partiallyCompletedErrorRefresh }}, market="NO"}))
-            / (sum by (className) (tink_agent_refresh_total{provider_type!="test", market="NO"})) < 0.3
-         and sum by (className) (tink_agent_refresh_total{provider_type!="test", market="NO"}) > 4
+        (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.partiallyCompletedErrorRefresh }}, market="NO"}))
+            / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="NO"})) < 0.3
+         and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="NO"}) > 4
       for: 5m
       labels:
         severity: urgent

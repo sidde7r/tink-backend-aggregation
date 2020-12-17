@@ -27,10 +27,10 @@ spec:
     - alert: RefreshSuccessRateLowWithAttemptLimitFI
       expr: |
         # Successful attempts above 90%
-        (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="FI", provider_type!="test"}[60m])) by (className,provider)
-            / sum(increase(tink_agent_refresh_total{market="FI", provider_type!="test"}[60m])) by (className,provider) < 0.90)
+        (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="FI", provider_type!="test"}[60m])) by (className,provider,type)
+            / sum(increase(tink_agent_refresh_total{market="FI", provider_type!="test"}[60m])) by (className,provider,type) < 0.90)
         # At least this many attempts.
-        and sum(increase(tink_agent_refresh_total{market="FI", provider_type!="test"}[60m])) by (className,provider) > 10
+        and sum(increase(tink_agent_refresh_total{market="FI", provider_type!="test"}[60m])) by (className,provider,type) > 5
       for: 5m
       labels:
         severity: ping
@@ -39,7 +39,7 @@ spec:
         description: {{ .Values.kibanaLink }}
           {{ .Values.grafanaLink }}
         summary: Refresh success rate is below 90% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-          the last hour.
+          the last hour for <{ $labels.type }>
         tags: {{ .Values.minionsTags }}
 
     ### Provider level fails
