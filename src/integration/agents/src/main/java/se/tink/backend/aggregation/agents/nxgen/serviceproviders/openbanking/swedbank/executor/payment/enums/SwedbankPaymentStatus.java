@@ -5,10 +5,10 @@ import se.tink.libraries.payment.enums.PaymentStatus;
 
 public enum SwedbankPaymentStatus {
     REJECTED("RJCT", PaymentStatus.REJECTED),
-    CANCELED("CANC", PaymentStatus.CANCELLED),
+    CANCELLED("CANC", PaymentStatus.CANCELLED),
     ACCEPTED_TECHNICAL_VALIDATION("ACTC", PaymentStatus.PENDING),
     PARTIALLY_ACCEPTED_TECHNICAL_VALIDATION("PATC", PaymentStatus.PENDING),
-    ACCEPTER_CUSTOMER_PROFILE("ACCP", PaymentStatus.PENDING),
+    ACCEPTER_CUSTOMER_PROFILE("ACCP", PaymentStatus.SIGNED),
     ACCEPTER_SETTLEMENT_COMPLETED_DEBTOR("ACSC", PaymentStatus.PAID),
     ACCEPTER_SETTLEMENT_COMPLETED_CREDITOR("ACCC", PaymentStatus.PAID),
     UNDEFINED("Undefined", PaymentStatus.UNDEFINED);
@@ -30,6 +30,10 @@ public enum SwedbankPaymentStatus {
 
     public PaymentStatus getTinkPaymentStatus() {
         return paymentStatus;
+    }
+
+    public boolean isEqualTo(String status) {
+        return text.equalsIgnoreCase(status);
     }
 
     @Override

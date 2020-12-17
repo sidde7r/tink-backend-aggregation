@@ -39,8 +39,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swe
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.executor.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.executor.payment.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.executor.payment.rpc.GetPaymentResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.executor.payment.rpc.GetPaymentStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.executor.payment.rpc.PaymentAuthorisationResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.executor.payment.rpc.PaymentStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.fetcher.transactionalaccount.rpc.AccountBalanceResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.fetcher.transactionalaccount.rpc.FetchAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.fetcher.transactionalaccount.rpc.StatementResponse;
@@ -320,13 +320,24 @@ public final class SwedbankApiClient {
                 .post(StatementResponse.class);
     }
 
-    public AuthenticationResponse startAuthorization(String endpoint) {
+    public AuthenticationResponse startPaymentAuthorization(String endpoint) {
+        final AuthorizeRequest authorizeRequest =
+                new AuthorizeRequest(
+                        configuration.getClientId(),
+                        getRedirectUrl(),
+                        credentialsRequest.getProvider().getPayload());
+
         return createRequestInSession(new URL(Urls.BASE.concat(endpoint)), true)
                 .header(HeaderKeys.TPP_REDIRECT_URI, getRedirectUrl())
                 .header(HeaderKeys.TPP_NOK_REDIRECT_URI, getRedirectUrl())
                 .header(HeaderKeys.TPP_REDIRECT_PREFERRED, HeaderValues.TPP_REDIRECT_PREFERRED)
                 .body(new AuthorizeRequest(), MediaType.APPLICATION_JSON_TYPE)
-                .put(AuthenticationResponse.class);
+                .put(AuthenticationResponse.class, authorizeRequest);
+    }
+
+    public AuthenticationResponse getScaResponse(String statusLink) {
+        return createRequestInSession(new URL(Urls.BASE.concat(statusLink)), true)
+                .get(AuthenticationResponse.class);
     }
 
     public OAuth2Token refreshToken(String refreshToken) {
@@ -350,7 +361,8 @@ public final class SwedbankApiClient {
                 .header(HeaderKeys.TPP_NOK_REDIRECT_URI, getRedirectUrl());
     }
 
-    private RequestBuilder getPaymentAuthorizationRequestBuilder(URL url, String state) {
+    private RequestBuilder getPaymentAuthorizationRequestBuilder(
+            URL url, String state, boolean isRedirect) {
         String tppRedirectUrl =
                 new URL(getRedirectUrl())
                         .queryParam(QueryKeys.STATE, state)
@@ -359,7 +371,8 @@ public final class SwedbankApiClient {
 
         return getPaymentRequestBuilder(url)
                 .header(HeaderKeys.TPP_REDIRECT_URI, tppRedirectUrl)
-                .header(HeaderKeys.TPP_NOK_REDIRECT_URI, tppRedirectUrl);
+                .header(HeaderKeys.TPP_NOK_REDIRECT_URI, tppRedirectUrl)
+                .header(HeaderKeys.TPP_REDIRECT_PREFERRED, isRedirect);
     }
 
     public CreatePaymentResponse createPayment(
@@ -399,24 +412,28 @@ public final class SwedbankApiClient {
                 .get(GetPaymentResponse.class);
     }
 
-    public GetPaymentStatusResponse getPaymentStatus(
+    public PaymentStatusResponse getPaymentStatus(
             String paymentId, SwedbankPaymentType swedbankPaymentType) {
         return getPaymentRequestBuilder(
                         Urls.GET_PAYMENT_STATUS
                                 .parameter(
                                         UrlParameters.PAYMENT_TYPE, swedbankPaymentType.toString())
                                 .parameter(UrlParameters.PAYMENT_ID, paymentId))
-                .get(GetPaymentStatusResponse.class);
+                .get(PaymentStatusResponse.class);
     }
 
     public PaymentAuthorisationResponse startPaymentAuthorisation(
-            String paymentId, SwedbankPaymentType swedbankPaymentType, String state) {
+            String paymentId,
+            SwedbankPaymentType swedbankPaymentType,
+            String state,
+            boolean isRedirect) {
         return getPaymentAuthorizationRequestBuilder(
                         Urls.INITIATE_PAYMENT_AUTH
                                 .parameter(
                                         UrlParameters.PAYMENT_TYPE, swedbankPaymentType.toString())
                                 .parameter(UrlParameters.PAYMENT_ID, paymentId),
-                        state)
+                        state,
+                        isRedirect)
                 .post(PaymentAuthorisationResponse.class);
     }
 
