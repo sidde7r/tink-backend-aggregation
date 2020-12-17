@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.payment.ReferenceValidationException;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.SwedbankPaymentAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.common.SwedbankOpenBankingPaymentApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.executor.payment.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.executor.payment.entities.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.executor.payment.enums.SwedbankPaymentStatus;
@@ -38,7 +38,7 @@ import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.rpc.Payment;
 
 public class SwedbankPaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
-    private final SwedbankApiClient apiClient;
+    private final SwedbankOpenBankingPaymentApiClient apiClient;
     private final SwedbankPaymentAuthenticator paymentAuthenticator;
     private final List<PaymentResponse> createdPaymentsList = new ArrayList<>();
     private final StrongAuthenticationState strongAuthenticationState;
@@ -46,15 +46,16 @@ public class SwedbankPaymentExecutor implements PaymentExecutor, FetchablePaymen
     private final SwedbankBankIdSigner bankIdSigner;
 
     public SwedbankPaymentExecutor(
-            SwedbankApiClient apiClient,
+            SwedbankOpenBankingPaymentApiClient apiClient,
             SwedbankPaymentAuthenticator paymentAuthenticator,
             StrongAuthenticationState strongAuthenticationState,
-            SupplementalRequester supplementalRequester) {
+            SupplementalRequester supplementalRequester,
+            SwedbankBankIdSigner swedbankBankIdSigner) {
         this.apiClient = apiClient;
         this.paymentAuthenticator = paymentAuthenticator;
         this.strongAuthenticationState = strongAuthenticationState;
         this.supplementalRequester = supplementalRequester;
-        this.bankIdSigner = new SwedbankBankIdSigner(this.apiClient);
+        this.bankIdSigner = swedbankBankIdSigner;
     }
 
     @Override

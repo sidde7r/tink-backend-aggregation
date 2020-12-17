@@ -34,6 +34,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swe
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.rpc.RefreshTokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.rpc.TokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.rpc.TokenResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.common.SwedbankOpenBankingPaymentApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.configuration.SwedbankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.executor.payment.enums.SwedbankPaymentType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.executor.payment.rpc.CreatePaymentRequest;
@@ -61,7 +62,7 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
-public final class SwedbankApiClient {
+public final class SwedbankApiClient implements SwedbankOpenBankingPaymentApiClient {
 
     private final TinkHttpClient client;
     private final PersistentStorage persistentStorage;
@@ -320,6 +321,7 @@ public final class SwedbankApiClient {
                 .post(StatementResponse.class);
     }
 
+    @Override
     public AuthenticationResponse startPaymentAuthorization(String endpoint) {
         final AuthorizeRequest authorizeRequest =
                 new AuthorizeRequest(
@@ -375,6 +377,7 @@ public final class SwedbankApiClient {
                 .header(HeaderKeys.TPP_REDIRECT_PREFERRED, isRedirect);
     }
 
+    @Override
     public CreatePaymentResponse createPayment(
             CreatePaymentRequest createPaymentRequest, SwedbankPaymentType swedbankPaymentType) {
 
@@ -402,6 +405,7 @@ public final class SwedbankApiClient {
                         SerializationUtils.serializeToString(createPaymentRequest));
     }
 
+    @Override
     public GetPaymentResponse getPayment(
             String paymentId, SwedbankPaymentType swedbankPaymentType) {
         return getPaymentRequestBuilder(
@@ -412,6 +416,7 @@ public final class SwedbankApiClient {
                 .get(GetPaymentResponse.class);
     }
 
+    @Override
     public PaymentStatusResponse getPaymentStatus(
             String paymentId, SwedbankPaymentType swedbankPaymentType) {
         return getPaymentRequestBuilder(
@@ -422,6 +427,7 @@ public final class SwedbankApiClient {
                 .get(PaymentStatusResponse.class);
     }
 
+    @Override
     public PaymentAuthorisationResponse startPaymentAuthorisation(
             String paymentId,
             SwedbankPaymentType swedbankPaymentType,

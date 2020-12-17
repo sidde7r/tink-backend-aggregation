@@ -12,6 +12,7 @@ import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.SwedbankDecoupledAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.SwedbankPaymentAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.configuration.SwedbankConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.executor.payment.SwedbankBankIdSigner;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.executor.payment.SwedbankPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.fetcher.transactionalaccount.SwedbankTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.fetcher.transactionalaccount.SwedbankTransactionalAccountFetcher;
@@ -129,7 +130,8 @@ public abstract class SwedbankBaseAgent extends NextGenerationAgent
                         apiClient,
                         paymentAuthenticator,
                         strongAuthenticationState,
-                        supplementalRequester);
+                        supplementalRequester,
+                        new SwedbankBankIdSigner(apiClient));
 
         return Optional.of(new PaymentController(swedbankPaymentExecutor, swedbankPaymentExecutor));
     }
