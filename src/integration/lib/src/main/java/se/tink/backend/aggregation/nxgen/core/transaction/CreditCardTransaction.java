@@ -29,8 +29,25 @@ public final class CreditCardTransaction extends Transaction {
             CreditCard creditCard,
             Map<TransactionExternalSystemIdType, String> externalSystemIds,
             Boolean mutable,
-            List<TransactionDate> transactionDates) {
-        super(amount, date, description, pending, externalSystemIds, mutable, transactionDates);
+            List<TransactionDate> transactionDates,
+            String proprietaryFinancialInstitutionType,
+            String merchantName,
+            String merchantCategoryCode,
+            String transactionReference,
+            String providerMarket) {
+        super(
+                amount,
+                date,
+                description,
+                pending,
+                externalSystemIds,
+                mutable,
+                transactionDates,
+                proprietaryFinancialInstitutionType,
+                merchantName,
+                merchantCategoryCode,
+                transactionReference,
+                providerMarket);
         this.creditAccount = creditAccount;
         this.creditCard = creditCard;
     }
@@ -157,7 +174,12 @@ public final class CreditCardTransaction extends Transaction {
                     getCreditCard(),
                     getExternalSystemIds(),
                     getMutable(),
-                    getTransactionDates());
+                    getTransactionDates(),
+                    getProprietaryFinancialInstitutionType(),
+                    getMerchantName(),
+                    getMerchantCategoryCode(),
+                    getTransactionReference(),
+                    getProviderMarket());
         }
     }
 }

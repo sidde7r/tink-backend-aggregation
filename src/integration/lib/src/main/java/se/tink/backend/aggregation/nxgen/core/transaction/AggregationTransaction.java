@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType;
+import se.tink.backend.aggregation.agents.models.TransactionMutability;
 import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
 import se.tink.backend.aggregation.agents.models.TransactionTypes;
 import se.tink.libraries.amount.Amount;
@@ -35,6 +36,11 @@ public abstract class AggregationTransaction {
     private final Map<TransactionExternalSystemIdType, String> externalSystemIds;
     private final Boolean mutable;
     private final List<TransactionDate> transactionDates;
+    private final String proprietaryFinancialInstitutionType;
+    private final String merchantName;
+    private final String merchantCategoryCode;
+    private final String transactionReference;
+    private final String providerMarket;
 
     protected AggregationTransaction(
             ExactCurrencyAmount amount,
@@ -45,7 +51,12 @@ public abstract class AggregationTransaction {
             Map<TransactionPayloadTypes, String> payload,
             Map<TransactionExternalSystemIdType, String> externalSystemIds,
             Boolean mutable,
-            List<TransactionDate> transactionDates) {
+            List<TransactionDate> transactionDates,
+            String proprietaryFinancialInstitutionType,
+            String merchantName,
+            String merchantCategoryCode,
+            String transactionReference,
+            String providerMarket) {
         this.amount = amount;
         this.date = date;
         this.description = description;
@@ -55,6 +66,11 @@ public abstract class AggregationTransaction {
         this.externalSystemIds = externalSystemIds;
         this.mutable = mutable;
         this.transactionDates = transactionDates;
+        this.proprietaryFinancialInstitutionType = proprietaryFinancialInstitutionType;
+        this.merchantName = merchantName;
+        this.merchantCategoryCode = merchantCategoryCode;
+        this.transactionReference = transactionReference;
+        this.providerMarket = providerMarket;
     }
 
     public ExactCurrencyAmount getExactAmount() {
@@ -97,6 +113,26 @@ public abstract class AggregationTransaction {
         return transactionDates;
     }
 
+    public String getMerchantCategoryCode() {
+        return merchantCategoryCode;
+    }
+
+    public String getMerchantName() {
+        return merchantName;
+    }
+
+    public String getProprietaryFinancialInstitutionType() {
+        return proprietaryFinancialInstitutionType;
+    }
+
+    public String getProviderMarket() {
+        return providerMarket;
+    }
+
+    public String getTransactionReference() {
+        return transactionReference;
+    }
+
     public Transaction toSystemTransaction(boolean multiCurrencyEnabled) {
 
         Transaction transaction = new Transaction();
@@ -115,7 +151,7 @@ public abstract class AggregationTransaction {
             payload.forEach((key, value) -> transaction.setPayload(key, value));
         }
 
-        transaction.setMutable(Boolean.TRUE.equals(getMutable()));
+        transaction.setMutability(TransactionMutability.valueOf(getMutable()));
         transaction.setExternalSystemIds(
                 getExternalSystemIds() != null
                         ? getExternalSystemIds().entrySet().stream()
@@ -161,6 +197,11 @@ public abstract class AggregationTransaction {
         private Map<TransactionExternalSystemIdType, String> externalSystemIds = Maps.newHashMap();
         private Boolean mutable;
         private List<TransactionDate> transactionDates = new ArrayList<>();
+        private String proprietaryFinancialInstitutionType;
+        private String merchantName;
+        private String merchantCategoryCode;
+        private String transactionReference;
+        private String providerMarket;
 
         @Deprecated
         public Builder setAmount(Amount amount) {
@@ -279,6 +320,52 @@ public abstract class AggregationTransaction {
 
         public List<TransactionDate> getTransactionDates() {
             return transactionDates;
+        }
+
+        public String getProprietaryFinancialInstitutionType() {
+            return proprietaryFinancialInstitutionType;
+        }
+
+        public Builder setProprietaryFinancialInstitutionType(
+                String proprietaryFinancialInstitutionType) {
+            this.proprietaryFinancialInstitutionType = proprietaryFinancialInstitutionType;
+            return this;
+        }
+
+        public String getMerchantName() {
+            return merchantName;
+        }
+
+        public Builder setMerchantName(String merchantName) {
+            this.merchantName = merchantName;
+            return this;
+        }
+
+        public String getMerchantCategoryCode() {
+            return merchantCategoryCode;
+        }
+
+        public Builder setMerchantCategoryCode(String merchantCategoryCode) {
+            this.merchantCategoryCode = merchantCategoryCode;
+            return this;
+        }
+
+        public String getTransactionReference() {
+            return transactionReference;
+        }
+
+        public Builder setTransactionReference(String transactionReference) {
+            this.transactionReference = transactionReference;
+            return this;
+        }
+
+        public String getProviderMarket() {
+            return providerMarket;
+        }
+
+        public Builder setProviderMarket(String providerMarket) {
+            this.providerMarket = providerMarket;
+            return this;
         }
 
         public abstract AggregationTransaction build();

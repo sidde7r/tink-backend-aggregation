@@ -32,7 +32,12 @@ public class AggregationTransactionTest {
                         payloads,
                         new HashMap<>(),
                         false,
-                        new ArrayList<>());
+                        new ArrayList<>(),
+                        "fakeProprietaryFinancialInstitutionType",
+                        "fakeMerchantName",
+                        "fakeMerchantCategoryCode",
+                        "fakeTransactionReference",
+                        "fakeProviderMarket");
 
         assertEquals("details", transaction.getPayload().get(TransactionPayloadTypes.DETAILS));
     }
