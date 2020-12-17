@@ -1,0 +1,270 @@
+{
+    "accountTransactions": [
+        {
+            "id": "1",
+            "contract": {
+                "id": "ES0182002000000000000000000160071345XXXXXXXXX",
+                "counterPart": "0020",
+                "country": "ES",
+                "bank": {
+                    "id": "0182"
+                },
+                "formats": {
+                    "bocf": "01821048002000000000152561",
+                    "iuc": "00000000000000000160071345"
+                }
+            },
+            "concept": {
+                "id": "00007",
+                "name": "TRANSFERENCIAS"
+            },
+            "name": "VERSE TRANSFER",
+            "branch": {
+                "id": "1048"
+            },
+            "extendedName": "VERSE TRANSFER",
+            "origin": {
+                "detailSourceId": "PGGP",
+                "detailSourceKey": "0011018220094767023504",
+                "billCode": "0000000000",
+                "procedureCode": "0102",
+                "timeRMS": "08:47:44",
+                "dateRMS": "20-09-24"
+            },
+            "transactionDate": "2020-09-24T00:00:00.000+0200",
+            "valueDate": "2020-09-24T00:00:00.000+0200",
+            "comments": [],
+            "attachments": [],
+            "balance": {
+                "accountingBalance": {
+                    "currency": {
+                        "id": "EUR",
+                        "code": "EUR"
+                    },
+                    "amount": 92.04
+                }
+            },
+            "amount": {
+                "currency": {
+                    "id": "EUR",
+                    "code": "EUR"
+                },
+                "amount": 42.0
+            },
+            "scheme": {
+                "source": {
+                    "name": "MANUAL"
+                },
+                "type": {
+                    "id": "0002",
+                    "name": "Abono"
+                },
+                "category": {
+                    "id": "0147",
+                    "name": "TRANSFERENCIAS INGRESOS"
+                },
+                "subCategory": {
+                    "id": "0149",
+                    "name": "TRANSFERENCIA RECIBIDA"
+                },
+                "summaryType": {}
+            },
+            "extendedDate": {
+                "terminal": "00",
+                "userCode": "IMMA999",
+                "bankCode": "0182"
+            },
+            "wireTransactionDetail": {
+                "id": "0011018220094767023504-RE-ES0182002000000000000000000160071345XXXXXXXXX",
+                "status": "RE",
+                "transferDate": "2020-09-24T00:00:00.000+0200",
+                "valueDate": "2020-09-24T00:00:00.000+0200",
+                "grossWireTransferAmount": {
+                    "currency": {
+                        "id": "EUR",
+                        "code": "EUR"
+                    },
+                    "amount": 42.0
+                },
+                "sender": {
+                    "account": {
+                        "id": "7669",
+                        "bank": {
+                            "name": "JOSEP DE LA VEGA",
+                            "countryId": "0724"
+                        },
+                        "formats": {
+                            "iban": "LT**************7669"
+                        },
+                        "productName": "1"
+                    },
+                    "person": {
+                        "address": "",
+                        "name": "Martin Eldo"
+                    },
+                    "creditedFunds": {
+                        "amount": {
+                            "currency": {
+                                "id": "EUR",
+                                "code": "EUR"
+                            },
+                            "amount": 42.0
+                        },
+                        "date": "2020-09-24T00:00:00.000+0200",
+                        "commission": {
+                            "currency": {},
+                            "amount": 0.0
+                        }
+                    }
+                },
+                "receiver": {
+                    "account": {
+                        "id": "01821048690201525617",
+                        "bank": {
+                            "name": "BANCO BILBAO VIZCAYA ARGENTARIA S.A.",
+                            "countryId": "0724"
+                        },
+                        "formats": {
+                            "iban": "ES8701821048690201525617",
+                            "ccc": "01821048690201525617"
+                        },
+                        "productName": "0"
+                    },
+                    "person": {
+                        "address": "",
+                        "id": {
+                            "number": "048086755B",
+                            "type": "01"
+                        },
+                        "name": "Martin Eldo"
+                    },
+                    "debitedFunds": {
+                        "amount": {
+                            "currency": {
+                                "id": "EUR",
+                                "code": "EUR"
+                            },
+                            "amount": 42.0
+                        },
+                        "date": "2020-09-24T00:00:00.000+0200",
+                        "commission": {
+                            "currency": {},
+                            "amount": 0.0
+                        }
+                    }
+                },
+                "periodicityInformation": {
+                    "id": "0000000000",
+                    "type": {
+                        "id": "N"
+                    },
+                    "customizedPeriod": {
+                        "amount": 0,
+                        "timeUnit": {}
+                    },
+                    "state": {}
+                },
+                "description": "VERSE TRANSFER",
+                "channel": {
+                    "id": "0100"
+                },
+                "postalExpensesAmount": {
+                    "currency": {
+                        "id": "EUR",
+                        "code": "EUR"
+                    },
+                    "amount": 0.0
+                },
+                "indicators": {
+                    "settlementIndicator": true,
+                    "remittance": false,
+                    "zeroAccount": false
+                },
+                "expensesType": {
+                    "id": "SHA"
+                },
+                "fees": {
+                    "swiftAmount": {
+                        "currency": {
+                            "id": "EUR",
+                            "code": "EUR"
+                        },
+                        "amount": 0.0
+                    },
+                    "commission": {
+                        "currency": {}
+                    }
+                },
+                "exchangeRate": 0.0,
+                "administrationExpenses": 0.0,
+                "intermediaryFeeAmount": 0.0,
+                "payment": {
+                    "currency": {},
+                    "amount": 0.0
+                },
+                "purpose": {},
+                "remittanceCode": "000000000",
+                "isSettlementForfait": false,
+                "isRealPaymentDate": true,
+                "executionType": {
+                    "id": "I"
+                },
+                "inmediatePayment": {},
+                "ownReference": "0011018220094767023504",
+                "orderType": {
+                    "id": "G",
+                    "name": "TRANSFERENCIA INMEDIATA"
+                },
+                "isGroupedRemittanceOrders": false,
+                "totalFeesAmount": {
+                    "currency": {},
+                    "amount": 0.0
+                },
+                "totalExpensesAmount": {
+                    "currency": {
+                        "id": "EUR",
+                        "code": "EUR"
+                    },
+                    "amount": 0.0
+                },
+                "totalExpensesFeesAmount": {
+                    "currency": {},
+                    "amount": 0.0
+                },
+                "feeAmount": {
+                    "currency": {},
+                    "amount": 0.0
+                }
+            },
+            "humanCategory": {
+                "id": "1",
+                "name": "Ingresos"
+            },
+            "humanSubcategory": {
+                "id": "51",
+                "name": "Transferencia recibida"
+            },
+            "humanConceptName": "TRANSFERENCIA RECIBIDA",
+            "humanExtendedConceptName": "VERSE TRANSFER",
+            "document": {
+                "rel": "TRANSFERENCIAS",
+                "href": "/transactionVirtualMails"
+            },
+            "financingData": {
+                "customizableIndicator": "NF"
+            }
+        }
+    ],
+    "accountFaceted": {},
+    "pagination": {
+        "page": 1,
+        "total": 8,
+        "start": 0,
+        "end": 8,
+        "pageSize": 40,
+        "numPages": 1,
+        "firstPage": "/accountTransactions/V02/accountTransactionsAdvancedSearch?paginationKey=0&pageSize=40"
+    },
+    "totalResults": 8,
+    "hostResult": false
+}

@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.rpc;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.ErrorCode;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
@@ -71,5 +72,17 @@ public class BbvaErrorResponse {
     @JsonIgnore
     public boolean isContractNotOperableError() {
         return ErrorCode.CONTRACT_NOT_OPERABLE.equalsIgnoreCase(errorCode);
+    }
+
+    public boolean isIncorrectCredentials() {
+        return httpStatus == HttpStatus.SC_FORBIDDEN;
+    }
+
+    public boolean isConflictStatus() {
+        return httpStatus == HttpStatus.SC_CONFLICT;
+    }
+
+    public boolean isInternalServerError() {
+        return httpStatus == HttpStatus.SC_INTERNAL_SERVER_ERROR;
     }
 }

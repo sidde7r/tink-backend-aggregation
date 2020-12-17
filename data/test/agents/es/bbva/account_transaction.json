@@ -1,0 +1,90 @@
+{
+    "id": "000000000000000000000",
+    "contract": {
+        "id": "ES000000000000000000000000",
+        "counterPart": "0000",
+        "country": "ES",
+        "bank": {
+            "id": "0000"
+        },
+        "formats": {
+            "bocf": "0000000000000000000000000000",
+            "iuc": "00000000000000000000000000"
+        }
+    },
+    "concept": {
+        "id": "000",
+        "name": "LIQUIDACION DE INTERESES-COMISIONES-GASTOS"
+    },
+    "branch": {
+        "id": "0000"
+    },
+    "extendedName": "OTROS",
+    "origin": {
+        "detailSourceId": "KPVG",
+        "billCode": "0000000000",
+        "procedureCode": "0699",
+        "timeRMS": "14:17:36",
+        "dateRMS": "20-12-17"
+    },
+    "transactionDate": "2020-12-17T00:00:00.000+0100",
+    "valueDate": "2020-12-15T00:00:00.000+0100",
+    "comments": [],
+    "attachments": [],
+    "balance": {
+        "accountingBalance": {
+            "currency": {
+                "id": "EUR",
+                "code": "EUR"
+            },
+            "amount": 0.0
+        }
+    },
+    "amount": {
+        "currency": {
+            "id": "EUR",
+            "code": "EUR"
+        },
+        "amount": -13.07
+    },
+    "scheme": {
+        "source": {
+            "name": "AUTOMATICO"
+        },
+        "type": {
+            "id": "0001",
+            "name": "Cargo"
+        },
+        "category": {
+            "id": "0052",
+            "name": "OTROS"
+        },
+        "subCategory": {
+            "id": "0054",
+            "name": "OTROS"
+        },
+        "summaryType": {}
+    },
+    "extendedDate": {
+        "terminal": "",
+        "userCode": "KPGIBIMP",
+        "bankCode": "0000"
+    },
+    "humanCategory": {
+        "id": "5",
+        "name": "Banco y servicios financieros"
+    },
+    "humanSubcategory": {
+        "id": "16",
+        "name": "Comisiones, gastos e intereses"
+    },
+    "humanConceptName": "LIQUIDACION DE INTERESES-COMISIONES-GASTOS",
+    "humanExtendedConceptName": "",
+    "document": {
+        "rel": "LIQUIDACION DE INTERESES-COMISIONES-GASTOS",
+        "href": "/transaction/banking"
+    },
+    "financingData": {
+        "customizableIndicator": "NF"
+    }
+}
