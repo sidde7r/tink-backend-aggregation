@@ -143,7 +143,7 @@ public class TransferDestinationPattern implements Comparable<TransferDestinatio
         return MoreObjects.toStringHelper(this.getClass())
                 .add("type", type)
                 .add("pattern", pattern)
-                .add("name", name)
+                .add("name", name == null ? null : "***")
                 .add("bank", bank)
                 .toString();
     }
