@@ -42,6 +42,11 @@ public class RandomValueGeneratorImpl implements RandomValueGenerator {
     }
 
     @Override
+    public double generateRandomDoubleInRange(double minimum, double maximum) {
+        return RandomUtils.generateRandomDoubleInRange(minimum, maximum);
+    }
+
+    @Override
     public String generateUuidWithTinkTag() {
         return UUIDUtils.generateUuidWithTinkTag();
     }

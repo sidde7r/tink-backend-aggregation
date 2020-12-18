@@ -3,11 +3,10 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import se.tink.backend.aggregation.agents.contexts.CompositeAgentContext;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.configuration.UkOpenBankingClientConfigurationAdapter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.configuration.UkOpenBankingConfiguration;
 
 public final class UkOpenBankingConfigurationProvider
-        implements Provider<UkOpenBankingClientConfigurationAdapter> {
+        implements Provider<UkOpenBankingConfiguration> {
 
     private final CompositeAgentContext context;
 
@@ -17,7 +16,7 @@ public final class UkOpenBankingConfigurationProvider
     }
 
     @Override
-    public UkOpenBankingClientConfigurationAdapter get() {
+    public UkOpenBankingConfiguration get() {
         return context.getAgentConfigurationController()
                 .getAgentConfiguration(UkOpenBankingConfiguration.class)
                 .getProviderSpecificConfiguration();
