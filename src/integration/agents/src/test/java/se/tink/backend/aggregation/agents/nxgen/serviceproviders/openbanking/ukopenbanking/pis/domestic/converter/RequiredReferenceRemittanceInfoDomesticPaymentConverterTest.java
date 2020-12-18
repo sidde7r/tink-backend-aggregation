@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.hsbc.pis.converter;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domestic.converter;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
@@ -16,13 +16,13 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
-public class HsbcDomesticPaymentConverterTest {
+public class RequiredReferenceRemittanceInfoDomesticPaymentConverterTest {
 
-    private HsbcDomesticPaymentConverter hsbcDomesticPaymentConverter;
+    private RequiredReferenceRemittanceInfoDomesticPaymentConverter paymentConverter;
 
     @Before
     public void setUp() {
-        hsbcDomesticPaymentConverter = new HsbcDomesticPaymentConverter();
+        paymentConverter = new RequiredReferenceRemittanceInfoDomesticPaymentConverter();
     }
 
     @Test
@@ -34,7 +34,7 @@ public class HsbcDomesticPaymentConverterTest {
 
         // when
         final RemittanceInformationDto returned =
-                hsbcDomesticPaymentConverter.getRemittanceInformationDto(paymentMock);
+                paymentConverter.getRemittanceInformationDto(paymentMock);
 
         // then
         final RemittanceInformationDto expected = createNoTypeRemittanceInformationDto();
@@ -49,7 +49,7 @@ public class HsbcDomesticPaymentConverterTest {
 
         // when
         final RemittanceInformationDto returned =
-                hsbcDomesticPaymentConverter.getRemittanceInformationDto(paymentMock);
+                paymentConverter.getRemittanceInformationDto(paymentMock);
 
         // then
         final RemittanceInformationDto expected = createReferenceRemittanceInformationDto();
@@ -64,7 +64,7 @@ public class HsbcDomesticPaymentConverterTest {
 
         // when
         final RemittanceInformationDto returned =
-                hsbcDomesticPaymentConverter.getRemittanceInformationDto(paymentMock);
+                paymentConverter.getRemittanceInformationDto(paymentMock);
 
         // then
         final RemittanceInformationDto expected = createNoTypeRemittanceInformationDto();
@@ -80,7 +80,7 @@ public class HsbcDomesticPaymentConverterTest {
 
         // when
         final RemittanceInformationDto returned =
-                hsbcDomesticPaymentConverter.getRemittanceInformationDto(paymentMock);
+                paymentConverter.getRemittanceInformationDto(paymentMock);
 
         // then
         assertThat(returned.getReference()).isEmpty();

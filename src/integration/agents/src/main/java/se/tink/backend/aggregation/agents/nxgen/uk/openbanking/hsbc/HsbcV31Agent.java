@@ -24,12 +24,12 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.signer.iface.JwtSigner;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.configuration.UkOpenBankingPisConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domestic.converter.DomesticPaymentConverter;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domestic.converter.RequiredReferenceRemittanceInfoDomesticPaymentConverter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domesticscheduled.converter.DomesticScheduledPaymentConverter;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domesticscheduled.converter.RequiredReferenceRemittanceInfoDomesticSchedulerPaymentConverter;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.validator.PaymentRequestWithRequiredReferenceRemittanceInfoValidator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.validator.UkOpenBankingPaymentRequestValidator;
-import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.hsbc.pis.converter.HsbcDomesticPaymentConverter;
-import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.hsbc.pis.converter.HsbcDomesticSchedulerPaymentConverter;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.hsbc.pis.signature.HsbcSignatureCreator;
-import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.hsbc.pis.validator.HsbcPaymentRequestValidator;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
@@ -105,16 +105,16 @@ public final class HsbcV31Agent extends UkOpenBankingBaseAgent {
 
     @Override
     protected UkOpenBankingPaymentRequestValidator getPaymentRequestValidator() {
-        return new HsbcPaymentRequestValidator();
+        return new PaymentRequestWithRequiredReferenceRemittanceInfoValidator();
     }
 
     @Override
     protected DomesticPaymentConverter getDomesticPaymentConverter() {
-        return new HsbcDomesticPaymentConverter();
+        return new RequiredReferenceRemittanceInfoDomesticPaymentConverter();
     }
 
     @Override
     protected DomesticScheduledPaymentConverter getDomesticScheduledPaymentConverter() {
-        return new HsbcDomesticSchedulerPaymentConverter();
+        return new RequiredReferenceRemittanceInfoDomesticSchedulerPaymentConverter();
     }
 }
