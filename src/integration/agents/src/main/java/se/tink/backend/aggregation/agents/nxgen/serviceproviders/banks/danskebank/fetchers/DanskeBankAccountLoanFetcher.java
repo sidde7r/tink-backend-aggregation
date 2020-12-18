@@ -25,6 +25,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeban
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.LoanDetailsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
 public class DanskeBankAccountLoanFetcher implements AccountFetcher<LoanAccount> {
     private static final Logger logger =
@@ -61,10 +62,13 @@ public class DanskeBankAccountLoanFetcher implements AccountFetcher<LoanAccount>
         List<LoanAccount> loans =
                 listAccounts.getAccounts().stream()
                         .filter(AccountEntity::isLoanAccount)
-                        .peek(
-                                accountEntity ->
-                                        fetchLoanAccountDetails(accountEntity.getAccountNoInt()))
-                        .map(account -> accountEntityMapper.toLoanAccount(configuration, account))
+                        .map(
+                                account -> {
+                                    AccountDetailsResponse accountDetailsResponse =
+                                            fetchLoanAccountDetails(account.getAccountNoInt());
+                                    return accountEntityMapper.toLoanAccount(
+                                            configuration, account, accountDetailsResponse);
+                                })
                         .distinct()
                         .collect(Collectors.toList());
 
@@ -91,20 +95,14 @@ public class DanskeBankAccountLoanFetcher implements AccountFetcher<LoanAccount>
     }
 
     private AccountDetailsResponse fetchLoanAccountDetails(String accountNumberInternal) {
-        /*
-        For now, try to fetch details and check logs if this endpoint works as expected.
-        The point of using this endpoint is to get interest rate for loans other than mortgage or for mortgages that
-        cannot be accessed through loan details endpoint.
-        Catch RuntimeException if anything goes wrong.
-        Then, Wiski please adjust logic to use these details or delete this method in ITE-1785
-         */
+        // Use EN language, because information returned in other languages is gibberish.
         try {
             return apiClient.fetchAccountDetails(
-                    new AccountDetailsRequest(accountNumberInternal, languageCode));
-        } catch (RuntimeException e) {
+                    new AccountDetailsRequest(accountNumberInternal, "EN"));
+        } catch (HttpResponseException e) {
             logger.info("Failed to fetch loan account details. ", e);
         }
-        return null;
+        return new AccountDetailsResponse();
     }
 
     private Collection<LoanAccount> fetchMortgages() {

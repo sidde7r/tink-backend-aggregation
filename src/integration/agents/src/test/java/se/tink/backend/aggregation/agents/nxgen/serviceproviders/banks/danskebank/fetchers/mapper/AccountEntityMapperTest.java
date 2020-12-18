@@ -10,6 +10,7 @@ import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.AccountDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.AccountEntity;
 import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
@@ -56,7 +57,9 @@ public class AccountEntityMapperTest {
                 danskeBankConfiguration(accountProductToTypeMapping);
 
         // when
-        LoanAccount result = accountEntityMapper.toLoanAccount(configuration, accountEntity);
+        LoanAccount result =
+                accountEntityMapper.toLoanAccount(
+                        configuration, accountEntity, new AccountDetailsResponse());
 
         // then
         assertThat(result.getDetails().getType()).isEqualTo(LoanDetails.Type.MORTGAGE);
@@ -74,7 +77,9 @@ public class AccountEntityMapperTest {
         DanskeBankConfiguration configuration = danskeBankConfiguration();
 
         // when
-        LoanAccount result = accountEntityMapper.toLoanAccount(configuration, accountEntity);
+        LoanAccount result =
+                accountEntityMapper.toLoanAccount(
+                        configuration, accountEntity, new AccountDetailsResponse());
 
         // then
         assertThat(result.getDetails().getType()).isEqualTo(LoanDetails.Type.DERIVE_FROM_NAME);

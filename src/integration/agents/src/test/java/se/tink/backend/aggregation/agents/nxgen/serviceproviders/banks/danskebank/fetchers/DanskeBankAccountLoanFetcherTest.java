@@ -61,7 +61,7 @@ public class DanskeBankAccountLoanFetcherTest {
         given(mockConfiguration.getLanguageCode()).willReturn("ZZ");
         given(mockConfiguration.getMarketCode()).willReturn("dk");
         given(mockConfiguration.getLoanAccountTypes()).willReturn(Collections.emptyMap());
-        given(mockAccountEntityMapper.toLoanAccount(any(), any()))
+        given(mockAccountEntityMapper.toLoanAccount(any(), any(), any()))
                 .willReturn(mock(LoanAccount.class));
     }
 
@@ -84,7 +84,7 @@ public class DanskeBankAccountLoanFetcherTest {
         assertThat(loanAccounts).hasSize(3);
         verify(mockApiClient).listAccounts(any());
         verify(mockApiClient).fetchAccountDetails(any());
-        verify(mockAccountEntityMapper).toLoanAccount(any(), any());
+        verify(mockAccountEntityMapper).toLoanAccount(any(), any(), any());
         verify(mockApiClient).listLoans(any());
         verify(mockApiClient, times(2)).loanDetails(any());
         verifyNoMoreInteractions(mockApiClient, mockAccountEntityMapper);
@@ -107,7 +107,7 @@ public class DanskeBankAccountLoanFetcherTest {
         assertThat(loanAccounts).hasSize(1);
         verify(mockApiClient).listAccounts(any());
         verify(mockApiClient).fetchAccountDetails(any());
-        verify(mockAccountEntityMapper).toLoanAccount(any(), any());
+        verify(mockAccountEntityMapper).toLoanAccount(any(), any(), any());
         verifyNoMoreInteractions(mockApiClient, mockAccountEntityMapper);
     }
 }

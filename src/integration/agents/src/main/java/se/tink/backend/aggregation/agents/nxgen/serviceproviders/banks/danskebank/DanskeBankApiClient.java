@@ -182,7 +182,13 @@ public class DanskeBankApiClient {
     }
 
     public AccountDetailsResponse fetchAccountDetails(AccountDetailsRequest request) {
-        return postRequest(Urls.ACCOUNT_DETAILS_URL, AccountDetailsResponse.class, request);
+        // Override x-app-culture header, because response in other languages is gibberish
+        return client.request(Urls.ACCOUNT_DETAILS_URL)
+                .header(
+                        DanskeBankConstants.DanskeRequestHeaders.REFERRER,
+                        configuration.getAppReferer())
+                .overrideHeader("x-app-culture", "en_US")
+                .post(AccountDetailsResponse.class, request);
     }
 
     public ListTransactionsResponse listTransactions(ListTransactionsRequest request) {
