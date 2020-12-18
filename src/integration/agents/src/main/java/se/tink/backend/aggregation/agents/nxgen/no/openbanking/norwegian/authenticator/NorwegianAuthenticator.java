@@ -1,10 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.no.openbanking.norwegian.authenticator;
 
+import java.time.LocalDate;
 import java.util.Objects;
-import se.tink.backend.aggregation.agents.exceptions.SessionException;
-import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.norwegian.NorwegianConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.norwegian.NorwegianConstants;
+import se.tink.backend.aggregation.agents.nxgen.no.openbanking.norwegian.authenticator.rpc.ConsentDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.norwegian.authenticator.rpc.RefreshRequest;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.norwegian.client.NorwegianApiClient;
 import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
@@ -20,15 +21,20 @@ public class NorwegianAuthenticator implements OAuth2Authenticator {
     private final SessionStorage sessionStorage;
     private final NorwegianApiClient apiClient;
     private final NorwegianConfiguration norwegianConfiguration;
+    private final Credentials credentials;
+
     private final String codeVerifier;
 
     public NorwegianAuthenticator(
             NorwegianApiClient apiClient,
             SessionStorage sessionStorage,
-            NorwegianConfiguration norwegianConfiguration) {
+            NorwegianConfiguration norwegianConfiguration,
+            Credentials credentials) {
         this.apiClient = Objects.requireNonNull(apiClient);
         this.sessionStorage = Objects.requireNonNull(sessionStorage);
         this.norwegianConfiguration = Objects.requireNonNull(norwegianConfiguration);
+        this.credentials = credentials;
+
         this.codeVerifier = generateCodeVerifier();
     }
 
@@ -38,13 +44,12 @@ public class NorwegianAuthenticator implements OAuth2Authenticator {
     }
 
     @Override
-    public OAuth2Token exchangeAuthorizationCode(String code) throws BankServiceException {
+    public OAuth2Token exchangeAuthorizationCode(String code) {
         return apiClient.exchangeAuthorizationToken(code, this.codeVerifier);
     }
 
     @Override
-    public OAuth2Token refreshAccessToken(String refreshToken)
-            throws SessionException, BankServiceException {
+    public OAuth2Token refreshAccessToken(String refreshToken) {
         RefreshRequest refreshRequest =
                 new RefreshRequest(
                         refreshToken,
@@ -65,5 +70,13 @@ public class NorwegianAuthenticator implements OAuth2Authenticator {
 
     private String generateCodeVerifier() {
         return RandomUtils.generateRandomBase64UrlEncoded(48);
+    }
+
+    public ConsentDetailsResponse getPersistedConsentDetails() {
+        return apiClient.getConsentDetails();
+    }
+
+    void storeConsentValidUntil(LocalDate consentValidUntil) {
+        credentials.setSessionExpiryDate(consentValidUntil);
     }
 }

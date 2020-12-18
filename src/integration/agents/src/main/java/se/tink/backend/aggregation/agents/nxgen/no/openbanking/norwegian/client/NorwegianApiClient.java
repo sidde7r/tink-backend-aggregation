@@ -20,6 +20,7 @@ import se.tink.backend.aggregation.agents.nxgen.no.openbanking.norwegian.Norwegi
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.norwegian.NorwegianConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.norwegian.NorwegianConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.norwegian.NorwegianConstants.StorageKeys;
+import se.tink.backend.aggregation.agents.nxgen.no.openbanking.norwegian.authenticator.rpc.ConsentDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.norwegian.authenticator.rpc.ConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.norwegian.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.norwegian.authenticator.rpc.RefreshRequest;
@@ -73,7 +74,6 @@ public class NorwegianApiClient {
     }
 
     public OAuth2Token exchangeAuthorizationToken(String code, String codeVerifier) {
-
         TokenRequest request =
                 TokenRequest.builder()
                         .setClientId(norwegianConfiguration.getClientId())
@@ -182,6 +182,20 @@ public class NorwegianApiClient {
                 .queryParam(QueryKeys.STATE, state)
                 .queryParam(QueryKeys.GRANT_TYPE, QueryValues.AUTHORIZATION_CODE)
                 .queryParam(QueryKeys.RESPONSE_MODE, QueryValues.QUERY);
+    }
+
+    public ConsentDetailsResponse getConsentDetails() {
+        String consentId = persistentStorage.get(StorageKeys.CONSENT_ID);
+        if (consentId == null) {
+            return null;
+        }
+
+        return createRequestInSession(
+                        new URL(
+                                        NorwegianConstants.URLs.BASE_URL
+                                                + NorwegianConstants.URLs.CONSENT_DETAILS_PATH)
+                                .parameter(NorwegianConstants.IdTags.CONSENT_ID, consentId))
+                .get(ConsentDetailsResponse.class);
     }
 
     private RequestBuilder createRequestInSession(URL url) {

@@ -12,6 +12,7 @@ import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.norwegian.authenticator.NorwegianAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.no.openbanking.norwegian.authenticator.NorwegianOAuth2AuthenticatorController;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.norwegian.client.NorwegianApiClient;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.norwegian.client.NorwegianSigningFilter;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.norwegian.fetcher.account.NorwegianAccountFetcher;
@@ -69,23 +70,31 @@ public final class NorwegianAgent extends NextGenerationAgent
 
     @Override
     protected Authenticator constructAuthenticator() {
-        final OAuth2AuthenticationController controller =
+        NorwegianAuthenticator norwegianAuthenticator =
+                new NorwegianAuthenticator(
+                        apiClient,
+                        sessionStorage,
+                        agentConfiguration.getProviderSpecificConfiguration(),
+                        credentials);
+
+        OAuth2AuthenticationController oAuth2AuthenticationController =
                 new OAuth2AuthenticationController(
                         persistentStorage,
                         supplementalInformationHelper,
-                        new NorwegianAuthenticator(
-                                apiClient,
-                                sessionStorage,
-                                agentConfiguration.getProviderSpecificConfiguration()),
+                        norwegianAuthenticator,
                         credentials,
                         strongAuthenticationState);
+
+        NorwegianOAuth2AuthenticatorController norwegianOAuth2AuthenticatorController =
+                new NorwegianOAuth2AuthenticatorController(
+                        oAuth2AuthenticationController, norwegianAuthenticator);
 
         return new AutoAuthenticationController(
                 request,
                 systemUpdater,
                 new ThirdPartyAppAuthenticationController<>(
-                        controller, supplementalInformationHelper),
-                controller);
+                        norwegianOAuth2AuthenticatorController, supplementalInformationHelper),
+                norwegianOAuth2AuthenticatorController);
     }
 
     private AgentConfiguration<NorwegianConfiguration> getAgentConfiguration() {
