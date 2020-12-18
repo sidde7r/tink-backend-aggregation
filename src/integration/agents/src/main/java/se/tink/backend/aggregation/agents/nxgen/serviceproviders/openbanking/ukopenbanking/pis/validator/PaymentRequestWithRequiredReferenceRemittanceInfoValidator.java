@@ -1,16 +1,15 @@
-package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.hsbc.pis.validator;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.validator;
 
 import org.apache.commons.lang3.StringUtils;
 import org.assertj.core.util.VisibleForTesting;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.validator.DefaultUkOpenBankingPaymentRequestValidator;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 
-public class HsbcPaymentRequestValidator extends DefaultUkOpenBankingPaymentRequestValidator {
+public class PaymentRequestWithRequiredReferenceRemittanceInfoValidator
+        extends DefaultUkOpenBankingPaymentRequestValidator {
 
-    @VisibleForTesting
-    static final String ERROR_MESSAGE = "Invalid Remittance Information Length for HSBC Family";
+    @VisibleForTesting static final String ERROR_MESSAGE = "Invalid Remittance Information Length";
 
     @Override
     public void validate(PaymentRequest paymentRequest) {

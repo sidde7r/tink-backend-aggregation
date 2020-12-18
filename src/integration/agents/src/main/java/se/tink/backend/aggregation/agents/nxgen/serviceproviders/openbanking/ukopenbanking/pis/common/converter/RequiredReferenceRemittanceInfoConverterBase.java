@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.hsbc.pis.converter;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.converter;
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.dto.RemittanceInformationDto;
@@ -6,9 +6,9 @@ import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
-public class HsbcConverterBase {
+public class RequiredReferenceRemittanceInfoConverterBase {
 
-    RemittanceInformationDto convertRemittanceInformationToDto(Payment payment) {
+    public RemittanceInformationDto convertRemittanceInformationToDto(Payment payment) {
         final String value =
                 Optional.ofNullable(payment.getRemittanceInformation())
                         .map(RemittanceInformation::getValue)

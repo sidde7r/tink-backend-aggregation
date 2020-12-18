@@ -1,10 +1,10 @@
-package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.hsbc.pis.validator;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.validator;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static se.tink.backend.aggregation.agents.nxgen.uk.openbanking.hsbc.pis.validator.HsbcPaymentRequestValidator.ERROR_MESSAGE;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.validator.PaymentRequestWithRequiredReferenceRemittanceInfoValidator.ERROR_MESSAGE;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -13,13 +13,13 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
-public class HsbcPaymentRequestValidatorTest {
+public class PaymentRequestWithRequiredReferenceRemittanceInfoValidatorTest {
 
-    private HsbcPaymentRequestValidator hsbcPaymentRequestValidator;
+    private PaymentRequestWithRequiredReferenceRemittanceInfoValidator paymentRequestValidator;
 
     @Before
     public void setUp() {
-        hsbcPaymentRequestValidator = new HsbcPaymentRequestValidator();
+        paymentRequestValidator = new PaymentRequestWithRequiredReferenceRemittanceInfoValidator();
     }
 
     @Test
@@ -30,7 +30,7 @@ public class HsbcPaymentRequestValidatorTest {
 
         // when
         final Throwable thrown =
-                catchThrowable(() -> hsbcPaymentRequestValidator.validate(paymentRequest));
+                catchThrowable(() -> paymentRequestValidator.validate(paymentRequest));
 
         // then
         assertThat(thrown).isNull();
@@ -44,7 +44,7 @@ public class HsbcPaymentRequestValidatorTest {
 
         // when
         final Throwable thrown =
-                catchThrowable(() -> hsbcPaymentRequestValidator.validate(paymentRequest));
+                catchThrowable(() -> paymentRequestValidator.validate(paymentRequest));
 
         // then
         assertThat(thrown)
@@ -61,7 +61,7 @@ public class HsbcPaymentRequestValidatorTest {
 
         // when
         final Throwable thrown =
-                catchThrowable(() -> hsbcPaymentRequestValidator.validate(paymentRequest));
+                catchThrowable(() -> paymentRequestValidator.validate(paymentRequest));
 
         // then
         assertThat(thrown)
