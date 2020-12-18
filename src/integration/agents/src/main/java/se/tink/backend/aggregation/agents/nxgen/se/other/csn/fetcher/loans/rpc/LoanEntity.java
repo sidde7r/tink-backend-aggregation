@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.other.csn.fetcher.loans.rpc;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.math.BigDecimal;
 import java.util.List;
 
 public class LoanEntity {
@@ -29,7 +30,7 @@ public class LoanEntity {
     @JsonProperty("klartext")
     private boolean isPlainText;
 
-    public Double getIncomingDebt() {
+    public BigDecimal getIncomingDebt() {
         return debtSpecification.stream()
                 .filter(DebtDetailEntity::isIncomingDebt)
                 .map(DebtDetailEntity::getAmount)
@@ -37,7 +38,7 @@ public class LoanEntity {
                 .orElse(null);
     }
 
-    public Double getOutgoingDebt() {
+    public BigDecimal getOutgoingDebt() {
         return debtSpecification.stream()
                 .filter(DebtDetailEntity::isOutgoingDebt)
                 .map(DebtDetailEntity::getAmount)
@@ -45,7 +46,7 @@ public class LoanEntity {
                 .orElse(null);
     }
 
-    public Double getInterest() {
+    public BigDecimal getInterest() {
         return debtSpecification.stream()
                 .filter(DebtDetailEntity::isInterest)
                 .map(DebtDetailEntity::getAmount)

@@ -6,6 +6,7 @@ import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.libraries.credentials.service.RefreshableItem;
 
 public class CSNAgentTest {
     private final ArgumentManager<ArgumentManager.SsnArgumentEnum> manager =
@@ -28,6 +29,9 @@ public class CSNAgentTest {
                         Field.Key.USERNAME, manager.get(ArgumentManager.SsnArgumentEnum.SSN))
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(false)
+                .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
+                .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
+                .expectLoggedIn(false)
                 .build()
                 .testRefresh();
     }

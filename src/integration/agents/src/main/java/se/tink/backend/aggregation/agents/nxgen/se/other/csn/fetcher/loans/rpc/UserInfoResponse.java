@@ -5,6 +5,9 @@ import lombok.Getter;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.identitydata.IdentityData;
+import se.tink.libraries.identitydata.countries.SeIdentityData;
 
 @Getter
 @JsonObject
@@ -125,12 +128,16 @@ public class UserInfoResponse {
         return Integer.toString(csnNumber);
     }
 
+    public IdentityData getIdentityData() {
+        return SeIdentityData.of(name, ssn);
+    }
+
     public IdModule getIdModule() {
         return IdModule.builder()
                 .withUniqueIdentifier(getAccountId())
                 .withAccountNumber(getAccountId())
                 .withAccountName(name)
-                .addIdentifier(AccountIdentifier.create(AccountIdentifier.Type.SE, getAccountId()))
+                .addIdentifier(AccountIdentifier.create(Type.TINK, getAccountId()))
                 .build();
     }
 }

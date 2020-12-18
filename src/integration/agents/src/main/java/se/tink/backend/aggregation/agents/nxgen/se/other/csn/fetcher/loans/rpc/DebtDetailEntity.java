@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.other.csn.fetcher.loans.rpc;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.math.BigDecimal;
 import lombok.Getter;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
@@ -16,7 +17,7 @@ public class DebtDetailEntity {
     private long eventDate;
 
     @JsonProperty("summa")
-    private double amount;
+    private BigDecimal amount;
 
     @JsonIgnore
     public boolean isIncomingDebt() {

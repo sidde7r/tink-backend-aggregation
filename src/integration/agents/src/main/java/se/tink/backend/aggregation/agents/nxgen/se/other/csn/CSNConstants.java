@@ -9,8 +9,8 @@ public class CSNConstants {
         static final String LOGIN_BANKID = BASE_URL_LOGIN + "/inloggning/mobilbid.do";
         static final String BANKID_POLL = BASE_URL_LOGIN + "/BankID";
 
-        static String CURRENT_DEBT = BASE_URL + "/api/kund-api-webb/rest/kund/aktuellskuld";
-        static String USER_INFO = BASE_URL + "/api/kund-api-webb/rest/kund/info";
+        static final String CURRENT_DEBT = BASE_URL + "/api/kund-api-webb/rest/kund/aktuellskuld";
+        static final String USER_INFO = BASE_URL + "/api/kund-api-webb/rest/kund/info";
     }
 
     public static class BankIdStatus {
@@ -19,12 +19,15 @@ public class CSNConstants {
         public static final String CONTINUE = "continue";
     }
 
-    public static class Login {
+    public static class LoginKeys {
         public static final String METHOD = "metod";
-        public static final String VALIDATE_BANK_ID = "valideramobilbid";
         public static final String SSN = "pnr";
-        public static final String TRY_LOGIN = "tryLogin";
         public static final String CSN_LOGIN = "csn_login";
+    }
+
+    public static class LoginValues {
+        public static final String VALIDATE_BANK_ID = "valideramobilbid";
+        public static final String TRY_LOGIN = "tryLogin";
         public static final String BANK_ID = "mobilbid";
     }
 
@@ -34,9 +37,8 @@ public class CSNConstants {
     }
 
     static class HeaderKeys {
-        static final String USER_AGENT = "User-Agent";
         static final String REFERER = "Referer";
-        static String CSN_AUTHORIZATION = "CSN_Authorization";
+        static final String CSN_AUTHORIZATION = "CSN_Authorization";
     }
 
     static class HeaderValues {

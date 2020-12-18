@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.other.csn.fetcher.loans.rpc;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.math.BigDecimal;
 import java.util.List;
 import lombok.Getter;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -14,7 +15,7 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 public class LoanAccountsResponse {
 
     @JsonProperty("rantaAbslAbal")
-    private double rantaAbslAbal;
+    private BigDecimal rantaAbslAbal;
 
     @JsonProperty("arsbearbetningPagar")
     private boolean isAnnualProcessing;
@@ -38,13 +39,14 @@ public class LoanAccountsResponse {
     private boolean debtCorrection;
 
     @JsonProperty("rantaAterkrav")
-    private double interestRepayment;
+    private BigDecimal interestRepayment;
 
     @JsonProperty("skuldsanering")
     private boolean debtRestructuring;
 
-    private double getInterestRate() {
-        return rantaAbslAbal / 100; // Need to adjust to a percentage, hence the division.
+    private BigDecimal getInterestRate() {
+        return rantaAbslAbal.divide(
+                new BigDecimal(100)); // Need to adjust to a percentage, hence the division.
     }
 
     private ExactCurrencyAmount getBalance() {
@@ -53,7 +55,11 @@ public class LoanAccountsResponse {
 
     private ExactCurrencyAmount getInitialBalance() {
         return ExactCurrencyAmount.inSEK(
-                loanList.stream().findFirst().map(LoanEntity::getIncomingDebt).orElse(0.0));
+                loanList.stream()
+                        .findFirst()
+                        .map(LoanEntity::getIncomingDebt)
+                        .orElse(new BigDecimal(0))
+                        .doubleValue());
     }
 
     public LoanAccount toTinkLoanAccount(UserInfoResponse userInfoResponse) {
@@ -63,7 +69,7 @@ public class LoanAccountsResponse {
                         LoanModule.builder()
                                 .withType(LoanDetails.Type.STUDENT)
                                 .withBalance(getBalance())
-                                .withInterestRate(getInterestRate())
+                                .withInterestRate(getInterestRate().doubleValue())
                                 .setInitialBalance(getInitialBalance())
                                 .build())
                 .withId(userInfoResponse.getIdModule())

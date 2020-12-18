@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.se.other.csn.authenticator.bankid;
 
-import com.sun.jersey.core.util.MultivaluedMapImpl;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
@@ -11,6 +10,7 @@ import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceErro
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.nxgen.se.other.csn.CSNApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.other.csn.CSNConstants;
+import se.tink.backend.aggregation.agents.nxgen.se.other.csn.authenticator.bankid.rpc.LoginForm;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticator;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
@@ -24,7 +24,7 @@ public class CSNBankIdAuthenticator implements BankIdAuthenticator<String> {
     public String init(String ssn)
             throws BankIdException, BankServiceException, AuthorizationException,
                     AuthenticationException {
-        final HttpResponse loginResponse = apiClient.initBankId(new LoginForm(ssn));
+        final HttpResponse loginResponse = apiClient.initBankId(new LoginForm(ssn.substring(2)));
         if (loginResponse.getBody(String.class).contains("Fel på sidan")) {
             throw BankServiceError.NO_BANK_SERVICE.exception();
         }
@@ -47,25 +47,13 @@ public class CSNBankIdAuthenticator implements BankIdAuthenticator<String> {
                 sessionStorage.put(
                         CSNConstants.Storage.ACCESS_TOKEN, apiClient.extractAccessToken());
                 return BankIdStatus.DONE;
+            default:
+                return BankIdStatus.TIMEOUT;
         }
-
-        return BankIdStatus.EXPIRED_AUTOSTART_TOKEN;
     }
 
     @Override
     public Optional<String> getAutostartToken() {
         return Optional.empty();
-    }
-
-    public static class LoginForm extends MultivaluedMapImpl {
-        LoginForm(String username) {
-            this.add(CSNConstants.Login.METHOD, CSNConstants.Login.VALIDATE_BANK_ID);
-            this.add(CSNConstants.Login.SSN, username);
-        }
-
-        LoginForm() {
-            this.add(CSNConstants.Login.METHOD, CSNConstants.Login.TRY_LOGIN);
-            this.add(CSNConstants.Login.CSN_LOGIN, CSNConstants.Login.BANK_ID);
-        }
     }
 }
