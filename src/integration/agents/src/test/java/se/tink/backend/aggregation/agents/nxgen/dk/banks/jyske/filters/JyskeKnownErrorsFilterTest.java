@@ -98,6 +98,10 @@ public class JyskeKnownErrorsFilterTest {
             new Object[] {
                 "{\"errorCode\": 110, \"status\": \"BAD_REQUEST\", \"errorMessage\": \"Din adgang til mobilbanken er spærret. Åbn den igen i Jyske Netbank.\"}",
                 AuthorizationError.ACCOUNT_BLOCKED
+            },
+            new Object[] {
+                "{\"errorCode\": 112, \"status\": \"BAD_REQUEST\", \"errorMessage\": \"Sidste chance\"}",
+                LoginError.INCORRECT_CREDENTIALS_LAST_ATTEMPT
             }
         };
     }

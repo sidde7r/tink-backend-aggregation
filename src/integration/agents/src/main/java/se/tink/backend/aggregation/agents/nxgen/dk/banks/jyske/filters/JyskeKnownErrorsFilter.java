@@ -26,6 +26,7 @@ public class JyskeKnownErrorsFilter extends Filter {
             "Kunne ikke hente kontobevægelser - Prøv igen senere.";
     private static final String ACCESS_TO_BANK_BLOCKED =
             "Din adgang til mobilbanken er spærret. Åbn den igen i Jyske Netbank.";
+    private static final String SIDSTE_CHANCE = "Sidste chance";
 
     @Override
     public HttpResponse handle(HttpRequest httpRequest)
@@ -49,7 +50,7 @@ public class JyskeKnownErrorsFilter extends Filter {
         log.info(internalMessage);
 
         // And in errors with error message, otherwise switch fails
-        // Based on known error messages only, as it is possible to receive the same error mnessage
+        // Based on known error messages only, as it is possible to receive the same error message
         // with different error codes
         switch (Strings.nullToEmpty(errorResponse.getErrorMessage())) {
             case MUST_REGISTER_MESSAGE:
@@ -60,6 +61,8 @@ public class JyskeKnownErrorsFilter extends Filter {
                 throw AuthorizationError.ACCOUNT_BLOCKED.exception(internalMessage);
             case INCORRECT_CREDENTIALS_MESSAGE:
                 throw LoginError.INCORRECT_CREDENTIALS.exception(internalMessage);
+            case SIDSTE_CHANCE:
+                throw LoginError.INCORRECT_CREDENTIALS_LAST_ATTEMPT.exception(internalMessage);
             case COULD_NOT_RETRIEVE_MESSAGE:
                 throw BankServiceError.BANK_SIDE_FAILURE.exception(internalMessage);
             default:
