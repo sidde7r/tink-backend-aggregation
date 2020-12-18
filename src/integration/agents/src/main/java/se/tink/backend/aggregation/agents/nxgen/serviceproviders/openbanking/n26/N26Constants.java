@@ -49,4 +49,11 @@ public class N26Constants {
                                 "STANDING_ORDERS",
                                 "TRANSFER_DESTINATIONS"));
     }
+
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class Timeout {
+        public static final int TIMEOUT_IN_MILLISECONDS = 60_000;
+        public static final int NUM_TIMEOUT_RETRIES = 2;
+        public static final int TIMEOUT_RETRY_SLEEP_MILLISECONDS = 1000;
+    }
 }

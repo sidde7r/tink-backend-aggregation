@@ -31,6 +31,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.TimeoutRetryFilter;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, TRANSFERS})
 public final class N26Agent extends NextGenerationAgent
@@ -46,6 +47,11 @@ public final class N26Agent extends NextGenerationAgent
     public N26Agent(AgentComponentProvider componentProvider) {
         super(componentProvider);
         this.storage = new N26Storage(persistentStorage);
+        client.setTimeout(N26Constants.Timeout.TIMEOUT_IN_MILLISECONDS);
+        client.addFilter(
+                new TimeoutRetryFilter(
+                        N26Constants.Timeout.NUM_TIMEOUT_RETRIES,
+                        N26Constants.Timeout.TIMEOUT_RETRY_SLEEP_MILLISECONDS));
         this.apiClient = new N26ApiClient(client, getAgentConfig(), storage);
         this.transactionalAccountRefreshController = initTransactionalAccountFetcher();
         this.transferDestinationRefreshController = constructTransferDestinationRefreshController();
