@@ -57,7 +57,7 @@ public class JyskeKnownErrorsFilterTest {
     }
 
     @Test
-    public void shouldThrowRuntimeExceptionForUnknownErrorMessage() {
+    public void shouldReturnResponseForUnknownErrorMessage() {
         // given
         ErrorResponse errorResponse =
                 SerializationUtils.deserializeFromString(
@@ -66,12 +66,10 @@ public class JyskeKnownErrorsFilterTest {
         when(httpResponse.getBody(ErrorResponse.class)).thenReturn(errorResponse);
 
         // when
-        final Throwable thrown = catchThrowable(() -> jyskeKnownErrorsFilter.handle(httpRequest));
+        HttpResponse httpResponse = jyskeKnownErrorsFilter.handle(httpRequest);
 
-        // then
-        assertThat(thrown)
-                .isInstanceOf(RuntimeException.class)
-                .hasMessage(errorResponse.toString());
+        // then;
+        assertThat(httpResponse).isEqualTo(httpResponse);
     }
 
     @SuppressWarnings("unused")

@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.yorkshire;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.name.Names;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.configuration.UkOpenBankingClientConfigurationAdapter;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.configuration.UkOpenBankingConfiguration;
 
 // TODO it's gonna be deleted after migration of the bank to the OBSEAL/OBWAC certificates
 //  information from 16.11.2020
@@ -13,8 +13,7 @@ public class YorkshireModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        bind(UkOpenBankingClientConfigurationAdapter.class)
-                .toProvider(YorkshireConfigurationProvider.class);
+        bind(UkOpenBankingConfiguration.class).toProvider(YorkshireConfigurationProvider.class);
         bind(String.class)
                 .annotatedWith(Names.named("eidasCertId"))
                 .toInstance(OPEN_BANKING_CERT_ID);

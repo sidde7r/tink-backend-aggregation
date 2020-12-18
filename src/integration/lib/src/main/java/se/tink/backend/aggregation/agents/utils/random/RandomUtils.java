@@ -39,6 +39,10 @@ public class RandomUtils {
         if (minimum >= maximum) {
             throw new IllegalArgumentException("Maximum must be greater than minimum");
         }
-        return new Random().nextInt((maximum - minimum) + 1) + minimum;
+        return random.nextInt((maximum - minimum) + 1) + minimum;
+    }
+
+    public static double generateRandomDoubleInRange(double minimum, double maximum) {
+        return random.doubles(minimum, maximum).findFirst().orElse(minimum);
     }
 }

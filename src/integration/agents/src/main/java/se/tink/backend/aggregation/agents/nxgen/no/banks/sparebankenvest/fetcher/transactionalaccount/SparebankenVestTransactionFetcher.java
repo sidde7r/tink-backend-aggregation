@@ -3,13 +3,13 @@ package se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.fetche
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.SparebankenVestApiClient;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.fetcher.transactionalaccount.entities.Payload;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.fetcher.transactionalaccount.entities.TransactionEntity;
-import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.fetcher.transactionalaccount.rpc.DuePaymentsResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.fetcher.transactionalaccount.rpc.TransactionsListResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.UpcomingTransactionFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
@@ -56,8 +56,10 @@ public class SparebankenVestTransactionFetcher
     @Override
     public Collection<UpcomingTransaction> fetchUpcomingTransactionsFor(
             TransactionalAccount account) {
-        DuePaymentsResponse duePaymentsResponse = apiClient.fetchUpcomingTransactions();
+        // Temporarily disable upcoming transactions as it blocks fetching transaction list.
+        // Should be fixed in ITE-1553
+        // DuePaymentsResponse duePaymentsResponse = apiClient.fetchUpcomingTransactions()
 
-        return duePaymentsResponse.getUpcomingTransactions();
+        return Collections.emptyList();
     }
 }

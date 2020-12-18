@@ -29,6 +29,7 @@ public class NorwegianConstants {
         public static final String BALANCES_PATH = "/accounts/{accountResourceId}/balances";
         public static final String TRANSACTIONS_PATH = "/accounts/{accountResourceId}/transactions";
         public static final String CONSENT_PATH = "/consents";
+        public static final String CONSENT_DETAILS_PATH = "/consents/{consentId}";
     }
 
     public static class ErrorMessages {
@@ -37,6 +38,7 @@ public class NorwegianConstants {
 
     public class IdTags {
         public static final String ACCOUNT_RESOURCE_ID = "accountResourceId";
+        public static final String CONSENT_ID = "consentId";
     }
 
     public class ResponseValues {

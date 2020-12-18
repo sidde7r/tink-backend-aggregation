@@ -63,9 +63,7 @@ public class JyskeKnownErrorsFilter extends Filter {
             case COULD_NOT_RETRIEVE_MESSAGE:
                 throw BankServiceError.BANK_SIDE_FAILURE.exception(internalMessage);
             default:
-                // An error message we currently do not know
-                log.warn("Unknown Jyske RE API error!");
-                throw new IllegalStateException(internalMessage);
+                return httpResponse;
         }
     }
 }

@@ -95,7 +95,7 @@ x-fapi-financial-id: 0015800000jfwB4AAI
 x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
 x-jws-signature: RkFLRV9TSUdOQVRVUkUK
 
-{"Risk":{"PaymentContextCode":"Other"},"Data":{"ConsentId":"b803b8c2c86f45ecbc8757f0a193f35e","Initiation":{"RemittanceInformation":{"Unstructured":"UK Demo","Reference":"UK Demo"},"EndToEndIdentification":"4f0a6efca9c740e781419944143cdf1","InstructionIdentification":"4f0a6efca9c740e781419944143cdf13","CreditorAccount":{"SchemeName":"UK.OBIE.SortCodeAccountNumber","Identification":"04000469431111","Name":"Dummy name"},"InstructedAmount":{"Amount":"1.00","Currency":"GBP"}}}}
+{"Risk":{"PaymentContextCode":"Other"},"Data":{"ConsentId":"b803b8c2c86f45ecbc8757f0a193f35e","Initiation":{"RemittanceInformation":{"Unstructured":"UK Demo"},"EndToEndIdentification":"4f0a6efca9c740e781419944143cdf1","InstructionIdentification":"4f0a6efca9c740e781419944143cdf13","CreditorAccount":{"SchemeName":"UK.OBIE.SortCodeAccountNumber","Identification":"04000469431111","Name":"Dummy name"},"InstructedAmount":{"Amount":"1.00","Currency":"GBP"}}}}
 
 
 RESPONSE 5

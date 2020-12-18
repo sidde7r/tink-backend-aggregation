@@ -22,6 +22,11 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.configuration.SoftwareStatementAssertion;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.signer.iface.JwtSigner;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.configuration.UkOpenBankingPisConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domestic.converter.DomesticPaymentConverter;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domesticscheduled.converter.DomesticScheduledPaymentConverter;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.validator.UkOpenBankingPaymentRequestValidator;
+import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.hsbc.pis.converter.HsbcDomesticPaymentConverter;
+import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.hsbc.pis.converter.HsbcDomesticSchedulerPaymentConverter;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.hsbc.pis.signature.HsbcSignatureCreator;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.hsbc.pis.validator.HsbcPaymentRequestValidator;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
@@ -64,7 +69,6 @@ public final class HsbcV31Agent extends UkOpenBankingBaseAgent {
                 jwtSigner,
                 aisConfig,
                 pisConfig,
-                new HsbcPaymentRequestValidator(),
                 createPisRequestFilter(
                         new HsbcSignatureCreator(jwtSigner),
                         jwtSigner,
@@ -78,6 +82,7 @@ public final class HsbcV31Agent extends UkOpenBankingBaseAgent {
         return new UkOpenBankingV31Ais(aisConfig, persistentStorage, localDateTimeSource);
     }
 
+    @Override
     protected UkOpenBankingApiClient createApiClient(
             TinkHttpClient httpClient,
             JwtSigner signer,
@@ -94,5 +99,20 @@ public final class HsbcV31Agent extends UkOpenBankingBaseAgent {
                 randomValueGenerator,
                 persistentStorage,
                 aisConfig);
+    }
+
+    @Override
+    protected UkOpenBankingPaymentRequestValidator getPaymentRequestValidator() {
+        return new HsbcPaymentRequestValidator();
+    }
+
+    @Override
+    protected DomesticPaymentConverter getDomesticPaymentConverter() {
+        return new HsbcDomesticPaymentConverter();
+    }
+
+    @Override
+    protected DomesticScheduledPaymentConverter getDomesticScheduledPaymentConverter() {
+        return new HsbcDomesticSchedulerPaymentConverter();
     }
 }
