@@ -4,11 +4,12 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingV31Constants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.authenticator.OpenIdAisAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.authenticator.rpc.AccountPermissionResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticatedHttpFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticationController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticationValidator;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.entities.ClientMode;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
@@ -25,7 +26,7 @@ public class DanskebankAuthenticationController extends OpenIdAuthenticationCont
             PersistentStorage persistentStorage,
             SupplementalInformationHelper supplementalInformationHelper,
             UkOpenBankingApiClient apiClient,
-            OpenIdAuthenticator authenticator,
+            OpenIdAisAuthenticator authenticator,
             Credentials credentials,
             StrongAuthenticationState strongAuthenticationState,
             String callbackUri,
@@ -62,7 +63,7 @@ public class DanskebankAuthenticationController extends OpenIdAuthenticationCont
 
         // Generate new client_credentials token, needed to verify consent validity
         OAuth2Token clientCredentialsToken =
-                apiClient.requestClientCredentials(authenticator.getClientCredentialScope());
+                apiClient.requestClientCredentials(ClientMode.ACCOUNTS);
         apiClient.instantiateAisAuthFilter(clientCredentialsToken);
 
         AccountPermissionResponse accountPermissionResponse =

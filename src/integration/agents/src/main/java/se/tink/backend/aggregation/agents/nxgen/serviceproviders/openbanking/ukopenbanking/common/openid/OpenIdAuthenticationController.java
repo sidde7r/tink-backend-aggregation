@@ -158,8 +158,7 @@ public class OpenIdAuthenticationController
         String refreshToken = oAuth2Token.getRefreshToken().get();
         try {
             OAuth2Token refreshedOAuth2Token =
-                    apiClient.refreshAccessToken(
-                            refreshToken, authenticator.getClientCredentialScope());
+                    apiClient.refreshAccessToken(refreshToken, ClientMode.ACCOUNTS);
 
             if (!refreshedOAuth2Token.isValid()) {
                 throw SessionError.SESSION_EXPIRED.exception();
@@ -193,8 +192,7 @@ public class OpenIdAuthenticationController
 
     @Override
     public ThirdPartyAppResponse<String> init() {
-        OAuth2Token clientOAuth2Token =
-                apiClient.requestClientCredentials(authenticator.getClientCredentialScope());
+        OAuth2Token clientOAuth2Token = apiClient.requestClientCredentials(ClientMode.ACCOUNTS);
 
         authenticationValidator.validateClientToken(clientOAuth2Token);
 
@@ -209,10 +207,7 @@ public class OpenIdAuthenticationController
 
         URL authorizeUrl =
                 apiClient.buildAuthorizeUrl(
-                        strongAuthenticationState,
-                        nonce,
-                        authenticator.getClientCredentialScope(),
-                        callbackUri);
+                        strongAuthenticationState, nonce, ClientMode.ACCOUNTS, callbackUri);
 
         // Let the agent add to or change the URL before we send it to the front-end.
         authorizeUrl =
@@ -300,11 +295,8 @@ public class OpenIdAuthenticationController
     }
 
     private void saveAccessToken(OAuth2Token oAuth2Token) {
-        // only need to save the AIS toke in storage as we dont use pis token after payment is done.
-        if (authenticator.getClientCredentialScope().equals(ClientMode.ACCOUNTS)) {
-            persistentStorage.rotateStorageValue(
-                    OpenIdConstants.PersistentStorageKeys.AIS_ACCESS_TOKEN, oAuth2Token);
-        }
+        persistentStorage.rotateStorageValue(
+                OpenIdConstants.PersistentStorageKeys.AIS_ACCESS_TOKEN, oAuth2Token);
     }
 
     private void instantiateAuthFilter(OAuth2Token oAuth2Token) {
