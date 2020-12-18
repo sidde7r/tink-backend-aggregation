@@ -25,6 +25,11 @@ public abstract class WireMockTestFixtures {
         this.properties = properties;
     }
 
+    public static AgentsServiceConfiguration readAgentConfiguration(String configurationPath)
+            throws Exception {
+        return AgentsServiceConfigurationReader.read(configurationPath);
+    }
+
     public abstract Payment createDomesticPayment(LocalDate localDate);
 
     public Payment createDomesticPayment() {
@@ -55,42 +60,41 @@ public abstract class WireMockTestFixtures {
     }
 
     protected RemittanceInformation createUnstructuredRemittanceInformation() {
-        return RemittanceInformationUtils.generateUnstructuredRemittanceInformation(properties.remittanceInfoValue);
+        return RemittanceInformationUtils.generateUnstructuredRemittanceInformation(
+                properties.remittanceInfoValue);
     }
 
-    public static AgentsServiceConfiguration readAgentConfiguration(String configurationPath) throws Exception{
-        return AgentsServiceConfigurationReader.read(configurationPath);
-    }
-
-    public <T extends CompositeAgentTestCommand> AgentWireMockPaymentTest getAgentWireMockPaymentTestWithAuthCodeCallbackData(String wireMockFileName,
-        Payment payment, Class<T> command) throws Exception {
+    public <T extends CompositeAgentTestCommand>
+            AgentWireMockPaymentTest getAgentWireMockPaymentTestWithAuthCodeCallbackData(
+                    String wireMockFileName, Payment payment, Class<T> command) throws Exception {
 
         return getPreconfiguredAgentWireMockPaymentTestBuilder(wireMockFileName, payment)
-            .addCallbackData("code", properties.authCode)
-            .buildWithoutLogin(command);
+                .addCallbackData("code", properties.authCode)
+                .buildWithoutLogin(command);
     }
 
-    public <T extends CompositeAgentTestCommand> AgentWireMockPaymentTest getAgentWireMockPaymentTestWithErrorCallbackData(String wireMockFileName,
-        Payment payment, Class<T> command) throws Exception {
+    public <T extends CompositeAgentTestCommand>
+            AgentWireMockPaymentTest getAgentWireMockPaymentTestWithErrorCallbackData(
+                    String wireMockFileName, Payment payment, Class<T> command) throws Exception {
 
         return getPreconfiguredAgentWireMockPaymentTestBuilder(wireMockFileName, payment)
-            .addCallbackData("error", "access_denied")
-            .buildWithoutLogin(command);
+                .addCallbackData("error", "access_denied")
+                .buildWithoutLogin(command);
     }
 
-    public AgentWireMockPaymentTest.Builder getPreconfiguredAgentWireMockPaymentTestBuilder(String wireMockFileName, Payment payment)
-        throws Exception {
+    public AgentWireMockPaymentTest.Builder getPreconfiguredAgentWireMockPaymentTestBuilder(
+            String wireMockFileName, Payment payment) throws Exception {
 
         return AgentWireMockPaymentTest.builder(
-            properties.marketCode,
-            properties.providerName,
-            getWireMockFilePath(wireMockFileName))
-            .withConfigurationFile(readAgentConfiguration(properties.configurationFileName))
-            .withHttpDebugTrace()
-            .withPayment(payment);
+                        properties.marketCode,
+                        properties.providerName,
+                        getWireMockFilePath(wireMockFileName))
+                .withConfigurationFile(readAgentConfiguration(properties.configurationFileName))
+                .withHttpDebugTrace()
+                .withPayment(payment);
     }
 
-    private String getWireMockFilePath(String filename){
+    private String getWireMockFilePath(String filename) {
         return properties.resourcesPath + filename;
     }
 
@@ -100,10 +104,7 @@ public abstract class WireMockTestFixtures {
 
     @Getter
     public static class Properties {
-        private String authCode = "DUMMY_AUTH_CODE";
-        private String amount = "1.00";
-        private String creditorName = "Dummy creditor name";
-        private String state = "00000000-0000-4000-0000-000000000000";
+
         private final String providerName;
         private final String currency;
         private final String destinationIdentifier;
@@ -112,6 +113,10 @@ public abstract class WireMockTestFixtures {
         private final MarketCode marketCode;
         private final String configurationFileName;
         private final String resourcesPath;
+        private String authCode = "DUMMY_AUTH_CODE";
+        private String amount = "1.00";
+        private String creditorName = "Dummy creditor name";
+        private String state = "00000000-0000-4000-0000-000000000000";
 
         @Builder
         private Properties(
