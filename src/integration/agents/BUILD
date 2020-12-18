@@ -186,6 +186,8 @@ junit_test(
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/legacy",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/utils/currency",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/configuration",
+        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/utils",
+        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/utils/fixtures",
         "//src/integration/models",
         "//src/integration/payment:enums",
         "//src/integration/payment:rpc",
