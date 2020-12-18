@@ -1,9 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.ImmutableMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.Account;
@@ -115,19 +113,7 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
 
     private FetcherInstrumentationRegistry fetcherInstrumentation;
 
-    private UkOpenBankingPaymentRequestValidator paymentRequestValidator;
     private UkOpenBankingPisRequestFilter pisRequestFilter;
-
-    public UkOpenBankingBaseAgent(
-            AgentComponentProvider componentProvider,
-            JwtSigner jwtSigner,
-            UkOpenBankingAisConfig aisConfig,
-            UkOpenBankingPisConfig pisConfig,
-            UkOpenBankingPaymentRequestValidator paymentRequestValidator,
-            UkOpenBankingPisRequestFilter pisRequestFilter) {
-        this(componentProvider, jwtSigner, aisConfig, pisConfig, pisRequestFilter);
-        this.paymentRequestValidator = paymentRequestValidator;
-    }
 
     public UkOpenBankingBaseAgent(
             AgentComponentProvider componentProvider,
@@ -453,38 +439,32 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
             UkOpenBankingRequestBuilder requestBuilder, Payment payment) {
         final PaymentType paymentType = UkOpenBankingPaymentHelper.getPaymentType(payment);
 
-        Map<PaymentType, UkOpenBankingPaymentApiClient> apiClientMap =
-                createApiClientMap(requestBuilder);
-
-        return Optional.ofNullable(apiClientMap.get(paymentType))
-                .orElseThrow(
-                        () ->
-                                new IllegalArgumentException(
-                                        (String.format("Unknown type: %s", paymentType))));
-    }
-
-    private Map<PaymentType, UkOpenBankingPaymentApiClient> createApiClientMap(
-            UkOpenBankingRequestBuilder requestBuilder) {
-        final UkOpenBankingPaymentApiClient domesticPaymentApiClient =
-                new DomesticPaymentApiClient(
-                        requestBuilder, new DomesticPaymentConverter(), pisConfig.getBaseUrl());
-
-        return ImmutableMap.of(
-                PaymentType.DOMESTIC,
-                domesticPaymentApiClient,
-                PaymentType.DOMESTIC_FUTURE,
-                new DomesticScheduledPaymentApiClient(
+        switch (paymentType) {
+            case DOMESTIC:
+            case SEPA:
+                return new DomesticPaymentApiClient(
+                        requestBuilder, getDomesticPaymentConverter(), pisConfig.getBaseUrl());
+            case DOMESTIC_FUTURE:
+                return new DomesticScheduledPaymentApiClient(
                         requestBuilder,
-                        new DomesticScheduledPaymentConverter(),
-                        pisConfig.getBaseUrl()),
-                PaymentType.SEPA,
-                domesticPaymentApiClient);
+                        getDomesticScheduledPaymentConverter(),
+                        pisConfig.getBaseUrl());
+            default:
+                throw new IllegalArgumentException(
+                        (String.format("Unknown type: %s", paymentType)));
+        }
     }
 
-    private UkOpenBankingPaymentRequestValidator getPaymentRequestValidator() {
-        return Objects.isNull(paymentRequestValidator)
-                ? new DefaultUkOpenBankingPaymentRequestValidator()
-                : paymentRequestValidator;
+    protected UkOpenBankingPaymentRequestValidator getPaymentRequestValidator() {
+        return new DefaultUkOpenBankingPaymentRequestValidator();
+    }
+
+    protected DomesticPaymentConverter getDomesticPaymentConverter() {
+        return new DomesticPaymentConverter();
+    }
+
+    protected DomesticScheduledPaymentConverter getDomesticScheduledPaymentConverter() {
+        return new DomesticScheduledPaymentConverter();
     }
 
     private void setSoftwareIdForSignatureCreator(SoftwareStatementAssertion softwareStatement) {

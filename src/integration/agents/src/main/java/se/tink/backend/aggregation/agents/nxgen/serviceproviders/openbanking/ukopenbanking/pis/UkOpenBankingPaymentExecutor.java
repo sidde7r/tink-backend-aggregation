@@ -160,7 +160,7 @@ public class UkOpenBankingPaymentExecutor implements PaymentExecutor, FetchableP
                 paymentRequest.getStorage().get(UkOpenBankingPaymentConstants.PAYMENT_ID_KEY));
     }
 
-    public static String getConsentId(PaymentRequest paymentRequest) {
+    private static String getConsentId(PaymentRequest paymentRequest) {
         final Optional<String> maybeConsentId =
                 Optional.ofNullable(
                         paymentRequest

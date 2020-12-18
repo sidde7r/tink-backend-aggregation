@@ -124,7 +124,7 @@ public class DomesticScheduledPaymentApiClient implements UkOpenBankingPaymentAp
                 .creditorAccount(domesticScheduledPaymentConverter.getCreditorAccount(payment))
                 .instructedAmount(domesticScheduledPaymentConverter.getInstructedAmount(payment))
                 .remittanceInformation(
-                        domesticScheduledPaymentConverter.getRemittanceInformation(payment))
+                        domesticScheduledPaymentConverter.getRemittanceInformationDto(payment))
                 .requestedExecutionDateTime(
                         domesticScheduledPaymentConverter.getRequestedExecutionDateTime(payment))
                 .instructionIdentification(instructionIdentification)

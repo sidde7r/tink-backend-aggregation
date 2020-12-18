@@ -9,10 +9,16 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbank
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentTestFixtures.createDomesticPaymentResponse;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentTestFixtures.createExactCurrencyAmount;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentTestFixtures.createInstructedAmount;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentTestFixtures.createNoTypeRemittanceInformation;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentTestFixtures.createNoTypeRemittanceInformationDto;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentTestFixtures.createPayment;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentTestFixtures.createPaymentResponse;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentTestFixtures.createPaymentResponseForConsent;
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentTestFixtures.createRemittanceInformation;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentTestFixtures.createPaymentWithRemittanceInfo;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentTestFixtures.createReferenceRemittanceInformation;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentTestFixtures.createReferenceRemittanceInformationDto;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentTestFixtures.createUnstructuredRemittanceInformation;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentTestFixtures.createUnstructuredRemittanceInformationDto;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingTestValidator.validateAccountIdentifiersAreEqual;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingTestValidator.validatePaymentResponsesForDomesticPaymentAreEqual;
 
@@ -21,13 +27,14 @@ import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.dto.CreditorAccount;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.dto.DebtorAccount;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.dto.InstructedAmount;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.dto.RemittanceInformation;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.dto.RemittanceInformationDto;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domestic.dto.DomesticPaymentConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domestic.dto.DomesticPaymentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
+import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 public class DomesticPaymentConverterTest {
 
@@ -93,16 +100,48 @@ public class DomesticPaymentConverterTest {
     }
 
     @Test
-    public void shouldGetRemittanceInformation() {
+    public void shouldGetUnstructuredRemittanceInformation() {
         // given
-        final Payment paymentMock = createPayment();
+        final RemittanceInformation remittanceInformation =
+                createUnstructuredRemittanceInformation();
+        final Payment paymentMock = createPaymentWithRemittanceInfo(remittanceInformation);
 
         // when
-        final RemittanceInformation returned =
-                domesticPaymentConverter.getRemittanceInformation(paymentMock);
+        final RemittanceInformationDto returned =
+                domesticPaymentConverter.getRemittanceInformationDto(paymentMock);
 
         // then
-        final RemittanceInformation expected = createRemittanceInformation();
+        final RemittanceInformationDto expected = createUnstructuredRemittanceInformationDto();
+        assertThat(returned).isEqualTo(expected);
+    }
+
+    @Test
+    public void shouldGetReferenceRemittanceInformation() {
+        // given
+        final RemittanceInformation remittanceInformation = createReferenceRemittanceInformation();
+        final Payment paymentMock = createPaymentWithRemittanceInfo(remittanceInformation);
+
+        // when
+        final RemittanceInformationDto returned =
+                domesticPaymentConverter.getRemittanceInformationDto(paymentMock);
+
+        // then
+        final RemittanceInformationDto expected = createReferenceRemittanceInformationDto();
+        assertThat(returned).isEqualTo(expected);
+    }
+
+    @Test
+    public void shouldGetNoTypeRemittanceInformation() {
+        // given
+        final RemittanceInformation remittanceInformation = createNoTypeRemittanceInformation();
+        final Payment paymentMock = createPaymentWithRemittanceInfo(remittanceInformation);
+
+        // when
+        final RemittanceInformationDto returned =
+                domesticPaymentConverter.getRemittanceInformationDto(paymentMock);
+
+        // then
+        final RemittanceInformationDto expected = createNoTypeRemittanceInformationDto();
         assertThat(returned).isEqualTo(expected);
     }
 
@@ -114,8 +153,8 @@ public class DomesticPaymentConverterTest {
         when(paymentMock.getRemittanceInformation()).thenReturn(null);
 
         // when
-        final RemittanceInformation returned =
-                domesticPaymentConverter.getRemittanceInformation(paymentMock);
+        final RemittanceInformationDto returned =
+                domesticPaymentConverter.getRemittanceInformationDto(paymentMock);
 
         // then
         assertThat(returned.getReference()).isEmpty();

@@ -20,6 +20,12 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.UkOpenBankingV31Ais;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.signer.iface.JwtSigner;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.configuration.UkOpenBankingPisConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domestic.converter.DomesticPaymentConverter;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domesticscheduled.converter.DomesticScheduledPaymentConverter;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.validator.UkOpenBankingPaymentRequestValidator;
+import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.hsbc.pis.converter.HsbcDomesticPaymentConverter;
+import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.hsbc.pis.converter.HsbcDomesticSchedulerPaymentConverter;
+import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.hsbc.pis.validator.HsbcPaymentRequestValidator;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 
@@ -63,5 +69,20 @@ public final class MonzoV31Agent extends UkOpenBankingBaseAgent {
         UkOpenBankingV31Ais ukOpenBankingV31Ais =
                 new UkOpenBankingV31Ais(aisConfig, persistentStorage, localDateTimeSource);
         return new MonzoV31Ais(ukOpenBankingV31Ais, aisConfig, persistentStorage);
+    }
+
+    @Override
+    protected UkOpenBankingPaymentRequestValidator getPaymentRequestValidator() {
+        return new HsbcPaymentRequestValidator();
+    }
+
+    @Override
+    protected DomesticPaymentConverter getDomesticPaymentConverter() {
+        return new HsbcDomesticPaymentConverter();
+    }
+
+    @Override
+    protected DomesticScheduledPaymentConverter getDomesticScheduledPaymentConverter() {
+        return new HsbcDomesticSchedulerPaymentConverter();
     }
 }

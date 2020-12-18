@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.dto.CreditorAccount;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.dto.DebtorAccount;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.dto.InstructedAmount;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.dto.RemittanceInformation;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.dto.RemittanceInformationDto;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
@@ -24,7 +24,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class DomesticPaymentInitiation {
 
     @JsonInclude(Include.NON_NULL)
-    private RemittanceInformation remittanceInformation;
+    private RemittanceInformationDto remittanceInformation;
 
     @JsonInclude(Include.NON_NULL)
     private String endToEndIdentification;
