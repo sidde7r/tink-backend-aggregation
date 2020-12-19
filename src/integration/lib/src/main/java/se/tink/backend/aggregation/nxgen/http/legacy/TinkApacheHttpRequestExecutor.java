@@ -4,6 +4,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTCreator;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableSet;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.OffsetDateTime;
@@ -61,6 +62,26 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
     private static final String EIDAS_PROXY_REQUESTER = "X-Tink-Debug-ProxyRequester";
 
     private DefaultRequestLoggingAdapter requestLoggingAdapter;
+
+    private static final ImmutableSet<String> ALLOWED_CLUSTERIDS_FOR_QSEALCSIGN =
+            ImmutableSet.of(
+                    "barnsley-staging",
+                    "barnsley-production",
+                    "cardiff-staging",
+                    "cardiff-production",
+                    // To trigger the workaround in proxy for cornwall
+                    "cornwall-production",
+                    "oxford-preprod",
+                    "oxford-production",
+                    "kirkby-staging",
+                    "kirkby-production",
+                    "farnham-staging",
+                    "farnham-production",
+                    "leeds-staging",
+                    "leeds-production",
+                    "neston-staging",
+                    "neston-preprod",
+                    "neston-production");
 
     private SignatureKeyPair signatureKeyPair;
     private Algorithm algorithm;
@@ -183,7 +204,9 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
         // * If eidasIdentity is null (for legacy agent), fallback to use self signed cert.
         // * If QSealC cert can't be found or other exceptions, fallback as well and log the
         // error.
-        if (eidasIdentity != null && eidasIdentity.getAppId() != null) {
+        if (eidasIdentity != null
+                && eidasIdentity.getAppId() != null
+                && ALLOWED_CLUSTERIDS_FOR_QSEALCSIGN.contains(eidasIdentity.getClusterId())) {
             try {
                 addQsealcSignatureByGetingWholeJwsToken(request);
             } catch (Exception e) {
