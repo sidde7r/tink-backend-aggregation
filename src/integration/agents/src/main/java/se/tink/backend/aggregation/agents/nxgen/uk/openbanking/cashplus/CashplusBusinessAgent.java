@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.cashplus;
 
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CREDIT_CARDS;
-import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.LOANS;
 
 import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
@@ -24,7 +23,7 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponen
         modules = {UkOpenBankingModule.class, JwtSignerModule.class})
 @AgentDependencyModulesForDecoupledMode(
         modules = UkOpenBankingLocalKeySignerModuleForDecoupledMode.class)
-@AgentCapabilities({CHECKING_ACCOUNTS, CREDIT_CARDS, LOANS})
+@AgentCapabilities({CHECKING_ACCOUNTS, CREDIT_CARDS})
 public final class CashplusBusinessAgent extends UkOpenBankingBaseAgent {
 
     private static final UkOpenBankingAisConfig aisConfig;
