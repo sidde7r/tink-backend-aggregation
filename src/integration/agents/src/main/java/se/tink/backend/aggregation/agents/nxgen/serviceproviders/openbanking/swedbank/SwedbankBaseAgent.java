@@ -12,6 +12,7 @@ import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.SwedbankDecoupledAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.SwedbankPaymentAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.configuration.SwedbankConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.executor.payment.SwedbankBankIdSigner;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.executor.payment.SwedbankPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.fetcher.transactionalaccount.SwedbankTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.fetcher.transactionalaccount.SwedbankTransactionalAccountFetcher;
@@ -29,6 +30,7 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
+import se.tink.backend.aggregation.nxgen.controllers.signing.multifactor.bankid.BankIdSigningController;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.BankServiceInternalErrorFilter;
 
 public abstract class SwedbankBaseAgent extends NextGenerationAgent
@@ -122,16 +124,22 @@ public abstract class SwedbankBaseAgent extends NextGenerationAgent
 
     @Override
     public Optional<PaymentController> constructPaymentController() {
-        SwedbankPaymentAuthenticator paymentAuthenticator =
+        final SwedbankPaymentAuthenticator paymentAuthenticator =
                 new SwedbankPaymentAuthenticator(supplementalInformationHelper);
-        SwedbankPaymentExecutor swedbankPaymentExecutor =
+        final SwedbankBankIdSigner swedbankBankIdSigner = getSwedbankBankIdSigner();
+        final SwedbankPaymentExecutor swedbankPaymentExecutor =
                 new SwedbankPaymentExecutor(
                         apiClient,
                         paymentAuthenticator,
                         strongAuthenticationState,
-                        supplementalRequester);
+                        swedbankBankIdSigner,
+                        new BankIdSigningController(supplementalRequester, swedbankBankIdSigner));
 
         return Optional.of(new PaymentController(swedbankPaymentExecutor, swedbankPaymentExecutor));
+    }
+
+    private SwedbankBankIdSigner getSwedbankBankIdSigner() {
+        return new SwedbankBankIdSigner(apiClient);
     }
 
     @Override

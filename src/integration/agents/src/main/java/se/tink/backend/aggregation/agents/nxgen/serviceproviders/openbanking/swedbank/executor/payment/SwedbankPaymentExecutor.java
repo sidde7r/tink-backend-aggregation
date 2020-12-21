@@ -2,10 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sw
 
 import java.util.ArrayList;
 import java.util.List;
-import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.payment.ReferenceValidationException;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.SwedbankPaymentAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.common.SwedbankOpenBankingPaymentApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.executor.payment.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.executor.payment.entities.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.executor.payment.enums.SwedbankPaymentStatus;
@@ -29,7 +28,6 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepReq
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
-import se.tink.backend.aggregation.nxgen.controllers.signing.Signer;
 import se.tink.backend.aggregation.nxgen.controllers.signing.SigningStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.signing.multifactor.bankid.BankIdSigningController;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
@@ -38,23 +36,24 @@ import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.rpc.Payment;
 
 public class SwedbankPaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
-    private final SwedbankApiClient apiClient;
+    private final SwedbankOpenBankingPaymentApiClient apiClient;
     private final SwedbankPaymentAuthenticator paymentAuthenticator;
     private final List<PaymentResponse> createdPaymentsList = new ArrayList<>();
     private final StrongAuthenticationState strongAuthenticationState;
-    private final SupplementalRequester supplementalRequester;
     private final SwedbankBankIdSigner bankIdSigner;
+    private final BankIdSigningController signingController;
 
     public SwedbankPaymentExecutor(
-            SwedbankApiClient apiClient,
+            SwedbankOpenBankingPaymentApiClient apiClient,
             SwedbankPaymentAuthenticator paymentAuthenticator,
             StrongAuthenticationState strongAuthenticationState,
-            SupplementalRequester supplementalRequester) {
+            SwedbankBankIdSigner swedbankBankIdSigner,
+            BankIdSigningController bankIdSigningController) {
         this.apiClient = apiClient;
         this.paymentAuthenticator = paymentAuthenticator;
         this.strongAuthenticationState = strongAuthenticationState;
-        this.supplementalRequester = supplementalRequester;
-        this.bankIdSigner = new SwedbankBankIdSigner(this.apiClient);
+        this.bankIdSigner = swedbankBankIdSigner;
+        this.signingController = bankIdSigningController;
     }
 
     @Override
@@ -170,7 +169,7 @@ public class SwedbankPaymentExecutor implements PaymentExecutor, FetchablePaymen
                             payment, SigningStepConstants.STEP_INIT, new ArrayList<>());
                 }
             case SigningStepConstants.STEP_SIGN:
-                getSigner().sign(paymentMultiStepRequest);
+                this.signingController.sign(paymentMultiStepRequest);
                 if (bankIdSigner.isMissingExtendedBankId()) {
                     signWithRedirectFlow(paymentMultiStepRequest);
                 } else if (getPaymentStatus(paymentId).equals(PaymentStatus.PENDING)) {
@@ -214,9 +213,5 @@ public class SwedbankPaymentExecutor implements PaymentExecutor, FetchablePaymen
 
         return SwedbankPaymentStatus.fromString(paymentStatusResponse.getTransactionStatus())
                 .getTinkPaymentStatus();
-    }
-
-    private Signer getSigner() {
-        return new BankIdSigningController(supplementalRequester, bankIdSigner);
     }
 }
