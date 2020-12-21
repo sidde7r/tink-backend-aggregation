@@ -8,6 +8,7 @@ import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.authenticator.rpc.LoginRequest;
@@ -111,10 +112,24 @@ public class ImaginBankApiClient {
     }
 
     public void initiateCardFetching() {
-        String initCardsResponse =
-                createRequest(ImaginBankConstants.Urls.INITIATE_CARD_FETCHING)
-                        .post(String.class, "{}");
-        logger.info("Initiated card fetching {}", initCardsResponse);
+        try {
+            String initCardsResponse =
+                    createRequest(ImaginBankConstants.Urls.INITIATE_CARD_FETCHING)
+                            .post(String.class, "{}");
+            logger.info("Initiated card fetching {}", initCardsResponse);
+        } catch (HttpResponseException e) {
+            HttpResponse response = e.getResponse();
+            ImaginBankErrorResponse errorResponse = response.getBody(ImaginBankErrorResponse.class);
+            logger.info(
+                    "Failed to initiate card fetching with error code {} and message {}",
+                    errorResponse.getCode(),
+                    errorResponse.getMessage());
+            if (response.getStatus() == HttpStatus.SC_CONFLICT
+                    && errorResponse.isCurrentlyUnavailable()) {
+                throw BankServiceError.BANK_SIDE_FAILURE.exception(e);
+            }
+            throw e;
+        }
     }
 
     public CardsResponse fetchCards() {
