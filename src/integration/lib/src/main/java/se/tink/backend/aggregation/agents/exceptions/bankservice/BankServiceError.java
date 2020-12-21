@@ -27,7 +27,8 @@ public enum BankServiceError implements AgentError {
     MULTIPLE_LOGIN(
             new LocalizableKey(
                     "You were automatically logged out because you logged in to another channel; Logout is done for your security.")),
-    SESSION_TERMINATED(new LocalizableKey("Your session has been terminated by the bank."));
+    SESSION_TERMINATED(new LocalizableKey("Your session has been terminated by the bank.")),
+    DEFAULT_MESSAGE(new LocalizableKey("Something went wrong during the process."));
 
     private final LocalizableKey userMessage;
 

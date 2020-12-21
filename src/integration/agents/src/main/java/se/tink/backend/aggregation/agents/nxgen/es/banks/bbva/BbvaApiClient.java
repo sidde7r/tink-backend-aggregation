@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva;
 
 import com.google.common.collect.ImmutableList;
 import javax.ws.rs.core.MediaType;
+import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.util.Strings;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.Fetchers;
@@ -35,6 +36,7 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
+@Slf4j
 public class BbvaApiClient {
 
     private final TinkHttpClient client;
@@ -113,19 +115,35 @@ public class BbvaApiClient {
 
     public AccountTransactionsResponse fetchAccountTransactions(Account account, String pageKey) {
         final TransactionsRequest request = createAccountTransactionsQuery(account);
-
-        final RequestBuilder builder;
-        if (Strings.isNullOrEmpty(pageKey)) {
-            // First page
-            builder =
-                    createRequestInSession(BbvaConstants.Url.ACCOUNT_TRANSACTION)
-                            .queryParam(QueryKeys.PAGINATION_OFFSET, QueryValues.FIRST_PAGE_KEY)
-                            .queryParam(QueryKeys.PAGE_SIZE, String.valueOf(Fetchers.PAGE_SIZE));
-        } else {
-            // Pagination key is complete URL from /ASO
-            builder = createRequestInSession(Url.ASO + pageKey);
+        final RequestBuilder builder = createAccountTransactionRequest(pageKey);
+        try {
+            return builder.post(AccountTransactionsResponse.class, request);
+        } catch (HttpResponseException e) {
+            BbvaErrorResponse errorResponse = e.getResponse().getBody(BbvaErrorResponse.class);
+            if (errorResponse.isConflictStatus() || errorResponse.isInternalServerError()) {
+                throw BankServiceError.BANK_SIDE_FAILURE.exception();
+            }
+            log.info(
+                    "Unknown error: httpStatus {}, code {}, message {}",
+                    errorResponse.getHttpStatus(),
+                    errorResponse.getErrorCode(),
+                    errorResponse.getErrorMessage());
+            throw BankServiceError.DEFAULT_MESSAGE.exception();
         }
-        return builder.post(AccountTransactionsResponse.class, request);
+    }
+
+    private RequestBuilder createAccountTransactionRequest(String pageKey) {
+        if (isFirstPageOfAccountTransactions(pageKey)) {
+            return createRequestInSession(BbvaConstants.Url.ACCOUNT_TRANSACTION)
+                    .queryParam(QueryKeys.PAGINATION_OFFSET, QueryValues.FIRST_PAGE_KEY)
+                    .queryParam(QueryKeys.PAGE_SIZE, String.valueOf(Fetchers.PAGE_SIZE));
+        } else {
+            return createRequestInSession(Url.ASO + pageKey);
+        }
+    }
+
+    private boolean isFirstPageOfAccountTransactions(String pageKey) {
+        return Strings.isNullOrEmpty(pageKey);
     }
 
     public CreditCardTransactionsResponse fetchCreditCardTransactions(
@@ -154,7 +172,12 @@ public class BbvaApiClient {
             if (response.isContractNotOperableError()) {
                 throw BankServiceError.BANK_SIDE_FAILURE.exception(response.getErrorMessage());
             }
-            throw ex;
+            log.info(
+                    "Unknown error: httpStatus {}, code {}, message {}",
+                    response.getHttpStatus(),
+                    response.getErrorCode(),
+                    response.getErrorMessage());
+            throw BankServiceError.DEFAULT_MESSAGE.exception();
         }
     }
 
