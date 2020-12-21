@@ -9,6 +9,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.executor.payment.SwedbankTestHelper.INSTRUCTION_ID;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.executor.payment.SwedbankTestHelper.createPaymentAuthorisationResponse;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.executor.payment.SwedbankTestHelper.createPaymentMultiStepRequest;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.executor.payment.SwedbankTestHelper.createPaymentRequest;
@@ -38,6 +39,7 @@ public class SwedbankPaymentExecutorTest {
     private SwedbankPaymentAuthenticator swedbankPaymentAuthenticator;
     private SwedbankBankIdSigner swedbankIdSigner;
     private BankIdSigningController<PaymentMultiStepRequest> bankIdSigningController;
+    private SwedbankPaymentSigner swedbankPaymentSigner;
 
     @Before
     @SuppressWarnings("unchecked")
@@ -46,6 +48,7 @@ public class SwedbankPaymentExecutorTest {
         swedbankPaymentAuthenticator = mock(SwedbankPaymentAuthenticator.class);
         swedbankIdSigner = mock(SwedbankBankIdSigner.class);
         bankIdSigningController = mock(BankIdSigningController.class);
+        swedbankPaymentSigner = mock(SwedbankPaymentSigner.class);
 
         swedbankPaymentExecutor =
                 new SwedbankPaymentExecutor(
@@ -53,16 +56,15 @@ public class SwedbankPaymentExecutorTest {
                         swedbankPaymentAuthenticator,
                         createStrongAuthenticationStateMock(),
                         swedbankIdSigner,
-                        bankIdSigningController);
-
-        givenPaymentAuthorization();
+                        bankIdSigningController,
+                        swedbankPaymentSigner);
     }
 
     @Test
-    public void shouldStayInInitStateIfNotReadyForSigning() {
+    public void shouldStayInInitStateIfAuthorizeProcessNotStarted() {
         // given
         final PaymentMultiStepRequest request = createPaymentRequest();
-        givenPaymentStatusIs(false, "");
+        when(swedbankPaymentSigner.authorize(INSTRUCTION_ID)).thenReturn(false);
 
         // when
         final PaymentMultiStepResponse result = swedbankPaymentExecutor.sign(request);
@@ -72,17 +74,17 @@ public class SwedbankPaymentExecutorTest {
     }
 
     @Test
-    public void shouldAuthorizePayment() {
+    public void shouldGoToSIGNStateIfAuthorizeProcessSuccessful() {
         // given
         final PaymentMultiStepRequest request = createPaymentRequest();
-        givenPaymentStatusIs(true, "");
+        when(swedbankPaymentSigner.authorize(INSTRUCTION_ID)).thenReturn(true);
 
         // when
         final PaymentMultiStepResponse result = swedbankPaymentExecutor.sign(request);
 
         // then
         assertThat(result.getStep(), is(STEP_SIGN));
-        verify(swedbankIdSigner, times(1)).setAuthenticationResponse(any());
+        verify(swedbankPaymentSigner, times(1)).authorize(INSTRUCTION_ID);
     }
 
     @Test
@@ -92,6 +94,7 @@ public class SwedbankPaymentExecutorTest {
 
         givenPaymentStatusIs(true, "");
         givenMissingExtendedBankId();
+        givenPaymentAuthorization();
 
         // when
         final PaymentMultiStepResponse result = swedbankPaymentExecutor.sign(request);

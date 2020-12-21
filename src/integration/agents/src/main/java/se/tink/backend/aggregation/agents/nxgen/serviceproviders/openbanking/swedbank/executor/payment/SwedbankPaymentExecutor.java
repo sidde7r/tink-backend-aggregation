@@ -47,18 +47,21 @@ public class SwedbankPaymentExecutor implements PaymentExecutor, FetchablePaymen
     private final StrongAuthenticationState strongAuthenticationState;
     private final SwedbankBankIdSigner bankIdSigner;
     private final BankIdSigningController<PaymentMultiStepRequest> signingController;
+    private final SwedbankPaymentSigner swedbankPaymentSigner;
 
     public SwedbankPaymentExecutor(
             SwedbankOpenBankingPaymentApiClient apiClient,
             SwedbankPaymentAuthenticator paymentAuthenticator,
             StrongAuthenticationState strongAuthenticationState,
             SwedbankBankIdSigner swedbankBankIdSigner,
-            BankIdSigningController<PaymentMultiStepRequest> bankIdSigningController) {
+            BankIdSigningController<PaymentMultiStepRequest> bankIdSigningController,
+            SwedbankPaymentSigner swedbankPaymentSigner) {
         this.apiClient = apiClient;
         this.paymentAuthenticator = paymentAuthenticator;
         this.strongAuthenticationState = strongAuthenticationState;
         this.bankIdSigner = swedbankBankIdSigner;
         this.signingController = bankIdSigningController;
+        this.swedbankPaymentSigner = swedbankPaymentSigner;
     }
 
     @Override
@@ -128,7 +131,9 @@ public class SwedbankPaymentExecutor implements PaymentExecutor, FetchablePaymen
 
         switch (paymentMultiStepRequest.getStep()) {
             case STEP_INIT:
-                return initialisePayment(payment, strongAuthenticationState.getState());
+                final boolean authorizationResult = swedbankPaymentSigner.authorize(paymentId);
+                final String step = authorizationResult ? STEP_SIGN : STEP_INIT;
+                return new PaymentMultiStepResponse(payment, step, emptyList());
             case STEP_SIGN:
                 return signPayment(paymentMultiStepRequest, paymentId);
             case STEP_FINALIZE:
@@ -140,32 +145,8 @@ public class SwedbankPaymentExecutor implements PaymentExecutor, FetchablePaymen
         }
     }
 
-    private PaymentMultiStepResponse initialisePayment(Payment payment, String authState) {
-        final PaymentStatusResponse paymentStatusResponse = getPaymentStatus(payment.getUniqueId());
-
-        if (paymentStatusResponse.isReadyForSigning()) {
-            authorizePayment(payment, authState);
-            return new PaymentMultiStepResponse(payment, STEP_SIGN, emptyList());
-        }
-
-        return new PaymentMultiStepResponse(payment, STEP_INIT, emptyList());
-    }
-
-    private void authorizePayment(Payment payment, String authenticationState) {
-        final PaymentAuthorisationResponse paymentAuthorisationResponse =
-                apiClient.startPaymentAuthorisation(
-                        payment.getUniqueId(),
-                        SwedbankPaymentType.SE_DOMESTIC_CREDIT_TRANSFERS,
-                        authenticationState,
-                        false);
-
-        bankIdSigner.setAuthenticationResponse(
-                apiClient.startPaymentAuthorization(
-                        paymentAuthorisationResponse.getSelectAuthenticationMethod()));
-    }
-
     private PaymentMultiStepResponse signPayment(
-        PaymentMultiStepRequest request, String paymentId) {
+            PaymentMultiStepRequest request, String paymentId) {
         this.signingController.sign(request);
         if (bankIdSigner.isMissingExtendedBankId()) {
             return signWithRedirectFlow(request);
@@ -199,12 +180,12 @@ public class SwedbankPaymentExecutor implements PaymentExecutor, FetchablePaymen
     private PaymentStatus getTinkPaymentStatus(String paymentId) {
         PaymentStatusResponse paymentStatusResponse = getPaymentStatus(paymentId);
         return SwedbankPaymentStatus.fromString(paymentStatusResponse.getTransactionStatus())
-            .getTinkPaymentStatus();
+                .getTinkPaymentStatus();
     }
 
     private PaymentStatusResponse getPaymentStatus(String paymentId) {
         return apiClient.getPaymentStatus(
-            paymentId, SwedbankPaymentType.SE_DOMESTIC_CREDIT_TRANSFERS);
+                paymentId, SwedbankPaymentType.SE_DOMESTIC_CREDIT_TRANSFERS);
     }
 
     @Override
