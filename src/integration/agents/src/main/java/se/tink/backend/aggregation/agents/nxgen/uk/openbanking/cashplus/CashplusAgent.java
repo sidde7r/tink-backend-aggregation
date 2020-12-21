@@ -25,14 +25,14 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponen
 @AgentDependencyModulesForDecoupledMode(
         modules = UkOpenBankingLocalKeySignerModuleForDecoupledMode.class)
 @AgentCapabilities({CHECKING_ACCOUNTS, CREDIT_CARDS, LOANS})
-public final class CashplusBusinessAgent extends UkOpenBankingBaseAgent {
+public final class CashplusAgent extends UkOpenBankingBaseAgent {
 
     private static final UkOpenBankingAisConfig aisConfig;
 
     static {
         aisConfig =
                 UkOpenBankingAisConfiguration.builder()
-                        .withAllowedAccountOwnershipType(AccountOwnershipType.BUSINESS)
+                        .withAllowedAccountOwnershipType(AccountOwnershipType.PERSONAL)
                         .withApiBaseURL(CashplusConstants.AIS_API_URL)
                         .withWellKnownURL(CashplusConstants.WELL_KNOWN_URL)
                         .withOrganisationId(CashplusConstants.ORGANISATION_ID)
@@ -40,7 +40,7 @@ public final class CashplusBusinessAgent extends UkOpenBankingBaseAgent {
     }
 
     @Inject
-    public CashplusBusinessAgent(AgentComponentProvider componentProvider, JwtSigner jwtSigner) {
+    public CashplusAgent(AgentComponentProvider componentProvider, JwtSigner jwtSigner) {
         super(componentProvider, jwtSigner, aisConfig);
     }
 
