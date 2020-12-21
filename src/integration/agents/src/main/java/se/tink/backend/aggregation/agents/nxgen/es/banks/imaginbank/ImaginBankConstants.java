@@ -95,6 +95,7 @@ public class ImaginBankConstants {
 
         public static final List<String> ACCOUNT_BLOCKED = Arrays.asList("0207", "0246");
         public static final String INCORRECT_CREDENTIALS = "0250";
+        public static final String UNAVAILABLE = "001";
     }
 
     public static class TransactionDescriptions {

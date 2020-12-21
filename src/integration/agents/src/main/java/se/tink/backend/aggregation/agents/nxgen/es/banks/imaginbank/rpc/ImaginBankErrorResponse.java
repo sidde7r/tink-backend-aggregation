@@ -28,4 +28,11 @@ public class ImaginBankErrorResponse {
                 .trim()
                 .equalsIgnoreCase(ImaginBankConstants.ErrorCode.INCORRECT_CREDENTIALS);
     }
+
+    @JsonIgnore
+    public boolean isCurrentlyUnavailable() {
+        return Strings.nullToEmpty(code)
+                .trim()
+                .equalsIgnoreCase(ImaginBankConstants.ErrorCode.UNAVAILABLE);
+    }
 }
