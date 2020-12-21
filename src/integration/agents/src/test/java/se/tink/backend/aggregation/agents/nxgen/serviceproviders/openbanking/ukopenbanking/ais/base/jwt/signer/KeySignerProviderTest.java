@@ -78,8 +78,7 @@ public class KeySignerProviderTest {
     @Test
     public void shouldAllowDirectionForEidasProxyJwtSignerWhenClusterIdAndTestMatching() {
         // given
-        when(context.getClusterId()).thenReturn("oxford-preprod");
-        when(randomValueGenerator.generateRandomDoubleInRange(0, 100)).thenReturn(15d);
+        when(randomValueGenerator.generateRandomDoubleInRange(0, 100)).thenReturn(4d);
 
         // when
         JwtSigner jwtSigner = keySignerProvider.get();
@@ -89,22 +88,8 @@ public class KeySignerProviderTest {
     }
 
     @Test
-    public void shouldUseLegacySolutionWhenClusterIdIsNotMatching() {
-        // given
-        when(context.getClusterId()).thenReturn("oxford-production");
-        when(randomValueGenerator.generateRandomDoubleInRange(0, 100)).thenReturn(15d);
-
-        // when
-        JwtSigner jwtSigner = keySignerProvider.get();
-
-        // then
-        assertThat(jwtSigner).isInstanceOf(SecretServiceJwtSigner.class);
-    }
-
-    @Test
     public void shouldUseLegacySolutionWhenTestIsNotMatching() {
         // given
-        when(context.getClusterId()).thenReturn("oxford-staging");
         when(randomValueGenerator.generateRandomDoubleInRange(0, 100)).thenReturn(50d);
 
         // when
