@@ -39,7 +39,7 @@ public final class SantanderAgentWiremockTestFixtures {
                 .withExactCurrencyAmount(createExactCurrencyAmount())
                 .withExecutionDate(localDate)
                 .withCurrency(CURRENCY)
-                .withRemittanceInformation(createUnstructuredRemittanceInformation())
+                .withRemittanceInformation(createReferenceRemittanceInformation())
                 .withUniqueId(UNIQUE_ID)
                 .build();
     }
@@ -54,10 +54,10 @@ public final class SantanderAgentWiremockTestFixtures {
         return ExactCurrencyAmount.of(AMOUNT, CURRENCY);
     }
 
-    private static RemittanceInformation createUnstructuredRemittanceInformation() {
+    private static RemittanceInformation createReferenceRemittanceInformation() {
         final RemittanceInformation result = new RemittanceInformation();
 
-        result.setType(RemittanceInformationType.UNSTRUCTURED);
+        result.setType(RemittanceInformationType.REFERENCE);
         result.setValue(REMITTANCE_INFO_VALUE);
 
         return result;

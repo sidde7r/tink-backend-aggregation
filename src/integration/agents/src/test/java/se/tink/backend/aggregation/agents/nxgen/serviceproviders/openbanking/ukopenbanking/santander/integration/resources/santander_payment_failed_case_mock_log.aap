@@ -55,7 +55,7 @@ x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
 x-jws-signature: RkFLRV9TSUdOQVRVUkUK
 x-fapi-financial-id: 0015800000jfFGuAAM
 
-{"Risk":{"PaymentContextCode":"Other"},"Data":{"Permission":"Create","ReadRefundAccount":"Yes","Initiation":{"RemittanceInformation":{"Unstructured":"UK Demo"},"InstructionIdentification":"b900555d03124056b54930e1c53c9cac","CreditorAccount":{"SchemeName":"UK.OBIE.SortCodeAccountNumber","Identification":"77788812345678","Name":"Dummy creditor name"},"InstructedAmount":{"Amount":"1.00","Currency":"GBP"},"RequestedExecutionDateTime":"2120-11-02T00:00:00Z"}}}
+{"Risk":{"PaymentContextCode":"Other"},"Data":{"Permission":"Create","ReadRefundAccount":"Yes","Initiation":{"RemittanceInformation":{"Reference":"UK Demo"},"InstructionIdentification":"b900555d03124056b54930e1c53c9cac","CreditorAccount":{"SchemeName":"UK.OBIE.SortCodeAccountNumber","Identification":"77788812345678","Name":"Dummy creditor name"},"InstructedAmount":{"Amount":"1.00","Currency":"GBP"},"RequestedExecutionDateTime":"2120-11-02T00:00:00Z"}}}
 
 RESPONSE 3
 400

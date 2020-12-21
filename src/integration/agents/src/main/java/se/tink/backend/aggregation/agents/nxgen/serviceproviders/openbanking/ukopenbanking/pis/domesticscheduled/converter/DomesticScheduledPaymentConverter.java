@@ -69,8 +69,7 @@ public class DomesticScheduledPaymentConverter extends PaymentConverterBase {
     private Payment createPayment(
             DomesticScheduledPaymentInitiation initiation, PaymentStatus paymentStatus) {
         final RemittanceInformation remittanceInformation =
-                createUnstructuredRemittanceInformation(
-                        initiation.getRemittanceInformation().getUnstructured());
+                createRemittanceInformation(initiation.getRemittanceInformation());
         final ExactCurrencyAmount amount =
                 convertInstructedAmountToExactCurrencyAmount(initiation.getInstructedAmount());
 
