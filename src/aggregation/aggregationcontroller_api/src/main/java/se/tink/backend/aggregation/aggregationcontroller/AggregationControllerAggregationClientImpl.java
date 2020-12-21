@@ -221,7 +221,16 @@ public class AggregationControllerAggregationClientImpl
     @Override
     public Response updateCredentials(
             HostConfiguration hostConfiguration, UpdateCredentialsStatusRequest request) {
-
+        if ("nl-abnamro".equals(request.getCredentials().getProviderName())) {
+            log.info(
+                    String.format(
+                            "UpdateCredentials [credentialsId:%s] [status:%s] [payload:%s] [operationId:%s]",
+                            request.getCredentials().getId(),
+                            request.getCredentials().getStatus(),
+                            request.getCredentials().getPayload(),
+                            request.getOperationId()),
+                    new Exception());
+        }
         return requestExecuter(
                 () -> getUpdateService(hostConfiguration).updateCredentials(request),
                 "Update Credentials");
