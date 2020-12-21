@@ -134,6 +134,7 @@ public class DanskeBankSEConfiguration implements DanskeBankConfiguration {
     public Map<String, LoanDetails.Type> getLoanAccountTypes() {
         return ImmutableMap.<String, LoanDetails.Type>builder()
                 .put("2AT", LoanDetails.Type.OTHER)
+                .put("2AS", LoanDetails.Type.LAND)
                 .put("2CK", LoanDetails.Type.MORTGAGE)
                 .put("2CL", LoanDetails.Type.BLANCO)
                 .put("2C6", LoanDetails.Type.OTHER)
