@@ -99,12 +99,17 @@ public abstract class PaymentConverterBase {
                 .orElse(null);
     }
 
-    protected se.tink.libraries.transfer.rpc.RemittanceInformation
-            createUnstructuredRemittanceInformation(String unstructuredString) {
-        final se.tink.libraries.transfer.rpc.RemittanceInformation remittanceInformation =
-                new se.tink.libraries.transfer.rpc.RemittanceInformation();
-        remittanceInformation.setType(RemittanceInformationType.UNSTRUCTURED);
-        remittanceInformation.setValue(unstructuredString);
+    protected RemittanceInformation createRemittanceInformation(
+            RemittanceInformationDto remittanceInformationDto) {
+        final RemittanceInformation remittanceInformation = new RemittanceInformation();
+
+        if (StringUtils.isNotBlank(remittanceInformationDto.getUnstructured())) {
+            remittanceInformation.setType(RemittanceInformationType.UNSTRUCTURED);
+            remittanceInformation.setValue(remittanceInformationDto.getUnstructured());
+        } else {
+            remittanceInformation.setType(RemittanceInformationType.REFERENCE);
+            remittanceInformation.setValue(remittanceInformationDto.getReference());
+        }
 
         return remittanceInformation;
     }

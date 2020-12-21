@@ -55,7 +55,7 @@ x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
 x-jws-signature: RkFLRV9TSUdOQVRVUkUK
 x-fapi-financial-id: 0015800000jfFGuAAM
 
-{"Risk":{"PaymentContextCode":"Other"},"Data":{"Initiation":{"InstructionIdentification":"b900555d03124056b54930e1c53c9cac","EndToEndIdentification":"b900555d03124056b54930e1c53c9ca","InstructedAmount":{"Amount":"1.00","Currency":"GBP"},"CreditorAccount":{"SchemeName":"UK.OBIE.SortCodeAccountNumber","Identification":"77788812345678","Name":"Dummy creditor name"},"RemittanceInformation":{"Unstructured":"UK Demo"}}}}
+{"Risk":{"PaymentContextCode":"Other"},"Data":{"Initiation":{"InstructionIdentification":"b900555d03124056b54930e1c53c9cac","EndToEndIdentification":"b900555d03124056b54930e1c53c9ca","InstructedAmount":{"Amount":"1.00","Currency":"GBP"},"CreditorAccount":{"SchemeName":"UK.OBIE.SortCodeAccountNumber","Identification":"77788812345678","Name":"Dummy creditor name"},"RemittanceInformation":{"Reference":"UK Demo"}}}}
 
 RESPONSE 3
 201
@@ -72,4 +72,4 @@ x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
 x-fapi-financial-id: 0015800000jfFGuAAM
 X-Aggregator: Tink Testing
 
-{"Data":{"ConsentId":"ca638bcb-bb90-48d9-a9a8-0b4403c18647","CreationDateTime":"2020-11-02T15:23:56Z","Status":"AwaitingAuthorisation","StatusUpdateDateTime":"2020-11-02T15:23:56Z","Initiation":{"InstructionIdentification":"b900555d03124056b54930e1c53c9cac","EndToEndIdentification":"b900555d03124056b54930e1c53c9cac","InstructedAmount":{"Amount":"1.00","Currency":"GBP"},"CreditorAccount":{"SchemeName":"UK.OBIE.SortCodeAccountNumber","Identification":"77788812345678","Name":"Dummy creditor name"},"RemittanceInformation":{"Unstructured":"UK Demo"}}},"Risk":{"PaymentContextCode":"Other"},"Links":{"Self":"https://openbanking-ma.santander.co.uk/sanuk/external/open-banking/v3.1/pisp/domestic-payment-consents/ca638bcb-bb90-48d9-a9a8-0b4403c18647"},"Meta":{}}
+{"Data":{"ConsentId":"ca638bcb-bb90-48d9-a9a8-0b4403c18647","CreationDateTime":"2020-11-02T15:23:56Z","Status":"AwaitingAuthorisation","StatusUpdateDateTime":"2020-11-02T15:23:56Z","Initiation":{"InstructionIdentification":"b900555d03124056b54930e1c53c9cac","EndToEndIdentification":"b900555d03124056b54930e1c53c9cac","InstructedAmount":{"Amount":"1.00","Currency":"GBP"},"CreditorAccount":{"SchemeName":"UK.OBIE.SortCodeAccountNumber","Identification":"77788812345678","Name":"Dummy creditor name"},"RemittanceInformation":{"Reference":"UK Demo"}}},"Risk":{"PaymentContextCode":"Other"},"Links":{"Self":"https://openbanking-ma.santander.co.uk/sanuk/external/open-banking/v3.1/pisp/domestic-payment-consents/ca638bcb-bb90-48d9-a9a8-0b4403c18647"},"Meta":{}}
