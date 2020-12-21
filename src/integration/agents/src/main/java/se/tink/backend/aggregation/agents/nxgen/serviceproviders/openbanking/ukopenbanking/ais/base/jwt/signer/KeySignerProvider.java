@@ -23,7 +23,7 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.ran
 
 @Slf4j
 public final class KeySignerProvider implements Provider<JwtSigner> {
-    private static final int ALLOWED_PERCENT_OF_TRAFFIC = 20;
+    private static final int ALLOWED_PERCENT_OF_TRAFFIC = 5;
     private static final Predicate<RandomValueGenerator> SHOULD_ALLOW =
             generator -> ALLOWED_PERCENT_OF_TRAFFIC > generator.generateRandomDoubleInRange(0, 100);
     private final AgentComponentProvider agentComponentProvider;
@@ -55,9 +55,7 @@ public final class KeySignerProvider implements Provider<JwtSigner> {
     public JwtSigner get() {
         String appId = agentComponentProvider.getContext().getAppId();
         SecretServiceJwtSigner secretServiceJwtSigner = new SecretServiceJwtSigner(configuration);
-        String clusterId = agentComponentProvider.getContext().getClusterId();
-        if (SHOULD_ALLOW.test(agentComponentProvider.getRandomValueGenerator())
-                && (clusterId.equals("oxford-preprod") || clusterId.equals("oxford-staging"))) {
+        if (SHOULD_ALLOW.test(agentComponentProvider.getRandomValueGenerator())) {
             X509Certificate certificate =
                     CertificateUtils.getX509CertificatesFromBase64EncodedCert(
                                     agentConfigurationControllerContext
