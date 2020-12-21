@@ -33,9 +33,10 @@ public class LoggingFilter implements ContainerRequestFilter, ContainerResponseF
             String headers = formatHeaders(request.getRequestHeaders());
 
             logger.info(
-                    "incoming request:\n{} {},\nheaders: {},\nmedia type: {},\nbody: {}\n",
+                    "incoming request:\n{} {}\npath: {}\nheaders: {}\nmedia type: {}\nbody: {}\n",
                     request.getMethod(),
                     request.getRequestUri(),
+                    request.getPath(),
                     headers,
                     request.getMediaType(),
                     prettify(body));
@@ -52,7 +53,7 @@ public class LoggingFilter implements ContainerRequestFilter, ContainerResponseF
             String headers = formatHeaders(response.getHttpHeaders());
 
             logger.info(
-                    "outgoing response:\nstatus: {},\n headers: {},\nmedia type: {},\nbody: {}",
+                    "outgoing response:\nstatus: {}\n headers: {}\nmedia type: {}\nbody: {}",
                     response.getStatus(),
                     headers,
                     request.getMediaType(),
