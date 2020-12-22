@@ -20,6 +20,7 @@ public final class NorwegianConstants {
         public static final String ALREADY_IN_PROGRESS = "ALREADY_IN_PROGRESS";
         public static final String INVALID_SSN = "The provided ID number was invalid";
         public static final String NOT_CUSTOMER = "hittade inte kunden";
+        public static final String USER_CANCEL = "USER_CANCEL";
     }
 
     public static class Urls {
