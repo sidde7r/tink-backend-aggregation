@@ -29,13 +29,13 @@ public class TransactionDatePaginationControllerTest {
 
     private TransactionDatePaginationController<Account> paginationController;
     private int MAX_CONSECUTIVE_EMPTY_PAGES = 4;
-    private int MONTHS_TO_FETCH = 3;
+    private int DAYS_TO_FETCH = 89;
 
     @Before
     public void setup() {
         paginationController =
                 new TransactionDatePaginationController<>(
-                        paginator, MAX_CONSECUTIVE_EMPTY_PAGES, MONTHS_TO_FETCH, ChronoUnit.MONTHS);
+                        paginator, MAX_CONSECUTIVE_EMPTY_PAGES, DAYS_TO_FETCH, ChronoUnit.DAYS);
     }
 
     @Test(expected = NullPointerException.class)
@@ -86,7 +86,7 @@ public class TransactionDatePaginationControllerTest {
 
         for (int i = 0; i < periods.size(); i++) {
             Pair<Date, Date> period = periods.get(i);
-            Assert.assertEquals(period.first, DateUtils.addMonths(period.second, -MONTHS_TO_FETCH));
+            Assert.assertEquals(period.first, DateUtils.addDays(period.second, -DAYS_TO_FETCH));
             if (i > 0) {
                 Pair<Date, Date> nextPeriod = periods.get(i - 1);
                 Assert.assertEquals(DateUtils.addDays(period.second, 1), nextPeriod.first);

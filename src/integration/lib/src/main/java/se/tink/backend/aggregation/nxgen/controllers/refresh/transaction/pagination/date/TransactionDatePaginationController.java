@@ -22,7 +22,7 @@ public class TransactionDatePaginationController<A extends Account>
             LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private static final int DEFAULT_MAX_CONSECUTIVE_EMPTY_PAGES = 4;
-    private static final int DEFAULT_MONTHS_TO_FETCH = 3;
+    private static final int DEFAULT_DAYS_TO_FETCH = 89;
 
     private final TransactionDatePaginator<A> paginator;
 
@@ -40,7 +40,7 @@ public class TransactionDatePaginationController<A extends Account>
 
     public TransactionDatePaginationController(
             TransactionDatePaginator<A> paginator, int consecutiveEmptyPagesLimit) {
-        this(paginator, consecutiveEmptyPagesLimit, DEFAULT_MONTHS_TO_FETCH, ChronoUnit.MONTHS);
+        this(paginator, consecutiveEmptyPagesLimit, DEFAULT_DAYS_TO_FETCH, ChronoUnit.DAYS);
     }
 
     public TransactionDatePaginationController(
