@@ -14,19 +14,33 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.credentials.service.RefreshableItem;
 
-public class IndividualAccountRefreshUtil {
+public class AccountClosureUtil {
 
-    /**
+    /*
+     * We expect refresh to return accounts if:
+     * - there is at least one account aggregated already (see request.getAccounts())
+     * - refreshable items match at least one of such accounts
+     */
+    public static boolean isRefreshExpectedToReturnAtLeastOneAccount(
+            RefreshInformationRequest request) {
+        Set<AccountTypes> accountTypesToRefresh =
+                mapRefreshableItemsToAccountTypes(request.getItemsToRefresh());
+        return request.getAccounts().stream()
+                .anyMatch(a -> accountTypesToRefresh.contains(a.getType()));
+    }
+
+    /*
      * System closes accounts that have been aggregated previously but have not been returned with a
-     * subsequent refresh. That can happen for example: - when just a subset of RefreshableItems is
-     * specified - for Real Time Balance (e.g. individual account refresh) To ensure that System
-     * won't close other accounts a proper information in ProcessAccountsRequest.requestedAccountIds
-     * needs to be send to System
+     * subsequent refresh. That can happen for example:
+     * - when just a subset of RefreshableItems is specified
+     * - for Real Time Balance (e.g. individual account refresh)
+     * To ensure that System won't close other accounts a proper information in
+     * ProcessAccountsRequest.requestedAccountIds needs to be send to System
      *
-     * <p>Note: Main (tink-backend) will reject all the granular refresh requests that are invalid,
-     * for example: refresh for non-existing accounts only or refresh that can't refresh requested &
-     * existing accounts due to missing Refreshable Item (example: refresh account123 (CHECKING) but
-     * the only RefreshableItem given is SAVING).
+     * <p>Note: Main (tink-backend) will reject all the granular refresh requests (to refresh
+     * individual accounts) that are invalid, for example: refresh for non-existing accounts only or
+     * refresh that can't refresh requested & existing accounts due to missing Refreshable Item
+     * (example: refresh account123 (CHECKING) but the only RefreshableItem given is SAVING).
      *
      * <p>Note: Main (tink-backend) can trim requestedAccountIds that come with the requested - if
      * any of the accountId given does not exist or is not refreshable (missing RefreshableItem)
@@ -58,7 +72,7 @@ public class IndividualAccountRefreshUtil {
     private static Set<AccountTypes> mapRefreshableItemsToAccountTypes(
             Set<RefreshableItem> itemsToRefresh) {
         return itemsToRefresh.stream()
-                .map(IndividualAccountRefreshUtil::mapRefreshableItemToAccountTypes)
+                .map(AccountClosureUtil::mapRefreshableItemToAccountTypes)
                 .flatMap(Set::stream)
                 .collect(Collectors.toSet());
     }
