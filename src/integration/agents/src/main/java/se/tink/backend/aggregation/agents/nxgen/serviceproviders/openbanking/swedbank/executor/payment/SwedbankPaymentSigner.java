@@ -62,7 +62,7 @@ public class SwedbankPaymentSigner {
 
         // left as it was until I'm a bit more brave to dig into changing lib code and the way we
         // handle BankIdStatus. It's ugly and has double dependency on SigningController and Signer.
-        if(swedbankIdSigner.isMissingExtendedBankId()) {
+        if (swedbankIdSigner.isMissingExtendedBankId()) {
             throw new MissingExtendedBankIdException();
         }
     }
@@ -75,5 +75,5 @@ public class SwedbankPaymentSigner {
         paymentAuthenticator.openThirdPartyApp(redirectUrl, state);
     }
 
-    static class MissingExtendedBankIdException extends RuntimeException { }
+    static class MissingExtendedBankIdException extends RuntimeException {}
 }
