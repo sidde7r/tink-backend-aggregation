@@ -90,7 +90,7 @@ Expires: 0
 {"personal_identity_number":"psu","first_name":"Firstname","last_name":"Lastname"}
 
 REQUEST 6
-GET https://psd.sbab.se/psd2/savings/2.0/accounts/account1/transfers?endDate=1992-04-10&startDate=1992-01-11
+GET https://psd.sbab.se/psd2/savings/2.0/accounts/account1/transfers?endDate=1992-04-10&startDate=1992-01-12
 Accept: application/json
 
 RESPONSE 6
@@ -107,7 +107,7 @@ Expires: 0
 {"transfers":[{"recurring_transfer":false,"transfer_id":"236322501","value_date":"2020-07-24","amount":11433.0,"counter_part_account":"account1","counter_part_bank":"SBAB","status":"complete","counter_part_statement":"lon","running_balance":12082.69,"currency":"SEK"},{"recurring_transfer":false,"transfer_id":"236322491","value_date":"2020-07-24","amount":224.0,"counter_part_account":"account1","counter_part_bank":"SBAB","status":"complete","counter_part_statement":"lon","running_balance":649.69,"currency":"SEK"},{"recurring_transfer":false,"transfer_id":"233289981","value_date":"2020-06-25","amount":-13000.0,"statement":"overforing","counter_part_account":"6546141276738","counter_part_bank":"Handelsbanken","status":"complete","counter_part_statement":"overforing","running_balance":425.69,"currency":"SEK"},{"recurring_transfer":false,"transfer_id":"233126471","value_date":"2020-06-25","amount":11497.0,"counter_part_account":"account1","counter_part_bank":"SBAB","status":"complete","counter_part_statement":"lon","running_balance":13425.69,"currency":"SEK"},{"recurring_transfer":false,"transfer_id":"233126461","value_date":"2020-06-25","amount":224.0,"counter_part_account":"account1","counter_part_bank":"SBAB","status":"complete","counter_part_statement":"lon","running_balance":1928.69,"currency":"SEK"},{"recurring_transfer":false,"transfer_id":"231851231","value_date":"2020-06-08","amount":-10000.0,"statement":"SBAB-BANK","counter_part_account":"6546141276738","counter_part_bank":"Handelsbanken","status":"complete","counter_part_statement":"SBAB-BANK","running_balance":1704.69,"currency":"SEK"},{"recurring_transfer":false,"transfer_id":"229754301","value_date":"2020-05-25","amount":11417.0,"counter_part_account":"account1","counter_part_bank":"SBAB","status":"complete","counter_part_statement":"lon","running_balance":11704.69,"currency":"SEK"},{"recurring_transfer":false,"transfer_id":"229754291","value_date":"2020-05-25","amount":224.0,"counter_part_account":"account1","counter_part_bank":"SBAB","status":"complete","counter_part_statement":"lon","running_balance":287.69,"currency":"SEK"}]}
 
 REQUEST 7
-GET https://psd.sbab.se/psd2/savings/2.0/accounts/account1/transfers?endDate=1992-01-10&startDate=1991-10-12
+GET https://psd.sbab.se/psd2/savings/2.0/accounts/account1/transfers?endDate=1992-01-11&startDate=1991-10-13
 Accept: application/json
 
 RESPONSE 7
@@ -192,7 +192,7 @@ Expires: 0
 {"transfers":[]}
 
 REQUEST 12
-GET https://psd.sbab.se/psd2/savings/2.0/accounts/account2/transfers?endDate=1992-04-10&startDate=1992-01-11
+GET https://psd.sbab.se/psd2/savings/2.0/accounts/account2/transfers?endDate=1992-04-10&startDate=1992-01-12
 Accept: application/json
 
 RESPONSE 12
@@ -209,7 +209,7 @@ Expires: 0
 {"transfers":[]}
 
 REQUEST 13
-GET https://psd.sbab.se/psd2/savings/2.0/accounts/account2/transfers?endDate=1992-01-10&startDate=1991-10-12
+GET https://psd.sbab.se/psd2/savings/2.0/accounts/account2/transfers?endDate=1992-01-11&startDate=1991-10-13
 Accept: application/json
 
 RESPONSE 13
