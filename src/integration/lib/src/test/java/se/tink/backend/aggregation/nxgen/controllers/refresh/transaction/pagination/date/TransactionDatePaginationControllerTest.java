@@ -6,6 +6,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.google.common.collect.Lists;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.List;
@@ -18,7 +21,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
-import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.pair.Pair;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -67,11 +69,14 @@ public class TransactionDatePaginationControllerTest {
 
     @Test
     public void ensureWeFetchWithExpectedPeriods() {
-        List<Pair<Date, Date>> periods = Lists.newArrayList();
+        List<Pair<LocalDateTime, LocalDateTime>> periods = Lists.newArrayList();
         when(paginator.getTransactionsFor(any(Account.class), any(Date.class), any(Date.class)))
                 .then(
                         call -> {
-                            periods.add(Pair.of(call.getArgument(1), call.getArgument(2)));
+                            periods.add(
+                                    Pair.of(
+                                            convertToDateTime(call.getArgument(1)),
+                                            convertToDateTime(call.getArgument(2))));
                             return PaginatorResponseImpl.createEmpty();
                         });
 
@@ -85,12 +90,17 @@ public class TransactionDatePaginationControllerTest {
         Assert.assertEquals(MAX_CONSECUTIVE_EMPTY_PAGES, periods.size());
 
         for (int i = 0; i < periods.size(); i++) {
-            Pair<Date, Date> period = periods.get(i);
-            Assert.assertEquals(period.first, DateUtils.addDays(period.second, -DAYS_TO_FETCH));
+            Pair<LocalDateTime, LocalDateTime> period = periods.get(i);
+            Assert.assertEquals(
+                    period.first, period.second.minusDays(DAYS_TO_FETCH).with(LocalTime.MIN));
             if (i > 0) {
-                Pair<Date, Date> nextPeriod = periods.get(i - 1);
-                Assert.assertEquals(DateUtils.addDays(period.second, 1), nextPeriod.first);
+                Pair<LocalDateTime, LocalDateTime> nextPeriod = periods.get(i - 1);
+                Assert.assertEquals(period.second.plus(1, ChronoUnit.MILLIS), nextPeriod.first);
             }
         }
+    }
+
+    private LocalDateTime convertToDateTime(Date date) {
+        return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
     }
 }

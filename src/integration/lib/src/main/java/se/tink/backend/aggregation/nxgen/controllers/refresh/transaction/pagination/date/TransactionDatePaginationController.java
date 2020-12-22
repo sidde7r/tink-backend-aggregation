@@ -2,6 +2,9 @@ package se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagina
 
 import com.google.common.base.Preconditions;
 import java.lang.invoke.MethodHandles;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.Collection;
 import java.util.Date;
@@ -14,7 +17,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginator;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.libraries.date.DateUtils;
 
 public class TransactionDatePaginationController<A extends Account>
         implements TransactionPaginator<A> {
@@ -26,8 +28,8 @@ public class TransactionDatePaginationController<A extends Account>
 
     private final TransactionDatePaginator<A> paginator;
 
-    private Date fromDate;
-    private Date toDate;
+    private LocalDateTime fromDateTime;
+    private LocalDateTime toDateTime;
     private int consecutiveEmptyPages = 0;
     private final int consecutiveEmptyPagesLimit;
     private final ChronoUnit unitToFetch;
@@ -77,17 +79,19 @@ public class TransactionDatePaginationController<A extends Account>
 
     @Override
     public void resetState() {
-        fromDate = null;
-        toDate = null;
+        fromDateTime = null;
+        toDateTime = null;
         consecutiveEmptyPages = 0;
     }
 
     @Override
     public PaginatorResponse fetchTransactionsFor(A account) {
-        toDate = calculateToDate();
-        fromDate = calculateFromDate(toDate);
+        toDateTime = calculateToDate();
+        fromDateTime = calculateFromDateAsBeginningOfTheDayBasedOnUnit(toDateTime);
 
-        PaginatorResponse response = paginator.getTransactionsFor(account, fromDate, toDate);
+        PaginatorResponse response =
+                paginator.getTransactionsFor(
+                        account, convertToDate(fromDateTime), convertToDate(toDateTime));
 
         Collection<? extends Transaction> transactions = response.getTinkTransactions();
         if (transactions.isEmpty() && !response.canFetchMore().isPresent()) {
@@ -119,22 +123,29 @@ public class TransactionDatePaginationController<A extends Account>
         return response;
     }
 
-    private Date calculateToDate() {
-        if (toDate == null) {
-            return Date.from(localDateTimeSource.getInstant());
-        }
-
-        return DateUtils.addDays(fromDate, -1); // Day before the previous fromDate
+    private Date convertToDate(LocalDateTime dateTime) {
+        return Date.from(dateTime.atZone(ZoneId.systemDefault()).toInstant());
     }
 
-    private Date calculateFromDate(Date toDate) {
+    private LocalDateTime calculateToDate() {
+        if (toDateTime == null) {
+            return localDateTimeSource.now();
+        }
+        return getEndOfTheDayBeforeLastFromDate();
+    }
+
+    private LocalDateTime getEndOfTheDayBeforeLastFromDate() {
+        return fromDateTime.minusDays(1).with(LocalTime.MAX);
+    }
+
+    private LocalDateTime calculateFromDateAsBeginningOfTheDayBasedOnUnit(LocalDateTime toDate) {
         switch (unitToFetch) {
             case DAYS:
-                return DateUtils.addDays(toDate, -amountToFetch);
+                return toDate.minusDays(amountToFetch).with(LocalTime.MIN);
             case WEEKS:
-                return DateUtils.addDays(toDate, -7 * amountToFetch);
+                return toDate.minusDays(7L * amountToFetch).with(LocalTime.MIN);
             case MONTHS:
-                return DateUtils.addMonths(toDate, -amountToFetch);
+                return toDate.minusMonths(amountToFetch).with(LocalTime.MIN);
             default:
                 throw new IllegalStateException(
                         "Unsupported pagination unit: " + unitToFetch.toString());
