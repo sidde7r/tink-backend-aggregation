@@ -12,6 +12,7 @@ public class YorkshireBusinessAgentTest {
                 .saveCredentialsAfter(true)
                 .expectLoggedIn(false)
                 .setFinancialInstitutionId("861409ea967e42cc9e5f8fc2c4732d54")
+                .setAppId("tink")
                 .build()
                 .testRefresh();
     }
