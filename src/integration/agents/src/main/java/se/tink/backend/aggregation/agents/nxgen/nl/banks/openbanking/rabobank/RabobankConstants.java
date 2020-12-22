@@ -85,7 +85,6 @@ public class RabobankConstants {
         public static final int TRANSACTIONS_SIZE = 500;
         public static final String SCOPES =
                 "ais.balances.read ais.transactions.read-90days ais.transactions.read-history";
-        public static final String PSU_IP_ADDRESS = "0.0.0.0";
     }
 
     public static class HttpClient {

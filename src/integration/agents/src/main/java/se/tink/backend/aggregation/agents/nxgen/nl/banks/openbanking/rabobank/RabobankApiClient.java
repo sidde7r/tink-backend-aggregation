@@ -54,7 +54,7 @@ public final class RabobankApiClient {
 
     private final TinkHttpClient client;
     private final PersistentStorage persistentStorage;
-    private final boolean requestIsManual;
+    private final RabobankUserIpInformation userIpInformation;
     private final RabobankConfiguration rabobankConfiguration;
     private final EidasProxyConfiguration eidasProxyConf;
     private final EidasIdentity eidasIdentity;
@@ -68,13 +68,13 @@ public final class RabobankApiClient {
             final String qsealcPem,
             final EidasProxyConfiguration eidasProxyConf,
             final EidasIdentity eidasIdentity,
-            final boolean requestIsManual) {
+            final RabobankUserIpInformation userIpInformation) {
         this.client = client;
         this.persistentStorage = persistentStorage;
         this.rabobankConfiguration = rabobankConfiguration;
         this.eidasProxyConf = eidasProxyConf;
         this.eidasIdentity = eidasIdentity;
-        this.requestIsManual = requestIsManual;
+        this.userIpInformation = userIpInformation;
 
         this.qsealcPem = qsealcPem;
     }
@@ -125,9 +125,9 @@ public final class RabobankApiClient {
                         .accept(MediaType.APPLICATION_JSON_TYPE);
 
         // This header must be present iff the request was initiated by the PSU
-        if (requestIsManual) {
+        if (userIpInformation.isManualRequest()) {
             logger.info("Request is attended -- adding PSU header for {}", url);
-            builder.header(QueryParams.PSU_IP_ADDRESS, QueryValues.PSU_IP_ADDRESS);
+            builder.header(QueryParams.PSU_IP_ADDRESS, userIpInformation.getUserIp());
         } else {
             logger.info("Request is unattended -- omitting PSU header for {}", url);
         }
