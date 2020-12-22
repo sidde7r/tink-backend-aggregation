@@ -19,7 +19,7 @@ public abstract class AgentWorkerCommand {
      * @throws Exception on error
      */
     public final AgentWorkerCommandResult execute() throws Exception {
-        MDC.put(AGENT_WORKER_COMMAND_MDC_KEY, getCommandName());
+        MDC.put(AGENT_WORKER_COMMAND_MDC_KEY, getCommandName() + " execute");
         try {
             return doExecute();
         } finally {
@@ -35,7 +35,7 @@ public abstract class AgentWorkerCommand {
      * @throws Exception on error
      */
     public final void postProcess() throws Exception {
-        MDC.put(AGENT_WORKER_COMMAND_MDC_KEY, getCommandName());
+        MDC.put(AGENT_WORKER_COMMAND_MDC_KEY, getCommandName() + " postProcess");
         try {
             doPostProcess();
         } finally {
