@@ -15,7 +15,7 @@ public final class CmcicConstants {
     }
 
     public static class Urls {
-        public static final String BASE_API_PATH = "stet-psd2-api/v1";
+        public static final String BASE_API_PATH = "stet-psd2-api/v1.1";
         public static final String FETCH_ACCOUNTS_PATH = BASE_API_PATH + "/accounts";
         public static final String FETCH_END_USER_IDENTITY = BASE_API_PATH + "/end-user-identity";
         public static final String TOKEN_PATH = "oauth2/token";
