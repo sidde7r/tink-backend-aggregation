@@ -45,7 +45,7 @@ data:
           password: PROXY_PASSWORD_ES
         be:
           host: "http://zproxy.lum-superproxy.io:22225"
-          username: "lum-customer-tink_ab-zone-belgium"
+          username: "lum-customer-c_71e4c7e0-zone-belgium"
           password: PROXY_PASSWORD_BE
 
       {{- if .Values.agentDataAvailabilityTrackerAvailable }}
