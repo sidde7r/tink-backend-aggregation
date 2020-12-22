@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs
 
 import java.time.format.DateTimeFormatter;
 import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.QueryValues;
@@ -15,11 +16,13 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.configuration.Xs2aDevelopersProviderConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
+import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2TokenAccessor;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
-public class Xs2aDevelopersAuthenticator implements OAuth2Authenticator {
+public class Xs2aDevelopersAuthenticator implements OAuth2Authenticator, OAuth2TokenAccessor {
 
     private final Xs2aDevelopersApiClient apiClient;
     private final PersistentStorage persistentStorage;
@@ -91,11 +94,6 @@ public class Xs2aDevelopersAuthenticator implements OAuth2Authenticator {
         persistentStorage.put(StorageKeys.OAUTH_TOKEN, accessToken);
     }
 
-    public void invalidateToken() {
-        persistentStorage.remove(StorageKeys.OAUTH_TOKEN);
-        persistentStorage.remove(StorageKeys.CONSENT_ID);
-    }
-
     protected AccessEntity getAccessEntity() {
         return new AccessEntity(FormValues.ALL_ACCOUNTS);
     }
@@ -108,5 +106,17 @@ public class Xs2aDevelopersAuthenticator implements OAuth2Authenticator {
     protected boolean isPersistedConsentValid() {
         ConsentStatusResponse consentStatusResponse = apiClient.getConsentStatus();
         return consentStatusResponse != null && consentStatusResponse.isValid();
+    }
+
+    @Override
+    public void invalidate() {
+        persistentStorage.clear();
+    }
+
+    @Override
+    public OAuth2Token getAccessToken() {
+        return persistentStorage
+                .get(OAuth2Constants.PersistentStorageKeys.OAUTH_2_TOKEN, OAuth2Token.class)
+                .orElseThrow(SessionError.SESSION_EXPIRED::exception);
     }
 }

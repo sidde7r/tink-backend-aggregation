@@ -18,7 +18,7 @@ public class OAuth2Token extends OAuth2TokenBase {
 
     private static final String BEARER = "bearer";
 
-    private OAuth2Token(
+    public OAuth2Token(
             String tokenType,
             String accessToken,
             String refreshToken,

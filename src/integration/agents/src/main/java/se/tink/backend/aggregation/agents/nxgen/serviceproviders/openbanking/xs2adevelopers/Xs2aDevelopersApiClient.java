@@ -92,11 +92,11 @@ public class Xs2aDevelopersApiClient {
         return isManual ? requestBuilder.header(HeaderKeys.PSU_IP_ADDRESS, userIp) : requestBuilder;
     }
 
-    private String getConsentIdFromStorage() {
+    String getConsentIdFromStorage() {
         return persistentStorage.get(StorageKeys.CONSENT_ID);
     }
 
-    private OAuth2Token getTokenFromStorage(String key) {
+    OAuth2Token getTokenFromStorage(String key) {
         return persistentStorage
                 .get(key, OAuth2Token.class)
                 .orElseThrow(SessionError.SESSION_EXPIRED::exception);
