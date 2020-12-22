@@ -290,7 +290,7 @@ public final class RabobankApiClient {
                         .get(TransactionalTransactionsResponse.class);
 
         pages.add(page);
-        while (page.getTransactions().getLinks().getNextKey() != null && !isSandbox) {
+        while (shouldFetchMoreTransactions(isSandbox, page)) {
             page =
                     buildRequest(
                                     new URL(
@@ -309,6 +309,13 @@ public final class RabobankApiClient {
         }
 
         return new CompositePaginatorResponse(pages);
+    }
+
+    private boolean shouldFetchMoreTransactions(
+            boolean isSandbox, TransactionalTransactionsResponse page) {
+        return page.getTransactions().getLinks().getNextKey() != null
+                && !isSandbox
+                && userIpInformation.isManualRequest();
     }
 
     private String buildSignatureHeader(
