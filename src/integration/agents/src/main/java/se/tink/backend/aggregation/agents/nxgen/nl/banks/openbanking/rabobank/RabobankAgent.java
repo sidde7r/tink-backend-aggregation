@@ -96,7 +96,7 @@ public final class RabobankAgent
                         qsealPem,
                         agentsConfiguration.getEidasProxy(),
                         eidasIdentity,
-                        request.isManual());
+                        getUserIpInformation());
 
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
 
@@ -133,6 +133,10 @@ public final class RabobankAgent
                         RabobankConstants.HttpClient.MAX_RETRIES,
                         HttpClient.RETRY_SLEEP_MILLISECONDS));
         client.addFilter(new RabobankFailureFilter());
+    }
+
+    private RabobankUserIpInformation getUserIpInformation() {
+        return new RabobankUserIpInformation(request.isManual(), userIp);
     }
 
     @Override
