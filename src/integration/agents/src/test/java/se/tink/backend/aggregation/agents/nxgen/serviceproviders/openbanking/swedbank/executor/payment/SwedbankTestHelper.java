@@ -33,6 +33,7 @@ public final class SwedbankTestHelper {
             LocalDate.parse(EXECUTION_DATE_TIME, ISO_OFFSET_DATE_TIME);
     public static final String INSTRUCTION_ID = "DUMMY_INSTRUCTION_ID";
     public static final String STRONG_AUTH_STATE = "MY_STATE";
+    public static final URL REDIRECT_URL = new URL("REDIRECT_URL");
     private static final String REMITTANCE_INFORMATION = "DUMMY_REMITTANCE_INFORMATION";
 
     static StrongAuthenticationState createStrongAuthenticationStateMock() {
@@ -57,7 +58,7 @@ public final class SwedbankTestHelper {
     static PaymentAuthorisationResponse createPaymentAuthorisationResponse() {
         final PaymentAuthorisationResponse response = mock(PaymentAuthorisationResponse.class);
         when(response.getSelectAuthenticationMethod()).thenReturn("");
-        when(response.getScaRedirectUrl()).thenReturn(new URL(""));
+        when(response.getScaRedirectUrl()).thenReturn(REDIRECT_URL);
         return response;
     }
 

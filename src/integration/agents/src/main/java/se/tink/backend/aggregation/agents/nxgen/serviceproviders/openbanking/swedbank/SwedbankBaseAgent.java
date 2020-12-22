@@ -125,27 +125,21 @@ public abstract class SwedbankBaseAgent extends NextGenerationAgent
 
     @Override
     public Optional<PaymentController> constructPaymentController() {
-        final SwedbankPaymentAuthenticator paymentAuthenticator =
-                new SwedbankPaymentAuthenticator(supplementalInformationHelper);
-        final SwedbankBankIdSigner swedbankBankIdSigner = getSwedbankBankIdSigner();
+        final SwedbankPaymentSigner swedbankPaymentSigner = getSwedbankPaymentSigner();
         final SwedbankPaymentExecutor swedbankPaymentExecutor =
-                new SwedbankPaymentExecutor(
-                        apiClient,
-                        paymentAuthenticator,
-                        strongAuthenticationState,
-                        swedbankBankIdSigner,
-                        new BankIdSigningController(supplementalRequester, swedbankBankIdSigner),
-                        getSwedbankPaymentSigner());
+                new SwedbankPaymentExecutor(apiClient, swedbankPaymentSigner);
 
         return Optional.of(new PaymentController(swedbankPaymentExecutor, swedbankPaymentExecutor));
     }
 
-    private SwedbankBankIdSigner getSwedbankBankIdSigner() {
-        return new SwedbankBankIdSigner(apiClient);
-    }
-
     private SwedbankPaymentSigner getSwedbankPaymentSigner() {
-        return new SwedbankPaymentSigner(apiClient, getSwedbankBankIdSigner(), strongAuthenticationState);
+        final SwedbankBankIdSigner swedbankBankIdSigner = new SwedbankBankIdSigner(apiClient);
+        return new SwedbankPaymentSigner(
+                apiClient,
+                swedbankBankIdSigner,
+                strongAuthenticationState,
+                new BankIdSigningController<>(supplementalRequester, swedbankBankIdSigner),
+                new SwedbankPaymentAuthenticator(supplementalInformationHelper));
     }
 
     @Override

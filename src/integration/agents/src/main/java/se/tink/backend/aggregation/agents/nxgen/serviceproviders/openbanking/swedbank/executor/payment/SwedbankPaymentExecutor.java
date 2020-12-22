@@ -4,26 +4,22 @@ import static java.util.Collections.emptyList;
 import static se.tink.backend.aggregation.nxgen.controllers.signing.SigningStepConstants.STEP_FINALIZE;
 import static se.tink.backend.aggregation.nxgen.controllers.signing.SigningStepConstants.STEP_INIT;
 import static se.tink.backend.aggregation.nxgen.controllers.signing.SigningStepConstants.STEP_SIGN;
-import static se.tink.libraries.payment.enums.PaymentStatus.PENDING;
 
 import java.util.ArrayList;
 import java.util.List;
 import se.tink.backend.aggregation.agents.exceptions.payment.ReferenceValidationException;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.SwedbankPaymentAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.common.SwedbankOpenBankingPaymentApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.executor.payment.SwedbankPaymentSigner.MissingExtendedBankIdException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.executor.payment.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.executor.payment.entities.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.executor.payment.enums.SwedbankPaymentStatus;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.executor.payment.enums.SwedbankPaymentType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.executor.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.executor.payment.rpc.CreatePaymentRequest.CreatePaymentRequestBuilder;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.executor.payment.rpc.PaymentAuthorisationResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.executor.payment.rpc.PaymentStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.executor.payment.util.SwedbankDateUtil;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.executor.payment.util.SwedbankRemittanceInformationUtil;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.util.AccountTypePair;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepConstants;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.FetchablePaymentExecutor;
@@ -34,7 +30,6 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepReq
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
-import se.tink.backend.aggregation.nxgen.controllers.signing.multifactor.bankid.BankIdSigningController;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.payment.enums.PaymentStatus;
@@ -42,25 +37,13 @@ import se.tink.libraries.payment.rpc.Payment;
 
 public class SwedbankPaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
     private final SwedbankOpenBankingPaymentApiClient apiClient;
-    private final SwedbankPaymentAuthenticator paymentAuthenticator;
     private final List<PaymentResponse> createdPaymentsList = new ArrayList<>();
-    private final StrongAuthenticationState strongAuthenticationState;
-    private final SwedbankBankIdSigner bankIdSigner;
-    private final BankIdSigningController<PaymentMultiStepRequest> signingController;
     private final SwedbankPaymentSigner swedbankPaymentSigner;
 
     public SwedbankPaymentExecutor(
             SwedbankOpenBankingPaymentApiClient apiClient,
-            SwedbankPaymentAuthenticator paymentAuthenticator,
-            StrongAuthenticationState strongAuthenticationState,
-            SwedbankBankIdSigner swedbankBankIdSigner,
-            BankIdSigningController<PaymentMultiStepRequest> bankIdSigningController,
             SwedbankPaymentSigner swedbankPaymentSigner) {
         this.apiClient = apiClient;
-        this.paymentAuthenticator = paymentAuthenticator;
-        this.strongAuthenticationState = strongAuthenticationState;
-        this.bankIdSigner = swedbankBankIdSigner;
-        this.signingController = bankIdSigningController;
         this.swedbankPaymentSigner = swedbankPaymentSigner;
     }
 
@@ -135,7 +118,7 @@ public class SwedbankPaymentExecutor implements PaymentExecutor, FetchablePaymen
                 final String step = authorizationResult ? STEP_SIGN : STEP_INIT;
                 return new PaymentMultiStepResponse(payment, step, emptyList());
             case STEP_SIGN:
-                return signPayment(paymentMultiStepRequest, paymentId);
+                return signPayment(paymentMultiStepRequest);
             case STEP_FINALIZE:
                 payment.setStatus(getTinkPaymentStatus(payment.getUniqueId()));
                 return new PaymentMultiStepResponse(payment, STEP_FINALIZE, emptyList());
@@ -145,40 +128,29 @@ public class SwedbankPaymentExecutor implements PaymentExecutor, FetchablePaymen
         }
     }
 
-    private PaymentMultiStepResponse signPayment(
-            PaymentMultiStepRequest request, String paymentId) {
-        this.signingController.sign(request);
-        if (bankIdSigner.isMissingExtendedBankId()) {
-            return signWithRedirectFlow(request);
-        } else if (getTinkPaymentStatus(paymentId).equals(PENDING)) {
-            return new PaymentMultiStepResponse(request.getPayment(), STEP_INIT, emptyList());
+    private PaymentMultiStepResponse signPayment(PaymentMultiStepRequest request) {
+        final Payment payment = request.getPayment();
+        final String paymentId = payment.getUniqueId();
+        try {
+            swedbankPaymentSigner.sign(request);
+            if (isPaymentInPendingStatus(paymentId)) {
+                return new PaymentMultiStepResponse(payment, STEP_INIT, emptyList());
+            }
+        } catch (MissingExtendedBankIdException exception) {
+            // fallback to redirect flow if we're missing extended BankID
+            swedbankPaymentSigner.signWithRedirect(paymentId);
+            payment.setStatus(getTinkPaymentStatus(paymentId));
         }
 
-        return new PaymentMultiStepResponse(request.getPayment(), STEP_FINALIZE, emptyList());
+        return new PaymentMultiStepResponse(payment, STEP_FINALIZE, emptyList());
     }
 
-    private PaymentMultiStepResponse signWithRedirectFlow(
-            PaymentMultiStepRequest paymentMultiStepRequest) {
-        Payment payment = paymentMultiStepRequest.getPayment();
-        String state = strongAuthenticationState.getState();
-
-        PaymentAuthorisationResponse paymentAuthorisationResponse =
-                apiClient.startPaymentAuthorisation(
-                        payment.getUniqueId(),
-                        SwedbankPaymentType.SE_DOMESTIC_CREDIT_TRANSFERS,
-                        state,
-                        true);
-        paymentAuthenticator.openThirdPartyApp(
-                paymentAuthorisationResponse.getScaRedirectUrl(), state);
-
-        payment.setStatus(getTinkPaymentStatus(payment.getUniqueId()));
-
-        return new PaymentMultiStepResponse(
-                payment, AuthenticationStepConstants.STEP_FINALIZE, new ArrayList<>());
+    private boolean isPaymentInPendingStatus(String paymentId) {
+        return getTinkPaymentStatus(paymentId).equals(PaymentStatus.PENDING);
     }
 
     private PaymentStatus getTinkPaymentStatus(String paymentId) {
-        PaymentStatusResponse paymentStatusResponse = getPaymentStatus(paymentId);
+        final PaymentStatusResponse paymentStatusResponse = getPaymentStatus(paymentId);
         return SwedbankPaymentStatus.fromString(paymentStatusResponse.getTransactionStatus())
                 .getTinkPaymentStatus();
     }
