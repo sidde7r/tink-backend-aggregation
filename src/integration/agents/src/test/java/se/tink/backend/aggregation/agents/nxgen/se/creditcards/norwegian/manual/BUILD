@@ -4,9 +4,7 @@ junit_test(
     name = "manual",
     srcs = glob(["**/*.java"]),
     data = [
-        "//data:aggregation_test",
-        "//data:provider_configurations",
-        "//etc:development",
+        "//:agent_test_data",
     ],
     tags = [
         "external",

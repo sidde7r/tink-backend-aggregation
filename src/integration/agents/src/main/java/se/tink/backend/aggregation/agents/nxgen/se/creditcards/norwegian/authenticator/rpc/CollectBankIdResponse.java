@@ -34,9 +34,8 @@ public class CollectBankIdResponse {
                 return BankIdStatus.DONE;
             case BankIdProgressStatus.OUTSTANDING_TRANSACTION:
             case BankIdProgressStatus.USER_SIGN:
-                return BankIdStatus.WAITING;
             case BankIdProgressStatus.NO_CLIENT:
-                return BankIdStatus.NO_CLIENT;
+                return BankIdStatus.WAITING;
             default:
                 LOGGER.warn("Unknown BankID status: {}", status);
                 return BankIdStatus.FAILED_UNKNOWN;
