@@ -25,5 +25,6 @@ junit_test(
         "//third_party:com_sun_jersey_jersey_core",
         "//third_party:org_assertj_assertj_core",
         "//third_party:org_mockito_mockito_core",
+        "//third_party:pl_pragmatists_junitparams",
     ],
 )

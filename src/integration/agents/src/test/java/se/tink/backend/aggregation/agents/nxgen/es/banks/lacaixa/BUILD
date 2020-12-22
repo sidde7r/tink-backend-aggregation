@@ -4,6 +4,7 @@ junit_test(
     name = "lacaixa",
     srcs = [
         "LaCaixaAgentTest.java",
+        "LaCaixaApiClientTest.java",
         "LaCaixaCryptoTest.java",
     ],
     data = [
@@ -17,16 +18,24 @@ junit_test(
     ],
     visibility = ["//visibility:public"],
     runtime_deps = [
-        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/es/banks/lacaixa",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/redsys",
     ],
     deps = [
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/es/banks/lacaixa",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/redsys",
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/credentials:service",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/crypto",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/client",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/response",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
+        "//src/libraries/serialization",
+        "//third_party:com_sun_jersey_jersey_core",
+        "//third_party:org_assertj_assertj_core",
         "//third_party:org_mockito_mockito_core",
+        "//third_party:pl_pragmatists_junitparams",
     ],
 )
 
