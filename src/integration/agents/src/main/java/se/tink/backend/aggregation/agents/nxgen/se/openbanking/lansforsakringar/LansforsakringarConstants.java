@@ -38,6 +38,7 @@ public abstract class LansforsakringarConstants {
         public static final String TOKEN = BASE_AUTH_URL + Endpoints.TOKEN;
 
         public static final String CONSENT = BASE_API_URL + Endpoints.CONSENT;
+        public static final String CONSENT_STATUS = BASE_API_URL + Endpoints.CONSENT_STATUS;
         public static final String CONSENT_PROVIDED = BASE_API_URL + Endpoints.CONSENT_PROVIDED;
         public static final String SCA_STATUS = BASE_API_URL + Endpoints.SCA_STATUS;
         public static final String GET_ACCOUNTS = BASE_API_URL + Endpoints.GET_ACCOUNTS;
@@ -55,6 +56,8 @@ public abstract class LansforsakringarConstants {
         public static final String TOKEN = "/as/token.oauth2";
 
         public static final String CONSENT = "/openbanking/ano/v2/consents";
+        public static final String CONSENT_STATUS =
+                "/openbanking/sec/v2/consents/{consentId}/status";
         public static final String CONSENT_PROVIDED =
                 "/openbanking/ano/v2/consents/{consentId}/authorisations";
         public static final String SCA_STATUS =
@@ -73,8 +76,9 @@ public abstract class LansforsakringarConstants {
     }
 
     public static class StorageKeys {
-        public static final String CONSENT_ID = "consentId";
         public static final String ACCOUNTS = "accounts";
+        public static final String AUTHORISATION_ID = "authorisationId";
+        public static final String CONSENT_ID = "consentId";
     }
 
     public static class QueryKeys {
