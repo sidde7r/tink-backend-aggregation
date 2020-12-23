@@ -137,7 +137,7 @@ public class AccountClosureUtilTest {
      * return at least the checking account
      */
     @Test
-    public void foo() {
+    public void shouldReturnTrueIfCheckingAccountShouldBeRefreshed() {
         RefreshInformationRequest request = new RefreshInformationRequest();
         request.setAccounts(
                 Arrays.asList(
@@ -147,6 +147,102 @@ public class AccountClosureUtilTest {
         boolean result = AccountClosureUtil.isRefreshExpectedToReturnAtLeastOneAccount(request);
 
         assertThat(result).withFailMessage("We expect CHECKING account to be refreshed").isTrue();
+    }
+
+    /*
+     * Scenario: No accounts aggregated before, no accounts fetched and processed so the result should
+     * be false
+     *
+     */
+    @Test
+    public void shouldReturnFalseIfNoAccountsHaveBeenUpdatedAndNoAccountsAggregatedInThePast() {
+        RefreshInformationRequest request = new RefreshInformationRequest();
+        request.setAccounts(Collections.emptyList());
+        request.setItemsToRefresh(ImmutableSet.of(RefreshableItem.CHECKING_ACCOUNTS));
+        List<Account> updatedAccounts = Collections.emptyList();
+        boolean result = AccountClosureUtil.shouldCallProcessAccounts(request, updatedAccounts);
+
+        assertThat(result).isFalse();
+    }
+
+    /*
+     * Scenario: No accounts aggregated before but some accounts fetched and processed so the result
+     * should be true
+     *
+     */
+    @Test
+    public void shouldReturnTrueIfNoAccountsHaveBeenUpdatedAndNoAccountsAggregatedInThePast() {
+        RefreshInformationRequest request = new RefreshInformationRequest();
+        request.setAccounts(Collections.emptyList());
+        request.setItemsToRefresh(ImmutableSet.of(RefreshableItem.CHECKING_ACCOUNTS));
+        List<Account> updatedAccounts =
+                Collections.singletonList(createAccount("123", AccountTypes.CHECKING));
+        boolean result = AccountClosureUtil.shouldCallProcessAccounts(request, updatedAccounts);
+
+        assertThat(result).isTrue();
+    }
+
+    /*
+     * Scenario: Some accounts aggregated before, no accounts fetched (and refreshable items
+     * allow to refresh existing CHECKING account) so the result should
+     * be true
+     *
+     */
+    @Test
+    public void shouldReturnTrueIfNoAccountsHaveBeenUpdatedButSomeAggregatedBefore() {
+        RefreshInformationRequest request = new RefreshInformationRequest();
+        request.setAccounts(
+                Arrays.asList(
+                        createAccount("123", AccountTypes.CHECKING),
+                        createAccount("256", AccountTypes.SAVINGS)));
+        request.setItemsToRefresh(ImmutableSet.of(RefreshableItem.CHECKING_ACCOUNTS));
+        List<Account> updatedAccounts = Collections.emptyList();
+        boolean result = AccountClosureUtil.shouldCallProcessAccounts(request, updatedAccounts);
+
+        assertThat(result).isTrue();
+    }
+
+    /*
+     * Scenario: Some accounts aggregated before, no accounts fetched (and refreshable items [CREDIT_CARD]
+     * do not allow to refresh any existing account) so the result should be false
+     *
+     */
+    @Test
+    public void shouldReturnFalseIfCouldNotRefreshAnyAccountsDueToRefreshableItems() {
+        RefreshInformationRequest request = new RefreshInformationRequest();
+        request.setAccounts(
+                Arrays.asList(
+                        createAccount("123", AccountTypes.CHECKING),
+                        createAccount("256", AccountTypes.SAVINGS)));
+        request.setItemsToRefresh(ImmutableSet.of(RefreshableItem.CREDITCARD_ACCOUNTS));
+        List<Account> updatedAccounts = Collections.emptyList();
+        boolean result = AccountClosureUtil.shouldCallProcessAccounts(request, updatedAccounts);
+
+        assertThat(result).isFalse();
+    }
+
+    /*
+     * Scenario: Some accounts aggregated before, some accounts fetched so the result should be true
+     *
+     */
+    @Test
+    public void shouldReturnTrueIfSomeAccountsHaveBeenUpdatedAndSomeAccountsAggregatedInThePast() {
+        RefreshInformationRequest request = new RefreshInformationRequest();
+        request.setAccounts(
+                Arrays.asList(
+                        createAccount("123", AccountTypes.CHECKING),
+                        createAccount("256", AccountTypes.SAVINGS)));
+        request.setItemsToRefresh(
+                ImmutableSet.of(
+                        RefreshableItem.CHECKING_ACCOUNTS, RefreshableItem.SAVING_ACCOUNTS));
+        List<Account> updatedAccounts =
+                Arrays.asList(
+                        createAccount("123", AccountTypes.CHECKING),
+                        createAccount("256", AccountTypes.SAVINGS),
+                        createAccount("789", AccountTypes.SAVINGS));
+        boolean result = AccountClosureUtil.shouldCallProcessAccounts(request, updatedAccounts);
+
+        assertThat(result).isTrue();
     }
 
     private Account createAccount(String id, AccountTypes accountType) {

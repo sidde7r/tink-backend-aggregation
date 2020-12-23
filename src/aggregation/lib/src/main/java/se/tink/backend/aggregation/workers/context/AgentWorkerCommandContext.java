@@ -12,7 +12,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.curator.framework.CuratorFramework;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,7 +37,6 @@ import se.tink.backend.aggregation.events.AccountInformationServiceEventsProduce
 import se.tink.backend.aggregation.workers.operation.AgentWorkerContext;
 import se.tink.backend.aggregation.workers.refresh.individual_refresh.AccountClosureUtil;
 import se.tink.libraries.credentials.service.CredentialsRequest;
-import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.identitydata.IdentityData;
 import se.tink.libraries.metrics.core.MetricId;
 import se.tink.libraries.metrics.registry.MetricRegistry;
@@ -158,7 +156,8 @@ public class AgentWorkerCommandContext extends AgentWorkerContext {
         // returned with the refresh. It's very easy to get all previously aggregated accounts
         // closed (e.g. because of the given refreshable items we couldn't refresh anything).
         // Not always this is expected, and in such cases we skip call to processAccounts
-        if (!shouldProcessAccounts()) {
+        if (!AccountClosureUtil.shouldCallProcessAccounts(
+                request, getAccountDataCache().getProcessedAccounts())) {
             log.info("Skipping processAccounts for credentials: {}", credentials.getId());
             return;
         }
@@ -213,17 +212,6 @@ public class AgentWorkerCommandContext extends AgentWorkerContext {
                                 request, getAccountDataCache().getProcessedAccounts())));
 
         controllerWrapper.processAccounts(processAccountsRequest);
-    }
-
-    private boolean shouldProcessAccounts() {
-        if (!(request instanceof RefreshInformationRequest)) {
-            // imho all the requests received here should be RefreshInformationRequest but if not
-            // then to preserve the legacy behaviour we return true
-            return true;
-        }
-        return !CollectionUtils.isEmpty(getAccountDataCache().getProcessedAccounts())
-                || AccountClosureUtil.isRefreshExpectedToReturnAtLeastOneAccount(
-                        (RefreshInformationRequest) request);
     }
 
     public CuratorFramework getCoordinationClient() {
