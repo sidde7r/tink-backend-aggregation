@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.brokers.nordnet.NordnetBaseConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.brokers.nordnet.NordnetBaseConstants.Errors;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @Getter
@@ -14,15 +15,23 @@ public class PollBankIdResponse {
     @JsonProperty("hint_code")
     private String hintCode;
 
+    @JsonProperty("error_code")
+    private String errorCode;
+
     public BankIdStatus getBankIdStatus() {
+        if (status.equalsIgnoreCase(Errors.ERROR)
+                && NordnetBaseConstants.BankIdStatus.ALREADY_IN_PROGRESS.equalsIgnoreCase(
+                        errorCode)) {
+            return BankIdStatus.INTERRUPTED;
+        }
+
         switch (hintCode.toLowerCase()) {
             case NordnetBaseConstants.BankIdStatus.OUTSTANDING_TRANSACTION:
+            case NordnetBaseConstants.BankIdStatus.NO_CLIENT:
             case NordnetBaseConstants.BankIdStatus.USER_SIGN:
                 return BankIdStatus.WAITING;
             case NordnetBaseConstants.BankIdStatus.COMPLETE:
                 return BankIdStatus.DONE;
-            case NordnetBaseConstants.BankIdStatus.NO_CLIENT:
-                return BankIdStatus.NO_CLIENT;
             default:
                 return BankIdStatus.FAILED_UNKNOWN;
         }

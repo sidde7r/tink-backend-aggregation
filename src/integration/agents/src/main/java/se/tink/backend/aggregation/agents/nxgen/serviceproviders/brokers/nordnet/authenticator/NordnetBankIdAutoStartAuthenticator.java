@@ -302,6 +302,12 @@ public class NordnetBankIdAutoStartAuthenticator implements BankIdAuthenticator<
             throw BankIdError.ALREADY_IN_PROGRESS.exception(e);
         } else if (e.getResponse().getStatus() == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
             throw BankServiceError.BANK_SIDE_FAILURE.exception(e);
+        } else if (e.getResponse().getStatus() == HttpStatus.SC_UNAUTHORIZED) {
+            PollBankIdResponse response = e.getResponse().getBody(PollBankIdResponse.class);
+            if (NordnetBaseConstants.BankIdStatus.USER_CANCEL.equalsIgnoreCase(
+                    response.getHintCode())) {
+                throw BankIdError.CANCELLED.exception(e);
+            }
         }
         throw BankIdError.UNKNOWN.exception();
     }

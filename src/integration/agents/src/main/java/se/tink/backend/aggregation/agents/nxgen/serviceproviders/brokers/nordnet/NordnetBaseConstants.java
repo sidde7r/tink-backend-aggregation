@@ -38,6 +38,8 @@ public class NordnetBaseConstants {
         public static final String USER_SIGN = "user_sign";
         public static final String COMPLETE = "complete";
         public static final String NO_CLIENT = "no_client";
+        public static final String ALREADY_IN_PROGRESS = "already_in_progress";
+        public static final String USER_CANCEL = "user_cancel";
     }
 
     public static class StorageKeys {
@@ -119,6 +121,7 @@ public class NordnetBaseConstants {
 
     public static class Errors {
         public static final String INVALID_SESSION = "NEXT_INVALID_SESSION";
+        public static final String ERROR = "error";
     }
 
     public static class IdTags {
