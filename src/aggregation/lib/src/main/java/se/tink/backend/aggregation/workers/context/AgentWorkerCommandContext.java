@@ -221,8 +221,8 @@ public class AgentWorkerCommandContext extends AgentWorkerContext {
             // then to preserve the legacy behaviour we return true
             return true;
         }
-        return CollectionUtils.isEmpty(getAccountDataCache().getProcessedAccounts())
-                && !AccountClosureUtil.isRefreshExpectedToReturnAtLeastOneAccount(
+        return !CollectionUtils.isEmpty(getAccountDataCache().getProcessedAccounts())
+                || AccountClosureUtil.isRefreshExpectedToReturnAtLeastOneAccount(
                         (RefreshInformationRequest) request);
     }
 
