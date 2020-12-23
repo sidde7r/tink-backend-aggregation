@@ -29,6 +29,17 @@ public class AccountClosureUtil {
                 .anyMatch(a -> accountTypesToRefresh.contains(a.getType()));
     }
 
+    public static boolean shouldCallProcessAccounts(
+            CredentialsRequest request, List<Account> updatedAccounts) {
+        if (!(request instanceof RefreshInformationRequest)) {
+            // imho all the requests received here should be RefreshInformationRequest but if not
+            // then to preserve the legacy behaviour we return true
+            return true;
+        }
+        return !CollectionUtils.isEmpty(updatedAccounts)
+                || isRefreshExpectedToReturnAtLeastOneAccount((RefreshInformationRequest) request);
+    }
+
     /*
      * System closes accounts that have been aggregated previously but have not been returned with a
      * subsequent refresh. That can happen for example:
