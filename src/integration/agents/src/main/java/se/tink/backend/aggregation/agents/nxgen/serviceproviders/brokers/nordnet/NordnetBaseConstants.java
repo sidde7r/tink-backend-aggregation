@@ -211,4 +211,9 @@ public class NordnetBaseConstants {
                         NordnetAccountCodes.TJANSTEPENSION_BTP_VALBAR)
                 .build();
     }
+
+    public static class NordnetRetryFilter {
+        public static final int NUM_TIMEOUT_RETRIES = 5;
+        public static final int RETRY_SLEEP_MILLISECONDS = 5000;
+    }
 }
