@@ -1,4 +1,5 @@
 status = ["buildkite/build-tink-backend-aggregation"]
+block_labels = ["do-not-merge"]
 pr_status = ["buildkite/build-tink-backend-aggregation", "SonarCloud Code Analysis"]
 delete_merged_branches = true
 required_approvals = 1
