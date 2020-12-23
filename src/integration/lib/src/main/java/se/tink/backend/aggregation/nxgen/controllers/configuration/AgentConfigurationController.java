@@ -307,6 +307,8 @@ public final class AgentConfigurationController implements AgentConfigurationCon
     private String getSecretsServiceParamsString() {
         return " for financialInstitutionId: "
                 + financialInstitutionId
+                + ", providerId: "
+                + providerId
                 + ", appId: "
                 + appId
                 + " and clusterId: "
