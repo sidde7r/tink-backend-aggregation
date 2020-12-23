@@ -19,20 +19,22 @@ import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
 import se.tink.backend.aggregation.agents.contexts.SystemUpdater;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
+import se.tink.backend.aggregation.agents.exceptions.errors.SupplementalInfoError;
 import se.tink.backend.aggregation.agents.models.AccountFeatures;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.OptOutAccountsRequest;
+import se.tink.backend.aggregation.events.LoginAgentEventProducer;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationControllerImpl;
 import se.tink.backend.aggregation.rpc.ConfigureWhitelistInformationRequest;
 import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
+import se.tink.eventproducerservice.events.grpc.AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account_data_cache.FilterReason;
 import se.tink.libraries.pair.Pair;
 
-/** TODO adding metrics if necessary */
 public class RequestUserOptInAccountsAgentWorkerCommand extends AgentWorkerCommand {
     private static final Logger log =
             LoggerFactory.getLogger(RequestUserOptInAccountsAgentWorkerCommand.class);
@@ -44,16 +46,21 @@ public class RequestUserOptInAccountsAgentWorkerCommand extends AgentWorkerComma
     private final SystemUpdater systemUpdater;
     private final ConfigureWhitelistInformationRequest request;
     private final ControllerWrapper controllerWrapper;
+    private final LoginAgentEventProducer loginAgentEventProducer;
+    private Long startTime;
 
     public RequestUserOptInAccountsAgentWorkerCommand(
             AgentWorkerCommandContext context,
             ConfigureWhitelistInformationRequest request,
-            ControllerWrapper controllerWrapper) {
+            ControllerWrapper controllerWrapper,
+            LoginAgentEventProducer loginAgentEventProducer) {
         this.context = context;
         this.statusUpdater = context;
         this.systemUpdater = context;
         this.request = request;
         this.controllerWrapper = controllerWrapper;
+        this.loginAgentEventProducer = loginAgentEventProducer;
+        this.startTime = System.nanoTime();
     }
 
     // refresh account and send supplemental information to system
@@ -119,8 +126,17 @@ public class RequestUserOptInAccountsAgentWorkerCommand extends AgentWorkerComma
     private AgentWorkerCommandResult handleEmptyRequestAccountsCase(
             List<Pair<Account, AccountFeatures>> accountsInContext)
             throws SupplementalInfoException {
-        Map<String, String> supplementalInformation =
-                askAccountSupplementalInformation(accountsInContext, Lists.newArrayList());
+        Map<String, String> supplementalInformation;
+        try {
+            supplementalInformation =
+                    askAccountSupplementalInformation(accountsInContext, Lists.newArrayList());
+        } catch (SupplementalInfoException exception) {
+            if (exception.getError() == SupplementalInfoError.NO_VALID_CODE) {
+                emitOptInTimeoutEvent();
+            }
+            statusUpdater.updateStatus(CredentialsStatus.AUTHENTICATION_ERROR);
+            return AgentWorkerCommandResult.ABORT;
+        }
 
         // Abort if the supplemental information is null or empty.
         if (supplementalInformation == null || supplementalInformation.isEmpty()) {
@@ -163,7 +179,7 @@ public class RequestUserOptInAccountsAgentWorkerCommand extends AgentWorkerComma
                         .masked(false)
                         .checkbox(true)
                         .pattern("true/false")
-                        .name("isCorrect")
+                        .name(IS_CORRECT)
                         .helpText(
                                 context.getCatalog()
                                         .getString(
@@ -335,5 +351,21 @@ public class RequestUserOptInAccountsAgentWorkerCommand extends AgentWorkerComma
         additionalInfo.add("portfolioTypes", portfolioTypes);
 
         return additionalInfo.toString();
+    }
+
+    private void emitOptInTimeoutEvent() {
+        if (loginAgentEventProducer != null) {
+            long finishTime = System.nanoTime();
+            long elapsedTime = finishTime - startTime;
+
+            loginAgentEventProducer.sendLoginCompletedEvent(
+                    context.getRequest().getCredentials().getProviderName(),
+                    context.getCorrelationId(),
+                    LoginResult.OPTIN_ERROR_TIMEOUT,
+                    elapsedTime,
+                    context.getAppId(),
+                    context.getClusterId(),
+                    context.getRequest().getCredentials().getUserId());
+        }
     }
 }
