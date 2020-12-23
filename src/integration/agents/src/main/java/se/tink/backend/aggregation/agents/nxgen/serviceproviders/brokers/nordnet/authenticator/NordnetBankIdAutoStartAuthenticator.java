@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
@@ -41,6 +42,7 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
+@Slf4j
 public class NordnetBankIdAutoStartAuthenticator implements BankIdAuthenticator<String> {
 
     private final NordnetBaseApiClient apiClient;
@@ -279,7 +281,13 @@ public class NordnetBankIdAutoStartAuthenticator implements BankIdAuthenticator<
     private String getAuthCodeFrom(String location) {
         Matcher matcher = Patterns.CODE.matcher(location);
 
-        return matcher.find() ? matcher.group(1) : null;
+        String code = matcher.find() ? matcher.group(1) : null;
+        if (code == null) {
+            log.error(
+                    "No code was return - this occurs due to bank issues, location: {}", location);
+            throw BankServiceError.BANK_SIDE_FAILURE.exception();
+        }
+        return code;
     }
 
     private void getNtag(HttpResponse response) {
