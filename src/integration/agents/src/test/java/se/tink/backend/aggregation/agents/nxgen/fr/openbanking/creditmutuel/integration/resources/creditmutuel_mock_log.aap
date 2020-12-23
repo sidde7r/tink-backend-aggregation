@@ -12,7 +12,7 @@ Content-Type: application/json
 {"access_token":"DUMMY_ACCESS_TOKEN","token_type":"bearer","expires_in":900,"state":"f2533843-785d-4499-b92f-61711101feed","scope":"aisp extended_transaction_history","refresh_token":"DUMMY_REFRESH_TOKEN"}
 
 REQUEST 2
-GET https://oauth2-apisi.e-i.com/cm/stet-psd2-api/v1/accounts
+GET https://oauth2-apisi.e-i.com/cm/stet-psd2-api/v1.1/accounts
 Authorization: Bearer DUMMY_ACCESS_TOKEN
 Accept: application/json
 X-Aggregator: Tink Testing
@@ -21,10 +21,10 @@ RESPONSE 2
 200
 Content-Type: application/json
 
-{"accounts":[{"cashAccountType":"CACC","resourceId":"DUMMY_RESOURCE_ID_1","accountId":{"iban":"DUMMY_IBAN","currency":"EUR"},"name":"DUMMY_NAME_1","currency":"EUR","balances":[{"name":"AvailableBalance","balanceAmount":{"currency":"EUR","amount":"5134.53"},"balanceType":"XPCD"}],"_links":{"balances":{"href":"/cm/stet-psd2-api/v1/accounts/DUMMY_RESOURCE_ID_1/balances"},"transactions":{"href":"/cm/stet-psd2-api/v1/accounts/DUMMY_RESOURCE_ID_1/transactions"}}},{"cashAccountType":"CARD","resourceId":"DUMMY_RESOURCE_ID_2","accountId":{"iban":"DUMMY_IBAN","currency":"EUR"},"name":"DUMMY_NAME_2","linkedAccount":"DUMMY_RESOURCE_ID_1","currency":"EUR","balances":[{"name":"AvailableBalance","balanceAmount":{"currency":"EUR","amount":"-42.48"},"balanceType":"CLBD"}],"_links":{"balances":{"href":"/cm/stet-psd2-api/v1/accounts/DUMMY_RESOURCE_ID_2/balances"},"transactions":{"href":"/cm/stet-psd2-api/v1/accounts/DUMMY_RESOURCE_ID_2/transactions"}}}],"_links":{"self":{"href":"/cm/stet-psd2-api/v1/accounts"}}}
+{"accounts":[{"cashAccountType":"CACC","resourceId":"DUMMY_RESOURCE_ID_1","accountId":{"iban":"DUMMY_IBAN","currency":"EUR"},"name":"DUMMY_NAME_1","currency":"EUR","balances":[{"name":"AvailableBalance","balanceAmount":{"currency":"EUR","amount":"5134.53"},"balanceType":"XPCD"}],"_links":{"balances":{"href":"/cm/stet-psd2-api/v1.1/accounts/DUMMY_RESOURCE_ID_1/balances"},"transactions":{"href":"/cm/stet-psd2-api/v1.1/accounts/DUMMY_RESOURCE_ID_1/transactions"}}},{"cashAccountType":"CARD","resourceId":"DUMMY_RESOURCE_ID_2","accountId":{"iban":"DUMMY_IBAN","currency":"EUR"},"name":"DUMMY_NAME_2","linkedAccount":"DUMMY_RESOURCE_ID_1","currency":"EUR","balances":[{"name":"AvailableBalance","balanceAmount":{"currency":"EUR","amount":"-42.48"},"balanceType":"CLBD"}],"_links":{"balances":{"href":"/cm/stet-psd2-api/v1.1/accounts/DUMMY_RESOURCE_ID_2/balances"},"transactions":{"href":"/cm/stet-psd2-api/v1.1/accounts/DUMMY_RESOURCE_ID_2/transactions"}}}],"_links":{"self":{"href":"/cm/stet-psd2-api/v1.1/accounts"}}}
 
 REQUEST 3
-GET https://oauth2-apisi.e-i.com/cm/stet-psd2-api/v1/accounts/DUMMY_RESOURCE_ID_1/transactions
+GET https://oauth2-apisi.e-i.com/cm/stet-psd2-api/v1.1/accounts/DUMMY_RESOURCE_ID_1/transactions
 Authorization: Bearer DUMMY_ACCESS_TOKEN
 Accept: application/json
 X-Aggregator: Tink Testing
@@ -33,10 +33,10 @@ RESPONSE 3
 200
 Content-Type: application/json
 
-{"transactions":[{"resourceId":"DUMMY_RESOURCE_TRANSACTION_ID_1","transactionAmount":{"currency":"EUR","amount":"12.25"},"creditDebitIndicator":"CRDT","status":"BOOK","bookingDate":"2018-02-12","remittanceInformation":{"unstructured":["SEPA CREDIT TRANSFER from PSD2Company"]}}],"_links":{"self":{"href":"/cm/stet-psd2-api/v1/accounts/DUMMY_RESOURCE_ID_1/transactions"},"parent-list":{"href":"/cm/stet-psd2-api/v1/accounts"},"balances":{"href":"/cm/stet-psd2-api/v1/accounts/DUMMY_RESOURCE_ID_1/balances"},"last":{"href":"/cm/stet-psd2-api/v1/accounts/DUMMY_RESOURCE_ID_1/transactions?page=2"},"next":{"href":"/cm/stet-psd2-api/v1/accounts/DUMMY_RESOURCE_ID_1/transactions?page=2"}}}
+{"transactions":[{"resourceId":"DUMMY_RESOURCE_TRANSACTION_ID_1","transactionAmount":{"currency":"EUR","amount":"12.25"},"creditDebitIndicator":"CRDT","status":"BOOK","bookingDate":"2018-02-12","remittanceInformation":{"unstructured":["SEPA CREDIT TRANSFER from PSD2Company"]}}],"_links":{"self":{"href":"/cm/stet-psd2-api/v1.1/accounts/DUMMY_RESOURCE_ID_1/transactions"},"parent-list":{"href":"/cm/stet-psd2-api/v1.1/accounts"},"balances":{"href":"/cm/stet-psd2-api/v1.1/accounts/DUMMY_RESOURCE_ID_1/balances"},"last":{"href":"/cm/stet-psd2-api/v1.1/accounts/DUMMY_RESOURCE_ID_1/transactions?page=2"},"next":{"href":"/cm/stet-psd2-api/v1.1/accounts/DUMMY_RESOURCE_ID_1/transactions?page=2"}}}
 
 REQUEST 4
-GET https://oauth2-apisi.e-i.com/cm/stet-psd2-api/v1/accounts/DUMMY_RESOURCE_ID_1/transactions?page=2
+GET https://oauth2-apisi.e-i.com/cm/stet-psd2-api/v1.1/accounts/DUMMY_RESOURCE_ID_1/transactions?page=2
 Authorization: Bearer DUMMY_ACCESS_TOKEN
 Accept: application/json
 X-Aggregator: Tink Testing
@@ -45,10 +45,10 @@ RESPONSE 4
 200
 Content-Type: application/json
 
-{"transactions":[{"resourceId":"DUMMY_RESOURCE_TRANSACTION_ID_2","transactionAmount":{"currency":"EUR","amount":"13.25"},"creditDebitIndicator":"DBIT","status":"BOOK","bookingDate":"2018-02-13","remittanceInformation":{"unstructured":["SEPA CREDIT TRANSFER from PSD2Company"]}}],"_links":{"self":{"href":"/cm/stet-psd2-api/v1/accounts/DUMMY_RESOURCE_ID_1/transactions?page=2"},"parent-list":{"href":"/cm/stet-psd2-api/v1/accounts"},"balances":{"href":"v1/accounts/DUMMY_RESOURCE_ID_1/balances"},"last":{"href":"/cm/stet-psd2-api/v1/accounts/DUMMY_RESOURCE_ID_1/transactions?page=2"},"next":null}}
+{"transactions":[{"resourceId":"DUMMY_RESOURCE_TRANSACTION_ID_2","transactionAmount":{"currency":"EUR","amount":"13.25"},"creditDebitIndicator":"DBIT","status":"BOOK","bookingDate":"2018-02-13","remittanceInformation":{"unstructured":["SEPA CREDIT TRANSFER from PSD2Company"]}}],"_links":{"self":{"href":"/cm/stet-psd2-api/v1.1/accounts/DUMMY_RESOURCE_ID_1/transactions?page=2"},"parent-list":{"href":"/cm/stet-psd2-api/v1.1/accounts"},"balances":{"href":"v1.1/accounts/DUMMY_RESOURCE_ID_1/balances"},"last":{"href":"/cm/stet-psd2-api/v1.1/accounts/DUMMY_RESOURCE_ID_1/transactions?page=2"},"next":null}}
 
 REQUEST 5
-GET https://oauth2-apisi.e-i.com/cm/stet-psd2-api/v1/accounts/DUMMY_RESOURCE_ID_2/transactions
+GET https://oauth2-apisi.e-i.com/cm/stet-psd2-api/v1.1/accounts/DUMMY_RESOURCE_ID_2/transactions
 Authorization: Bearer DUMMY_ACCESS_TOKEN
 Accept: application/json
 X-Aggregator: Tink Testing
@@ -57,10 +57,10 @@ RESPONSE 5
 200
 Content-Type: application/json
 
-{"transactions":[{"creditDebitIndicator":"DBIT","status":"PDNG","resourceId":"DUMMY_RESOURCE_TRANSACTION_ID_3","transactionAmount":{"currency":"EUR","amount":"-28.50"},"transactionDate":"2020-06-30","remittanceInformation":{"unstructured":["DUMMY_DESCRIPTION_A"]}},{"creditDebitIndicator":"DBIT","status":"BOOK","resourceId":"DUMMY_RESOURCE_TRANSACTION_ID_4","transactionAmount":{"currency":"EUR","amount":"-46.00"},"bookingDate":"2020-06-30","transactionDate":"2020-06-21","remittanceInformation":{"unstructured":["DUMMY_DESCRIPTION_B"]}}],"_links":{"self":{"href":"/cm/stet-psd2-api/v1/accounts/DUMMY_RESOURCE_ID_2/transactions?page=1"},"balances":{"href":"/cm/stet-psd2-api/v1/accounts/DUMMY_RESOURCE_ID_2/balances"},"first":{"href":"/cm/stet-psd2-api/v1/accounts/DUMMY_RESOURCE_ID_2/transactions"},"parent-list":{"href":"/cm/stet-psd2-api/v1/accounts"}}}
+{"transactions":[{"creditDebitIndicator":"DBIT","status":"PDNG","resourceId":"DUMMY_RESOURCE_TRANSACTION_ID_3","transactionAmount":{"currency":"EUR","amount":"-28.50"},"transactionDate":"2020-06-30","remittanceInformation":{"unstructured":["DUMMY_DESCRIPTION_A"]}},{"creditDebitIndicator":"DBIT","status":"BOOK","resourceId":"DUMMY_RESOURCE_TRANSACTION_ID_4","transactionAmount":{"currency":"EUR","amount":"-46.00"},"bookingDate":"2020-06-30","transactionDate":"2020-06-21","remittanceInformation":{"unstructured":["DUMMY_DESCRIPTION_B"]}}],"_links":{"self":{"href":"/cm/stet-psd2-api/v1.1/accounts/DUMMY_RESOURCE_ID_2/transactions?page=1"},"balances":{"href":"/cm/stet-psd2-api/v1.1/accounts/DUMMY_RESOURCE_ID_2/balances"},"first":{"href":"/cm/stet-psd2-api/v1.1/accounts/DUMMY_RESOURCE_ID_2/transactions"},"parent-list":{"href":"/cm/stet-psd2-api/v1.1/accounts"}}}
 
 REQUEST 6
-GET https://oauth2-apisi.e-i.com/cm/stet-psd2-api/v1/trusted-beneficiaries
+GET https://oauth2-apisi.e-i.com/cm/stet-psd2-api/v1.1/trusted-beneficiaries
 Accept: application/json
 X-Aggregator: Tink Testing
 Authorization: Bearer DUMMY_ACCESS_TOKEN
@@ -72,7 +72,7 @@ Content-Type: application/json
 {"beneficiaries":[{"id":"DUMMY_ID_1","isTrusted":true,"creditorAccount":{"iban":"FR7612548029981234567890161"},"creditorAgent":{"bicFi":"AXUBFRPP"},"creditor":{"name":"DUMMY_NAME","postalAddress":null}}],"_links":{"self":{"href":"/trusted-beneficiaries","templated":false},"parent-list":null,"first":null,"last":null,"next":{"href":"/trusted-beneficiaries?page=2","templated":true},"prev":null}}
 
 REQUEST 7 MATCH BENEFICIARIES_FIRST_PAGE_LOADED
-GET https://oauth2-apisi.e-i.com/cm/stet-psd2-api/v1/trusted-beneficiaries?page=2
+GET https://oauth2-apisi.e-i.com/cm/stet-psd2-api/v1.1/trusted-beneficiaries?page=2
 Accept: application/json
 X-Aggregator: Tink Testing
 Authorization: Bearer DUMMY_ACCESS_TOKEN
