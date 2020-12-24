@@ -215,7 +215,7 @@ public class SignableOperation implements SafelyLoggable {
                 .add("updated", updated)
                 .add("userId", userId)
                 .add("credentialsId", credentialsId)
-                .add("signableObject", signableObject)
+                .add("signableObject", signableObject == null ? null : "***")
                 .add("internalStatus", internalStatus)
                 .add("correlationId", correlationId)
                 .toString();
