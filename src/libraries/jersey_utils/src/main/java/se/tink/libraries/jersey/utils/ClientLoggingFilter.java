@@ -35,7 +35,7 @@ public class ClientLoggingFilter extends ClientFilter {
                             .append(formatResponse(response))
                             .toString());
         } catch (RuntimeException e) {
-            log.error("sth bad happened when logging outgoing traffic");
+            log.error("sth bad happened when logging outgoing traffic", e);
         }
     }
 
