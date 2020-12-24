@@ -60,7 +60,7 @@ public final class KeySignerProvider implements Provider<JwtSigner> {
 
         List<X509Certificate> certChain = extractQsealCertChain();
         if (certChain.isEmpty()) {
-            log.error(
+            log.info(
                     "Could not extract cert chain from provided qsealc string: '{}'. Unable to construct Eidas JWT signer - falling back to secrets JWT Signer",
                     agentConfigurationControllerContext
                             .getAgentConfigurationController()
