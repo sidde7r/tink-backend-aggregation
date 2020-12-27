@@ -81,7 +81,7 @@ spec:
           the last 30 minutes for <{ $labels.type }>.
         tags: {{ .Values.fluffyTags }}
     ### Agent level login failures
-    - alert: HighProviderFailedLoginRatioEs
+    - alert: HighProviderFailedLoginRatioGB
       expr: |
         # Never trigger on agents with less than 40 login attempts past 60 minutes.
         # This filters out small agents which are less critical to fix quickly
@@ -103,7 +103,7 @@ spec:
         tags: {{ .Values.fluffyTags }}
 
     ### Provider level fails
-    - alert: HighProviderErrorRatioES
+    - alert: HighProviderErrorRatioGB
       expr: |
         # Never triggers on providers that did less than 10 operations past 60
         # minutes. This filters out small providers which are less critical to fix
