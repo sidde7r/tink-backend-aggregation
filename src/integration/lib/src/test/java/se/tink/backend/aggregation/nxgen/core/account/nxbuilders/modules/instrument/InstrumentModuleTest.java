@@ -47,18 +47,6 @@ public class InstrumentModuleTest {
                 .withCurrency(null);
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void negativeQuantity() {
-        InstrumentModule.builder()
-                .withType(InstrumentType.FUND)
-                .withId(INSTRUMENT_ID_MODULE)
-                .withMarketPrice(5d)
-                .withMarketValue(20d)
-                .withAverageAcquisitionPrice(7d)
-                .withCurrency("SEK")
-                .withQuantity(-20);
-    }
-
     @Test
     public void buildTest() {
         InstrumentModule instrumentModule =

@@ -163,7 +163,6 @@ public final class InstrumentModule {
 
         @Override
         public ProfitStep<InstrumentBuildStep> withQuantity(double quantity) {
-            Preconditions.checkArgument(quantity >= 0, "Quantity must not be negative.");
             this.quantity = quantity;
             return this;
         }
