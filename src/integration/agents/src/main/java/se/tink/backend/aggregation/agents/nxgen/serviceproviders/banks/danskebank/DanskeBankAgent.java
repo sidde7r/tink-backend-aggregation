@@ -59,6 +59,8 @@ public abstract class DanskeBankAgent<MarketSpecificApiClient extends DanskeBank
             DanskeBankConfiguration configuration,
             AccountEntityMapper accountEntityMapper) {
         super(agentComponentProvider);
+        this.client.disableSignatureRequestHeader();
+        this.client.disableAggregatorHeader();
         this.apiClient = createApiClient(this.client, configuration);
         this.configuration = configuration;
         this.deviceId = Hash.sha1AsHex(this.credentials.getField(Field.Key.USERNAME) + "-TINK");
@@ -99,6 +101,8 @@ public abstract class DanskeBankAgent<MarketSpecificApiClient extends DanskeBank
             DanskeBankConfiguration configuration,
             AccountEntityMapper accountEntityMapper) {
         super(request, context, signatureKeyPair);
+        this.client.disableSignatureRequestHeader();
+        this.client.disableAggregatorHeader();
         this.apiClient = createApiClient(this.client, configuration);
         this.configuration = configuration;
         this.deviceId = Hash.sha1AsHex(this.credentials.getField(Field.Key.USERNAME) + "-TINK");
