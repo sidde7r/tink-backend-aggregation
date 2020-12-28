@@ -19,7 +19,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeban
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.mapper.AccountEntityMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.filters.DanskeBankHttpFilter;
 import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
-import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
@@ -31,7 +30,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
-import se.tink.backend.aggregation.nxgen.http.MultiIpGateway;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.ServiceUnavailableBankServiceErrorFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.TimeoutFilter;
@@ -47,7 +45,7 @@ public abstract class DanskeBankAgent<MarketSpecificApiClient extends DanskeBank
     protected final MarketSpecificApiClient apiClient;
     protected final DanskeBankConfiguration configuration;
     protected final String deviceId;
-    private final MultiIpGateway gateway;
+
     private final InvestmentRefreshController investmentRefreshController;
     private final LoanRefreshController loanRefreshController;
     private final CreditCardRefreshController creditCardRefreshController;
@@ -65,7 +63,6 @@ public abstract class DanskeBankAgent<MarketSpecificApiClient extends DanskeBank
         this.configuration = configuration;
         this.deviceId = Hash.sha1AsHex(this.credentials.getField(Field.Key.USERNAME) + "-TINK");
         this.accountEntityMapper = accountEntityMapper;
-        this.gateway = new MultiIpGateway(client, credentials.getUserId(), credentials.getId());
 
         this.investmentRefreshController =
                 new InvestmentRefreshController(
@@ -107,7 +104,6 @@ public abstract class DanskeBankAgent<MarketSpecificApiClient extends DanskeBank
         this.configuration = configuration;
         this.deviceId = Hash.sha1AsHex(this.credentials.getField(Field.Key.USERNAME) + "-TINK");
         this.accountEntityMapper = accountEntityMapper;
-        this.gateway = new MultiIpGateway(client, credentials.getUserId(), credentials.getId());
 
         this.investmentRefreshController =
                 new InvestmentRefreshController(
@@ -135,12 +131,6 @@ public abstract class DanskeBankAgent<MarketSpecificApiClient extends DanskeBank
         client.addFilter(new DanskeBankHttpFilter(configuration));
         client.addFilter(new ServiceUnavailableBankServiceErrorFilter());
         client.addFilter(new TimeoutFilter());
-    }
-
-    @Override
-    public void setConfiguration(AgentsServiceConfiguration configuration) {
-        super.setConfiguration(configuration);
-        gateway.setMultiIpGateway(configuration.getIntegrations());
     }
 
     protected abstract MarketSpecificApiClient createApiClient(
