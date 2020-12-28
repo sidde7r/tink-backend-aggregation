@@ -111,7 +111,8 @@ public final class NordeaDkAgent extends SubsequentProgressiveGenerationAgent
                 persistentStorage,
                 supplementalRequester,
                 catalog,
-                statusUpdater);
+                statusUpdater,
+                metricContext);
     }
 
     @Override

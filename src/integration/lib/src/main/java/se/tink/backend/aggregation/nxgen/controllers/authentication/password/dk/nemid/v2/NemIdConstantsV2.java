@@ -46,16 +46,18 @@ public class NemIdConstantsV2 {
                     + "    </body>\n"
                     + "</html>";
 
-    static final long PHANTOMJS_TIMEOUT_SECONDS = 30;
-    static final String NEM_ID_PREFIX = "[NemId]";
+    public static final long PHANTOMJS_TIMEOUT_SECONDS = 30;
+    public static final String NEM_ID_PREFIX = "[NemId]";
+    // value from docs
+    public static final int NEM_ID_TIMEOUT_SECONDS = 5 * 60;
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class Storage {
         public static final String NEMID_INSTALL_ID = "NEMID_INSTALL_ID";
     }
 
-    static class Errors {
-        static final ImmutableList<Pattern> INCORRECT_CREDENTIALS_ERROR_PATTERNS =
+    public static class Errors {
+        public static final ImmutableList<Pattern> INCORRECT_CREDENTIALS_ERROR_PATTERNS =
                 ImmutableList.<Pattern>builder()
                         .add(
                                 Pattern.compile("^incorrect (user|password).*"),
@@ -63,20 +65,34 @@ public class NemIdConstantsV2 {
                                 Pattern.compile("^indtast (bruger|adgangskode).*"))
                         .build();
 
-        static final String ENTER_ACTIVATION_PASSWORD = "Enter activation password.";
+        public static final String ENTER_ACTIVATION_PASSWORD = "Enter activation password.";
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
-    static class HtmlElements {
-        static final By USERNAME_INPUT = By.cssSelector("input[type=text]");
-        static final By ERROR_MESSAGE = By.cssSelector("p.error");
-        static final By NEMID_CODE_CARD = By.className("otp__card-number");
-        static final By NEMID_CODE_TOKEN = By.className("otp__token");
-        static final By PASSWORD_INPUT = By.cssSelector("input[type=password]");
-        static final By SUBMIT_BUTTON = By.cssSelector("button.button--submit");
-        static final By NEMID_TOKEN = By.cssSelector("div#tink_nemIdToken");
-        static final By IFRAME = By.tagName("iframe");
-        static final By OTP_ICON = By.className("otp__icon-phone-pulse");
-        static final By NEMID_APP_BUTTON = By.cssSelector("button.button--submit");
+    public static class HtmlElements {
+        public static final By IFRAME = By.tagName("iframe");
+
+        public static final By USERNAME_INPUT = By.cssSelector("input[type=text]");
+        public static final By PASSWORD_INPUT = By.cssSelector("input[type=password]");
+        public static final By SUBMIT_LOGIN_BUTTON = By.cssSelector("button.button--submit");
+
+        public static final By NEMID_CODE_APP_METHOD = By.className("otp__icon-phone-pulse");
+        public static final By NEMID_CODE_CARD_METHOD = By.className("otp__card-number");
+        public static final By NEMID_CODE_TOKEN_METHOD = By.className("otp__token");
+        public static final By NOT_EMPTY_ERROR_MESSAGE =
+                By.xpath("//p[@class='error' and text()!='']");
+        public static final By NEMID_TOKEN = By.cssSelector("div#tink_nemIdToken");
+
+        public static final By NEMID_CODE_APP_BUTTON = By.cssSelector("button.button--submit");
+
+        public static final By NEMID_TIMEOUT_ICON = By.className("otp__icon-noresponse");
+    }
+
+    // source:
+    // https://www.nets.eu/dk-da/kundeservice/nemid-tjenesteudbyder/NemID-tjenesteudbyderpakken/Documents/NemID%20Error%20Codes.pdf
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class NemIdErrorCodes {
+        public static final String TIMEOUT = "SRV006";
+        public static final String REJECTED = "CAN007";
     }
 }

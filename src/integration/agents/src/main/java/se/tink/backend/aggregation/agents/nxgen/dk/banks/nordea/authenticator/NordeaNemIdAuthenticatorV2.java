@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
+import se.tink.backend.aggregation.agents.contexts.MetricContext;
 import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
 import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
@@ -28,6 +29,7 @@ import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.exception.NemIdError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2.NemIdConstantsV2;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2.NemIdIFrameController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2.NemIdIFrameControllerInitializer;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2.NemIdParametersFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2.NemIdParametersV2;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
@@ -60,12 +62,14 @@ public class NordeaNemIdAuthenticatorV2 extends StatelessProgressiveAuthenticato
             final PersistentStorage persistentStorage,
             final SupplementalRequester supplementalRequester,
             final Catalog catalog,
-            final StatusUpdater statusUpdater) {
+            final StatusUpdater statusUpdater,
+            final MetricContext metricContext) {
         this.bankClient = Objects.requireNonNull(bankClient);
         this.sessionStorage = Objects.requireNonNull(sessionStorage);
         this.persistentStorage = Objects.requireNonNull(persistentStorage);
         this.iFrameController =
-                new NemIdIFrameController(this, supplementalRequester, catalog, statusUpdater);
+                NemIdIFrameControllerInitializer.initNemIdIframeController(
+                        this, catalog, statusUpdater, supplementalRequester, metricContext);
     }
 
     public void authenticate(final Credentials credentials) throws AuthenticationException {
@@ -73,25 +77,10 @@ public class NordeaNemIdAuthenticatorV2 extends StatelessProgressiveAuthenticato
                 || Strings.isNullOrEmpty(credentials.getField(Field.Key.USERNAME))) {
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
-        try {
-            String token = iFrameController.doLoginWith(credentials);
 
-            final String code = exchangeNemIdToken(token);
-
-            saveToken(exchangeOauthToken(code));
-        } catch (HttpResponseException e) {
-            String nemIdErrorCode =
-                    (String) e.getResponse().getBody(Map.class).get("nemid_error_code");
-            // source:
-            // https://www.nets.eu/dk-da/kundeservice/nemid-tjenesteudbyder/NemID-tjenesteudbyderpakken/Documents/NemID%20Error%20Codes.pdf
-            if ("SRV006".equals(nemIdErrorCode)) {
-                throw NemIdError.TIMEOUT.exception();
-            }
-            if ("CAN007".equals(nemIdErrorCode)) {
-                throw NemIdError.REJECTED.exception();
-            }
-            throw e;
-        }
+        String token = iFrameController.doLoginWith(credentials);
+        final String code = exchangeNemIdToken(token);
+        saveToken(exchangeOauthToken(code));
     }
 
     public AuthenticationStepResponse autoAuthenticate() {
