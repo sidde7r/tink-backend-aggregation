@@ -6,6 +6,10 @@ import se.tink.libraries.account.AccountIdentifier;
 
 public class StarlingConstants {
 
+    public static final String UKOB_CERT_ID = "UKOB";
+    public static final String CLIENT_ID_PARAM_KEY = "client_id";
+    public static final String CLIENT_SECRET_PARAM_KEY = "client_secret";
+
     public static final TypeMapper<AccountIdentifier.Type> ACCOUNT_IDENTIFIER_MAPPER =
             TypeMapper.<AccountIdentifier.Type>builder()
                     .put(AccountIdentifier.Type.IBAN, "IBAN")
@@ -50,7 +54,10 @@ public class StarlingConstants {
     }
 
     public static class Url {
-        private static final String API_STARLING = "https://api.starlingbank.com";
+        public static final String AUTH_STARLING = "https://oauth.starlingbank.com";
+        public static final URL GET_ACCESS_TOKEN =
+                new URL("https://token-api.starlingbank.com/oauth/access-token");
+        public static final String API_STARLING = "https://api.starlingbank.com";
 
         public static final URL GET_ACCOUNTS = new URL(API_STARLING + ApiEndpoint.GET_ACCOUNTS);
         public static final URL GET_ACCOUNT_HOLDER =
