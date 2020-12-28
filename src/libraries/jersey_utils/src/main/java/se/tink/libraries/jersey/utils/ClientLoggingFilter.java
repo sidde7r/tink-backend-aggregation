@@ -34,6 +34,8 @@ public class ClientLoggingFilter extends ClientFilter {
                             .append("INCOMING RESPONSE:\n")
                             .append(formatResponse(response))
                             .toString());
+        } catch (UnsupportedOperationException ignored) {
+            log.warn("unable to log outgoing traffic, payload is not valid JSON");
         } catch (RuntimeException e) {
             log.error("sth bad happened when logging outgoing traffic", e);
         }
