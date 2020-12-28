@@ -19,6 +19,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeban
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.mapper.AccountEntityMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.filters.DanskeBankHttpFilter;
 import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
+import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
+import se.tink.backend.aggregation.configuration.agentsservice.PasswordBasedProxyConfiguration;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
@@ -131,6 +133,22 @@ public abstract class DanskeBankAgent<MarketSpecificApiClient extends DanskeBank
         client.addFilter(new DanskeBankHttpFilter(configuration));
         client.addFilter(new ServiceUnavailableBankServiceErrorFilter());
         client.addFilter(new TimeoutFilter());
+    }
+
+    @Override
+    public void setConfiguration(AgentsServiceConfiguration agentsServiceConfiguration) {
+        super.setConfiguration(agentsServiceConfiguration);
+        configureProxy(agentsServiceConfiguration);
+    }
+
+    private void configureProxy(final AgentsServiceConfiguration agentsServiceConfiguration) {
+        final PasswordBasedProxyConfiguration proxyConfiguration =
+                agentsServiceConfiguration.getCountryProxy(
+                        "be", credentials.getUserId().hashCode());
+        client.setProductionProxy(
+                proxyConfiguration.getHost(),
+                proxyConfiguration.getUsername(),
+                proxyConfiguration.getPassword());
     }
 
     protected abstract MarketSpecificApiClient createApiClient(
