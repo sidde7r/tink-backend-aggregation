@@ -12,9 +12,9 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 public class StarlingOAut2Authenticator extends OAuth2Authenticator {
 
     private static final String AUTH_STARLING = "https://oauth.starlingbank.com";
+    private static final String API_STARLING = "https://api.starlingbank.com";
     private static final URL GET_OAUTH2_TOKEN_ENDPOINT =
-            new URL("https://token-api.starlingbank.com/oauth/access-token");
-
+            new URL(API_STARLING + "/oauth/access-token");
     private static final String CLIENT_ID_PARAM_KEY = "client_id";
     private static final String CLIENT_SECRET_PARAM_KEY = "client_secret";
 
