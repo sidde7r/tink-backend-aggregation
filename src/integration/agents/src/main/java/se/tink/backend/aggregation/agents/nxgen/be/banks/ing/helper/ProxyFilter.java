@@ -12,6 +12,7 @@ import javax.ws.rs.core.MediaType;
 import org.bouncycastle.util.encoders.Hex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngStorage;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.crypto.IngCryptoUtils;
 import se.tink.backend.aggregation.agents.utils.crypto.AES;
@@ -75,6 +76,7 @@ public class ProxyFilter extends Filter {
         if (debug) {
             BodyPrinter.print(httpResponse);
         }
+        validateResponse(httpResponse);
         verifySign(httpResponse);
         decrypt(httpResponse);
         logResponse(httpResponse);
@@ -104,6 +106,16 @@ public class ProxyFilter extends Filter {
         byte[] body = (byte[]) request.getBody();
         byte[] signature = ingCryptoUtils.calculateSignature(body, getSigningKey());
         replaceBody(request, body, signature);
+    }
+
+    private void validateResponse(HttpResponse httpResponse) {
+        byte[] body = httpResponse.getBody(byte[].class);
+        boolean isBodyValid = validateBody(body);
+        if (!isBodyValid) {
+            resetStreamForLogging(httpResponse);
+            logResponse(httpResponse);
+            throw BankServiceError.BANK_SIDE_FAILURE.exception();
+        }
     }
 
     private void verifySign(HttpResponse httpResponse) {
@@ -139,6 +151,13 @@ public class ProxyFilter extends Filter {
 
     private byte[] parseMessage(byte[] body) {
         return Arrays.copyOfRange(body, 0, body.length - SIGNATURE_LENGTH - IV_LENGTH);
+    }
+
+    private boolean validateBody(byte[] body) {
+        // Messages that are returned and handled by this filter must be encrypted and signed.
+        // If the body is shorter than the signature then it is most probably a temporary server
+        // side failure. Like unencrypted and unsigned: `{"status":"502"}`
+        return body.length >= SIGNATURE_LENGTH;
     }
 
     private byte[] parseMessageWithIV(byte[] body) {
@@ -180,5 +199,13 @@ public class ProxyFilter extends Filter {
 
     private void logResponse(HttpResponse httpResponse) {
         ingLoggingAdapter.logResponse(httpResponse);
+    }
+
+    private void resetStreamForLogging(HttpResponse httpResponse) {
+        try {
+            httpResponse.getBodyInputStream().reset();
+        } catch (IOException ex) {
+            throw new IllegalStateException("Could not reset input stream");
+        }
     }
 }
