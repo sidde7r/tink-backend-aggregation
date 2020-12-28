@@ -152,7 +152,7 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
     }
 
     @Override
-    public final void setConfiguration(AgentsServiceConfiguration configuration) {
+    public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
 
         UkOpenBankingClientConfigurationAdapter ukOpenBankingConfiguration =
