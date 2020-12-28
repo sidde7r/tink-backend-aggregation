@@ -97,6 +97,9 @@ public class SwedbankDecoupledAuthenticator implements BankIdAuthenticator<Strin
         if (errorResponse.hasEmptyUserId() || errorResponse.hasWrongUserId()) {
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
+        if (errorResponse.hasAuthenticationExpired()) {
+            throw BankIdError.TIMEOUT.exception();
+        }
 
         throw e;
     }

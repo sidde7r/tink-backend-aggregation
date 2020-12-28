@@ -63,6 +63,11 @@ public class GenericResponse {
     }
 
     @JsonIgnore
+    public boolean hasAuthenticationExpired() {
+        return containsError(ErrorCodes.AUTHORIZATION_EXPIRED);
+    }
+
+    @JsonIgnore
     private boolean containsError(String errorCode) {
         return ListUtils.emptyIfNull(tppMessages).stream()
                 .anyMatch(
