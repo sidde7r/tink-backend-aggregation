@@ -85,12 +85,13 @@ spec:
       expr: |
         # Never trigger on agents with less than 40 login attempts past 60 minutes.
         # This filters out small agents which are less critical to fix quickly
-        sum(increase(tink_agent_login_total{action="login", market="GB"}[1h])) BY (className,provider) > 40 and
+        sum(increase(tink_agent_login_total{action="login", market="GB", provider_type!="test"}[1h])) BY (className,provider) > 40 and
         # Agents where more than 20% of the login attempts fail.
         sum(increase(tink_agent_login_total{action="login",outcome="failed", market="GB"}[30m])) BY (className,provider) / sum(increase(tink_agent_login_total{action="login", market="GB"}[30m])) BY (className,provider) > 0.20
       for: 30m
       labels:
         severity: urgent
+        priority: P1
         who: integration-fluffy
       annotations:
         description: To learn more check out the metric `tink_agent_login_total`. This
@@ -108,17 +109,17 @@ spec:
         # Never triggers on providers that did less than 10 operations past 60
         # minutes. This filters out small providers which are less critical to fix
         # quickly.
-        sum(increase(tink_executions_total{market="GB"}[1h])) BY (provider) > 10 and
+        sum(increase(tink_executions_total{market="GB", provider_type!="test"}[1h])) BY (provider) > 10 and
         # Providers where over 50% of the requests have failed.
         ratio:tink_provider_errors:delta60m > 50
       for: 15m
       labels:
-        severity: ping
+        severity: urgent
+        priority: P1
         who: integration-fluffy
       annotations:
-        description: Investigate further in https://kibana.global.tink.network/goto/e0e04ba547d2d76936afa0788febabc8
-          (and possibly add the provider in search query). This alert never triggers
-          on providers that did less than 10 operations past 60 minutes.
+        description: {{ .Values.kibanaLink }}
+          {{ .Values.grafanaLink }}
         summary: Provider <{ $labels.provider }> has failed over 50%
           of its operations the past 60 minutes
         tags: {{ .Values.fluffyTags }}
