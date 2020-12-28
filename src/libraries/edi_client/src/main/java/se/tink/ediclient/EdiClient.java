@@ -18,6 +18,7 @@ import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
+import java.security.Security;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
@@ -26,6 +27,7 @@ import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.Locale;
 import java.util.function.Consumer;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.operator.OperatorCreationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,6 +40,10 @@ public class EdiClient {
     private static final String CERT_ALIAS = "clientcert";
     private static final char[] DEFAULT_KEYSTORE_PWD = "changeme".toCharArray();
 
+    static {
+        Security.addProvider(new BouncyCastleProvider());
+    }
+
     private static KeyStore issue()
             throws GeneralSecurityException, URISyntaxException, IOException,
                     OperatorCreationException {
@@ -46,12 +52,12 @@ public class EdiClient {
 
         String url = EdiApiClient.urlForCsr(csrString);
         if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Action.BROWSE)) {
-            LOG.info("Opening url: " + url);
+            LOG.info("Opening url: {}", url);
             Desktop.getDesktop().browse(new URI(url));
         } else {
             LOG.info(
-                    "Could not automatically open browser. URL to issue development certificate: "
-                            + url);
+                    "Could not automatically open browser. URL to issue development certificate: {}",
+                    url);
         }
 
         RSAPublicKey publicKey = (RSAPublicKey) pair.getPublic();
@@ -71,7 +77,7 @@ public class EdiClient {
             throws KeyStoreException, IOException, CertificateException, NoSuchAlgorithmException,
                     NoSuchProviderException {
         if (!workDir.exists() && !workDir.mkdirs()) {
-            LOG.warn("Could not make working directory; " + workDir.getAbsolutePath());
+            LOG.warn("Could not make working directory: {}", workDir.getAbsolutePath());
         }
         File devCertKeystore = new File(workDir, DEVCERT_P12);
         if (devCertKeystore.exists()) {
@@ -101,6 +107,7 @@ public class EdiClient {
         }
     }
 
+    @SuppressWarnings("java:S106")
     private static void trySaveKeystore(File saveAs, KeyStore newKeyStore)
             throws KeyStoreException, NoSuchAlgorithmException, CertificateException {
         try (FileOutputStream keystoreOutputStream = new FileOutputStream(saveAs)) {
