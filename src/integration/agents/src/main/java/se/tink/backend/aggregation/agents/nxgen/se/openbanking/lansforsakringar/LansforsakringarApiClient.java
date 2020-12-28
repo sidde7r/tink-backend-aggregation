@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +23,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.authenticator.rpc.AuthenticateResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.authenticator.rpc.ConsentResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.authenticator.rpc.ConsentStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.authenticator.rpc.RefreshTokenForm;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.authenticator.rpc.TokenForm;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.configuration.LansforsakringarConfiguration;
@@ -129,6 +131,20 @@ public final class LansforsakringarApiClient {
                 .header(LansforsakringarConstants.HeaderKeys.TPP_REDIRECT_URI, getRedirectUrl())
                 .header(LansforsakringarConstants.HeaderKeys.TPP_EXPLICIT_AUTH_PREFERRED, false)
                 .post(ConsentResponse.class, LansforsakringarConstants.BodyValues.EMPTY_BODY);
+    }
+
+    public ConsentStatusResponse getConsentStatus() {
+        String consentId = storageHelper.getConsentId();
+        if (StringUtils.isEmpty(consentId)) {
+            return null;
+        }
+
+        return client.request(new URL(Urls.CONSENT_STATUS).parameter(IdTags.CONSENT_ID, consentId))
+                .accept(MediaType.APPLICATION_JSON)
+                .addBearerToken(getTokenFromStorage())
+                .header(HeaderKeys.PSU_USER_AGENT, HeaderValues.PSU_USER_AGENT)
+                .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID())
+                .get(ConsentStatusResponse.class);
     }
 
     public URL buildAuthorizeUrl(String state, String authorizationId) {
