@@ -8,11 +8,11 @@ import se.tink.backend.agents.rpc.Provider;
 public class SdcNoConfigurationTest {
 
     private static final String NETT_BANK_CODE = "1254";
-    private static final String NETT_BANK_INDIVIDUAL_URL = "https://www.cultura.no/";
+    private static final String NETT_BANK_INDIVIDUAL_URL = "https://cultura.no/";
     private static final String PORTAL_BANK_CODE = "3730";
-    private static final String PORTAL_BANK_INDIVIDUAL_URL = "https://www.sognbank.no/";
+    private static final String PORTAL_BANK_INDIVIDUAL_URL = "https://sognbank.no/";
     private static final String EIKA_BANK_CODE = "1821";
-    private static final String EIKA_INDIVIDUAL_URL = "https://www.eika.no/";
+    private static final String EIKA_INDIVIDUAL_URL = "https://eika.no/";
     private static final Provider NETTBANK_PROVIDER = new Provider();
     private static final Provider PORTALBANK_PROVIDER = new Provider();
     private static final Provider EIKA_PROVIDER = new Provider();
