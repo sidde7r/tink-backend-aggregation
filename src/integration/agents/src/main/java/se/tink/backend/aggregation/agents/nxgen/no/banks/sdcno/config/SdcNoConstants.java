@@ -8,7 +8,7 @@ public class SdcNoConstants {
     private static final Pattern BANKCODE_PATTERN = Pattern.compile("\\{bankcode}");
     private static final Pattern DOMAIN_PATTERN = Pattern.compile("\\{domain}");
 
-    public static final String INDIVIDUAL_BASE_URL = "https://www.{domain}.no/";
+    public static final String INDIVIDUAL_BASE_URL = "https://{domain}.no/";
     public static final Matcher DOMAIN_MATCHER = DOMAIN_PATTERN.matcher(INDIVIDUAL_BASE_URL);
 
     private SdcNoConstants() {}
