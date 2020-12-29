@@ -42,6 +42,7 @@ public class LansforsakringarAuthController extends OAuth2AuthenticationControll
 
     @Override
     public void autoAuthenticate() {
+        authenticator.tryRefreshingToken();
         if (!authenticator.isConsentValid()) {
             storageHelper.clearSessionData();
             throw SessionError.SESSION_EXPIRED.exception();
