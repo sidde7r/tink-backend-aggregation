@@ -8,7 +8,6 @@ import lombok.AllArgsConstructor;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.Transactions;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.Xs2aDevelopersAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.transactionalaccount.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
@@ -16,6 +15,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2TokenAccessor;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
 @AllArgsConstructor
@@ -24,7 +24,7 @@ public class Xs2aDevelopersTransactionalAccountFetcher
                 TransactionDatePaginator<TransactionalAccount> {
 
     private final Xs2aDevelopersApiClient apiClient;
-    private final Xs2aDevelopersAuthenticator authenticator;
+    private final OAuth2TokenAccessor oAuth2TokenAccessor;
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
@@ -55,7 +55,7 @@ public class Xs2aDevelopersTransactionalAccountFetcher
             if (isNoMoreTransactionsAvailableToFetchException(e)) {
                 return PaginatorResponseImpl.createEmpty(false);
             } else if (isConsentTimeoutException(e)) {
-                authenticator.invalidateToken();
+                oAuth2TokenAccessor.invalidate();
                 throw SessionError.CONSENT_EXPIRED.exception(e.getMessage());
             }
             throw e;
