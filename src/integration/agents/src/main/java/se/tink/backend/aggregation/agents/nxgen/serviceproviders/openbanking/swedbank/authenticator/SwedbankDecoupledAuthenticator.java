@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.AuthStatus;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.EndUserMessage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.entities.ChallengeDataEntity;
@@ -25,12 +26,14 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
 public class SwedbankDecoupledAuthenticator implements BankIdAuthenticator<String> {
     private final SwedbankApiClient apiClient;
+    private final boolean isSwedbank;
     private String ssn;
     private String autoStartToken;
     private OAuth2Token accessToken;
 
-    public SwedbankDecoupledAuthenticator(SwedbankApiClient apiClient) {
+    public SwedbankDecoupledAuthenticator(SwedbankApiClient apiClient, boolean isSwedbank) {
         this.apiClient = apiClient;
+        this.isSwedbank = isSwedbank;
     }
 
     @Override
@@ -93,6 +96,18 @@ public class SwedbankDecoupledAuthenticator implements BankIdAuthenticator<Strin
         }
         if (errorResponse.isMissingBankAgreement()) {
             throw LoginError.NOT_CUSTOMER.exception();
+        }
+        if (errorResponse.isNoProfileAvailable()) {
+            if (isSwedbank) {
+                // This should be somehow extended - there are more than one savingsbank,
+                // but we do not have possibility to check what savings bank it is.
+                // Currently we are supporting only Swedbank through Decoupled flow.
+                throw LoginError.NOT_CUSTOMER.exception(
+                        SwedbankConstants.EndUserMessage.WRONG_BANK_SAVINGSBANK.getKey());
+            } else {
+                throw LoginError.NOT_CUSTOMER.exception(
+                        SwedbankConstants.EndUserMessage.WRONG_BANK_SWEDBANK.getKey());
+            }
         }
         if (errorResponse.hasEmptyUserId() || errorResponse.hasWrongUserId()) {
             throw LoginError.INCORRECT_CREDENTIALS.exception();
