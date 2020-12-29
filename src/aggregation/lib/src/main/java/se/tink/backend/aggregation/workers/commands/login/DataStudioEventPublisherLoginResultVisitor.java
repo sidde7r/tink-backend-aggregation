@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.workers.commands.login;
 import com.google.common.collect.ImmutableMap;
 import java.util.Map;
 import lombok.AllArgsConstructor;
-import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.result.error.NoUserInteractionResponseError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AccountBlockedError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AuthenticationError;
@@ -24,12 +23,102 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.error.ThirdPar
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.ThirdPartyAppNoClientError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.ThirdPartyAppTimedOutError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.ThirdPartyAppUnknownError;
-import se.tink.backend.aggregation.workers.metrics.MetricActionIface;
+import se.tink.backend.aggregation.workers.commands.login.handler.result.AgentPlatformLoginErrorResult;
+import se.tink.backend.aggregation.workers.commands.login.handler.result.LoginAuthenticationErrorResult;
+import se.tink.backend.aggregation.workers.commands.login.handler.result.LoginAuthorizationErrorResult;
+import se.tink.backend.aggregation.workers.commands.login.handler.result.LoginBankIdErrorResult;
+import se.tink.backend.aggregation.workers.commands.login.handler.result.LoginBankServiceEroroResult;
+import se.tink.backend.aggregation.workers.commands.login.handler.result.LoginResultVisitor;
+import se.tink.backend.aggregation.workers.commands.login.handler.result.LoginSuccessResult;
+import se.tink.backend.aggregation.workers.commands.login.handler.result.LoginUnknownErrorResult;
 import se.tink.eventproducerservice.events.grpc.AgentLoginCompletedEventProto;
 
 @AllArgsConstructor
-class AgentPlatformAuthenticationProcessExceptionBankApiErrorVisitor
-        implements BankApiErrorVisitor<CredentialsStatus> {
+public class DataStudioEventPublisherLoginResultVisitor implements LoginResultVisitor {
+
+    private final DataStudioLoginEventPublisherService dataStudioLoginEventPublisherService;
+
+    @Override
+    public void visit(LoginSuccessResult successResult) {
+        dataStudioLoginEventPublisherService.publishLoginSuccessEvent();
+    }
+
+    @Override
+    public void visit(LoginAuthorizationErrorResult authorizationErrorResult) {
+        dataStudioLoginEventPublisherService.publishLoginAuthorizationErrorEvent(
+                authorizationErrorResult.getException());
+    }
+
+    @Override
+    public void visit(LoginAuthenticationErrorResult authenticationErrorResult) {
+        dataStudioLoginEventPublisherService.publishLoginAuthenticationErrorEvent(
+                authenticationErrorResult.getException());
+    }
+
+    @Override
+    public void visit(LoginBankIdErrorResult bankIdErrorResult) {
+        dataStudioLoginEventPublisherService.publishLoginBankIdErrorEvent(
+                bankIdErrorResult.getException());
+    }
+
+    @Override
+    public void visit(LoginBankServiceEroroResult bankServiceErrorResult) {
+        dataStudioLoginEventPublisherService.publishLoginBankServiceErrorEvent(
+                bankServiceErrorResult.getException());
+    }
+
+    @Override
+    public void visit(LoginUnknownErrorResult unknownErrorResult) {
+        dataStudioLoginEventPublisherService.publishLoginErrorUnknown();
+    }
+
+    @Override
+    public void visit(AgentPlatformLoginErrorResult loginErrorResult) {
+        loginErrorResult
+                .getException()
+                .getSourceAgentPlatformError()
+                .accept(
+                        new BankApiErrorVisitor<Void>() {
+                            @Override
+                            public Void visit(AuthenticationError error) {
+                                dataStudioLoginEventPublisherService.publishLoginResultEvent(
+                                        AUTHENTICATION_ERROR_TO_LOGIN_RESULT_MAPPING.getOrDefault(
+                                                error.getClass(),
+                                                AgentLoginCompletedEventProto
+                                                        .AgentLoginCompletedEvent.LoginResult
+                                                        .LOGIN_ERROR_UNKNOWN));
+                                return null;
+                            }
+
+                            @Override
+                            public Void visit(AuthorizationError error) {
+                                dataStudioLoginEventPublisherService.publishLoginResultEvent(
+                                        AUTHORIZATION_ERROR_TO_LOGIN_RESULT_MAPPING.getOrDefault(
+                                                error.getClass(),
+                                                AgentLoginCompletedEventProto
+                                                        .AgentLoginCompletedEvent.LoginResult
+                                                        .AUTHORIZATION_ERROR_UNKNOWN));
+                                return null;
+                            }
+
+                            @Override
+                            public Void visit(ServerError error) {
+                                dataStudioLoginEventPublisherService.publishLoginResultEvent(
+                                        SERVER_ERROR_TO_LOGIN_RESULT_MAPPING.getOrDefault(
+                                                error.getClass(),
+                                                AgentLoginCompletedEventProto
+                                                        .AgentLoginCompletedEvent.LoginResult
+                                                        .BANK_SERVICE_ERROR_UNKNOWN));
+                                return null;
+                            }
+
+                            @Override
+                            public Void visit(FetchDataError error) {
+                                throw new IllegalStateException(
+                                        "Fetching data error is not allowed during authentication");
+                            }
+                        });
+    }
 
     private static final Map<
                     Class<? extends ServerError>,
@@ -123,45 +212,4 @@ class AgentPlatformAuthenticationProcessExceptionBankApiErrorVisitor
                                     AgentLoginCompletedEventProto.AgentLoginCompletedEvent
                                             .LoginResult.THIRD_PARTY_APP_ERROR_UNKNOWN)
                             .build();
-
-    private final MetricActionIface metricAction;
-    private final DataStudioLoginEventPublisherService dataStudioLoginEventPublisherService;
-
-    @Override
-    public CredentialsStatus visit(AuthenticationError error) {
-        metricAction.cancelled();
-        dataStudioLoginEventPublisherService.publishLoginResultEvent(
-                AUTHENTICATION_ERROR_TO_LOGIN_RESULT_MAPPING.getOrDefault(
-                        error.getClass(),
-                        AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult
-                                .LOGIN_ERROR_UNKNOWN));
-        return CredentialsStatus.AUTHENTICATION_ERROR;
-    }
-
-    @Override
-    public CredentialsStatus visit(AuthorizationError error) {
-        metricAction.cancelled();
-        dataStudioLoginEventPublisherService.publishLoginResultEvent(
-                AUTHORIZATION_ERROR_TO_LOGIN_RESULT_MAPPING.getOrDefault(
-                        error.getClass(),
-                        AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult
-                                .AUTHORIZATION_ERROR_UNKNOWN));
-        return CredentialsStatus.AUTHENTICATION_ERROR;
-    }
-
-    @Override
-    public CredentialsStatus visit(ServerError error) {
-        metricAction.unavailable();
-        dataStudioLoginEventPublisherService.publishLoginResultEvent(
-                SERVER_ERROR_TO_LOGIN_RESULT_MAPPING.getOrDefault(
-                        error.getClass(),
-                        AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult
-                                .BANK_SERVICE_ERROR_UNKNOWN));
-        return CredentialsStatus.TEMPORARY_ERROR;
-    }
-
-    @Override
-    public CredentialsStatus visit(FetchDataError error) {
-        throw new IllegalStateException("Fetching data error is not allowed during authentication");
-    }
 }

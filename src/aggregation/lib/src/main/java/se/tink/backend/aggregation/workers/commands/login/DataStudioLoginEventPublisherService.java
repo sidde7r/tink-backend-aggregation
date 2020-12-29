@@ -20,11 +20,12 @@ import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.events.LoginAgentEventProducer;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.exception.NemIdError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.exception.NemIdException;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
 import se.tink.eventproducerservice.events.grpc.AgentLoginCompletedEventProto;
 
 @AllArgsConstructor
-public class AgentLoginEventPublisherService {
+public class DataStudioLoginEventPublisherService {
 
     private static final ImmutableMap<
                     LoginError, AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult>
@@ -325,12 +326,11 @@ public class AgentLoginEventPublisherService {
     private final LoginAgentEventProducer eventPublisher;
     private final long authenticationStartTime;
     private final AgentWorkerCommandContext context;
-    private final SupplementalInformationControllerUsageMonitorProxy
-            supplementalInformationControllerUsageMonitorProxy;
+    private final SupplementalInformationController supplementalInformationController;
 
     void publishLoginSuccessEvent() {
         AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult result =
-                supplementalInformationControllerUsageMonitorProxy.isUsed()
+                supplementalInformationController.isUsed()
                         ? AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult
                                 .SUCCESSFUL_LOGIN
                         : AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult

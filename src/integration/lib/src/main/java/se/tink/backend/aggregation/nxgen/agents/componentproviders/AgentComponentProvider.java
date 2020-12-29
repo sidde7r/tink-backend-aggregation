@@ -18,7 +18,7 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public final class AgentComponentProvider
+public class AgentComponentProvider
         implements TinkHttpClientProvider,
                 SupplementalInformationProvider,
                 AgentContextProvider,

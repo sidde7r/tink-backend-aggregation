@@ -6,11 +6,12 @@ import se.tink.backend.aggregation.agents.agentplatform.authentication.storage.P
 import se.tink.backend.aggregation.agents.agentplatform.authentication.storage.PersistentStorageServiceFactory;
 import se.tink.backend.aggregation.nxgen.agents.AgentPersistentStorageReceiverAgentVisitor;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class AgentPlatformAuthenticationExecutor {
 
-    public static void processAuthentication(
+    public void processAuthentication(
             Agent agent,
             CredentialsRequest credentialsRequest,
             SupplementalInformationController supplementalInformationController) {
@@ -20,7 +21,10 @@ public class AgentPlatformAuthenticationExecutor {
 
         PersistentStorageService persistentStorageService =
                 PersistentStorageServiceFactory.create(
-                        agent, agentPersistentStorageReceiver.getPersistentStorage().get());
+                        agent,
+                        agentPersistentStorageReceiver
+                                .getPersistentStorage()
+                                .orElse(new PersistentStorage()));
         AgentPlatformAuthenticator agentPlatformAuthenticator = (AgentPlatformAuthenticator) agent;
         new AgentPlatformAuthenticationService(
                         new UserInteractionService(

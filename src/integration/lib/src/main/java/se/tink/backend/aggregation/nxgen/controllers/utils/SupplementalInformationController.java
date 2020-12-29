@@ -16,4 +16,10 @@ public interface SupplementalInformationController {
             throws SupplementalInfoException;
 
     void openThirdPartyApp(ThirdPartyAppAuthenticationPayload payload);
+
+    short getInteractionCounter();
+
+    default boolean isUsed() {
+        return getInteractionCounter() > 0;
+    }
 }

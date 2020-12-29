@@ -15,20 +15,20 @@ import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.agents.PersistentLogin;
 import se.tink.backend.aggregation.agents.agent.Agent;
+import se.tink.backend.aggregation.agents.agentplatform.authentication.AgentPlatformAuthenticationExecutor;
 import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.events.LoginAgentEventProducer;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationControllerImpl;
-import se.tink.backend.aggregation.workers.commands.login.AgentLoginEventPublisherService;
+import se.tink.backend.aggregation.workers.commands.login.DataStudioLoginEventPublisherService;
 import se.tink.backend.aggregation.workers.commands.login.LoginExecutor;
-import se.tink.backend.aggregation.workers.commands.login.SupplementalInformationControllerUsageMonitorProxy;
+import se.tink.backend.aggregation.workers.commands.login.MetricsFactory;
 import se.tink.backend.aggregation.workers.commands.metrics.MetricsCommand;
 import se.tink.backend.aggregation.workers.commands.state.LoginAgentWorkerCommandState;
 import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.metrics.AgentWorkerCommandMetricState;
 import se.tink.backend.aggregation.workers.metrics.MetricAction;
-import se.tink.backend.aggregation.workers.metrics.MetricActionComposite;
-import se.tink.backend.aggregation.workers.metrics.MetricActionIface;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
 import se.tink.backend.aggregation.workers.operation.type.AgentWorkerOperationMetricType;
@@ -73,8 +73,7 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
     private final Credentials credentials;
     private final User user;
     private Agent agent;
-    private final SupplementalInformationControllerUsageMonitorProxy
-            supplementalInformationController;
+    private final SupplementalInformationController supplementalInformationController;
     private final LoginAgentEventProducer loginAgentEventProducer;
 
     private InterProcessSemaphoreMutex lock;
@@ -92,9 +91,8 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
         this.credentials = request.getCredentials();
         this.user = request.getUser();
         this.supplementalInformationController =
-                new SupplementalInformationControllerUsageMonitorProxy(
-                        new SupplementalInformationControllerImpl(
-                                context, request.getCredentials(), request.getState()));
+                new SupplementalInformationControllerImpl(
+                        context, request.getCredentials(), request.getState());
         this.loginAgentEventProducer = loginAgentEventProducer;
         this.startTime = System.nanoTime();
         this.metrics =
@@ -283,49 +281,30 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
         return true;
     }
 
-    private boolean isManualAuthentication(CredentialsRequest request) {
-        ManualOrAutoAuthenticationAgentVisitor visitor =
-                new ManualOrAutoAuthenticationAgentVisitor(request);
-        agent.accept(visitor);
-        logger.info(
-                "Authentication requires user intervention: {}", visitor.isManualAuthentication());
-        return visitor.isManualAuthentication();
-    }
-
     private AgentWorkerCommandResult login() throws Exception {
         ArrayList<Context> loginTimerContext =
                 state.getTimerContexts(state.LOGIN_TIMER_NAME, credentials.getType());
 
         try {
             return new LoginExecutor(
+                            new MetricsFactory(metrics),
                             statusUpdater,
+                            new AgentPlatformAuthenticationExecutor())
+                    .execute(
                             context,
                             supplementalInformationController,
-                            new AgentLoginEventPublisherService(
+                            new DataStudioLoginEventPublisherService(
                                     loginAgentEventProducer,
                                     startTime,
                                     context,
-                                    supplementalInformationController))
-                    .executeLogin(agent, createLoginMetricAction(), context.getRequest());
+                                    supplementalInformationController));
+
         } finally {
             stopCommandContexts(loginTimerContext);
 
             // If we have a lock, release it.
             releaseLock();
         }
-    }
-
-    private MetricActionIface createLoginMetricAction() {
-        final CredentialsRequest request = context.getRequest();
-        final boolean isCron = !request.isManual();
-        MetricAction action = metrics.buildAction(metricForAction(MetricName.LOGIN));
-        MetricAction actionLoginType =
-                isCron
-                        ? metrics.buildAction(metricForAction(MetricName.LOGIN_CRON))
-                        : (isManualAuthentication(request)
-                                ? metrics.buildAction(metricForAction(MetricName.LOGIN_MANUAL))
-                                : metrics.buildAction(metricForAction(MetricName.LOGIN_AUTO)));
-        return new MetricActionComposite(action, actionLoginType);
     }
 
     private void releaseLock() throws Exception {

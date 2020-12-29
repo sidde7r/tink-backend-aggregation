@@ -267,8 +267,9 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         }
 
         if (agent instanceof AgentPlatformAuthenticator) {
-            AgentPlatformAuthenticationExecutor.processAuthentication(
-                    agent, credentialsRequest, supplementalInformationController);
+            new AgentPlatformAuthenticationExecutor()
+                    .processAuthentication(
+                            agent, credentialsRequest, supplementalInformationController);
             return;
         }
 
