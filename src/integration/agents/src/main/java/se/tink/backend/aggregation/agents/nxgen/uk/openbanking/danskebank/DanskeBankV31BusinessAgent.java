@@ -64,8 +64,6 @@ public class DanskeBankV31BusinessAgent extends UkOpenBankingBaseAgent {
                 proxyConfiguration.getHost(),
                 proxyConfiguration.getUsername(),
                 proxyConfiguration.getPassword());
-        client.disableSignatureRequestHeader();
-        client.disableAggregatorHeader();
     }
 
     @Override
