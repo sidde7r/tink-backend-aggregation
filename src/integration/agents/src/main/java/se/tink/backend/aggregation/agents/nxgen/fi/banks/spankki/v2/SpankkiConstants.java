@@ -149,7 +149,7 @@ public class SpankkiConstants {
     }
 
     public static class Investments {
-        public static String ACCOUNT_ID_PREFIX = "FUND-";
+        public static final String ACCOUNT_ID_PREFIX = "FUND-";
     }
 
     public static class Regex {
