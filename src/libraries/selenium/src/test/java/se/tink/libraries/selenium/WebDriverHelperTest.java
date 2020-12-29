@@ -1,11 +1,11 @@
 package se.tink.libraries.selenium;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
-import java.util.Arrays;
-import org.assertj.core.api.Assertions;
+import java.util.Collections;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
@@ -24,7 +24,7 @@ public class WebDriverHelperTest {
     public void init() {
         TargetLocator targetLocator = mock(TargetLocator.class);
         driver = mock(PhantomJSDriver.class);
-        webDriverHelper = new WebDriverHelper();
+        webDriverHelper = new WebDriverHelper(100);
         given(driver.switchTo()).willReturn(targetLocator);
     }
 
@@ -34,8 +34,7 @@ public class WebDriverHelperTest {
         By xpath = By.xpath("dummy");
 
         // when
-        Throwable throwable =
-                Assertions.catchThrowable(() -> webDriverHelper.getElement(driver, xpath));
+        Throwable throwable = catchThrowable(() -> webDriverHelper.getElement(driver, xpath));
 
         // then
         assertThat(throwable)
@@ -52,7 +51,7 @@ public class WebDriverHelperTest {
         given(element.toString()).willReturn("dummy_button");
         // when
 
-        Throwable throwable = Assertions.catchThrowable(() -> webDriverHelper.clickButton(element));
+        Throwable throwable = catchThrowable(() -> webDriverHelper.clickButton(element));
 
         // then
         assertThat(throwable)
@@ -68,7 +67,7 @@ public class WebDriverHelperTest {
         given(element.isEnabled()).willReturn(false).willReturn(true);
         // when
 
-        Throwable throwable = Assertions.catchThrowable(() -> webDriverHelper.clickButton(element));
+        Throwable throwable = catchThrowable(() -> webDriverHelper.clickButton(element));
 
         // then
         assertThat(throwable).isNull();
@@ -79,8 +78,7 @@ public class WebDriverHelperTest {
         // given
 
         // when
-        Throwable throwable =
-                Assertions.catchThrowable(() -> webDriverHelper.switchToIframe(driver));
+        Throwable throwable = catchThrowable(() -> webDriverHelper.switchToIframe(driver));
 
         // then
         assertThat(throwable)
@@ -93,11 +91,11 @@ public class WebDriverHelperTest {
         // given
         WebElement iframe = mock(WebElement.class);
         given(iframe.isDisplayed()).willReturn(true);
-        given(driver.findElements(By.tagName("iframe"))).willReturn(Arrays.asList(iframe));
+        given(driver.findElements(By.tagName("iframe")))
+                .willReturn(Collections.singletonList(iframe));
 
         // when
-        Throwable throwable =
-                Assertions.catchThrowable(() -> webDriverHelper.switchToIframe(driver));
+        Throwable throwable = catchThrowable(() -> webDriverHelper.switchToIframe(driver));
 
         // then
         assertThat(throwable).isNull();
