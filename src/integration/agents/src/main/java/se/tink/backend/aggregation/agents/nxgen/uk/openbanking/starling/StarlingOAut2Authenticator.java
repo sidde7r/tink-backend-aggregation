@@ -1,22 +1,19 @@
 package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling;
 
+import static se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.StarlingConstants.CLIENT_ID_PARAM_KEY;
+import static se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.StarlingConstants.CLIENT_SECRET_PARAM_KEY;
+import static se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.StarlingConstants.Url.AUTH_STARLING;
+import static se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.StarlingConstants.Url.GET_ACCESS_TOKEN;
+
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.configuration.entity.ClientConfigurationEntity;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.oauth.EndpointSpecification;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.oauth.OAuth2AuthorizationSpecification;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.oauth.progressive.OAuth2Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
-import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class StarlingOAut2Authenticator extends OAuth2Authenticator {
-
-    private static final String AUTH_STARLING = "https://oauth.starlingbank.com";
-    private static final String API_STARLING = "https://api.starlingbank.com";
-    private static final URL GET_OAUTH2_TOKEN_ENDPOINT =
-            new URL(API_STARLING + "/oauth/access-token");
-    private static final String CLIENT_ID_PARAM_KEY = "client_id";
-    private static final String CLIENT_SECRET_PARAM_KEY = "client_secret";
 
     private static final String[] SCOPES =
             new String[] {
@@ -55,7 +52,7 @@ public class StarlingOAut2Authenticator extends OAuth2Authenticator {
 
     private static EndpointSpecification createRefreshTokenEndpointSpecification(
             final ClientConfigurationEntity aisConfiguration) {
-        return new EndpointSpecification(GET_OAUTH2_TOKEN_ENDPOINT.toString())
+        return new EndpointSpecification(GET_ACCESS_TOKEN.toString())
                 .withClientSpecificParameter(CLIENT_ID_PARAM_KEY, aisConfiguration.getClientId())
                 .withClientSpecificParameter(
                         CLIENT_SECRET_PARAM_KEY, aisConfiguration.getClientSecret());
@@ -63,7 +60,7 @@ public class StarlingOAut2Authenticator extends OAuth2Authenticator {
 
     private static EndpointSpecification createAccessTokenEndpoint(
             final ClientConfigurationEntity aisConfiguration) {
-        return new EndpointSpecification(GET_OAUTH2_TOKEN_ENDPOINT.toString())
+        return new EndpointSpecification(GET_ACCESS_TOKEN.toString())
                 .withClientSpecificParameter(
                         CLIENT_SECRET_PARAM_KEY, aisConfiguration.getClientSecret());
     }

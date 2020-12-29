@@ -1,5 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling;
 
+import static se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.StarlingConstants.CLIENT_ID_PARAM_KEY;
+import static se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.StarlingConstants.CLIENT_SECRET_PARAM_KEY;
+import static se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.StarlingConstants.Url.AUTH_STARLING;
+import static se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.StarlingConstants.Url.GET_ACCESS_TOKEN;
+
 import com.google.common.collect.ImmutableSet;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -8,17 +13,9 @@ import lombok.AllArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.configuration.entity.ClientConfigurationEntity;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.oauth2.EndpointSpecification;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.oauth2.OAuth2AuthorizationSpecification;
-import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 @AllArgsConstructor
 public class StarlingOAuth2AuthorizationSpecification implements OAuth2AuthorizationSpecification {
-
-    private static final String AUTH_STARLING = "https://oauth.starlingbank.com";
-    private static final String API_STARLING = "https://api.starlingbank.com";
-    private static final URL GET_OAUTH2_TOKEN_ENDPOINT =
-            new URL(API_STARLING + "/oauth/access-token");
-    private static final String CLIENT_ID_PARAM_KEY = "client_id";
-    private static final String CLIENT_SECRET_PARAM_KEY = "client_secret";
 
     private final ClientConfigurationEntity aisConfiguration;
     private final String redirectUrl;
@@ -59,14 +56,14 @@ public class StarlingOAuth2AuthorizationSpecification implements OAuth2Authoriza
 
     @Override
     public EndpointSpecification getAccessTokenEndpoint() {
-        return EndpointSpecification.builder(GET_OAUTH2_TOKEN_ENDPOINT.toUri())
+        return EndpointSpecification.builder(GET_ACCESS_TOKEN.toUri())
                 .clientSpecificParam(CLIENT_SECRET_PARAM_KEY, aisConfiguration.getClientSecret())
                 .build();
     }
 
     @Override
     public EndpointSpecification getRefreshTokenEndpoint() {
-        return EndpointSpecification.builder(GET_OAUTH2_TOKEN_ENDPOINT.toUri())
+        return EndpointSpecification.builder(GET_ACCESS_TOKEN.toUri())
                 .clientSpecificParam(CLIENT_SECRET_PARAM_KEY, aisConfiguration.getClientSecret())
                 .clientSpecificParam(CLIENT_ID_PARAM_KEY, aisConfiguration.getClientId())
                 .build();
