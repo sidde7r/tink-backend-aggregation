@@ -20,7 +20,7 @@ public class InstructedAmountEntity {
     public static InstructedAmountEntity of(PaymentRequest paymentRequest) {
         return InstructedAmountEntity.builder()
                 .amount(paymentRequest.getPayment().getExactCurrencyAmount().getExactValue())
-                .currency(paymentRequest.getPayment().getCurrency())
+                .currency(paymentRequest.getPayment().getExactCurrencyAmount().getCurrencyCode())
                 .build();
     }
 }
