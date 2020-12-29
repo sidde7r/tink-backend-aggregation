@@ -24,6 +24,7 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.backend.aggregation.utils.json.JsonUtils;
 
 public final class BelfiusApiClient {
 
@@ -109,7 +110,8 @@ public final class BelfiusApiClient {
 
         try {
             return OBJECT_MAPPER.readValue(
-                    httpResponse.getBodyInputStream(), FetchTransactionsResponse.class);
+                    JsonUtils.escapeNotSpecialSingleBackslashes(httpResponse.getBody(String.class)),
+                    FetchTransactionsResponse.class);
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }
