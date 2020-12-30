@@ -110,7 +110,7 @@ public final class VolvoFinansAgent extends NextGenerationAgent
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
                         new TransactionDatePaginationController.Builder<>(transactionsFetcher)
-                                .setZoneId(ZoneId.of("UTC"))
+                                .setZoneId(ZoneId.of(VolvoFinansConstants.Timezone.UTC))
                                 .build()));
     }
 

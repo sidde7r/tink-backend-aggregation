@@ -137,7 +137,7 @@ public final class SparebankenVestAgent extends NextGenerationAgent
                                 .setConsecutiveEmptyPagesLimit(
                                         SparebankenVestConstants.PagePagination
                                                 .CONSECUTIVE_EMPTY_PAGES_LIMIT)
-                                .setZoneId(ZoneId.of("UTC"))
+                                .setZoneId(ZoneId.of(SparebankenVestConstants.Timezone.UTC))
                                 .build(),
                         transactionFetcher);
 

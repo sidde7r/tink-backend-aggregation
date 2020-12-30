@@ -132,4 +132,8 @@ public final class BankdataConstants {
         public static final LogTag ERROR_FETCHING_BALANCE =
                 LogTag.from("BANKDATA_ERROR_FETCHING_BALANCE");
     }
+
+    public static class Timezone {
+        public static final String UTC = "UTC";
+    }
 }

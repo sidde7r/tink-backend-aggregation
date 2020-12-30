@@ -91,7 +91,7 @@ public class SparebankenVestConstants {
                 new ThreadSafeDateFormat.ThreadSafeDateFormatBuilder(
                                 "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
                                 new Locale("sv", "SE"),
-                                TimeZone.getTimeZone("UTC"))
+                                TimeZone.getTimeZone(Timezone.UTC))
                         .build();
 
         public static final String WA = "wa";
@@ -169,5 +169,9 @@ public class SparebankenVestConstants {
     public static class Storage {
         public static final String DEVICE_TOKEN = "DeviceToken";
         public static final String HARDWARE_ID = "HardwareId";
+    }
+
+    public static class Timezone {
+        public static final String UTC = "UTC";
     }
 }
