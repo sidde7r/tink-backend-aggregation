@@ -7,7 +7,6 @@ import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.Collection;
 import java.util.Date;
-import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.ActualLocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
@@ -178,17 +177,15 @@ public class TransactionDatePaginationController<A extends Account>
     }
 
     public static class Builder<A extends Account> {
-
-        @NonNull private TransactionDatePaginator<A> paginator;
+        private final TransactionDatePaginator<A> paginator;
         private int consecutiveEmptyPagesLimit = DEFAULT_MAX_CONSECUTIVE_EMPTY_PAGES;
         private ChronoUnit unitToFetch = ChronoUnit.DAYS;
         private int amountToFetch = DEFAULT_DAYS_TO_FETCH;
         private LocalDateTimeSource localDateTimeSource = new ActualLocalDateTimeSource();
         private ZoneId zoneId = ZoneId.of("CET");
 
-        public Builder<A> setPaginator(TransactionDatePaginator<A> paginator) {
+        public Builder(TransactionDatePaginator<A> paginator) {
             this.paginator = paginator;
-            return this;
         }
 
         public Builder<A> setConsecutiveEmptyPagesLimit(int consecutiveEmptyPagesLimit) {

@@ -4,7 +4,7 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.TRANSFERS;
 
 import com.google.inject.Inject;
-import java.time.temporal.ChronoUnit;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.Account;
@@ -15,7 +15,6 @@ import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SbabConstants.HttpClient;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SbabConstants.TransactionFetching;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.authenticator.SbabAuthenticationController;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.authenticator.SbabAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.authenticator.rpc.BankIdResponse;
@@ -125,12 +124,10 @@ public final class SbabAgent extends NextGenerationAgent
                 accountFetcher,
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(
-                                transactionFetcher,
-                                TransactionFetching.MAX_CONSECUTIVE_EMPTY_PAGES,
-                                TransactionFetching.DAYS_TO_FETCH,
-                                ChronoUnit.DAYS,
-                                localDateTimeSource)));
+                        new TransactionDatePaginationController.Builder<>(transactionFetcher)
+                                .setLocalDateTimeSource(localDateTimeSource)
+                                .setZoneId(ZoneId.of(SbabConstants.Format.TIMEZONE))
+                                .build()));
     }
 
     @Override

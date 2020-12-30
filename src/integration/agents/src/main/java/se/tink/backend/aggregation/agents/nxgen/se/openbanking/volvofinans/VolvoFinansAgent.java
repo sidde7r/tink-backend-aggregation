@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.volvofinans;
 
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CREDIT_CARDS;
 
+import java.time.ZoneId;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
@@ -108,7 +109,9 @@ public final class VolvoFinansAgent extends NextGenerationAgent
                 creditCardFetcher,
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(transactionsFetcher)));
+                        new TransactionDatePaginationController.Builder<>(transactionsFetcher)
+                                .setZoneId(ZoneId.of("UTC"))
+                                .build()));
     }
 
     @Override

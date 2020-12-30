@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata;
 
+import java.time.ZoneId;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
@@ -128,7 +129,9 @@ public abstract class BankdataAgent extends NextGenerationAgent
                 accountFetcher,
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(accountFetcher)));
+                        new TransactionDatePaginationController.Builder<>(accountFetcher)
+                                .setZoneId(ZoneId.of("UTC"))
+                                .build()));
     }
 
     @Override
