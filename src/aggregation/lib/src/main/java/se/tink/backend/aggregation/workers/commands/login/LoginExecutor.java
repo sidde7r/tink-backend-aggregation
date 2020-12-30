@@ -75,6 +75,7 @@ public class LoginExecutor {
             AgentWorkerCommandContext context,
             SupplementalInformationController supplementalInformationController,
             DataStudioLoginEventPublisherService dataStudioLoginEventPublisherService) {
+        loginResult.accept(new LoggerLoginResultVisitor());
         logUserInteractionStatus(supplementalInformationController);
         createLoginMetric(loginResult, context.getRequest(), supplementalInformationController);
         updateCredentialsStatus(loginResult, context);
