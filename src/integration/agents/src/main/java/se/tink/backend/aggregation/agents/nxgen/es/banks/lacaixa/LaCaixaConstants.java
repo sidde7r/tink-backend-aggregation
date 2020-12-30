@@ -183,6 +183,8 @@ public final class LaCaixaConstants {
     }
 
     public static class RetryFilterValues {
+        RetryFilterValues() {}
+
         public static final int MAX_ATTEMPTS = 3;
         public static final int RETRY_SLEEP_MILLISECONDS = 1000;
     }

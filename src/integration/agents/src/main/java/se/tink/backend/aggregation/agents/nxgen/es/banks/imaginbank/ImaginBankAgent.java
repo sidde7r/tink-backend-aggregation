@@ -14,11 +14,13 @@ import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.ImaginBankConstants.RetryFilterValues;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.authenticator.ImaginBankPasswordAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.fetcher.creditcard.ImaginBankCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.fetcher.identitydata.ImaginBankIdentityDataFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.fetcher.transactionalaccount.ImaginBankAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.fetcher.transactionalaccount.ImaginBankTransactionFetcher;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.filter.ImaginBankRetryFilter;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.session.ImaginBankSessionHandler;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -64,6 +66,10 @@ public final class ImaginBankAgent extends NextGenerationAgent
 
     private void configureHttpClient(TinkHttpClient client) {
         client.addFilter(new TimeoutFilter());
+        client.addFilter(
+                new ImaginBankRetryFilter(
+                        RetryFilterValues.MAX_ATTEMPTS,
+                        RetryFilterValues.RETRY_SLEEP_MILLISECONDS));
     }
 
     @Override
