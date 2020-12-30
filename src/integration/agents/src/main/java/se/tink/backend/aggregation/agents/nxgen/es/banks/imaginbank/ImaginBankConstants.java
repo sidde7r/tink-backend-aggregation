@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank;
 
+import com.google.common.collect.ImmutableList;
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
@@ -93,9 +93,10 @@ public class ImaginBankConstants {
     public static class ErrorCode {
         private ErrorCode() {}
 
-        public static final List<String> ACCOUNT_BLOCKED = Arrays.asList("0207", "0246");
+        public static final List<String> ACCOUNT_BLOCKED = ImmutableList.of("0207", "0246");
         public static final String INCORRECT_CREDENTIALS = "0250";
         public static final String UNAVAILABLE = "001";
+        public static final String TEMPORARY_PROBLEM = "1574";
     }
 
     public static class TransactionDescriptions {
@@ -131,5 +132,12 @@ public class ImaginBankConstants {
         IdentityData() {}
 
         public static final String DNI = "linkDNI";
+    }
+
+    public static class RetryFilterValues {
+        RetryFilterValues() {}
+
+        public static final int MAX_ATTEMPTS = 3;
+        public static final int RETRY_SLEEP_MILLISECONDS = 1000;
     }
 }

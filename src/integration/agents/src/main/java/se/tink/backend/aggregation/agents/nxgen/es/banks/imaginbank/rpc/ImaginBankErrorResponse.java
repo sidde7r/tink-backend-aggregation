@@ -35,4 +35,11 @@ public class ImaginBankErrorResponse {
                 .trim()
                 .equalsIgnoreCase(ImaginBankConstants.ErrorCode.UNAVAILABLE);
     }
+
+    @JsonIgnore
+    public boolean isTemporaryProblem() {
+        return Strings.nullToEmpty(code)
+                .trim()
+                .equalsIgnoreCase(ImaginBankConstants.ErrorCode.TEMPORARY_PROBLEM);
+    }
 }
