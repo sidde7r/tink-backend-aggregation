@@ -23,6 +23,7 @@ junit_test(
     visibility = ["//visibility:public"],
     deps = [
         "//src/libraries/serialization",
+        "//third_party:org_assertj_assertj_core",
         "@aggregation//:com_google_guava_guava",
     ],
 )
