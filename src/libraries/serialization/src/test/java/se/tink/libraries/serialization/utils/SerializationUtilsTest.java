@@ -1,43 +1,63 @@
 package se.tink.libraries.serialization.utils;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
+
 import java.io.IOException;
-import org.junit.Assert;
 import org.junit.Test;
 
 public class SerializationUtilsTest {
 
-    @Test(expected = NullPointerException.class)
-    public void shouldThrowExceptionWhenBinaryToDeserializeIsNull() throws IOException {
-        // Arrange
+    @Test
+    public void shouldThrowExceptionWhenBinaryToDeserializeIsNull() {
+        // given
         byte[] binary = null;
 
-        // Act & Assert
-        SerializationUtils.deserializeFromBinary(binary, TargetClass.class);
+        // when
+        Throwable t =
+                catchThrowable(
+                        () -> SerializationUtils.deserializeFromBinary(binary, TargetClass.class));
+
+        // then
+        assertThat(t).isInstanceOf(NullPointerException.class);
     }
 
-    @Test(expected = IOException.class)
-    public void shouldRethrowExceptionFromObjectMapper() throws IOException {
-        // Arrange
+    @Test
+    public void shouldRethrowExceptionFromObjectMapper() {
+        // given
         byte[] binary = {0, 1, 2, 3, 4};
 
-        // Act & Assert
-        SerializationUtils.deserializeFromBinary(binary, TargetClass.class);
+        // when
+        Throwable t =
+                catchThrowable(
+                        () -> SerializationUtils.deserializeFromBinary(binary, TargetClass.class));
+
+        // then
+        assertThat(t).isInstanceOf(IOException.class);
     }
 
     @Test
     public void shouldSerializeToBinary() throws IOException {
-        // Act
-        byte[] testBinary = SerializationUtils.serializeToBinary("testString");
+        // given
+        byte[] expectedResult =
+                new byte[] {58, 41, 10, 1, 73, 116, 101, 115, 116, 83, 116, 114, 105, 110, 103};
 
-        // Assert
-        Assert.assertNotNull(testBinary);
-        Assert.assertNotEquals(0, testBinary.length);
+        // when
+        byte[] result = SerializationUtils.serializeToBinary("testString");
+
+        // then
+        assertThat(result).isEqualTo(expectedResult);
     }
 
-    @Test(expected = IOException.class)
-    public void shouldThrowExceptionWhenSerializationIsFailed() throws IOException {
-        // Act & Assert
-        SerializationUtils.serializeToBinary(new TargetClass());
+    @Test
+    public void shouldThrowExceptionWhenSerializationIsFailed() {
+        // given
+
+        // when
+        Throwable t = catchThrowable(() -> SerializationUtils.serializeToBinary(new TargetClass()));
+
+        // then
+        assertThat(t).isInstanceOf(IOException.class);
     }
 
     static class TargetClass {
