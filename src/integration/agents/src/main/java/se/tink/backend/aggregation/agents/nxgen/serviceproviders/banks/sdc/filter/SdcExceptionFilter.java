@@ -1,9 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.filter;
 
-import java.util.HashMap;
+import com.google.common.collect.ImmutableMap;
 import java.util.Map;
 import java.util.Optional;
 import javax.ws.rs.core.MultivaluedMap;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.tuple.Pair;
+import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcConstants.ErrorMessage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcConstants.Headers;
@@ -20,15 +23,36 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
  * return the error message in a special header instead of the message body. In some cases Special
  * Header is not returned but json with pin invalid message is returned.
  */
+@Slf4j
 public class SdcExceptionFilter extends Filter {
 
-    private static final Map<String, String> knownErrorMessagesMapping = new HashMap<>();
+    private final Map<String, LoginException> messageToExceptionMapping;
 
-    static {
-        knownErrorMessagesMapping.put(
-                ErrorMessage.PIN_4_CHARACTERS.getCriteria(), "Your PIN has illegal characters.");
-        knownErrorMessagesMapping.put(
-                ErrorMessage.PIN_BLOCKED.getCriteria(), "Your PIN code is blocked.");
+    private static final Map<String, LoginException> defaultMessagesToExceptionMapping =
+            new ImmutableMap.Builder<String, LoginException>()
+                    .put(
+                            ErrorMessage.PIN_4_CHARACTERS.getCriteria(),
+                            LoginError.INCORRECT_CREDENTIALS.exception(
+                                    "Your PIN has illegal characters."))
+                    .put(
+                            ErrorMessage.PIN_BLOCKED.getCriteria(),
+                            LoginError.INCORRECT_CREDENTIALS.exception("Your PIN code is blocked."))
+                    .build();
+
+    public SdcExceptionFilter() {
+        messageToExceptionMapping = defaultMessagesToExceptionMapping;
+    }
+
+    public SdcExceptionFilter(Map<String, Pair<LoginError, String>> messageToErrorReasonMapping) {
+        ImmutableMap.Builder<String, LoginException> builder =
+                new ImmutableMap.Builder<String, LoginException>()
+                        .putAll(defaultMessagesToExceptionMapping);
+        messageToErrorReasonMapping.forEach(
+                (message, errorReasonPair) ->
+                        builder.put(
+                                message,
+                                errorReasonPair.getKey().exception(errorReasonPair.getValue())));
+        messageToExceptionMapping = builder.build();
     }
 
     @Override
@@ -42,51 +66,38 @@ public class SdcExceptionFilter extends Filter {
     }
 
     private void handleIntegrationError(HttpRequest httpRequest, HttpResponse httpResponse) {
-        handleKnownErrors(httpResponse);
-        handleOtherErrors(httpRequest, httpResponse);
+        String headerErrorMessage = getErrorMessageFromHeader(httpResponse);
+        String bodyMessage = getBody(httpResponse);
+        handleKnownErrors(headerErrorMessage, bodyMessage);
+        handleOtherErrors(httpRequest, httpResponse, headerErrorMessage, bodyMessage);
     }
 
-    private void handleKnownErrors(HttpResponse httpResponse) {
-        Optional.ofNullable(knownErrorMessagesMapping.get(lookForErrorMessage(httpResponse)))
+    private void handleKnownErrors(String headerErrorMessage, String bodyMessage) {
+        String errorMessage = headerErrorMessage != null ? headerErrorMessage : bodyMessage;
+        Optional.ofNullable(messageToExceptionMapping.get(errorMessage))
                 .ifPresent(
-                        knownAuthError -> {
-                            throw LoginError.INCORRECT_CREDENTIALS.exception(knownAuthError);
+                        exception -> {
+                            log.info("Handle known error: " + errorMessage);
+                            throw exception;
                         });
     }
 
-    private void handleOtherErrors(HttpRequest httpRequest, HttpResponse httpResponse) {
-        throw new HttpResponseException(
-                detailedExceptionMessage(httpResponse), httpRequest, httpResponse);
-    }
-
-    private String lookForErrorMessage(HttpResponse httpResponse) {
-        String errorMessage = getErrorMessageFromHeader(httpResponse);
-        return errorMessage != null ? errorMessage : checkErrorsInResponseBody(httpResponse);
-    }
-
-    private String checkErrorsInResponseBody(HttpResponse httpResponse) {
-        String responseBody = httpResponse.getBody(String.class);
-        if (ErrorMessage.PIN_4_CHARACTERS.getCriteria().equals(responseBody)) {
-            return responseBody;
-        }
-        return null;
-    }
-
-    private String detailedExceptionMessage(HttpResponse httpResponse) {
-        String errorMessage = getErrorMessageFromHeader(httpResponse);
+    private void handleOtherErrors(
+            HttpRequest httpRequest,
+            HttpResponse httpResponse,
+            String headerErrorMessage,
+            String bodyMessage) {
         String message =
                 "Response statusCode: "
                         + httpResponse.getStatus()
                         + "\n    with "
                         + Headers.X_SDC_ERROR_MESSAGE
                         + " header: "
-                        + errorMessage;
-        try {
-            return message + "\n    with body: " + httpResponse.getBody(String.class);
-        } catch (Exception e) {
-            // just in case, but should never be reached.
-            return message;
-        }
+                        + headerErrorMessage
+                        + " body: "
+                        + bodyMessage;
+        log.error("Unknown error " + message);
+        throw new HttpResponseException(message, httpRequest, httpResponse);
     }
 
     private String getErrorMessageFromHeader(HttpResponse httpResponse) {
@@ -95,5 +106,14 @@ public class SdcExceptionFilter extends Filter {
             return headers.getFirst(Headers.X_SDC_ERROR_MESSAGE);
         }
         return null;
+    }
+
+    private String getBody(HttpResponse httpResponse) {
+        try {
+            return httpResponse.getBody(String.class);
+        } catch (HttpClientException | HttpResponseException e) {
+            log.error("Couldn't getBody from response", e);
+            return null;
+        }
     }
 }
