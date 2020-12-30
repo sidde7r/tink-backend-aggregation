@@ -316,6 +316,11 @@ public class CountryDateHelper {
         if (holiday.getPropertiesKey().equals("MIDSUMMER")) {
             holidayLocalDateBuilder.add(holiday.getDate().minusDays(1));
         }
+
+        // Add New Years Eve
+        if (holiday.getPropertiesKey().equals("NEW_YEAR")) {
+            holidayLocalDateBuilder.add(holiday.getDate().minusDays(1));
+        }
     }
 
     private Date getBestPossibleTransferDate(int cutOffHours, int cutOffMinutes) {
