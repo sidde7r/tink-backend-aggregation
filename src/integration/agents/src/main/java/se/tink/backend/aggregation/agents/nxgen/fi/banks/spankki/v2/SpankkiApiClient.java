@@ -61,6 +61,9 @@ public class SpankkiApiClient {
     }
 
     public SpankkiResponse keepAlive() {
+        if (persistentStorage.get(Storage.DEVICE_ID) == null) {
+            throw new IllegalStateException("Cannot keep-alive with empty storage");
+        }
         return getRequest(SpankkiResponse.class, Urls.KEEP_ALIVE);
     }
 

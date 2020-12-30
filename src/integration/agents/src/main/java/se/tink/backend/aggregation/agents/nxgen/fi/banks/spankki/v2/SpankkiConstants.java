@@ -91,9 +91,9 @@ public class SpankkiConstants {
     }
 
     public static class Authentication {
-        public static final String REQUEST_TOKEN_HASH_SALT = "3f9ba36637674bd9891ca8cf5decb6b2";
+        public static final String REQUEST_TOKEN_HASH_SALT = "23fee939242741f79c4e2bec3d64a5b3";
         public static final String CHALLENGE_RESPONSE_HASH_SALT =
-                "746f241d14104ec68c95d2bbe6ad39cb";
+                "45d493b8f45b459c8903a6e4f260b62e";
         public static final String B64_ELLIPTIC_CURVE_PUBLIC_KEY =
                 "MFIwEAYHKoZIzj0CAQYFK4EEABoDPgAEAdI87D0d2WOaZq5LBZRBxbmeZnaDvpNutQJNjvb3AVtGSsf2rq1lu4PAmk4bnl2DRlSbtV8spT4l4tDi";
         public static final int KEY_CARD_VALUE_LENGTH = 4;
@@ -107,7 +107,7 @@ public class SpankkiConstants {
 
     public static class Request {
         public static final String CLIENT_INFO_APP_NAME = "SBank2.0";
-        public static final String CLIENT_INFO_APP_VERSION = "2.6.2.1";
+        public static final String CLIENT_INFO_APP_VERSION = "2.7.0.2";
         public static final String CLIENT_INFO_LANG = "sv";
     }
 
@@ -149,7 +149,7 @@ public class SpankkiConstants {
     }
 
     public static class Investments {
-        public static String ACCOUNT_ID_PREFIX = "FUND-";
+        public static final String ACCOUNT_ID_PREFIX = "FUND-";
     }
 
     public static class Regex {
