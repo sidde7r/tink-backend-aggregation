@@ -54,6 +54,8 @@ public class RabobankAuthenticator implements OAuth2Authenticator {
 
     @Override
     public URL buildAuthorizeUrl(final String state) {
+        logger.info("[Rabobank] Started building authorize url");
+
         final String clientId = getConfiguration().getClientId();
 
         final Form params =
@@ -117,4 +119,8 @@ public class RabobankAuthenticator implements OAuth2Authenticator {
 
     @Override
     public void useAccessToken(final OAuth2Token accessToken) {}
+
+    void checkConsentStatus() {
+        apiClient.checkConsentStatus();
+    }
 }

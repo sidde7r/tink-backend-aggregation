@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.HttpClient;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.QueryParams;
+import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.authenticator.RabobankAuthenticationController;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.authenticator.RabobankAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.configuration.RabobankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.fetcher.transactional.SandboxTransactionFetcher;
@@ -101,7 +102,7 @@ public final class RabobankAgent
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
 
         final OAuth2AuthenticationProgressiveController controller =
-                new OAuth2AuthenticationProgressiveController(
+                new RabobankAuthenticationController(
                         persistentStorage,
                         new RabobankAuthenticator(apiClient, persistentStorage, agentConfiguration),
                         credentials,
