@@ -101,6 +101,6 @@ public class TransactionDatePaginationControllerTest {
     }
 
     private LocalDateTime convertToDateTime(Date date) {
-        return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+        return date.toInstant().atZone(ZoneId.of("CET")).toLocalDateTime();
     }
 }

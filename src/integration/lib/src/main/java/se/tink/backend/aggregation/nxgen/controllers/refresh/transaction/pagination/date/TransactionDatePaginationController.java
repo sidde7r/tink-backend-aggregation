@@ -61,6 +61,18 @@ public class TransactionDatePaginationController<A extends Account>
     public TransactionDatePaginationController(
             TransactionDatePaginator<A> paginator,
             int consecutiveEmptyPagesLimit,
+            LocalDateTimeSource localDateTimeSource) {
+        this(
+                paginator,
+                consecutiveEmptyPagesLimit,
+                DEFAULT_DAYS_TO_FETCH,
+                ChronoUnit.DAYS,
+                localDateTimeSource);
+    }
+
+    public TransactionDatePaginationController(
+            TransactionDatePaginator<A> paginator,
+            int consecutiveEmptyPagesLimit,
             int amountToFetch,
             ChronoUnit unitToFetch,
             LocalDateTimeSource localDateTimeSource) {
@@ -124,7 +136,7 @@ public class TransactionDatePaginationController<A extends Account>
     }
 
     private Date convertToDate(LocalDateTime dateTime) {
-        return Date.from(dateTime.atZone(ZoneId.systemDefault()).toInstant());
+        return Date.from(dateTime.atZone(ZoneId.of("CET")).toInstant());
     }
 
     private LocalDateTime calculateToDate() {

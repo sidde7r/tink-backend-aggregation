@@ -8,7 +8,6 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Inject;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.Account;
@@ -122,8 +121,6 @@ public final class StarlingAgent extends SubsequentProgressiveGenerationAgent
                         new TransactionDatePaginationController<>(
                                 new StarlingTransactionFetcher(apiClient),
                                 3,
-                                90,
-                                ChronoUnit.DAYS,
                                 localDateTimeSource)));
     }
 
