@@ -18,9 +18,10 @@ import se.tink.libraries.selenium.exceptions.HtmlElementNotFoundException;
 import se.tink.libraries.selenium.exceptions.ScreenScrapingException;
 
 public class WebDriverHelper {
-    private static final long WAIT_FOR_RENDER_MILLIS = 2000;
     private static final By IFRAME_TAG = By.tagName("iframe");
     private static final File phantomJsdriverFile;
+
+    private final long waitForRenderInMillis;
 
     static {
         boolean mac = System.getProperty("os.name").toLowerCase().contains("mac");
@@ -30,6 +31,14 @@ public class WebDriverHelper {
         } else {
             phantomJsdriverFile = new File("tools/phantomjs-tink-linux-x86_64-2.1.1");
         }
+    }
+
+    public WebDriverHelper() {
+        this(2_000L);
+    }
+
+    WebDriverHelper(final long waitForRenderInMillis) {
+        this.waitForRenderInMillis = waitForRenderInMillis;
     }
 
     public WebDriver constructPhantomJsWebDriver(String userAgent) {
@@ -81,7 +90,7 @@ public class WebDriverHelper {
     }
 
     public Optional<WebElement> waitForElement(WebDriver driver, By by) {
-        for (int i = 0; i < 5; i++, sleep(WAIT_FOR_RENDER_MILLIS)) {
+        for (int i = 0; i < 5; i++, sleep(waitForRenderInMillis)) {
             List<WebElement> elements = driver.findElements(by);
             if (!elements.isEmpty()) {
                 return elements.stream().filter(WebElement::isDisplayed).findFirst();
@@ -91,7 +100,7 @@ public class WebDriverHelper {
     }
 
     public Optional<WebElement> waitForOneOfElements(WebDriver driver, By... byArray) {
-        for (int i = 0; i < 5; i++, sleep(WAIT_FOR_RENDER_MILLIS)) {
+        for (int i = 0; i < 5; i++, sleep(waitForRenderInMillis)) {
             for (By by : byArray) {
                 List<WebElement> elements = driver.findElements(by);
                 if (!elements.isEmpty()) {
@@ -104,7 +113,7 @@ public class WebDriverHelper {
 
     public Optional<String> waitForElementWithAttribute(
             WebDriver driver, By elementPath, String attributeKey) {
-        for (int i = 0; i < 10; i++, sleep(WAIT_FOR_RENDER_MILLIS)) {
+        for (int i = 0; i < 10; i++, sleep(waitForRenderInMillis)) {
             Optional<String> attributeValue =
                     waitForElement(driver, elementPath)
                             .map(el -> el.getAttribute(attributeKey))
@@ -159,7 +168,7 @@ public class WebDriverHelper {
     }
 
     public boolean checkIfElementEnabledIfNotWait(WebElement element) {
-        for (int i = 0; i < 10; i++, sleep(WAIT_FOR_RENDER_MILLIS)) {
+        for (int i = 0; i < 10; i++, sleep(waitForRenderInMillis)) {
             try {
                 if (element.isEnabled()) {
                     return true;
