@@ -38,7 +38,7 @@ public class LaCaixaLoanFetcher implements AccountFetcher<LoanAccount> {
             if (response.getStatus() == HttpStatus.SC_CONFLICT) {
                 LaCaixaErrorResponse errorResponse = response.getBody(LaCaixaErrorResponse.class);
 
-                if (errorResponse.isUserHasNoLoans()) {
+                if (errorResponse.isUserHasNoLoans() || errorResponse.isNoAccounts()) {
                     return Collections.emptyList();
                 }
             }

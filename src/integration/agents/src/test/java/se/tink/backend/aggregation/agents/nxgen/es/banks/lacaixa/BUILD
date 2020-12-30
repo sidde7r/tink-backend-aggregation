@@ -6,6 +6,7 @@ junit_test(
         "LaCaixaAgentTest.java",
         "LaCaixaApiClientTest.java",
         "LaCaixaCryptoTest.java",
+        "filter/LaCaixaRetryFilterTest.java",
     ],
     data = [
         "//data:aggregation_test",
@@ -28,6 +29,7 @@ junit_test(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/crypto",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/client",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/filter/filters/iface",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/response",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",

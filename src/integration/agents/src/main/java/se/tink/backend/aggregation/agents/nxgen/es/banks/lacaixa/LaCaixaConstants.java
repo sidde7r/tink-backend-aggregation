@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa;
 
+import com.google.common.collect.ImmutableList;
 import java.util.Arrays;
 import java.util.List;
 import se.tink.backend.agents.rpc.AccountTypes;
@@ -80,8 +81,9 @@ public final class LaCaixaConstants {
         public static final String NO_OWN_CARDS = "LIT_NO_PERMITE_CONSULTA_TARJETAS";
         public static final String UNAVAILABLE = "0001";
         public static final String NO_ASSOCIATED_ACCOUNTS = "0007";
-        public static final List<String> ACCOUNT_BLOCKED = Arrays.asList("0207", "0246");
+        public static final List<String> ACCOUNT_BLOCKED = ImmutableList.of("0207", "0246");
         public static final String INCORRECT_CREDENTIALS = "0250";
+        public static final List<String> TEMPORARY_PROBLEM = ImmutableList.of("1574", "1575");
     }
 
     public static class Urls {
@@ -178,5 +180,10 @@ public final class LaCaixaConstants {
         private LiquidationSimulation() {}
 
         public static final String TRUE = "S";
+    }
+
+    public static class RetryFilterValues {
+        public static final int MAX_ATTEMPTS = 3;
+        public static final int RETRY_SLEEP_MILLISECONDS = 1000;
     }
 }

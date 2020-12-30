@@ -24,6 +24,7 @@ import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaConstants.AuthenticationParams;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaConstants.RetryFilterValues;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.LaCaixaMultifactorAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.creditcard.LaCaixaCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.identitydata.LaCaixaIdentityDataFetcher;
@@ -31,6 +32,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.investm
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.loan.LaCaixaLoanFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transactionalaccount.LaCaixaAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transactionalaccount.LaCaixaTransactionFetcher;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.filter.LaCaixaRetryFilter;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.session.LaCaixaSessionHandler;
 import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentProgressiveGenerationAgent;
@@ -96,6 +98,10 @@ public final class LaCaixaAgent extends SubsequentProgressiveGenerationAgent
 
     private void configureHttpClient(TinkHttpClient client) {
         client.addFilter(new TimeoutFilter());
+        client.addFilter(
+                new LaCaixaRetryFilter(
+                        RetryFilterValues.MAX_ATTEMPTS,
+                        RetryFilterValues.RETRY_SLEEP_MILLISECONDS));
     }
 
     private String getInstallationId(Credentials credentials) {

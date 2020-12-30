@@ -74,4 +74,10 @@ public class LaCaixaErrorResponse {
                 .trim()
                 .equalsIgnoreCase(LaCaixaConstants.ErrorCode.INCORRECT_CREDENTIALS);
     }
+
+    @JsonIgnore
+    public boolean isTemporaryProblem() {
+        return LaCaixaConstants.ErrorCode.TEMPORARY_PROBLEM.contains(
+                Strings.nullToEmpty(code).trim());
+    }
 }
