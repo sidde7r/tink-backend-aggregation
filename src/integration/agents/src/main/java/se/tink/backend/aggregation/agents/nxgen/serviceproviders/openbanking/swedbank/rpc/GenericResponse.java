@@ -21,6 +21,10 @@ public class GenericResponse {
         return containsError(ErrorCodes.MISSING_BANK_AGREEMENT);
     }
 
+    public boolean isNoProfileAvailable() {
+        return containsError(ErrorCodes.NO_PROFILE_AVAILABLE);
+    }
+
     @JsonIgnore
     public boolean requiresSca() {
         return containsError(ErrorCodes.SCA_REQUIRED);

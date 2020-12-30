@@ -14,6 +14,8 @@ public final class SwedbankConstants {
     }
 
     public static final String INTEGRATION_NAME = "swedbank";
+    public static final String SWEDBANK_OB_PROVIDER_NAME = "se-swedbank-ob";
+
     public static final int TRANSACTIONS_DOWNLOAD_RETRY_COUNT = 3;
 
     public static class Format {
@@ -194,6 +196,7 @@ public final class SwedbankConstants {
         public static final String REFRESH_TOKEN_EXPIRED = "Provided refresh_token expired";
         public static final String WRONG_USER_ID = "Wrong UserId parameter";
         public static final String MISSING_BANK_AGREEMENT = "MISSING_BANK_AGREEMENT";
+        public static final String NO_PROFILE_AVAILABLE = "No profile available";
         public static final String USER_CANCEL = "USER_CANCEL";
         public static final String LOGIN_SESSION_INTERRUPTED = "Other login session is ongoing";
         public static final String EMPTY_USER_ID = "Mandatory header value is empty: PSU-ID";
@@ -236,7 +239,14 @@ public final class SwedbankConstants {
     public enum EndUserMessage implements LocalizableEnum {
         MUST_UPDATE_AGREEMENT(
                 new LocalizableKey(
-                        "To be able to refresh your accounts you need to answer some questions from your bank. Please log in to your bank's app or internet bank."));
+                        "To be able to refresh your accounts you need to answer some questions from your bank. Please log in to your bank's app or internet bank.")),
+        WRONG_BANK_SWEDBANK(
+                new LocalizableKey(
+                        "You do not have any accounts at Swedbank. Use Sparbankerna (Mobile BankID) instead.")),
+        WRONG_BANK_SAVINGSBANK(
+                new LocalizableKey(
+                        "You do not have any accounts at Sparbankerna. Use Swedbank (Mobile BankID) instead."));
+
         private final LocalizableKey userMessage;
 
         EndUserMessage(LocalizableKey userMessage) {

@@ -78,7 +78,7 @@ public abstract class SwedbankBaseAgent extends NextGenerationAgent
         BankIdAuthenticationController bankIdAuthenticationController =
                 new BankIdAuthenticationController<>(
                         supplementalRequester,
-                        new SwedbankDecoupledAuthenticator(apiClient),
+                        new SwedbankDecoupledAuthenticator(apiClient, isSwedbank()),
                         persistentStorage,
                         credentials);
 
@@ -87,6 +87,10 @@ public abstract class SwedbankBaseAgent extends NextGenerationAgent
                 systemUpdater,
                 bankIdAuthenticationController,
                 bankIdAuthenticationController);
+    }
+
+    private boolean isSwedbank() {
+        return SwedbankConstants.SWEDBANK_OB_PROVIDER_NAME.equals(credentials.getProviderName());
     }
 
     @Override
