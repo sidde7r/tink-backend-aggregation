@@ -6,11 +6,17 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import com.sun.jersey.core.util.MultivaluedMapImpl;
+import java.util.Collections;
 import javax.ws.rs.core.MultivaluedMap;
+import junitparams.JUnitParamsRunner;
+import junitparams.Parameters;
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcConstants.ErrorMessage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcConstants.Headers;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.iface.Filter;
@@ -18,6 +24,7 @@ import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
+@RunWith(JUnitParamsRunner.class)
 public class SdcExceptionFilterTest {
 
     private static final int HTTP_OK = 200;
@@ -75,24 +82,64 @@ public class SdcExceptionFilterTest {
     }
 
     @Test
-    public void shouldHandleRequestWithResponseGreaterOrEqual400WithKnownHeaderAndKnownMsg() {
+    @Parameters(method = "knownMessages")
+    public void shouldHandleRequestWithResponseGreaterOrEqual400WithKnownHeaderAndKnownMsg(
+            String message, String reason) {
         // given
         HttpResponse mockHttpResponse = Mockito.mock(HttpResponse.class);
         when(mockHttpResponse.getStatus()).thenReturn(HTTP_UNAUTHORIZED);
         when(mockHttpResponse.getHeaders())
-                .thenReturn(
-                        createHeaderMap(
-                                Headers.X_SDC_ERROR_MESSAGE,
-                                ErrorMessage.PIN_BLOCKED.getCriteria()));
+                .thenReturn(createHeaderMap(Headers.X_SDC_ERROR_MESSAGE, message));
         when(mockFilter.handle(httpRequest)).thenReturn(mockHttpResponse);
 
         // when
         final Throwable thrown = catchThrowable(() -> sdcExceptionFilter.handle(httpRequest));
 
         // then
-        assertThat(thrown)
-                .isExactlyInstanceOf(LoginException.class)
-                .hasMessageContaining(YOUR_PIN_CODE_IS_BLOCKED);
+        assertThat(thrown).isExactlyInstanceOf(LoginException.class).hasMessageContaining(reason);
+        assertThat(thrown.getLocalizedMessage()).isEqualTo(reason);
+    }
+
+    private Object[] knownMessages() {
+        return new Object[] {
+            new Object[] {ErrorMessage.PIN_BLOCKED.getCriteria(), YOUR_PIN_CODE_IS_BLOCKED},
+            new Object[] {
+                ErrorMessage.PIN_4_CHARACTERS.getCriteria(), YOUR_PIN_HAS_ILLEGAL_CHARACTERS
+            }
+        };
+    }
+
+    @Test
+    @Parameters(method = "configuredMessages")
+    public void shouldHandlePassedMessages(String message, LoginError error, String reason) {
+        // given
+        HttpResponse mockHttpResponse = Mockito.mock(HttpResponse.class);
+        when(mockHttpResponse.getStatus()).thenReturn(HTTP_UNAUTHORIZED);
+        when(mockHttpResponse.getHeaders())
+                .thenReturn(createHeaderMap(Headers.X_SDC_ERROR_MESSAGE, message));
+        when(mockFilter.handle(httpRequest)).thenReturn(mockHttpResponse);
+        sdcExceptionFilter =
+                new SdcExceptionFilter(
+                        Collections.singletonMap(message, new ImmutablePair<>(error, reason)));
+        sdcExceptionFilter.setNext(mockFilter);
+
+        // when
+        final Throwable thrown = catchThrowable(() -> sdcExceptionFilter.handle(httpRequest));
+
+        // then
+        assertThat(thrown).isExactlyInstanceOf(error.exception().getClass());
+        if (reason == null) {
+            assertThat(thrown.getMessage()).isNull();
+        } else {
+            assertThat(thrown.getMessage()).contains(reason);
+        }
+    }
+
+    private Object[] configuredMessages() {
+        return new Object[] {
+            new Object[] {"message", LoginError.INCORRECT_CREDENTIALS, "reason"},
+            new Object[] {"messageWithNoReason", LoginError.INCORRECT_CREDENTIALS, null}
+        };
     }
 
     @Test

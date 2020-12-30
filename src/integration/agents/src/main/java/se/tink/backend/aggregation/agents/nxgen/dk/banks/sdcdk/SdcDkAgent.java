@@ -6,6 +6,10 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.LOANS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
 
+import com.google.common.collect.ImmutableMap;
+import java.util.Map;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
@@ -15,6 +19,7 @@ import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.sdcdk.SdcDkConstants.Secret;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.sdcdk.parser.SdcDkTransactionParser;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcAgent;
@@ -28,6 +33,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.conve
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetcher.SdcAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetcher.SdcCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetcher.SdcTransactionFetcher;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.filter.SdcExceptionFilter;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
@@ -65,8 +71,54 @@ public final class SdcDkAgent extends SdcAgent
 
         creditCardRefreshController = constructCreditCardRefreshController();
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
-        this.client.loadTrustMaterial(
+        client.loadTrustMaterial(
                 null, TrustPinnedCertificateStrategy.forCertificate(Secret.PUBLIC_CERT));
+        configureExceptionFilter();
+    }
+
+    private void configureExceptionFilter() {
+        client.removeFilter(sdcExceptionFilter);
+        Map<String, Pair<LoginError, String>> mapping =
+                new ImmutableMap.Builder<String, Pair<LoginError, String>>()
+                        .put(
+                                "Forkert brugernummer eller adgangskode.",
+                                // Incorrect user number or password.
+                                new ImmutablePair<>(LoginError.INCORRECT_CREDENTIALS, null))
+                        .put(
+                                "Din PIN kode er spærret. Vælg \"Tilmeld ny aftale\" i menuen (de tre prikker) for at genaktivere din aftale",
+                                // Your PIN is blocked. Select "Register new appointment" in the
+                                // menu (the three dots) to reactivate your appointment
+                                new ImmutablePair<>(
+                                        LoginError.INCORRECT_CREDENTIALS,
+                                        "Your PIN code is blocked."))
+                        .put(
+                                "Login afvist.",
+                                // Login rejected.
+                                new ImmutablePair<>(LoginError.INCORRECT_CREDENTIALS, null))
+                        .put(
+                                "Pin eller kode er ikke gyldig. Prøv venligst igen.",
+                                // Pin or code is not valid. Please try again.
+                                new ImmutablePair<>(LoginError.INCORRECT_CREDENTIALS, null))
+                        .put(
+                                "Adgangskoden er udløbet.",
+                                // The password has expired.
+                                new ImmutablePair<>(LoginError.INCORRECT_CREDENTIALS, null))
+                        .put(
+                                "Der er opstået en fejl, prøv igen senere eller kontakt os og oplys fejlkode: KS01052F. Oplys venligst brugernummer, dato og tid samt den handling du forsøgte at udføre, da fejlen opstod.",
+                                // An error has occurred, try again later or contact us and provide
+                                // error code: KS01052F. Please state the user number, date and time
+                                // as well as the action you tried to perform when the error
+                                // occurred.
+                                new ImmutablePair<>(LoginError.DEFAULT_MESSAGE, null))
+                        .put(
+                                "Der er opstået en fejl, prøv igen senere eller kontakt os og oplys fejlkode: -. Oplys venligst brugernummer, dato og tid samt den handling du forsøgte at udføre, da fejlen opstod.",
+                                // An error has occurred, try again later or contact us and provide
+                                // error code:. Please state the user number, date and time as well
+                                // as the action you tried to perform when the error occurred.
+                                new ImmutablePair<>(LoginError.DEFAULT_MESSAGE, null))
+                        .build();
+        sdcExceptionFilter = new SdcExceptionFilter(mapping);
+        client.addFilter(sdcExceptionFilter);
     }
 
     @Override

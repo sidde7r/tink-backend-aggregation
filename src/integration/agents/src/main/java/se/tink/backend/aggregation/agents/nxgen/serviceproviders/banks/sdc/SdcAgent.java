@@ -49,6 +49,7 @@ public abstract class SdcAgent extends NextGenerationAgent
     private final LoanRefreshController loanRefreshController;
     private final CreditCardRefreshController creditCardRefreshController;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
+    protected SdcExceptionFilter sdcExceptionFilter;
 
     public SdcAgent(
             CredentialsRequest request,
@@ -85,8 +86,9 @@ public abstract class SdcAgent extends NextGenerationAgent
     }
 
     protected void configureHttpClient(TinkHttpClient client) {
+        sdcExceptionFilter = new SdcExceptionFilter();
         client.setTimeout(SdcConstants.HTTP_TIMEOUT);
-        client.addFilter(new SdcExceptionFilter());
+        client.addFilter(sdcExceptionFilter);
         client.addFilter(
                 new TimeoutRetryFilter(
                         TimeoutFilter.NUM_TIMEOUT_RETRIES,
