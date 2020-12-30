@@ -140,6 +140,18 @@ public class CountryDateHelperTest {
     }
 
     @Test
+    public void newYearsEveTest() {
+        testDayBoundaries(
+                c -> {
+                    c.set(Calendar.MONTH, 11);
+                    c.set(Calendar.DATE, 31);
+                    assertFalse(c.toString(), swedishHelper.isBusinessDay(c));
+                    assertFalse(c.toString(), belgianHelper.isBusinessDay(c));
+                    assertTrue(c.toString(), unitedKingdomHelper.isBusinessDay(c));
+                });
+    }
+
+    @Test
     public void isTomorrowBeforeTodayTest() {
         Date tomorrow = DateUtils.addDays(swedishHelper.getToday(), 1);
         assertFalse(swedishHelper.isBeforeToday(tomorrow));
