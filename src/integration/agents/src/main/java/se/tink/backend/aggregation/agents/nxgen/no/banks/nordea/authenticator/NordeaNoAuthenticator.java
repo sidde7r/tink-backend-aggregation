@@ -9,13 +9,11 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.client.Authentic
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.StatelessProgressiveAuthenticator;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.i18n.Catalog;
 
 @Slf4j
 public class NordeaNoAuthenticator extends StatelessProgressiveAuthenticator {
 
-    private final NordeaNoStorage storage;
     private final List<AuthenticationStep> mySteps;
 
     public NordeaNoAuthenticator(
@@ -24,8 +22,6 @@ public class NordeaNoAuthenticator extends StatelessProgressiveAuthenticator {
             RandomValueGenerator randomValueGenerator,
             SupplementalRequester supplementalRequester,
             Catalog catalog) {
-        this.storage = storage;
-
         mySteps =
                 ImmutableList.of(
                         new SetupSessionStep(
@@ -40,10 +36,5 @@ public class NordeaNoAuthenticator extends StatelessProgressiveAuthenticator {
     @Override
     public List<AuthenticationStep> authenticationSteps() {
         return mySteps;
-    }
-
-    @Override
-    public boolean isManualAuthentication(CredentialsRequest request) {
-        return !storage.retrieveOauthToken().isPresent();
     }
 }

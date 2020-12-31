@@ -13,12 +13,10 @@ import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.authenticator.AutoAuthenticator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.type.AuthenticationControllerType;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.CredentialsRequestType;
 
-public class AutoAuthenticationController
-        implements TypedAuthenticator, AuthenticationControllerType {
+public class AutoAuthenticationController implements TypedAuthenticator {
 
     private static final Logger log = LoggerFactory.getLogger(AutoAuthenticationController.class);
     private final CredentialsRequest request;
@@ -63,7 +61,7 @@ public class AutoAuthenticationController
     public void authenticate(Credentials credentials)
             throws AuthenticationException, AuthorizationException {
         try {
-            if (isManualAuthentication(request)) {
+            if (shouldDoManualAuthentication(request)) {
                 manual(credentials);
             } else {
                 Preconditions.checkState(
@@ -96,11 +94,6 @@ public class AutoAuthenticationController
                                                 request.getType(),
                                                 CredentialsRequestType.TRANSFER)))
                 || request.isForceAuthenticate();
-    }
-
-    @Override
-    public boolean isManualAuthentication(CredentialsRequest request) {
-        return shouldDoManualAuthentication(request);
     }
 
     // TODO: Remove this when there is support for new MultiFactor credential types.

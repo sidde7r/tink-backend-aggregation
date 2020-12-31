@@ -17,7 +17,6 @@ import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.models.AccountFeatures;
 import se.tink.backend.aggregation.agents.models.Transaction;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.type.AuthenticationControllerType;
 import se.tink.backend.aggregation.nxgen.controllers.metrics.MetricRefreshAction;
 import se.tink.backend.aggregation.nxgen.controllers.metrics.MetricRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
@@ -27,15 +26,13 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.UpdateController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.pair.Pair;
 
 public final class TransactionalAccountRefreshController
         implements AccountRefresher,
                 TransactionRefresher,
                 RefreshCheckingAccountsExecutor,
-                RefreshSavingsAccountsExecutor,
-                AuthenticationControllerType {
+                RefreshSavingsAccountsExecutor {
 
     private final MetricRefreshController metricController;
     private final UpdateController updateController;
@@ -201,10 +198,5 @@ public final class TransactionalAccountRefreshController
     private List<AggregationTransaction> fetchTransactionsFor(final TransactionalAccount account) {
         return Optional.ofNullable(transactionFetcher.fetchTransactionsFor(account))
                 .orElseGet(Collections::emptyList);
-    }
-
-    @Override
-    public boolean isManualAuthentication(CredentialsRequest request) {
-        return true;
     }
 }

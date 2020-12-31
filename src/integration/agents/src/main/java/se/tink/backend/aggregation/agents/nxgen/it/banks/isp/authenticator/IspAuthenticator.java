@@ -31,7 +31,6 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class IspAuthenticator extends StatelessProgressiveAuthenticator {
 
@@ -212,10 +211,5 @@ public class IspAuthenticator extends StatelessProgressiveAuthenticator {
             persistentStorage.put(StorageKeys.DEVICE_ID, deviceId);
         }
         return deviceId;
-    }
-
-    @Override
-    public boolean isManualAuthentication(CredentialsRequest request) {
-        return !canAutoAuthenticate();
     }
 }

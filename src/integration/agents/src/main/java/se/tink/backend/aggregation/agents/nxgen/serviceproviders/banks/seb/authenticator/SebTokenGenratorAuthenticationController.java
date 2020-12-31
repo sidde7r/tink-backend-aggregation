@@ -12,13 +12,10 @@ import se.tink.backend.aggregation.agents.exceptions.errors.SupplementalInfoErro
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.SebApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.authenticator.rpc.ChallengeResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.type.AuthenticationControllerType;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class SebTokenGenratorAuthenticationController
-        implements TypedAuthenticator, AuthenticationControllerType {
+public class SebTokenGenratorAuthenticationController implements TypedAuthenticator {
     private final SebApiClient apiClient;
     private final SupplementalInformationHelper supplementalInformationHelper;
 
@@ -65,10 +62,5 @@ public class SebTokenGenratorAuthenticationController
     @Override
     public CredentialsTypes getType() {
         return CredentialsTypes.PASSWORD;
-    }
-
-    @Override
-    public boolean isManualAuthentication(CredentialsRequest request) {
-        return true;
     }
 }

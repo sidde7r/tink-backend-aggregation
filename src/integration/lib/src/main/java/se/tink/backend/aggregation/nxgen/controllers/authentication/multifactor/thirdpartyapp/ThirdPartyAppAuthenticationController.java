@@ -11,14 +11,11 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.ThirdPartyAppException;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.type.AuthenticationControllerType;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.i18n.LocalizableKey;
 
-public class ThirdPartyAppAuthenticationController<T>
-        implements TypedAuthenticator, AuthenticationControllerType {
+public class ThirdPartyAppAuthenticationController<T> implements TypedAuthenticator {
 
     protected final ThirdPartyAppAuthenticator<T> authenticator;
     protected final SupplementalInformationHelper supplementalInformationHelper;
@@ -117,11 +114,5 @@ public class ThirdPartyAppAuthenticationController<T>
 
         // Treat poll exhaustion as a timeout.
         throw decorateException(ThirdPartyAppStatus.TIMED_OUT, ThirdPartyAppError.TIMED_OUT);
-    }
-
-    @Override
-    public boolean isManualAuthentication(CredentialsRequest request) {
-        // since authenticate always opens the third party app
-        return true;
     }
 }

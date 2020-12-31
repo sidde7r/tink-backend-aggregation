@@ -26,7 +26,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.StatelessProgressiveAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.step.AutomaticAuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationFormer;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class AxaAuthenticator extends StatelessProgressiveAuthenticator {
 
@@ -56,11 +55,6 @@ public class AxaAuthenticator extends StatelessProgressiveAuthenticator {
     @Override
     public List<AuthenticationStep> authenticationSteps() {
         return storage.isDeviceRegistered() ? autoAuthenticationSteps : manualAuthenticationSteps;
-    }
-
-    @Override
-    public boolean isManualAuthentication(CredentialsRequest request) {
-        return !storage.isDeviceRegistered();
     }
 
     private AxaStorage initStorageData(AxaStorage axaStorage) {

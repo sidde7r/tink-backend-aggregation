@@ -17,7 +17,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.step.PinCode
 import se.tink.backend.aggregation.nxgen.controllers.authentication.step.UsernamePasswordAuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationFormer;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class BancoBpiAuthenticatorTest {
 
@@ -56,8 +55,6 @@ public class BancoBpiAuthenticatorTest {
                 ImmutableList.copyOf(objectUnderTest.authenticationSteps());
         // then
         Assert.assertEquals(4, steps.size());
-        Assert.assertTrue(
-                objectUnderTest.isManualAuthentication(Mockito.mock(CredentialsRequest.class)));
         Assert.assertEquals(ModuleVersionAuthenticationStep.class, steps.get(0).getClass());
         Assert.assertEquals(UsernamePasswordAuthenticationStep.class, steps.get(1).getClass());
         Assert.assertEquals(PinCodeGeneratorAuthenticationStep.class, steps.get(2).getClass());
@@ -74,8 +71,6 @@ public class BancoBpiAuthenticatorTest {
                 ImmutableList.copyOf(objectUnderTest.authenticationSteps());
         // then
         Assert.assertEquals(2, steps.size());
-        Assert.assertFalse(
-                objectUnderTest.isManualAuthentication(Mockito.mock(CredentialsRequest.class)));
         Assert.assertEquals(ModuleVersionAuthenticationStep.class, steps.get(0).getClass());
         Assert.assertEquals(AutomaticAuthenticationStep.class, steps.get(1).getClass());
     }

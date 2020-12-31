@@ -15,9 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovide
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.authenticator.rpc.InitSecurityTokenChallengeResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.authenticator.rpc.SecurityTokenChallengeResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.type.AuthenticationControllerType;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
 /**
  * This class handles Swedbank's security token authentication. Swedbank provides two types of
@@ -31,8 +29,7 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
  * token, and one where the user receives a challenge that they input in their security token. Both
  * login flows for this token is supported.
  */
-public class SwedbankTokenGeneratorAuthenticationController
-        implements TypedAuthenticator, AuthenticationControllerType {
+public class SwedbankTokenGeneratorAuthenticationController implements TypedAuthenticator {
     private static final Logger log =
             LoggerFactory.getLogger(SwedbankTokenGeneratorAuthenticationController.class);
 
@@ -114,11 +111,5 @@ public class SwedbankTokenGeneratorAuthenticationController
 
     private InitSecurityTokenChallengeResponse initTokenGenerator(String ssn) {
         return apiClient.initTokenGenerator(ssn);
-    }
-
-    @Override
-    public boolean isManualAuthentication(CredentialsRequest request) {
-        // since always asks for login input
-        return true;
     }
 }

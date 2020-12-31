@@ -21,7 +21,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.step.PinCode
 import se.tink.backend.aggregation.nxgen.controllers.authentication.step.UsernamePasswordAuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationFormer;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.i18n.LocalizableKey;
 
 public class BancoBpiAuthenticator extends StatelessProgressiveAuthenticator {
@@ -30,7 +29,6 @@ public class BancoBpiAuthenticator extends StatelessProgressiveAuthenticator {
     private List<AuthenticationStep> manualAuthenticationSteps;
     private TinkHttpClient httpClient;
     private final SupplementalInformationFormer supplementalInformationFormer;
-    private boolean manualAuthenticationFlag = true;
     private BancoBpiAuthContext authContext;
     private BancoBpiEntityManager entityManager;
 
@@ -67,10 +65,8 @@ public class BancoBpiAuthenticator extends StatelessProgressiveAuthenticator {
     @Override
     public List<AuthenticationStep> authenticationSteps() {
         if (authContext.isDeviceActivationFinished()) {
-            manualAuthenticationFlag = false;
             return autoAuthenticationSteps;
         } else {
-            manualAuthenticationFlag = true;
             return manualAuthenticationSteps;
         }
     }
@@ -132,11 +128,6 @@ public class BancoBpiAuthenticator extends StatelessProgressiveAuthenticator {
             throw ex;
         }
         return AuthenticationStepResponse.executeNextStep();
-    }
-
-    @Override
-    public boolean isManualAuthentication(CredentialsRequest request) {
-        return manualAuthenticationFlag;
     }
 
     private <T> T callLoginRequest(DefaultRequest<T> request) throws LoginException {

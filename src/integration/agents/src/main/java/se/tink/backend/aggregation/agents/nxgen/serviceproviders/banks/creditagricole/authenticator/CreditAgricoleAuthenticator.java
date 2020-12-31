@@ -36,7 +36,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.step.Automat
 import se.tink.backend.aggregation.nxgen.controllers.authentication.step.OtpStep;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationFormer;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class CreditAgricoleAuthenticator extends StatelessProgressiveAuthenticator {
 
@@ -66,11 +65,6 @@ public class CreditAgricoleAuthenticator extends StatelessProgressiveAuthenticat
     @Override
     public List<AuthenticationStep> authenticationSteps() {
         return isDeviceRegistered() ? autoAuthenticationSteps : manualAuthenticationSteps;
-    }
-
-    @Override
-    public boolean isManualAuthentication(CredentialsRequest request) {
-        return !isDeviceRegistered();
     }
 
     private List<AuthenticationStep> initManualAuthSteps() {

@@ -14,7 +14,6 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.steps
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.StatelessProgressiveAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationFormer;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class IngAuthenticator extends StatelessProgressiveAuthenticator {
 
@@ -40,10 +39,5 @@ public class IngAuthenticator extends StatelessProgressiveAuthenticator {
                 new DeviceAgreementStep(ingConfiguration),
                 new BridgeStep(ingConfiguration),
                 new MpinAgreementStep(ingConfiguration));
-    }
-
-    @Override
-    public boolean isManualAuthentication(CredentialsRequest request) {
-        return !ingConfiguration.getIngStorage().wasEnrolled();
     }
 }

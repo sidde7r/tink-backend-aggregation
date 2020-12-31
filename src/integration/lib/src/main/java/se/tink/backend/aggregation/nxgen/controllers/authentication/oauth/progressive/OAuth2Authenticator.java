@@ -23,7 +23,6 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class OAuth2Authenticator extends StatelessProgressiveAuthenticator {
     private static final Logger logger =
@@ -87,12 +86,6 @@ public class OAuth2Authenticator extends StatelessProgressiveAuthenticator {
     @Override
     public List<AuthenticationStep> authenticationSteps() {
         return authSteps;
-    }
-
-    @Override
-    public boolean isManualAuthentication(CredentialsRequest request) {
-        Optional<OAuth2Token> token = getToken();
-        return !token.isPresent() || token.get().hasAccessExpired() || !token.get().canRefresh();
     }
 
     private AuthenticationStepResponse authorizationStepHandler() {

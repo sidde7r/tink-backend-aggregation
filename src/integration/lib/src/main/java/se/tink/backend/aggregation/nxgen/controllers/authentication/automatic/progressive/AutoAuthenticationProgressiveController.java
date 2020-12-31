@@ -11,7 +11,6 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.authenticator.AutoAuthenticator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.type.AuthenticationControllerType;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.ProgressiveAuthenticator;
@@ -19,8 +18,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.CredentialsRequestType;
 
-public class AutoAuthenticationProgressiveController
-        implements ProgressiveAuthenticator, AuthenticationControllerType {
+public class AutoAuthenticationProgressiveController implements ProgressiveAuthenticator {
 
     private final Credentials credentials;
     private final CredentialsRequestType credentialsRequestType;
@@ -75,11 +73,6 @@ public class AutoAuthenticationProgressiveController
                                                 credentialsRequestType,
                                                 CredentialsRequestType.TRANSFER)))
                 || requestIsForceAuthenticate;
-    }
-
-    @Override
-    public boolean isManualAuthentication(final CredentialsRequest request) {
-        return shouldDoManualAuthentication(request.getCredentials());
     }
 
     // TODO: Remove this when there is support for new MultiFactor credential types.

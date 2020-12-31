@@ -25,7 +25,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.step.Supplem
 import se.tink.backend.aggregation.nxgen.controllers.authentication.step.UsernamePasswordAuthenticationStep;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.i18n.Catalog;
 
 @Slf4j
@@ -87,11 +86,6 @@ public class BecAuthenticator extends StatelessProgressiveAuthenticator {
     private void auditCredentials(String username, String password) {
         log.info("Username matches pattern: {} ", USERNAME_PATTERN.matcher(username).matches());
         log.info("Password matches pattern: {} ", MOBILECODE_PATTERN.matcher(password).matches());
-    }
-
-    @Override
-    public boolean isManualAuthentication(CredentialsRequest request) {
-        return true;
     }
 
     private AuthenticationStepResponse keyCardAuth(Map<String, String> callbackData) {

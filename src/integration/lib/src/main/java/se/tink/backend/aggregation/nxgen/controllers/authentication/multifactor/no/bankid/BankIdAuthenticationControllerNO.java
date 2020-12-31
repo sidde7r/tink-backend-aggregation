@@ -28,14 +28,11 @@ import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.NorwegianFields;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.type.AuthenticationControllerType;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
-public class BankIdAuthenticationControllerNO
-        implements TypedAuthenticator, AuthenticationControllerType {
+public class BankIdAuthenticationControllerNO implements TypedAuthenticator {
     private static final Logger logger =
             LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private static final int MAX_ATTEMPTS = 90;
@@ -160,11 +157,5 @@ public class BankIdAuthenticationControllerNO
             logger.error("[BankID] Other error occurred while polling bankID", e);
             throw LoginError.DEFAULT_MESSAGE.exception();
         }
-    }
-
-    @Override
-    public boolean isManualAuthentication(CredentialsRequest request) {
-        // since authenticate always init bankid
-        return true;
     }
 }

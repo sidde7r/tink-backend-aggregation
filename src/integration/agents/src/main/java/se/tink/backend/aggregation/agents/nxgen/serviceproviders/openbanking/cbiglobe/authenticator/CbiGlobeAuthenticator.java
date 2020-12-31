@@ -19,7 +19,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class CbiGlobeAuthenticator extends StatelessProgressiveAuthenticator {
 
@@ -88,11 +87,6 @@ public class CbiGlobeAuthenticator extends StatelessProgressiveAuthenticator {
         }
 
         return manualAuthenticationSteps;
-    }
-
-    @Override
-    public boolean isManualAuthentication(CredentialsRequest request) {
-        return !isAutoAuthenticationPossible();
     }
 
     private boolean isAutoAuthenticationPossible() {

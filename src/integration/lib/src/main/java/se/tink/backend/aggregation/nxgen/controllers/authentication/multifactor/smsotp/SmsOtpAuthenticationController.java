@@ -15,14 +15,11 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.type.AuthenticationControllerType;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.i18n.Catalog;
 
-public class SmsOtpAuthenticationController<T>
-        implements TypedAuthenticator, AuthenticationControllerType {
+public class SmsOtpAuthenticationController<T> implements TypedAuthenticator {
     private static final Logger LOGGER =
             LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private static final String OTP_VALUE_FIELD_KEY = "otpValue";
@@ -93,11 +90,5 @@ public class SmsOtpAuthenticationController<T>
                 .pattern(String.format("([0-9]{%d})", otpValueLength))
                 .patternError("The code you entered is not valid")
                 .build();
-    }
-
-    @Override
-    public boolean isManualAuthentication(CredentialsRequest request) {
-        // since authenticate always asks for otp
-        return true;
     }
 }
