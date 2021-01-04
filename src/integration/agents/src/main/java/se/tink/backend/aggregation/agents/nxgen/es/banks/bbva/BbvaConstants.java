@@ -180,4 +180,8 @@ public final class BbvaConstants {
     public static class ProductTypes {
         public static final String COMPLEMENTARY = "COMPLEMENTARIAS";
     }
+
+    public static class HolderTypes {
+        public static final String OWNER = "TIT";
+    }
 }

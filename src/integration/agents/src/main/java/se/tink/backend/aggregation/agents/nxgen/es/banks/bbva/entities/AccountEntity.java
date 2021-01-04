@@ -7,11 +7,17 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Predicates;
 import io.vavr.control.Option;
 import io.vavr.control.Try;
+import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.util.Strings;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.HolderTypes;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Holder;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Holder.Role;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -20,6 +26,7 @@ import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.account.identifiers.formatters.DisplayAccountIdentifierFormatter;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
+@Slf4j
 @JsonObject
 public class AccountEntity extends AbstractContractDetailsEntity {
 
@@ -50,7 +57,7 @@ public class AccountEntity extends AbstractContractDetailsEntity {
         String iban = getAccountNumber();
         String accountProductId = getAccountProductId();
 
-        if (Strings.isNullOrEmpty(iban)) {
+        if (Strings.isNullOrEmpty(iban) && Strings.isNullOrEmpty(accountProductId)) {
             return Optional.empty();
         }
 
@@ -69,30 +76,19 @@ public class AccountEntity extends AbstractContractDetailsEntity {
                                 .addIdentifier(ibanIdentifier)
                                 .build())
                 .setApiIdentifier(getId())
+                .addHolders(getHolders())
                 .build();
     }
 
     @JsonIgnore
-    private ExactCurrencyAmount getBalance() {
-        return availableBalance.toTinkAmount();
-    }
-
-    @JsonIgnore
-    private String getAccountProductId() {
-        return Optional.ofNullable(getProduct())
-                .map(ProductEntity::getId)
-                .filter(Predicates.not(Strings::isNullOrEmpty))
-                .orElse(null);
-    }
-
-    @JsonIgnore
-    @Override
-    protected String getAccountNumber() {
-        return Optional.ofNullable(getFormats())
-                .map(FormatsEntity::getIban)
-                .map(iban -> iban.replaceAll("\\s+", ""))
-                .filter(Predicates.not(Strings::isNullOrEmpty))
-                .orElse(null);
+    public List<Holder> getHolders() {
+        return getParticipants()
+                .map(ParticipantEntity::getRelationship)
+                .filter(
+                        relationshipEntity ->
+                                HolderTypes.OWNER.equals(relationshipEntity.getType().getId()))
+                .map(this::createOwnerHolder)
+                .collect(Collectors.toList());
     }
 
     @JsonIgnore
@@ -106,5 +102,32 @@ public class AccountEntity extends AbstractContractDetailsEntity {
     public boolean hasBalance() {
         return Objects.nonNull(availableBalance)
                 && Try.of(availableBalance::toTinkAmount).isSuccess();
+    }
+
+    @JsonIgnore
+    @Override
+    public String getAccountNumber() {
+        return Optional.ofNullable(getFormats())
+                .map(FormatsEntity::getIban)
+                .filter(Predicates.not(Strings::isNullOrEmpty))
+                .orElse(null);
+    }
+
+    @JsonIgnore
+    public String getAccountProductId() {
+        return Optional.ofNullable(getProduct())
+                .map(ProductEntity::getId)
+                .filter(Predicates.not(Strings::isNullOrEmpty))
+                .orElse(null);
+    }
+
+    @JsonIgnore
+    private ExactCurrencyAmount getBalance() {
+        return availableBalance.toTinkAmount();
+    }
+
+    @JsonIgnore
+    private Holder createOwnerHolder(RelationshipEntity relationshipEntity) {
+        return Holder.of(relationshipEntity.getType().getName(), Role.HOLDER);
     }
 }
