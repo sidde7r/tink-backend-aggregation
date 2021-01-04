@@ -263,7 +263,9 @@ public final class RefreshExecutorUtils {
         for (Map.Entry<Account, AccountFeatures> investAccount : investmentAccounts.entrySet()) {
             context.cacheAccount(investAccount.getKey(), investAccount.getValue());
         }
-        log.info("[Refresh Executor Utils] Successfully finished fetching investment accounts.");
+        log.info(
+                "[Refresh Executor Utils] Successfully finished fetching investment accounts, size: {}",
+                investmentAccounts.size());
     }
 
     private static boolean fetchInvestmentTransactions(
