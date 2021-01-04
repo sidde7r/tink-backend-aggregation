@@ -67,6 +67,7 @@ public class AccountsEntity {
                 .setBankIdentifier(bban)
                 .putInTemporaryStorage(SebCommonConstants.StorageKeys.ACCOUNT_ID, resourceId)
                 .putInTemporaryStorage(SebConstants.Storage.PRODUCT, product)
+                .putPayload(SebCommonConstants.StorageKeys.ACCOUNT_ID, resourceId)
                 .build();
     }
 
