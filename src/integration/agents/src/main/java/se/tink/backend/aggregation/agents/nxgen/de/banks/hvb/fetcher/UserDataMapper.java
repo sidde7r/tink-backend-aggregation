@@ -56,10 +56,11 @@ public class UserDataMapper {
     private int assumeCenturyOfYear(int year) {
         Preconditions.checkArgument(year >= 0 && year <= 99);
         int yearNow = LocalDate.now().getYear();
-        int result = (yearNow % 100) * 100 + year;
-        if (result >= yearNow) {
-            result -= 100;
+        int numberOfCenturies = yearNow / 100;
+        int resultInCurrentCentury = numberOfCenturies * 100 + year;
+        if (resultInCurrentCentury >= yearNow) {
+            return (numberOfCenturies - 1) * 100 + year;
         }
-        return result;
+        return resultInCurrentCentury;
     }
 }
