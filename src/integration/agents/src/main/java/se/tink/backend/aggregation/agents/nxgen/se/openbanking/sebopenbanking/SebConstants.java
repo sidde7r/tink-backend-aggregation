@@ -61,8 +61,6 @@ public abstract class SebConstants {
     public static class Storage {
         public static final String CREDIT_CARD_TRANSACTION_RESPONSE =
                 "creditCardTransactionResponse";
-        public static final String PRODUCT = "product";
-        public static final String ACCOUNT_PRODUCT_MAP = "accountProductMap";
     }
 
     public static class PaymentProduct {

@@ -103,7 +103,7 @@ public final class SebAgent extends SebBaseAgent<SebApiClient>
 
     private TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
         SebTransactionalAccountFetcher accountFetcher =
-                new SebTransactionalAccountFetcher(apiClient, instanceStorage);
+                new SebTransactionalAccountFetcher(apiClient);
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController,
