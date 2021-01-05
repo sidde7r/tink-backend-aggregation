@@ -5,12 +5,15 @@ import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import com.google.common.collect.ImmutableMap;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
 import java.util.Collections;
+import java.util.Map;
 import javax.ws.rs.core.MultivaluedMap;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -129,7 +132,7 @@ public class SdcExceptionFilterTest {
         // then
         assertThat(thrown).isExactlyInstanceOf(error.exception().getClass());
         if (reason == null) {
-            assertThat(thrown.getMessage()).isNull();
+            assertThat(thrown.getMessage()).contains(error.name());
         } else {
             assertThat(thrown.getMessage()).contains(reason);
         }
@@ -178,6 +181,31 @@ public class SdcExceptionFilterTest {
         assertThat(thrown)
                 .isExactlyInstanceOf(HttpResponseException.class)
                 .hasMessageContaining("with " + Headers.X_SDC_ERROR_MESSAGE + " header: null");
+    }
+
+    @Test
+    public void canCreateFilterWithCustomConfiguration() {
+        // given
+        Map<String, Pair<LoginError, String>> mapping =
+                new ImmutableMap.Builder<String, Pair<LoginError, String>>()
+                        .put(
+                                "Forkert brugernummer eller adgangskode.",
+                                // Incorrect user number or password.
+                                new ImmutablePair<>(LoginError.INCORRECT_CREDENTIALS, null))
+                        .put(
+                                "Din PIN kode er spærret. Vælg \"Tilmeld ny aftale\" i menuen (de tre prikker) for at genaktivere din aftale",
+                                // Your PIN is blocked. Select "Register new appointment" in the
+                                // menu (the three dots) to reactivate your appointment
+                                new ImmutablePair<>(
+                                        LoginError.INCORRECT_CREDENTIALS,
+                                        "Your PIN code is blocked."))
+                        .build();
+        // when
+        final Throwable thrown =
+                catchThrowable(() -> sdcExceptionFilter = new SdcExceptionFilter(mapping));
+
+        // then
+        assertThat(thrown).isNull();
     }
 
     private MultivaluedMap<String, String> createHeaderMap(String header, String msg) {

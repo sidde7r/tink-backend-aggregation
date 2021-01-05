@@ -48,10 +48,13 @@ public class SdcExceptionFilter extends Filter {
                 new ImmutableMap.Builder<String, LoginException>()
                         .putAll(defaultMessagesToExceptionMapping);
         messageToErrorReasonMapping.forEach(
-                (message, errorReasonPair) ->
-                        builder.put(
-                                message,
-                                errorReasonPair.getKey().exception(errorReasonPair.getValue())));
+                (message, errorReasonPair) -> {
+                    LoginError loginError = errorReasonPair.getKey();
+                    String reason = errorReasonPair.getValue();
+                    LoginException loginException =
+                            reason == null ? loginError.exception() : loginError.exception(reason);
+                    builder.put(message, loginException);
+                });
         messageToExceptionMapping = builder.build();
     }
 
