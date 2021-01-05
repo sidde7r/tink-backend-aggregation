@@ -152,7 +152,7 @@ public class SparebankenSorConstants {
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class ErrorText {
         public static final String BANKID_BLOCKED =
-                "Det har dessverre oppstått en feil. Ditt mobilabonnement kan ha blitt endret eller din BankID på mobil kan være sperret.  Aktiver BankID på mobil på nytt i din nettbank dersom feilen vedvarer.";
+                "Det har dessverre oppstått en feil. Ditt mobilabonnement kan ha blitt endret eller din BankID på mobil kan være sperret. Aktiver BankID på mobil på nytt i din nettbank dersom feilen vedvarer.";
     }
 
     public enum UserMessage implements LocalizableEnum {
