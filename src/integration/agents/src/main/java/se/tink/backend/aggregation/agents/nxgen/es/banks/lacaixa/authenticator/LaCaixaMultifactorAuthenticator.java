@@ -12,7 +12,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.StatelessProgressiveAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.step.UsernamePasswordAuthenticationStep;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class LaCaixaMultifactorAuthenticator extends StatelessProgressiveAuthenticator {
     private final LaCaixaApiClient apiClient;
@@ -31,11 +30,6 @@ public class LaCaixaMultifactorAuthenticator extends StatelessProgressiveAuthent
     @Override
     public List<AuthenticationStep> authenticationSteps() {
         return authenticationSteps;
-    }
-
-    @Override
-    public boolean isManualAuthentication(CredentialsRequest request) {
-        return request.isCreate();
     }
 
     private AuthenticationStepResponse login(String username, String password)

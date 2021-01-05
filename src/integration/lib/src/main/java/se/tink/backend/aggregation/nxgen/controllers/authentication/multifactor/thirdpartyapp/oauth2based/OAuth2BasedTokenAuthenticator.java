@@ -8,7 +8,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2based.steps.ThirdPartyAppAuthenticationStepCreator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.StatelessProgressiveAuthenticator;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class OAuth2BasedTokenAuthenticator extends StatelessProgressiveAuthenticator {
 
@@ -28,10 +27,5 @@ public class OAuth2BasedTokenAuthenticator extends StatelessProgressiveAuthentic
     @Override
     public List<AuthenticationStep> authenticationSteps() {
         return authenticationSteps;
-    }
-
-    @Override
-    public boolean isManualAuthentication(CredentialsRequest request) {
-        return false;
     }
 }

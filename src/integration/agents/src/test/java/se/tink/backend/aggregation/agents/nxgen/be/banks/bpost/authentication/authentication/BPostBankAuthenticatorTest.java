@@ -173,29 +173,4 @@ public class BPostBankAuthenticatorTest {
         Assert.assertEquals(
                 BPostBankSigningAuthenticationStep.STEP_ID, response.getStepIdentifier().get());
     }
-
-    @Test
-    public void isManualAuthenticationShouldReturnTrueWhenAuthContextIsEmpty() {
-        // given
-        BPostBankAuthenticator objectUnderTest =
-                new BPostBankAuthenticator(
-                        apiClient, Mockito.mock(BPostBankAuthContext.class), credentialsRequest);
-        // when
-        boolean result = objectUnderTest.isManualAuthentication(credentialsRequest);
-        // then
-        Assert.assertTrue(result);
-    }
-
-    @Test
-    public void isManualAuthenticationShouldReturnFalseWhenRegistrationIsCompleted() {
-        // given
-        BPostBankAuthContext authContext = Mockito.mock(BPostBankAuthContext.class);
-        Mockito.when(authContext.isRegistrationCompleted()).thenReturn(true);
-        BPostBankAuthenticator objectUnderTest =
-                new BPostBankAuthenticator(apiClient, authContext, credentialsRequest);
-        // when
-        boolean result = objectUnderTest.isManualAuthentication(credentialsRequest);
-        // then
-        Assert.assertFalse(result);
-    }
 }

@@ -10,12 +10,9 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.type.AuthenticationControllerType;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class PasswordAuthenticationController
-        implements TypedAuthenticator, AuthenticationControllerType {
+public class PasswordAuthenticationController implements TypedAuthenticator {
     private final PasswordAuthenticator authenticator;
 
     public PasswordAuthenticationController(PasswordAuthenticator authenticator) {
@@ -43,10 +40,5 @@ public class PasswordAuthenticationController
         }
 
         authenticator.authenticate(username, password);
-    }
-
-    @Override
-    public boolean isManualAuthentication(CredentialsRequest request) {
-        return request.isUpdate() || request.isCreate();
     }
 }

@@ -39,7 +39,6 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.i18n.Catalog;
 
 public class NordeaNemIdAuthenticatorV2 extends StatelessProgressiveAuthenticator
@@ -199,12 +198,5 @@ public class NordeaNemIdAuthenticatorV2 extends StatelessProgressiveAuthenticato
         steps.add(new AutomaticAuthenticationStep(this::autoAuthenticate, "autoAuth"));
         steps.add(new CredentialsAuthenticationStep(this::authenticate));
         return steps;
-    }
-
-    @Override
-    public boolean isManualAuthentication(CredentialsRequest request) {
-        // Having a token does not ensure it's auto authentication,
-        // but there is no way to determine this unless we actually call the bank.
-        return !persistentStorage.get(StorageKeys.OAUTH_TOKEN, OAuth2Token.class).isPresent();
     }
 }

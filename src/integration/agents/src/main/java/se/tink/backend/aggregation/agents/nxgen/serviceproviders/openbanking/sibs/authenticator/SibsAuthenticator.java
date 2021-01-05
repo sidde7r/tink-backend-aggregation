@@ -16,7 +16,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.step.AutomaticAuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.step.ThirdPartyAppAuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class SibsAuthenticator extends StatelessProgressiveAuthenticator {
 
@@ -54,11 +53,6 @@ public class SibsAuthenticator extends StatelessProgressiveAuthenticator {
                             sibsThirdPartyAppRequestParamsProvider::processThirdPartyCallback));
         }
         return authSteps;
-    }
-
-    @Override
-    public boolean isManualAuthentication(CredentialsRequest request) {
-        return !isAutoAuthenticationPossible();
     }
 
     private AuthenticationStepResponse processAutoAuthentication() {

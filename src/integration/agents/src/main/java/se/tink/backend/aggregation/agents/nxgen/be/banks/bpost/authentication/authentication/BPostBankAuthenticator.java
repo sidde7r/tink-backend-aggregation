@@ -21,7 +21,6 @@ public class BPostBankAuthenticator extends StatelessProgressiveAuthenticator {
     private final List<AuthenticationStep> authSteps = new LinkedList<>();
     private final BPostBankApiClient apiClient;
     private final BPostBankAuthContext authContext;
-    private final CredentialsRequest credentialsRequest;
     private final SupplementalInformationFormer supplementalInformationFormer;
 
     public BPostBankAuthenticator(
@@ -30,7 +29,6 @@ public class BPostBankAuthenticator extends StatelessProgressiveAuthenticator {
             final CredentialsRequest credentialsRequest) {
         this.apiClient = apiClient;
         this.authContext = authContext;
-        this.credentialsRequest = credentialsRequest;
         this.supplementalInformationFormer =
                 new SupplementalInformationFormer(credentialsRequest.getProvider());
     }
@@ -52,14 +50,13 @@ public class BPostBankAuthenticator extends StatelessProgressiveAuthenticator {
         return authSteps;
     }
 
-    @Override
-    public boolean isManualAuthentication(CredentialsRequest request) {
+    private boolean isManualAuthentication() {
         return !authContext.isRegistrationCompleted();
     }
 
     private AuthenticationStepResponse initSessionCallbackHandler() throws AuthenticationException {
         authContext.setCsrfToken(apiClient.initSessionAndGetCSRFToken());
-        return isManualAuthentication(credentialsRequest)
+        return isManualAuthentication()
                 ? AuthenticationStepResponse.executeNextStep()
                 : AuthenticationStepResponse.executeStepWithId(LOGIN_PIN_INIT_STEP_ID);
     }

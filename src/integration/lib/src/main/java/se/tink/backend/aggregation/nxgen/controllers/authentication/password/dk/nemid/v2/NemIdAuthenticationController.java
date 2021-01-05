@@ -9,13 +9,10 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.type.AuthenticationControllerType;
 import se.tink.backend.aggregation.nxgen.storage.Storage;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
 @RequiredArgsConstructor
-public class NemIdAuthenticationController
-        implements TypedAuthenticator, AuthenticationControllerType {
+public class NemIdAuthenticationController implements TypedAuthenticator {
 
     private final NemIdIFrameController iFrameController;
     private final NemIdAuthenticatorV2 authenticator;
@@ -44,10 +41,5 @@ public class NemIdAuthenticationController
     @Override
     public CredentialsTypes getType() {
         return CredentialsTypes.THIRD_PARTY_APP;
-    }
-
-    @Override
-    public boolean isManualAuthentication(CredentialsRequest request) {
-        return true;
     }
 }

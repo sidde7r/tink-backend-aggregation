@@ -14,14 +14,11 @@ import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SupplementalInfoError;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.CommonFields;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.type.AuthenticationControllerType;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.i18n.Catalog;
 
-public class KeyCardAuthenticationController
-        implements TypedAuthenticator, AuthenticationControllerType {
+public class KeyCardAuthenticationController implements TypedAuthenticator {
     private static final int DEFAULT_KEY_CARD_VALUE_LENGTH = 6;
 
     private final Catalog catalog;
@@ -95,11 +92,5 @@ public class KeyCardAuthenticationController
 
     private Field getKeyCardValueField() {
         return CommonFields.KeyCardCode.build(catalog, keyCardValueLength);
-    }
-
-    @Override
-    public boolean isManualAuthentication(CredentialsRequest request) {
-        // since authenticate always asks for supplemental info.
-        return true;
     }
 }

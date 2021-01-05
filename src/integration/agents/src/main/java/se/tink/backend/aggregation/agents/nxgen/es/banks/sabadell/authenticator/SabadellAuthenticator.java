@@ -22,7 +22,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.step.Usernam
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationFormer;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class SabadellAuthenticator extends StatelessProgressiveAuthenticator {
     private static final Logger LOG = LoggerFactory.getLogger(SabadellAuthenticator.class);
@@ -116,10 +115,5 @@ public class SabadellAuthenticator extends StatelessProgressiveAuthenticator {
             persistentStorage.put(Storage.CSID_KEY, UUID.randomUUID().toString().toUpperCase());
         }
         return persistentStorage.get(Storage.CSID_KEY);
-    }
-
-    @Override
-    public boolean isManualAuthentication(CredentialsRequest request) {
-        return true; // TODO: change once automatic flow is implemented
     }
 }

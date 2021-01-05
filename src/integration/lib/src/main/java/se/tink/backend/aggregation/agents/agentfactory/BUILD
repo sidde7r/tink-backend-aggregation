@@ -219,7 +219,6 @@ java_library(
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/hu/openbanking/sberbank",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/hu/openbanking/unicredit",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/it/banks/bancoposta",
-        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/it/banks/ing",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/it/banks/isp",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/it/creditcards/amex",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/it/openbanking/bancacarige",

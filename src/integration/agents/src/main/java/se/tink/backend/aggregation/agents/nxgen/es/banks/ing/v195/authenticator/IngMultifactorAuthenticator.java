@@ -64,8 +64,7 @@ public class IngMultifactorAuthenticator extends StatelessProgressiveAuthenticat
                         supplementalInformationHelper));
     }
 
-    @Override
-    public boolean isManualAuthentication(CredentialsRequest request) {
+    private boolean isManualAuthentication(CredentialsRequest request) {
         return request.isCreate() || request.isUpdate();
     }
 }

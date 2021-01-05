@@ -8,7 +8,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.StatelessProgressiveAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.step.AutomaticAuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.step.UsernamePasswordAuthenticationStep;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class MontepioAuthenticator extends StatelessProgressiveAuthenticator {
 
@@ -30,11 +29,6 @@ public class MontepioAuthenticator extends StatelessProgressiveAuthenticator {
     @Override
     public List<AuthenticationStep> authenticationSteps() {
         return authenticationSteps;
-    }
-
-    @Override
-    public boolean isManualAuthentication(CredentialsRequest request) {
-        return request.isUpdate() || request.isCreate();
     }
 
     private AuthenticationStepResponse processLogin() {

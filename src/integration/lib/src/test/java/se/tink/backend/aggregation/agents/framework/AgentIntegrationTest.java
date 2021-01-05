@@ -53,8 +53,6 @@ import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConf
 import se.tink.backend.aggregation.fakelogmasker.FakeLogMasker;
 import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.logmasker.LogMaskerImpl;
-import se.tink.backend.aggregation.nxgen.agents.SubsequentGenerationAgent;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.type.AuthenticationControllerType;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.executor.ProgressiveLoginExecutor;
 import se.tink.backend.aggregation.nxgen.controllers.configuration.AgentConfigurationController;
@@ -271,16 +269,6 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                     .processAuthentication(
                             agent, credentialsRequest, supplementalInformationController);
             return;
-        }
-
-        if (agent instanceof SubsequentGenerationAgent
-                && ((SubsequentGenerationAgent) agent).getAuthenticator()
-                        instanceof AuthenticationControllerType) {
-            final AuthenticationControllerType manualOrAutoAuth =
-                    (AuthenticationControllerType)
-                            ((SubsequentGenerationAgent) agent).getAuthenticator();
-            final boolean isManual = manualOrAutoAuth.isManualAuthentication(credentialsRequest);
-            log.info("Authentication requires user intervention: " + isManual);
         }
 
         if (agent instanceof ProgressiveAuthAgent) {

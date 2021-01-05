@@ -17,7 +17,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.StatelessProgressiveAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.SteppableAuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.SteppableAuthenticationResponse;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class StatelessProgressiveAuthenticatorTest {
 
@@ -154,11 +153,6 @@ public class StatelessProgressiveAuthenticatorTest {
             @Override
             public List<AuthenticationStep> authenticationSteps() {
                 return Arrays.asList(authSteps);
-            }
-
-            @Override
-            public boolean isManualAuthentication(CredentialsRequest request) {
-                return false;
             }
         };
     }
