@@ -46,9 +46,9 @@ public class AccountDetailsResponseTest {
     public void shouldGetFirstInterestRateHigherThanZero() {
         // given
         InterestDetailEntity interestDetailEntity1 = new InterestDetailEntity();
-        interestDetailEntity1.setRate(ZERO_INTEREST_RATE);
+        interestDetailEntity1.setRateInPercent(ZERO_INTEREST_RATE);
         InterestDetailEntity interestDetailEntity2 = new InterestDetailEntity();
-        interestDetailEntity2.setRate(INTEREST_RATE);
+        interestDetailEntity2.setRateInPercent(INTEREST_RATE);
 
         AccountInterestDetailsEntity accountInterestDetailsEntity =
                 new AccountInterestDetailsEntity();
@@ -70,9 +70,9 @@ public class AccountDetailsResponseTest {
     public void shouldReturnNullWhenRateIsWrongFormat(String firstRate, String secondRate) {
         // given
         InterestDetailEntity interestDetailEntity1 = new InterestDetailEntity();
-        interestDetailEntity1.setRate(firstRate);
+        interestDetailEntity1.setRateInPercent(firstRate);
         InterestDetailEntity interestDetailEntity2 = new InterestDetailEntity();
-        interestDetailEntity2.setRate(secondRate);
+        interestDetailEntity2.setRateInPercent(secondRate);
 
         AccountInterestDetailsEntity accountInterestDetailsEntity =
                 new AccountInterestDetailsEntity();

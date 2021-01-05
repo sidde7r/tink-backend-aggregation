@@ -62,13 +62,7 @@ public class DanskeBankAccountLoanFetcher implements AccountFetcher<LoanAccount>
         List<LoanAccount> loans =
                 listAccounts.getAccounts().stream()
                         .filter(AccountEntity::isLoanAccount)
-                        .map(
-                                account -> {
-                                    AccountDetailsResponse accountDetailsResponse =
-                                            fetchLoanAccountDetails(account.getAccountNoInt());
-                                    return accountEntityMapper.toLoanAccount(
-                                            configuration, account, accountDetailsResponse);
-                                })
+                        .map(this::toLoanAccount)
                         .distinct()
                         .collect(Collectors.toList());
 
@@ -77,6 +71,12 @@ public class DanskeBankAccountLoanFetcher implements AccountFetcher<LoanAccount>
         }
 
         return loans;
+    }
+
+    private LoanAccount toLoanAccount(AccountEntity account) {
+        AccountDetailsResponse accountDetailsResponse =
+                fetchLoanAccountDetails(account.getAccountNoInt());
+        return accountEntityMapper.toLoanAccount(configuration, account, accountDetailsResponse);
     }
 
     private void logUnknownLoanAccountTypes(ListAccountsResponse listAccounts) {

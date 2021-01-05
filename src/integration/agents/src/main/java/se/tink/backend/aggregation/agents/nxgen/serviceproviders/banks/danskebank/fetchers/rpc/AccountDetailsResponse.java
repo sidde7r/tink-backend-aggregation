@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -14,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.rpc.AbstractResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.core.account.loan.util.InterestRateConverter;
 import se.tink.libraries.enums.MarketCode;
 
 @EqualsAndHashCode(callSuper = false)
@@ -37,7 +37,8 @@ public class AccountDetailsResponse extends AbstractResponse {
         /* Scale in division is set to 8 places, because in banking we should provide 6 digits after
         the decimal, and here we also divide by 100, although in Danske Bank's response interest
         rates are usually rounded to 3 digits after the decimal.
-        Divide by 100 because we should return decimal number, not percent.
+        In response we get usually 2 or sometimes 1 interest rate, and one of them is higher than zero.
+        Get first interest rate higher than zero and add logs. Remove this comment after getting more information.
         */
         try {
             // Wiski please remove unnecessary logging after getting proper logs
@@ -48,17 +49,10 @@ public class AccountDetailsResponse extends AbstractResponse {
                                             "Danske interestDetail with text: [{}] and rate [{}] 0",
                                             interestDetail.getText(),
                                             getInterestRateDescriptionForLog(interestDetail)))
-                    .map(interestDetail -> Double.parseDouble(interestDetail.getRate()))
-                    .filter(rate -> rate > 0)
+                    .map(interestDetail -> Double.parseDouble(interestDetail.getRateInPercent()))
+                    .filter(rateInPercent -> rateInPercent > 0)
                     .findFirst()
-                    .map(
-                            rate ->
-                                    BigDecimal.valueOf(rate)
-                                            .divide(
-                                                    BigDecimal.valueOf(100),
-                                                    SCALE,
-                                                    RoundingMode.HALF_UP)
-                                            .doubleValue())
+                    .map(rate -> InterestRateConverter.toDecimalValue(rate, SCALE))
                     .orElse(null);
         } catch (NumberFormatException | ArithmeticException | NullPointerException e) {
             log.warn("Couldn't parse interest rate", e);
@@ -80,7 +74,7 @@ public class AccountDetailsResponse extends AbstractResponse {
 
     private String getInterestRateDescriptionForLog(InterestDetailEntity interestDetailEntity) {
         try {
-            double rate = Double.parseDouble(interestDetailEntity.getRate());
+            double rate = Double.parseDouble(interestDetailEntity.getRateInPercent());
             if (rate > 0) {
                 return "higher than";
             } else if (rate == 0) {
@@ -110,20 +104,19 @@ public class AccountDetailsResponse extends AbstractResponse {
         try {
             return accountOwners.stream()
                     .filter(StringUtils::isNotBlank)
-                    .map(
-                            accountOwner -> {
-                                Matcher matcher =
-                                        EXTRACT_ACCOUNT_OWNERS_PATTERN.matcher(accountOwner);
-                                if (matcher.find()) {
-                                    return matcher.group(1);
-                                }
-                                throw new IllegalStateException(
-                                        "Found accountOwner that couldn't be extracted");
-                            })
+                    .map(this::extractAccountOwner)
                     .collect(Collectors.toList());
         } catch (IllegalStateException e) {
             log.warn(e.getMessage(), e);
             return Collections.emptyList();
         }
+    }
+
+    private String extractAccountOwner(String accountOwner) {
+        Matcher matcher = EXTRACT_ACCOUNT_OWNERS_PATTERN.matcher(accountOwner);
+        if (matcher.find()) {
+            return matcher.group(1);
+        }
+        throw new IllegalStateException("Found accountOwner that couldn't be extracted");
     }
 }
