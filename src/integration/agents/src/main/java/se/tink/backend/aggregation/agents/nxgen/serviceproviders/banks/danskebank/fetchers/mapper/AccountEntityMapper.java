@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankPredicates;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.AccountDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.AccountEntity;
 import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
@@ -60,7 +61,9 @@ public class AccountEntityMapper {
     }
 
     public LoanAccount toLoanAccount(
-            DanskeBankConfiguration configuration, AccountEntity accountEntity) {
+            DanskeBankConfiguration configuration,
+            AccountEntity accountEntity,
+            AccountDetailsResponse accountDetailsResponse) {
         return LoanAccount.builder(
                         accountEntity.getAccountNoInt(),
                         ExactCurrencyAmount.of(
@@ -68,6 +71,7 @@ public class AccountEntityMapper {
                 .setAccountNumber(accountEntity.getAccountNoExt())
                 .setName(accountEntity.getAccountName())
                 .setBankIdentifier(accountEntity.getAccountNoInt())
+                .setInterestRate(accountDetailsResponse.getInterestRate())
                 .canExecuteExternalTransfer(
                         configuration.canExecuteExternalTransfer(accountEntity.getAccountProduct()))
                 .canReceiveExternalTransfer(
@@ -78,6 +82,7 @@ public class AccountEntityMapper {
                 .setDetails(
                         LoanDetails.builder(getLoanType(configuration, accountEntity))
                                 .setLoanNumber(accountEntity.getAccountNoExt())
+                                .setApplicants(accountDetailsResponse.getAccountOwners(marketCode))
                                 .build())
                 .build();
     }

@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
@@ -7,6 +8,9 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @Data
 public class InterestDetailEntity {
     private String text;
-    private String rate;
+
+    @JsonProperty("rate")
+    private String rateInPercent;
+
     private String period;
 }
