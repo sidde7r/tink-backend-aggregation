@@ -26,12 +26,12 @@ import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.authenticator.rp
 import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdParameters;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdParametersFetcher;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.NemIdIFrameController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.NemIdIFrameControllerInitializer;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.exception.NemIdError;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2.NemIdConstantsV2;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2.NemIdIFrameController;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2.NemIdIFrameControllerInitializer;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2.NemIdParametersFetcher;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2.NemIdParametersV2;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.StatelessProgressiveAuthenticator;
@@ -112,7 +112,7 @@ public class NordeaNemIdAuthenticatorV2 extends StatelessProgressiveAuthenticato
     }
 
     @Override
-    public NemIdParametersV2 getNemIdParameters() throws AuthenticationException {
+    public NemIdParameters getNemIdParameters() throws AuthenticationException {
         String codeVerifier = generateCodeVerifier();
         sessionStorage.put(StorageKeys.CODE_VERIFIER, codeVerifier);
         String state = generateState();
@@ -131,11 +131,11 @@ public class NordeaNemIdAuthenticatorV2 extends StatelessProgressiveAuthenticato
         } catch (JsonProcessingException e) {
             throw NemIdError.INTERRUPTED.exception();
         }
-        return new NemIdParametersV2(
+        return new NemIdParameters(
                 String.format(NEM_ID_SCRIPT_FORMAT, params)
                         + String.format(
-                                NemIdConstantsV2.NEM_ID_IFRAME,
-                                NemIdConstantsV2.NEM_ID_INIT_URL + Instant.now().toEpochMilli()));
+                                NemIdConstants.NEM_ID_IFRAME,
+                                NemIdConstants.NEM_ID_INIT_URL + Instant.now().toEpochMilli()));
     }
 
     private String exchangeNemIdToken(String nemIdToken) {

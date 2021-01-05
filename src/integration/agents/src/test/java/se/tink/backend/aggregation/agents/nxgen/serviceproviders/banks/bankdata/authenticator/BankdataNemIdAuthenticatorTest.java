@@ -26,7 +26,7 @@ import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.BankdataApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.CryptoHelper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.authenticator.rpc.CompleteEnrollResponse;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2.NemIdParametersV2;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdParameters;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.storage.Storage;
 
@@ -42,7 +42,7 @@ public class BankdataNemIdAuthenticatorTest {
     private Storage mockedStorage;
     private Storage storage;
     private HttpResponse httpResponse;
-    private NemIdParametersV2 nemIdParametersV2;
+    private NemIdParameters nemIdParameters;
 
     @Before
     public void setup() throws NoSuchAlgorithmException {
@@ -51,7 +51,7 @@ public class BankdataNemIdAuthenticatorTest {
 
         httpResponse = mock(HttpResponse.class);
         bankdataNemIdAuthenticator = new BankdataNemIdAuthenticator(bankClient, mockedStorage);
-        nemIdParametersV2 = new NemIdParametersV2("testElements");
+        nemIdParameters = new NemIdParameters("testElements");
 
         storage = new Storage();
         KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA");
@@ -70,16 +70,16 @@ public class BankdataNemIdAuthenticatorTest {
     public void shouldGetNemIdParameters() {
         // Given
         when(bankClient.portal()).thenReturn(httpResponse);
-        when(bankClient.fetchNemIdParameters(httpResponse)).thenReturn(nemIdParametersV2);
+        when(bankClient.fetchNemIdParameters(httpResponse)).thenReturn(nemIdParameters);
 
         // When
-        NemIdParametersV2 result = bankdataNemIdAuthenticator.getNemIdParameters();
+        NemIdParameters result = bankdataNemIdAuthenticator.getNemIdParameters();
 
         // Then
         verify(bankClient).nemIdInit(any(CryptoHelper.class));
         verify(bankClient).portal();
         verify(bankClient).fetchNemIdParameters(httpResponse);
-        assertThat(result).isEqualTo(nemIdParametersV2);
+        assertThat(result).isEqualTo(nemIdParameters);
     }
 
     @Test

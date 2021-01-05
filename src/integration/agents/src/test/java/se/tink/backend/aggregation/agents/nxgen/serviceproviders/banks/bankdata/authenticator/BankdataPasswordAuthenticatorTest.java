@@ -13,7 +13,7 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.storage.BankdataStorage;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2.NemIdConstantsV2;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants;
 
 public class BankdataPasswordAuthenticatorTest {
 
@@ -37,7 +37,7 @@ public class BankdataPasswordAuthenticatorTest {
             throws LoginException, AuthorizationException, SessionException {
         // Given
         when(bankdataStorage.getNemidInstallId())
-                .thenReturn(Optional.of(NemIdConstantsV2.Storage.NEMID_INSTALL_ID));
+                .thenReturn(Optional.of(NemIdConstants.Storage.NEMID_INSTALL_ID));
 
         // When
         bankdataPasswordAuthenticator.autoAuthenticate();
@@ -46,7 +46,7 @@ public class BankdataPasswordAuthenticatorTest {
         verify(bankdataStorage).getNemidInstallId();
         verify(bankdataNemIdAuthenticator)
                 .authenticateUsingInstallId(
-                        USERNAME, PIN_CODE, NemIdConstantsV2.Storage.NEMID_INSTALL_ID);
+                        USERNAME, PIN_CODE, NemIdConstants.Storage.NEMID_INSTALL_ID);
     }
 
     @Test

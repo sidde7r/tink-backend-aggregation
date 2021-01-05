@@ -9,13 +9,13 @@ import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.BankdataApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.CryptoHelper;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2.NemIdAuthenticatorV2;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2.NemIdParametersV2;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdAuthenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdParameters;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.storage.Storage;
 import se.tink.libraries.uuid.UUIDUtils;
 
-public class BankdataNemIdAuthenticator implements NemIdAuthenticatorV2 {
+public class BankdataNemIdAuthenticator implements NemIdAuthenticator {
 
     private final BankdataApiClient bankClient;
     private final Storage storage;
@@ -28,7 +28,7 @@ public class BankdataNemIdAuthenticator implements NemIdAuthenticatorV2 {
     }
 
     @Override
-    public NemIdParametersV2 getNemIdParameters() {
+    public NemIdParameters getNemIdParameters() {
 
         // Generate new keys for a new nemid instantiation
         final String keyPairId = UUIDUtils.generateUUID();
