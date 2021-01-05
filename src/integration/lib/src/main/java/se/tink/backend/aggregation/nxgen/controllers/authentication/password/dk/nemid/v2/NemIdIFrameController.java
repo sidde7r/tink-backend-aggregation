@@ -3,10 +3,10 @@ package se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2.NemIdConstantsV2.NEM_ID_PREFIX;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2.metrics.NemIdMetricLabel.NEM_ID_IFRAME_AUTH_METRIC;
 
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2.metrics.NemIdMetrics;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2.steps.NemIdCollectTokenStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2.steps.NemIdInitializeIframeStep;
@@ -15,7 +15,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2.steps.NemIdWaitForCodeAppResponseStep;
 
 @Slf4j
-@RequiredArgsConstructor
+@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 public class NemIdIFrameController {
     // NemId Javascript Client Integration for mobile:
     // https://www.nets.eu/dk-da/kundeservice/nemid-tjenesteudbyder/NemID-tjenesteudbyderpakken/Documents/NemID%20Integration%20-%20Mobile.pdf
@@ -29,7 +29,7 @@ public class NemIdIFrameController {
     private final NemIdWaitForCodeAppResponseStep waitForCodeAppResponseStep;
     private final NemIdCollectTokenStep collectTokenStep;
 
-    public String doLoginWith(Credentials credentials) throws AuthenticationException {
+    public String doLoginWith(Credentials credentials) {
         try {
             return metrics.executeWithTimer(() -> doLogin(credentials), NEM_ID_IFRAME_AUTH_METRIC);
         } finally {

@@ -10,7 +10,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2.NemIdConstantsV2.HtmlElements.NEMID_TIMEOUT_ICON;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2.NemIdConstantsV2.HtmlElements.NEMID_TOKEN;
-import static se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2.NemIdConstantsV2.NEM_ID_TIMEOUT_SECONDS;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2.NemIdConstantsV2.NEM_ID_TIMEOUT_SECONDS_WITH_SAFETY_MARGIN;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2.util.NemIdTestHelper.nemIdMetricsMock;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2.util.NemIdTestHelper.verifyNTimes;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2.util.NemIdTestHelper.verifyThatFromUsersPerspectiveThrowableIsTheSameAsGivenAgentException;
@@ -195,7 +195,7 @@ public class NemIdCollectTokenStepTest {
                     mocksToVerifyInOrder.verify(driverWrapper).tryFindElement(NEMID_TIMEOUT_ICON);
                     mocksToVerifyInOrder.verify(driverWrapper).sleepFor(1_000);
                 },
-                NEM_ID_TIMEOUT_SECONDS + 15);
+                NEM_ID_TIMEOUT_SECONDS_WITH_SAFETY_MARGIN);
     }
 
     private void mockThatTokenIsValid() {

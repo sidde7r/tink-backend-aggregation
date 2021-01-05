@@ -48,14 +48,18 @@ public class NemIdConstantsV2 {
 
     public static final long PHANTOMJS_TIMEOUT_SECONDS = 30;
     public static final String NEM_ID_PREFIX = "[NemId]";
+
     // value from docs
-    public static final int NEM_ID_TIMEOUT_SECONDS = 5 * 60;
+    private static final int NEM_ID_TIMEOUT_SECONDS = 5 * 60;
+    // value increased by a few seconds just to be sure that we don't announce the timeout too early
+    public static final int NEM_ID_TIMEOUT_SECONDS_WITH_SAFETY_MARGIN = NEM_ID_TIMEOUT_SECONDS + 15;
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class Storage {
         public static final String NEMID_INSTALL_ID = "NEMID_INSTALL_ID";
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class Errors {
         public static final ImmutableList<Pattern> INCORRECT_CREDENTIALS_ERROR_PATTERNS =
                 ImmutableList.<Pattern>builder()

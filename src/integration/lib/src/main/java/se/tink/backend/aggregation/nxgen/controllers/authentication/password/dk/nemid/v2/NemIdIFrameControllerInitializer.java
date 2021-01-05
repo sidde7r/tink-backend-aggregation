@@ -24,6 +24,11 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2.steps.NemIdWaitForCodeAppResponseStep;
 import se.tink.libraries.i18n.Catalog;
 
+/**
+ * This class should be used to correctly initialize {@link
+ * se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2.NemIdIFrameController}
+ * with all its dependencies.
+ */
 @Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class NemIdIFrameControllerInitializer {

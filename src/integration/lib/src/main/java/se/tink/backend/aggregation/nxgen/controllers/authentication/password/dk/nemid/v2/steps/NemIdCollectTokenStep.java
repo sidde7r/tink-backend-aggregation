@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2.NemIdConstantsV2.HtmlElements.NEMID_TIMEOUT_ICON;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2.NemIdConstantsV2.HtmlElements.NEMID_TOKEN;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2.NemIdConstantsV2.NEM_ID_PREFIX;
-import static se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2.NemIdConstantsV2.NEM_ID_TIMEOUT_SECONDS;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2.NemIdConstantsV2.NEM_ID_TIMEOUT_SECONDS_WITH_SAFETY_MARGIN;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2.metrics.NemIdMetricLabel.WAITING_FOR_TOKEN_METRIC;
 
 import com.google.common.base.Strings;
@@ -33,9 +33,8 @@ public class NemIdCollectTokenStep {
     }
 
     private String waitForNotEmptyToken() {
-        int additionalSecondsForRenderDelays = 15;
 
-        for (int i = 0; i < NEM_ID_TIMEOUT_SECONDS + additionalSecondsForRenderDelays; i++) {
+        for (int i = 0; i < NEM_ID_TIMEOUT_SECONDS_WITH_SAFETY_MARGIN; i++) {
 
             driverWrapper.switchToParentWindow();
             Optional<String> maybeNemIdToken = tryFindNotEmptyNemIdToken();

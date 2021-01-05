@@ -1,7 +1,5 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2.metrics;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,12 +20,6 @@ public class NemIdTimer {
 
     public Double getTotalTimeInSeconds() {
         Long millis = savedIntervals.stream().reduce(0L, Long::sum);
-        return round(millis / 1_000., 2);
-    }
-
-    public static double round(double value, int places) {
-        BigDecimal bd = BigDecimal.valueOf(value);
-        bd = bd.setScale(places, RoundingMode.HALF_UP);
-        return bd.doubleValue();
+        return millis / 1_000.;
     }
 }

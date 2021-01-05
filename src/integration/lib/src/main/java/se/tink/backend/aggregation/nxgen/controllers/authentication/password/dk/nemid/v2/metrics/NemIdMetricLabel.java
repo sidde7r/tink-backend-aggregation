@@ -25,9 +25,10 @@ public enum NemIdMetricLabel {
             buckets(1, 2, 3, 4, 5, 10, 15, 20, 25, 30)),
     WAITING_FOR_SUPPLEMENTAL_INFO_METRIC(
             "waiting_for_supplemental_info",
-            bucketsSequence(30, NemIdConstantsV2.NEM_ID_TIMEOUT_SECONDS, 30)),
+            bucketsSequence(30, NemIdConstantsV2.NEM_ID_TIMEOUT_SECONDS_WITH_SAFETY_MARGIN, 30)),
     WAITING_FOR_TOKEN_METRIC(
-            "waiting_for_token", bucketsSequence(30, NemIdConstantsV2.NEM_ID_TIMEOUT_SECONDS, 30));
+            "waiting_for_token",
+            bucketsSequence(30, NemIdConstantsV2.NEM_ID_TIMEOUT_SECONDS_WITH_SAFETY_MARGIN, 30));
 
     private final String name;
     private final List<Number> customBuckets;
