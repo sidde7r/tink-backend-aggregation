@@ -24,10 +24,10 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class Xs2aDevelopersAuthenticator implements OAuth2Authenticator, OAuth2TokenAccessor {
 
-    private final Xs2aDevelopersApiClient apiClient;
-    private final PersistentStorage persistentStorage;
+    protected final Xs2aDevelopersApiClient apiClient;
+    protected final PersistentStorage persistentStorage;
     private final Xs2aDevelopersProviderConfiguration configuration;
-    private final LocalDateTimeSource localDateTimeSource;
+    protected final LocalDateTimeSource localDateTimeSource;
     private final Credentials credentials;
 
     public Xs2aDevelopersAuthenticator(
