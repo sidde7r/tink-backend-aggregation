@@ -1,0 +1,23 @@
+{
+  "_links": {
+    "scaStatus": {
+      "href": "https://xs2a.f-i-apim.de:8443/fixs2aop-env/xs2a-api/75050000/v1/consents/147852369/authorisations/1234567890"
+    },
+    "selectAuthenticationMethod": {
+      "href": "https://xs2a.f-i-apim.de:8443/fixs2aop-env/xs2a-api/75050000/v1/consents/147852369/authorisations/1234567890"
+    }
+  },
+  "authorisationId": "1234567890",
+  "chosenScaMethod": {
+    "authenticationMethodId": "METHOD_1",
+    "authenticationType": "PUSH_OTP",
+    "authenticationVersion": "",
+    "name": "pushTAN | METHOD_1"
+  },
+  "challengeData": {
+    "additionalInformation": "Bitte tragen Sie die TAN aus der pushTAN-App ein.",
+    "otpFormat": "integer",
+    "otpMaxLength": 6
+  },
+  "scaStatus": "scaMethodSelected"
+}

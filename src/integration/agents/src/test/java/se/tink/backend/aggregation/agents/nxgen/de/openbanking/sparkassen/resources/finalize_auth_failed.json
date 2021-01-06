@@ -1,0 +1,11 @@
+{
+  "_links": {
+    "scaStatus": {
+      "href": "https://xs2a.f-i-apim.de:8443/fixs2aop-env/xs2a-api/75050000/v1/consents/147852369/authorisations/1234567890"
+    },
+    "status": {
+      "href": "https://xs2a.f-i-apim.de:8443/fixs2aop-env/xs2a-api/75050000/v1/consents/147852369/status"
+    }
+  },
+  "scaStatus": "failed"
+}

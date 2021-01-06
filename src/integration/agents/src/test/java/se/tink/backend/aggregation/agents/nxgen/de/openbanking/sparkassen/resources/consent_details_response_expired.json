@@ -1,0 +1,16 @@
+{
+  "access": {
+    "allPsd2": "allAccounts"
+  },
+  "_links": {
+    "account": {
+      "href": "hhttps://xs2a.f-i-apim.de:8443/fixs2aop-env/xs2a-api/v1/accounts"
+    }
+  },
+  "consentStatus": "expired",
+  "validUntil": "2020-01-01",
+  "recurringIndicator": true,
+  "lastActionDate": "2020-11-25",
+  "frequencyPerDay": 4
+}
+

@@ -1,0 +1,16 @@
+{
+  "consentStatus": "received",
+  "consentId": "147852369",
+  "_links": {
+    "startAuthorisationWithPsuAuthentication": {
+      "href": "https://xs2a.f-i-apim.de:8443/fixs2aop-env/xs2a-api/75050000/v1/consents/147852369/authorisations"
+    },
+    "self": {
+      "href": "https://xs2a.f-i-apim.de:8443/fixs2aop-env/xs2a-api/68452290/v1/consents/**HASHED:Yo**"
+    },
+    "status": {
+      "href": "https://xs2a.f-i-apim.de:8443/fixs2aop-env/xs2a-api/68452290/v1/consents/**HASHED:Yo**/status"
+    }
+  },
+  "psuMessage": "Bitte geben Sie Ihren Anmeldenamen/Legitimations-ID und Ihre PIN ein."
+}

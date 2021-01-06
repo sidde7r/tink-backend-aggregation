@@ -14,11 +14,8 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.Sparka
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.Urls;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.entities.AccessEntity;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.entities.PsuDataEntity;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.AuthenticationMethodResponse;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.ConsentRequest;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.ConsentStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.FinalizeAuthorizationRequest;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.FinalizeAuthorizationResponse;
@@ -26,6 +23,10 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authen
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.SelectAuthenticationMethodRequest;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.fetcher.rpc.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.fetcher.rpc.FetchBalancesResponse;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AccessEntity;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentDetailsResponse;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentRequest;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentResponse;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
@@ -65,17 +66,21 @@ public class SparkassenApiClient {
     }
 
     public ConsentResponse createConsent() throws LoginException {
-        ConsentRequest getConsentRequest =
+        LocalDate validUntil = LocalDate.now().plusDays(90);
+        ConsentRequest consentRequest =
                 new ConsentRequest(
                         new AccessEntity(),
                         true,
-                        LocalDate.now().plusDays(90).toString(),
+                        validUntil.toString(),
                         FormValues.FREQUENCY_PER_DAY,
                         false);
 
-        return createRequest(Urls.GET_CONSENT)
-                .header(HeaderKeys.TPP_REDIRECT_PREFERRED, false)
-                .post(ConsentResponse.class, getConsentRequest);
+        ConsentResponse consentResponse =
+                createRequest(Urls.CONSENT)
+                        .header(HeaderKeys.TPP_REDIRECT_PREFERRED, false)
+                        .post(ConsentResponse.class, consentRequest);
+        consentResponse.setValidUntil(validUntil);
+        return consentResponse;
     }
 
     public AuthenticationMethodResponse initializeAuthorization(
@@ -124,10 +129,15 @@ public class SparkassenApiClient {
     }
 
     public ConsentStatusResponse getConsentStatus(String consentId) {
-        return createRequest(
-                        Urls.CHECK_CONSENT_STATUS.parameter(PathVariables.CONSENT_ID, consentId))
+        return createRequest(Urls.CONSENT_STATUS.parameter(PathVariables.CONSENT_ID, consentId))
                 .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
                 .get(ConsentStatusResponse.class);
+    }
+
+    public ConsentDetailsResponse getConsentDetails(String consentId) {
+        return createRequest(Urls.CONSENT_DETAILS.parameter(PathVariables.CONSENT_ID, consentId))
+                .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
+                .get(ConsentDetailsResponse.class);
     }
 
     public FetchAccountsResponse fetchAccounts(String consentId) {

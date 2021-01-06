@@ -20,49 +20,46 @@ public final class SparkassenConstants {
         public static final String STARTCODE_NOT_FOUND = "Startcode fo Chip tan not found";
     }
 
-    public static class Urls {
-        public static final String BASE_URL = "https://xs2a.f-i-apim.de:8443/fixs2aop-env";
-        public static final URL GET_CONSENT =
-                new URL(BASE_URL + "/xs2a-api/{bankCode}/v1/consents");
-        public static final URL UPDATE_SCA_METHOD =
-                new URL(GET_CONSENT + "/{consentId}/authorisations/{authorizationId}");
-        public static final URL FINALIZE_AUTHORIZATION =
-                new URL(GET_CONSENT + "/{consentId}/authorisations/{authorizationId}");
-        public static final URL CHECK_CONSENT_STATUS = new URL(GET_CONSENT + "/{consentId}/status");
-
-        public static final URL FETCH_ACCOUNTS =
-                new URL(BASE_URL + "/xs2a-api/{bankCode}/v1/accounts");
-        public static final URL FETCH_BALANCES = new URL(FETCH_ACCOUNTS + "/{accountId}/balances");
-        public static final URL FETCH_TRANSACTIONS =
-                new URL(FETCH_ACCOUNTS + "/{accountId}/transactions");
+    static class Urls {
+        static final String BASE_URL = "https://xs2a.f-i-apim.de:8443/fixs2aop-env";
+        static final URL CONSENT = new URL(BASE_URL + "/xs2a-api/{bankCode}/v1/consents");
+        static final URL UPDATE_SCA_METHOD =
+                new URL(CONSENT + "/{consentId}/authorisations/{authorizationId}");
+        static final URL FINALIZE_AUTHORIZATION =
+                new URL(CONSENT + "/{consentId}/authorisations/{authorizationId}");
+        static final URL CONSENT_STATUS = new URL(CONSENT + "/{consentId}/status");
+        static final URL CONSENT_DETAILS = new URL(CONSENT + "/{consentId}");
+        static final URL FETCH_ACCOUNTS = new URL(BASE_URL + "/xs2a-api/{bankCode}/v1/accounts");
+        static final URL FETCH_BALANCES = new URL(FETCH_ACCOUNTS + "/{accountId}/balances");
+        static final URL FETCH_TRANSACTIONS = new URL(FETCH_ACCOUNTS + "/{accountId}/transactions");
     }
 
-    public static class PathVariables {
-        public static final String CONSENT_ID = "consentId";
-        public static final String AUTHORIZATION_ID = "authorizationId";
-        public static final String ACCOUNT_ID = "accountId";
-        public static final String BANK_CODE = "bankCode";
+    static class PathVariables {
+        static final String CONSENT_ID = "consentId";
+        static final String AUTHORIZATION_ID = "authorizationId";
+        static final String ACCOUNT_ID = "accountId";
+        static final String BANK_CODE = "bankCode";
     }
 
-    public static class QueryKeys {
-        public static final String DATE_FROM = "dateFrom";
-        public static final String BOOKING_STATUS = "bookingStatus";
+    static class QueryKeys {
+        static final String DATE_FROM = "dateFrom";
+        static final String BOOKING_STATUS = "bookingStatus";
     }
 
-    public static class QueryValues {
-        public static final String BOTH = "both";
+    static class QueryValues {
+        static final String BOTH = "both";
     }
 
-    public static class HeaderKeys {
-        public static final String X_REQUEST_ID = "X-Request-ID";
-        public static final String CONSENT_ID = "Consent-ID";
-        public static final String TPP_REDIRECT_PREFERRED = "TPP-Redirect-Preferred";
-        public static final String PSU_ID = "PSU-ID";
-        public static final String PSU_IP_ADDRESS = "PSU-IP-Address";
+    static class HeaderKeys {
+        static final String X_REQUEST_ID = "X-Request-ID";
+        static final String CONSENT_ID = "Consent-ID";
+        static final String TPP_REDIRECT_PREFERRED = "TPP-Redirect-Preferred";
+        static final String PSU_ID = "PSU-ID";
+        static final String PSU_IP_ADDRESS = "PSU-IP-Address";
     }
 
-    public static class FormValues {
-        public static final int FREQUENCY_PER_DAY = 4;
+    static class FormValues {
+        static final int FREQUENCY_PER_DAY = 4;
     }
 
     public static class AuthMethods {
