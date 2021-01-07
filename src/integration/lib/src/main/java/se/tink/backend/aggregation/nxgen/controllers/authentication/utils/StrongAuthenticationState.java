@@ -20,4 +20,9 @@ public class StrongAuthenticationState {
     public static String formatSupplementalKey(String key) {
         return String.format(UNIQUE_PREFIX_TPCB, key);
     }
+
+    @Override
+    public String toString() {
+        return "StrongAuthenticationState{" + "state='" + state + '\'' + '}';
+    }
 }
