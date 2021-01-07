@@ -109,7 +109,7 @@ public class SibsPaymentExecutor implements PaymentExecutor, FetchablePaymentExe
                 .getPayment(
                         paymentRequest.getPayment().getUniqueId(),
                         SibsPaymentType.fromDomainPayment(paymentRequest.getPayment()))
-                .toTinkPaymentResponse(paymentRequest.getStorage());
+                .toTinkPaymentResponse(paymentRequest);
     }
 
     @Override

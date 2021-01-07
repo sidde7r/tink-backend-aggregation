@@ -11,8 +11,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sib
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.entities.dictionary.SibsTransactionStatus;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.utils.SibsUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
-import se.tink.backend.aggregation.nxgen.storage.Storage;
 import se.tink.libraries.payment.rpc.Payment;
 
 @JsonObject
@@ -86,7 +86,8 @@ public class SibsGetPaymentResponse {
         return tppMessages;
     }
 
-    public PaymentResponse toTinkPaymentResponse(Storage sessionStorage) throws PaymentException {
+    public PaymentResponse toTinkPaymentResponse(PaymentRequest paymentRequest)
+            throws PaymentException {
 
         Payment.Builder buildingPaymentResponse =
                 new Payment.Builder()
@@ -97,10 +98,11 @@ public class SibsGetPaymentResponse {
                                 SibsUtils.convertStringToLocalDate(requestedExecutionDate))
                         .withCurrency(instructedAmount.getCurrency())
                         .withStatus(getTransactionStatus().getTinkStatus())
+                        .withPaymentScheme(paymentRequest.getPayment().getPaymentScheme())
                         .withUniqueId(getPaymentId());
 
         logger.info("Payment execution date set to: {}", requestedExecutionDate);
 
-        return new PaymentResponse(buildingPaymentResponse.build(), sessionStorage);
+        return new PaymentResponse(buildingPaymentResponse.build(), paymentRequest.getStorage());
     }
 }

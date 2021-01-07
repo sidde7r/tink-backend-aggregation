@@ -84,6 +84,7 @@ public class SibsPaymentInitiationResponse {
                         .withCurrency(paymentRequest.getPayment().getCurrency())
                         .withUniqueId(getPaymentId())
                         .withStatus(getTransactionStatus().getTinkStatus())
+                        .withPaymentScheme(paymentRequest.getPayment().getPaymentScheme())
                         .withType(paymentRequest.getPayment().getType());
         Storage storage = paymentRequest.getStorage();
         storage.put(SibsConstants.Storage.PAYMENT_REDIRECT_URI, getLinks().getRedirect());
