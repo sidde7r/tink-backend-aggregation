@@ -28,9 +28,4 @@ public class DebtDetailEntity {
     public boolean isOutgoingDebt() {
         return "Utgående skuld".equalsIgnoreCase(event);
     }
-
-    @JsonIgnore
-    public boolean isInterest() {
-        return "Beräknad ränta".equalsIgnoreCase(event);
-    }
 }

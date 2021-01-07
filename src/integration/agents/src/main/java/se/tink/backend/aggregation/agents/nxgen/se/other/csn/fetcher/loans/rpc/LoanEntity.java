@@ -3,6 +3,16 @@ package se.tink.backend.aggregation.agents.nxgen.se.other.csn.fetcher.loans.rpc;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.math.BigDecimal;
 import java.util.List;
+import se.tink.backend.aggregation.agents.nxgen.se.other.csn.CSNConstants;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Holder;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Holder.Role;
+import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
+import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.loan.LoanModule;
+import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class LoanEntity {
 
@@ -22,7 +32,7 @@ public class LoanEntity {
     private String loanType;
 
     @JsonProperty("skuldbelopp")
-    private int debtAmount;
+    private BigDecimal debtAmount;
 
     @JsonProperty("skuldrattat")
     private String debtCorrected;
@@ -30,7 +40,35 @@ public class LoanEntity {
     @JsonProperty("klartext")
     private boolean isPlainText;
 
-    public BigDecimal getIncomingDebt() {
+    public LoanAccount toTinkLoanAccount(
+            UserInfoResponse userInfoResponse, LoanAccountsResponse loanAccountsResponse) {
+        return LoanAccount.nxBuilder()
+                .withLoanDetails(getLoanModule(loanAccountsResponse))
+                .withId(getIdModule(userInfoResponse))
+                .addHolders(Holder.of(userInfoResponse.getName(), Role.HOLDER))
+                .build();
+    }
+
+    private LoanModule getLoanModule(LoanAccountsResponse loanAccountsResponse) {
+        return LoanModule.builder()
+                .withType(LoanDetails.Type.STUDENT)
+                .withBalance(ExactCurrencyAmount.of(getOutgoingDebt(), CSNConstants.CURRENCY))
+                .withInterestRate(loanAccountsResponse.getInterestRate().doubleValue())
+                .setLoanNumber(getAccountNumber())
+                .setInitialBalance(ExactCurrencyAmount.of(getIncomingDebt(), CSNConstants.CURRENCY))
+                .build();
+    }
+
+    private IdModule getIdModule(UserInfoResponse userInfoResponse) {
+        return IdModule.builder()
+                .withUniqueIdentifier(getUniqueIdenifier(userInfoResponse.getSsn()))
+                .withAccountNumber(getAccountNumber())
+                .withAccountName(getAccountName())
+                .addIdentifier(AccountIdentifier.create(Type.TINK, getAccountNumber()))
+                .build();
+    }
+
+    private BigDecimal getIncomingDebt() {
         return debtSpecification.stream()
                 .filter(DebtDetailEntity::isIncomingDebt)
                 .map(DebtDetailEntity::getAmount)
@@ -38,7 +76,7 @@ public class LoanEntity {
                 .orElse(null);
     }
 
-    public BigDecimal getOutgoingDebt() {
+    private BigDecimal getOutgoingDebt() {
         return debtSpecification.stream()
                 .filter(DebtDetailEntity::isOutgoingDebt)
                 .map(DebtDetailEntity::getAmount)
@@ -46,11 +84,52 @@ public class LoanEntity {
                 .orElse(null);
     }
 
-    public BigDecimal getInterest() {
-        return debtSpecification.stream()
-                .filter(DebtDetailEntity::isInterest)
-                .map(DebtDetailEntity::getAmount)
-                .findFirst()
-                .orElse(null);
+    private String getUniqueIdenifier(String ssn) {
+        // From legacy agent, we are parsing the strings below as unique IDs.
+        // We don't get those string in any request which is why we need to parse them hardcoded
+        // from loan type.
+        switch (loanType) {
+            case CSNConstants.LoanTypes.ANNUTITY_LOAN:
+                // Unique ID from legacy: "Lån efter den 30 juni 2001 (annuitetslån)"
+                // Translated: "Loan after 30 june 2001 (annuity loan)"
+                return ssn + "annuitetslan";
+            case CSNConstants.LoanTypes.STUDENT_LOAN:
+                // Unique ID from legacy: "Lån 1 januari 1989-30 juni 2001 (studielån)"
+                // Translated: "Loan 1 january 1989-30 june 2001 (student loan)"
+                return ssn + "studielan";
+            case CSNConstants.LoanTypes.STUDENT_AID:
+                // Unique ID from legacy: "Lån före 1 januari 1989 (studiemedel)"
+                // Translated: "Loan before 1 january 1989 (student aid)"
+                return ssn + "studiemedel";
+            default:
+                return loanType;
+        }
+    }
+
+    private String getAccountNumber() {
+        switch (loanType) {
+            case CSNConstants.LoanTypes.ANNUTITY_LOAN:
+                return "Lån efter den 30 juni 2001 (annuitetslån)";
+            case CSNConstants.LoanTypes.STUDENT_LOAN:
+                return "Lån 1 januari 1989-30 juni 2001 (studielån)";
+            case CSNConstants.LoanTypes.STUDENT_AID:
+                return "Lån före 1 januari 1989 (studiemedel)";
+            default:
+                log.info("loanType: " + loanType);
+                return loanType;
+        }
+    }
+
+    private String getAccountName() {
+        switch (loanType) {
+            case CSNConstants.LoanTypes.ANNUTITY_LOAN:
+                return "Annuitetslån";
+            case CSNConstants.LoanTypes.STUDENT_LOAN:
+                return "Studielån";
+            case CSNConstants.LoanTypes.STUDENT_AID:
+                return "Studiemedel";
+            default:
+                return loanType;
+        }
     }
 }

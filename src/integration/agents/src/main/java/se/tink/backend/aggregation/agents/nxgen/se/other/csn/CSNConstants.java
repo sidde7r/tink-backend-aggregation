@@ -2,6 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.se.other.csn;
 
 public class CSNConstants {
 
+    public static final String CURRENCY = "SEK";
+
     public static class Urls {
         private static final String BASE_URL = "https://www.csn.se";
         private static final String BASE_URL_LOGIN = "https://tjanster.csn.se/bas";
@@ -34,6 +36,12 @@ public class CSNConstants {
     public static class Storage {
         public static final String SESSION_ID = "JSESSIONID";
         public static final String ACCESS_TOKEN = "access_token";
+    }
+
+    public static class LoanTypes {
+        public static final String ANNUTITY_LOAN = "ÅBAL";
+        public static final String STUDENT_LOAN = "ÅBSL";
+        public static final String STUDENT_AID = "ÅBSM";
     }
 
     static class HeaderKeys {
