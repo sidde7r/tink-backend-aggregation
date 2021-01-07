@@ -78,12 +78,6 @@ public final class SbabConstants {
         public static final String REFRESH_TOKEN = "refresh_token";
     }
 
-    public static class TransactionFetching {
-        // 4 is default in the TransactionDatePaginationController
-        public static final int MAX_CONSECUTIVE_EMPTY_PAGES = 4;
-        public static final int DAYS_TO_FETCH = 90;
-    }
-
     public static class Errors {
         public static final String UNAUTHORIZED_CLIENT = "unauthorized_client";
         public static final String KYC_QUESTIONS_NOT_COMPLETED = "kyc_questions_not_completed";

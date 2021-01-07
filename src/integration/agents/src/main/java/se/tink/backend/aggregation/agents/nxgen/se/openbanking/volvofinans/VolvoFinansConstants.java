@@ -86,4 +86,8 @@ public final class VolvoFinansConstants {
         public static final int NUM_TIMEOUT_RETRIES = 3;
         public static final int RETRY_SLEEP_MILLISECONDS = 5000;
     }
+
+    public static class Timezone {
+        public static final String UTC = "UTC";
+    }
 }

@@ -92,7 +92,7 @@ Server-Timing: ***
 {"clearedBalance":{"currency":"GBP","minorUnits":3394},"effectiveBalance":{"currency":"GBP","minorUnits":3394},"pendingTransactions":{"currency":"GBP","minorUnits":0},"acceptedOverdraft":{"currency":"GBP","minorUnits":0},"amount":{"currency":"GBP","minorUnits":3394}}
 
 REQUEST 7
-GET https://api.starlingbank.com/api/v2/feed/account/account-uuid-1234567/category/5d3c6070-1972-4f93-8f2a-44c0ccce5719/transactions-between?minTransactionTimestamp=1992-01-11T02%3A00%3A00.000Z&maxTransactionTimestamp=1992-04-10T02%3A00%3A00.000Z
+GET https://api.starlingbank.com/api/v2/feed/account/account-uuid-1234567/category/5d3c6070-1972-4f93-8f2a-44c0ccce5719/transactions-between?minTransactionTimestamp=1992-01-12T00%3A00%3A00.000Z&maxTransactionTimestamp=1992-04-10T00%3A00%3A00.000Z
 Authorization: Bearer DUMMY_OAUTH2_TOKEN
 Accept: application/json
 
@@ -164,7 +164,7 @@ Server-Timing: ***
 }
 
 REQUEST 8
-GET https://api.starlingbank.com/api/v2/feed/account/account-uuid-1234567/category/5d3c6070-1972-4f93-8f2a-44c0ccce5719/transactions-between?minTransactionTimestamp=1991-10-12T02%3A00%3A00.000Z&maxTransactionTimestamp=1992-01-10T02%3A00%3A00.000Z
+GET https://api.starlingbank.com/api/v2/feed/account/account-uuid-1234567/category/5d3c6070-1972-4f93-8f2a-44c0ccce5719/transactions-between?minTransactionTimestamp=1991-10-14T00%3A00%3A00.000Z&maxTransactionTimestamp=1992-01-11T23%3A59%3A59.999Z
 Authorization: Bearer DUMMY_OAUTH2_TOKEN
 Accept: application/json
 
@@ -181,7 +181,7 @@ Server-Timing: ***
 }
 
 REQUEST 9
-GET https://api.starlingbank.com/api/v2/feed/account/account-uuid-1234567/category/5d3c6070-1972-4f93-8f2a-44c0ccce5719/transactions-between?minTransactionTimestamp=1991-07-13T02%3A00%3A00.000Z&maxTransactionTimestamp=1991-10-11T02%3A00%3A00.000Z
+GET https://api.starlingbank.com/api/v2/feed/account/account-uuid-1234567/category/5d3c6070-1972-4f93-8f2a-44c0ccce5719/transactions-between?minTransactionTimestamp=1991-07-16T00%3A00%3A00.000Z&maxTransactionTimestamp=1991-10-13T23%3A59%3A59.999Z
 Authorization: Bearer DUMMY_OAUTH2_TOKEN
 Accept: application/json
 
@@ -198,7 +198,7 @@ Server-Timing: ***
 }
 
 REQUEST 10
-GET https://api.starlingbank.com/api/v2/feed/account/account-uuid-1234567/category/5d3c6070-1972-4f93-8f2a-44c0ccce5719/transactions-between?minTransactionTimestamp=1991-04-13T02%3A00%3A00.000Z&maxTransactionTimestamp=1991-07-12T02%3A00%3A00.000Z
+GET https://api.starlingbank.com/api/v2/feed/account/account-uuid-1234567/category/5d3c6070-1972-4f93-8f2a-44c0ccce5719/transactions-between?minTransactionTimestamp=1991-04-17T00%3A00%3A00.000Z&maxTransactionTimestamp=1991-07-15T23%3A59%3A59.999Z
 Authorization: Bearer DUMMY_OAUTH2_TOKEN
 Accept: application/json
 

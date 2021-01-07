@@ -6,6 +6,7 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
 
 import com.google.inject.Inject;
+import java.time.ZoneId;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
@@ -132,10 +133,12 @@ public final class SparebankenVestAgent extends NextGenerationAgent
         TransactionFetcherController<TransactionalAccount> transactionFetcherController =
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(
-                                transactionFetcher,
-                                SparebankenVestConstants.PagePagination
-                                        .CONSECUTIVE_EMPTY_PAGES_LIMIT),
+                        new TransactionDatePaginationController.Builder<>(transactionFetcher)
+                                .setConsecutiveEmptyPagesLimit(
+                                        SparebankenVestConstants.PagePagination
+                                                .CONSECUTIVE_EMPTY_PAGES_LIMIT)
+                                .setZoneId(ZoneId.of(SparebankenVestConstants.Timezone.UTC))
+                                .build(),
                         transactionFetcher);
 
         return new TransactionalAccountRefreshController(

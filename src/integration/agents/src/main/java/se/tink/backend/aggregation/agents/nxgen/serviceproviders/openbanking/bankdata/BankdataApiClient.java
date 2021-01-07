@@ -183,11 +183,13 @@ public class BankdataApiClient {
                 .queryParam(
                         QueryKeys.DATE_TO,
                         DateFormat.formatDateTime(
-                                toDate, DateFormat.YEAR_MONTH_DAY, DateFormat.Zone.UTC))
+                                toDate, DateFormat.YEAR_MONTH_DAY, BankdataConstants.Timezone.UTC))
                 .queryParam(
                         QueryKeys.DATE_FROM,
                         DateFormat.formatDateTime(
-                                fromDate, DateFormat.YEAR_MONTH_DAY, DateFormat.Zone.UTC))
+                                fromDate,
+                                DateFormat.YEAR_MONTH_DAY,
+                                BankdataConstants.Timezone.UTC))
                 .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BOTH)
                 .get(TransactionResponse.class);
     }

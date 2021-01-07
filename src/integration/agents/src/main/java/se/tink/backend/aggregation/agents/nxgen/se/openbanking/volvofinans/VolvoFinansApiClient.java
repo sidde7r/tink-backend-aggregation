@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.volvofinans;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
@@ -28,7 +27,6 @@ import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestB
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.date.DateFormat;
-import se.tink.libraries.date.DateFormat.Zone;
 
 public final class VolvoFinansApiClient {
 
@@ -113,11 +111,16 @@ public final class VolvoFinansApiClient {
                                 account.getFromTemporaryStorage(StorageKeys.ACCOUNT_ID)))
                 .queryParam(
                         QueryKeys.DATE_TO,
-                        DateFormat.formatDateTime(endDate, DateFormat.YEAR_MONTH_DAY, Zone.UTC))
+                        DateFormat.formatDateTime(
+                                endDate,
+                                DateFormat.YEAR_MONTH_DAY,
+                                VolvoFinansConstants.Timezone.UTC))
                 .queryParam(
                         QueryKeys.DATE_FROM,
                         DateFormat.formatDateTime(
-                                get90DaysDate(endDate), DateFormat.YEAR_MONTH_DAY, Zone.UTC))
+                                startDate,
+                                DateFormat.YEAR_MONTH_DAY,
+                                VolvoFinansConstants.Timezone.UTC))
                 .header(HeaderKeys.X_API_KEY, apiKey)
                 .header(HeaderKeys.X_REQUEST_ID, requestId)
                 .accept(MediaType.APPLICATION_JSON)
@@ -136,12 +139,5 @@ public final class VolvoFinansApiClient {
                 .get(StorageKeys.OAUTH_TOKEN, OAuth2Token.class)
                 .orElseThrow(
                         () -> new IllegalStateException(SessionError.SESSION_EXPIRED.exception()));
-    }
-
-    private static Date get90DaysDate(Date toDate) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(toDate);
-        calendar.add(Calendar.DATE, -89);
-        return calendar.getTime();
     }
 }
