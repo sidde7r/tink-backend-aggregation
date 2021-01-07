@@ -25,7 +25,9 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.ran
 
 @Slf4j
 public final class KeySignerProvider implements Provider<JwtSigner> {
-    private static final int ALLOWED_PERCENT_OF_TRAFFIC = 5;
+    // TODO Increase the percent after solving the issue :
+    // https://tinkab.atlassian.net/browse/TPA-787
+    private static final int ALLOWED_PERCENT_OF_TRAFFIC = 0;
     private static final Predicate<RandomValueGenerator> SHOULD_USE_EIDAS_PROXY =
             generator -> ALLOWED_PERCENT_OF_TRAFFIC > generator.generateRandomDoubleInRange(0, 100);
     private final AgentComponentProvider agentComponentProvider;
@@ -105,9 +107,10 @@ public final class KeySignerProvider implements Provider<JwtSigner> {
     }
 
     private EidasJwsSigner createEidasJwsSigner() {
-        return new EidasJwsSigner(
-                internalEidasProxyConfiguration,
+        EidasIdentity identity =
                 new EidasIdentity(
-                        eidasContext.getClusterId(), eidasContext.getAppId(), eidasCertId, ""));
+                        eidasContext.getClusterId(), eidasContext.getAppId(), eidasCertId, "");
+        log.info("Eidas Identity setting: `{}`", identity);
+        return new EidasJwsSigner(internalEidasProxyConfiguration, identity);
     }
 }

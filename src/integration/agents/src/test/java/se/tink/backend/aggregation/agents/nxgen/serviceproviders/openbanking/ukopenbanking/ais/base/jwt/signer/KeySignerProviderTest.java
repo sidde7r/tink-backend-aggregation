@@ -11,7 +11,6 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import se.tink.backend.aggregation.agents.contexts.CompositeAgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.configuration.UkOpenBankingConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.configuration.SoftwareStatementAssertion;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.signer.iface.JwtSigner;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
@@ -65,8 +64,6 @@ public class KeySignerProviderTest {
                 .thenReturn(ukConfiguration);
         when(ukConfiguration.getQsealc()).thenReturn(EIdasTinkCert.QSEALC);
 
-        when(configuration.getSoftwareStatementAssertions())
-                .thenReturn(mock(SoftwareStatementAssertion.class));
         keySignerProvider =
                 new KeySignerProvider(
                         configuration,
@@ -84,7 +81,7 @@ public class KeySignerProviderTest {
         JwtSigner jwtSigner = keySignerProvider.get();
 
         // then
-        assertThat(jwtSigner).isInstanceOf(EidasProxyWithFallbackJwtSigner.class);
+        assertThat(jwtSigner).isInstanceOf(SecretServiceJwtSigner.class);
     }
 
     @Test
