@@ -11,12 +11,16 @@ import org.mockito.junit.MockitoJUnitRunner;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.aggregation.agents.exceptions.errors.SupplementalInfoError;
 import se.tink.backend.aggregation.agents.models.AccountFeatures;
 import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
+import se.tink.backend.aggregation.events.LoginAgentEventProducer;
 import se.tink.backend.aggregation.rpc.ConfigureWhitelistInformationRequest;
 import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
+import se.tink.eventproducerservice.events.grpc.AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.pair.Pair;
 import se.tink.libraries.uuid.UUIDUtils;
 
@@ -26,14 +30,18 @@ public class RequestUserOptInAccountsAgentWorkerCommandTest {
     private ConfigureWhitelistInformationRequest request;
     private ControllerWrapper controllerWrapper;
     private RequestUserOptInAccountsAgentWorkerCommand command;
+    private LoginAgentEventProducer eventProducer;
 
     @Before
     public void setup() {
         context = Mockito.mock(AgentWorkerCommandContext.class);
         request = Mockito.mock(ConfigureWhitelistInformationRequest.class);
         controllerWrapper = Mockito.mock(ControllerWrapper.class);
+        eventProducer = Mockito.mock(LoginAgentEventProducer.class);
+
         command =
-                new RequestUserOptInAccountsAgentWorkerCommand(context, request, controllerWrapper);
+                new RequestUserOptInAccountsAgentWorkerCommand(
+                        context, request, controllerWrapper, eventProducer);
     }
 
     @Test
@@ -47,27 +55,19 @@ public class RequestUserOptInAccountsAgentWorkerCommandTest {
     @Test
     public void ensureSupplementalInformationHavePortfolioTypesWhenAccountHaveIt()
             throws Exception {
-        Account account = new Account();
-        account.setBankId(UUIDUtils.generateUUID());
-        account.setType(AccountTypes.INVESTMENT);
-
-        Portfolio portfolio = new Portfolio();
-        portfolio.setType(Portfolio.Type.PENSION);
-
-        AccountFeatures features = AccountFeatures.createForPortfolios(portfolio);
+        // given
         Credentials credentials = new Credentials();
-
-        List<Account> accountsInRequest = Lists.newArrayList(account);
-        List<Pair<Account, AccountFeatures>> accountsInContext =
-                Lists.newArrayList(Pair.of(account, features));
-
-        Mockito.when(request.getAccounts()).thenReturn(accountsInRequest);
+        Mockito.when(request.getAccounts())
+                .thenReturn(getAccountsInRequest(AccountTypes.INVESTMENT, false));
         Mockito.when(request.getCredentials()).thenReturn(credentials);
-        Mockito.when(context.getCachedAccountsWithFeatures()).thenReturn(accountsInContext);
+        Mockito.when(context.getCachedAccountsWithFeatures())
+                .thenReturn(getAccountsInContext(AccountTypes.INVESTMENT, false, true));
         Mockito.when(context.requestSupplementalInformation(credentials)).thenReturn("{}");
 
+        // when
         command.execute();
 
+        // then
         Assert.assertTrue(
                 credentials
                         .getSupplementalInformation()
@@ -77,52 +77,102 @@ public class RequestUserOptInAccountsAgentWorkerCommandTest {
     @Test
     public void ensureSupplementalInformationDoNotHavePortfolioTypesWhenAccountDoNotHaveIt()
             throws Exception {
-        Account account = new Account();
-        account.setBankId(UUIDUtils.generateUUID());
-        account.setType(AccountTypes.CHECKING);
-
-        List<Account> accountsInRequest = Lists.newArrayList(account);
-        List<Pair<Account, AccountFeatures>> accountsInContext =
-                Lists.newArrayList(Pair.of(account, AccountFeatures.createEmpty()));
+        // given
         Credentials credentials = new Credentials();
-
-        Mockito.when(request.getAccounts()).thenReturn(accountsInRequest);
+        Mockito.when(request.getAccounts())
+                .thenReturn(getAccountsInRequest(AccountTypes.CHECKING, false));
         Mockito.when(request.getCredentials()).thenReturn(credentials);
-        Mockito.when(context.getCachedAccountsWithFeatures()).thenReturn(accountsInContext);
+        Mockito.when(context.getCachedAccountsWithFeatures())
+                .thenReturn(getAccountsInContext(AccountTypes.CHECKING, false, false));
         Mockito.when(context.requestSupplementalInformation(credentials)).thenReturn("{}");
 
+        // when
         command.execute();
 
+        // then
         Assert.assertFalse(credentials.getSupplementalInformation().contains("portfolioTypes"));
     }
 
     @Test
     public void ensureSupplementalInformationHaveCurrencyCode() throws Exception {
-        // Arrange
-        Account account = new Account();
-        account.setBankId(UUIDUtils.generateUUID());
-        account.setType(AccountTypes.CHECKING);
-        account.setCurrencyCode("USD");
-
-        AccountFeatures features = AccountFeatures.createEmpty();
+        // given
         Credentials credentials = new Credentials();
-
-        List<Account> accountsInRequest = Lists.newArrayList(account);
-        List<Pair<Account, AccountFeatures>> accountsInContext =
-                Lists.newArrayList(Pair.of(account, features));
-
-        Mockito.when(request.getAccounts()).thenReturn(accountsInRequest);
+        Mockito.when(request.getAccounts())
+                .thenReturn(getAccountsInRequest(AccountTypes.CHECKING, true));
         Mockito.when(request.getCredentials()).thenReturn(credentials);
-        Mockito.when(context.getCachedAccountsWithFeatures()).thenReturn(accountsInContext);
+        Mockito.when(context.getCachedAccountsWithFeatures())
+                .thenReturn(getAccountsInContext(AccountTypes.CHECKING, true, false));
         Mockito.when(context.requestSupplementalInformation(credentials)).thenReturn("{}");
 
-        // Act
+        // when
         command.execute();
 
-        // Assert
+        // then
         Assert.assertTrue(
                 credentials
                         .getSupplementalInformation()
                         .contains("\\\"currencyCode\\\":\\\"USD\\\""));
+    }
+
+    @Test
+    public void ensureEventEmittedWhenOptinTimeouted() throws Exception {
+        // given
+        Credentials credentials = new Credentials();
+        CredentialsRequest mockedRequest =
+                Mockito.mock(CredentialsRequest.class, Mockito.RETURNS_DEEP_STUBS);
+
+        Mockito.when(request.getAccounts()).thenReturn(Lists.emptyList());
+        Mockito.when(request.getCredentials()).thenReturn(credentials);
+        Mockito.when(context.getCachedAccountsWithFeatures())
+                .thenReturn(getAccountsInContext(AccountTypes.CHECKING, false, false));
+        Mockito.when(context.requestSupplementalInformation(credentials))
+                .thenThrow(SupplementalInfoError.NO_VALID_CODE.exception());
+        Mockito.when(context.getRequest()).thenReturn(mockedRequest);
+
+        // when
+        AgentWorkerCommandResult result = command.execute();
+
+        // then
+        Assert.assertEquals(AgentWorkerCommandResult.ABORT, result);
+
+        Mockito.verify(eventProducer)
+                .sendLoginCompletedEvent(
+                        Mockito.any(),
+                        Mockito.any(),
+                        Mockito.eq(LoginResult.OPTIN_ERROR_TIMEOUT),
+                        Mockito.anyLong(),
+                        Mockito.any(),
+                        Mockito.any(),
+                        Mockito.any());
+    }
+
+    private List<Pair<Account, AccountFeatures>> getAccountsInContext(
+            AccountTypes accountTypes, boolean withCurrency, boolean withFeatures) {
+
+        AccountFeatures features;
+        if (withFeatures) {
+            Portfolio portfolio = new Portfolio();
+            portfolio.setType(Portfolio.Type.PENSION);
+            features = AccountFeatures.createForPortfolios(portfolio);
+        } else {
+            features = AccountFeatures.createEmpty();
+        }
+
+        return Lists.newArrayList(Pair.of(getAccount(accountTypes, withCurrency), features));
+    }
+
+    private List<Account> getAccountsInRequest(AccountTypes accountTypes, boolean withCurrency) {
+        return Lists.newArrayList(getAccount(accountTypes, withCurrency));
+    }
+
+    private Account getAccount(AccountTypes accountTypes, boolean withCurrency) {
+        Account account = new Account();
+        account.setBankId(UUIDUtils.generateUUID());
+        account.setType(accountTypes);
+        if (withCurrency) {
+            account.setCurrencyCode("USD");
+        }
+
+        return account;
     }
 }

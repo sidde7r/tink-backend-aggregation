@@ -1399,7 +1399,8 @@ public class AgentWorkerOperationFactory {
                         new RequestUserOptInAccountsAgentWorkerCommand(
                                 context,
                                 (ConfigureWhitelistInformationRequest) request,
-                                controllerWrapper));
+                                controllerWrapper,
+                                loginAgentEventProducer));
                 commands.add(
                         new SetCredentialsStatusAgentWorkerCommand(
                                 context, CredentialsStatus.UPDATING));
