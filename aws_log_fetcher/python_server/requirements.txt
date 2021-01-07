@@ -11,7 +11,7 @@ hidapi==0.7.99.post21
 idna==2.8
 jmespath==0.9.4
 keyring==19.2.0
-lxml==4.4.1
+lxml==4.6.2
 Pillow==7.2.0
 python-dateutil==2.8.0
 python-u2flib-host==3.0.3
