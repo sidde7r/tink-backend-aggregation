@@ -133,7 +133,7 @@ public class TransactionDatePaginationController<A extends Account>
 
         public Builder<A> setConsecutiveEmptyPagesLimit(int consecutiveEmptyPagesLimit) {
             Preconditions.checkState(
-                    consecutiveEmptyPagesLimit >= 0, "Amount to fetch must be positive");
+                    consecutiveEmptyPagesLimit >= 0, "Consecutive empty pages must be positive");
             this.consecutiveEmptyPagesLimit = consecutiveEmptyPagesLimit;
             return this;
         }
