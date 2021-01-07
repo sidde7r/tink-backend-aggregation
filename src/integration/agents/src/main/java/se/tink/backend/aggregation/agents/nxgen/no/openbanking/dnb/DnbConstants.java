@@ -60,7 +60,6 @@ public final class DnbConstants {
     }
 
     public static class CreditCardFetcherValues {
-        public static final int EMPTY_PAGES_LIMIT = 4;
         public static final int AT_A_TIME = 1;
         public static final ChronoUnit TIME_UNIT = ChronoUnit.MONTHS;
     }

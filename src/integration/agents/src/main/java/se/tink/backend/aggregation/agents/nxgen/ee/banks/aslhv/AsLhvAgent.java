@@ -85,7 +85,8 @@ public final class AsLhvAgent extends NextGenerationAgent
                 new AsLhvTransactionalAccountFetcher(apiClient, asLhvSessionStorage),
                 new TransactionFetcherController<>(
                         this.transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(transactionFetcher)));
+                        new TransactionDatePaginationController.Builder<>(transactionFetcher)
+                                .build()));
     }
 
     @Override
@@ -107,7 +108,8 @@ public final class AsLhvAgent extends NextGenerationAgent
                 new AsLhvCreditCardAccountFetcher(apiClient, asLhvSessionStorage),
                 new TransactionFetcherController<>(
                         this.transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(transactionFetcher)));
+                        new TransactionDatePaginationController.Builder<>(transactionFetcher)
+                                .build()));
     }
 
     @Override

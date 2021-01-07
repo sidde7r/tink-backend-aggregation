@@ -106,7 +106,8 @@ public final class SdcSeAgent extends SdcAgent
                 creditCardFetcher,
                 new TransactionFetcherController<>(
                         this.transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(creditCardFetcher)));
+                        new TransactionDatePaginationController.Builder<>(creditCardFetcher)
+                                .build()));
     }
 
     @Override

@@ -118,10 +118,11 @@ public final class StarlingAgent extends SubsequentProgressiveGenerationAgent
                         apiClient, ImmutableSet.of(INDIVIDUAL, SOLE_TRADER, JOINT)),
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(
-                                new StarlingTransactionFetcher(apiClient),
-                                3,
-                                localDateTimeSource)));
+                        new TransactionDatePaginationController.Builder<>(
+                                        new StarlingTransactionFetcher(apiClient))
+                                .setConsecutiveEmptyPagesLimit(3)
+                                .setLocalDateTimeSource(localDateTimeSource)
+                                .build()));
     }
 
     @Override

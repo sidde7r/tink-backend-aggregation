@@ -68,7 +68,7 @@ public final class NorwegianAgent extends NextGenerationAgent
                 accountFetcher,
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(accountFetcher)));
+                        new TransactionDatePaginationController.Builder<>(accountFetcher).build()));
     }
 
     private CreditCardRefreshController constructCreditCardRefreshController() {

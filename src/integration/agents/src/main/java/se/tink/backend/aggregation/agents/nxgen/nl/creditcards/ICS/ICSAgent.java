@@ -115,8 +115,9 @@ public final class ICSAgent extends NextGenerationAgent
                 new ICSAccountFetcher(apiClient),
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(
-                                new ICSCreditCardFetcher(apiClient, persistentStorage)),
+                        new TransactionDatePaginationController.Builder<>(
+                                        new ICSCreditCardFetcher(apiClient, persistentStorage))
+                                .build(),
                         null));
     }
 

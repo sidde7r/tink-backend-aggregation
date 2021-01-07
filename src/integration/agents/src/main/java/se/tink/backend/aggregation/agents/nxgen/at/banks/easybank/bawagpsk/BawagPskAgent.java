@@ -28,6 +28,8 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
+import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
+import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
@@ -67,8 +69,10 @@ public final class BawagPskAgent extends NextGenerationAgent
                         new BawagPskLoanFetcher(apiClient),
                         new TransactionFetcherController<>(
                                 transactionPaginationHelper,
-                                new TransactionDatePaginationController<>(
-                                        new BawagPskTransactionFetcher<>(apiClient))));
+                                new TransactionDatePaginationController.Builder<>(
+                                                new BawagPskTransactionFetcher<LoanAccount>(
+                                                        apiClient))
+                                        .build()));
 
         creditCardRefreshController = constructCreditCardRefreshController();
 
@@ -117,7 +121,8 @@ public final class BawagPskAgent extends NextGenerationAgent
                         // which keeps fetching
                         // transactions until AccountStatementItem/Position equals 1
                         // (signifying the earliest entry)
-                        new TransactionDatePaginationController<>(transactionFetcher)));
+                        new TransactionDatePaginationController.Builder<>(transactionFetcher)
+                                .build()));
     }
 
     @Override
@@ -137,8 +142,10 @@ public final class BawagPskAgent extends NextGenerationAgent
                 new BawagPskCreditCardFetcher(apiClient),
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(
-                                new BawagPskTransactionFetcher<>(apiClient))));
+                        new TransactionDatePaginationController.Builder<>(
+                                        new BawagPskTransactionFetcher<CreditCardAccount>(
+                                                apiClient))
+                                .build()));
     }
 
     @Override

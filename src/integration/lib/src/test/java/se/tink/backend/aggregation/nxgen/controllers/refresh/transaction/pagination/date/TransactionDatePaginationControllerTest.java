@@ -26,23 +26,27 @@ import se.tink.libraries.pair.Pair;
 @RunWith(MockitoJUnitRunner.class)
 public class TransactionDatePaginationControllerTest {
 
+    private final int MAX_CONSECUTIVE_EMPTY_PAGES = 4;
+    private final int DAYS_TO_FETCH = 89;
+
     @Mock private TransactionDatePaginator<Account> paginator;
     @Mock private Account account;
 
     private TransactionDatePaginationController<Account> paginationController;
-    private int MAX_CONSECUTIVE_EMPTY_PAGES = 4;
-    private int DAYS_TO_FETCH = 89;
 
     @Before
     public void setup() {
         paginationController =
-                new TransactionDatePaginationController<>(
-                        paginator, MAX_CONSECUTIVE_EMPTY_PAGES, DAYS_TO_FETCH, ChronoUnit.DAYS);
+                new TransactionDatePaginationController.Builder<>(paginator)
+                        .setConsecutiveEmptyPagesLimit(MAX_CONSECUTIVE_EMPTY_PAGES)
+                        .setAmountToFetch(DAYS_TO_FETCH)
+                        .setUnitToFetch(ChronoUnit.DAYS)
+                        .build();
     }
 
     @Test(expected = NullPointerException.class)
     public void ensureExceptionIsThrown_whenTransactionDatePaginator_isNull() {
-        new TransactionDatePaginationController<>(null);
+        new TransactionDatePaginationController.Builder<>(null);
     }
 
     @Test(expected = NullPointerException.class)

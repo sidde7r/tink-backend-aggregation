@@ -67,8 +67,9 @@ public class SebKortAgent extends NextGenerationAgent implements RefreshCreditCa
                 new SEBKortAccountFetcher(apiClient, config, currency),
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(
-                                new SEBKortTransactionFetcher(apiClient))));
+                        new TransactionDatePaginationController.Builder<>(
+                                        new SEBKortTransactionFetcher(apiClient))
+                                .build()));
     }
 
     @Override

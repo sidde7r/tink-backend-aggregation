@@ -30,7 +30,7 @@ public class TransactionMonthPaginationControllerTest {
 
     @Test(expected = NullPointerException.class)
     public void ensureExceptionIsThrown_whenTransactionDatePaginator_isNull() {
-        new TransactionDatePaginationController<>(null);
+        new TransactionDatePaginationController.Builder<>(null).build();
     }
 
     @Test(expected = NullPointerException.class)

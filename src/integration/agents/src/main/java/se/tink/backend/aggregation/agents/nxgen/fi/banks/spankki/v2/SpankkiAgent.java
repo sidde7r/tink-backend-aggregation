@@ -196,7 +196,8 @@ public final class SpankkiAgent extends NextGenerationAgent
                 new SpankkiCreditCardFetcher(apiClient),
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(
-                                new SpankkiCreditCardTransactionsFetcher(apiClient))));
+                        new TransactionDatePaginationController.Builder<>(
+                                        new SpankkiCreditCardTransactionsFetcher(apiClient))
+                                .build()));
     }
 }

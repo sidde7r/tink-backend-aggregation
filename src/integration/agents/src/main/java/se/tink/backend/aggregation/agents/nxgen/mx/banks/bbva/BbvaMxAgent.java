@@ -92,7 +92,9 @@ public final class BbvaMxAgent extends NextGenerationAgent
                 transactionalAccountFetcher,
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(transactionalAccountFetcher),
+                        new TransactionDatePaginationController.Builder<>(
+                                        transactionalAccountFetcher)
+                                .build(),
                         transactionalAccountFetcher));
     }
 
@@ -116,7 +118,8 @@ public final class BbvaMxAgent extends NextGenerationAgent
                 creditCardFetcher,
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(creditCardFetcher)));
+                        new TransactionDatePaginationController.Builder<>(creditCardFetcher)
+                                .build()));
     }
 
     @Override

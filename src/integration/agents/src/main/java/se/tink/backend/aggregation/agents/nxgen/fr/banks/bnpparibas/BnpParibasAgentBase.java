@@ -94,7 +94,8 @@ public abstract class BnpParibasAgentBase extends NextGenerationAgent
                 accountFetcher,
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(transactionFetcher)));
+                        new TransactionDatePaginationController.Builder<>(transactionFetcher)
+                                .build()));
     }
 
     private void configureHttpClient(

@@ -97,8 +97,9 @@ public final class DemobankAgent extends NextGenerationAgent
                 demobankTransactionalAccountFetcher,
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(
-                                demobankTransactionalAccountFetcher)));
+                        new TransactionDatePaginationController.Builder<>(
+                                        demobankTransactionalAccountFetcher)
+                                .build()));
     }
 
     private CreditCardRefreshController constructCreditCardRefreshController() {
@@ -111,7 +112,8 @@ public final class DemobankAgent extends NextGenerationAgent
                 demobankCreditCardFetcher,
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(demobankCreditCardFetcher)));
+                        new TransactionDatePaginationController.Builder<>(demobankCreditCardFetcher)
+                                .build()));
     }
 
     @Override

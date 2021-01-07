@@ -114,8 +114,9 @@ public final class ChebancaAgent extends NextGenerationAgent
                 accountFetcher,
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(
-                                new ChebancaTransactionFetcher(apiClient))));
+                        new TransactionDatePaginationController.Builder<>(
+                                        new ChebancaTransactionFetcher(apiClient))
+                                .build()));
     }
 
     @Override

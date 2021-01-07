@@ -153,16 +153,18 @@ public final class SdcDkAgent extends SdcAgent
     }
 
     private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
+        SdcTransactionFetcher sdcTransactionFetcher =
+                new SdcTransactionFetcher(this.bankClient, this.sdcSessionStorage, this.parser);
+
         return new TransactionalAccountRefreshController(
                 this.metricRefreshController,
                 this.updateController,
                 new SdcAccountFetcher(this.bankClient, this.sdcSessionStorage, getIbanConverter()),
                 new TransactionFetcherController<>(
                         this.transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(
-                                new SdcTransactionFetcher(
-                                        this.bankClient, this.sdcSessionStorage, this.parser),
-                                DK_MAX_CONSECUTIVE_EMPTY_PAGES)));
+                        new TransactionDatePaginationController.Builder<>(sdcTransactionFetcher)
+                                .setConsecutiveEmptyPagesLimit(DK_MAX_CONSECUTIVE_EMPTY_PAGES)
+                                .build()));
     }
 
     @Override
@@ -194,8 +196,9 @@ public final class SdcDkAgent extends SdcAgent
                 creditCardFetcher,
                 new TransactionFetcherController<>(
                         this.transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(
-                                creditCardFetcher, DK_MAX_CONSECUTIVE_EMPTY_PAGES)));
+                        new TransactionDatePaginationController.Builder<>(creditCardFetcher)
+                                .setConsecutiveEmptyPagesLimit(DK_MAX_CONSECUTIVE_EMPTY_PAGES)
+                                .build()));
     }
 
     private Authenticator constructSmsAuthenticator() {

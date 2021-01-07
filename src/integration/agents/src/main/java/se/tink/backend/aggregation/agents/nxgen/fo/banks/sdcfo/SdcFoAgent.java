@@ -80,16 +80,18 @@ public final class SdcFoAgent extends SdcAgent
     }
 
     private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
+        SdcTransactionFetcher sdcTransactionFetcher =
+                new SdcTransactionFetcher(this.bankClient, this.sdcSessionStorage, this.parser);
+
         return new TransactionalAccountRefreshController(
                 this.metricRefreshController,
                 this.updateController,
                 new SdcAccountFetcher(this.bankClient, this.sdcSessionStorage, getIbanConverter()),
                 new TransactionFetcherController<>(
                         this.transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(
-                                new SdcTransactionFetcher(
-                                        this.bankClient, this.sdcSessionStorage, this.parser),
-                                MAX_CONSECUTIVE_EMPTY_PAGES)));
+                        new TransactionDatePaginationController.Builder<>(sdcTransactionFetcher)
+                                .setConsecutiveEmptyPagesLimit(MAX_CONSECUTIVE_EMPTY_PAGES)
+                                .build()));
     }
 
     @Override

@@ -120,7 +120,8 @@ public final class BecAgent extends SubsequentProgressiveGenerationAgent
                 new BecAccountFetcher(this.apiClient),
                 new TransactionFetcherController<>(
                         this.transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(this.transactionFetcher),
+                        new TransactionDatePaginationController.Builder<>(this.transactionFetcher)
+                                .build(),
                         this.transactionFetcher));
     }
 
@@ -141,8 +142,9 @@ public final class BecAgent extends SubsequentProgressiveGenerationAgent
                 new BecCreditCardFetcher(this.apiClient),
                 new TransactionFetcherController<>(
                         this.transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(
-                                new BecCreditCardTransactionsFetcher(this.apiClient))));
+                        new TransactionDatePaginationController.Builder<>(
+                                        new BecCreditCardTransactionsFetcher(this.apiClient))
+                                .build()));
     }
 
     @Override

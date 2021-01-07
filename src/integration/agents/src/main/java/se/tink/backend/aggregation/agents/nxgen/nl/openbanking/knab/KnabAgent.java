@@ -107,8 +107,9 @@ public final class KnabAgent extends NextGenerationAgent
                 new KnabAccountFetcher(apiClient),
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(
-                                new KnabTransactionFetcher(apiClient))));
+                        new TransactionDatePaginationController.Builder<>(
+                                        new KnabTransactionFetcher(apiClient))
+                                .build()));
     }
 
     @Override

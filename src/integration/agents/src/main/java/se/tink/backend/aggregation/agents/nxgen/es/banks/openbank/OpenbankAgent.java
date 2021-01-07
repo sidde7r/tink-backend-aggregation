@@ -107,7 +107,8 @@ public final class OpenbankAgent extends NextGenerationAgent
                 creditCardFetcher,
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(creditCardFetcher)));
+                        new TransactionDatePaginationController.Builder<>(creditCardFetcher)
+                                .build()));
     }
 
     @Override

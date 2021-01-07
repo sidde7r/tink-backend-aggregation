@@ -225,7 +225,7 @@ public abstract class DanskeBankAgent<MarketSpecificApiClient extends DanskeBank
                         this.apiClient, this.configuration.getLanguageCode());
         return new TransactionFetcherController<>(
                 this.transactionPaginationHelper,
-                new TransactionDatePaginationController<>(transactionFetcher),
+                new TransactionDatePaginationController.Builder<>(transactionFetcher).build(),
                 transactionFetcher);
     }
 

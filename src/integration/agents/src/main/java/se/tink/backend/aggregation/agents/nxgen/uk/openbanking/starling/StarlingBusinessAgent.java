@@ -79,8 +79,9 @@ public final class StarlingBusinessAgent extends SubsequentProgressiveGeneration
                                 AccountHolderType.BANKING_AS_A_SERVICE)),
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(
-                                new StarlingTransactionFetcher(apiClient))));
+                        new TransactionDatePaginationController.Builder<>(
+                                        new StarlingTransactionFetcher(apiClient))
+                                .build()));
     }
 
     @Override

@@ -96,7 +96,9 @@ public final class BankAustriaAgent extends NextGenerationAgent
                 transactionalAccountFetcher,
                 new TransactionFetcherController<>(
                         this.transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(transactionalAccountFetcher)));
+                        new TransactionDatePaginationController.Builder<>(
+                                        transactionalAccountFetcher)
+                                .build()));
     }
 
     @Override

@@ -21,7 +21,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ame
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.macgenerator.MacSignatureCreator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.transactionalaccount.AmexCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.transactionalaccount.AmexCreditCardTransactionFetcher;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.transactionalaccount.converter.AmexTransactionalAccountConverter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.transactionalaccount.storage.HmacAccountIdStorage;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
@@ -146,8 +145,9 @@ public final class AmericanExpressAgent extends SubsequentProgressiveGenerationA
     private CreditCardRefreshController constructCreditCardController() {
         final HmacAccountIdStorage hmacAccountIdStorage = new HmacAccountIdStorage(sessionStorage);
 
-        final AmexTransactionalAccountConverter amexTransactionalAccountConverter =
-                new AmexTransactionalAccountConverter();
+        AmexCreditCardTransactionFetcher cardTransactionFetcher =
+                new AmexCreditCardTransactionFetcher(
+                        amexApiClient, hmacAccountIdStorage, temporaryStorage, this.objectMapper);
 
         return new CreditCardRefreshController(
                 metricRefreshController,
@@ -156,16 +156,12 @@ public final class AmericanExpressAgent extends SubsequentProgressiveGenerationA
                         amexApiClient, hmacMultiTokenStorage, hmacAccountIdStorage),
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        (new TransactionDatePaginationController<>(
-                                new AmexCreditCardTransactionFetcher(
-                                        amexApiClient,
-                                        hmacAccountIdStorage,
-                                        temporaryStorage,
-                                        this.objectMapper),
-                                0,
-                                90,
-                                ChronoUnit.DAYS,
-                                localDateTimeSource))));
+                        new TransactionDatePaginationController.Builder<>(cardTransactionFetcher)
+                                .setConsecutiveEmptyPagesLimit(0)
+                                .setAmountToFetch(90)
+                                .setUnitToFetch(ChronoUnit.DAYS)
+                                .setLocalDateTimeSource(localDateTimeSource)
+                                .build()));
     }
 
     @Override

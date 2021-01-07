@@ -108,7 +108,7 @@ public abstract class HandelsbankenBaseAgent extends NextGenerationAgent
                 accountFetcher,
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(accountFetcher)));
+                        new TransactionDatePaginationController.Builder<>(accountFetcher).build()));
     }
 
     protected CreditCardRefreshController getCreditCardRefreshController() {
@@ -121,7 +121,8 @@ public abstract class HandelsbankenBaseAgent extends NextGenerationAgent
                 creditCardFetcher,
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(creditCardFetcher)));
+                        new TransactionDatePaginationController.Builder<>(creditCardFetcher)
+                                .build()));
     }
 
     @Override

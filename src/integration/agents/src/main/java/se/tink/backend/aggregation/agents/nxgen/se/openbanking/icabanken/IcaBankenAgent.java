@@ -111,7 +111,8 @@ public final class IcaBankenAgent extends NextGenerationAgent
                 accountFetcher,
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(transactionFetcher)));
+                        new TransactionDatePaginationController.Builder<>(transactionFetcher)
+                                .build()));
     }
 
     @Override

@@ -28,71 +28,13 @@ public class TransactionDatePaginationController<A extends Account>
     private final ChronoUnit unitToFetch;
     private final int amountToFetch;
     private final LocalDateTimeSource localDateTimeSource;
-    private ZoneId zoneId = ZoneId.of("CET");
+    private final ZoneId zoneId;
 
     private LocalDateTime fromDateTime;
     private LocalDateTime toDateTime;
     private int consecutiveEmptyPages = 0;
 
-    @Deprecated
-    public TransactionDatePaginationController(TransactionDatePaginator<A> paginator) {
-        this(paginator, DEFAULT_MAX_CONSECUTIVE_EMPTY_PAGES);
-    }
-
-    @Deprecated
-    public TransactionDatePaginationController(
-            TransactionDatePaginator<A> paginator, int consecutiveEmptyPagesLimit) {
-        this(paginator, consecutiveEmptyPagesLimit, DEFAULT_DAYS_TO_FETCH, ChronoUnit.DAYS);
-    }
-
-    @Deprecated
-    public TransactionDatePaginationController(
-            TransactionDatePaginator<A> paginator,
-            int consecutiveEmptyPagesLimit,
-            int amountToFetch,
-            ChronoUnit unitToFetch) {
-        this(
-                paginator,
-                consecutiveEmptyPagesLimit,
-                amountToFetch,
-                unitToFetch,
-                new ActualLocalDateTimeSource());
-    }
-
-    @Deprecated
-    public TransactionDatePaginationController(
-            TransactionDatePaginator<A> paginator,
-            int consecutiveEmptyPagesLimit,
-            LocalDateTimeSource localDateTimeSource) {
-        this(
-                paginator,
-                consecutiveEmptyPagesLimit,
-                DEFAULT_DAYS_TO_FETCH,
-                ChronoUnit.DAYS,
-                localDateTimeSource);
-    }
-
-    @Deprecated
-    public TransactionDatePaginationController(
-            TransactionDatePaginator<A> paginator,
-            int consecutiveEmptyPagesLimit,
-            int amountToFetch,
-            ChronoUnit unitToFetch,
-            LocalDateTimeSource localDateTimeSource) {
-        this.paginator = Preconditions.checkNotNull(paginator);
-        this.consecutiveEmptyPagesLimit = consecutiveEmptyPagesLimit;
-        this.unitToFetch = unitToFetch;
-        this.amountToFetch = amountToFetch;
-        this.localDateTimeSource = localDateTimeSource;
-        Preconditions.checkState(amountToFetch >= 1, "Amount to fetch must be 1 or more.");
-        Preconditions.checkState(
-                unitToFetch == ChronoUnit.DAYS
-                        || unitToFetch == ChronoUnit.WEEKS
-                        || unitToFetch == ChronoUnit.MONTHS,
-                "Invalid time unit for pagination: " + unitToFetch.toString());
-    }
-
-    private TransactionDatePaginationController(Builder<A> builder) {
+    protected TransactionDatePaginationController(Builder<A> builder) {
         this.paginator = builder.paginator;
         this.consecutiveEmptyPagesLimit = builder.consecutiveEmptyPagesLimit;
         this.unitToFetch = builder.unitToFetch;
@@ -185,6 +127,7 @@ public class TransactionDatePaginationController<A extends Account>
         private ZoneId zoneId = ZoneId.of("CET");
 
         public Builder(TransactionDatePaginator<A> paginator) {
+            Preconditions.checkNotNull(paginator);
             this.paginator = paginator;
         }
 

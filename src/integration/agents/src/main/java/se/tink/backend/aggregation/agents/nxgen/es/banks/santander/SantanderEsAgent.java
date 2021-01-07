@@ -144,16 +144,17 @@ public final class SantanderEsAgent extends NextGenerationAgent
     }
 
     private CreditCardRefreshController constructCreditCardRefreshController() {
-        CreditCardFetcher creditcardFetcher =
+        CreditCardFetcher creditCardFetcher =
                 new CreditCardFetcher(apiClient, santanderEsSessionStorage);
 
         return new CreditCardRefreshController(
                 metricRefreshController,
                 updateController,
-                creditcardFetcher,
+                creditCardFetcher,
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(creditcardFetcher)));
+                        new TransactionDatePaginationController.Builder<>(creditCardFetcher)
+                                .build()));
     }
 
     @Override

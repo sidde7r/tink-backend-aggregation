@@ -93,7 +93,8 @@ public abstract class NordnetBaseAgent<T extends NordnetBaseApiClient> extends N
                 investmentFetcher,
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(investmentFetcher)));
+                        new TransactionDatePaginationController.Builder<>(investmentFetcher)
+                                .build()));
     }
 
     protected TransactionalAccountRefreshController
@@ -107,8 +108,9 @@ public abstract class NordnetBaseAgent<T extends NordnetBaseApiClient> extends N
                 nordnetBaseTransactionalAccountFetcher,
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(
-                                nordnetBaseTransactionalAccountFetcher)));
+                        new TransactionDatePaginationController.Builder<>(
+                                        nordnetBaseTransactionalAccountFetcher)
+                                .build()));
     }
 
     @Override

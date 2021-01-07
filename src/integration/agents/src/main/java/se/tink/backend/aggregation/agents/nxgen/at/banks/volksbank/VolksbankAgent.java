@@ -78,8 +78,9 @@ public final class VolksbankAgent extends NextGenerationAgent
                 new VolksbankCheckingAccountFetcher(apiClient, sessionStorage),
                 new TransactionFetcherController<>(
                         this.transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(
-                                new VolksbankCheckingTransactionFetcher(apiClient))));
+                        new TransactionDatePaginationController.Builder<>(
+                                        new VolksbankCheckingTransactionFetcher(apiClient))
+                                .build()));
     }
 
     @Override

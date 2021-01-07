@@ -186,7 +186,8 @@ public final class RabobankAgent
                 new TransactionalAccountFetcher(apiClient),
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(transactionFetcher)));
+                        new TransactionDatePaginationController.Builder<>(transactionFetcher)
+                                .build()));
     }
 
     @Override
