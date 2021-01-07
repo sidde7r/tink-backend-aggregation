@@ -52,4 +52,11 @@ public class EidasIdentity {
     public String getCertId() {
         return certId;
     }
+
+    @Override
+    public String toString() {
+        return String.format(
+                "{clusterId='%s', appId='%s', certId='%s', requester='%s'}",
+                clusterId, appId, certId, requester);
+    }
 }
