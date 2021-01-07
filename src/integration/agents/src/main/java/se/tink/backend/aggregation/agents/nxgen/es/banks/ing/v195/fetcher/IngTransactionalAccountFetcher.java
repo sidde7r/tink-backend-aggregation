@@ -1,17 +1,19 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngApiClient;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.entity.Holder;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.entity.Product;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.entity.IngHolder;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.entity.IngProduct;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Holder;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
-import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.transactional.TransactionalBuildStep;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
@@ -30,46 +32,49 @@ public class IngTransactionalAccountFetcher implements AccountFetcher<Transactio
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
         return this.ingApiClient.getApiRestProducts().getProducts().stream()
-                .map(this::toTinkAccount)
+                .map(this::toTransactionalAccount)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toList());
     }
 
-    private Optional<TransactionalAccount> toTinkAccount(Product product) {
+    public Optional<TransactionalAccount> toTransactionalAccount(IngProduct product) {
         if (!product.isActiveTransactionalAccount()) {
             return Optional.empty();
         }
 
-        final String alias =
-                Optional.ofNullable(product.getAliasOrProductName())
-                        .filter(StringUtils::isNotEmpty)
-                        .orElse(product.getIban());
+        final TransactionalAccountType type = product.getTransactionalAccountType();
+        final BalanceModule balance =
+                BalanceModule.of(
+                        ExactCurrencyAmount.of(product.getBalance(), product.getCurrency()));
+        final IdModule id = getId(product);
+        final String apiIdentifier = product.getUuid();
+        final List<Holder> holders = IngHolder.getHolders(product);
 
-        final TransactionalBuildStep buildStep =
-                TransactionalAccount.nxBuilder()
-                        .withType(product.getTransactionalAccountType())
-                        .withInferredAccountFlags()
-                        .withBalance(
-                                BalanceModule.of(
-                                        ExactCurrencyAmount.of(
-                                                product.getBalance(), product.getCurrency())))
-                        .withId(
-                                IdModule.builder()
-                                        .withUniqueIdentifier(
-                                                product.getUniqueIdentifierForTransactionAccount())
-                                        .withAccountNumber(product.getIban())
-                                        .withAccountName(alias)
-                                        .addIdentifier(
-                                                new IbanIdentifier(
-                                                        product.getBic(),
-                                                        product.getIbanCanonical()))
-                                        .setProductName(product.getName())
-                                        .build())
-                        .setApiIdentifier(product.getUuid());
+        return TransactionalAccount.nxBuilder()
+                .withType(type)
+                .withInferredAccountFlags()
+                .withBalance(balance)
+                .withId(id)
+                .setApiIdentifier(apiIdentifier)
+                .addHolders(holders)
+                .build();
+    }
 
-        product.getHolders().stream().map(Holder::getAnyName).forEach(buildStep::addHolderName);
+    private IdModule getId(IngProduct product) {
+        String alias = getAlias(product);
 
-        return buildStep.build();
+        return IdModule.builder()
+                .withUniqueIdentifier(product.getProductNumber())
+                .withAccountNumber(product.getIban())
+                .withAccountName(alias)
+                .addIdentifier(new IbanIdentifier(product.getBic(), product.getIbanCanonical()))
+                .build();
+    }
+
+    private String getAlias(IngProduct product) {
+        return Optional.ofNullable(product.getAliasOrProductName())
+                .filter(StringUtils::isNotEmpty)
+                .orElse(product.getIban());
     }
 }

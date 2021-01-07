@@ -1,0 +1,211 @@
+{
+    "accounts": [
+        {
+            "accountNumber": "ES90 1465 0120 31 1729424020",
+            "accountExclusion": "NONE",
+            "exactAvailableCredit": null,
+            "exactBalance": {
+                "currencyCode": "EUR",
+                "exactValue": 926.43,
+                "scale": 2,
+                "unscaledValue": 92643,
+                "doubleValue": 926.43
+            },
+            "currencyCode": "EUR",
+            "availableBalance": null,
+            "creditLimit": null,
+            "bankId": "14650120311729424020",
+            "certainDate": null,
+            "credentialsId": null,
+            "excluded": false,
+            "favored": false,
+            "name": "Cuenta SIN NÓMINA Compte conjunt",
+            "ownership": 1.0,
+            "payload": null,
+            "type": "CHECKING",
+            "userId": null,
+            "userModifiedExcluded": false,
+            "userModifiedName": false,
+            "userModifiedType": false,
+            "identifiers": "[\"iban://INGDESMMXXX/ES9014650120311729424020\"]",
+            "transferDestinations": null,
+            "details": null,
+            "closed": false,
+            "holderName": "JOHN TINKER",
+            "accountHolder": {
+                "accountId": null,
+                "type": "PERSONAL",
+                "identities": [
+                    {
+                        "name": "JOHN TINKER",
+                        "role": "HOLDER"
+                    },
+                    {
+                        "name": "ALICE TINKER",
+                        "role": "HOLDER"
+                    }
+                ]
+            },
+            "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
+            "financialInstitutionId": null,
+            "balances": [],
+            "availableCredit": 0.0,
+            "balance": 926.43
+        },
+        {
+            "accountNumber": "ES07 1465 0120 35 2092814575",
+            "accountExclusion": "NONE",
+            "exactAvailableCredit": null,
+            "exactBalance": {
+                "currencyCode": "EUR",
+                "exactValue": 46978.56,
+                "scale": 2,
+                "unscaledValue": 4697856,
+                "doubleValue": 46978.56
+            },
+            "currencyCode": "EUR",
+            "availableBalance": null,
+            "creditLimit": null,
+            "bankId": "14650120352092814575",
+            "certainDate": null,
+            "credentialsId": null,
+            "excluded": false,
+            "favored": false,
+            "name": "Cuenta NARANJA",
+            "ownership": 1.0,
+            "payload": null,
+            "type": "SAVINGS",
+            "userId": null,
+            "userModifiedExcluded": false,
+            "userModifiedName": false,
+            "userModifiedType": false,
+            "identifiers": "[\"iban://INGDESMMXXX/ES0714650120352092814575\"]",
+            "transferDestinations": null,
+            "details": null,
+            "closed": false,
+            "holderName": "WILL TINKER",
+            "accountHolder": {
+                "accountId": null,
+                "type": "PERSONAL",
+                "identities": [
+                    {
+                        "name": "WILL TINKER",
+                        "role": "HOLDER"
+                    },
+                    {
+                        "name": "JOHN TINKER",
+                        "role": "AUTHORIZED_USER"
+                    }
+                ]
+            },
+            "flags": "[]",
+            "financialInstitutionId": null,
+            "balances": [],
+            "availableCredit": 0.0,
+            "balance": 46978.56
+        },
+        {
+            "accountNumber": "5160973462723019",
+            "accountExclusion": "NONE",
+            "exactAvailableCredit": {
+                "currencyCode": "EUR",
+                "scale": 2,
+                "unscaledValue": 6416,
+                "exactValue": 64.16,
+                "doubleValue": 64.16
+            },
+            "exactBalance": {
+                "currencyCode": "EUR",
+                "scale": 2,
+                "unscaledValue": 6416,
+                "exactValue": 64.16,
+                "doubleValue": 64.16
+            },
+            "currencyCode": "EUR",
+            "availableBalance": null,
+            "creditLimit": null,
+            "bankId": "5160973462723019",
+            "certainDate": null,
+            "credentialsId": null,
+            "excluded": false,
+            "favored": false,
+            "name": "Tarjeta Crédito",
+            "ownership": 1.0,
+            "payload": null,
+            "type": "CREDIT_CARD",
+            "userId": null,
+            "userModifiedExcluded": false,
+            "userModifiedName": false,
+            "userModifiedType": false,
+            "identifiers": "[\"payment-card-number://5160973462723019\"]",
+            "transferDestinations": null,
+            "details": null,
+            "closed": false,
+            "holderName": "WILL TINKER",
+            "accountHolder": {
+                "accountId": null,
+                "type": "PERSONAL",
+                "identities": [
+                    {
+                        "name": "WILL TINKER",
+                        "role": "HOLDER"
+                    }
+                ]
+            },
+            "flags": "[]",
+            "financialInstitutionId": null,
+            "balances": [],
+            "availableCredit": 64.16,
+            "balance": 64.16
+        },
+        {
+            "accountNumber": "ES73 1465 0170 13 1734495517",
+            "accountExclusion": "NONE",
+            "exactAvailableCredit": null,
+            "exactBalance": {
+                "currencyCode": "EUR",
+                "exactValue": 434.77,
+                "scale": 2,
+                "unscaledValue": 43477,
+                "doubleValue": 434.77
+            },
+            "currencyCode": "EUR",
+            "availableBalance": null,
+            "creditLimit": null,
+            "bankId": "14650170131734495517",
+            "certainDate": null,
+            "credentialsId": null,
+            "excluded": false,
+            "favored": false,
+            "name": "Cuenta NÓMINA",
+            "ownership": 1.0,
+            "payload": null,
+            "type": "CHECKING",
+            "userId": null,
+            "userModifiedExcluded": false,
+            "userModifiedName": false,
+            "userModifiedType": false,
+            "identifiers": "[\"iban://INGDESMMXXX/ES7314650170131734495517\"]",
+            "transferDestinations": null,
+            "details": null,
+            "closed": false,
+            "holderName": "WILL TINKER",
+            "accountHolder": {
+                "accountId": null,
+                "type": "PERSONAL",
+                "identities": [
+                    {
+                        "name": "WILL TINKER",
+                        "role": "HOLDER"
+                    }
+                ]
+            },
+            "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
+            "financialInstitutionId": null,
+            "balances": [],
+            "availableCredit": 0.0,
+            "balance": 434.77
+        }
+    ],
+    "transactions": []
+}

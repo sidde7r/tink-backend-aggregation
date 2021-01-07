@@ -6,8 +6,8 @@ import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngUtils;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.entity.Holder;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.entity.Product;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.entity.IngHolder;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.entity.IngProduct;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
@@ -25,12 +25,12 @@ public class IngLoanAccountFetcher implements AccountFetcher<LoanAccount> {
     @Override
     public Collection<LoanAccount> fetchAccounts() {
         return this.ingApiClient.getApiRestProducts().getProducts().stream()
-                .filter(Product::isActiveLoanAccount)
+                .filter(IngProduct::isActiveLoanAccount)
                 .map(product -> mapLoanAccount(product))
                 .collect(Collectors.toList());
     }
 
-    private LoanAccount mapLoanAccount(Product product) {
+    private LoanAccount mapLoanAccount(IngProduct product) {
         LoanDetails loanDetails;
         if (IngConstants.AccountTypes.MORTGAGE_ACCOUNT.equals(product.getType())) {
             loanDetails = mapLoanDetailsForMortgage(product);
@@ -64,7 +64,7 @@ public class IngLoanAccountFetcher implements AccountFetcher<LoanAccount> {
                 .build();
     }
 
-    private static LoanDetails mapLoanDetailsForMortgage(Product product) {
+    private static LoanDetails mapLoanDetailsForMortgage(IngProduct product) {
         return LoanDetails.builder(LoanDetails.Type.MORTGAGE)
                 .setAmortized(
                         ExactCurrencyAmount.of(
@@ -77,7 +77,7 @@ public class IngLoanAccountFetcher implements AccountFetcher<LoanAccount> {
                                 product.getNextPaymentAmount(), product.getCurrency()))
                 .setApplicants(
                         product.getHolders().stream()
-                                .map(Holder::getAnyName)
+                                .map(IngHolder::getAnyName)
                                 .collect(Collectors.toList()))
                 .setCoApplicant(product.getHolders().size() > 1)
                 .setInitialDate(getDateIfPresent(product.getSignClientDate()))
@@ -86,7 +86,7 @@ public class IngLoanAccountFetcher implements AccountFetcher<LoanAccount> {
                 .build();
     }
 
-    private static LoanDetails mapLoanDetailsForLoanAccount(Product product) {
+    private static LoanDetails mapLoanDetailsForLoanAccount(IngProduct product) {
         return LoanDetails.builder(LoanDetails.Type.OTHER)
                 .setAmortized(
                         ExactCurrencyAmount.of(product.getPaidAmount(), product.getCurrency()))
@@ -97,7 +97,7 @@ public class IngLoanAccountFetcher implements AccountFetcher<LoanAccount> {
                                 product.getNextPayOffAmount(), product.getCurrency()))
                 .setApplicants(
                         product.getHolders().stream()
-                                .map(Holder::getAnyName)
+                                .map(IngHolder::getAnyName)
                                 .collect(Collectors.toList()))
                 .setCoApplicant(product.getHolders().size() > 1)
                 .setInitialDate(getDateIfPresent(product.getInitDate()))

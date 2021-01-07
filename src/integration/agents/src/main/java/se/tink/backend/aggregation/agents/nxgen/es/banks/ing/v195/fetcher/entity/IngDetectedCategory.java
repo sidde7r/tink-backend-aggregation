@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.entit
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public final class DetectedCategory {
+public final class IngDetectedCategory {
 
     private int categoryId;
     private double score;

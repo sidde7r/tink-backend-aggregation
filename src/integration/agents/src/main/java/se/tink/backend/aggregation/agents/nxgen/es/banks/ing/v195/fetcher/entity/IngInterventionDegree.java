@@ -3,13 +3,13 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.entit
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public final class Status {
+public class IngInterventionDegree {
 
-    private String cod;
+    private String code;
     private String description;
 
-    public String getCod() {
-        return cod;
+    public String getCode() {
+        return code;
     }
 
     public String getDescription() {

@@ -112,4 +112,34 @@ public class IngMockServerAgentTest {
         // Then
         agentWireMockRefreshTest.assertExpectedData(expected);
     }
+
+    @Test
+    public void testFetchAccounts() throws Exception {
+        // Given
+        final String wireMockServerFilePath = RESOURCES_PATH + "fetch-accounts.aap";
+        final String wireMockContractFilePath = RESOURCES_PATH + "fetch-accounts-contract.json";
+
+        final AgentContractEntity expected =
+                new AgentContractEntitiesJsonFileParser()
+                        .parseContractOnBasisOfFile(wireMockContractFilePath);
+
+        final AgentWireMockRefreshTest agentWireMockRefreshTest =
+                AgentWireMockRefreshTest.builder(
+                                MarketCode.ES, PROVIDER_NAME, wireMockServerFilePath)
+                        .addCredentialField(Key.USERNAME.getFieldKey(), USERNAME)
+                        .addCredentialField(Key.PASSWORD.getFieldKey(), PASSWORD)
+                        .addCredentialField(Key.DATE_OF_BIRTH.getFieldKey(), DATE_OF_BIRTH)
+                        .addCallbackData(Field.Key.OTP_INPUT.getFieldKey(), OTP_INPUT)
+                        .addRefreshableItems(RefreshableItem.REFRESHABLE_ITEMS_ACCOUNTS)
+                        .withConfigurationFile(
+                                AgentsServiceConfigurationReader.read(
+                                        RESOURCES_PATH + "configuration.yml"))
+                        .build();
+
+        // When
+        agentWireMockRefreshTest.executeRefresh();
+
+        // Then
+        agentWireMockRefreshTest.assertExpectedData(expected);
+    }
 }

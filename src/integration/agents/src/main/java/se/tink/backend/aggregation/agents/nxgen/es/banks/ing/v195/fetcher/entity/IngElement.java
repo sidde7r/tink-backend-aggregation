@@ -4,7 +4,7 @@ import java.util.List;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public final class Element {
+public final class IngElement {
 
     private String uuid;
     private String productNumber;
@@ -17,11 +17,11 @@ public final class Element {
     private Integer categoryId;
     private Boolean hasUncertainCategorization;
     private String effectiveDate;
-    private Status status;
+    private IngStatus status;
     private String cardNumber;
     private String operationId;
     private String crossingCode;
-    private List<DetectedCategory> detectedCategories = null;
+    private List<IngDetectedCategory> detectedCategories;
 
     public String getUuid() {
         return uuid;
@@ -67,7 +67,7 @@ public final class Element {
         return effectiveDate;
     }
 
-    public Status getStatus() {
+    public IngStatus getStatus() {
         return status;
     }
 
@@ -83,7 +83,7 @@ public final class Element {
         return crossingCode;
     }
 
-    public List<DetectedCategory> getDetectedCategories() {
+    public List<IngDetectedCategory> getDetectedCategories() {
         return detectedCategories;
     }
 }
