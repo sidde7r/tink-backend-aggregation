@@ -12,6 +12,7 @@ import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.List;
+import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,7 +22,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
-import se.tink.libraries.pair.Pair;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TransactionDatePaginationControllerTest {
@@ -96,10 +96,12 @@ public class TransactionDatePaginationControllerTest {
         for (int i = 0; i < periods.size(); i++) {
             Pair<LocalDateTime, LocalDateTime> period = periods.get(i);
             Assert.assertEquals(
-                    period.first, period.second.minusDays(DAYS_TO_FETCH).with(LocalTime.MIN));
+                    period.getLeft(),
+                    period.getRight().minusDays(DAYS_TO_FETCH).with(LocalTime.MIN));
             if (i > 0) {
                 Pair<LocalDateTime, LocalDateTime> nextPeriod = periods.get(i - 1);
-                Assert.assertEquals(period.second.plus(1, ChronoUnit.MILLIS), nextPeriod.first);
+                Assert.assertEquals(
+                        period.getRight().plus(1, ChronoUnit.MILLIS), nextPeriod.getLeft());
             }
         }
     }
