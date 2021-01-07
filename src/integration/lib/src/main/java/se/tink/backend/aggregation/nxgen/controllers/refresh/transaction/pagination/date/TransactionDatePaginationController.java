@@ -132,16 +132,26 @@ public class TransactionDatePaginationController<A extends Account>
         }
 
         public Builder<A> setConsecutiveEmptyPagesLimit(int consecutiveEmptyPagesLimit) {
+            Preconditions.checkState(
+                    consecutiveEmptyPagesLimit >= 0, "Amount to fetch must be positive");
             this.consecutiveEmptyPagesLimit = consecutiveEmptyPagesLimit;
             return this;
         }
 
         public Builder<A> setUnitToFetch(ChronoUnit unitToFetch) {
+            Preconditions.checkNotNull(unitToFetch);
+            Preconditions.checkState(
+                    unitToFetch == ChronoUnit.DAYS
+                            || unitToFetch == ChronoUnit.WEEKS
+                            || unitToFetch == ChronoUnit.MONTHS,
+                    "Invalid time unit for pagination: {}",
+                    unitToFetch.toString());
             this.unitToFetch = unitToFetch;
             return this;
         }
 
         public Builder<A> setAmountToFetch(int amountToFetch) {
+            Preconditions.checkState(amountToFetch > 0, "Amount to fetch must be greater than 0.");
             this.amountToFetch = amountToFetch;
             return this;
         }
