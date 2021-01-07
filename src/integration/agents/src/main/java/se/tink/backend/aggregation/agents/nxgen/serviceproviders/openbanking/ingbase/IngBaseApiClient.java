@@ -5,6 +5,7 @@ import java.security.cert.CertificateException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import javax.ws.rs.core.MediaType;
@@ -364,6 +365,7 @@ public class IngBaseApiClient {
     }
 
     private String getFormattedDate() {
-        return DateFormat.getFormattedCurrentDate(Signature.DATE_FORMAT, Signature.TIMEZONE);
+        return DateFormat.getFormattedCurrentDate(
+                Signature.DATE_FORMAT, Signature.TIMEZONE, Locale.ENGLISH);
     }
 }
