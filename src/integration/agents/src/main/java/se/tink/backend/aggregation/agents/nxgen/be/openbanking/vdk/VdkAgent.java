@@ -46,8 +46,7 @@ public final class VdkAgent extends Xs2aDevelopersTransactionalAgent {
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
                         new TransactionDatePaginationController.Builder<>(accountFetcher)
-                                .setAmountToFetch(DEFAULT_AMOUNT_TO_FETCH)
-                                .setUnitToFetch(ChronoUnit.DAYS)
+                                .setAmountAndUnitToFetch(DEFAULT_AMOUNT_TO_FETCH, ChronoUnit.DAYS)
                                 .build()));
     }
 }

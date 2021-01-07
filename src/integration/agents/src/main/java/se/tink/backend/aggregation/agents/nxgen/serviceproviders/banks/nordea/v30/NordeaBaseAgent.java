@@ -147,8 +147,8 @@ public abstract class NordeaBaseAgent extends NextGenerationAgent
                         new TransactionDatePaginationController.Builder<>(transactionFetcher)
                                 .setConsecutiveEmptyPagesLimit(
                                         TransactionFetching.MAX_CONSECUTIVE_EMPTY_PAGES)
-                                .setAmountToFetch(TransactionFetching.MONTHS_TO_PAGINATE)
-                                .setUnitToFetch(ChronoUnit.MONTHS)
+                                .setAmountAndUnitToFetch(
+                                        TransactionFetching.MONTHS_TO_PAGINATE, ChronoUnit.MONTHS)
                                 .setLocalDateTimeSource(localDateTimeSource)
                                 .build(),
                         upcomingTransactionFetcher));

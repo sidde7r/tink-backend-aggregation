@@ -39,8 +39,7 @@ public class TransactionDatePaginationControllerTest {
         paginationController =
                 new TransactionDatePaginationController.Builder<>(paginator)
                         .setConsecutiveEmptyPagesLimit(MAX_CONSECUTIVE_EMPTY_PAGES)
-                        .setAmountToFetch(DAYS_TO_FETCH)
-                        .setUnitToFetch(ChronoUnit.DAYS)
+                        .setAmountAndUnitToFetch(DAYS_TO_FETCH, ChronoUnit.DAYS)
                         .build();
     }
 

@@ -121,8 +121,7 @@ public final class AvanzaAgent extends NextGenerationAgent
                         transactionPaginationHelper,
                         new TransactionDatePaginationController.Builder<>(accountFetcher)
                                 .setConsecutiveEmptyPagesLimit(3)
-                                .setAmountToFetch(3)
-                                .setUnitToFetch(ChronoUnit.MONTHS)
+                                .setAmountAndUnitToFetch(3, ChronoUnit.MONTHS)
                                 .setLocalDateTimeSource(localDateTimeSource)
                                 .build()));
     }
@@ -144,8 +143,7 @@ public final class AvanzaAgent extends NextGenerationAgent
                         transactionPaginationHelper,
                         new TransactionDatePaginationController.Builder<>(investmentFetcher)
                                 .setConsecutiveEmptyPagesLimit(3)
-                                .setAmountToFetch(3)
-                                .setUnitToFetch(ChronoUnit.MONTHS)
+                                .setAmountAndUnitToFetch(3, ChronoUnit.MONTHS)
                                 .setLocalDateTimeSource(localDateTimeSource)
                                 .build()));
     }

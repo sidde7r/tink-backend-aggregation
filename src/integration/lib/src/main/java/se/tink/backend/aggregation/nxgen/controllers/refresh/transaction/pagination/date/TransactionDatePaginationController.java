@@ -138,7 +138,13 @@ public class TransactionDatePaginationController<A extends Account>
             return this;
         }
 
-        public Builder<A> setUnitToFetch(ChronoUnit unitToFetch) {
+        public Builder<A> setAmountAndUnitToFetch(int amountToFetch, ChronoUnit unitToFetch) {
+            setAmountToFetch(amountToFetch);
+            setUnitToFetch(unitToFetch);
+            return this;
+        }
+
+        private void setUnitToFetch(ChronoUnit unitToFetch) {
             Preconditions.checkNotNull(unitToFetch);
             Preconditions.checkState(
                     unitToFetch == ChronoUnit.DAYS
@@ -147,13 +153,11 @@ public class TransactionDatePaginationController<A extends Account>
                     "Invalid time unit for pagination: {}",
                     unitToFetch.toString());
             this.unitToFetch = unitToFetch;
-            return this;
         }
 
-        public Builder<A> setAmountToFetch(int amountToFetch) {
+        private void setAmountToFetch(int amountToFetch) {
             Preconditions.checkState(amountToFetch > 0, "Amount to fetch must be greater than 0.");
             this.amountToFetch = amountToFetch;
-            return this;
         }
 
         public Builder<A> setLocalDateTimeSource(LocalDateTimeSource localDateTimeSource) {

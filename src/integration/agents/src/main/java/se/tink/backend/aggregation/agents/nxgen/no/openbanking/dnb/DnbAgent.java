@@ -100,8 +100,9 @@ public final class DnbAgent extends NextGenerationAgent
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
                         new TransactionDatePaginationController.Builder<>(cardTransactionFetcher)
-                                .setAmountToFetch(DnbConstants.CreditCardFetcherValues.AT_A_TIME)
-                                .setUnitToFetch(DnbConstants.CreditCardFetcherValues.TIME_UNIT)
+                                .setAmountAndUnitToFetch(
+                                        DnbConstants.CreditCardFetcherValues.AT_A_TIME,
+                                        DnbConstants.CreditCardFetcherValues.TIME_UNIT)
                                 .build()));
     }
 

@@ -5,7 +5,6 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;
 import java.time.Clock;
-import java.time.temporal.ChronoUnit;
 import lombok.Getter;
 import org.assertj.core.util.VisibleForTesting;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
@@ -158,8 +157,6 @@ public final class AmericanExpressAgent extends SubsequentProgressiveGenerationA
                         transactionPaginationHelper,
                         new TransactionDatePaginationController.Builder<>(cardTransactionFetcher)
                                 .setConsecutiveEmptyPagesLimit(0)
-                                .setAmountToFetch(90)
-                                .setUnitToFetch(ChronoUnit.DAYS)
                                 .setLocalDateTimeSource(localDateTimeSource)
                                 .build()));
     }

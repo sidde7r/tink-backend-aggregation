@@ -114,8 +114,7 @@ public final class SdcAgent extends NextGenerationAgent
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
                         new TransactionDatePaginationController.Builder<>(transactionFetcher)
-                                .setAmountToFetch(MONTHS_TO_FETCH)
-                                .setUnitToFetch(ChronoUnit.MONTHS)
+                                .setAmountAndUnitToFetch(MONTHS_TO_FETCH, ChronoUnit.MONTHS)
                                 .build()));
     }
 

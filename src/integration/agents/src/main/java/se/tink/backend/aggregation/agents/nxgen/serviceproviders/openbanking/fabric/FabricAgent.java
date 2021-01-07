@@ -127,8 +127,7 @@ public abstract class FabricAgent extends NextGenerationAgent
                         transactionPaginationHelper,
                         new TransactionDatePaginationController.Builder<>(transactionFetcher)
                                 .setConsecutiveEmptyPagesLimit(4)
-                                .setAmountToFetch(85)
-                                .setUnitToFetch(ChronoUnit.DAYS)
+                                .setAmountAndUnitToFetch(85, ChronoUnit.DAYS)
                                 .setLocalDateTimeSource(localDateTimeSource)
                                 .build()));
     }
