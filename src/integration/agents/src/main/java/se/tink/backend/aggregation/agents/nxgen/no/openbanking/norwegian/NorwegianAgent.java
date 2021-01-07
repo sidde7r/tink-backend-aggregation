@@ -34,6 +34,8 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
+import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 @AgentCapabilities({SAVINGS_ACCOUNTS, CREDIT_CARDS})
@@ -136,9 +138,10 @@ public final class NorwegianAgent extends NextGenerationAgent
                 accountFetcher,
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(
-                                new NorwegianTransactionFetcher<>(
-                                        apiClient, persistentStorage, sessionStorage))));
+                        new TransactionDatePaginationController.Builder<>(
+                                        new NorwegianTransactionFetcher<TransactionalAccount>(
+                                                apiClient, persistentStorage, sessionStorage))
+                                .build()));
     }
 
     private CreditCardRefreshController getCreditCardRefreshController() {
@@ -150,9 +153,10 @@ public final class NorwegianAgent extends NextGenerationAgent
                 cardFetcher,
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(
-                                new NorwegianTransactionFetcher<>(
-                                        apiClient, persistentStorage, sessionStorage))));
+                        new TransactionDatePaginationController.Builder<>(
+                                        new NorwegianTransactionFetcher<CreditCardAccount>(
+                                                apiClient, persistentStorage, sessionStorage))
+                                .build()));
     }
 
     @Override

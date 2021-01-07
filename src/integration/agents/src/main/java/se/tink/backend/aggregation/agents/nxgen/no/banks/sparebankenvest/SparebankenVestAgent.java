@@ -161,10 +161,12 @@ public final class SparebankenVestAgent extends NextGenerationAgent
     private CreditCardRefreshController constructCreditCardRefreshController() {
 
         TransactionFetcher<CreditCardAccount> transactionFetcher =
-                new TransactionFetcherController<CreditCardAccount>(
+                new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(
-                                SparebankenVestCreditCardTransactionFetcher.create(apiClient)));
+                        new TransactionDatePaginationController.Builder<>(
+                                        SparebankenVestCreditCardTransactionFetcher.create(
+                                                apiClient))
+                                .build());
 
         return new CreditCardRefreshController(
                 metricRefreshController,

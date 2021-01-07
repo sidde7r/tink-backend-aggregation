@@ -118,8 +118,9 @@ public final class SantanderAgent
                 new SantanderTransactionalAccountFetcher(apiClient),
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(
-                                new SantanderTransactionFetcher(apiClient))));
+                        new TransactionDatePaginationController.Builder<>(
+                                        new SantanderTransactionFetcher(apiClient))
+                                .build()));
     }
 
     @Override

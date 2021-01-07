@@ -113,7 +113,9 @@ public final class BecAgent extends NextGenerationAgent
                 accountFetcher,
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(accountFetcher, 6)));
+                        new TransactionDatePaginationController.Builder<>(accountFetcher)
+                                .setConsecutiveEmptyPagesLimit(6)
+                                .build()));
     }
 
     protected SessionHandler constructSessionHandler() {

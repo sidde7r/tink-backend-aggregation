@@ -81,8 +81,9 @@ public final class SantanderAgent extends NextGenerationAgent
                 new SantanderAccountFetcher(santanderApiClient),
                 new TransactionFetcherController<>(
                         this.transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(
-                                new SantanderTransactionFetcher(santanderApiClient))));
+                        new TransactionDatePaginationController.Builder<>(
+                                        new SantanderTransactionFetcher(santanderApiClient))
+                                .build()));
     }
 
     @Override

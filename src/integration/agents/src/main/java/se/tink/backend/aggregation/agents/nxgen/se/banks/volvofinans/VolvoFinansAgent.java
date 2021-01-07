@@ -89,8 +89,9 @@ public final class VolvoFinansAgent extends NextGenerationAgent
                 new VolvoFinansTransactionalAccountFetcher(apiClient),
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(
-                                new VolvoFinansTransactionalAccountFetcher(apiClient))));
+                        new TransactionDatePaginationController.Builder<>(
+                                        new VolvoFinansTransactionalAccountFetcher(apiClient))
+                                .build()));
     }
 
     @Override
@@ -104,14 +105,16 @@ public final class VolvoFinansAgent extends NextGenerationAgent
     }
 
     private CreditCardRefreshController constructCreditCardRefreshController() {
+        VolvoFinansCreditCardFetcher creditCardFetcher =
+                new VolvoFinansCreditCardFetcher(apiClient);
         return new CreditCardRefreshController(
                 metricRefreshController,
                 updateController,
-                new VolvoFinansCreditCardFetcher(apiClient),
+                creditCardFetcher,
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(
-                                new VolvoFinansCreditCardFetcher(apiClient))));
+                        new TransactionDatePaginationController.Builder<>(creditCardFetcher)
+                                .build()));
     }
 
     @Override

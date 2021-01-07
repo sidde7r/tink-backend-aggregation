@@ -18,7 +18,7 @@ public class NorwegianDatePaginationController
     public NorwegianDatePaginationController(
             TransactionDatePaginator<CreditCardAccount> paginator,
             NorwegianCreditCardFetcher fetcher) {
-        super(paginator);
+        super(new TransactionDatePaginationController.Builder<>(paginator));
         this.fetcher = fetcher;
     }
 

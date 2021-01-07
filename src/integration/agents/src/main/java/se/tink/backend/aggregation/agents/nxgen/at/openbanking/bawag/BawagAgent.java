@@ -111,7 +111,7 @@ public final class BawagAgent extends NextGenerationAgent
                 accountFetcher,
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(accountFetcher)));
+                        new TransactionDatePaginationController.Builder<>(accountFetcher).build()));
     }
 
     @Override

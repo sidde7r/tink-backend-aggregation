@@ -142,7 +142,7 @@ public final class BoursoramaAgent extends NextGenerationAgent
                 accountFetcher,
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(accountFetcher)));
+                        new TransactionDatePaginationController.Builder<>(accountFetcher).build()));
     }
 
     private BoursoramaIdentityFetcher getIdentityFetcher() {

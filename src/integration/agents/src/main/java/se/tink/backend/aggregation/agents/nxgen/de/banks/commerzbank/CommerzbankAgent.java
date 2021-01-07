@@ -84,8 +84,9 @@ public final class CommerzbankAgent extends NextGenerationAgent
                 new CommerzbankAccountFetcher(apiClient),
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(
-                                new CommerzbankTransactionFetcher(apiClient))));
+                        new TransactionDatePaginationController.Builder<>(
+                                        new CommerzbankTransactionFetcher(apiClient))
+                                .build()));
     }
 
     @Override
@@ -105,8 +106,9 @@ public final class CommerzbankAgent extends NextGenerationAgent
                 new CommerzbankCreditCardFetcher(apiClient),
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(
-                                new CommerzbankCreditCardFetcher(apiClient))));
+                        new TransactionDatePaginationController.Builder<>(
+                                        new CommerzbankCreditCardFetcher(apiClient))
+                                .build()));
     }
 
     @Override

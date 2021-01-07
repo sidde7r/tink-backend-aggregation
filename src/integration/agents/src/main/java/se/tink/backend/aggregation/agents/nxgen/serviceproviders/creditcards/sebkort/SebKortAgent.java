@@ -69,8 +69,9 @@ public class SebKortAgent extends NextGenerationAgent
                 new SebKortAccountFetcher(apiClient, config),
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(
-                                new SebKortTransactionFetcher(apiClient))));
+                        new TransactionDatePaginationController.Builder<>(
+                                        new SebKortTransactionFetcher(apiClient))
+                                .build()));
     }
 
     @Override

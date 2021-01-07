@@ -166,8 +166,10 @@ public abstract class CrosskeyBaseAgent extends NextGenerationAgent
                 new CrossKeyTransactionalAccountFetcher(apiClient),
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(
-                                new CrossKeyTransactionalAccountTransactionFetcher(apiClient))));
+                        new TransactionDatePaginationController.Builder<>(
+                                        new CrossKeyTransactionalAccountTransactionFetcher(
+                                                apiClient))
+                                .build()));
     }
 
     protected CreditCardRefreshController getCreditCardRefreshController() {
@@ -177,7 +179,8 @@ public abstract class CrosskeyBaseAgent extends NextGenerationAgent
                 new CrossKeyCreditCardAccountFetcher(apiClient),
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(
-                                new CrossKeyCreditCardTransactionFetcher(apiClient))));
+                        new TransactionDatePaginationController.Builder<>(
+                                        new CrossKeyCreditCardTransactionFetcher(apiClient))
+                                .build()));
     }
 }

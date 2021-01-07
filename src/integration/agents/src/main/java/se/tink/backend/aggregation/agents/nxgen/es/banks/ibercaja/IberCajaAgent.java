@@ -111,7 +111,8 @@ public final class IberCajaAgent extends NextGenerationAgent
                 accountFetcher,
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(transactionalFetcher)));
+                        new TransactionDatePaginationController.Builder<>(transactionalFetcher)
+                                .build()));
     }
 
     @Override
@@ -135,7 +136,8 @@ public final class IberCajaAgent extends NextGenerationAgent
                 creditCardFetcher,
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(transactionalFetcher)));
+                        new TransactionDatePaginationController.Builder<>(transactionalFetcher)
+                                .build()));
     }
 
     @Override

@@ -144,12 +144,13 @@ public abstract class NordeaBaseAgent extends NextGenerationAgent
                 new NordeaTransactionalAccountFetcher(apiClient, nordeaConfiguration),
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(
-                                transactionFetcher,
-                                TransactionFetching.MAX_CONSECUTIVE_EMPTY_PAGES,
-                                TransactionFetching.MONTHS_TO_PAGINATE,
-                                ChronoUnit.MONTHS,
-                                localDateTimeSource),
+                        new TransactionDatePaginationController.Builder<>(transactionFetcher)
+                                .setConsecutiveEmptyPagesLimit(
+                                        TransactionFetching.MAX_CONSECUTIVE_EMPTY_PAGES)
+                                .setAmountAndUnitToFetch(
+                                        TransactionFetching.MONTHS_TO_PAGINATE, ChronoUnit.MONTHS)
+                                .setLocalDateTimeSource(localDateTimeSource)
+                                .build(),
                         upcomingTransactionFetcher));
     }
 

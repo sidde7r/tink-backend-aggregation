@@ -88,9 +88,10 @@ public final class VolksbankAgent
                                 volksbankApiClient, persistentStorage),
                         new TransactionFetcherController<>(
                                 this.transactionPaginationHelper,
-                                new TransactionDatePaginationController<>(
-                                        new VolksbankTransactionFetcher(
-                                                volksbankApiClient, persistentStorage))));
+                                new TransactionDatePaginationController.Builder<>(
+                                                new VolksbankTransactionFetcher(
+                                                        volksbankApiClient, persistentStorage))
+                                        .build()));
 
         VolksbankAuthenticator authenticator =
                 new VolksbankAuthenticator(

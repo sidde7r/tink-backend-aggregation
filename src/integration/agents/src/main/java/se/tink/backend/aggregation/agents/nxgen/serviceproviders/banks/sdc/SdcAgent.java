@@ -122,9 +122,12 @@ public abstract class SdcAgent extends NextGenerationAgent
                 new SdcAccountFetcher(this.bankClient, this.sdcSessionStorage, getIbanConverter()),
                 new TransactionFetcherController<>(
                         this.transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(
-                                new SdcTransactionFetcher(
-                                        this.bankClient, this.sdcSessionStorage, this.parser))));
+                        new TransactionDatePaginationController.Builder<>(
+                                        new SdcTransactionFetcher(
+                                                this.bankClient,
+                                                this.sdcSessionStorage,
+                                                this.parser))
+                                .build()));
     }
 
     protected abstract AccountNumberToIbanConverter getIbanConverter();
@@ -170,7 +173,8 @@ public abstract class SdcAgent extends NextGenerationAgent
                 creditCardFetcher,
                 new TransactionFetcherController<>(
                         this.transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(creditCardFetcher)));
+                        new TransactionDatePaginationController.Builder<>(creditCardFetcher)
+                                .build()));
     }
 
     @Override

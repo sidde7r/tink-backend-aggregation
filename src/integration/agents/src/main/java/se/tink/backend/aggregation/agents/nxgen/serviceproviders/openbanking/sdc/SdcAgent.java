@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sdc;
 
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sdc.SdcConstants.Transactions.MAX_CONSECUTIVE_EMPTY_PAGES;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sdc.SdcConstants.Transactions.MONTHS_TO_FETCH;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
 
@@ -114,11 +113,9 @@ public final class SdcAgent extends NextGenerationAgent
                 accountFetcher,
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(
-                                transactionFetcher,
-                                MAX_CONSECUTIVE_EMPTY_PAGES,
-                                MONTHS_TO_FETCH,
-                                ChronoUnit.MONTHS)));
+                        new TransactionDatePaginationController.Builder<>(transactionFetcher)
+                                .setAmountAndUnitToFetch(MONTHS_TO_FETCH, ChronoUnit.MONTHS)
+                                .build()));
     }
 
     @Override

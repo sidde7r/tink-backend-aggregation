@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.vdk;
 
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.Transactions.DEFAULT_AMOUNT_TO_FETCH;
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.Transactions.DEFAULT_CONSECUTIVE_EMPTY_PAGES_LIMIT;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
 
 import com.google.inject.Inject;
@@ -46,10 +45,8 @@ public final class VdkAgent extends Xs2aDevelopersTransactionalAgent {
                 accountFetcher,
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(
-                                accountFetcher,
-                                DEFAULT_CONSECUTIVE_EMPTY_PAGES_LIMIT,
-                                DEFAULT_AMOUNT_TO_FETCH,
-                                ChronoUnit.DAYS)));
+                        new TransactionDatePaginationController.Builder<>(accountFetcher)
+                                .setAmountAndUnitToFetch(DEFAULT_AMOUNT_TO_FETCH, ChronoUnit.DAYS)
+                                .build()));
     }
 }

@@ -90,8 +90,9 @@ public final class IngAtAgent extends NextGenerationAgent
                 new IngAtTransactionalAccountFetcher(apiClient, ingAtSessionStorage),
                 new TransactionFetcherController<>(
                         this.transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(
-                                new IngAtTransactionFetcher(apiClient, ingAtSessionStorage))));
+                        new TransactionDatePaginationController.Builder<>(
+                                        new IngAtTransactionFetcher(apiClient, ingAtSessionStorage))
+                                .build()));
     }
 
     @Override
@@ -111,9 +112,10 @@ public final class IngAtAgent extends NextGenerationAgent
                 new IngAtCreditCardAccountFetcher(apiClient, ingAtSessionStorage),
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(
-                                new IngAtCreditCardTransactionFetcher(
-                                        apiClient, ingAtSessionStorage))));
+                        new TransactionDatePaginationController.Builder<>(
+                                        new IngAtCreditCardTransactionFetcher(
+                                                apiClient, ingAtSessionStorage))
+                                .build()));
     }
 
     @Override

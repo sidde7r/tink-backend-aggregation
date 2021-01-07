@@ -119,8 +119,11 @@ public final class AvanzaAgent extends NextGenerationAgent
                 accountFetcher,
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(
-                                accountFetcher, 3, 3, ChronoUnit.MONTHS, localDateTimeSource)));
+                        new TransactionDatePaginationController.Builder<>(accountFetcher)
+                                .setConsecutiveEmptyPagesLimit(3)
+                                .setAmountAndUnitToFetch(3, ChronoUnit.MONTHS)
+                                .setLocalDateTimeSource(localDateTimeSource)
+                                .build()));
     }
 
     private InvestmentRefreshController constructInvestmentRefreshController() {
@@ -138,8 +141,11 @@ public final class AvanzaAgent extends NextGenerationAgent
                 investmentFetcher,
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(
-                                investmentFetcher, 3, 3, ChronoUnit.MONTHS, localDateTimeSource)));
+                        new TransactionDatePaginationController.Builder<>(investmentFetcher)
+                                .setConsecutiveEmptyPagesLimit(3)
+                                .setAmountAndUnitToFetch(3, ChronoUnit.MONTHS)
+                                .setLocalDateTimeSource(localDateTimeSource)
+                                .build()));
     }
 
     @Override

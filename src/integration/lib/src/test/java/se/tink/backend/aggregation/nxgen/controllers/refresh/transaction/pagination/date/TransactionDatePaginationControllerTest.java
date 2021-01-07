@@ -12,6 +12,7 @@ import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.List;
+import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,28 +22,30 @@ import org.mockito.junit.MockitoJUnitRunner;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
-import se.tink.libraries.pair.Pair;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TransactionDatePaginationControllerTest {
+
+    private final int MAX_CONSECUTIVE_EMPTY_PAGES = 4;
+    private final int DAYS_TO_FETCH = 89;
 
     @Mock private TransactionDatePaginator<Account> paginator;
     @Mock private Account account;
 
     private TransactionDatePaginationController<Account> paginationController;
-    private int MAX_CONSECUTIVE_EMPTY_PAGES = 4;
-    private int DAYS_TO_FETCH = 89;
 
     @Before
     public void setup() {
         paginationController =
-                new TransactionDatePaginationController<>(
-                        paginator, MAX_CONSECUTIVE_EMPTY_PAGES, DAYS_TO_FETCH, ChronoUnit.DAYS);
+                new TransactionDatePaginationController.Builder<>(paginator)
+                        .setConsecutiveEmptyPagesLimit(MAX_CONSECUTIVE_EMPTY_PAGES)
+                        .setAmountAndUnitToFetch(DAYS_TO_FETCH, ChronoUnit.DAYS)
+                        .build();
     }
 
     @Test(expected = NullPointerException.class)
     public void ensureExceptionIsThrown_whenTransactionDatePaginator_isNull() {
-        new TransactionDatePaginationController<>(null);
+        new TransactionDatePaginationController.Builder<>(null);
     }
 
     @Test(expected = NullPointerException.class)
@@ -92,10 +95,12 @@ public class TransactionDatePaginationControllerTest {
         for (int i = 0; i < periods.size(); i++) {
             Pair<LocalDateTime, LocalDateTime> period = periods.get(i);
             Assert.assertEquals(
-                    period.first, period.second.minusDays(DAYS_TO_FETCH).with(LocalTime.MIN));
+                    period.getLeft(),
+                    period.getRight().minusDays(DAYS_TO_FETCH).with(LocalTime.MIN));
             if (i > 0) {
                 Pair<LocalDateTime, LocalDateTime> nextPeriod = periods.get(i - 1);
-                Assert.assertEquals(period.second.plus(1, ChronoUnit.MILLIS), nextPeriod.first);
+                Assert.assertEquals(
+                        period.getRight().plus(1, ChronoUnit.MILLIS), nextPeriod.getLeft());
             }
         }
     }

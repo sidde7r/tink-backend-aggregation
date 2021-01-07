@@ -76,9 +76,10 @@ public final class RaiffeisenAgent extends NextGenerationAgent
                 new RaiffeisenTransactionalAccountFetcher(apiClient, raiffeisenSessionStorage),
                 new TransactionFetcherController<>(
                         this.transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(
-                                new RaiffeisenTransactionFetcher(
-                                        apiClient, raiffeisenSessionStorage))));
+                        new TransactionDatePaginationController.Builder<>(
+                                        new RaiffeisenTransactionFetcher(
+                                                apiClient, raiffeisenSessionStorage))
+                                .build()));
     }
 
     @Override

@@ -4,7 +4,6 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CREDIT_CARDS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
 
-import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
@@ -127,8 +126,9 @@ public final class FinecoBankAgent extends NextGenerationAgent
                 accountFetcher,
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(
-                                accountFetcher, 1, 90, ChronoUnit.DAYS)));
+                        new TransactionDatePaginationController.Builder<>(accountFetcher)
+                                .setConsecutiveEmptyPagesLimit(1)
+                                .build()));
     }
 
     @Override
@@ -169,7 +169,8 @@ public final class FinecoBankAgent extends NextGenerationAgent
                 accountFetcher,
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(
-                                accountFetcher, 1, 90, ChronoUnit.DAYS)));
+                        new TransactionDatePaginationController.Builder<>(accountFetcher)
+                                .setConsecutiveEmptyPagesLimit(1)
+                                .build()));
     }
 }

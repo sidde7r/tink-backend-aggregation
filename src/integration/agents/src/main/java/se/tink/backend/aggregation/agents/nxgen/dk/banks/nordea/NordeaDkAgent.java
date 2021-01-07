@@ -86,7 +86,7 @@ public final class NordeaDkAgent extends SubsequentProgressiveGenerationAgent
                 fetcher,
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(fetcher)));
+                        new TransactionDatePaginationController.Builder<>(fetcher).build()));
     }
 
     private LoanRefreshController constructLoanRefreshController() {

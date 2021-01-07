@@ -86,21 +86,24 @@ public final class DnbAgent extends NextGenerationAgent
 
     private CreditCardRefreshController constructCardAccountRefreshController(
             AgentComponentProvider componentProvider) {
+        DnbCardTransactionFetcher cardTransactionFetcher =
+                new DnbCardTransactionFetcher(
+                        storage,
+                        apiClient,
+                        new DnbTransactionMapper(),
+                        componentProvider.getCredentialsRequest().isManual());
+
         return new CreditCardRefreshController(
                 metricRefreshController,
                 updateController,
                 new DnbCardAccountFetcher(storage, apiClient, new DnbCardMapper()),
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(
-                                new DnbCardTransactionFetcher(
-                                        storage,
-                                        apiClient,
-                                        new DnbTransactionMapper(),
-                                        componentProvider.getCredentialsRequest().isManual()),
-                                DnbConstants.CreditCardFetcherValues.EMPTY_PAGES_LIMIT,
-                                DnbConstants.CreditCardFetcherValues.AT_A_TIME,
-                                DnbConstants.CreditCardFetcherValues.TIME_UNIT)));
+                        new TransactionDatePaginationController.Builder<>(cardTransactionFetcher)
+                                .setAmountAndUnitToFetch(
+                                        DnbConstants.CreditCardFetcherValues.AT_A_TIME,
+                                        DnbConstants.CreditCardFetcherValues.TIME_UNIT)
+                                .build()));
     }
 
     @Override

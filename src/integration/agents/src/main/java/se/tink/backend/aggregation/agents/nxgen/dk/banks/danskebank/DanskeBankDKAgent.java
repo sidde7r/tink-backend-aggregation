@@ -172,8 +172,9 @@ public final class DanskeBankDKAgent extends DanskeBankAgent
                         this.apiClient, this.configuration.getLanguageCode());
         return new TransactionFetcherController<>(
                 this.transactionPaginationHelper,
-                new TransactionDatePaginationController<>(
-                        transactionFetcher, DK_MAX_CONSECUTIVE_EMPTY_PAGES),
+                new TransactionDatePaginationController.Builder<>(transactionFetcher)
+                        .setConsecutiveEmptyPagesLimit(DK_MAX_CONSECUTIVE_EMPTY_PAGES)
+                        .build(),
                 transactionFetcher);
     }
 }

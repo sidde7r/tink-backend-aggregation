@@ -104,9 +104,10 @@ public abstract class CrossKeyAgent extends NextGenerationAgent
                 new CrossKeyTransactionalAccountFetcher(this.apiClient, agentConfiguration),
                 new TransactionFetcherController<>(
                         this.transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(
-                                new CrossKeyTransactionFetcher(
-                                        this.apiClient, agentConfiguration))));
+                        new TransactionDatePaginationController.Builder<>(
+                                        new CrossKeyTransactionFetcher(
+                                                this.apiClient, agentConfiguration))
+                                .build()));
     }
 
     @Override
@@ -128,7 +129,8 @@ public abstract class CrossKeyAgent extends NextGenerationAgent
                 creditCardFetcher,
                 new TransactionFetcherController<>(
                         this.transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(creditCardFetcher)));
+                        new TransactionDatePaginationController.Builder<>(creditCardFetcher)
+                                .build()));
     }
 
     @Override

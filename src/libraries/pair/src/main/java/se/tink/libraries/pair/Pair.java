@@ -2,6 +2,8 @@ package se.tink.libraries.pair;
 
 import java.util.Objects;
 
+/** @deprecated use {@link org.apache.commons.lang3.tuple.Pair } */
+@Deprecated
 public class Pair<T, U> {
     public T first;
     public U second;
