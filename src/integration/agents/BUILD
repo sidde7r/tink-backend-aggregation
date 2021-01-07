@@ -158,6 +158,7 @@ junit_test(
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/ais/base",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/ais/v31",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/tools",
+        "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/utils/fixtures",
         "//src/integration/amount",
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/credentials:demo",
