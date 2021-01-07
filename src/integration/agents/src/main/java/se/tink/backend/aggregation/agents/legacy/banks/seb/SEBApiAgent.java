@@ -1328,6 +1328,9 @@ public final class SEBApiAgent extends AbstractAgent
             throw e;
         }
 
+        if (sebResponse.x.errorcode == 8022) {
+            throw BankServiceError.BANK_SIDE_FAILURE.exception();
+        }
         // It's sufficient to check that the following is fulfilled
         Preconditions.checkNotNull(sebResponse.d);
         Preconditions.checkNotNull(sebResponse.d.VODB);
