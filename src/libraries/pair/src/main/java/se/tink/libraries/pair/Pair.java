@@ -2,9 +2,7 @@ package se.tink.libraries.pair;
 
 import java.util.Objects;
 
-/**
- * @deprecated We should not reinvent the wheel and use utils.
- */
+/** @deprecated We should not reinvent the wheel and use utils. */
 @Deprecated
 public class Pair<T, U> {
     public T first;

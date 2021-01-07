@@ -172,13 +172,10 @@ public final class RabobankAgent
     }
 
     private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
-        final TransactionDatePaginator<TransactionalAccount> transactionFetcher;
-
-        if (isSandbox()) {
-            transactionFetcher = new SandboxTransactionFetcher(apiClient);
-        } else {
-            transactionFetcher = new TransactionFetcher(apiClient);
-        }
+        TransactionDatePaginator<TransactionalAccount> transactionFetcher =
+                isSandbox()
+                        ? new SandboxTransactionFetcher(apiClient)
+                        : new TransactionFetcher(apiClient);
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController,
