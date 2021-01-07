@@ -18,7 +18,6 @@ import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.account.identifiers.formatters.DisplayAccountIdentifierFormatter;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @JsonObject
 public class AccountEntity {
@@ -78,7 +77,7 @@ public class AccountEntity {
                 log.warn(
                         "{}: Unknown type: {}",
                         SabadellConstants.Tags.UNKNOWN_ACCOUNT_TYPE,
-                        SerializationUtils.serializeToString(this));
+                        description);
                 return AccountTypes.OTHER;
         }
     }
