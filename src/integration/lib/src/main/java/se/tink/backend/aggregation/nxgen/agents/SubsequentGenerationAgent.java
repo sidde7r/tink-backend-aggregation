@@ -3,6 +3,8 @@ package se.tink.backend.aggregation.nxgen.agents;
 import java.security.Security;
 import java.util.Optional;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.CreateBeneficiaryControllerable;
@@ -40,6 +42,7 @@ public abstract class SubsequentGenerationAgent<Auth> extends SuperAbstractAgent
                 PaymentControllerable,
                 CreateBeneficiaryControllerable,
                 PersistentLogin {
+    private static final Logger LOG = LoggerFactory.getLogger(SubsequentGenerationAgent.class);
 
     static {
         Security.addProvider(new BouncyCastleProvider());
@@ -95,6 +98,9 @@ public abstract class SubsequentGenerationAgent<Auth> extends SuperAbstractAgent
         this.supplementalInformationFormer =
                 new SupplementalInformationFormer(request.getProvider());
         this.appId = context.getAppId();
+        if ("be-kbc-ob".equals(request.getProvider().getName())) {
+            LOG.info("[KBCR] be-kbc-ob -at state read- appUriId: {}", request.getAppUriId());
+        }
         this.strongAuthenticationState = new StrongAuthenticationState(request.getState());
 
         this.userIp = getOriginatingUserIpOrDefault();
