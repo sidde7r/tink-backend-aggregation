@@ -58,7 +58,7 @@ public final class SebAgent extends SebBaseAgent<SebApiClient>
 
     private TransferDestinationRefreshController constructTransferDestinationController() {
         return new TransferDestinationRefreshController(
-                metricRefreshController, new SebTransferDestinationFetcher(instanceStorage));
+                metricRefreshController, new SebTransferDestinationFetcher(apiClient));
     }
 
     private void connfigureHttpClient(TinkHttpClient client) {
@@ -103,7 +103,7 @@ public final class SebAgent extends SebBaseAgent<SebApiClient>
 
     private TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
         SebTransactionalAccountFetcher accountFetcher =
-                new SebTransactionalAccountFetcher(apiClient, instanceStorage);
+                new SebTransactionalAccountFetcher(apiClient);
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController,

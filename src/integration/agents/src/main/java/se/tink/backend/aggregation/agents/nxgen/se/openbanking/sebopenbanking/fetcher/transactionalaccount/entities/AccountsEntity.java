@@ -5,7 +5,6 @@ import com.google.common.base.Strings;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.SebConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebCommonConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebCommonConstants.AccountTypes;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -66,7 +65,7 @@ public class AccountsEntity {
                 .setApiIdentifier(resourceId)
                 .setBankIdentifier(bban)
                 .putInTemporaryStorage(SebCommonConstants.StorageKeys.ACCOUNT_ID, resourceId)
-                .putInTemporaryStorage(SebConstants.Storage.PRODUCT, product)
+                .putPayload(SebCommonConstants.StorageKeys.ACCOUNT_ID, resourceId)
                 .build();
     }
 

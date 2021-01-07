@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.inves
 import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -13,6 +14,7 @@ import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.SabadellApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.SabadellConstants;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.SabadellConstants.ErrorCodes;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.investments.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.investments.entities.MarketsEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.investments.entities.StocksEntity;
@@ -20,8 +22,10 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.invest
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.investments.rpc.SavingsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.investments.rpc.ServicingFundsAccountDetailsRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.investments.rpc.ServicingFundsResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.rpc.ErrorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
 public class SabadellInvestmentFetcher implements AccountFetcher<InvestmentAccount> {
     private static final Logger logger =
@@ -54,15 +58,29 @@ public class SabadellInvestmentFetcher implements AccountFetcher<InvestmentAccou
 
     private Function<AccountEntity, InvestmentAccount> aggregateStockInvestmentAccount() {
         return accountEntity -> {
-            List<Instrument> instruments =
-                    apiClient.fetchMarkets(new MarketsRequest(accountEntity)).getMarkets().stream()
-                            .flatMap(getInstruments(accountEntity))
-                            .collect(Collectors.toList());
-
+            List<Instrument> instruments = fetchMarkets(accountEntity);
             List<Portfolio> portfolios = accountEntity.toTinkPortfolios(instruments);
-
             return accountEntity.toTinkInvestmentAccount(portfolios);
         };
+    }
+
+    private List<Instrument> fetchMarkets(AccountEntity accountEntity) {
+        try {
+            return apiClient.fetchMarkets(new MarketsRequest(accountEntity)).getMarkets().stream()
+                    .flatMap(getInstruments(accountEntity))
+                    .collect(Collectors.toList());
+        } catch (HttpResponseException e) {
+            ErrorResponse response = e.getResponse().getBody(ErrorResponse.class);
+            String errorCode = response.getErrorCode();
+            if (ErrorCodes.NO_TRANSACTIONS.equalsIgnoreCase(errorCode)) {
+                return Collections.emptyList();
+            }
+            logger.warn(
+                    "Investment fetching failed with error code: {}, error message: {}",
+                    response.getErrorCode(),
+                    response.getErrorMessage());
+        }
+        return Collections.emptyList();
     }
 
     private Function<MarketsEntity, Stream<? extends Instrument>> getInstruments(
