@@ -18,6 +18,7 @@
                     "amount": "200.26",
                     "currency": "NOK"
                 },
+                "transactionDate": "2020-01-01",
                 "transactionDetails": "Details 1234 of booked"
             }
         ],
@@ -28,6 +29,7 @@
                     "amount": "100.26",
                     "currency": "NOK"
                 },
+                "transactionDate": "2020-01-01",
                 "transactionDetails": "Details 1234 of pending"
             }
         ]
