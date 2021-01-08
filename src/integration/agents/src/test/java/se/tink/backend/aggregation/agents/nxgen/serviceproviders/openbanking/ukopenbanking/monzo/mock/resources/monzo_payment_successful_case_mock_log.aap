@@ -124,7 +124,7 @@ X-Jws-Signature: RkFLRV9TSUdOQVRVUkUK
 
 REQUEST 7
 GET https://openbanking.monzo.com/open-banking/v3.1/pisp/domestic-payments/obdompayment_0000A1olsLdmu1xI9fLoMT
-Authorization: Bearer DUMMY_ACCESS_TOKEN2
+Authorization: Bearer DUMMY_ACCESS_TOKEN
 x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
 Accept: application/json
 x-fapi-financial-id: 001580000103U9RAAU

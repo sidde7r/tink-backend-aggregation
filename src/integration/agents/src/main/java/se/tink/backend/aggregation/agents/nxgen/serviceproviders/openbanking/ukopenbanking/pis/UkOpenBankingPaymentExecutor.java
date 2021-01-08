@@ -50,6 +50,8 @@ public class UkOpenBankingPaymentExecutor implements PaymentExecutor, FetchableP
 
     @Override
     public PaymentResponse fetch(PaymentRequest paymentRequest) {
+        authFilterInstantiator.instantiateAuthFilterWithClientToken();
+
         return getPaymentId(paymentRequest)
                 .map(id -> paymentResponseRetryer(() -> apiClient.getPayment(id)))
                 .orElseGet(

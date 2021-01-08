@@ -136,7 +136,7 @@ x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
 
 REQUEST 7
 GET https://telesto.api.barclays:443/open-banking/v3.1/pisp/domestic-payments/BARCLAYS-P-10000000245531
-Authorization: Bearer DUMMY_ACCESS_TOKEN
+Authorization: Bearer DUMMY_TPP_ACCESS_TOKEN
 x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
 Accept: application/json
 x-fapi-financial-id: 0015800000jfAW1AAM
