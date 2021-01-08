@@ -23,8 +23,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.creditcards.DefaultCreditCardBalanceMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.signer.iface.JwtSigner;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.configuration.UkOpenBankingPisConfiguration;
-import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
-import se.tink.backend.aggregation.configuration.agentsservice.PasswordBasedProxyConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.libraries.mapper.PrioritizedValueExtractor;
@@ -63,22 +61,6 @@ public final class DanskeBankV31Agent extends UkOpenBankingBaseAgent {
                 createPisRequestFilterUsingPs256WithoutBase64Signature(
                         jwtSigner, componentProvider.getRandomValueGenerator()));
         this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
-    }
-
-    @Override
-    public final void setConfiguration(AgentsServiceConfiguration configuration) {
-        super.setConfiguration(configuration);
-        configureProxy(configuration);
-    }
-
-    private void configureProxy(final AgentsServiceConfiguration agentsServiceConfiguration) {
-        final PasswordBasedProxyConfiguration proxyConfiguration =
-                agentsServiceConfiguration.getCountryProxy(
-                        "be", credentials.getUserId().hashCode());
-        client.setProductionProxy(
-                proxyConfiguration.getHost(),
-                proxyConfiguration.getUsername(),
-                proxyConfiguration.getPassword());
     }
 
     @Override
