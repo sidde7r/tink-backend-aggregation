@@ -52,7 +52,8 @@ public final class SparkassenAgent extends NextGenerationAgent
                         catalog,
                         supplementalInformationHelper,
                         apiClient,
-                        sparkassenPersistentStorage);
+                        sparkassenPersistentStorage,
+                        credentials);
 
         return new AutoAuthenticationController(
                 request, context, sparkassenAuthenticator, sparkassenAuthenticator);
