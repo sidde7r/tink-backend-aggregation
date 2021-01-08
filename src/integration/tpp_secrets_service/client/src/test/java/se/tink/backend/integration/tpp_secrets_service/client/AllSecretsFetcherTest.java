@@ -22,6 +22,7 @@ public class AllSecretsFetcherTest {
     private String appId;
     private String clusterId;
     private String providerId;
+    private String certId;
 
     @Rule public ExpectedException exceptionRule = ExpectedException.none();
 
@@ -34,6 +35,7 @@ public class AllSecretsFetcherTest {
         appId = "appId";
         clusterId = "clusterId";
         providerId = "providerId";
+        certId = "";
     }
 
     @Test
@@ -45,7 +47,7 @@ public class AllSecretsFetcherTest {
         // when
         Optional<SecretsEntityCore> resp =
                 allSecretsFetcher.getAllSecrets(
-                        financialInstitutionId, appId, clusterId, providerId);
+                        financialInstitutionId, appId, clusterId, certId, providerId);
 
         // then
         Assert.assertFalse(resp.isPresent());
@@ -60,7 +62,7 @@ public class AllSecretsFetcherTest {
         // when
         Optional<SecretsEntityCore> resp =
                 allSecretsFetcher.getAllSecrets(
-                        financialInstitutionId, appId, clusterId, providerId);
+                        financialInstitutionId, appId, clusterId, certId, providerId);
 
         // then
         Assert.assertFalse(resp.isPresent());
@@ -75,7 +77,7 @@ public class AllSecretsFetcherTest {
         // when
         Optional<SecretsEntityCore> resp =
                 allSecretsFetcher.getAllSecrets(
-                        financialInstitutionId, appId, clusterId, providerId);
+                        financialInstitutionId, appId, clusterId, certId, providerId);
 
         // then
         Assert.assertFalse(resp.isPresent());
@@ -92,7 +94,7 @@ public class AllSecretsFetcherTest {
         // when
         Optional<SecretsEntityCore> resp =
                 allSecretsFetcher.getAllSecrets(
-                        financialInstitutionId, appId, clusterId, providerId);
+                        financialInstitutionId, appId, clusterId, certId, providerId);
 
         // then, expected exception is thrown
     }
