@@ -13,6 +13,7 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
+import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyError;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants.ApiService;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants.BodyValues;
@@ -177,11 +178,18 @@ public class NordeaBaseApiClient implements TokenInterface {
         } catch (HttpResponseException e) {
             if (e.getResponse().getStatus() == HttpStatus.SC_MOVED_TEMPORARILY) {
                 return URL.of(e.getResponse().getHeaders().get(HeaderKeys.LOCATION).get(0));
-            } else {
-                throw e;
             }
+            handleHttpAisResponseException(e);
         }
         throw LoginError.DEFAULT_MESSAGE.exception();
+    }
+
+    private void handleHttpAisResponseException(HttpResponseException e) {
+        if (e.getResponse().getStatus() == HttpStatus.SC_UNAUTHORIZED
+                && e.getResponse().getBody(String.class).contains("Invalid client id or secret")) {
+            throw ThirdPartyError.INCORRECT_SECRETS.exception();
+        }
+        throw e;
     }
 
     public OAuth2Token getToken(GetTokenForm form) {
