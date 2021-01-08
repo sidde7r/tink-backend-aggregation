@@ -33,6 +33,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.AccessExceededFilter;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.BadGatewayFilter;
 import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.payloadparser.PayloadParser;
@@ -76,6 +77,7 @@ public abstract class CbiGlobeAgent extends SubsequentProgressiveGenerationAgent
         client.addFilter(
                 new CBIGlobeRetryFilter(
                         HttpClient.MAX_RETRIES, HttpClient.RETRY_SLEEP_MILLISECONDS));
+        client.addFilter(new BadGatewayFilter());
     }
 
     protected CbiGlobeApiClient getApiClient(boolean requestManual) {
