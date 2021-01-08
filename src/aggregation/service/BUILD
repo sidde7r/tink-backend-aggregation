@@ -31,6 +31,7 @@ java_library(
         "//third_party:io_dropwizard_dropwizard_core",
         "//third_party:org_slf4j_slf4j_api",
         "//third_party/dropwizard",
+        "@aggregation//:com_fasterxml_jackson_datatype_jackson_datatype_jsr310",
         "@aggregation//:com_google_guava_guava",
         "@aggregation//:com_netflix_governator_governator",
     ],
