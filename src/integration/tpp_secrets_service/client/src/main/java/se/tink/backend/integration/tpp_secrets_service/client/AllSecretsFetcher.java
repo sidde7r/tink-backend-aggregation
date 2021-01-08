@@ -31,12 +31,13 @@ class AllSecretsFetcher {
     }
 
     public Optional<SecretsEntityCore> getAllSecrets(
-            String financialInstitutionId, String appId, String clusterId, String providerId) {
+            String financialInstitutionId, String appId, String clusterId, String certId, String providerId) {
         log.info(
-                "calling SecretService getAllSecrets with params: financialInstitutionId:{}, appId:{}, clusterId:{}, providerId:{}",
+                "calling SecretService getAllSecrets with params: financialInstitutionId:{}, appId:{}, clusterId:{}, certId: {}, providerId:{}",
                 financialInstitutionId,
                 appId,
                 clusterId,
+                certId,
                 providerId);
         if (!enabled) {
             log.warn(
@@ -51,7 +52,7 @@ class AllSecretsFetcher {
         }
 
         GetSecretsRequest getSecretsRequest =
-                buildRequest(financialInstitutionId, appId, clusterId, providerId);
+                buildRequest(financialInstitutionId, appId, clusterId, certId, providerId);
 
         GetAllSecretsResponse response =
                 internalSecretsServiceStub.getAllSecrets(getSecretsRequest);
@@ -75,7 +76,7 @@ class AllSecretsFetcher {
     }
 
     private GetSecretsRequest buildRequest(
-            String financialInstitutionId, String appId, String clusterId, String providerId) {
+            String financialInstitutionId, String appId, String clusterId, String certId, String providerId) {
         Preconditions.checkNotNull(
                 financialInstitutionId, "financialInstitutionId must not be null");
         Preconditions.checkNotNull(appId, "appId must not be null");
@@ -87,6 +88,7 @@ class AllSecretsFetcher {
                 .setProviderId(providerId)
                 .setAppId(appId)
                 .setClusterId(clusterId)
+                .setCertId(Strings.isNullOrEmpty(certId) ? "" : certId)
                 .build();
     }
 }
