@@ -93,7 +93,8 @@ public final class KbcAgent extends BerlinGroupAgent<KbcApiClient, KbcConfigurat
                         agentConfiguration,
                         redirectUrl,
                         httpClient,
-                        objectMapperFactory.getInstance())
+                        objectMapperFactory.getInstance(),
+                        strongAuthenticationState.getState())
                 .authenticationProcess();
     }
 
