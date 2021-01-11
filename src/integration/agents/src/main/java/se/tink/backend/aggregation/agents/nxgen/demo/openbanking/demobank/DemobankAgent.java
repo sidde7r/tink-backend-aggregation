@@ -133,23 +133,20 @@ public final class DemobankAgent extends NextGenerationAgent
                 && AccessType.OTHER.equals(provider.getAccessType())
                 && "DK".equals(provider.getMarket())) {
             return constructMockNemIdAuthenticator();
-        } else if (AccessType.OPEN_BANKING.equals(provider.getAccessType())
-                && AuthenticationFlow.DECOUPLED.equals(provider.getAuthenticationFlow())) {
-            return constructDecoupledAppAuthenticator();
-        } else if (CredentialsTypes.PASSWORD.equals(provider.getCredentialsType())
-                && AccessType.OPEN_BANKING.equals(provider.getAccessType())
-                && AuthenticationFlow.EMBEDDED.equals(provider.getAuthenticationFlow())) {
-            return constructPasswordAndOtpAuthenticator();
+        } else if (AccessType.OPEN_BANKING.equals(provider.getAccessType())) {
+            if (AuthenticationFlow.DECOUPLED.equals(provider.getAuthenticationFlow())) {
+                return constructDecoupledAppAuthenticator();
+            } else if (AuthenticationFlow.EMBEDDED.equals(provider.getAuthenticationFlow())) {
+                return constructPasswordAndOtpAuthenticator();
+            } else if (provider.getName().endsWith("-app-to-app")) {
+                return constructApptToAppAuthenticator();
+            }
+            return constructRedirectAuthenticator();
         } else if (CredentialsTypes.PASSWORD.equals(provider.getCredentialsType())) {
             return new PasswordAuthenticationController(
                     new DemobankPasswordAuthenticator(apiClient));
-        } else if (provider.getName().endsWith("-app-to-app")) {
-            return constructApptToAppAuthenticator();
-        } else if (provider.getName().endsWith("-redirect")) {
-            return constructRedirectAuthenticator();
-        } else {
-            throw new IllegalStateException("Invalid provider configuration");
         }
+        throw new IllegalStateException("Invalid provider configuration");
     }
 
     private Authenticator constructPasswordAndOtpAuthenticator() {
