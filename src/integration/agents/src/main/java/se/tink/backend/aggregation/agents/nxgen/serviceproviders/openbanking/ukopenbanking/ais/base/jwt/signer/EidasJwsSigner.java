@@ -21,7 +21,7 @@ public class EidasJwsSigner extends BaseJWSProvider implements JWSSigner {
     private final InternalEidasProxyConfiguration configuration;
     private final EidasIdentity identity;
 
-    EidasJwsSigner(InternalEidasProxyConfiguration configuration, EidasIdentity identity) {
+    public EidasJwsSigner(InternalEidasProxyConfiguration configuration, EidasIdentity identity) {
         super(SUPPORTED_ALGORITHMS);
         this.configuration = configuration;
         this.identity = identity;
