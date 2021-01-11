@@ -44,6 +44,7 @@ import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.metrics.core.MetricId;
 import se.tink.libraries.payment.rpc.Payment;
+import se.tink.libraries.signableoperation.enums.InternalStatus;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.signableoperation.rpc.SignableOperation;
 import se.tink.libraries.transfer.enums.TransferType;
@@ -242,6 +243,7 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
                     e.getMessage());
 
             signableOperation.setStatus(SignableOperationStatuses.FAILED);
+            signableOperation.setInternalStatus(InternalStatus.BANK_SERVICE_UNAVAILABLE.toString());
             signableOperation.setStatusMessage(catalog.getString(e.getUserMessage()));
             context.updateSignableOperation(signableOperation);
 
