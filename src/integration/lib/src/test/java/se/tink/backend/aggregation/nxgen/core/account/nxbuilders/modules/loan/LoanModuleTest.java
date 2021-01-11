@@ -31,11 +31,11 @@ public class LoanModuleTest {
         LoanModule.builder().withType(Type.MORTGAGE).withBalance(null).withInterestRate(0).build();
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void negativeInterest() {
+    @Test
+    public void shouldAllowNegativeInterestRate() {
         LoanModule.builder()
                 .withType(Type.MORTGAGE)
-                .withBalance(ExactCurrencyAmount.of(BigDecimal.valueOf(2500), "EUR"))
+                .withBalance(ExactCurrencyAmount.of(BigDecimal.valueOf(2500), "#@!$^#$^"))
                 .withInterestRate(-1.24398)
                 .build();
     }
