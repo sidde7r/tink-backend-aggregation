@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.agentplatform.authentication.result;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.UserInteractionService;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.result.error.AgentPlatformAuthenticationProcessError;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.result.error.NoUserInteractionResponseError;
@@ -21,20 +22,16 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentThirdPartyAppOpenAppAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentUserInteractionDefinitionResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.userinteraction.AgentFieldValue;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.common.AgentExtendedClientInfo;
 
+@RequiredArgsConstructor
 public class AgentAuthenticationResultAggregationHandler
         implements AgentAuthenticationResultVisitor {
 
     private final UserInteractionService userInteractionService;
     private final PersistentStorageService persistentStorageService;
+    private final AgentExtendedClientInfo agentExtendedClientInfo;
     private AgentAuthenticationResultHandlingResult handlingResult;
-
-    public AgentAuthenticationResultAggregationHandler(
-            UserInteractionService userInteractionService,
-            PersistentStorageService persistentStorageService) {
-        this.userInteractionService = userInteractionService;
-        this.persistentStorageService = persistentStorageService;
-    }
 
     @Override
     public void visit(AgentRedirectAuthenticationResult arg) {
@@ -55,7 +52,8 @@ public class AgentAuthenticationResultAggregationHandler
                                                                                 new AgentAuthenticationProcessState(
                                                                                         new HashMap<>())),
                                                                 new AgentRemoteInteractionData(
-                                                                        data))))
+                                                                        data),
+                                                                agentExtendedClientInfo)))
                         .orElse(
                                 AgentAuthenticationResultHandlingResult.authenticationFailed(
                                         new AgentPlatformAuthenticationProcessError(
@@ -88,7 +86,8 @@ public class AgentAuthenticationResultAggregationHandler
                                             .orElse(
                                                     new AgentAuthenticationProcessState(
                                                             new HashMap<>())),
-                                    values));
+                                    values,
+                                    agentExtendedClientInfo));
         }
     }
 

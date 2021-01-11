@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.agentplatform.authentication;
 
 import java.util.Date;
-import lombok.AllArgsConstructor;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.result.AgentAuthenticationResultAggregationHandler;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.result.AgentAuthenticationResultHandlingResult;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.storage.PersistentStorageService;
@@ -9,14 +8,32 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.request.AgentAuthenticationRequest;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.request.AgentStartAuthenticationProcessRequest;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentAuthenticationResult;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.common.AgentClientInfo;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.common.AgentExtendedClientInfo;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-@AllArgsConstructor
 public class AgentPlatformAuthenticationService {
 
     private final UserInteractionService userInteractionService;
     private final PersistentStorageService persistentStorageService;
     private final CredentialsRequest credentialsRequest;
+    private final AgentExtendedClientInfo agentExtendedClientInfo;
+
+    public AgentPlatformAuthenticationService(
+            UserInteractionService userInteractionService,
+            PersistentStorageService persistentStorageService,
+            CredentialsRequest credentialsRequest) {
+        this.userInteractionService = userInteractionService;
+        this.persistentStorageService = persistentStorageService;
+        this.credentialsRequest = credentialsRequest;
+        agentExtendedClientInfo =
+                AgentExtendedClientInfo.builder()
+                        .clientInfo(
+                                AgentClientInfo.builder()
+                                        .appId(credentialsRequest.getState())
+                                        .build())
+                        .build();
+    }
 
     public void authenticate(final AgentPlatformAuthenticator agentPlatformAuthenticator) {
         AuthenticationExecutor executor =
@@ -28,7 +45,8 @@ public class AgentPlatformAuthenticationService {
         AgentAuthenticationResultHandlingResult handlingResult =
                 executor.execute(
                         new AgentStartAuthenticationProcessRequest(
-                                persistentStorageService.readFromAgentPersistentStorage()));
+                                persistentStorageService.readFromAgentPersistentStorage(),
+                                agentExtendedClientInfo));
         while (!handlingResult.isFinalResult()) {
             handlingResult = executor.execute(handlingResult.getAgentAuthenticationNextRequest());
         }
@@ -68,7 +86,9 @@ public class AgentPlatformAuthenticationService {
             AgentAuthenticationResult authenticationResult =
                     authenticationService.authenticate(authenticationRequest);
             return new AgentAuthenticationResultAggregationHandler(
-                            userInteractionService, persistentStorageService)
+                            userInteractionService,
+                            persistentStorageService,
+                            agentExtendedClientInfo)
                     .handle(authenticationResult);
         }
     }
