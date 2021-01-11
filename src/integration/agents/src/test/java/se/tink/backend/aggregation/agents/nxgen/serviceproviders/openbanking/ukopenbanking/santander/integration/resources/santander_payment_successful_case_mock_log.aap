@@ -145,7 +145,7 @@ x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
 
 REQUEST 7
 GET https://openbanking-ma.santander.co.uk/sanuk/external/open-banking/v3.1/pisp/domestic-payments/8a2cc798-ec7f-48c4-aae6-d1d1c2941f72
-Authorization: Bearer DUMMY_ACCESS_TOKEN
+Authorization: Bearer DUMMY_TPP_ACCESS_TOKEN
 x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
 Accept: application/json
 x-fapi-financial-id: 0015800000jfFGuAAM

@@ -115,7 +115,7 @@ x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
 
 REQUEST 6
 GET https://api.rbs.co.uk/open-banking/v3.1/pisp/domestic-payments/b803b8c2c86f45ecbc8757f0a193f35e
-Authorization: Bearer DUMMY_ACCESS_TOKEN
+Authorization: Bearer DUMMY_TPP_ACCESS_TOKEN
 x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
 Accept: application/json
 x-fapi-financial-id: 0015800000jfwB4AAI

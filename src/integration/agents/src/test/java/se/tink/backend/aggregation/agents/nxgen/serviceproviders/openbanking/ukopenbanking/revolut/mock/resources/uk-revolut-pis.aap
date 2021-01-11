@@ -150,10 +150,11 @@ X-Content-Type-Options: nosniff
 X-Xss-Protection: 1; mode=block
 Referrer-Policy: ***
 
-{"access_token":"DUMMY_ACCESS_TOKEN","token_type":"Bearer","expires_in":2399}
+{"access_token":"DUMMY_TPP_ACCESS_TOKEN","token_type":"Bearer","expires_in":2399}
 
 REQUEST 3
 POST https://oba.revolut.com/domestic-payment-consents
+Authorization: Bearer DUMMY_TPP_ACCESS_TOKEN
 Accept: application/json
 Content-Type: application/json
 x-idempotency-key: 0000000000000000
@@ -237,6 +238,7 @@ Referrer-Policy: ***
 
 REQUEST 6
 POST https://oba.revolut.com/domestic-payments
+Authorization: Bearer DUMMY_ACCESS_TOKEN
 Accept: application/json
 Content-Type: application/json
 x-idempotency-key: 0000000000000000
@@ -264,3 +266,16 @@ Via: 1.1 google
 Alt-Svc: ***
 
 {"Data":{"DomesticPaymentId":"2cf7553c-3c77-46e8-889b-f9b2c75505c5","Status":"AcceptedSettlementInProcess","StatusUpdateDateTime":"2020-11-16T08:15:33.349108Z","CreationDateTime":"2020-11-16T08:15:33.349108Z","ConsentId":"1d955df7-f304-41de-a9bb-a330702f3551","Initiation":{"CreditorAccount":{"Name":"Amnesty","SchemeName":"UK.OBIE.SortCodeAccountNumber","Identification":"30654138867868"},"InstructedAmount":{"Amount":"1.00","Currency":"GBP"},"RemittanceInformation":{"Reference":"Donation","Unstructured":"Donation"},"EndToEndIdentification":"0a44fcefbd524c5383707c3bbb77809","InstructionIdentification":"0a44fcefbd524c5383707c3bbb77809a"}},"Links":{"Self":"https://oba.revolut.com/domestic-payments/2cf7553c-3c77-46e8-889b-f9b2c75505c5"},"Meta":{"TotalPages":1}}
+
+REQUEST 7
+GET https://oba.revolut.com/domestic-payments/2cf7553c-3c77-46e8-889b-f9b2c75505c5
+Authorization: Bearer DUMMY_TPP_ACCESS_TOKEN
+Accept: application/json
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+RESPONSE 7
+200
+Content-Type: application/json;charset=UTF-8
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+{"Risk": {}, "Data": {"DomesticPaymentId": "2cf7553c-3c77-46e8-889b-f9b2c75505c5", "ConsentId": "1d955df7-f304-41de-a9bb-a330702f3551", "Status": "AcceptedSettlementCompleted", "Initiation": {"RemittanceInformation":{"Reference":"Donation","Unstructured":"Donation"}, "CreditorAccount":{"Name":"Amnesty","SchemeName":"UK.OBIE.SortCodeAccountNumber","Identification":"30654138867868"}, "InstructedAmount": {"Amount":"1.00","Currency":"GBP"}}}}
