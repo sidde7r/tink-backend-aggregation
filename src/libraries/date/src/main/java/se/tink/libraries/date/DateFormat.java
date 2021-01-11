@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.util.TimeZone;
 
 public final class DateFormat {
@@ -24,6 +25,17 @@ public final class DateFormat {
     public static String formatDate(
             final Date date, final String dateFormat, final String timeZone) {
         final SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);
+        return formatDate(date, sdf, timeZone);
+    }
+
+    public static String formatDate(
+            final Date date, final String dateFormat, final String timeZone, final Locale locale) {
+        final SimpleDateFormat sdf = new SimpleDateFormat(dateFormat, locale);
+        return formatDate(date, sdf, timeZone);
+    }
+
+    private static String formatDate(
+            final Date date, final SimpleDateFormat sdf, final String timeZone) {
 
         if (!Strings.isNullOrEmpty(timeZone)) {
             sdf.setTimeZone(TimeZone.getTimeZone(timeZone));
@@ -48,6 +60,11 @@ public final class DateFormat {
 
     public static String getFormattedCurrentDate(final String format, final String timeZone) {
         return formatDate(Calendar.getInstance().getTime(), format, timeZone);
+    }
+
+    public static String getFormattedCurrentDate(
+            final String format, final String timeZone, final Locale locale) {
+        return formatDate(Calendar.getInstance().getTime(), format, timeZone, locale);
     }
 
     public static Date convertToDateViaInstant(LocalDate dateToConvert) {
