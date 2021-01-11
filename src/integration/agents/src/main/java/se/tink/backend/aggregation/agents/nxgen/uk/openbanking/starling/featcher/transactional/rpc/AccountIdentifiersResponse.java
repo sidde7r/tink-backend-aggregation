@@ -31,7 +31,8 @@ public class AccountIdentifiersResponse {
         return AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban);
     }
 
-    public AccountIdentifier getSortCodeIdentifier() {
+    // Required to reflect UK.OBIE.SortCodeAccountNumber format
+    public AccountIdentifier getSortCodeAccountNumber() {
         return AccountIdentifier.create(
                 AccountIdentifier.Type.SORT_CODE, bankIdentifier + accountIdentifier);
     }

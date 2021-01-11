@@ -90,9 +90,10 @@ public class StarlingTransactionalAccountFetcher implements AccountFetcher<Trans
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(identifiers.getIban())
-                                .withAccountNumber(identifiers.getAccountIdentifier())
+                                .withAccountNumber(
+                                        identifiers.getSortCodeAccountNumber().getIdentifier())
                                 .withAccountName(identifiers.getAccountIdentifier())
-                                .addIdentifier(identifiers.getSortCodeIdentifier())
+                                .addIdentifier(identifiers.getSortCodeAccountNumber())
                                 .addIdentifier(identifiers.getIbanIdentifier())
                                 .build())
                 .addHolders(holders)

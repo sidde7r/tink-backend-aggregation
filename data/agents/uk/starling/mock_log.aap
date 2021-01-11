@@ -58,20 +58,20 @@ Connection: keep-alive
 Server-Timing: ***
 
 {
-    "accountIdentifier": "11111111",
-    "bankIdentifier": "608371",
-    "iban": "GB31SRLG60837111111111",
+    "accountIdentifier": "22222222",
+    "bankIdentifier": "111111",
+    "iban": "GB73SRLG6083722222222",
     "bic": "SRLGGB2L",
     "accountIdentifiers": [
         {
-            "identifierType": "IBAN_BIC",
-            "bankIdentifier": "SRLGGB2L",
-            "accountIdentifier": "GB31SRLG60837111111111"
+            "identifierType": "SORT_CODE",
+            "bankIdentifier": "111111",
+            "accountIdentifier": "22222222"
         },
         {
-            "identifierType": "SORT_CODE",
-            "bankIdentifier": "608371",
-            "accountIdentifier": "11111111"
+            "identifierType": "IBAN_BIC",
+            "bankIdentifier": "SRLGGB2L",
+            "accountIdentifier": "GB73SRLG6083722222222"
         }
     ]
 }
