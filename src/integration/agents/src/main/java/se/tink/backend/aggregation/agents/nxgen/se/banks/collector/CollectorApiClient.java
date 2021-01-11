@@ -16,6 +16,7 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 public class CollectorApiClient {
     private final TinkHttpClient client;
     private final SessionStorage sessionStorage;
+    private AccountListResponse accountList = new AccountListResponse();
 
     public CollectorApiClient(TinkHttpClient client, SessionStorage sessionStorage) {
         this.client = client;
@@ -46,10 +47,14 @@ public class CollectorApiClient {
     }
 
     public AccountListResponse fetchAccounts(String token) {
-        return client.request(Urls.ACCOUNTS)
-                .type(MediaType.APPLICATION_JSON)
-                .header(Headers.AUTHORIZATION, token)
-                .get(AccountListResponse.class);
+        if (accountList.isEmpty()) {
+            accountList =
+                    client.request(Urls.ACCOUNTS)
+                            .type(MediaType.APPLICATION_JSON)
+                            .header(Headers.AUTHORIZATION, token)
+                            .get(AccountListResponse.class);
+        }
+        return accountList;
     }
 
     public SavingsResponse getAccountInfo(String accountId) {
