@@ -26,7 +26,7 @@ public class CicAgentPaymentTest {
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("fr", "fr-cic-oauth2")
+                new AgentIntegrationTest.Builder("fr", "fr-cic-ob")
                         .setFinancialInstitutionId("cic")
                         .setAppId("tink")
                         .expectLoggedIn(false)

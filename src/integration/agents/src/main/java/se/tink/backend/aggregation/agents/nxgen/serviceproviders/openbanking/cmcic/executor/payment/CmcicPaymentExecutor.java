@@ -72,7 +72,7 @@ import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
@@ -291,10 +291,10 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
         return new PaymentResponse(
                 new Payment.Builder()
                         .withUniqueId(payment.getResourceId())
-                        .withAmount(
-                                new Amount(
-                                        amountTypeEntity.getCurrency(),
-                                        Double.parseDouble(amountTypeEntity.getAmount())))
+                        .withExactCurrencyAmount(
+                                ExactCurrencyAmount.of(
+                                        amountTypeEntity.getAmount(),
+                                        amountTypeEntity.getCurrency()))
                         .withStatus(PaymentStatus.PENDING)
                         .withCreditor(
                                 new Creditor(
@@ -375,8 +375,8 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
 
         AmountTypeEntity instructedAmount =
                 new AmountTypeEntity(
-                        payment.getAmount().getCurrency(),
-                        payment.getAmount().getValue().toString());
+                        payment.getExactCurrencyAmount().getCurrencyCode(),
+                        payment.getExactCurrencyAmount().getExactValue().toString());
 
         RemittanceInformationEntity remittanceInformation = new RemittanceInformationEntity();
 
