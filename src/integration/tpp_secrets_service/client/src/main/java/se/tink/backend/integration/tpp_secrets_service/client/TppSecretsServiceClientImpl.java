@@ -97,11 +97,15 @@ public final class TppSecretsServiceClientImpl extends ManagedSafeStop
 
     @Override
     public Optional<SecretsEntityCore> getAllSecrets(
-            String financialInstitutionId, String appId, String clusterId, String providerId) {
+            String financialInstitutionId,
+            String appId,
+            String clusterId,
+            String certId,
+            String providerId) {
         final AllSecretsFetcher allSecretsFetcher =
                 new AllSecretsFetcher(enabled, internalSecretsServiceStub);
         return allSecretsFetcher.getAllSecrets(
-                financialInstitutionId, appId, clusterId, providerId);
+                financialInstitutionId, appId, clusterId, certId, providerId);
     }
 
     @Override

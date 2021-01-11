@@ -5,7 +5,11 @@ import se.tink.backend.integration.tpp_secrets_service.client.entities.SecretsEn
 
 public interface TppSecretsServiceClient {
     Optional<SecretsEntityCore> getAllSecrets(
-            String financialInstitutionId, String appId, String clusterId, String providerId);
+            String financialInstitutionId,
+            String appId,
+            String clusterId,
+            String certId,
+            String providerId);
 
     void ping();
 
