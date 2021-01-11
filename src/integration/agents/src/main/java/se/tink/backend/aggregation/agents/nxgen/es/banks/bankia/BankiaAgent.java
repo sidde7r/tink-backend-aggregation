@@ -74,7 +74,7 @@ public final class BankiaAgent extends NextGenerationAgent
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
 
-        apiClient = new BankiaApiClient(client, persistentStorage);
+        apiClient = new BankiaApiClient(client, persistentStorage, new RequestFactory(client));
         configureHttpClient(client);
 
         BankiaInvestmentFetcher fetcher = new BankiaInvestmentFetcher(apiClient);

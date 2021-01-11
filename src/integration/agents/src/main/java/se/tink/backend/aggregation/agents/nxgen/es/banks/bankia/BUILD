@@ -27,6 +27,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/filter/filters/retry",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/form",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/response",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
         "//src/integration/models",
         "//src/libraries/account_identifier",
@@ -36,6 +37,7 @@ java_library(
         "//third_party:com_sun_jersey_jersey_core",
         "//third_party:commons_httpclient_commons_httpclient",
         "//third_party:commons_io_commons_io",
+        "//third_party:lombok_libs",
         "//third_party:org_apache_commons_commons_lang3",
         "//third_party:org_apache_httpcomponents_httpclient",
         "//third_party:org_apache_httpcomponents_httpcore",
@@ -47,5 +49,6 @@ java_library(
         "@aggregation//:com_fasterxml_jackson_core_jackson_core",
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
         "@aggregation//:com_google_guava_guava",
+        "@aggregation//:io_vavr_vavr",
     ],
 )
