@@ -139,9 +139,8 @@ public class SwedbankPaymentExecutor implements PaymentExecutor, FetchablePaymen
         } catch (MissingExtendedBankIdException exception) {
             // fallback to redirect flow if we're missing extended BankID
             swedbankPaymentSigner.signWithRedirect(paymentId);
-            payment.setStatus(getTinkPaymentStatus(paymentId));
         }
-
+        payment.setStatus(getTinkPaymentStatus(paymentId));
         return new PaymentMultiStepResponse(payment, STEP_FINALIZE, emptyList());
     }
 
