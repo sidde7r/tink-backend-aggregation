@@ -16,10 +16,14 @@ public class NordeaInternalServerErrorFilter extends Filter {
     public HttpResponse handle(HttpRequest httpRequest)
             throws HttpClientException, HttpResponseException {
         HttpResponse response = nextFilter(httpRequest);
-        if (response.getStatus() == HttpStatus.SC_INTERNAL_SERVER_ERROR && response.hasBody()) {
-            String body = response.getBody(String.class);
-            if (!Strings.isNullOrEmpty(body) && isBankSideFailure(body)) {
-                throw BankServiceError.BANK_SIDE_FAILURE.exception("Error body: " + body);
+        if (response.getStatus() == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
+            if (response.hasBody()) {
+                String body = response.getBody(String.class);
+                if (!Strings.isNullOrEmpty(body) && isBankSideFailure(body)) {
+                    throw BankServiceError.BANK_SIDE_FAILURE.exception("Error body: " + body);
+                }
+            } else {
+                throw BankServiceError.BANK_SIDE_FAILURE.exception();
             }
         }
         return response;
