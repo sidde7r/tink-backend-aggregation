@@ -22,7 +22,7 @@ public class TransactionAmountEntityTest {
                 amountToTransactionAmountEntity(givenAmount, givenCurrency);
         // and
         ExactCurrencyAmount expectedAmount =
-                new ExactCurrencyAmount(new BigDecimal(givenAmount), givenCurrency);
+                new ExactCurrencyAmount(new BigDecimal(givenAmount).negate(), givenCurrency);
 
         // when
         ExactCurrencyAmount result = transactionAmountEntity.toTinkAmount();
@@ -41,7 +41,7 @@ public class TransactionAmountEntityTest {
                 amountToTransactionAmountEntity(givenAmount, givenCurrency);
         // and
         ExactCurrencyAmount expectedAmount =
-                new ExactCurrencyAmount(new BigDecimal(givenAmount), givenCurrency);
+                new ExactCurrencyAmount(new BigDecimal(givenAmount).negate(), givenCurrency);
 
         // when
         ExactCurrencyAmount result = transactionAmountEntity.toTinkAmount();
@@ -60,7 +60,7 @@ public class TransactionAmountEntityTest {
                 amountToTransactionAmountEntity(givenAmount, givenCurrency);
         // and
         ExactCurrencyAmount expectedAmount =
-                new ExactCurrencyAmount(new BigDecimal(givenAmount), givenCurrency);
+                new ExactCurrencyAmount(new BigDecimal(givenAmount).negate(), givenCurrency);
 
         // when
         ExactCurrencyAmount result = transactionAmountEntity.toTinkAmount();
