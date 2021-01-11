@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation;
 
 import com.codahale.metrics.health.HealthCheck;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.inject.Injector;
 import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
@@ -35,6 +36,7 @@ public class AggregationServiceContainer extends Application<AggregationServiceC
     @Override
     public void initialize(Bootstrap<AggregationServiceConfiguration> bootstrap) {
         DropwizardObjectMapperConfigurator.doNotFailOnUnknownProperties(bootstrap);
+        bootstrap.getObjectMapper().registerModule(new JavaTimeModule());
         bootstrap.addCommand(new AddClientConfigurationsCommand());
 
         // Enables us to use environment variables in the yaml config
