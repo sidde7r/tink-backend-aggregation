@@ -46,7 +46,7 @@ public class SwedbankPaymentSigner {
 
     private PaymentAuthorisationResponse startAuthorisationProcess(
             String paymentId, boolean isRedirect) {
-        return swedbankApiClient.startPaymentAuthorisation(
+        return swedbankApiClient.initiatePaymentAuthorisation(
                 paymentId,
                 SwedbankPaymentType.SE_DOMESTIC_CREDIT_TRANSFERS,
                 strongAuthenticationState.getState(),

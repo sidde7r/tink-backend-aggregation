@@ -91,7 +91,7 @@ public class SwedbankPaymentSignerTest {
 
         // then
         verify(swedbankApiClient, times(1))
-                .startPaymentAuthorisation(
+                .initiatePaymentAuthorisation(
                         INSTRUCTION_ID,
                         SwedbankPaymentType.SE_DOMESTIC_CREDIT_TRANSFERS,
                         STRONG_AUTH_STATE,
@@ -159,7 +159,7 @@ public class SwedbankPaymentSignerTest {
         final PaymentAuthorisationResponse paymentAuthorisationResponse =
                 createPaymentAuthorisationResponse();
 
-        when(swedbankApiClient.startPaymentAuthorisation(
+        when(swedbankApiClient.initiatePaymentAuthorisation(
                         INSTRUCTION_ID,
                         SwedbankPaymentType.SE_DOMESTIC_CREDIT_TRANSFERS,
                         STRONG_AUTH_STATE,
