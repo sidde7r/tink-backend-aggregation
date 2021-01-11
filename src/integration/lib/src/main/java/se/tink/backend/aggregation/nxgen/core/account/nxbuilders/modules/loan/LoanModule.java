@@ -165,7 +165,6 @@ public final class LoanModule {
 
         @Override
         public LoanModuleBuildStep withInterestRate(double interestRate) {
-            Preconditions.checkArgument(interestRate >= 0, "Interest Rate must not be negative.");
             this.interestRate = interestRate;
             return this;
         }
