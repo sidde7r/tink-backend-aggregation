@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2;
+package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid;
 
 import com.google.common.base.Strings;
 import lombok.RequiredArgsConstructor;
@@ -9,13 +9,14 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.NemIdIFrameController;
 import se.tink.backend.aggregation.nxgen.storage.Storage;
 
 @RequiredArgsConstructor
 public class NemIdAuthenticationController implements TypedAuthenticator {
 
     private final NemIdIFrameController iFrameController;
-    private final NemIdAuthenticatorV2 authenticator;
+    private final NemIdAuthenticator authenticator;
     private final Storage storage;
 
     @Override
@@ -35,7 +36,7 @@ public class NemIdAuthenticationController implements TypedAuthenticator {
 
         authenticator.authenticateUsingInstallId(username, pinCode, installId);
 
-        storage.put(NemIdConstantsV2.Storage.NEMID_INSTALL_ID, installId);
+        storage.put(NemIdConstants.Storage.NEMID_INSTALL_ID, installId);
     }
 
     @Override

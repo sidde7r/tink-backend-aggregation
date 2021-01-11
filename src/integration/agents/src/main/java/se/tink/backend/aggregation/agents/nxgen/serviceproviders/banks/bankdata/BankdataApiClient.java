@@ -39,8 +39,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher.rpc.GetTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher.rpc.PoolAccountsResponse;
 import se.tink.backend.aggregation.agents.utils.crypto.RSA;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2.NemIdConstantsV2;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2.NemIdParametersV2;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdParameters;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.form.Form;
@@ -194,7 +194,7 @@ public class BankdataApiClient {
         return response;
     }
 
-    public NemIdParametersV2 fetchNemIdParameters(HttpResponse httpResponse) {
+    public NemIdParameters fetchNemIdParameters(HttpResponse httpResponse) {
         String responseString = httpResponse.getBody(String.class);
         Document responseBody = Jsoup.parse(responseString);
         String launcher =
@@ -203,14 +203,14 @@ public class BankdataApiClient {
                         .getElementsByAttribute("src")
                         .attr("src");
 
-        String iframeTemplate = NemIdConstantsV2.NEM_ID_IFRAME;
+        String iframeTemplate = NemIdConstants.NEM_ID_IFRAME;
         String formattedIframe = String.format(iframeTemplate, launcher);
 
         String nemidParametersScriptTag =
                 responseBody.getElementById("nemid_parameters").toString();
         String nemidParametersElement = nemidParametersScriptTag + formattedIframe;
 
-        return new NemIdParametersV2(nemidParametersElement);
+        return new NemIdParameters(nemidParametersElement);
     }
 
     public CompleteEnrollResponse completeEnrollment(final CryptoHelper cryptoHelper) {

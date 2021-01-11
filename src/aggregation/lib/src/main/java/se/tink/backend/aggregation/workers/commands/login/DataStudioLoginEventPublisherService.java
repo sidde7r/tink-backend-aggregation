@@ -312,7 +312,7 @@ public class DataStudioLoginEventPublisherService {
                             .put(
                                     NemIdError.REJECTED,
                                     AgentLoginCompletedEventProto.AgentLoginCompletedEvent
-                                            .LoginResult.LOGIN_ERROR_CREDENTIALS_VERIFICATION_ERROR)
+                                            .LoginResult.THIRD_PARTY_APP_ERROR_CANCELLED)
                             .put(
                                     NemIdError.SECOND_FACTOR_NOT_REGISTERED,
                                     AgentLoginCompletedEventProto.AgentLoginCompletedEvent

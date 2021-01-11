@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2;
+package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid;
 
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 
@@ -9,5 +9,5 @@ public interface NemIdParametersFetcher {
     //  - Signed NemId parameters which the iframe use
     //
     // This is the standard way of operations according to the NemId implementation guide.
-    NemIdParametersV2 getNemIdParameters() throws AuthenticationException;
+    NemIdParameters getNemIdParameters() throws AuthenticationException;
 }

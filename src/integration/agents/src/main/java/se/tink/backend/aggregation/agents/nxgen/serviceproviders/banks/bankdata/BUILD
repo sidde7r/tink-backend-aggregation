@@ -16,7 +16,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/encoding",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/compliance/account_capabilities",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/signaturekeypair",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/authentication/password/dk/nemid/v2:nemid",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/authentication/multifactor/nemid",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/client",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/exceptions/client",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/filter/filterable/request",

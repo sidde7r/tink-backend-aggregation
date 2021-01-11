@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata
 
 import com.google.common.base.Strings;
 import java.util.Optional;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2.NemIdConstantsV2;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants;
 import se.tink.backend.aggregation.nxgen.storage.Storage;
 
 public class BankdataStorage {
@@ -15,6 +15,6 @@ public class BankdataStorage {
 
     public Optional<String> getNemidInstallId() {
         return Optional.ofNullable(
-                Strings.emptyToNull(storage.get(NemIdConstantsV2.Storage.NEMID_INSTALL_ID)));
+                Strings.emptyToNull(storage.get(NemIdConstants.Storage.NEMID_INSTALL_ID)));
     }
 }

@@ -1,10 +1,10 @@
-package se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2;
+package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public class NemIdParametersV2 {
+public class NemIdParameters {
     private final String nemIdElements;
 }
