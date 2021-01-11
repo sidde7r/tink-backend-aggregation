@@ -50,7 +50,7 @@ public final class CollectorAgent extends NextGenerationAgent
 
     @Override
     protected SessionHandler constructSessionHandler() {
-        return new CollectorSessionHandler(sessionStorage);
+        return new CollectorSessionHandler(apiClient, sessionStorage);
     }
 
     private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
