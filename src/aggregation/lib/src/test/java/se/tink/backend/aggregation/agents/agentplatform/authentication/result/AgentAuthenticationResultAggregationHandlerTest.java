@@ -22,21 +22,24 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentUserInteractionDefinitionResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.userinteraction.AgentFieldValue;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.userinteraction.fielddefinition.AgentUsernameFieldDefinition;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.common.AgentExtendedClientInfo;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.InvalidCredentialsError;
 
 public class AgentAuthenticationResultAggregationHandlerTest {
 
     private UserInteractionService userInteractionService;
     private PersistentStorageService persistentStorageService;
+    private AgentExtendedClientInfo agentExtendedClientInfo;
     private AgentAuthenticationResultAggregationHandler objectUnderTest;
 
     @Before
     public void init() {
         userInteractionService = Mockito.mock(UserInteractionService.class);
         persistentStorageService = Mockito.mock(PersistentStorageService.class);
+        agentExtendedClientInfo = AgentExtendedClientInfo.builder().build();
         objectUnderTest =
                 new AgentAuthenticationResultAggregationHandler(
-                        userInteractionService, persistentStorageService);
+                        userInteractionService, persistentStorageService, agentExtendedClientInfo);
     }
 
     @Test
@@ -122,6 +125,11 @@ public class AgentAuthenticationResultAggregationHandlerTest {
                                 .getUserInteractionData()
                                 .getFieldValue(AgentUsernameFieldDefinition.id()))
                 .isEqualTo("XXX");
+        Assertions.assertThat(
+                        ((AgentUserInteractionAuthenticationProcessRequest)
+                                        result.getAgentAuthenticationNextRequest())
+                                .getAgentExtendedClientInfo())
+                .isEqualTo(agentExtendedClientInfo);
     }
 
     @Test
@@ -155,5 +163,10 @@ public class AgentAuthenticationResultAggregationHandlerTest {
                 .isEqualTo(agentAuthenticationProcessStepIdentifier);
         Assertions.assertThat(remoteInteractionRequest.getRemoteInteractionData().getValue("key1"))
                 .isEqualTo("value1");
+        Assertions.assertThat(
+                        ((AgentRemoteInteractionAuthenticationRequest)
+                                        result.getAgentAuthenticationNextRequest())
+                                .getAgentExtendedClientInfo())
+                .isEqualTo(agentExtendedClientInfo);
     }
 }

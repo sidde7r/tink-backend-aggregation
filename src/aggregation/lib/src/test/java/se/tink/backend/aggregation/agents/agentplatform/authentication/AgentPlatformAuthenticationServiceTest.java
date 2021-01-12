@@ -28,6 +28,8 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.steps.AgentAuthenticationProcessStep;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.userinteraction.AgentFieldValue;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.userinteraction.fielddefinition.AgentFieldDefinition;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.common.AgentClientInfo;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.common.AgentExtendedClientInfo;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.ServerError;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.credentials.service.CredentialsRequest;
@@ -41,6 +43,8 @@ public class AgentPlatformAuthenticationServiceTest {
     private PersistentStorage persistentStorage;
     private CredentialsRequest credentialsRequest;
     private Credentials credentials;
+    private final String appId = "dummyTestAppId";
+    private AgentExtendedClientInfo agentExtendedClientInfo;
 
     @Before
     public void init() {
@@ -49,6 +53,7 @@ public class AgentPlatformAuthenticationServiceTest {
         credentials = Mockito.mock(Credentials.class);
         credentialsRequest = Mockito.mock(CredentialsRequest.class);
         Mockito.when(credentialsRequest.getCredentials()).thenReturn(credentials);
+        Mockito.when(credentialsRequest.getState()).thenReturn(appId);
         objectUnderTest =
                 new AgentPlatformAuthenticationService(
                         userInteractionService,
@@ -58,6 +63,11 @@ public class AgentPlatformAuthenticationServiceTest {
         agentAuthenticationProcess = Mockito.mock(AgentAuthenticationProcess.class);
         Mockito.when(agentPlatformAuthenticator.getAuthenticationProcess())
                 .thenReturn(agentAuthenticationProcess);
+
+        agentExtendedClientInfo =
+                AgentExtendedClientInfo.builder()
+                        .clientInfo(AgentClientInfo.builder().appId(appId).build())
+                        .build();
     }
 
     @Test
@@ -75,7 +85,8 @@ public class AgentPlatformAuthenticationServiceTest {
         AgentAuthenticationProcessStep firstStep =
                 createAuthenticationStep(
                         new AgentStartAuthenticationProcessRequest(
-                                new AgentAuthenticationPersistedData(new HashMap<>())),
+                                new AgentAuthenticationPersistedData(new HashMap<>()),
+                                agentExtendedClientInfo),
                         firstStepResult);
         Mockito.when(agentAuthenticationProcess.getStartStep()).thenReturn(firstStep);
 
@@ -95,7 +106,8 @@ public class AgentPlatformAuthenticationServiceTest {
                                 lastStepIdentifier,
                                 new AgentAuthenticationPersistedData(new HashMap<>()),
                                 new AgentAuthenticationProcessState(new HashMap<>()),
-                                agentFieldValues),
+                                agentFieldValues,
+                                agentExtendedClientInfo),
                         new AgentSucceededAuthenticationResult(
                                 sessionExpiryDate,
                                 new AgentAuthenticationPersistedData(persistentData)));
@@ -120,7 +132,8 @@ public class AgentPlatformAuthenticationServiceTest {
         AgentAuthenticationProcessStep firstStep =
                 createAuthenticationStep(
                         new AgentStartAuthenticationProcessRequest(
-                                new AgentAuthenticationPersistedData(persistentData)),
+                                new AgentAuthenticationPersistedData(persistentData),
+                                agentExtendedClientInfo),
                         new AgentFailedAuthenticationResult(
                                 new ServerError(),
                                 new AgentAuthenticationPersistedData(new HashMap<>())));
