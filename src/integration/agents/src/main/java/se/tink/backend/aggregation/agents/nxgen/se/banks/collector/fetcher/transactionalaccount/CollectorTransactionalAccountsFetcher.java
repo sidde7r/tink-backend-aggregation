@@ -36,7 +36,7 @@ public class CollectorTransactionalAccountsFetcher implements AccountFetcher<Tra
     }
 
     private Optional<TransactionalAccount> getAccountInfo(AccountEntity accountEntity) {
-        return Optional.of(accountEntity.getAccountId())
+        return Optional.of(accountEntity.getAccountUUID())
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .map(apiClient::getAccountInfo)

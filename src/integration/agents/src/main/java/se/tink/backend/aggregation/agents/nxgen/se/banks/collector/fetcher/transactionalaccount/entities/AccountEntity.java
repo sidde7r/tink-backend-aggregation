@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.collector.fetcher.tran
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.base.Strings;
 import java.math.BigDecimal;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.AccountTypes;
@@ -54,7 +55,12 @@ public class AccountEntity {
         return titleEntity;
     }
 
-    public Optional<String> getAccountId() {
+    public Optional<String> getAccountUUID() {
+        if (Strings.isNullOrEmpty(accountId)
+                || !CollectorConstants.UUID_PATTERN.matcher(accountId).matches()) {
+            return Optional.empty();
+        }
+
         return Optional.ofNullable(accountId);
     }
 

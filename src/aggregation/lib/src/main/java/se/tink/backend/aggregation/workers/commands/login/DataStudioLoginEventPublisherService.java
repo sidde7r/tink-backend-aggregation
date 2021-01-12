@@ -17,6 +17,7 @@ import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SupplementalInfoError;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
+import se.tink.backend.aggregation.events.IntegrationParameters;
 import se.tink.backend.aggregation.events.LoginAgentEventProducer;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.exception.NemIdError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.exception.NemIdException;
@@ -435,13 +436,17 @@ public class DataStudioLoginEventPublisherService {
     void publishLoginResultEvent(
             AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult reason) {
         eventPublisher.sendLoginCompletedEvent(
-                context.getRequest().getCredentials().getProviderName(),
-                context.getCorrelationId(),
+                IntegrationParameters.builder()
+                        .providerName(context.getRequest().getCredentials().getProviderName())
+                        .correlationId(context.getCorrelationId())
+                        .appId(context.getAppId())
+                        .clusterId(context.getClusterId())
+                        .userId(context.getRequest().getCredentials().getUserId())
+                        .build(),
                 reason,
                 countAuthenticationElapsedTime(),
-                context.getAppId(),
-                context.getClusterId(),
-                context.getRequest().getCredentials().getUserId());
+                AgentLoginCompletedEventUserInteractionInformationProvider
+                        .userInteractionInformation(supplementalInformationController));
     }
 
     private long countAuthenticationElapsedTime() {

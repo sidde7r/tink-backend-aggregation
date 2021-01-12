@@ -26,13 +26,10 @@ public class LoginAgentEventProducer {
     }
 
     public void sendLoginCompletedEvent(
-            String providerName,
-            String correlationId,
+            IntegrationParameters integrationParameters,
             LoginResult result,
             long elapsedTime,
-            String appId,
-            String clusterId,
-            String userId) {
+            AgentLoginCompletedEvent.UserInteractionInformation userInteractionInformation) {
 
         if (!sendAgentLoginCompletedEventsEnabled) {
             return;
@@ -42,13 +39,14 @@ public class LoginAgentEventProducer {
             AgentLoginCompletedEvent event =
                     AgentLoginCompletedEvent.newBuilder()
                             .setTimestamp(ProtobufTypeUtil.toProtobufTimestamp(Instant.now()))
-                            .setProviderName(providerName)
-                            .setCorrelationId(correlationId)
+                            .setProviderName(integrationParameters.getProviderName())
+                            .setCorrelationId(integrationParameters.getCorrelationId())
                             .setResult(result)
                             .setPassedTime(elapsedTime)
-                            .setAppId(appId)
-                            .setClusterId(clusterId)
-                            .setUserId(userId)
+                            .setAppId(integrationParameters.getAppId())
+                            .setClusterId(integrationParameters.getClusterId())
+                            .setUserId(integrationParameters.getUserId())
+                            .setUserInteractionInformation(userInteractionInformation)
                             .build();
 
             eventProducerServiceClient.postEventAsync(Any.pack(event));
