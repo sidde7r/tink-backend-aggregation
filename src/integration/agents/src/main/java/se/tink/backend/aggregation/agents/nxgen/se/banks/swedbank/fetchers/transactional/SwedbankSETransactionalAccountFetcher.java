@@ -56,12 +56,7 @@ public class SwedbankSETransactionalAccountFetcher
                             .collect(Collectors.toList()));
             accounts.addAll(
                     engagementOverviewResponse.getSavingAccounts().stream()
-                            // have not found any other way to filter out investment accounts from
-                            // savings accounts
-                            .filter(
-                                    account ->
-                                            !getInvestmentAccountNumbers()
-                                                    .contains(account.getFullyFormattedNumber()))
+                            .filter(account -> !isInvestmentAccount(account))
                             .map(
                                     account -> {
                                         tryAccessPensionPortfoliosIfPensionType(account);
@@ -78,6 +73,16 @@ public class SwedbankSETransactionalAccountFetcher
         }
 
         return accounts;
+    }
+
+    private boolean isInvestmentAccount(SavingAccountEntity account) {
+        boolean existsInInvestmentAccounts =
+                getInvestmentAccountNumbers().contains(account.getFullyFormattedNumber());
+        if (existsInInvestmentAccounts && !account.isInvestmentAccount()) {
+            // Mismatched ids should be added to INVESTMENT_ACCOUNT_PRODUCT_IDS
+            log.warn("Swedbank investment account product ID mismatch: {}", account.getProductId());
+        }
+        return existsInInvestmentAccounts;
     }
 
     private void tryAccessPensionPortfoliosIfPensionType(SavingAccountEntity account) {
