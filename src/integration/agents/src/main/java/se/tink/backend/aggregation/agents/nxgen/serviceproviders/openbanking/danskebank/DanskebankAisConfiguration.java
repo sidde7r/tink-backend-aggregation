@@ -1,9 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.danskebank;
 
 import com.google.common.base.Preconditions;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import com.google.common.collect.ImmutableSet;
 import javax.annotation.Nonnull;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingV31Constants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.authenticator.rpc.AccountPermissionResponse;
@@ -11,6 +9,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingConstants.ApiServices;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.authenticator.rpc.AccountPermissionResponseV31;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticatorConstants;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.enums.MarketCode;
 
@@ -18,21 +17,18 @@ public class DanskebankAisConfiguration implements UkOpenBankingAisConfig {
     private final URL apiBaseURL;
     private final URL wellKnownURL;
     private final URL identityDataURL;
-    private final Set<String> additionalPermissions;
     private final String market;
-    private boolean partyEndpointEnabled;
+    private final boolean partyEndpointEnabled;
 
     private DanskebankAisConfiguration(
             URL apiBaseURL,
             URL wellKnownURL,
             URL identityDataURL,
-            Set<String> additionalPermissions,
             @Nonnull MarketCode market,
             boolean partyEndpointEnabled) {
         this.apiBaseURL = apiBaseURL;
         this.wellKnownURL = wellKnownURL;
         this.identityDataURL = identityDataURL;
-        this.additionalPermissions = additionalPermissions;
         this.market = market.name().toLowerCase();
         this.partyEndpointEnabled = partyEndpointEnabled;
     }
@@ -60,8 +56,26 @@ public class DanskebankAisConfiguration implements UkOpenBankingAisConfig {
         return false;
     }
 
-    public Set<String> getAdditionalPermissions() {
-        return additionalPermissions;
+    @Override
+    public ImmutableSet<String> getPermissions() {
+        return ImmutableSet.<String>builder()
+                .add(
+                        OpenIdAuthenticatorConstants.ConsentPermission.READ_ACCOUNTS_DETAIL
+                                .getValue(),
+                        OpenIdAuthenticatorConstants.ConsentPermission.READ_BALANCES.getValue(),
+                        OpenIdAuthenticatorConstants.ConsentPermission.READ_BENEFICIARIES_DETAIL
+                                .getValue(),
+                        OpenIdAuthenticatorConstants.ConsentPermission.READ_DIRECT_DEBITS
+                                .getValue(),
+                        OpenIdAuthenticatorConstants.ConsentPermission.READ_STANDING_ORDERS_DETAIL
+                                .getValue(),
+                        OpenIdAuthenticatorConstants.ConsentPermission.READ_TRANSACTIONS_CREDITS
+                                .getValue(),
+                        OpenIdAuthenticatorConstants.ConsentPermission.READ_TRANSACTIONS_DEBITS
+                                .getValue(),
+                        OpenIdAuthenticatorConstants.ConsentPermission.READ_TRANSACTIONS_DETAIL
+                                .getValue())
+                .build();
     }
 
     @Override
@@ -138,7 +152,6 @@ public class DanskebankAisConfiguration implements UkOpenBankingAisConfig {
         private URL wellKnownURL;
         private URL identityDataURL;
         private final MarketCode market;
-        private Set<String> additionalPermissions;
         private boolean partyEndpointEnabled = true;
 
         public Builder(final String apiBaseUrl, final MarketCode market) {
@@ -157,15 +170,6 @@ public class DanskebankAisConfiguration implements UkOpenBankingAisConfig {
             return this;
         }
 
-        public DanskebankAisConfiguration.Builder withAdditionalPermission(
-                final String additionalPermission) {
-            if (Objects.isNull(this.additionalPermissions)) {
-                this.additionalPermissions = new HashSet<>();
-            }
-            this.additionalPermissions.add(additionalPermission);
-            return this;
-        }
-
         public DanskebankAisConfiguration.Builder partyEndpointEnabled(
                 final boolean partyEndpointEnabled) {
             this.partyEndpointEnabled = partyEndpointEnabled;
@@ -175,12 +179,7 @@ public class DanskebankAisConfiguration implements UkOpenBankingAisConfig {
         public DanskebankAisConfiguration build() {
             Preconditions.checkNotNull(apiBaseURL);
             return new DanskebankAisConfiguration(
-                    apiBaseURL,
-                    wellKnownURL,
-                    identityDataURL,
-                    additionalPermissions,
-                    market,
-                    partyEndpointEnabled);
+                    apiBaseURL, wellKnownURL, identityDataURL, market, partyEndpointEnabled);
         }
     }
 }

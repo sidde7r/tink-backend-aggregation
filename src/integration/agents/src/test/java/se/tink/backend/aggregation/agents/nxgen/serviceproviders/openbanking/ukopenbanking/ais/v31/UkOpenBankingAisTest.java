@@ -1,19 +1,18 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31;
 
 import java.util.Set;
-import org.hamcrest.core.Is;
-import org.junit.Assert;
+import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountOwnershipType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingConstants.PartyEndpoint;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingConstants.PartyEndpoint.PartyPermission;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticatorConstants;
 
 public class UkOpenBankingAisTest {
 
     @Test
     public void shouldGetAllRequiredPermissionsForChosenPartyEndpoints() {
         // given
-        UkOpenBankingAisConfiguration withOnePermission =
+        UkOpenBankingAisConfiguration configWithOnePartyPermission =
                 UkOpenBankingAisConfiguration.builder()
                         .withApiBaseURL("apiBaseURL")
                         .withOrganisationId("orgId")
@@ -21,7 +20,7 @@ public class UkOpenBankingAisTest {
                         .withAllowedAccountOwnershipType(AccountOwnershipType.PERSONAL)
                         .withPartyEndpoints(PartyEndpoint.IDENTITY_DATA_ENDPOINT_PARTY)
                         .build();
-        UkOpenBankingAisConfiguration withTwoPermissions =
+        UkOpenBankingAisConfiguration configWithTwoPartyPermissions =
                 UkOpenBankingAisConfiguration.builder()
                         .withApiBaseURL("apiBaseURL")
                         .withOrganisationId("orgId")
@@ -34,23 +33,48 @@ public class UkOpenBankingAisTest {
                         .build();
 
         // when
-        Set<String> onePermission = withOnePermission.getAdditionalPermissions();
-        Set<String> twoPermissions = withTwoPermissions.getAdditionalPermissions();
+        Set<String> permissionSet1 = configWithOnePartyPermission.getPermissions();
+        Set<String> permissionSet2 = configWithTwoPartyPermissions.getPermissions();
 
         // then
-        Assert.assertThat(onePermission.size(), Is.is(1));
-        Assert.assertThat(
-                onePermission.contains(
-                        PartyPermission.ACCOUNT_PERMISSION_READ_PARTY_PSU.getPermissionValue()),
-                Is.is(true));
-        Assert.assertThat(twoPermissions.size(), Is.is(2));
-        Assert.assertThat(
-                twoPermissions.contains(
-                        PartyPermission.ACCOUNT_PERMISSION_READ_PARTY.getPermissionValue()),
-                Is.is(true));
-        Assert.assertThat(
-                twoPermissions.contains(
-                        PartyPermission.ACCOUNT_PERMISSION_READ_PARTY_PSU.getPermissionValue()),
-                Is.is(true));
+        Assertions.assertThat(permissionSet1)
+                .hasSize(9)
+                .contains(
+                        OpenIdAuthenticatorConstants.ConsentPermission.READ_ACCOUNTS_DETAIL
+                                .getValue(),
+                        OpenIdAuthenticatorConstants.ConsentPermission.READ_BALANCES.getValue(),
+                        OpenIdAuthenticatorConstants.ConsentPermission.READ_BENEFICIARIES_DETAIL
+                                .getValue(),
+                        OpenIdAuthenticatorConstants.ConsentPermission.READ_DIRECT_DEBITS
+                                .getValue(),
+                        OpenIdAuthenticatorConstants.ConsentPermission.READ_STANDING_ORDERS_DETAIL
+                                .getValue(),
+                        OpenIdAuthenticatorConstants.ConsentPermission.READ_TRANSACTIONS_CREDITS
+                                .getValue(),
+                        OpenIdAuthenticatorConstants.ConsentPermission.READ_TRANSACTIONS_DEBITS
+                                .getValue(),
+                        OpenIdAuthenticatorConstants.ConsentPermission.READ_TRANSACTIONS_DETAIL
+                                .getValue(),
+                        OpenIdAuthenticatorConstants.ConsentPermission.READ_PARTY_PSU.getValue());
+        Assertions.assertThat(permissionSet2)
+                .hasSize(10)
+                .contains(
+                        OpenIdAuthenticatorConstants.ConsentPermission.READ_ACCOUNTS_DETAIL
+                                .getValue(),
+                        OpenIdAuthenticatorConstants.ConsentPermission.READ_BALANCES.getValue(),
+                        OpenIdAuthenticatorConstants.ConsentPermission.READ_BENEFICIARIES_DETAIL
+                                .getValue(),
+                        OpenIdAuthenticatorConstants.ConsentPermission.READ_DIRECT_DEBITS
+                                .getValue(),
+                        OpenIdAuthenticatorConstants.ConsentPermission.READ_STANDING_ORDERS_DETAIL
+                                .getValue(),
+                        OpenIdAuthenticatorConstants.ConsentPermission.READ_TRANSACTIONS_CREDITS
+                                .getValue(),
+                        OpenIdAuthenticatorConstants.ConsentPermission.READ_TRANSACTIONS_DEBITS
+                                .getValue(),
+                        OpenIdAuthenticatorConstants.ConsentPermission.READ_TRANSACTIONS_DETAIL
+                                .getValue(),
+                        OpenIdAuthenticatorConstants.ConsentPermission.READ_PARTY_PSU.getValue(),
+                        OpenIdAuthenticatorConstants.ConsentPermission.READ_PARTY.getValue());
     }
 }

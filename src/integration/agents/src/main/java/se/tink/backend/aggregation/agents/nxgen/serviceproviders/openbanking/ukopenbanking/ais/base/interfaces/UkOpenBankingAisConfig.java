@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces;
 
-import java.util.Set;
+import com.google.common.collect.ImmutableSet;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.authenticator.rpc.AccountPermissionResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountOwnershipType;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -35,7 +35,7 @@ public interface UkOpenBankingAisConfig {
 
     boolean isAccountPartyEndpointEnabled();
 
-    Set<String> getAdditionalPermissions();
+    ImmutableSet<String> getPermissions();
 
     AccountOwnershipType getAllowedAccountOwnershipType();
 
