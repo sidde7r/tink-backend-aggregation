@@ -91,12 +91,12 @@ spec:
   - alert: RefreshSuccessRateBelow90WithAttemptLimitNL
     expr: |
       # Successful attempts < 90% and >= 80%
-      (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="NL", provider_type!="test"}[30m])) by (className,provider,type)
-          / sum(increase(tink_agent_refresh_total{market="NL", provider_type!="test"}[30m])) by (className,provider,type) < 0.90)
-      and (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="NL", provider_type!="test"}[30m])) by (className,provider,type)
-              / sum(increase(tink_agent_refresh_total{market="NL", provider_type!="test"}[30m])) by (className,provider,type) >= 0.80)
+      (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="NL", provider_type!="test", className!~"nxgen.nl.banks.openbanking.rabobank.RabobankAgent"}[30m])) by (className,provider,type)
+          / sum(increase(tink_agent_refresh_total{market="NL", provider_type!="test", className!~"nxgen.nl.banks.openbanking.rabobank.RabobankAgent"}[30m])) by (className,provider,type) < 0.90)
+      and (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="NL", provider_type!="test", className!~"nxgen.nl.banks.openbanking.rabobank.RabobankAgent"}[30m])) by (className,provider,type)
+              / sum(increase(tink_agent_refresh_total{market="NL", provider_type!="test", className!~"nxgen.nl.banks.openbanking.rabobank.RabobankAgent"}[30m])) by (className,provider,type) >= 0.80)
       # At least this many attempts.
-        and sum(increase(tink_agent_refresh_total{market="NL", provider_type!="test"}[30m])) by (className,provider,type) > 40
+        and sum(increase(tink_agent_refresh_total{market="NL", provider_type!="test", className!~"nxgen.nl.banks.openbanking.rabobank.RabobankAgent"}[30m])) by (className,provider,type) > 40
     for: 5m
     labels:
       severity: urgent
@@ -112,12 +112,12 @@ spec:
   - alert: RefreshSuccessRateBelow80WithAttemptLimitNL
     expr: |
       # Successful attempts < 80% and >= 70%
-      (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="NL", provider_type!="test"}[30m])) by (className,provider,type)
-          / sum(increase(tink_agent_refresh_total{market="NL", provider_type!="test"}[30m])) by (className,provider,type) < 0.80)
-      and (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="NL", provider_type!="test"}[30m])) by (className,provider,type)
-              / sum(increase(tink_agent_refresh_total{market="NL", provider_type!="test"}[30m])) by (className,provider,type) >= 0.70)
+      (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="NL", provider_type!="test", className!~"nxgen.nl.banks.openbanking.rabobank.RabobankAgent"}[30m])) by (className,provider,type)
+          / sum(increase(tink_agent_refresh_total{market="NL", provider_type!="test", className!~"nxgen.nl.banks.openbanking.rabobank.RabobankAgent"}[30m])) by (className,provider,type) < 0.80)
+      and (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="NL", provider_type!="test", className!~"nxgen.nl.banks.openbanking.rabobank.RabobankAgent"}[30m])) by (className,provider,type)
+              / sum(increase(tink_agent_refresh_total{market="NL", provider_type!="test", className!~"nxgen.nl.banks.openbanking.rabobank.RabobankAgent"}[30m])) by (className,provider,type) >= 0.70)
       # At least this many attempts.
-        and sum(increase(tink_agent_refresh_total{market="NL", provider_type!="test"}[30m])) by (className,provider,type) > 20
+        and sum(increase(tink_agent_refresh_total{market="NL", provider_type!="test", className!~"nxgen.nl.banks.openbanking.rabobank.RabobankAgent"}[30m])) by (className,provider,type) > 20
     for: 5m
     labels:
       severity: urgent
