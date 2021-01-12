@@ -80,18 +80,20 @@ public abstract class SwedbankBaseAgent extends NextGenerationAgent
 
     @Override
     protected Authenticator constructAuthenticator() {
-        if (AuthenticationFlow.DECOUPLED.equals(request.getProvider().getAuthenticationFlow())) {
+        AuthenticationFlow authenticationFlow = request.getProvider().getAuthenticationFlow();
+
+        if (AuthenticationFlow.DECOUPLED.equals(authenticationFlow)) {
             return constructDecoupledAppAuthenticator();
         }
 
-        if (AuthenticationFlow.REDIRECT.equals(request.getProvider().getAuthenticationFlow())) {
+        if (AuthenticationFlow.REDIRECT.equals(authenticationFlow)) {
             return constructRedirectAuthenticator();
         }
 
         throw new NotImplementedException(
                 String.format(
                         "Support for %s authentication flow has not been implemented.",
-                        request.getProvider().getAuthenticationFlow()));
+                        authenticationFlow));
     }
 
     private Authenticator constructDecoupledAppAuthenticator() {
