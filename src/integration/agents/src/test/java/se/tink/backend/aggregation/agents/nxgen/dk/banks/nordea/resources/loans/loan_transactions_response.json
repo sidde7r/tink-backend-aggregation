@@ -1,0 +1,43 @@
+{
+    "result": [
+        {
+            "has_details": false,
+            "booked": true,
+            "amount": -111.59,
+            "currency": "DKK",
+            "booking_date": "2020-12-31",
+            "interest_date": "2021-01-01",
+            "transaction_date": "2020-12-30",
+            "title": "Renter",
+            "description": "Renter",
+            "balance_after": -12345.12,
+            "transaction_type": {
+                "transaction_code": "00111",
+                "transaction_code_text": "RENTER"
+            },
+            "reconciliation_status": "not_done",
+            "reconciliation_id": "test_id"
+        },
+        {
+            "has_details": false,
+            "booked": true,
+            "amount": -123.11,
+            "currency": "DKK",
+            "booking_date": "2020-12-11",
+            "interest_date": "2020-12-11",
+            "transaction_date": "2020-12-11",
+            "title": "Provision",
+            "description": "Provision",
+            "balance_after": -5432.12,
+            "transaction_type": {
+                "transaction_code": "00123",
+                "transaction_code_text": "PROVISION"
+            },
+            "reconciliation_status": "not_done",
+            "reconciliation_id": "some_id"
+        }
+    ],
+    "total_size": null,
+    "continuation_key": "blablablatest",
+    "sub_system_errors": []
+}
