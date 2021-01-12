@@ -65,6 +65,8 @@ public class CollectorBankIdAuthenticator implements BankIdAuthenticator<String>
                 return BankIdStatus.DONE;
             case CollectorConstants.BankIdStatus.NO_CLIENT:
                 return BankIdStatus.NO_CLIENT;
+            case CollectorConstants.BankIdStatus.CANCELLED:
+                return BankIdStatus.CANCELLED;
             default:
                 return BankIdStatus.FAILED_UNKNOWN;
         }

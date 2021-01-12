@@ -49,6 +49,7 @@ public class CollectorConstants {
         public static final String USER_SIGN = "user_sign";
         public static final String COMPLETE = "complete";
         public static final String NO_CLIENT = "no_client";
+        public static final String CANCELLED = "user_cancel";
     }
 
     public static class IdTags {
