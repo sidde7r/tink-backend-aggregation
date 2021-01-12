@@ -24,6 +24,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.ConsentStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.TokenForm;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.TokenResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.WellKnownResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.configuration.Xs2aDevelopersProviderConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.executor.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.executor.payment.rpc.CreatePaymentResponse;
@@ -230,5 +231,12 @@ public class Xs2aDevelopersApiClient {
                         getTokenFromStorage(StorageKeys.PIS_TOKEN).getAccessToken())
                 .header(HeaderKeys.X_REQUEST_ID, randomValueGenerator.getUUID())
                 .get(GetPaymentResponse.class);
+    }
+
+    public String getAuthorizationEndpoint(String authorizationEndpointSource) {
+        return client.request(authorizationEndpointSource)
+                .accept(MediaType.APPLICATION_JSON_TYPE)
+                .get(WellKnownResponse.class)
+                .getAuthorizationEndpoint();
     }
 }

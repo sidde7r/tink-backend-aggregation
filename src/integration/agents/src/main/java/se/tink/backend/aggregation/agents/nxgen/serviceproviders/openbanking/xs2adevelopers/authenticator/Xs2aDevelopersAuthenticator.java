@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator;
 
 import java.time.format.DateTimeFormatter;
+import lombok.RequiredArgsConstructor;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersApiClient;
@@ -22,6 +23,7 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2TokenAccessor
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
+@RequiredArgsConstructor
 public class Xs2aDevelopersAuthenticator implements OAuth2Authenticator, OAuth2TokenAccessor {
 
     protected final Xs2aDevelopersApiClient apiClient;
@@ -29,22 +31,18 @@ public class Xs2aDevelopersAuthenticator implements OAuth2Authenticator, OAuth2T
     private final Xs2aDevelopersProviderConfiguration configuration;
     protected final LocalDateTimeSource localDateTimeSource;
     private final Credentials credentials;
-
-    public Xs2aDevelopersAuthenticator(
-            Xs2aDevelopersApiClient apiClient,
-            PersistentStorage persistentStorage,
-            Xs2aDevelopersProviderConfiguration configuration,
-            LocalDateTimeSource localDateTimeSource,
-            Credentials credentials) {
-        this.apiClient = apiClient;
-        this.persistentStorage = persistentStorage;
-        this.configuration = configuration;
-        this.localDateTimeSource = localDateTimeSource;
-        this.credentials = credentials;
-    }
+    private final boolean isRequestForWellKnownUrlNeeded;
 
     @Override
     public URL buildAuthorizeUrl(String state) {
+        ConsentResponse consentResponse = requestForConsent();
+        persistentStorage.put(StorageKeys.CONSENT_ID, consentResponse.getConsentId());
+        String scaUrl = retrieveScaUrl(consentResponse);
+        return apiClient.buildAuthorizeUrl(
+                state, QueryValues.SCOPE + consentResponse.getConsentId(), scaUrl);
+    }
+
+    private ConsentResponse requestForConsent() {
         AccessEntity accessEntity = getAccessEntity();
         ConsentRequest consentRequest =
                 new ConsentRequest(
@@ -53,13 +51,15 @@ public class Xs2aDevelopersAuthenticator implements OAuth2Authenticator, OAuth2T
                         FormValues.FREQUENCY_PER_DAY,
                         FormValues.TRUE,
                         localDateTimeSource.now().plusDays(89).format(DateTimeFormatter.ISO_DATE));
+        return apiClient.createConsent(consentRequest);
+    }
 
-        ConsentResponse consentResponse = apiClient.createConsent(consentRequest);
-        persistentStorage.put(StorageKeys.CONSENT_ID, consentResponse.getConsentId());
-        return apiClient.buildAuthorizeUrl(
-                state,
-                QueryValues.SCOPE + consentResponse.getConsentId(),
-                consentResponse.getLinks().getScaOAuth());
+    private String retrieveScaUrl(ConsentResponse consentResponse) {
+        String scaOAuthSourceUrl = consentResponse.getLinks().getScaOAuth();
+        if (isRequestForWellKnownUrlNeeded) {
+            return apiClient.getAuthorizationEndpoint(scaOAuthSourceUrl);
+        }
+        return scaOAuthSourceUrl;
     }
 
     @Override

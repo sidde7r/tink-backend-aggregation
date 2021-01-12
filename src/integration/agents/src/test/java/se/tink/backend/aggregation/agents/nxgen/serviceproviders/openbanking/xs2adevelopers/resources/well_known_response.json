@@ -1,0 +1,11 @@
+{
+    "issuer" : "https://psd2.api.commerzbank.com",
+    "authorization_endpoint" : "https://psd2.redirect.commerzbank.com/public/berlingroup/authorize/f72f2b08-0a25-4e0d-b4be-ac67a04ef264",
+    "token_endpoint" : "https://psd2.api.commerzbank.com/berlingroup/v1/token",
+    "userinfo_endpoint" : "https://psd2.api.commerzbank.com/berlingroup/v1/accounts",
+    "scopes_supported" : [ "account", "payment" ],
+    "response_types_supported" : [ "code" ],
+    "grant_types_supported" : [ "client_credentials", "authorization_code", "refresh_token" ],
+    "code_challenge_methods_supported" : [ "S256" ],
+    "subject_types_supported" : [ "public" ]
+}

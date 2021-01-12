@@ -39,6 +39,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.ConsentStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.TokenResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.WellKnownResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.configuration.Xs2aDevelopersProviderConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.ActualLocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
@@ -113,7 +114,12 @@ public class Xs2aDevelopersAuthenticatorTest {
 
         authenticator =
                 new Xs2aDevelopersAuthenticator(
-                        apiClient, storage, configuration, localDateTimeSource, new Credentials());
+                        apiClient,
+                        storage,
+                        configuration,
+                        localDateTimeSource,
+                        new Credentials(),
+                        false);
     }
 
     @Test
@@ -189,7 +195,8 @@ public class Xs2aDevelopersAuthenticatorTest {
         credentials.setType(CredentialsTypes.THIRD_PARTY_APP);
 
         Xs2aDevelopersAuthenticator xs2aDevelopersAuthenticator =
-                createXs2aDevelopersAuthenticator(tinkHttpClient, persistentStorage, credentials);
+                createXs2aDevelopersAuthenticator(
+                        tinkHttpClient, persistentStorage, credentials, false);
 
         AutoAuthenticationController autoAuthenticationController =
                 createAutoAuthenticationController(
@@ -209,7 +216,8 @@ public class Xs2aDevelopersAuthenticatorTest {
         Credentials credentials = createCredentials(new Date());
 
         Xs2aDevelopersAuthenticator xs2aDevelopersAuthenticator =
-                createXs2aDevelopersAuthenticator(tinkHttpClient, persistentStorage, credentials);
+                createXs2aDevelopersAuthenticator(
+                        tinkHttpClient, persistentStorage, credentials, false);
         AutoAuthenticationController autoAuthenticationController =
                 createAutoAuthenticationController(
                         xs2aDevelopersAuthenticator, credentials, persistentStorage, false);
@@ -233,7 +241,8 @@ public class Xs2aDevelopersAuthenticatorTest {
         Credentials credentials = createCredentials(currentSessionExpiryDate);
 
         Xs2aDevelopersAuthenticator xs2aDevelopersAuthenticator =
-                createXs2aDevelopersAuthenticator(tinkHttpClient, persistentStorage, credentials);
+                createXs2aDevelopersAuthenticator(
+                        tinkHttpClient, persistentStorage, credentials, false);
         AutoAuthenticationController autoAuthenticationController =
                 createAutoAuthenticationController(
                         xs2aDevelopersAuthenticator, credentials, persistentStorage, false);
@@ -243,6 +252,26 @@ public class Xs2aDevelopersAuthenticatorTest {
 
         // then
         assertThat(credentials.getSessionExpiryDate()).isEqualTo(newSessionExpiryDate);
+    }
+
+    @Test
+    public void buildAuthorizeUrl_should_request_for_wellKnownUrl_if_needed() {
+        // given
+        TinkHttpClient tinkHttpClient = mockHttpClient();
+        PersistentStorage persistentStorage = new PersistentStorage();
+        Credentials credentials = new Credentials();
+        credentials.setType(CredentialsTypes.THIRD_PARTY_APP);
+        Xs2aDevelopersAuthenticator authenticatiorWithRequestForWellKnownUrlNeeded =
+                createXs2aDevelopersAuthenticator(
+                        tinkHttpClient, persistentStorage, credentials, true);
+
+        // when
+        authenticatiorWithRequestForWellKnownUrlNeeded.buildAuthorizeUrl("dummyState");
+
+        // then
+        verify(tinkHttpClient)
+                .request(
+                        "https://psd.xs2a-api.com/public/berlingroup/authorize/55d7b2c8-d120-441c-ab3c-ca930e2f6ec9");
     }
 
     private Credentials createCredentials(Date sessionExpiryDate) {
@@ -314,7 +343,8 @@ public class Xs2aDevelopersAuthenticatorTest {
     private Xs2aDevelopersAuthenticator createXs2aDevelopersAuthenticator(
             TinkHttpClient tinkHttpClient,
             PersistentStorage persistentStorage,
-            Credentials credentials) {
+            Credentials credentials,
+            boolean isRequestForWellKnownUrlNeeded) {
         Xs2aDevelopersProviderConfiguration xs2aDevelopersProviderConfiguration =
                 new Xs2aDevelopersProviderConfiguration("clientId", "baseUrl", "redirectUrl");
 
@@ -333,13 +363,15 @@ public class Xs2aDevelopersAuthenticatorTest {
                 persistentStorage,
                 xs2aDevelopersProviderConfiguration,
                 localDateTimeSource,
-                credentials);
+                credentials,
+                isRequestForWellKnownUrlNeeded);
     }
 
     public TinkHttpClient mockHttpClient() {
         TinkHttpClient tinkHttpClient = mock(TinkHttpClient.class);
         RequestBuilder requestBuilder = mock(RequestBuilder.class);
         when(tinkHttpClient.request(any(URL.class))).thenReturn(requestBuilder);
+        when(tinkHttpClient.request(any(String.class))).thenReturn(requestBuilder);
         when(requestBuilder.accept(any(MediaType.class))).thenReturn(requestBuilder);
         when(requestBuilder.type(any(String.class))).thenReturn(requestBuilder);
         when(requestBuilder.header(any(), any())).thenReturn(requestBuilder);
@@ -366,6 +398,11 @@ public class Xs2aDevelopersAuthenticatorTest {
                         SerializationUtils.deserializeFromString(
                                 Paths.get(TEST_DATA_PATH, "consent_status_response.json").toFile(),
                                 ConsentStatusResponse.class));
+        when(requestBuilder.get(WellKnownResponse.class))
+                .thenReturn(
+                        SerializationUtils.deserializeFromString(
+                                Paths.get(TEST_DATA_PATH, "well_known_response.json").toFile(),
+                                WellKnownResponse.class));
         return tinkHttpClient;
     }
 
