@@ -42,6 +42,10 @@ public abstract class SdcConfiguration implements ClientConfiguration {
         return new URL(baseUrl + SdcConstants.Url.SEARCH_TRANSACTIONS_PATH);
     }
 
+    public URL getUrlForTotalKreditLoans() {
+        return new URL(baseUrl + SdcConstants.Url.TOTALKREDIT_LOANS_PATH);
+    }
+
     public URL getPinLogonUrl() {
         return new URL(baseUrl + SdcConstants.Url.LOGON_PIN_PATH);
     }
