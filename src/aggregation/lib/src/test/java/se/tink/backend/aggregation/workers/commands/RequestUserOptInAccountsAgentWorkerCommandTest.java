@@ -19,6 +19,7 @@ import se.tink.backend.aggregation.events.LoginAgentEventProducer;
 import se.tink.backend.aggregation.rpc.ConfigureWhitelistInformationRequest;
 import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
+import se.tink.eventproducerservice.events.grpc.AgentLoginCompletedEventProto;
 import se.tink.eventproducerservice.events.grpc.AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.pair.Pair;
@@ -138,12 +139,12 @@ public class RequestUserOptInAccountsAgentWorkerCommandTest {
         Mockito.verify(eventProducer)
                 .sendLoginCompletedEvent(
                         Mockito.any(),
-                        Mockito.any(),
                         Mockito.eq(LoginResult.OPTIN_ERROR_TIMEOUT),
                         Mockito.anyLong(),
-                        Mockito.any(),
-                        Mockito.any(),
-                        Mockito.any());
+                        Mockito.eq(
+                                AgentLoginCompletedEventProto.AgentLoginCompletedEvent
+                                        .UserInteractionInformation
+                                        .MULTIPLE_FACTOR_USER_INTERACTION));
     }
 
     private List<Pair<Account, AccountFeatures>> getAccountsInContext(

@@ -23,6 +23,7 @@ import se.tink.backend.aggregation.agents.exceptions.errors.SupplementalInfoErro
 import se.tink.backend.aggregation.agents.models.AccountFeatures;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.OptOutAccountsRequest;
+import se.tink.backend.aggregation.events.IntegrationParameters;
 import se.tink.backend.aggregation.events.LoginAgentEventProducer;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationControllerImpl;
@@ -30,6 +31,7 @@ import se.tink.backend.aggregation.rpc.ConfigureWhitelistInformationRequest;
 import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
+import se.tink.eventproducerservice.events.grpc.AgentLoginCompletedEventProto;
 import se.tink.eventproducerservice.events.grpc.AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account_data_cache.FilterReason;
@@ -359,13 +361,17 @@ public class RequestUserOptInAccountsAgentWorkerCommand extends AgentWorkerComma
             long elapsedTime = finishTime - startTime;
 
             loginAgentEventProducer.sendLoginCompletedEvent(
-                    context.getRequest().getCredentials().getProviderName(),
-                    context.getCorrelationId(),
+                    IntegrationParameters.builder()
+                            .providerName(context.getRequest().getCredentials().getProviderName())
+                            .correlationId(context.getCorrelationId())
+                            .appId(context.getAppId())
+                            .clusterId(context.getClusterId())
+                            .userId(context.getRequest().getCredentials().getUserId())
+                            .build(),
                     LoginResult.OPTIN_ERROR_TIMEOUT,
                     elapsedTime,
-                    context.getAppId(),
-                    context.getClusterId(),
-                    context.getRequest().getCredentials().getUserId());
+                    AgentLoginCompletedEventProto.AgentLoginCompletedEvent
+                            .UserInteractionInformation.MULTIPLE_FACTOR_USER_INTERACTION);
         }
     }
 }

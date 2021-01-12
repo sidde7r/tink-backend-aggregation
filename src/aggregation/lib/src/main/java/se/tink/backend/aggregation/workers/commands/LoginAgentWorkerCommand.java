@@ -18,9 +18,11 @@ import se.tink.backend.aggregation.agents.agent.Agent;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.AgentPlatformAuthenticationExecutor;
 import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
+import se.tink.backend.aggregation.events.IntegrationParameters;
 import se.tink.backend.aggregation.events.LoginAgentEventProducer;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationControllerImpl;
+import se.tink.backend.aggregation.workers.commands.login.AgentLoginCompletedEventUserInteractionInformationProvider;
 import se.tink.backend.aggregation.workers.commands.login.DataStudioLoginEventPublisherService;
 import se.tink.backend.aggregation.workers.commands.login.LoginExecutor;
 import se.tink.backend.aggregation.workers.commands.login.MetricsFactory;
@@ -113,13 +115,17 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
         long elapsedTime = finishTime - startTime;
 
         loginAgentEventProducer.sendLoginCompletedEvent(
-                context.getRequest().getCredentials().getProviderName(),
-                context.getCorrelationId(),
+                IntegrationParameters.builder()
+                        .providerName(context.getRequest().getCredentials().getProviderName())
+                        .correlationId(context.getCorrelationId())
+                        .appId(context.getAppId())
+                        .clusterId(context.getClusterId())
+                        .userId(context.getRequest().getCredentials().getUserId())
+                        .build(),
                 result,
                 elapsedTime,
-                context.getAppId(),
-                context.getClusterId(),
-                context.getRequest().getCredentials().getUserId());
+                AgentLoginCompletedEventUserInteractionInformationProvider
+                        .userInteractionInformation(supplementalInformationController));
     }
 
     @Override
