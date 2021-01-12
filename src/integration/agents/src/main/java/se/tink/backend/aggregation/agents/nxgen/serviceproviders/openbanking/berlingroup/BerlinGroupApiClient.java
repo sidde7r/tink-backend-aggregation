@@ -4,7 +4,6 @@ import java.util.UUID;
 import javax.ws.rs.core.MediaType;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.QueryKeys;
@@ -23,7 +22,6 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 @RequiredArgsConstructor
-@Slf4j
 public abstract class BerlinGroupApiClient<TConfiguration extends BerlinGroupConfiguration> {
 
     protected final TinkHttpClient client;
@@ -91,7 +89,6 @@ public abstract class BerlinGroupApiClient<TConfiguration extends BerlinGroupCon
             final String consentId,
             final String clientId,
             final String redirectUrl) {
-        log.info("[KBCR] BerlinGroupApiClient.getAuthorizeUrlWithCode() state: {}", state);
         final String codeVerifier = Psd2Headers.generateCodeVerifier();
 
         persistentStorage.put(StorageKeys.CODE_VERIFIER, codeVerifier);

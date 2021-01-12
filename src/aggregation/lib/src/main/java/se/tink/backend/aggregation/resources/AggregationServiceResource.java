@@ -165,9 +165,6 @@ public class AggregationServiceResource implements AggregationService {
     @Override
     public void refreshInformation(final RefreshInformationRequest request, ClientInfo clientInfo)
             throws Exception {
-        if (request.getProvider() != null && "be-kbc-ob".equals(request.getProvider().getName())) {
-            logger.info("[KBCR] be-kbc-ob -at request- appUriId: {}", request.getAppUriId());
-        }
         if (request.isManual()) {
             agentWorker.execute(
                     agentWorkerCommandFactory.createOperationRefresh(request, clientInfo));

@@ -92,17 +92,13 @@ public class KbcApiClient extends BerlinGroupAgentPlatformStorageApiClient<KbcCo
     public URL getAuthorizeUrl(final String state) {
         final String consentId = rotateConsentId();
         final String authUrl = Urls.BASE_AUTH_URL + Urls.AUTH;
-        URL url =
-                getAuthorizeUrlWithCode(
-                                authUrl,
-                                state,
-                                consentId,
-                                getConfiguration().getClientId(),
-                                getRedirectUrl())
-                        .getUrl();
-        logger.info(
-                "[KBCR] - KbcApiClient.getAuthorizeUrl() state: {} url: {}", state, url.toString());
-        return url;
+        return getAuthorizeUrlWithCode(
+                        authUrl,
+                        state,
+                        consentId,
+                        getConfiguration().getClientId(),
+                        getRedirectUrl())
+                .getUrl();
     }
 
     @Override
