@@ -33,10 +33,10 @@ Content-Length: 649
   "consentId" : "1601969847-ba91d97",
   "_links" : {
     "scaOAuth" : {
-      "href" : "https://psd2.redirect.commerzbank.com/public/berlingroup/authorize/fea4a2df-b0f2-4999-8422-87e7ec4d1130"
+      "href" : "https://psd2.api.commerzbank.com/berlingroup/.well-known/openid-configuration?authorizationId=317b774f-dcd4-4243-ae36-5b306ecffab1"
     },
     "scaStatus" : {
-      "href" : "https://psd2.api.commerzbank.com/berlingroup/v1/consents/1601969847-ba91d97/authorisations/fea4a2df-b0f2-4999-8422-87e7ec4d1130"
+      "href" : "https://psd2.api.commerzbank.com/berlingroup/v1/consents/1601969847-ba91d97/authorisations/317b774f-dcd4-4243-ae36-5b306ecffab1"
     },
     "status" : {
       "href" : "https://psd2.api.commerzbank.com/berlingroup/v1/consents/1601969847-ba91d97/status"
@@ -48,12 +48,34 @@ Content-Length: 649
 }
 
 REQUEST 2
+GET https://psd2.api.commerzbank.com/berlingroup/.well-known/openid-configuration?authorizationId=317b774f-dcd4-4243-ae36-5b306ecffab1
+X-Aggregator: Tink Testing
+Accept: application/json
+
+
+RESPONSE 2
+200
+Content-Type: application/json;charset=utf-8
+
+{
+  "issuer" : "https://psd2.api.commerzbank.com",
+  "authorization_endpoint" : "https://psd2.redirect.commerzbank.com/public/berlingroup/authorize/317b774f-dcd4-4243-ae36-5b306ecffab1",
+  "token_endpoint" : "https://psd2.api.commerzbank.com/berlingroup/v1/token",
+  "userinfo_endpoint" : "https://psd2.api.commerzbank.com/berlingroup/v1/accounts",
+  "scopes_supported" : [ "account", "payment" ],
+  "response_types_supported" : [ "code" ],
+  "grant_types_supported" : [ "client_credentials", "authorization_code", "refresh_token" ],
+  "code_challenge_methods_supported" : [ "S256" ],
+  "subject_types_supported" : [ "public" ]
+}
+
+REQUEST 3
 POST https://psd2.api.commerzbank.com/berlingroup/v1/token
 Accept: application/json
 Content-Type: application/x-www-form-urlencoded
 X-Aggregator: Tink Testing
 
-RESPONSE 2
+RESPONSE 3
 201
 Date: Tue, 06 Oct 2020 07:38:13 GMT
 Date: Tue, 06 Oct 2020 07:38:13 GMT
@@ -77,16 +99,16 @@ Content-Length: 329
   "scope" : "AIS:1601969847-ba91d97"
 }
 
-REQUEST 3
+REQUEST 4
 GET https://psd2.api.commerzbank.com/berlingroup/v1/consents/1601969847-ba91d97
 
-RESPONSE 3
+RESPONSE 4
 200
 Content-Type: application/json
 
 {"validUntil": "2030-01-01"}
 
-REQUEST 4
+REQUEST 5
 GET https://psd2.api.commerzbank.com/berlingroup/v1/accounts
 Accept: application/json
 Content-Type: application/json
@@ -96,7 +118,7 @@ X-Request-ID: 00000000-0000-4000-0000-000000000000
 PSU-IP-ADDRESS: 127.0.0.1
 X-Aggregator: Tink Testing
 
-RESPONSE 4
+RESPONSE 5
 200
 Date: Tue, 06 Oct 2020 07:38:14 GMT
 Date: Tue, 06 Oct 2020 07:38:14 GMT
@@ -136,7 +158,7 @@ Content-Length: 813
   } ]
 }
 
-REQUEST 5
+REQUEST 6
 GET https://psd2.api.commerzbank.com/berlingroup/v1/accounts/cMRdQBwJOD9fXJG4SlYX8r7ziFHJASDJMZX-QeDv5xKc-22/balances
 Accept: application/json
 Content-Type: application/json
@@ -146,7 +168,7 @@ X-Request-ID: 00000000-0000-4000-0000-000000000000
 PSU-IP-ADDRESS: 127.0.0.1
 X-Aggregator: Tink Testing
 
-RESPONSE 5
+RESPONSE 6
 200
 Date: Tue, 06 Oct 2020 07:38:15 GMT
 Date: Tue, 06 Oct 2020 07:38:15 GMT
@@ -179,7 +201,7 @@ Content-Length: 264
 }
 
 
-REQUEST 6
+REQUEST 7
 GET https://psd2.api.commerzbank.com/berlingroup/v1/accounts/cMRdQBwJOD9fXJG4SlYX8r7ziFHJASDJMZX-QeDv5xKc-22/transactions?dateFrom=1970-01-01&dateTo=1992-04-10&bookingStatus=both
 Accept: application/json
 Content-Type: application/json
@@ -189,7 +211,7 @@ X-Request-ID: 00000000-0000-4000-0000-000000000000
 PSU-IP-ADDRESS: 127.0.0.1
 X-Aggregator: Tink Testing
 
-RESPONSE 6
+RESPONSE 7
 200
 Date: Tue, 06 Oct 2020 07:03:22 GMT
 Date: Tue, 06 Oct 2020 07:03:23 GMT
@@ -265,7 +287,7 @@ Transfer-Encoding: chunked
   }
 }
 
-REQUEST 7
+REQUEST 8
 GET https://psd2.api.commerzbank.com/berlingroup/v1/accounts/cMRdQBwJOD9fXJG4SlYX8r7ziFHJASDJMZX-QeDv5xKc-22/transactions?dateFrom=1970-01-01&dateTo=2020-10-06&bookingStatus=BOTH&withBalance=false&page=1
 Accept: application/json
 Content-Type: application/json
@@ -275,7 +297,7 @@ X-Request-ID: 00000000-0000-4000-0000-000000000000
 PSU-IP-ADDRESS: 127.0.0.1
 X-Aggregator: Tink Testing
 
-RESPONSE 7 SET STATE1
+RESPONSE 8 SET STATE1
 400
 Date: Tue, 06 Oct 2020 07:03:23 GMT
 Date: Tue, 06 Oct 2020 07:03:24 GMT
@@ -300,7 +322,7 @@ Content-Length: 143
   } ]
 }
 
-REQUEST 8 MATCH STATE1
+REQUEST 9 MATCH STATE1
 GET https://psd2.api.commerzbank.com/berlingroup/v1/accounts/cMRdQBwJOD9fXJG4SlYX8r7ziFHJASDJMZX-QeDv5xKc-22/transactions?dateFrom=1970-01-01&dateTo=2020-10-06&bookingStatus=BOTH&withBalance=false&page=1
 Accept: application/json
 Content-Type: application/json
@@ -310,7 +332,7 @@ X-Request-ID: 00000000-0000-4000-0000-000000000000
 PSU-IP-ADDRESS: 127.0.0.1
 X-Aggregator: Tink Testing
 
-RESPONSE 8
+RESPONSE 9
 200
 Date: Tue, 06 Oct 2020 07:03:24 GMT
 Date: Tue, 06 Oct 2020 07:03:25 GMT
