@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.CreditAgricoleBaseConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.apiclient.CreditAgricoleBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.rpc.GetAccountsResponse;
@@ -17,6 +18,7 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 @RequiredArgsConstructor
+@Slf4j
 public class CreditAgricoleBaseTransactionalAccountFetcher
         implements AccountFetcher<TransactionalAccount>,
                 TransactionDatePaginator<TransactionalAccount> {
@@ -30,6 +32,13 @@ public class CreditAgricoleBaseTransactionalAccountFetcher
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
         GetAccountsResponse getAccountsResponse = apiClient.getAccounts();
+
+        if (getAccountsResponse.getAccounts().stream()
+                .filter(acc -> !acc.getCashAccountType().equals("CACC"))
+                .findFirst()
+                .isPresent()) {
+            log.info("Account type different then CACC.");
+        }
 
         if (getAccountsResponse.areConsentsNecessary()) {
             apiClient.putConsents(getAccountsResponse.getListOfNecessaryConsents());
