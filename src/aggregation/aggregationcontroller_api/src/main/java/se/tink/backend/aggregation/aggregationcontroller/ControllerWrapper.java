@@ -20,7 +20,6 @@ import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateTransactio
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateTransferDestinationPatternsRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateTransfersRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpsertRegulatoryClassificationRequest;
-import se.tink.backend.system.rpc.UpdateFraudDetailsRequest;
 import se.tink.libraries.signableoperation.rpc.SignableOperation;
 
 public class ControllerWrapper {
@@ -93,10 +92,6 @@ public class ControllerWrapper {
 
     public Response processEinvoices(UpdateTransfersRequest request) {
         return client.processEinvoices(configuration, request);
-    }
-
-    public Response updateFraudDetails(UpdateFraudDetailsRequest request) {
-        return client.updateFraudDetails(configuration, request);
     }
 
     public Response updateCredentialSensitive(

@@ -41,11 +41,9 @@ import se.tink.backend.aggregation.agents.models.LoanDetails;
 import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
-import se.tink.backend.aggregation.agents.models.fraud.FraudDetailsContent;
 import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.fakelogmasker.FakeLogMasker;
 import se.tink.backend.aggregation.logmasker.LogMasker;
-import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.framework.validation.AisValidator;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account_data_cache.AccountData;
@@ -252,11 +250,6 @@ public final class NewAgentTestContext extends AgentContext {
                 accountUniqueId); // Necessary until we make @Nonnull throw the exception
 
         accountDataCache.cacheTransactions(accountUniqueId, transactions);
-    }
-
-    @Override
-    public void updateFraudDetailsContent(List<FraudDetailsContent> contents) {
-        throw new NotImplementedException("Fraud cannot be tested yet.");
     }
 
     @Override

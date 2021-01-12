@@ -14,7 +14,6 @@ import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.models.AccountFeatures;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
-import se.tink.backend.aggregation.agents.models.fraud.FraudDetailsContent;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.CredentialsRequestType;
 import se.tink.libraries.i18n.Catalog;
@@ -143,10 +142,6 @@ public class FakeIntegrationArgumentsCreator {
                     public void updateCredentialsExcludingSensitiveInformation(
                             se.tink.backend.agents.rpc.Credentials credentials,
                             boolean doStatusUpdate) {}
-
-                    @Override
-                    public void updateFraudDetailsContent(
-                            List<FraudDetailsContent> detailsContent) {}
 
                     @Override
                     public List<Account> getUpdatedAccounts() {

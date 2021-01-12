@@ -23,7 +23,6 @@ import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.models.AccountFeatures;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
-import se.tink.backend.aggregation.agents.models.fraud.FraudDetailsContent;
 import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.fakelogmasker.FakeLogMasker;
 import se.tink.backend.aggregation.logmasker.LogMasker;
@@ -48,7 +47,6 @@ public class AgentTestContext extends AgentContext {
     private final TinkHttpClient supplementalClient;
 
     private final AccountDataCache accountDataCache;
-    private List<FraudDetailsContent> detailsContents;
     private List<Transfer> transfers = Lists.newArrayList();
     private Credentials credentials;
     private String providerSessionCacheInformation;
@@ -83,10 +81,6 @@ public class AgentTestContext extends AgentContext {
 
     public List<Account> getUpdatedAccounts() {
         return Lists.newArrayList(accountDataCache.getProcessedAccounts());
-    }
-
-    public List<FraudDetailsContent> getDetailsContents() {
-        return detailsContents;
     }
 
     public List<Transaction> getTransactions() {
@@ -272,11 +266,6 @@ public class AgentTestContext extends AgentContext {
         Preconditions.checkNotNull(
                 accountUniqueId); // Necessary until we make @Nonnull throw the exception
         accountDataCache.cacheTransactions(accountUniqueId, transactions);
-    }
-
-    @Override
-    public void updateFraudDetailsContent(List<FraudDetailsContent> contents) {
-        detailsContents = contents;
     }
 
     @Override
