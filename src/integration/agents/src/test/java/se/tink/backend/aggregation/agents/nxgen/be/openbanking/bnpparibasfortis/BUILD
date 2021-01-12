@@ -6,7 +6,7 @@ junit_test(
     data = ["//:agent_test_data"],
     tags = [
         "external",
-        "manual",
+#        "manual",
     ],
     visibility = ["//visibility:public"],
     deps = [

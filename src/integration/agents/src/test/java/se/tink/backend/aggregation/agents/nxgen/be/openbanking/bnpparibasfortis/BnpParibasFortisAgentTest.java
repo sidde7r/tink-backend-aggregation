@@ -16,7 +16,7 @@ public class BnpParibasFortisAgentTest {
                         .setAppId("tink")
                         .loadCredentialsBefore(false)
                         .expectLoggedIn(false)
-                        .saveCredentialsAfter(false);
+                        .saveCredentialsAfter(true);
     }
 
     @Test

@@ -21,7 +21,7 @@ public class DanskebankAgentTest {
 
     @Test
     public void test() throws Exception {
-        new AgentIntegrationTest.Builder("uk", "uk-danskebank-oauth2")
+        new AgentIntegrationTest.Builder("fi", "fi-danskebank-ob")
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(false)
                 .expectLoggedIn(false)
