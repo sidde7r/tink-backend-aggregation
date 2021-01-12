@@ -27,6 +27,7 @@ public abstract class AccountEntity extends AbstractAccountEntity {
     protected boolean availableForFavouriteAccount;
     protected boolean availableForPriorityAccount;
     protected String type;
+    protected String productId;
     protected TransactionsEntity transactions;
 
     @JsonIgnore
