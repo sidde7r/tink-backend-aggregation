@@ -1,21 +1,19 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.entities;
 
-import static se.tink.backend.agents.rpc.AccountTypes.OTHER;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Optional;
-import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.AgentParsingUtils;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoConstants.Storage;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Holder;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Holder.Role;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.CheckingAccount;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.SavingsAccount;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.amount.Amount;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
@@ -64,68 +62,45 @@ public class AgreementsListEntity {
     @JsonProperty("DatosTarjeta")
     private CardDataEntityGlobalPositionResponse cardData;
 
-    public boolean isAccount() {
-        return accountType != null;
-    }
-
     public boolean isCard() {
         return cardData != null;
     }
 
+    private String getAccountTypeKey() {
+        return accountType + "#" + aliasbe;
+    }
+
     public Optional<TransactionalAccount> toTinkAccount(String holderName) {
-        AccountTypes type =
-                EvoBancoConstants.ACCOUNT_TYPE_MAPPER
-                        .translate(accountType + "#" + aliasbe)
-                        .orElse(OTHER);
-
-        Optional<TransactionalAccount> tinkAccount;
-
-        Amount balance = Amount.inEUR(AgentParsingUtils.parseAmount(unspentBalance));
-
-        switch (type) {
-            case CHECKING:
-                tinkAccount =
-                        Optional.of(
-                                CheckingAccount.builder()
-                                        .setUniqueIdentifier(iban)
-                                        .setAccountNumber(iban)
-                                        .setBalance(balance)
-                                        .setAlias(aliasbe)
-                                        .addAccountIdentifier(
-                                                AccountIdentifier.create(
-                                                        AccountIdentifier.Type.IBAN, iban))
+        return EvoBancoConstants.ACCOUNT_TYPE_MAPPER
+                .translate(getAccountTypeKey())
+                .flatMap(
+                        type ->
+                                TransactionalAccount.nxBuilder()
+                                        .withType(type)
+                                        .withInferredAccountFlags()
+                                        .withBalance(getBalance())
+                                        .withId(
+                                                IdModule.builder()
+                                                        .withUniqueIdentifier(iban)
+                                                        .withAccountNumber(iban)
+                                                        .withAccountName(aliasbe)
+                                                        .addIdentifier(
+                                                                AccountIdentifier.create(
+                                                                        AccountIdentifier.Type.IBAN,
+                                                                        iban))
+                                                        .setProductName(accountType)
+                                                        .build())
+                                        .addHolders(Holder.of(holderName, Role.HOLDER))
                                         .setApiIdentifier(agreement)
-                                        .addHolderName(holderName)
-                                        .setProductName(accountType)
                                         .build());
+    }
 
-                break;
-
-            case SAVINGS:
-                tinkAccount =
-                        Optional.of(
-                                SavingsAccount.builder()
-                                        .setUniqueIdentifier(iban)
-                                        .setAccountNumber(iban)
-                                        .setBalance(balance)
-                                        .setAlias(aliasbe)
-                                        .addAccountIdentifier(
-                                                AccountIdentifier.create(
-                                                        AccountIdentifier.Type.IBAN, iban))
-                                        .setApiIdentifier(agreement)
-                                        .addHolderName(holderName)
-                                        .setProductName(accountType)
-                                        .build());
-
-                break;
-
-            case OTHER:
-            default:
-                tinkAccount = Optional.empty();
-                break;
-        }
-
-        return tinkAccount;
+    private BalanceModule getBalance() {
+        return BalanceModule.builder()
+                .withBalance(
+                        ExactCurrencyAmount.of(
+                                AgentParsingUtils.parseAmount(unspentBalance), "EUR"))
+                .build();
     }
 
     public Optional<CreditCardAccount> toTinkCreditCard() {

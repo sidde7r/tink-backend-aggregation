@@ -23,7 +23,6 @@ public class AnswerEntityGlobalPositionResponse {
 
     public Collection<TransactionalAccount> getTransactionalAccounts(String holderName) {
         return agreementsList.stream()
-                .filter(AgreementsListEntity::isAccount)
                 .map(agreementsListEntity -> agreementsListEntity.toTinkAccount(holderName))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
