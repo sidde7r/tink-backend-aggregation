@@ -16,7 +16,6 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 public class SwedbankRedirectAuthenticator implements OAuth2Authenticator {
     private final SwedbankApiClient apiClient;
     private final PersistentStorage persistentStorage;
-    private static final String NOT_IMPLEMENTED = "Not Implemented";
 
     public SwedbankRedirectAuthenticator(
             SwedbankApiClient apiClient, PersistentStorage persistentStorage) {
@@ -26,7 +25,7 @@ public class SwedbankRedirectAuthenticator implements OAuth2Authenticator {
 
     @Override
     public URL buildAuthorizeUrl(String state) {
-        throw new UnsupportedOperationException(NOT_IMPLEMENTED);
+        return apiClient.getAuthorizeUrl(state);
     }
 
     @Override

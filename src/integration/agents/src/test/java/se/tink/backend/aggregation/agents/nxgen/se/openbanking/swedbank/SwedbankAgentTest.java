@@ -12,26 +12,30 @@ public class SwedbankAgentTest {
     private final ArgumentManager<UsernameArgumentEnum> manager =
             new ArgumentManager<>(UsernameArgumentEnum.values());
 
-    private AgentIntegrationTest.Builder builder;
-
     @Before
     public void setup() {
         manager.before();
+    }
 
-        builder =
-                new AgentIntegrationTest.Builder("se", "se-swedbank-ob")
-                        .addCredentialField(
-                                Field.Key.USERNAME, manager.get(UsernameArgumentEnum.USERNAME))
-                        .expectLoggedIn(false)
-                        .setFinancialInstitutionId("swedbank")
-                        .setAppId("tink")
-                        .loadCredentialsBefore(true)
-                        .saveCredentialsAfter(true);
+    private AgentIntegrationTest setupAgentTest(final String providerName) {
+        return new AgentIntegrationTest.Builder("se", providerName)
+                .addCredentialField(Field.Key.USERNAME, manager.get(UsernameArgumentEnum.USERNAME))
+                .expectLoggedIn(false)
+                .setFinancialInstitutionId("swedbank")
+                .setAppId("tink")
+                .loadCredentialsBefore(false)
+                .saveCredentialsAfter(true)
+                .build();
     }
 
     @Test
-    public void testRefresh() throws Exception {
-        builder.build().testRefresh();
+    public void testSwedbankRefresh() throws Exception {
+        setupAgentTest("se-swedbank-ob").testRefresh();
+    }
+
+    @Test
+    public void testSavingsbankRefresh() throws Exception {
+        setupAgentTest("se-savingsbank-ob").testRefresh();
     }
 
     @AfterClass
