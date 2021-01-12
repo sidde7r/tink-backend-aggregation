@@ -180,7 +180,8 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
         addFilter(new FinancialOrganisationIdFilter(aisConfig.getOrganisationId()));
     }
 
-    private void configureTls(UkOpenBankingClientConfigurationAdapter ukOpenBankingConfiguration) {
+    protected void configureTls(
+            UkOpenBankingClientConfigurationAdapter ukOpenBankingConfiguration) {
         Optional<TlsConfigurationSetter> tlsConfigurationSetter =
                 ukOpenBankingConfiguration.getTlsConfigurationOverride();
 
