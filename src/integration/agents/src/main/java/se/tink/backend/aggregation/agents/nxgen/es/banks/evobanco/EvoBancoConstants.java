@@ -3,14 +3,16 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco;
 import com.google.common.collect.ImmutableSet;
 import java.time.format.DateTimeFormatter;
 import java.util.Set;
-import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
-import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
+import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccountTypeMapper;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class EvoBancoConstants {
 
     public static class ApiService {
+        private ApiService() {}
+
         static final String LOGIN_INIT_PATH = "login_be";
         static final String EE_LOGIN_PATH = "SOA_RVIA/Empresa/PS/rest/v3/SE_RVA_Login";
         static final String KEEP_ALIVE_PATH =
@@ -29,6 +31,8 @@ public class EvoBancoConstants {
     }
 
     public static class Urls {
+        private Urls() {}
+
         private static final String BASE_API = "https://api.evobanco.com:8443/";
         private static final String BASE_MOBILE_SERVICES = "https://serviciosmoviles.evobanco.com/";
 
@@ -51,19 +55,27 @@ public class EvoBancoConstants {
     }
 
     public static class ReturnCodes {
+        private ReturnCodes() {}
+
         public static final String UNSUCCESSFUL_RETURN_CODE = "0";
     }
 
     public static class ErrorCodes {
+        private ErrorCodes() {}
+
         public static final String NO_TRANSACTIONS_FOUND = "00350";
         public static final String AUTHENTICATION_ERROR = "1500";
     }
 
     public static class ErrorMessages {
+        private ErrorMessages() {}
+
         public static final String AUTHENTICATION_ERROR_MSG = "Authentication Error";
     }
 
     public static class QueryParamsKeys {
+        private QueryParamsKeys() {}
+
         public static final String AGREEMENT_BE = "acuerdoBE";
         public static final String USER_BE = "usuarioBE";
         public static final String ENTITY_CODE = "codigoEntidad";
@@ -73,6 +85,8 @@ public class EvoBancoConstants {
     }
 
     public static class HeaderKeys {
+        private HeaderKeys() {}
+
         public static final String COD_SEC_USER = "CODSecUser";
         public static final String COD_SEC_TRANS = "CODSecTrans";
         public static final String COD_SEC_ENT = "CODSecEnt";
@@ -84,6 +98,8 @@ public class EvoBancoConstants {
 
     // TODO: Remove this as soon as we find out how to get these values from their backend
     public static class HeaderValues {
+        private HeaderValues() {}
+
         public static final String COD_SEC_IP = "10.1.245.2";
         public static final String COD_CANAL = "18";
         public static final String COD_APL = "BDP";
@@ -91,6 +107,8 @@ public class EvoBancoConstants {
 
     // TODO: Remove this as soon as we find out how to get these values from their backend
     public static class HardCodedValues {
+        private HardCodedValues() {}
+
         public static final String OPERATING_SYSTEM = "IOS";
         public static final String APP_ID = "1";
         public static final String APP_VERSION = "12.12.1";
@@ -102,6 +120,8 @@ public class EvoBancoConstants {
     }
 
     public static class Storage {
+        private Storage() {}
+
         public static final String USER_ID = "user-id";
         public static final String AGREEMENT_BE = "agreement-be";
         public static final String USER_BE = "user-be";
@@ -115,17 +135,24 @@ public class EvoBancoConstants {
     }
 
     public static class FormKey {
+        private FormKey() {}
+
         public static final String USERNAME = "username";
         public static final String PASSWORD = "password";
     }
 
-    public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
-            TypeMapper.<AccountTypes>builder()
-                    .put(AccountTypes.CHECKING, "I#Cuenta Inteligente EVO", "I#Cuenta Inteligente")
-                    .put(AccountTypes.SAVINGS, "I#Depósito")
+    public static final TransactionalAccountTypeMapper ACCOUNT_TYPE_MAPPER =
+            TransactionalAccountTypeMapper.builder()
+                    .put(
+                            TransactionalAccountType.CHECKING,
+                            "I#Cuenta Inteligente EVO",
+                            "I#Cuenta Inteligente")
+                    .put(TransactionalAccountType.SAVINGS, "I#Depósito")
                     .build();
 
     public static class Constants {
+        private Constants() {}
+
         public static final String FIRST_SEQUENTIAL_NUMBER = "0000001";
         public static final String MADRID_ZONE_ID = "Europe/Madrid";
         public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE;
@@ -138,10 +165,14 @@ public class EvoBancoConstants {
     }
 
     public static class CardState {
+        private CardState() {}
+
         public static final String NOT_ACTIVATED = "E.EST.RENO";
     }
 
     public static class Tags {
+        private Tags() {}
+
         public static final LogTag INVESTMENTS_ERROR = LogTag.from("es_evobanco_investments_error");
     }
 }
