@@ -68,6 +68,10 @@ public class Hash {
         return hmac("HmacSHA256", key, data);
     }
 
+    public static byte[] hmacSha512(byte[] key, byte[] data) {
+        return hmac("HmacSHA512", key, data);
+    }
+
     public static byte[] sha512(final String data) {
         return hashFunction("SHA-512", data.getBytes());
     }
