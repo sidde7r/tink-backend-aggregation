@@ -22,6 +22,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swe
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.HeadersToSign;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.QueryValues;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.RequestValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.UrlParameters;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.Urls;
@@ -171,13 +172,14 @@ public final class SwedbankApiClient implements SwedbankOpenBankingPaymentApiCli
 
     public URL getAuthorizeUrl(String state) {
         HttpResponse response =
-                createRequest(SwedbankConstants.Urls.AUTHORIZATION)
+                createRequest(SwedbankConstants.Urls.AUTHORIZATION_REDIRECT)
                         .queryParam(
                                 SwedbankConstants.QueryKeys.CLIENT_ID,
                                 getConfiguration().getClientId())
                         .queryParam(
                                 SwedbankConstants.QueryKeys.RESPONSE_TYPE,
                                 SwedbankConstants.QueryValues.RESPONSE_TYPE_CODE)
+                        .queryParam(SwedbankConstants.QueryKeys.SCOPE, RequestValues.ALL_SCOPES)
                         .queryParam(SwedbankConstants.QueryKeys.REDIRECT_URI, getRedirectUrl())
                         .queryParam(SwedbankConstants.QueryKeys.STATE, state)
                         .get(HttpResponse.class);
@@ -185,7 +187,7 @@ public final class SwedbankApiClient implements SwedbankOpenBankingPaymentApiCli
         return new URL(response.getHeaders().getFirst(HttpHeaders.LOCATION));
     }
 
-    public AuthenticationResponse authenticate(String ssn) {
+    public AuthenticationResponse authenticateDecoupled(String ssn) {
 
         final AuthorizeRequest authorizeRequest =
                 new AuthorizeRequest(
@@ -193,7 +195,7 @@ public final class SwedbankApiClient implements SwedbankOpenBankingPaymentApiCli
                         getRedirectUrl(),
                         credentialsRequest.getProvider().getPayload());
 
-        return createRequest(SwedbankConstants.Urls.AUTHORIZATION)
+        return createRequest(SwedbankConstants.Urls.AUTHORIZATION_DECOUPLED)
                 .header(HeaderKeys.PSU_ID, ssn)
                 .type(MediaType.APPLICATION_JSON_TYPE)
                 .post(AuthenticationResponse.class, authorizeRequest);
