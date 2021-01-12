@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.dto.AccountResourceDto;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.dto.BalanceResourceDto;
@@ -19,6 +20,7 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.mapper.PrioritizedValueExtractor;
 
 @RequiredArgsConstructor
+@Slf4j
 public class CmcicTransactionalAccountConverter {
 
     private static final List<BalanceStatusEntity> BALANCE_PREFERRED_TYPES =
@@ -29,6 +31,7 @@ public class CmcicTransactionalAccountConverter {
     public Optional<TransactionalAccount> convertAccountResourceToTinkAccount(
             AccountResourceDto accountResource) {
         if (accountResource.getCashAccountType() != CashAccountTypeEnumEntity.CACC) {
+            log.info("Account type different than CACC.");
             return Optional.empty();
         }
 
