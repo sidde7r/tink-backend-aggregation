@@ -24,3 +24,4 @@ ignoredAgentsForInitialisationTest:
   - nxgen.no.banks.nordeapartner.NordeaPartnerNoAgent
   - nxgen.fi.banks.nordea.partner.NordeaPartnerFiAgent
   - nxgen.se.openbanking.swedbank.SwedbankAgent
+  - nxgen.se.banks.swedbank.fallback.SwedbankFallbackAgent
