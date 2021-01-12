@@ -20,7 +20,7 @@ public class VdkAuthenticator extends Xs2aDevelopersAuthenticator {
             Xs2aDevelopersProviderConfiguration configuration,
             LocalDateTimeSource localDateTimeSource,
             Credentials credentials) {
-        super(apiClient, persistentStorage, configuration, localDateTimeSource, credentials);
+        super(apiClient, persistentStorage, configuration, localDateTimeSource, credentials, false);
         this.credentials = credentials;
     }
 
