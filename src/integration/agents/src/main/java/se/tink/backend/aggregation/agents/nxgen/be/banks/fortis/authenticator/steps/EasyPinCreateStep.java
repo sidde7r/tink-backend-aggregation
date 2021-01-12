@@ -31,6 +31,7 @@ public class EasyPinCreateStep
             AgentUserInteractionAuthenticationProcessRequest request) {
 
         String phoneNo = request.getUserInteractionData().getFieldValue(PhonenumberInputField.ID);
+        phoneNo = phoneNo.replace(" ", "");
 
         request.getAuthenticationProcessState();
 
