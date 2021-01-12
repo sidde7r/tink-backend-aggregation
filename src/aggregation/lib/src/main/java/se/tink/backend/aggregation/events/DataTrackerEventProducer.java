@@ -50,13 +50,12 @@ public class DataTrackerEventProducer {
 
             data.stream()
                     .forEach(
-                            pair -> {
-                                builder.addFieldData(
-                                        DataTrackerFieldInfo.newBuilder()
-                                                .setFieldName(pair.first)
-                                                .setHasValue(pair.second)
-                                                .build());
-                            });
+                            pair ->
+                                    builder.addFieldData(
+                                            DataTrackerFieldInfo.newBuilder()
+                                                    .setFieldName(pair.first)
+                                                    .setHasValue(pair.second)
+                                                    .build()));
 
             DataTrackerEvent event = builder.build();
 
