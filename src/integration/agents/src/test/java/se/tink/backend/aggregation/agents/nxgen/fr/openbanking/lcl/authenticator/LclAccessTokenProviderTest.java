@@ -12,7 +12,7 @@ import java.util.Optional;
 import java.util.function.Predicate;
 import org.junit.Before;
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.apiclient.LclApiClient;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.apiclient.LclTokenApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.apiclient.dto.accesstoken.TokenResponseDto;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 
@@ -20,12 +20,11 @@ public class LclAccessTokenProviderTest {
 
     private LclAccessTokenProvider lclAccessTokenProvider;
 
-    private LclApiClient apiClientMock;
+    private LclTokenApiClient apiClientMock;
 
     @Before
     public void setUp() {
-        apiClientMock = mock(LclApiClient.class);
-
+        apiClientMock = mock(LclTokenApiClient.class);
         lclAccessTokenProvider = new LclAccessTokenProvider(apiClientMock);
     }
 

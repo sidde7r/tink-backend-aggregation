@@ -21,6 +21,7 @@ import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.apiclient.LclApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.apiclient.LclHeaderValueProvider;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.apiclient.LclTokenApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.authenticator.LclAccessTokenProvider;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.authenticator.LclThirdPartyAppRequestParamsProvider;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.configuration.LclConfiguration;
@@ -72,6 +73,7 @@ public final class LclAgent extends SubsequentProgressiveGenerationAgent
 
     private final LclApiClient lclApiClient;
     private final LclPaymentApiClient paymentApiClient;
+    private final LclTokenApiClient tokenApiClient;
     private final OAuth2TokenStorage tokenStorage;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final LclIdentityFetcher lclIdentityFetcher;
@@ -84,18 +86,18 @@ public final class LclAgent extends SubsequentProgressiveGenerationAgent
 
         this.agentConfiguration = getAgentConfiguration();
         this.tokenStorage = new OAuth2TokenStorage(this.persistentStorage, this.sessionStorage);
+
+        LclHeaderValueProvider lclHeaderValueProvider = getLclHeaderValueProvider(qsealcSigner);
+        this.tokenApiClient =
+                new LclTokenApiClient(this.client, lclHeaderValueProvider, this.agentConfiguration);
         this.lclApiClient =
-                new LclApiClient(
-                        this.client,
-                        getLclHeaderValueProvider(qsealcSigner),
-                        this.tokenStorage,
-                        this.agentConfiguration);
+                new LclApiClient(this.client, lclHeaderValueProvider, this.tokenStorage);
         this.paymentApiClient =
                 new LclPaymentApiClient(
-                        client,
-                        getLclHeaderValueProvider(qsealcSigner),
-                        sessionStorage,
-                        agentConfiguration);
+                        this.client,
+                        lclHeaderValueProvider,
+                        this.sessionStorage,
+                        this.tokenApiClient);
 
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
         this.lclIdentityFetcher = new LclIdentityFetcher(this.lclApiClient);
@@ -116,7 +118,7 @@ public final class LclAgent extends SubsequentProgressiveGenerationAgent
     @Override
     public StatelessProgressiveAuthenticator getAuthenticator() {
         final LclAccessTokenProvider accessTokenProvider =
-                new LclAccessTokenProvider(this.lclApiClient);
+                new LclAccessTokenProvider(this.tokenApiClient);
 
         final AccessTokenFetchHelper<OAuth2Token> accessTokenFetchHelper =
                 new AccessTokenFetchHelper<>(
