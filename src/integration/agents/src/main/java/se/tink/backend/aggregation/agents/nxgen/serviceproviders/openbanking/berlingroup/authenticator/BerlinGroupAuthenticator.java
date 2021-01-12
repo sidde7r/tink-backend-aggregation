@@ -18,7 +18,6 @@ public abstract class BerlinGroupAuthenticator implements OAuth2Authenticator {
     }
 
     public URL buildAuthorizeUrl(final String state) {
-        log.info("[KBCR] -BerlinGroupAuthenticator.buildAuthorizeUrl() state: {}", state);
         return apiClient.getAuthorizeUrl(state);
     }
 

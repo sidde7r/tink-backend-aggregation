@@ -96,9 +96,7 @@ public abstract class SubsequentGenerationAgent<Auth> extends SuperAbstractAgent
                 new SupplementalInformationFormer(request.getProvider());
         this.appId = context.getAppId();
         this.strongAuthenticationState = new StrongAuthenticationState(request.getState());
-        if ("be-kbc-ob".equals(request.getProvider().getName())) {
-            LOG.info("[KBCR] be-kbc-ob state: {}", this.strongAuthenticationState);
-        }
+
         this.userIp = getOriginatingUserIpOrDefault();
     }
 
