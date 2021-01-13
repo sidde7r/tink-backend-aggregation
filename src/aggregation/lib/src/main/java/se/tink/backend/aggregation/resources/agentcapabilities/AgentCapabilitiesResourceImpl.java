@@ -28,4 +28,9 @@ public class AgentCapabilitiesResourceImpl implements AgentCapabilitiesResource 
         return agentCapabilitiesService.getAgentsCapabilities().entrySet().stream()
                 .collect(Collectors.toMap(Entry::getKey, capabilitiesAsStringSet));
     }
+
+    @Override
+    public Map<String, Map<String, Set<String>>> getAgentPisCapabilities() {
+        return agentCapabilitiesService.getAgentsPisCapabilities();
+    }
 }
