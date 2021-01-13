@@ -11,7 +11,8 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 public class SwedbankMethodNotAllowedFilter extends Filter {
 
     @Override
-    public HttpResponse handle(HttpRequest httpRequest) throws HttpClientException, HttpResponseException {
+    public HttpResponse handle(HttpRequest httpRequest)
+            throws HttpClientException, HttpResponseException {
         HttpResponse response = nextFilter(httpRequest);
 
         if (response.getStatus() == HttpStatus.SC_METHOD_NOT_ALLOWED) {
@@ -22,5 +23,4 @@ public class SwedbankMethodNotAllowedFilter extends Filter {
 
         return response;
     }
-
 }

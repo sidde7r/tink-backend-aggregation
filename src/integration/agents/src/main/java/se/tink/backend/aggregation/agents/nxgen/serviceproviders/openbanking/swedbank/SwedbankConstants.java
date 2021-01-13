@@ -211,6 +211,7 @@ public final class SwedbankConstants {
         public static final String RESOURCE_UNKNOWN = "RESOURCE_UNKNOWN";
         public static final String USER_INTERUPTION = "USER_INTERUPTION";
         public static final String MOBILE_ID_EXCEPTION = "MOBILE_ID_EXCEPTION";
+        public static final String FORMAT_ERROR = "FORMAT_ERROR";
     }
 
     public static final class AccountIdentifierPrefix {

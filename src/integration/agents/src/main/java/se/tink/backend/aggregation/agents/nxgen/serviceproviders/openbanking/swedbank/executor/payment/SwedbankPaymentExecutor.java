@@ -7,6 +7,7 @@ import static se.tink.backend.aggregation.nxgen.controllers.signing.SigningStepC
 
 import java.util.ArrayList;
 import java.util.List;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
 import se.tink.backend.aggregation.agents.exceptions.payment.ReferenceValidationException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.common.SwedbankOpenBankingPaymentApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.executor.payment.SwedbankPaymentSigner.MissingExtendedBankIdException;
@@ -49,7 +50,7 @@ public class SwedbankPaymentExecutor implements PaymentExecutor, FetchablePaymen
 
     @Override
     public PaymentResponse create(PaymentRequest paymentRequest)
-            throws ReferenceValidationException {
+            throws ReferenceValidationException, PaymentRejectedException {
         final Payment payment = paymentRequest.getPayment();
         AccountEntity creditor = AccountEntity.creditorOf(paymentRequest);
         AccountEntity debtor = AccountEntity.debtorOf(paymentRequest);
@@ -93,7 +94,7 @@ public class SwedbankPaymentExecutor implements PaymentExecutor, FetchablePaymen
     }
 
     @Override
-    public PaymentResponse fetch(PaymentRequest paymentRequest) {
+    public PaymentResponse fetch(PaymentRequest paymentRequest) throws PaymentRejectedException {
         return apiClient
                 .getPayment(
                         paymentRequest.getPayment().getUniqueId(),
@@ -108,7 +109,8 @@ public class SwedbankPaymentExecutor implements PaymentExecutor, FetchablePaymen
     }
 
     @Override
-    public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest) {
+    public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest)
+            throws PaymentRejectedException {
         final Payment payment = paymentMultiStepRequest.getPayment();
         final String paymentId = payment.getUniqueId();
 
@@ -125,7 +127,8 @@ public class SwedbankPaymentExecutor implements PaymentExecutor, FetchablePaymen
         }
     }
 
-    private PaymentMultiStepResponse signPayment(PaymentMultiStepRequest request) {
+    private PaymentMultiStepResponse signPayment(PaymentMultiStepRequest request)
+            throws PaymentRejectedException {
         final Payment payment = request.getPayment();
         final String paymentId = payment.getUniqueId();
         try {
@@ -133,7 +136,7 @@ public class SwedbankPaymentExecutor implements PaymentExecutor, FetchablePaymen
             if (isPaymentInPendingStatus(paymentId)) {
                 return new PaymentMultiStepResponse(payment, STEP_INIT, emptyList());
             }
-        } catch (MissingExtendedBankIdException exception) {
+        } catch (MissingExtendedBankIdException | PaymentRejectedException exception) {
             // fallback to redirect flow if we're missing extended BankID
             swedbankPaymentSigner.signWithRedirect(paymentId);
         }
@@ -141,17 +144,18 @@ public class SwedbankPaymentExecutor implements PaymentExecutor, FetchablePaymen
         return new PaymentMultiStepResponse(payment, STEP_FINALIZE, emptyList());
     }
 
-    private boolean isPaymentInPendingStatus(String paymentId) {
+    private boolean isPaymentInPendingStatus(String paymentId) throws PaymentRejectedException {
         return getTinkPaymentStatus(paymentId).equals(PaymentStatus.PENDING);
     }
 
-    private PaymentStatus getTinkPaymentStatus(String paymentId) {
+    private PaymentStatus getTinkPaymentStatus(String paymentId) throws PaymentRejectedException {
         final PaymentStatusResponse paymentStatusResponse = getPaymentStatus(paymentId);
         return SwedbankPaymentStatus.fromString(paymentStatusResponse.getTransactionStatus())
                 .getTinkPaymentStatus();
     }
 
-    private PaymentStatusResponse getPaymentStatus(String paymentId) {
+    private PaymentStatusResponse getPaymentStatus(String paymentId)
+            throws PaymentRejectedException {
         return apiClient.getPaymentStatus(
                 paymentId, SwedbankPaymentType.SE_DOMESTIC_CREDIT_TRANSFERS);
     }

@@ -72,11 +72,25 @@ public class GenericResponse {
     }
 
     @JsonIgnore
+    public boolean isBadRequest() {
+        return containsError(ErrorCodes.FORMAT_ERROR);
+    }
+
+    @JsonIgnore
     private boolean containsError(String errorCode) {
         return ListUtils.emptyIfNull(tppMessages).stream()
                 .anyMatch(
                         tppMessage ->
                                 errorCode.equalsIgnoreCase(tppMessage.getCode())
                                         || errorCode.equalsIgnoreCase(tppMessage.getText()));
+    }
+
+    @JsonIgnore
+    public String getErrorMessage(String errorCode) {
+        return tppMessages.stream()
+                .filter(tppMessage -> errorCode.equalsIgnoreCase(tppMessage.getCode()))
+                .findFirst()
+                .get()
+                .getText();
     }
 }

@@ -19,6 +19,7 @@ import static se.tink.backend.aggregation.nxgen.controllers.signing.SigningStepC
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.common.SwedbankOpenBankingPaymentApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.executor.payment.SwedbankPaymentSigner.MissingExtendedBankIdException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.executor.payment.enums.SwedbankPaymentType;
@@ -34,7 +35,8 @@ public class SwedbankPaymentExecutorTest {
     private SwedbankPaymentSigner swedbankPaymentSigner;
 
     @Before
-    public void setUp() throws PaymentAuthorizationException {
+    @SuppressWarnings("unchecked")
+    public void setUp() throws PaymentAuthorizationException, PaymentRejectedException {
         swedbankApiClient = mock(SwedbankOpenBankingPaymentApiClient.class);
         swedbankPaymentSigner = mock(SwedbankPaymentSigner.class);
         swedbankPaymentExecutor =
@@ -42,7 +44,7 @@ public class SwedbankPaymentExecutorTest {
     }
 
     @Test
-    public void signShouldStayInInitStateIfAuthorizeProcessNotStarted() {
+    public void shouldStayInInitStateIfNotReadyForSigning() throws PaymentRejectedException {
         // given
         final PaymentMultiStepRequest request = createPaymentRequest();
         givenPaymentAuthorisationWas(false);
@@ -55,7 +57,7 @@ public class SwedbankPaymentExecutorTest {
     }
 
     @Test
-    public void signShouldGoToSIGNStateIfAuthorizeProcessIsSuccessful() {
+    public void shouldAuthorizePayment() throws PaymentRejectedException {
         // given
         final PaymentMultiStepRequest request = createPaymentRequest();
         givenPaymentAuthorisationWas(true);
@@ -68,12 +70,13 @@ public class SwedbankPaymentExecutorTest {
         verify(swedbankPaymentSigner, times(1)).authorize(INSTRUCTION_ID);
     }
 
-    private void givenPaymentAuthorisationWas(boolean success) {
+    private void givenPaymentAuthorisationWas(boolean success) throws PaymentRejectedException {
         when(swedbankPaymentSigner.authorize(INSTRUCTION_ID)).thenReturn(success);
     }
 
     @Test
-    public void signShouldFallBackToRedirectFlowIfMissingExtendedBankId() {
+    public void shouldFallBackToRedirectFlowIfMissingExtendedBankId()
+            throws PaymentRejectedException {
         // given
         final PaymentMultiStepRequest request = createPaymentMultiStepRequest(STEP_SIGN);
         givenPaymentWithStatus("");
@@ -88,7 +91,7 @@ public class SwedbankPaymentExecutorTest {
     }
 
     @Test
-    public void signShouldTryToSignPayment() {
+    public void shouldTryToSignPayment() throws PaymentRejectedException {
         // given
         final PaymentMultiStepRequest request = createPaymentMultiStepRequest(STEP_SIGN);
         givenPaymentWithStatus("");
@@ -102,7 +105,8 @@ public class SwedbankPaymentExecutorTest {
     }
 
     @Test
-    public void signShouldReturnToInitStepIfPaymentIsPending() {
+    public void shouldReturnToInitStepIfPaymentIsPending() throws PaymentRejectedException {
+
         // given
         final PaymentMultiStepRequest request = createPaymentMultiStepRequest(STEP_SIGN);
         givenPaymentWithStatus("ACTC");
@@ -115,7 +119,7 @@ public class SwedbankPaymentExecutorTest {
     }
 
     @Test(expected = IllegalStateException.class)
-    public void signShouldThrowIllegalStateException() {
+    public void shouldThrowIllegalStateException() throws PaymentRejectedException {
         // given
         final PaymentMultiStepRequest request = createPaymentMultiStepRequest("INVALID_STEP");
 
@@ -125,7 +129,7 @@ public class SwedbankPaymentExecutorTest {
         // then - assert in annotation
     }
 
-    private void givenPaymentWithStatus(String status) {
+    private void givenPaymentWithStatus(String status) throws PaymentRejectedException {
         final PaymentStatusResponse paymentStatusResponse =
                 createPaymentStatusResponseWith(true, status);
 
