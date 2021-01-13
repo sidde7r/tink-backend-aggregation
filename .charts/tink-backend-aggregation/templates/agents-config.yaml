@@ -58,7 +58,7 @@ data:
           password: PROXY_PASSWORD_BE
         se:
           host: "http://zproxy.lum-superproxy.io:22225"
-          username: "lum-customer-tink_ab-zone-sweden"
+          username: "lum-customer-c_71e4c7e0-zone-sweden"
           password: PROXY_PASSWORD_SE
 
       {{- if .Values.agentDataAvailabilityTrackerAvailable }}
@@ -105,33 +105,13 @@ data:
         {{- end }}
 
       featureFlags:
-<<<<<<< HEAD
         esProxy: {{ $featureFlagsConfig.esProxy | default false }}
         beProxy: {{ $featureFlagsConfig.beProxy | default false }}
         createBeneficiary: {{ $featureFlagsConfig.createBeneficiary | default false }}
         allowRefreshRegardlessOfRestrictions: {{ $featureFlagsConfig.allowRefreshRegardlessOfRestrictions | default false }}
         supportIndividualAccountsRefresh: {{ $featureFlagsConfig.supportIndividualAccountsRefresh | default false }}
         useAccountSegmentRestriction: {{ $featureFlagsConfig.useAccountSegmentRestriction | default false }}
-=======
-        {{- if $featureFlagsConfig.esProxy }}
-          esProxy: {{ $featureFlagsConfig.esProxy | default false }}
-        {{- end }}
-        {{- if $featureFlagsConfig.beProxy }}
-          beProxy: {{ $featureFlagsConfig.beProxy | default false }}
-        {{- end }}
-        {{- if $featureFlagsConfig.swedbankExtProxy }}
-          swedbankExtProxy: {{ $featureFlagsConfig.swedbankExtProxy | default false }}
-        {{- end }}
-        {{- if $featureFlagsConfig.createBeneficiary }}
-          createBeneficiary: {{ $featureFlagsConfig.createBeneficiary | default false }}
-        {{- end }}
-        {{- if $featureFlagsConfig.allowRefreshRegardlessOfRestrictions }}
-          allowRefreshRegardlessOfRestrictions: {{ $featureFlagsConfig.allowRefreshRegardlessOfRestrictions | default false }}
-        {{- end }}
-        {{- if $featureFlagsConfig.supportIndividualAccountsRefresh }}
-          supportIndividualAccountsRefresh: {{ $featureFlagsConfig.supportIndividualAccountsRefresh | default false }}
-        {{- end }}
->>>>>>> b194eb35be (feat(swedbank): use external proxy based on feature flag)
+        swedbankExtProxy: {{ $featureFlagsConfig.swedbankExtProxy | default false }}
 
       integrations:
         {{- if $agentsConfig.collectorSubscriptionKey }}
