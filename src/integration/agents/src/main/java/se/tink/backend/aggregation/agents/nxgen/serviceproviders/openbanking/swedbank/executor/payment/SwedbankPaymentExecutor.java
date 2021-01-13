@@ -119,9 +119,6 @@ public class SwedbankPaymentExecutor implements PaymentExecutor, FetchablePaymen
                 return new PaymentMultiStepResponse(payment, step, emptyList());
             case STEP_SIGN:
                 return signPayment(paymentMultiStepRequest);
-            case STEP_FINALIZE:
-                payment.setStatus(getTinkPaymentStatus(payment.getUniqueId()));
-                return new PaymentMultiStepResponse(payment, STEP_FINALIZE, emptyList());
             default:
                 throw new IllegalStateException(
                         String.format("Unknown step %s", paymentMultiStepRequest.getStep()));
