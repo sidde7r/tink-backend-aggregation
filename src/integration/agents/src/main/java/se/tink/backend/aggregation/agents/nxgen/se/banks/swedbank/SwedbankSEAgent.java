@@ -6,9 +6,7 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.INVESTMENTS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.LOANS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.MORTGAGE_AGGREGATION;
-import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.PAYMENTS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
-import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.TRANSFERS;
 
 import com.google.inject.Inject;
 import java.time.ZoneId;
@@ -42,11 +40,9 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 @AgentCapabilities({
     CHECKING_ACCOUNTS,
     LOANS,
-    PAYMENTS,
     CREDIT_CARDS,
     SAVINGS_ACCOUNTS,
     IDENTITY_DATA,
-    TRANSFERS,
     INVESTMENTS,
     MORTGAGE_AGGREGATION
 })
