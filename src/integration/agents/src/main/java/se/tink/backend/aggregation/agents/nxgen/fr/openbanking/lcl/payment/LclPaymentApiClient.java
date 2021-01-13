@@ -2,14 +2,12 @@ package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.payment;
 
 import java.util.List;
 import java.util.UUID;
-import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.LclAgent;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.apiclient.LclHeaderValueProvider;
-import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.apiclient.dto.accesstoken.TokenResponseDto;
-import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.configuration.LclConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.apiclient.LclTokenApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.payment.rpc.ConfirmPaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.payment.rpc.GetPaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.payment.rpc.PaymentRequestResource;
@@ -18,10 +16,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fro
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.rpc.GetPaymentResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.rpc.PispTokenRequest;
 import se.tink.backend.aggregation.api.Psd2Headers;
-import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
-import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2TokenBase;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -36,7 +31,6 @@ public class LclPaymentApiClient implements FrOpenBankingPaymentApiClient {
 
     private static final String PAYMENT_AUTHORIZATION_URL = "payment_authorization_url";
     private static final String PAYMENT_ID_PATH_PLACEHOLDER = "paymentId";
-    private static final String TOKEN_PATH = "/token";
     private static final String PISP_PATH = "/pisp";
     private static final String CREATE_PAYMENT_PATH = PISP_PATH + "/payment-requests";
     private static final String GET_PAYMENT_PATH = PISP_PATH + "/payment-requests/{paymentId}";
@@ -50,7 +44,7 @@ public class LclPaymentApiClient implements FrOpenBankingPaymentApiClient {
     private final TinkHttpClient client;
     private final LclHeaderValueProvider headerValueProvider;
     private final SessionStorage sessionStorage;
-    private final AgentConfiguration<LclConfiguration> configuration;
+    private final LclTokenApiClient tokenApiClient;
 
     @Override
     public void fetchToken() {
@@ -67,20 +61,12 @@ public class LclPaymentApiClient implements FrOpenBankingPaymentApiClient {
     }
 
     private void getAndSaveToken() {
-        OAuth2Token token = getToken().toOauthToken();
+        OAuth2Token token = getToken();
         sessionStorage.put(TOKEN, token);
     }
 
-    @SneakyThrows
-    private TokenResponseDto getToken() {
-        PispTokenRequest request =
-                new PispTokenRequest(
-                        CertificateUtils.getOrganizationIdentifier(configuration.getQwac()));
-
-        return client.request(createUrl(TOKEN_PATH))
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
-                .accept(MediaType.APPLICATION_JSON)
-                .post(TokenResponseDto.class, request);
+    private OAuth2Token getToken() {
+        return tokenApiClient.getPispToken().toOauthToken();
     }
 
     @Override
@@ -114,9 +100,7 @@ public class LclPaymentApiClient implements FrOpenBankingPaymentApiClient {
 
         sessionStorage.put(
                 PAYMENT_AUTHORIZATION_URL,
-                url.queryParam(
-                                "client_id",
-                                CertificateUtils.getOrganizationIdentifier(configuration.getQwac()))
+                url.queryParam("client_id", LclAgent.CLIENT_ID)
                         .queryParam("redirect_uri", sessionStorage.get(REDIRECT_URL_LOCAL_KEY))
                         .toString());
         return sessionStorage.get(PAYMENT_ID_LOCAL_KEY);
