@@ -7,10 +7,12 @@ public class AIBCorporateAgentTest {
 
     @Test
     public void testRefresh() throws Exception {
-        new AgentIntegrationTest.Builder("uk", "uk-aib-business-ob")
+        new AgentIntegrationTest.Builder("uk", "uk-aib-business-oauth2")
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(true)
                 .expectLoggedIn(false)
+                .setFinancialInstitutionId("aib")
+                .setAppId("tink")
                 .build()
                 .testRefresh();
     }

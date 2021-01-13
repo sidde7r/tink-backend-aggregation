@@ -11,6 +11,7 @@ public class HsbcKineticAgentTest {
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(true)
                 .expectLoggedIn(false)
+                .setFinancialInstitutionId("hsbc-kinetic")
                 .setAppId("tink")
                 .build()
                 .testRefresh();
