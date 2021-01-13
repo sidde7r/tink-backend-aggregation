@@ -21,6 +21,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swe
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.fetcher.transactionalaccount.SwedbankTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.fetcher.transferdestinations.SwedbankTransferDestinationFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.filter.SwedbankConsentLimitFilter;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.filter.SwedbankMethodNotAllowedFilter;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
@@ -38,6 +39,7 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.signing.multifactor.bankid.BankIdSigningController;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.BankServiceInternalErrorFilter;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.ServiceUnavailableBankServiceErrorFilter;
 
 public abstract class SwedbankBaseAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor,
@@ -51,7 +53,9 @@ public abstract class SwedbankBaseAgent extends NextGenerationAgent
     public SwedbankBaseAgent(AgentComponentProvider componentProvider, QsealcSigner qsealcSigner) {
         super(componentProvider);
         client.addFilter(new SwedbankConsentLimitFilter());
+        client.addFilter(new SwedbankMethodNotAllowedFilter());
         client.addFilter(new BankServiceInternalErrorFilter());
+        client.addFilter(new ServiceUnavailableBankServiceErrorFilter());
         apiClient =
                 new SwedbankApiClient(
                         client,
