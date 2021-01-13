@@ -12,6 +12,8 @@ public class AgentContractEntity {
 
     private Map<String, Object> identityData;
 
+    private List<Map<String, Object>> transferDestinationPatterns;
+
     public List<Map<String, Object>> getAccounts() {
         return accounts;
     }
@@ -22,5 +24,9 @@ public class AgentContractEntity {
 
     public Optional<Map<String, Object>> getIdentityData() {
         return Optional.ofNullable(identityData);
+    }
+
+    public List<Map<String, Object>> getTransferDestinationPatterns() {
+        return transferDestinationPatterns;
     }
 }
