@@ -48,6 +48,13 @@ public class SebKortConstants {
         public static final URL BANK_ID_INIT = new URL(BANKID_HOST + "/std/method/seb");
     }
 
+    static class Headers {
+        static final String USER_AGENT = "User-Agent";
+        static final String USER_AGENT_VALUE =
+                "SEBKortClient/1.0 (os=iOS/13.3.1; app=se.eurocard.Eurocard/5.6.1)";
+        static final String REFERER = "Referer";
+    }
+
     public static class StorageKey {
         public static final String AUTHORIZATION = "Authorization";
         public static final String CARD_ACCOUNT_ID = "cardAccountId";

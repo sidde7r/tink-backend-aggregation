@@ -44,12 +44,18 @@ public class SebKortApiClient {
 
     private RequestBuilder createFormRequest(URL url) {
         return client.request(url)
-                .type(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
-                .accept(MediaType.APPLICATION_JSON_TYPE);
+                .header(
+                        SebKortConstants.Headers.USER_AGENT,
+                        SebKortConstants.Headers.USER_AGENT_VALUE)
+                .accept(MediaType.APPLICATION_JSON)
+                .type(MediaType.APPLICATION_FORM_URLENCODED);
     }
 
     private RequestBuilder createRequestInSession(URL url) {
         return createRequest(url)
+                .header(
+                        SebKortConstants.Headers.USER_AGENT,
+                        SebKortConstants.Headers.USER_AGENT_VALUE)
                 .header(
                         SebKortConstants.StorageKey.AUTHORIZATION,
                         sessionStorage.get(SebKortConstants.StorageKey.AUTHORIZATION))
@@ -121,6 +127,9 @@ public class SebKortApiClient {
         client.getInternalClient().setFollowRedirects(true);
 
         return createFormRequest(SebKortConstants.Urls.SEBKORT_AUTH)
+                .header(
+                        SebKortConstants.Headers.REFERER,
+                        "https://secure.sebkort.com/nis/m/sase/external/t/login/index")
                 .post(AuthResponse.class, request);
     }
 
