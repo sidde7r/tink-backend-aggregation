@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngUtils;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.entity.Element;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.entity.IngElement;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.rpc.MovementsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
@@ -55,7 +55,7 @@ public class IngTransactionFetcher implements TransactionMonthPaginator {
         return PaginatorResponseImpl.create(allTransactions);
     }
 
-    private static Transaction toTinkTransaction(Account account, Element element) {
+    private static Transaction toTinkTransaction(Account account, IngElement element) {
         Transaction.Builder builder = new Transaction.Builder();
 
         builder.setAmount(

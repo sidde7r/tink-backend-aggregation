@@ -56,6 +56,7 @@ public class IngConstants {
     }
 
     public static final class AccountTypes {
+        public static final Integer DEBIT_CARD = 1;
         public static final Integer CREDIT_CARD = 3;
         public static final Integer TRANSACTION_ACCOUNT = 17;
         public static final Integer SAVINGS_ACCOUNT_20 = 20;
@@ -88,6 +89,12 @@ public class IngConstants {
         public static final String ACTIVE = "0"; // Activa
         public static final String OPERATIVE = "5"; // Operative
         public static final String SINGLE_CONTRACT = "7"; // Solo Contrato
+    }
+
+    public static final class HolderTypes {
+        public static final String OWNER = "1";
+        public static final String CO_OWNER = "2";
+        public static final String AUTHORIZED_USER = "3";
     }
 
     public static final class Default {

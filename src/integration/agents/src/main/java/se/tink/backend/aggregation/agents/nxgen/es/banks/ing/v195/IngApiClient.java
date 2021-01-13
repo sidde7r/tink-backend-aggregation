@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngConstants.Query;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngConstants.Url;
@@ -13,7 +14,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.rpc.PutRestSessionResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.rpc.PutSessionRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.rpc.ScaStatusResponse;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.entity.Product;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.entity.IngProduct;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.rpc.MovementsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.rpc.ProductsResponse;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -84,19 +85,15 @@ public class IngApiClient {
 
     // Product list
     public ProductsResponse getApiRestProducts() {
-        if (cachedProductsResponse == null) {
-            Product[] products =
-                    client.request(IngConstants.Url.API_REST_PRODUCTS)
-                            .type(MediaType.APPLICATION_JSON)
-                            .accept(MediaType.APPLICATION_JSON)
-                            .get(Product[].class);
-
-            List<Product> productList = Arrays.asList(products);
-
-            cachedProductsResponse = ProductsResponse.create(productList);
-        }
-
-        return cachedProductsResponse;
+        return Optional.ofNullable(this.cachedProductsResponse)
+                .orElseGet(
+                        () ->
+                                ProductsResponse.create(
+                                        Arrays.asList(
+                                                client.request(Url.API_REST_PRODUCTS)
+                                                        .type(MediaType.APPLICATION_JSON)
+                                                        .accept(MediaType.APPLICATION_JSON)
+                                                        .get(IngProduct[].class))));
     }
 
     // "Movements" (Transactions)

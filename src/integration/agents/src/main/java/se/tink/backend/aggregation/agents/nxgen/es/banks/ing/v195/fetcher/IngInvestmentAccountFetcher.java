@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngConstants;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.entity.Product;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.entity.IngProduct;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
@@ -26,12 +26,12 @@ public class IngInvestmentAccountFetcher implements AccountFetcher<InvestmentAcc
     public Collection<InvestmentAccount> fetchAccounts() {
 
         return this.ingApiClient.getApiRestProducts().getProducts().stream()
-                .filter(Product::isActiveInvestmentAccount)
+                .filter(IngProduct::isActiveInvestmentAccount)
                 .map(product -> mapProductToInvestmentAccount(product))
                 .collect(Collectors.toList());
     }
 
-    private InvestmentAccount mapProductToInvestmentAccount(Product product) {
+    private InvestmentAccount mapProductToInvestmentAccount(IngProduct product) {
 
         Instrument instrument = new Instrument();
         instrument.setUniqueIdentifier(product.getProductNumber());

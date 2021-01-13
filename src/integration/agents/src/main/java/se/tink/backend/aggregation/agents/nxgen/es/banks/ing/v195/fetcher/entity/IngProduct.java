@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 
 @JsonObject
-public final class Product {
+public final class IngProduct {
 
     private String productNumber;
     private BigDecimal balance;
@@ -20,7 +20,7 @@ public final class Product {
     private String name;
     private Integer interventionCod;
     private String interventionDesc;
-    private Status status;
+    private IngStatus status;
     private Boolean moreInterveners;
     private Boolean enableAlias;
     private String openingDate;
@@ -30,8 +30,8 @@ public final class Product {
 
     // Cards have a single holder (Credit card, debit card, etc)
     // Accounts/Loans have an array of holders
-    private Holder holder;
-    private List<Holder> holders = null;
+    private IngHolder holder;
+    private List<IngHolder> holders;
 
     private String bic;
     private String bank;
@@ -52,7 +52,7 @@ public final class Product {
     private String nextPaymentDate;
     private Double nextPaymentAmount;
     private Double nominalType;
-    private AssociatedAccount associatedAccount;
+    private IngAssociatedAccount associatedAccount;
     private Boolean stableType;
     private Boolean fixedType;
     private Double euribor;
@@ -65,14 +65,14 @@ public final class Product {
     private Boolean hasLifeInsurance;
     private Boolean hasHomeInsurance;
     private String deedDifferential;
-    private Status insuranceStatus;
+    private IngStatus insuranceStatus;
     private Double capitalInsured;
     private Double capitalOptional;
     private Double capital;
     private Boolean conditionsNotAccepted;
-    private Status statusIndra;
-    private Status statusOnOff;
-    private Status statusContactless;
+    private IngStatus statusIndra;
+    private IngStatus statusOnOff;
+    private IngStatus statusContactless;
     private String cardType;
     private Double pendingAuthorizationAmount;
     private Double creditLimit;
@@ -136,7 +136,7 @@ public final class Product {
         return interventionDesc;
     }
 
-    public Status getStatus() {
+    public IngStatus getStatus() {
         return status;
     }
 
@@ -164,7 +164,7 @@ public final class Product {
         return branchCode;
     }
 
-    public List<Holder> getHolders() {
+    public List<IngHolder> getHolders() {
         return holders;
     }
 
@@ -240,7 +240,7 @@ public final class Product {
         return nominalType;
     }
 
-    public AssociatedAccount getAssociatedAccount() {
+    public IngAssociatedAccount getAssociatedAccount() {
         return associatedAccount;
     }
 
@@ -292,7 +292,7 @@ public final class Product {
         return deedDifferential;
     }
 
-    public Status getInsuranceStatus() {
+    public IngStatus getInsuranceStatus() {
         return insuranceStatus;
     }
 
@@ -312,19 +312,19 @@ public final class Product {
         return conditionsNotAccepted;
     }
 
-    public Holder getHolder() {
+    public IngHolder getHolder() {
         return holder;
     }
 
-    public Status getStatusIndra() {
+    public IngStatus getStatusIndra() {
         return statusIndra;
     }
 
-    public Status getStatusOnOff() {
+    public IngStatus getStatusOnOff() {
         return statusOnOff;
     }
 
-    public Status getStatusContactless() {
+    public IngStatus getStatusContactless() {
         return statusContactless;
     }
 
@@ -451,13 +451,6 @@ public final class Product {
     @JsonIgnore
     public String getAliasOrProductName() {
         return !Strings.isNullOrEmpty(alias) ? alias : name;
-    }
-
-    // This unique identifier strategy was used in the old agent, which only implemented transaction
-    // accounts.
-    @JsonIgnore
-    public String getUniqueIdentifierForTransactionAccount() {
-        return iban.replaceAll(" ", "").toLowerCase();
     }
 
     @JsonIgnore

@@ -1,0 +1,270 @@
+REQUEST 1 MATCH Started
+GET https://ing.ingdirect.es/genoma_api/rest/client
+
+RESPONSE 1
+410
+Content-Type: application/json; charset=UTF-8
+
+{
+    "code": 400002,
+    "Description": "UNAUTHORIZED"
+}
+
+REQUEST 2
+POST https://ing.ingdirect.es/genoma_login/rest/session
+Content-Type: application/json
+
+{"device":"mobilePhone","loginDocument":{"document":"1234567X","documentType":2},"birthday":"12/12/2012","deviceId":"0000000000000000000000000000000000000000"}
+
+RESPONSE 2
+200
+Content-Type: application/json; charset=UTF-8
+
+{
+	"pinPositions": [
+		1,
+		2,
+		5
+	],
+	"pinPadNumbers": [
+		1, 2, 3, 4, 6,
+		7, 8, 9, 0, 5
+	],
+	"lastConnection": "18/05/2020 16:46",
+	"lastDeviceConnection": "desktop",
+	"numFails": 0,
+	"registeredFingerprint": false,
+	"password": false,
+	"validEmail": true,
+	"processId": "0000011111111222222222333333333",
+	"pinpad": [
+		"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"
+	]
+}
+
+REQUEST 3
+PUT https://ing.ingdirect.es/genoma_login/rest/session
+Content-Type: application/json
+
+{"pinPositions":[0,1,9],"processId":"0000011111111222222222333333333"}
+
+RESPONSE 3
+200
+Content-Type: application/json; charset=UTF-8
+
+{
+	"isSameDevice": false,
+	"personId": "11112222",
+	"rememberMeToken": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+	"ticket": "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB==",
+	"timeoutInSeconds": 600
+}
+
+REQUEST 5
+POST https://ing.ingdirect.es/genoma_api/login/auth/response
+Content-Type: application/x-www-form-urlencoded
+
+ticket=BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB%3D%3D&device=mobilePhone
+
+RESPONSE 5 SET LoggedIn
+200
+Content-Type: application/json; charset=UTF-8
+
+{}
+
+REQUEST 6
+GET https://ing.ingdirect.es/genoma_api/rest/products
+
+RESPONSE 6
+200
+Content-Type: application/json; charset=UTF-8
+
+[
+    {
+        "productNumber": "14650120311729424020",
+        "balance": 926.43,
+        "availableBalance": 926.43,
+        "type": 17,
+        "subtype": "6",
+        "name": "Cuenta SIN NÓMINA",
+        "alias": "Cuenta SIN NÓMINA Compte conjunt",
+        "interventionCod": 1,
+        "interventionDesc": "Primer titular",
+        "status": {
+            "cod": "5",
+            "description": "Operative"
+        },
+        "moreInterveners": true,
+        "enableAlias": true,
+        "openingDate": "05/10/2017",
+        "cid": "1729424020",
+        "currency": "EUR",
+        "branchCode": "0120",
+        "holders": [
+             {
+                 "interventionDegree": {
+                     "code": "1",
+                     "description": "PRIMER TITULAR"
+                 },
+                 "name": "JOHN TINKER"
+             },
+             {
+                 "interventionDegree": {
+                     "code": "2",
+                     "description": "COTITULAR"
+                 },
+                 "name": "ALICE TINKER"
+             }
+         ],
+        "bic": "INGDESMMXXX",
+        "bank": "1465",
+        "iban": "ES90 1465 0120 31 1729424020",
+        "assignedOverdraftLimit": 0,
+        "uuid": "___V1ID___DXJvBATSAoXxrpCEz327HaPV88Nzyox9tQe7AgE1Ll9cwnWfFT-8A3Vl8188U8Q6aumaaC4IbYoHTPg7bPzAtQ___V1ID___"
+    },
+    {
+        "productNumber": "14650120352092814575",
+        "balance": 46978.56,
+        "availableBalance": 46978.56,
+        "type": 20,
+        "name": "Cuenta NARANJA",
+        "interventionCod": 3,
+        "interventionDesc": "Autorizado",
+        "status": {
+            "cod": "5",
+            "description": "Operative"
+        },
+        "moreInterveners": true,
+        "enableAlias": true,
+        "openingDate": "31/01/2012",
+        "cid": "2092814575",
+        "currency": "EUR",
+        "branchCode": "0120",
+        "holders": [
+            {
+                "interventionDegree": {
+                    "code": "1",
+                    "description": "TITULAR"
+                },
+                "name": "WILL TINKER"
+            },
+            {
+                "interventionDegree": {
+                    "code": "3",
+                    "description": "AUTORIZADO"
+                },
+                "name": "JOHN TINKER"
+            }
+        ],
+        "bic": "INGDESMMXXX",
+        "bank": "1465",
+        "iban": "ES07 1465 0120 35 2092814575",
+        "nominal": 0.01,
+        "tae": 0.01,
+        "sinceOpen": 747.21,
+        "sinceYear": 5.69,
+        "sinceMonth": 0.39,
+        "yearRetention": 1.08,
+        "uuid": "___V1ID___64UXj_JV20_u_pueGT9OQdMKp3MjzwhKxfTHfkp9bTWHde5qV3hmGQ77eO2mTB_d___V1ID___"
+    },
+    {
+        "productNumber": "5160973462723019",
+        "availableBalance": 64.16,
+        "type": 3,
+        "subtype": "2",
+        "name": "Tarjeta Crédito",
+        "status": {
+            "cod": "0",
+            "description": "Activa"
+        },
+        "enableAlias": true,
+        "holder": {
+            "nif": "**HASHED:n4**",
+            "completeName": "WILL TINKER",
+            "type": "Principal",
+            "typeCode": "1"
+        },
+        "associatedAccount": {
+            "productNumber": "14650170131734495517",
+            "uuid": "___V1ID___DXJvBATSAoXxrpCEz327HaPV88Nzyox9tQe7AgE1Ll_4q3qaflL420YVKqVLu03_15FLfz1sGml5sblsnkivgA___V1ID___"
+        },
+        "statusIndra": {},
+        "statusOnOff": {
+            "cod": "0",
+            "description": "Encendida"
+        },
+        "statusContactless": {
+            "cod": "0",
+            "description": "Encendida"
+        },
+        "cardType": "Débito/Crédito",
+        "pendingAuthorizationAmount": 0,
+        "creditLimit": 1000,
+        "monthPurchasesAmount": 0,
+        "paymentMethod": "4",
+        "monthlyFee": 35,
+        "lastMonthDeferredAmount": 898.58,
+        "spentAmount": 935.84,
+        "nextPaymentDate": "05/01/2021",
+        "anualInterest": "17.48",
+        "tae": "18.95",
+        "expedientNumber": "10415220",
+        "isRealTimeData": true,
+        "codConTar": "3462723",
+        "expirationDate": "08/24",
+        "uuid": "___V1ID___m6PibnYhP0tarT2bZcKraUEke2k4WI48cWOHzmMMwpL3BQou3p45gvLSdW2nrpGKyDbBtRwiHCLgs7xaLWn1XL38tVD9dx9IrYkD881avNVE5hz8cmiE_-o045_oq3tXoAcyqrC7xolXF_4ibXNMsg___V1ID___",
+        "availableCreditAmount": 64.16
+    },
+    {
+        "productNumber": "14650170131734495517",
+        "balance": 434.77,
+        "availableBalance": 434.77,
+        "type": 17,
+        "subtype": "1",
+        "name": "Cuenta NÓMINA",
+        "interventionCod": 1,
+        "interventionDesc": "Titular",
+        "status": {
+            "cod": "5",
+            "description": "Operative"
+        },
+        "moreInterveners": false,
+        "enableAlias": true,
+        "openingDate": "11/03/2019",
+        "cid": "1734495517",
+        "currency": "EUR",
+        "branchCode": "0170",
+        "holders": [
+            {
+                "interventionDegree": {
+                    "code": "1",
+                    "description": "TITULAR"
+                },
+                "name": "WILL TINKER"
+            }
+        ],
+        "bic": "INGDESMMXXX",
+        "bank": "1465",
+        "iban": "ES73 1465 0170 13 1734495517",
+        "assignedOverdraftLimit": 30,
+        "uuid": "___V1ID___DXJvBATSAoXxrpCEz327HaPV88Nzyox9tQe7AgE1Ll_4q3qaflL420YVKqVLu03_15FLfz1sGml5sblsnkivgA___V1ID___"
+    }
+]
+
+REQUEST 7 MATCH LoggedIn
+GET https://ing.ingdirect.es/genoma_api/rest/client
+
+RESPONSE 7
+200
+Content-Type: application/json; charset=UTF-8
+
+{}
