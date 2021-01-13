@@ -430,7 +430,7 @@ public final class SwedbankApiClient implements SwedbankOpenBankingPaymentApiCli
     }
 
     @Override
-    public PaymentAuthorisationResponse startPaymentAuthorisation(
+    public PaymentAuthorisationResponse initiatePaymentAuthorisation(
             String paymentId,
             SwedbankPaymentType swedbankPaymentType,
             String state,

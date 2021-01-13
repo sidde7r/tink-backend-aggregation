@@ -12,7 +12,7 @@ public interface SwedbankOpenBankingPaymentApiClient {
     CreatePaymentResponse createPayment(
             CreatePaymentRequest createPaymentRequest, SwedbankPaymentType swedbankPaymentType);
 
-    PaymentAuthorisationResponse startPaymentAuthorisation(
+    PaymentAuthorisationResponse initiatePaymentAuthorisation(
             String paymentId,
             SwedbankPaymentType swedbankPaymentType,
             String state,
