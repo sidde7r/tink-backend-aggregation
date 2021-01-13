@@ -6,7 +6,6 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.fe
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.fetcher.transactionalaccount.entities.BalancesEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.fetcher.transactionalaccount.entities.LimitsEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.fetcher.transactionalaccount.entities.LinksEntity;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.fetcher.transferdestinations.entities.AccountOwnersEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.fetcher.transferdestinations.entities.InterestConditionsEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.fetcher.transferdestinations.entities.InterestsDetailsEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -18,7 +17,7 @@ public class FetchAccountDetailsResponse {
     private LinksEntity links;
 
     private String accountInterest;
-    private AccountOwnersEntity accountOwners;
+    private List<String> accountOwners;
     private List<AliasesEntity> aliases;
     private List<BalancesEntity> balances;
     private String bankgiroNumber;
