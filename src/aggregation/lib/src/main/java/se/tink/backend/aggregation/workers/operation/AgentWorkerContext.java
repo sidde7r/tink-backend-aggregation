@@ -31,7 +31,6 @@ import se.tink.backend.aggregation.agents.models.AccountFeatures;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.models.TransactionTypes;
 import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
-import se.tink.backend.aggregation.agents.models.fraud.FraudDetailsContent;
 import se.tink.backend.aggregation.agents.utils.mappers.CoreAccountMapper;
 import se.tink.backend.aggregation.agents.utils.mappers.CoreCredentialsMapper;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
@@ -43,7 +42,6 @@ import se.tink.backend.aggregation.controllers.ProviderSessionCacheController;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
 import se.tink.backend.aggregation.events.AccountInformationServiceEventsProducer;
 import se.tink.backend.aggregation.locks.BarrierName;
-import se.tink.backend.system.rpc.UpdateFraudDetailsRequest;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account_data_cache.AccountData;
 import se.tink.libraries.account_data_cache.AccountDataCache;
@@ -531,15 +529,6 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         refreshId.ifPresent(updateCredentialsStatusRequest::setRefreshId);
 
         controllerWrapper.updateCredentials(updateCredentialsStatusRequest);
-    }
-
-    @Override
-    public void updateFraudDetailsContent(List<FraudDetailsContent> detailsContents) {
-        UpdateFraudDetailsRequest updateFraudRequest = new UpdateFraudDetailsRequest();
-        updateFraudRequest.setUserId(request.getUser().getId());
-        updateFraudRequest.setDetailsContents(detailsContents);
-
-        controllerWrapper.updateFraudDetails(updateFraudRequest);
     }
 
     @Override

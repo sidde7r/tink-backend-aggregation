@@ -37,7 +37,6 @@ import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateTransactio
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateTransferDestinationPatternsRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateTransfersRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpsertRegulatoryClassificationRequest;
-import se.tink.backend.system.rpc.UpdateFraudDetailsRequest;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.signableoperation.rpc.SignableOperation;
 
@@ -185,12 +184,6 @@ public class FakeAggregationControllerAggregationClient
             HostConfiguration hostConfiguration, UpdateTransfersRequest request) {
         callFakeAggregationController("processEinvoices", request);
         return Response.ok().build();
-    }
-
-    @Override
-    public Response updateFraudDetails(
-            HostConfiguration hostConfiguration, UpdateFraudDetailsRequest request) {
-        throw new UnsupportedOperationException("Not implemented");
     }
 
     @Override

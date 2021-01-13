@@ -52,10 +52,6 @@ public interface AggregationControllerAggregationClient {
 
     Response processEinvoices(HostConfiguration hostConfiguration, UpdateTransfersRequest request);
 
-    Response updateFraudDetails(
-            HostConfiguration hostConfiguration,
-            se.tink.backend.system.rpc.UpdateFraudDetailsRequest request);
-
     Response updateCredentialSensitive(
             HostConfiguration hostConfiguration,
             Credentials credentials,

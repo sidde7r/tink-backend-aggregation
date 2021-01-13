@@ -19,7 +19,6 @@ import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateAccountReq
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateCredentialsStatusRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateTransferDestinationPatternsRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateTransfersRequest;
-import se.tink.backend.system.rpc.UpdateFraudDetailsRequest;
 import se.tink.libraries.http.annotations.auth.AllowAnonymous;
 import se.tink.libraries.signableoperation.rpc.SignableOperation;
 
@@ -105,11 +104,4 @@ public interface UpdateService {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     Response processEinvoices(UpdateTransfersRequest request);
-
-    @POST
-    @Path("/fraud/update")
-    @TeamOwnership(Team.AGGREGATION)
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response updateFraudDetails(UpdateFraudDetailsRequest request);
 }

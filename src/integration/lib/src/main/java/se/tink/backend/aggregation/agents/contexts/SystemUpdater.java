@@ -6,7 +6,6 @@ import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.AccountHolder;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
-import se.tink.backend.aggregation.agents.models.fraud.FraudDetailsContent;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 public interface SystemUpdater {
@@ -21,8 +20,6 @@ public interface SystemUpdater {
 
     void updateCredentialsExcludingSensitiveInformation(
             Credentials credentials, boolean doStatusUpdate);
-
-    void updateFraudDetailsContent(List<FraudDetailsContent> detailsContent);
 
     List<Account> getUpdatedAccounts();
 
