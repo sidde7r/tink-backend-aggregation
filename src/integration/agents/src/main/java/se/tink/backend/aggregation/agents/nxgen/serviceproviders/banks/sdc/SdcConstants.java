@@ -105,6 +105,7 @@ public class SdcConstants {
                 "creditcardprovider/transactions/search";
         public static final String CREDIT_CARD_PROVIDER_ACCOUNTS_LIST_PATH =
                 "creditcardprovider/account/list";
+        public static final String TOTALKREDIT_LOANS_PATH = "totalkredit/effectivemortgageloans";
     }
 
     public static class Session {

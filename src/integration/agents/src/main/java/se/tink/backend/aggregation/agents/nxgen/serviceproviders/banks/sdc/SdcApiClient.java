@@ -23,6 +23,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetch
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetcher.rpc.SearchTransactionsRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetcher.rpc.SearchTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetcher.rpc.SelectAgreementRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetcher.totalkredit.TotalKreditLoanResponse;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
@@ -160,6 +161,11 @@ public class SdcApiClient {
     public ListLoanAccountsResponse listLoans() {
         return createApiRequest(this.agentConfiguration.getListLoansUrl())
                 .get(ListLoanAccountsResponse.class);
+    }
+
+    public TotalKreditLoanResponse listTotalKreditLoans() {
+        return createApiRequest(agentConfiguration.getUrlForTotalKreditLoans())
+                .get(TotalKreditLoanResponse.class);
     }
 
     public FilterAccountsResponse listCreditCardProviderAccounts() {
