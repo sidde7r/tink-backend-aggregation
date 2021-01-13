@@ -35,7 +35,6 @@ import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationWrapp
 import se.tink.backend.aggregation.logmasker.LogMaskerImpl.LoggingMode;
 import se.tink.backend.aggregation.nxgen.http.filter.factory.ClientFilterFactory;
 import se.tink.backend.aggregation.nxgen.http.log.HttpLoggingFilterFactory;
-import se.tink.backend.aggregation.rpc.KeepAliveRequest;
 import se.tink.backend.aggregation.utils.CookieContainer;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
@@ -134,18 +133,6 @@ public abstract class AbstractAgentTest<T extends Agent> extends AbstractConfigu
         return user;
     }
 
-    protected KeepAliveRequest createKeepAliveRequest(Credentials credentials) {
-        UserProfile profile = new UserProfile();
-        profile.setLocale("sv_SE");
-
-        User user = new User();
-        user.setId(credentials.getUserId());
-        user.setProfile(profile);
-        user.setFlags(constructFeatureFlags());
-
-        return new KeepAliveRequest(user, constructProvider(), credentials);
-    }
-
     protected void testAgent(Credentials credentials) throws Exception {
         testAgent(credentials, true);
     }
@@ -167,7 +154,7 @@ public abstract class AbstractAgentTest<T extends Agent> extends AbstractConfigu
         // Save Session on the Credentials
         persistentAgent.persistLoginSession();
         // Keep the session alive against the agent (will not really do anything in this test case)
-        Assert.assertTrue(persistentAgent.keepAlive());
+        Assert.assertTrue(persistentAgent.isLoggedIn());
 
         // Create a new agent to simulate that we are creating the agent in another request
         persistentAgent =
@@ -203,7 +190,7 @@ public abstract class AbstractAgentTest<T extends Agent> extends AbstractConfigu
         agent.logout();
 
         // Create a new agent to simulate that we are creating the agent in another request
-        agent = factory.create(cls, createKeepAliveRequest(credentials), testContext);
+        agent = factory.create(cls, createRefreshInformationRequest(credentials), testContext);
         persistentAgent = (PersistentLogin) agent;
 
         // Load the invalid Session
@@ -214,7 +201,7 @@ public abstract class AbstractAgentTest<T extends Agent> extends AbstractConfigu
         Assert.assertTrue(sessionExists);
 
         // Forced to fail
-        Assert.assertFalse(persistentAgent.keepAlive());
+        Assert.assertFalse(persistentAgent.isLoggedIn());
         // Remove Session
         persistentAgent.clearLoginSession();
 

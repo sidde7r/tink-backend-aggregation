@@ -19,7 +19,6 @@ import se.tink.backend.aggregation.cluster.identification.ClientInfo;
 import se.tink.backend.aggregation.rpc.ChangeProviderRateLimitsRequest;
 import se.tink.backend.aggregation.rpc.ConfigureWhitelistInformationRequest;
 import se.tink.backend.aggregation.rpc.CreateBeneficiaryCredentialsRequest;
-import se.tink.backend.aggregation.rpc.KeepAliveRequest;
 import se.tink.backend.aggregation.rpc.ReEncryptCredentialsRequest;
 import se.tink.backend.aggregation.rpc.RecurringPaymentRequest;
 import se.tink.backend.aggregation.rpc.RefreshWhitelistInformationRequest;
@@ -122,13 +121,6 @@ public interface AggregationService {
     void whitelistedTransfer(
             WhitelistedTransferRequest request, @ClientContext ClientInfo clientInfo)
             throws Exception;
-
-    @POST
-    @Path("keepalive")
-    @TeamOwnership(Team.AGGREGATION)
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    void keepAlive(KeepAliveRequest request, @ClientContext ClientInfo clientInfo) throws Exception;
 
     @PUT
     @Path("update")

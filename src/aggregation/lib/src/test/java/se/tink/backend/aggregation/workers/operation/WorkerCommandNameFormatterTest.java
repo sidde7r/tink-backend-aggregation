@@ -15,7 +15,6 @@ import se.tink.backend.aggregation.workers.commands.DecryptCredentialsWorkerComm
 import se.tink.backend.aggregation.workers.commands.EncryptCredentialsWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.ExpireSessionAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.InstantiateAgentWorkerCommand;
-import se.tink.backend.aggregation.workers.commands.KeepAliveAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.LockAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.LoginAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.MigrateCredentialsAndAccountsWorkerCommand;
@@ -55,7 +54,6 @@ public class WorkerCommandNameFormatterTest {
         assertEquals("encrypt-credentials", get(EncryptCredentialsWorkerCommand.class));
         assertEquals("expire-session", get(ExpireSessionAgentWorkerCommand.class));
         assertEquals("instantiate", get(InstantiateAgentWorkerCommand.class));
-        assertEquals("keep-alive", get(KeepAliveAgentWorkerCommand.class));
         assertEquals("lock", get(LockAgentWorkerCommand.class));
         assertEquals("login", get(LoginAgentWorkerCommand.class));
         assertEquals(
