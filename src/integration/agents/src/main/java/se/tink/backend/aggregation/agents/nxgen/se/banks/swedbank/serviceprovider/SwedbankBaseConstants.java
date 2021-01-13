@@ -8,6 +8,7 @@ import com.google.common.collect.ImmutableSet;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import org.apache.commons.codec.binary.Base64;
 import se.tink.backend.aggregation.agents.AgentParsingUtils;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.configuration.SwedbankConfiguration;
@@ -119,6 +120,23 @@ public class SwedbankBaseConstants {
     public static class SavingAccountTypes {
         public static final String PENSION = "pension";
     }
+
+    // Some investment accounts are returned in the same list as savings accounts, but they should
+    // be filtered out so they are not aggregated as savings. Found these product IDs for savings
+    // accounts that always match an investment account.
+    public static final Set<String> INVESTMENT_ACCOUNT_PRODUCT_IDS =
+            ImmutableSet.of(
+                    "DIRPDEPA",
+                    "DIRPFOND",
+                    "FOND",
+                    "FSP002",
+                    "FVR",
+                    "ISKPRV01",
+                    "KAPPFOND",
+                    "KAPSFOND",
+                    "KBRNFOND",
+                    "KFORDEPA",
+                    "KPENFOND");
 
     public enum InvestmentAccountType {
         EQUITY_TRADER("EQUITY_TRADER"),
