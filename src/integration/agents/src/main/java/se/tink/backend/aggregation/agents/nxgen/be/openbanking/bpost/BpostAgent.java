@@ -25,7 +25,6 @@ public final class BpostAgent extends Xs2aDevelopersTransactionalAgent {
                 persistentStorage,
                 configuration,
                 componentProvider.getLocalDateTimeSource(),
-                credentials,
-                new BPostApiClient(componentProvider.getTinkHttpClient()));
+                credentials);
     }
 }

@@ -21,7 +21,8 @@ public class ComdirectAuthenticator extends Xs2aDevelopersAuthenticator {
                 persistentStorage,
                 xs2ADevelopersProviderConfiguration,
                 localDateTimeSource,
-                credentials);
+                credentials,
+                false);
     }
 
     @Override

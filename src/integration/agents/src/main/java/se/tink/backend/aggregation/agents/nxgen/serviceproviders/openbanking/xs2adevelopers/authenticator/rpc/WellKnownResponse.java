@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.de.openbanking.commerzbank.authenticator.rpc;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
