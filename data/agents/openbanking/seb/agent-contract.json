@@ -5007,5 +5007,23 @@
       "type": "DEFAULT",
       "upcoming": false
     }
+  ],
+  "transferDestinationPatterns": [
+    {
+      "type": "SE_BG",
+      "pattern": ".+"
+    },
+    {
+      "type": "SE_PG",
+      "pattern": ".+"
+    },
+    {
+      "type": "IBAN",
+      "pattern": ".+"
+    },
+    {
+      "type": "SE",
+      "pattern": ".+"
+    }
   ]
 }
