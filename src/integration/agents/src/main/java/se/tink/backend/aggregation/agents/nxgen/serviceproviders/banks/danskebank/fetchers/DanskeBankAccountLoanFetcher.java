@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankApiClient;
@@ -94,12 +95,24 @@ public class DanskeBankAccountLoanFetcher implements AccountFetcher<LoanAccount>
                                         a.getAccountProduct()));
     }
 
-    private AccountDetailsResponse fetchLoanAccountDetails(String accountNumberInternal) {
+    AccountDetailsResponse fetchLoanAccountDetails(String accountNumberInternal) {
         // Use EN language, because information returned in other languages is gibberish.
         try {
             return apiClient.fetchAccountDetails(
                     new AccountDetailsRequest(accountNumberInternal, "EN"));
         } catch (HttpResponseException e) {
+            // Sometimes we receive 500 response that has a body of AccountDetailsResponse including
+            // interestRate, but missing other fields like accountOwners and accountType - that's
+            // why I think it is 500.
+            // Try to get the body, so we could set interest rate
+            if (e.getResponse().getStatus() == HttpStatus.SC_INTERNAL_SERVER_ERROR
+                    && e.getResponse().hasBody()) {
+                try {
+                    return e.getResponse().getBody(AccountDetailsResponse.class);
+                } catch (RuntimeException re) {
+                    logger.info("Failed to map exception body into AccountDetailsResponse. ", e);
+                }
+            }
             logger.info("Failed to fetch loan account details. ", e);
         }
         return new AccountDetailsResponse();

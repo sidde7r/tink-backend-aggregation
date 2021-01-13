@@ -1,0 +1,33 @@
+{
+    "traceId": null,
+    "statusCode": 500,
+    "responseCode": 500,
+    "responseMessage": null,
+    "eupToken": null,
+    "accountInterestDetails": {
+        "interestIntervalDetails": [],
+        "interestDetails": [
+            {
+                "text": "Interest on credit balance:",
+                "rate": "0.000",
+                "period": ""
+            },
+            {
+                "text": "Interest on debit balance:",
+                "rate": "10.100",
+                "period": ""
+            }
+        ],
+        "interestIntervalType": "",
+        "bodyText": "",
+        "headline": "Interest rate"
+    },
+    "accountOwners": null,
+    "feeAmount": 0,
+    "feeCurrency": null,
+    "accountType": null,
+    "accountNumber": null,
+    "registrationNumber": null,
+    "iban": null,
+    "bic": null
+}

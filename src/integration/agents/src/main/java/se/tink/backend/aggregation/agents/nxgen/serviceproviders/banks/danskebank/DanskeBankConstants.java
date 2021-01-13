@@ -290,4 +290,9 @@ public class DanskeBankConstants {
         public static final String SE_MARKET = "SE";
         public static final String DK_MARKET = "DK";
     }
+
+    public static final class RetryFilter {
+        public static final int NUM_TIMEOUT_RETRIES = 3;
+        public static final long RETRY_SLEEP_MILLISECONDS = 1000;
+    }
 }

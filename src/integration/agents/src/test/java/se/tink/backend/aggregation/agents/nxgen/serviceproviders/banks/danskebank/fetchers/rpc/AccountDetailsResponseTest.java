@@ -18,7 +18,7 @@ public class AccountDetailsResponseTest {
     private final String INTEREST_RATE = "1.123";
 
     @Test
-    public void shouldReturnNullWhenAccountInterestDetailsIsNull() {
+    public void shouldReturnZeroWhenAccountInterestDetailsIsNull() {
         // given
         AccountDetailsResponse accountDetailsResponse = new AccountDetailsResponse();
 
@@ -26,11 +26,11 @@ public class AccountDetailsResponseTest {
         Double result = accountDetailsResponse.getInterestRate();
 
         // then
-        assertThat(result).isNull();
+        assertThat(result).isEqualTo(0.0);
     }
 
     @Test
-    public void shouldReturnNullWhenInterestDetailsListIsEmpty() {
+    public void shouldReturnZeroWhenInterestDetailsListIsEmpty() {
         // given
         AccountDetailsResponse accountDetailsResponse = new AccountDetailsResponse();
         accountDetailsResponse.setAccountInterestDetails(new AccountInterestDetailsEntity());
@@ -39,7 +39,7 @@ public class AccountDetailsResponseTest {
         Double result = accountDetailsResponse.getInterestRate();
 
         // then
-        assertThat(result).isNull();
+        assertThat(result).isEqualTo(0.0);
     }
 
     @Test
@@ -67,7 +67,7 @@ public class AccountDetailsResponseTest {
 
     @Test
     @Parameters(method = "ratesParams")
-    public void shouldReturnNullWhenRateIsWrongFormat(String firstRate, String secondRate) {
+    public void shouldReturnZeroWhenRateIsWrongFormat(String firstRate, String secondRate) {
         // given
         InterestDetailEntity interestDetailEntity1 = new InterestDetailEntity();
         interestDetailEntity1.setRateInPercent(firstRate);
@@ -86,7 +86,7 @@ public class AccountDetailsResponseTest {
         Double result = accountDetailsResponse.getInterestRate();
 
         // then
-        assertThat(result).isNull();
+        assertThat(result).isEqualTo(0.0);
     }
 
     private Object[] ratesParams() {
