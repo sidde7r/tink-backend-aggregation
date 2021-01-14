@@ -4,21 +4,25 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankPredicates;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.AccountDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.AccountEntity;
 import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Holder;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.loan.LoanModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.backend.aggregation.source_info.AccountSourceInfo;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountFlag;
+import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @RequiredArgsConstructor
@@ -64,14 +68,34 @@ public class AccountEntityMapper {
             DanskeBankConfiguration configuration,
             AccountEntity accountEntity,
             AccountDetailsResponse accountDetailsResponse) {
-        return LoanAccount.builder(
-                        accountEntity.getAccountNoInt(),
-                        ExactCurrencyAmount.of(
-                                accountEntity.getBalance(), accountEntity.getCurrency()))
-                .setAccountNumber(accountEntity.getAccountNoExt())
-                .setName(accountEntity.getAccountName())
+
+        List<String> accountOwners = accountDetailsResponse.getAccountOwners(marketCode);
+
+        return LoanAccount.nxBuilder()
+                .withLoanDetails(
+                        LoanModule.builder()
+                                .withType(getLoanType(configuration, accountEntity))
+                                .withBalance(
+                                        ExactCurrencyAmount.of(
+                                                accountEntity.getBalance(),
+                                                accountEntity.getCurrency()))
+                                .withInterestRate(accountDetailsResponse.getInterestRate())
+                                .setLoanNumber(accountEntity.getAccountNoExt())
+                                .setApplicants(accountOwners.isEmpty() ? null : accountOwners)
+                                .setCoApplicant(accountOwners.size() > 1)
+                                .build())
+                .withId(
+                        IdModule.builder()
+                                .withUniqueIdentifier(accountEntity.getAccountNoInt())
+                                .withAccountNumber(accountEntity.getAccountNoExt())
+                                .withAccountName(accountEntity.getAccountName())
+                                .addIdentifier(
+                                        getLoanIdentifier(accountEntity, accountDetailsResponse))
+                                .setProductName(accountDetailsResponse.getAccountType())
+                                .build())
                 .setBankIdentifier(accountEntity.getAccountNoInt())
-                .setInterestRate(accountDetailsResponse.getInterestRate())
+                .setApiIdentifier(accountEntity.getAccountNoInt())
+                .addHolders(getAccountHolders(accountOwners))
                 .canExecuteExternalTransfer(
                         configuration.canExecuteExternalTransfer(accountEntity.getAccountProduct()))
                 .canReceiveExternalTransfer(
@@ -79,12 +103,19 @@ public class AccountEntityMapper {
                 .canPlaceFunds(configuration.canPlaceFunds(accountEntity.getAccountProduct()))
                 .canWithdrawCash(configuration.canWithdrawCash(accountEntity.getAccountProduct()))
                 .sourceInfo(createAccountSourceInfo(accountEntity))
-                .setDetails(
-                        LoanDetails.builder(getLoanType(configuration, accountEntity))
-                                .setLoanNumber(accountEntity.getAccountNoExt())
-                                .setApplicants(accountDetailsResponse.getAccountOwners(marketCode))
-                                .build())
                 .build();
+    }
+
+    private AccountIdentifier getLoanIdentifier(
+            AccountEntity accountEntity, AccountDetailsResponse accountDetailsResponse) {
+        return StringUtils.isNotBlank(accountDetailsResponse.getIban())
+                ? new IbanIdentifier(accountDetailsResponse.getIban())
+                : AccountIdentifier.create(
+                        getAccountIdentifierType(marketCode), accountEntity.getAccountNoExt());
+    }
+
+    private List<Holder> getAccountHolders(List<String> accountOwners) {
+        return accountOwners.stream().map(Holder::of).collect(Collectors.toList());
     }
 
     private LoanDetails.Type getLoanType(
