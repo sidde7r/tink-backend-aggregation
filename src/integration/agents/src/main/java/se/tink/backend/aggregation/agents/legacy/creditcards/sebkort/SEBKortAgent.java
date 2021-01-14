@@ -6,6 +6,7 @@ import com.google.common.util.concurrent.Uninterruptibles;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource.Builder;
+import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -65,7 +66,8 @@ public final class SEBKortAgent extends AbstractAgent implements DeprecatedRefre
     private final String product;
     private boolean hasRefreshed = false;
 
-    public SEBKortAgent(CredentialsRequest request, AgentContext context) {
+    public SEBKortAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context);
 
         client = setupClient();
@@ -277,7 +279,8 @@ public final class SEBKortAgent extends AbstractAgent implements DeprecatedRefre
     }
 
     private InvoiceDetailsEntity fetchInvoiceDetails(
-            InvoiceBillingUnitEntity invoiceBillingUnit, InvoiceEntity invoice) {
+            InvoiceBillingUnitEntity invoiceBillingUnit, InvoiceEntity invoice)
+            throws RetryableError {
         InvoiceDetailsResponse response =
                 createClientRequest(
                                 BASE_URL
@@ -297,7 +300,8 @@ public final class SEBKortAgent extends AbstractAgent implements DeprecatedRefre
         return response.getBody();
     }
 
-    private List<InvoiceEntity> fetchInvoices(InvoiceBillingUnitEntity invoiceBillingUnit) {
+    private List<InvoiceEntity> fetchInvoices(InvoiceBillingUnitEntity invoiceBillingUnit)
+            throws RetryableError {
         InvoiceBillingUnitResponse response =
                 createClientRequest(
                                 BASE_URL
@@ -391,7 +395,7 @@ public final class SEBKortAgent extends AbstractAgent implements DeprecatedRefre
         throw new RuntimeException("Ran out of retries. Attaching last retry error.", lastError);
     }
 
-    private void retryableRefreshInformation() {
+    private void retryableRefreshInformation() throws RetryableError, ParseException {
         SEBKortParser parser = new SEBKortParser();
 
         // Parse all the invoices.
