@@ -3,6 +3,8 @@ package se.tink.backend.aggregation.agents.nxgen.se.other.csn;
 import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
+import se.tink.backend.aggregation.agents.nxgen.se.other.csn.fetcher.loans.rpc.LoanAccountsResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.other.csn.fetcher.loans.rpc.UserInfoResponse;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
@@ -51,5 +53,25 @@ public class CSNApiClient {
                 .header(CSNConstants.HeaderKeys.REFERER, CSNConstants.Urls.LOGIN_BANKID)
                 .header(CSNConstants.HeaderKeys.USER_AGENT, CSNConstants.HeaderValues.USER_AGENT)
                 .get(HttpResponse.class);
+    }
+
+    public LoanAccountsResponse fetchLoanAccounts() {
+        return client.request(CSNConstants.Urls.CURRENT_DEBT)
+                .type(MediaType.APPLICATION_JSON)
+                .header(CSNConstants.HeaderKeys.USER_AGENT, CSNConstants.HeaderValues.USER_AGENT)
+                .header(
+                        CSNConstants.HeaderKeys.CSN_AUTHORIZATION,
+                        "Bearer " + sessionStorage.get(CSNConstants.Storage.ACCESS_TOKEN))
+                .get(LoanAccountsResponse.class);
+    }
+
+    public UserInfoResponse fetchUserInfo() {
+        return client.request(CSNConstants.Urls.USER_INFO)
+                .type(MediaType.APPLICATION_JSON)
+                .header(CSNConstants.HeaderKeys.USER_AGENT, CSNConstants.HeaderValues.USER_AGENT)
+                .header(
+                        CSNConstants.HeaderKeys.CSN_AUTHORIZATION,
+                        "Bearer " + sessionStorage.get(CSNConstants.Storage.ACCESS_TOKEN))
+                .get(UserInfoResponse.class);
     }
 }

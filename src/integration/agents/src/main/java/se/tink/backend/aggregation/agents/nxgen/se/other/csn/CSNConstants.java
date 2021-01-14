@@ -8,6 +8,9 @@ public class CSNConstants {
 
         static final String LOGIN_BANKID = BASE_URL_LOGIN + "/inloggning/mobilbid.do";
         static final String BANKID_POLL = BASE_URL_LOGIN + "/BankID";
+
+        static String CURRENT_DEBT = BASE_URL + "/api/kund-api-webb/rest/kund/aktuellskuld";
+        static String USER_INFO = BASE_URL + "/api/kund-api-webb/rest/kund/info";
     }
 
     public static class BankIdStatus {
@@ -33,6 +36,7 @@ public class CSNConstants {
     static class HeaderKeys {
         static final String USER_AGENT = "User-Agent";
         static final String REFERER = "Referer";
+        static String CSN_AUTHORIZATION = "CSN_Authorization";
     }
 
     static class HeaderValues {
