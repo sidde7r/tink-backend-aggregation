@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sw
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.SwedbankPaymentAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.rpc.AuthenticationResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.common.SwedbankOpenBankingPaymentApiClient;
@@ -21,7 +22,7 @@ public class SwedbankPaymentSigner {
     private final BankIdSigningController<PaymentMultiStepRequest> signingController;
     private final SwedbankPaymentAuthenticator paymentAuthenticator;
 
-    public boolean authorize(String paymentId) {
+    public boolean authorize(String paymentId) throws PaymentRejectedException {
         boolean readyForSigning = isReadyForSigning(paymentId);
         if (readyForSigning) {
             final PaymentAuthorisationResponse paymentAuthorisationResponse =
@@ -38,14 +39,14 @@ public class SwedbankPaymentSigner {
         return false;
     }
 
-    private boolean isReadyForSigning(String paymentId) {
+    private boolean isReadyForSigning(String paymentId) throws PaymentRejectedException {
         return swedbankApiClient
                 .getPaymentStatus(paymentId, SwedbankPaymentType.SE_DOMESTIC_CREDIT_TRANSFERS)
                 .isReadyForSigning();
     }
 
     private PaymentAuthorisationResponse startAuthorisationProcess(
-            String paymentId, boolean isRedirect) {
+            String paymentId, boolean isRedirect) throws PaymentRejectedException {
         return swedbankApiClient.initiatePaymentAuthorisation(
                 paymentId,
                 SwedbankPaymentType.SE_DOMESTIC_CREDIT_TRANSFERS,
@@ -53,7 +54,8 @@ public class SwedbankPaymentSigner {
                 isRedirect);
     }
 
-    private AuthenticationResponse specifySCAMethod(String selectedAuthenticationMethod) {
+    private AuthenticationResponse specifySCAMethod(String selectedAuthenticationMethod)
+            throws PaymentRejectedException {
         return swedbankApiClient.startPaymentAuthorization(selectedAuthenticationMethod);
     }
 
@@ -67,7 +69,7 @@ public class SwedbankPaymentSigner {
         }
     }
 
-    public void signWithRedirect(String paymentId) {
+    public void signWithRedirect(String paymentId) throws PaymentRejectedException {
         final String state = strongAuthenticationState.getState();
         final PaymentAuthorisationResponse paymentAuthResponse =
                 startAuthorisationProcess(paymentId, true);

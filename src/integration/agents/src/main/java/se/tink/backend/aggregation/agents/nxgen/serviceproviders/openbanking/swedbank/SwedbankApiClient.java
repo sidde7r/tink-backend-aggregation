@@ -15,7 +15,9 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.MediaType;
 import org.apache.http.HttpHeaders;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.entity.AccessEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.ErrorCodes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.HeaderValues;
@@ -46,6 +48,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swe
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.fetcher.transactionalaccount.rpc.AccountBalanceResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.fetcher.transactionalaccount.rpc.FetchAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.fetcher.transactionalaccount.rpc.StatementResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.rpc.GenericResponse;
 import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
@@ -57,6 +60,7 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.credentials.service.CredentialsRequest;
@@ -324,19 +328,25 @@ public final class SwedbankApiClient implements SwedbankOpenBankingPaymentApiCli
     }
 
     @Override
-    public AuthenticationResponse startPaymentAuthorization(String endpoint) {
+    public AuthenticationResponse startPaymentAuthorization(String endpoint)
+            throws PaymentRejectedException {
         final AuthorizeRequest authorizeRequest =
                 new AuthorizeRequest(
                         configuration.getClientId(),
                         getRedirectUrl(),
                         credentialsRequest.getProvider().getPayload());
+        try {
 
-        return createRequestInSession(new URL(Urls.BASE.concat(endpoint)), true)
-                .header(HeaderKeys.TPP_REDIRECT_URI, getRedirectUrl())
-                .header(HeaderKeys.TPP_NOK_REDIRECT_URI, getRedirectUrl())
-                .header(HeaderKeys.TPP_REDIRECT_PREFERRED, HeaderValues.TPP_REDIRECT_PREFERRED)
-                .body(new AuthorizeRequest(), MediaType.APPLICATION_JSON_TYPE)
-                .put(AuthenticationResponse.class, authorizeRequest);
+            return createRequestInSession(new URL(Urls.BASE.concat(endpoint)), true)
+                    .header(HeaderKeys.TPP_REDIRECT_URI, getRedirectUrl())
+                    .header(HeaderKeys.TPP_NOK_REDIRECT_URI, getRedirectUrl())
+                    .header(HeaderKeys.TPP_REDIRECT_PREFERRED, HeaderValues.TPP_REDIRECT_PREFERRED)
+                    .body(new AuthorizeRequest(), MediaType.APPLICATION_JSON_TYPE)
+                    .put(AuthenticationResponse.class, authorizeRequest);
+        } catch (HttpResponseException e) {
+            handleBadRequestError(e);
+            throw e;
+        }
     }
 
     public AuthenticationResponse getScaResponse(String statusLink) {
@@ -381,52 +391,71 @@ public final class SwedbankApiClient implements SwedbankOpenBankingPaymentApiCli
 
     @Override
     public CreatePaymentResponse createPayment(
-            CreatePaymentRequest createPaymentRequest, SwedbankPaymentType swedbankPaymentType) {
+            CreatePaymentRequest createPaymentRequest, SwedbankPaymentType swedbankPaymentType)
+            throws PaymentRejectedException {
 
         String requestId = UUID.randomUUID().toString();
         String digest = createDigest(SerializationUtils.serializeToString(createPaymentRequest));
         Date date = new Date();
         Map<String, Object> headers = getHeaders(requestId, digest, date);
-
-        return client.request(
-                        Urls.INITIATE_PAYMENT.parameter(
-                                UrlParameters.PAYMENT_TYPE, swedbankPaymentType.toString()))
-                .addBearerToken(getTokenFromSession())
-                .queryParam(SwedbankConstants.QueryKeys.BIC, SwedbankConstants.BICProduction.SWEDEN)
-                .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS)
-                .header(HeaderKeys.PSU_USER_AGENT, HeaderValues.PSU_USER_AGENT)
-                .header(HeaderKeys.X_REQUEST_ID, requestId)
-                .header(HeaderKeys.DATE, getFormattedDate(date))
-                .header(HeaderKeys.TPP_REDIRECT_URI, getRedirectUrl())
-                .header(HeaderKeys.DIGEST, digest)
-                .header(HeaderKeys.SIGNATURE, generateSignatureHeader(headers))
-                .type(MediaType.APPLICATION_JSON_TYPE)
-                .accept(MediaType.APPLICATION_JSON)
-                .post(
-                        CreatePaymentResponse.class,
-                        SerializationUtils.serializeToString(createPaymentRequest));
+        try {
+            return client.request(
+                            Urls.INITIATE_PAYMENT.parameter(
+                                    UrlParameters.PAYMENT_TYPE, swedbankPaymentType.toString()))
+                    .addBearerToken(getTokenFromSession())
+                    .queryParam(
+                            SwedbankConstants.QueryKeys.BIC, SwedbankConstants.BICProduction.SWEDEN)
+                    .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS)
+                    .header(HeaderKeys.PSU_USER_AGENT, HeaderValues.PSU_USER_AGENT)
+                    .header(HeaderKeys.X_REQUEST_ID, requestId)
+                    .header(HeaderKeys.DATE, getFormattedDate(date))
+                    .header(HeaderKeys.TPP_REDIRECT_URI, getRedirectUrl())
+                    .header(HeaderKeys.DIGEST, digest)
+                    .header(HeaderKeys.SIGNATURE, generateSignatureHeader(headers))
+                    .type(MediaType.APPLICATION_JSON_TYPE)
+                    .accept(MediaType.APPLICATION_JSON)
+                    .post(
+                            CreatePaymentResponse.class,
+                            SerializationUtils.serializeToString(createPaymentRequest));
+        } catch (HttpResponseException e) {
+            handleBadRequestError(e);
+            throw e;
+        }
     }
 
     @Override
-    public GetPaymentResponse getPayment(
-            String paymentId, SwedbankPaymentType swedbankPaymentType) {
-        return getPaymentRequestBuilder(
-                        Urls.GET_PAYMENT
-                                .parameter(
-                                        UrlParameters.PAYMENT_TYPE, swedbankPaymentType.toString())
-                                .parameter(UrlParameters.PAYMENT_ID, paymentId))
-                .get(GetPaymentResponse.class);
+    public GetPaymentResponse getPayment(String paymentId, SwedbankPaymentType swedbankPaymentType)
+            throws PaymentRejectedException {
+        try {
+            return getPaymentRequestBuilder(
+                            Urls.GET_PAYMENT
+                                    .parameter(
+                                            UrlParameters.PAYMENT_TYPE,
+                                            swedbankPaymentType.toString())
+                                    .parameter(UrlParameters.PAYMENT_ID, paymentId))
+                    .get(GetPaymentResponse.class);
+        } catch (HttpResponseException e) {
+            handleBadRequestError(e);
+            throw e;
+        }
     }
 
     @Override
     public PaymentStatusResponse getPaymentStatus(
-            String paymentId, SwedbankPaymentType swedbankPaymentType) {
-        return getPaymentRequestBuilder(
-                        Urls.GET_PAYMENT_STATUS
-                                .parameter(
-                                        UrlParameters.PAYMENT_TYPE, swedbankPaymentType.toString())
-                                .parameter(UrlParameters.PAYMENT_ID, paymentId))
-                .get(PaymentStatusResponse.class);
+            String paymentId, SwedbankPaymentType swedbankPaymentType)
+            throws PaymentRejectedException {
+        try {
+            return getPaymentRequestBuilder(
+                            Urls.GET_PAYMENT_STATUS
+                                    .parameter(
+                                            UrlParameters.PAYMENT_TYPE,
+                                            swedbankPaymentType.toString())
+                                    .parameter(UrlParameters.PAYMENT_ID, paymentId))
+                    .get(PaymentStatusResponse.class);
+        } catch (HttpResponseException e) {
+            handleBadRequestError(e);
+            throw e;
+        }
     }
 
     @Override
@@ -434,20 +463,35 @@ public final class SwedbankApiClient implements SwedbankOpenBankingPaymentApiCli
             String paymentId,
             SwedbankPaymentType swedbankPaymentType,
             String state,
-            boolean isRedirect) {
-        return getPaymentAuthorizationRequestBuilder(
-                        Urls.INITIATE_PAYMENT_AUTH
-                                .parameter(
-                                        UrlParameters.PAYMENT_TYPE, swedbankPaymentType.toString())
-                                .parameter(UrlParameters.PAYMENT_ID, paymentId),
-                        state,
-                        isRedirect)
-                .post(PaymentAuthorisationResponse.class);
+            boolean isRedirect)
+            throws PaymentRejectedException {
+        try {
+            return getPaymentAuthorizationRequestBuilder(
+                            Urls.INITIATE_PAYMENT_AUTH
+                                    .parameter(
+                                            UrlParameters.PAYMENT_TYPE,
+                                            swedbankPaymentType.toString())
+                                    .parameter(UrlParameters.PAYMENT_ID, paymentId),
+                            state,
+                            isRedirect)
+                    .post(PaymentAuthorisationResponse.class);
+        } catch (HttpResponseException e) {
+            handleBadRequestError(e);
+            throw e;
+        }
     }
 
     private String createDigest(String body) {
         return String.format(
                 "SHA-256=".concat("%s"), Base64.getEncoder().encodeToString(Hash.sha256(body)));
+    }
+
+    private void handleBadRequestError(HttpResponseException e) throws PaymentRejectedException {
+        GenericResponse errorResponse = e.getResponse().getBody(GenericResponse.class);
+        if (errorResponse.isBadRequest()) {
+            throw new PaymentRejectedException(
+                    errorResponse.getErrorMessage(ErrorCodes.FORMAT_ERROR));
+        }
     }
 
     private String generateSignatureHeader(Map<String, Object> headers) {
