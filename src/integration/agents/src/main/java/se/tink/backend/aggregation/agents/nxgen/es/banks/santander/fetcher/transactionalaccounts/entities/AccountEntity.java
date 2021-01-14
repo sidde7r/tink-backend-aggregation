@@ -2,6 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.tran
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import javax.xml.bind.annotation.XmlRootElement;
 import se.tink.backend.agents.rpc.AccountTypes;
@@ -14,6 +16,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.entit
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.rpc.LoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.utils.SantanderEsXmlUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Holder;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
@@ -137,7 +140,7 @@ public class AccountEntity {
                                 .withAccountName(generalInfo.getAlias())
                                 .addIdentifier(ibanIdentifier)
                                 .build())
-                .addHolderName(holderName.toString())
+                .addHolders(getHolders(holderName, customerData))
                 .setBankIdentifier(iban)
                 .putInTemporaryStorage(
                         SantanderEsConstants.Storage.USER_DATA_XML,
@@ -149,6 +152,21 @@ public class AccountEntity {
                         SantanderEsConstants.Storage.BALANCE_XML,
                         SantanderEsXmlUtils.parseJsonToXmlString(getBalance()))
                 .build();
+    }
+
+    @JsonIgnore
+    private List<Holder> getHolders(HolderName holderName, CustomerData customerData) {
+        if (!isPersonTypeHolder(customerData)) {
+            // Other person types does not provide holder name
+            return Collections.emptyList();
+        }
+
+        return Collections.singletonList(Holder.of(holderName.toString(), Holder.Role.HOLDER));
+    }
+
+    @JsonIgnore
+    private boolean isPersonTypeHolder(CustomerData customerData) {
+        return SantanderEsConstants.PersonType.HOLDER.equals(customerData.getPersonType());
     }
 
     @JsonIgnore

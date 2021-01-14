@@ -65,6 +65,11 @@ public class SantanderEsConstants {
         public static final String DEBIT_CARD_TYPE = "débito";
     }
 
+    public static final class PersonType {
+        public static final String HOLDER = "F";
+        public static final String INSURANCE_HOLDER = "J";
+    }
+
     public static final ImmutableMap<String, Type> LOAN_TYPES =
             ImmutableMap.<String, LoanDetails.Type>builder()
                     .put("143", Type.MORTGAGE)
