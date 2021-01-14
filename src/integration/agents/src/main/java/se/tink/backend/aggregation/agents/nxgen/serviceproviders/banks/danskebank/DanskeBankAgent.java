@@ -88,6 +88,7 @@ public abstract class DanskeBankAgent<MarketSpecificApiClient extends DanskeBank
         // (from NextGenerationAgent constructor).
         client.addFilter(new DanskeBankHttpFilter(configuration));
         client.addFilter(new ServiceUnavailableBankServiceErrorFilter());
+        client.addFilter(new TimeoutFilter());
         client.addFilter(
                 new GatewayTimeoutRetryFilter(
                         DanskeBankConstants.RetryFilter.NUM_TIMEOUT_RETRIES,
