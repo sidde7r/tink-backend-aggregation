@@ -82,7 +82,7 @@ public class SwedbankSETransactionalAccountFetcher
         boolean existsInInvestmentAccounts =
                 getInvestmentAccountNumbers().contains(account.getFullyFormattedNumber());
         if (existsInInvestmentAccounts && !account.isInvestmentAccount()) {
-            // Mismatched ids should be added to INVESTMENT_ACCOUNT_PRODUCT_IDS
+            // Mismatched ids should be added to ACCOUNT_TYPE_MAPPER as INVESTMENT
             log.warn("Swedbank investment account product ID mismatch: {}", account.getProductId());
         }
         return existsInInvestmentAccounts;
