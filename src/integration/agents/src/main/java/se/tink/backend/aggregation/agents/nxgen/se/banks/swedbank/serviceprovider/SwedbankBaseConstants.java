@@ -13,6 +13,8 @@ import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.AgentParsingUtils;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.configuration.SwedbankConfiguration;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
+import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
+import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities.Answer;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.nxgen.BankTransferConstants;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -198,6 +200,80 @@ public class SwedbankBaseConstants {
                     .put(AccountTypes.OTHER, "SPP00118" /* Inaktiva konton */)
                     .ignoreKeys(
                             "TRP00103" /* seen Sparkonto under savings, Bokonto under checking */)
+                    .build();
+
+    public static final TypeMapper<AccountCapabilities> ACCOUNT_CAPABILITIES_MAPPER =
+            TypeMapper.<AccountCapabilities>builder()
+                    .put(
+                            new AccountCapabilities(Answer.NO, Answer.YES, Answer.YES, Answer.YES),
+                            "DEP00102",
+                            "DEP02305",
+                            "SPF00101",
+                            "SPP00102",
+                            "SPP00103",
+                            "SPP00106",
+                            "SPP00202",
+                            "SPP00601",
+                            "SPP00620",
+                            "SPP00902",
+                            "SPP01407",
+                            "SPP01709",
+                            "SPP01801",
+                            "TRP00103")
+                    .put(
+                            new AccountCapabilities(Answer.NO, Answer.YES, Answer.NO, Answer.YES),
+                            "FST02101",
+                            "IP-SPAR",
+                            "SPP00101",
+                            "SPP00104",
+                            "SPP00105",
+                            "SPP00224",
+                            "TRP00104",
+                            "TRP00301",
+                            "UBE02301")
+                    .put(
+                            new AccountCapabilities(
+                                    Answer.NO, Answer.YES, Answer.NO, Answer.UNKNOWN),
+                            "SPF00102",
+                            "SPP00107",
+                            "SPP00323",
+                            "SPP00901",
+                            "SPP01301",
+                            "SPP01306")
+                    .put(
+                            new AccountCapabilities(Answer.NO, Answer.YES, Answer.NO, Answer.NO),
+                            "PSI02303",
+                            "SPP00201")
+                    .put(
+                            new AccountCapabilities(
+                                    Answer.NO, Answer.NO, Answer.YES, Answer.UNKNOWN),
+                            "PSI02301")
+                    .put(
+                            new AccountCapabilities(Answer.NO, Answer.NO, Answer.NO, Answer.NO),
+                            "SPP00118")
+                    .put(
+                            new AccountCapabilities(Answer.NO, Answer.YES, Answer.YES, Answer.NO),
+                            "SPP01012")
+                    .put(
+                            new AccountCapabilities(
+                                    Answer.UNKNOWN, Answer.YES, Answer.UNKNOWN, Answer.UNKNOWN),
+                            "TRF00903")
+                    .put(
+                            new AccountCapabilities(Answer.YES, Answer.YES, Answer.YES, Answer.YES),
+                            "PER00101",
+                            "PMK02401",
+                            "TRF00509",
+                            "TRF00910",
+                            "TRP00105",
+                            "TRP00111",
+                            "TRP00303",
+                            "TRP00502",
+                            "TRP00901",
+                            "VKT")
+                    .put(
+                            new AccountCapabilities(
+                                    Answer.YES, Answer.YES, Answer.UNKNOWN, Answer.UNKNOWN),
+                            "TRP00101")
                     .build();
 
     public enum InvestmentAccountType {
