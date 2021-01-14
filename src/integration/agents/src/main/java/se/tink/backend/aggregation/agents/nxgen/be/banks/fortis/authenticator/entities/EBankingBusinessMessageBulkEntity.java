@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class EBankingBusinessMessageBulkEntity implements Errorable {
     private Object globalIndicator;
-    private List<Object> messages;
+    private List<EBankingDetailedMessage> messages;
     private Object text;
     private Object pewCode;
 
