@@ -22,8 +22,18 @@ public class AgentCapabilitiesService {
                 .collect(Collectors.toMap(getAgentName, CapabilitiesExtractor::readCapabilities));
     }
 
+    public Map<String, Map<String, Set<String>>> getAgentsPisCapabilities() {
+        return reflections.getSubTypesOf(Agent.class).stream()
+                .filter(hasPisCapabilities)
+                .collect(
+                        Collectors.toMap(getAgentName, CapabilitiesExtractor::readPisCapabilities));
+    }
+
     private final Predicate<Class<? extends Agent>> hasCapabilities =
             klass -> klass.isAnnotationPresent(AgentCapabilities.class);
+
+    private final Predicate<Class<? extends Agent>> hasPisCapabilities =
+            klass -> klass.isAnnotationPresent(AgentPisCapability.class);
 
     private final Function<Class<? extends Agent>, String> getAgentName =
             klass -> klass.getName().replace(DEFAULT_AGENT_PACKAGE_CLASS_PREFIX + ".", "");

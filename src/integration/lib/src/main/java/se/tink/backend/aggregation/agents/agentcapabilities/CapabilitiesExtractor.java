@@ -1,8 +1,10 @@
 package se.tink.backend.aggregation.agents.agentcapabilities;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.CreateBeneficiariesCapabilityExecutor;
@@ -17,6 +19,8 @@ import se.tink.backend.aggregation.agents.TransferExecutor;
 import se.tink.backend.aggregation.agents.TransferExecutorNxgen;
 import se.tink.backend.aggregation.agents.agent.Agent;
 import se.tink.backend.aggregation.client.provider_configuration.rpc.Capability;
+import se.tink.backend.aggregation.client.provider_configuration.rpc.PisCapability;
+import se.tink.libraries.enums.MarketCode;
 
 public class CapabilitiesExtractor {
 
@@ -70,5 +74,47 @@ public class CapabilitiesExtractor {
 
     private static Set<Capability> readCapabilitiesFromAnnotation(AgentCapabilities capabilities) {
         return new HashSet<>(Arrays.asList(capabilities.value()));
+    }
+
+    public static Map<String, Set<String>> readPisCapabilities(Class<? extends Agent> klass) {
+        /* Java internally treats repeating Annotation as an instance of @AgentPisCapabilities holding an array of @AgentPisCapability */
+        AgentPisCapability[] pisCapabilitiesArray =
+                klass.getAnnotationsByType(AgentPisCapability.class);
+        Map<String, Set<String>> map = new HashMap<>();
+        Set<String> processedMarkets = new HashSet<>();
+        for (AgentPisCapability agentPisCapability : pisCapabilitiesArray) {
+            List<String> markets = Arrays.asList(agentPisCapability.markets());
+            if (markets.isEmpty()) {
+                for (String market :
+                        Arrays.stream(MarketCode.values())
+                                .map(marketCode -> marketCode.name())
+                                .collect(Collectors.toList())) {
+                    map.computeIfAbsent(
+                            market,
+                            k ->
+                                    new HashSet<>(
+                                            readPisCapabilitiesFromAnnotation(agentPisCapability)));
+                }
+            } else {
+                for (String market : markets) {
+                    if (processedMarkets.contains(market)) {
+                        throw new IllegalStateException(
+                                "PIS Capabilities for market "
+                                        + market
+                                        + " configured more than once!");
+                    }
+                    processedMarkets.add(market);
+                    map.computeIfAbsent(market, k -> new HashSet<>());
+                    map.put(market, readPisCapabilitiesFromAnnotation(agentPisCapability));
+                }
+            }
+        }
+        return map;
+    }
+
+    private static Set<String> readPisCapabilitiesFromAnnotation(
+            AgentPisCapability pisCapabilities) {
+        Set<PisCapability> s = new HashSet<>(Arrays.asList(pisCapabilities.capabilities()));
+        return s.stream().map(Enum::name).collect(Collectors.toSet());
     }
 }

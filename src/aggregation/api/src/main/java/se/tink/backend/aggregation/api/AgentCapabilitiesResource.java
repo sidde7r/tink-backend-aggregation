@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.api;
 
 import static se.tink.api.annotations.Team.AGGREGATION_MARKETS;
+import static se.tink.api.annotations.Team.CORE_AGGREGATION;
 
 import java.util.Map;
 import java.util.Set;
@@ -17,4 +18,9 @@ public interface AgentCapabilitiesResource {
     @GET
     @TeamOwnership(AGGREGATION_MARKETS)
     Map<String, Set<String>> getAgentCapabilities();
+
+    @GET
+    @Path("/payments")
+    @TeamOwnership(CORE_AGGREGATION)
+    Map<String, Map<String, Set<String>>> getAgentPisCapabilities();
 }
