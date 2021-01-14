@@ -70,12 +70,14 @@ public class SwedbankDefaultTransactionalAccountFetcher
 
             accounts.addAll(
                     engagementOverviewResponse.getTransactionAccounts().stream()
+                            .filter(account -> !account.isInvestmentAccount())
                             .map(account -> account.toTransactionalAccount(bankProfile))
                             .filter(Optional::isPresent)
                             .map(Optional::get)
                             .collect(Collectors.toList()));
             accounts.addAll(
                     engagementOverviewResponse.getTransactionDisposalAccounts().stream()
+                            .filter(account -> !account.isInvestmentAccount())
                             .map(account -> account.toTransactionalAccount(bankProfile))
                             .filter(Optional::isPresent)
                             .map(Optional::get)
