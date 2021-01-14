@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdConstants.MANDATORY_RESPONSE_TYPES;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdConstants.PREFERRED_ID_TOKEN_SIGNING_ALGORITHM;
 
-import com.auth0.jwt.impl.PublicClaims;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
@@ -128,10 +127,8 @@ public class AuthorizeRequest {
                                                     "Preferred signing algorithm unknown: only RS256 and PS256 are supported"));
             return TinkJwt.create()
                     .withIssuer(clientId)
-                    .withClaim(OpenIdConstants.Ps256.PayloadClaims.AUDIENCE, issuer)
-                    .withClaim(
-                            PublicClaims.EXPIRES_AT,
-                            Instant.now().plusSeconds(599).getEpochSecond())
+                    .withAudience(issuer)
+                    .withExpiresAt(Instant.now().plusSeconds(599))
                     .withClaim(OpenIdConstants.Params.RESPONSE_TYPE, responseTypes)
                     .withClaim(OpenIdConstants.Params.CLIENT_ID, clientId)
                     .withClaim(OpenIdConstants.Params.REDIRECT_URI, redirectUri)

@@ -25,8 +25,6 @@ public class DanskebankAisConfigurationTest {
         // given
         builder.withWellKnownURL(new URL(WELL_KNOWN_URL))
                 .withIdentityDataURL(IDENTITY_DATA_URL)
-                .withAdditionalPermission("additional permission 1")
-                .withAdditionalPermission("additional permission 2")
                 .partyEndpointEnabled(false);
 
         // when
@@ -38,8 +36,6 @@ public class DanskebankAisConfigurationTest {
         assertThat(result.getIdentityDataURL()).isEqualTo(new URL(IDENTITY_DATA_URL));
         assertThat(result.isAccountPartiesEndpointEnabled()).isEqualTo(false);
         assertThat(result.isAccountPartyEndpointEnabled()).isEqualTo(false);
-        assertThat(result.getAdditionalPermissions())
-                .containsOnly("additional permission 1", "additional permission 2");
         assertThat(result.getApiBaseURL()).isEqualTo(new URL(API_BASE_URL));
     }
 

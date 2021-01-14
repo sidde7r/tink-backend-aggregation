@@ -39,6 +39,20 @@ public class TokenRequestForm extends AbstractForm {
     public TokenRequestForm withPrivateKeyJwt(
             JwtSigner signer, WellKnownResponse wellKnownConfiguration, ClientInfo clientInfo) {
 
+        withPrivateKeyJwt(
+                signer,
+                wellKnownConfiguration,
+                clientInfo,
+                wellKnownConfiguration.getTokenEndpoint().toString());
+        return this;
+    }
+
+    public TokenRequestForm withPrivateKeyJwt(
+            JwtSigner signer,
+            WellKnownResponse wellKnownConfiguration,
+            ClientInfo clientInfo,
+            String audience) {
+
         JwtSigner.Algorithm signingAlg;
         if (Strings.isNullOrEmpty(clientInfo.getTokenEndpointAuthSigningAlg())) {
             signingAlg = Algorithm.RS256;
@@ -50,7 +64,9 @@ public class TokenRequestForm extends AbstractForm {
                 ClientAssertion.create()
                         .withWellKnownConfiguration(wellKnownConfiguration)
                         .withClientInfo(clientInfo)
-                        .build(signer, signingAlg);
+                        .withSigner(signer, signingAlg)
+                        .withAudience(audience)
+                        .build();
 
         this.withClientId(clientInfo.getClientId());
         this.put("client_assertion_type", CLIENT_ASSERTION_TYPE);

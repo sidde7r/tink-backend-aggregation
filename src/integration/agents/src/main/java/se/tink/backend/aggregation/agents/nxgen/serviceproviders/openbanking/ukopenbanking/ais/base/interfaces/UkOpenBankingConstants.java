@@ -1,50 +1,32 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces;
 
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticatorConstants;
 
 public interface UkOpenBankingConstants {
 
     enum PartyEndpoint {
         IDENTITY_DATA_ENDPOINT_ACCOUNT_ID_PARTIES(
-                "/accounts/%s/parties", PartyPermission.ACCOUNT_PERMISSION_READ_PARTY),
+                "/accounts/%s/parties", OpenIdAuthenticatorConstants.ConsentPermission.READ_PARTY),
         IDENTITY_DATA_ENDPOINT_ACCOUNT_ID_PARTY(
-                "/accounts/%s/party", PartyPermission.ACCOUNT_PERMISSION_READ_PARTY),
-        IDENTITY_DATA_ENDPOINT_PARTY("/party", PartyPermission.ACCOUNT_PERMISSION_READ_PARTY_PSU);
+                "/accounts/%s/party", OpenIdAuthenticatorConstants.ConsentPermission.READ_PARTY),
+        IDENTITY_DATA_ENDPOINT_PARTY(
+                "/party", OpenIdAuthenticatorConstants.ConsentPermission.READ_PARTY_PSU);
 
         private final String value;
 
-        private final PartyPermission[] permissions;
+        private final OpenIdAuthenticatorConstants.ConsentPermission permission;
 
-        PartyEndpoint(String value, PartyPermission... partyPermissions) {
+        PartyEndpoint(String value, OpenIdAuthenticatorConstants.ConsentPermission permission) {
             this.value = value;
-            this.permissions = partyPermissions;
+            this.permission = permission;
         }
 
         public String getPath() {
             return this.value;
         }
 
-        public Set<String> getPermissions() {
-            return Stream.of(permissions)
-                    .map(PartyPermission::getPermissionValue)
-                    .collect(Collectors.toSet());
-        }
-
-        public enum PartyPermission {
-            ACCOUNT_PERMISSION_READ_PARTY("ReadParty"),
-            ACCOUNT_PERMISSION_READ_PARTY_PSU("ReadPartyPSU");
-
-            private final String permissionValue;
-
-            PartyPermission(String permissionValue) {
-                this.permissionValue = permissionValue;
-            }
-
-            public String getPermissionValue() {
-                return permissionValue;
-            }
+        public String getPermission() {
+            return permission.getValue();
         }
     }
 

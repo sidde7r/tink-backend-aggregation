@@ -1,10 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableSet;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingV31Constants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.authenticator.rpc.AccountPermissionResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountOwnershipType;
@@ -12,6 +12,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingConstants.ApiServices;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingConstants.PartyEndpoint;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.authenticator.rpc.AccountPermissionResponseV31;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticatorConstants;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class UkOpenBankingAisConfiguration implements UkOpenBankingAisConfig {
@@ -21,7 +22,7 @@ public class UkOpenBankingAisConfiguration implements UkOpenBankingAisConfig {
     private final AccountOwnershipType allowedAccountOwnershipType;
     private final String organisationId;
 
-    private UkOpenBankingAisConfiguration(Builder builder) {
+    protected UkOpenBankingAisConfiguration(Builder builder) {
         this.apiBaseURL = builder.apiBaseURL;
         this.wellKnownURL = builder.wellKnownURL;
         this.partyEndpoints = builder.partyEndpoints;
@@ -101,10 +102,33 @@ public class UkOpenBankingAisConfiguration implements UkOpenBankingAisConfig {
     }
 
     @Override
-    public Set<String> getAdditionalPermissions() {
-        return this.partyEndpoints.stream()
-                .flatMap(partyEndpoint -> partyEndpoint.getPermissions().stream())
-                .collect(Collectors.toSet());
+    public ImmutableSet<String> getPermissions() {
+
+        Set<String> set = new HashSet<>();
+        set.add(OpenIdAuthenticatorConstants.ConsentPermission.READ_ACCOUNTS_DETAIL.getValue());
+        set.add(OpenIdAuthenticatorConstants.ConsentPermission.READ_BALANCES.getValue());
+        set.add(
+                OpenIdAuthenticatorConstants.ConsentPermission.READ_BENEFICIARIES_DETAIL
+                        .getValue());
+        set.add(OpenIdAuthenticatorConstants.ConsentPermission.READ_DIRECT_DEBITS.getValue());
+        set.add(
+                OpenIdAuthenticatorConstants.ConsentPermission.READ_STANDING_ORDERS_DETAIL
+                        .getValue());
+        set.add(
+                OpenIdAuthenticatorConstants.ConsentPermission.READ_TRANSACTIONS_CREDITS
+                        .getValue());
+        set.add(OpenIdAuthenticatorConstants.ConsentPermission.READ_TRANSACTIONS_DEBITS.getValue());
+        set.add(OpenIdAuthenticatorConstants.ConsentPermission.READ_TRANSACTIONS_DETAIL.getValue());
+
+        if (isPartyEndpointEnabled()) {
+            set.add(OpenIdAuthenticatorConstants.ConsentPermission.READ_PARTY_PSU.getValue());
+        }
+
+        if (isAccountPartiesEndpointEnabled() || isAccountPartyEndpointEnabled()) {
+            set.add(OpenIdAuthenticatorConstants.ConsentPermission.READ_PARTY.getValue());
+        }
+
+        return ImmutableSet.<String>builder().addAll(set).build();
     }
 
     @Override
