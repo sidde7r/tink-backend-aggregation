@@ -12,10 +12,6 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 public class SavingAccountEntity extends AccountEntity {
     private static final Logger log = LoggerFactory.getLogger(SavingAccountEntity.class);
 
-    public boolean isInvestmentAccount() {
-        return SwedbankBaseConstants.INVESTMENT_ACCOUNT_PRODUCT_IDS.contains(productId);
-    }
-
     public Optional<TransactionalAccount> toTransactionalAccount(BankProfile bankProfile) {
         if (type != null) {
             if (SwedbankBaseConstants.SavingAccountTypes.PENSION.equalsIgnoreCase(type)) {

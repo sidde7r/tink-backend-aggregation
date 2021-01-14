@@ -8,12 +8,13 @@ import com.google.common.collect.ImmutableSet;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import org.apache.commons.codec.binary.Base64;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.AgentParsingUtils;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.configuration.SwedbankConfiguration;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.nxgen.BankTransferConstants;
+import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.i18n.LocalizableKey;
 import se.tink.libraries.strings.StringUtils;
@@ -121,22 +122,83 @@ public class SwedbankBaseConstants {
         public static final String PENSION = "pension";
     }
 
-    // Some investment accounts are returned in the same list as savings accounts, but they should
-    // be filtered out so they are not aggregated as savings. Found these product IDs for savings
-    // accounts that always match an investment account.
-    public static final Set<String> INVESTMENT_ACCOUNT_PRODUCT_IDS =
-            ImmutableSet.of(
-                    "DIRPDEPA",
-                    "DIRPFOND",
-                    "FOND",
-                    "FSP002",
-                    "FVR",
-                    "ISKPRV01",
-                    "KAPPFOND",
-                    "KAPSFOND",
-                    "KBRNFOND",
-                    "KFORDEPA",
-                    "KPENFOND");
+    public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
+            TypeMapper.<AccountTypes>builder()
+                    .put(
+                            AccountTypes.CHECKING,
+                            "PER00101", /* Personalkonto */
+                            "PMK02401", /* Penningmarkn.kto */
+                            "TRF00101",
+                            "TRF00102", /* EU-konto */
+                            "TRF00910",
+                            "TRF00509", /* Företagskonto */
+                            "TRP00101", /* Ungdomskonto */
+                            "TRP00105", /* Ekenkonto */
+                            "TRP00111",
+                            "TRP00901", /* Lönekonto */
+                            "TRP00303", /* Transaktionskonto */
+                            "TRP00502", /* Privatkonto */
+                            "VKT" /* Valutakonto */)
+                    .put(
+                            AccountTypes.SAVINGS,
+                            "DEP00102", /* Depåkonto 1 */
+                            "DEP02305", /* Depåkonto 2 */
+                            "FSI02302", /* Specialkonto Ftg */
+                            "FST02101", /* Fasträntekonto */
+                            "HSB", /* HSB Fondkonto */
+                            "IP-SPAR", /* Pensionssparande */
+                            "PMK02403", /* Depåkonto PM */
+                            "PSI02301", /* Specialinlåning */
+                            "PSI02303", /* Specialkonto Pri */
+                            "SPF00101", /* Skogslikvidkonto */
+                            "SPF00202", /* Skogslikvidkonto */
+                            "SPF00102", /* Placeringskonto ftg */
+                            "SPP00101", /* HSB Bosparkonto */
+                            "SPP00102", /* Premiumkonto */
+                            "SPP00103", /* e-sparkonto */
+                            "SPP00104", /* Private Banking */
+                            "SPP00105", /* Eken Pluskonto */
+                            "SPP00106", /* Premiumkonto */
+                            "SPP00107", /* Försäkring */
+                            "SPP00201", /* Varbergskonto */
+                            "SPP00202", /* Private Banking */
+                            "SPP00222", /* Spara&Bokonto */
+                            "SPP00224", /* Framtidskonto */
+                            "SPP00323", /* Sparkapitalkonto */
+                            "SPP00524", /* Ekebykonto */
+                            "SPP00601", /* Sparbankskonto */
+                            "SPP00620", /* Mälarkonto */
+                            "SPP00901", /* Kapitalkonto */
+                            "SPP00902", /* Sparkonto */
+                            "SPP01012", /* Sidensjökonto */
+                            "SPP01301", /* Sparkapitalkonto */
+                            "SPP01306", /* Sparkapitalkonto */
+                            "SPP01407", /* Sparkonto */
+                            "SPP01709", /* Sparkonto */
+                            "UBE02301" /* Skogskonto */)
+                    .put(
+                            // Some investment accounts are returned under savingsAccounts, but are
+                            // actually savings accounts. These product IDs appear under
+                            // savingsAccounts and always match an investment account from the
+                            // portfolio/holdings endpoint. Some of them are filtered out from
+                            // savings anyway because they have no balance.
+                            AccountTypes.INVESTMENT,
+                            "DIRPDEPA", /* Direktpension Depå */
+                            "DIRPFOND", /* Direktpension Fond */
+                            "FOND", /* Fond */
+                            "FSP002", /* FolksamKapital */
+                            "FVR", /* Fond */
+                            "ISK00101", /* Investeringsspar */
+                            "ISKPRV01", /* Investeringssparande */
+                            "KAPPFOND", /* Kapitalspar Pension */
+                            "KAPSFOND", /* Kapitalspar Fond */
+                            "KBRNFOND", /* Kapitalspar Barn */
+                            "KFORDEPA", /* Kapitalspar Depå */
+                            "KPENFOND" /* Kapitalpension Fond */)
+                    .put(AccountTypes.OTHER, "SPP00118" /* Inaktiva konton */)
+                    .ignoreKeys(
+                            "TRP00103" /* seen Sparkonto under savings, Bokonto under checking */)
+                    .build();
 
     public enum InvestmentAccountType {
         EQUITY_TRADER("EQUITY_TRADER"),
