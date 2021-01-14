@@ -65,8 +65,7 @@ public final class SEBKortAgent extends AbstractAgent implements DeprecatedRefre
     private final String product;
     private boolean hasRefreshed = false;
 
-    public SEBKortAgent(
-            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+    public SEBKortAgent(CredentialsRequest request, AgentContext context) {
         super(request, context);
 
         client = setupClient();
@@ -246,7 +245,7 @@ public final class SEBKortAgent extends AbstractAgent implements DeprecatedRefre
         return url.replace("//secure.", "//application.");
     }
 
-    private List<ContractEntity> fetchContracts() throws Exception {
+    private List<ContractEntity> fetchContracts() {
         ContractsResponse response =
                 createClientRequest(
                                 BASE_URL + code + "/a/contracts",
@@ -257,7 +256,7 @@ public final class SEBKortAgent extends AbstractAgent implements DeprecatedRefre
         return response.getBody();
     }
 
-    private List<InvoiceBillingUnitEntity> fetchInvoiceBillingUnits() throws Exception {
+    private List<InvoiceBillingUnitEntity> fetchInvoiceBillingUnits() {
         InvoiceBillingUnitsResponse response =
                 createClientRequest(
                                 BASE_URL + code + "/a/invoiceBillingUnits",
@@ -278,7 +277,7 @@ public final class SEBKortAgent extends AbstractAgent implements DeprecatedRefre
     }
 
     private InvoiceDetailsEntity fetchInvoiceDetails(
-            InvoiceBillingUnitEntity invoiceBillingUnit, InvoiceEntity invoice) throws Exception {
+            InvoiceBillingUnitEntity invoiceBillingUnit, InvoiceEntity invoice) {
         InvoiceDetailsResponse response =
                 createClientRequest(
                                 BASE_URL
@@ -298,8 +297,7 @@ public final class SEBKortAgent extends AbstractAgent implements DeprecatedRefre
         return response.getBody();
     }
 
-    private List<InvoiceEntity> fetchInvoices(InvoiceBillingUnitEntity invoiceBillingUnit)
-            throws Exception {
+    private List<InvoiceEntity> fetchInvoices(InvoiceBillingUnitEntity invoiceBillingUnit) {
         InvoiceBillingUnitResponse response =
                 createClientRequest(
                                 BASE_URL
@@ -317,8 +315,7 @@ public final class SEBKortAgent extends AbstractAgent implements DeprecatedRefre
         return response.getBody();
     }
 
-    private InvoiceDetailsEntity fetchPengingTransactions(ContractEntity contractEntity)
-            throws Exception {
+    private InvoiceDetailsEntity fetchPengingTransactions(ContractEntity contractEntity) {
         InvoiceDetailsResponse response =
                 createClientRequest(
                                 BASE_URL
@@ -394,7 +391,7 @@ public final class SEBKortAgent extends AbstractAgent implements DeprecatedRefre
         throw new RuntimeException("Ran out of retries. Attaching last retry error.", lastError);
     }
 
-    private void retryableRefreshInformation() throws Exception {
+    private void retryableRefreshInformation() {
         SEBKortParser parser = new SEBKortParser();
 
         // Parse all the invoices.
@@ -450,7 +447,6 @@ public final class SEBKortAgent extends AbstractAgent implements DeprecatedRefre
         Client cookieClient = clientFactory.createCookieClient(context.getLogOutputStream());
 
         cookieClient.setFollowRedirects(true);
-        // cookieClient.addFilter(new LoggingFilter(System.out));
 
         return cookieClient;
     }
