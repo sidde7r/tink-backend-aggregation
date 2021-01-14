@@ -292,3 +292,20 @@ Content-Length: 403
 Server: Jetty(9.4.z-SNAPSHOT)
 
 {"transactionAmount":{"amount":"269.33","currency":"SEK"},"proprietaryBankTransactionCode":"10","valueDate":"2019-12-30","bookingDate":"2019-12-28","debtorAccount":{"bban":"00000000646"},"remittanceInformationUnstructured":"Amzn com","currencyExchange":{"exchangeRate":"9.6189"},"cardAcceptorId":"cardAcceptorId","transactionDate":"2019-12-27","originalAmount":{"amount":"28.00","currency":"USD"}}
+
+REQUEST 23
+GET https://tpp-api.sebgroup.com/tpp/ais/v6/identified2/accounts/resourceId_1
+Accept: application/json
+Content-Type: application/json
+
+
+RESPONSE 23
+200
+Date: Thu, 25 Jun 2020 08:38:54 GMT
+Date: Thu, 25 Jun 2020 08:38:54 GMT
+Content-Type: application/json;charset=utf-8
+Cache-Control: private
+Content-Length: 2711
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"resourceId":"resourceId_1","iban":"SE8050000000000000000646","bban":"00000000646","bic":"ESSESESS","status":"enabled","currency":"SEK","ownerName":"FirstName LastName","creditLine":"20000.000","product":"Privatkonto","name":"accountName","bicAddress":"SEB, 106 40 Stockholm","cardLinkedToAccount":true,"paymentService":true,"accountInterest":"0.0","_links":{"transactions":{"href":"/accounts/resourceId_1/transactions?bookingStatus=booked"}}}
