@@ -1,0 +1,346 @@
+{
+    "cardAccount": {
+        "maskedPan": "424397XXXXXX1111"
+    },
+    "cardTransactions": {
+        "booked": [
+            {
+                "transactionDate": "2021-01-11",
+                "bookingDate": "2021-01-12",
+                "transactionAmount": {
+                    "currency": "EUR",
+                    "amount": "-5.00"
+                },
+                "cardAcceptorAddress": {
+                    "city": "35314369001  ",
+                    "country": "GBR"
+                },
+                "merchantCategoryCode": "5945",
+                "maskedPAN": "424397XXXXXX1111",
+                "transactionDetails": "details 1x",
+                "invoiced": true
+            },
+            {
+                "transactionDate": "2021-01-08",
+                "bookingDate": "2021-01-09",
+                "transactionAmount": {
+                    "currency": "EUR",
+                    "amount": "-2.47"
+                },
+                "cardAcceptorAddress": {
+                    "city": "Luxembourg   ",
+                    "country": "LUX"
+                },
+                "merchantCategoryCode": "5310",
+                "maskedPAN": "424397XXXXXX1111",
+                "transactionDetails": "details 2x",
+                "invoiced": true
+            },
+            {
+                "cardTransactionId": "201227119576",
+                "transactionDate": "2020-12-27",
+                "bookingDate": "2020-12-28",
+                "transactionAmount": {
+                    "currency": "EUR",
+                    "amount": "139.00"
+                },
+                "cardAcceptorAddress": {
+                    "city": "TAMPERE                  ",
+                    "country": "FIN"
+                },
+                "merchantCategoryCode": "5732",
+                "maskedPAN": "424397XXXXXX1111",
+                "transactionDetails": "details 3x",
+                "invoiced": true
+            },
+            {
+                "cardTransactionId": "201222043328",
+                "transactionDate": "2020-12-22",
+                "bookingDate": "2020-12-23",
+                "transactionAmount": {
+                    "currency": "EUR",
+                    "amount": "-268.90"
+                },
+                "cardAcceptorAddress": {
+                    "city": "TAMPERE                  ",
+                    "country": "FIN"
+                },
+                "merchantCategoryCode": "5732",
+                "maskedPAN": "424397XXXXXX1111",
+                "transactionDetails": "details 4x",
+                "invoiced": true
+            },
+            {
+                "transactionDate": "2020-12-20",
+                "bookingDate": "2020-12-21",
+                "transactionAmount": {
+                    "currency": "EUR",
+                    "amount": "-11.26"
+                },
+                "cardAcceptorAddress": {
+                    "city": "LUXEMBOURG   ",
+                    "country": "LUX"
+                },
+                "merchantCategoryCode": "5964",
+                "maskedPAN": "424397XXXXXX1111",
+                "transactionDetails": "details 5x",
+                "invoiced": true
+            },
+            {
+                "transactionDate": "2020-12-14",
+                "bookingDate": "2020-12-16",
+                "transactionAmount": {
+                    "currency": "EUR",
+                    "amount": "83.00"
+                },
+                "cardAcceptorAddress": {
+                    "city": "917696959    ",
+                    "country": "DEU"
+                },
+                "merchantCategoryCode": "5651",
+                "maskedPAN": "424397XXXXXX1111",
+                "transactionDetails": "details 6x",
+                "invoiced": true
+            },
+            {
+                "cardTransactionId": "201211488841",
+                "transactionDate": "2020-12-11",
+                "bookingDate": "2020-12-12",
+                "transactionAmount": {
+                    "currency": "EUR",
+                    "amount": "-12.00"
+                },
+                "cardAcceptorAddress": {
+                    "city": "Espoo                    ",
+                    "country": "FIN"
+                },
+                "merchantCategoryCode": "5812",
+                "maskedPAN": "424397XXXXXX1111",
+                "transactionDetails": "details 7x",
+                "invoiced": true
+            },
+            {
+                "transactionDate": "2020-12-08",
+                "bookingDate": "2020-12-10",
+                "transactionAmount": {
+                    "currency": "EUR",
+                    "amount": "-62.70"
+                },
+                "cardAcceptorAddress": {
+                    "city": "35314369001  ",
+                    "country": "FIN"
+                },
+                "merchantCategoryCode": "5047",
+                "maskedPAN": "424397XXXXXX1111",
+                "transactionDetails": "details 8x",
+                "invoiced": true
+            },
+            {
+                "transactionDate": "2020-12-06",
+                "bookingDate": "2020-12-07",
+                "transactionAmount": {
+                    "currency": "EUR",
+                    "amount": "-3.99"
+                },
+                "cardAcceptorAddress": {
+                    "city": "35314369001  ",
+                    "country": "GBR"
+                },
+                "merchantCategoryCode": "5945",
+                "maskedPAN": "424397XXXXXX1111",
+                "transactionDetails": "details 9x",
+                "invoiced": true
+            },
+            {
+                "transactionDate": "2020-12-05",
+                "bookingDate": "2020-12-06",
+                "transactionAmount": {
+                    "currency": "EUR",
+                    "amount": "-3.75"
+                },
+                "cardAcceptorAddress": {
+                    "city": "LUXEMBOURG   ",
+                    "country": "LUX"
+                },
+                "merchantCategoryCode": "5964",
+                "maskedPAN": "424397XXXXXX1111",
+                "transactionDetails": "details 10x",
+                "invoiced": true
+            },
+            {
+                "transactionDate": "2020-12-04",
+                "bookingDate": "2020-12-05",
+                "transactionAmount": {
+                    "currency": "EUR",
+                    "amount": "-9.25"
+                },
+                "cardAcceptorAddress": {
+                    "city": "LUXEMBOURG   ",
+                    "country": "LUX"
+                },
+                "merchantCategoryCode": "5964",
+                "maskedPAN": "424397XXXXXX1111",
+                "transactionDetails": "details 11x",
+                "invoiced": true
+            },
+            {
+                "transactionDate": "2020-11-28",
+                "bookingDate": "2020-11-29",
+                "transactionAmount": {
+                    "currency": "EUR",
+                    "amount": "-259.89"
+                },
+                "cardAcceptorAddress": {
+                    "city": "HELSINKI     ",
+                    "country": "FIN"
+                },
+                "merchantCategoryCode": "5732",
+                "maskedPAN": "424397XXXXXX1111",
+                "transactionDetails": "details 12x",
+                "invoiced": true
+            },
+            {
+                "transactionDate": "2020-11-25",
+                "bookingDate": "2020-11-26",
+                "transactionAmount": {
+                    "currency": "EUR",
+                    "amount": "-34.80"
+                },
+                "cardAcceptorAddress": {
+                    "city": "INTERNET     ",
+                    "country": "FIN"
+                },
+                "merchantCategoryCode": "5655",
+                "maskedPAN": "424397XXXXXX1111",
+                "transactionDetails": "details 13x",
+                "invoiced": true
+            },
+            {
+                "transactionDate": "2020-11-25",
+                "bookingDate": "2020-11-27",
+                "transactionAmount": {
+                    "currency": "EUR",
+                    "amount": "-30.20"
+                },
+                "cardAcceptorAddress": {
+                    "city": "917696959    ",
+                    "country": "DEU"
+                },
+                "merchantCategoryCode": "5651",
+                "maskedPAN": "424397XXXXXX1111",
+                "transactionDetails": "details 14x",
+                "invoiced": true
+            },
+            {
+                "transactionDate": "2020-11-22",
+                "bookingDate": "2020-11-23",
+                "transactionAmount": {
+                    "currency": "EUR",
+                    "amount": "-135.00"
+                },
+                "cardAcceptorAddress": {
+                    "city": "917696959    ",
+                    "country": "DEU"
+                },
+                "merchantCategoryCode": "5651",
+                "maskedPAN": "424397XXXXXX1111",
+                "transactionDetails": "details 15x",
+                "invoiced": true
+            },
+            {
+                "transactionDate": "2020-11-20",
+                "bookingDate": "2020-11-21",
+                "transactionAmount": {
+                    "currency": "EUR",
+                    "amount": "-33.58"
+                },
+                "cardAcceptorAddress": {
+                    "city": "Luxembourg   ",
+                    "country": "LUX"
+                },
+                "merchantCategoryCode": "5310",
+                "maskedPAN": "424397XXXXXX1111",
+                "transactionDetails": "details 16x",
+                "invoiced": true
+            },
+            {
+                "cardTransactionId": "0049568",
+                "transactionDate": "2020-11-03",
+                "bookingDate": "2020-11-03",
+                "transactionAmount": {
+                    "currency": "EUR",
+                    "amount": "-57.11"
+                },
+                "cardAcceptorAddress": {},
+                "maskedPAN": "424397XXXXXX1111",
+                "transactionDetails": "details 17x",
+                "invoiced": true
+            },
+            {
+                "cardTransactionId": "0049568",
+                "transactionDate": "2020-11-03",
+                "bookingDate": "2020-11-03",
+                "transactionAmount": {
+                    "currency": "EUR",
+                    "amount": "-3.71"
+                },
+                "cardAcceptorAddress": {},
+                "maskedPAN": "424397XXXXXX1111",
+                "transactionDetails": "details 18x",
+                "invoiced": true
+            },
+            {
+                "transactionDate": "2020-10-27",
+                "bookingDate": "2020-10-29",
+                "transactionAmount": {
+                    "currency": "EUR",
+                    "amount": "27.00"
+                },
+                "cardAcceptorAddress": {
+                    "city": "35314369001  ",
+                    "country": "DEU"
+                },
+                "merchantCategoryCode": "5651",
+                "maskedPAN": "424397XXXXXX1111",
+                "transactionDetails": "details 19x",
+                "invoiced": true
+            },
+            {
+                "transactionDate": "2020-10-23",
+                "bookingDate": "2020-10-24",
+                "transactionAmount": {
+                    "currency": "EUR",
+                    "amount": "-2.90"
+                },
+                "cardAcceptorAddress": {
+                    "city": "Stockholm    ",
+                    "country": "SWE"
+                },
+                "merchantCategoryCode": "4215",
+                "maskedPAN": "424397XXXXXX1111",
+                "transactionDetails": "details 20x",
+                "invoiced": true
+            },
+            {
+                "transactionDate": "2020-10-20",
+                "bookingDate": "2020-10-21",
+                "transactionAmount": {
+                    "currency": "EUR",
+                    "amount": "42.00"
+                },
+                "cardAcceptorAddress": {
+                    "city": "35314369001  ",
+                    "country": "DEU"
+                },
+                "merchantCategoryCode": "5651",
+                "maskedPAN": "424397XXXXXX1111",
+                "transactionDetails": "details 21x",
+                "invoiced": true
+            }
+        ],
+        "pending": [],
+        "_links": {
+            "cardAccount": "/psd2/v1/card-accounts/10c114a0-54fc-40e9-a221-cd6c42072fdd"
+        }
+    }
+}

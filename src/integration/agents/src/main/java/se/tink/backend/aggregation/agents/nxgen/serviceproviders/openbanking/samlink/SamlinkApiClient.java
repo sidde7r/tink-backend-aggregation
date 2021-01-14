@@ -33,6 +33,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ber
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.samlink.SamlinkConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.samlink.configuration.SamlinkAgentsConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.samlink.configuration.SamlinkConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.samlink.fetcher.creditcard.rpc.CardTransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.samlink.fetcher.creditcard.rpc.CardsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.samlink.fetcher.transactionalaccount.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.samlink.provider.SamlinkAuthorisationEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.samlink.provider.SamlinkSignatureEntity;
@@ -194,6 +196,18 @@ public class SamlinkApiClient extends BerlinGroupApiClient<SamlinkConfiguration>
                 .body(consentsRequest.toData(), MediaType.APPLICATION_JSON_TYPE)
                 .post(ConsentBaseResponseWithoutHref.class)
                 .getConsentId();
+    }
+
+    public CardsResponse fetchCardAccounts() {
+        return createRequestInSession(
+                        new URL(agentConfiguration.getBaseUrl()).concat(Urls.CARD_ACCOUNTS),
+                        StringUtils.EMPTY)
+                .get(CardsResponse.class);
+    }
+
+    public CardTransactionsResponse fetchCardAccountTransactions(String url) {
+        return createRequestInSession(new URL(url), StringUtils.EMPTY)
+                .get(CardTransactionsResponse.class);
     }
 
     @Override

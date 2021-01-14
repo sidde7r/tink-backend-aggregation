@@ -26,8 +26,8 @@ public class TransactionsResponse extends TransactionsKeyPaginatorBaseResponse {
 
         return Optional.ofNullable(getTransactions()).map(TransactionsBaseEntity::getBooked)
                 .orElse(Collections.emptyList()).stream()
-                .findFirst()
                 .map(BookedTransactionBaseEntity::getEntryReference)
+                .min(String::compareTo)
                 .orElse(null);
     }
 

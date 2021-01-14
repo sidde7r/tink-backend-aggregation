@@ -16,6 +16,8 @@ public final class SamlinkConstants {
         public static final String CONSENT = AIS_PRODUCT + "/consents";
         public static final String ACCOUNTS = AIS_PRODUCT + "/accounts";
         public static final String TRANSACTIONS = ACCOUNTS + "/{accountId}/transactions";
+        public static final String CARD_ACCOUNTS = AIS_PRODUCT + "/card-accounts";
+        public static final String CARD_TRANSACTIONS = CARD_ACCOUNTS + "/{accountId}/transactions";
     }
 
     public static class HeaderKeys {
@@ -27,13 +29,15 @@ public final class SamlinkConstants {
         public static final String DIGEST_PREFIX = "SHA-256=";
         public static final String TPP_SIGNATURE_CERTIFICATE = "TPP-Signature-Certificate";
         public static final String ENTRY_REFERENCE_FROM = "entryReferenceFrom";
+        public static final String DATE_FROM = "dateFrom";
     }
 
-    public static final class BookingStatus {
-        private BookingStatus() {}
+    public static final class BookingStatusParameter {
+        private BookingStatusParameter() {}
 
         public static final String BOOKED = "booked";
         public static final String PENDING = "pending";
+        public static final String BOTH = "both";
     }
 
     public static class PathVariables {

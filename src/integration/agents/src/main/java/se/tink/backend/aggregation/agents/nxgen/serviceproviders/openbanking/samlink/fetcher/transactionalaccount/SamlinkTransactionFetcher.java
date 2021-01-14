@@ -4,7 +4,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ber
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.BerlinGroupTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.rpc.TransactionsKeyPaginatorBaseResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.samlink.SamlinkConstants.BookingStatus;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.samlink.SamlinkConstants.BookingStatusParameter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.samlink.SamlinkConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.samlink.SamlinkConstants.PathVariables;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.samlink.SamlinkConstants.Urls;
@@ -46,7 +46,7 @@ public class SamlinkTransactionFetcher extends BerlinGroupTransactionFetcher {
         return apiClient.fetchTransactions(
                 new URL(configuration.getBaseUrl().concat(Urls.TRANSACTIONS))
                         .parameter(PathVariables.ACCOUNT_ID, account.getApiIdentifier())
-                        .queryParam(QueryKeys.BOOKING_STATUS, BookingStatus.BOOKED)
+                        .queryParam(QueryKeys.BOOKING_STATUS, BookingStatusParameter.BOOKED)
                         .queryParam(HeaderKeys.ENTRY_REFERENCE_FROM, key)
                         .toString());
     }
@@ -57,7 +57,8 @@ public class SamlinkTransactionFetcher extends BerlinGroupTransactionFetcher {
                 apiClient.fetchTransactions(
                         new URL(configuration.getBaseUrl().concat(Urls.TRANSACTIONS))
                                 .parameter(PathVariables.ACCOUNT_ID, account.getApiIdentifier())
-                                .queryParam(QueryKeys.BOOKING_STATUS, BookingStatus.PENDING)
+                                .queryParam(
+                                        QueryKeys.BOOKING_STATUS, BookingStatusParameter.PENDING)
                                 .toString());
         shouldFetchPending = false;
         return pending;
