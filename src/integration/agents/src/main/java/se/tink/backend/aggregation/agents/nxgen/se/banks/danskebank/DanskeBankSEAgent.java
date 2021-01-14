@@ -57,12 +57,14 @@ public final class DanskeBankSEAgent extends DanskeBankAgent
 
     @Inject
     public DanskeBankSEAgent(AgentComponentProvider componentProvider) {
-        super(
-                componentProvider,
-                new DanskeBankSEConfiguration(),
-                new AccountEntityMapper(MarketCode.SE.name()));
+        super(componentProvider, new AccountEntityMapper(MarketCode.SE.name()));
         configureHttpClient(client);
         transferDestinationRefreshController = constructTransferDestinationController();
+    }
+
+    @Override
+    protected DanskeBankConfiguration createConfiguration() {
+        return new DanskeBankSEConfiguration();
     }
 
     @Override
