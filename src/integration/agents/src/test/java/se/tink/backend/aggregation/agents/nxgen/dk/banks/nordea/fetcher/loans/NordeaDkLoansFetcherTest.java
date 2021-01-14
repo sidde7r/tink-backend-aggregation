@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaDkApiClient;
@@ -21,6 +22,7 @@ import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.loan.LoanModule;
+import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.libraries.account.identifiers.DanishIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
@@ -32,6 +34,8 @@ public class NordeaDkLoansFetcherTest {
             "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/dk/banks/nordea/resources/loans/";
 
     private static final String PRODUCT_CODE = "FBLÅN1";
+    private static final String CONTINUATION_KEY = "blablablatestkey";
+    private static final String CURRENCY_CODE = "DKK";
 
     private NordeaDkApiClient apiClient = mock(NordeaDkApiClient.class);
     private NordeaDkLoansFetcher nordeaDkLoansFetcher = new NordeaDkLoansFetcher(apiClient);
@@ -48,14 +52,16 @@ public class NordeaDkLoansFetcherTest {
                                         .withType(LoanDetails.Type.MORTGAGE)
                                         .withBalance(
                                                 new ExactCurrencyAmount(
-                                                        BigDecimal.valueOf(-1111.11), "DKK"))
+                                                        BigDecimal.valueOf(-1111.11),
+                                                        CURRENCY_CODE))
                                         .withInterestRate(1.1)
                                         .setAmortized(
                                                 new ExactCurrencyAmount(
-                                                        BigDecimal.valueOf(1111.111), "DKK"))
+                                                        BigDecimal.valueOf(1111.111),
+                                                        CURRENCY_CODE))
                                         .setInitialBalance(
                                                 new ExactCurrencyAmount(
-                                                        BigDecimal.valueOf(1111.11), "DKK"))
+                                                        BigDecimal.valueOf(1111.11), CURRENCY_CODE))
                                         .setApplicants(Arrays.asList("owner", "second owner"))
                                         .setCoApplicant(true)
                                         .setLoanNumber("SOME_ID")
@@ -83,7 +89,7 @@ public class NordeaDkLoansFetcherTest {
     }
 
     @Test
-    public void shouldFormatProductCodeAndFetchLoanTransactions() {
+    public void shouldFetchLoanTransactions() {
         // given
         when(apiClient.getAccountTransactions(
                         eq(loanAccount.getApiIdentifier()), eq(PRODUCT_CODE), any()))
@@ -97,8 +103,23 @@ public class NordeaDkLoansFetcherTest {
         assertThat(result)
                 .isEqualToComparingFieldByFieldRecursively(
                         new TransactionKeyPaginatorResponseImpl<>(
-                                nordeaDkLoansFetcher.getTransactions(transactionsResponse),
-                                transactionsResponse.getContinuationKey()));
+                                getTransactions(), CONTINUATION_KEY));
+    }
+
+    private List<Transaction> getTransactions() {
+        return Arrays.asList(
+                Transaction.builder()
+                        .setAmount(ExactCurrencyAmount.of(-111.59, CURRENCY_CODE))
+                        .setDescription("Renter")
+                        .setPending(false)
+                        .setDate(LocalDate.parse("2020-12-31"))
+                        .build(),
+                Transaction.builder()
+                        .setAmount(ExactCurrencyAmount.of(-123.11, CURRENCY_CODE))
+                        .setDescription("Provision")
+                        .setPending(false)
+                        .setDate(LocalDate.parse("2020-12-11"))
+                        .build());
     }
 
     @Test

@@ -1,7 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.fetcher.loans;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,18 +41,17 @@ public class NordeaDkLoansFetcher
     public TransactionKeyPaginatorResponse<String> getTransactionsFor(
             LoanAccount account, String continuationKey) {
         TransactionsResponse transactionsResponse;
+        String productCode =
+                account.getFromTemporaryStorage(NordeaDkConstants.StorageKeys.PRODUCT_CODE);
         try {
             transactionsResponse =
                     apiClient.getAccountTransactions(
-                            account.getApiIdentifier(),
-                            account.getFromTemporaryStorage(
-                                    NordeaDkConstants.StorageKeys.PRODUCT_CODE),
-                            continuationKey);
+                            account.getApiIdentifier(), productCode, continuationKey);
 
             log.info(
                     "[Nordea DK] Successfully fetched loan transactions. Loan type: {}, loan productCode: {}",
                     account.getDetails().getType(),
-                    account.getFromTemporaryStorage(NordeaDkConstants.StorageKeys.PRODUCT_CODE));
+                    productCode);
 
             return new TransactionKeyPaginatorResponseImpl<>(
                     getTransactions(transactionsResponse),
@@ -59,14 +60,15 @@ public class NordeaDkLoansFetcher
             log.info(
                     "[Nordea DK] Failed to fetch loan transactions. Loan type: {}, loan productCode: {} ",
                     account.getDetails().getType(),
-                    account.getFromTemporaryStorage(NordeaDkConstants.StorageKeys.PRODUCT_CODE),
+                    productCode,
                     e);
             return TransactionKeyPaginatorResponseImpl.createEmpty();
         }
     }
 
-    List<Transaction> getTransactions(TransactionsResponse transactionsResponse) {
-        return transactionsResponse.getTransactions().stream()
+    private List<Transaction> getTransactions(TransactionsResponse transactionsResponse) {
+        return Optional.ofNullable(transactionsResponse.getTransactions())
+                .orElse(Collections.emptyList()).stream()
                 .map(TransactionEntity::toTinkTransaction)
                 .collect(Collectors.toList());
     }
