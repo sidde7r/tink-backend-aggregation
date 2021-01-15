@@ -3,27 +3,52 @@
         {
             "accountNumber": "ES58 0487 4233 1632 2468 7413",
             "accountExclusion": "NONE",
+            "exactAvailableCredit": null,
             "exactBalance": {
                 "currencyCode": "EUR",
                 "exactValue": 582.09,
                 "scale": 2,
-                "doubleValue": 582.09,
-                "unscaledValue": 58209
+                "unscaledValue": 58209,
+                "doubleValue": 582.09
             },
             "currencyCode": "EUR",
+            "availableBalance": null,
+            "creditLimit": null,
             "bankId": "ES5804874233163224687413",
+            "certainDate": null,
+            "credentialsId": null,
             "excluded": false,
             "favored": false,
             "name": "",
             "ownership": 1.0,
+            "payload": null,
             "type": "CHECKING",
+            "userId": null,
             "userModifiedExcluded": false,
             "userModifiedName": false,
             "userModifiedType": false,
             "identifiers": "[\"iban://ES5804874233163224687413\"]",
+            "transferDestinations": null,
+            "details": null,
             "closed": false,
-            "holderName": "Dummy Name",
+            "holderName": "JOHN DOE LOE",
+            "accountHolder": {
+                "accountId": null,
+                "type": "PERSONAL",
+                "identities": [
+                    {
+                        "name": "JOHN DOE LOE",
+                        "role": "HOLDER"
+                    },
+                    {
+                        "name": "JOHNNY DONNY LONNY",
+                        "role": "AUTHORIZED_USER"
+                    }
+                ]
+            },
             "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
+            "financialInstitutionId": null,
+            "balances": [],
             "availableCredit": 0.0,
             "balance": 582.09
         }

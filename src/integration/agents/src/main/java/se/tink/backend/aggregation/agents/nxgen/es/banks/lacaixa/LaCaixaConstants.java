@@ -98,6 +98,7 @@ public final class LaCaixaConstants {
         public static final URL KEEP_ALIVE = new URL(BASE + "smartContent/consultaFoto");
 
         public static final URL MAIN_ACCOUNT = new URL(BASE + "dashboardApp/cuentaPrincipal?");
+        public static final URL HOLDERS_LIST = new URL(BASE + "cuentas/listaTitulares?");
         public static final URL ACCOUNT_TRANSACTIONS = new URL(BASE + "cuentas/extracto?");
 
         public static final URL CARDS = new URL(BASE + "tarjetas/listadoTarjetasGenerica");
@@ -187,5 +188,12 @@ public final class LaCaixaConstants {
 
         public static final int MAX_ATTEMPTS = 3;
         public static final int RETRY_SLEEP_MILLISECONDS = 1000;
+    }
+
+    public static class HolderTypes {
+        HolderTypes() {}
+
+        public static final String OWNER = "Titular";
+        public static final String AUTHORIZED_USER = "Autorizado";
     }
 }

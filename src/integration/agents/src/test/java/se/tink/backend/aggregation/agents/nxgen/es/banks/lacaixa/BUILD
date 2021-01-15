@@ -6,12 +6,14 @@ junit_test(
         "LaCaixaAgentTest.java",
         "LaCaixaApiClientTest.java",
         "LaCaixaCryptoTest.java",
+        "fetcher/transactionalaccount/LaCaixaAccountFetcherTest.java",
         "filter/LaCaixaRetryFilterTest.java",
     ],
     data = [
         "//data:aggregation_test",
         "//data:provider_configurations",
         "//etc:development",
+        "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/es/banks/lacaixa/resources",
     ],
     tags = [
         "external",
@@ -28,6 +30,7 @@ junit_test(
         "//src/integration/credentials:service",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/crypto",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/core/account",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/client",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/filter/filters/iface",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/response",

@@ -1,0 +1,16 @@
+ {
+    "titulares": [{    
+        "alftipr": "001",
+        "alfnuor": "001",
+        "dni": "00001",
+        "numper": "-------",
+        "nombre": "ALICE",
+        "apellido1": "DOE",
+        "apellido2": "NOE",
+        "descripcion": "Titular",
+        "fechaNac": "14021964",
+        "indEmancipacion": "N"
+    }
+],
+    "masDatos": false
+}

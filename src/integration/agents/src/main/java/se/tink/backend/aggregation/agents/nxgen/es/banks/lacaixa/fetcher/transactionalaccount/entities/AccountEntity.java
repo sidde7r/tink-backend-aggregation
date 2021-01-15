@@ -2,11 +2,12 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transa
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.List;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Holder;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -28,8 +29,12 @@ public class AccountEntity {
     @JsonProperty("numeroCuenta")
     private AccountIdentifierEntity identifiers;
 
+    public AccountIdentifierEntity getIdentifiers() {
+        return identifiers;
+    }
+
     @JsonIgnore
-    public Optional<TransactionalAccount> toTinkAccount(HolderName holderName) {
+    public Optional<TransactionalAccount> toTinkAccount(List<Holder> holders) {
         AccountTypes type =
                 LaCaixaConstants.ACCOUNT_TYPE_MAPPER
                         .translate(accountType)
@@ -54,7 +59,7 @@ public class AccountEntity {
                                 .withAccountName(alias)
                                 .addIdentifier(ibanIdentifier)
                                 .build())
-                .addHolderName(holderName.toString())
+                .addHolders(holders)
                 .putInTemporaryStorage(
                         LaCaixaConstants.TemporaryStorage.ACCOUNT_REFERENCE,
                         identifiers.getAccountReference())

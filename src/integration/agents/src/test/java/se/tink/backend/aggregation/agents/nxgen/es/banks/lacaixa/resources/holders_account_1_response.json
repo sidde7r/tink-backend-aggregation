@@ -1,0 +1,27 @@
+ {
+    "titulares": [{    
+        "alftipr": "001",
+        "alfnuor": "001",
+        "dni": "00001",
+        "numper": "-------",
+        "nombre": "JOHN",
+        "apellido1": "DOE",
+        "apellido2": "LOE",
+        "descripcion": "Titular",
+        "fechaNac": "14021964",
+        "indEmancipacion": "N"
+    }, {
+        "alftipr": "001",
+        "alfnuor": "001",
+        "dni": "0000",
+        "numper": "-------",
+        "nombre": "JOHNNY",
+        "apellido1": "DONNY",
+        "apellido2": "LONNY",
+        "descripcion": "Autorizado",
+        "fechaNac": "14021964",
+        "indEmancipacion": "N"
+    }
+],
+    "masDatos": false
+}
