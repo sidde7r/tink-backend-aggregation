@@ -10,6 +10,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountBalanceEntity;
@@ -22,6 +23,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.instrumentation.FetcherInstrumentationRegistry;
 
+@Slf4j
 @RequiredArgsConstructor
 public final class AccountV31Fetcher<T extends Account> implements AccountFetcher<T> {
 
@@ -35,7 +37,11 @@ public final class AccountV31Fetcher<T extends Account> implements AccountFetche
     public Collection<T> fetchAccounts() {
         List<AccountEntity> allAccountEntities = apiClient.fetchV31Accounts();
         instrument(allAccountEntities);
-
+        log.info(
+                "Type of accounts {}",
+                allAccountEntities.stream()
+                        .map(AccountEntity::getRawAccountSubType)
+                        .collect(Collectors.toList()));
         return Observable.fromIterable(allAccountEntities)
                 .filter(accountTypeMapper::supportsAccountOwnershipType)
                 .filter(
