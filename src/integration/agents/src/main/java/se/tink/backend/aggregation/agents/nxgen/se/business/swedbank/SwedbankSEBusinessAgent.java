@@ -17,17 +17,21 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovide
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.fetchers.transactional.SwedbankDefaultTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.business.swedbank.fetchers.transactional.SwedbankSEBusinessTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.business.swedbank.profile.SwedbankBusinessProfileSelector;
+import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.http.MultiIpGateway;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, IDENTITY_DATA})
 public final class SwedbankSEBusinessAgent extends SwedbankAbstractAgent {
 
     @Inject
-    public SwedbankSEBusinessAgent(AgentComponentProvider componentProvider) {
+    public SwedbankSEBusinessAgent(
+            AgentComponentProvider componentProvider,
+            AgentsServiceConfiguration agentsServiceConfiguration) {
         super(
                 componentProvider,
                 new SwedbankConfiguration(
@@ -45,6 +49,10 @@ public final class SwedbankSEBusinessAgent extends SwedbankAbstractAgent {
                                         .getCredentials()
                                         .getField(Key.CORPORATE_ID))),
                 new SwedbankDateUtils(ZoneId.of("Europe/Stockholm"), new Locale("sv", "SE")));
+
+        final MultiIpGateway gateway =
+                new MultiIpGateway(client, credentials.getUserId(), credentials.getId());
+        gateway.setMultiIpGateway(agentsServiceConfiguration.getIntegrations());
     }
 
     @Override
