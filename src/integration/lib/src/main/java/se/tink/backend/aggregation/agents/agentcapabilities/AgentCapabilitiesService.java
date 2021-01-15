@@ -33,7 +33,7 @@ public class AgentCapabilitiesService {
             klass -> klass.isAnnotationPresent(AgentCapabilities.class);
 
     private final Predicate<Class<? extends Agent>> hasPisCapabilities =
-            klass -> klass.isAnnotationPresent(AgentPisCapability.class);
+            klass -> klass.getAnnotationsByType(AgentPisCapability.class).length != 0;
 
     private final Function<Class<? extends Agent>, String> getAgentName =
             klass -> klass.getName().replace(DEFAULT_AGENT_PACKAGE_CLASS_PREFIX + ".", "");
