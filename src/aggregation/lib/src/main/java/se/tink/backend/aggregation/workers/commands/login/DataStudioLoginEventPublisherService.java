@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.workers.commands.login;
 
 import com.google.common.collect.ImmutableMap;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
@@ -26,6 +27,7 @@ import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
 import se.tink.eventproducerservice.events.grpc.AgentLoginCompletedEventProto;
 
 @AllArgsConstructor
+@Slf4j
 public class DataStudioLoginEventPublisherService {
 
     private static final ImmutableMap<
@@ -435,6 +437,14 @@ public class DataStudioLoginEventPublisherService {
 
     void publishLoginResultEvent(
             AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult reason) {
+        AgentLoginCompletedEventProto.AgentLoginCompletedEvent.UserInteractionInformation
+                userInteractionInformation =
+                        AgentLoginCompletedEventUserInteractionInformationProvider
+                                .userInteractionInformation(supplementalInformationController);
+        log.info(
+                String.format(
+                        "Authentication finished with %s and %s",
+                        reason, userInteractionInformation));
         eventPublisher.sendLoginCompletedEvent(
                 IntegrationParameters.builder()
                         .providerName(context.getRequest().getCredentials().getProviderName())
@@ -445,8 +455,7 @@ public class DataStudioLoginEventPublisherService {
                         .build(),
                 reason,
                 countAuthenticationElapsedTime(),
-                AgentLoginCompletedEventUserInteractionInformationProvider
-                        .userInteractionInformation(supplementalInformationController));
+                userInteractionInformation);
     }
 
     private long countAuthenticationElapsedTime() {
