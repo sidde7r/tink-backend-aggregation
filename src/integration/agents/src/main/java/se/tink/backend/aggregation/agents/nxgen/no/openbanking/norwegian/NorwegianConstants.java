@@ -5,9 +5,9 @@ import java.util.List;
 
 public class NorwegianConstants {
 
-    public static String SIGNATURE_FORMAT =
+    public static final String SIGNATURE_FORMAT =
             "keyId=\"%s\",algorithm=\"rsa-sha256\",headers=\"%s\",signature=\"%s\"";
-    public static List<String> SIGNABLE_HEADERS =
+    public static final List<String> SIGNABLE_HEADERS =
             Arrays.asList(
                     "(request-target)",
                     HeaderKeys.DATE,
