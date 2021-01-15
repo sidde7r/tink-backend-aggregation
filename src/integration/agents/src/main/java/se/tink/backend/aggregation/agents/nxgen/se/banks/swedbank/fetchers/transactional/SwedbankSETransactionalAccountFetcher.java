@@ -12,6 +12,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.inves
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.investment.rpc.PortfolioHoldingsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.fetchers.transactional.SwedbankDefaultTransactionalAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.BankProfile;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.EngagementOverviewResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.SavingAccountEntity;
@@ -44,12 +45,14 @@ public class SwedbankSETransactionalAccountFetcher
 
             accounts.addAll(
                     engagementOverviewResponse.getTransactionAccounts().stream()
+                            .filter(account -> !isInvestmentAccount(account))
                             .map(account -> account.toTransactionalAccount(bankProfile))
                             .filter(Optional::isPresent)
                             .map(Optional::get)
                             .collect(Collectors.toList()));
             accounts.addAll(
                     engagementOverviewResponse.getTransactionDisposalAccounts().stream()
+                            .filter(account -> !isInvestmentAccount(account))
                             .map(account -> account.toTransactionalAccount(bankProfile))
                             .filter(Optional::isPresent)
                             .map(Optional::get)
@@ -75,11 +78,11 @@ public class SwedbankSETransactionalAccountFetcher
         return accounts;
     }
 
-    private boolean isInvestmentAccount(SavingAccountEntity account) {
+    private boolean isInvestmentAccount(AccountEntity account) {
         boolean existsInInvestmentAccounts =
                 getInvestmentAccountNumbers().contains(account.getFullyFormattedNumber());
         if (existsInInvestmentAccounts && !account.isInvestmentAccount()) {
-            // Mismatched ids should be added to INVESTMENT_ACCOUNT_PRODUCT_IDS
+            // Mismatched ids should be added to ACCOUNT_TYPE_MAPPER as INVESTMENT
             log.warn("Swedbank investment account product ID mismatch: {}", account.getProductId());
         }
         return existsInInvestmentAccounts;

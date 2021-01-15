@@ -35,6 +35,13 @@ public abstract class AccountEntity extends AbstractAccountEntity {
         return SwedbankSeSerializationUtils.parseAmountForInput(balance, currency);
     }
 
+    public boolean isInvestmentAccount() {
+        return SwedbankBaseConstants.ACCOUNT_TYPE_MAPPER
+                .translate(productId)
+                .orElse(AccountTypes.OTHER)
+                .equals(AccountTypes.INVESTMENT);
+    }
+
     public boolean isAvailableForFavouriteAccount() {
         return availableForFavouriteAccount;
     }
@@ -53,14 +60,16 @@ public abstract class AccountEntity extends AbstractAccountEntity {
 
     @JsonIgnore
     protected Optional<TransactionalAccount> toTransactionalAccount(
-            BankProfile bankProfile, @Nonnull AccountTypes type) {
+            BankProfile bankProfile, @Nonnull AccountTypes defaultType) {
         if (fullyFormattedNumber == null || currency == null || isBalanceUndefined()) {
             return Optional.empty();
         }
 
         return Optional.of(
                 TransactionalAccount.builder(
-                                type,
+                                SwedbankBaseConstants.ACCOUNT_TYPE_MAPPER
+                                        .translate(productId)
+                                        .orElse(defaultType),
                                 fullyFormattedNumber,
                                 ExactCurrencyAmount.of(StringUtils.parseAmount(balance), currency))
                         .setAccountNumber(fullyFormattedNumber)
