@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.pt.banks.edenred;
 
 import java.net.SocketTimeoutException;
 import lombok.RequiredArgsConstructor;
-import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.refresh.AccountRefreshException;
@@ -122,9 +121,12 @@ public class EdenredApiClient {
         return request(url).header(Headers.AUTHORIZATION, edenredStorage.getToken());
     }
 
-    private LoginException mapAuthenticationException(HttpResponseException exception) {
-        if (exception.getResponse().getStatus() == 409) {
+    private RuntimeException mapAuthenticationException(HttpResponseException exception) {
+        int status = exception.getResponse().getStatus();
+        if (status == 409) {
             return LoginError.INCORRECT_CREDENTIALS.exception();
+        } else if (status == 404 || status >= 500) {
+            return BankServiceError.BANK_SIDE_FAILURE.exception(exception);
         } else {
             return LoginError.DEFAULT_MESSAGE.exception(exception);
         }
