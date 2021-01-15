@@ -10,6 +10,8 @@ import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.SabadellConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.entities.AmountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Holder;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Holder.Role;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -55,10 +57,14 @@ public class AccountEntity {
                                 .withAccountName(getTinkName())
                                 .addIdentifier(new IbanIdentifier(iban))
                                 .build())
-                .addHolderName(owner)
+                .addHolders(getHolder())
                 .setBankIdentifier(iban)
                 .putInTemporaryStorage(formatIban(iban), this)
                 .build();
+    }
+
+    private Holder getHolder() {
+        return Holder.of(owner, isOwner ? Role.HOLDER : Role.AUTHORIZED_USER);
     }
 
     @JsonIgnore
