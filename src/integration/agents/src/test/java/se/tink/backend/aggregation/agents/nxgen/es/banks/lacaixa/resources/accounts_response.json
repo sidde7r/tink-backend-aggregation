@@ -1,0 +1,175 @@
+{
+    "listaCuentas": {
+        "cuentas": [
+            {
+                "id": "0",
+                "numeroCuenta": {
+                    "iban": "ES5804874233163224687413",
+                    "codigoPais": "ES",
+                    "dcIban": "68",
+                    "numeroCuenta": "0001",
+                    "entidad": "2100",
+                    "oficina": "8695",
+                    "dc": "07",
+                    "refvalCuenta": "Qlf1",
+                    "longitudModalidad": 0,
+                    "longitudCuenta": 0
+                },
+                "alias": "Chunga",
+                "tipoCuenta": "LIBRETA",
+                "saldo": {
+                    "importe": 48.65,
+                    "moneda": "EUR"
+                },
+                "saldoRetenido": {
+                    "importe": 0.0,
+                    "moneda": "EUR"
+                },
+                "existeSaldoDisponibleNomina": false,
+                "saldoDisponibleNomina": {
+                    "importe": 0.0,
+                    "moneda": "EUR"
+                },
+                "saldoDisponibleNominaEfectivo": {
+                    "importe": 0.0,
+                    "moneda": "EUR"
+                },
+                "principal": true,
+                "representanteMenorIndica": false,
+                "imaginTeens": false,
+                "titularCuentaOVisibilidadForzada": true,
+                "representanteMenorLegalCuentaTiprel": false,
+                "firmaReconocida": false,
+                "apoderado": false,
+                "cuentaAgregada": false,
+                "myCardVisaPayOProductoSimilar": false
+            },
+            {
+                "id": "1",
+                "numeroCuenta": {
+                    "iban": "ES0700759329691643618378",
+                    "codigoPais": "ES",
+                    "dcIban": "69",
+                    "numeroCuenta": "0002",
+                    "entidad": "2100",
+                    "oficina": "2904",
+                    "dc": "02",
+                    "refvalCuenta": "Qlf2",
+                    "longitudModalidad": 0,
+                    "longitudCuenta": 0
+                },
+                "alias": "imagin",
+                "tipoCuenta": "CUENTA CORRIENTE",
+                "saldo": {
+                    "importe": 250.0,
+                    "moneda": "EUR"
+                },
+                "saldoRetenido": {},
+                "existeSaldoDisponibleNomina": false,
+                "saldoDisponibleNomina": {},
+                "saldoDisponibleNominaEfectivo": {},
+                "principal": false,
+                "representanteMenorIndica": false,
+                "imaginTeens": false,
+                "titularCuentaOVisibilidadForzada": true,
+                "representanteMenorLegalCuentaTiprel": false,
+                "firmaReconocida": false,
+                "apoderado": false,
+                "cuentaAgregada": false,
+                "myCardVisaPayOProductoSimilar": false
+            }
+        ],
+        "masDatos": false
+    },
+    "hayCuentasAgregadas": false,
+    "listaMovimientos": {
+        "movimientos": [
+            {
+                "id": "0",
+                "concepto": "CUSTODIA VALORES",
+                "pendienteValidar": false,
+                "remitente": "",
+                "referencia": "",
+                "fechaOperacion": {
+                    "valor": "01/01/2021",
+                    "formato": "dd/MM/yyyy"
+                },
+                "fechaValor": {
+                    "valor": "01/01/2021",
+                    "formato": "dd/MM/yyyy"
+                },
+                "hora": {
+                    "valor": "04:25:18",
+                    "formato": "HH:mm:ss"
+                },
+                "importe": {
+                    "importe": -14.52,
+                    "moneda": "EUR"
+                },
+                "saldoCuenta": {
+                    "importe": 48.65,
+                    "moneda": "EUR"
+                },
+                "accesoDetalleMov": "Qlf1ff6oMXhCV_V9_qgxeAAAAXcAbW5dBh0O5gzjUCY"
+            },
+            {
+                "id": "1",
+                "concepto": "MANTENIMIENTO",
+                "pendienteValidar": false,
+                "remitente": "",
+                "referencia": "",
+                "fechaOperacion": {
+                    "valor": "02/10/2020",
+                    "formato": "dd/MM/yyyy"
+                },
+                "fechaValor": {
+                    "valor": "01/10/2020",
+                    "formato": "dd/MM/yyyy"
+                },
+                "hora": {
+                    "valor": "05:25:38",
+                    "formato": "HH:mm:ss"
+                },
+                "importe": {
+                    "importe": -12.0,
+                    "moneda": "EUR"
+                },
+                "saldoCuenta": {
+                    "importe": 63.17,
+                    "moneda": "EUR"
+                },
+                "accesoDetalleMov": "Qlf1ff1BB3dCV_V9_UEHdwAAAXcAbW5dUV58p83A66Q"
+            },
+            {
+                "id": "2",
+                "concepto": "TRANSFER INMEDIATA",
+                "pendienteValidar": false,
+                "remitente": "CARLOS JOSE RUIZ-HENESTROSA RUIZ",
+                "referencia": "CAZRES2ZXXX",
+                "fechaOperacion": {
+                    "valor": "13/02/2019",
+                    "formato": "dd/MM/yyyy"
+                },
+                "fechaValor": {
+                    "valor": "13/02/2019",
+                    "formato": "dd/MM/yyyy"
+                },
+                "hora": {
+                    "valor": "11:38:47",
+                    "formato": "HH:mm:ss"
+                },
+                "importe": {
+                    "importe": 200.0,
+                    "moneda": "EUR"
+                },
+                "saldoCuenta": {
+                    "importe": 213.99,
+                    "moneda": "EUR"
+                },
+                "accesoDetalleMov": "Qlf1fQC5WvhCV_V9ALla~AAAAXcAbW5fN7NT16Sh8W0"
+            }
+        ],
+        "claveContinuacion": "Qlf1fQC7i_RCV_V9ALuL9AAAAXcAbW5fTxGhPiJG07M",
+        "masDatos": true
+    }
+}

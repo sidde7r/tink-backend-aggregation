@@ -34,6 +34,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.rpc.Use
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.rpc.UserDataResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transactionalaccount.rpc.AccountTransactionResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transactionalaccount.rpc.ListAccountsResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transactionalaccount.rpc.ListHoldersResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.rpc.LaCaixaErrorResponse;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
@@ -95,6 +96,13 @@ public class LaCaixaApiClient {
     public ListAccountsResponse fetchAccountList() {
 
         return createRequest(LaCaixaConstants.Urls.MAIN_ACCOUNT).get(ListAccountsResponse.class);
+    }
+
+    public ListHoldersResponse fetchHolderList(String accountReference) {
+        return createRequest(LaCaixaConstants.Urls.HOLDERS_LIST)
+                .queryParam(LaCaixaConstants.QueryParams.FROM_BEGIN, "true")
+                .queryParam(LaCaixaConstants.QueryParams.ACCOUNT_NUMBER, accountReference)
+                .get(ListHoldersResponse.class);
     }
 
     public UserDataResponse fetchIdentityData() {
