@@ -3,6 +3,8 @@ package se.tink.backend.aggregation.agents.nxgen.se.other.csn.fetcher.loans.rpc;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.math.BigDecimal;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.se.other.csn.CSNConstants;
 import se.tink.backend.aggregation.nxgen.core.account.entity.Holder;
 import se.tink.backend.aggregation.nxgen.core.account.entity.Holder.Role;
@@ -15,6 +17,7 @@ import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class LoanEntity {
+    private static final Logger log = LoggerFactory.getLogger(LoanEntity.class);
 
     @JsonProperty("skuldspecifikation")
     private List<DebtDetailEntity> debtSpecification;
@@ -39,6 +42,18 @@ public class LoanEntity {
 
     @JsonProperty("klartext")
     private boolean isPlainText;
+
+    public boolean isLoanAccount() {
+        switch (loanType) {
+            case CSNConstants.LoanTypes.ANNUTITY_LOAN:
+            case CSNConstants.LoanTypes.STUDENT_LOAN:
+            case CSNConstants.LoanTypes.STUDENT_AID:
+                return true;
+            default:
+                log.info("loanType: " + loanType);
+                return false;
+        }
+    }
 
     public LoanAccount toTinkLoanAccount(
             UserInfoResponse userInfoResponse, LoanAccountsResponse loanAccountsResponse) {

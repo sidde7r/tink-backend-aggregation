@@ -50,6 +50,7 @@ public class LoanAccountsResponse {
 
     public Collection<LoanAccount> toTinkAccounts(UserInfoResponse userInfoResponse) {
         return loanList.stream()
+                .filter(LoanEntity::isLoanAccount)
                 .map(loanEntity -> loanEntity.toTinkLoanAccount(userInfoResponse, this))
                 .collect(Collectors.toList());
     }
