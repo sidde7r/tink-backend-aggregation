@@ -1,0 +1,66 @@
+{
+    "divisas": [
+        {
+            "amount": {
+                "value": "13.671,05",
+                "currency": "EUR"
+            },
+            "accounts": [
+                {
+                    "alias": "",
+                    "description": "CUENTA RELACIÓN",
+                    "availability": "TOTAL",
+                    "owner": "JOHN DOE",
+                    "product": "DV00001",
+                    "productType": "DV",
+                    "entityCode": "",
+                    "contractCode": "",
+                    "bic": "BSAB ESBB",
+                    "number": "1111-1111-11-0001038406",
+                    "iban": "ES0820952954871624915582",
+                    "hashIban": "1693f546ba944e42db8959dfa1e928505446296bac0f8707de7c3ad654e2c1c1",
+                    "amount": {
+                        "value": "13.591,73",
+                        "currency": "EUR"
+                    },
+                    "numOwners": 1,
+                    "isOwner": true,
+                    "isSBPManaged": false,
+                    "isIberSecurities": false,
+                    "joint": "I",
+                    "mobileWarning": "M",
+                    "contractNumberFormatted": "0081-120000000000",
+                    "value": null,
+                    "navigationLink": ""
+                },
+                {
+                    "alias": "CUENTA EXPANSIÓN",
+                    "description": "CUENTA EXPANSIÓN",
+                    "availability": "TOTAL",
+                    "owner": "JOHN DOE I JANE DOE",
+                    "product": "DV00001",
+                    "productType": "DV",
+                    "entityCode": "",
+                    "contractCode": "",
+                    "bic": "BSAB ESBB",
+                    "number": "1111-1111-11-0001052915",
+                    "iban": "ES3831906561918657847255",
+                    "hashIban": "6558fcd162115eab68668d90411bcff6c6badb34b34636719140df1915912885",
+                    "amount": {
+                        "value": "79,32",
+                        "currency": "EUR"
+                    },
+                    "numOwners": 2,
+                    "isOwner": false,
+                    "isSBPManaged": false,
+                    "isIberSecurities": false,
+                    "joint": "I",
+                    "mobileWarning": "M",
+                    "contractNumberFormatted": "0081-140000000000",
+                    "value": null,
+                    "navigationLink": ""
+                }
+            ]
+        }
+    ]
+}
