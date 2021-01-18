@@ -25,7 +25,12 @@ public class Transaction extends AggregationTransaction {
             boolean pending,
             Map<TransactionExternalSystemIdType, String> externalSystemIds,
             Boolean mutable,
-            List<TransactionDate> transactionDates) {
+            List<TransactionDate> transactionDates,
+            String proprietaryFinancialInstitutionType,
+            String merchantName,
+            String merchantCategoryCode,
+            String transactionReference,
+            String providerMarket) {
         this(
                 amount,
                 date,
@@ -38,7 +43,12 @@ public class Transaction extends AggregationTransaction {
                 null,
                 externalSystemIds,
                 mutable,
-                transactionDates);
+                transactionDates,
+                proprietaryFinancialInstitutionType,
+                merchantName,
+                merchantCategoryCode,
+                transactionReference,
+                providerMarket);
     }
 
     protected Transaction(
@@ -53,7 +63,12 @@ public class Transaction extends AggregationTransaction {
             Map<TransactionPayloadTypes, String> payload,
             Map<TransactionExternalSystemIdType, String> externalSystemIds,
             Boolean mutable,
-            List<TransactionDate> transactionDates) {
+            List<TransactionDate> transactionDates,
+            String proprietaryFinancialInstitutionType,
+            String merchantName,
+            String merchantCategoryCode,
+            String transactionReference,
+            String providerMarket) {
         super(
                 amount,
                 date,
@@ -63,7 +78,12 @@ public class Transaction extends AggregationTransaction {
                 payload,
                 externalSystemIds,
                 mutable,
-                transactionDates);
+                transactionDates,
+                proprietaryFinancialInstitutionType,
+                merchantName,
+                merchantCategoryCode,
+                transactionReference,
+                providerMarket);
         this.pending = pending;
         this.externalId = externalId;
         this.fieldsMigrations = fieldsMigrations;
@@ -186,7 +206,12 @@ public class Transaction extends AggregationTransaction {
                     getPayload(),
                     getExternalSystemIds(),
                     getMutable(),
-                    getTransactionDates());
+                    getTransactionDates(),
+                    getProprietaryFinancialInstitutionType(),
+                    getMerchantName(),
+                    getMerchantCategoryCode(),
+                    getTransactionReference(),
+                    getProviderMarket());
         }
     }
 }

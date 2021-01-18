@@ -35,9 +35,14 @@ public class Transaction implements Comparable<Transaction>, Cloneable {
     private String userId;
     private boolean upcoming;
     private Map<TransactionExternalSystemIdType, String> externalSystemIds;
-    private boolean mutable;
+    private TransactionMutability mutability;
     private ExactCurrencyAmount transactionAmount;
     private List<TransactionDate> transactionDates;
+    private String proprietaryFinancialInstitutionType;
+    private String merchantName;
+    private String merchantCategoryCode;
+    private String transactionReference;
+    private String providerMarket;
 
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
@@ -200,12 +205,12 @@ public class Transaction implements Comparable<Transaction>, Cloneable {
         this.externalSystemIds = externalSystemIds;
     }
 
-    public boolean isMutable() {
-        return mutable;
+    public TransactionMutability getMutability() {
+        return mutability;
     }
 
-    public void setMutable(boolean mutable) {
-        this.mutable = mutable;
+    public void setMutability(TransactionMutability mutability) {
+        this.mutability = mutability;
     }
 
     public ExactCurrencyAmount getTransactionAmount() {
@@ -222,6 +227,46 @@ public class Transaction implements Comparable<Transaction>, Cloneable {
 
     public void setTransactionDates(List<TransactionDate> transactionDates) {
         this.transactionDates = transactionDates;
+    }
+
+    public String getProprietaryFinancialInstitutionType() {
+        return proprietaryFinancialInstitutionType;
+    }
+
+    public void setProprietaryFinancialInstitutionType(String proprietaryFinancialInstitutionType) {
+        this.proprietaryFinancialInstitutionType = proprietaryFinancialInstitutionType;
+    }
+
+    public String getMerchantName() {
+        return merchantName;
+    }
+
+    public void setMerchantName(String merchantName) {
+        this.merchantName = merchantName;
+    }
+
+    public String getMerchantCategoryCode() {
+        return merchantCategoryCode;
+    }
+
+    public void setMerchantCategoryCode(String merchantCategoryCode) {
+        this.merchantCategoryCode = merchantCategoryCode;
+    }
+
+    public String getTransactionReference() {
+        return transactionReference;
+    }
+
+    public void setTransactionReference(String transactionReference) {
+        this.transactionReference = transactionReference;
+    }
+
+    public String getProviderMarket() {
+        return providerMarket;
+    }
+
+    public void setProviderMarket(String providerMarket) {
+        this.providerMarket = providerMarket;
     }
 
     public static boolean deepEquals(Transaction first, Transaction second) {
@@ -245,9 +290,16 @@ public class Transaction implements Comparable<Transaction>, Cloneable {
                 && first.type == second.type
                 && Objects.equals(first.userId, second.userId)
                 && Objects.equals(first.externalSystemIds, second.externalSystemIds)
-                && Objects.equals(first.mutable, second.mutable)
+                && Objects.equals(first.mutability, second.mutability)
                 && Objects.equals(first.transactionAmount, second.transactionAmount)
-                && Objects.equals(first.transactionDates, second.transactionDates);
+                && Objects.equals(first.transactionDates, second.transactionDates)
+                && Objects.equals(
+                        first.proprietaryFinancialInstitutionType,
+                        second.proprietaryFinancialInstitutionType)
+                && Objects.equals(first.merchantName, second.merchantName)
+                && Objects.equals(first.merchantCategoryCode, second.merchantCategoryCode)
+                && Objects.equals(first.transactionReference, second.transactionReference)
+                && Objects.equals(first.providerMarket, second.providerMarket);
     }
 
     @Override
@@ -266,9 +318,13 @@ public class Transaction implements Comparable<Transaction>, Cloneable {
                 .add("userId", userId)
                 .add("upcoming", upcoming)
                 .add("externalSystemIds", externalSystemIds)
-                .add("mutable", mutable)
+                .add("mutability", mutability)
                 .add("transactionAmount", transactionAmount)
-                .add("transactionDates", transactionDates)
+                .add("proprietaryFinancialInstitutionType", proprietaryFinancialInstitutionType)
+                .add("merchantName", merchantName)
+                .add("merchantCategoryCode", merchantCategoryCode)
+                .add("transactionReference", transactionReference)
+                .add("providerMarket", providerMarket)
                 .toString();
     }
 }
