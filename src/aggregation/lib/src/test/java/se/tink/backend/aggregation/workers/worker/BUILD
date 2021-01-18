@@ -24,6 +24,8 @@ junit_test(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/agentsservice",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/controllers",
         "//src/integration/tpp_secrets_service/client/src/main/java/se/tink/backend/integration/tpp_secrets_service/client:tpp-secrets-service-client",
+        "//src/integration/transfer:rpc",
+        "//src/libraries/account_identifier",
         "//src/libraries/cache",
         "//third_party:com_google_guava_guava",
         "//third_party:com_google_inject_guice",
