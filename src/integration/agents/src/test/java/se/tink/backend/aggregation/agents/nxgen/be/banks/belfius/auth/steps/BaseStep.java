@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.request.AgentProceedNextStepAuthenticationRequest;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.request.AgentUserInteractionAuthenticationProcessRequest;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.userinteraction.AgentFieldValue;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.common.AgentExtendedClientInfo;
 
 @Ignore
 public class BaseStep {
@@ -33,7 +34,9 @@ public class BaseStep {
 
     protected AgentProceedNextStepAuthenticationRequest
             createAgentProceedNextStepAuthenticationRequest(
-                    BelfiusProcessState build1, BelfiusAuthenticationData build) {
+                    BelfiusProcessState build1,
+                    BelfiusAuthenticationData build,
+                    AgentExtendedClientInfo agentExtendedClientInfo) {
         AgentAuthenticationPersistedData agentAuthenticationPersistedData =
                 createBelfiusDataAccessorFactory()
                         .createBelfiusPersistedDataAccessor(
@@ -47,13 +50,15 @@ public class BaseStep {
         return new AgentProceedNextStepAuthenticationRequest(
                 new AgentAuthenticationProcessStepIdentifier(""),
                 agentAuthenticationProcessState,
-                agentAuthenticationPersistedData);
+                agentAuthenticationPersistedData,
+                agentExtendedClientInfo);
     }
 
     protected AgentUserInteractionAuthenticationProcessRequest
             createAgentUserInteractionAuthenticationProcessRequest(
                     BelfiusProcessState build1,
                     BelfiusAuthenticationData build,
+                    AgentExtendedClientInfo agentExtendedClientInfo,
                     AgentFieldValue... agentFieldValues) {
         AgentAuthenticationPersistedData agentAuthenticationPersistedData =
                 createBelfiusDataAccessorFactory()
@@ -69,7 +74,8 @@ public class BaseStep {
                 new AgentAuthenticationProcessStepIdentifier(""),
                 agentAuthenticationPersistedData,
                 agentAuthenticationProcessState,
-                Arrays.asList(agentFieldValues));
+                Arrays.asList(agentFieldValues),
+                agentExtendedClientInfo);
     }
 
     protected BelfiusDataAccessorFactory createBelfiusDataAccessorFactory() {

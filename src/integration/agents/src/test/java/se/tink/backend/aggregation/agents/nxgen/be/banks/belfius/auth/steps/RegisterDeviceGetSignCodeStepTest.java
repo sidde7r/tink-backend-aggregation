@@ -22,6 +22,7 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.userinteraction.fielddefinition.AgentFieldDefinition;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.userinteraction.fielddefinition.CardReaderSignDescriptionAgentField;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.userinteraction.fielddefinition.CardReaderSignInputAgentField;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.common.AgentExtendedClientInfo;
 
 public class RegisterDeviceGetSignCodeStepTest extends BaseStep {
 
@@ -38,7 +39,8 @@ public class RegisterDeviceGetSignCodeStepTest extends BaseStep {
                                 .sessionId(SESSION_ID)
                                 .machineId(MACHINE_ID)
                                 .deviceToken(DEVICE_TOKEN),
-                        new BelfiusAuthenticationData());
+                        new BelfiusAuthenticationData(),
+                        AgentExtendedClientInfo.builder().build());
 
         when(apiClient.prepareDeviceRegistration(
                         eq(SESSION_ID),

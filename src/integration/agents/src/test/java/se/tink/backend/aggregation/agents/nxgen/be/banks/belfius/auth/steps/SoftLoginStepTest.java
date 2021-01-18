@@ -21,6 +21,7 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentFailedAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentProceedNextStepAuthenticationResult;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.common.AgentExtendedClientInfo;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AuthenticationError;
 
 public class SoftLoginStepTest extends BaseStep {
@@ -43,7 +44,8 @@ public class SoftLoginStepTest extends BaseStep {
                                 .challenge(CHALLENGE),
                         new BelfiusAuthenticationData()
                                 .panNumber(PAN_NUMBER)
-                                .deviceToken(DEVICE_TOKEN));
+                                .deviceToken(DEVICE_TOKEN),
+                        AgentExtendedClientInfo.builder().build());
 
         when(signer.hash(DEVICE_TOKEN)).thenReturn(DEVICE_TOKEN_HASHED);
         when(signer.hash(DEVICE_TOKEN_HASHED)).thenReturn(DEVICE_TOKEN_HASHED_IOS_COMPARISON);
@@ -105,7 +107,8 @@ public class SoftLoginStepTest extends BaseStep {
                                 .challenge(CHALLENGE),
                         new BelfiusAuthenticationData()
                                 .panNumber(PAN_NUMBER)
-                                .deviceToken(DEVICE_TOKEN));
+                                .deviceToken(DEVICE_TOKEN),
+                        AgentExtendedClientInfo.builder().build());
 
         when(signer.hash(DEVICE_TOKEN)).thenReturn(DEVICE_TOKEN_HASHED);
         when(signer.hash(DEVICE_TOKEN_HASHED)).thenReturn(DEVICE_TOKEN_HASHED_IOS_COMPARISON);

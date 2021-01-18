@@ -3,14 +3,14 @@ package se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.authenticati
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationProcessStepIdentifier;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.steps.AgentAuthenticationProcessStep;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.steps.IbanAgentUserInteractionAuthenticationStep;
-import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.AgentRedirectTokensAuthenticationPersistedDataAccessorFactory;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.AgentRefreshableAccessTokenAuthenticationPersistedDataAccessorFactory;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.RedirectAuthenticationInitialProcessStep;
 
 public class KbcRedirectAuthenticationInitialProcessStep
         extends RedirectAuthenticationInitialProcessStep {
 
     public KbcRedirectAuthenticationInitialProcessStep(
-            AgentRedirectTokensAuthenticationPersistedDataAccessorFactory
+            AgentRefreshableAccessTokenAuthenticationPersistedDataAccessorFactory
                     agentRedirectTokensAuthenticationPersistedDataAccessorFactory) {
         super(agentRedirectTokensAuthenticationPersistedDataAccessorFactory);
     }

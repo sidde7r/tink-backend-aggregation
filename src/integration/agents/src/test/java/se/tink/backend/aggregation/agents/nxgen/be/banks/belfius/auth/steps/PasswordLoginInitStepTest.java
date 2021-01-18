@@ -16,6 +16,7 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.request.AgentProceedNextStepAuthenticationRequest;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentProceedNextStepAuthenticationResult;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.common.AgentExtendedClientInfo;
 
 public class PasswordLoginInitStepTest extends BaseStep {
 
@@ -29,7 +30,8 @@ public class PasswordLoginInitStepTest extends BaseStep {
         AgentProceedNextStepAuthenticationRequest request =
                 createAgentProceedNextStepAuthenticationRequest(
                         new BelfiusProcessState().machineId(MACHINE_ID),
-                        new BelfiusAuthenticationData());
+                        new BelfiusAuthenticationData(),
+                        AgentExtendedClientInfo.builder().build());
 
         when(apiClient.openSession(MACHINE_ID))
                 .thenReturn(new SessionOpenedResponse(SESSION_ID, "", 1));

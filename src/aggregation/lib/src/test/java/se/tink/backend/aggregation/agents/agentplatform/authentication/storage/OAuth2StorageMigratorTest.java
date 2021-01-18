@@ -7,9 +7,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationPersistedData;
-import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.AgentRedirectTokensAuthenticationPersistedData;
-import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.AgentRedirectTokensAuthenticationPersistedDataAccessorFactory;
-import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.RedirectTokens;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.AgentRefreshableAccessTokenAuthenticationPersistedData;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.AgentRefreshableAccessTokenAuthenticationPersistedDataAccessorFactory;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.common.authentication.RefreshableAccessToken;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
@@ -20,7 +20,7 @@ public class OAuth2StorageMigratorTest {
     private PersistentStorage persistentStorage;
     private OAuth2StorageMigrator objectUnderTest;
     private ObjectMapper objectMapper = new ObjectMapper();
-    private AgentRedirectTokensAuthenticationPersistedDataAccessorFactory
+    private AgentRefreshableAccessTokenAuthenticationPersistedDataAccessorFactory
             redirectTokensAuthenticationPersistedDataAccessorFactory;
 
     @Before
@@ -31,7 +31,8 @@ public class OAuth2StorageMigratorTest {
                 .thenReturn(Optional.of(oAuth2Token));
         Mockito.when(persistentStorage.containsKey(OAUTH2_STORAGE_KEY)).thenReturn(true);
         redirectTokensAuthenticationPersistedDataAccessorFactory =
-                new AgentRedirectTokensAuthenticationPersistedDataAccessorFactory(objectMapper);
+                new AgentRefreshableAccessTokenAuthenticationPersistedDataAccessorFactory(
+                        objectMapper);
         objectUnderTest = new OAuth2StorageMigrator(objectMapper);
     }
 
@@ -42,14 +43,18 @@ public class OAuth2StorageMigratorTest {
         // when
         AgentAuthenticationPersistedData result = objectUnderTest.migrate(persistentStorage);
         // then
-        AgentRedirectTokensAuthenticationPersistedData redirectTokensAuthenticationPersistedData =
-                redirectTokensAuthenticationPersistedDataAccessorFactory
-                        .createAgentRedirectTokensAuthenticationPersistedData(result);
+        AgentRefreshableAccessTokenAuthenticationPersistedData
+                redirectTokensAuthenticationPersistedData =
+                        redirectTokensAuthenticationPersistedDataAccessorFactory
+                                .createAgentRefreshableAccessTokenAuthenticationPersistedData(
+                                        result);
         Assertions.assertThat(
-                        redirectTokensAuthenticationPersistedData.getRedirectTokens().isPresent())
+                        redirectTokensAuthenticationPersistedData
+                                .getRefreshableAccessToken()
+                                .isPresent())
                 .isTrue();
-        RedirectTokens redirectTokens =
-                redirectTokensAuthenticationPersistedData.getRedirectTokens().get();
+        RefreshableAccessToken redirectTokens =
+                redirectTokensAuthenticationPersistedData.getRefreshableAccessToken().get();
         Assertions.assertThat(redirectTokens.getAccessToken().getBody())
                 .isEqualTo(oAuth2Token.getAccessToken().getBytes());
         Assertions.assertThat(redirectTokens.getAccessToken().getExpiresInSeconds())
@@ -67,14 +72,18 @@ public class OAuth2StorageMigratorTest {
         // when
         AgentAuthenticationPersistedData result = objectUnderTest.migrate(persistentStorage);
         // then
-        AgentRedirectTokensAuthenticationPersistedData redirectTokensAuthenticationPersistedData =
-                redirectTokensAuthenticationPersistedDataAccessorFactory
-                        .createAgentRedirectTokensAuthenticationPersistedData(result);
+        AgentRefreshableAccessTokenAuthenticationPersistedData
+                redirectTokensAuthenticationPersistedData =
+                        redirectTokensAuthenticationPersistedDataAccessorFactory
+                                .createAgentRefreshableAccessTokenAuthenticationPersistedData(
+                                        result);
         Assertions.assertThat(
-                        redirectTokensAuthenticationPersistedData.getRedirectTokens().isPresent())
+                        redirectTokensAuthenticationPersistedData
+                                .getRefreshableAccessToken()
+                                .isPresent())
                 .isTrue();
-        RedirectTokens redirectTokens =
-                redirectTokensAuthenticationPersistedData.getRedirectTokens().get();
+        RefreshableAccessToken redirectTokens =
+                redirectTokensAuthenticationPersistedData.getRefreshableAccessToken().get();
         Assertions.assertThat(redirectTokens.getRefreshToken().getBody())
                 .isEqualTo(oAuth2Token.getRefreshToken().get().getBytes());
     }

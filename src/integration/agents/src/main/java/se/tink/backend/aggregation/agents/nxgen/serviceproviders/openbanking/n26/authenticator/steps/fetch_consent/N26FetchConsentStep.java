@@ -13,8 +13,8 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentFailedAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentProceedNextStepAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.steps.AgentAuthenticationProcessStep;
-import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.AgentRedirectTokensAuthenticationPersistedDataAccessorFactory;
-import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.RedirectTokens;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.AgentRefreshableAccessTokenAuthenticationPersistedDataAccessorFactory;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.common.authentication.RefreshableAccessToken;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AccessTokenFetchingFailureError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AgentBankApiError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AuthorizationError;
@@ -81,16 +81,17 @@ public class N26FetchConsentStep
                 authenticationProcessRequest.getAuthenticationPersistedData(), objectMapper);
     }
 
-    private String mapToAccessToken(RedirectTokens redirectTokens) {
+    private String mapToAccessToken(RefreshableAccessToken redirectTokens) {
         return new String(redirectTokens.getAccessToken().getBody(), StandardCharsets.UTF_8);
     }
 
     private Optional<String> retrieveAccessTokenFromStorage(
             AgentProceedNextStepAuthenticationRequest authenticationProcessRequest) {
-        return new AgentRedirectTokensAuthenticationPersistedDataAccessorFactory(objectMapper)
-                .createAgentRedirectTokensAuthenticationPersistedData(
+        return new AgentRefreshableAccessTokenAuthenticationPersistedDataAccessorFactory(
+                        objectMapper)
+                .createAgentRefreshableAccessTokenAuthenticationPersistedData(
                         authenticationProcessRequest.getAuthenticationPersistedData())
-                .getRedirectTokens()
+                .getRefreshableAccessToken()
                 .map(this::mapToAccessToken);
     }
 

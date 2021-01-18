@@ -21,6 +21,7 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentProceedNextStepAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.userinteraction.AgentFieldValue;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.userinteraction.fielddefinition.CardReaderLoginInputAgentField;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.common.AgentExtendedClientInfo;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.IncorrectCardReaderResponseCodeError;
 
 public class RegisterDeviceLoginStepTest extends BaseStep {
@@ -36,6 +37,7 @@ public class RegisterDeviceLoginStepTest extends BaseStep {
                 createAgentUserInteractionAuthenticationProcessRequest(
                         new BelfiusProcessState().sessionId(SESSION_ID).machineId(MACHINE_ID),
                         new BelfiusAuthenticationData(),
+                        AgentExtendedClientInfo.builder().build(),
                         new AgentFieldValue(CardReaderLoginInputAgentField.id(), CODE));
 
         // when
@@ -65,6 +67,7 @@ public class RegisterDeviceLoginStepTest extends BaseStep {
                 createAgentUserInteractionAuthenticationProcessRequest(
                         new BelfiusProcessState().sessionId(SESSION_ID).machineId(MACHINE_ID),
                         new BelfiusAuthenticationData(),
+                        AgentExtendedClientInfo.builder().build(),
                         new AgentFieldValue(CardReaderLoginInputAgentField.id(), CODE));
 
         // when

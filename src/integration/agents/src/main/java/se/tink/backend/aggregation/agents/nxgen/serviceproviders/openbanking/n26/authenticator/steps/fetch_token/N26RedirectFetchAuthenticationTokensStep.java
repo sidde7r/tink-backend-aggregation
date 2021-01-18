@@ -7,20 +7,18 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentProceedNextStepAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentSucceededAuthenticationResult;
-import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.AgentRedirectTokensAuthenticationPersistedDataAccessorFactory;
-import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.RedirectAuthenticationAuthorizationResponseErrorVerifier;
-import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.RedirectFetchAuthenticationTokensStep;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.AgentRefreshableAccessTokenAuthenticationPersistedDataAccessorFactory;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.RedirectFetchRefreshableAccessTokenStep;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.RedirectFetchTokenCall;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.oauth2.OAuth2ErrorVerifier;
 
 public class N26RedirectFetchAuthenticationTokensStep
-        extends RedirectFetchAuthenticationTokensStep {
+        extends RedirectFetchRefreshableAccessTokenStep {
 
     public N26RedirectFetchAuthenticationTokensStep(
             @NonNull RedirectFetchTokenCall redirectFetchTokenCall,
-            @NonNull
-                    RedirectAuthenticationAuthorizationResponseErrorVerifier
-                            authorizationResponseErrorVerifier,
-            AgentRedirectTokensAuthenticationPersistedDataAccessorFactory
+            @NonNull OAuth2ErrorVerifier authorizationResponseErrorVerifier,
+            AgentRefreshableAccessTokenAuthenticationPersistedDataAccessorFactory
                     agentRedirectTokensAuthenticationPersistedDataAccessorFactory) {
         super(
                 redirectFetchTokenCall,

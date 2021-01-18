@@ -25,6 +25,7 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.request.AgentProceedNextStepAuthenticationRequest;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentSucceededAuthenticationResult;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.common.AgentExtendedClientInfo;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AutoAuthStepTest extends AbstractStepTest {
@@ -73,7 +74,8 @@ public class AutoAuthStepTest extends AbstractStepTest {
                         AgentAuthenticationProcessStepIdentifier.of("doesnt-matter"),
                         AgentAuthenticationProcessState.of("FortisProcessState", "{}"),
                         AgentAuthenticationPersistedData.of(
-                                "FortisAuthData", objectMapper.writeValueAsString(fortisAuthData)));
+                                "FortisAuthData", objectMapper.writeValueAsString(fortisAuthData)),
+                        AgentExtendedClientInfo.builder().build());
 
         // when
         AgentAuthenticationResult result = step.execute(request);

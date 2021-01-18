@@ -28,7 +28,7 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.RedirectAuthenticationInitialProcessStep;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.RedirectAuthenticationProcess;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.RedirectAuthenticationRefreshTokenStep;
-import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.RedirectFetchAuthenticationTokensStep;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.RedirectFetchRefreshableAccessTokenStep;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.RedirectFetchTokenCall;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.RedirectRefreshTokenCall;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.RedirectUrlBuilder;
@@ -82,7 +82,7 @@ public class N26OAuth2AuthenticationConfig extends OAuth2AuthenticationConfig {
     }
 
     @Override
-    public RedirectFetchAuthenticationTokensStep fetchAuthenticationTokensStep(
+    public RedirectFetchRefreshableAccessTokenStep fetchAuthenticationTokensStep(
             RedirectFetchTokenCall fetchTokenCall) {
         return new N26RedirectFetchAuthenticationTokensStep(
                 fetchTokenCall,

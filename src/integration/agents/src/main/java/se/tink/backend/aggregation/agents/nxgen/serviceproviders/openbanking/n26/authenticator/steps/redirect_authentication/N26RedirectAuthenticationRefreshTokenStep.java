@@ -9,10 +9,10 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentProceedNextStepAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentSucceededAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.steps.AgentAuthenticationProcessStep;
-import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.AgentRedirectTokensAuthenticationPersistedDataAccessorFactory;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.AgentRefreshableAccessTokenAuthenticationPersistedDataAccessorFactory;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.RedirectAuthenticationRefreshTokenStep;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.RedirectRefreshTokenCall;
-import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.RedirectTokensValidator;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.common.authentication.RefreshableAccessTokenValidator;
 
 @Slf4j
 public class N26RedirectAuthenticationRefreshTokenStep
@@ -20,9 +20,9 @@ public class N26RedirectAuthenticationRefreshTokenStep
 
     public N26RedirectAuthenticationRefreshTokenStep(
             RedirectRefreshTokenCall redirectRefreshTokenCall,
-            AgentRedirectTokensAuthenticationPersistedDataAccessorFactory
+            AgentRefreshableAccessTokenAuthenticationPersistedDataAccessorFactory
                     agentRedirectTokensAuthenticationPersistedDataAccessorFactory,
-            RedirectTokensValidator tokensValidator) {
+            RefreshableAccessTokenValidator tokensValidator) {
         super(
                 redirectRefreshTokenCall,
                 agentRedirectTokensAuthenticationPersistedDataAccessorFactory,
@@ -37,8 +37,7 @@ public class N26RedirectAuthenticationRefreshTokenStep
         if (authenticationResult instanceof AgentSucceededAuthenticationResult) {
             return new AgentProceedNextStepAuthenticationResult(
                     AgentAuthenticationProcessStep.identifier(N26AutoAuthValidateConsentStep.class),
-                    authenticationProcessRequest.getAuthenticationPersistedData(),
-                    authenticationProcessRequest.getAgentExtendedClientInfo());
+                    authenticationProcessRequest.getAuthenticationPersistedData());
         } else if (authenticationResult instanceof AgentProceedNextStepAuthenticationResult) {
             return new AgentProceedNextStepAuthenticationResult(
                     AgentAuthenticationProcessStepIdentifier.of(

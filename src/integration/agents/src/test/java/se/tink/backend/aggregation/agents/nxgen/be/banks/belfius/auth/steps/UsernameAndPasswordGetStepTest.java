@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentUserInteractionDefinitionResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.userinteraction.fielddefinition.AgentFieldDefinition;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.common.AgentExtendedClientInfo;
 
 public class UsernameAndPasswordGetStepTest extends BaseStep {
 
@@ -24,7 +25,9 @@ public class UsernameAndPasswordGetStepTest extends BaseStep {
 
         AgentProceedNextStepAuthenticationRequest request =
                 createAgentProceedNextStepAuthenticationRequest(
-                        new BelfiusProcessState(), new BelfiusAuthenticationData());
+                        new BelfiusProcessState(),
+                        new BelfiusAuthenticationData(),
+                        AgentExtendedClientInfo.builder().build());
 
         // when
         AgentAuthenticationResult result = step.execute(request);

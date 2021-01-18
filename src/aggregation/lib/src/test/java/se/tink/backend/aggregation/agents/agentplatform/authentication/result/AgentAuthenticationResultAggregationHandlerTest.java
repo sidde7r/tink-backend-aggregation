@@ -22,6 +22,7 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentUserInteractionDefinitionResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.userinteraction.AgentFieldValue;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.userinteraction.fielddefinition.AgentUsernameFieldDefinition;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.common.AgentClientInfo;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.common.AgentExtendedClientInfo;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.InvalidCredentialsError;
 
@@ -136,6 +137,14 @@ public class AgentAuthenticationResultAggregationHandlerTest {
     public void forRedirectAuthenticationResultShouldMakeARedirectAndPassCallbackData() {
         // given
         final String redirectUrl = "http://somedomain.com";
+        final String appId = "dummyTestAppId";
+        agentExtendedClientInfo =
+                AgentExtendedClientInfo.builder()
+                        .clientInfo(AgentClientInfo.builder().appId(appId).build())
+                        .build();
+        objectUnderTest =
+                new AgentAuthenticationResultAggregationHandler(
+                        userInteractionService, persistentStorageService, agentExtendedClientInfo);
         AgentAuthenticationProcessStepIdentifier agentAuthenticationProcessStepIdentifier =
                 Mockito.mock(AgentAuthenticationProcessStepIdentifier.class);
         AgentRedirectAuthenticationResult authenticationResult =
@@ -146,7 +155,10 @@ public class AgentAuthenticationResultAggregationHandlerTest {
                         Mockito.mock(AgentAuthenticationProcessState.class));
         Map<String, String> callbackData = new HashMap<>();
         callbackData.put("key1", "value1");
-        Mockito.when(userInteractionService.redirect(redirectUrl))
+        Mockito.when(
+                        userInteractionService.redirect(
+                                redirectUrl,
+                                AgentClientInfo.builder().appId("dummyTestAppId").build()))
                 .thenReturn(Optional.of(callbackData));
         // when
         AgentAuthenticationResultHandlingResult result =

@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentUserInteractionDefinitionResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.userinteraction.fielddefinition.AgentFieldDefinition;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.userinteraction.fielddefinition.AgentUsernameFieldDefinition;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.common.AgentExtendedClientInfo;
 
 public class ClientCredentialsGetStepTest extends AbstractStepTest {
 
@@ -31,7 +32,8 @@ public class ClientCredentialsGetStepTest extends AbstractStepTest {
                 new AgentProceedNextStepAuthenticationRequest(
                         AgentAuthenticationProcessStepIdentifier.of("doesnt-matter"),
                         AgentAuthenticationProcessState.of("FortisProcessState", "{}"),
-                        AgentAuthenticationPersistedData.of("FortisAuthData", "{}"));
+                        AgentAuthenticationPersistedData.of("FortisAuthData", "{}"),
+                        AgentExtendedClientInfo.builder().build());
 
         // when
         AgentAuthenticationResult result = step.execute(request);

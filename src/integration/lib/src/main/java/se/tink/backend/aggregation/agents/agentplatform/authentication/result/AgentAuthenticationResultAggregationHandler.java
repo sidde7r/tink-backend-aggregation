@@ -37,7 +37,7 @@ public class AgentAuthenticationResultAggregationHandler
     public void visit(AgentRedirectAuthenticationResult arg) {
         handlingResult =
                 userInteractionService
-                        .redirect(arg.getRedirectUrl())
+                        .redirect(arg.getRedirectUrl(), agentExtendedClientInfo.getClientInfo())
                         .map(
                                 data ->
                                         AgentAuthenticationResultHandlingResult

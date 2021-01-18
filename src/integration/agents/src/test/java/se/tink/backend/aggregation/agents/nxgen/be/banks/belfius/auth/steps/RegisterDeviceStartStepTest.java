@@ -19,6 +19,7 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.request.AgentProceedNextStepAuthenticationRequest;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentProceedNextStepAuthenticationResult;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.common.AgentExtendedClientInfo;
 
 public class RegisterDeviceStartStepTest extends BaseStep {
 
@@ -33,7 +34,8 @@ public class RegisterDeviceStartStepTest extends BaseStep {
         AgentProceedNextStepAuthenticationRequest request =
                 createAgentProceedNextStepAuthenticationRequest(
                         new BelfiusProcessState(),
-                        new BelfiusAuthenticationData().panNumber(PAN_NUMBER));
+                        new BelfiusAuthenticationData().panNumber(PAN_NUMBER),
+                        AgentExtendedClientInfo.builder().build());
 
         when(apiClient.openSession("XXX"))
                 .thenReturn(new SessionOpenedResponse(SESSION_ID, MACHINE_ID, 1));

@@ -16,6 +16,7 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentFailedAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentSucceededAuthenticationResult;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.common.AgentExtendedClientInfo;
 
 public class PasswordLoginStepTest extends BaseStep {
 
@@ -36,7 +37,8 @@ public class PasswordLoginStepTest extends BaseStep {
                                 .deviceTokenHashed(DEVICE_TOKEN_HASHED)
                                 .deviceTokenHashedIosComparison(DEVICE_TOKEN_HASHED_IOS_COMPARISON)
                                 .encryptedPassword(ENCRYPTED_PASSWORD),
-                        new BelfiusAuthenticationData());
+                        new BelfiusAuthenticationData(),
+                        AgentExtendedClientInfo.builder().build());
 
         when(apiClient.loginPw(
                         SESSION_ID,
@@ -76,7 +78,8 @@ public class PasswordLoginStepTest extends BaseStep {
                                 .deviceTokenHashed(DEVICE_TOKEN_HASHED)
                                 .deviceTokenHashedIosComparison(DEVICE_TOKEN_HASHED_IOS_COMPARISON)
                                 .encryptedPassword(ENCRYPTED_PASSWORD),
-                        new BelfiusAuthenticationData());
+                        new BelfiusAuthenticationData(),
+                        AgentExtendedClientInfo.builder().build());
 
         // when
 

@@ -24,6 +24,7 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.userinteraction.AgentFieldValue;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.userinteraction.fielddefinition.CardReaderLoginInputAgentField;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.common.AgentExtendedClientInfo;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CheckLoginResultStepTest extends AbstractStepTest {
@@ -59,7 +60,8 @@ public class CheckLoginResultStepTest extends AbstractStepTest {
                         AgentAuthenticationProcessState.of("FortisProcessState", "{}"),
                         Collections.singletonList(
                                 new AgentFieldValue(
-                                        CardReaderLoginInputAgentField.id(), "55556666")));
+                                        CardReaderLoginInputAgentField.id(), "55556666")),
+                        AgentExtendedClientInfo.builder().build());
 
         // when
         AgentAuthenticationResult result = step.execute(request);

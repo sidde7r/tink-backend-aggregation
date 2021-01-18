@@ -23,6 +23,7 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentFailedAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentProceedNextStepAuthenticationResult;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.common.AgentExtendedClientInfo;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.DeviceRegistrationError;
 
 public class AutoAuthenticationInitStepTest extends BaseStep {
@@ -41,7 +42,8 @@ public class AutoAuthenticationInitStepTest extends BaseStep {
                         new BelfiusProcessState(),
                         new BelfiusAuthenticationData()
                                 .panNumber(PAN_NUMBER)
-                                .deviceToken(DEVICE_TOKEN));
+                                .deviceToken(DEVICE_TOKEN),
+                        AgentExtendedClientInfo.builder().build());
 
         when(apiClient.openSession("XXX"))
                 .thenReturn(new SessionOpenedResponse(SESSION_ID, MACHINE_ID, 1));
@@ -102,7 +104,8 @@ public class AutoAuthenticationInitStepTest extends BaseStep {
                         new BelfiusProcessState(),
                         new BelfiusAuthenticationData()
                                 .panNumber(PAN_NUMBER)
-                                .deviceToken(DEVICE_TOKEN));
+                                .deviceToken(DEVICE_TOKEN),
+                        AgentExtendedClientInfo.builder().build());
 
         when(apiClient.openSession("XXX"))
                 .thenReturn(new SessionOpenedResponse(SESSION_ID, MACHINE_ID, 1));

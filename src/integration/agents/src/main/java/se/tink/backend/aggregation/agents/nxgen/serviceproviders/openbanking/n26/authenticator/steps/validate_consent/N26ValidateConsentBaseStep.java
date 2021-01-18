@@ -15,8 +15,8 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentFailedAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentSucceededAuthenticationResult;
-import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.AgentRedirectTokensAuthenticationPersistedDataAccessorFactory;
-import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.Token;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.AgentRefreshableAccessTokenAuthenticationPersistedDataAccessorFactory;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.common.authentication.Token;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AgentBankApiError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.http.AuthenticationPersistedDataCookieStoreAccessorFactory;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.http.ExternalApiCallResult;
@@ -90,9 +90,10 @@ public abstract class N26ValidateConsentBaseStep {
     }
 
     private Token getAccessToken(AgentAuthenticationPersistedData persistedData) {
-        return new AgentRedirectTokensAuthenticationPersistedDataAccessorFactory(objectMapper)
-                .createAgentRedirectTokensAuthenticationPersistedData(persistedData)
-                .getRedirectTokens()
+        return new AgentRefreshableAccessTokenAuthenticationPersistedDataAccessorFactory(
+                        objectMapper)
+                .createAgentRefreshableAccessTokenAuthenticationPersistedData(persistedData)
+                .getRefreshableAccessToken()
                 .get()
                 .getAccessToken();
     }

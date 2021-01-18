@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.request.AgentStartAuthenticationProcessRequest;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentProceedNextStepAuthenticationResult;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.common.AgentExtendedClientInfo;
 
 public class BelfiusPersistedDataAccessorAuthenticationInitStepTest extends BaseStep {
 
@@ -25,7 +26,8 @@ public class BelfiusPersistedDataAccessorAuthenticationInitStepTest extends Base
         AgentAuthenticationPersistedData persisted =
                 new AgentAuthenticationPersistedData(new HashMap<>());
         AgentStartAuthenticationProcessRequest request =
-                new AgentStartAuthenticationProcessRequest(persisted);
+                new AgentStartAuthenticationProcessRequest(
+                        persisted, AgentExtendedClientInfo.builder().build());
 
         // when
         AgentAuthenticationResult result = step.execute(request);
@@ -54,7 +56,8 @@ public class BelfiusPersistedDataAccessorAuthenticationInitStepTest extends Base
                                 new AgentAuthenticationPersistedData(new HashMap<>()))
                         .storeBelfiusAuthenticationData(belfiusPersistence);
         AgentStartAuthenticationProcessRequest request =
-                new AgentStartAuthenticationProcessRequest(persisted);
+                new AgentStartAuthenticationProcessRequest(
+                        persisted, AgentExtendedClientInfo.builder().build());
 
         // when
         AgentAuthenticationResult result = step.execute(request);

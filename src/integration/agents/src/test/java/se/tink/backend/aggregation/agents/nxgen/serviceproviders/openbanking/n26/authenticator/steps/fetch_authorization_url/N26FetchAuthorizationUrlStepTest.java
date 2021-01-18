@@ -23,6 +23,8 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentFailedAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentProceedNextStepAuthenticationResult;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.common.AgentClientInfo;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.common.AgentExtendedClientInfo;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.ServerError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.http.ExternalApiCallResult;
 
@@ -57,6 +59,12 @@ public class N26FetchAuthorizationUrlStepTest extends N26BaseTestStep {
         when(externalApiCallResult.getResponse()).thenReturn(Optional.of(URI.create(REDIRECT_URL)));
 
         when(request.getAuthenticationProcessState()).thenReturn(processState);
+        when(request.getAgentExtendedClientInfo())
+                .thenReturn(
+                        AgentExtendedClientInfo.builder()
+                                .clientInfo(
+                                        AgentClientInfo.builder().appId("dummyTestAppId").build())
+                                .build());
         when(apiCall.execute(any(), any(), any())).thenReturn(externalApiCallResult);
 
         // when
@@ -79,6 +87,12 @@ public class N26FetchAuthorizationUrlStepTest extends N26BaseTestStep {
         AgentAuthenticationProcessState processState =
                 new AgentAuthenticationProcessState(new HashMap<>());
         when(request.getAuthenticationProcessState()).thenReturn(processState);
+        when(request.getAgentExtendedClientInfo())
+                .thenReturn(
+                        AgentExtendedClientInfo.builder()
+                                .clientInfo(
+                                        AgentClientInfo.builder().appId("dummyTestAppId").build())
+                                .build());
 
         ExternalApiCallResult<URI> externalApiCallResult = mock(ExternalApiCallResult.class);
         when(externalApiCallResult.getAgentBankApiError())

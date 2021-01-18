@@ -8,17 +8,17 @@ import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationPersistedData;
-import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.AgentRedirectTokensAuthenticationPersistedData;
-import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.AgentRedirectTokensAuthenticationPersistedDataAccessorFactory;
-import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.RedirectTokens;
-import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.Token;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.AgentRefreshableAccessTokenAuthenticationPersistedData;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.AgentRefreshableAccessTokenAuthenticationPersistedDataAccessorFactory;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.common.authentication.RefreshableAccessToken;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.common.authentication.Token;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class RedirectTokensAccessorTest {
 
     private PersistentStorage persistentStorage;
-    private AgentRedirectTokensAuthenticationPersistedData
+    private AgentRefreshableAccessTokenAuthenticationPersistedData
             redirectTokensAuthenticationPersistedData;
     private ObjectMapper objectMapper;
 
@@ -29,16 +29,17 @@ public class RedirectTokensAccessorTest {
         AgentAuthenticationPersistedData agentAuthenticationPersistedData =
                 new AgentAuthenticationPersistedData(persistentStorage);
         redirectTokensAuthenticationPersistedData =
-                new AgentRedirectTokensAuthenticationPersistedDataAccessorFactory(objectMapper)
-                        .createAgentRedirectTokensAuthenticationPersistedData(
+                new AgentRefreshableAccessTokenAuthenticationPersistedDataAccessorFactory(
+                                objectMapper)
+                        .createAgentRefreshableAccessTokenAuthenticationPersistedData(
                                 agentAuthenticationPersistedData);
     }
 
     @Test
     public void redirectTokensToOAuth2TokenMapTest() {
         // given
-        RedirectTokens redirectTokens =
-                RedirectTokens.builder()
+        RefreshableAccessToken redirectTokens =
+                RefreshableAccessToken.builder()
                         .accessToken(
                                 Token.builder()
                                         .tokenType("dummyTokenType")
@@ -46,7 +47,7 @@ public class RedirectTokensAccessorTest {
                                         .expiresIn(600L, 0L)
                                         .build())
                         .build();
-        redirectTokensAuthenticationPersistedData.storeRedirectTokens(redirectTokens);
+        redirectTokensAuthenticationPersistedData.storeRefreshableAccessToken(redirectTokens);
         RedirectTokensAccessor objectUnderTest =
                 new RedirectTokensAccessor(persistentStorage, objectMapper);
         // when

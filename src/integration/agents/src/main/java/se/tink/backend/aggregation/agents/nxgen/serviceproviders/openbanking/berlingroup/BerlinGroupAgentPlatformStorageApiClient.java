@@ -4,8 +4,8 @@ import java.nio.charset.StandardCharsets;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.ObjectMapperFactory;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.storage.PersistentStorageService;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.configuration.BerlinGroupConfiguration;
-import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.AgentRedirectTokensAuthenticationPersistedDataAccessorFactory;
-import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.RedirectTokens;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.AgentRefreshableAccessTokenAuthenticationPersistedDataAccessorFactory;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.common.authentication.RefreshableAccessToken;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
@@ -14,7 +14,7 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 public abstract class BerlinGroupAgentPlatformStorageApiClient<T extends BerlinGroupConfiguration>
         extends BerlinGroupApiClient<T> {
 
-    private AgentRedirectTokensAuthenticationPersistedDataAccessorFactory
+    private AgentRefreshableAccessTokenAuthenticationPersistedDataAccessorFactory
             agentRedirectTokensAuthenticationPersistedDataAccessorFactory;
 
     public BerlinGroupAgentPlatformStorageApiClient(
@@ -26,18 +26,18 @@ public abstract class BerlinGroupAgentPlatformStorageApiClient<T extends BerlinG
             final String qSealc) {
         super(client, persistentStorage, configuration, request, redirectUrl, qSealc);
         agentRedirectTokensAuthenticationPersistedDataAccessorFactory =
-                new AgentRedirectTokensAuthenticationPersistedDataAccessorFactory(
+                new AgentRefreshableAccessTokenAuthenticationPersistedDataAccessorFactory(
                         new ObjectMapperFactory().getInstance());
     }
 
     @Override
     public OAuth2Token getTokenFromSession(String code) {
-        RedirectTokens redirectTokens =
+        RefreshableAccessToken redirectTokens =
                 agentRedirectTokensAuthenticationPersistedDataAccessorFactory
-                        .createAgentRedirectTokensAuthenticationPersistedData(
+                        .createAgentRefreshableAccessTokenAuthenticationPersistedData(
                                 new PersistentStorageService(persistentStorage)
                                         .readFromAgentPersistentStorage())
-                        .getRedirectTokens()
+                        .getRefreshableAccessToken()
                         .get();
         return OAuth2Token.create(
                 redirectTokens.getAccessToken().getTokenType(),

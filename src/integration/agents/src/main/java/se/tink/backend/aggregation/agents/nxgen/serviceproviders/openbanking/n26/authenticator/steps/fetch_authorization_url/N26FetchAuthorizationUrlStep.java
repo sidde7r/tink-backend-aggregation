@@ -47,7 +47,11 @@ public class N26FetchAuthorizationUrlStep
                         .clientId(clientId)
                         .codeChallenge(n26CryptoService.generateCodeChallenge(codeVerifier))
                         .redirectUri(redirectUri)
-                        .state(StrongAuthenticationState.generateUuidWithTinkTag())
+                        .state(
+                                StrongAuthenticationState.getState(
+                                        authenticationRequest
+                                                .getAgentExtendedClientInfo()
+                                                .getClientInfo()))
                         .build();
         ExternalApiCallResult<URI> executeResult =
                 apiCall.execute(

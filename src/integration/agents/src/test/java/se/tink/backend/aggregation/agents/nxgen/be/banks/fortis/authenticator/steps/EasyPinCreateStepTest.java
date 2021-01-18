@@ -26,6 +26,7 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.request.AgentUserInteractionAuthenticationProcessRequest;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.userinteraction.AgentFieldValue;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.common.AgentExtendedClientInfo;
 
 @RunWith(MockitoJUnitRunner.class)
 public class EasyPinCreateStepTest extends AbstractStepTest {
@@ -66,7 +67,8 @@ public class EasyPinCreateStepTest extends AbstractStepTest {
                         AgentAuthenticationPersistedData.of("FortisAuthData", "{}"),
                         AgentAuthenticationProcessState.of("FortisProcessState", "{}"),
                         Collections.singletonList(
-                                new AgentFieldValue(PhonenumberInputField.ID, "+3212341234")));
+                                new AgentFieldValue(PhonenumberInputField.ID, "+3212341234")),
+                        AgentExtendedClientInfo.builder().build());
 
         // when
         AgentAuthenticationResult result = step.execute(request);

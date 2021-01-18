@@ -12,10 +12,10 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.authenticator.steps.fetch_consent.N26ConsentPersistentData;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentDetailsResponse;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationPersistedData;
-import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.AgentRedirectTokensAuthenticationPersistedData;
-import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.AgentRedirectTokensAuthenticationPersistedDataAccessorFactory;
-import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.RedirectTokens;
-import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.Token;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.AgentRefreshableAccessTokenAuthenticationPersistedData;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.AgentRefreshableAccessTokenAuthenticationPersistedDataAccessorFactory;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.common.authentication.RefreshableAccessToken;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.common.authentication.Token;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.http.ExternalApiCallResult;
 
 @Ignore
@@ -54,8 +54,8 @@ public abstract class N26ValidateConsentStepBaseTest extends N26BaseTestStep {
     protected AgentAuthenticationPersistedData preparePersistedDataWithToken(
             AgentAuthenticationPersistedData agentAuthenticationPersistedData) {
 
-        RedirectTokens redirectTokens =
-                RedirectTokens.builder()
+        RefreshableAccessToken redirectTokens =
+                RefreshableAccessToken.builder()
                         .accessToken(
                                 Token.builder()
                                         .body("TOKEN")
@@ -64,12 +64,13 @@ public abstract class N26ValidateConsentStepBaseTest extends N26BaseTestStep {
                                         .build())
                         .build();
 
-        AgentRedirectTokensAuthenticationPersistedData
+        AgentRefreshableAccessTokenAuthenticationPersistedData
                 agentRedirectTokensAuthenticationPersistedData =
-                        new AgentRedirectTokensAuthenticationPersistedDataAccessorFactory(
+                        new AgentRefreshableAccessTokenAuthenticationPersistedDataAccessorFactory(
                                         objectMapper)
-                                .createAgentRedirectTokensAuthenticationPersistedData(
+                                .createAgentRefreshableAccessTokenAuthenticationPersistedData(
                                         agentAuthenticationPersistedData);
-        return agentRedirectTokensAuthenticationPersistedData.storeRedirectTokens(redirectTokens);
+        return agentRedirectTokensAuthenticationPersistedData.storeRefreshableAccessToken(
+                redirectTokens);
     }
 }
