@@ -1151,13 +1151,6 @@ agentsServiceConfiguration:
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
     2fbf60e5608f4e629f80539917568770:
       tink:
-        aliasType: EIDAS
-        aliasValue: PSDSE-FINA-44059
-        apiKey: dummyApiKey
-        authorizationUrl: https://dummyauthorizationurl.com
-        baseUrl: https://dummybaseurl.com
-        memberId: dummyMemberId
-        realmId: dummyRealmId
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
     2fcd7354521d42a9b60b4ae6694185ce:
       tink:
@@ -3319,11 +3312,6 @@ agentsServiceConfiguration:
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
     8a2899876c8143438c98be7d52d67f58:
       tink:
-        aliasType: EIDAS
-        aliasValue: PSDSE-FINA-44059
-        apiKey: dummyApiKey
-        memberId: dummyMemberId
-        realmId: dummyRealmId
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
     8a32b33c04cf4de7859c7b9b73e2989b:
       tink:
@@ -4113,13 +4101,6 @@ agentsServiceConfiguration:
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
     a83912f4aaff45099825fb5eeebdae6f:
       tink:
-        aliasType: EIDAS
-        aliasValue: PSDSE-FINA-44059
-        apiKey: dummyApiKey
-        authorizationUrl: https://dummyauthorizationurl.com
-        baseUrl: https://dummybaseurl.com
-        memberId: dummyMemberId
-        realmId: dummyRealmId
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
     a86039e6557a42edb8ec608be3032571:
       tink:
@@ -4611,11 +4592,6 @@ agentsServiceConfiguration:
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
     b94fdf1c79ee4fcb95d843f918affce3:
       tink:
-        aliasType: EIDAS
-        aliasValue: PSDSE-FINA-44059
-        apiKey: dummyApiKey
-        memberId: dummyMemberId
-        realmId: dummyRealmId
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
     b95b2bc06c77462fa131437a23ae21bd:
       tink:
@@ -5639,11 +5615,6 @@ agentsServiceConfiguration:
         redirectUrl: https://api.tink.se/api/v1/credentials/third-party/callback
     d00a2e3c594d4f27ba3a6352b17909df:
       tink:
-        aliasType: EIDAS
-        aliasValue: PSDSE-FINA-44059
-        apiKey: dummyApiKey
-        memberId: dummyMemberId
-        realmId: dummyRealmId
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
     d040680bbcf943288bdb3cc6ce7361a5:
       tink:
@@ -7000,15 +6971,7 @@ agentsServiceConfiguration:
         clientSecret: ''
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
     n26:
-      #These are sandbox values. Go to https://n26.dashboard.token.io/ for production values
       tink:
-        aliasType: EIDAS
-        aliasValue: PSDSE-FINA-44059
-        apiKey: bS12WW13bjFONE5INTdxc1RSdmhhYVlXblZnRjEtNXpLdFhFQXE6Y2Q5M2U5NGMtNmE3MS00ODkzLTgyNDgtM2JmNGU2YmY5NzA4
-        authorizationUrl: https://web-app.sandbox.token.io/app/request-token/{tokenId}
-        baseUrl: https://api.sandbox.token.io
-        memberId: m:vYmwn1N4NH57qsTRvhaaYWnVgF1:5zKtXEAq
-        realmId: m:YxHeCNV2F2fJYyayR8JnCxhSL2q:5zKtXEAq
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
     nagelmackers:
       tink:
