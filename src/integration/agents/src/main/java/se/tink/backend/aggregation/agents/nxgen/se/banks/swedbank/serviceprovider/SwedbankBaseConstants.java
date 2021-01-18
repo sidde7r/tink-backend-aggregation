@@ -186,6 +186,7 @@ public class SwedbankBaseConstants {
                             "DIRPDEPA", /* Direktpension Depå */
                             "DIRPFOND", /* Direktpension Fond */
                             "FOND", /* Fond */
+                            "FSP001", /* FolksamLivränta */
                             "FSP002", /* FolksamKapital */
                             "FVR", /* Fond */
                             "ISK00101", /* Investeringsspar */
