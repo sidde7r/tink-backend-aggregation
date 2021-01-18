@@ -54,6 +54,21 @@ public interface TinkHttpClient extends Filterable<TinkHttpClient>, RequestBuild
 
     void setCookieSpec(String cookieSpec);
 
+    /**
+     * DO NOT CALL IT ON YOUR OWN !!!
+     *
+     * <p>In general this method should not be called due to legal reasons. We should identify
+     * ourselves in all possible requests.
+     *
+     * <p>That method can be called in two cases.
+     *
+     * <p>1. Bank API does not like our X-Signature request header (requests fails when this header
+     * is set).
+     *
+     * <p>2. We got blocked on headers - and it is needed to restore traffic.
+     *
+     * <p>If you need to call it - contact with your PO & (VP of Aggregation / CTO).
+     */
     void disableSignatureRequestHeader();
 
     void disableAggregatorHeader();
