@@ -59,6 +59,7 @@ public class CollectorBankIdAuthenticator implements BankIdAuthenticator<String>
         String status = response.getStatus();
         switch (status.toLowerCase()) {
             case CollectorConstants.BankIdStatus.OUTSTANDING_TRANSACTION:
+            case CollectorConstants.BankIdStatus.STARTED:
             case CollectorConstants.BankIdStatus.USER_SIGN:
                 return BankIdStatus.WAITING;
             case CollectorConstants.BankIdStatus.COMPLETE:
