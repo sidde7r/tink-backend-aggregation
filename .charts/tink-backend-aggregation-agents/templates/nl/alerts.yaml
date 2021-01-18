@@ -60,7 +60,7 @@ spec:
     for: 5m
     labels:
       severity: urgent
-      priority: P3
+      priority: P2
       who: integration-thundercats
     annotations:
       description: {{ .Values.kibanaLink }}
@@ -79,7 +79,7 @@ spec:
     for: 5m
     labels:
       severity: urgent
-      priority: P3
+      priority: P1
       who: integration-thundercats
     annotations:
       description: {{ .Values.kibanaLink }}
@@ -142,7 +142,7 @@ spec:
     for: 5m
     labels:
       severity: urgent
-      priority: P3
+      priority: P2
       who: integration-thundercats
     annotations:
       description: {{ .Values.kibanaLink }}
@@ -161,7 +161,7 @@ spec:
     for: 5m
     labels:
       severity: urgent
-      priority: P3
+      priority: P1
       who: integration-thundercats
     annotations:
       description: {{ .Values.kibanaLink }}
@@ -181,7 +181,7 @@ spec:
     for: 5m
     labels:
       severity: urgent
-      priority: P3
+      priority: P1
       who: integration-thundercats
     annotations:
       description: {{ .Values.kibanaLink }}
@@ -200,7 +200,7 @@ spec:
     for: 5m
     labels:
       severity: urgent
-      priority: P3
+      priority: P1
       who: integration-thundercats
     annotations:
       description: {{ .Values.kibanaLink }}
@@ -221,7 +221,7 @@ spec:
     for: 15m
     labels:
       severity: urgent
-      priority: P3
+      priority: P1
       who: integration-thundercats
     annotations:
       description: {{ .Values.kibanaLink }}
@@ -241,7 +241,7 @@ spec:
     for: 30m
     labels:
       severity: urgent
-      priority: P3
+      priority: P1
       who: integration-thundercats
     annotations:
       description: To learn more check out the metric `tink_agent_login_total`. This
