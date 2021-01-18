@@ -9,6 +9,8 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovide
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants.StorageKey;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.utils.SwedbankSeSerializationUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
+import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities.Answer;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
@@ -65,6 +67,16 @@ public abstract class AccountEntity extends AbstractAccountEntity {
             return Optional.empty();
         }
 
+        final AccountCapabilities capabilities =
+                SwedbankBaseConstants.ACCOUNT_CAPABILITIES_MAPPER
+                        .translate(productId)
+                        .orElse(
+                                new AccountCapabilities(
+                                        Answer.UNKNOWN,
+                                        Answer.UNKNOWN,
+                                        Answer.UNKNOWN,
+                                        Answer.UNKNOWN));
+
         return Optional.of(
                 TransactionalAccount.builder(
                                 SwedbankBaseConstants.ACCOUNT_TYPE_MAPPER
@@ -75,6 +87,10 @@ public abstract class AccountEntity extends AbstractAccountEntity {
                         .setAccountNumber(fullyFormattedNumber)
                         .setName(name)
                         .setBankIdentifier(id)
+                        .canWithdrawCash(capabilities.getCanWithdrawCash())
+                        .canPlaceFunds(capabilities.getCanPlaceFunds())
+                        .canExecuteExternalTransfer(capabilities.getCanExecuteExternalTransfer())
+                        .canReceiveExternalTransfer(capabilities.getCanReceiveExternalTransfer())
                         .addIdentifier(new SwedishIdentifier(fullyFormattedNumber))
                         .putInTemporaryStorage(StorageKey.NEXT_LINK, getLinkOrNull())
                         .putInTemporaryStorage(
