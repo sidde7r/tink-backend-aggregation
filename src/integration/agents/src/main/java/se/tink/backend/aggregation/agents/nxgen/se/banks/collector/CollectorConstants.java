@@ -61,6 +61,15 @@ public class CollectorConstants {
         public static final String SEK = "sek";
     }
 
+    public static class ErrorMessages {
+        public static final String ILLEGAL_REQUEST = "ILLEGAL_REQUEST";
+    }
+
+    public static class HttpClient {
+        public static final int MAX_ATTEMPTS = 3;
+        public static final int RETRY_SLEEP_MILLISECONDS = 2000;
+    }
+
     public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
             TypeMapper.<AccountTypes>builder().put(AccountTypes.SAVINGS, "savings").build();
 

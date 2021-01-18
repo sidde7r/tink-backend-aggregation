@@ -11,10 +11,12 @@ import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.collector.CollectorConstants.HttpClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.collector.authenticator.bankid.CollectorBankIdAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.collector.fetcher.identitydata.CollectorIdentityDataFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.collector.fetcher.transactionalaccount.CollectorTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.collector.fetcher.transactionalaccount.CollectorTransactionalAccountsFetcher;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.collector.filter.CollectorRetryFilter;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.collector.session.CollectorSessionHandler;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
@@ -35,6 +37,9 @@ public final class CollectorAgent extends NextGenerationAgent
     @Inject
     public CollectorAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
+        client.addFilter(
+                new CollectorRetryFilter(
+                        HttpClient.MAX_ATTEMPTS, HttpClient.RETRY_SLEEP_MILLISECONDS));
         apiClient = new CollectorApiClient(client, sessionStorage);
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
     }
