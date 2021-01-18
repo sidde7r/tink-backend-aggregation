@@ -91,7 +91,13 @@ public final class NordeaDkAgent extends SubsequentProgressiveGenerationAgent
 
     private LoanRefreshController constructLoanRefreshController() {
         NordeaDkLoansFetcher fetcher = new NordeaDkLoansFetcher(nordeaClient);
-        return new LoanRefreshController(metricRefreshController, updateController, fetcher);
+        return new LoanRefreshController(
+                metricRefreshController,
+                updateController,
+                fetcher,
+                new TransactionFetcherController<>(
+                        transactionPaginationHelper,
+                        new TransactionKeyPaginationController<>(fetcher)));
     }
 
     private NordeaDkApiClient constructNordeaClient() {

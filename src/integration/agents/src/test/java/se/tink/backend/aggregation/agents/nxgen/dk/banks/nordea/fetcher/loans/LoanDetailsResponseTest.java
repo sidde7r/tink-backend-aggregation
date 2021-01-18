@@ -15,6 +15,7 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaDkConstants;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaTestData.LoansTestData;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.fetcher.loans.rpc.LoanDetailsResponse;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
@@ -28,6 +29,10 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 @Slf4j
 @RunWith(JUnitParamsRunner.class)
 public class LoanDetailsResponseTest {
+
+    private static final String FIRST_ACCOUNT_ID = "ID 001";
+    private static final String SECOND_ACCOUNT_ID = "ID123";
+    private static final String PRODUCT_CODE = "FRBLÅN";
 
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -84,18 +89,25 @@ public class LoanDetailsResponseTest {
                                                 .withBalance(
                                                         new ExactCurrencyAmount(
                                                                 BigDecimal.valueOf(13000.4), null))
-                                                .withInterestRate(4.1)
+                                                .withInterestRate(0.041)
                                                 .setApplicants(Collections.emptyList())
                                                 .setCoApplicant(false)
-                                                .setLoanNumber("ID 001")
+                                                .setLoanNumber(FIRST_ACCOUNT_ID)
                                                 .build())
                                 .withId(
                                         IdModule.builder()
-                                                .withUniqueIdentifier("ID 001")
+                                                .withUniqueIdentifier(FIRST_ACCOUNT_ID)
                                                 .withAccountNumber("DK77 1234 1234 1234 12")
                                                 .withAccountName("DK77 1234 1234 1234 12")
-                                                .addIdentifier(new DanishIdentifier("ID 001"))
+                                                .addIdentifier(
+                                                        new DanishIdentifier(FIRST_ACCOUNT_ID))
+                                                .setProductName(PRODUCT_CODE)
                                                 .build())
+                                .setApiIdentifier(
+                                        NordeaDkConstants.PathValues.ACCOUNT_ID_PREFIX
+                                                + FIRST_ACCOUNT_ID)
+                                .putInTemporaryStorage(
+                                        NordeaDkConstants.StorageKeys.PRODUCT_CODE, PRODUCT_CODE)
                                 .build());
     }
 
@@ -177,7 +189,7 @@ public class LoanDetailsResponseTest {
                                                         new ExactCurrencyAmount(
                                                                 BigDecimal.valueOf(-81469.41),
                                                                 "DKK"))
-                                                .withInterestRate(10.2500)
+                                                .withInterestRate(0.102500)
                                                 .setAmortized(
                                                         new ExactCurrencyAmount(
                                                                 BigDecimal.valueOf(495117.49),
@@ -195,12 +207,18 @@ public class LoanDetailsResponseTest {
                                                 .build())
                                 .withId(
                                         IdModule.builder()
-                                                .withUniqueIdentifier("ID123")
-                                                .withAccountNumber("FORMATTED ID123")
+                                                .withUniqueIdentifier(SECOND_ACCOUNT_ID)
+                                                .withAccountNumber("FORMATTED " + SECOND_ACCOUNT_ID)
                                                 .withAccountName("account nickname")
-                                                .addIdentifier(new DanishIdentifier("ID123"))
-                                                .setProductName("FRBLÅN")
+                                                .addIdentifier(
+                                                        new DanishIdentifier(SECOND_ACCOUNT_ID))
+                                                .setProductName(PRODUCT_CODE)
                                                 .build())
+                                .setApiIdentifier(
+                                        NordeaDkConstants.PathValues.ACCOUNT_ID_PREFIX
+                                                + SECOND_ACCOUNT_ID)
+                                .putInTemporaryStorage(
+                                        NordeaDkConstants.StorageKeys.PRODUCT_CODE, PRODUCT_CODE)
                                 .build());
     }
 

@@ -241,9 +241,11 @@ public class NordeaDkApiClient {
     public TransactionsResponse getAccountTransactions(
             String accountId, String productCode, String continuationKey) {
         String url = String.format(URLs.FETCH_ACCOUNT_TRANSACTIONS_FORMAT, accountId);
-        RequestBuilder request = baseAuthorizedRequest(url).queryParam("product_code", productCode);
+        RequestBuilder request = baseAuthorizedRequest(url);
         if (continuationKey != null) {
             request.queryParam("continuation_key", continuationKey);
+        } else {
+            request.queryParam("product_code", productCode);
         }
         return request.get(TransactionsResponse.class);
     }

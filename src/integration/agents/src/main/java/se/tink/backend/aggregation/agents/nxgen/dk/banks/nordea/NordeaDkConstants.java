@@ -133,6 +133,10 @@ public class NordeaDkConstants {
         public static final String SCOPE = "ndf";
     }
 
+    public static class PathValues {
+        public static final String ACCOUNT_ID_PREFIX = "NAID-DK-DKK-";
+    }
+
     public static final String CURRENCY = "DKK";
 
     public static TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =

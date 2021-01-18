@@ -6,6 +6,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaDkConstants;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaDkConstants.PathValues;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.fetcher.loans.entities.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.fetcher.loans.entities.FinancedObjectEntity;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.fetcher.loans.entities.InterestEntity;
@@ -14,6 +16,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
+import se.tink.backend.aggregation.nxgen.core.account.loan.util.InterestRateConverter;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.loan.LoanModule;
 import se.tink.libraries.account.identifiers.DanishIdentifier;
@@ -22,6 +25,9 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 @JsonObject
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class LoanDetailsResponse {
+
+    // In banks' response, interest rate is percentage value with four decimal places
+    private static final int SCALE = 6;
 
     private static final TypeMapper<LoanDetails.Type> LOAN_TYPE_MAPPER =
             TypeMapper.<LoanDetails.Type>builder()
@@ -55,6 +61,8 @@ public class LoanDetailsResponse {
                                 .addIdentifier(new DanishIdentifier(loanId))
                                 .setProductName(productCode)
                                 .build())
+                .setApiIdentifier(PathValues.ACCOUNT_ID_PREFIX + loanId)
+                .putInTemporaryStorage(NordeaDkConstants.StorageKeys.PRODUCT_CODE, productCode)
                 .build();
     }
 
@@ -63,7 +71,7 @@ public class LoanDetailsResponse {
         return LoanModule.builder()
                 .withType(getTinkLoanType())
                 .withBalance(getLoanBalance())
-                .withInterestRate(interest.getRate())
+                .withInterestRate(InterestRateConverter.toDecimalValue(interest.getRate(), SCALE))
                 .setAmortized(getAmountPaid())
                 .setInitialBalance(getInitialBalance())
                 .setApplicants(applicants)

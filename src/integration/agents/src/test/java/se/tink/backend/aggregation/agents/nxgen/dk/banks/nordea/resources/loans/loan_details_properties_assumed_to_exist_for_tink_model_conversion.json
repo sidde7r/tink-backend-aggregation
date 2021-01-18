@@ -1,6 +1,7 @@
 {
     "loan_id": "ID 001",
     "loan_formatted_id": "DK77 1234 1234 1234 12",
+    "product_code": "FRBLÅN",
     "interest": {
         "rate": 4.1
     },
