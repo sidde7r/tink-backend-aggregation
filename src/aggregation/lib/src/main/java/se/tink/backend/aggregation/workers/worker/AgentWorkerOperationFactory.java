@@ -1512,6 +1512,7 @@ public class AgentWorkerOperationFactory {
                         context,
                         loginAgentWorkerCommandState,
                         createCommandMetricState(context.getRequest()),
+                        metricRegistry,
                         loginAgentEventProducer));
     }
 }

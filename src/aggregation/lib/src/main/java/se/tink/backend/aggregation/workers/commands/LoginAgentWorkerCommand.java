@@ -2,7 +2,12 @@ package se.tink.backend.aggregation.workers.commands;
 
 import com.google.common.collect.ImmutableMap;
 import java.lang.invoke.MethodHandles;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -13,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.CredentialsTypes;
+import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.PersistentLogin;
 import se.tink.backend.aggregation.agents.agent.Agent;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.AgentPlatformAuthenticationExecutor;
@@ -38,6 +44,8 @@ import se.tink.eventproducerservice.events.grpc.AgentLoginCompletedEventProto.Ag
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.CredentialsRequestType;
 import se.tink.libraries.metrics.core.MetricId;
+import se.tink.libraries.metrics.registry.MetricRegistry;
+import se.tink.libraries.metrics.types.histograms.Histogram;
 import se.tink.libraries.metrics.types.timers.Timer.Context;
 import se.tink.libraries.user.rpc.User;
 
@@ -55,6 +63,7 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
 
     static class MetricName {
         static final String METRIC = "agent_login";
+        static final String LOGIN_SESSION_EXPIRY_METRIC = "agent_login_session_lifetime";
 
         static final String IS_LOGGED_IN = "is-logged-in";
         static final String LOGIN = "login";
@@ -67,6 +76,8 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
         static final String PERSIST_LOGIN_SESSION = "persist-login-session";
     }
 
+    private static final List<Integer> SESSION_LIFETIME_BUCKETS =
+            Arrays.asList(1, 2, 3, 5, 8, 13, 21, 30, 60, 90);
     private CredentialsStatus initialCredentialStatus;
     private final AgentWorkerCommandMetricState metrics;
     private final LoginAgentWorkerCommandState state;
@@ -77,6 +88,7 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
     private Agent agent;
     private final SupplementalInformationController supplementalInformationController;
     private final LoginAgentEventProducer loginAgentEventProducer;
+    private final MetricRegistry metricRegistry;
 
     private InterProcessSemaphoreMutex lock;
     private final long startTime;
@@ -85,7 +97,9 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
             AgentWorkerCommandContext context,
             LoginAgentWorkerCommandState state,
             AgentWorkerCommandMetricState metrics,
+            MetricRegistry metricRegistry,
             LoginAgentEventProducer loginAgentEventProducer) {
+        this.metricRegistry = metricRegistry;
         final CredentialsRequest request = context.getRequest();
         this.context = context;
         this.statusUpdater = context;
@@ -138,6 +152,7 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
         agent = context.getAgent();
         metrics.start(AgentWorkerOperationMetricType.EXECUTE_COMMAND);
         initialCredentialStatus = credentials.getStatus();
+        Date initialCredentialsSessionExpiryDate = credentials.getSessionExpiryDate();
 
         AgentWorkerCommandResult result;
 
@@ -168,8 +183,13 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
                     result = login();
                 }
             }
+
+            if (result == AgentWorkerCommandResult.CONTINUE) {
+                emitSessionExpiryMertic(initialCredentialsSessionExpiryDate);
+            }
         } finally {
             metrics.stop();
+
             logger.info(CREDENTIAL_SUPPLEMENTAL_INFO_LOG, credentials.getSupplementalInformation());
             logger.info(CREDENTIAL_STATUS_PAYLOAD_LOG, credentials.getStatusPayload());
             logger.info(CREDENTIAL_STATUS_LOG, credentials.getStatus());
@@ -184,6 +204,38 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
                 Optional.ofNullable(result).map(Enum::toString).orElse(null),
                 credentials.getId());
         return result;
+    }
+
+    private void emitSessionExpiryMertic(Date initialCredentialsSessionExpiryDate) {
+        Optional<Date> sessionExpiryDate = Optional.ofNullable(credentials.getSessionExpiryDate());
+
+        boolean hasChanged =
+                !Objects.equals(
+                        sessionExpiryDate.orElse(null), initialCredentialsSessionExpiryDate);
+
+        logger.info(
+                String.format(
+                        "LoginAgentWorkerCommand, session expiry details: exists=%b, hasChanged=%b",
+                        sessionExpiryDate.isPresent(), hasChanged));
+        Histogram histogram =
+                histogram(
+                        MetricId.newId(MetricName.LOGIN_SESSION_EXPIRY_METRIC)
+                                .label(
+                                        new MetricId.MetricLabels()
+                                                .add(
+                                                        "session_expiry_date_exists",
+                                                        String.valueOf(
+                                                                sessionExpiryDate.isPresent()))
+                                                .add(
+                                                        "session_expiry_date_changed",
+                                                        String.valueOf(hasChanged))));
+
+        Optional<Long> sessionLifetime =
+                sessionExpiryDate
+                        .map(d -> d.toInstant().atZone(ZoneId.systemDefault()).toLocalDate())
+                        .map(localDate -> ChronoUnit.DAYS.between(localDate, LocalDate.now()));
+
+        histogram.update(sessionLifetime.orElse(0L));
     }
 
     private MetricId.MetricLabels metricForAction(String action) {
@@ -399,5 +451,19 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
         for (Context context : contexts) {
             context.stop();
         }
+    }
+
+    private Histogram histogram(MetricId metricId) {
+        CredentialsRequest request = context.getRequest();
+        Provider provider = request.getProvider();
+        metricId =
+                metricId.label("provider_name", provider.getName())
+                        .label("provider_type", provider.getMetricTypeName())
+                        .label("provider_access_type", provider.getAccessType().name())
+                        .label("market", provider.getMarket())
+                        .label("className", provider.getClassName())
+                        .label("credential", credentials.getMetricTypeName())
+                        .label("request_type", request.getType().name());
+        return metricRegistry.histogram(metricId, SESSION_LIFETIME_BUCKETS);
     }
 }

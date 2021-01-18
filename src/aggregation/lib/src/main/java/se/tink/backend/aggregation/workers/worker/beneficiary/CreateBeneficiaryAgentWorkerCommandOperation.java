@@ -184,6 +184,7 @@ public class CreateBeneficiaryAgentWorkerCommandOperation {
                         context,
                         loginAgentWorkerCommandState,
                         createCommandMetricState(context.getRequest(), metricRegistry),
+                        metricRegistry,
                         loginAgentEventProducer));
     }
 }
