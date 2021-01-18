@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Strings;
 import java.math.BigDecimal;
 import java.util.List;
+import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngConstants.AccountCategories;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -451,6 +452,13 @@ public final class IngProduct {
     @JsonIgnore
     public String getAliasOrProductName() {
         return !Strings.isNullOrEmpty(alias) ? alias : name;
+    }
+
+    // This unique identifier strategy was used in the old agent, which only implemented transaction
+    // accounts.
+    @JsonIgnore
+    public String getUniqueIdentifierForTransactionAccount() {
+        return StringUtils.deleteWhitespace(iban).toLowerCase();
     }
 
     @JsonIgnore

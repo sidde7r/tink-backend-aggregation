@@ -65,7 +65,7 @@ public class IngTransactionalAccountFetcher implements AccountFetcher<Transactio
         String alias = getAlias(product);
 
         return IdModule.builder()
-                .withUniqueIdentifier(product.getProductNumber())
+                .withUniqueIdentifier(product.getUniqueIdentifierForTransactionAccount())
                 .withAccountNumber(product.getIban())
                 .withAccountName(alias)
                 .addIdentifier(new IbanIdentifier(product.getBic(), product.getIbanCanonical()))

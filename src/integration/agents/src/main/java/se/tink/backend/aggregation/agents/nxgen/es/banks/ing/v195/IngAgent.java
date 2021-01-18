@@ -99,7 +99,6 @@ public final class IngAgent extends SubsequentProgressiveGenerationAgent
     private void configureHttpClient(TinkHttpClient client) {
         /* SCA status polling takes up to 60s */
         client.setTimeout(61000);
-
         client.addFilter(new ServiceUnavailableBankServiceErrorFilter());
     }
 
