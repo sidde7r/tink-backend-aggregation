@@ -211,11 +211,10 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
                 addQsealcSignatureByGetingWholeJwsToken(request);
             } catch (Exception e) {
                 log.warn(
-                        "Error occurred in QSealC signing, appId {} certId {} clusterId {}",
+                        "QSealC signing failed for appId {} certId {} clusterId {}. Using self signed cert instead.",
                         eidasIdentity.getAppId(),
                         eidasIdentity.getCertId(),
-                        eidasIdentity.getClusterId(),
-                        e);
+                        eidasIdentity.getClusterId());
                 addRequestSignature(request);
             }
         } else {
