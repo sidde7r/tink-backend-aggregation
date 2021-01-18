@@ -8,7 +8,6 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 public class CollectorConstants {
 
     public static class Urls {
-
         private static final String HOST_AUTHENTICATION = "https://mobiltbankid.collectorbank.se";
         private static final String HOST_USER_DATA = "https://api-bankapp-prod.azurewebsites.net";
         private static final String HOST_TRANSACTIONAL_ACCOUNTS =
