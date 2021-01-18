@@ -60,7 +60,7 @@ spec:
     for: 5m
     labels:
       severity: urgent
-      priority: P3
+      priority: P2
       who: integration-thundercats
     annotations:
       description: {{ .Values.kibanaLink }}
@@ -72,14 +72,14 @@ spec:
   - alert: LoginSuccessRateBelow60WithAttemptLimitSE
     expr: |
       # Successful/Cancelled attempts below 60%
-      (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled|unavailable", market="SE", provider_type!="test", className!~"nxgen.se.banks.swedbank.SwedbankSEAgent"}[60m])) by (action,className,provider)
-          / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="SE", provider_type!="test", className!~"nxgen.se.banks.swedbank.SwedbankSEAgent"}[60m])) by (action,className,provider) < 0.60)
+      (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled|unavailable", market="SE", provider_type!="test"}[60m])) by (action,className,provider)
+          / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="SE", provider_type!="test"}[60m])) by (action,className,provider) < 0.60)
       # At least this many attempts.
-      and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="SE", provider_type!="test", className!~"nxgen.se.banks.swedbank.SwedbankSEAgent"}[60m])) by (action,className,provider) > 10
+      and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="SE", provider_type!="test"}[60m])) by (action,className,provider) > 10
     for: 5m
     labels:
       severity: urgent
-      priority: P3
+      priority: P1
       who: integration-thundercats
     annotations:
       description: {{ .Values.kibanaLink }}
@@ -142,7 +142,7 @@ spec:
     for: 5m
     labels:
       severity: urgent
-      priority: P3
+      priority: P2
       who: integration-thundercats
     annotations:
       description: {{ .Values.kibanaLink }}
@@ -154,14 +154,14 @@ spec:
   - alert: RefreshSuccessRateBelow60WithAttemptLimitSE
     expr: |
       # Successful attempts below 60%
-      (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="SE", provider_type!="test", className!~"nxgen.se.banks.swedbank.SwedbankSEAgent"}[30m])) by (className,provider,type)
-          / sum(increase(tink_agent_refresh_total{market="SE", provider_type!="test", className!~"nxgen.se.banks.swedbank.SwedbankSEAgent"}[30m])) by (className,provider,type) < 0.60)
+      (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="SE", provider_type!="test"}[30m])) by (className,provider,type)
+          / sum(increase(tink_agent_refresh_total{market="SE", provider_type!="test"}[30m])) by (className,provider,type) < 0.60)
       # At least this many attempts.
-        and sum(increase(tink_agent_refresh_total{market="SE", provider_type!="test", className!~"nxgen.se.banks.swedbank.SwedbankSEAgent"}[30m])) by (className,provider,type) > 20
+        and sum(increase(tink_agent_refresh_total{market="SE", provider_type!="test"}[30m])) by (className,provider,type) > 20
     for: 5m
     labels:
       severity: urgent
-      priority: P3
+      priority: P1
       who: integration-thundercats
     annotations:
       description: {{ .Values.kibanaLink }}
@@ -174,14 +174,14 @@ spec:
   - alert: BankServerUnavailableForLoginSE
     expr: |
       # Unavailable outcome above 50%
-      (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"unavailable", market="SE", provider_type!="test", className!~"nxgen.se.banks.swedbank.SwedbankSEAgent"}[30m])) by (action,className)
-          / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", className!~"nxgen.se.banks.swedbank.SwedbankSEAgent"}[30m])) by (action,className) > 0.50)
+      (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"unavailable", market="SE", provider_type!="test"}[30m])) by (action,className)
+          / sum(increase(tink_agent_login_total{action=~"login|is-logged-in"}[30m])) by (action,className) > 0.50)
       # At least this many attempts.
-      and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", className!~"nxgen.se.banks.swedbank.SwedbankSEAgent"}[30m])) by (action,className) > 10
+      and sum(increase(tink_agent_login_total{action=~"login|is-logged-in"}[30m])) by (action,className) > 10
     for: 5m
     labels:
       severity: urgent
-      priority: P3
+      priority: P1
       who: integration-thundercats
     annotations:
       description: {{ .Values.kibanaLink }}
@@ -193,14 +193,14 @@ spec:
   - alert: BankServerUnavailableForRefreshSE
     expr: |
       # Unavailable outcome above 50%
-      (sum(increase(tink_agent_refresh_total{outcome=~"unavailable", market="SE", provider_type!="test", className!~"nxgen.se.banks.swedbank.SwedbankSEAgent"}[30m])) by (className)
-          / sum(increase(tink_agent_refresh_total[30m]{className!~"nxgen.se.banks.swedbank.SwedbankSEAgent"})) by (className) > 0.50)
+      (sum(increase(tink_agent_refresh_total{outcome=~"unavailable", market="SE", provider_type!="test"}[30m])) by (className)
+          / sum(increase(tink_agent_refresh_total[30m])) by (className) > 0.50)
       # At least this many attempts.
-      and sum(increase(tink_agent_refresh_total[30m]{className!~"nxgen.se.banks.swedbank.SwedbankSEAgent"})) by (className) > 10
+      and sum(increase(tink_agent_refresh_total[30m])) by (className) > 10
     for: 5m
     labels:
       severity: urgent
-      priority: P3
+      priority: P1
       who: integration-thundercats
     annotations:
       description: {{ .Values.kibanaLink }}
@@ -215,13 +215,13 @@ spec:
       # Never triggers on providers that did less than 10 operations past 60
       # minutes. This filters out small providers which are less critical to fix
       # quickly.
-      sum(increase(tink_executions_total{market="SE", provider!~"swedbank-bankid|swedbank-token|savingsbank-bankid|savingsbank-token"}[1h])) BY (provider) > 10 and
+      sum(increase(tink_executions_total{market="SE"}[1h])) BY (provider) > 10 and
       # Providers where over 50% of the requests have failed.
       ratio:tink_provider_errors:delta60m > 50
     for: 15m
     labels:
       severity: urgent
-      priority: P3
+      priority: P1
       who: integration-thundercats
     annotations:
       description: {{ .Values.kibanaLink }}
@@ -235,130 +235,9 @@ spec:
     expr: |
       # Never trigger on agents with less than 40 login attempts past 60 minutes.
       # This filters out small agents which are less critical to fix quickly
-      sum(increase(tink_agent_login_total{action="login", market="SE", className!~"nxgen.se.banks.swedbank.SwedbankSEAgent"}[1h])) BY (className,provider) > 40 and
+      sum(increase(tink_agent_login_total{action="login", market="SE"}[1h])) BY (className,provider) > 40 and
       # Agents where more than 20% of the login attempts fail.
-      sum(increase(tink_agent_login_total{action="login",outcome="failed", market="SE", className!~"nxgen.se.banks.swedbank.SwedbankSEAgent"}[30m])) BY (className,provider)
-          / sum(increase(tink_agent_login_total{action="login", market="SE", className!~"nxgen.se.banks.swedbank.SwedbankSEAgent"}[30m])) BY (className,provider) > 0.20
-    for: 30m
-    labels:
-      severity: urgent
-      priority: P3
-      who: integration-thundercats
-    annotations:
-      description: To learn more check out the metric `tink_agent_login_total`. This
-        alert never triggers on agents that did less than 10 operations in the
-        past 60 minutes.
-        {{ .Values.kibanaLink }}
-        {{ .Values.grafanaLink }}
-      summary: Agent <{ $labels.className }> has failed over 20%
-        of its login attempts the past 60 minutes.
-      tags: {{ .Values.thundercatsTags }}
-
-  ### Temporary Swedbank RE alerts for 24/7 oncall
-  - alert: LoginSuccessRateBelow60SwedbankRE
-    expr: |
-      # Successful/Cancelled attempts below 60%
-      (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled|unavailable", className="nxgen.se.banks.swedbank.SwedbankSEAgent"}[60m])) by (action,className,provider)
-          / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", className="nxgen.se.banks.swedbank.SwedbankSEAgent"}[60m])) by (action,className,provider) < 0.60)
-      # At least this many attempts.
-      and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", className="nxgen.se.banks.swedbank.SwedbankSEAgent"}[60m])) by (action,className,provider) > 10
-    for: 5m
-    labels:
-      severity: urgent
-      priority: P1
-      who: integration-thundercats
-    annotations:
-      description: {{ .Values.kibanaLink }}
-        {{ .Values.grafanaLink }}
-      summary: Login success rate is below 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-        the last hour.
-      tags: {{ .Values.thundercatsTags }}
-
-  - alert: RefreshSuccessRateBelow60SwedbankRE
-    expr: |
-      # Successful attempts below 60%
-      (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", className="nxgen.se.banks.swedbank.SwedbankSEAgent"}[30m])) by (className,provider,type)
-          / sum(increase(tink_agent_refresh_total{className="nxgen.se.banks.swedbank.SwedbankSEAgent"}[30m])) by (className,provider,type) < 0.60)
-      # At least this many attempts.
-        and sum(increase(tink_agent_refresh_total{className="nxgen.se.banks.swedbank.SwedbankSEAgent"}[30m])) by (className,provider,type) > 20
-    for: 5m
-    labels:
-      severity: urgent
-      priority: P1
-      who: integration-thundercats
-    annotations:
-      description: {{ .Values.kibanaLink }}
-        {{ .Values.grafanaLink }}
-      summary: Refresh success rate is below 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-        the last 30 minutes for <{ $labels.type }>.
-      tags: {{ .Values.thundercatsTags }}
-
-  - alert: BankServerUnavailableForLoginSwedbankRE
-    expr: |
-      # Unavailable outcome above 50%
-      (sum(increase(tink_agent_login_total{action=~"login|is-logged-in", outcome=~"unavailable", className="nxgen.se.banks.swedbank.SwedbankSEAgent"}[30m])) by (action,className)
-          / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", className="nxgen.se.banks.swedbank.SwedbankSEAgent"}[30m])) by (action,className) > 0.50)
-      # At least this many attempts.
-      and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", className="nxgen.se.banks.swedbank.SwedbankSEAgent"}[30m])) by (action,className) > 10
-    for: 5m
-    labels:
-      severity: urgent
-      priority: P1
-      who: integration-thundercats
-    annotations:
-      description: {{ .Values.kibanaLink }}
-        {{ .Values.grafanaLink }}
-      summary: Login unavailable rate is above 50% ( <{ $value }> ) for <{ $labels.className }>
-        the last 30 minutes.
-      tags: {{ .Values.thundercatsTags }}
-
-  - alert: BankServerUnavailableForRefreshSwedbankRE
-    expr: |
-      # Unavailable outcome above 50%
-      (sum(increase(tink_agent_refresh_total{outcome=~"unavailable", market="SE", provider_type!="test", className="nxgen.se.banks.swedbank.SwedbankSEAgent"}[30m])) by (className)
-          / sum(increase(tink_agent_refresh_total[30m]{className="nxgen.se.banks.swedbank.SwedbankSEAgent"})) by (className) > 0.50)
-      # At least this many attempts.
-      and sum(increase(tink_agent_refresh_total[30m]{className="nxgen.se.banks.swedbank.SwedbankSEAgent"})) by (className) > 10
-    for: 5m
-    labels:
-      severity: urgent
-      priority: P1
-      who: integration-thundercats
-    annotations:
-      description: {{ .Values.kibanaLink }}
-        {{ .Values.grafanaLink }}
-      summary: Refresh unavailable rate is above 50% ( <{ $value }> ) for <{ $labels.className }>
-        the last 30 minutes.
-      tags: {{ .Values.thundercatsTags }}
-
-  - alert: HighProviderErrorRatioSwedbankRE
-    expr: |
-      # Never triggers on providers that did less than 10 operations past 60
-      # minutes. This filters out small providers which are less critical to fix
-      # quickly.
-      sum(increase(tink_executions_total{provider=~"swedbank-bankid|swedbank-token|savingsbank-bankid|savingsbank-token"}[1h])) BY (provider) > 10 and
-      # Providers where over 50% of the requests have failed.
-      ratio:tink_provider_errors:delta60m > 50
-    for: 15m
-    labels:
-      severity: urgent
-      priority: P1
-      who: integration-thundercats
-    annotations:
-      description: {{ .Values.kibanaLink }}
-        {{ .Values.grafanaLink }}
-      summary: Provider <{ $labels.provider }> has failed over 50%
-        of its operations the past 60 minutes
-      tags: {{ .Values.thundercatsTags }}
-
-  - alert: HighProviderFailedLoginRatioSwedbankRE
-    expr: |
-      # Never trigger on agents with less than 40 login attempts past 60 minutes.
-      # This filters out small agents which are less critical to fix quickly
-      sum(increase(tink_agent_login_total{action="login", className="nxgen.se.banks.swedbank.SwedbankSEAgent"}[1h])) BY (className,provider) > 40 and
-      # Agents where more than 20% of the login attempts fail.
-      sum(increase(tink_agent_login_total{action="login",outcome="failed", className="nxgen.se.banks.swedbank.SwedbankSEAgent"}[30m])) BY (className,provider)
-          / sum(increase(tink_agent_login_total{action="login", className="nxgen.se.banks.swedbank.SwedbankSEAgent"}[30m])) BY (className,provider) > 0.20
+      sum(increase(tink_agent_login_total{action="login",outcome="failed", market="SE"}[30m])) BY (className,provider) / sum(increase(tink_agent_login_total{action="login", market="SE"}[30m])) BY (className,provider) > 0.20
     for: 30m
     labels:
       severity: urgent
