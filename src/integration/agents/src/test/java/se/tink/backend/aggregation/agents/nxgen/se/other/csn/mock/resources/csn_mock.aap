@@ -1,0 +1,3282 @@
+REQUEST 1
+POST https://tjanster.csn.se/bas/inloggning/mobilbid.do
+Content-Type: application/x-www-form-urlencoded
+
+metod=valideramobilbid&pnr=9901011234
+
+RESPONSE 1
+200
+Date: Mon, 11 Jan 2021 13:29:42 GMT
+Server: Apache
+X-Powered-By: Servlet/3.0
+Cache-Control: no-cache
+Cache-Control: no-store
+Cache-Control: private
+Pragma: no-cache
+Expires: -1
+Set-Cookie: JSESSIONID=0000uhxKIkZvR9TYuiP9O510Bqg:1cu3t4d06; Path=/bas; HttpOnly
+Set-Cookie: access_token=eyJraWQiOiJPaG1RR183M0Q1aENDNHEwRVdpZE5TUnZ4RDQ1cjhEMXZ0WTA2cV91NW8wIiwidHlwIjoiSldUIiwiYWxnIjoiUlMyNTYifQ.eyJ0b2tlbl90eXBlIjoiQmVhcmVyIiwic3ViIjoiR0NqK1Bzd1J1eGQ2eDNtMVhuWGFyYlprRVk0WE9JcVp5S1BDL2s3MTA0dnlXTkcza2ZtTEhHS0c0N3QwTHdpZVMzMng0bC9NdEJTMUkzOHFMY3h2MzZXbmMxeXRhS0Nsek1naVphOW50QW1zQU5odlNCT0JVRlNZeWJwVmpTRkVEN2N3OTR3bzAwZDQwd2d3R3grWjI2anJyRDMrd2pTWmp1R2tYRFFLNlVqWVZUcldQTGgycWxRSXRUVTQ3cUJtT3JrdFdjS2hBbGdHanJTL1BSY2JReHhILzV2dzdTOE9WeFVQVmtneHVtWC9RSnkyRi91bHJ0N0t1dXo0QXZXZE1lMmtWTmZIYWFaTGhqVnVVb3FKTkl5NjdzekNFSmw3cmtqeXAzSDFCSGVxc3dzcHhaaGRBSlJDbnZJVDJFbVVjTEs2KzNTMFJxMmszeXZiRTE3Tm1nPT0iLCJzZWtyZXRlc3MiOmZhbHNlLCJhdXRoIjoiU1RBTkRBUkRfVVNFUiIsImVrdW5kc3RhdHVzIjoiQW5tw6RsZCIsIm5hbW4iOiJPbGF1c3NvbiwgUGVyIFZpa3RvciBBbmRyZWFzIiwiaW5sb2dnbmluZ3N0eXAiOiJtb2JpbGJpZCIsImNzbm51bW1lciI6IkJzVHM1MS9jMFF4am0wNGNiV3RhMlN6RkJHSjk2OStLbWFPMVdrc2U5ejRuTUNObDl1b044Z3dEdEp3WjVKbzRpODRlUWVsU1EyekdLRDBzeElpYTdkaDdTeDJsT0dxeEFwTGo4cTV3WkwzZUFXejZiT1NvMS9kbUlDNWEreTdkakttcEtnTTU1VCtvcnBmNnNubFJTTGk0UFFiQW5LOWRuUVovR2poOFR6eDZMRGJaZzRISzluYVVSZTVWcXp1eTRwbE52b3J0SG9Pc2JSVVphWWx5ZTFqWDdheU9jcW1mSGlPa1NpR3A1akxVVkh0R2IrS0ZOS3d0VjRReHl4VElGb1Z0Y3loSEhaYUYyRklIK0hvK1NBL2w2ZEJ4Z3RBR3kyUlkrSkg3Y2dHYllZM0UzSkp0M2l0MnJaTG54ZzdMSkMra1JjUjZXQkhOTmZwN2c5TnNlQT09Iiwia2tsc3RhdHVzIjoiS0tMX09GRkxJTkUiLCJpc3MiOiJodHRwczovL2Nzbi5zZSIsImV4cCI6MTYxMDQwNDU4MiwiaWF0IjoxNjEwMzY4NTgyfQ.HRtAldMRpjPdW050KmnXlj9f6T8zqucI4xPzBMS0SMTKTjdM8sIvx7jRzMFJ7qyFxLfID2EWNh1Rp-rgMeO9-BFmuMRggITPzm1Tx5C943F-L36Q9wqNcmD6Bva-tMEeI_Qt1lkow_KiwRhfqwhW_7EV6f5ehelUjPRwuqpvra9f_zbQj1L2rXAyc5QyNgqEpaFnWgBPjxQWeUAtD0CwrTy22bRvjXEfkpEQIr7R_Jw_WWKyg9BMSZqpH7keSTAhbKU5lhFjSwjGwcCMy_SsAVC9a0oUx8Ug3VqSrU_kRxv7UcjgZ-KRzDb2DSgqgMQxIZg2adZL6JBjErar-fFYUg; Path=/;
+Connection: close
+Content-Type: text/html;charset=ISO-8859-1
+Content-Language: sv-SE
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="sv" lang="sv">
+
+    <head>
+
+        <!-- Google Tag Manager -->
+
+        <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push(
+
+        {'gtm.start': new Date().getTime(),event:'gtm.js'}
+
+        );var f=d.getElementsByTagName(s)[0],
+
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+
+        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+
+        })(window,document,'script','dataLayer','GTM-M52KN4');</script>
+
+        <!-- End Google Tag Manager -->
+
+        <meta http-equiv="Content-Type" content="text/html;charset=ISO-8859-1" />
+
+        <meta http-equiv="Pragma" content="no-cache" />
+
+        <meta http-equiv="Expires" content="-1" />
+
+        <meta http-equiv="Cache-Control" content="no-cache" />
+
+        <meta name="robots" content="noindex,nofollow"/>
+
+        <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, shrink-to-fit=no" />
+
+        <meta name="DCSext.login" content="Mina Sidor"/>
+
+        <meta name="DCSext.logintype" content="Oinloggad"/>
+
+        <title>Inloggning med e-legitimation - Mina sidor - CSN</title>
+
+        <meta name="WT.cg_n" content="Mina sidor"/>
+
+        <meta name="WT.cg_s" content="Logga in med e-legitimation" />
+
+        <meta name="WT.ti" content="Mina sidor/Inloggning med e-legitimation"/>
+
+        <meta name="DCSext.etjanst" content="Logga in med e-legitimation"/>
+
+        <!--############### SCREEN ###############-->
+
+        <link rel="stylesheet" type="text/css" href="/bas/GenerellaFiler/Css/screen.css?v1" media="screen" />
+
+        <!--[if IE 5.5]>
+
+			<link rel="stylesheet" type="text/css" href="/bas/GenerellaFiler/Css/screen_ie5_5.css" media="screen" />
+
+		<![endif]-->
+
+        <!--[if IE 6]>
+
+			<link rel="stylesheet" type="text/css" href="/bas/GenerellaFiler/Css/screen_ie6.css" media="screen" />
+
+		<![endif]-->
+
+        <!--[if IE 7]>
+
+			<link rel="stylesheet" type="text/css" href="/bas/GenerellaFiler/Css/screen_ie7.css" media="screen" />
+
+		<![endif]-->
+
+        <!--############### PRINT ###############-->
+
+        <link rel="stylesheet" type="text/css" href="/bas/GenerellaFiler/Css/print.css?v1" media="print" />
+
+        <!--[if IE 6]>
+
+			<link rel="stylesheet" type="text/css" href="/bas/GenerellaFiler/Css/print_ie6.css" media="print" />
+
+		<![endif]-->
+
+        <!--############### GENERELLT ###############-->
+
+        <link rel="stylesheet" type="text/css" href="/bas/GenerellaFiler/Css/generellt.css?v1" media="screen, print" />
+
+        <!--[if IE 6]>
+
+			<link rel="stylesheet" type="text/css" href="/bas/GenerellaFiler/Css/generellt_ie6.css" media="screen, print" />
+
+		<![endif]-->
+
+        <!--############### E ###############-->
+
+        <link rel="stylesheet" type="text/css" href="/bas/GenerellaFiler/Css/e_bsm_screen.css?v1" media="screen" />
+
+        <link rel="stylesheet" type="text/css" media="all" href="/bas/GenerellaFiler/kalender/themes/minasidor.css" title="winxp" />
+
+        <link rel="shortcut icon" href="/bas/GenerellaFiler/Bilder/favicon.ico" type="image/x-icon" />
+
+        <!-- jQuery -->
+
+        <script type="text/javascript" src="/bas/GenerellaFiler/js/jquery/jquery-1.9.1.min.js"></script>
+
+        <script type="text/javascript" src="/bas/GenerellaFiler/js/jquery/jquery.cookie-1.3.1/jquery.cookie.js"></script>
+
+    </head>
+
+    <body>
+
+        <!-- Google Tag Manager (noscript) -->
+
+        <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-M52KN4"
+
+        height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+
+        <!-- End Google Tag Manager (noscript) -->
+
+        <div id="yttreSkal">
+
+            <div class="pad">
+
+                <script type="text/javascript" src="/bas/GenerellaFiler/js/ajaxBas.js"></script>
+
+                <script type="text/javascript">
+
+                <!--
+
+window.onload=function() {
+
+	sendRequest("/bas/javascript");
+
+}
+
+//-->
+
+                </script>
+
+                <script type="text/javascript" src="/bas/GenerellaFiler/js/infoBox.js"></script>
+
+                <div id="sidhuvud" class="divRow">
+
+                    <div id="sidhuvudCenter">
+
+                        <div class="auralTextMedFokus">
+
+                            <ul>
+
+                                <li><a href="#spalt1" accesskey="s">G� till inneh&aring;ll</a></li>
+
+                            </ul>
+
+                        </div>
+
+                        <div id="logo">
+
+                            <a class="csnLogo" href="/bas/ForwardServlet?url=/"
+
+                            title="Till startsidan">
+
+                            <img src="/bas/GenerellaFiler/Bilder/csnlogo.svg" alt="Centrala studiest�dsn�mnden" />
+
+                            </a>
+
+                            <a href="/bas/ForwardServlet?url=/"
+
+                            title="Till csn.se">
+
+                            Till csn.se
+
+                            </a>
+
+                        </div>
+
+                        <div id="sok">
+
+                            <div id="anpassningar">
+
+                                &nbsp;
+
+                            </div>
+
+                            <div class="divRow hogerjusterad">
+
+                                <div class="vansterjusterad">
+
+                                    <ul>
+
+                                        <li>
+
+                                            <a href="/bas/ForwardServlet?url=%2Fpartner%2Fsok%2F2.941" class="textLiten" title="">Ordlista</a>
+
+                                        </li>
+
+                                    </ul>
+
+                                    <form method="post" action="/bas/ForwardServlet?url=%2Fsok">
+
+                                    <label for="sokText" class="auralText">S�kord:</label>
+
+                                    <input type="text" name="sokText" id="sokText" size="20" title="S�k p� csn.se" accesskey="4" />
+
+                                    <input type="submit" value="S�k" class="knapp" title="S�k" />
+
+                                    </form>
+
+                                </div>
+
+                            </div>
+
+                        </div><!-- close sok -->
+
+                    </div>
+
+                </div>
+
+                <div id="avskiljare1"><hr /></div>
+
+                <div id="wrapper">
+
+                    <div id="spalt1">
+
+                        <hr/>
+
+                        <div id="spalt1pad" class="pad">
+
+                            <h1>Logga in med e-legitimation</h1>
+
+                            <!-- Hantera XHTML -->
+
+                            <p>H�r loggar du in med mobilt bank-id. </p>
+
+                            <form id="LoggaInForm" method="post" action="/bas/inloggning/mobilbid.do">
+
+                            <input name="metod" value="tryLogin" type="hidden" />
+
+                            <input name="csn_login" value="mobilbid" type="hidden" />
+
+                            <div id="WaitSymbol">
+
+                                <p>
+
+                                <span class="w30p">
+
+                                <span id="outstanding_transaction">
+
+                                Starta BankID-appen.
+
+                                <br />
+
+                                <br />
+
+                                <a><img src="/bas/GenerellaFiler/Bilder/loader.gif" width="30" height="30"
+
+                                alt='Starta BankID-appen.'	border="0" /></a>
+
+                                </span>
+
+                                <span id="user_sign" style="display:none;">
+
+                                Skriv in din s�kerhetskod i BankIDappen och v�lj Legitimera eller Skriv under.
+
+                                <br />
+
+                                <br />
+
+                                <a><img src="/bas/GenerellaFiler/Bilder/loader.gif" width="30" height="30"
+
+                                alt='Skriv in din s�kerhetskod i BankIDappen och v�lj Legitimera eller Skriv under.'	border="0" /></a>
+
+                                </span>
+
+                                <span id="no_client" style="display:none;">
+
+                                Starta BankID-appen.
+
+                                <br />
+
+                                <br />
+
+                                <a><img src="/bas/GenerellaFiler/Bilder/loader.gif" width="30" height="30"
+
+                                alt='Starta BankID-appen.'	border="0" /></a>
+
+                                </span>
+
+                                <span id="started" style="display:none;">
+
+                                S�ker efter BankID, det kan ta en liten stund... Om det har g�tt n�gra sekunder och inget BankID har hittats har du sannolikt inget BankID som g�r att anv�nda f�r den aktuella identifieringen/underskriften i den h�r enheten. Om du inte har n�got BankID kan du h�mta ett hos din internetbank. Om du har ett BankID p� en annan enhet kan du starta din BankID-app d�r.
+
+                                <br />
+
+                                <br />
+
+                                <a><img src="/bas/GenerellaFiler/Bilder/loader.gif" width="30" height="30"
+
+                                alt='S�ker efter BankID, det kan ta en liten stund... Om det har g�tt n�gra sekunder och inget BankID har hittats har du sannolikt inget BankID som g�r att anv�nda f�r den aktuella identifieringen/underskriften i den h�r enheten. Om du inte har n�got BankID kan du h�mta ett hos din internetbank. Om du har ett BankID p� en annan enhet kan du starta din BankID-app d�r.'	border="0" /></a>
+
+                                </span>
+
+                                </span>
+
+                                </p>
+
+                            </div>
+
+                            <input type="hidden" id="BankIDajaxURL" value="/bas/BankID" />
+
+                            <script type="text/javascript" src="/bas/GenerellaFiler/js/ajaxBas.js"></script>
+
+                            <script type="text/javascript" src="/bas/GenerellaFiler/js/ajaxMobiltBankIDAnrop.js?v=202008141334"></script>
+
+                            </form>
+
+                        </div><!-- close pad -->
+
+                    </div><!-- close spalt1 -->
+
+                </div><!-- close wrapper -->
+
+                <div id="sidfot">
+
+                    <div class="pad divRow">
+
+                        <div>
+
+                            <div class="inner">
+
+                                <ul>
+
+                                    <li>
+
+                                        <a href="/bas/ForwardServlet?url=https%3A%2F%2Fwww.csn.se%2Fkontakta-oss.html"
+
+                                        title="">Kontakta oss</a>
+
+                                    </li>
+
+                                    <li>
+
+                                        <a href="/bas/ForwardServlet?url=https%3A%2F%2Fwww.csn.se%2Fom-webbplatsen%2Fbehandling-av-personuppgifter.html"
+
+                                        title="">Om personuppgifter</a>
+
+                                    </li>
+
+                                    <li>
+
+                                        <a href="/bas/ForwardServlet?url=https%3A%2F%2Fwww.csn.se%2Fom-webbplatsen%2Fkakor.html"
+
+                                        title="">Om kakor</a>
+
+                                    </li>
+
+                                </ul>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div><!-- close yttreSkal -->
+
+        <!-- START OF SmartSource Data Collector TAG -->
+
+        <!-- Copyright (c) 1996-2011 Webtrends Inc.  All rights reserved. -->
+
+        <!-- Version: 9.4.0 -->
+
+        <!-- Tag Builder Version: 3.2  -->
+
+        <!-- Created: 6/16/2011 12:24:28 PM -->
+
+        <script src="/bas/GenerellaFiler/js/webtrends_prod.js" type="text/javascript"></script>
+
+        <!--                                                                                     -->
+
+        <!-- Warning: The two script blocks below must remain inline. Moving them to an external -->
+
+        <!-- JavaScript include file can cause serious problems with cross-domain tracking.      -->
+
+        <!--                                                                                     -->
+
+        <script type="text/javascript">
+
+        //<![CDATA[
+
+        var _tag=new WebTrends();
+
+        _tag.dcsGetId();
+
+        //]]>
+
+        </script>
+
+        <script type="text/javascript">
+
+        //<![CDATA[
+
+        _tag.dcsCustom=function(){
+
+        // Add custom parameters here.
+
+        //_tag.DCSext.param_name=param_value;
+
+        }
+
+        _tag.dcsCollect();
+
+        //]]>
+
+        </script>
+
+        <noscript>
+
+        <div><img alt="DCSIMG" id="DCSIMG" width="1" height="1" src="//www.csn.se/dcs8if7kj000008q9vts59l2n_6v5m/njs.gif?dcsuri=/nojavascript&amp;WT.js=No&amp;WT.tv=9.4.0&amp;dcssip=www.csn.se"/></div>
+
+        </noscript>
+
+        <!-- END OF SmartSource Data Collector TAG -->
+
+    </body>
+
+</html>
+
+REQUEST 5
+GET https://tjanster.csn.se/bas/BankID
+Accept: text/plain
+Referer: https://tjanster.csn.se/bas/inloggning/mobilbid.do
+
+RESPONSE 5
+200
+Date: Mon, 11 Jan 2021 13:29:49 GMT
+Server: Apache
+X-Powered-By: Servlet/3.0
+Cache-Control: no-cache
+Content-Length: 8
+Expires: Thu, 01 Dec 1994 16:00:00 GMT
+Connection: close
+Content-Language: sv-SE
+
+continue
+
+REQUEST 6
+POST https://tjanster.csn.se/bas/inloggning/mobilbid.do
+Content-Type: application/x-www-form-urlencoded
+
+metod=tryLogin&csn_login=mobilbid
+
+RESPONSE 6
+200
+Server: nginx
+Date: Mon, 11 Jan 2021 13:29:49 GMT
+Content-Type: text/html;charset=UTF-8
+Transfer-Encoding: chunked
+Connection: keep-alive
+X-Frame-Options: SAMEORIGIN
+Cache-Control: no-cache, no-store, must-revalidate
+Pragma: no-cache
+Expires: Thu, 01 Jan 1970 00:00:00 GMT
+vary: accept-encoding
+
+<!DOCTYPE html>
+
+<html lang="sv" class="sv-no-js sv-template-standard">
+
+   <head>
+
+      <meta charset="UTF-8">
+
+      <script>(function(H){H.className=H.className.replace(/\bsv-no-js\b/,'')})(document.documentElement)</script>
+
+      <title>Mina sidor - CSN</title>
+
+      <meta name="robots" content="noindex, nofollow" />
+
+      <meta name="theme-color" content="#4d2f6d" />
+
+      <meta name="msapplication-navbutton-color" content="#4d2f6d" />
+
+      <meta name="robots" content="" />
+
+      <meta name="WT.ti" content="Mina sidor" />
+
+      <meta name="format-detection" content="telephone=no" />
+
+      <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, shrink-to-fit=no" />
+
+      <meta name="dcterms.identifier" content="https://www.csn.se">
+
+      <meta name="dcterms.language" content="sv">
+
+      <meta name="dcterms.format" content="text/html">
+
+      <meta name="dcterms.type" content="text">
+
+      <!--[if !IE]><!-->
+
+      <link rel="stylesheet" type="text/css" media="print,screen,speech" href="/2.2135ad961575182cc9d442/1609573837729/sitevision-responsive-grids.css" />
+
+      <!--<![endif]-->
+
+      <!--[if IE]><link rel="stylesheet" type="text/css" media="print,screen,speech" href="/2.2135ad961575182cc9d442/1609573837729/sitevision-ie-responsive.css" /><![endif]-->
+
+      <!--[if IE]><link rel="stylesheet" type="text/css" media="print,screen,speech" href="/2.2135ad961575182cc9d442/1609573837729/sitevision-ie-grids.css" /><![endif]-->
+
+      <!--[if IE]><link rel="stylesheet" type="text/css" media="print,screen,speech" href="/2.2135ad961575182cc9d442/1609573837729/651.2135ad961575182cc9daa5/sitevision-ie-grids.css" /><![endif]-->
+
+      <!--[if IE]><link rel="stylesheet" type="text/css" media="print,screen,speech" href="/2.2135ad961575182cc9d442/1609573837729/651.6f9e8e215890cf4d2139ed/sitevision-ie-grids.css" /><![endif]-->
+
+      <!--[if IE]><link rel="stylesheet" type="text/css" media="print,screen,speech" href="/2.2135ad961575182cc9d442/1609573837729/651.448c6fa015890d2c81f477/sitevision-ie-grids.css" /><![endif]-->
+
+      <!--[if IE]><link rel="stylesheet" type="text/css" media="print,screen,speech" href="/2.2135ad961575182cc9d442/1609573837729/651.2135ad961575182cc9dbd0/sitevision-ie-grids.css" /><![endif]-->
+
+      <!--[if IE]><link rel="stylesheet" type="text/css" media="print,screen,speech" href="/2.2135ad961575182cc9d442/1609573837729/651.cf5065b16ffa2588945249/sitevision-ie-grids.css" /><![endif]-->
+
+      <!--[if !IE]><!-->
+
+      <link rel="stylesheet" type="text/css" media="print,screen,speech" href="/2.2135ad961575182cc9d442/1606416134248/sitevision-spacing.css" />
+
+      <!--<![endif]-->
+
+      <!--[if IE]><link rel="stylesheet" type="text/css" media="print,screen,speech" href="/2.2135ad961575182cc9d442/1606416134248/px/sitevision-ie-spacing.css" /><![endif]-->
+
+      <!--[if IE]><link rel="stylesheet" type="text/css" media="print,screen,speech" href="/2.2135ad961575182cc9d442/1606416134248/em/sitevision-ie-spacing.css" /><![endif]-->
+
+      <!--[if IE]><link rel="stylesheet" type="text/css" media="print,screen,speech" href="/2.2135ad961575182cc9d442/1606416134248/pc/sitevision-ie-spacing.css" /><![endif]-->
+
+
+
+      <link rel="stylesheet" type="text/css" media="print,screen,speech" href="/2.2135ad961575182cc9d442/auto/1610371603084/SiteVision.css"/>
+
+      <link rel="stylesheet" type="text/css" media="print,screen,speech" href="/2.2135ad961575182cc9d442/974/5508/SiteVision.css" />
+
+      <link rel="stylesheet" type="text/css" media="print,screen,speech" href="/sitevision/7.2.4-258/css/sitevision_static-min.css" />
+
+      <link rel="stylesheet" type="text/css" media="screen" href="/sitevision/7.2.4-258/css/jquery.rating-min.css" />
+
+      <!--[if IE]><link rel="stylesheet" type="text/css" media="screen" href="/sitevision/7.2.4-258/css/sitevision-ie.css" /><![endif]-->
+
+      <link rel="stylesheet" type="text/css" href="/sitevision/7.2.4-258/envision/envision.css" />
+
+
+
+      <!--[if IE]>
+
+      <link rel="stylesheet" type="text/css" media="all" href="/download/18.2135ad961575182cc9dbd8/1596463182568/csn-generell.css" />
+
+      <link rel="stylesheet" type="text/css" media="all" href="/download/18.650d596215a6a5b5fbd3a/1581926358799/csn-sidhuvud.css" />
+
+      <link rel="stylesheet" type="text/css" media="all" href="/download/18.650d596215a6a5b5fbd3d/1536647253490/csn-sidfot.css" />
+
+      <link rel="stylesheet" type="text/css" media="all" href="/download/18.62fc105b15ddecaf46f22c9/1605877974418/csn-innehall.css" />
+
+      <link rel="stylesheet" type="text/css" media="all" href="/download/18.6db0a5ca1578ffbedb12a0/1599479838301/csn-formular.css" />
+
+      <link rel="stylesheet" type="text/css" media="all" href="/download/18.650d596215a6a5b5fbd41/1517286954398/csn-punktlistor.css" />
+
+      <link rel="stylesheet" type="text/css" media="all and (max-width: 768px)" href="/download/18.1f4150ed1578feb6a65235/1539863812201/csn-brytpunkt-telefon.css" />
+
+      <link rel="stylesheet" type="text/css" media="all" href="/download/18.fbd880f160599de31326ab/1583941137183/csn-pagebar.css" />
+
+      <link rel="stylesheet" type="text/css" media="all" href="/download/18.650d596215a6a5b5fbd40/1590677701880/csn-labb.css" />
+
+      <link rel="stylesheet" type="text/css" media="all" href="/download/18.cf5065b16ffa2588943db6/1592902973357/csn-resursytor.css" />
+
+      <link rel="stylesheet" type="text/css" media="all" href="/download/18.cf5065b16ffa2588943db5/1590834510056/csn-partner.css" />
+
+      <link rel="stylesheet" type="text/css" media="all" href="/download/18.25c8284616ffa19f1e7f9b/1590677629948/csn-formatmall.css" />
+
+      <link rel="stylesheet" type="text/css" media="all" href="/download/18.7ceb52b315ad72aa59e35f87/1599491926002/csn-resursarkiv.css" />
+
+      <link rel="stylesheet" type="text/css" media="print" href="/download/18.7ceb52b315ad72aa59e382fc/1517286958071/csn-utskrift.css" />
+
+      <link rel="stylesheet" type="text/css" media="all" href="/download/18.7ceb52b315ad72aa59e382fd/1537275158613/csn-typsnitt.css" />
+
+      <link rel="stylesheet" type="text/css" media="all" href="/download/18.62fc105b15ddecaf46f6e8b/1555424528353/csn-blanketter.css" />
+
+      <link rel="stylesheet" type="text/css" media="all" href="/download/18.62fc105b15ddecaf46f16674/1517286957003/csn-tabeller.css" />
+
+      <link rel="stylesheet" type="text/css" media="all" href="/download/18.62fc105b15ddecaf46f1ae1f/1588174011586/csn-utfallbara-ytor.css" />
+
+      <link rel="stylesheet" type="text/css" media="all" href="/download/18.1ba9ecae15f9080d21db5c/1583919318648/csn-externvideo.css" />
+
+      <link rel="stylesheet" type="text/css" media="all" href="/download/18.182311ae15fc466d258231/1593070154419/csn-feedback.css" />
+
+      <link rel="stylesheet" type="text/css" media="all" href="/download/18.47df78271623dce716bf0/1606290052402/csn-html-banner.css" />
+
+      <link rel="stylesheet" type="text/css" media="all" href="/download/18.4a98997b1668798201b41d4/1551961584880/csn-blankettbestallning.css" />
+
+      <link rel="stylesheet" type="text/css" media="all" href="/download/18.727834bc16b4bb5dc9024af/1569676048472/csn-utloggningsrutan.css" />
+
+      <link rel="stylesheet" type="text/css" media="all" href="/download/18.34f0a34115fd85739c5207/1606311915983/csn-puffar.css" />
+
+      <![endif]-->
+
+      <!--[if !IE]>-->
+
+      <link rel="stylesheet" type="text/css" href="/2.2135ad961575182cc9d442/91.2135ad961575182cc9dabb/1606416135289/0/sv-template-asset.css" />
+
+      <!--<![endif]-->
+
+      <!-- Google Tag Manager -->
+
+      <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+
+      new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+
+      j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+
+      'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+
+      })(window,document,'script','dataLayer','GTM-M52KN4');</script>
+
+      <!-- End Google Tag Manager -->
+
+      <script src="/sitevision/7.2.4-258/js/docready-min.js"></script>
+
+      <script src="/sitevision/7.2.4-258/js/sitevision_jquery-min.js"></script>
+
+   <script src="/2.2135ad961575182cc9d442/91.2135ad961575182cc9dabb/1606416135334/HEAD/0/sv-template-asset.js"></script>
+
+<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   <meta property="og:title" content="Mina sidor" />
+
+
+
+
+
+   <meta property="og:image" content="https://www.csn.se/images/18.62fc105b15ddecaf46f27a7/csnlogo.png" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   <script>
+
+      window.sv = window.sv || {};
+
+      sv.PageContext = {
+
+         pageId: '4.2020cba016a03060f97139d',
+
+         siteId: '2.2135ad961575182cc9d442',
+
+         userIdentityId: '',
+
+         userIdentityReadTimeout: 0,
+
+         userLocale: 'sv',
+
+         versionPath: '7.2.4-258',
+
+         dev: false,
+
+         csrfToken: '',
+
+         html5: true,
+
+         useServerSideEvents: false,
+
+         nodeIsReadOnly: false
+
+      };
+
+   </script>
+
+   <script src="/sitevision/7.2.4-258/webapps/AppRegistry.js"></script>
+
+</head>
+
+   <body class=" sv-responsive c2195" >
+
+   <!-- Google Tag Manager (noscript) -->
+
+      <noscript>
+
+         <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-M52KN4" height="0" width="0" class="c2236"></iframe>
+
+      </noscript>
+
+      <!-- End Google Tag Manager (noscript) -->
+
+<div  id="svid10_2135ad961575182cc9da47" class="sv-layout"><div class="sv-html-portlet sv-portlet sv-skip-spacer sv-template-portlet
+
+" id="svid12_62fc105b15ddecaf46f166b3"><div id="DetekteraJSFixGA"><!-- Detektera JS FixGA --></div><script>
+
+   $('body').addClass('js');
+
+   var _0x37e8=["open","/4.2020cba016a03060f971ad2/12.2020cba016a03060f971ade.xml","send","userAgent","toLowerCase","indexOf","XMLHttpRequest"];!function(e,x){!function(x){for(;--x;)e.push(e.shift())}(++x)}(_0x37e8,178);var _0x2555=function(e,x){return _0x37e8[e-=0]},ua=navigator[_0x2555("0x0")][_0x2555("0x1")](),req=null;-1!=ua[_0x2555("0x2")]("safari")&&ua[_0x2555("0x2")]("chrome")<0&&(window[_0x2555("0x3")]&&(req=new XMLHttpRequest),null!=req&&(req[_0x2555("0x4")]("GET",_0x2555("0x5"),!0),req[_0x2555("0x6")]()));
+
+</script></div>
+
+<div class="sv-script-portlet sv-portlet sv-template-portlet
+
+" id="svid12_38d9574316a02e4fbbc1423"><div id="Sekretessochhandlaggarlankar"><!-- Sekretess och handläggarlänkar --></div>   <script>
+
+      var accessTokenDecoded = jwt_decode(cookie.get('access_token'));
+
+
+
+      if (typeof(accessTokenDecoded) == 'object') {
+
+         if (accessTokenDecoded.handlaggarkod && accessTokenDecoded.sekretess === true) {
+
+            $('body').addClass('csn-sekretess csn-sekretess--user');
+
+         }
+
+
+
+                     if (accessTokenDecoded.handlaggarkod) {
+
+               $(function() {
+
+                  $('a[href^="https://tjanster.csn.se/bas"], a[href^="https://tjanster.csn.se/rut"], a[href^="https://tjanster.csn.se/studiemedel"], a[href^="https://tjanster.csn.se/aterbetalning"], a[href^="https://tjanster.csn.se/korkortslan"]').each(function() {
+
+   var href = $(this).attr('href');
+
+   href = href.replace('https://tjanster.csn.se/bas', 'http://intern.csn.se/ibas');
+
+   href = href.replace('https://tjanster.csn.se/rut', 'http://intern.csn.se/irut');
+
+   href = href.replace('https://tjanster.csn.se/studiemedel', 'http://intern.csn.se/istudiemedel');
+
+   href = href.replace('https://tjanster.csn.se/aterbetalning', 'http://intern.csn.se/iaterbetalning');
+
+   href = href.replace('https://tjanster.csn.se/korkortslan', 'http://intern.csn.se/ikorkortslan');
+
+   $(this).attr('href', href);
+
+});
+
+
+
+               });
+
+            }
+
+               }
+
+   </script>
+
+</div>
+
+<div class="sv-script-portlet sv-portlet sv-template-portlet
+
+" id="svid12_25c8284616ffa19f1e71157"><div id="Statehantering"><!-- Statehantering --></div><!-- statehantering-start -->
+
+<script>
+
+   if (!document.cookie.includes('access_token')) {
+
+     sessionStorage.clear();
+
+   }
+
+</script>
+
+<!-- statehantering-end --></div>
+
+<div class="sv-script-portlet sv-portlet sv-template-portlet
+
+" id="svid12_2020cba016a03060f9717fa"><div id="Digitalatjansterinit"><!-- Digitala tjänster init --></div><!--
+
+<script>
+
+/*
+
+   var apiConfigUrl = "$apiConfigUrl";
+
+
+
+                           */
+
+</script>
+
+--></div>
+
+<div class="sv-script-portlet sv-portlet sv-template-portlet
+
+" id="svid12_cf5065b16ffa258894a1e"><div id="SokvagtillgamlaMinasidor"><!-- Sökvag till gamla Mina sidor --></div><!-- sokvag-till-gamla-mina-sidor-start -->
+
+<script>
+
+          var minaSidorRootPath ="https://tjanster.csn.se:443";
+
+   </script>
+
+<!-- sokvag-till-gamla-mina-sidor-slut --></div>
+
+<div class="sv-script-portlet sv-portlet sv-template-portlet
+
+" id="svid12_cf5065b16ffa258894a20"><div id="Appconfiginit"><!-- Appconfig-init --></div><!-- appconfig-init-start -->
+
+<script>
+
+    (function () {
+
+        var appConfigInit = {};
+
+        appConfigInit.apiConfigUrl = "/download/18.2020cba016a03060f9717fc/1558604217025/appConfig.json";
+
+        window.apiConfigUrl = appConfigInit.apiConfigUrl;
+
+    })();
+
+</script>
+
+<!-- appconfig-init-slut --></div>
+
+<div class="sv-script-portlet sv-portlet sv-template-portlet
+
+" id="svid12_cf5065b16ffa258894a22"><div id="Utloggningshantering"><!-- Utloggningshantering --></div><!-- utloggningshantering-start -->
+
+<script>
+
+    (function () {
+
+        var utloggningshantering = {};
+
+        utloggningshantering.currentPageUrl = "https://www.csn.se/mina-sidor.html";
+
+        utloggningshantering.authenticated = false;
+
+        utloggningshantering.insideMinaSidor = true;
+
+        utloggningshantering.minaSidorUrl = "https://tjanster.csn.se/bas/";
+
+        // Expose to global
+
+        window.utloggningshantering = utloggningshantering;
+
+    })();
+
+</script>
+
+<!-- utloggningshantering-slut --></div>
+
+<div class="sv-script-portlet sv-portlet sv-template-portlet
+
+" id="svid12_52342fb716b4ff957b2299b"><div id="AutomatiskutloggningNyaMinaSidor"><!-- Automatisk utloggning Nya Mina Sidor --></div><!--
+
+	Automatisk utloggning
+
+-->
+
+<div>
+
+	<div class="sv-fixed-fluid-grid sv-grid-12-nobreak">
+
+      <div id="varningLoggaUt" class="csn-cookiebar c1713" >
+
+         <div class="csn-cookiebar-content">
+
+            <div class="csn-cookiebar__left">
+
+               <div class="csn-cookiebar__text csn-formatmall-kakor-rubrik">Vill du stanna kvar på sidan?</div>
+
+               <div class="csn-cookiebar__text csn-formatmall-kakor-brodtext">Du har varit inaktiv i en längre stund och kommer att bli utloggad om du inte väljer att stanna kvar på sidan.</div>
+
+               <div class="csn-cookiebar__text csn-formatmall-kakor-brodtext nedrakning-kursiv">Automatisk utloggning sker om cirka <span id="utloggningNedrakning"></span></div>
+
+            </div>
+
+            <a tabindex="1" role="button" class="csn-knapp-utloggningsruta" onclick="stangRuta()">Stanna kvar på sidan</a>
+
+         </div>
+
+      </div>
+
+   </div>
+
+</div>
+
+
+
+<script>
+
+   //Tider
+
+   var nuvarandeTid = 0;
+
+   var kollaAktivitet = 300;		//5min
+
+   var varnaAnvanderVid = 1530; 	//25min 30s
+
+   var slutPaSession = 1800; 		//30min
+
+
+
+
+
+   var harAnvandarenVaritAktiv = false;
+
+   var varningrutaOppen = false;
+
+
+
+   var display = document.querySelector('#utloggningNedrakning');
+
+
+
+   var minaSidorBasUrl = hamtaMinaSidorBasUrl();
+
+   var minaSidorBasUrlForXHR = minaSidorBasUrl;
+
+
+
+   var logoutadress = minaSidorBasUrl + "inloggning/LoggaUt.do?metod=Logga+ut&externredir=https://csn.se/mina-sidor.html";
+
+   var adresskontrolleraInloggning = minaSidorBasUrlForXHR + "inloggning/utloggadInaktivitet.do?checksession=1";
+
+   var adressUppdaterInloggning = minaSidorBasUrlForXHR + "inloggning/utloggadInaktivitet.do?keepalive=1";
+
+
+
+
+
+   function stangRuta(){
+
+      $('#varningLoggaUt').slideUp('fast');
+
+      skaAnvandarenBliUtloggad();
+
+      varningrutaOppen = false;
+
+   }
+
+
+
+   function hamtaMinaSidorBasUrl() {
+
+      var returvarde = '';
+
+            returvarde = 'https://tjanster.csn.se:443/bas/';
+
+            return returvarde;
+
+   }
+
+
+
+
+
+   function loadXMLDocChecksession(callBackFunktion) {
+
+      var xhttp = new XMLHttpRequest();
+
+      xhttp.onreadystatechange = function() {
+
+         if (this.readyState == 4 && this.status == 200) {
+
+            var jsonData = JSON.parse(this.responseText);
+
+            callBackFunktion(jsonData);
+
+         }
+
+      };
+
+
+
+      xhttp.open("GET", adresskontrolleraInloggning, true);
+
+      setHeaders();
+
+      xhttp.withCredentials = true;
+
+      xhttp.send();
+
+
+
+      function setHeaders() {
+
+         xhttp.setRequestHeader('Content-Type', 'application/json');
+
+         xhttp.setRequestHeader('cache-control', 'no-cache, must-revalidate, post-check=0, pre-check=0');
+
+         xhttp.setRequestHeader('cache-control', 'max-age=0');
+
+         xhttp.setRequestHeader('expires', '0');
+
+         xhttp.setRequestHeader('expires', 'Tue, 01 Jan 1980 1:00:00 GMT');
+
+         xhttp.setRequestHeader('pragma', 'no-cache');
+
+      }
+
+ 	}
+
+
+
+   function loadXMLDocAlive() {
+
+      var xhttp1 = new XMLHttpRequest();
+
+      xhttp1.onreadystatechange = function() {
+
+         if (this.readyState == 4 && this.status == 204) {
+
+            harAnvandarenVaritAktiv = false;
+
+         }
+
+      };
+
+      xhttp1.open("GET", adressUppdaterInloggning, true);
+
+      xhttp1.withCredentials = true;
+
+      xhttp1.send();
+
+   }
+
+
+
+   function skaAnvandarenBliUtloggad() {
+
+      if (harAnvandarenVaritAktiv) {
+
+         loadXMLDocAlive();
+
+      }
+
+      setTimeout(function() {
+
+         loadXMLDocChecksession(function(jsonData) {
+
+            if (jsonData['ar-session-aktiv']) {
+
+               loadXMLDocAlive();
+
+            }
+
+            else {
+
+               window.location.replace(logoutadress);
+
+            }
+
+         });
+
+      }, 1000);
+
+   }
+
+</script>
+
+
+
+
+
+<script>
+
+   function startSession() {
+
+      var timeout = setInterval(timer, 1000);
+
+
+
+
+
+      //Varje sidladdning aktiverar sessionen
+
+      skaAnvandarenBliUtloggad();
+
+
+
+      //Startar timern
+
+      timer();
+
+
+
+
+
+      function timer() {
+
+         if (isLoginCookieDeleted()) {
+
+            window.location.replace(logoutadress);
+
+         }
+
+
+
+         else if (nuvarandeTid >= slutPaSession) {
+
+            window.location.replace(logoutadress);
+
+         }
+
+
+
+          else if(nuvarandeTid >= kollaAktivitet && harAnvandarenVaritAktiv && !varningrutaOppen){
+
+            skaAnvandarenBliUtloggad();
+
+            nuvarandeTid = 0;
+
+         }
+
+
+
+			else if ((nuvarandeTid == varnaAnvanderVid && !harAnvandarenVaritAktiv) || varningrutaOppen){
+
+            if(nuvarandeTid == varnaAnvanderVid){
+
+            	loadXMLDocChecksession(function(statusFromResponse) {
+
+                  if(statusFromResponse['ar-session-aktiv']){
+
+                     varningrutaOppen = false;
+
+                     nuvarandeTid = 0;
+
+                  }
+
+                  else{
+
+                     varningrutaOppen = true;
+
+                  }
+
+               });
+
+            }
+
+            else{
+
+               varningrutaOppen = true;
+
+            }
+
+
+
+            if(varningrutaOppen){
+
+            	$('#varningLoggaUt').slideDown('fast');
+
+					var kvarvarandeTidiSek = slutPaSession - nuvarandeTid;
+
+               var tidIminuter = Math.ceil(kvarvarandeTidiSek/60);
+
+
+
+               if (tidIminuter == 1) {
+
+                  display.textContent = tidIminuter + " minut";
+
+               }
+
+               else {
+
+                  display.textContent = tidIminuter + " minuter";
+
+               }
+
+        		}
+
+         }
+
+
+
+         function isLoginCookieDeleted() {
+
+            return (
+
+               document.cookie.indexOf(
+
+                  "HanteraIntegrationMellanWebbplatsenOchMinaSidor="
+
+               ) == -1
+
+            );
+
+         }
+
+
+
+			nuvarandeTid++;
+
+      }
+
+
+
+
+
+
+
+      //Nollställer timern
+
+      function resetTimer() {
+
+         if(!varningrutaOppen){
+
+            harAnvandarenVaritAktiv = true;
+
+         }
+
+      }
+
+
+
+
+
+
+
+      //Reagerar på mus och tangetbords event
+
+      document.addEventListener("mousemove", resetTimer);
+
+      document.addEventListener("click", resetTimer);
+
+      document.addEventListener("keypress", resetTimer);
+
+      document.addEventListener("scroll", resetTimer)
+
+
+
+   }
+
+
+
+   window.onload = startSession();
+
+</script>
+
+</div>
+
+<div class="sv-script-portlet sv-portlet sv-template-portlet
+
+" id="svid12_14bcc7aa16687bd947130"><div id="Hoppatillinnehall"><!-- Hoppa till innehåll --></div><div role="navigation" aria-label="Hoppa till innehåll">
+
+   <a href="#content" class="csn-skip js-skip" tabindex="1"><div>Hoppa till innehåll</div></a>
+
+</div></div>
+
+<div class="sv-script-portlet sv-portlet csn-print-hidden sv-template-portlet
+
+" id="svid12_5f088ffd15ad72e34519c"><div id="Konfiguration"><!-- Konfiguration --></div></div>
+
+<div class="sv-script-portlet sv-portlet csn-print-hidden sv-template-portlet
+
+ c2223"  id="svid12_7ceb52b315ad72aa59e6f76e"><div id="Kakor"><!-- Kakor --></div>   <div class="sv-fixed-fluid-grid sv-grid-12-nobreak" role="contentinfo" aria-label="Webbplatsen använder kakor">
+
+      <div id="csn-cookiebar-oppen-id" class="csn-cookiebar">
+
+         <div class="csn-cookiebar-content">
+
+            <div class="csn-cookiebar__left">
+
+               <div class="csn-cookiebar__text csn-formatmall-kakor-rubrik">Webbplatsen använder kakor</div>
+
+               <div class="csn-cookiebar__text csn-formatmall-kakor-brodtext">Vi använder kakor för att ge dig en bättre upplevelse av webbplatsen.</div>
+
+               <a href="/om-webbplatsen/kakor.html" tabindex="1" class="csn-cookiebar__lank csn-formatmall-kakor-lank">Läs mer om kakor på csn.se</a>
+
+            </div>
+
+            <div class="csn-cookiebar-right">
+
+               <a href="/javascript.html" tabindex="1" role="button" class="csn-cookiebar__stang csn-knapp csn-knapp--kakor js-accept-cookie">Jag accepterar</a>
+
+            </div>
+
+         </div>
+
+      </div>
+
+   </div>
+
+
+
+<noscript>
+
+   <div class="sv-fixed-fluid-grid sv-grid-12-nobreak" role="contentinfo" aria-label="Webbplatsen använder sig av Javascript">
+
+      <div class="csn-cookiebar csn-javascript-varning">
+
+         <div class="csn-cookiebar-content">
+
+            <div class="csn-cookiebar__left">
+
+               <div class="csn-cookiebar__text csn-formatmall-kakor-rubrik">Aktivera JavaScript</div>
+
+               <div class="csn-cookiebar__text csn-formatmall-kakor-brodtext">För att kunna använda alla funktioner på vår webbplats måste du tillåta JavaScript i din webbläsare, <br> eller uppgradera till en webbläsare som kan hantera JavaScript.</div>
+
+            </div>
+
+         </div>
+
+      </div>
+
+	</div>
+
+</noscript></div>
+
+<div class="sv-script-portlet sv-portlet csn-print-hidden sv-template-portlet
+
+ c2237"  id="svid12_6db0a5ca1578ffbedb1296"><div id="Driftinformation"><!-- Driftinformation --></div>
+
+<div class="sv-fixed-fluid-grid sv-grid-12-nobreak" role="complementary" aria-label="Driftinformation">
+
+            </div></div>
+
+<div class="sv-script-portlet sv-portlet csn-print-hidden sv-template-portlet
+
+ c2223"  id="svid12_62fc105b15ddecaf46f10d41"><div id="Viktigtmeddelande"><!-- Viktigt meddelande --></div>
+
+<div class="sv-fixed-fluid-grid sv-grid-12-nobreak" role="complementary" aria-label="Viktigt meddelande">
+
+   </div>
+
+</div>
+
+<div class="sv-script-portlet sv-portlet csn-print-hidden sv-template-portlet
+
+ c2223"  id="svid12_25c8284616ffa19f1e7d84"><div id="ViktigtmeddelandePartner"><!-- Viktigt meddelande Partner --></div>
+
+<div class="sv-fixed-fluid-grid sv-grid-12-nobreak" role="complementary" aria-label="Viktiga meddelande partner">
+
+   </div>
+
+</div>
+
+<div class="sv-script-portlet sv-portlet csn-print-hidden sv-template-portlet
+
+" id="svid12_7ceb52b315ad72aa59eb42fa"><div id="Pagebar"><!-- Pagebar --></div>   <div class="sv-fixed-fluid-grid sv-grid-12-nobreak" role="navigation" aria-label="Innehållsförteckning">
+
+      <div class="csn-pagebar csn-pagebar--removed csn-formatmall-brodtext">
+
+         <div class="csn-pagebar__table">
+
+            <div class="csn-pagebar__text">
+
+               <div class="csn-pagebar__current">
+
+                  <a href="" class="csn-pagebar__sectionlink" tabindex="-1">
+
+                     <div class="csn-pagebar__section csn-formatmall-rubrik-2">...</div>
+
+                     <div class="csn-pagebar__page csn-formatmall-brodtext">Mina sidor</div>
+
+                  </a>
+
+               </div>
+
+               <div class="csn-pagebar__index">
+
+                  <div class="csn-pagebar__sectioncaption_desktop">Innehåll</div>
+
+
+
+                  <a class="csn-pagebar__sectioncaption js-pagebar" tabindex="-1">
+
+                     <div class="csn-pagebar__section csn-formatmall-rubrik-2">Innehåll</div>
+
+                     <div class="csn-pagebar__page csn-formatmall-brodtext">Mina sidor</div>
+
+                  </a>
+
+
+
+                  <a href="" class="csn-pagebar__sectionlink js-pagetop" tabindex="-1">
+
+                     <div class="csn-pagebar__section csn-formatmall-rubrik-2">Till toppen</div>
+
+                  </a>
+
+               </div>
+
+            </div>
+
+            <div class="csn-pagebar__top">
+
+               <div class="csn-pagebar__top__column">
+
+                  <a href="" class="js-pagebar" tabindex="-1"><img src="/images/18.7ceb52b315ad72aa59eb4292/ic_keyboard_arrow_right_black_24px.svg" alt="Visa/dölj innehållsförteckning" /></a>
+
+               </div>
+
+            </div>
+
+         </div>
+
+      </div>
+
+   </div>
+
+</div>
+
+<div class="sv-html-portlet sv-portlet csn-print-hidden sv-template-portlet
+
+" id="svid12_448c6fa015890d2c81f3fc5"><div id="Modalnedtoning"><!-- Modal nedtoning --></div><div class="csn-modal-fader"></div></div>
+
+<div class="sv-vertical sv-layout sv-visible-sv-bp-telefon csn-mobilmeny sv-template-layout" id="svid10_448c6fa015890d2c81f3fa8"><div class="sv-script-portlet sv-portlet sv-skip-spacer sv-template-portlet
+
+" id="svid12_448c6fa015890d2c81f3fc4"><div id="Mobilmeny"><!-- Mobilmeny --></div><nav class="csn-knapp-container-vertical" aria-label="Mobilmeny">
+
+   <a href="" tabindex="8" class="csn-knapp csn-knapp--lila-alt csn-knapp--stang csn-mobilmeny-stang"><span>Stäng</span></a>
+
+   <a href="/kontakta-oss.html" tabindex="8" class="csn-knapp csn-knapp--lila-alt"><span>Kontakta oss</span></a>
+
+   <a href="/languages.html" tabindex="8" lang="en" class="csn-knapp csn-knapp--lila-alt"><span>Languages</span></a>
+
+   <a href="/teckensprak.html" tabindex="8" class="csn-knapp csn-knapp--lila-alt"><span>Teckenspråk</span></a>
+
+</nav></div>
+
+</div>
+
+<div class="sv-vertical sv-layout csn-sidhuvud ielayoutfix sv-template-layout c2215"  id="svid10_2135ad961575182cc9dfcc"><div class="sv-fixed-fluid-grid sv-grid-12-nobreak sv-spacer-0vt sv-layout sv-skip-spacer sv-template-layout" id="svid10_2135ad961575182cc9dab4"><div class="sv-row sv-layout sv-skip-spacer sv-template-layout c2222"  id="svid10_2135ad961575182cc9dab5"><div class="sv-layout sv-skip-spacer sv-column-12 sv-template-layout" id="svid10_6f9e8e215890cf4d21511"><div class="sv-script-portlet sv-portlet sv-skip-spacer sv-template-portlet
+
+ c2198"  id="svid12_2bc92e1f15a2288a5b611e9"><div id="Logotyp"><!-- Logotyp --></div><div class="csn-logo" role="complementary" aria-label="Logotyp">
+
+   <a href="/" class="csn-logo__link" tabindex="1">
+
+      <img src="/images/18.7ceb52b315ad72aa59e3830a/csnlogo.svg" class="csn-logo__image" alt="CSN logotyp" />
+
+         </a>
+
+</div></div>
+
+<div class="sv-script-portlet sv-portlet sv-template-portlet
+
+ c2191"  id="svid12_2020cba016a03060f9718f2"><div id="Toppmeny"><!-- Toppmeny --></div><nav class="csn-toppmeny csn-knapp-container-horisontal" aria-label="toppmeny">
+
+   <a href="" tabindex="5" class="csn-knapp csn-knapp--ikon csn-knapp--more csn-knapp--lila-alt csn-mobilmeny-toggle sv-visible-sv-bp-telefon">
+
+      <div></div>
+
+   </a>
+
+
+
+         <a href="/logga-in.html" tabindex="4" class="csn-knapp csn-knapp--gul csn-login-toggle">
+
+         <span>Inloggad</span>
+
+   	</a>
+
+         <a href="/teckensprak.html" tabindex="2" class="csn-meny-link sv-hide-sv-bp-telefon">
+
+   		<span>Teckenspråk</span>
+
+      </a>
+
+
+
+
+
+   <a href="/languages.html" tabindex="2" lang="en" class="csn-meny-link sv-hide-sv-bp-telefon">
+
+      <span>Languages</span>
+
+   </a>
+
+   <a href="/kontakta-oss.html" tabindex="2" class="csn-meny-link sv-hide-sv-bp-telefon">
+
+      <span>Kontakta oss</span>
+
+   </a>
+
+
+
+   <div class="csn-login-meny" aria-live="assertive" aria-atomic="true">
+
+               <div class="csn-login-meny__sektion csn-login-meny__topp c2197" >
+
+            <div class="csn-login-meny__titel">Mina sidor för:</div>
+
+            <div class="csn-login-meny__namn"><!--Inloggad som:<br />-->Olausson, Per Viktor Andreas</div>
+
+            <div class="csn-login-meny__lankar">
+
+               	                  	               <a href="https://tjanster.csn.se:443/bas/BackServlet" tabindex="4">Tillbaka till Mina sidor</a><br />
+
+                                 	<!-- https://tjanster.csn.se:443/bas/inloggning/LoggaUt.do -->
+
+	               <a href="https://tjanster.csn.se/bas/inloggning/LoggaUt.do?metod=Logga+ut&externredir=https://www.csn.se/mina-sidor.html" tabindex="4">Logga ut</a>
+
+                           </div>
+
+         </div>
+
+
+
+         <div class="csn-login-meny__sektion c2186" >
+
+            <div class="csn-minasidor-meny">
+
+               <a href="/mina-sidor.html" class="csn-resursytor__huvud csn-resursytor__huvud--lank csn-resursytor__huvud--aktiv" tabindex="4">
+
+                  <div class="csn-resursytor__ikon">
+
+                     <img src="/images/18.38d9574316a02e4fbbc141b/ic_home_24px.svg" alt="">
+
+                  </div>
+
+
+
+                  <div class="csn-resursytor__rubriker">
+
+                     <div>
+
+                        <div class="csn-resursytor__rubrik">Start - Mina sidor</div>
+
+                        <div class="csn-resursytor__underrubrik">Se vad som är aktuellt för dig.</div>
+
+                     </div>
+
+                  </div>
+
+               </a>
+
+               <div class="csn-resursytor__huvud csn-ansokan-utfallbar-meny csn-resursytor__huvud--lank" aria-expanded="false" tabindex="4">
+
+                  <div class="csn-resursytor__ikon">
+
+                    <img src="/images/18.38d9574316a02e4fbbc141d/ic_school_24px.svg" alt="">
+
+                  </div>
+
+
+
+                  <div class="csn-resursytor__rubriker">
+
+                    <div>
+
+                        <div class="csn-resursytor__rubrik">Ansök om studiemedel</div>
+
+                    </div>
+
+                  </div>
+
+                </div>
+
+                <div class="csn-ansokan-utfallbar-content">
+
+                  <div class="csn-nopadlock-frame">
+
+                    <a class="csn-ansokan-meny-lank" href="https://tjanster.csn.se/studiemedel/ansokOmStudieMedel/ansokanOmStudiemedel.do" tabindex="4">
+
+                       Ansök om studiemedel
+
+                    </a>
+
+                  </div>
+
+                  <div class="csn-nopadlock-frame">
+
+                    <a class="csn-ansokan-meny-lank" href="https://tjanster.csn.se/bas/andraUtbildningBidragLan/andraUtbildningBidragLan.do" tabindex="4">
+
+                       Ändra utbildning, bidrag och lån
+
+                    </a>
+
+                  </div>
+
+                </div>
+
+					<!-- $ sessionData.minaSidorRootPath/bas/andraMinaKontaktuppgifter/andraMinaUppgifterFirst.do -->
+
+               <a href="https://tjanster.csn.se/bas/andraMinaKontaktuppgifter/andraMinaUppgifter.do" class="csn-resursytor__huvud csn-resursytor__huvud--lank"  tabindex="4">
+
+                  <div class="csn-resursytor__ikon">
+
+                     <img src="/images/18.38d9574316a02e4fbbc1417/ic_contact_mail_24px.svg" alt="">
+
+                  </div>
+
+
+
+                  <div class="csn-resursytor__rubriker">
+
+                     <div>
+
+                        <div class="csn-resursytor__rubrik">Min profil</div>
+
+                        <div class="csn-resursytor__underrubrik">Ändra din adress och ställ in hur du vill få utskick.</div>
+
+                     </div>
+
+                  </div>
+
+               </a>
+
+
+
+               <a href="/mina-sidor/meddelanden-och-beslut.html" class="csn-resursytor__huvud csn-resursytor__huvud--lank" tabindex="4">
+
+                  <div class="csn-resursytor__ikon">
+
+                     <img src="/images/18.38d9574316a02e4fbbc141a/ic_email_24px.svg" alt="">
+
+                                       </div>
+
+
+
+                  <div class="csn-resursytor__rubriker">
+
+                     <div>
+
+                        <div class="csn-resursytor__rubrik">Meddelanden och beslut</div>
+
+                        <div class="csn-resursytor__underrubrik">Läs beslut, besked och andra viktiga utskick från oss.</div>
+
+                     </div>
+
+                  </div>
+
+               </a>
+
+
+
+               <a href="/mina-sidor/utbetalningar.html" class="csn-resursytor__huvud csn-resursytor__huvud--lank" tabindex="4">
+
+                  <div class="csn-resursytor__ikon">
+
+                     <img src="/images/18.38d9574316a02e4fbbc141e/kr.svg" alt="">
+
+                  </div>
+
+
+
+                  <div class="csn-resursytor__rubriker">
+
+                     <div>
+
+                        <div class="csn-resursytor__rubrik">Utbetalningar</div>
+
+                        <div class="csn-resursytor__underrubrik">Se alla utbetalningar till dig, lämna studieförsäkran, se ditt fribelopp m.m.</div>
+
+                     </div>
+
+                  </div>
+
+               </a>
+
+
+
+               <a href="/mina-sidor/inbetalningar.html" class="csn-resursytor__huvud csn-resursytor__huvud--lank" tabindex="4">
+
+                  <div class="csn-resursytor__ikon">
+
+                     <img src="/images/18.38d9574316a02e4fbbc1418/ic_credit_card_black_24px.svg" alt="">
+
+                  </div>
+
+
+
+                  <div class="csn-resursytor__rubriker">
+
+                     <div>
+
+                        <div class="csn-resursytor__rubrik">Inbetalningar</div>
+
+                        <div class="csn-resursytor__underrubrik">Se när och hur du betalar, ansök om att betala mindre, lämna uppgifter om inkomst m.m.</div>
+
+                     </div>
+
+                  </div>
+
+               </a>
+
+
+
+               <a href="/mina-sidor/bidrag-och-lan-for-studier.html" class="csn-resursytor__huvud csn-resursytor__huvud--lank" tabindex="4">
+
+                  <div class="csn-resursytor__ikon">
+
+                     <img src="/images/18.38d9574316a02e4fbbc141d/ic_school_24px.svg" alt="">
+
+                  </div>
+
+
+
+                  <div class="csn-resursytor__rubriker">
+
+                     <div>
+
+                        <div class="csn-resursytor__rubrik">Bidrag och lån för studier</div>
+
+                        <div class="csn-resursytor__underrubrik">Ansök om lån och bidrag, följ din ansökan, meddela ändringar, se hur mycket du kan få och låna.</div>
+
+                     </div>
+
+                  </div>
+
+               </a>
+
+
+
+               <a href="/mina-sidor/korkortslan.html" class="csn-resursytor__huvud csn-resursytor__huvud--lank" tabindex="4">
+
+                  <div class="csn-resursytor__ikon">
+
+                     <img src="/images/18.38d9574316a02e4fbbc1419/ic_directions_car_24px.svg" alt="">
+
+                  </div>
+
+
+
+                  <div class="csn-resursytor__rubriker">
+
+                     <div>
+
+                        <div class="csn-resursytor__rubrik">Körkortslån</div>
+
+                        <div class="csn-resursytor__underrubrik">Ansök om lån och begär utbetalning.</div>
+
+                     </div>
+
+                  </div>
+
+               </a>
+
+            </div>
+
+         </div>
+
+
+
+      <div class="c2188">
+
+         <a href="https://www.csn.se/logga-in/mina-sidor-for-hemutrustningslan-ar-stangt.html" tabindex="4" class="csn-login-meny__sektion csn-login-meny__titel c2225"  aria-label="Logga in i Hemutrustningslån">
+
+            Hemutrustningslån
+
+         </a>
+
+
+
+         <div class="csn-login-meny__partner">
+
+            <a href="/partner.html" tabindex="4" class="csn-login-meny__utf csn-login-meny__titel" aria-label="Visa länkar för partner" aria-expanded="false">
+
+               Partner
+
+            </a>
+
+            <div class="csn-login-meny__partner-content">
+
+               <a href="https://tjanster.csn.se/minatjanster/inloggning.do" tabindex="4" class="csn-login-meny__sektion csn-login-meny__titel">
+
+                  Mina tjänster
+
+               </a>
+
+               <a href="/blankettbestallning" tabindex="4" class="csn-login-meny__sektion csn-login-meny__titel">
+
+                  Blankettbeställning
+
+               </a>
+
+               <a href="https://tjanster.csn.se/trafikskola/loggaIn.xhtml" tabindex="4" class="csn-login-meny__sektion csn-login-meny__titel">
+
+                  Trafikskola (körkortslån)
+
+               </a>
+
+
+
+               <div class="csn-login-meny__eller">eller</div>
+
+
+
+               <a href="/partner.html" tabindex="4" class="csn-login-meny__sektion csn-login-meny__titel csn-login-meny__sektion--pil">
+
+                  Gå till partnersidorna
+
+               </a>
+
+            </div>
+
+         </div>
+
+
+
+               </div>
+
+   </div>
+
+</nav></div>
+
+<div class="sv-vertical sv-layout sv-template-layout" id="svid10_62fc105b15ddecaf46f10d45"><div class="sv-vertical sv-layout sv-view sv-skip-spacer sv-template-layout" id="svid93_62fc105b15ddecaf46f10d47"><div class="sv-searchform-portlet sv-portlet sv-skip-spacer sv-template-portlet
+
+ c2218"  id="svid12_448c6fa015890d2c81f17d"><div id="Sokruta"><!-- Sökruta --></div>
+
+
+
+
+
+//<!--
+
+   svDocReady(function() {
+
+   // Fallback if browser doesn't support the html5 placeholder attribute
+
+   if (!sv.ClientUtil.supportsPlaceholder) {
+
+      // Ensure initial value
+
+      if ($svjq("#search12_448c6fa015890d2c81f17d").val() == "") {
+
+         $svjq("#search12_448c6fa015890d2c81f17d").val("Sök");
+
+      }
+
+      // Ensures 'search here' text is properly cleared when entering search field
+
+      $svjq("#search12_448c6fa015890d2c81f17d").on('focusin', function() {
+
+         if ($svjq("#search12_448c6fa015890d2c81f17d").val() == "Sök") {
+
+            $svjq("#search12_448c6fa015890d2c81f17d").val("");
+
+            return false;
+
+         }
+
+      });
+
+      // Ensures 'search here' text is properly set when leaving search field
+
+      $svjq("#search12_448c6fa015890d2c81f17d").on('focusout', function() {
+
+         if ($svjq("#search12_448c6fa015890d2c81f17d").val() == "") {
+
+            $svjq("#search12_448c6fa015890d2c81f17d").val("Sök");
+
+            return false;
+
+         }
+
+      });
+
+   }
+
+      // Submit, blocks empty search and 'search here' search
+
+      $svjq("#search12_448c6fa015890d2c81f17dbutton").on('click', function() {
+
+         var qry = $svjq("#search12_448c6fa015890d2c81f17d").val();
+
+         if (qry == "") {
+
+            $svjq("#search12_448c6fa015890d2c81f17d").val("Sök");
+
+            return false;
+
+         } else if (qry == "Sök") {
+
+            return false;
+
+         }
+
+      });
+
+      // Invokes the search button if user presses the enter key (needed in IE)
+
+      $svjq("#search12_448c6fa015890d2c81f17d").on('keypress', function(e) {
+
+         if (e.which == 13) {
+
+            $svjq("#search12_448c6fa015890d2c81f17dbutton").trigger('focus').trigger('click');
+
+            return false;
+
+         }
+
+      });
+
+   });
+
+//-->
+
+</script>
+
+
+
+
+
+
+
+<form method="get" action="/sok.html" role="search" class="csn-sok sv-nomargin c2185" >
+
+   <div class="csn-formular-sok">
+
+      <label for="search12_448c6fa015890d2c81f17d" class="csn-formular-soklabel">Sök</label>
+
+      <input id="search12_448c6fa015890d2c81f17d" class="csn-formatmall-brodtext sv-vamiddle csn-formular-sokfalt c2193"  type="text" name="query" placeholder="Sök" value="" />
+
+      <input type="button" class="csn-formatmall-brodtext sv-vamiddle csn-formular-rensaknapp" title="Rensa" value="Rensa" />
+
+      <input id="search12_448c6fa015890d2c81f17dbutton" type="submit" class="csn-formatmall-brodtext sv-vamiddle csn-formular-sokknapp" title="Sök" value="Sök" />
+
+   </div>
+
+</form>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="sv-vertical sv-layout csn-sidcontainer ielayoutfix sv-template-layout c2190"  id="svid10_2135ad961575182cc9da49"><div id="svid94_1f4150ed1578feb6a6520a"><div class="sv-vertical sv-layout sv-skip-spacer sv-template-layout c2214"  id="svid10_1f4150ed1578feb6a6520b"><div class="sv-fixed-fluid-grid sv-grid-12 sv-layout sv-skip-spacer sv-template-layout" id="svid10_1f4150ed1578feb6a6520c"><div class="sv-row sv-layout sv-skip-spacer sv-template-layout" id="svid10_1f4150ed1578feb6a6520d"><div class="sv-layout sv-skip-spacer sv-column-12 sv-template-layout" id="svid10_1f4150ed1578feb6a6520e"><div class="sv-script-portlet sv-portlet sv-skip-spacer sv-template-portlet
+
+" id="svid12_62fc105b15ddecaf46f10d4e"><div id="Brodsmulor"><!-- Brödsmulor --></div>
+
+
+
+
+
+<nav aria-label="Breadcrumb" class="c1216">
+
+   <ul class="csn-breadcrumbs">
+
+
+
+                                    <li>
+
+
+
+
+
+
+
+                     <a href="/" class="csn-formatmall-brodsmulemeny c2187" >Start</a>
+
+                                 </li>
+
+                                                <li>
+
+
+
+                                       <span class="csn-formatmall-brodsmulemeny">Mina sidor</span>
+
+                                 </li>
+
+                              </ul>
+
+</nav></div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="sv-vertical sv-layout csn-sida sv-template-layout c1372"  id="svid10_1f4150ed1578feb6a65210"><div class="sv-fixed-fluid-grid sv-grid-12 sv-layout sv-skip-spacer sv-template-layout" id="svid10_1f4150ed1578feb6a65211"><main class="sv-row sv-layout sv-skip-spacer sv-template-layout" id="svid10_1f4150ed1578feb6a65212"><div class="sv-html-portlet sv-portlet sv-skip-spacer sv-template-portlet
+
+" id="svid12_62fc105b15ddecaf46f166c5"><div id="Hoppatillinnehallmal"><!-- Hoppa till innehåll mål --></div><div id="content" tabindex="-1"></div></div>
+
+<div id="svid94_1f4150ed1578feb6a6521f"><div class="sv-row sv-layout sv-skip-spacer sv-template-layout" id="svid10_6f9e8e215890cf4d213c7"><div class="sv-spacer-1emvt sv-vertical sv-layout sv-skip-spacer sv-template-layout c2224"  id="svid10_6f9e8e215890cf4d2159f"><div id="svid94_2020cba016a03060f9713a4" class="pagecontent sv-layout sv-spacer-1emvt sv-skip-spacer"><div id="Ovreyta"><!-- Övre yta --></div><div class="sv-text-portlet sv-use-margins sv-skip-spacer c2275"  id="svid12_2020cba016a03060f9713a5"><div id="Rubrik"><!-- Rubrik --></div><div class="sv-text-portlet-content"><h1 class="csn-formatmall-rubrik-1" id="h-Minasidor">Mina sidor<br/></h1></div></div>
+
+</div></div>
+
+</div>
+
+<div class="sv-html-portlet sv-portlet sv-template-portlet
+
+" id="svid12_1ba9ecae15f9080d21d8c4"><div id="Underrubriker"><!-- Underrubriker --></div><script>
+
+   if (!$('body').is('.sv-classic-edit-mode, .sv-editing-mode')) {
+
+      var rubrik = $('.csn-formatmall-rubrik-1').text();
+
+
+
+      if (rubrik.match(' – ')) {
+
+         var rubrikarray = rubrik.split(' – ');
+
+         $('.csn-formatmall-rubrik-1').text(rubrikarray[0]);
+
+         $('.csn-formatmall-rubrik-1').append('<br><span class = "csn-underrubrik">' + rubrikarray[1] + '</span>');
+
+      }
+
+   }
+
+</script></div>
+
+<div class="sv-row sv-layout sv-template-layout" id="svid10_34f0a34115fd85739c52e0"><div class="sv-vertical sv-layout sv-skip-spacer sv-template-layout c2247"  id="svid10_34f0a34115fd85739c52e8"><div class="sv-vertical sv-layout sv-view sv-skip-spacer sv-template-layout" id="svid93_34f0a34115fd85739c52e9"></div>
+
+</div>
+
+</div>
+
+<div class="sv-row sv-layout csn-sida-mittenspalt sv-template-layout" id="svid10_2135ad961575182cc9dac6"><div class="sv-spacer-1emvt sv-vertical sv-layout sv-skip-spacer sv-template-layout c2209"  id="svid10_448c6fa015890d2c81f36e"><div class="sv-vertical sv-layout csn-innehallsforteckning sv-skip-spacer sv-template-layout" id="svid10_62fc105b15ddecaf46ff72a"><div class="sv-vertical sv-layout sv-view sv-skip-spacer sv-template-layout" id="svid93_62fc105b15ddecaf46ff72b"></div>
+
+</div>
+
+<div id="svid94_2020cba016a03060f9713a6" class="pagecontent sv-layout sv-spacer-1emvt"><div id="Mittenspalt"><!-- Mittenspalt --></div><div class="sv-custom-module sv-skip-spacer" id="svid12_2020cba016a03060f97183c"><div id="CSNEtjanstverktygAngularcore"><!-- CSN Etjänst-verktyg - Angular core --></div><div class="sv-script-portlet sv-portlet sv-skip-spacer sv-template-portlet
+
+"><script src="/webdav/files/etjanster/verktyg/angular.core/files/versions/3.0.0/runtime-es2015.4f20f961866cdae88697.js" type="module"></script>
+
+<script src="/webdav/files/etjanster/verktyg/angular.core/files/versions/3.0.0/runtime-es5.4f20f961866cdae88697.js" nomodule defer></script>
+
+<script src="/webdav/files/etjanster/verktyg/angular.core/files/versions/3.0.0/polyfills-es2015.9fce5a4d9847852c0f25.js" type="module"></script>
+
+<script src="/webdav/files/etjanster/verktyg/angular.core/files/versions/3.0.0/polyfills-es5.e891142edf86228af408.js" nomodule defer></script>
+
+<script src="/webdav/files/etjanster/verktyg/angular.core/files/versions/3.0.0/main-es2015.143a0eea5a0f38a1f151.js" type="module"></script>
+
+<script src="/webdav/files/etjanster/verktyg/angular.core/files/versions/3.0.0/main-es5.143a0eea5a0f38a1f151.js" nomodule defer></script>
+
+</div>
+
+</div>
+
+<div class="sv-custom-module" id="svid12_2020cba016a03060f97183e"><div id="CSNEtjanstsnabbinfo"><!-- CSN Etjänst - snabbinfo --></div><div class="sv-script-portlet sv-portlet sv-skip-spacer sv-template-portlet
+
+"><!--
+
+-->
+
+<!-- <snabbinfo-root></snabbinfo-root> -->
+
+</div>
+
+</div>
+
+<div class="sv-vertical sv-layout" id="svid10_38d9574316a02e4fbbc1376"><div class="sv-html-portlet sv-portlet sv-skip-spacer" id="svid12_38d9574316a02e4fbbc1726"><div id="HTML"><!-- HTML --></div><h2 class="csn-formatmall-rubrik-2 c2248" id="startsida-rubrik-aktuell-for-dig-toggle" >
+
+   Aktuellt för dig
+
+</h2>
+
+
+
+<script>
+
+   /**
+
+    * Loopa globalt objekt (common.js).
+
+    * Om någon av angularapparna har content tänd rubriken ovan.
+
+    */
+
+   var minaSidorAktuellt = function(callback) {
+
+      for (var angular_app in csnApps) {
+
+         if (csnApps.hasOwnProperty(angular_app)) {
+
+            if(csnApps[angular_app].hasContent){
+
+               $('#startsida-rubrik-aktuell-for-dig-toggle').show();
+
+            }
+
+         }
+
+      }
+
+   };
+
+</script></div>
+
+<div class="sv-custom-module" id="svid12_2020cba016a03060f971840"><div id="CSNEtjanstMeddelandenstartsida"><!-- CSN Etjänst - Meddelanden startsida --></div><div class="sv-script-portlet sv-portlet sv-skip-spacer sv-template-portlet
+
+"><!--
+
+-->
+
+<!-- <meddelanden-cta></meddelanden-cta> -->
+
+<csn-service service="meddelanden" component="cta"></csn-service>
+
+</div>
+
+</div>
+
+<div class="sv-custom-module" id="svid12_2020cba016a03060f971842"><div id="CSNEtjanstStudieforsakranstartsida"><!-- CSN Etjänst - Studieförsäkran startsida --></div><div class="sv-script-portlet sv-portlet sv-skip-spacer sv-template-portlet
+
+"><!--
+
+-->
+
+<!-- <studieforsakran-cta></studieforsakran-cta> -->
+
+<csn-service service="studieforsakran" component="cta"></csn-service>
+
+</div>
+
+</div>
+
+<div class="sv-custom-module" id="svid12_727834bc16b4bb5dc9025e4"><div id="CSNEtjanstLamnauppgifterstartsida"><!-- CSN Etjänst - Lämna uppgifter startsida --></div><div class="sv-script-portlet sv-portlet sv-skip-spacer sv-template-portlet
+
+"><!--
+
+-->
+
+<!-- <lamna-uppgifter-cta></lamna-uppgifter-cta> -->
+
+<csn-service service="lamna-uppgifter" component="cta"></csn-service>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="sv-vertical sv-layout" id="svid10_38d9574316a02e4fbbc1377"><div class="sv-custom-module sv-skip-spacer" id="svid12_2020cba016a03060f971844"><div id="CSNEtjanstFoljdinansokanstartsida"><!-- CSN Etjänst - Följ din ansökan startsida --></div><div class="sv-script-portlet sv-portlet sv-skip-spacer sv-template-portlet
+
+"><!--
+
+-->
+
+<!-- <folj-din-ansokan-startsida></folj-din-ansokan-startsida> -->
+
+<csn-service service="mina-arenden" component="startsida"></csn-service>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="sv-text-portlet sv-use-margins" id="svid12_38d9574316a02e4fbbc1375"><div id="MenyforMinasidorRubrik"><!-- Meny för Mina sidor - Rubrik --></div><div class="sv-text-portlet-content"><h2 class="csn-formatmall-rubrik-2" id="h-AlltinnehalliMinasidor">Allt innehåll i Mina sidor</h2></div></div>
+
+<div class="sv-vertical sv-layout csn-minasidor-meny" id="svid10_38d9574316a02e4fbbc1378"><div class="sv-script-portlet sv-portlet sv-skip-spacer" id="svid12_25c8284616ffa19f1e71461"><div id="Ansokomstudiemedel"><!-- Ansök om studiemedel --></div>
+
+
+
+
+
+   <a href="#" class="csn-resursytor__huvud   csn-resursytor__huvud--lank csn-ansokan-utfallbar-meny " aria-expanded="false">
+
+
+
+         <div class="csn-resursytor__ikon csn-resursytor__ikon--new c2263" ></div>
+
+
+
+   <div class="csn-resursytor__rubriker">
+
+      <div>
+
+          <div class="csn-resursytor__rubrik">Ansök om studiemedel</div>
+
+      </div>
+
+   </div>
+
+</a>
+
+<div class="csn-ansokan-utfallbar-content csn-ansokan-utfallbar-content__startsida">
+
+   <div class="csn-nopadlock-frame">
+
+      <a href="https://tjanster.csn.se/studiemedel/ansokOmStudieMedel/ansokanOmStudiemedel.do"
+
+      	>Ansök om studiemedel</a
+
+      >
+
+   </div>
+
+   <div class="csn-nopadlock-frame">
+
+      <a href="https://tjanster.csn.se/bas/andraUtbildningBidragLan/andraUtbildningBidragLan.do"
+
+         >Ändra utbildning, bidrag och lån</a
+
+      >
+
+   </div>
+
+</div>
+
+</div>
+
+<div class="sv-script-portlet sv-portlet" id="svid12_38d9574316a02e4fbbc137b"><div id="Minprofil"><!-- Min profil --></div>
+
+
+
+
+
+   <a href="https://tjanster.csn.se/bas/andraMinaKontaktuppgifter/andraMinaUppgifter.do" class="csn-resursytor__huvud csn-resursytor__huvud--lank ">
+
+
+
+         <div class="csn-resursytor__ikon csn-resursytor__ikon--new c2277" ></div>
+
+
+
+   <div class="csn-resursytor__rubriker">
+
+      <div>
+
+          <div class="csn-resursytor__rubrik">Min profil</div>
+
+      </div>
+
+   </div>
+
+</a>
+
+</div>
+
+<div class="sv-script-portlet sv-portlet" id="svid12_38d9574316a02e4fbbc137e"><div id="Meddelandenochbeslut"><!-- Meddelanden och beslut --></div>
+
+
+
+
+
+   <a href="/mina-sidor/meddelanden-och-beslut.html" class="csn-resursytor__huvud csn-resursytor__huvud--lank ">
+
+
+
+         <div class="csn-resursytor__ikon csn-resursytor__ikon--new c2273" ></div>
+
+
+
+   <div class="csn-resursytor__rubriker">
+
+      <div>
+
+          <div class="csn-resursytor__rubrik">Meddelanden och beslut</div>
+
+      </div>
+
+   </div>
+
+</a>
+
+</div>
+
+<div class="sv-script-portlet sv-portlet" id="svid12_38d9574316a02e4fbbc137f"><div id="Utbetalningar"><!-- Utbetalningar --></div>
+
+
+
+
+
+   <a href="/mina-sidor/utbetalningar.html" class="csn-resursytor__huvud csn-resursytor__huvud--lank ">
+
+
+
+         <div class="csn-resursytor__ikon csn-resursytor__ikon--new c2268" ></div>
+
+
+
+   <div class="csn-resursytor__rubriker">
+
+      <div>
+
+          <div class="csn-resursytor__rubrik">Utbetalningar</div>
+
+      </div>
+
+   </div>
+
+</a>
+
+</div>
+
+<div class="sv-script-portlet sv-portlet" id="svid12_38d9574316a02e4fbbc1380"><div id="Inbetalningar"><!-- Inbetalningar --></div>
+
+
+
+
+
+   <a href="/mina-sidor/inbetalningar.html" class="csn-resursytor__huvud csn-resursytor__huvud--lank ">
+
+
+
+         <div class="csn-resursytor__ikon csn-resursytor__ikon--new c2253" ></div>
+
+
+
+   <div class="csn-resursytor__rubriker">
+
+      <div>
+
+          <div class="csn-resursytor__rubrik">Inbetalningar</div>
+
+      </div>
+
+   </div>
+
+</a>
+
+</div>
+
+<div class="sv-script-portlet sv-portlet" id="svid12_38d9574316a02e4fbbc1381"><div id="Bidragochlanforstudier"><!-- Bidrag och lån för studier --></div>
+
+
+
+
+
+   <a href="/mina-sidor/bidrag-och-lan-for-studier.html" class="csn-resursytor__huvud csn-resursytor__huvud--lank ">
+
+
+
+         <div class="csn-resursytor__ikon csn-resursytor__ikon--new c2263" ></div>
+
+
+
+   <div class="csn-resursytor__rubriker">
+
+      <div>
+
+          <div class="csn-resursytor__rubrik">Bidrag och lån för studier</div>
+
+      </div>
+
+   </div>
+
+</a>
+
+</div>
+
+<div class="sv-script-portlet sv-portlet" id="svid12_38d9574316a02e4fbbc1382"><div id="Korkortslan"><!-- Körkortslån --></div>
+
+
+
+
+
+   <a href="/mina-sidor/korkortslan.html" class="csn-resursytor__huvud csn-resursytor__huvud--lank ">
+
+
+
+         <div class="csn-resursytor__ikon csn-resursytor__ikon--new c2243" ></div>
+
+
+
+   <div class="csn-resursytor__rubriker">
+
+      <div>
+
+          <div class="csn-resursytor__rubrik">Körkortslån</div>
+
+      </div>
+
+   </div>
+
+</a>
+
+</div>
+
+</div>
+
+</div></div>
+
+</div>
+
+<div class="sv-row sv-layout sv-template-layout" id="svid10_6f9e8e215890cf4d213cb"><div class="sv-spacer-1emvt sv-layout sv-skip-spacer sv-column-12 sv-template-layout c2208"  id="svid10_448c6fa015890d2c81f265"><div id="svid94_2020cba016a03060f9713a8" class="pagecontent sv-layout sv-spacer-1emvt sv-skip-spacer"><div id="Nedreyta"><!-- Nedre yta --></div></div></div>
+
+</div>
+
+<div class="sv-row sv-layout sv-template-layout" id="svid10_1f4150ed1578feb6a652a9"><div class="sv-layout sv-skip-spacer sv-column-8 sv-template-layout c2208"  id="svid10_448c6fa015890d2c81f264"><div class="sv-related-portlet sv-portlet sv-skip-spacer sv-template-portlet
+
+" id="svid12_1f4150ed1578feb6a652ab"><div id="Relateradelankar"><!-- Relaterade länkar --></div>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="sv-row sv-layout sv-template-layout" id="svid10_34f0a34115fd85739c522e"><div class="sv-vertical sv-layout sv-skip-spacer sv-template-layout c2208"  id="svid10_34f0a34115fd85739c5230"><div class="sv-vertical sv-layout sv-view sv-skip-spacer sv-template-layout" id="svid93_34f0a34115fd85739c5231"></div>
+
+</div>
+
+</div>
+
+<div class="sv-row sv-layout sv-template-layout" id="svid10_6f9e8e215890cf4d2174"><div class="sv-vertical sv-layout sv-skip-spacer sv-template-layout c2208"  id="svid10_182311ae15fc466d2587d"><div class="sv-script-portlet sv-portlet sv-skip-spacer sv-template-portlet
+
+" id="svid12_6f9e8e215890cf4d2175"><div id="Etiketter"><!-- Etiketter --></div>
+
+
+
+
+
+
+
+</div>
+
+</div>
+
+</div>
+
+</div></main>
+
+</div>
+
+</div>
+
+</div><div class="sv-fluid-grid sv-grid-12 sv-layout sv-skip-spacer sv-template-layout" id="svid10_1ba9ecae15f9080d21dd20"><div class="sv-row sv-layout sv-skip-spacer sv-template-layout" id="svid10_7691d591732dcf1af311c6"><div class="sv-vertical sv-layout sv-skip-spacer sv-template-layout" id="svid10_7691d591732dcf1af311c7"><div class="sv-vertical sv-layout sv-view sv-skip-spacer sv-template-layout" id="svid93_7691d591732dcf1af311c8"></div>
+
+</div>
+
+</div>
+
+<div class="sv-row sv-layout sv-template-layout" id="svid10_1ba9ecae15f9080d21dd21"><div class="sv-vertical sv-layout sv-skip-spacer sv-template-layout" id="svid10_182311ae15fc466d258229"><div class="sv-vertical sv-layout sv-view sv-skip-spacer sv-template-layout" id="svid93_182311ae15fc466d25822a"></div>
+
+</div>
+
+<div class="sv-layout sv-column-6 sv-template-layout" id="svid10_1ba9ecae15f9080d21dd22"><div class="sv-script-portlet sv-portlet sv-skip-spacer sv-template-portlet
+
+" id="svid12_1ba9ecae15f9080d21dd26"><div id="ModalFeedback"><!-- Modal Feedback --></div><div role="complementary" aria-label="Feedback" class="csn-modal-feedback c2211" >
+
+    <div class="c2183">
+
+        <div class="c2228">
+
+            <div class="c2196">
+
+                                <div class="csn-modal-feedback--content">
+
+                	<a href="" class="csn-modal-feedback__close c2194" title="Stäng" role="button" ><img src="/images/18.7ceb52b315ad72aa59e6f7ea/ic_cancel_black_24px.svg" width="24" height="24" alt="Stäng" class="c2227"/></a>
+
+               </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</div>
+
+<div class="sv-rating-portlet sv-portlet csn-feedback-betyg sv-template-portlet
+
+ c1713"  id="svid12_1ba9ecae15f9080d21dd25"><div id="BetygFeedback"><!-- Betyg Feedback --></div>
+
+<div role="complementary" aria-label="Feedback - Tyck till om webbplatsen">
+
+<script>
+
+    $svjq(function(){
+
+        $svjq("#pos_1ba9ecae15f9080d21dd25").click(function(e){e.preventDefault(); e.stopPropagation(); if(e.which == 1 || e.keyCode == 13){ doPost_1ba9ecae15f9080d21dd25(1);return false; }}).keypress(function(e){if(e.which == 1 || e.keyCode == 13){ return $svjq(this).click(); }});
+
+        $svjq("#neg_1ba9ecae15f9080d21dd25").click(function(e){e.preventDefault(); e.stopPropagation(); if(e.which == 1 || e.keyCode == 13){ doPost_1ba9ecae15f9080d21dd25(0);return false; }}).keypress(function(e){if(e.which == 1 || e.keyCode == 13){ return $svjq(this).click(); }});
+
+    });
+
+ // -->
+
+</script>
+
+
+
+<form class="sv-vamiddle" id="form_1ba9ecae15f9080d21dd25" action="/mina-sidor.html;jsessionid=9915CD33C9D9C24115E3C8BFB2D13944.csnsv23?sv.url=12.1ba9ecae15f9080d21dd25&amp;state=rate" method="post">
+
+   <div id="leave-feedback">
+
+      <label class="svhidden" for="mailname_id_1ba9ecae15f9080d21dd25">Mail name e-mail:</label>
+
+<input class="svhidden" id="mailname_id_1ba9ecae15f9080d21dd25" name="mail_name_1ba9ecae15f9080d21dd25" autocomplete="off" type="text" value="" />
+
+
+
+      <div role="group" aria-labelledby="leave-feedback" class="csn-betyg-buttons">
+
+      <input type="image"  id="pos_1ba9ecae15f9080d21dd25" class="posFeed csn-feedback-pos csn-modal-feedback__link sv-vamiddle gfx__item " title="Positivt" formaction="/mina-sidor.html;jsessionid=9915CD33C9D9C24115E3C8BFB2D13944.csnsv23?sv.url=12.1ba9ecae15f9080d21dd25&amp;ratingValue=1&amp;state=rate" name="ratingValue" src="/images/18.1ba9ecae15f9080d21dd2f/ic_mood_black_24px.svg" alt="jag är nöjd" height="42" width="42" />
+
+      <div class="csn-formatmall-brodtext csn-feedback-brodtext">eller</div>
+
+      <input type="image"  id="neg_1ba9ecae15f9080d21dd25" class="negFeed csn-feedback-neg sv-vamiddle gfx__item " title="Negativt" formaction="/mina-sidor.html;jsessionid=9915CD33C9D9C24115E3C8BFB2D13944.csnsv23?sv.url=12.1ba9ecae15f9080d21dd25&amp;ratingValue=0&amp;state=rate" name="ratingValue" src="/images/18.1ba9ecae15f9080d21dd2e/ic_sentiment_dissatisfied_black_24px.svg" alt="jag är missnöjd" height="42" width="42" />
+
+      </div>
+
+   </div>
+
+              <script>
+
+//<!--
+
+   function doPost_1ba9ecae15f9080d21dd25(value) {
+
+      var formData   = $svjq('#form_1ba9ecae15f9080d21dd25').serialize() + '&ratingValue=' + value;
+
+      var theUrl     = "/4.2020cba016a03060f97139d.12.1ba9ecae15f9080d21dd25.xml?state=rate";
+
+      $svjq.post(theUrl, formData, function(data){
+
+         $svjq("#form_1ba9ecae15f9080d21dd25").remove();
+
+         $svjq("#svid12_1ba9ecae15f9080d21dd25").append(data);
+
+      });
+
+   };
+
+//-->
+
+</script>
+
+</form>
+
+</div></div>
+
+<div class="sv-script-portlet sv-portlet csn-feedback-epost sv-template-portlet
+
+ c1713"  id="svid12_182311ae15fc466d25822d"><div id="EpostformularFeedback"><!-- E-postformulär Feedback --></div><div role="complementary" aria-label="Feedback - Lämna synpunkter">
+
+<form id="form_1ba9ecae15f9080d21dd29" action="/system/service/feedback.html?sv.url=12.1ba9ecae15f9080d21dd29&amp;state=create#svid12_1ba9ecae15f9080d21dd29" enctype="multipart/form-data" method="post" class="c2195"  data-sv-single-click>
+
+<div class="sv-defaultFormTheme">
+
+   <label class="svhidden" for="mailname_id_1ba9ecae15f9080d21dd29">Mail name e-mail:</label>
+
+<input class="svhidden" id="mailname_id_1ba9ecae15f9080d21dd29" name="mail_name_1ba9ecae15f9080d21dd29" autocomplete="off" type="text" value="" />
+
+
+
+
+
+
+
+
+
+<div class="sv-formFieldRow">
+
+
+
+
+
+         <div class="sv-formField sv-formField--cols-12 c2219" >
+
+
+
+
+
+
+
+
+
+
+
+      </div>
+
+
+
+            </div>
+
+      <div class="sv-formFieldRow">
+
+
+
+         <div class="sv-formField sv-formField--cols-12 c2219" >
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div>
+
+
+
+
+
+
+
+   <div class="sv-field-title-container sv-bold">
+
+         </div>
+
+
+
+</div>
+
+<div  >
+
+
+
+
+
+
+
+
+
+
+
+<textarea class="sv-form-textfield csn-formatmall-brodtext" id="field_120_1ba9ecae15f9080d21dd5a" name="field_120_1ba9ecae15f9080d21dd5a" rows="3" title="" placeholder="Skriv dina synpunkter om webbplatsen här." required oninvalid="this.setCustomValidity('Vänligen fyll i fältet $field.name')" oninput="setCustomValidity('')"
+
+         ></textarea>
+
+
+
+
+
+
+
+
+
+</div>
+
+
+
+
+
+      </div>
+
+   </div>
+
+
+
+
+
+   <div class="sv-formFieldRow">
+
+      <div class="sv-formField c2219" >
+
+         <input class="csn-formatmall-brodtext" type="submit" value="Lämna synpunkt" />
+
+      </div>
+
+   </div>
+
+
+
+</div>
+
+</form>
+
+
+
+
+
+   <script>
+
+svDocReady(function() {
+
+   var counter = 0;
+
+   var selector = '#svid' + '12.1ba9ecae15f9080d21dd29'.replace('.', '_') + ' form';
+
+
+
+   $svjq(selector).one('keypress', function() {
+
+      var checkInterval = setInterval(function() {
+
+
+
+         $svjq.post('/4.2020cba016a03060f97139d/12.1ba9ecae15f9080d21dd29.html?state=keepAlive&amp;sv.contenttype=text/html;charset=UTF-8');
+
+
+
+         if (++counter === 12) {
+
+            window.clearInterval(checkInterval);
+
+         }
+
+      }, 900000); // 15 minutes
+
+   });
+
+});
+
+</script>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<footer class="sv-vertical sv-layout csn-sidfot-ovre sv-template-layout" id="svid10_433841811732d7d884444f"><div class="sv-vertical sv-layout csn-sidfot-ovre sv-skip-spacer sv-template-layout" id="svid10_433841811732d7d8844450"><div class="sv-fixed-fluid-grid sv-grid-12-ingen-marginal sv-layout sv-skip-spacer sv-template-layout" id="svid10_433841811732d7d8844451"><div class="sv-row sv-layout ielayoutfix sv-skip-spacer sv-template-layout c2223"  id="svid10_433841811732d7d8844452"><div class="sv-layout ielayoutfix sv-skip-spacer sv-column-4 sv-template-layout c2205"  id="svid10_433841811732d7d8844453"><div class="sv-text-portlet sv-use-margins sv-skip-spacer sv-template-portlet
+
+" lang="sv" id="svid12_433841811732d7d8844454"><div id="Kundservice"><!-- Kundservice --></div><div class="sv-text-portlet-content"><p class="csn-formatmall-stor-svart"><a href="/kontakta-oss.html"><strong>Kontakta oss</strong></a></p><p class="csn-formatmall-brodtext"><br/>Hitta svar på dina frågor!<br/></p></div></div>
+
+<div class="sv-html-portlet sv-portlet sv-template-portlet
+
+" id="svid12_433841811732d7d8844456"><div id="Lankar"><!-- Länkar --></div><ul class="sv-text-portlet csn-formatmall-liten-svart">
+
+   <li>
+
+      <a href="/fragor-och-svar.html" aria-label="Se alla frågor och svar">Frågor och svar</a>
+
+   </li>
+
+   <li>
+
+      <a href="https://www.facebook.com/CSNsverige/" rel="external" target="_blank">Besök oss på Facebook</a>
+
+   </li>
+
+</ul></div>
+
+</div>
+
+<div class="sv-layout ielayoutfix sv-column-8 sv-template-layout c2229"  id="svid10_433841811732d7d8844457"><div class="sv-text-portlet sv-use-margins sv-skip-spacer sv-template-portlet
+
+" lang="sv" id="svid12_433841811732d7d8844458"><div id="Varaetjanster"><!-- Våra e-tjänster --></div><div class="sv-text-portlet-content"><p class="csn-formatmall-stor-svart"><a href="/logga-in.html">Logga in</a></p><p class="csn-formatmall-brodtext"><br/>Du kan utföra många ärenden själv genom våra e-tjänster</p></div></div>
+
+<div class="sv-text-portlet sv-use-margins sv-template-portlet
+
+" lang="sv" id="svid12_433841811732d7d884445a"><div id="Lankar-0"><!-- Länkar --></div><div class="sv-text-portlet-content"><ul class=" csn-formatmall-liten-svart"><li><a href="/om-webbplatsen/mina-sidor-och-e-tjanster.html">Allt om våra e-tjänster</a></li></ul></div></div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="sv-vertical sv-layout csn-sidfot-nedre ielayoutfix sv-template-layout c2215"  id="svid10_433841811732d7d884445c"><div class="sv-fixed-fluid-grid sv-grid-12 sv-layout sv-skip-spacer sv-template-layout c2185"  id="svid10_433841811732d7d884445d"><div class="sv-row sv-layout sv-skip-spacer sv-template-layout c2220"  id="svid10_433841811732d7d884445e"><div class="sv-layout sv-skip-spacer sv-column-4 sv-template-layout" id="svid10_433841811732d7d884445f"><div class="sv-text-portlet sv-use-margins sv-skip-spacer sv-template-portlet
+
+" lang="sv" id="svid12_433841811732d7d8844460"><div id="Rubrik-0"><!-- Rubrik --></div><div class="sv-text-portlet-content"><h2 class="csn-formatmall-rubrik2-vit" id="h-OmCSN"><a title="Om CSN" href="/om-csn.html">Om CSN</a></h2></div></div>
+
+<div class="sv-jcrmenu-portlet sv-portlet sv-template-portlet
+
+ c2216"  id="svid12_433841811732d7d8844462"><div id="Meny1"><!-- Meny 1 --></div>
+
+
+
+
+
+
+
+
+
+      <ul>
+
+
+
+
+
+
+
+
+
+
+
+               <li><a href="/om-csn/aktuellt.html" title="Aktuellt" class="csn-formatmall-liten-gul c2184" >Aktuellt</a></li>
+
+
+
+
+
+
+
+
+
+
+
+               <li><a href="/om-csn/jobba-hos-oss.html" title="Jobba hos oss" class="csn-formatmall-liten-gul c2184" >Jobba hos oss</a></li>
+
+
+
+
+
+
+
+
+
+
+
+               <li><a href="/om-csn/press.html" title="Press" class="csn-formatmall-liten-gul c2184" >Press</a></li>
+
+
+
+
+
+
+
+
+
+
+
+               <li><a href="/om-csn/vart-uppdrag.html" title="Vårt uppdrag" class="csn-formatmall-liten-gul c2184" >Vårt uppdrag</a></li>
+
+
+
+
+
+
+
+
+
+
+
+               <li><a href="/om-csn/statistik-och-rapporter.html" title="Statistik och rapporter" class="csn-formatmall-liten-gul c2184" >Statistik och rapporter</a></li>
+
+
+
+
+
+
+
+
+
+
+
+               <li><a href="/om-csn/lag-och-ratt.html" title="Lag och rätt" class="csn-formatmall-liten-gul c2184" >Lag och rätt</a></li>
+
+                           </ul>
+
+   </div>
+
+</div>
+
+<div class="sv-layout sv-column-4 sv-template-layout" id="svid10_433841811732d7d8844463"><div class="sv-text-portlet sv-use-margins sv-skip-spacer sv-template-portlet
+
+" lang="sv" id="svid12_433841811732d7d8844464"><div id="Rubrik-1"><!-- Rubrik --></div><div class="sv-text-portlet-content"><h2 class="csn-formatmall-rubrik2-vit" id="h-Bidragochlan"><a title="Bidrag och lån" href="/bidrag-och-lan.html">Bidrag och lån</a></h2></div></div>
+
+<div class="sv-jcrmenu-portlet sv-portlet sv-template-portlet
+
+ c2216"  id="svid12_433841811732d7d8844466"><div id="Meny2"><!-- Meny 2 --></div>
+
+
+
+
+
+
+
+
+
+      <ul>
+
+
+
+
+
+
+
+
+
+
+
+               <li><a href="/bidrag-och-lan/studiestod.html" title="Studiestöd" class="csn-formatmall-liten-gul c2184" >Studiestöd</a></li>
+
+
+
+
+
+
+
+
+
+
+
+               <li><a href="/bidrag-och-lan/korkortslan.html" title="Körkortslån" class="csn-formatmall-liten-gul c2184" >Körkortslån</a></li>
+
+
+
+
+
+
+
+
+
+
+
+               <li><a href="/bidrag-och-lan/hemutrustningslan.html" title="Hemutrustningslån" class="csn-formatmall-liten-gul c2184" >Hemutrustningslån</a></li>
+
+
+
+
+
+
+
+
+
+
+
+               <li><a href="/bidrag-och-lan/for-din-situation.html" title="För din situation" class="csn-formatmall-liten-gul c2184" >För din situation</a></li>
+
+                           </ul>
+
+   </div>
+
+</div>
+
+<div class="sv-layout sv-column-4 sv-template-layout c2202"  id="svid10_433841811732d7d8844467"><div class="sv-text-portlet sv-use-margins sv-skip-spacer sv-template-portlet
+
+" lang="sv" id="svid12_433841811732d7d8844468"><div id="Rubrik-2"><!-- Rubrik --></div><div class="sv-text-portlet-content"><h2 class="csn-formatmall-rubrik2-vit" id="h-Partner"><a title="Partner" href="/partner.html">Partner</a></h2></div></div>
+
+<div class="sv-jcrmenu-portlet sv-portlet sv-template-portlet
+
+ c2216"  id="svid12_433841811732d7d884446a"><div id="Meny3"><!-- Meny 3 --></div>
+
+
+
+
+
+
+
+
+
+      <ul>
+
+
+
+
+
+
+
+
+
+
+
+               <li><a href="/partner/rapporterar-uppgifter-till-csn.html" title="Rapporterar uppgifter" class="csn-formatmall-liten-gul c2184" >Rapporterar uppgifter</a></li>
+
+
+
+
+
+
+
+
+
+
+
+               <li><a href="/partner/hjalper-och-vagleder.html" title="Hjälper och vägleder" class="csn-formatmall-liten-gul c2184" >Hjälper och vägleder</a></li>
+
+
+
+
+
+
+
+
+
+
+
+               <li><a href="/partner/arbetar-som-lanekontaktperson.html" title="Lånekontaktperson" class="csn-formatmall-liten-gul c2184" >Lånekontaktperson</a></li>
+
+
+
+
+
+
+
+
+
+
+
+               <li><a href="/partner/arbetar-pa-trafikskola.html" title="Trafikskola" class="csn-formatmall-liten-gul c2184" >Trafikskola</a></li>
+
+                           </ul>
+
+   </div>
+
+</div>
+
+</div>
+
+<div class="sv-row sv-layout csn-sidfot-bottenlankar sv-template-layout c2203"  id="svid10_433841811732d7d884446b"><div class="sv-layout sv-skip-spacer sv-column-6 sv-template-layout c2200"  id="svid10_433841811732d7d884446c"><div class="sv-text-portlet sv-use-margins sv-skip-spacer sv-template-portlet
+
+" id="svid12_433841811732d7d884446d"><div id="Lankar-1"><!-- Länkar --></div><div class="sv-text-portlet-content"><p class="csn-formatmall-liten-vit"><a href="/om-webbplatsen/kakor.html">Om kakor</a></p><p class="csn-formatmall-liten-vit"><a href="/om-webbplatsen.html">Om webbplatsen</a></p><p class="csn-formatmall-liten-vit"><a href="/om-webbplatsen/webbkarta.html">Webbkarta</a></p></div></div>
+
+</div>
+
+<div class="sv-layout sv-column-6 sv-template-layout" id="svid10_433841811732d7d8844471"><div class="sv-html-portlet sv-portlet sv-skip-spacer sv-template-portlet
+
+ c2201"  id="svid12_433841811732d7d8844472"><div id="Slogan"><!-- Slogan --></div><div class="c1559" role="complementary" aria-label="Slogan">
+
+   <a href="/" class="c2162">
+
+   	<p class="csn-slogan csn-formatmall-rubrik-3 c2069"  >Vi gör <span class="csn-slogan--red">studier möjligt.</span></a>
+
+
+
+      <span class="csn-logo__link c2070" >
+
+         <img src="/images/18.7ceb52b315ad72aa59e3830a/csnlogo.svg" class="csn-logo__image" alt="CSN logotyp" />
+
+      </span>
+
+   </a>
+
+</div></div>
+
+</div>
+
+</div>
+
+<div class="sv-script-portlet sv-portlet sv-hide-sv-bp-telefon csn-print-hidden sv-template-portlet
+
+ c2244"  id="svid12_433841811732d7d8844473"><div id="Tilltoppen"><!-- Till toppen --></div>
+
+   <a href="" class="csn-knapp-tilltoppen js-pagetop" role="button" title="Till toppen av sidan"></a>
+
+</div>
+
+</div>
+
+</div>
+
+</footer>
+
+<div class="sv-script-portlet sv-portlet sv-template-portlet
+
+" id="svid12_34f0a34115fd85739c5dfc"><div id="NoscriptWT"><!-- NoscriptWT --></div><div role="complementary" aria-label="WT_tracker">
+
+<noscript id="WT_tracker">
+
+<img id="DCSIMG" src="/dcs8if7kj000008q9vts59l2n_6v5m/njs.gif?dcsuri=/nojavascript&amp;WT.js=No&amp;WT.tv=9.4.0&amp;dcssip=www.csn.se" alt="DCSIMG" width="1" height="1" />
+
+</noscript>
+
+</div></div>
+
+<div class="sv-html-portlet sv-portlet sv-template-portlet
+
+" id="svid12_1ba9ecae15f9080d21de13"><div id="Sokordsforslag"><!-- Sökordsförslag --></div><script>
+
+   var sokFalt = document.querySelector('.csn-formular-sokfalt');
+
+   var sokKnapp = document.querySelector('.csn-formular-sokknapp');
+
+   var ajaxSokforslag = new XMLHttpRequest();
+
+
+
+   if (sokFalt) {
+
+      ajaxSokforslag.open('GET', '/download/18.1ba9ecae15f9080d21de4a/suggest.json', true);
+
+
+
+      ajaxSokforslag.onload = function() {
+
+         var list = JSON.parse(ajaxSokforslag.responseText).map(function(i) { return i.name; });
+
+         var placeholderOption = document.createElement('li');
+
+
+
+         placeholderOption.appendChild(document.createTextNode('Platshållare för valbara sökordsförslag'));
+
+         placeholderOption.setAttribute('aria-selected', 'false');
+
+         placeholderOption.setAttribute('role', 'option');
+
+
+
+         new Awesomplete(sokFalt, { list: list, maxItems: 4, filter: Awesomplete.FILTER_STARTSWITH });
+
+
+
+         document.querySelector('.awesomplete ul').setAttribute('aria-label', 'Sökordsförslag');
+
+         document.querySelector('.awesomplete ul').appendChild(placeholderOption);
+
+      };
+
+
+
+      ajaxSokforslag.send();
+
+
+
+      sokFalt.addEventListener('awesomplete-select', function() {
+
+         setTimeout(function() {
+
+            sokKnapp.click();
+
+         }, 0);
+
+      });
+
+
+
+      sokFalt.addEventListener('awesomplete-open', function() {
+
+         var options = document.querySelectorAll('.awesomplete ul li');
+
+
+
+         sokFalt.setAttribute('aria-expanded', 'true');
+
+
+
+         options.forEach(function(item) {
+
+            item.setAttribute('role', 'option');
+
+         });
+
+      });
+
+
+
+      sokFalt.addEventListener('awesomplete-close', function() {
+
+         sokFalt.setAttribute('aria-expanded', 'false');
+
+      });
+
+   }
+
+</script></div>
+
+<div class="sv-vertical sv-layout sv-template-layout" id="svid10_56ed604c160506de914b7b"><div class="sv-vertical sv-layout sv-view sv-skip-spacer sv-template-layout" id="svid93_56ed604c160506de914b7c"></div>
+
+</div>
+
+</div>
+
+
+
+      <script src="/sitevision/7.2.4-258/js/sitevision_plugins-min.js"></script>
+
+      <script src="/sitevision/7.2.4-258/js/rating_plugins-min.js"></script>
+
+      <script src="/sitevision/7.2.4-258/js/search_plugins-min.js"></script>
+
+      <script src="/sitevision/7.2.4-258/js/sitevision_common-min.js"></script>
+
+      <script src="/sitevision/7.2.4-258/portlet/sitevision-portlets-min.js"></script>
+
+      <script src="/sitevision/7.2.4-258/envision/envision.js"></script>
+
+   </body>
+
+</html>
+
+13:29:49.919 [main] INFO  s.t.b.a.a.f.AgentIntegrationTest - Starting refresh.
+
+13:29:49.922 [main] WARN  s.t.b.a.agents.RefreshExecutorUtils - A request for CHECKING_ACCOUNTS is received, agent is not capable of doing this
+
+13:29:49.922 [main] WARN  s.t.b.a.agents.RefreshExecutorUtils - A request for SAVING_ACCOUNTS is received, agent is not capable of doing this
+
+13:29:49.922 [main] WARN  s.t.b.a.agents.RefreshExecutorUtils - A request for CREDITCARD_ACCOUNTS is received, agent is not capable of doing this
+
+REQUEST 7
+GET https://www.csn.se/api/kund-api-webb/rest/kund/aktuellskuld
+Content-Type: application/json
+
+RESPONSE 7
+200
+Server: nginx
+Date: Mon, 11 Jan 2021 13:29:50 GMT
+Content-Type: application/json
+Transfer-Encoding: chunked
+Connection: keep-alive
+X-Powered-By: Servlet/4.0
+Cache-Control: no-cache
+Pragma: no-cache
+Content-Language: en-US
+Expires: Thu, 01 Dec 1994 16:00:00 GMT
+
+{"lanLista":[{"skuldspecifikation":[{"handelse":"Ingående skuld","handelsedatum":1609455600000,"summa":36146},{"handelse":"Expeditionsavgift 2021","summa":150},{"handelse":"Beräknad ränta","handelsedatum":1610319600000,"summa":1},{"handelse":"Utgående skuld","handelsedatum":1610319600000,"summa":36297}],"lanetyp":"ÅBAL","lopnummer":1,"senasteBerakningsdatum":1609369200000,"skuldbelopp":36297,"skuldrattat":"","klartext":false,"laneTypKlartext":"laan.ÅBAL"}],"aterkravLista":[],"rantaAbslAbal":0.05,"rantaAterkrav":2.1,"skuldupprakningsdatum":1610319600000,"totalSkuld":36297,"skuldsanering":false,"uppsagtLanFinns":false,"skuldrattning":false,"arsbearbetningPagar":false}
+
+REQUEST 8
+GET https://www.csn.se/api/kund-api-webb/rest/kund/info
+Content-Type: application/json
+
+RESPONSE 8
+200
+Server: nginx
+Date: Mon, 11 Jan 2021 13:29:50 GMT
+Content-Type: application/json
+Transfer-Encoding: chunked
+Connection: keep-alive
+X-Powered-By: Servlet/4.0
+Cache-Control: no-cache
+Pragma: no-cache
+Content-Language: en-US
+Expires: Thu, 01 Dec 1994 16:00:00 GMT
+
+{"adress":{"utdelningsadress":"DANSKEVÄGEN 10","postnummerPostort":"123 45 ANKEBORG","isUtlandsk":false},"adressFromDatum":1599688800000,"adressGiltigLandbeteckning":"S","adresstyp":"FBF","antalReturer":0,"atkomstskyddLista":[],"avliden":"N","csnNummer":12345678,"ekundStatus":{"csnException":null,"event":null,"exception":false,"transactionId":null,"csnNummer":12345678,"ekundsStatus":"Anmäld","epostadress":"kalle.anka@gmail.com","meddelandesatt":"Epost","mobilnummer":"0701234123","dtoexception":null},"fbfAdressFinns":true,"fbfstatus":"UA","formatPersonnummer":"990101-1234","framtidaAdress":[],"framtidaAdressGiltigLandbeteckning":"","inbetalningAdress":{},"inbetalningAdressGiltigLandbeteckning":"","inloggad":true,"kommuntillhorighet":"ANKEBORG","medborgarskap":"S","namn":"Anka, Karl Johan","personnummer":"9901011234","sekretess":"N","skuldsaneringsFlagga":"N","verifierad":"SKV"}
