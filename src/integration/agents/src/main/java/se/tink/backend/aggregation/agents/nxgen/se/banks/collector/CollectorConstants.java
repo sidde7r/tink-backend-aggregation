@@ -46,6 +46,7 @@ public class CollectorConstants {
 
     public static class BankIdStatus {
         public static final String OUTSTANDING_TRANSACTION = "outstanding_transaction";
+        public static final String STARTED = "started";
         public static final String USER_SIGN = "user_sign";
         public static final String COMPLETE = "complete";
         public static final String NO_CLIENT = "no_client";
