@@ -61,6 +61,7 @@ public final class HttpLoggingConstants {
                     "x-content-type-options",
                     "x-correlation-id",
                     "x-fapi-financial-id",
+                    "x-jws-signature",
                     "x-fapi-interaction-id",
                     "x-forwarded-for",
                     "x-forwarded-host",
