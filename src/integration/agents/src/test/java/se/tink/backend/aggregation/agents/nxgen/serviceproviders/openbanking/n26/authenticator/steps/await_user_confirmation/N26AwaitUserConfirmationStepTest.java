@@ -49,7 +49,7 @@ public class N26AwaitUserConfirmationStepTest {
                         .getRequiredFields()
                         .isEmpty());
         assertEquals(
-                "consentConfirmationAwait",
+                "consentConfirmationAwait1",
                 agentUserInteractionDefinitionResult
                         .getUserInteractionDefinition()
                         .getRequiredFields()

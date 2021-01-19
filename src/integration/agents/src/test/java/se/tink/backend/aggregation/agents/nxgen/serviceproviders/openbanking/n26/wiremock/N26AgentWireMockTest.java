@@ -28,7 +28,7 @@ public class N26AgentWireMockTest {
                         .withConfigurationFile(configuration)
                         .addCallbackData("code", "DUMMY_AUTH_CODE")
                         .addCallbackData("state", "DUMMY_STATE_CODE")
-                        .addCallbackData("consentConfirmationAwait", "blablabla")
+                        .addCallbackData("consentConfirmationAwait1", "blablabla")
                         .build();
 
         final AgentContractEntity expected =
