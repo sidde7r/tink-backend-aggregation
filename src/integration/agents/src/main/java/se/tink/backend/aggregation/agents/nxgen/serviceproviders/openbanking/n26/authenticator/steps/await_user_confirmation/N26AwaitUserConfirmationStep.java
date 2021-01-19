@@ -21,8 +21,10 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.error.ThirdPar
 public class N26AwaitUserConfirmationStep
         extends AgentUserInteractionDefinitionStep<AgentProceedNextStepAuthenticationRequest> {
 
-    private static final String FIELD_ID = "consentConfirmationAwait";
-    private static final String FIELD_LABEL = "Please confirm your login in your N26 app";
+    private static final String FIELD_ID_BASE = "consentConfirmationAwait";
+    private static final String FIELD_LABEL =
+            "Please confirm your login in your N26 app. Retry %d of %d";
+    private static final short MAX_RETRY = 3;
 
     private final ObjectMapper objectMapper;
 
@@ -45,7 +47,13 @@ public class N26AwaitUserConfirmationStep
                                 N26ValidateConsentStep.class.getSimpleName()),
                         authenticationProcessRequest.getAuthenticationPersistedData(),
                         agentAuthenticationProcessState)
-                .requireField(new AgentNonEditableTextFieldDefinition(FIELD_ID, FIELD_LABEL));
+                .requireField(
+                        new AgentNonEditableTextFieldDefinition(
+                                FIELD_ID_BASE + n26ProcessStateData.getConsentRetryCounter(),
+                                String.format(
+                                        FIELD_LABEL,
+                                        n26ProcessStateData.getConsentRetryCounter(),
+                                        MAX_RETRY)));
     }
 
     @Override
@@ -57,7 +65,7 @@ public class N26AwaitUserConfirmationStep
 
         N26ProcessStateData n26ProcessStateData = n26ProcessStateAccessor.getN26ProcessStateData();
 
-        if (n26ProcessStateData.getConsentRetryCounter() > 2) {
+        if (n26ProcessStateData.getConsentRetryCounter() == MAX_RETRY) {
             return new AgentFailedAuthenticationResult(
                     new ThirdPartyAppCancelledError(),
                     new AgentAuthenticationPersistedData(Collections.emptyMap()));
