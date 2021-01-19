@@ -20,6 +20,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.inves
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.investment.rpc.InvestmentSavingsAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.investment.rpc.PensionPortfoliosResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.investment.rpc.PortfolioHoldingsResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants.MenuItemKey;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.BankProfile;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.LinksEntity;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
@@ -50,25 +51,31 @@ public class SwedbankDefaultInvestmentFetcher implements AccountFetcher<Investme
         for (BankProfile bankProfile : apiClient.getBankProfiles()) {
             apiClient.selectProfile(bankProfile);
 
-            PortfolioHoldingsResponse portfolioHoldings = apiClient.portfolioHoldings();
+            if (apiClient.getBankProfileHandler().isAuthorizedForAction(MenuItemKey.PORTFOLIOS)) {
 
-            PensionPortfoliosResponse pensionPortfolios = apiClient.getPensionPortfolios();
+                PortfolioHoldingsResponse portfolioHoldings = apiClient.portfolioHoldings();
 
-            investmentAccounts.addAll(
-                    fundAccountsToInvestmentAccounts(portfolioHoldings.getFundAccounts()));
+                investmentAccounts.addAll(
+                        fundAccountsToInvestmentAccounts(portfolioHoldings.getFundAccounts()));
 
-            investmentAccounts.addAll(
-                    endowmentInsurancesToTinkInvestmentAccounts(
-                            portfolioHoldings.getEndowmentInsurances()));
+                investmentAccounts.addAll(
+                        endowmentInsurancesToTinkInvestmentAccounts(
+                                portfolioHoldings.getEndowmentInsurances()));
 
-            investmentAccounts.addAll(
-                    equityTradersToTinkInvestmentAccounts(portfolioHoldings.getEquityTraders()));
+                investmentAccounts.addAll(
+                        equityTradersToTinkInvestmentAccounts(
+                                portfolioHoldings.getEquityTraders()));
 
-            investmentAccounts.addAll(
-                    investmentSavingsToTinkInvestmentAccounts(
-                            portfolioHoldings.getInvestmentSavings()));
-
-            investmentAccounts.addAll(pensionAccountsToInvestmentAccounts(pensionPortfolios));
+                investmentAccounts.addAll(
+                        investmentSavingsToTinkInvestmentAccounts(
+                                portfolioHoldings.getInvestmentSavings()));
+            }
+            if (apiClient
+                    .getBankProfileHandler()
+                    .isAuthorizedForAction(MenuItemKey.PENSION_PORTFOLIOS)) {
+                PensionPortfoliosResponse pensionPortfolios = apiClient.getPensionPortfolios();
+                investmentAccounts.addAll(pensionAccountsToInvestmentAccounts(pensionPortfolios));
+            }
         }
 
         return investmentAccounts;

@@ -560,7 +560,7 @@ public class SwedbankDefaultApiClient {
         bankProfileHandler.setActiveBankProfile(bankProfile);
     }
 
-    private BankProfileHandler getBankProfileHandler() {
+    public BankProfileHandler getBankProfileHandler() {
         if (bankProfileHandler == null) {
             bankProfileHandler = swedbankStorage.getBankProfileHandler();
             bankProfileHandler.setActiveBankProfile(bankProfileHandler.findTransferProfile());
