@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.investm
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.BankiaUtils;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.investment.BankiaInvestmentUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
@@ -30,7 +30,7 @@ public class ValueAccountIdentifierEntity {
 
     @JsonIgnore
     public static ValueAccountIdentifierEntity fromInternalProductCode(String productCode) {
-        BankiaUtils.checkValidInternalProductCode(productCode);
+        BankiaInvestmentUtils.checkValidInternalProductCode(productCode);
 
         String entity = productCode.substring(0, 4);
         String center = productCode.substring(4, 8);

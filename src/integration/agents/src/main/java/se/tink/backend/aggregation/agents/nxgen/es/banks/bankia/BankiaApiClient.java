@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bankia;
 
-import com.google.common.base.Strings;
+import com.google.api.client.util.Strings;
 import io.vavr.control.Either;
 import io.vavr.control.Try;
 import java.time.LocalDate;
@@ -10,8 +10,8 @@ import javax.annotation.Nullable;
 import javax.ws.rs.core.MediaType;
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.BankiaConstants.Default;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.RequestFactory.Scope;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.authenticator.BankiaCrypto;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.authenticator.rpc.LoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.authenticator.rpc.LoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.authenticator.rpc.RsaKeyResponse;
@@ -34,12 +34,15 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.transact
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.transactional.entities.AccountIdentifierEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.transactional.entities.PaginationDataEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.transactional.entities.SearchCriteriaEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.transactional.rpc.AccountDetailsErrorCode;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.transactional.rpc.AccountDetailsRequest;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.transactional.rpc.AccountDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.transactional.rpc.AccountTransactionsRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.transactional.rpc.AcountTransactionsResponse;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
-import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class BankiaApiClient {
@@ -68,48 +71,21 @@ public class BankiaApiClient {
         return getServicesContracts().getInvestments();
     }
 
-    private RequestBuilder createRequest(String url) {
-        return client.request(url)
-                .queryParam(
-                        BankiaConstants.Query.CM_FORCED_DEVICE_TYPE, BankiaConstants.Default.JSON)
-                .queryParam(BankiaConstants.Query.OIGID, BankiaConstants.Default.TRUE)
-                .queryParam(
-                        BankiaConstants.Query.J_GID_COD_APP, BankiaConstants.Default.LOWER_CASE_AM)
-                .queryParam(
-                        BankiaConstants.Query.J_GID_COD_DS, BankiaConstants.Default.LOWER_CASE_OIP)
-                .queryParam(BankiaConstants.Query.ORIGEN, BankiaConstants.Default.UPPER_CASE_AM)
-                .accept(MediaType.APPLICATION_JSON)
-                .acceptLanguage(Default.ACCEPT_LANGUAGE);
-    }
-
-    private RequestBuilder createInSessionRequest(String url) {
-        return client.request(url)
-                .queryParam(BankiaConstants.Query.J_GID_COD_APP, BankiaConstants.Default.O3)
-                .queryParam(
-                        BankiaConstants.Query.J_GID_COD_DS, BankiaConstants.Default.LOWER_CASE_OIP)
-                .queryParam(
-                        BankiaConstants.Query.X_J_GID_COD_APP,
-                        BankiaConstants.Default.LOWER_CASE_AM)
-                .queryParam(
-                        BankiaConstants.Query.CM_FORCED_DEVICE_TYPE, BankiaConstants.Default.JSON)
-                .accept(MediaType.APPLICATION_JSON)
-                .acceptLanguage(Default.ACCEPT_LANGUAGE);
-    }
-
     public List<LoanAccountEntity> getLoans() {
         return getServicesContracts().getLoans();
     }
 
-    public CardTransactionsResponse getCardTransactions(String cardNumberUnmasked, int limit) {
-        CardTransactionsRequest request = CardTransactionsRequest.create(cardNumberUnmasked, limit);
-        return createInSessionRequest(BankiaConstants.Url.CREDIT_CARD_TRANSACTIONS)
+    public CardTransactionsResponse getCardTransactions(CardTransactionsRequest request) {
+        return requestFactory
+                .create(Scope.WITH_SESSION, URL.of(BankiaConstants.Url.CREDIT_CARD_TRANSACTIONS))
                 .body(request, MediaType.APPLICATION_JSON)
                 .post(CardTransactionsResponse.class);
     }
 
     private ContractsResponse getServicesContracts() {
         try {
-            return createInSessionRequest(BankiaConstants.Url.SERVICES_CONTRACTS)
+            return requestFactory
+                    .create(Scope.WITH_SESSION, URL.of(BankiaConstants.Url.SERVICES_CONTRACTS))
                     .queryParam(
                             BankiaConstants.Query.GROUP_BY_FAMILIA, BankiaConstants.Default.TRUE)
                     .queryParam(BankiaConstants.Query.ID_VISTA, BankiaConstants.Default._1)
@@ -153,7 +129,8 @@ public class BankiaApiClient {
                         BankiaConstants.LANGUAGE,
                         paginationData);
 
-        return createInSessionRequest(BankiaConstants.Url.SERVICES_ACCOUNT_MOVEMENT)
+        return requestFactory
+                .create(Scope.WITH_SESSION, URL.of(BankiaConstants.Url.SERVICES_ACCOUNT_MOVEMENT))
                 .body(request, MediaType.APPLICATION_JSON)
                 .post(AcountTransactionsResponse.class);
     }
@@ -190,8 +167,9 @@ public class BankiaApiClient {
 
     public RsaKeyResponse getLoginKey() {
         try {
-            return createRequest(BankiaConstants.Url.LOGIN_KEY).get(RsaKeyResponse.class);
-
+            return requestFactory
+                    .create(Scope.WITHOUT_SESSION, URL.of(BankiaConstants.Url.LOGIN_KEY))
+                    .get(RsaKeyResponse.class);
         } catch (HttpResponseException exception) {
             if (exception.getResponse().getStatus() == HttpStatus.SC_FORBIDDEN) {
                 return exception.getResponse().getBody(RsaKeyResponse.class);
@@ -209,8 +187,8 @@ public class BankiaApiClient {
                 LoginRequest.create(
                         persistentStorage, username, password, execution, encryptedPassword);
         try {
-
-            return createRequest(BankiaConstants.Url.LOGIN)
+            return requestFactory
+                    .create(Scope.WITHOUT_SESSION, URL.of(BankiaConstants.Url.LOGIN))
                     .queryParam(
                             BankiaConstants.Query.X_J_GID_COD_APP,
                             BankiaConstants.Default.LOWER_CASE_AM)
@@ -237,7 +215,9 @@ public class BankiaApiClient {
      */
     public boolean authorizeSession() {
         try {
-            createInSessionRequest(BankiaConstants.Url.CUSTOMER_SCENARIO).get(String.class);
+            requestFactory
+                    .create(Scope.WITH_SESSION, URL.of(BankiaConstants.Url.CUSTOMER_SCENARIO))
+                    .get(String.class);
             return true;
         } catch (HttpResponseException exception) {
             int status = exception.getResponse().getStatus();
@@ -260,6 +240,18 @@ public class BankiaApiClient {
                                         .post(LoanDetailsResponse.class))
                 .toEither()
                 .mapLeft(LoanDetailsErrorCode::getErrorCode);
+    }
+
+    public Either<AccountDetailsErrorCode, AccountDetailsResponse> getAccountDetails(
+            AccountDetailsRequest request) {
+        return Try.of(
+                        () ->
+                                requestFactory
+                                        .create(Scope.WITH_SESSION, request.getURL())
+                                        .body(request, MediaType.APPLICATION_JSON)
+                                        .post(AccountDetailsResponse.class))
+                .toEither()
+                .mapLeft(AccountDetailsErrorCode::getErrorCode);
     }
 
     public IdentityDataResponse fetchIdentityData() {

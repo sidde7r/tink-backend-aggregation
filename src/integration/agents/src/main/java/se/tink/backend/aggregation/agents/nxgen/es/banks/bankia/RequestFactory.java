@@ -19,7 +19,7 @@ public class RequestFactory {
     }
 
     enum Scope {
-        NORMAL(
+        WITHOUT_SESSION(
                 (client, url) ->
                         client.request(url)
                                 .queryParam(

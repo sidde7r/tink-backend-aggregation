@@ -2,13 +2,18 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.transac
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Collections;
 import java.util.Optional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.function.Function;
+import java.util.function.UnaryOperator;
+import lombok.extern.slf4j.Slf4j;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.BankiaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.BankiaConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.BankiaConstants.Logging;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.entities.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.entities.ContractEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.transactional.rpc.AccountDetailsRequest;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.transactional.rpc.AccountDetailsResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
@@ -20,8 +25,8 @@ import se.tink.libraries.account.identifiers.formatters.DisplayAccountIdentifier
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @JsonObject
+@Slf4j
 public class AccountEntity {
-    @JsonIgnore private static final Logger log = LoggerFactory.getLogger(AccountEntity.class);
 
     @JsonProperty("contrato")
     private ContractEntity contract;
@@ -57,34 +62,53 @@ public class AccountEntity {
     }
 
     @JsonIgnore
-    public Optional<TransactionalAccount> toTinkAccount() {
-        logAccountDataIfUnknownType();
-        final String iban = contract.getIdentifierProductContract();
-
-        // These are used to fetch transactions for the account.
-        final String country = iban.substring(0, 2);
-        final String controlDigits = iban.substring(2, 4);
-        final String bankIdentifier = iban.substring(4);
-
-        return TransactionalAccount.nxBuilder()
-                .withTypeAndFlagsFrom(BankiaConstants.PSD2_TYPE_MAPPER, contract.getProductCode())
-                .withBalance(BalanceModule.of(availableBalance.parseToExactCurrencyAmount()))
-                .withId(
-                        IdModule.builder()
-                                .withUniqueIdentifier(iban.toLowerCase())
-                                .withAccountNumber(formatIban(iban))
-                                .withAccountName(getAccountName(iban))
-                                .addIdentifier(new IbanIdentifier(iban))
-                                .build())
-                .setApiIdentifier(bankIdentifier)
-                .putInTemporaryStorage(BankiaConstants.StorageKey.COUNTRY, country)
-                .putInTemporaryStorage(BankiaConstants.StorageKey.CONTROL_DIGITS, controlDigits)
-                .build();
+    public Function<BankiaApiClient, Optional<TransactionalAccount>> toTinkAccount() {
+        return apiClient -> {
+            logAccountDataIfUnknownType();
+            final String iban = contract.getIdentifierProductContract();
+            return TransactionalAccount.nxBuilder()
+                    .withTypeAndFlagsFrom(
+                            BankiaConstants.PSD2_TYPE_MAPPER, contract.getProductCode())
+                    .withBalance(BalanceModule.of(availableBalance.parseToExactCurrencyAmount()))
+                    .withId(
+                            IdModule.builder()
+                                    .withUniqueIdentifier(iban.toLowerCase())
+                                    .withAccountNumber(
+                                            new DisplayAccountIdentifierFormatter()
+                                                    .apply(
+                                                            AccountIdentifier.create(
+                                                                    Type.IBAN, iban)))
+                                    .withAccountName(getAccountName(iban))
+                                    .addIdentifier(new IbanIdentifier(iban))
+                                    .build())
+                    .addHolders(
+                            apiClient
+                                    .getAccountDetails(new AccountDetailsRequest(iban))
+                                    .map(AccountDetailsResponse::getHolders)
+                                    .getOrElse(Collections.emptyList()))
+                    .setApiIdentifier(Iban.BANK_IDENTIFIER.extract(iban))
+                    .putInTemporaryStorage(
+                            BankiaConstants.StorageKey.COUNTRY, Iban.COUNTRY.extract(iban))
+                    .putInTemporaryStorage(
+                            BankiaConstants.StorageKey.CONTROL_DIGITS,
+                            Iban.CONTROL_DIGITS.extract(iban))
+                    .build();
+        };
     }
 
-    @JsonIgnore
-    private String formatIban(String iban) {
-        return new DisplayAccountIdentifierFormatter()
-                .apply(AccountIdentifier.create(Type.IBAN, iban));
+    private enum Iban {
+        COUNTRY(iban -> iban.substring(0, 2)),
+        CONTROL_DIGITS(iban -> iban.substring(2, 4)),
+        BANK_IDENTIFIER(iban -> iban.substring(4));
+
+        private final Function<String, String> function;
+
+        Iban(UnaryOperator<String> function) {
+            this.function = function;
+        }
+
+        private String extract(String iban) {
+            return this.function.apply(iban);
+        }
     }
 }

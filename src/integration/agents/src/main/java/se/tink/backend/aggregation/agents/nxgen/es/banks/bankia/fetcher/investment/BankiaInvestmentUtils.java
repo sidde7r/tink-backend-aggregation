@@ -1,9 +1,9 @@
-package se.tink.backend.aggregation.agents.nxgen.es.banks.bankia;
+package se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.investment;
 
 import com.google.common.base.Preconditions;
 import java.util.regex.Pattern;
 
-public class BankiaUtils {
+public class BankiaInvestmentUtils {
     private static final Pattern INTERNAL_PRODUCT_CODE_PATTERN = Pattern.compile("^[0-9]{20}$");
 
     public static void checkValidInternalProductCode(String productCode) {
