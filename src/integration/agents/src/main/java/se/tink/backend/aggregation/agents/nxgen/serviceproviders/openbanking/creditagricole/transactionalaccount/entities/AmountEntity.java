@@ -1,10 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.entities;
 
 import java.math.BigDecimal;
+import lombok.Data;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
+@Data
 public class AmountEntity {
     private BigDecimal amount;
     private String currency;
