@@ -13,6 +13,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.TypeLiteral;
+import java.net.URI;
 import org.apache.curator.framework.CuratorFramework;
 import org.junit.Before;
 import org.junit.Test;
@@ -46,6 +47,7 @@ import se.tink.backend.aggregation.workers.operation.AgentWorkerOperation.AgentW
 import se.tink.backend.aggregation.workers.worker.conditions.annotation.ShouldAddExtraCommands;
 import se.tink.backend.integration.agent_data_availability_tracker.client.AsAgentDataAvailabilityTrackerClient;
 import se.tink.backend.integration.tpp_secrets_service.client.ManagedTppSecretsServiceClient;
+import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.cache.CacheClient;
 import se.tink.libraries.credentials.service.CredentialsRequestType;
 import se.tink.libraries.credentials.service.ManualAuthenticateRequest;
@@ -53,6 +55,7 @@ import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.enums.MarketCode;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 import se.tink.libraries.provider.ProviderDto;
+import se.tink.libraries.transfer.rpc.Transfer;
 
 public final class AgentWorkerOperationFactoryTest {
 
@@ -238,6 +241,39 @@ public final class AgentWorkerOperationFactoryTest {
 
         // then
         assertThat(operation.getContext().getRefreshId()).hasValue(CORRELATION_ID);
+    }
+
+    @Test
+    public void testAisPlusPisFlowLogic() {
+        TransferRequest request = mock(TransferRequest.class);
+        Provider pisProvider = provider = mock(Provider.class);
+        Transfer payment = mock(Transfer.class);
+        when(request.getTransfer()).thenReturn(payment);
+        // SE case, regardless of source account
+        when(request.getProvider()).thenReturn(pisProvider);
+        when(pisProvider.getName()).thenReturn("danskebank-bankid");
+        assertThat(factory.isAisPlusPisFlow(request)).isTrue();
+        // UK case, classical
+        when(payment.getSource()).thenReturn(null);
+        when(pisProvider.getName()).thenReturn("uk-revolut-oauth2");
+        assertThat(factory.isAisPlusPisFlow(request)).isFalse();
+        // UK case, with source account
+        when(payment.getSource())
+                .thenReturn(AccountIdentifier.create(URI.create("sort-code://12345612345678")));
+        when(pisProvider.getName()).thenReturn("uk-barclays-oauth2");
+        assertThat(factory.isAisPlusPisFlow(request)).isFalse();
+        // FR case, with source account
+        when(payment.getSource())
+                .thenReturn(
+                        AccountIdentifier.create(URI.create("iban://FR1420041010050500013M02606")));
+        when(pisProvider.getName()).thenReturn("fr-bnpparibas-ob");
+        assertThat(factory.isAisPlusPisFlow(request)).isFalse();
+        // IT case, regardless of source account
+        when(pisProvider.getName()).thenReturn("it-bancasella-ob");
+        assertThat(factory.isAisPlusPisFlow(request)).isTrue();
+        // Revolut SE
+        when(pisProvider.getName()).thenReturn("se-revolut-ob");
+        assertThat(factory.isAisPlusPisFlow(request)).isFalse();
     }
 
     private static class TestModule extends AbstractModule {

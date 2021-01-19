@@ -10,6 +10,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.apache.curator.framework.CuratorFramework;
+import org.assertj.core.util.VisibleForTesting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.CredentialsStatus;
@@ -101,7 +102,7 @@ import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.enums.MarketCode;
 import se.tink.libraries.metrics.registry.MetricRegistry;
-import se.tink.libraries.payments_validations.java.se.tink.libraries.payments.validations.MarketValidationsUtil;
+import se.tink.libraries.payments_validations.java.se.tink.libraries.payments.validations.ProviderBasedValidationsUtil;
 import se.tink.libraries.uuid.UUIDUtils;
 
 public class AgentWorkerOperationFactory {
@@ -718,9 +719,10 @@ public class AgentWorkerOperationFactory {
                 agentWorkerOperationState, operationName, request, commands, context);
     }
 
-    private boolean isAisPlusPisFlow(TransferRequest request) {
-        return MarketValidationsUtil.isSourceAccountMandatory(request.getProvider().getMarket())
-                || request.getTransfer().getSource() != null;
+    @VisibleForTesting
+    boolean isAisPlusPisFlow(TransferRequest request) {
+        return ProviderBasedValidationsUtil.isDebtorAccountMandatory(
+                request.getProvider().getName());
     }
 
     private boolean isUKOBProvider(Provider provider) {
