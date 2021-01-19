@@ -1,23 +1,21 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.loan;
 
+import io.vavr.control.Either;
+import io.vavr.control.Try;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.BankiaApiClient;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.BankiaConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.loan.entities.LoanAccountEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.loan.rpc.LoanDetailsErrorCode;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.loan.rpc.LoanDetailsRequest;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.loan.rpc.LoanDetailsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 
+@Slf4j
 public class BankiaLoanFetcher implements AccountFetcher<LoanAccount> {
-    private static final Logger LOG = LoggerFactory.getLogger(BankiaLoanFetcher.class);
-
     private final BankiaApiClient apiClient;
 
     public BankiaLoanFetcher(BankiaApiClient apiClient) {
@@ -26,29 +24,34 @@ public class BankiaLoanFetcher implements AccountFetcher<LoanAccount> {
 
     @Override
     public Collection<LoanAccount> fetchAccounts() {
-        try {
-            List<LoanAccountEntity> loans = apiClient.getLoans();
-
-            return Optional.ofNullable(loans).orElseGet(Collections::emptyList).stream()
-                    .map(this::toLoanAccount)
-                    .collect(Collectors.toList());
-        } catch (Exception e) {
-            LOG.warn("Failed to fetch loan data " + e.getMessage(), e);
-        }
-
-        return Collections.emptyList();
+        return Try.of(apiClient::getLoans)
+                .map(
+                        loanAccountEntities ->
+                                loanAccountEntities.stream()
+                                        .map(
+                                                loanAccountEntity ->
+                                                        toLoanAccount().apply(loanAccountEntity))
+                                        .filter(
+                                                either -> {
+                                                    if (either.isLeft()) {
+                                                        log.info(either.getLeft().getMessage());
+                                                        return false;
+                                                    } else {
+                                                        return true;
+                                                    }
+                                                })
+                                        .map(Either::get)
+                                        .collect(Collectors.toList()))
+                .onFailure(e -> log.warn("Failed to fetch loan data", e))
+                .getOrElse(Collections::emptyList);
     }
 
-    private LoanAccount toLoanAccount(LoanAccountEntity loanAccountEntity) {
-        LOG.info(BankiaConstants.Logging.LOAN.toString() + " found Loan");
-        return loanAccountEntity.toTinkLoanAccount(fetchLoanDetails(loanAccountEntity));
-    }
-
-    private LoanDetailsResponse fetchLoanDetails(LoanAccountEntity loanAccountEntity) {
-        LoanDetailsRequest request =
-                new LoanDetailsRequest(loanAccountEntity.getProductCode())
-                        .setLoanIdentifier(loanAccountEntity.getLoanIdentifier());
-
-        return apiClient.getLoanDetails(request);
+    private Function<LoanAccountEntity, Either<LoanDetailsErrorCode, LoanAccount>> toLoanAccount() {
+        return loanAccountEntity ->
+                apiClient
+                        .getLoanDetails(
+                                new LoanDetailsRequest(loanAccountEntity.getProductCode())
+                                        .setLoanIdentifier(loanAccountEntity.getLoanIdentifier()))
+                        .map(loanAccountEntity::toTinkLoanAccount);
     }
 }

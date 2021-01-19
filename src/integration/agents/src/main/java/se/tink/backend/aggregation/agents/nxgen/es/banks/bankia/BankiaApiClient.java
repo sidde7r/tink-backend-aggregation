@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bankia;
 
 import com.google.common.base.Strings;
+import io.vavr.control.Either;
+import io.vavr.control.Try;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
@@ -9,6 +11,7 @@ import javax.ws.rs.core.MediaType;
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.BankiaConstants.Default;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.RequestFactory.Scope;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.authenticator.rpc.LoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.authenticator.rpc.LoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.authenticator.rpc.RsaKeyResponse;
@@ -23,6 +26,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.investme
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.investment.rpc.PositionWalletRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.investment.rpc.PositionWalletResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.loan.entities.LoanAccountEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.loan.rpc.LoanDetailsErrorCode;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.loan.rpc.LoanDetailsRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.loan.rpc.LoanDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.rpc.ContractsResponse;
@@ -39,13 +43,17 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class BankiaApiClient {
-
     private final TinkHttpClient client;
     private final PersistentStorage persistentStorage;
+    private final RequestFactory requestFactory;
 
-    public BankiaApiClient(TinkHttpClient client, PersistentStorage persistentStorage) {
+    public BankiaApiClient(
+            TinkHttpClient client,
+            PersistentStorage persistentStorage,
+            RequestFactory requestFactory) {
         this.client = client;
         this.persistentStorage = persistentStorage;
+        this.requestFactory = requestFactory;
     }
 
     public List<AccountEntity> getAccounts() {
@@ -242,10 +250,16 @@ public class BankiaApiClient {
         }
     }
 
-    public LoanDetailsResponse getLoanDetails(LoanDetailsRequest loanDetailsRequest) {
-        return createInSessionRequest(BankiaConstants.Url.LOAN_DETAILS)
-                .body(loanDetailsRequest, MediaType.APPLICATION_JSON)
-                .post(LoanDetailsResponse.class);
+    public Either<LoanDetailsErrorCode, LoanDetailsResponse> getLoanDetails(
+            LoanDetailsRequest request) {
+        return Try.of(
+                        () ->
+                                requestFactory
+                                        .create(Scope.WITH_SESSION, request.getURL())
+                                        .body(request, MediaType.APPLICATION_JSON)
+                                        .post(LoanDetailsResponse.class))
+                .toEither()
+                .mapLeft(LoanDetailsErrorCode::getErrorCode);
     }
 
     public IdentityDataResponse fetchIdentityData() {

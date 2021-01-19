@@ -16,7 +16,7 @@ public abstract class BankiaConstants {
     public static final String PROVIDER_NAME = "es-bankia-password";
     public static final String MARKET = "ES";
     public static final String LANGUAGE = "en";
-    private static final String URL_BASE_OIP = "https://oip.bankia.es";
+    public static final String URL_BASE_OIP = "https://oip.bankia.es";
 
     public static class Url {
         public static final String LOGIN =
@@ -31,9 +31,6 @@ public abstract class BankiaConstants {
                 URL_BASE_OIP + "/api/1.0/operativas/2.0/tarjetas/movimientos";
         public static final String VALUE_ACCOUNT_POSITION_WALLET =
                 URL_BASE_OIP + "/api/microservicios/1.0/valores/posicionCartera";
-
-        public static final String LOAN_DETAILS =
-                URL_BASE_OIP + "/api/1.0/operativas/1.0/prestamos/ObtenerDatosGeneralesPrestamoSBP";
 
         public static final String IDENTITY_DATA =
                 URL_BASE_OIP + "/api/1.0/servicios/cliente.datos/5.0/cliente/datos";
