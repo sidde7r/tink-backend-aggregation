@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.agentplatform.authentication.result;
 
 import com.google.common.collect.Lists;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -21,6 +22,7 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentSucceededAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentUserInteractionDefinitionResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.userinteraction.AgentFieldValue;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.userinteraction.fielddefinition.AgentNonEditableTextFieldDefinition;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.userinteraction.fielddefinition.AgentUsernameFieldDefinition;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.common.AgentClientInfo;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.common.AgentExtendedClientInfo;
@@ -126,6 +128,52 @@ public class AgentAuthenticationResultAggregationHandlerTest {
                                 .getUserInteractionData()
                                 .getFieldValue(AgentUsernameFieldDefinition.id()))
                 .isEqualTo("XXX");
+        Assertions.assertThat(
+                        ((AgentUserInteractionAuthenticationProcessRequest)
+                                        result.getAgentAuthenticationNextRequest())
+                                .getAgentExtendedClientInfo())
+                .isEqualTo(agentExtendedClientInfo);
+    }
+
+    @Test
+    public void
+            forUserInteractionAuthenticationResultShouldRequestUserNonEditableTextFieldAndProcessWithNoUserInteractionData() {
+        // given
+        AgentAuthenticationProcessState agentAuthenticationProcessState =
+                Mockito.mock(AgentAuthenticationProcessState.class);
+        AgentAuthenticationPersistedData agentAuthenticationPersistedData =
+                Mockito.mock(AgentAuthenticationPersistedData.class);
+        AgentAuthenticationProcessStepIdentifier agentAuthenticationProcessStepIdentifier =
+                Mockito.mock(AgentAuthenticationProcessStepIdentifier.class);
+        AgentUserInteractionDefinitionResult authenticationResult =
+                new AgentUserInteractionDefinitionResult(
+                        agentAuthenticationProcessStepIdentifier,
+                        agentAuthenticationPersistedData,
+                        agentAuthenticationProcessState);
+        authenticationResult.requireField(
+                AgentNonEditableTextFieldDefinition.of("fieldId", "fieldLabel"));
+        Mockito.when(
+                        userInteractionService.requestForFields(
+                                authenticationResult
+                                        .getUserInteractionDefinition()
+                                        .getRequiredFields()))
+                .thenReturn(Collections.emptyList());
+        // when
+        AgentAuthenticationResultHandlingResult result =
+                objectUnderTest.handle(authenticationResult);
+        // then
+        Assertions.assertThat(result.getAgentAuthenticationNextRequest())
+                .isExactlyInstanceOf(AgentUserInteractionAuthenticationProcessRequest.class);
+        AgentUserInteractionAuthenticationProcessRequest userInteractionRequest =
+                (AgentUserInteractionAuthenticationProcessRequest)
+                        result.getAgentAuthenticationNextRequest();
+        Assertions.assertThat(userInteractionRequest.getAuthenticationProcessState())
+                .isEqualTo(agentAuthenticationProcessState);
+        Assertions.assertThat(userInteractionRequest.getAuthenticationProcessStepIdentifier().get())
+                .isEqualTo(agentAuthenticationProcessStepIdentifier);
+        Assertions.assertThat(
+                        userInteractionRequest.getUserInteractionData().getFieldValue("fieldId"))
+                .isNull();
         Assertions.assertThat(
                         ((AgentUserInteractionAuthenticationProcessRequest)
                                         result.getAgentAuthenticationNextRequest())
