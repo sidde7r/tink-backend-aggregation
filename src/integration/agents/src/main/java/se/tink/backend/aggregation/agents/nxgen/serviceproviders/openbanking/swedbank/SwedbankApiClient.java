@@ -15,6 +15,9 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.MediaType;
 import org.apache.http.HttpHeaders;
+import se.tink.backend.aggregation.agents.exceptions.payment.CreditorValidationException;
+import se.tink.backend.aggregation.agents.exceptions.payment.InsufficientFundsException;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.entity.AccessEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.ErrorCodes;
@@ -66,6 +69,7 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 import se.tink.libraries.serialization.utils.SerializationUtils;
+import se.tink.libraries.signableoperation.enums.InternalStatus;
 
 public final class SwedbankApiClient implements SwedbankOpenBankingPaymentApiClient {
 
@@ -329,7 +333,7 @@ public final class SwedbankApiClient implements SwedbankOpenBankingPaymentApiCli
 
     @Override
     public AuthenticationResponse startPaymentAuthorization(String endpoint)
-            throws PaymentRejectedException {
+            throws PaymentException {
         final AuthorizeRequest authorizeRequest =
                 new AuthorizeRequest(
                         configuration.getClientId(),
@@ -344,7 +348,7 @@ public final class SwedbankApiClient implements SwedbankOpenBankingPaymentApiCli
                     .body(new AuthorizeRequest(), MediaType.APPLICATION_JSON_TYPE)
                     .put(AuthenticationResponse.class, authorizeRequest);
         } catch (HttpResponseException e) {
-            handleBadRequestError(e);
+            handleBankSideErrorCodes(e);
             throw e;
         }
     }
@@ -392,7 +396,7 @@ public final class SwedbankApiClient implements SwedbankOpenBankingPaymentApiCli
     @Override
     public CreatePaymentResponse createPayment(
             CreatePaymentRequest createPaymentRequest, SwedbankPaymentType swedbankPaymentType)
-            throws PaymentRejectedException {
+            throws PaymentException {
 
         String requestId = UUID.randomUUID().toString();
         String digest = createDigest(SerializationUtils.serializeToString(createPaymentRequest));
@@ -418,14 +422,14 @@ public final class SwedbankApiClient implements SwedbankOpenBankingPaymentApiCli
                             CreatePaymentResponse.class,
                             SerializationUtils.serializeToString(createPaymentRequest));
         } catch (HttpResponseException e) {
-            handleBadRequestError(e);
+            handleBankSideErrorCodes(e);
             throw e;
         }
     }
 
     @Override
     public GetPaymentResponse getPayment(String paymentId, SwedbankPaymentType swedbankPaymentType)
-            throws PaymentRejectedException {
+            throws PaymentException {
         try {
             return getPaymentRequestBuilder(
                             Urls.GET_PAYMENT
@@ -435,15 +439,14 @@ public final class SwedbankApiClient implements SwedbankOpenBankingPaymentApiCli
                                     .parameter(UrlParameters.PAYMENT_ID, paymentId))
                     .get(GetPaymentResponse.class);
         } catch (HttpResponseException e) {
-            handleBadRequestError(e);
+            handleBankSideErrorCodes(e);
             throw e;
         }
     }
 
     @Override
     public PaymentStatusResponse getPaymentStatus(
-            String paymentId, SwedbankPaymentType swedbankPaymentType)
-            throws PaymentRejectedException {
+            String paymentId, SwedbankPaymentType swedbankPaymentType) throws PaymentException {
         try {
             return getPaymentRequestBuilder(
                             Urls.GET_PAYMENT_STATUS
@@ -453,7 +456,7 @@ public final class SwedbankApiClient implements SwedbankOpenBankingPaymentApiCli
                                     .parameter(UrlParameters.PAYMENT_ID, paymentId))
                     .get(PaymentStatusResponse.class);
         } catch (HttpResponseException e) {
-            handleBadRequestError(e);
+            handleBankSideErrorCodes(e);
             throw e;
         }
     }
@@ -464,7 +467,7 @@ public final class SwedbankApiClient implements SwedbankOpenBankingPaymentApiCli
             SwedbankPaymentType swedbankPaymentType,
             String state,
             boolean isRedirect)
-            throws PaymentRejectedException {
+            throws PaymentException {
         try {
             return getPaymentAuthorizationRequestBuilder(
                             Urls.INITIATE_PAYMENT_AUTH
@@ -476,7 +479,7 @@ public final class SwedbankApiClient implements SwedbankOpenBankingPaymentApiCli
                             isRedirect)
                     .post(PaymentAuthorisationResponse.class);
         } catch (HttpResponseException e) {
-            handleBadRequestError(e);
+            handleBankSideErrorCodes(e);
             throw e;
         }
     }
@@ -486,12 +489,30 @@ public final class SwedbankApiClient implements SwedbankOpenBankingPaymentApiCli
                 "SHA-256=".concat("%s"), Base64.getEncoder().encodeToString(Hash.sha256(body)));
     }
 
-    private void handleBadRequestError(HttpResponseException e) throws PaymentRejectedException {
+    private void handleBankSideErrorCodes(HttpResponseException e) throws PaymentException {
         GenericResponse errorResponse = e.getResponse().getBody(GenericResponse.class);
         if (errorResponse.isBadRequest()) {
             throw new PaymentRejectedException(
-                    errorResponse.getErrorMessage(ErrorCodes.FORMAT_ERROR));
+                    errorResponse.getErrorMessage(ErrorCodes.FORMAT_ERROR),
+                    InternalStatus.BANK_ERROR_CODE_NOT_HANDLED_YET);
         }
+        if (errorResponse.hasInsufficientFunds()) {
+            throw new InsufficientFundsException(
+                    errorResponse.getErrorMessage(ErrorCodes.INSUFFICIENT_FUNDS),
+                    InternalStatus.INSUFFICIENT_FUNDS);
+        }
+        if (errorResponse.isInvalidRecipient()) {
+            throw new CreditorValidationException(
+                    errorResponse.getErrorMessage(ErrorCodes.INVALID_RECIPIENT),
+                    InternalStatus.INVALID_DESTINATION_ACCOUNT);
+        }
+        if (errorResponse.isAgreementMissing()) {
+            throw new PaymentRejectedException(
+                    errorResponse.getErrorMessage(ErrorCodes.MISSING_CT_AGREEMENT),
+                    InternalStatus.BANK_ERROR_CODE_NOT_HANDLED_YET);
+        }
+        throw new PaymentException(
+                errorResponse.getErrorText(), InternalStatus.BANK_ERROR_CODE_NOT_HANDLED_YET);
     }
 
     private String generateSignatureHeader(Map<String, Object> headers) {
