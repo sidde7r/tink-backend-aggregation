@@ -8,7 +8,6 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 public class CollectorConstants {
 
     public static class Urls {
-
         private static final String HOST_AUTHENTICATION = "https://mobiltbankid.collectorbank.se";
         private static final String HOST_USER_DATA = "https://api-bankapp-prod.azurewebsites.net";
         private static final String HOST_TRANSACTIONAL_ACCOUNTS =
@@ -60,6 +59,15 @@ public class CollectorConstants {
 
     public static class Currency {
         public static final String SEK = "sek";
+    }
+
+    public static class ErrorMessages {
+        public static final String ILLEGAL_REQUEST = "ILLEGAL_REQUEST";
+    }
+
+    public static class HttpClient {
+        public static final int MAX_ATTEMPTS = 3;
+        public static final int RETRY_SLEEP_MILLISECONDS = 2000;
     }
 
     public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
