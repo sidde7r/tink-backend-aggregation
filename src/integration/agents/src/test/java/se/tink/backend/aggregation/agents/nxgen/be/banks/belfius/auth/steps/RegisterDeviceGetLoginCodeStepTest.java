@@ -22,6 +22,7 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.userinteraction.fielddefinition.AgentFieldDefinition;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.userinteraction.fielddefinition.CardReaderLoginDescriptionAgentField;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.userinteraction.fielddefinition.CardReaderLoginInputAgentField;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.common.AgentExtendedClientInfo;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.InvalidCredentialsError;
 
 public class RegisterDeviceGetLoginCodeStepTest extends BaseStep {
@@ -36,7 +37,8 @@ public class RegisterDeviceGetLoginCodeStepTest extends BaseStep {
         AgentProceedNextStepAuthenticationRequest request =
                 createAgentProceedNextStepAuthenticationRequest(
                         new BelfiusProcessState().sessionId(SESSION_ID).machineId(MACHINE_ID),
-                        new BelfiusAuthenticationData().panNumber(PAN_NUMBER));
+                        new BelfiusAuthenticationData().panNumber(PAN_NUMBER),
+                        AgentExtendedClientInfo.builder().build());
 
         PrepareAuthenticationResponse prepareAuthenticationResponse = mockValidResponse();
         when(apiClient.prepareAuthentication(
@@ -75,7 +77,8 @@ public class RegisterDeviceGetLoginCodeStepTest extends BaseStep {
         AgentProceedNextStepAuthenticationRequest request =
                 createAgentProceedNextStepAuthenticationRequest(
                         new BelfiusProcessState().sessionId(SESSION_ID).machineId(MACHINE_ID),
-                        new BelfiusAuthenticationData().panNumber(PAN_NUMBER));
+                        new BelfiusAuthenticationData().panNumber(PAN_NUMBER),
+                        AgentExtendedClientInfo.builder().build());
 
         PrepareAuthenticationResponse prepareAuthenticationResponse = mockInvalidResponse();
         when(apiClient.prepareAuthentication(

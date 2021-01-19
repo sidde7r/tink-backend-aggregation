@@ -11,6 +11,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import org.apache.http.client.utils.URIBuilder;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.oauth2.StrongAuthenticationState;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.common.AgentClientInfo;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SupplementalWaitRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 
@@ -22,16 +23,19 @@ public class ThirdPartyRequestWithStateParam implements ThirdPartyRequest {
     private String strongAuthenticationState;
     private final long waitFor;
     private final TimeUnit timeUnit;
+    private final AgentClientInfo agentClientInfo;
 
-    public ThirdPartyRequestWithStateParam(String url, long waitFor, TimeUnit timeUnit) {
+    public ThirdPartyRequestWithStateParam(
+            String url, long waitFor, TimeUnit timeUnit, AgentClientInfo agentClientInfo) {
         try {
             this.url = new URL(url);
         } catch (MalformedURLException e) {
             throw new IllegalArgumentException("Redirect url has incorrect format");
         }
-        initStrongAuthenticationState();
         this.waitFor = waitFor;
         this.timeUnit = timeUnit;
+        this.agentClientInfo = agentClientInfo;
+        initStrongAuthenticationState();
     }
 
     public ThirdPartyAppAuthenticationPayload getPayload() {
@@ -62,7 +66,7 @@ public class ThirdPartyRequestWithStateParam implements ThirdPartyRequest {
 
     private String generateNewStrongAuthenticationState() {
         final String newStrongAuthenticationState =
-                StrongAuthenticationState.generateUuidWithTinkTag();
+                StrongAuthenticationState.getState(agentClientInfo);
         try {
             url =
                     new URIBuilder(url.toString())

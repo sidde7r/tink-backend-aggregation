@@ -2,14 +2,14 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n2
 
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.authenticator.steps.fetch_authorization_url.N26FetchAuthorizationUrlStep;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationProcessStepIdentifier;
-import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.AgentRedirectTokensAuthenticationPersistedDataAccessorFactory;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.AgentRefreshableAccessTokenAuthenticationPersistedDataAccessorFactory;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.RedirectAuthenticationAccessTokenValidationStep;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.RedirectAuthenticationInitialProcessStep;
 
 public class N26AuthenticationInitStep extends RedirectAuthenticationInitialProcessStep {
 
     public N26AuthenticationInitStep(
-            AgentRedirectTokensAuthenticationPersistedDataAccessorFactory
+            AgentRefreshableAccessTokenAuthenticationPersistedDataAccessorFactory
                     agentRedirectTokensAuthenticationPersistedDataAccessorFactory) {
         super(agentRedirectTokensAuthenticationPersistedDataAccessorFactory);
     }

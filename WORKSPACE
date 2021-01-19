@@ -153,7 +153,7 @@ git_repository(
 # To be used only by //src/aggregation/lib/src/main/java/se/tink/backend/aggregation/agents_platform/agents_framework
 git_repository(
     name = "tink_backend_for_agents_framework",
-    commit = "aada680958ac940e5ca82205440e7f0bc976f8f4",
+    commit = "f8eef7a3715a1ebafcd788b53f6bb727b4aef445",
     remote = "git@github.com:tink-ab/tink-backend.git",
     shallow_since = "1595000000 +0000",
 )
@@ -556,6 +556,14 @@ jvm_maven_import_external(
     server_urls = MAVEN_REPOS,
 )
 
+jvm_maven_import_external(
+    name = "joda_time_joda_time",
+    artifact = "joda-time:joda-time:2.9.9",
+    artifact_sha256 = "b049a43c1057942e6acfbece008e4949b2e35d1658d0c8e06f4485397e2fa4e7",
+    licenses = ["notice"],
+    server_urls = ["https://repo1.maven.org/maven2"],
+)
+
 http_archive(
     name = "grpc_ecosystem_grpc_gateway",
     sha256 = "b14c0ad883933705bfaeffcc695f07bf1e435e7f27e5999d164eb22ced105b3d",
@@ -812,7 +820,7 @@ maven_install(
         "javax.servlet:javax.servlet-api:4.0.1",
         "javax.transaction:jta:1.1",
         "javax.validation:validation-api:2.0.1.Final",
-        "javax.xml.bind:jaxb-api:2.2.7",
+        "javax.xml.bind:jaxb-api:2.3.1",
         "javax.xml.stream:stax-api:1.0-2",
         "jline:jline:0.9.94",
         "joda-time:joda-time:2.9.9",

@@ -6,6 +6,7 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationProcessState;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationProcessStepIdentifier;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.request.AgentProceedNextStepAuthenticationRequest;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.common.AgentExtendedClientInfo;
 
 @Ignore
 public abstract class N26BaseTestStep {
@@ -23,7 +24,10 @@ public abstract class N26BaseTestStep {
                     AgentAuthenticationProcessState state,
                     AgentAuthenticationPersistedData persistedData) {
         return new AgentProceedNextStepAuthenticationRequest(
-                AgentAuthenticationProcessStepIdentifier.of("test_id"), state, persistedData);
+                AgentAuthenticationProcessStepIdentifier.of("test_id"),
+                state,
+                persistedData,
+                AgentExtendedClientInfo.builder().build());
     }
 
     protected static final ObjectMapper objectMapper = new ObjectMapper();

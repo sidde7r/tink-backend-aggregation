@@ -23,6 +23,7 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.request.AgentProceedNextStepAuthenticationRequest;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.userinteraction.fielddefinition.CardReaderLoginInputAgentField;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.common.AgentExtendedClientInfo;
 
 @RunWith(MockitoJUnitRunner.class)
 public class IdentAuthStepTest extends AbstractStepTest {
@@ -66,7 +67,8 @@ public class IdentAuthStepTest extends AbstractStepTest {
                         AgentAuthenticationProcessStepIdentifier.of("doesnt-matter"),
                         AgentAuthenticationProcessState.of("FortisProcessState", "{}"),
                         AgentAuthenticationPersistedData.of(
-                                "FortisAuthData", objectMapper.writeValueAsString(fortisAuthData)));
+                                "FortisAuthData", objectMapper.writeValueAsString(fortisAuthData)),
+                        AgentExtendedClientInfo.builder().build());
 
         // when
         AgentAuthenticationResult result = step.execute(request);

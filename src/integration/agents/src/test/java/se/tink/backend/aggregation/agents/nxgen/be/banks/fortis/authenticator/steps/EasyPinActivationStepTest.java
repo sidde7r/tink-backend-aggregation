@@ -21,6 +21,7 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.request.AgentProceedNextStepAuthenticationRequest;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentSucceededAuthenticationResult;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.common.AgentExtendedClientInfo;
 
 @RunWith(MockitoJUnitRunner.class)
 public class EasyPinActivationStepTest extends AbstractStepTest {
@@ -68,7 +69,8 @@ public class EasyPinActivationStepTest extends AbstractStepTest {
                                 "FortisProcessState",
                                 objectMapper.writeValueAsString(fortisProcessState)),
                         AgentAuthenticationPersistedData.of(
-                                "FortisAuthData", objectMapper.writeValueAsString(fortisAuthData)));
+                                "FortisAuthData", objectMapper.writeValueAsString(fortisAuthData)),
+                        AgentExtendedClientInfo.builder().build());
 
         // when
         AgentAuthenticationResult result = step.execute(request);

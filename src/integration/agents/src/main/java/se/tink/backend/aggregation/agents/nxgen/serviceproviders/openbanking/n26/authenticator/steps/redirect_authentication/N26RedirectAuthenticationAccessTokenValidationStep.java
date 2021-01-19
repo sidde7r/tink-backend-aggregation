@@ -7,19 +7,19 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentProceedNextStepAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentSucceededAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.steps.AgentAuthenticationProcessStep;
-import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.AgentRedirectTokensAuthenticationPersistedDataAccessorFactory;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.AgentRefreshableAccessTokenAuthenticationPersistedDataAccessorFactory;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.RedirectAuthenticationAccessTokenValidationStep;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.RedirectAuthenticationRefreshTokenStep;
-import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.RedirectTokensValidator;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.common.authentication.RefreshableAccessTokenValidator;
 
 @Slf4j
 public class N26RedirectAuthenticationAccessTokenValidationStep
         extends RedirectAuthenticationAccessTokenValidationStep {
 
     public N26RedirectAuthenticationAccessTokenValidationStep(
-            AgentRedirectTokensAuthenticationPersistedDataAccessorFactory
+            AgentRefreshableAccessTokenAuthenticationPersistedDataAccessorFactory
                     agentRedirectTokensAuthenticationPersistedDataAccessorFactory,
-            RedirectTokensValidator tokenValidator) {
+            RefreshableAccessTokenValidator tokenValidator) {
         super(agentRedirectTokensAuthenticationPersistedDataAccessorFactory, tokenValidator);
     }
 
@@ -31,14 +31,12 @@ public class N26RedirectAuthenticationAccessTokenValidationStep
         if (result instanceof AgentSucceededAuthenticationResult) {
             return new AgentProceedNextStepAuthenticationResult(
                     AgentAuthenticationProcessStep.identifier(N26AutoAuthValidateConsentStep.class),
-                    authenticationProcessRequest.getAuthenticationPersistedData(),
-                    authenticationProcessRequest.getAgentExtendedClientInfo());
+                    authenticationProcessRequest.getAuthenticationPersistedData());
         } else if (result instanceof AgentProceedNextStepAuthenticationResult) {
             return new AgentProceedNextStepAuthenticationResult(
                     AgentAuthenticationProcessStep.identifier(
                             RedirectAuthenticationRefreshTokenStep.class),
-                    authenticationProcessRequest.getAuthenticationPersistedData(),
-                    authenticationProcessRequest.getAgentExtendedClientInfo());
+                    authenticationProcessRequest.getAuthenticationPersistedData());
         }
         log.error("Unknown state after validating access token");
         throw new IllegalStateException(

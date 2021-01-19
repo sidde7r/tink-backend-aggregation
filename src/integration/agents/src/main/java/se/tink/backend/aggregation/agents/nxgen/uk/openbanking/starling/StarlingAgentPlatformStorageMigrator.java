@@ -4,10 +4,10 @@ import java.util.HashMap;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.ObjectMapperFactory;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.storage.AgentPlatformStorageMigrator;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationPersistedData;
-import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.AgentRedirectTokensAuthenticationPersistedData;
-import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.AgentRedirectTokensAuthenticationPersistedDataAccessorFactory;
-import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.RedirectTokens;
-import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.Token;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.AgentRefreshableAccessTokenAuthenticationPersistedData;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.AgentRefreshableAccessTokenAuthenticationPersistedDataAccessorFactory;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.common.authentication.RefreshableAccessToken;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.common.authentication.Token;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.oauth.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.oauth.OAuth2TokenStorageDefaultImpl;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
@@ -16,25 +16,26 @@ public class StarlingAgentPlatformStorageMigrator implements AgentPlatformStorag
 
     @Override
     public AgentAuthenticationPersistedData migrate(PersistentStorage ps) {
-        AgentRedirectTokensAuthenticationPersistedData redirectTokensAuthenticationPersistedData =
-                new AgentRedirectTokensAuthenticationPersistedDataAccessorFactory(
-                                new ObjectMapperFactory().getInstance())
-                        .createAgentRedirectTokensAuthenticationPersistedData(
-                                new AgentAuthenticationPersistedData(ps));
+        AgentRefreshableAccessTokenAuthenticationPersistedData
+                redirectTokensAuthenticationPersistedData =
+                        new AgentRefreshableAccessTokenAuthenticationPersistedDataAccessorFactory(
+                                        new ObjectMapperFactory().getInstance())
+                                .createAgentRefreshableAccessTokenAuthenticationPersistedData(
+                                        new AgentAuthenticationPersistedData(ps));
 
         return new OAuth2TokenStorageDefaultImpl(ps)
                 .fetchToken()
                 .map(oauth2Token -> mapOAuth2TokenToRedirectTokens(oauth2Token))
                 .map(
                         redirectTokens ->
-                                redirectTokensAuthenticationPersistedData.storeRedirectTokens(
-                                        redirectTokens))
+                                redirectTokensAuthenticationPersistedData
+                                        .storeRefreshableAccessToken(redirectTokens))
                 .orElse(new AgentAuthenticationPersistedData(new HashMap<>()));
     }
 
-    private RedirectTokens mapOAuth2TokenToRedirectTokens(OAuth2Token oAuth2Token) {
-        RedirectTokens.RedirectTokensBuilder builder =
-                RedirectTokens.builder()
+    private RefreshableAccessToken mapOAuth2TokenToRedirectTokens(OAuth2Token oAuth2Token) {
+        RefreshableAccessToken.RefreshableAccessTokenBuilder builder =
+                RefreshableAccessToken.builder()
                         .accessToken(
                                 Token.builder()
                                         .body(oAuth2Token.getAccessToken())

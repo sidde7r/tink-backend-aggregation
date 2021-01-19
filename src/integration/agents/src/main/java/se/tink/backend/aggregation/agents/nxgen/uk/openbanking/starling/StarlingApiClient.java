@@ -24,9 +24,9 @@ import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transfer.rpc.PayeesResponse;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationPersistedData;
-import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.AgentRedirectTokensAuthenticationPersistedData;
-import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.AgentRedirectTokensAuthenticationPersistedDataAccessorFactory;
-import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.Token;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.AgentRefreshableAccessTokenAuthenticationPersistedData;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.AgentRefreshableAccessTokenAuthenticationPersistedDataAccessorFactory;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.common.authentication.Token;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -42,14 +42,15 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 public class StarlingApiClient {
 
     private final TinkHttpClient client;
-    private final AgentRedirectTokensAuthenticationPersistedData redirectTokensPersistedData;
+    private final AgentRefreshableAccessTokenAuthenticationPersistedData
+            redirectTokensPersistedData;
 
     public StarlingApiClient(TinkHttpClient client, PersistentStorage persistentStorage) {
         this.client = client;
         redirectTokensPersistedData =
-                new AgentRedirectTokensAuthenticationPersistedDataAccessorFactory(
+                new AgentRefreshableAccessTokenAuthenticationPersistedDataAccessorFactory(
                                 new ObjectMapperFactory().getInstance())
-                        .createAgentRedirectTokensAuthenticationPersistedData(
+                        .createAgentRefreshableAccessTokenAuthenticationPersistedData(
                                 new AgentAuthenticationPersistedData(persistentStorage));
     }
 
@@ -180,7 +181,8 @@ public class StarlingApiClient {
     }
 
     private OAuth2Token getOAuthToken() {
-        Token accessToken = redirectTokensPersistedData.getRedirectTokens().get().getAccessToken();
+        Token accessToken =
+                redirectTokensPersistedData.getRefreshableAccessToken().get().getAccessToken();
         return OAuth2Token.create(
                 accessToken.getTokenType(),
                 new String(accessToken.getBody(), StandardCharsets.UTF_8),

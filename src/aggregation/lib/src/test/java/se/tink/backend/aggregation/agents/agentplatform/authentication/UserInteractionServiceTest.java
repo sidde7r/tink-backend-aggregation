@@ -20,6 +20,7 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.userinteraction.fielddefinition.AgentFieldDefinition;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.userinteraction.fielddefinition.label.AgentFieldLabel;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.userinteraction.fielddefinition.label.I18NFieldLabel;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.common.AgentClientInfo;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.libraries.credentials.service.CredentialsRequest;
@@ -131,7 +132,8 @@ public class UserInteractionServiceTest {
         UserInteractionService objectUnderTest =
                 new UserInteractionService(supplementalInformationController, credentialsRequest);
         // when
-        Optional<Map<String, String>> result = objectUnderTest.redirect(redirectUrl);
+        Optional<Map<String, String>> result =
+                objectUnderTest.redirect(redirectUrl, AgentClientInfo.builder().build());
         // then
         Mockito.verify(supplementalInformationController)
                 .openThirdPartyApp(thirdPartyAppAuthenticationPayloadArgumentCaptor.capture());
@@ -164,7 +166,8 @@ public class UserInteractionServiceTest {
         UserInteractionService objectUnderTest =
                 new UserInteractionService(supplementalInformationController, credentialsRequest);
         // when
-        Optional<Map<String, String>> result = objectUnderTest.redirect(redirectUrl);
+        Optional<Map<String, String>> result =
+                objectUnderTest.redirect(redirectUrl, AgentClientInfo.builder().build());
         // then
         Mockito.verify(supplementalInformationController)
                 .waitForSupplementalInformation(
@@ -196,7 +199,8 @@ public class UserInteractionServiceTest {
         UserInteractionService objectUnderTest =
                 new UserInteractionService(supplementalInformationController, credentialsRequest);
         // when
-        Optional<Map<String, String>> result = objectUnderTest.redirect(redirectUrl);
+        Optional<Map<String, String>> result =
+                objectUnderTest.redirect(redirectUrl, AgentClientInfo.builder().build());
         // then
         Assert.assertFalse(result.isPresent());
     }

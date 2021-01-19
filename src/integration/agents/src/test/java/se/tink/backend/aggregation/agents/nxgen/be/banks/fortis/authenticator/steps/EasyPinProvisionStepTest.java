@@ -28,6 +28,7 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.request.AgentUserInteractionAuthenticationProcessRequest;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.userinteraction.AgentFieldValue;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.common.AgentExtendedClientInfo;
 
 @RunWith(MockitoJUnitRunner.class)
 public class EasyPinProvisionStepTest extends AbstractStepTest {
@@ -67,7 +68,8 @@ public class EasyPinProvisionStepTest extends AbstractStepTest {
                         AgentAuthenticationProcessState.of(
                                 "FortisProcessState",
                                 objectMapper.writeValueAsString(fortisProcessState)),
-                        Collections.singletonList(new AgentFieldValue(OtpInputField.ID, "44444")));
+                        Collections.singletonList(new AgentFieldValue(OtpInputField.ID, "44444")),
+                        AgentExtendedClientInfo.builder().build());
 
         when(fortisApiClient.easyPinProvision(any(), any(), any(), any()))
                 .thenReturn(mockResponse());

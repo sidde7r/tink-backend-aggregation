@@ -5,7 +5,6 @@ import agents_platform_agents_framework.org.springframework.http.RequestEntity;
 import agents_platform_agents_framework.org.springframework.http.ResponseEntity;
 import agents_platform_agents_framework.org.springframework.util.LinkedMultiValueMap;
 import agents_platform_agents_framework.org.springframework.util.MultiValueMap;
-import lombok.var;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.common.AgentExtendedClientInfo;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.http.AgentHttpClient;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -39,7 +38,7 @@ public class AgentPlatformHttpClient implements AgentHttpClient {
                                 headerValues.forEach(
                                         headerValue ->
                                                 requestBuilder.header(headerName, headerValue)));
-        var response =
+        HttpResponse response =
                 requestBuilder.method(
                         HttpMethod.valueOf(requestEntity.getMethod().name()), HttpResponse.class);
         return new ResponseEntity<>(

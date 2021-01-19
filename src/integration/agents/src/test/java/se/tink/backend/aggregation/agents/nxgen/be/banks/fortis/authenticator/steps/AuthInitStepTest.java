@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.authenticator.pe
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationPersistedData;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.request.AgentStartAuthenticationProcessRequest;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentAuthenticationResult;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.common.AgentExtendedClientInfo;
 
 public class AuthInitStepTest extends AbstractStepTest {
 
@@ -29,7 +30,8 @@ public class AuthInitStepTest extends AbstractStepTest {
         AgentStartAuthenticationProcessRequest request =
                 new AgentStartAuthenticationProcessRequest(
                         AgentAuthenticationPersistedData.of(
-                                "FortisAuthData", objectMapper.writeValueAsString(fortisAuthData)));
+                                "FortisAuthData", objectMapper.writeValueAsString(fortisAuthData)),
+                        AgentExtendedClientInfo.builder().build());
 
         // when
         AgentAuthenticationResult result = step.execute(request);
@@ -52,7 +54,8 @@ public class AuthInitStepTest extends AbstractStepTest {
         AgentStartAuthenticationProcessRequest request =
                 new AgentStartAuthenticationProcessRequest(
                         AgentAuthenticationPersistedData.of(
-                                "FortisAuthData", objectMapper.writeValueAsString(fortisAuthData)));
+                                "FortisAuthData", objectMapper.writeValueAsString(fortisAuthData)),
+                        AgentExtendedClientInfo.builder().build());
 
         // when
         AgentAuthenticationResult result = step.execute(request);
@@ -71,7 +74,8 @@ public class AuthInitStepTest extends AbstractStepTest {
         AgentStartAuthenticationProcessRequest request =
                 new AgentStartAuthenticationProcessRequest(
                         AgentAuthenticationPersistedData.of(
-                                "FortisAuthData", objectMapper.writeValueAsString(fortisAuthData)));
+                                "FortisAuthData", objectMapper.writeValueAsString(fortisAuthData)),
+                        AgentExtendedClientInfo.builder().build());
 
         // when
         AgentAuthenticationResult result = step.execute(request);

@@ -4,6 +4,9 @@ java_library(
     name = "agents",
     srcs = glob(["src/main/java/**/*.java"]),
     visibility = ["//visibility:public"],
+    runtime_deps = [
+        "@maven//:com_sun_xml_bind_jaxb_impl",
+    ],
     deps = [
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/client/provider_configuration/rpc",
         "//src/integration/account/src/main/java/se/tink/libraries/account/enums",

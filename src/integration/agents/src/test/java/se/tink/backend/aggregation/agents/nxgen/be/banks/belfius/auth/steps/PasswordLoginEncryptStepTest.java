@@ -18,6 +18,7 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.request.AgentProceedNextStepAuthenticationRequest;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentProceedNextStepAuthenticationResult;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.common.AgentExtendedClientInfo;
 
 public class PasswordLoginEncryptStepTest extends BaseStep {
 
@@ -39,7 +40,8 @@ public class PasswordLoginEncryptStepTest extends BaseStep {
                                 .contractNumber(CONTRACT_NUMBER)
                                 .sessionId(SESSION_ID)
                                 .machineId(MACHINE_ID),
-                        persistenceData);
+                        persistenceData,
+                        AgentExtendedClientInfo.builder().build());
 
         when(apiClient.sendCardNumber(
                         SESSION_ID,

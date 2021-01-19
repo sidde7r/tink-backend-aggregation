@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.request.AgentProceedNextStepAuthenticationRequest;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentProceedNextStepAuthenticationResult;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.common.AgentExtendedClientInfo;
 
 public class RegisterDeviceFinishStepTest extends BaseStep {
 
@@ -30,7 +31,8 @@ public class RegisterDeviceFinishStepTest extends BaseStep {
                                 .sessionId(SESSION_ID)
                                 .machineId(MACHINE_ID)
                                 .deviceToken(DEVICE_TOKEN),
-                        new BelfiusAuthenticationData());
+                        new BelfiusAuthenticationData(),
+                        AgentExtendedClientInfo.builder().build());
 
         // when
         AgentAuthenticationResult result = step.execute(request);

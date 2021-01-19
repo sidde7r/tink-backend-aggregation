@@ -8,8 +8,8 @@ import se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.authenticatio
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.authentication.persistence.KbcPersistedDataAccessorFactory;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationPersistedData;
-import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.AgentRedirectTokensAuthenticationPersistedData;
-import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.AgentRedirectTokensAuthenticationPersistedDataAccessorFactory;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.AgentRefreshableAccessTokenAuthenticationPersistedData;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.AgentRefreshableAccessTokenAuthenticationPersistedDataAccessorFactory;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
@@ -47,43 +47,48 @@ public class KbcStorageMigratorTest {
                         .getKbcAuthenticationData();
         Assertions.assertThat(kbcAuthenticationData.getConsentId()).isEqualTo(consentId);
         Assertions.assertThat(kbcAuthenticationData.getCodeVerifier()).isEqualTo(codeVerifier);
-        AgentRedirectTokensAuthenticationPersistedData redirectTokensAuthenticationPersistedData =
-                new AgentRedirectTokensAuthenticationPersistedDataAccessorFactory(objectMapper)
-                        .createAgentRedirectTokensAuthenticationPersistedData(result);
+        AgentRefreshableAccessTokenAuthenticationPersistedData
+                redirectTokensAuthenticationPersistedData =
+                        new AgentRefreshableAccessTokenAuthenticationPersistedDataAccessorFactory(
+                                        objectMapper)
+                                .createAgentRefreshableAccessTokenAuthenticationPersistedData(
+                                        result);
         Assertions.assertThat(
-                        redirectTokensAuthenticationPersistedData.getRedirectTokens().isPresent())
+                        redirectTokensAuthenticationPersistedData
+                                .getRefreshableAccessToken()
+                                .isPresent())
                 .isTrue();
         Assertions.assertThat(
                         redirectTokensAuthenticationPersistedData
-                                .getRedirectTokens()
+                                .getRefreshableAccessToken()
                                 .get()
                                 .getAccessToken()
                                 .getBody())
                 .isEqualTo(oAuth2Token.getAccessToken().getBytes());
         Assertions.assertThat(
                         redirectTokensAuthenticationPersistedData
-                                .getRedirectTokens()
+                                .getRefreshableAccessToken()
                                 .get()
                                 .getAccessToken()
                                 .getIssuedAtInSeconds())
                 .isEqualTo(oAuth2Token.getIssuedAt());
         Assertions.assertThat(
                         redirectTokensAuthenticationPersistedData
-                                .getRedirectTokens()
+                                .getRefreshableAccessToken()
                                 .get()
                                 .getAccessToken()
                                 .getExpiresInSeconds())
                 .isEqualTo(oAuth2Token.getExpiresInSeconds());
         Assertions.assertThat(
                         redirectTokensAuthenticationPersistedData
-                                .getRedirectTokens()
+                                .getRefreshableAccessToken()
                                 .get()
                                 .getAccessToken()
                                 .getTokenType())
                 .isEqualTo(oAuth2Token.getTokenType());
         Assertions.assertThat(
                         redirectTokensAuthenticationPersistedData
-                                .getRedirectTokens()
+                                .getRefreshableAccessToken()
                                 .get()
                                 .getRefreshToken()
                                 .getBody())

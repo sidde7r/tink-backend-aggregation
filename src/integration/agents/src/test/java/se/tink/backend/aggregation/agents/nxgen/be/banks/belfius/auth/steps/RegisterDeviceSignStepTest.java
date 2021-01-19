@@ -20,6 +20,7 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentProceedNextStepAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.userinteraction.AgentFieldValue;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.userinteraction.fielddefinition.CardReaderSignInputAgentField;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.common.AgentExtendedClientInfo;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AgentBankApiError;
 
 public class RegisterDeviceSignStepTest extends BaseStep {
@@ -35,6 +36,7 @@ public class RegisterDeviceSignStepTest extends BaseStep {
                 createAgentUserInteractionAuthenticationProcessRequest(
                         new BelfiusProcessState().sessionId(SESSION_ID).machineId(MACHINE_ID),
                         new BelfiusAuthenticationData(),
+                        AgentExtendedClientInfo.builder().build(),
                         new AgentFieldValue(CardReaderSignInputAgentField.id(), CODE));
 
         RegisterDeviceSignResponse registerDeviceSignResponse =
@@ -67,6 +69,7 @@ public class RegisterDeviceSignStepTest extends BaseStep {
                 createAgentUserInteractionAuthenticationProcessRequest(
                         new BelfiusProcessState().sessionId(SESSION_ID).machineId(MACHINE_ID),
                         new BelfiusAuthenticationData(),
+                        AgentExtendedClientInfo.builder().build(),
                         new AgentFieldValue(CardReaderSignInputAgentField.id(), CODE));
 
         RegisterDeviceSignResponse registerDeviceSignResponse =

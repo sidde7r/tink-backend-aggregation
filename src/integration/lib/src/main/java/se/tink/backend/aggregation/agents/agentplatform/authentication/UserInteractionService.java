@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.userinteraction.AgentFieldValue;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.userinteraction.fielddefinition.AgentFieldDefinition;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.common.AgentClientInfo;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationFormer;
 import se.tink.libraries.credentials.service.CredentialsRequest;
@@ -50,10 +51,11 @@ public class UserInteractionService {
         return values;
     }
 
-    public Optional<Map<String, String>> redirect(String redirectUrl) {
+    public Optional<Map<String, String>> redirect(
+            String redirectUrl, AgentClientInfo agentClientInfo) {
         ThirdPartyRequest thirdPartyRequest =
                 agentInteractionDataToSupplementalInformationMapper.toThirdPartyRequest(
-                        redirectUrl);
+                        redirectUrl, agentClientInfo);
         final String waitOnKey =
                 String.format(
                         UNIQUE_PREFIX_TPCB,

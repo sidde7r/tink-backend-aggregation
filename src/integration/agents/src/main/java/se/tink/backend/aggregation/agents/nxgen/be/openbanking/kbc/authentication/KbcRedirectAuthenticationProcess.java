@@ -6,7 +6,7 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.RedirectAuthenticationInitialProcessStep;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.RedirectAuthenticationProcess;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.RedirectAuthenticationRefreshTokenStep;
-import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.RedirectFetchAuthenticationTokensStep;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.RedirectFetchRefreshableAccessTokenStep;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.RedirectPreparationRedirectUrlStep;
 
 public class KbcRedirectAuthenticationProcess extends RedirectAuthenticationProcess {
@@ -18,7 +18,7 @@ public class KbcRedirectAuthenticationProcess extends RedirectAuthenticationProc
             RedirectAuthenticationAccessTokenValidationStep accessTokenValidationStep,
             RedirectAuthenticationRefreshTokenStep refreshTokenStep,
             RedirectPreparationRedirectUrlStep redirectPreparationRedirectUrlStep,
-            RedirectFetchAuthenticationTokensStep redirectFetchAuthenticationTokensStep,
+            RedirectFetchRefreshableAccessTokenStep redirectFetchAuthenticationTokensStep,
             KbcFetchConsentAuthenticationStep fetchConsentAuthenticationStep) {
         super(
                 redirectAuthenticationInitialProcessStep,

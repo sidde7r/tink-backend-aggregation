@@ -16,6 +16,7 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.request.AgentProceedNextStepAuthenticationRequest;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentProceedNextStepAuthenticationResult;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.common.AgentExtendedClientInfo;
 
 public class SoftLoginGetContactNumberAndChallegeStepTest extends BaseStep {
 
@@ -30,7 +31,8 @@ public class SoftLoginGetContactNumberAndChallegeStepTest extends BaseStep {
         AgentProceedNextStepAuthenticationRequest request =
                 createAgentProceedNextStepAuthenticationRequest(
                         new BelfiusProcessState().sessionId(SESSION_ID).machineId(MACHINE_ID),
-                        new BelfiusAuthenticationData().panNumber(PAN_NUMBER));
+                        new BelfiusAuthenticationData().panNumber(PAN_NUMBER),
+                        AgentExtendedClientInfo.builder().build());
 
         when(apiClient.prepareLogin(
                         SESSION_ID,
