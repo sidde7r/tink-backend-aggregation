@@ -14,9 +14,9 @@ public class AxaAgentTest {
         builder =
                 new AgentIntegrationTest.Builder("be", "be-axa-ob")
                         .expectLoggedIn(false)
-                        .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(false)
-                        .setFinancialInstitutionId("axa")
+                        .loadCredentialsBefore(true)
+                        .saveCredentialsAfter(true)
+                        .setFinancialInstitutionId("0f0a1f6794ce4de7ae12972b89813fa2")
                         .setAppId("tink");
     }
 
