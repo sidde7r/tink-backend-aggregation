@@ -21,7 +21,6 @@ public class KbcOauth2AuthenticationConfig extends OAuth2AuthenticationConfig {
     private URI redirectUrl;
     private AgentPlatformHttpClient httpClient;
     private ObjectMapper objectMapper;
-    private String state;
 
     public RedirectAuthenticationProcess authenticationProcess() {
         return new KbcRedirectAuthenticationProcess(
@@ -52,10 +51,7 @@ public class KbcOauth2AuthenticationConfig extends OAuth2AuthenticationConfig {
 
     public RedirectUrlBuilder redirectUrlBuilder() {
         return new KbcRedirectUrlBuilder(
-                kbcConfiguration.getClientId(),
-                redirectUrl,
-                kbcPersistedDataAccessorFactory(),
-                state);
+                kbcConfiguration.getClientId(), redirectUrl, kbcPersistedDataAccessorFactory());
     }
 
     public RedirectFetchTokenCall redirectFetchTokenCall() {
