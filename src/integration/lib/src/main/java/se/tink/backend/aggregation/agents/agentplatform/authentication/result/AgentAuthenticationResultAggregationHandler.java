@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.UserInteractionService;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.result.error.AgentPlatformAuthenticationProcessError;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.result.error.NoUserInteractionResponseError;
@@ -22,9 +23,12 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentThirdPartyAppOpenAppAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentUserInteractionDefinitionResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.userinteraction.AgentFieldValue;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.userinteraction.fielddefinition.AgentFieldDefinition;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.userinteraction.fielddefinition.AgentNonEditableTextFieldDefinition;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.common.AgentExtendedClientInfo;
 
 @RequiredArgsConstructor
+@Slf4j
 public class AgentAuthenticationResultAggregationHandler
         implements AgentAuthenticationResultVisitor {
 
@@ -70,7 +74,13 @@ public class AgentAuthenticationResultAggregationHandler
         List<AgentFieldValue> values =
                 userInteractionService.requestForFields(
                         arg.getUserInteractionDefinition().getRequiredFields());
-        if (values.isEmpty()) {
+        log.info(
+                String.format(
+                        "Received %s fields from user interaction (supplemental information)",
+                        values.size()));
+        if (values.isEmpty()
+                && atLeastOneOfRequestedFieldsIsEditable(
+                        arg.getUserInteractionDefinition().getRequiredFields())) {
             handlingResult =
                     AgentAuthenticationResultHandlingResult.authenticationFailed(
                             new AgentPlatformAuthenticationProcessError(
@@ -123,5 +133,13 @@ public class AgentAuthenticationResultAggregationHandler
             final AgentAuthenticationResult authenticationResult) {
         authenticationResult.accept(this);
         return handlingResult;
+    }
+
+    private boolean atLeastOneOfRequestedFieldsIsEditable(
+            List<AgentFieldDefinition> requestedFields) {
+        return requestedFields.stream()
+                .filter(f -> !AgentNonEditableTextFieldDefinition.class.isInstance(f))
+                .findAny()
+                .isPresent();
     }
 }
