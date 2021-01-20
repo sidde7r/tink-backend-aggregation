@@ -123,7 +123,6 @@ public class SwedbankTransactionFetcher implements TransactionFetcher<Transactio
 
     private Optional<FetchOnlineTransactionsResponse> downaloadZippedTransactions(
             String downloadLink) {
-        int retryCount = SwedbankConstants.TRANSACTIONS_DOWNLOAD_RETRY_COUNT;
         do {
             try (ZipInputStream zipInputStream =
                     new ZipInputStream(
@@ -141,7 +140,6 @@ public class SwedbankTransactionFetcher implements TransactionFetcher<Transactio
                 if (e.getResponse().getStatus() == SwedbankConstants.HttpStatus.RESOURCE_PENDING) {
                     // Download resource is not ready yet. TPP should retry download link after some
                     // time (proposed wait time is 60 seconds).
-                    retryCount--;
                     Uninterruptibles.sleepUninterruptibly(
                             TimeValues.RETRY_TRANSACTIONS_DOWNLOAD, TimeUnit.MILLISECONDS);
                 } else {
@@ -150,8 +148,7 @@ public class SwedbankTransactionFetcher implements TransactionFetcher<Transactio
             } catch (IOException e) {
                 throw new IllegalStateException("Failed to parse transactions");
             }
-        } while (retryCount > 0);
-        return Optional.empty();
+        } while (true);
     }
 
     @Override
