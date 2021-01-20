@@ -18,6 +18,7 @@ public class ConsentDetailsResponse {
 
     @JsonDeserialize(using = LocalDateDeserializer.class)
     @Getter
+    @Setter
     private LocalDate validUntil;
 
     public boolean isValid() {

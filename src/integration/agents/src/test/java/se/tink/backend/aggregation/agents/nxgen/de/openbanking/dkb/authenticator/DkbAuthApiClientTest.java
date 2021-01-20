@@ -12,6 +12,8 @@ import java.time.LocalDate;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbStorage;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentDetailsResponse;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentResponse;
 import se.tink.backend.aggregation.nxgen.http.HttpRequestImpl;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
@@ -240,7 +242,7 @@ public class DkbAuthApiClientTest {
         when(requestFactoryMock.generateCreateConsentRequest(any())).thenReturn(givenHttpRequest);
 
         HttpResponse givenSuccessfulHttpResponse =
-                dummyHttpResponse(OK_REQUEST_STATUS, Consent.class, new Consent());
+                dummyHttpResponse(OK_REQUEST_STATUS, ConsentResponse.class, new ConsentResponse());
         when(clientMock.request(HttpResponse.class, givenHttpRequest))
                 .thenReturn(givenSuccessfulHttpResponse);
 
@@ -253,22 +255,24 @@ public class DkbAuthApiClientTest {
     }
 
     @Test
-    public void getConsentShouldCallRequestFactoryAndExecuteRequest() {
+    public void getConsentDetailsShouldCallRequestFactoryAndExecuteRequest() {
         // given
         String givenConsentId = "consentId";
         HttpRequest givenHttpRequest = dummyHttpRequest("createConsent");
         when(requestFactoryMock.generateGetConsentRequest(any())).thenReturn(givenHttpRequest);
 
         HttpResponse givenSuccessfulHttpResponse =
-                dummyHttpResponse(OK_REQUEST_STATUS, Consent.class, new Consent());
+                dummyHttpResponse(
+                        OK_REQUEST_STATUS,
+                        ConsentDetailsResponse.class,
+                        new ConsentDetailsResponse());
         when(clientMock.request(HttpResponse.class, givenHttpRequest))
                 .thenReturn(givenSuccessfulHttpResponse);
 
         // when
-        Consent consent = tested.getConsent(givenConsentId);
+        tested.getConsentDetails(givenConsentId);
 
         // then
-        assertThat(consent.getConsentId()).isEqualTo(givenConsentId);
         verify(requestFactoryMock).generateGetConsentRequest(givenConsentId);
         verify(clientMock).request(HttpResponse.class, givenHttpRequest);
     }

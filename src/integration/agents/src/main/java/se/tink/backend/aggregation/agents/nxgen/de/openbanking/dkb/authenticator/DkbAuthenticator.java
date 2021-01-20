@@ -16,6 +16,8 @@ import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbStorage;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentDetailsResponse;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.authenticator.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
@@ -55,7 +57,7 @@ public class DkbAuthenticator implements AutoAuthenticator, MultiFactorAuthentic
 
         getWso2Token();
         authenticateUser(username, password);
-        getConsent();
+        createConsentAndAuthorize();
     }
 
     @Override
@@ -70,7 +72,7 @@ public class DkbAuthenticator implements AutoAuthenticator, MultiFactorAuthentic
             getWso2Token();
         }
 
-        Optional<Consent> maybeConsent = Optional.empty();
+        Optional<ConsentDetailsResponse> maybeConsent = Optional.empty();
         // Check two things at once. It can throw in case of oauth token expiry (token for
         // retrieving end user data). It doesn't come with expiresAt, so we need to check it by
         // doing.
@@ -85,7 +87,8 @@ public class DkbAuthenticator implements AutoAuthenticator, MultiFactorAuthentic
             }
         }
 
-        Consent consent = maybeConsent.orElseThrow(SessionError.SESSION_EXPIRED::exception);
+        ConsentDetailsResponse consent =
+                maybeConsent.orElseThrow(SessionError.SESSION_EXPIRED::exception);
         if (consent.isExpired()) {
             throw SessionError.CONSENT_EXPIRED.exception();
         }
@@ -95,6 +98,7 @@ public class DkbAuthenticator implements AutoAuthenticator, MultiFactorAuthentic
         if (!consent.isValid()) {
             throw SessionError.SESSION_EXPIRED.exception();
         }
+        credentials.setSessionExpiryDate(consent.getValidUntil());
     }
 
     private void getNewAccessTokenForAutoAuthentication() {
@@ -190,26 +194,25 @@ public class DkbAuthenticator implements AutoAuthenticator, MultiFactorAuthentic
                 Collections.singletonList(previousResult.getChallenge()));
     }
 
-    private void getConsent() throws AuthenticationException {
-        Consent consent =
-                getExistingConsent().filter(Consent::isValid).orElseGet(this::createNewConsent);
-        if (consent.isNotAuthorized()) {
-            authorizeConsent(consent.getConsentId());
+    private void createConsentAndAuthorize() throws AuthenticationException {
+        ConsentResponse consentResponse = createNewConsent();
+        if (consentResponse.isNotAuthorized()) {
+            authorizeConsent(consentResponse.getConsentId());
         }
+        ConsentDetailsResponse consentDetailsResponse =
+                authApiClient.getConsentDetails(consentResponse.getConsentId());
+        credentials.setSessionExpiryDate(consentDetailsResponse.getValidUntil());
     }
 
-    private Optional<Consent> getExistingConsent() {
-        return storage.getConsentId().map(authApiClient::getConsent);
+    private Optional<ConsentDetailsResponse> getExistingConsent() {
+        return storage.getConsentId().map(authApiClient::getConsentDetails);
     }
 
-    private Consent createNewConsent() {
-        Consent consent = authApiClient.createConsent(getMaxConsentValidityDate());
+    private ConsentResponse createNewConsent() {
+        LocalDate maxConsentValidityDate = LocalDate.now().plusDays(MAX_CONSENT_VALIDITY_DAYS);
+        ConsentResponse consent = authApiClient.createConsent(maxConsentValidityDate);
         storage.setConsentId(consent.getConsentId());
         return consent;
-    }
-
-    private LocalDate getMaxConsentValidityDate() {
-        return LocalDate.now().plusDays(MAX_CONSENT_VALIDITY_DAYS);
     }
 
     private void authorizeConsent(String consentId) throws AuthenticationException {

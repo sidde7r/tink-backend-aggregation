@@ -8,10 +8,17 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.authenticator.DkbAuthenticatorTest.createCredentials;
+import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.authenticator.DkbAuthenticatorTest.createDkbAuthenticator;
+import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.authenticator.DkbAuthenticatorTest.createDkbStorage;
+import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.authenticator.DkbAuthenticatorTest.mockHttpClient;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.Optional;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
+import lombok.SneakyThrows;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,9 +26,12 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbStorage;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentDetailsResponse;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
+import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
+import se.tink.libraries.date.ThreadSafeDateFormat;
 
 @RunWith(JUnitParamsRunner.class)
 public class DkbAutoAuthenticatorTest {
@@ -29,6 +39,8 @@ public class DkbAutoAuthenticatorTest {
     private static final String TEST_CONSENT_ID = "1234consentId";
     private static final String TEST_USERNAME = "1234username";
     private static final String TEST_PASSWORD = "1234password";
+
+    private static final LocalDate DATE_2030_01_01 = LocalDate.parse("2030-01-01");
 
     private static final OAuth2Token VALID_TOKEN = OAuth2Token.create("x", "x", "x", 1000);
     private static final OAuth2Token EXPIRED_TOKEN = OAuth2Token.create("x", "x", "x", 0);
@@ -90,7 +102,8 @@ public class DkbAutoAuthenticatorTest {
         given(mockStorage.getConsentId()).willReturn(Optional.of(TEST_CONSENT_ID));
         given(mockStorage.getWso2OAuthToken()).willReturn(VALID_TOKEN);
 
-        given(mockAuthApiClient.getConsent(TEST_CONSENT_ID)).willReturn(consentWithStatus("valid"));
+        given(mockAuthApiClient.getConsentDetails(TEST_CONSENT_ID))
+                .willReturn(consentWithStatus("valid"));
 
         // when
         Throwable throwable = catchThrowable(() -> authenticator.autoAuthenticate());
@@ -99,7 +112,8 @@ public class DkbAutoAuthenticatorTest {
         assertThat(throwable).isNull();
         verify(mockStorage, times(2)).getConsentId();
         verify(mockStorage).getWso2OAuthToken();
-        verify(mockAuthApiClient).getConsent(TEST_CONSENT_ID);
+        verify(mockAuthApiClient).getConsentDetails(TEST_CONSENT_ID);
+        verify(mockCredentials).setSessionExpiryDate(DATE_2030_01_01);
         verifyNoMoreInteractionsOnAnyMock();
     }
 
@@ -115,7 +129,7 @@ public class DkbAutoAuthenticatorTest {
         given(mockStorage.getConsentId()).willReturn(Optional.of(TEST_CONSENT_ID));
         given(mockStorage.getWso2OAuthToken()).willReturn(VALID_TOKEN);
 
-        given(mockAuthApiClient.getConsent(TEST_CONSENT_ID))
+        given(mockAuthApiClient.getConsentDetails(TEST_CONSENT_ID))
                 .willReturn(consentWithStatus(consentStatus));
 
         // when
@@ -125,7 +139,7 @@ public class DkbAutoAuthenticatorTest {
         assertThat(throwable).isInstanceOf(SessionException.class).hasMessage(expectedCause);
         verify(mockStorage, times(2)).getConsentId();
         verify(mockStorage).getWso2OAuthToken();
-        verify(mockAuthApiClient).getConsent(TEST_CONSENT_ID);
+        verify(mockAuthApiClient).getConsentDetails(TEST_CONSENT_ID);
         verifyNoMoreInteractionsOnAnyMock();
     }
 
@@ -135,7 +149,8 @@ public class DkbAutoAuthenticatorTest {
         given(mockStorage.getConsentId()).willReturn(Optional.of(TEST_CONSENT_ID));
         given(mockStorage.getWso2OAuthToken()).willReturn(EXPIRED_TOKEN);
         given(mockAuthApiClient.getWso2Token()).willReturn(testWso2Token);
-        given(mockAuthApiClient.getConsent(TEST_CONSENT_ID)).willReturn(consentWithStatus("valid"));
+        given(mockAuthApiClient.getConsentDetails(TEST_CONSENT_ID))
+                .willReturn(consentWithStatus("valid"));
 
         // when
         Throwable throwable = catchThrowable(() -> authenticator.autoAuthenticate());
@@ -146,7 +161,8 @@ public class DkbAutoAuthenticatorTest {
         verify(mockAuthApiClient).getWso2Token();
         verify(mockStorage).getWso2OAuthToken();
         verify(mockStorage).setWso2OAuthToken(eq(testWso2Token.toOAuth2Token()));
-        verify(mockAuthApiClient).getConsent(TEST_CONSENT_ID);
+        verify(mockAuthApiClient).getConsentDetails(TEST_CONSENT_ID);
+        verify(mockCredentials).setSessionExpiryDate(DATE_2030_01_01);
         verifyNoMoreInteractionsOnAnyMock();
     }
 
@@ -156,7 +172,7 @@ public class DkbAutoAuthenticatorTest {
         given(mockStorage.getConsentId()).willReturn(Optional.of(TEST_CONSENT_ID));
         given(mockStorage.getWso2OAuthToken()).willReturn(VALID_TOKEN);
         HttpResponse testHttpResponse = getTestHttpResponse();
-        given(mockAuthApiClient.getConsent(TEST_CONSENT_ID))
+        given(mockAuthApiClient.getConsentDetails(TEST_CONSENT_ID))
                 .willThrow(new HttpResponseException(null, testHttpResponse))
                 .willReturn(consentWithStatus("valid"));
 
@@ -172,10 +188,11 @@ public class DkbAutoAuthenticatorTest {
         verify(mockStorage, times(3)).getConsentId();
         verify(mockStorage).getWso2OAuthToken();
         verify(mockStorage).setAccessToken(testAuthResult.toOAuth2Token());
-        verify(mockAuthApiClient, times(2)).getConsent(TEST_CONSENT_ID);
+        verify(mockAuthApiClient, times(2)).getConsentDetails(TEST_CONSENT_ID);
         verify(mockAuthApiClient).authenticate1stFactor(TEST_USERNAME, TEST_PASSWORD);
         verify(mockCredentials).getField(Field.Key.USERNAME);
         verify(mockCredentials).getField(Field.Key.PASSWORD);
+        verify(mockCredentials).setSessionExpiryDate(DATE_2030_01_01);
         verifyNoMoreInteractionsOnAnyMock();
     }
 
@@ -186,7 +203,7 @@ public class DkbAutoAuthenticatorTest {
         given(mockStorage.getWso2OAuthToken()).willReturn(VALID_TOKEN);
 
         HttpResponse testHttpResponse = getTestHttpResponse();
-        given(mockAuthApiClient.getConsent(TEST_CONSENT_ID))
+        given(mockAuthApiClient.getConsentDetails(TEST_CONSENT_ID))
                 .willThrow(new HttpResponseException(null, testHttpResponse));
 
         AuthResult testAuthResult = getTestAuthResult(false);
@@ -202,11 +219,32 @@ public class DkbAutoAuthenticatorTest {
                 .hasMessage("Failed to gather new oauth token during auto authentication.");
         verify(mockStorage, times(2)).getConsentId();
         verify(mockStorage).getWso2OAuthToken();
-        verify(mockAuthApiClient, times(1)).getConsent(TEST_CONSENT_ID);
+        verify(mockAuthApiClient, times(1)).getConsentDetails(TEST_CONSENT_ID);
         verify(mockAuthApiClient).authenticate1stFactor(TEST_USERNAME, TEST_PASSWORD);
         verify(mockCredentials).getField(Field.Key.USERNAME);
         verify(mockCredentials).getField(Field.Key.PASSWORD);
         verifyNoMoreInteractionsOnAnyMock();
+    }
+
+    @Test
+    @SneakyThrows
+    public void whenUserIsAutoAuthenticatedThenSessionExpiryDateIsSet() {
+        // given
+        Date currentSessionExpiryDate =
+                ThreadSafeDateFormat.FORMATTER_DAILY_DEFAULT_TIMEZONE.parse("2029-01-01");
+        Date newSessionExpiryDate =
+                ThreadSafeDateFormat.FORMATTER_DAILY_DEFAULT_TIMEZONE.parse("2030-01-01");
+        TinkHttpClient tinkHttpClient = mockHttpClient();
+        Credentials credentials = createCredentials(currentSessionExpiryDate);
+        DkbStorage dkbStorage = createDkbStorage();
+        DkbAuthenticator dkbAuthenticator =
+                createDkbAuthenticator(tinkHttpClient, credentials, dkbStorage);
+
+        // when
+        dkbAuthenticator.autoAuthenticate();
+
+        // then
+        assertThat(credentials.getSessionExpiryDate()).isEqualToIgnoringHours(newSessionExpiryDate);
     }
 
     private HttpResponse getTestHttpResponse() {
@@ -224,9 +262,10 @@ public class DkbAutoAuthenticatorTest {
         return authResult;
     }
 
-    private Consent consentWithStatus(String status) {
-        Consent consent = new Consent();
+    private ConsentDetailsResponse consentWithStatus(String status) {
+        ConsentDetailsResponse consent = new ConsentDetailsResponse();
         consent.setConsentStatus(status);
+        consent.setValidUntil(DATE_2030_01_01);
         return consent;
     }
 

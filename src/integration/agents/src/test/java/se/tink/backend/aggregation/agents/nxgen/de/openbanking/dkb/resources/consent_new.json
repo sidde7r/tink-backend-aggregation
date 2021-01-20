@@ -1,0 +1,9 @@
+{
+  "consentStatus": "received",
+  "consentId": "consentId",
+  "_links": {
+    "startAuthorisation": {
+      "href": "/v1/consents/consentId/authorisations"
+    }
+  }
+}
