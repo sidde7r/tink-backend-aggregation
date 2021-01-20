@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.fetcher.transactionalaccount;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -10,32 +12,42 @@ import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.EndUserMessage;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.TimeValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.fetcher.transactionalaccount.entity.account.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.fetcher.transactionalaccount.rpc.FetchAccountResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.fetcher.transactionalaccount.rpc.StatementResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.rpc.GenericResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 @Slf4j
 @JsonObject
 public class SwedbankTransactionalAccountFetcher implements AccountFetcher<TransactionalAccount> {
     private final SwedbankApiClient apiClient;
     private final PersistentStorage persistentStorage;
+    private final SessionStorage sessionStorage;
     private FetchAccountResponse fetchAccountResponse;
 
     public SwedbankTransactionalAccountFetcher(
-            SwedbankApiClient apiClient, PersistentStorage persistentStorage) {
+            SwedbankApiClient apiClient,
+            PersistentStorage persistentStorage,
+            SessionStorage sessionStorage) {
         this.apiClient = apiClient;
         this.persistentStorage = persistentStorage;
+        this.sessionStorage = sessionStorage;
     }
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
         handleConsentFlow();
+        // Request Creation of the transactions over 90 days zip file in advance
+        getAccounts().getAccountList().forEach(this::postAccountStatement);
         return getAccounts().getAccountList().stream()
                 .map(toTinkAccountWithBalance())
                 .filter(Optional::isPresent)
@@ -121,5 +133,17 @@ public class SwedbankTransactionalAccountFetcher implements AccountFetcher<Trans
                 "Remvoving invalid consent with ID = {}",
                 persistentStorage.get(SwedbankConstants.StorageKeys.CONSENT));
         persistentStorage.remove(SwedbankConstants.StorageKeys.CONSENT);
+    }
+
+    private void postAccountStatement(AccountEntity accountEntity) {
+        HttpResponse response =
+                apiClient.getTransactions(
+                        accountEntity.getResourceId(),
+                        Timestamp.valueOf(
+                                LocalDateTime.now()
+                                        .minusMonths(TimeValues.MONTHS_TO_FETCH_MAX)),
+                        Timestamp.valueOf(LocalDateTime.now()));
+        sessionStorage.put(
+                accountEntity.getResourceId(), response.getBody(StatementResponse.class));
     }
 }

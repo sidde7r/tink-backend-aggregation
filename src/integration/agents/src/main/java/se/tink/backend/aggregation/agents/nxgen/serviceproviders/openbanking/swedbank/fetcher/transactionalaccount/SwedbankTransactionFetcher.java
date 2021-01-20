@@ -18,23 +18,22 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swe
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.fetcher.transactionalaccount.entity.transaction.TransactionsEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.fetcher.transactionalaccount.rpc.FetchOnlineTransactionsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcher;
-import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class SwedbankTransactionFetcher implements TransactionFetcher<TransactionalAccount> {
 
     private final SwedbankApiClient apiClient;
-    private final SupplementalInformationHelper supplementalInformationHelper;
+    private final SessionStorage sessionStorage;
 
     public SwedbankTransactionFetcher(
-            final SwedbankApiClient apiClient,
-            final SupplementalInformationHelper supplementalInformationHelper) {
+            final SwedbankApiClient apiClient, SessionStorage sessionStorage) {
         this.apiClient = apiClient;
-        this.supplementalInformationHelper = supplementalInformationHelper;
+        this.sessionStorage = sessionStorage;
     }
 
     private Optional<FetchOnlineTransactionsResponse> fetchOnlineTransactions(
@@ -91,10 +90,8 @@ public class SwedbankTransactionFetcher implements TransactionFetcher<Transactio
 
     @Override
     public List<AggregationTransaction> fetchTransactionsFor(TransactionalAccount account) {
-        Optional<FetchOnlineTransactionsResponse> fetchOnlineTransactionsResponse =
-                fetchOnlineTransactions(account);
         List<AggregationTransaction> onlineTransactions =
-                fetchOnlineTransactionsResponse
+                fetchOnlineTransactions(account)
                         .map(FetchOnlineTransactionsResponse::getTransactions)
                         .map(TransactionsEntity::getTinkTransactions)
                         .orElseGet(Lists::newArrayList);
