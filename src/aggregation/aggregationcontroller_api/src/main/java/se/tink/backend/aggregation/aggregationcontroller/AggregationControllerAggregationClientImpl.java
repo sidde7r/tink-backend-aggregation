@@ -220,6 +220,15 @@ public class AggregationControllerAggregationClientImpl
     @Override
     public Response updateCredentials(
             HostConfiguration hostConfiguration, UpdateCredentialsStatusRequest request) {
+
+        if (request.getCredentials() != null
+                && request.getCredentials().getSessionExpiryDate() == null) {
+            log.warn(
+                    "Null sessionExpiryDate for provider {} state {}",
+                    request.getCredentials().getProviderName(),
+                    request.getCredentials().getStatus());
+        }
+
         return requestExecuter(
                 () -> getUpdateService(hostConfiguration).updateCredentials(request),
                 "Update Credentials");
