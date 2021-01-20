@@ -3,6 +3,6 @@ set -e
 
 COMMIT_DATE=$(git show --date=format:'%Y%m%d%H%M' --no-patch --format=%cd "$BUILDKITE_COMMIT")
 COMMIT_PREFIX=$(echo "$BUILDKITE_COMMIT" | head --bytes 8)
-export VERSION="$COMMIT_DATE-$COMMIT_PREFIX"
+export VERSION="$COMMIT_DATE-r$COMMIT_PREFIX"
 echo '--- Version'
 echo "Set version to $VERSION"
