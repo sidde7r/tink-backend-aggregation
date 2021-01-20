@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator;
 
 import java.nio.file.Paths;
-import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
@@ -69,12 +68,10 @@ class AuthenticatorTestData {
     static final ConsentResponse CONSENT_RESPONSE_OK;
 
     static {
-        ConsentResponse consentResponse =
+        CONSENT_RESPONSE_OK =
                 SerializationUtils.deserializeFromString(
                         Paths.get(TEST_DATA_PATH, "consent_response_ok.json").toFile(),
                         ConsentResponse.class);
-        consentResponse.setValidUntil(LocalDate.parse("2030-01-01"));
-        CONSENT_RESPONSE_OK = consentResponse;
     }
 
     static final AuthenticationMethodResponse INIT_AUTH_RESPONSE_NO_METHOD =

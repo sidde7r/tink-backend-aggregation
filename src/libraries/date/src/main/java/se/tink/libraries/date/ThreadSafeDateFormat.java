@@ -39,6 +39,8 @@ public class ThreadSafeDateFormat {
             new ThreadSafeDateFormat("xxxx:ww"); // weekyear
     public static final ThreadSafeDateFormat FORMATTER_DAILY =
             new ThreadSafeDateFormat("yyyy-MM-dd");
+    public static final ThreadSafeDateFormat FORMATTER_DAILY_DEFAULT_TIMEZONE =
+            FORMATTER_DAILY.builder.setTimezone(TimeZone.getDefault()).build();
     public static final ThreadSafeDateFormat FORMATTER_DD_MM_YYYY =
             new ThreadSafeDateFormat("dd/MM/yyyy");
     public static final ThreadSafeDateFormat FORMATTER_DOTTED_DAILY =
@@ -136,11 +138,19 @@ public class ThreadSafeDateFormat {
     public ThreadSafeDateFormat(String pattern) {
         this(
                 new ThreadSafeDateFormatBuilder(
-                        pattern, DateUtils.DEFAULT_LOCALE, DateUtils.createCetTimeZone()));
+                        pattern,
+                        new Locale(
+                                CountryDateHelper.LANGUAGE_CODE_SWEDISH,
+                                CountryDateHelper.COUNTRY_CODE_SWEDEN),
+                        TimeZone.getTimeZone(CountryDateHelper.TIMEZONE_CODE_CET)));
     }
 
     public ThreadSafeDateFormat(String pattern, Locale locale) {
-        this(new ThreadSafeDateFormatBuilder(pattern, locale, DateUtils.createCetTimeZone()));
+        this(
+                new ThreadSafeDateFormatBuilder(
+                        pattern,
+                        locale,
+                        TimeZone.getTimeZone(CountryDateHelper.TIMEZONE_CODE_CET)));
     }
 
     public ThreadSafeDateFormat(String pattern, Locale locale, TimeZone timezone) {
@@ -168,10 +178,8 @@ public class ThreadSafeDateFormat {
     }
 
     public Date parse(String string) throws ParseException {
-        Date date = null;
-
         try {
-            date = dateFormat.parseDateTime(TRIMMER.trimFrom(string)).toDate();
+            return dateFormat.parseDateTime(TRIMMER.trimFrom(string)).toDate();
         } catch (Exception e) {
             throw new ParseException(
                     "could not parse date: "
@@ -181,8 +189,6 @@ public class ThreadSafeDateFormat {
                             + ")",
                     0);
         }
-
-        return date;
     }
 
     public boolean fitsFormat(String period) {

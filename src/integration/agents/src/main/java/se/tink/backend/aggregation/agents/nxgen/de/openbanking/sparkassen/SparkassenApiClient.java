@@ -75,12 +75,9 @@ public class SparkassenApiClient {
                         FormValues.FREQUENCY_PER_DAY,
                         false);
 
-        ConsentResponse consentResponse =
-                createRequest(Urls.CONSENT)
-                        .header(HeaderKeys.TPP_REDIRECT_PREFERRED, false)
-                        .post(ConsentResponse.class, consentRequest);
-        consentResponse.setValidUntil(validUntil);
-        return consentResponse;
+        return createRequest(Urls.CONSENT)
+                .header(HeaderKeys.TPP_REDIRECT_PREFERRED, false)
+                .post(ConsentResponse.class, consentRequest);
     }
 
     public AuthenticationMethodResponse initializeAuthorization(
