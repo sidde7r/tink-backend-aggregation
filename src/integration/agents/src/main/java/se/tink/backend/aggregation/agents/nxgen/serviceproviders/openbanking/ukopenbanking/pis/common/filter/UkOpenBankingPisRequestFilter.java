@@ -85,14 +85,19 @@ public class UkOpenBankingPisRequestFilter extends Filter {
 
     private void addSignatureHeaderIfBodyIsPresent(
             HttpRequest httpRequest, MultivaluedMap<String, Object> headers) {
+        if (Optional.ofNullable(httpRequest.getBody()).isPresent()) {
+            log.info(
+                    "templog jwt token value="
+                            + Optional.ofNullable(httpRequest.getBody())
+                                    .map(jwtSignatureHelper::createJwtSignature)
+                                    .get());
+        } else {
+            log.info("httpRequest.getBody() is empty");
+        }
+
         Optional.ofNullable(httpRequest.getBody())
                 .map(jwtSignatureHelper::createJwtSignature)
                 .ifPresent(signature -> headers.add(X_JWS_SIGNATURE_HEADER, signature));
-        log.info(
-                "templog jwt:"
-                        + Optional.ofNullable(httpRequest.getBody())
-                                .map(jwtSignatureHelper::createJwtSignature)
-                                .get());
     }
 
     private static boolean isInteractionIdValidInResponse(
