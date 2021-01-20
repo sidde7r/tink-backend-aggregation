@@ -1,9 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.pt.openbanking.santander.integration;
 
 import java.time.LocalDate;
+import org.junit.Ignore;
 import se.tink.backend.aggregation.agents.utils.fixtures.WireMockTestFixtures;
 import se.tink.libraries.payment.rpc.Payment;
 
+@Ignore
 public class SantanderPTAgentWireMockTestFixtures extends WireMockTestFixtures {
 
     public SantanderPTAgentWireMockTestFixtures(Properties properties) {
