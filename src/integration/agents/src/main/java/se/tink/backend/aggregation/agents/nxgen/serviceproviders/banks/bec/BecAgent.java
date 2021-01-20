@@ -84,7 +84,7 @@ public final class BecAgent extends SubsequentProgressiveGenerationAgent
                 new LoanRefreshController(
                         this.metricRefreshController,
                         this.updateController,
-                        new BecLoanFetcher(this.apiClient, this.credentials));
+                        new BecLoanFetcher(this.apiClient));
         this.creditCardRefreshController = constructCreditCardRefreshController();
         this.transactionalAccountRefreshController =
                 constructTransactionalAccountRefreshController();

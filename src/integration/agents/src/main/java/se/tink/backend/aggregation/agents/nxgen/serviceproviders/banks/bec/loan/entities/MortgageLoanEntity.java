@@ -19,34 +19,16 @@ public class MortgageLoanEntity {
         return loanNumber;
     }
 
-    public String getDisplayName() {
-        return displayName;
-    }
-
-    public Double getAmount() {
-        return amount;
-    }
-
-    public String getCurrency() {
-        return currency;
-    }
-
-    public String getAmountTxt() {
-        return amountTxt;
-    }
-
-    public String getPropertyAddress() {
-        return propertyAddress;
-    }
-
     public LoanAccount toTinkLoan(LoanDetailsResponse loanDetails) {
-        return LoanAccount.builder(getLoanNumber(), ExactCurrencyAmount.of(0 - amount, currency))
-                .setAccountNumber(getLoanNumber())
-                .setName(getDisplayName())
-                .setInterestRate(loanDetails.getInterestRate().orElse(null))
+        return LoanAccount.builder(loanNumber, ExactCurrencyAmount.of(0 - amount, currency))
+                .setAccountNumber(loanNumber)
+                .setName(displayName)
+                .setInterestRate(loanDetails.getInterestRate())
                 .setDetails(
-                        LoanDetails.builder(LoanDetails.Type.MORTGAGE)
-                                .setSecurity(getPropertyAddress())
+                        LoanDetails.builder(loanDetails.getType())
+                                .setSecurity(propertyAddress)
+                                .setNumMonthsBound(loanDetails.getNumOfMonthsBound())
+                                .setInitialBalance(loanDetails.getInitialBalance())
                                 .build())
                 .build();
     }
