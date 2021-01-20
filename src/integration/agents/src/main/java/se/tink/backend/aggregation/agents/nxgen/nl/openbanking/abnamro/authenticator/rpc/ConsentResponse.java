@@ -1,9 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.openbanking.abnamro.authenticator.rpc;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.time.Instant;
+import lombok.Getter;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
+@Getter
 public class ConsentResponse {
 
     @JsonProperty("iban")
@@ -14,21 +17,9 @@ public class ConsentResponse {
     private String scopes;
 
     @JsonProperty("valid")
-    private String expiresIn;
+    private Long valid;
 
-    public String getAccountId() {
-        return accountId;
-    }
-
-    public String getTransactionId() {
-        return transactionId;
-    }
-
-    public String getScopes() {
-        return scopes;
-    }
-
-    public String getExpiresIn() {
-        return expiresIn;
+    public boolean isValid() {
+        return valid.compareTo(Instant.now().getEpochSecond()) > 0;
     }
 }

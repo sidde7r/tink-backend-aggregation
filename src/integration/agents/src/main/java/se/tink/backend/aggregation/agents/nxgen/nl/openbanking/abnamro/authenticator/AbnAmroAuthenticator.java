@@ -1,12 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.openbanking.abnamro.authenticator;
 
 import java.util.Optional;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.abnamro.AbnAmroApiClient;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.abnamro.AbnAmroConstants;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.abnamro.AbnAmroConstants.ErrorMessages;
+import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.abnamro.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.abnamro.authenticator.rpc.ExchangeAuthorizationCodeRequest;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.abnamro.authenticator.rpc.RefreshTokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.abnamro.configuration.AbnAmroConfiguration;
@@ -17,6 +19,7 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
+@Slf4j
 public class AbnAmroAuthenticator implements OAuth2Authenticator {
 
     private final AbnAmroApiClient apiClient;
@@ -93,5 +96,12 @@ public class AbnAmroAuthenticator implements OAuth2Authenticator {
     @Override
     public void useAccessToken(final OAuth2Token accessToken) {
         persistentStorage.put(AbnAmroConstants.StorageKey.OAUTH_TOKEN, accessToken);
+    }
+
+    void checkIfConsentValidOrThrowException() {
+        ConsentResponse consentResponse = apiClient.consentRequest();
+        if (!consentResponse.isValid()) {
+            throw SessionError.CONSENT_EXPIRED.exception();
+        }
     }
 }

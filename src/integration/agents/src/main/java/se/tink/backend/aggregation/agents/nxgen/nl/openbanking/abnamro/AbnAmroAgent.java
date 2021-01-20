@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.abnamro.authenticator.AbnAmroAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.abnamro.authenticator.AbnAmroOAuth2AuthenticationController;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.abnamro.configuration.AbnAmroConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.abnamro.fetcher.AbnAmroAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.abnamro.fetcher.AbnAmroTransactionFetcher;
@@ -33,12 +34,10 @@ public final class AbnAmroAgent extends NextGenerationAgent
     private final AbnAmroApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private AgentConfiguration<AbnAmroConfiguration> agentConfiguration;
-    private AbnAmroConfiguration clientConfiguration;
 
     public AbnAmroAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
-
         this.apiClient = new AbnAmroApiClient(client, persistentStorage);
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
@@ -50,7 +49,8 @@ public final class AbnAmroAgent extends NextGenerationAgent
         agentConfiguration =
                 getAgentConfigurationController().getAgentConfiguration(AbnAmroConfiguration.class);
 
-        clientConfiguration = agentConfiguration.getProviderSpecificConfiguration();
+        AbnAmroConfiguration clientConfiguration =
+                agentConfiguration.getProviderSpecificConfiguration();
         apiClient.setConfiguration(clientConfiguration);
 
         this.client.setEidasProxy(configuration.getEidasProxy());
@@ -59,7 +59,7 @@ public final class AbnAmroAgent extends NextGenerationAgent
     @Override
     protected Authenticator constructAuthenticator() {
         final OAuth2AuthenticationController controller =
-                new OAuth2AuthenticationController(
+                new AbnAmroOAuth2AuthenticationController(
                         persistentStorage,
                         supplementalInformationHelper,
                         new AbnAmroAuthenticator(apiClient, persistentStorage, agentConfiguration),
@@ -102,7 +102,11 @@ public final class AbnAmroAgent extends NextGenerationAgent
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
                         new TransactionKeyPaginationController<>(
-                                new AbnAmroTransactionFetcher(apiClient))));
+                                new AbnAmroTransactionFetcher(apiClient, getUserIpInformation()))));
+    }
+
+    private AbnAmroUserIpInformation getUserIpInformation() {
+        return new AbnAmroUserIpInformation(request.isManual(), userIp);
     }
 
     @Override
