@@ -19,7 +19,7 @@ import static se.tink.backend.aggregation.nxgen.controllers.signing.SigningStepC
 
 import org.junit.Before;
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.SwedbankPaymentAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.common.SwedbankOpenBankingPaymentApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.executor.payment.SwedbankPaymentSigner.MissingExtendedBankIdException;
@@ -39,7 +39,7 @@ public class SwedbankPaymentSignerTest {
 
     @Before
     @SuppressWarnings("unchecked")
-    public void setUp() throws PaymentRejectedException {
+    public void setUp() throws PaymentException {
         swedbankApiClient = mock(SwedbankOpenBankingPaymentApiClient.class);
         swedbankIdSigner = mock(SwedbankBankIdSigner.class);
         StrongAuthenticationState strongAuthenticationState = createStrongAuthenticationStateMock();
@@ -58,7 +58,7 @@ public class SwedbankPaymentSignerTest {
     }
 
     @Test
-    public void authorizeShouldAuthorizePaymentIfReadyToSign() throws PaymentRejectedException {
+    public void authorizeShouldAuthorizePaymentIfReadyToSign() throws PaymentException {
         // given
         givenPaymentIs(true);
 
@@ -71,8 +71,7 @@ public class SwedbankPaymentSignerTest {
     }
 
     @Test
-    public void authorizeShouldNotAuthorizePaymentIfNotReadyToSign()
-            throws PaymentRejectedException {
+    public void authorizeShouldNotAuthorizePaymentIfNotReadyToSign() throws PaymentException {
         // given
         givenPaymentIs(false);
 
@@ -84,8 +83,7 @@ public class SwedbankPaymentSignerTest {
     }
 
     @Test
-    public void authorizeShouldStartAuthorisationProcessForAPayment()
-            throws PaymentRejectedException {
+    public void authorizeShouldStartAuthorisationProcessForAPayment() throws PaymentException {
         // given
         givenPaymentIs(true);
 
@@ -102,7 +100,7 @@ public class SwedbankPaymentSignerTest {
     }
 
     @Test
-    public void authorizeShouldSpecifySCAMethodForAuthorisation() throws PaymentRejectedException {
+    public void authorizeShouldSpecifySCAMethodForAuthorisation() throws PaymentException {
         // given
         givenPaymentIs(true);
 
@@ -137,8 +135,7 @@ public class SwedbankPaymentSignerTest {
     }
 
     @Test
-    public void signWithRedirectShouldSignPaymentWithRedirectFlow()
-            throws PaymentRejectedException {
+    public void signWithRedirectShouldSignPaymentWithRedirectFlow() throws PaymentException {
         // given
         givenSelectedAuthenticationMethodWithRedirect(true);
 
@@ -150,7 +147,7 @@ public class SwedbankPaymentSignerTest {
                 .openThirdPartyApp(REDIRECT_URL, STRONG_AUTH_STATE);
     }
 
-    private void givenPaymentIs(boolean readyToSign) throws PaymentRejectedException {
+    private void givenPaymentIs(boolean readyToSign) throws PaymentException {
         final PaymentStatusResponse paymentStatusResponse =
                 createPaymentStatusResponseWith(readyToSign, "");
 
@@ -160,7 +157,7 @@ public class SwedbankPaymentSignerTest {
     }
 
     private void givenSelectedAuthenticationMethodWithRedirect(boolean redirect)
-            throws PaymentRejectedException {
+            throws PaymentException {
         final PaymentAuthorisationResponse paymentAuthorisationResponse =
                 createPaymentAuthorisationResponse();
 

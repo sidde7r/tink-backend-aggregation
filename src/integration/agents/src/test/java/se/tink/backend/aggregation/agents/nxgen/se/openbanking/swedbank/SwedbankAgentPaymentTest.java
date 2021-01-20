@@ -105,7 +105,7 @@ public class SwedbankAgentPaymentTest {
                             .withDebtor(debtor)
                             .withExactCurrencyAmount(ExactCurrencyAmount.inSEK(1))
                             .withCurrency("SEK")
-                            .withExecutionDate(LocalDate.now())
+                            .withExecutionDate(LocalDate.now().minusDays(4))
                             .withRemittanceInformation(remittanceInformation)
                             .build());
         }

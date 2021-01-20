@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.exceptions.payment;
 
+import se.tink.libraries.signableoperation.enums.InternalStatus;
+
 public class PaymentRejectedException extends PaymentException {
     public static final String MESSAGE = "The payment was rejected by the bank.";
     public static final String TEMPORARILY_UNAVAILABLE_MESSAGE =
@@ -15,5 +17,9 @@ public class PaymentRejectedException extends PaymentException {
 
     public static PaymentRejectedException bankPaymentServiceUnavailable() {
         return new PaymentRejectedException(TEMPORARILY_UNAVAILABLE_MESSAGE);
+    }
+
+    public PaymentRejectedException(String message, InternalStatus internalStatus) {
+        super(message, internalStatus);
     }
 }

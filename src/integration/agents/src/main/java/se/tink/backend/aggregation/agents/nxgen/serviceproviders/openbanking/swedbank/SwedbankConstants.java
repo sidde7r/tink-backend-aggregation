@@ -159,8 +159,6 @@ public final class SwedbankConstants {
                 "No SwedbankPaymentType found for AccountIdentifiers pair %s";
         public static final String INVALID_REMITTANCE_INFORMATION_VALUE =
                 "Invalid destination message.";
-        public static final String ACTIVATE_EXTENDED_BANKID =
-                "To add a new recipient, activate Mobile BankID for extended use.";
     }
 
     public static class ConsentStatus {
@@ -212,6 +210,9 @@ public final class SwedbankConstants {
         public static final String USER_INTERUPTION = "USER_INTERUPTION";
         public static final String MOBILE_ID_EXCEPTION = "MOBILE_ID_EXCEPTION";
         public static final String FORMAT_ERROR = "FORMAT_ERROR";
+        public static final String INSUFFICIENT_FUNDS = "INSUFFICIENT_FUNDS";
+        public static final String INVALID_RECIPIENT = "INVALID_RECIPIENT";
+        public static final String MISSING_CT_AGREEMENT = "MISSING_CT_AGREEMENT";
     }
 
     public static final class AccountIdentifierPrefix {
@@ -250,7 +251,11 @@ public final class SwedbankConstants {
                         "You do not have any accounts at Swedbank. Use Sparbankerna (Mobile BankID) instead.")),
         WRONG_BANK_SAVINGSBANK(
                 new LocalizableKey(
-                        "You do not have any accounts at Sparbankerna. Use Swedbank (Mobile BankID) instead."));
+                        "You do not have any accounts at Sparbankerna. Use Swedbank (Mobile BankID) instead.")),
+        ACTIVATE_EXTENDED_BANKID(
+                new LocalizableKey(
+                        "In order to add new recipients you need to activate Mobile BankID for extended use. You can find more information on how to extend your Mobile BankID in your Internet bank.")),
+        UNKNOWN_ERROR(new LocalizableKey("Unknown error"));
 
         private final LocalizableKey userMessage;
 

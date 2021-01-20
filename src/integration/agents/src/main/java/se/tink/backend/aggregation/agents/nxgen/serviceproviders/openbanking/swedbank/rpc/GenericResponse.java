@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sw
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
 import org.apache.commons.collections4.ListUtils;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.EndUserMessage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.ErrorCodes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.entities.TppMessagesEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -77,6 +78,21 @@ public class GenericResponse {
     }
 
     @JsonIgnore
+    public boolean hasInsufficientFunds() {
+        return containsError(ErrorCodes.INSUFFICIENT_FUNDS);
+    }
+
+    @JsonIgnore
+    public boolean isInvalidRecipient() {
+        return containsError(ErrorCodes.INVALID_RECIPIENT);
+    }
+
+    @JsonIgnore
+    public boolean isAgreementMissing() {
+        return containsError(ErrorCodes.MISSING_CT_AGREEMENT);
+    }
+
+    @JsonIgnore
     private boolean containsError(String errorCode) {
         return ListUtils.emptyIfNull(tppMessages).stream()
                 .anyMatch(
@@ -92,5 +108,12 @@ public class GenericResponse {
                 .findFirst()
                 .get()
                 .getText();
+    }
+
+    public String getErrorText() {
+        return tppMessages.stream()
+                .map(TppMessagesEntity::getText)
+                .findFirst()
+                .orElse(EndUserMessage.UNKNOWN_ERROR.getKey().get());
     }
 }

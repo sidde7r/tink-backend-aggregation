@@ -3,8 +3,8 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sw
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import org.apache.commons.collections4.ListUtils;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.EndUserMessage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.ErrorCodes;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.entities.ChallengeDataEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.entities.LinksEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.entities.TppMessagesEntity;
@@ -40,7 +40,8 @@ public class AuthenticationResponse {
 
     public boolean isMissingExtendedBankId() {
         return containsErrorAndMessage(
-                ErrorCodes.MOBILE_ID_EXCEPTION, ErrorMessages.ACTIVATE_EXTENDED_BANKID);
+                ErrorCodes.MOBILE_ID_EXCEPTION,
+                EndUserMessage.ACTIVATE_EXTENDED_BANKID.getKey().get());
     }
 
     private boolean containsErrorAndMessage(String errorCode, String text) {
