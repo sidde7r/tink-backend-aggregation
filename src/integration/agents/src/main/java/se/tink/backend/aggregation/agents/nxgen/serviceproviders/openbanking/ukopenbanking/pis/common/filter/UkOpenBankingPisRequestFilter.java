@@ -8,6 +8,7 @@ import java.util.Optional;
 import javax.ws.rs.core.MultivaluedMap;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.signature.UkOpenBankingJwtSignatureHelper;
@@ -21,6 +22,7 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
 @RequiredArgsConstructor
+@Slf4j
 public class UkOpenBankingPisRequestFilter extends Filter {
 
     private static final String X_IDEMPOTENCY_KEY_HEADER = "x-idempotency-key";
@@ -86,6 +88,11 @@ public class UkOpenBankingPisRequestFilter extends Filter {
         Optional.ofNullable(httpRequest.getBody())
                 .map(jwtSignatureHelper::createJwtSignature)
                 .ifPresent(signature -> headers.add(X_JWS_SIGNATURE_HEADER, signature));
+        log.info(
+                "templog jwt:"
+                        + Optional.ofNullable(httpRequest.getBody())
+                                .map(jwtSignatureHelper::createJwtSignature)
+                                .get());
     }
 
     private static boolean isInteractionIdValidInResponse(
