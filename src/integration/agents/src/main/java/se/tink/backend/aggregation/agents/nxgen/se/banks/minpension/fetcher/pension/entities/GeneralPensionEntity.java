@@ -26,9 +26,9 @@ public class GeneralPensionEntity {
     private GeneralPensionBasisEntity generalPensionUnderlag;
 
     @JsonIgnore
-    public InvestmentAccount toTinkInvestmentAccount() {
-        List<PortfolioModule> portfolios = generalPensionUnderlag.getPremiumPensionPortfolios();
-        final PortfolioModule incomePension = generalPensionUnderlag.getIncomePensionPortfolio();
+    public InvestmentAccount toTinkInvestmentAccount(String ssn) {
+        List<PortfolioModule> portfolios = generalPensionUnderlag.getPremiumPensionPortfolios(ssn);
+        final PortfolioModule incomePension = generalPensionUnderlag.getIncomePensionPortfolio(ssn);
         portfolios.add(incomePension);
 
         return InvestmentAccount.nxBuilder()
@@ -36,7 +36,7 @@ public class GeneralPensionEntity {
                 .withCashBalance(ExactCurrencyAmount.zero(MinPensionConstants.CURRENCY_SEK))
                 .withId(
                         IdModule.builder()
-                                .withUniqueIdentifier(AccountTypes.GENERAL_PENSION)
+                                .withUniqueIdentifier(AccountTypes.GENERAL_PENSION + ssn)
                                 .withAccountNumber(AccountTypes.GENERAL_PENSION)
                                 .withAccountName(AccountTypes.GENERAL_PENSION)
                                 .addIdentifier(

@@ -18,9 +18,10 @@ public class PensionAccountFetcher implements AccountFetcher<InvestmentAccount> 
         List<InvestmentAccount> pensionAccounts = new ArrayList<>();
         final PensionAccountsResponse pensionAccountsResponse =
                 minPensionApiClient.fetchPensionAccounts();
+        final String ssn = minPensionApiClient.fetchSsn();
 
         final InvestmentAccount generalPension =
-                pensionAccountsResponse.getGeneralPension().toTinkInvestmentAccount();
+                pensionAccountsResponse.getGeneralPension().toTinkInvestmentAccount(ssn);
 
         pensionAccounts.add(generalPension);
 
