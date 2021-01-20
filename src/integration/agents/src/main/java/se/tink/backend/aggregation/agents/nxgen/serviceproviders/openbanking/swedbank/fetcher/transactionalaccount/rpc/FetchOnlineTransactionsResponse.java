@@ -5,7 +5,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swe
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class FetchTransactionsResponse {
+public class FetchOnlineTransactionsResponse {
     private AccountEntity account;
     private TransactionsEntity transactions;
 

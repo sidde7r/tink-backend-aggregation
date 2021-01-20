@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.fetcher.transactionalaccount.entity.transaction;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Date;
 import java.util.Optional;
@@ -10,8 +11,12 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class TransactionEntity {
+    @JsonFormat(pattern = "yyMMdd")
     private Date valueDate;
+
+    @JsonFormat(pattern = "yyMMdd")
     private Date transactionDate;
+
     private TransactionAmountEntity transactionAmount;
     private String remittanceInformationUnstructured;
     private String remittanceInformationStructured;

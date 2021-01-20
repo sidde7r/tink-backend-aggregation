@@ -24,7 +24,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swe
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.ConsentStatus;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.TimeValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.fetcher.transactionalaccount.entity.transaction.TransactionsEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.fetcher.transactionalaccount.rpc.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.fetcher.transactionalaccount.rpc.FetchOnlineTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.fetcher.transactionalaccount.rpc.StatementResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.rpc.GenericResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
@@ -84,7 +84,8 @@ public class SwedbankTransactionFetcher implements TransactionFetcher<Transactio
                 SwedbankConstants.LogMessages.TRANSACTION_SIGNING_TIMED_OUT);
     }
 
-    private Optional<FetchTransactionsResponse> fetchAllTransactions(TransactionalAccount account) {
+    private Optional<FetchOnlineTransactionsResponse> fetchAllTransactions(
+            TransactionalAccount account) {
 
         HttpResponse httpResponse;
         try {
@@ -108,7 +109,8 @@ public class SwedbankTransactionFetcher implements TransactionFetcher<Transactio
                                 TimeUnit.MILLISECONDS)
                         <= TimeValues.ONLINE_STATEMENT_MAX_DAYS;
         if (isOnlineStatement) {
-            return Optional.ofNullable((httpResponse.getBody(FetchTransactionsResponse.class)));
+            return Optional.ofNullable(
+                    (httpResponse.getBody(FetchOnlineTransactionsResponse.class)));
         } else {
             return downaloadZippedTransactions(
                     httpResponse
@@ -119,7 +121,8 @@ public class SwedbankTransactionFetcher implements TransactionFetcher<Transactio
         }
     }
 
-    private Optional<FetchTransactionsResponse> downaloadZippedTransactions(String downloadLink) {
+    private Optional<FetchOnlineTransactionsResponse> downaloadZippedTransactions(
+            String downloadLink) {
         int retryCount = SwedbankConstants.TRANSACTIONS_DOWNLOAD_RETRY_COUNT;
         do {
             try (ZipInputStream zipInputStream =
@@ -133,7 +136,7 @@ public class SwedbankTransactionFetcher implements TransactionFetcher<Transactio
                 return Optional.of(
                         SerializationUtils.deserializeFromString(
                                 IOUtils.toString(zipInputStream, StandardCharsets.UTF_8),
-                                FetchTransactionsResponse.class));
+                                FetchOnlineTransactionsResponse.class));
             } catch (HttpResponseException e) {
                 if (e.getResponse().getStatus() == SwedbankConstants.HttpStatus.RESOURCE_PENDING) {
                     // Download resource is not ready yet. TPP should retry download link after some
@@ -153,11 +156,11 @@ public class SwedbankTransactionFetcher implements TransactionFetcher<Transactio
 
     @Override
     public List<AggregationTransaction> fetchTransactionsFor(TransactionalAccount account) {
-        Optional<FetchTransactionsResponse> fetchTransactionsResponse =
+        Optional<FetchOnlineTransactionsResponse> fetchTransactionsResponse =
                 fetchAllTransactions(account);
         return Stream.of(
                         fetchTransactionsResponse
-                                .map(FetchTransactionsResponse::getTransactions)
+                                .map(FetchOnlineTransactionsResponse::getTransactions)
                                 .map(TransactionsEntity::getPending)
                                 .map(
                                         tes ->
@@ -166,7 +169,7 @@ public class SwedbankTransactionFetcher implements TransactionFetcher<Transactio
                                                         .collect(Collectors.toList()))
                                 .orElseGet(Lists::newArrayList),
                         fetchTransactionsResponse
-                                .map(FetchTransactionsResponse::getTransactions)
+                                .map(FetchOnlineTransactionsResponse::getTransactions)
                                 .map(TransactionsEntity::getBooked)
                                 .map(
                                         tes ->
