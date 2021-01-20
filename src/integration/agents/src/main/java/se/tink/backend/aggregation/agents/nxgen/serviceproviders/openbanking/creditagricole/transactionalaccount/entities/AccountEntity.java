@@ -106,15 +106,12 @@ public class AccountEntity {
     }
 
     private ExactCurrencyAmount getBalanceCreditCards() {
-        BalanceEntity balanceEntity =
-                balances != null && balances.isEmpty() ? null : balances.get(balances.size() - 1);
-        return balanceEntity.getBalanceAmount().toAmount();
+        return balances != null && !balances.isEmpty()
+                ? balances.get(balances.size() - 1).getBalanceAmount().toAmount()
+                : null;
     }
 
     private ExactCurrencyAmount getAvailableCredits() {
-        BalanceEntity balanceEntity =
-                balances != null && balances.isEmpty() ? null : balances.get(balances.size() - 1);
-        return ExactCurrencyAmount.of(
-                BigDecimal.ZERO, balanceEntity.getBalanceAmount().getCurrency());
+        return ExactCurrencyAmount.of(BigDecimal.ZERO, "EUR");
     }
 }
