@@ -52,7 +52,7 @@ public final class LloydsV31Agent extends UkOpenBankingBaseAgent {
                 aisConfig,
                 new UkOpenBankingPisConfiguration(
                         LloydsConstants.PIS_API_URL, LloydsConstants.WELL_KNOWN_PERSONAL_URL),
-                createPisRequestFilterUsingPs256Base64Signature(
+                createPisRequestFilterUsingPs256WithoutBase64Signature(
                         jwtSigner, componentProvider.getRandomValueGenerator()));
         this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
     }
