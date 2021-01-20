@@ -14,8 +14,10 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.Sparka
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.Urls;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.entities.AccessEntity;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.entities.PsuDataEntity;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.AuthenticationMethodResponse;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.ConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.ConsentStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.FinalizeAuthorizationRequest;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.FinalizeAuthorizationResponse;
@@ -23,9 +25,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authen
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.SelectAuthenticationMethodRequest;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.fetcher.rpc.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.fetcher.rpc.FetchBalancesResponse;
-import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AccessEntity;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentDetailsResponse;
-import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentRequest;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentResponse;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
