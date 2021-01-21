@@ -6,6 +6,7 @@ option java_outer_classname = "Protos";
 option go_package = "proto";
 
 import "google/protobuf/empty.proto";
+import "google/protobuf/struct.proto";
 
 service InternalCertificateService {
     rpc GetQwacCertificateWithEncryptedPrivateKey (QwacCertificateRequest) returns (CertificateResponse) {}
@@ -28,6 +29,11 @@ service InternalSecretsService {
 service ExternalSecretsService {
     rpc GetUploadKey (PublicKeyRequest) returns (PublicKeyResponse) {}
     rpc InvalidateCachedSecrets (InvalidateCachedSecretsRequest) returns (InvalidateCachedSecretsResponse) {}
+}
+
+service ExternalRegistrationService{
+    rpc GetEnrollmentInformation (GetEnrollmentInformationRequest) returns (GetEnrollmentInformationResponse);
+    rpc Enroll (EnrollmentRequest) returns (EnrollmentResponse);
 }
 
 enum CertType {
@@ -128,4 +134,31 @@ message DeleteAesKeyRequest {
 }
 
 message PingMessage {
+}
+
+message GetEnrollmentInformationRequest {
+    string providerId = 1;
+}
+
+message GetEnrollmentInformationResponse {
+    string providerId = 1;
+    string guide = 2;
+    bool isDynamicEnrollmentPossible = 3;
+    google.protobuf.Struct enrollmentInputsSchema = 4;
+}
+
+message EnrollmentRequest {
+    string appId = 1;
+    string certId = 2;
+    string providerId = 3;
+    string enrollmentInputs = 4;
+    string clusterId = 5;
+    PlainCertificateEntity certificates = 6;
+    repeated string redirectUrls = 7;
+}
+
+message EnrollmentResponse {
+    map<string, string> secrets = 1;
+    map<string, string> encryptedSecrets = 2;
+    repeated string providerIds = 3;
 }

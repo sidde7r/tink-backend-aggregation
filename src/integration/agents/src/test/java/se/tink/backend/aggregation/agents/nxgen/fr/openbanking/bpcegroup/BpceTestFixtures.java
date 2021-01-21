@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup;
 import java.math.BigDecimal;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import org.junit.Ignore;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.transactionalaccount.rpc.BalancesResponse;
@@ -15,6 +16,7 @@ import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
+@Ignore
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class BpceTestFixtures {
 

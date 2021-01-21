@@ -303,7 +303,7 @@ http_file(
 
 # proto_library rules implicitly depend on @com_google_protobuf//:protoc,
 # which is the proto-compiler.
-PROTOBUF_VERSION = "3.9.0"
+PROTOBUF_VERSION = "3.11.3"
 
 # Keep in mind the netty version compatibility table linked below when updating this
 # https://github.com/grpc/grpc-java/blob/master/SECURITY.md#netty
@@ -338,7 +338,7 @@ rules_proto_toolchains()
 
 http_archive(
     name = "com_google_protobuf",
-    sha256 = "8eb5ca331ab8ca0da2baea7fc0607d86c46c80845deca57109a5d637ccb93bb4",
+    sha256 = "832c476bb442ca98a59c2291b8a504648d1c139b74acc15ef667a0e8f5e984e7",
     strip_prefix = "protobuf-%s" % PROTOBUF_VERSION,
     urls = ["https://github.com/protocolbuffers/protobuf/archive/v%s.zip" % PROTOBUF_VERSION],
 )
