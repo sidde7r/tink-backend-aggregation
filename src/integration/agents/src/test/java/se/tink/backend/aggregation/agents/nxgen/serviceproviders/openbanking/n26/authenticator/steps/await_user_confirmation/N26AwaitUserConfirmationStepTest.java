@@ -18,6 +18,7 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentFailedAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentUserInteractionDefinitionResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.ThirdPartyAppCancelledError;
+import se.tink.libraries.i18n.Catalog;
 
 @RunWith(MockitoJUnitRunner.class)
 public class N26AwaitUserConfirmationStepTest {
@@ -26,7 +27,8 @@ public class N26AwaitUserConfirmationStepTest {
 
     @Before
     public void init() {
-        confirmationStep = new N26AwaitUserConfirmationStep(new ObjectMapper());
+        confirmationStep =
+                new N26AwaitUserConfirmationStep(new ObjectMapper(), mock(Catalog.class));
     }
 
     @Test

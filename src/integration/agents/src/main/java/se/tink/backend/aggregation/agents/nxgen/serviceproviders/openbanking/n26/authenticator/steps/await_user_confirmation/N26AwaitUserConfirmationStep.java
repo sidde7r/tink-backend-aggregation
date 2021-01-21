@@ -16,19 +16,24 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.steps.AgentUserInteractionDefinitionStep;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.userinteraction.fielddefinition.AgentNonEditableTextFieldDefinition;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.ThirdPartyAppCancelledError;
+import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.i18n.LocalizableKey;
 
 @RequiredArgsConstructor
 public class N26AwaitUserConfirmationStep
         extends AgentUserInteractionDefinitionStep<AgentProceedNextStepAuthenticationRequest> {
 
     private static final String FIELD_ID_BASE = "consentConfirmationAwait";
-    private static final String FIELD_LABEL_1 =
-            "Please confirm the login in your N26 app and then click \"Submit\".";
-    private static final String FIELD_LABEL_2 =
-            "You haven't confirmed your login in the N26 app yet. Please confirm it and click \"Submit\".";
+    private static final LocalizableKey FIELD_LABEL_1 =
+            new LocalizableKey(
+                    "Please confirm the login in your N26 app and then click \"Submit\".");
+    private static final LocalizableKey FIELD_LABEL_2 =
+            new LocalizableKey(
+                    "You haven't confirmed your login in the N26 app yet. Please confirm it and click \"Submit\".");
     private static final short MAX_RETRY = 3;
 
     private final ObjectMapper objectMapper;
+    private final Catalog catalog;
 
     @Override
     protected AgentUserInteractionDefinitionResult defineInteraction(
@@ -53,8 +58,8 @@ public class N26AwaitUserConfirmationStep
                         new AgentNonEditableTextFieldDefinition(
                                 FIELD_ID_BASE + n26ProcessStateData.getConsentRetryCounter(),
                                 n26ProcessStateData.getConsentRetryCounter() == 1
-                                        ? FIELD_LABEL_1
-                                        : FIELD_LABEL_2));
+                                        ? catalog.getString(FIELD_LABEL_1)
+                                        : catalog.getString(FIELD_LABEL_2)));
     }
 
     @Override
