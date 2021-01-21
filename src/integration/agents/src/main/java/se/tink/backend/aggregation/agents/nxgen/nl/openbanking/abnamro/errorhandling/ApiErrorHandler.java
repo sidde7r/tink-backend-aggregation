@@ -40,13 +40,13 @@ public final class ApiErrorHandler {
             RequestBuilder requestBuilder, Class<T> clazz, RequestType requestType) {
         try {
             return callApi(requestBuilder, clazz, requestType);
-        } catch (HttpResponseException e) {
-            handleHttpResponseException(e);
         } catch (ExecutionException | RetryException e) {
+            Throwable cause = e.getCause();
+            if (cause instanceof HttpResponseException) {
+                handleHttpResponseException((HttpResponseException) cause);
+            }
             throw new RuntimeException("[ABN] Something bad happened when calling bank API", e);
         }
-        // should not reach here
-        return null;
     }
 
     private static <T> T callApi(
