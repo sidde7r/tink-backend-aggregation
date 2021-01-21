@@ -97,26 +97,24 @@ public final class AbancaApiClient {
         try {
             return request.get(response);
         } catch (HttpResponseException e) {
-            if (e.getResponse().getStatus() == HttpStatus.SC_FORBIDDEN) {
-                if (e.getResponse().hasBody()) {
-                    ErrorsEntity challengeError =
-                            e.getResponse()
-                                    .getBody(ErrorResponse.class)
-                                    .getChallengeError()
-                                    .orElseThrow(() -> e);
+            if (e.getResponse().getStatus() == HttpStatus.SC_FORBIDDEN
+                    && e.getResponse().hasBody()) {
+                ErrorsEntity challengeError =
+                        e.getResponse()
+                                .getBody(ErrorResponse.class)
+                                .getChallengeError()
+                                .orElseThrow(() -> e);
 
-                    if (!isManualRequest) {
-                        log.warn("SCA request in non-manual refresh, this will time out");
-                    }
-                    String challengeSolution =
-                            requestChallengeSolution(challengeError.getDetails());
-
-                    return request.header(
-                                    HeaderKeys.CHALLENGE_ID,
-                                    challengeError.getDetails().getChallengeId())
-                            .header(HeaderKeys.CHALLENGE_RESPONSE, challengeSolution)
-                            .get(response);
+                if (!isManualRequest) {
+                    log.warn("SCA request in non-manual refresh, this will time out");
                 }
+                String challengeSolution = requestChallengeSolution(challengeError.getDetails());
+
+                return request.header(
+                                HeaderKeys.CHALLENGE_ID,
+                                challengeError.getDetails().getChallengeId())
+                        .header(HeaderKeys.CHALLENGE_RESPONSE, challengeSolution)
+                        .get(response);
             }
             throw e;
         }
