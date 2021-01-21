@@ -1,0 +1,11 @@
+{
+    "id": "0CA0000079",
+    "name": "CUENTAS PERSONALES",
+    "description": "CUENTA JOVEN BBVA",
+    "comertialClassifications": [
+        {
+            "id": "00001",
+            "name": "INVERSION"
+        }
+    ]
+}

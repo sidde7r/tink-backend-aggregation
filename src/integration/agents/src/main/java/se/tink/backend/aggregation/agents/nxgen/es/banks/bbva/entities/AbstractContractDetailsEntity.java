@@ -85,6 +85,13 @@ public abstract class AbstractContractDetailsEntity {
     protected abstract String getAccountNumber();
 
     @JsonIgnore
+    protected String getAccountName() {
+        return Optional.ofNullable(userCustomization)
+                .map(UserCustomizationEntity::getAlias)
+                .orElse(getDefaultAccountName());
+    }
+
+    @JsonIgnore
     private String getDefaultAccountName() {
         String accountNumber = getAccountNumber();
         Optional<String> last4AccountNumber =
@@ -95,12 +102,5 @@ public abstract class AbstractContractDetailsEntity {
         return last4AccountNumber
                 .map(last4 -> product.getName() + " *" + last4)
                 .orElse(accountNumber);
-    }
-
-    @JsonIgnore
-    protected String getAccountName() {
-        return Optional.ofNullable(userCustomization)
-                .map(UserCustomizationEntity::getAlias)
-                .orElse(getDefaultAccountName());
     }
 }
