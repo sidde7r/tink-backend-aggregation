@@ -11,6 +11,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants;
@@ -26,6 +27,7 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
+@Slf4j
 public class SwedbankTransactionFetcher implements TransactionFetcher<TransactionalAccount> {
 
     private final SwedbankApiClient apiClient;
@@ -63,10 +65,15 @@ public class SwedbankTransactionFetcher implements TransactionFetcher<Transactio
                 if (entry == null) {
                     return Optional.empty();
                 }
+
+                String offlineTransactions =
+                        IOUtils.toString(zipInputStream, StandardCharsets.UTF_8);
+                log.info("Offline transactions: {}", offlineTransactions);
+
                 return Optional.of(
                         SerializationUtils.deserializeFromString(
-                                IOUtils.toString(zipInputStream, StandardCharsets.UTF_8),
-                                FetchOfflineTransactionsResponse.class));
+                                offlineTransactions, FetchOfflineTransactionsResponse.class));
+
             } catch (HttpResponseException e) {
                 if (e.getResponse().getStatus() == SwedbankConstants.HttpStatus.RESOURCE_PENDING) {
                     // Download resource is not ready yet. TPP should retry download link after some
