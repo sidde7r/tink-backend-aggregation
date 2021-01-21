@@ -93,7 +93,7 @@ public abstract class SwedbankAbstractAgent extends NextGenerationAgent
     protected TypedAuthenticator[] constructAuthenticators() {
         return new TypedAuthenticator[] {
             new SwedbankTokenGeneratorAuthenticationController(
-                    apiClient, supplementalInformationHelper),
+                    apiClient, sessionStorage, supplementalInformationHelper),
             new BankIdAuthenticationController<>(
                     supplementalRequester,
                     new SwedbankDefaultBankIdAuthenticator(

@@ -11,8 +11,10 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.entities.AccountIdEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.entities.CashAccountTypeEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.entities.LinksEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
 @JsonObject
@@ -26,9 +28,18 @@ public class GetAccountsResponse {
     public Collection<TransactionalAccount> toTinkAccounts() {
         return Optional.ofNullable(accounts).orElse(Collections.emptyList()).stream()
                 .filter(this::isAccountWithResourceId)
+                .filter(this::isCheckingAccounts)
                 .map(AccountEntity::toTinkAccount)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
+                .collect(Collectors.toList());
+    }
+
+    public Collection<CreditCardAccount> toTinkCreditCards() {
+        return Optional.ofNullable(accounts).orElse(Collections.emptyList()).stream()
+                .filter(this::isAccountWithResourceId)
+                .filter(this::isCreditCards)
+                .map(AccountEntity::convertToCreditCards)
                 .collect(Collectors.toList());
     }
 
@@ -60,5 +71,13 @@ public class GetAccountsResponse {
 
     private boolean isBeneficiaryConsentNecessary() {
         return links == null || !links.hasBeneficiaries();
+    }
+
+    public boolean isCreditCards(AccountEntity accountEntity) {
+        return CashAccountTypeEntity.CARD == accountEntity.getCashAccountType();
+    }
+
+    public boolean isCheckingAccounts(AccountEntity accountEntity) {
+        return CashAccountTypeEntity.CACC == accountEntity.getCashAccountType();
     }
 }

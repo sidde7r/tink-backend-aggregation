@@ -11,11 +11,13 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.SwedbankSEConstants.StorageKey;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankDefaultApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.authenticator.rpc.InitSecurityTokenChallengeResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.authenticator.rpc.SecurityTokenChallengeResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 /**
  * This class handles Swedbank's security token authentication. Swedbank provides two types of
@@ -34,12 +36,15 @@ public class SwedbankTokenGeneratorAuthenticationController implements TypedAuth
             LoggerFactory.getLogger(SwedbankTokenGeneratorAuthenticationController.class);
 
     private final SwedbankDefaultApiClient apiClient;
+    private final SessionStorage sessionStorage;
     private final SupplementalInformationHelper supplementalInformationHelper;
 
     public SwedbankTokenGeneratorAuthenticationController(
             SwedbankDefaultApiClient apiClient,
+            SessionStorage sessionStorage,
             SupplementalInformationHelper supplementalInformationHelper) {
         this.apiClient = apiClient;
+        this.sessionStorage = sessionStorage;
         this.supplementalInformationHelper = supplementalInformationHelper;
     }
 
@@ -73,6 +78,8 @@ public class SwedbankTokenGeneratorAuthenticationController implements TypedAuth
                         challengeResponse);
         apiClient.completeAuthentication(
                 securityTokenChallengeResponse.getLinks().getNextOrThrow());
+
+        sessionStorage.put(StorageKey.HAS_EXTENDED_USAGE, true);
     }
 
     public String getChallengeResponse(
