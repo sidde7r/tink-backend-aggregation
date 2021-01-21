@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sw
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
@@ -20,6 +21,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swe
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.rpc.GenericResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginationHelper;
+import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
@@ -32,27 +35,34 @@ public class SwedbankTransactionalAccountFetcher implements AccountFetcher<Trans
     private final SwedbankApiClient apiClient;
     private final PersistentStorage persistentStorage;
     private final SessionStorage sessionStorage;
+    private final TransactionPaginationHelper transactionPaginationHelper;
     private FetchAccountResponse fetchAccountResponse;
 
     public SwedbankTransactionalAccountFetcher(
             SwedbankApiClient apiClient,
             PersistentStorage persistentStorage,
-            SessionStorage sessionStorage) {
+            SessionStorage sessionStorage,
+            TransactionPaginationHelper transactionPaginationHelper) {
         this.apiClient = apiClient;
         this.persistentStorage = persistentStorage;
         this.sessionStorage = sessionStorage;
+        this.transactionPaginationHelper = transactionPaginationHelper;
     }
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
         handleConsentFlow();
-        // Request Creation of the transactions over 90 days zip file in advance
-        getAccounts().getAccountList().forEach(this::postAccountStatement);
-        return getAccounts().getAccountList().stream()
-                .map(toTinkAccountWithBalance())
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .collect(Collectors.toList());
+        Collection<TransactionalAccount> tinkAccounts =
+                getAccounts().getAccountList().stream()
+                        .map(toTinkAccountWithBalance())
+                        .filter(Optional::isPresent)
+                        .map(Optional::get)
+                        .collect(Collectors.toList());
+
+        // Request transactions over 90 days zip file in advance
+        tinkAccounts.forEach(this::postAccountStatement);
+
+        return tinkAccounts;
     }
 
     private Function<AccountEntity, Optional<TransactionalAccount>> toTinkAccountWithBalance() {
@@ -135,14 +145,20 @@ public class SwedbankTransactionalAccountFetcher implements AccountFetcher<Trans
         persistentStorage.remove(SwedbankConstants.StorageKeys.CONSENT);
     }
 
-    private void postAccountStatement(AccountEntity accountEntity) {
+    private void postAccountStatement(Account account) {
+        Optional<Date> certainDate = transactionPaginationHelper.getContentWithRefreshDate(account);
+        final Date fromDate =
+                Timestamp.valueOf(LocalDateTime.now().minusMonths(TimeValues.MONTHS_TO_FETCH_MAX));
+        final Date toDate =
+                Timestamp.valueOf(
+                        LocalDateTime.now().minusDays(TimeValues.ONLINE_STATEMENT_MAX_DAYS));
+
+        if (certainDate.isPresent() && certainDate.get().after(toDate)) {
+            return;
+        }
+
         HttpResponse response =
-                apiClient.getTransactions(
-                        accountEntity.getResourceId(),
-                        Timestamp.valueOf(
-                                LocalDateTime.now().minusMonths(TimeValues.MONTHS_TO_FETCH_MAX)),
-                        Timestamp.valueOf(LocalDateTime.now()));
-        sessionStorage.put(
-                accountEntity.getResourceId(), response.getBody(StatementResponse.class));
+                apiClient.getTransactions(account.getApiIdentifier(), fromDate, toDate);
+        sessionStorage.put(account.getApiIdentifier(), response.getBody(StatementResponse.class));
     }
 }

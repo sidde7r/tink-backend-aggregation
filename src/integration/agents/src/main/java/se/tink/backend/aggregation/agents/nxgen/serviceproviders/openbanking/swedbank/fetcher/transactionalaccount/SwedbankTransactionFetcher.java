@@ -53,7 +53,7 @@ public class SwedbankTransactionFetcher implements TransactionFetcher<Transactio
         return Optional.ofNullable(httpResponse.getBody(FetchOnlineTransactionsResponse.class));
     }
 
-    private Optional<FetchOfflineTransactionsResponse> downaloadZippedTransactions(
+    private Optional<FetchOfflineTransactionsResponse> downloadZippedTransactions(
             Optional<StatementResponse> statementResponse) {
         if (!statementResponse.isPresent()) {
             return Optional.empty();
@@ -97,7 +97,7 @@ public class SwedbankTransactionFetcher implements TransactionFetcher<Transactio
                         .orElseGet(Lists::newArrayList);
 
         transactions.addAll(
-                downaloadZippedTransactions(
+                downloadZippedTransactions(
                                 sessionStorage.get(
                                         account.getApiIdentifier(), StatementResponse.class))
                         .map(FetchOfflineTransactionsResponse::getTransactions)

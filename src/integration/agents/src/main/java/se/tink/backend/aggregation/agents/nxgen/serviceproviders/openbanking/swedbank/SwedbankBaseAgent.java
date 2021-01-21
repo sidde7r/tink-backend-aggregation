@@ -165,7 +165,7 @@ public abstract class SwedbankBaseAgent extends NextGenerationAgent
                 metricRefreshController,
                 updateController,
                 new SwedbankTransactionalAccountFetcher(
-                        apiClient, persistentStorage, sessionStorage),
+                        apiClient, persistentStorage, sessionStorage, transactionPaginationHelper),
                 new SwedbankTransactionFetcher(apiClient, sessionStorage));
     }
 
