@@ -54,7 +54,7 @@ public class ViewDetailListItem {
         String iban = getIban();
         return TransactionalAccount.nxBuilder()
                 .withType(getTinkAccountType())
-                .withPaymentAccountFlag()
+                .withInferredAccountFlags()
                 .withBalance(BalanceModule.of(getBalance()))
                 .withId(
                         IdModule.builder()

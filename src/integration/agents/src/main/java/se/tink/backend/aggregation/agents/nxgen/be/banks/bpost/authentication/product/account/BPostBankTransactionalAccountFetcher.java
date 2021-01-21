@@ -56,7 +56,7 @@ public class BPostBankTransactionalAccountFetcher implements AccountFetcher<Tran
         final String iban = findIbanIdentifier(accountDTO);
         return TransactionalAccount.nxBuilder()
                 .withType(accountType)
-                .withPaymentAccountFlag()
+                .withInferredAccountFlags()
                 .withBalance(
                         BalanceModule.of(
                                 ExactCurrencyAmount.of(
