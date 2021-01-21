@@ -140,8 +140,7 @@ public class SwedbankTransactionalAccountFetcher implements AccountFetcher<Trans
                 apiClient.getTransactions(
                         accountEntity.getResourceId(),
                         Timestamp.valueOf(
-                                LocalDateTime.now()
-                                        .minusMonths(TimeValues.MONTHS_TO_FETCH_MAX)),
+                                LocalDateTime.now().minusMonths(TimeValues.MONTHS_TO_FETCH_MAX)),
                         Timestamp.valueOf(LocalDateTime.now()));
         sessionStorage.put(
                 accountEntity.getResourceId(), response.getBody(StatementResponse.class));

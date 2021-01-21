@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import org.apache.commons.io.IOUtils;
@@ -16,7 +17,9 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swe
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.TimeValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.fetcher.transactionalaccount.entity.transaction.TransactionsEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.fetcher.transactionalaccount.rpc.FetchOfflineTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.fetcher.transactionalaccount.rpc.FetchOnlineTransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.fetcher.transactionalaccount.rpc.StatementResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
@@ -48,18 +51,15 @@ public class SwedbankTransactionFetcher implements TransactionFetcher<Transactio
                         Timestamp.valueOf(LocalDateTime.now()));
 
         return Optional.ofNullable(httpResponse.getBody(FetchOnlineTransactionsResponse.class));
-        //        } else {
-        //            return downaloadZippedTransactions(
-        //                    httpResponse
-        //                            .getBody(StatementResponse.class)
-        //                            .getLinks()
-        //                            .getDownload()
-        //                            .getHref());
-        //        }
     }
 
-    private Optional<FetchOnlineTransactionsResponse> downaloadZippedTransactions(
-            String downloadLink) {
+    private Optional<FetchOfflineTransactionsResponse> downaloadZippedTransactions(
+            Optional<StatementResponse> statementResponse) {
+        if (!statementResponse.isPresent()) {
+            return Optional.empty();
+        }
+        String downloadLink = statementResponse.get().getLinks().getDownload().getHref();
+
         do {
             try (ZipInputStream zipInputStream =
                     new ZipInputStream(
@@ -72,7 +72,7 @@ public class SwedbankTransactionFetcher implements TransactionFetcher<Transactio
                 return Optional.of(
                         SerializationUtils.deserializeFromString(
                                 IOUtils.toString(zipInputStream, StandardCharsets.UTF_8),
-                                FetchOnlineTransactionsResponse.class));
+                                FetchOfflineTransactionsResponse.class));
             } catch (HttpResponseException e) {
                 if (e.getResponse().getStatus() == SwedbankConstants.HttpStatus.RESOURCE_PENDING) {
                     // Download resource is not ready yet. TPP should retry download link after some
@@ -90,11 +90,26 @@ public class SwedbankTransactionFetcher implements TransactionFetcher<Transactio
 
     @Override
     public List<AggregationTransaction> fetchTransactionsFor(TransactionalAccount account) {
-        List<AggregationTransaction> onlineTransactions =
+        List<AggregationTransaction> transactions =
                 fetchOnlineTransactions(account)
                         .map(FetchOnlineTransactionsResponse::getTransactions)
                         .map(TransactionsEntity::getTinkTransactions)
                         .orElseGet(Lists::newArrayList);
-        return onlineTransactions;
+
+        transactions.addAll(
+                downaloadZippedTransactions(
+                                sessionStorage.get(
+                                        account.getApiIdentifier(), StatementResponse.class))
+                        .map(FetchOfflineTransactionsResponse::getTransactions)
+                        .map(
+                                transactionEntities ->
+                                        transactionEntities.stream()
+                                                .map(
+                                                        transactionEntity ->
+                                                                transactionEntity.toTinkTransaction(
+                                                                        false))
+                                                .collect(Collectors.toList()))
+                        .orElseGet(Lists::newArrayList));
+        return transactions;
     }
 }
