@@ -1,0 +1,225 @@
+
+REQUEST 1a
+POST https://tpp-auth.seb.se/auth/bid/v2/authentications
+Accept: application/json
+
+RESPONSE 1a SET AUTH_1
+201
+Date: Tue, 19 Jan 2021 09:58:27 GMT
+Date: Tue, 19 Jan 2021 09:58:27 GMT
+x-seb-csrf: CSRF_TOKEN
+Content-Language: en-US
+Content-Type: application/json
+Cache-Control: no-store, no-cache
+Expires: Thu, 01 Dec 1994 16:00:00 GMT
+Content-Length: 33
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"auto_start_token":"dummyToken"}
+
+REQUEST 1b MATCH AUTH_1
+GET https://tpp-auth.seb.se/auth/bid/v2/authentications
+Accept: application/json
+
+RESPONSE 1b SET AUTH_2
+200
+Date: Tue, 19 Jan 2021 09:58:27 GMT
+Date: Tue, 19 Jan 2021 09:58:27 GMT
+x-seb-csrf: CSRF_TOKEN
+Content-Language: en-US
+Content-Type: application/json
+Content-Length: 58
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"hint_code":"OUTSTANDING_TRANSACTION","status":"PENDING"}
+
+REQUEST 1c MATCH AUTH_2
+GET https://tpp-auth.seb.se/auth/bid/v2/authentications
+Accept: application/json
+
+RESPONSE 1c SET AUTH_3
+200
+Date: Tue, 19 Jan 2021 09:58:29 GMT
+Date: Tue, 19 Jan 2021 09:58:30 GMT
+x-seb-csrf: CSRF_TOKEN
+Content-Language: en-US
+Content-Type: application/json
+Content-Length: 44
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"hint_code":"USER_SIGN","status":"PENDING"}
+
+REQUEST 1d MATCH AUTH_3
+GET https://tpp-auth.seb.se/auth/bid/v2/authentications
+Accept: application/json
+
+RESPONSE 1d
+200
+Date: Tue, 19 Jan 2021 09:58:32 GMT
+Date: Tue, 19 Jan 2021 09:58:32 GMT
+x-seb-csrf: CSRF_TOKEN
+Content-Language: en-US
+Content-Type: application/json
+Cache-Control: no-store, no-cache
+Pragma: no-cache
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+Content-Length: 21
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"status":"COMPLETE"}
+
+REQUEST 1e
+GET https://tpp-auth.seb.se/mga/sps/oauth/oauth20/dpsd2/authorize?client_id=dummyId&response_type=code&scope=psd2_accounts+psd2_payments&redirect_uri=https%3A%2F%2F127.0.0.1%3A7357%2Fapi%2Fv1%2Fthirdparty%2Fcallback
+Accept: application/json
+
+RESPONSE 1e
+200
+Date: Tue, 19 Jan 2021 09:58:32 GMT
+Content-Type: application/json
+Cache-Control: no-cache, no-store
+Content-Length: 48
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"CONSENT_FORM_VERIFIER":"0qfduE9veTM7FcNMofbs"}
+
+REQUEST 1f
+POST https://tpp-auth.seb.se/mga/sps/oauth/oauth20/dpsd2/authorize
+Accept: application/json
+Content-Type: application/x-www-form-urlencoded
+
+scope=psd2_accounts+psd2_payments&trust_level=permit&consent_form_verifier=0qfduE9veTM7FcNMofbs
+
+RESPONSE 1f
+200
+Date: Tue, 19 Jan 2021 09:58:33 GMT
+Content-Type: application/json
+Cache-Control: no-cache, no-store
+Set-Cookie: ***
+Content-Length: 38
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"code": "dummyCode", "state": "null"}
+
+REQUEST 1g
+POST https://tpp-api.sebgroup.com/mga/sps/oauth/oauth20/dpsd2/token
+Accept: application/json
+Content-Type: application/x-www-form-urlencoded
+
+client_id=dummyId&client_secret=dummySecret&redirect_uri=https%3A%2F%2F127.0.0.1%3A7357%2Fapi%2Fv1%2Fthirdparty%2Fcallback&grant_type=authorization_code&code=dummyCode&scope=psd2_accounts+psd2_payments
+
+RESPONSE 1g
+200
+Date: Tue, 19 Jan 2021 09:58:33 GMT
+Content-Type: application/json
+Cache-Control: no-cache, no-store
+Content-Length: 140
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"access_token":"ACCESS_TOKEN","refresh_token":"REFRESH_TOKEN","scope":"psd2_accounts psd2_payments","token_type":"Bearer","expires_in":599}
+
+REQUEST 1
+POST https://tpp-api.sebgroup.com/tpp/pis/v6/identified2/payments/swedish-domestic-private-bankgiros
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 1
+201
+Date: Tue, 19 Jan 2021 09:58:44 GMT
+Date: Tue, 19 Jan 2021 09:58:44 GMT
+Content-Type: application/json
+Content-Length: 485
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"paymentId":"STOHYD01210119105844128700000001","templateId":"swedish-domestic-private-bankgiros","instructedAmount":{"currency":"SEK","amount":"2020.0"},"debtorAccount":{"iban":"SE4550000000058398257466"},"creditorAccount":{"bgnr":"5768353"},"remittanceInformationStructured":{"referenceType":"OCR","reference":"1047514784933"},"requestedExecutionDate":"2021-02-01","_links":{"status":{"href":"/payments/swedish-domestic-private-bankgiros/STOHYD01210119105844128700000001/status"}}}
+
+REQUEST 2
+GET https://tpp-api.sebgroup.com/tpp/pis/v6/identified2/payments/swedish-domestic-private-bankgiros/STOHYD01210119105844128700000001/status
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 2 SET STATUS_1
+200
+Date: Tue, 19 Jan 2021 09:58:44 GMT
+Date: Tue, 19 Jan 2021 09:58:44 GMT
+Content-Type: application/json
+Content-Length: 191
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"paymentId":"STOHYD01210119105844128700000001","transactionStatus":"RCVD","_links":{"status":{"href":"/payments/swedish-domestic-private-bankgiros/STOHYD01210119105844128700000001/status"}}}
+
+REQUEST 3 MATCH STATUS_1
+GET https://tpp-api.sebgroup.com/tpp/pis/v6/identified2/payments/swedish-domestic-private-bankgiros/STOHYD01210119105844128700000001/status
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 3 SET STATUS_2
+200
+Date: Tue, 19 Jan 2021 09:58:44 GMT
+Date: Tue, 19 Jan 2021 09:58:44 GMT
+Content-Type: application/json
+Content-Length: 853
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"paymentId":"STOHYD01210119105844128700000001","transactionStatus":"RCVD","scaMethods":[{"authenticationType":"CHIP_OTP","authenticationMethodId":"mobiltbankid","name":"Mobilt BankID","explanation":"SCA using decoupled approach"},{"authenticationType":"CHIP_OTP","authenticationMethodId":"digipass","name":"Digipass","explanation":"SCA using Redirect to SEB pages"},{"authenticationType":"CHIP_OTP","authenticationMethodId":"bankIdOnCardDecoupled","name":"BankID på kort","explanation":"SCA using BankId on card, a domestic Swedish authentication method. Decoupled approach"}],"_links":{"startAuthorisationWithAuthenticationMethodSelection":{"href":"/payments/swedish-domestic-private-bankgiros/STOHYD01210119105844128700000001/authorisations"},"status":{"href":"/payments/swedish-domestic-private-bankgiros/STOHYD01210119105844128700000001/status"}}}
+
+REQUEST 4 MATCH STATUS_2
+GET https://tpp-api.sebgroup.com/tpp/pis/v6/identified2/payments/swedish-domestic-private-bankgiros/STOHYD01210119105844128700000001/status
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 4 SET STATUS_3
+200
+Date: Tue, 19 Jan 2021 09:58:45 GMT
+Date: Tue, 19 Jan 2021 09:58:45 GMT
+Content-Type: application/json
+Content-Length: 853
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"paymentId":"STOHYD01210119105844128700000001","transactionStatus":"RCVD","scaMethods":[{"authenticationType":"CHIP_OTP","authenticationMethodId":"mobiltbankid","name":"Mobilt BankID","explanation":"SCA using decoupled approach"},{"authenticationType":"CHIP_OTP","authenticationMethodId":"digipass","name":"Digipass","explanation":"SCA using Redirect to SEB pages"},{"authenticationType":"CHIP_OTP","authenticationMethodId":"bankIdOnCardDecoupled","name":"BankID på kort","explanation":"SCA using BankId on card, a domestic Swedish authentication method. Decoupled approach"}],"_links":{"startAuthorisationWithAuthenticationMethodSelection":{"href":"/payments/swedish-domestic-private-bankgiros/STOHYD01210119105844128700000001/authorisations"},"status":{"href":"/payments/swedish-domestic-private-bankgiros/STOHYD01210119105844128700000001/status"}}}
+
+REQUEST 5
+POST https://tpp-api.sebgroup.com/tpp/pis/v6/identified2/payments/swedish-domestic-private-bankgiros/STOHYD01210119105844128700000001/authorisations
+Accept: application/json
+Content-Type: application/json
+
+{"authenticationMethodId":"mobiltbankid"}
+
+RESPONSE 5
+201
+Date: Tue, 19 Jan 2021 09:58:45 GMT
+Date: Tue, 19 Jan 2021 09:58:46 GMT
+Content-Type: application/json
+Content-Length: 485
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"authorisationId":"c19bbf7e-aa4e-4a04-b597-fe45474a17c1","basketId":"bf48da68-e6bc-4b5a-be0d-a0b95fbad67d","chosenScaMethod":{"authenticationType":"CHIP_OTP","authenticationMethodId":"mobiltbankid","name":"Mobilt BankID","explanation":"SCA using decoupled approach"},"scaStatus":"scaMethodSelected","paymentIds":["STOHYD01210119105844128700000001"],"_links":{"self":{"href":"/signing-baskets/bf48da68-e6bc-4b5a-be0d-a0b95fbad67d/authorisations/c19bbf7e-aa4e-4a04-b597-fe45474a17c1"}}}
+
+REQUEST 6 MATCH STATUS_3
+GET https://tpp-api.sebgroup.com/tpp/pis/v6/identified2/payments/swedish-domestic-private-bankgiros/STOHYD01210119105844128700000001/status
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 6 SET STATUS_4
+200
+Date: Tue, 19 Jan 2021 09:58:46 GMT
+Date: Tue, 19 Jan 2021 09:58:46 GMT
+Content-Type: application/json
+Content-Length: 344
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"paymentId":"STOHYD01210119105844128700000001","transactionStatus":"RCVD","scaStatus":"started","psuMessage":"Signera med mobilt BankID","tppMessages":["Ask the customer to sign for the payment with mobile BankId application"],"_links":{"status":{"href":"/payments/swedish-domestic-private-bankgiros/STOHYD01210119105844128700000001/status"}}}
+
+REQUEST 7 MATCH STATUS_4
+GET https://tpp-api.sebgroup.com/tpp/pis/v6/identified2/payments/swedish-domestic-private-bankgiros/STOHYD01210119105844128700000001/status
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 7
+200
+Date: Tue, 19 Jan 2021 09:59:32 GMT
+Date: Tue, 19 Jan 2021 09:59:32 GMT
+Content-Type: application/json
+Content-Length: 853
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"paymentId":"STOHYD01210119105844128700000001","transactionStatus":"RCVD","scaMethods":[{"authenticationType":"CHIP_OTP","authenticationMethodId":"mobiltbankid","name":"Mobilt BankID","explanation":"SCA using decoupled approach"},{"authenticationType":"CHIP_OTP","authenticationMethodId":"digipass","name":"Digipass","explanation":"SCA using Redirect to SEB pages"},{"authenticationType":"CHIP_OTP","authenticationMethodId":"bankIdOnCardDecoupled","name":"BankID på kort","explanation":"SCA using BankId on card, a domestic Swedish authentication method. Decoupled approach"}],"_links":{"startAuthorisationWithAuthenticationMethodSelection":{"href":"/payments/swedish-domestic-private-bankgiros/STOHYD01210119105844128700000001/authorisations"},"status":{"href":"/payments/swedish-domestic-private-bankgiros/STOHYD01210119105844128700000001/status"}}}
