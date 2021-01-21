@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.loan.rpc;
 
-import java.util.Arrays;
-import java.util.Collections;
+import com.google.common.collect.ImmutableList;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 
@@ -50,8 +49,7 @@ class NumberOfMonthsBoundCalculator {
     }
 
     private static final List<ToMonthCalculator> toMonthCalculators =
-            Collections.unmodifiableList(
-                    Arrays.asList(new MonthToMonthCalculator(), new YearToMonthCalculator()));
+            ImmutableList.of(new MonthToMonthCalculator(), new YearToMonthCalculator());
 
     public int calculate(String s) {
         String[] parts = s.split(",");

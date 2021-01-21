@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.loan.rpc;
 
+import com.google.common.collect.ImmutableList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
@@ -22,7 +22,7 @@ public class LoanDetailsResponse {
             new ToExactCurrencyAmountMapper(new Locale("da"), " ");
 
     private static final List<String> MORTGAGE_NAMES =
-            Collections.unmodifiableList(Arrays.asList("PrioritetsLån", "EjendomsLån", "BoligLån"));
+            ImmutableList.of("PrioritetsLån", "EjendomsLån", "BoligLån");
 
     private final NumberOfMonthsBoundCalculator numberOfMonthsBoundCalculator =
             new NumberOfMonthsBoundCalculator();
@@ -33,9 +33,8 @@ public class LoanDetailsResponse {
 
         return findFirstMatchingDetail(
                         details ->
-                                details.getDetailName().equals("Rentesats")
-                                        || details.getDetailName().equals("Interest rate")
-                                        || details.getDetailName().equals("Yearly interest"))
+                                Arrays.asList("Rentesats", "Interest rate", "Yearly interest")
+                                        .contains(details.getDetailName()))
                 .map(
                         detail ->
                                 AgentParsingUtils.parsePercentageFormInterest(
@@ -46,8 +45,8 @@ public class LoanDetailsResponse {
     public ExactCurrencyAmount getInitialBalance() {
         return findFirstMatchingDetail(
                         details ->
-                                details.getDetailName().equals("Hovedstol")
-                                        || details.getDetailName().equals("Principal"))
+                                Arrays.asList("Hovedstol", "Principal")
+                                        .contains(details.getDetailName()))
                 .map(detail -> toExactCurrencyAmountMapper.parse(detail.getDetailValue()))
                 .orElse(null);
     }
@@ -66,8 +65,8 @@ public class LoanDetailsResponse {
     public Integer getNumOfMonthsBound() {
         return findFirstMatchingDetail(
                         details ->
-                                details.getDetailName().equals("Restløbetid")
-                                        || details.getDetailName().equals("Maturity"))
+                                Arrays.asList("Restløbetid", "Maturity")
+                                        .contains(details.getDetailName()))
                 .map(detail -> numberOfMonthsBoundCalculator.calculate(detail.getDetailValue()))
                 .filter(v -> v > 0)
                 .orElse(null);

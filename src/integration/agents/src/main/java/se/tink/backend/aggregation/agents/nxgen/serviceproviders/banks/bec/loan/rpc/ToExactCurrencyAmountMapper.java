@@ -14,7 +14,7 @@ class ToExactCurrencyAmountMapper {
     private final Locale locale;
     private final String separator;
 
-    public ExactCurrencyAmount parse(final String s) {
+    ExactCurrencyAmount parse(final String s) {
         String[] parts = s.split(separator);
         if (parts.length != 2) {
             return null;

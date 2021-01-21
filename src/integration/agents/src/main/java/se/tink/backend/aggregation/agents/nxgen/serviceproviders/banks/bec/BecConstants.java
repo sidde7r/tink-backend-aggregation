@@ -232,8 +232,4 @@ public final class BecConstants {
 
     public static final ImmutableMap<String, Instrument.Type> INSTRUMENT_TYPES =
             ImmutableMap.<String, Instrument.Type>builder().put("1", Instrument.Type.STOCK).build();
-
-    public static final class Loan {
-        public static final String INTEREST_DETAILS_KEY = "Yearly interest";
-    }
 }
