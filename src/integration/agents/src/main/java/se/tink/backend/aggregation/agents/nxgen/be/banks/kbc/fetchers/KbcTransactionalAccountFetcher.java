@@ -2,9 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.fetchers;
 
 import com.google.common.collect.Lists;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.Set;
 import java.util.stream.Collectors;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.KbcApiClient;
@@ -25,8 +22,6 @@ public class KbcTransactionalAccountFetcher
         implements AccountFetcher<TransactionalAccount>,
                 TransactionKeyPaginator<TransactionalAccount, String>,
                 UpcomingTransactionFetcher<TransactionalAccount> {
-    private static final Set<AccountTypes> SAVINGS_OR_CHECKING =
-            Collections.unmodifiableSet(EnumSet.of(AccountTypes.CHECKING, AccountTypes.SAVINGS));
 
     private final KbcApiClient apiClient;
     private String userLanguage;
@@ -49,8 +44,8 @@ public class KbcTransactionalAccountFetcher
                 .filter(
                         agreement ->
                                 agreement.getAccountType().isPresent()
-                                        && SAVINGS_OR_CHECKING.contains(
-                                                agreement.getAccountType().get()))
+                                        && AccountTypes.SAVINGS
+                                                == agreement.getAccountType().orElse(null))
                 .map(AgreementDto::toTransactionalAccount)
                 .collect(Collectors.toList());
     }

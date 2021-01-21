@@ -39,11 +39,30 @@ public class BelfiusTransactionalAccountFetcherTest {
     }
 
     @Test
-    public void shouldReturnAccounts() {
+    public void shouldNotReturnCheckingAccount() {
         // given
         FetchProductsResponse fpr =
                 SerializationUtils.deserializeFromString(
-                        ProductList.oneProductList, FetchProductsResponse.class);
+                        ProductList.checkingProductList, FetchProductsResponse.class);
+        // and
+        given(apiClient.fetchProducts()).willReturn(fpr);
+
+        // when
+        Collection<TransactionalAccount> accounts = fetcher.fetchAccounts();
+
+        // then
+        TransactionalAccount[] transactionalAccounts =
+                accounts.toArray(new TransactionalAccount[0]);
+        assertThat(transactionalAccounts).isEmpty();
+    }
+
+    @Test
+    public void shouldReturnSavingsAccoount() {
+
+        // given
+        FetchProductsResponse fpr =
+                SerializationUtils.deserializeFromString(
+                        ProductList.savingsProductList, FetchProductsResponse.class);
         // and
         given(apiClient.fetchProducts()).willReturn(fpr);
 
@@ -55,7 +74,7 @@ public class BelfiusTransactionalAccountFetcherTest {
                 accounts.toArray(new TransactionalAccount[0]);
 
         assertThat(transactionalAccounts[0].getName()).isEqualTo("BELFIasdas");
-        assertThat(transactionalAccounts[0].getType()).isEqualTo(AccountTypes.CHECKING);
+        assertThat(transactionalAccounts[0].getType()).isEqualTo(AccountTypes.SAVINGS);
         assertThat(transactionalAccounts[0].getExactBalance())
                 .isEqualTo(ExactCurrencyAmount.inEUR(123.45));
 

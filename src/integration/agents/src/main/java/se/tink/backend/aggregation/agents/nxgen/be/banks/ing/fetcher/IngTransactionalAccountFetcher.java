@@ -32,8 +32,7 @@ public class IngTransactionalAccountFetcher implements AccountFetcher<Transactio
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
 
-        AgreementsResponseEntity agreements =
-                ingProxyApiClient.getAgreements(Types.SAVINGS + "," + Types.CURRENT);
+        AgreementsResponseEntity agreements = ingProxyApiClient.getAgreements(Types.SAVINGS);
 
         return agreements.getAgreements().stream()
                 .map(this::map)

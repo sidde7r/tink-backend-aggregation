@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.bpost.authentication.product.account;
 
 import java.util.Collection;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.common.RequestException;
@@ -31,14 +30,8 @@ public class BPostBankTransactionalAccountFetcher implements AccountFetcher<Tran
     public Collection<TransactionalAccount> fetchAccounts() {
         try {
             BPostBankAccountsResponseDTO response = apiClient.fetchAccounts(authContext);
-            List<TransactionalAccount> accounts = new LinkedList<>();
-            accounts.addAll(
-                    mapToTransactionalAccounts(
-                            response.currentAccounts, TransactionalAccountType.CHECKING));
-            accounts.addAll(
-                    mapToTransactionalAccounts(
-                            response.savingsAccounts, TransactionalAccountType.SAVINGS));
-            return accounts;
+            return mapToTransactionalAccounts(
+                    response.savingsAccounts, TransactionalAccountType.SAVINGS);
         } catch (RequestException ex) {
             throw BankServiceError.BANK_SIDE_FAILURE.exception(ex.getMessage());
         }
