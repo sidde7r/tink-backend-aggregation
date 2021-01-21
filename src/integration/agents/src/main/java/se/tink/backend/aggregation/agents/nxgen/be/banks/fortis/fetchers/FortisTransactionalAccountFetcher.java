@@ -4,6 +4,8 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.stream.Collectors;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.FortisApiClient;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.FortisConstants;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.fetchers.rpc.UpcomingTransactionsResponse;
@@ -29,7 +31,9 @@ public class FortisTransactionalAccountFetcher
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
-        return apiClient.fetchAccounts().toTinkAccounts();
+        return apiClient.fetchAccounts().toTinkAccounts().stream()
+                .filter(this::onlySavings)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -74,5 +78,9 @@ public class FortisTransactionalAccountFetcher
         } catch (HttpResponseException hre) {
             return PaginatorResponseImpl.createEmpty(false);
         }
+    }
+
+    private boolean onlySavings(TransactionalAccount account) {
+        return AccountTypes.SAVINGS == account.getType();
     }
 }
