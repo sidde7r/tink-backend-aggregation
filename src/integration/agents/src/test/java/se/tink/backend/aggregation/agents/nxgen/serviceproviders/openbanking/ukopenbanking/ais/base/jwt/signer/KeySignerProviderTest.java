@@ -9,6 +9,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.contexts.CompositeAgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.configuration.UkOpenBankingConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.signer.iface.JwtSigner;
@@ -24,6 +25,7 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementali
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.tinkhttpclient.TinkHttpClientProvider;
 import se.tink.backend.aggregation.nxgen.controllers.configuration.EIdasTinkCert;
 import se.tink.backend.aggregation.nxgen.controllers.configuration.iface.AgentConfigurationControllerable;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 
 @RunWith(MockitoJUnitRunner.class)
 public class KeySignerProviderTest {
@@ -37,6 +39,8 @@ public class KeySignerProviderTest {
     @Mock private RandomValueGenerator randomValueGenerator;
     @Mock private EidasProxyConfiguration eidasProxyConfiguration;
     @Mock private AgentConfiguration<UkOpenBankingConfiguration> ukConfiguration;
+    @Mock private CredentialsRequest credentialsRequest;
+    @Mock private Provider provider;
     private KeySignerProvider keySignerProvider;
 
     @Before
@@ -63,6 +67,10 @@ public class KeySignerProviderTest {
                         UkOpenBankingConfiguration.class))
                 .thenReturn(ukConfiguration);
         when(ukConfiguration.getQsealc()).thenReturn(EIdasTinkCert.QSEALC);
+        when(agentComponentProvider.getCredentialsRequest()).thenReturn(credentialsRequest);
+        when(credentialsRequest.getProvider()).thenReturn(provider);
+        when(provider.getName()).thenReturn("uk-aib-oauth2");
+        // agentComponentProvider.getCredentialsRequest().getProvider().getName()))
 
         keySignerProvider =
                 new KeySignerProvider(
@@ -81,7 +89,7 @@ public class KeySignerProviderTest {
         JwtSigner jwtSigner = keySignerProvider.get();
 
         // then
-        assertThat(jwtSigner).isInstanceOf(SecretServiceJwtSigner.class);
+        assertThat(jwtSigner).isInstanceOf(PayloadEncodedSecretServiceJwtSigner.class);
     }
 
     @Test
@@ -93,6 +101,6 @@ public class KeySignerProviderTest {
         JwtSigner jwtSigner = keySignerProvider.get();
 
         // then
-        assertThat(jwtSigner).isInstanceOf(SecretServiceJwtSigner.class);
+        assertThat(jwtSigner).isInstanceOf(PayloadEncodedSecretServiceJwtSigner.class);
     }
 }
