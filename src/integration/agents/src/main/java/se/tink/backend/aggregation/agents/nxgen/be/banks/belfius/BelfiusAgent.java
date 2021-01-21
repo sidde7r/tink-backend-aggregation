@@ -22,6 +22,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.B
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.BelfiusAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.HumanInteractionDelaySimulator;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.persistence.BelfiusAgentPlatformStorageMigrator;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.responsevalidator.AgentPlatformResponseValidator;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.fetcher.credit.BelfiusCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.fetcher.transactional.BelfiusTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.sessionhandler.BelfiusSessionHandler;
@@ -87,7 +88,8 @@ public final class BelfiusAgent extends NextGenerationAgent
                         agentPlatformApiClient,
                         belfiusSessionStorage,
                         belfiusSignatureCreator,
-                        objectMapperFactory.getInstance());
+                        objectMapperFactory.getInstance(),
+                        AgentPlatformResponseValidator.getInstance());
     }
 
     @Override
