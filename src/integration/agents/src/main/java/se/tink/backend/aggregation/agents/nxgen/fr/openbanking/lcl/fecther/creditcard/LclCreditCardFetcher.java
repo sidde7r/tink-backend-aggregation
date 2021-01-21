@@ -65,9 +65,7 @@ public class LclCreditCardFetcher
                                                 .getOther()
                                                 .getIdentification())
                                 .withBalance(getCreditCardBalance(accountResourceDto))
-                                .withAvailableCredit(
-                                        getAvailableCredit()) // This could be specify after
-                                                              // receiving example log.
+                                .withAvailableCredit(getAvailableCredit())
                                 .withCardAlias(accountResourceDto.getProduct())
                                 .build())
                 .withInferredAccountFlags()
