@@ -3,7 +3,9 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter;
 import com.google.common.collect.Sets;
 import java.util.Set;
 import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.fetcher.transactionalaccount.entities.BankinterHolder;
 import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapper;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Holder.Role;
 import se.tink.libraries.account.enums.AccountFlag;
 
 public final class BankinterConstants {
@@ -34,6 +36,17 @@ public final class BankinterConstants {
     public static class Paths {
         public static final String GLOBAL_POSITION = "/extracto/secure/extracto_integral.xhtml";
         public static final String VERIFY_SCA = "/gestion/verifica_sca.xhtml";
+    }
+
+    public static class Holders {
+        public static final BankinterHolder TITULAR_HOLDER_NAME =
+                new BankinterHolder("//dt[text()='Titular']/following-sibling::dd/p", Role.HOLDER);
+        public static final BankinterHolder AUTHORIZED_HOLDER_NAME =
+                new BankinterHolder(
+                        "//dt[text()='Apoderado']/following-sibling::dd/p", Role.AUTHORIZED_USER);
+        public static final BankinterHolder TITULARS_HOLDER_NAME =
+                new BankinterHolder(
+                        "//dt[text()='Titulares']/following-sibling::dd/p", Role.HOLDER);
     }
 
     public static class LoginForm {
