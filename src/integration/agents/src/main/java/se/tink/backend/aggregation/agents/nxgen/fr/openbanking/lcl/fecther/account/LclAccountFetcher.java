@@ -5,11 +5,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.exceptions.refresh.AccountRefreshException;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.apiclient.LclApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.apiclient.dto.account.AccountResourceDto;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.apiclient.dto.account.AccountUsage;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.apiclient.dto.account.AccountsResponseDto;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.apiclient.dto.account.BalanceResourceDto;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.apiclient.dto.account.BalanceType;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.apiclient.dto.account.CashAccountType;
@@ -25,6 +27,7 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.mapper.PrioritizedValueExtractor;
 
 @RequiredArgsConstructor
+@Slf4j
 public class LclAccountFetcher implements AccountFetcher<TransactionalAccount> {
 
     private static final List<BalanceType> BALANCE_PREFERRED_TYPES =
@@ -36,7 +39,16 @@ public class LclAccountFetcher implements AccountFetcher<TransactionalAccount> {
 
     @Override
     public List<TransactionalAccount> fetchAccounts() {
-        return apiClient.getAccountsResponse().getAccounts().stream()
+        AccountsResponseDto accountsResponseDto = apiClient.getAccountsResponse();
+
+        if (accountsResponseDto.getAccounts().stream()
+                .filter(acc -> CashAccountType.CACC != acc.getCashAccountType())
+                .findFirst()
+                .isPresent()) {
+            log.info("Account type different than CACC.");
+        }
+
+        return accountsResponseDto.getAccounts().stream()
                 .filter(account -> account.getCashAccountType() == CashAccountType.CACC)
                 .map(this::mapAccountResourceToTransactionalAccount)
                 .filter(Optional::isPresent)
