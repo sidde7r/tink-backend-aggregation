@@ -60,7 +60,7 @@ public final class RevolutV31Agent extends UkOpenBankingBaseAgent {
                 aisConfig,
                 new UkOpenBankingPisConfiguration(
                         RevolutConstants.PIS_API_URL, RevolutConstants.WELL_KNOWN_URL),
-                createPisRequestFilterUsingPs256Base64Signature(
+                createPisRequestFilterUsingPs256WithoutBase64Signature(
                         jwtSigner, componentProvider.getRandomValueGenerator()));
         this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
     }

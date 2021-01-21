@@ -52,7 +52,7 @@ public final class HalifaxV31Agent extends UkOpenBankingBaseAgent {
                 aisConfig,
                 new UkOpenBankingPisConfiguration(
                         HalifaxConstants.PIS_API_URL, HalifaxConstants.WELL_KNOWN_URL),
-                createPisRequestFilterUsingPs256Base64Signature(
+                createPisRequestFilterUsingPs256WithoutBase64Signature(
                         jwtSigner, componentProvider.getRandomValueGenerator()));
         this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
     }

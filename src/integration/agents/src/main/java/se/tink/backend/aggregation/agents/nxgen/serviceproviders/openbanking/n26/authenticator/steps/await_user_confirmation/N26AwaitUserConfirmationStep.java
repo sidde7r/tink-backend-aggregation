@@ -22,8 +22,10 @@ public class N26AwaitUserConfirmationStep
         extends AgentUserInteractionDefinitionStep<AgentProceedNextStepAuthenticationRequest> {
 
     private static final String FIELD_ID_BASE = "consentConfirmationAwait";
-    private static final String FIELD_LABEL =
-            "Please confirm your login in your N26 app. Retry %d of %d";
+    private static final String FIELD_LABEL_1 =
+            "Please confirm the login in your N26 app and then click \"Submit\".";
+    private static final String FIELD_LABEL_2 =
+            "You haven't confirmed your login in the N26 app yet. Please confirm it and click \"Submit\".";
     private static final short MAX_RETRY = 3;
 
     private final ObjectMapper objectMapper;
@@ -50,10 +52,9 @@ public class N26AwaitUserConfirmationStep
                 .requireField(
                         new AgentNonEditableTextFieldDefinition(
                                 FIELD_ID_BASE + n26ProcessStateData.getConsentRetryCounter(),
-                                String.format(
-                                        FIELD_LABEL,
-                                        n26ProcessStateData.getConsentRetryCounter(),
-                                        MAX_RETRY)));
+                                n26ProcessStateData.getConsentRetryCounter() == 1
+                                        ? FIELD_LABEL_1
+                                        : FIELD_LABEL_2));
     }
 
     @Override

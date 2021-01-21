@@ -1,26 +1,17 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.fetcher.entities.transaction;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.util.ArrayList;
 import java.util.Date;
-import se.tink.backend.aggregation.agents.models.TransactionDateType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.EntryStatusCode;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.TransactionMutability;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AmountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.backend.aggregation.nxgen.core.transaction.TransactionDate;
 import se.tink.libraries.amount.ExactCurrencyAmount;
-import se.tink.libraries.chrono.AvailableDateInformation;
 
 @JsonObject
 @JsonNaming(PropertyNamingStrategy.UpperCamelCaseStrategy.class)
@@ -41,14 +32,11 @@ public class TransactionEntity {
 
     private UkOpenBankingApiDefinitions.EntryStatusCode status;
 
-    private UkOpenBankingApiDefinitions.TransactionMutability transactionMutability =
-            TransactionMutability.UNDEFINED;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date bookingDateTime;
 
-    @JsonDeserialize(using = ISOInstantDeserializer.class)
-    private Instant bookingDateTime;
-
-    @JsonDeserialize(using = ISOInstantDeserializer.class)
-    private Instant valueDateTime;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date valueDateTime;
 
     private String transactionInformation;
 
@@ -92,60 +80,24 @@ public class TransactionEntity {
     private Object exchangeRate;
 
     public Transaction toTinkTransaction() {
-        return (Transaction)
-                Transaction.builder()
-                        .setAmount(getSignedAmount())
-                        .setDescription(transactionInformation)
-                        .setPending(status == EntryStatusCode.PENDING)
-                        .setDate(getDateOfTransaction())
-                        .setMutable(isMutable())
-                        .addTransactionDates(getTransactionDates())
-                        .build();
+
+        return Transaction.builder()
+                .setAmount(getSignedAmount())
+                .setDescription(transactionInformation)
+                .setPending(status == UkOpenBankingApiDefinitions.EntryStatusCode.PENDING)
+                .setDate(bookingDateTime)
+                .build();
     }
 
     public CreditCardTransaction toCreditCardTransaction(CreditCardAccount account) {
 
-        return (CreditCardTransaction)
-                CreditCardTransaction.builder()
-                        .setCreditAccount(account)
-                        .setAmount(getSignedAmount())
-                        .setDescription(transactionInformation)
-                        .setPending(status == EntryStatusCode.PENDING)
-                        .setMutable(isMutable())
-                        .setDate(getDateOfTransaction())
-                        .addTransactionDates(getTransactionDates())
-                        .build();
-    }
-
-    private ArrayList<TransactionDate> getTransactionDates() {
-        ArrayList<TransactionDate> transactionDates = new ArrayList<>();
-        AvailableDateInformation bookingDateInformation = new AvailableDateInformation();
-        bookingDateInformation.setInstant(bookingDateTime);
-        transactionDates.add(
-                TransactionDate.builder()
-                        .type(TransactionDateType.BOOKING_DATE)
-                        .value(bookingDateInformation)
-                        .build());
-
-        if (valueDateTime != null) {
-            AvailableDateInformation valueDateInformation = new AvailableDateInformation();
-            valueDateInformation.setInstant(valueDateTime);
-            transactionDates.add(
-                    TransactionDate.builder()
-                            .type(TransactionDateType.VALUE_DATE)
-                            .value(valueDateInformation)
-                            .build());
-        }
-        return transactionDates;
-    }
-
-    private Boolean isMutable() {
-        if (transactionMutability != TransactionMutability.UNDEFINED
-                && status == EntryStatusCode.BOOKED) {
-            return transactionMutability.isMutable();
-        } else {
-            return status == EntryStatusCode.PENDING;
-        }
+        return CreditCardTransaction.builder()
+                .setCreditAccount(account)
+                .setAmount(getSignedAmount())
+                .setDescription(transactionInformation)
+                .setPending(status == UkOpenBankingApiDefinitions.EntryStatusCode.PENDING)
+                .setDate(bookingDateTime)
+                .build();
     }
 
     private ExactCurrencyAmount getSignedAmount() {
@@ -155,19 +107,5 @@ public class TransactionEntity {
         return UkOpenBankingApiDefinitions.CreditDebitIndicator.CREDIT.equals(creditDebitIndicator)
                 ? unsignedAmount
                 : unsignedAmount.negate();
-    }
-
-    /**
-     * That is the previous date formatting and we will stay with that formatting in date field
-     *
-     * @return date in `yyyy-MM-dd` pattern
-     */
-    private Date getDateOfTransaction() {
-        try {
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            return simpleDateFormat.parse(bookingDateTime.toString());
-        } catch (ParseException e) {
-            return Date.from(bookingDateTime);
-        }
     }
 }

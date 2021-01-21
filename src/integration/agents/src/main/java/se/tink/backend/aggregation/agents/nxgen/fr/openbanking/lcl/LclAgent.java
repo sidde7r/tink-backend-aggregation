@@ -2,8 +2,10 @@ package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl;
 
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CREDIT_CARDS;
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CREDIT_CARDS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.IDENTITY_DATA;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.LIST_BENEFICIARIES;
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.TRANSFERS;
 
 import com.google.inject.Inject;
 import java.time.Clock;
@@ -17,6 +19,7 @@ import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.RefreshBeneficiariesExecutor;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
@@ -65,12 +68,12 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.libraries.mapper.PrioritizedValueExtractor;
 
 @AgentDependencyModules(modules = QSealcSignerModuleRSASHA256.class)
-@AgentCapabilities({CHECKING_ACCOUNTS, IDENTITY_DATA, LIST_BENEFICIARIES, CREDIT_CARDS})
+@AgentCapabilities({CHECKING_ACCOUNTS, IDENTITY_DATA, LIST_BENEFICIARIES, TRANSFERS, CREDIT_CARDS})
 public final class LclAgent extends SubsequentProgressiveGenerationAgent
         implements RefreshCheckingAccountsExecutor,
                 RefreshIdentityDataExecutor,
                 RefreshBeneficiariesExecutor,
-                RefreshCreditCardAccountsExecutor {
+    RefreshCreditCardAccountsExecutor {
 
     private static final ZoneId ZONE_ID = ZoneId.of("CET");
     public static final String BASE_URL = "https://psd.lcl.fr";

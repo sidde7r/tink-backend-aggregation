@@ -35,10 +35,10 @@ public class PremiumPensionAccountEntity {
     @JsonProperty("fondList")
     private List<FundListEntity> fundList;
 
-    PortfolioModule getPremiumPension() {
+    PortfolioModule getPremiumPension(String ssn) {
         return PortfolioModule.builder()
                 .withType(PortfolioType.PENSION)
-                .withUniqueIdentifier(getIdentifier())
+                .withUniqueIdentifier(getIdentifier(ssn))
                 .withCashValue(0.00)
                 .withTotalProfit(capital)
                 .withTotalValue(capital)
@@ -46,8 +46,8 @@ public class PremiumPensionAccountEntity {
                 .build();
     }
 
-    private String getIdentifier() {
-        return AccountTypes.PREMIUM_PENSION + "-" + type + "-" + insuranceType;
+    private String getIdentifier(String ssn) {
+        return AccountTypes.PREMIUM_PENSION + "-" + type + "-" + insuranceType + "-" + ssn;
     }
 
     private List<InstrumentModule> toTinkInstrument() {

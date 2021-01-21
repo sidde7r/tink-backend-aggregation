@@ -145,7 +145,7 @@ go_repository(
 
 git_repository(
     name = "tink_backend",
-    commit = "637259036da51f7962ac93705df9cd85e573b007",
+    commit = "c1ae91b9701ac20587e2783c7d6f85e26063b107",
     remote = "git@github.com:tink-ab/tink-backend.git",
     shallow_since = "1601479333 +0000",
 )
@@ -153,7 +153,7 @@ git_repository(
 # To be used only by //src/aggregation/lib/src/main/java/se/tink/backend/aggregation/agents_platform/agents_framework
 git_repository(
     name = "tink_backend_for_agents_framework",
-    commit = "f8eef7a3715a1ebafcd788b53f6bb727b4aef445",
+    commit = "d1816d4033916aa3ea1ae3bffef21cc39d2bccdc",
     remote = "git@github.com:tink-ab/tink-backend.git",
     shallow_since = "1595000000 +0000",
 )
@@ -303,7 +303,7 @@ http_file(
 
 # proto_library rules implicitly depend on @com_google_protobuf//:protoc,
 # which is the proto-compiler.
-PROTOBUF_VERSION = "3.9.0"
+PROTOBUF_VERSION = "3.11.3"
 
 # Keep in mind the netty version compatibility table linked below when updating this
 # https://github.com/grpc/grpc-java/blob/master/SECURITY.md#netty
@@ -338,7 +338,7 @@ rules_proto_toolchains()
 
 http_archive(
     name = "com_google_protobuf",
-    sha256 = "8eb5ca331ab8ca0da2baea7fc0607d86c46c80845deca57109a5d637ccb93bb4",
+    sha256 = "832c476bb442ca98a59c2291b8a504648d1c139b74acc15ef667a0e8f5e984e7",
     strip_prefix = "protobuf-%s" % PROTOBUF_VERSION,
     urls = ["https://github.com/protocolbuffers/protobuf/archive/v%s.zip" % PROTOBUF_VERSION],
 )

@@ -61,16 +61,16 @@ public class GeneralPensionBasisEntity {
     @JsonProperty("ppKontoList")
     private List<PremiumPensionAccountEntity> premiumPensionKontoList;
 
-    List<PortfolioModule> getPremiumPensionPortfolios() {
+    List<PortfolioModule> getPremiumPensionPortfolios(String ssn) {
         return ListUtils.emptyIfNull(premiumPensionKontoList).stream()
-                .map(PremiumPensionAccountEntity::getPremiumPension)
+                .map(p -> p.getPremiumPension(ssn))
                 .collect(Collectors.toList());
     }
 
-    PortfolioModule getIncomePensionPortfolio() {
+    PortfolioModule getIncomePensionPortfolio(String ssn) {
         return PortfolioModule.builder()
                 .withType(PortfolioType.PENSION)
-                .withUniqueIdentifier(AccountTypes.INCOME_PENSION)
+                .withUniqueIdentifier(AccountTypes.INCOME_PENSION + ssn)
                 .withCashValue(0.00)
                 .withTotalProfit(incomePensionBalanceAmount)
                 .withTotalValue(incomePensionBalanceAmount)

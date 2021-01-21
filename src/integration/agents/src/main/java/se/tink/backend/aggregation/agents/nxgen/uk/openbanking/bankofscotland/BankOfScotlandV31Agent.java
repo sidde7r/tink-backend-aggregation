@@ -53,7 +53,7 @@ public final class BankOfScotlandV31Agent extends UkOpenBankingBaseAgent {
                 new UkOpenBankingPisConfiguration(
                         BankOfScotlandConstants.PIS_API_URL,
                         BankOfScotlandConstants.WELL_KNOWN_URL_PERSONAL),
-                createPisRequestFilterUsingPs256Base64Signature(
+                createPisRequestFilterUsingPs256WithoutBase64Signature(
                         jwtSigner, componentProvider.getRandomValueGenerator()));
         this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
     }

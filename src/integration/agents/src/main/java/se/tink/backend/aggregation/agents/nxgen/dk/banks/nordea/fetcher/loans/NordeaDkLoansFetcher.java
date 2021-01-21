@@ -48,11 +48,6 @@ public class NordeaDkLoansFetcher
                     apiClient.getAccountTransactions(
                             account.getApiIdentifier(), productCode, continuationKey);
 
-            log.info(
-                    "[Nordea DK] Successfully fetched loan transactions. Loan type: {}, loan productCode: {}",
-                    account.getDetails().getType(),
-                    productCode);
-
             return new TransactionKeyPaginatorResponseImpl<>(
                     getTransactions(transactionsResponse),
                     transactionsResponse.getContinuationKey());

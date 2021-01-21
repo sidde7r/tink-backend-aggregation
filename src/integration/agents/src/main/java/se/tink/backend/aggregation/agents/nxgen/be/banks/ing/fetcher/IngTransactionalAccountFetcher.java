@@ -46,7 +46,7 @@ public class IngTransactionalAccountFetcher implements AccountFetcher<Transactio
 
         return TransactionalAccount.nxBuilder()
                 .withType(map(agreementEntity.getType()))
-                .withoutFlags()
+                .withInferredAccountFlags()
                 .withBalance(
                         BalanceModule.builder()
                                 .withBalance(extractBalance(agreementEntity.getBalance()))

@@ -233,7 +233,7 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
         Optional<Long> sessionLifetime =
                 sessionExpiryDate
                         .map(d -> d.toInstant().atZone(ZoneId.systemDefault()).toLocalDate())
-                        .map(localDate -> ChronoUnit.DAYS.between(localDate, LocalDate.now()));
+                        .map(localDate -> ChronoUnit.DAYS.between(LocalDate.now(), localDate));
 
         histogram.update(sessionLifetime.orElse(0L));
     }

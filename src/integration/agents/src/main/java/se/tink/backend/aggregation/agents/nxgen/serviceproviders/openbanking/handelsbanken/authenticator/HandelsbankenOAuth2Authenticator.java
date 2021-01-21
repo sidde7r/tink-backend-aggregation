@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.handelsbanken.authenticator;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.authenticator;
 
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;

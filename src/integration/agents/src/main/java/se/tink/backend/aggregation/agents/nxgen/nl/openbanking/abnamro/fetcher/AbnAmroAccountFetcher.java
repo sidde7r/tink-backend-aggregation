@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.nl.openbanking.abnamro.fetcher;
 import com.google.common.collect.Lists;
 import java.util.Collection;
 import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.abnamro.AbnAmroApiClient;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.abnamro.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.abnamro.fetcher.rpc.AccountBalanceResponse;
@@ -14,13 +15,10 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 
+@RequiredArgsConstructor
 public class AbnAmroAccountFetcher implements AccountFetcher<TransactionalAccount> {
 
     private final AbnAmroApiClient apiClient;
-
-    public AbnAmroAccountFetcher(final AbnAmroApiClient apiClient) {
-        this.apiClient = apiClient;
-    }
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {

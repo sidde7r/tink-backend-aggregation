@@ -18,6 +18,9 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class PortfolioEntity {
+    private static final String INVALID_CHARACTERS_PATTERN =
+            "[^\\p{L}\\p{M}\\p{N}\\p{P}\\p{Z}\\p{Cf}\\p{Cs}\\s]";
+
     @JsonProperty("instrumentPositions")
     private List<InstrumentEntity> instruments;
 
@@ -56,6 +59,9 @@ public class PortfolioEntity {
     }
 
     public String getAccountName(String clusterId) {
+        // This is to remove all emojis and flags.
+        // Will will have it like this until the database can handle does unicode.
+        accountName = accountName.replaceAll(INVALID_CHARACTERS_PATTERN, "");
         if (clusterId.contains(AvanzaConstants.CLUSTER_ID_NESTON)
                 && accountId.contains(accountName)) {
             return String.format("%s %s", accountName, getPortfolioType());

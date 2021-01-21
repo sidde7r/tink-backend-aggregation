@@ -4,6 +4,7 @@ import com.google.api.client.http.HttpStatusCodes;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
+import com.sun.jersey.api.client.ClientHandlerException;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import java.util.List;
@@ -57,8 +58,14 @@ public class IBSubscriptionClient extends IBClient {
 
         validateContentType(response, MediaType.APPLICATION_JSON_TYPE);
 
-        PfmContractResponse entity = response.getEntity(PfmContractResponse.class);
-        return Lists.newArrayList(entity);
+        try {
+            return Lists.newArrayList(response.getEntity(PfmContractResponse.class));
+        } catch (ClientHandlerException e) {
+            log.error(
+                    "Could not deserialize PfmContractResponse {}",
+                    response.getEntity(String.class));
+            throw e;
+        }
     }
 
     /**

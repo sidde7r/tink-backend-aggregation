@@ -19,6 +19,7 @@ import static se.tink.backend.aggregation.nxgen.controllers.signing.SigningStepC
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.common.SwedbankOpenBankingPaymentApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.executor.payment.SwedbankPaymentSigner.MissingExtendedBankIdException;
@@ -44,7 +45,7 @@ public class SwedbankPaymentExecutorTest {
     }
 
     @Test
-    public void shouldStayInInitStateIfNotReadyForSigning() throws PaymentRejectedException {
+    public void shouldStayInInitStateIfNotReadyForSigning() throws PaymentException {
         // given
         final PaymentMultiStepRequest request = createPaymentRequest();
         givenPaymentAuthorisationWas(false);
@@ -57,7 +58,7 @@ public class SwedbankPaymentExecutorTest {
     }
 
     @Test
-    public void shouldAuthorizePayment() throws PaymentRejectedException {
+    public void shouldAuthorizePayment() throws PaymentException {
         // given
         final PaymentMultiStepRequest request = createPaymentRequest();
         givenPaymentAuthorisationWas(true);
@@ -70,13 +71,12 @@ public class SwedbankPaymentExecutorTest {
         verify(swedbankPaymentSigner, times(1)).authorize(INSTRUCTION_ID);
     }
 
-    private void givenPaymentAuthorisationWas(boolean success) throws PaymentRejectedException {
+    private void givenPaymentAuthorisationWas(boolean success) throws PaymentException {
         when(swedbankPaymentSigner.authorize(INSTRUCTION_ID)).thenReturn(success);
     }
 
     @Test
-    public void shouldFallBackToRedirectFlowIfMissingExtendedBankId()
-            throws PaymentRejectedException {
+    public void shouldFallBackToRedirectFlowIfMissingExtendedBankId() throws PaymentException {
         // given
         final PaymentMultiStepRequest request = createPaymentMultiStepRequest(STEP_SIGN);
         givenPaymentWithStatus("");
@@ -91,7 +91,7 @@ public class SwedbankPaymentExecutorTest {
     }
 
     @Test
-    public void shouldTryToSignPayment() throws PaymentRejectedException {
+    public void shouldTryToSignPayment() throws PaymentException {
         // given
         final PaymentMultiStepRequest request = createPaymentMultiStepRequest(STEP_SIGN);
         givenPaymentWithStatus("");
@@ -105,7 +105,7 @@ public class SwedbankPaymentExecutorTest {
     }
 
     @Test
-    public void shouldReturnToInitStepIfPaymentIsPending() throws PaymentRejectedException {
+    public void shouldReturnToInitStepIfPaymentIsPending() throws PaymentException {
 
         // given
         final PaymentMultiStepRequest request = createPaymentMultiStepRequest(STEP_SIGN);
@@ -119,7 +119,7 @@ public class SwedbankPaymentExecutorTest {
     }
 
     @Test(expected = IllegalStateException.class)
-    public void shouldThrowIllegalStateException() throws PaymentRejectedException {
+    public void shouldThrowIllegalStateException() throws PaymentException {
         // given
         final PaymentMultiStepRequest request = createPaymentMultiStepRequest("INVALID_STEP");
 
@@ -129,7 +129,7 @@ public class SwedbankPaymentExecutorTest {
         // then - assert in annotation
     }
 
-    private void givenPaymentWithStatus(String status) throws PaymentRejectedException {
+    private void givenPaymentWithStatus(String status) throws PaymentException {
         final PaymentStatusResponse paymentStatusResponse =
                 createPaymentStatusResponseWith(true, status);
 

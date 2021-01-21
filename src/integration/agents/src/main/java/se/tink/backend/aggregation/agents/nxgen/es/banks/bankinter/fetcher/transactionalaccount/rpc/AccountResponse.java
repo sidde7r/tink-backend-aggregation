@@ -3,27 +3,31 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.fetcher.tran
 import static se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants.ACCOUNT_TYPE_MAPPER;
 
 import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableSet;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URIBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants.Holders;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants.JsfPart;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants.Urls;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.fetcher.transactionalaccount.entities.BankinterHolder;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.fetcher.transactionalaccount.entities.PaginationKey;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.rpc.HtmlResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.rpc.JsfUpdateResponse;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Holder;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
-import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.transactional.TransactionalBuildStep;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
@@ -75,42 +79,47 @@ public class AccountResponse extends HtmlResponse {
         return parseAmount(balanceString);
     }
 
-    protected List<String> getHolderNames(Document accountDetails) {
-        final NodeList holderNames =
-                evaluateXPath(
-                        accountDetails,
-                        "//dt[text()='Titulares']/following-sibling::dd/p",
-                        NodeList.class);
-        ArrayList<String> namesList = new ArrayList<>();
-        for (int i = 0; i < holderNames.getLength(); i++) {
-            namesList.add(holderNames.item(i).getTextContent());
-        }
-        return namesList;
-    }
-
     public Optional<TransactionalAccount> toTinkAccount(
             String accountLink, JsfUpdateResponse accountInfo) {
         final Document accountDetails = accountInfo.getUpdateDocument(JsfPart.ACCOUNT_DETAILS);
         final AccountIdentifier accountIdentifier = getAccountIdentifier(accountDetails);
-        TransactionalBuildStep builder =
-                TransactionalAccount.nxBuilder()
-                        .withTypeAndFlagsFrom(ACCOUNT_TYPE_MAPPER, getAccountType(accountLink))
-                        .withBalance(BalanceModule.of(getBalance()))
-                        .withId(
-                                IdModule.builder()
-                                        .withUniqueIdentifier(accountIdentifier.getIdentifier())
-                                        .withAccountNumber(accountIdentifier.getIdentifier())
-                                        .withAccountName(getAccountName())
-                                        .addIdentifier(accountIdentifier)
-                                        .build())
-                        .setApiIdentifier(accountLink);
 
-        final List<String> holderNames = getHolderNames(accountDetails);
-        for (String name : holderNames) {
-            builder = builder.addHolderName(name);
+        return TransactionalAccount.nxBuilder()
+                .withTypeAndFlagsFrom(ACCOUNT_TYPE_MAPPER, getAccountType(accountLink))
+                .withBalance(BalanceModule.of(getBalance()))
+                .withId(
+                        IdModule.builder()
+                                .withUniqueIdentifier(accountIdentifier.getIdentifier())
+                                .withAccountNumber(accountIdentifier.getIdentifier())
+                                .withAccountName(getAccountName())
+                                .addIdentifier(accountIdentifier)
+                                .build())
+                .addHolders(getHolders(accountDetails))
+                .setApiIdentifier(accountLink)
+                .build();
+    }
+
+    private List<Holder> getHolders(Document accountDetails) {
+        ImmutableSet<BankinterHolder> bankinterHolders =
+                ImmutableSet.of(
+                        Holders.TITULAR_HOLDER_NAME,
+                        Holders.AUTHORIZED_HOLDER_NAME,
+                        Holders.TITULARS_HOLDER_NAME);
+
+        return bankinterHolders.stream()
+                .map(bankinterHolder -> createHolders(accountDetails, bankinterHolder))
+                .flatMap(List::stream)
+                .collect(Collectors.toList());
+    }
+
+    private List<Holder> createHolders(Document accountDetails, BankinterHolder bankinterHolder) {
+        NodeList holders =
+                evaluateXPath(accountDetails, bankinterHolder.getxPath(), NodeList.class);
+        ArrayList<Holder> holderNames = new ArrayList<>();
+        for (int i = 0; i < holders.getLength(); i++) {
+            holderNames.add(Holder.of(holders.item(i).getTextContent(), bankinterHolder.getRole()));
         }
-
-        return builder.build();
+        return holderNames;
     }
 
     private String getUrlParameter(String url, String paramName) {
