@@ -16,7 +16,8 @@ import org.apache.commons.io.IOUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.TimeValues;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.fetcher.transactionalaccount.entity.transaction.TransactionsEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.fetcher.transactionalaccount.entity.transaction.OfflineTransactionEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.fetcher.transactionalaccount.entity.transaction.OnlineTransactionsEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.fetcher.transactionalaccount.rpc.FetchOfflineTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.fetcher.transactionalaccount.rpc.FetchOnlineTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.fetcher.transactionalaccount.rpc.StatementResponse;
@@ -94,7 +95,7 @@ public class SwedbankTransactionFetcher implements TransactionFetcher<Transactio
         List<AggregationTransaction> transactions =
                 fetchOnlineTransactions(account)
                         .map(FetchOnlineTransactionsResponse::getTransactions)
-                        .map(TransactionsEntity::getTinkTransactions)
+                        .map(OnlineTransactionsEntity::getTinkTransactions)
                         .orElseGet(Lists::newArrayList);
 
         transactions.addAll(
@@ -105,10 +106,7 @@ public class SwedbankTransactionFetcher implements TransactionFetcher<Transactio
                         .map(
                                 transactionEntities ->
                                         transactionEntities.stream()
-                                                .map(
-                                                        transactionEntity ->
-                                                                transactionEntity.toTinkTransaction(
-                                                                        false))
+                                                .map(OfflineTransactionEntity::toTinkTransaction)
                                                 .collect(Collectors.toList()))
                         .orElseGet(Lists::newArrayList));
         return transactions;
