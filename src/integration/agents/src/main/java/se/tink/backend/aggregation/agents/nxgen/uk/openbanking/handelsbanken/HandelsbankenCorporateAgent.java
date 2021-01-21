@@ -9,9 +9,9 @@ import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPa
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS})
-public final class HandelsbankenAgent extends HandelsbankenUKBaseAgent {
+public final class HandelsbankenCorporateAgent extends HandelsbankenUKBaseAgent {
 
-    public HandelsbankenAgent(
+    public HandelsbankenCorporateAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
     }
