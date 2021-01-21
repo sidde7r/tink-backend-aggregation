@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.fetcher.transactionalaccount;
 
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -24,7 +24,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginationHelper;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
@@ -52,6 +51,7 @@ public class SwedbankTransactionalAccountFetcher implements AccountFetcher<Trans
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
         handleConsentFlow();
+
         Collection<TransactionalAccount> tinkAccounts =
                 getAccounts().getAccountList().stream()
                         .map(toTinkAccountWithBalance())
@@ -147,18 +147,23 @@ public class SwedbankTransactionalAccountFetcher implements AccountFetcher<Trans
 
     private void postAccountStatement(Account account) {
         Optional<Date> certainDate = transactionPaginationHelper.getContentWithRefreshDate(account);
-        final Date fromDate =
-                Timestamp.valueOf(LocalDateTime.now().minusMonths(TimeValues.MONTHS_TO_FETCH_MAX));
-        final Date toDate =
-                Timestamp.valueOf(
-                        LocalDateTime.now().minusDays(TimeValues.ONLINE_STATEMENT_MAX_DAYS));
+        final LocalDate fromDate = LocalDate.now().minusMonths(TimeValues.MONTHS_TO_FETCH_MAX);
+        final LocalDate toDate = LocalDate.now().minusDays(TimeValues.ONLINE_STATEMENT_MAX_DAYS);
 
-        if (certainDate.isPresent() && certainDate.get().after(toDate)) {
+        // No need to fetch transactions if the account was refreshed within the last 90 days
+        if (certainDate.isPresent()
+                && certainDate
+                        .get()
+                        .after(
+                                Date.from(
+                                        toDate.atStartOfDay()
+                                                .atZone(ZoneId.systemDefault())
+                                                .toInstant()))) {
             return;
         }
 
-        HttpResponse response =
-                apiClient.getTransactions(account.getApiIdentifier(), fromDate, toDate);
-        sessionStorage.put(account.getApiIdentifier(), response.getBody(StatementResponse.class));
+        StatementResponse response =
+                apiClient.postOfflineStatement(account.getApiIdentifier(), fromDate, toDate);
+        sessionStorage.put(account.getApiIdentifier(), response);
     }
 }

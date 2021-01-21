@@ -4,8 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.Uninterruptibles;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -23,7 +22,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swe
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
-import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
@@ -42,15 +40,11 @@ public class SwedbankTransactionFetcher implements TransactionFetcher<Transactio
     private Optional<FetchOnlineTransactionsResponse> fetchOnlineTransactions(
             TransactionalAccount account) {
 
-        HttpResponse httpResponse =
-                apiClient.getTransactions(
+        return Optional.ofNullable(
+                apiClient.getOnlineTransactions(
                         account.getApiIdentifier(),
-                        Timestamp.valueOf(
-                                LocalDateTime.now()
-                                        .minusDays(TimeValues.ONLINE_STATEMENT_MAX_DAYS)),
-                        Timestamp.valueOf(LocalDateTime.now()));
-
-        return Optional.ofNullable(httpResponse.getBody(FetchOnlineTransactionsResponse.class));
+                        LocalDate.now().minusDays(TimeValues.ONLINE_STATEMENT_MAX_DAYS),
+                        LocalDate.now()));
     }
 
     private Optional<FetchOfflineTransactionsResponse> downloadZippedTransactions(
@@ -63,7 +57,7 @@ public class SwedbankTransactionFetcher implements TransactionFetcher<Transactio
         do {
             try (ZipInputStream zipInputStream =
                     new ZipInputStream(
-                            apiClient.getTransactions(downloadLink).getBodyInputStream())) {
+                            apiClient.getOfflineTransactions(downloadLink).getBodyInputStream())) {
                 // There's only one file in the archive
                 ZipEntry entry = zipInputStream.getNextEntry();
                 if (entry == null) {
