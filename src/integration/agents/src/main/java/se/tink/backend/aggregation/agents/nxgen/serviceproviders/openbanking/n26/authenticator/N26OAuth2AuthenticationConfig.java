@@ -32,6 +32,7 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.RedirectFetchTokenCall;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.RedirectRefreshTokenCall;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.RedirectUrlBuilder;
+import se.tink.libraries.i18n.Catalog;
 
 @AllArgsConstructor
 public class N26OAuth2AuthenticationConfig extends OAuth2AuthenticationConfig {
@@ -39,6 +40,7 @@ public class N26OAuth2AuthenticationConfig extends OAuth2AuthenticationConfig {
     private AgentPlatformHttpClient agentHttpClient;
     private ObjectMapper objectMapper;
     private N26AgentConfiguration n26AgentConfiguration;
+    private Catalog catalog;
 
     public AgentAuthenticationProcess authenticationProcess() {
         return new RedirectAuthenticationProcess(
@@ -113,7 +115,7 @@ public class N26OAuth2AuthenticationConfig extends OAuth2AuthenticationConfig {
     }
 
     private N26AwaitUserConfirmationStep getN26AwaitUserConfirmationStep() {
-        return new N26AwaitUserConfirmationStep(objectMapper);
+        return new N26AwaitUserConfirmationStep(objectMapper, catalog);
     }
 
     private N26ValidateConsentStep getN26ValidateConsentStep() {

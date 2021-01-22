@@ -72,7 +72,8 @@ public final class N26Agent extends AgentPlatformAgent implements RefreshCheckin
         return new N26OAuth2AuthenticationConfig(
                         new AgentPlatformHttpClient(client),
                         objectMapper,
-                        getN26AgentConfiguration())
+                        getN26AgentConfiguration(),
+                        catalog)
                 .authenticationProcess();
     }
 
