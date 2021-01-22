@@ -1,16 +1,10 @@
 load("//tools/bzl:junit.bzl", "junit_test")
 
 junit_test(
-    name = "manual",
+    name = "mock",
     srcs = glob(["*.java"]),
     data = [
-        "//:agent_test_data",
         "//data:agents",
-        "//etc:development",
-    ],
-    tags = [
-        "external",
-        "manual",
     ],
     visibility = ["//visibility:public"],
     deps = [
@@ -20,6 +14,7 @@ junit_test(
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/credentials/src/main/java/se/tink/libraries/credentials/service",
         "//src/integration/enums",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/agentsservice",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/assertions",

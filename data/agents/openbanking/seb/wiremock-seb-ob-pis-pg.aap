@@ -1,0 +1,357 @@
+
+REQUEST 1
+POST https://tpp-auth.seb.se/auth/bid/v2/authentications
+Accept: application/json
+
+RESPONSE 1
+201
+Date: Thu, 21 Jan 2021 08:05:53 GMT
+Date: Thu, 21 Jan 2021 08:05:53 GMT
+Content-Language: en-US
+Content-Type: application/json
+Cache-Control: no-store, no-cache
+Expires: Thu, 01 Dec 1994 16:00:00 GMT
+x-seb-csrf: CSRF_TOKEN
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+Content-Length: 33
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"auto_start_token":"dummyToken"}
+
+REQUEST 2
+GET https://tpp-auth.seb.se/auth/bid/v2/authentications
+Accept: application/json
+
+RESPONSE 2 SET AUTH_1
+200
+Date: Thu, 21 Jan 2021 08:05:54 GMT
+Date: Thu, 21 Jan 2021 08:05:54 GMT
+Content-Language: en-US
+Content-Type: application/json
+Cache-Control: no-store, no-cache
+x-seb-csrf: CSRF_TOKEN
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+Content-Length: 58
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"hint_code":"OUTSTANDING_TRANSACTION","status":"PENDING"}
+
+REQUEST 3 MATCH AUTH_1
+GET https://tpp-auth.seb.se/auth/bid/v2/authentications
+Accept: application/json
+x-seb-csrf: CSRF_TOKEN
+
+RESPONSE 3 SET AUTH_2
+200
+Date: Thu, 21 Jan 2021 08:05:56 GMT
+Date: Thu, 21 Jan 2021 08:05:56 GMT
+Content-Language: en-US
+Content-Type: application/json
+Cache-Control: no-store, no-cache
+x-seb-csrf: CSRF_TOKEN
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+Content-Length: 44
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"hint_code":"USER_SIGN","status":"PENDING"}
+
+REQUEST 4 MATCH AUTH_2
+GET https://tpp-auth.seb.se/auth/bid/v2/authentications
+Accept: application/json
+x-seb-csrf: CSRF_TOKEN
+
+RESPONSE 4 SET AUTH_3
+200
+Date: Thu, 21 Jan 2021 08:05:58 GMT
+Date: Thu, 21 Jan 2021 08:05:58 GMT
+Content-Language: en-US
+Content-Type: application/json
+Cache-Control: no-store, no-cache
+x-seb-csrf: CSRF_TOKEN
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+Content-Length: 44
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"hint_code":"USER_SIGN","status":"PENDING"}
+
+REQUEST 5 MATCH AUTH_3
+GET https://tpp-auth.seb.se/auth/bid/v2/authentications
+Accept: application/json
+x-seb-csrf: CSRF_TOKEN
+
+RESPONSE 5 SET AUTH_4
+200
+Date: Thu, 21 Jan 2021 08:06:01 GMT
+Date: Thu, 21 Jan 2021 08:06:00 GMT
+Content-Language: en-US
+Content-Type: application/json
+Cache-Control: no-store, no-cache
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+Content-Length: 21
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"status":"COMPLETE"}
+
+REQUEST 6
+GET https://tpp-auth.seb.se/mga/sps/oauth/oauth20/dpsd2/authorize?client_id=dummyId&response_type=code&scope=psd2_accounts+psd2_payments&redirect_uri=https%3A%2F%2F127.0.0.1%3A7357%2Fapi%2Fv1%2Fthirdparty%2Fcallback
+Accept: application/json
+
+RESPONSE 6
+200
+Date: Thu, 21 Jan 2021 08:06:01 GMT
+Content-Type: application/json
+Cache-Control: no-cache, no-store
+Content-Length: 40
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"CONSENT_FORM_VERIFIER":"dummyConsent"}
+
+REQUEST 7
+POST https://tpp-auth.seb.se/mga/sps/oauth/oauth20/dpsd2/authorize
+Accept: application/json
+Content-Type: application/x-www-form-urlencoded
+
+scope=psd2_accounts+psd2_payments&trust_level=permit&consent_form_verifier=dummyConsent
+
+RESPONSE 7
+200
+Date: Thu, 21 Jan 2021 08:06:01 GMT
+code: dummyCode
+state: dummyState
+Content-Type: application/json
+Cache-Control: no-cache, no-store
+Content-Length: 38
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"code": "dummyCode", "state": "null"}
+
+REQUEST 8
+POST https://tpp-api.sebgroup.com/mga/sps/oauth/oauth20/dpsd2/token
+Accept: application/json
+Content-Type: application/x-www-form-urlencoded
+
+client_id=dummyId&client_secret=dummySecret&redirect_uri=https%3A%2F%2F127.0.0.1%3A7357%2Fapi%2Fv1%2Fthirdparty%2Fcallback&grant_type=authorization_code&code=dummyCode&scope=psd2_accounts+psd2_payments
+
+RESPONSE 8
+200
+Date: Thu, 21 Jan 2021 08:06:02 GMT
+Content-Type: application/json
+Cache-Control: no-cache, no-store
+Content-Length: 140
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"access_token":"ACCESS_TOKEN","refresh_token":"REFRESH_TOKEN","scope":"psd2_accounts psd2_payments","token_type":"Bearer","expires_in":599}
+
+REQUEST 9
+GET https://tpp-api.sebgroup.com/tpp/ais/v6/identified2/accounts?withBalance=true
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 9
+200
+Date: Thu, 21 Jan 2021 08:06:02 GMT
+Date: Thu, 21 Jan 2021 08:06:02 GMT
+Content-Type: application/json
+x-global-transaction-id: ed5e1fcc600935ea020195c4
+Cache-Control: private
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+Content-Length: 1170
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"accounts":[{"resourceId":"resourceId_1","iban":"SE8050000000000000000646","bban":"00000000646","status":"enabled","currency":"SEK","ownerName":"FirstName LastName","creditLine":"20000.000","product":"Privatkonto","name":"accountName","balances":[{"balanceType":"interimAvailable","creditLimitIncluded":true,"balanceAmount":{"amount":"40055.940","currency":"SEK"}},{"balanceType":"interimBooked","balanceAmount":{"amount":"20094.94","currency":"SEK"}}],"_links":{"transactions":{"href":"/accounts/resourceId_1/transactions?bookingStatus=booked"}}}]}
+
+REQUEST 10
+GET https://tpp-api.sebgroup.com/tpp/ais/v6/identified2/accounts/resourceId_1
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 10
+200
+Date: Thu, 21 Jan 2021 08:06:03 GMT
+Date: Thu, 21 Jan 2021 08:06:04 GMT
+Content-Type: application/json
+x-global-transaction-id: e98ea081600935eb0198ebf1
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+Content-Length: 491
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"resourceId":"resourceId_1","iban":"SE6350000000057212985236","bban":"57212985236","bic":"ESSESESS","status":"enabled","currency":"SEK","ownerName":"Name Namesson","creditLine":"0.000","product":"Enkla sparkontot","name":"Sparkonto","bicAddress":"SEB, 106 40 Stockholm","cardLinkedToAccount":false,"paymentService":false,"accountInterest":"0.0","_links":{"transactions":{"href":"/accounts/6af9a660-e877-432c-b866-827531314112/transactions?bookingStatus=booked"}}}
+
+REQUEST 11
+GET https://tpp-api.sebgroup.com/tpp/ais/v6/identified2/accounts/37807a5c-417c-47b3-854c-0d457cf529db
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 11
+200
+Date: Thu, 21 Jan 2021 08:06:04 GMT
+Date: Thu, 21 Jan 2021 08:06:04 GMT
+Content-Type: application/json
+x-global-transaction-id: ed5e1fcc600935ec00e21195
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+Content-Length: 485
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"resourceId":"37807a5c-417c-47b3-854c-0d457cf529db","iban":"SE4550000000058398257466","bban":"58398257466","bic":"ESSESESS","status":"enabled","currency":"SEK","ownerName":"Name Namesson","creditLine":"0.000","product":"Privatkonto","name":"Lönekonto","bicAddress":"SEB, 106 40 Stockholm","cardLinkedToAccount":true,"paymentService":true,"accountInterest":"0.0","_links":{"transactions":{"href":"/accounts/37807a5c-417c-47b3-854c-0d457cf529db/transactions?bookingStatus=booked"}}}
+
+REQUEST 12
+POST https://tpp-api.sebgroup.com/tpp/pis/v6/identified2/payments/swedish-domestic-private-plusgiros
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 12
+201
+Date: Thu, 21 Jan 2021 08:06:09 GMT
+Date: Thu, 21 Jan 2021 08:06:09 GMT
+Content-Type: application/json
+x-global-transaction-id: ed5e1fcc600935f1044ab900
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+Content-Length: 484
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"paymentId":"STOHYD01210121090609130207000001","templateId":"swedish-domestic-private-plusgiros","instructedAmount":{"currency":"SEK","amount":"585.57"},"debtorAccount":{"iban":"SE4550000000058398257466"},"creditorAccount":{"pgnr":"5768353"},"remittanceInformationStructured":{"referenceType":"OCR","reference":"1047514784933"},"requestedExecutionDate":"2021-01-21","_links":{"status":{"href":"/payments/swedish-domestic-private-plusgiros/STOHYD01210121090609130207000001/status"}}}
+
+REQUEST 13
+GET https://tpp-api.sebgroup.com/tpp/pis/v6/identified2/payments/swedish-domestic-private-plusgiros/STOHYD01210121090609130207000001/status
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 13 SET STATUS_1
+200
+Date: Thu, 21 Jan 2021 08:06:10 GMT
+Date: Thu, 21 Jan 2021 08:06:10 GMT
+Content-Type: application/json
+x-global-transaction-id: ed5e1fcc600935f2044ab980
+Cache-Control: private
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+Content-Length: 191
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"paymentId":"STOHYD01210121090609130207000001","transactionStatus":"RCVD","_links":{"status":{"href":"/payments/swedish-domestic-private-plusgiros/STOHYD01210121090609130207000001/status"}}}
+
+REQUEST 14 MATCH STATUS_1
+GET https://tpp-api.sebgroup.com/tpp/pis/v6/identified2/payments/swedish-domestic-private-plusgiros/STOHYD01210121090609130207000001/status
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 14 SET STATUS_2
+200
+Date: Thu, 21 Jan 2021 08:06:10 GMT
+Date: Thu, 21 Jan 2021 08:06:10 GMT
+Content-Type: application/json
+x-global-transaction-id: ed5e1fcc600935f201665831
+Cache-Control: private
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+Content-Length: 853
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"paymentId":"STOHYD01210121090609130207000001","transactionStatus":"RCVD","scaMethods":[{"authenticationType":"CHIP_OTP","authenticationMethodId":"mobiltbankid","name":"Mobilt BankID","explanation":"SCA using decoupled approach"},{"authenticationType":"CHIP_OTP","authenticationMethodId":"digipass","name":"Digipass","explanation":"SCA using Redirect to SEB pages"},{"authenticationType":"CHIP_OTP","authenticationMethodId":"bankIdOnCardDecoupled","name":"BankID på kort","explanation":"SCA using BankId on card, a domestic Swedish authentication method. Decoupled approach"}],"_links":{"startAuthorisationWithAuthenticationMethodSelection":{"href":"/payments/swedish-domestic-private-plusgiros/STOHYD01210121090609130207000001/authorisations"},"status":{"href":"/payments/swedish-domestic-private-plusgiros/STOHYD01210121090609130207000001/status"}}}
+
+REQUEST 15 MATCH STATUS_2
+GET https://tpp-api.sebgroup.com/tpp/pis/v6/identified2/payments/swedish-domestic-private-plusgiros/STOHYD01210121090609130207000001/status
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 15 SET STATUS_3
+200
+Date: Thu, 21 Jan 2021 08:06:10 GMT
+Date: Thu, 21 Jan 2021 08:06:10 GMT
+Content-Type: application/json
+x-global-transaction-id: ed5e1fcc600935f3044aba40
+Cache-Control: private
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+Content-Length: 853
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"paymentId":"STOHYD01210121090609130207000001","transactionStatus":"RCVD","scaMethods":[{"authenticationType":"CHIP_OTP","authenticationMethodId":"mobiltbankid","name":"Mobilt BankID","explanation":"SCA using decoupled approach"},{"authenticationType":"CHIP_OTP","authenticationMethodId":"digipass","name":"Digipass","explanation":"SCA using Redirect to SEB pages"},{"authenticationType":"CHIP_OTP","authenticationMethodId":"bankIdOnCardDecoupled","name":"BankID på kort","explanation":"SCA using BankId on card, a domestic Swedish authentication method. Decoupled approach"}],"_links":{"startAuthorisationWithAuthenticationMethodSelection":{"href":"/payments/swedish-domestic-private-plusgiros/STOHYD01210121090609130207000001/authorisations"},"status":{"href":"/payments/swedish-domestic-private-plusgiros/STOHYD01210121090609130207000001/status"}}}
+
+REQUEST 16
+POST https://tpp-api.sebgroup.com/tpp/pis/v6/identified2/payments/swedish-domestic-private-plusgiros/STOHYD01210121090609130207000001/authorisations
+Accept: application/json
+Content-Type: application/json
+
+{"authenticationMethodId":"mobiltbankid"}
+
+RESPONSE 16
+201
+Date: Thu, 21 Jan 2021 08:06:11 GMT
+Date: Thu, 21 Jan 2021 08:06:11 GMT
+Content-Type: application/json
+x-global-transaction-id: ed5e1fcc600935f301665951
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+Content-Length: 485
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"authorisationId":"7b98562c-9ae3-4cb8-aeb2-fa3b963e7602","basketId":"6ab18f9c-af73-46ae-a130-81aa5770e59f","chosenScaMethod":{"authenticationType":"CHIP_OTP","authenticationMethodId":"mobiltbankid","name":"Mobilt BankID","explanation":"SCA using decoupled approach"},"scaStatus":"scaMethodSelected","paymentIds":["STOHYD01210121090609130207000001"],"_links":{"self":{"href":"/signing-baskets/6ab18f9c-af73-46ae-a130-81aa5770e59f/authorisations/7b98562c-9ae3-4cb8-aeb2-fa3b963e7602"}}}
+
+REQUEST 17 MATCH STATUS_3
+GET https://tpp-api.sebgroup.com/tpp/pis/v6/identified2/payments/swedish-domestic-private-plusgiros/STOHYD01210121090609130207000001/status
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 17 SET STATUS_4
+200
+Date: Thu, 21 Jan 2021 08:06:11 GMT
+Date: Thu, 21 Jan 2021 08:06:12 GMT
+Content-Type: application/json
+x-global-transaction-id: ed5e1fcc600935f3044abb30
+Cache-Control: private
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+Content-Length: 355
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"paymentId":"STOHYD01210121090609130207000001","transactionStatus":"RCVD","scaStatus":"scaMethodSelected","psuMessage":"Starta Mobilt BankID-appen","tppMessages":["Ask the customer to sign for the payment with mobile BankId application"],"_links":{"status":{"href":"/payments/swedish-domestic-private-plusgiros/STOHYD01210121090609130207000001/status"}}}
+
+REQUEST 18 MATCH STATUS_4
+GET https://tpp-api.sebgroup.com/tpp/pis/v6/identified2/payments/swedish-domestic-private-plusgiros/STOHYD01210121090609130207000001/status
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 18 SET STATUS_5
+200
+Date: Thu, 21 Jan 2021 08:06:12 GMT
+Date: Thu, 21 Jan 2021 08:06:13 GMT
+Content-Type: application/json
+x-global-transaction-id: ed5e1fcc600935f4044abc90
+Cache-Control: private
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+Content-Length: 344
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"paymentId":"STOHYD01210121090609130207000001","transactionStatus":"RCVD","scaStatus":"started","psuMessage":"Signera med mobilt BankID","tppMessages":["Ask the customer to sign for the payment with mobile BankId application"],"_links":{"status":{"href":"/payments/swedish-domestic-private-plusgiros/STOHYD01210121090609130207000001/status"}}}
+
+REQUEST 19 MATCH STATUS_5
+GET https://tpp-api.sebgroup.com/tpp/pis/v6/identified2/payments/swedish-domestic-private-plusgiros/STOHYD01210121090609130207000001/status
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 19 SET STATUS_6
+200
+Date: Thu, 21 Jan 2021 08:06:22 GMT
+Date: Thu, 21 Jan 2021 08:06:22 GMT
+Content-Type: application/json
+x-global-transaction-id: ed5e1fcc600935fe0201a414
+Cache-Control: private
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+Content-Length: 351
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"paymentId":"STOHYD01210121090609130207000001","transactionStatus":"ACTC","chosenScaMethod":{"authenticationType":"CHIP_OTP","authenticationMethodId":"mobiltbankid","name":"Mobilt BankID","explanation":"SCA using decoupled approach"},"_links":{"status":{"href":"/payments/swedish-domestic-private-plusgiros/STOHYD01210121090609130207000001/status"}}}
+
+REQUEST 20 MATCH STATUS_6
+GET https://tpp-api.sebgroup.com/tpp/pis/v6/identified2/payments/swedish-domestic-private-plusgiros/STOHYD01210121090609130207000001/status
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 20
+200
+Date: Thu, 21 Jan 2021 08:06:23 GMT
+Date: Thu, 21 Jan 2021 08:06:25 GMT
+Content-Type: application/json
+x-global-transaction-id: e98ea081600935ff043282c0
+Cache-Control: private
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+Content-Length: 351
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"paymentId":"STOHYD01210121090609130207000001","transactionStatus":"ACTC","chosenScaMethod":{"authenticationType":"CHIP_OTP","authenticationMethodId":"mobiltbankid","name":"Mobilt BankID","explanation":"SCA using decoupled approach"},"_links":{"status":{"href":"/payments/swedish-domestic-private-plusgiros/STOHYD01210121090609130207000001/status"}}}
