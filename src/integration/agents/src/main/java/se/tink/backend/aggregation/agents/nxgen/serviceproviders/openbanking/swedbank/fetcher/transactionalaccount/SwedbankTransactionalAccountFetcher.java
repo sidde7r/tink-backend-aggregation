@@ -162,8 +162,11 @@ public class SwedbankTransactionalAccountFetcher implements AccountFetcher<Trans
             return;
         }
 
-        StatementResponse response =
+        Optional<StatementResponse> response =
                 apiClient.postOfflineStatement(account.getApiIdentifier(), fromDate, toDate);
-        sessionStorage.put(account.getApiIdentifier(), response);
+        if (!response.isPresent()) {
+            return;
+        }
+        sessionStorage.put(account.getApiIdentifier(), response.get());
     }
 }
