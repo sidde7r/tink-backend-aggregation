@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: VERSION\n"
-"POT-Creation-Date: 2021-01-22 09:43+0000\n"
-"PO-Revision-Date: 2021-01-22 09:43+0000\n"
+"POT-Creation-Date: 2021-01-22 11:17+0000\n"
+"PO-Revision-Date: 2021-01-22 11:17+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE TEAM <EMAIL@ADDRESS>\n"
 "Language: de\n"
@@ -526,10 +526,10 @@ msgstr ""
 "derzeit nicht unterstützt. Probieren Sie eine andere Option, wenn möglich."
 
 msgid "Incorrect login credentials. Please try again."
-msgstr "Falsche Anmeldedaten. Bitte versuchen Sie es erneut."
+msgstr "Ihre Anmeldedaten sind nicht korrekt. Bitte versuchen Sie es erneut."
 
 msgid "Incorrect challenge response. Please try again."
-msgstr "Falsche Antwort auf Challenge. Bitte versuchen Sie es erneut."
+msgstr "Ihre Eingabe war nicht erfolgreich. Bitte versuchen Sie es erneut."
 
 msgid "Your credentials could not be verified. Please try again."
 msgstr ""
@@ -1349,11 +1349,12 @@ msgstr ""
 "Sie haben keinen Zugang zum Mobile Banking. Bitte kontaktieren Sie Ihre Bank."
 
 msgid "The bank service is offline; please try again later."
-msgstr "Der Bankservice ist offline. Bitte später erneut versuchen."
+msgstr "Der Bankservice ist offline. Bitte versuchen Sie es später erneut."
 
 msgid "The bank service has temporarily failed; please try again later."
 msgstr ""
-"Der Bankservice ist vorübergehend ausgefallen. Bitte später erneut versuchen."
+"Dieser Service ist vorübergehend nicht verfügbar. Bitte versuchen Sie es "
+"später erneut."
 
 msgid ""
 "The maximum allowed number of requests to the bank service has been "
@@ -1779,7 +1780,7 @@ msgstr ""
 "müssen, um den Dienst nutzen zu können."
 
 msgid "There aren't any Authentication methods available."
-msgstr "Keine Authentifizierungsmethoden verfügbar."
+msgstr "Es sind keine Authentifizierungsmethoden verfügbar."
 
 msgid "Second factor is not registered option to use. Contact bank support."
 msgstr ""
