@@ -154,7 +154,7 @@ public class StarlingApiClient {
                     .accept(MediaType.APPLICATION_JSON)
                     .get(HttpResponse.class);
 
-            return TransferStatusEntity.Ok();
+            return TransferStatusEntity.ok();
 
         } catch (HttpResponseException e) {
             int status = e.getResponse().getStatus();
@@ -167,7 +167,7 @@ public class StarlingApiClient {
 
                 // Starling will send very specific error messages in readable text for bad
                 // requests.
-                return TransferStatusEntity.Fail(status, e.getResponse().getBody(String.class));
+                return TransferStatusEntity.fail(status, e.getResponse().getBody(String.class));
             }
 
             throw e;
