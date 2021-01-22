@@ -6,7 +6,6 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Base64;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,7 +15,6 @@ import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.ArgentaConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.ArgentaConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.ArgentaConstants.HeaderValues;
-import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.ArgentaConstants.PathVariables;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.ArgentaConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.ArgentaConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.ArgentaConstants.StorageKeys;
@@ -33,7 +31,6 @@ import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.configura
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.fetcher.transactionalaccount.rpc.AccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.fetcher.transactionalaccount.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.utils.SignatureHeaderProvider;
-import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.utils.TimeUtils;
 import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
@@ -43,7 +40,6 @@ import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestB
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import se.tink.libraries.date.ThreadSafeDateFormat;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class ArgentaApiClient {
@@ -167,25 +163,10 @@ public class ArgentaApiClient {
                 .get(AccountResponse.class);
     }
 
-    public TransactionsResponse getTransactions(String apiIdentifier, Date fromDate, Date toDate) {
-        TransactionsResponse transactionsResponse = new TransactionsResponse();
-        if (checkWithin90Days(toDate)) {
-            transactionsResponse =
-                    createRequestInSession(
-                                    Urls.TRANSACTIONS.parameter(
-                                            PathVariables.ACCOUNT_ID, apiIdentifier))
-                            .header(HeaderKeys.DATE, getFormattedDate())
-                            .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BOTH)
-                            .queryParam(
-                                    QueryKeys.DATE_FROM,
-                                    ThreadSafeDateFormat.FORMATTER_DAILY.format(
-                                            TimeUtils.get90DaysDate(toDate)))
-                            .queryParam(
-                                    QueryKeys.DATE_TO,
-                                    ThreadSafeDateFormat.FORMATTER_DAILY.format(toDate))
-                            .get(TransactionsResponse.class);
-        }
-        return transactionsResponse;
+    public TransactionsResponse getTransactions(URL url) {
+        return createRequestInSession(url)
+                .header(HeaderKeys.DATE, getFormattedDate())
+                .get(TransactionsResponse.class);
     }
 
     private String getFormattedDate() {
@@ -214,11 +195,5 @@ public class ArgentaApiClient {
                 .type(MediaType.APPLICATION_FORM_URLENCODED)
                 .post(TokenResponse.class, refreshTokenRequest.toData())
                 .toTinkToken();
-    }
-
-    private boolean checkWithin90Days(Date toDate) {
-        Date last90DaysFromNow = TimeUtils.get90DaysDate(new Date());
-        Date fromDate = TimeUtils.get90DaysDate(toDate);
-        return fromDate.equals(last90DaysFromNow) || fromDate.after(last90DaysFromNow);
     }
 }

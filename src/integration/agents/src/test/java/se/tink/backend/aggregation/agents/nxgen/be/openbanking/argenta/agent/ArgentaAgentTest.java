@@ -29,8 +29,8 @@ public class ArgentaAgentTest {
                         .expectLoggedIn(false)
                         .setFinancialInstitutionId("argenta")
                         .setAppId("tink")
-                        .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(false);
+                        .loadCredentialsBefore(true)
+                        .saveCredentialsAfter(true);
     }
 
     @Test

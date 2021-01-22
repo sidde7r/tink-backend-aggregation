@@ -12,18 +12,11 @@ import java.util.Collection;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.ArgentaApiClient;
-import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.fetcher.transactionalaccount.rpc.AccountResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class ArgentaTransactionalAccountFetcherTest {
     private ArgentaApiClient apiClient;
     private ArgentaTransactionalAccountFetcher fetcher;
-
-    private static final AccountResponse ACCOUNT_RESPONSE =
-            SerializationUtils.deserializeFromString(
-                    "{\"accounts\" : [ {\"iban\" : \"IBAN\", \"bban\" : \"BBAN\", \"product\" : \"PRODUCT\", \"resourceId\" : \"RESOURCE_ID\", \"balances\" : [{ \"balanceAmount\" : { \"amount\" : \"6.66\" , \"currency\" : \"EUR\"} }]}]}",
-                    AccountResponse.class);
 
     @Before
     public void init() {
@@ -34,7 +27,7 @@ public class ArgentaTransactionalAccountFetcherTest {
     @Test
     public void shouldFetchAccountsAndConvertItToTinkModel() {
         // given
-        when(apiClient.getAccounts()).thenReturn(ACCOUNT_RESPONSE);
+        when(apiClient.getAccounts()).thenReturn(ArgentaFetcherTestData.ACCOUNT_RESPONSE);
 
         // when
         Collection<TransactionalAccount> result = fetcher.fetchAccounts();
