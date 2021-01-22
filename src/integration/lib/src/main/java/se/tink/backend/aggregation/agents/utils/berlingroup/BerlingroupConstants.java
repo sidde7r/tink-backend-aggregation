@@ -6,6 +6,7 @@ public final class BerlingroupConstants {
         public static final String EXPIRED = "expired";
         public static final String RECEIVED = "received";
         public static final String VALID = "valid";
+        public static final String REVOKED_BY_PSU = "revokedByPsu";
     }
 
     public static class AccessEntityTypes {

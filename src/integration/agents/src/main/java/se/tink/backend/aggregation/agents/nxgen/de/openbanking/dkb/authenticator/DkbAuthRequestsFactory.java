@@ -9,17 +9,15 @@ import static se.tink.backend.aggregation.nxgen.http.request.HttpMethod.GET;
 import static se.tink.backend.aggregation.nxgen.http.request.HttpMethod.POST;
 import static se.tink.backend.aggregation.nxgen.http.request.HttpMethod.PUT;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import java.time.LocalDate;
-import lombok.Getter;
 import lombok.Value;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbStorage;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbUserIpInformation;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.configuration.DkbConfiguration;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AccessEntity;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentRequest;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.nxgen.http.NextGenRequestBuilder;
@@ -28,8 +26,6 @@ import se.tink.backend.aggregation.nxgen.http.request.HttpRequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class DkbAuthRequestsFactory {
-
-    private static final String ISO_DATE_FORMAT = "yyyy-MM-dd";
 
     private final DkbConfiguration config;
     private final DkbStorage storage;
@@ -102,13 +98,16 @@ public class DkbAuthRequestsFactory {
     }
 
     HttpRequest generateCreateConsentRequest(LocalDate validUntil) {
+        ConsentRequest consentRequest =
+                new ConsentRequest(
+                        new AccessEntity("allAccounts"), true, validUntil.toString(), 4, false);
         return newRequest("/psd2/v1/consents")
                 .type(APPLICATION_JSON_TYPE)
                 .addBearerToken(storage.getWso2OAuthToken())
                 .header(
                         HeaderKeys.PSD_2_AUTHORIZATION_HEADER,
                         storage.getAccessToken().toAuthorizeHeader())
-                .body(new Consents(validUntil))
+                .body(consentRequest)
                 .build(POST);
     }
 
@@ -171,52 +170,29 @@ public class DkbAuthRequestsFactory {
     @JsonObject
     static class UserCredentials {
 
-        private String username;
-        private String password;
+        String username;
+        String password;
     }
 
     @Value
     @JsonObject
     static class SelectedAuthMethod {
 
-        private String authOptionId;
+        String authOptionId;
     }
 
     @Value
     @JsonObject
     static class TanCode {
 
-        private String tan;
-    }
-
-    @JsonObject
-    @Getter
-    @Value
-    static class Consents {
-
-        private Access access = new Access();
-        private boolean recurringIndicator = true;
-
-        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = ISO_DATE_FORMAT)
-        @JsonSerialize(using = LocalDateSerializer.class)
-        private LocalDate validUntil;
-
-        private Integer frequencyPerDay = 4;
-        private boolean combinedServiceIndicator = false;
-
-        @Value
-        @JsonObject
-        static class Access {
-
-            private String allPsd2 = "allAccounts";
-        }
+        String tan;
     }
 
     @JsonObject
     @Value
     static class ConsentAuthorizationMethod {
 
-        private final String authenticationMethodId;
+        String authenticationMethodId;
     }
 
     @JsonObject
@@ -224,6 +200,6 @@ public class DkbAuthRequestsFactory {
     static class ConsentAuthorizationOtp {
 
         @JsonProperty("scaAuthenticationData")
-        private final String otp;
+        String otp;
     }
 }

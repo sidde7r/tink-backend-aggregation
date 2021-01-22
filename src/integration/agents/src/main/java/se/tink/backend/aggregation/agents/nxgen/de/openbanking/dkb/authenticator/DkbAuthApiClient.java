@@ -13,6 +13,8 @@ import javax.ws.rs.core.NewCookie;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbStorage;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentDetailsResponse;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentResponse;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
@@ -51,20 +53,14 @@ public class DkbAuthApiClient {
         return executeHttpRequest(request, AuthResult.class, INCORRECT_CREDENTIALS);
     }
 
-    Consent createConsent(LocalDate validUntil) {
+    ConsentResponse createConsent(LocalDate validUntil) {
         HttpRequest request = requestsFactory.generateCreateConsentRequest(validUntil);
-        return executeHttpRequest(request, Consent.class);
+        return executeHttpRequest(request, ConsentResponse.class);
     }
 
-    Consent getConsent(String consentId) {
+    ConsentDetailsResponse getConsentDetails(String consentId) {
         HttpRequest request = requestsFactory.generateGetConsentRequest(consentId);
-        Consent consent = executeHttpRequest(request, Consent.class);
-        // Consent details returned from bank do not contain consentId
-        // Enrich the object here to keep the handling of Consent object consistent
-        if (consent != null) {
-            consent.setConsentId(consentId);
-        }
-        return consent;
+        return executeHttpRequest(request, ConsentDetailsResponse.class);
     }
 
     ConsentAuthorization startConsentAuthorization(String consentId) throws LoginException {

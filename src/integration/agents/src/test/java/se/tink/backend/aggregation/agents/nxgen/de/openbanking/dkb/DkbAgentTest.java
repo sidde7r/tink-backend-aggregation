@@ -21,7 +21,7 @@ public class DkbAgentTest {
                     .loadCredentialsBefore(false)
                     .saveCredentialsAfter(false)
                     .setAppId("tink")
-                    .setFinancialInstitutionId("de-dkb-ob");
+                    .setFinancialInstitutionId("dkb");
 
     @AfterClass
     public static void afterClass() {

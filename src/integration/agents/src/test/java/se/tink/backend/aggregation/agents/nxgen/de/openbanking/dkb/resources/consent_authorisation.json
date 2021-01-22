@@ -1,0 +1,18 @@
+{
+  "scaStatus": "started",
+  "authorisationId": "authorisationId",
+  "scaMethods": [
+    {
+      "authenticationType": "PUSH_OTP",
+      "authenticationVersion": "1",
+      "authenticationMethodId": "authenticationMethodId",
+      "name": "TAN2go",
+      "explanation": "A"
+    }
+  ],
+  "_links": {
+    "scaStatus": {
+      "href": "/v1/consents/consentId/authorisations/authorisationId"
+    }
+  }
+}
