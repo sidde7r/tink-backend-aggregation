@@ -61,6 +61,9 @@ public class LoanEntity {
                                 .setLoanNumber(loanNumber)
                                 .setInitialBalance(loanDetailsResponse.getPrincipal(currencyCode))
                                 .setSecurity(realEstateNumber)
+                                .setMonthlyAmortization(
+                                        loanDetailsResponse.getInstalment(currencyCode))
+                                .setAmortized(loanDetailsResponse.getAmortized(currencyCode))
                                 .build())
                 .withId(
                         IdModule.builder()
