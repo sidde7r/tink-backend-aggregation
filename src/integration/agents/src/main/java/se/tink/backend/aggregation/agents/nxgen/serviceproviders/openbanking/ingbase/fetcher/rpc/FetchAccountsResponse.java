@@ -21,4 +21,12 @@ public class FetchAccountsResponse {
                 .filter(account -> currency.equalsIgnoreCase(account.getCurrency()))
                 .collect(Collectors.toList());
     }
+
+    @JsonIgnore
+    public Collection<AccountEntity> getCreditCardAccounts(String currency) {
+        return Optional.ofNullable(accounts).orElse(Collections.emptyList()).stream()
+                .filter(AccountEntity::isCardAccount)
+                .filter(account -> currency.equalsIgnoreCase(account.getCurrency()))
+                .collect(Collectors.toList());
+    }
 }

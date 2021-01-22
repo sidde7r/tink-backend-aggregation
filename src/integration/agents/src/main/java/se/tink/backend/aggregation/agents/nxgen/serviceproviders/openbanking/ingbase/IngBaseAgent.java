@@ -186,7 +186,7 @@ public abstract class IngBaseAgent extends NextGenerationAgent
         return null;
     }
 
-    private LocalDate getTransactionsFromDate() {
+    protected LocalDate getTransactionsFromDate() {
         final Long authenticationTime =
                 persistentStorage.get(StorageKeys.AUTHENTICATION_TIME, Long.TYPE).orElse(0L);
         final long authenticationAge = System.currentTimeMillis() - authenticationTime;

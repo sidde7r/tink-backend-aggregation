@@ -35,6 +35,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ing
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.fetcher.rpc.ErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.fetcher.rpc.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.fetcher.rpc.FetchBalancesResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.fetcher.rpc.FetchCardTransactionsResponse;
 import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils;
@@ -143,12 +144,36 @@ public class IngBaseApiClient {
         return fetchTransactionsPage(path);
     }
 
+    public FetchCardTransactionsResponse fetchCardTransactions(
+            final String transactionsUrl, LocalDate fromDate, LocalDate toDate) {
+        final String path =
+                new URL(transactionsUrl)
+                        .queryParam(
+                                IngBaseConstants.QueryKeys.DATE_FROM,
+                                fromDate.format(DateTimeFormatter.ISO_LOCAL_DATE))
+                        .queryParam(
+                                IngBaseConstants.QueryKeys.DATE_TO,
+                                toDate.format(DateTimeFormatter.ISO_LOCAL_DATE))
+                        .queryParam(
+                                IngBaseConstants.QueryKeys.LIMIT, QueryValues.TRANSACTIONS_LIMIT)
+                        .toString();
+        return fetchCardTransactionsPage(path);
+    }
+
     public BaseFetchTransactionsResponse fetchTransactionsPage(final String transactionsUrl) {
         return buildRequestWithSignature(
                         transactionsUrl, Signature.HTTP_METHOD_GET, StringUtils.EMPTY)
                 .addBearerToken(getTokenFromSession())
                 .type(MediaType.APPLICATION_JSON)
                 .get(marketConfiguration.getTransactionsResponseClass());
+    }
+
+    public FetchCardTransactionsResponse fetchCardTransactionsPage(final String transactionsUrl) {
+        return buildRequestWithSignature(
+                        transactionsUrl, Signature.HTTP_METHOD_GET, StringUtils.EMPTY)
+                .addBearerToken(getTokenFromSession())
+                .type(MediaType.APPLICATION_JSON)
+                .get(FetchCardTransactionsResponse.class);
     }
 
     public URL getAuthorizeUrl(final String state) {
