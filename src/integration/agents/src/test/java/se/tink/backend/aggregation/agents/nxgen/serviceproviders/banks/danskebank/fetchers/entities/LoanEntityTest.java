@@ -16,7 +16,8 @@ public class LoanEntityTest {
     private static final String INTEREST = "221.34";
     private static final String CASH_DEBT = "2108000.00";
     private static final String DEBT_AMOUNT = "2108000.00";
-    private static final String PRINCIPAL = "1230000.00";
+    private static final String PRINCIPAL = "2200000.00";
+    private static final String INSTALMENT = "1234.56";
     private static final String PAYMENT_FREQUENCY = "12";
     private static final Double CALCULATION_RESULT = 0.00126;
     private static final String CURRENCY_CODE = "DKK";
@@ -178,6 +179,71 @@ public class LoanEntityTest {
             new Object[] {PRINCIPAL, "", ExactCurrencyAmount.of(PRINCIPAL, "")},
             new Object[] {PRINCIPAL, null, ExactCurrencyAmount.of(PRINCIPAL, null)},
             new Object[] {ZERO, null, ExactCurrencyAmount.of(ZERO, null)},
+        };
+    }
+
+    @Test
+    @Parameters(method = "monthlyAmortizationParameters")
+    public void shouldGetMonthlyAmortization(String instalment, ExactCurrencyAmount expected) {
+        // given
+        LoanDetailEntity loanDetailEntity = new LoanDetailEntity();
+        loanDetailEntity.setInstalment(instalment);
+
+        LoanDetailsResponse loanDetailsResponse = new LoanDetailsResponse();
+        loanDetailsResponse.setLoanDetail(loanDetailEntity);
+
+        // when
+        ExactCurrencyAmount result = loanDetailsResponse.getInstalment(CURRENCY_CODE);
+
+        // then
+        assertThat(result).isEqualTo(expected);
+    }
+
+    private Object[] monthlyAmortizationParameters() {
+        return new Object[] {
+            new Object[] {INSTALMENT, ExactCurrencyAmount.of(INSTALMENT, CURRENCY_CODE)},
+            new Object[] {"", null},
+            new Object[] {null, null},
+            new Object[] {ZERO, ExactCurrencyAmount.of(ZERO, CURRENCY_CODE)},
+        };
+    }
+
+    @Test
+    @Parameters(method = "amortizedParameters")
+    public void shouldGetAmortizedAmount(
+            String principal, String debtAmount, ExactCurrencyAmount expected) {
+        // given
+        LoanDetailEntity loanDetailEntity = new LoanDetailEntity();
+        loanDetailEntity.setPrincipal(principal);
+        loanDetailEntity.setDebtAmount(debtAmount);
+
+        LoanDetailsResponse loanDetailsResponse = new LoanDetailsResponse();
+        loanDetailsResponse.setLoanDetail(loanDetailEntity);
+
+        // when
+        ExactCurrencyAmount result = loanDetailsResponse.getAmortized(CURRENCY_CODE);
+
+        // then
+        assertThat(result).isEqualTo(expected);
+    }
+
+    private Object[] amortizedParameters() {
+        return new Object[] {
+            new Object[] {PRINCIPAL, DEBT_AMOUNT, ExactCurrencyAmount.of("92000", CURRENCY_CODE)},
+            new Object[] {null, DEBT_AMOUNT, null},
+            new Object[] {"", DEBT_AMOUNT, null},
+            new Object[] {PRINCIPAL, null, null},
+            new Object[] {PRINCIPAL, "", null},
+            new Object[] {
+                ZERO,
+                DEBT_AMOUNT,
+                ExactCurrencyAmount.of(new BigDecimal(DEBT_AMOUNT).negate(), CURRENCY_CODE)
+            },
+            new Object[] {
+                PRINCIPAL, ZERO, ExactCurrencyAmount.of(new BigDecimal(PRINCIPAL), CURRENCY_CODE)
+            },
+            new Object[] {PRINCIPAL, "testo", null},
+            new Object[] {"viron", DEBT_AMOUNT, null},
         };
     }
 }

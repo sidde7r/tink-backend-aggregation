@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.time.LocalDate;
 import lombok.Setter;
@@ -62,5 +63,26 @@ public class LoanDetailsResponse extends AbstractResponse {
         return StringUtils.isNotBlank(loanDetail.getPrincipal())
                 ? ExactCurrencyAmount.of(loanDetail.getPrincipal(), currencyCode)
                 : null;
+    }
+
+    public ExactCurrencyAmount getInstalment(String currencyCode) {
+        return StringUtils.isNotBlank(loanDetail.getInstalment())
+                ? ExactCurrencyAmount.of(loanDetail.getInstalment(), currencyCode)
+                : null;
+    }
+
+    public ExactCurrencyAmount getAmortized(String currencyCode) {
+        if (StringUtils.isNotBlank(loanDetail.getPrincipal())
+                && StringUtils.isNotBlank(loanDetail.getDebtAmount())) {
+            try {
+                return ExactCurrencyAmount.of(
+                        new BigDecimal(loanDetail.getPrincipal())
+                                .subtract(new BigDecimal(loanDetail.getDebtAmount())),
+                        currencyCode);
+            } catch (NumberFormatException e) {
+                log.warn("Failed to calculate amortized amount", e);
+            }
+        }
+        return null;
     }
 }
