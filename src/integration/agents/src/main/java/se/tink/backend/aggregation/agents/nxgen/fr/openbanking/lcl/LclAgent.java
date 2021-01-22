@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl;
 
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CREDIT_CARDS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.IDENTITY_DATA;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.LIST_BENEFICIARIES;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.TRANSFERS;
@@ -17,6 +18,7 @@ import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.RefreshBeneficiariesExecutor;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
@@ -28,6 +30,7 @@ import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.authenticator
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.configuration.LclConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.fecther.account.LclAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.fecther.converter.LclDataConverter;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.fecther.creditcard.LclCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.fecther.identity.LclIdentityFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.fecther.transaction.LclTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.lcl.fecther.transferdestination.LclTransferDestinationFetcher;
@@ -53,6 +56,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2based.steps.ThirdPartyAppAuthenticationStepCreator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.StatelessProgressiveAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
@@ -62,11 +66,12 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.libraries.mapper.PrioritizedValueExtractor;
 
 @AgentDependencyModules(modules = QSealcSignerModuleRSASHA256.class)
-@AgentCapabilities({CHECKING_ACCOUNTS, IDENTITY_DATA, LIST_BENEFICIARIES, TRANSFERS})
+@AgentCapabilities({CHECKING_ACCOUNTS, IDENTITY_DATA, LIST_BENEFICIARIES, TRANSFERS, CREDIT_CARDS})
 public final class LclAgent extends SubsequentProgressiveGenerationAgent
         implements RefreshCheckingAccountsExecutor,
                 RefreshIdentityDataExecutor,
-                RefreshBeneficiariesExecutor {
+                RefreshBeneficiariesExecutor,
+                RefreshCreditCardAccountsExecutor {
 
     private static final ZoneId ZONE_ID = ZoneId.of("CET");
     public static final String BASE_URL = "https://psd.lcl.fr";
@@ -77,9 +82,11 @@ public final class LclAgent extends SubsequentProgressiveGenerationAgent
     private final LclTokenApiClient tokenApiClient;
     private final OAuth2TokenStorage tokenStorage;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
+    private final CreditCardRefreshController creditCardRefreshController;
     private final LclIdentityFetcher lclIdentityFetcher;
     private final AgentConfiguration<LclConfiguration> agentConfiguration;
     private final TransferDestinationRefreshController transferDestinationRefreshController;
+    private final LclDataConverter dataConverter;
 
     @Inject
     public LclAgent(AgentComponentProvider componentProvider, QsealcSigner qsealcSigner) {
@@ -100,7 +107,9 @@ public final class LclAgent extends SubsequentProgressiveGenerationAgent
                         this.sessionStorage,
                         this.tokenApiClient);
 
+        this.dataConverter = new LclDataConverter();
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
+        this.creditCardRefreshController = constructCreditCardRefreshController();
         this.lclIdentityFetcher = new LclIdentityFetcher(this.lclApiClient);
         this.transferDestinationRefreshController = constructTransferDestinationRefreshController();
     }
@@ -167,6 +176,16 @@ public final class LclAgent extends SubsequentProgressiveGenerationAgent
     }
 
     @Override
+    public FetchAccountsResponse fetchCreditCardAccounts() {
+        return this.creditCardRefreshController.fetchCreditCardAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCreditCardTransactions() {
+        return this.creditCardRefreshController.fetchCreditCardTransactions();
+    }
+
+    @Override
     public FetchTransferDestinationsResponse fetchBeneficiaries(List<Account> accounts) {
         /* TODO: In the future add dedicated RefreshController for beneficiary listing. */
         return this.transferDestinationRefreshController.fetchTransferDestinations(accounts);
@@ -188,13 +207,26 @@ public final class LclAgent extends SubsequentProgressiveGenerationAgent
         return Optional.of(new PaymentController(paymentExecutor, paymentExecutor));
     }
 
+    private CreditCardRefreshController constructCreditCardRefreshController() {
+
+        LclCreditCardFetcher lclCreditCardFetcher =
+                new LclCreditCardFetcher(this.lclApiClient, this.dataConverter);
+        return new CreditCardRefreshController(
+                this.metricRefreshController,
+                this.updateController,
+                lclCreditCardFetcher,
+                new TransactionFetcherController<>(
+                        this.transactionPaginationHelper,
+                        new TransactionPagePaginationController<>(lclCreditCardFetcher, 1)));
+    }
+
     private TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
         final PrioritizedValueExtractor prioritizedValueExtractor = new PrioritizedValueExtractor();
-        final LclDataConverter dataConverter = new LclDataConverter();
         final LclAccountFetcher accountFetcher =
-                new LclAccountFetcher(this.lclApiClient, prioritizedValueExtractor, dataConverter);
+                new LclAccountFetcher(
+                        this.lclApiClient, prioritizedValueExtractor, this.dataConverter);
         final LclTransactionFetcher transactionFetcher =
-                new LclTransactionFetcher(this.lclApiClient, dataConverter);
+                new LclTransactionFetcher(this.lclApiClient, this.dataConverter);
 
         return new TransactionalAccountRefreshController(
                 this.metricRefreshController,
