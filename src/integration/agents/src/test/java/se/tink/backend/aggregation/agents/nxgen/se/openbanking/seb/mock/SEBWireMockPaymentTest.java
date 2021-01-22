@@ -65,11 +65,12 @@ public class SEBWireMockPaymentTest {
             agentWireMockPaymentTest.executePayment();
             Assert.fail();
         } catch (PaymentAuthorizationException e) {
-            Assert.assertEquals("BankID signing of payment was cancelled by the user.", e.getMessage());
+            Assert.assertEquals(
+                    "BankID signing of payment was cancelled by the user.", e.getMessage());
         }
     }
 
-    //TODO: Update the aap file for this test from a recent successful payment
+    // TODO: Update the aap file for this test from a recent successful payment
     @Ignore("This likely fails because of an outdated aap file")
     @Test
     public void testTransfer() throws Exception {
