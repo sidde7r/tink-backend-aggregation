@@ -1,0 +1,488 @@
+
+REQUEST 1
+POST https://psd2.api.swedbank.com/psd2/v3/authorize-decoupled?bic=SWEDSESS
+Accept: application/json
+Content-Type: application/json
+X-Aggregator: Tink Testing
+
+{"authenticationMethodId":"MOBILE_ID","clientID":"dummyClientId","psuData":{"bankID":"08999"},"redirectUri":"https://127.0.0.1:7357/api/v1/thirdparty/callback","scope":"PSD2 PSD2account_balances PSD2account_transactions"}
+
+RESPONSE 1
+200
+Date: Fri, 22 Jan 2021 10:48:47 GMT
+Date: Fri, 22 Jan 2021 10:48:48 GMT
+ASPSP-SCA-Approach: ***
+X-Rate-Limit-Limit: 60000
+X-Rate-Limit-Remaining: 53332
+X-Rate-Limit-Reset: 672
+Content-Type: application/json;charset=utf-8
+Server: Layer7-API-Gateway
+Set-Cookie: ***
+Content-Length: 483
+
+{"authorizeId" : "1612345678-1234-1234-1234-123456789123","chosenScaMethod":{"authenticationType" : "Mobile BankID","authenticationMethodId" : "MOBILE_ID"},"challengeData": { "autoStartToken": "9e133f21-9d73-4b6a-83c0-41f8dd42040a" },"psuMessage" : "Loging via Tink_org","_links": {"scaStatus": {"href": "/psd2/v3/authorize-decoupled/authorize/1612345678-1234-1234-1234-123456789123"}}}
+
+REQUEST 2
+GET https://psd2.api.swedbank.com/psd2/v3/authorize-decoupled/authorize/1612345678-1234-1234-1234-123456789123?bic=SWEDSESS&client_id=dummyClientId
+Accept: application/json
+X-Aggregator: Tink Testing
+
+RESPONSE 2 SET AUTH_POLL_1
+200
+Date: Fri, 22 Jan 2021 10:48:48 GMT
+Date: Fri, 22 Jan 2021 10:48:48 GMT
+X-Rate-Limit-Limit: 60000
+X-Rate-Limit-Remaining: 53327
+X-Rate-Limit-Reset: 671
+Content-Type: application/json;charset=utf-8
+Server: Layer7-API-Gateway
+
+{"scaStatus": "started"}
+
+REQUEST 3 MATCH AUTH_POLL_1
+GET https://psd2.api.swedbank.com/psd2/v3/authorize-decoupled/authorize/1612345678-1234-1234-1234-123456789123?bic=SWEDSESS&client_id=dummyClientId
+Accept: application/json
+X-Aggregator: Tink Testing
+
+RESPONSE 3 SET AUTH_POLL_2
+200
+Date: Fri, 22 Jan 2021 10:48:51 GMT
+Date: Fri, 22 Jan 2021 10:48:51 GMT
+X-Rate-Limit-Limit: 60000
+X-Rate-Limit-Remaining: 53303
+X-Rate-Limit-Reset: 669
+Content-Type: application/json;charset=utf-8
+Server: Layer7-API-Gateway
+
+{"scaStatus": "started"}
+
+REQUEST 4 MATCH AUTH_POLL_2
+GET https://psd2.api.swedbank.com/psd2/v3/authorize-decoupled/authorize/1612345678-1234-1234-1234-123456789123?bic=SWEDSESS&client_id=dummyClientId
+Accept: application/json
+X-Aggregator: Tink Testing
+
+RESPONSE 4 SET AUTH_START_1
+200
+Date: Fri, 22 Jan 2021 10:48:54 GMT
+Date: Fri, 22 Jan 2021 10:48:54 GMT
+X-Rate-Limit-Limit: 60000
+X-Rate-Limit-Remaining: 53290
+X-Rate-Limit-Reset: 666
+Content-Type: application/json;charset=utf-8
+Server: Layer7-API-Gateway
+
+{"scaStatus": "started"}
+
+REQUEST 5 MATCH AUTH_START_1
+GET https://psd2.api.swedbank.com/psd2/v3/authorize-decoupled/authorize/1612345678-1234-1234-1234-123456789123?bic=SWEDSESS&client_id=dummyClientId
+Accept: application/json
+X-Aggregator: Tink Testing
+
+RESPONSE 5 SET AUTH_START_2
+200
+Date: Fri, 22 Jan 2021 10:48:57 GMT
+Date: Fri, 22 Jan 2021 10:48:56 GMT
+X-Rate-Limit-Limit: 60000
+X-Rate-Limit-Remaining: 53279
+X-Rate-Limit-Reset: 663
+Content-Type: application/json;charset=utf-8
+Server: Layer7-API-Gateway
+
+{"scaStatus": "started"}
+
+REQUEST 6 MATCH AUTH_START_2
+GET https://psd2.api.swedbank.com/psd2/v3/authorize-decoupled/authorize/1612345678-1234-1234-1234-123456789123?bic=SWEDSESS&client_id=dummyClientId
+Accept: application/json
+X-Aggregator: Tink Testing
+
+RESPONSE 6
+200
+Date: Fri, 22 Jan 2021 10:48:59 GMT
+Date: Fri, 22 Jan 2021 10:49:00 GMT
+X-Rate-Limit-Limit: 60000
+X-Rate-Limit-Remaining: 53258
+X-Rate-Limit-Reset: 660
+Content-Type: application/json;charset=utf-8
+Server: Layer7-API-Gateway
+
+{"scaStatus": "finalised","authorizationCode": "abcdefab-abcd-abcd-abcd-abcdefabcdef"}
+
+REQUEST 7
+POST https://psd2.api.swedbank.com/psd2/token?bic=SWEDSESS&code=abcdefab-abcd-abcd-abcd-abcdefabcdef&grant_type=authorization_code&client_secret=dummyClientSecret&redirect_uri=https%3A%2F%2F127.0.0.1%3A7357%2Fapi%2Fv1%2Fthirdparty%2Fcallback&client_id=dummyClientId
+Accept: application/json
+X-Aggregator: Tink Testing
+
+RESPONSE 7
+200
+Date: Fri, 22 Jan 2021 10:49:01 GMT
+Date: Fri, 22 Jan 2021 10:49:01 GMT
+UserID: ***
+Pragma: no-cache
+Cache-Control: no-store
+Content-Type: application/json;charset=utf-8
+Server: Layer7-API-Gateway
+
+{"access_token":"ACCESS_TOKEN", "token_type":"Bearer", "expires_in":599, "refresh_token":"REFRESH_TOKEN", "scope":"PSD2 PSD2account_balances PSD2account_transactions PSD2account_list"}
+
+REQUEST 8
+POST https://psd2.api.swedbank.com/v3/payments/se-domestic-credit-transfers?bic=SWEDSESS
+PSU-IP-Address: 127.0.0.1
+PSU-User-Agent: Tink
+TPP-Redirect-URI: https://127.0.0.1:7357/api/v1/thirdparty/callback
+Content-Type: application/json
+Accept: application/json
+X-Aggregator: Tink Testing
+
+{"creditorAccount":{"bban":"12345678901"},"debtorAccount":{"bban":"10987654321"},"creditorFriendlyName":"TinkTest","debtorAccountStatementText":"TinkTest","executionDate":"2021-01-25","instructedAmount":{"amount":"1.0","currency":"SEK"},"remittanceInformationUnstructured":"tinkTest"}
+
+RESPONSE 8
+201
+Date: Fri, 22 Jan 2021 10:49:02 GMT
+Date: Fri, 22 Jan 2021 10:49:02 GMT
+ASPSP-SCA-Approach: ***
+X-Rate-Limit-Limit: 60000
+X-Rate-Limit-Remaining: 53245
+X-Rate-Limit-Reset: 657
+Content-Type: application/json;charset=utf-8
+Server: Layer7-API-Gateway
+
+{"_links":{"self":{"href":"/v3/payments/se-domestic-credit-transfers/8f45adfe-3771-4c6d-9018-8cfbfb265072"},"status":{"href":"/v3/payments/se-domestic-credit-transfers/8f45adfe-3771-4c6d-9018-8cfbfb265072/status"},"scaRedirect":{"href":"https://psd2.swedbank.se/app/consent/login-open-banking?token=3d3043132f5c8d847955576b0a41c11ebfdbfa0bc246709a4c3b94ea973b9856&ns=1"},"scaStatus":{"href":"/v3/payments/se-domestic-credit-transfers/8f45adfe-3771-4c6d-9018-8cfbfb265072/authorisations/39b82ca3-f660-4905-9a3b-8ed29bc329db"}},"paymentId":"8f45adfe-3771-4c6d-9018-8cfbfb265072","transactionStatus":"ACTC"}
+
+REQUEST 9
+GET https://psd2.api.swedbank.com/v3/payments/se-domestic-credit-transfers/8f45adfe-3771-4c6d-9018-8cfbfb265072?bic=SWEDSESS
+Accept: application/json
+PSU-IP-Address: 127.0.0.1
+PSU-User-Agent: Tink
+TPP-Redirect-URI: https://127.0.0.1:7357/api/v1/thirdparty/callback
+TPP-Nok-Redirect-URI: https://127.0.0.1:7357/api/v1/thirdparty/callback
+X-Aggregator: Tink Testing
+
+RESPONSE 9
+200
+Date: Fri, 22 Jan 2021 10:49:03 GMT
+Date: Fri, 22 Jan 2021 10:49:03 GMT
+X-Rate-Limit-Limit: 60000
+X-Rate-Limit-Remaining: 53238
+X-Rate-Limit-Reset: 656
+Content-Type: application/json;charset=utf-8
+Server: Layer7-API-Gateway
+
+{"debtorAccount":{"bban":"10987654321"},"creditorAccount":{"bban":"12345678901"},"instructedAmount":{"currency":"SEK","amount":"1.00"},"executionDate":"2021-01-25","remittanceInformationUnstructured":"tinkTest","creditorFriendlyName":"TinkTest","debtorAccountStatementText":"TinkTest"}
+
+REQUEST 10
+GET https://psd2.api.swedbank.com/v3/payments/se-domestic-credit-transfers/8f45adfe-3771-4c6d-9018-8cfbfb265072/status?bic=SWEDSESS
+Accept: application/json
+PSU-IP-Address: 127.0.0.1
+PSU-User-Agent: Tink
+TPP-Redirect-URI: https://127.0.0.1:7357/api/v1/thirdparty/callback
+TPP-Nok-Redirect-URI: https://127.0.0.1:7357/api/v1/thirdparty/callback
+X-Aggregator: Tink Testing
+
+RESPONSE 10 SET STATUS_POLL_1
+200
+Date: Fri, 22 Jan 2021 10:49:04 GMT
+Date: Fri, 22 Jan 2021 10:49:04 GMT
+X-Rate-Limit-Limit: 60000
+X-Rate-Limit-Remaining: 53233
+X-Rate-Limit-Reset: 656
+Content-Type: application/json;charset=utf-8
+Server: Layer7-API-Gateway
+
+{"transactionStatus":"ACTC"}
+
+REQUEST 11 MATCH STATUS_POLL_1
+GET https://psd2.api.swedbank.com/v3/payments/se-domestic-credit-transfers/8f45adfe-3771-4c6d-9018-8cfbfb265072/status?bic=SWEDSESS
+Accept: application/json
+PSU-IP-Address: 127.0.0.1
+PSU-User-Agent: Tink
+TPP-Redirect-URI: https://127.0.0.1:7357/api/v1/thirdparty/callback
+TPP-Nok-Redirect-URI: https://127.0.0.1:7357/api/v1/thirdparty/callback
+X-Aggregator: Tink Testing
+
+RESPONSE 11
+200
+Date: Fri, 22 Jan 2021 10:49:05 GMT
+Date: Fri, 22 Jan 2021 10:49:05 GMT
+X-Rate-Limit-Limit: 60000
+X-Rate-Limit-Remaining: 53229
+X-Rate-Limit-Reset: 655
+Content-Type: application/json;charset=utf-8
+Server: Layer7-API-Gateway
+
+{"transactionStatus":"ACTC"}
+
+REQUEST 12
+POST https://psd2.api.swedbank.com/v3/payments/se-domestic-credit-transfers/8f45adfe-3771-4c6d-9018-8cfbfb265072/authorisations?bic=SWEDSESS
+Accept: application/json
+PSU-IP-Address: 127.0.0.1
+PSU-User-Agent: Tink
+X-Aggregator: Tink Testing
+
+RESPONSE 12
+201
+Date: Fri, 22 Jan 2021 10:49:06 GMT
+Date: Fri, 22 Jan 2021 10:49:05 GMT
+ASPSP-SCA-Approach: ***
+X-Rate-Limit-Limit: 60000
+X-Rate-Limit-Remaining: 53223
+X-Rate-Limit-Reset: 654
+Content-Type: application/json;charset=utf-8
+Server: Layer7-API-Gateway
+
+{"_links":{"scaStatus":{"href":"/v3/payments/se-domestic-credit-transfers/8f45adfe-3771-4c6d-9018-8cfbfb265072/authorisations/b3fcf52c-d943-47c5-aabe-5f35a27aa034"},"selectAuthenticationMethod":{"href":"/v3/payments/se-domestic-credit-transfers/8f45adfe-3771-4c6d-9018-8cfbfb265072/authorisations/b3fcf52c-d943-47c5-aabe-5f35a27aa034"}},"authorisationId":"b3fcf52c-d943-47c5-aabe-5f35a27aa034","scaStatus":"received","scaMethods":[{"authenticationMethodId":"MOBILE_ID","authenticationType":"Mobile BankID"}],"chosenScaMethod":{"authenticationMethodId":"MOBILE_ID","authenticationType":"Mobile BankID"}}
+
+REQUEST 13
+PUT https://psd2.api.swedbank.com/v3/payments/se-domestic-credit-transfers/8f45adfe-3771-4c6d-9018-8cfbfb265072/authorisations/b3fcf52c-d943-47c5-aabe-5f35a27aa034?bic=SWEDSESS
+Accept: application/json
+PSU-IP-Address: 127.0.0.1
+PSU-User-Agent: Tink
+Content-Type: application/json
+X-Aggregator: Tink Testing
+
+{"authenticationMethodId":"MOBILE_ID","clientID":"dummyClientId","psuData":{"bankID":"08999"},"redirectUri":"https://127.0.0.1:7357/api/v1/thirdparty/callback","scope":"PSD2 PSD2account_balances PSD2account_transactions"}
+
+RESPONSE 13 SET RECIPIENT_CONFIRMATION_1
+201
+Date: Fri, 22 Jan 2021 10:49:07 GMT
+Date: Fri, 22 Jan 2021 10:49:06 GMT
+ASPSP-SCA-Approach: ***
+X-Rate-Limit-Limit: 60000
+X-Rate-Limit-Remaining: 53219
+X-Rate-Limit-Reset: 653
+Content-Type: application/json;charset=utf-8
+Server: Layer7-API-Gateway
+
+{"psuMessage":"Please confirm the recipient to make the payment. When you have added the recipient, the payment can be made. The recipient will thereafter be stored in your recipient list","tppMessages":[{"category":"INFO","code":"RECIPIENT_MISSING","text":"PSU must add recipient to recipient list first."}],"_links":{"scaStatus":{"href":"/v3/payments/se-domestic-credit-transfers/8f45adfe-3771-4c6d-9018-8cfbfb265072/authorisations/b3fcf52c-d943-47c5-aabe-5f35a27aa034"}},"chosenScaMethod":{"authenticationMethodId":"MOBILE_ID","authenticationType":"Mobile BankID"},"scaStatus":"started","challengeData":{"autoStartToken":"f566ae8f-33e6-49cb-83ab-71ead8e0298d"}}
+
+REQUEST 14 MATCH RECIPIENT_CONFIRMATION_1
+GET https://psd2.api.swedbank.com/v3/payments/se-domestic-credit-transfers/8f45adfe-3771-4c6d-9018-8cfbfb265072/authorisations/b3fcf52c-d943-47c5-aabe-5f35a27aa034?bic=SWEDSESS
+Accept: application/json
+PSU-IP-Address: 127.0.0.1
+PSU-User-Agent: Tink
+X-Aggregator: Tink Testing
+
+RESPONSE 14 SET RECIPIENT_CONFIRMATION_2
+200
+Date: Fri, 22 Jan 2021 10:49:08 GMT
+Date: Fri, 22 Jan 2021 10:49:08 GMT
+X-Rate-Limit-Limit: 60000
+X-Rate-Limit-Remaining: 53216
+X-Rate-Limit-Reset: 652
+Content-Type: application/json;charset=utf-8
+Server: Layer7-API-Gateway
+
+{"scaStatus":"started"}
+
+REQUEST 15 MATCH RECIPIENT_CONFIRMATION_2
+GET https://psd2.api.swedbank.com/v3/payments/se-domestic-credit-transfers/8f45adfe-3771-4c6d-9018-8cfbfb265072/authorisations/b3fcf52c-d943-47c5-aabe-5f35a27aa034?bic=SWEDSESS
+Accept: application/json
+PSU-IP-Address: 127.0.0.1
+PSU-User-Agent: Tink
+X-Aggregator: Tink Testing
+
+RESPONSE 15 SET RECIPIENT_CONFIRMATION_3
+200
+Date: Fri, 22 Jan 2021 10:49:10 GMT
+Date: Fri, 22 Jan 2021 10:49:10 GMT
+X-Rate-Limit-Limit: 60000
+X-Rate-Limit-Remaining: 53203
+X-Rate-Limit-Reset: 649
+Content-Type: application/json;charset=utf-8
+Server: Layer7-API-Gateway
+
+{"scaStatus":"started"}
+
+REQUEST 16 MATCH RECIPIENT_CONFIRMATION_3
+GET https://psd2.api.swedbank.com/v3/payments/se-domestic-credit-transfers/8f45adfe-3771-4c6d-9018-8cfbfb265072/authorisations/b3fcf52c-d943-47c5-aabe-5f35a27aa034?bic=SWEDSESS
+Accept: application/json
+PSU-IP-Address: 127.0.0.1
+PSU-User-Agent: Tink
+X-Aggregator: Tink Testing
+
+RESPONSE 16 SET REC_AUTHORIZED
+200
+Date: Fri, 22 Jan 2021 10:49:13 GMT
+Date: Fri, 22 Jan 2021 10:49:13 GMT
+X-Rate-Limit-Limit: 60000
+X-Rate-Limit-Remaining: 53196
+X-Rate-Limit-Reset: 646
+Content-Type: application/json;charset=utf-8
+Server: Layer7-API-Gateway
+
+{"_links":{"startAuthorisation":{"href":"/v3/payments/se-domestic-credit-transfers/8f45adfe-3771-4c6d-9018-8cfbfb265072/authorisations"}},"scaStatus":"finalised"}
+
+REQUEST 17 MATCH REC_AUTHORIZED
+GET https://psd2.api.swedbank.com/v3/payments/se-domestic-credit-transfers/8f45adfe-3771-4c6d-9018-8cfbfb265072/status?bic=SWEDSESS
+Accept: application/json
+PSU-IP-Address: 127.0.0.1
+PSU-User-Agent: Tink
+X-Aggregator: Tink Testing
+
+RESPONSE 17 SET WAIT_FOR_READY_TO_SIGN_1
+200
+Date: Fri, 22 Jan 2021 10:49:14 GMT
+Date: Fri, 22 Jan 2021 10:49:14 GMT
+X-Rate-Limit-Limit: 60000
+X-Rate-Limit-Remaining: 53194
+X-Rate-Limit-Reset: 645
+Content-Type: application/json;charset=utf-8
+Server: Layer7-API-Gateway
+Content-Length: 28
+
+{"transactionStatus":"ACTC"}
+
+REQUEST 18 MATCH WAIT_FOR_READY_TO_SIGN_1
+GET https://psd2.api.swedbank.com/v3/payments/se-domestic-credit-transfers/8f45adfe-3771-4c6d-9018-8cfbfb265072/status?bic=SWEDSESS
+Accept: application/json
+PSU-IP-Address: 127.0.0.1
+PSU-User-Agent: Tink
+X-Aggregator: Tink Testing
+
+RESPONSE 18 SET WAIT_FOR_READY_TO_SIGN_2
+200
+Date: Fri, 22 Jan 2021 10:49:15 GMT
+Date: Fri, 22 Jan 2021 10:49:16 GMT
+X-Rate-Limit-Limit: 60000
+X-Rate-Limit-Remaining: 53190
+X-Rate-Limit-Reset: 644
+Content-Type: application/json;charset=utf-8
+Server: Layer7-API-Gateway
+
+{"transactionStatus":"ACTC"}
+
+REQUEST 19 MATCH WAIT_FOR_READY_TO_SIGN_2
+POST https://psd2.api.swedbank.com/v3/payments/se-domestic-credit-transfers/8f45adfe-3771-4c6d-9018-8cfbfb265072/authorisations?bic=SWEDSESS
+Accept: application/json
+PSU-IP-Address: 127.0.0.1
+PSU-User-Agent: Tink
+X-Aggregator: Tink Testing
+
+RESPONSE 19 SET PAYMENT_SIGNING_1
+201
+Date: Fri, 22 Jan 2021 10:49:16 GMT
+Date: Fri, 22 Jan 2021 10:49:17 GMT
+X-Rate-Limit-Limit: 60000
+X-Rate-Limit-Remaining: 53185
+X-Rate-Limit-Reset: 644
+Content-Type: application/json;charset=utf-8
+Server: Layer7-API-Gateway
+
+{"_links":{"scaStatus":{"href":"/v3/payments/se-domestic-credit-transfers/8f45adfe-3771-4c6d-9018-8cfbfb265072/authorisations/f3fe69d8-172f-4d73-bb91-fa7c21a52b52"},"selectAuthenticationMethod":{"href":"/v3/payments/se-domestic-credit-transfers/8f45adfe-3771-4c6d-9018-8cfbfb265072/authorisations/f3fe69d8-172f-4d73-bb91-fa7c21a52b52"}},"authorisationId":"f3fe69d8-172f-4d73-bb91-fa7c21a52b52","scaStatus":"received","scaMethods":[{"authenticationMethodId":"MOBILE_ID","authenticationType":"Mobile BankID"}],"chosenScaMethod":{"authenticationMethodId":"MOBILE_ID","authenticationType":"Mobile BankID"}}
+
+REQUEST 20 MATCH PAYMENT_SIGNING_1
+PUT https://psd2.api.swedbank.com/v3/payments/se-domestic-credit-transfers/8f45adfe-3771-4c6d-9018-8cfbfb265072/authorisations/f3fe69d8-172f-4d73-bb91-fa7c21a52b52?bic=SWEDSESS
+Accept: application/json
+PSU-IP-Address: 127.0.0.1
+PSU-User-Agent: Tink
+Content-Type: application/json
+X-Aggregator: Tink Testing
+
+{"authenticationMethodId":"MOBILE_ID","clientID":"dummyClientId","psuData":{"bankID":"08999"},"redirectUri":"https://127.0.0.1:7357/api/v1/thirdparty/callback","scope":"PSD2 PSD2account_balances PSD2account_transactions"}
+
+RESPONSE 20 SET PAYMENT_SIGNING_2
+201
+Date: Fri, 22 Jan 2021 10:49:17 GMT
+Date: Fri, 22 Jan 2021 10:49:18 GMT
+X-Rate-Limit-Limit: 60000
+X-Rate-Limit-Remaining: 53179
+X-Rate-Limit-Reset: 643
+Content-Type: application/json;charset=utf-8
+Server: Layer7-API-Gateway
+Content-Length: 439
+
+{"psuMessage":"Approve payment of 1 SEK to 33824238 by using your MOBILE_ID device","_links":{"scaStatus":{"href":"/v3/payments/se-domestic-credit-transfers/8f45adfe-3771-4c6d-9018-8cfbfb265072/authorisations/f3fe69d8-172f-4d73-bb91-fa7c21a52b52"}},"chosenScaMethod":{"authenticationMethodId":"MOBILE_ID","authenticationType":"Mobile BankID"},"scaStatus":"started","challengeData":{"autoStartToken":"0e3325f3-15e5-43c2-a513-6041ce54dcc0"}}
+
+REQUEST 21 MATCH PAYMENT_SIGNING_2
+GET https://psd2.api.swedbank.com/v3/payments/se-domestic-credit-transfers/8f45adfe-3771-4c6d-9018-8cfbfb265072/authorisations/f3fe69d8-172f-4d73-bb91-fa7c21a52b52?bic=SWEDSESS
+Accept: application/json
+PSU-IP-Address: 127.0.0.1
+PSU-User-Agent: Tink
+X-Aggregator: Tink Testing
+
+RESPONSE 21 SET PAYMENT_SIGNING_3
+200
+Date: Fri, 22 Jan 2021 10:49:18 GMT
+Date: Fri, 22 Jan 2021 10:49:18 GMT
+X-Rate-Limit-Limit: 60000
+X-Rate-Limit-Remaining: 53174
+X-Rate-Limit-Reset: 642
+Content-Type: application/json;charset=utf-8
+Server: Layer7-API-Gateway
+
+{"scaStatus":"started"}
+
+REQUEST 22 MATCH PAYMENT_SIGNING_3
+GET https://psd2.api.swedbank.com/v3/payments/se-domestic-credit-transfers/8f45adfe-3771-4c6d-9018-8cfbfb265072/authorisations/f3fe69d8-172f-4d73-bb91-fa7c21a52b52?bic=SWEDSESS
+Accept: application/json
+PSU-IP-Address: 127.0.0.1
+PSU-User-Agent: Tink
+X-Aggregator: Tink Testing
+
+RESPONSE 22 SET PAYMENT_SIGNING_4
+200
+Date: Fri, 22 Jan 2021 10:49:21 GMT
+Date: Fri, 22 Jan 2021 10:49:21 GMT
+X-Rate-Limit-Limit: 60000
+X-Rate-Limit-Remaining: 53162
+X-Rate-Limit-Reset: 639
+Content-Type: application/json;charset=utf-8
+Server: Layer7-API-Gateway
+
+{"scaStatus":"started"}
+
+REQUEST 23 MATCH PAYMENT_SIGNING_4
+GET https://psd2.api.swedbank.com/v3/payments/se-domestic-credit-transfers/8f45adfe-3771-4c6d-9018-8cfbfb265072/authorisations/f3fe69d8-172f-4d73-bb91-fa7c21a52b52?bic=SWEDSESS
+Accept: application/json
+PSU-IP-Address: 127.0.0.1
+PSU-User-Agent: Tink
+X-Aggregator: Tink Testing
+
+RESPONSE 23 SET SIGNING_COMPLETE_1
+200
+Date: Fri, 22 Jan 2021 10:49:24 GMT
+Date: Fri, 22 Jan 2021 10:49:24 GMT
+X-Rate-Limit-Limit: 60000
+X-Rate-Limit-Remaining: 53149
+X-Rate-Limit-Reset: 636
+Content-Type: application/json;charset=utf-8
+Server: Layer7-API-Gateway
+
+{"scaStatus":"finalised"}
+
+REQUEST 24 MATCH SIGNING_COMPLETE_1
+GET https://psd2.api.swedbank.com/v3/payments/se-domestic-credit-transfers/8f45adfe-3771-4c6d-9018-8cfbfb265072/status?bic=SWEDSESS
+Accept: application/json
+PSU-IP-Address: 127.0.0.1
+PSU-User-Agent: Tink
+X-Aggregator: Tink Testing
+
+RESPONSE 24 SET SIGNING_COMPLETE_2
+200
+Date: Fri, 22 Jan 2021 10:49:25 GMT
+Date: Fri, 22 Jan 2021 10:49:25 GMT
+X-Rate-Limit-Limit: 60000
+X-Rate-Limit-Remaining: 53145
+X-Rate-Limit-Reset: 635
+Content-Type: application/json;charset=utf-8
+Server: Layer7-API-Gateway
+
+{"transactionStatus":"ACCP"}
+
+REQUEST 25 MATCH SIGNING_COMPLETE_2
+GET https://psd2.api.swedbank.com/v3/payments/se-domestic-credit-transfers/8f45adfe-3771-4c6d-9018-8cfbfb265072/status?bic=SWEDSESS
+Accept: application/json
+PSU-IP-Address: 127.0.0.1
+PSU-User-Agent: Tink
+X-Aggregator: Tink Testing
+
+RESPONSE 25
+200
+Date: Fri, 22 Jan 2021 10:49:26 GMT
+Date: Fri, 22 Jan 2021 10:49:25 GMT
+X-Rate-Limit-Limit: 60000
+X-Rate-Limit-Remaining: 53143
+X-Rate-Limit-Reset: 634
+Content-Type: application/json;charset=utf-8
+Server: Layer7-API-Gateway
+
+{"transactionStatus":"ACCP"}
