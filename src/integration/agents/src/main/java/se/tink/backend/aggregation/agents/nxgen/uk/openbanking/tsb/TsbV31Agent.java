@@ -19,8 +19,10 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.UkOpenBankingV31Ais;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.signer.iface.JwtSigner;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.configuration.UkOpenBankingPisConfiguration;
+import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
+import se.tink.backend.aggregation.nxgen.http.client.LoggingStrategy;
 
 @AgentDependencyModulesForProductionMode(
         modules = {UkOpenBankingModule.class, JwtSignerModule.class})
@@ -60,5 +62,12 @@ public final class TsbV31Agent extends UkOpenBankingBaseAgent {
     @Override
     protected UkOpenBankingAis makeAis() {
         return new UkOpenBankingV31Ais(aisConfig, persistentStorage, localDateTimeSource);
+    }
+
+    @Override
+    public void setConfiguration(final AgentsServiceConfiguration configuration) {
+        super.setConfiguration(configuration);
+        client.disableSignatureRequestHeader();
+        client.setLoggingStrategy(LoggingStrategy.EXPERIMENTAL);
     }
 }

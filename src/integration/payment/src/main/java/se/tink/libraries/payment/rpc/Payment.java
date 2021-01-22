@@ -183,7 +183,7 @@ public class Payment {
     }
 
     public Pair<AccountIdentifier.Type, AccountIdentifier.Type> getCreditorAndDebtorAccountType() {
-        if (Objects.isNull(debtor)) {
+        if (Objects.isNull(debtor) || Objects.isNull(debtor.getAccountIdentifier())) {
             return new Pair<>(null, creditor.getAccountIdentifierType());
         }
         return new Pair<>(debtor.getAccountIdentifierType(), creditor.getAccountIdentifierType());
