@@ -17,10 +17,10 @@ public class StarlingAgentTest {
     @Test
     public void testRefresh() throws Exception {
         new AgentIntegrationTest.Builder("uk", "uk-starling-oauth2")
-                .loadCredentialsBefore(true)
+                .loadCredentialsBefore(false)
                 .saveCredentialsAfter(true)
                 .expectLoggedIn(false)
-                .setFinancialInstitutionId(STARLING_FINANCIAL_INSTITUTION_ID)
+                .setFinancialInstitutionId("starling")
                 .setAppId("tink")
                 .build()
                 .testRefresh();
