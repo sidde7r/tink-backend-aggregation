@@ -30,7 +30,7 @@ Server-Timing: ***
 {"accountHolderUid":"1f1c43dd-88de-4b10-b9ef-1a927eba81e1","accountHolderType":"INDIVIDUAL"}
 
 REQUEST 4
-GET https://api.starlingbank.com/api/v2/account-holder/individual
+GET https://api.starlingbank.com/api/v2/account-holder/name
 Authorization: Bearer DUMMY_OAUTH2_TOKEN
 Accept: application/json
 
@@ -42,7 +42,7 @@ Transfer-Encoding: chunked
 Connection: keep-alive
 Server-Timing: ***
 
-{"title":"MR","firstName":"Martin","lastName":"Tinkowsky","dateOfBirth":"1982-07-11","email":"dummy@gmail.com","phone":"+44123456789"}
+{"accountHolderName":"Martin Tinkowsky"}
 
 REQUEST 5
 GET https://api.starlingbank.com/api/v2/accounts/account-uuid-1234567/identifiers

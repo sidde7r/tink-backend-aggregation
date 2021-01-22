@@ -14,12 +14,11 @@ import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.executor
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.executor.transfer.rpc.ExecutePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.executor.transfer.util.PaymentSignature;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.rpc.AccountBalanceResponse;
+import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.rpc.AccountHolderNameResponse;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.rpc.AccountHolderResponse;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.rpc.AccountIdentifiersResponse;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.rpc.BusinessAccountHolderResponse;
-import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.rpc.IndividualAccountHolderResponse;
-import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.rpc.JointAccountHolderResponse;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.rpc.SoleTraderAccountHolderResponse;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transfer.rpc.PayeesResponse;
@@ -62,13 +61,8 @@ public class StarlingApiClient {
         return request(Url.GET_ACCOUNT_HOLDER).get(AccountHolderResponse.class);
     }
 
-    public IndividualAccountHolderResponse fetchIndividualAccountHolder() {
-        return request(Url.GET_INDIVIDUAL_ACCOUNT_HOLDER)
-                .get(IndividualAccountHolderResponse.class);
-    }
-
-    public JointAccountHolderResponse fetchJointAccountHolder() {
-        return request(Url.GET_JOINT_ACCOUNT_HOLDER).get(JointAccountHolderResponse.class);
+    public AccountHolderNameResponse fetchAccountHolderName() {
+        return request(Url.GET_ACCOUNT_HOLDER_NAME).get(AccountHolderNameResponse.class);
     }
 
     public SoleTraderAccountHolderResponse fetchSoleTraderAccountHolder() {

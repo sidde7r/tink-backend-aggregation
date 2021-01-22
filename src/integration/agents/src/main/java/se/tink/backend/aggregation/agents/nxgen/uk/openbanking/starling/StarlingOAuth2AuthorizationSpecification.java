@@ -24,7 +24,7 @@ public class StarlingOAuth2AuthorizationSpecification implements OAuth2Authoriza
     public Set<String> getScopes() {
         return ImmutableSet.of(
                 "account-holder-type:read",
-                "customer:read",
+                "account-holder-name:read",
                 "account-identifier:read",
                 "account:read",
                 "transaction:read",

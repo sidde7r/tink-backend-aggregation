@@ -18,7 +18,7 @@ public class StarlingOAut2Authenticator extends OAuth2Authenticator {
     private static final String[] SCOPES =
             new String[] {
                 "account-holder-type:read",
-                "customer:read",
+                "account-holder-name:read",
                 "account-identifier:read",
                 "account:read",
                 "transaction:read",

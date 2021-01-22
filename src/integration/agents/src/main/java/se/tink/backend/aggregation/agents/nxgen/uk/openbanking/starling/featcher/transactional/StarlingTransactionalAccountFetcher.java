@@ -49,17 +49,15 @@ public class StarlingTransactionalAccountFetcher implements AccountFetcher<Trans
 
         switch (accountHolderType) {
             case AccountHolderType.INDIVIDUAL:
-                return Collections.singleton(
-                        apiClient.fetchIndividualAccountHolder().getFullName());
             case AccountHolderType.JOINT:
                 return Collections.singleton(
-                        apiClient.fetchJointAccountHolder().getCombinedFullName());
+                        apiClient.fetchAccountHolderName().getAccountHolderName());
             case AccountHolderType.BUSINESS:
                 return Collections.singleton(
                         apiClient.fetchBusinessAccountHolder().getCompanyName());
             case AccountHolderType.SOLE_TRADER:
                 Set<String> holders = new HashSet<>();
-                holders.add(apiClient.fetchIndividualAccountHolder().getFullName());
+                holders.add(apiClient.fetchAccountHolderName().getAccountHolderName());
                 holders.add(apiClient.fetchSoleTraderAccountHolder().getTradingAsName());
                 return holders;
             case AccountHolderType.BANKING_AS_A_SERVICE:
