@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.tesco;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.module;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
@@ -15,7 +15,7 @@ import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConf
 import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 
-public class TescoModule extends AbstractModule {
+public class UkOpenBankingQsealModule extends AbstractModule {
 
     @Override
     protected void configure() {
@@ -24,7 +24,7 @@ public class TescoModule extends AbstractModule {
                 .in(Scopes.SINGLETON);
     }
 
-    // Tesco has been registered using Qwac/Qseal and it's still working (after 01.01.2021, where
+    // If bank has been registered using Qwac/Qseal and it's still working (after 01.01.2021, where
     // the support should get expired). This is the workaround till we're gonna be able to register
     // the application using Obwac/Obseal
     @Provides
@@ -36,8 +36,7 @@ public class TescoModule extends AbstractModule {
             AgentsServiceConfiguration agentsServiceConfiguration) {
         CompositeAgentContext context = agentComponentProvider.getContext();
         EidasIdentity eidasIdentity =
-                new EidasIdentity(
-                        context.getClusterId(), context.getAppId(), "DEFAULT", TescoV31Agent.class);
+                new EidasIdentity(context.getClusterId(), context.getAppId(), "DEFAULT", "");
         EidasJwsSigner eidasJwsSigner =
                 new EidasJwsSigner(
                         agentsServiceConfiguration.getEidasProxy().toInternalConfig(),
