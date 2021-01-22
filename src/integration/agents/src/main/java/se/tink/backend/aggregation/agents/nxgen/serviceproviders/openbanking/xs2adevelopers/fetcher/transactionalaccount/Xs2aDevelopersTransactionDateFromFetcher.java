@@ -21,7 +21,7 @@ public class Xs2aDevelopersTransactionDateFromFetcher<A extends Account>
     private static final LocalDate START_DATE_ALL_HISTORY = LocalDate.ofEpochDay(0);
 
     private final Xs2aDevelopersApiClient apiClient;
-    private final LocalDateTimeSource localDateTimeSource;
+    protected final LocalDateTimeSource localDateTimeSource;
 
     @Override
     public LocalDate minimalFromDate() {
