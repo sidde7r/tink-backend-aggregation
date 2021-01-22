@@ -98,7 +98,7 @@ public final class AbnAmroAgent extends NextGenerationAgent
         return new TransactionalAccountRefreshController(
                 metricRefreshController,
                 updateController,
-                new AbnAmroAccountFetcher(apiClient),
+                new AbnAmroAccountFetcher(apiClient, persistentStorage),
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
                         new TransactionKeyPaginationController<>(
