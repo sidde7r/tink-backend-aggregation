@@ -20,11 +20,11 @@ public class TransferStatusEntity {
         return body;
     }
 
-    public static TransferStatusEntity Ok() {
+    public static TransferStatusEntity ok() {
         return new TransferStatusEntity(HttpStatus.SC_OK, "");
     }
 
-    public static TransferStatusEntity Fail(int code, String body) {
+    public static TransferStatusEntity fail(int code, String body) {
         return new TransferStatusEntity(code, body);
     }
 }

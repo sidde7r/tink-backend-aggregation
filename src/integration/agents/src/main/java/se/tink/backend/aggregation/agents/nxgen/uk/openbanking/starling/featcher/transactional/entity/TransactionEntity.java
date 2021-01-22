@@ -38,7 +38,7 @@ public class TransactionEntity {
     private String userNote;
 
     private static List<String> pendingStatus =
-            new ArrayList<>(Arrays.asList("pending", "upcoming"));
+            new ArrayList<String>(Arrays.asList("pending", "upcoming"));
 
     @JsonIgnore
     private boolean isPending() {
