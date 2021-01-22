@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.fetcher.
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
+import lombok.Getter;
 import org.apache.commons.collections4.ListUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
@@ -20,5 +21,6 @@ public class TransactionsEntity {
     }
 
     @JsonProperty("_links")
+    @Getter
     private Links links;
 }

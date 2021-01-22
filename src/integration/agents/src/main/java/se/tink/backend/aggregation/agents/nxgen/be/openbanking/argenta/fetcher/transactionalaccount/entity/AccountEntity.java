@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.fetcher.
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import java.util.Optional;
-import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.authenticator.entities.LinksEntity;
+import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.ArgentaConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
@@ -40,6 +40,9 @@ public class AccountEntity {
                                 .addIdentifier(new IbanIdentifier(iban))
                                 .build())
                 .setApiIdentifier(resourceId)
+                .putInTemporaryStorage(
+                        ArgentaConstants.StorageKeys.TRANSACTIONS_URL,
+                        links.getTransactions().getHref())
                 .build();
     }
 

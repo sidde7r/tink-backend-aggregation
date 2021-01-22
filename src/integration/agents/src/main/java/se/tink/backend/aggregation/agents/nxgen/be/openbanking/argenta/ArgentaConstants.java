@@ -14,24 +14,22 @@ public final class ArgentaConstants {
     }
 
     public static class Urls {
-        public static final String BASE_API_URL = "https://api.payments.argenta.be";
+        private static final String BASE_API_URL = "https://api.payments.argenta.be";
         public static final String BASE_BERLIN_GROUP = BASE_API_URL + "/berlingroup";
         public static final String BASE_AUTH_URL = "https://login.payments.argenta.be";
         public static final URL AUTHORIZATION = new URL(BASE_AUTH_URL + Endpoints.AUTHORIZATION);
-        public static final URL CONSENT = new URL(BASE_API_URL + Endpoints.CONSENT);
+        public static final URL CONSENT = new URL(BASE_BERLIN_GROUP + Endpoints.CONSENT);
         public static final URL TOKEN = new URL(BASE_API_URL + Endpoints.TOKEN);
-        public static final URL ACCOUNTS = new URL(BASE_API_URL + Endpoints.ACCOUNTS);
-        public static final URL TRANSACTIONS = new URL(BASE_API_URL + Endpoints.TRANSACTIONS);
+        public static final URL ACCOUNTS = new URL(BASE_BERLIN_GROUP + Endpoints.ACCOUNTS);
     }
 
-    private static class Endpoints {
-        public static final String CONSENT = "/berlingroup/v1/consents";
+    public static class Endpoints {
+        public static final String CONSENT = "/v1/consents";
         public static final String AUTHORIZATION = "/psd2/v1/berlingroup-auth/authorise";
         public static final String TOKEN = "/psd2/v1/berlingroup-auth/token";
 
-        public static final String ACCOUNTS = "/berlingroup/v1/accounts";
-        public static final String TRANSACTIONS =
-                "/berlingroup/v1/accounts/{accountId}/transactions";
+        public static final String ACCOUNTS = "/v1/accounts";
+        public static final String TRANSACTIONS = "/v1/accounts/{accountId}/transactions";
     }
 
     public static class PathVariables {
@@ -42,6 +40,7 @@ public final class ArgentaConstants {
         public static final String OAUTH_TOKEN = PersistentStorageKeys.OAUTH_2_TOKEN;
         public static final String CODE_VERIFIER = "CODE_VERIFIER";
         public static final String CONSENT_ID = "CONSENT_ID";
+        public static final String TRANSACTIONS_URL = "TRANSACTIONS_URL";
     }
 
     public static class QueryKeys {
@@ -64,6 +63,7 @@ public final class ArgentaConstants {
         public static final String CODE = "code";
         public static final String SCOPE = "AIS:%s";
         public static final String BOTH = "both";
+        public static final String START_DATE = "1970-01-01";
     }
 
     public static class HeaderKeys {
