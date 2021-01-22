@@ -28,7 +28,7 @@ public class SEBWireMockPaymentTest {
     public void testPayment() throws Exception {
 
         // given
-        final String wireMockFilePath = "data/agents/openbanking/seb/wireMock-seb-ob-pis-bg.aap";
+        final String wireMockFilePath = "data/agents/openbanking/seb/wiremock-seb-ob-pis-pg.aap";
         final AgentsServiceConfiguration configuration =
                 AgentsServiceConfigurationReader.read(CONFIGURATION_PATH);
 
@@ -36,7 +36,7 @@ public class SEBWireMockPaymentTest {
                 AgentWireMockPaymentTest.builder(MarketCode.SE, "se-seb-ob", wireMockFilePath)
                         .withConfigurationFile(configuration)
                         .withHttpDebugTrace()
-                        .withPayment(createMockedDomesticPayment())
+                        .withPayment(createMockedDomesticPGPayment())
                         .addCredentialField(Field.Key.USERNAME.getFieldKey(), "197710120000")
                         .buildWithLogin(PaymentCommand.class);
 
@@ -56,7 +56,7 @@ public class SEBWireMockPaymentTest {
                 AgentWireMockPaymentTest.builder(MarketCode.SE, "se-seb-ob", wireMockFilePath)
                         .withConfigurationFile(configuration)
                         .withHttpDebugTrace()
-                        .withPayment(createMockedDomesticPayment())
+                        .withPayment(createMockedDomesticBGPayment())
                         .addCredentialField(Field.Key.USERNAME.getFieldKey(), "197710120000")
                         .buildWithLogin(PaymentCommand.class);
 
@@ -89,7 +89,23 @@ public class SEBWireMockPaymentTest {
         Assert.assertTrue(true);
     }
 
-    private Payment createMockedDomesticPayment() {
+    private Payment createMockedDomesticPGPayment() {
+        RemittanceInformation remittanceInformation = new RemittanceInformation();
+        remittanceInformation.setType(RemittanceInformationType.OCR);
+        remittanceInformation.setValue("1047514784933");
+
+        return new Payment.Builder()
+                .withCreditor(new Creditor(AccountIdentifier.create(Type.SE_PG, "5768353"), "Tink"))
+                .withDebtor(
+                        new Debtor(AccountIdentifier.create(Type.IBAN, "SE4550000000058398257466")))
+                .withExactCurrencyAmount(ExactCurrencyAmount.inSEK(585.57))
+                .withCurrency("SEK")
+                .withRemittanceInformation(remittanceInformation)
+                .withExecutionDate(LocalDate.parse("2021-01-21"))
+                .build();
+    }
+
+    private Payment createMockedDomesticBGPayment() {
         RemittanceInformation remittanceInformation = new RemittanceInformation();
         remittanceInformation.setType(RemittanceInformationType.OCR);
         remittanceInformation.setValue("1047514784933");
@@ -98,10 +114,10 @@ public class SEBWireMockPaymentTest {
                 .withCreditor(new Creditor(AccountIdentifier.create(Type.SE_BG, "5768353"), "Tink"))
                 .withDebtor(
                         new Debtor(AccountIdentifier.create(Type.IBAN, "SE4550000000058398257466")))
-                .withExactCurrencyAmount(ExactCurrencyAmount.inSEK(328.0))
+                .withExactCurrencyAmount(ExactCurrencyAmount.inSEK(585.57))
                 .withCurrency("SEK")
                 .withRemittanceInformation(remittanceInformation)
-                .withExecutionDate(LocalDate.parse("2020-06-22"))
+                .withExecutionDate(LocalDate.parse("2021-01-21"))
                 .build();
     }
 
