@@ -24,7 +24,7 @@ import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestB
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
 @Slf4j
-public class ApiErrorHandler {
+public final class ApiErrorHandler {
     private static final int MAX_TIME_WAIT_IN_S = 15;
     private static final int MAX_NUM_OF_ATTEMPTS = 5;
 
@@ -66,7 +66,7 @@ public class ApiErrorHandler {
         }
     }
 
-    static <T> Retryer<T> prepareRetryer() {
+    private static <T> Retryer<T> prepareRetryer() {
         return RetryerBuilder.<T>newBuilder()
                 .retryIfException(
                         e ->
