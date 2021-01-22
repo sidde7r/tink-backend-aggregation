@@ -164,8 +164,9 @@ public abstract class SwedbankBaseAgent extends NextGenerationAgent
         return new TransactionalAccountRefreshController(
                 metricRefreshController,
                 updateController,
-                new SwedbankTransactionalAccountFetcher(apiClient, persistentStorage),
-                new SwedbankTransactionFetcher(apiClient, supplementalInformationHelper));
+                new SwedbankTransactionalAccountFetcher(
+                        apiClient, persistentStorage, sessionStorage, transactionPaginationHelper),
+                new SwedbankTransactionFetcher(apiClient, sessionStorage));
     }
 
     @Override

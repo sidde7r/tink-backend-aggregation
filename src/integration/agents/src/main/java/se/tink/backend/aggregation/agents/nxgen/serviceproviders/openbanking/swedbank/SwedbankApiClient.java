@@ -19,7 +19,6 @@ import se.tink.backend.aggregation.agents.exceptions.payment.CreditorValidationE
 import se.tink.backend.aggregation.agents.exceptions.payment.InsufficientFundsException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.entity.AccessEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.ErrorCodes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.HeaderKeys;
@@ -31,6 +30,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swe
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.UrlParameters;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.Urls;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.entities.SwedbankAccessEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.entities.consent.ConsentAllAccountsEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.rpc.AuthenticationResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.rpc.AuthenticationStatusResponse;
@@ -50,6 +50,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swe
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.executor.payment.rpc.PaymentStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.fetcher.transactionalaccount.rpc.AccountBalanceResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.fetcher.transactionalaccount.rpc.FetchAccountResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.fetcher.transactionalaccount.rpc.FetchOnlineTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.fetcher.transactionalaccount.rpc.StatementResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.rpc.GenericResponse;
 import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
@@ -235,7 +236,7 @@ public final class SwedbankApiClient implements SwedbankOpenBankingPaymentApiCli
                         .toString(),
                 SwedbankConstants.BodyParameter.FREQUENCY_PER_DAY,
                 SwedbankConstants.BodyParameter.COMBINED_SERVICE_INDICATOR,
-                new AccessEntity.Builder().addIbans(list).build());
+                new SwedbankAccessEntity().addIbans(list));
     }
 
     /**
@@ -290,23 +291,33 @@ public final class SwedbankApiClient implements SwedbankOpenBankingPaymentApiCli
                 .get(AccountBalanceResponse.class);
     }
 
-    public HttpResponse getTransactions(String accountId, Date fromDate, Date toDate) {
+    public FetchOnlineTransactionsResponse getOnlineTransactions(
+            String accountId, LocalDate fromDate, LocalDate toDate) {
         return createRequestInSession(
                         Urls.ACCOUNT_TRANSACTIONS.parameter(UrlParameters.ACCOUNT_ID, accountId),
                         true)
-                .queryParam(
-                        SwedbankConstants.HeaderKeys.FROM_DATE,
-                        ThreadSafeDateFormat.FORMATTER_DAILY.format(fromDate))
-                .queryParam(
-                        SwedbankConstants.HeaderKeys.TO_DATE,
-                        ThreadSafeDateFormat.FORMATTER_DAILY.format(toDate))
+                .queryParam(SwedbankConstants.HeaderKeys.FROM_DATE, fromDate.toString())
+                .queryParam(SwedbankConstants.HeaderKeys.TO_DATE, toDate.toString())
                 .queryParam(
                         SwedbankConstants.QueryKeys.BOOKING_STATUS,
                         SwedbankConstants.QueryValues.BOOKING_STATUS_BOTH)
-                .get(HttpResponse.class);
+                .get(FetchOnlineTransactionsResponse.class);
     }
 
-    public HttpResponse getTransactions(String endPoint) {
+    public StatementResponse postOfflineStatement(
+            String accountId, LocalDate fromDate, LocalDate toDate) {
+        return createRequestInSession(
+                        Urls.ACCOUNT_TRANSACTIONS.parameter(UrlParameters.ACCOUNT_ID, accountId),
+                        true)
+                .queryParam(SwedbankConstants.HeaderKeys.FROM_DATE, fromDate.toString())
+                .queryParam(SwedbankConstants.HeaderKeys.TO_DATE, toDate.toString())
+                .queryParam(
+                        SwedbankConstants.QueryKeys.BOOKING_STATUS,
+                        SwedbankConstants.QueryValues.BOOKING_STATUS_BOTH)
+                .post(StatementResponse.class);
+    }
+
+    public HttpResponse getOfflineTransactions(String endPoint) {
         return createRequestInSession(new URL(Urls.BASE.concat(endPoint)), true)
                 .get(HttpResponse.class);
     }

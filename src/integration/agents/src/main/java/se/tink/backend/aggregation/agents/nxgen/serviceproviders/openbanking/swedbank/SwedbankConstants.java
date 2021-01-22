@@ -16,8 +16,6 @@ public final class SwedbankConstants {
     public static final String INTEGRATION_NAME = "swedbank";
     public static final String SWEDBANK_OB_PROVIDER_NAME = "se-swedbank-ob";
 
-    public static final int TRANSACTIONS_DOWNLOAD_RETRY_COUNT = 3;
-
     public static class Format {
         public static final String TRANSACTION_DESCRIPTION_SEPARATOR = " ";
     }
@@ -132,7 +130,7 @@ public final class SwedbankConstants {
         public static final String PSD2 = "PSD2";
         public static final String MOBILE_ID = "MOBILE_ID";
         public static final String ALL_SCOPES =
-                "PSD2 PSD2account_balances PSD2account_transactions";
+                "PSD2 PSD2account_balances PSD2account_transactions PSD2account_transactions_over90";
     }
 
     public static class BICProduction {
@@ -179,7 +177,7 @@ public final class SwedbankConstants {
         public static final int ONLINE_STATEMENT_MAX_DAYS = 89;
         public static final int ATTEMPS_BEFORE_TIMEOUT = 10;
         public static final int CONSENT_DURATION_IN_DAYS = 90;
-        public static final int RETRY_TRANSACTIONS_DOWNLOAD = 60000;
+        public static final int RETRY_TRANSACTIONS_DOWNLOAD = 5000;
     }
 
     public static final class LogMessages {
