@@ -25,8 +25,6 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
 @Slf4j
 public class ApiErrorHandler {
-    public static final String TOKEN_EXPIRED_CODE = "ERR_2100_001";
-
     private static final int MAX_TIME_WAIT_IN_S = 15;
     private static final int MAX_NUM_OF_ATTEMPTS = 5;
 
@@ -135,7 +133,7 @@ public class ApiErrorHandler {
 
     private static void handleCustomerIssues(HttpResponseException e, Errors error) {
         if (HttpStatus.SC_UNAUTHORIZED == e.getResponse().getStatus()
-                && TOKEN_EXPIRED_CODE.equals(error.getCode())) {
+                && ApiErrors.TOKEN_EXPIRED_CODE.equals(error.getCode())) {
             throw SessionError.SESSION_EXPIRED.exception();
         }
     }
