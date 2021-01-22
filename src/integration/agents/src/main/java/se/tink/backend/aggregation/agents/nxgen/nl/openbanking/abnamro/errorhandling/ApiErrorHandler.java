@@ -12,10 +12,14 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.abnamro.authenticator.rpc.ErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.abnamro.authenticator.rpc.Errors;
+import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.abnamro.authenticator.rpc.OAuth2ErrorResponse;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
@@ -91,11 +95,32 @@ public final class ApiErrorHandler {
 
     private static void handleHttpResponseException(HttpResponseException e) {
         log.error("[ABN] HttpResponseException occurred - attempting to handle...");
-        ErrorResponse errorResponse = e.getResponse().getBody(ErrorResponse.class);
-        Errors error = errorResponse.getErrors().get(0);
-        handleBankSideIssues(e, error);
+        tryHandleOAuth2ErrorResponse(e);
+        tryHandleErrorResponse(e);
         log.error("[ABN] Unhandled issue - please add handling!");
         throw e;
+    }
+
+    private static void tryHandleOAuth2ErrorResponse(HttpResponseException e) {
+        OAuth2ErrorResponse oAuth2ErrorResponse =
+                e.getResponse().getBody(OAuth2ErrorResponse.class);
+        String error = oAuth2ErrorResponse.getError();
+        if (StringUtils.isNotBlank(error)) {
+            if ("invalid_grant".equals(error)) {
+                throw SessionError.CONSENT_INVALID.exception();
+            } else {
+                log.error("[ABN] Unhandled issue in OAuth2 communication - please add handling!");
+            }
+        }
+    }
+
+    private static void tryHandleErrorResponse(HttpResponseException e) {
+        ErrorResponse errorResponse = e.getResponse().getBody(ErrorResponse.class);
+        if (CollectionUtils.isNotEmpty(errorResponse.getErrors())) {
+            Errors error = errorResponse.getErrors().get(0);
+            handleBankSideIssues(e, error);
+            handleCustomerIssues(e, error);
+        }
     }
 
     private static void handleBankSideIssues(HttpResponseException e, Errors error) {
@@ -103,6 +128,13 @@ public final class ApiErrorHandler {
             throw BankServiceError.BANK_SIDE_FAILURE.exception(error.getMessage());
         } else if (TOO_MANY_REQUESTS == e.getResponse().getStatus()) {
             throw BankServiceError.ACCESS_EXCEEDED.exception(error.getMessage());
+        }
+    }
+
+    private static void handleCustomerIssues(HttpResponseException e, Errors error) {
+        if (HttpStatus.SC_UNAUTHORIZED == e.getResponse().getStatus()
+                && ApiErrors.TOKEN_EXPIRED_CODE.equals(error.getCode())) {
+            throw SessionError.SESSION_EXPIRED.exception();
         }
     }
 }
