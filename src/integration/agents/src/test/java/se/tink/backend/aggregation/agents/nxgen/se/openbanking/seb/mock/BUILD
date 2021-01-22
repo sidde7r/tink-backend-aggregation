@@ -1,16 +1,10 @@
 load("//tools/bzl:junit.bzl", "junit_test")
 
 junit_test(
-    name = "manual",
+    name = "mock",
     srcs = glob(["*.java"]),
     data = [
-        "//:agent_test_data",
         "//data:agents",
-        "//etc:development",
-    ],
-    tags = [
-        "external",
-        "manual",
     ],
     visibility = ["//visibility:public"],
     deps = [
