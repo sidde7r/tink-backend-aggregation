@@ -8,6 +8,7 @@ import org.mockito.Mockito;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.AgentPlatformBelfiusApiClient;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.BelfiusProcessState;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.persistence.BelfiusAuthenticationData;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.responsevalidator.AgentPlatformResponseValidator;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.rpc.PrepareLoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.steps.SoftLoginGetContactNumberAndChallegeStep;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.steps.SoftLoginStep;
@@ -24,9 +25,11 @@ public class SoftLoginGetContactNumberAndChallegeStepTest extends BaseStep {
     public void shouldGetContractNumberAndChallenge() {
         // given
         AgentPlatformBelfiusApiClient apiClient = Mockito.mock(AgentPlatformBelfiusApiClient.class);
+        AgentPlatformResponseValidator validator =
+                Mockito.mock(AgentPlatformResponseValidator.class);
         SoftLoginGetContactNumberAndChallegeStep step =
                 new SoftLoginGetContactNumberAndChallegeStep(
-                        apiClient, createBelfiusDataAccessorFactory());
+                        apiClient, createBelfiusDataAccessorFactory(), validator);
 
         AgentProceedNextStepAuthenticationRequest request =
                 createAgentProceedNextStepAuthenticationRequest(

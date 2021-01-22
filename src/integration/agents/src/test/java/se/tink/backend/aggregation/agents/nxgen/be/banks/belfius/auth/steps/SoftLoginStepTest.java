@@ -5,11 +5,13 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.Optional;
 import org.junit.Test;
 import org.mockito.Mockito;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.AgentPlatformBelfiusApiClient;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.BelfiusProcessState;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.persistence.BelfiusAuthenticationData;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.responsevalidator.AgentPlatformResponseValidator;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.responsevalidator.LoginResponseStatus;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.rpc.LoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.steps.SoftLoginFinishStep;
@@ -22,6 +24,7 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentFailedAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentProceedNextStepAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.common.AgentExtendedClientInfo;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AccountBlockedError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AuthenticationError;
 
 public class SoftLoginStepTest extends BaseStep {
@@ -33,8 +36,10 @@ public class SoftLoginStepTest extends BaseStep {
         // given
         AgentPlatformBelfiusApiClient apiClient = Mockito.mock(AgentPlatformBelfiusApiClient.class);
         BelfiusSignatureCreator signer = Mockito.mock(BelfiusSignatureCreator.class);
+        AgentPlatformResponseValidator validator =
+                Mockito.mock(AgentPlatformResponseValidator.class);
         SoftLoginStep step =
-                new SoftLoginStep(apiClient, signer, createBelfiusDataAccessorFactory());
+                new SoftLoginStep(apiClient, signer, createBelfiusDataAccessorFactory(), validator);
 
         AgentProceedNextStepAuthenticationRequest request =
                 createAgentProceedNextStepAuthenticationRequest(
@@ -96,8 +101,10 @@ public class SoftLoginStepTest extends BaseStep {
         // given
         AgentPlatformBelfiusApiClient apiClient = Mockito.mock(AgentPlatformBelfiusApiClient.class);
         BelfiusSignatureCreator signer = Mockito.mock(BelfiusSignatureCreator.class);
+        AgentPlatformResponseValidator validator =
+                Mockito.mock(AgentPlatformResponseValidator.class);
         SoftLoginStep step =
-                new SoftLoginStep(apiClient, signer, createBelfiusDataAccessorFactory());
+                new SoftLoginStep(apiClient, signer, createBelfiusDataAccessorFactory(), validator);
 
         AgentProceedNextStepAuthenticationRequest request =
                 createAgentProceedNextStepAuthenticationRequest(
@@ -123,12 +130,13 @@ public class SoftLoginStepTest extends BaseStep {
                         DEVICE_TOKEN_HASHED,
                         DEVICE_TOKEN_HASHED_IOS_COMPARISON,
                         SIGNATURE))
-                .thenReturn(
-                        Mockito.mock(
-                                LoginResponse.class, a -> LoginResponseStatus.ACCOUNT_BLOCKED));
+                .thenReturn(Mockito.mock(LoginResponse.class));
 
         when(signer.hash(any())).thenReturn(DEVICE_TOKEN_HASHED);
         when(signer.hash(DEVICE_TOKEN_HASHED)).thenReturn(DEVICE_TOKEN_HASHED_IOS_COMPARISON);
+
+        when(validator.validate(any(LoginResponse.class)))
+                .thenReturn(Optional.of(new AccountBlockedError()));
 
         // when
         AgentAuthenticationResult result = step.execute(request);

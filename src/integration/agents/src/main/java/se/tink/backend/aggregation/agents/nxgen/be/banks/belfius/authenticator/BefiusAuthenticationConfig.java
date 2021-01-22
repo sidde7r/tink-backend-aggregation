@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.AgentPlatformBelfiusApiClient;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.BelfiusSessionStorage;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.persistence.BelfiusDataAccessorFactory;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.responsevalidator.AgentPlatformResponseValidator;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.steps.AutoAuthenticationInitStep;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.steps.BelfiusAuthenticationInitStep;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.steps.IsDeviceRegisteredStep;
@@ -36,6 +37,7 @@ public class BefiusAuthenticationConfig {
     private final BelfiusSessionStorage sessionStorage;
     private final BelfiusSignatureCreator signer;
     private final ObjectMapper objectMapper;
+    private final AgentPlatformResponseValidator agentPlatformResponseValidator;
 
     public BelfiusAuthenticationInitStep belfiusAuthenticationInitStep() {
         return new BelfiusAuthenticationInitStep(belfiusDataAccessorFactory());
@@ -58,7 +60,11 @@ public class BefiusAuthenticationConfig {
     }
 
     public PasswordLoginStep passwordLoginStep() {
-        return new PasswordLoginStep(apiClient, sessionStorage, belfiusDataAccessorFactory());
+        return new PasswordLoginStep(
+                apiClient,
+                sessionStorage,
+                belfiusDataAccessorFactory(),
+                agentPlatformResponseValidator);
     }
 
     public RegisterDeviceFinishStep registerDeviceFinishStep() {
@@ -91,7 +97,7 @@ public class BefiusAuthenticationConfig {
 
     public SoftLoginGetContactNumberAndChallegeStep softLoginGetContactNumberAndChallegeStep() {
         return new SoftLoginGetContactNumberAndChallegeStep(
-                apiClient, belfiusDataAccessorFactory());
+                apiClient, belfiusDataAccessorFactory(), agentPlatformResponseValidator);
     }
 
     public SoftLoginInitStep softLoginInitStep() {
@@ -99,7 +105,8 @@ public class BefiusAuthenticationConfig {
     }
 
     public SoftLoginStep softLoginStep() {
-        return new SoftLoginStep(apiClient, signer, belfiusDataAccessorFactory());
+        return new SoftLoginStep(
+                apiClient, signer, belfiusDataAccessorFactory(), agentPlatformResponseValidator);
     }
 
     public UsernameAndPasswordGetStep usernameAndPasswordGetStep() {

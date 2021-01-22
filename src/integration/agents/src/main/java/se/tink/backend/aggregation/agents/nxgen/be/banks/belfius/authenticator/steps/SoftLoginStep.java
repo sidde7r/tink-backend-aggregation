@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.steps;
 
+import java.util.Optional;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.AgentPlatformBelfiusApiClient;
@@ -8,7 +9,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.B
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.persistence.BelfiusAuthenticationData;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.persistence.BelfiusDataAccessorFactory;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.persistence.BelfiusPersistedDataAccessor;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.responsevalidator.LoginResponseStatus;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.responsevalidator.AgentPlatformResponseValidator;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.rpc.LoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.signature.BelfiusSignatureCreator;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationProcessStepIdentifier;
@@ -17,6 +18,7 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentFailedAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentProceedNextStepAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.steps.AgentAuthenticationProcessStep;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AgentBankApiError;
 
 @RequiredArgsConstructor
 public class SoftLoginStep
@@ -25,6 +27,7 @@ public class SoftLoginStep
     @NonNull private final AgentPlatformBelfiusApiClient apiClient;
     @NonNull private final BelfiusSignatureCreator signer;
     @NonNull private final BelfiusDataAccessorFactory persistedDataAccessorFactory;
+    @NonNull private final AgentPlatformResponseValidator agentPlatformResponseValidator;
 
     @Override
     public AgentAuthenticationResult execute(AgentProceedNextStepAuthenticationRequest request) {
@@ -51,10 +54,10 @@ public class SoftLoginStep
                         processState.getDeviceTokenHashed(),
                         processState.getDeviceTokenHashedIosComparison(),
                         signature);
-        LoginResponseStatus status = loginResponse.getStatus();
-        if (status.isError()) {
+        Optional<AgentBankApiError> error = agentPlatformResponseValidator.validate(loginResponse);
+        if (error.isPresent()) {
             return new AgentFailedAuthenticationResult(
-                    status.getError(),
+                    error.get(),
                     persistedDataAccessor.storeBelfiusAuthenticationData(persistenceData));
         }
 

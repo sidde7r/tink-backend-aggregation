@@ -1,18 +1,20 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.steps;
 
+import java.util.Optional;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.AgentPlatformBelfiusApiClient;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.BelfiusSessionStorage;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.BelfiusProcessState;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.persistence.BelfiusDataAccessorFactory;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.responsevalidator.LoginResponseStatus;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.responsevalidator.AgentPlatformResponseValidator;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.rpc.LoginResponse;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.request.AgentProceedNextStepAuthenticationRequest;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentFailedAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentSucceededAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.steps.AgentAuthenticationProcessStep;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AgentBankApiError;
 
 @RequiredArgsConstructor
 public class PasswordLoginStep
@@ -21,6 +23,7 @@ public class PasswordLoginStep
     @NonNull private final AgentPlatformBelfiusApiClient apiClient;
     @NonNull private final BelfiusSessionStorage sessionStorage;
     @NonNull private final BelfiusDataAccessorFactory dataAccessorFactory;
+    @NonNull private final AgentPlatformResponseValidator agentPlatformResponseValidator;
 
     @Override
     public AgentAuthenticationResult execute(AgentProceedNextStepAuthenticationRequest request) {
@@ -29,11 +32,12 @@ public class PasswordLoginStep
                         .createBelfiusProcessStateAccessor(request.getAuthenticationProcessState())
                         .getBelfiusProcessState();
 
-        LoginResponseStatus status = loginPw(processState).getStatus();
+        LoginResponse loginResponse = loginPw(processState);
+        Optional<AgentBankApiError> error = agentPlatformResponseValidator.validate(loginResponse);
 
-        if (status.isError()) {
+        if (error.isPresent()) {
             return new AgentFailedAuthenticationResult(
-                    status.getError(), request.getAuthenticationPersistedData());
+                    error.get(), request.getAuthenticationPersistedData());
         }
         passProcessStateToSessionStorage(processState);
         return new AgentSucceededAuthenticationResult(request.getAuthenticationPersistedData());

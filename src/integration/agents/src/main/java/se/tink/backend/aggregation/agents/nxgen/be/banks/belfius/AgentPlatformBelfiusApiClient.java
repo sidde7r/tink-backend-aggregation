@@ -97,7 +97,8 @@ public class AgentPlatformBelfiusApiClient {
                 PrepareAuthenticationResponse.class,
                 PrepareAuthenticationRequest.create(panNumber)
                         .setSessionId(sessionId)
-                        .setRequestCounter(requestCounterAggregated));
+                        .setRequestCounter(requestCounterAggregated),
+                false);
     }
 
     public AuthenticateWithCodeResponse authenticateWithCode(
@@ -191,15 +192,13 @@ public class AgentPlatformBelfiusApiClient {
     public PrepareLoginResponse prepareLogin(
             String sessionId, String machineId, String requestCounterAggregated, String panNumber)
             throws LoginException {
-        PrepareLoginResponse prepareLoginResponse =
-                post(
-                        buildGepaRenderingUrl(machineId),
-                        PrepareLoginResponse.class,
-                        PrepareLoginRequest.create(panNumber)
-                                .setSessionId(sessionId)
-                                .setRequestCounter(requestCounterAggregated));
-        prepareLoginResponse.validate();
-        return prepareLoginResponse;
+        return post(
+                buildGepaRenderingUrl(machineId),
+                PrepareLoginResponse.class,
+                PrepareLoginRequest.create(panNumber)
+                        .setSessionId(sessionId)
+                        .setRequestCounter(requestCounterAggregated),
+                false);
     }
 
     public LoginResponse login(
@@ -214,7 +213,8 @@ public class AgentPlatformBelfiusApiClient {
                 LoginResponse.class,
                 LoginRequest.create(deviceTokenHashed, deviceTokenHashedIosComparison, signature)
                         .setSessionId(sessionId)
-                        .setRequestCounter(requestCounterAggregated));
+                        .setRequestCounter(requestCounterAggregated),
+                false);
     }
 
     public void bacProductList(String sessionId, String machineId, String requestCounterServices) {
@@ -251,7 +251,8 @@ public class AgentPlatformBelfiusApiClient {
                 LoginResponse.class,
                 LoginRequest.createPw(deviceTokenHashed, deviceTokenHashedIosComparison, signature)
                         .setSessionId(sessionId)
-                        .setRequestCounter(requestCounterAggregated));
+                        .setRequestCounter(requestCounterAggregated),
+                false);
     }
 
     public BelfiusResponse actorInformation(
@@ -266,6 +267,11 @@ public class AgentPlatformBelfiusApiClient {
 
     private <T extends BelfiusResponse> T post(
             URI uri, Class<T> c, BelfiusRequest.Builder belfiusBuilder) {
+        return post(uri, c, belfiusBuilder, true);
+    }
+
+    private <T extends BelfiusResponse> T post(
+            URI uri, Class<T> c, BelfiusRequest.Builder belfiusBuilder, boolean withValidation) {
         String body = belfiusBuilder.build().urlEncode();
 
         BodyBuilder builder =
@@ -276,7 +282,11 @@ public class AgentPlatformBelfiusApiClient {
 
         String responseBody = client.exchange(builder.body(body), String.class, null).getBody();
         T response = SerializationUtils.deserializeFromString(responseBody, c);
-        MessageResponse.validate(response);
+
+        // once all error mapping is done get rid of the check here
+        if (withValidation) {
+            MessageResponse.validate(response);
+        }
         return response;
     }
 
