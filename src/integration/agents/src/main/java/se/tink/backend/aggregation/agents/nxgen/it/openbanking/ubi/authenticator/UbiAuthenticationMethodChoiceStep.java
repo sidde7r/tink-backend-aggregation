@@ -17,13 +17,15 @@ public class UbiAuthenticationMethodChoiceStep implements AuthenticationStep {
     private final Catalog catalog;
 
     private static final LocalizableKey DESCRIPTION =
-            new LocalizableKey("Do you have bank app installed?");
+            new LocalizableKey("Do you have UBI Banca mobile app installed on this phone?");
     private static final String FIELD_NAME = "IS_APP_INSTALLED";
     private static final LocalizableKey HELPTEXT =
-            new LocalizableKey("The value you entered is not valid");
-    private static final String PATTERN = "y|Y|n|N";
+            new LocalizableKey(
+                    "Please enter “Y” or “Yes“ if you have UBI Banca mobile app installed \n"
+                            + "Please enter “N” or “No“ if you don’t have UBI Banca mobile app installed");
+    private static final String PATTERN = "y|Y|yes|Yes|s|S|sì|Sì|SÌ|si|Si|SI|n|N|no|No|NO";
     private static final LocalizableKey PATTERN_ERROR_MSG =
-            new LocalizableKey("The value you entered is not valid");
+            new LocalizableKey("The value you entered is not valid.");
 
     public UbiAuthenticationMethodChoiceStep(Catalog catalog) {
         this.catalog = catalog;
@@ -55,13 +57,13 @@ public class UbiAuthenticationMethodChoiceStep implements AuthenticationStep {
                 .helpText(catalog.getString(HELPTEXT))
                 .name(FIELD_NAME)
                 .minLength(1)
-                .maxLength(1)
+                .maxLength(3)
                 .pattern(PATTERN)
                 .patternError(catalog.getString(PATTERN_ERROR_MSG))
                 .build();
     }
 
     private boolean shouldUseRedirectFlow(String chosenMethod) {
-        return chosenMethod.equalsIgnoreCase("n");
+        return chosenMethod.equalsIgnoreCase("n") || chosenMethod.equalsIgnoreCase("no");
     }
 }
