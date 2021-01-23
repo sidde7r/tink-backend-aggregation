@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.authenticator;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.HttpStatus;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
@@ -18,6 +19,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.rpc.BbvaErrorRespo
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.utils.BbvaUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
@@ -83,18 +85,23 @@ public class BbvaAuthenticator implements MultiFactorAuthenticator {
     }
 
     private void mapHttpErrors(HttpResponseException e) throws LoginException {
-        BbvaErrorResponse errorResponse = e.getResponse().getBody(BbvaErrorResponse.class);
-        if (errorResponse.isIncorrectCredentials()) {
-            throw LoginError.INCORRECT_CREDENTIALS.exception();
+        HttpResponse response = e.getResponse();
+        if (response.getStatus() == HttpStatus.SC_FORBIDDEN
+                || response.getStatus() == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
+            BbvaErrorResponse errorResponse = e.getResponse().getBody(BbvaErrorResponse.class);
+            if (errorResponse.isIncorrectCredentials()) {
+                throw LoginError.INCORRECT_CREDENTIALS.exception();
+            }
+            if (errorResponse.isInternalServerError()) {
+                throw LoginError.NOT_SUPPORTED.exception();
+            }
+            log.info(
+                    "Unknown error: httpStatus {}, code {}, message {}",
+                    errorResponse.getHttpStatus(),
+                    errorResponse.getErrorCode(),
+                    errorResponse.getErrorMessage());
+            throw LoginError.DEFAULT_MESSAGE.exception();
         }
-        if (errorResponse.isInternalServerError()) {
-            throw LoginError.NOT_SUPPORTED.exception();
-        }
-        log.info(
-                "Unknown error: httpStatus {}, code {}, message {}",
-                errorResponse.getHttpStatus(),
-                errorResponse.getErrorCode(),
-                errorResponse.getErrorMessage());
-        throw LoginError.DEFAULT_MESSAGE.exception();
+        throw e;
     }
 }
