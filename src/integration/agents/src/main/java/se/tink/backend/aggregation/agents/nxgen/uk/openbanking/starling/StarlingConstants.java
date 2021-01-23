@@ -101,4 +101,10 @@ public class StarlingConstants {
 
         public static final String OUT = "OUT";
     }
+
+    public class ErrorCode {
+        private ErrorCode() {}
+
+        public static final String INSUFFICIENT_SCOPE = "insufficient_scope";
+    }
 }
