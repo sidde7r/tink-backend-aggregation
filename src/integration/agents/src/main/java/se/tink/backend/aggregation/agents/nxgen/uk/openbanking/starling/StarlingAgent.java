@@ -29,6 +29,7 @@ import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.executor
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.StarlingTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.StarlingTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transfer.StarlingTransferDestinationFetcher;
+import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.filter.StarlingErrorFilter;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationProcess;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
@@ -185,5 +186,6 @@ public final class StarlingAgent extends SubsequentProgressiveGenerationAgent
         client.setEidasProxy(configuration.getEidasProxy());
         client.setEidasIdentity(
                 new EidasIdentity(context.getClusterId(), context.getAppId(), UKOB_CERT_ID, ""));
+        client.addFilter(new StarlingErrorFilter(persistentStorage));
     }
 }
