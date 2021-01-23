@@ -31,6 +31,7 @@ public class StarlingErrorFilter extends Filter {
     }
 
     private void removeOauthToken() {
+        persistentStorage.remove("CONSENT");
         persistentStorage.remove("OAUTH2_TOKEN");
     }
 }
