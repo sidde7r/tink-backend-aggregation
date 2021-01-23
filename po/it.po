@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: VERSION\n"
-"POT-Creation-Date: 2021-01-22 09:43+0000\n"
-"PO-Revision-Date: 2021-01-22 09:43+0000\n"
+"POT-Creation-Date: 2021-01-23 14:16+0000\n"
+"PO-Revision-Date: 2021-01-23 14:16+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE TEAM <EMAIL@ADDRESS>\n"
 "Language: it\n"
@@ -1364,3 +1364,16 @@ msgstr ""
 
 msgid "There was a problem connecting to the bank."
 msgstr "C'è stato un problema nel connettersi alla banca."
+
+msgid "The value you entered is not valid."
+msgstr "Il valore inserito non è valido."
+
+msgid "Do you have UBI Banca mobile app installed on this phone?"
+msgstr "Su questo telefono è installata l'app mobile UBI Banca?"
+
+msgid ""
+"Please enter “Y” or “Yes“ if you have UBI Banca mobile app installed \n"
+"Please enter “N” or “No“ if you don’t have UBI Banca mobile app installed"
+msgstr ""
+"Inserisci \"S\" o \"SI\" se hai installato l'app mobile UBI Banca\n"
+"Inserisci \"N\" o \"NO\" se non hai installato l'app mobile UBI Banca"
