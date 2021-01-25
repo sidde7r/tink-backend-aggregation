@@ -5,7 +5,7 @@ Accept: application/json
 Content-Type: application/json
 X-Aggregator: Tink Testing
 
-{"authenticationMethodId":"MOBILE_ID","clientID":"dummyClientId","psuData":{"bankID":"08999"},"redirectUri":"https://127.0.0.1:7357/api/v1/thirdparty/callback","scope":"PSD2 PSD2account_balances PSD2account_transactions"}
+{"authenticationMethodId":"MOBILE_ID","clientID":"dummyClientId","psuData":{"bankID":"08999"},"redirectUri":"https://127.0.0.1:7357/api/v1/thirdparty/callback","scope":"PSD2 PSD2account_balances PSD2account_transactions PSD2account_transactions_over90"}
 
 RESPONSE 1
 200
@@ -122,7 +122,7 @@ Cache-Control: no-store
 Content-Type: application/json;charset=utf-8
 Server: Layer7-API-Gateway
 
-{"access_token":"ACCESS_TOKEN", "token_type":"Bearer", "expires_in":599, "refresh_token":"REFRESH_TOKEN", "scope":"PSD2 PSD2account_balances PSD2account_transactions PSD2account_list"}
+{"access_token":"ACCESS_TOKEN", "token_type":"Bearer", "expires_in":599, "refresh_token":"REFRESH_TOKEN", "scope":"PSD2 PSD2account_balances PSD2account_transactions PSD2account_list PSD2account_transactions_over90"}
 
 REQUEST 8
 POST https://psd2.api.swedbank.com/v3/payments/se-domestic-credit-transfers?bic=SWEDSESS
@@ -239,7 +239,7 @@ PSU-User-Agent: Tink
 Content-Type: application/json
 X-Aggregator: Tink Testing
 
-{"authenticationMethodId":"MOBILE_ID","clientID":"dummyClientId","psuData":{"bankID":"08999"},"redirectUri":"https://127.0.0.1:7357/api/v1/thirdparty/callback","scope":"PSD2 PSD2account_balances PSD2account_transactions"}
+{"authenticationMethodId":"MOBILE_ID","clientID":"dummyClientId","psuData":{"bankID":"08999"},"redirectUri":"https://127.0.0.1:7357/api/v1/thirdparty/callback","scope":"PSD2 PSD2account_balances PSD2account_transactions PSD2account_transactions_over90"}
 
 RESPONSE 13 SET RECIPIENT_CONFIRMATION_1
 201
@@ -377,7 +377,7 @@ PSU-User-Agent: Tink
 Content-Type: application/json
 X-Aggregator: Tink Testing
 
-{"authenticationMethodId":"MOBILE_ID","clientID":"dummyClientId","psuData":{"bankID":"08999"},"redirectUri":"https://127.0.0.1:7357/api/v1/thirdparty/callback","scope":"PSD2 PSD2account_balances PSD2account_transactions"}
+{"authenticationMethodId":"MOBILE_ID","clientID":"dummyClientId","psuData":{"bankID":"08999"},"redirectUri":"https://127.0.0.1:7357/api/v1/thirdparty/callback","scope":"PSD2 PSD2account_balances PSD2account_transactions PSD2account_transactions_over90"}
 
 RESPONSE 20 SET PAYMENT_SIGNING_2
 201
