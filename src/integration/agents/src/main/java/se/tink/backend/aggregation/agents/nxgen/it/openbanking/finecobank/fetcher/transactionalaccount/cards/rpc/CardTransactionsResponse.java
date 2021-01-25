@@ -39,6 +39,6 @@ public class CardTransactionsResponse implements PaginatorResponse {
     @JsonIgnore
     @Override
     public Optional<Boolean> canFetchMore() {
-        return Optional.of(false);
+        return Optional.of(true);
     }
 }

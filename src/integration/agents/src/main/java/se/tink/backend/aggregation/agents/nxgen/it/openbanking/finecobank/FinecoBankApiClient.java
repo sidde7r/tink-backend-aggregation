@@ -3,6 +3,8 @@ package se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.common.base.Strings;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -132,10 +134,9 @@ public class FinecoBankApiClient {
         return addPsuIpAddressHeaderIfNeeded(requestBuilder).get(TransactionsResponse.class);
     }
 
-    public PaginatorResponse getCreditTransactions(
-            CreditCardAccount account, Date fromDate, Date toDate) {
-        SimpleDateFormat paginationDateFormatter =
-                new SimpleDateFormat(Formats.DEFAULT_DATE_FORMAT);
+    public PaginatorResponse getCreditTransactions(CreditCardAccount account, LocalDate fromDate) {
+        DateTimeFormatter paginationDateFormatter =
+                DateTimeFormatter.ofPattern(Formats.DEFAULT_DATE_FORMAT);
 
         RequestBuilder requestBuilder =
                 createRequest(
@@ -147,8 +148,7 @@ public class FinecoBankApiClient {
                                 persistentStorage.get(StorageKeys.CONSENT_ID))
                         .queryParam(QueryKeys.WITH_BALANCE, String.valueOf(true))
                         .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BOOKED)
-                        .queryParam(QueryKeys.DATE_FROM, paginationDateFormatter.format(fromDate))
-                        .queryParam(QueryKeys.DATE_TO, paginationDateFormatter.format(toDate));
+                        .queryParam(QueryKeys.DATE_FROM, paginationDateFormatter.format(fromDate));
         return addPsuIpAddressHeaderIfNeeded(requestBuilder).get(CardTransactionsResponse.class);
     }
 
