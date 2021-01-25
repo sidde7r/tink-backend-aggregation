@@ -5,8 +5,6 @@ import com.google.inject.Provider;
 import com.google.inject.name.Named;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
 import lombok.SneakyThrows;
@@ -32,9 +30,6 @@ public final class KeySignerProvider implements Provider<JwtSigner> {
     private static final int ALLOWED_PERCENT_OF_TRAFFIC = 0;
     private static final Predicate<RandomValueGenerator> SHOULD_USE_EIDAS_PROXY =
             generator -> ALLOWED_PERCENT_OF_TRAFFIC > generator.generateRandomDoubleInRange(0, 100);
-    private static final List<String> FOUR_PIS_AGENTS_NEEDS_NEW_SIGNER =
-            new ArrayList<>(
-                    Arrays.asList("uk-firsttrust-oauth2", "uk-aib-oauth2", "uk-tsb-oauth2"));
     private final AgentComponentProvider agentComponentProvider;
     private final UkOpenBankingConfiguration configuration;
     private final AgentConfigurationControllerContext agentConfigurationControllerContext;
@@ -77,12 +72,6 @@ public final class KeySignerProvider implements Provider<JwtSigner> {
             return secretServiceJwtSigner;
         } else if (SHOULD_USE_EIDAS_PROXY.test(agentComponentProvider.getRandomValueGenerator())) {
             return constructEidasProxyJwtSigner(appId, secretServiceJwtSigner, certChain);
-            // Four banks needed the new PayloadEncodedSecretServiceJwtSigner which contains the new
-            // TinkJwtPaymentSigner
-        } else if (FOUR_PIS_AGENTS_NEEDS_NEW_SIGNER.contains(
-                agentComponentProvider.getCredentialsRequest().getProvider().getName())) {
-            log.info("initializing new Payment JWT signer for appId '{}'", appId);
-            return new PayloadEncodedSecretServiceJwtSigner(configuration);
         } else {
             log.info("Initializing legacy JWT signer for appId '{}'", appId);
             return secretServiceJwtSigner;
