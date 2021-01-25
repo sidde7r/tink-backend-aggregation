@@ -21,7 +21,7 @@ RESPONSE 2
 200
 Content-Type: application/json
 
-{"accounts":[{"cashAccountType":"CACC","resourceId":"DUMMY_RESOURCE_ID_1","accountId":{"iban":"DUMMY_IBAN","currency":"EUR"},"name":"DUMMY_NAME_1","currency":"EUR","balances":[{"name":"AvailableBalance","balanceAmount":{"currency":"EUR","amount":"5134.53"},"balanceType":"XPCD"}],"_links":{"balances":{"href":"/cm/stet-psd2-api/v1.1/accounts/DUMMY_RESOURCE_ID_1/balances"},"transactions":{"href":"/cm/stet-psd2-api/v1.1/accounts/DUMMY_RESOURCE_ID_1/transactions"}}},{"cashAccountType":"CARD","resourceId":"DUMMY_RESOURCE_ID_2","accountId":{"iban":"DUMMY_IBAN","currency":"EUR"},"name":"DUMMY_NAME_2","linkedAccount":"DUMMY_RESOURCE_ID_1","currency":"EUR","balances":[{"name":"AvailableBalance","balanceAmount":{"currency":"EUR","amount":"-42.48"},"balanceType":"CLBD"}],"_links":{"balances":{"href":"/cm/stet-psd2-api/v1.1/accounts/DUMMY_RESOURCE_ID_2/balances"},"transactions":{"href":"/cm/stet-psd2-api/v1.1/accounts/DUMMY_RESOURCE_ID_2/transactions"}}}],"_links":{"self":{"href":"/cm/stet-psd2-api/v1.1/accounts"}}}
+{"accounts":[{"cashAccountType":"CACC","resourceId":"DUMMY_RESOURCE_ID_1","accountId":{"iban":"DUMMY_IBAN","currency":"EUR"},"name":"DUMMY_NAME_1","currency":"EUR","balances":[{"name":"AvailableBalance","balanceAmount":{"currency":"EUR","amount":"5134.53"},"balanceType":"XPCD"}],"_links":{"balances":{"href":"/cm/stet-psd2-api/v1.1/accounts/DUMMY_RESOURCE_ID_1/balances"},"transactions":{"href":"/cm/stet-psd2-api/v1.1/accounts/DUMMY_RESOURCE_ID_1/transactions"}}}],"_links":{"self":{"href":"/cm/stet-psd2-api/v1.1/accounts"}}}
 
 REQUEST 3
 GET https://oauth2-apisi.e-i.com/cm/stet-psd2-api/v1.1/accounts/DUMMY_RESOURCE_ID_1/transactions

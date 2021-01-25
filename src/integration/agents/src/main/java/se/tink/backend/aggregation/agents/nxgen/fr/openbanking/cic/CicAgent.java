@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.cic;
 
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CREDIT_CARDS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.LIST_BENEFICIARIES;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.TRANSFERS;
@@ -15,7 +16,13 @@ import se.tink.backend.aggregation.eidassigner.module.QSealcSignerModuleRSASHA25
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 
 @AgentDependencyModules(modules = QSealcSignerModuleRSASHA256.class)
-@AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, LIST_BENEFICIARIES, TRANSFERS})
+@AgentCapabilities({
+    CHECKING_ACCOUNTS,
+    SAVINGS_ACCOUNTS,
+    LIST_BENEFICIARIES,
+    TRANSFERS,
+    CREDIT_CARDS
+})
 public final class CicAgent extends CmcicAgent {
 
     @Inject

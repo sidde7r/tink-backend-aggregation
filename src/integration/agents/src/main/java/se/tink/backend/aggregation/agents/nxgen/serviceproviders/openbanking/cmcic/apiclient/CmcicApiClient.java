@@ -40,7 +40,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmc
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.provider.CmcicSignatureProvider;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.transfer.FrAispApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.transfer.dto.TrustedBeneficiariesResponseDto;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
@@ -178,7 +178,7 @@ public class CmcicApiClient implements FrAispApiClient {
                 .get(FetchAccountsResponse.class);
     }
 
-    public FetchTransactionsResponse fetchTransactions(TransactionalAccount account, URL nextUrl) {
+    public FetchTransactionsResponse fetchTransactions(Account account, URL nextUrl) {
         String baseUrl = cmcicAgentConfig.getBaseUrl();
         String basePath = cmcicAgentConfig.getBasePath();
 

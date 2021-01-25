@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.RefreshBeneficiariesExecutor;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.apiclient.CmcicApiClient;
@@ -16,8 +17,10 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmc
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.configuration.CmcicAgentConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.configuration.CmcicConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.executor.payment.CmcicPaymentExecutor;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.creditcard.CmcicCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.CmcicIdentityDataFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.CmcicTransactionalAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.converter.CmcicCreditCardConverter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.converter.CmcicTransactionalAccountConverter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transfer.CmcicTransferDestinationFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.provider.CmcicCodeChallengeProvider;
@@ -33,6 +36,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.Au
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
@@ -44,7 +48,8 @@ public abstract class CmcicAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor,
                 RefreshIdentityDataExecutor,
-                RefreshBeneficiariesExecutor {
+                RefreshBeneficiariesExecutor,
+                RefreshCreditCardAccountsExecutor {
 
     private final CmcicApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
@@ -52,6 +57,7 @@ public abstract class CmcicAgent extends NextGenerationAgent
     private final CmcicIdentityDataFetcher cmcicIdentityDataFetcher;
     private final TransferDestinationRefreshController transferDestinationRefreshController;
     private final CmcicAgentConfig agentConfig;
+    private final CreditCardRefreshController creditCardRefreshController;
 
     public CmcicAgent(
             AgentComponentProvider componentProvider,
@@ -77,10 +83,10 @@ public abstract class CmcicAgent extends NextGenerationAgent
                         signatureProvider,
                         codeChallengeProvider,
                         this.agentConfig);
-
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
         this.cmcicIdentityDataFetcher = new CmcicIdentityDataFetcher(this.apiClient);
         this.transferDestinationRefreshController = constructTransferDestinationRefreshController();
+        this.creditCardRefreshController = constructCreditCardRefreshController();
     }
 
     @Override
@@ -139,10 +145,34 @@ public abstract class CmcicAgent extends NextGenerationAgent
         return transactionalAccountRefreshController.fetchSavingsTransactions();
     }
 
+    @Override
+    public FetchAccountsResponse fetchCreditCardAccounts() {
+        return creditCardRefreshController.fetchCreditCardAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCreditCardTransactions() {
+        return creditCardRefreshController.fetchCreditCardTransactions();
+    }
+
+    private CreditCardRefreshController constructCreditCardRefreshController() {
+        CmcicCreditCardConverter cmcicCreditCardConverter = new CmcicCreditCardConverter();
+        CmcicCreditCardFetcher creditCardFetcher =
+                new CmcicCreditCardFetcher(apiClient, cmcicCreditCardConverter);
+        return new CreditCardRefreshController(
+                this.metricRefreshController,
+                this.updateController,
+                creditCardFetcher,
+                new TransactionFetcherController<>(
+                        transactionPaginationHelper,
+                        new TransactionKeyPaginationController<>(creditCardFetcher)));
+    }
+
     private TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
-        final PrioritizedValueExtractor prioritizedValueExtractor = new PrioritizedValueExtractor();
-        final CmcicTransactionalAccountConverter transactionalAccountConverter =
+        PrioritizedValueExtractor prioritizedValueExtractor = new PrioritizedValueExtractor();
+        CmcicTransactionalAccountConverter transactionalAccountConverter =
                 new CmcicTransactionalAccountConverter(prioritizedValueExtractor);
+
         final CmcicTransactionalAccountFetcher accountFetcher =
                 new CmcicTransactionalAccountFetcher(apiClient, transactionalAccountConverter);
 
