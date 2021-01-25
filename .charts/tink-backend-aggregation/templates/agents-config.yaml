@@ -29,7 +29,7 @@ data:
       countryProxies:
         es:
           host: "http://zproxy.lum-superproxy.io:22225"
-          username: "lum-customer-c_71e4c7e0-zone-spain-ip-185.30.171.91"
+          username: "lum-customer-c_71e4c7e0-zone-spain-ip-178.171.89.169"
           password: PROXY_PASSWORD_ES
         es-2:
           host: "http://zproxy.lum-superproxy.io:22225"
