@@ -52,6 +52,7 @@ java_library(
         "//third_party:org_apache_curator_curator_recipes",
         "//third_party:org_assertj_assertj_core",
         "//third_party:org_slf4j_slf4j_api",
+        "@tink_backend//src/aggregation-controller/api/src/main/java/se/tink/backend/aggregationcontroller/v1/rpc/enums",
         "@tink_backend//src/libraries/metrics/core/src/main/java/se/tink/libraries/metrics/core",
         "@tink_backend//src/libraries/metrics/core/src/main/java/se/tink/libraries/metrics/registry",
         "@tink_backend//src/libraries/uuid",

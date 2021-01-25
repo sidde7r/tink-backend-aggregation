@@ -16,5 +16,6 @@ junit_test(
         "//src/libraries/metrics:registry",
         "//third_party:com_google_guava_guava",
         "//third_party:org_mockito_mockito_core",
+        "@tink_backend//src/aggregation-controller/api/src/main/java/se/tink/backend/aggregationcontroller/v1/rpc/enums",
     ],
 )

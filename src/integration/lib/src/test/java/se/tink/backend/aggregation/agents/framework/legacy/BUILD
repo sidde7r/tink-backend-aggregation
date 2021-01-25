@@ -31,6 +31,7 @@ java_library(
         "//third_party:io_dropwizard_dropwizard_configuration",
         "//third_party:junit_junit",
         "//third_party:org_slf4j_slf4j_api",
+        "@tink_backend//src/aggregation-controller/api/src/main/java/se/tink/backend/aggregationcontroller/v1/rpc/enums",
         "@tink_backend//src/libraries/strings",
     ],
 )

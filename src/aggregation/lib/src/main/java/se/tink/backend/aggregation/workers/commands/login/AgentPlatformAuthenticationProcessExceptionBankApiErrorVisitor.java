@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.workers.commands.login;
 import com.google.common.collect.ImmutableMap;
 import java.util.Map;
 import lombok.AllArgsConstructor;
-import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.result.error.NoUserInteractionResponseError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AccountBlockedError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AuthenticationError;
@@ -25,6 +24,7 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.error.ThirdPar
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.ThirdPartyAppTimedOutError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.ThirdPartyAppUnknownError;
 import se.tink.backend.aggregation.workers.metrics.MetricActionIface;
+import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
 import se.tink.eventproducerservice.events.grpc.AgentLoginCompletedEventProto;
 
 @AllArgsConstructor

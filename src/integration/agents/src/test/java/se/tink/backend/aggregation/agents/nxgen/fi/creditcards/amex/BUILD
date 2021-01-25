@@ -25,5 +25,6 @@ junit_test(
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/configuration",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/nxgen/agents/agenttest",
         "//src/integration/models",
+        "@tink_backend//src/aggregation-controller/api/src/main/java/se/tink/backend/aggregationcontroller/v1/rpc/enums",
     ],
 )

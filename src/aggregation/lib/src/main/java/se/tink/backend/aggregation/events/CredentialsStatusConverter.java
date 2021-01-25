@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.events;
 
 import com.google.common.collect.ImmutableMap;
-import se.tink.backend.agents.rpc.CredentialsStatus;
+import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
 import se.tink.eventproducerservice.events.grpc.CredentialsRefreshCommandChainFinishedProto.CredentialsRefreshCommandChainFinished.CredentialStatus;
 
 public class CredentialsStatusConverter {
