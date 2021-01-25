@@ -8,6 +8,7 @@ java_library(
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",
         "//third_party:com_google_guava_guava",
         "//third_party:commons_codec_commons_codec",
+        "@tink_backend//src/aggregation-controller/api/src/main/java/se/tink/backend/aggregationcontroller/v1/rpc/enums",
         "@tink_backend//src/libraries/strings",
         "@tink_backend//src/libraries/uuid",
     ],

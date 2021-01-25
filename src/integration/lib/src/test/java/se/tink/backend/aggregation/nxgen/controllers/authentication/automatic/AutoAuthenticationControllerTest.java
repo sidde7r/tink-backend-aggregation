@@ -16,8 +16,8 @@ import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.authenticator.AutoAuthenticator;
+import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsRequestType;
 import se.tink.libraries.credentials.service.CredentialsRequest;
-import se.tink.libraries.credentials.service.CredentialsRequestType;
 
 public class AutoAuthenticationControllerTest {
     private CredentialsRequest request = Mockito.mock(CredentialsRequest.class);

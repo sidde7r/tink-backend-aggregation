@@ -15,8 +15,8 @@ import org.slf4j.MDC;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.cluster.identification.ClusterId;
+import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsRequestType;
 import se.tink.libraries.credentials.service.CredentialsRequest;
-import se.tink.libraries.credentials.service.CredentialsRequestType;
 import se.tink.libraries.user.rpc.User;
 
 public class AggregationLoggerRequestFilter implements ContainerRequestFilter {

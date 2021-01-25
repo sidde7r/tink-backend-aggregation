@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.aggregationcontroller.v1.rpc;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.common.base.MoreObjects;
+import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsRequestType;
 import se.tink.libraries.credentials.rpc.Credentials;
 import se.tink.libraries.jersey.utils.SafelyLoggable;
 
@@ -64,12 +65,8 @@ public class UpdateCredentialsStatusRequest implements SafelyLoggable {
         this.refreshId = refreshId;
     }
 
-    public void setRequestType(
-            se.tink.libraries.credentials.service.CredentialsRequestType
-                    serviceCredentialsRequestType) {
-        requestType =
-                CredentialsRequestType.translateFromServiceRequestType(
-                        serviceCredentialsRequestType);
+    public void setRequestType(CredentialsRequestType serviceCredentialsRequestType) {
+        requestType = serviceCredentialsRequestType;
     }
 
     public CredentialsRequestType getRequestType() {

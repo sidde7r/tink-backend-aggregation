@@ -4,7 +4,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateCredentialsStatusRequest;
-import se.tink.libraries.credentials.service.CredentialsRequestType;
+import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsRequestType;
 
 public class UpdateCredentialsStatusRequestTest {
 

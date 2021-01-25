@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.google.common.base.MoreObjects;
 import java.util.List;
 import se.tink.backend.aggregation.agents.models.Transaction;
+import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsRequestType;
 import se.tink.libraries.jersey.utils.SafelyLoggable;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -87,14 +88,6 @@ public class UpdateTransactionsRequest implements SafelyLoggable {
 
     public void setRequestType(CredentialsRequestType requestType) {
         this.requestType = requestType;
-    }
-
-    public void setRequestTypeFromService(
-            se.tink.libraries.credentials.service.CredentialsRequestType
-                    serviceCredentialsRequestType) {
-        this.requestType =
-                CredentialsRequestType.translateFromServiceRequestType(
-                        serviceCredentialsRequestType);
     }
 
     public String getAggregationId() {
