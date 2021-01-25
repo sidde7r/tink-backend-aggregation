@@ -16,6 +16,7 @@ import se.tink.backend.aggregation.workers.commands.migrations.implementations.b
 import se.tink.backend.aggregation.workers.commands.migrations.implementations.banks.skandiabanken.SkandiaBankenSanitizingMigration;
 import se.tink.backend.aggregation.workers.commands.migrations.implementations.brokers.avanza.AvanzaStripClearingMigration;
 import se.tink.backend.aggregation.workers.commands.migrations.implementations.creditcards.norwegian.NorwegianSanitizingMigration;
+import se.tink.backend.aggregation.workers.commands.migrations.implementations.other.csn.CSNSanitizingMigration;
 import se.tink.backend.aggregation.workers.commands.migrations.implementations.serviceproviders.entercard.EnterCardAccountIdMigration;
 import se.tink.backend.aggregation.workers.commands.migrations.implementations.serviceproviders.sebkort.SebKortSanitizeUniqueIdentifierMgration;
 import se.tink.backend.aggregation.workers.commands.migrations.implemntations.other.handelsbanken.HandelsbankenBankIdMigrationNoClearingNumber;
@@ -34,7 +35,7 @@ public class MigrateCredentialsAndAccountsWorkerCommand extends AgentWorkerComma
             new ImmutableMap.Builder<String, AgentVersionMigration>()
                     // Add your migrations here
                     .put("handelsbanken-bankid", new HandelsbankenBankIdMigrationNoClearingNumber())
-
+                    .put("csn-bankid", new CSNSanitizingMigration())
                     // SEB Kort migrations
                     .put(
                             "chevroletmastercard-bankid",
