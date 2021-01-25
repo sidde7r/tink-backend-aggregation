@@ -63,8 +63,7 @@ public class JwtHeaders {
     }
 
     private void addCrit() {
-        headers.put(
-                CRIT_KEY_HEADER, ImmutableSet.of(IAT_KEY_HEADER, ISS_KEY_HEADER, TAN_KEY_HEADER));
+        headers.put(CRIT_KEY_HEADER, ImmutableSet.copyOf(headers.keySet()));
     }
 
     public Map<String, Object> build() {
