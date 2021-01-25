@@ -93,6 +93,11 @@ public class GenericResponse {
     }
 
     @JsonIgnore
+    public boolean hasInvalidAuthToken() {
+        return containsError(ErrorCodes.INVALID_AUTH_TOKEN);
+    }
+
+    @JsonIgnore
     private boolean containsError(String errorCode) {
         return ListUtils.emptyIfNull(tppMessages).stream()
                 .anyMatch(

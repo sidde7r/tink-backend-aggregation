@@ -530,6 +530,11 @@ public final class SwedbankApiClient implements SwedbankOpenBankingPaymentApiCli
                     errorResponse.getErrorMessage(ErrorCodes.MISSING_CT_AGREEMENT),
                     InternalStatus.BANK_ERROR_CODE_NOT_HANDLED_YET);
         }
+        if (errorResponse.hasInvalidAuthToken()) {
+            throw new PaymentRejectedException(
+                    errorResponse.getErrorMessage(ErrorCodes.INVALID_AUTH_TOKEN),
+                    InternalStatus.INVALID_SECURITY_TOKEN);
+        }
         throw new PaymentException(
                 errorResponse.getErrorText(), InternalStatus.BANK_ERROR_CODE_NOT_HANDLED_YET);
     }

@@ -211,6 +211,7 @@ public final class SwedbankConstants {
         public static final String INSUFFICIENT_FUNDS = "INSUFFICIENT_FUNDS";
         public static final String INVALID_RECIPIENT = "INVALID_RECIPIENT";
         public static final String MISSING_CT_AGREEMENT = "MISSING_CT_AGREEMENT";
+        public static final String INVALID_AUTH_TOKEN = "TOKEN_INVALID";
     }
 
     public static final class AccountIdentifierPrefix {
