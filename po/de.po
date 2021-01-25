@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: VERSION\n"
-"POT-Creation-Date: 2021-01-22 11:17+0000\n"
-"PO-Revision-Date: 2021-01-22 11:17+0000\n"
+"POT-Creation-Date: 2021-01-22 11:39+0000\n"
+"PO-Revision-Date: 2021-01-22 11:39+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE TEAM <EMAIL@ADDRESS>\n"
 "Language: de\n"
@@ -1877,7 +1877,7 @@ msgid "Startcode"
 msgstr "Startcode"
 
 msgid "Authentication method index"
-msgstr "Index der Authentifizierungsmethode"
+msgstr "Wählen Sie eine Authentifizierungsmethode"
 
 #, java-format
 msgid "Select from 1 to {0}"
@@ -1898,7 +1898,7 @@ msgid "Confirm by entering the generated TAN."
 msgstr "Bestätigen Sie durch Eingabe der generierten TAN."
 
 msgid "The value you entered is not valid."
-msgstr "Der eingegebene Wert ist nicht gültig."
+msgstr "Die Eingabe ist ungültig."
 
 msgid "Choose TAN Medium you want to use"
 msgstr "Wählen Sie das TAN-Medium, das Sie verwenden möchten"
