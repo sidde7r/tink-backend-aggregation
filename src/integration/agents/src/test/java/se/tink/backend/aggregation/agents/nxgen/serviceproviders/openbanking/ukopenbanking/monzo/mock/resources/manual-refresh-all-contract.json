@@ -1,613 +1,1233 @@
 {
-  "accounts" : [ {
-    "accountNumber" : "04000484427126",
-    "accountExclusion" : "NONE",
-    "exactBalance" : {
-      "currencyCode" : "GBP",
-      "exactValue" : 50.64,
-      "scale" : 4,
-      "unscaledValue" : 506400,
-      "doubleValue" : 50.64
-    },
-    "currencyCode" : "GBP",
-    "availableBalance" : {
-      "currencyCode" : "GBP",
-      "exactValue" : 50.64,
-      "scale" : 4,
-      "unscaledValue" : 506400,
-      "doubleValue" : 50.64
-    },
-    "bankId" : "04000484427126",
-    "excluded" : false,
-    "favored" : false,
-    "name" : "John Tinker",
-    "ownership" : 1.0,
-    "type" : "CHECKING",
-    "userModifiedExcluded" : false,
-    "userModifiedName" : false,
-    "userModifiedType" : false,
-    "identifiers" : "[\"sort-code://04000484427126\"]",
-    "closed" : false,
-    "holderName" : "John Tinker",
-    "accountHolder" : {
-      "accountId" : null,
-      "type" : "PERSONAL",
-      "identities" : [ {
-        "name" : "John Tinker",
-        "role" : null
-      } ]
-    },
-    "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
-    "availableCredit" : 0.0,
-    "balance" : 50.64
-  } ],
-  "transactions" : [ {
-    "amount" : 265.0,
-    "date" : 1598954400000,
-    "description" : "SAVING POTS",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : -100.0,
-    "date" : 1598954400000,
-    "description" : "Xmas / Birthdays ",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : -100.0,
-    "date" : 1598954400000,
-    "description" : "Season Ticket ",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : -5.0,
-    "date" : 1598954400000,
-    "description" : "Straya Fund",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : -5.0,
-    "date" : 1598954400000,
-    "description" : "Wedding",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : -50.0,
-    "date" : 1598954400000,
-    "description" : "Car Insurance Simon ",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : -5.0,
-    "date" : 1598954400000,
-    "description" : "Mat Leave",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : 99.0,
-    "date" : 1599472800000,
-    "description" : "Xmas / Birthdays ",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : -99.0,
-    "date" : 1599472800000,
-    "description" : "Mixtiles",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : 90.0,
-    "date" : 1599732000000,
-    "description" : "SAVING POTS",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : -39.78,
-    "date" : 1599732000000,
-    "description" : "Lidl Gb Shirebrook",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : -7.5,
-    "date" : 1599732000000,
-    "description" : "Co-op",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : -2.3,
-    "date" : 1599732000000,
-    "description" : "Brinsley Fish Bar",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : -10.03,
-    "date" : 1599904800000,
-    "description" : "Morrisons Petrol Station",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : -2.2,
-    "date" : 1599904800000,
-    "description" : "John Fretwell Sporting",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : -7.85,
-    "date" : 1599904800000,
-    "description" : "John Fretwell Sporting",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : -3.0,
-    "date" : 1600077600000,
-    "description" : "Morrisons",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : -10.0,
-    "date" : 1600855200000,
-    "description" : "Sent from Monzo",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : 210.0,
-    "date" : 1601719200000,
-    "description" : "SAVING POTS",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : -50.0,
-    "date" : 1601719200000,
-    "description" : "Season Ticket ",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : -70.0,
-    "date" : 1601719200000,
-    "description" : "Straya Fund",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : -70.0,
-    "date" : 1601719200000,
-    "description" : "Car Insurance Simon ",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : -10.0,
-    "date" : 1601892000000,
-    "description" : "Annual Bills ",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : 10.0,
-    "date" : 1602410400000,
-    "description" : "Annual Bills ",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : 5.0,
-    "date" : 1602410400000,
-    "description" : "Mat Leave",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : 5.0,
-    "date" : 1602410400000,
-    "description" : "Wedding",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : 40.0,
-    "date" : 1602410400000,
-    "description" : "Straya Fund",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : -56.0,
-    "date" : 1602410400000,
-    "description" : "Sent from Monzo",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : 35.0,
-    "date" : 1602842400000,
-    "description" : "Straya Fund",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : 1.0,
-    "date" : 1603101600000,
-    "description" : "Xmas / Birthdays ",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : 150.0,
-    "date" : 1603101600000,
-    "description" : "Season Ticket ",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : -150.0,
-    "date" : 1603101600000,
-    "description" : "Sent from Monzo",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : -16.22,
-    "date" : 1603101600000,
-    "description" : "McDonald's",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : -14.98,
-    "date" : 1603188000000,
-    "description" : "Teddykave",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : -5.5,
-    "date" : 1603188000000,
-    "description" : "Jump Warriors",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : -10.0,
-    "date" : 1603274400000,
-    "description" : "ATM",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : 120.0,
-    "date" : 1603360800000,
-    "description" : "Car Insurance Simon ",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : -130.0,
-    "date" : 1603360800000,
-    "description" : "Sent from Monzo",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : 355.0,
-    "date" : 1604055600000,
-    "description" : "SAVING POTS",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : -100.0,
-    "date" : 1604055600000,
-    "description" : "Xmas / Birthdays ",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : -175.0,
-    "date" : 1604055600000,
-    "description" : "Straya Fund",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : -80.0,
-    "date" : 1604055600000,
-    "description" : "Last Man Standing Winner",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : 185.0,
-    "date" : 1604228400000,
-    "description" : "SAVING POTS",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : -185.0,
-    "date" : 1604228400000,
-    "description" : "Last Man Standing Club",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : 50.0,
-    "date" : 1604228400000,
-    "description" : "Xmas / Birthdays ",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : -50.0,
-    "date" : 1604228400000,
-    "description" : "Sent from Monzo",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : 5.0,
-    "date" : 1604314800000,
-    "description" : "SAVING POTS",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : -5.0,
-    "date" : 1604314800000,
-    "description" : "Last Man Standing Club",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : 50.0,
-    "date" : 1604487600000,
-    "description" : "Xmas / Birthdays ",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : -50.0,
-    "date" : 1604487600000,
-    "description" : "Sent from Monzo",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : 50.0,
-    "date" : 1604487600000,
-    "description" : "SAVING POTS",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  } ],
-  "identityData" : {
-    "nameElements" : [ {
-      "type" : "FULLNAME",
-      "value" : "John The Tinker"
-    } ],
-    "dateOfBirth" : null
-  }
+    "accounts": [
+        {
+            "accountNumber": "04000484427126",
+            "accountExclusion": "NONE",
+            "exactBalance": {
+                "currencyCode": "GBP",
+                "unscaledValue": 506400,
+                "scale": 4,
+                "exactValue": 50.64,
+                "doubleValue": 50.64
+            },
+            "currencyCode": "GBP",
+            "availableBalance": {
+                "currencyCode": "GBP",
+                "unscaledValue": 506400,
+                "scale": 4,
+                "exactValue": 50.64,
+                "doubleValue": 50.64
+            },
+            "bankId": "04000484427126",
+            "excluded": false,
+            "favored": false,
+            "name": "John Tinker",
+            "ownership": 1.0,
+            "type": "CHECKING",
+            "userModifiedExcluded": false,
+            "userModifiedName": false,
+            "userModifiedType": false,
+            "identifiers": "[\"sort-code://04000484427126\"]",
+            "closed": false,
+            "holderName": "John Tinker",
+            "accountHolder": {
+                "accountId": null,
+                "type": "PERSONAL",
+                "identities": [
+                    {
+                        "name": "John Tinker",
+                        "role": null
+                    }
+                ]
+            },
+            "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
+            "balances": [],
+            "availableCredit": 0.0,
+            "balance": 50.64
+        }
+    ],
+    "transactions": [
+        {
+            "amount": 265.0,
+            "date": 1598954400000,
+            "description": "SAVING POTS",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "mutability": "MUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": null,
+                        "instant": "2020-09-01T08:36:23.353Z"
+                    }
+                }
+            ]
+        },
+        {
+            "amount": -100.0,
+            "date": 1598954400000,
+            "description": "Xmas / Birthdays ",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": null,
+                        "instant": "2020-09-01T08:37:10.977Z"
+                    }
+                }
+            ]
+        },
+        {
+            "amount": -100.0,
+            "date": 1598954400000,
+            "description": "Season Ticket ",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": null,
+                        "instant": "2020-09-01T08:37:10.978Z"
+                    }
+                }
+            ]
+        },
+        {
+            "amount": -5.0,
+            "date": 1598954400000,
+            "description": "Straya Fund",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": null,
+                        "instant": "2020-09-01T08:37:10.984Z"
+                    }
+                }
+            ]
+        },
+        {
+            "amount": -5.0,
+            "date": 1598954400000,
+            "description": "Wedding",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": null,
+                        "instant": "2020-09-01T08:37:10.988Z"
+                    }
+                }
+            ]
+        },
+        {
+            "amount": -50.0,
+            "date": 1598954400000,
+            "description": "Car Insurance Simon ",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": null,
+                        "instant": "2020-09-01T08:37:10.991Z"
+                    }
+                }
+            ]
+        },
+        {
+            "amount": -5.0,
+            "date": 1598954400000,
+            "description": "Mat Leave",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": null,
+                        "instant": "2020-09-01T08:37:11.168Z"
+                    }
+                }
+            ]
+        },
+        {
+            "amount": 99.0,
+            "date": 1599472800000,
+            "description": "Xmas / Birthdays ",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": null,
+                        "instant": "2020-09-07T18:20:03.650Z"
+                    }
+                }
+            ]
+        },
+        {
+            "amount": -99.0,
+            "date": 1599472800000,
+            "description": "Mixtiles",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": null,
+                        "instant": "2020-09-07T18:21:06.574Z"
+                    }
+                }
+            ]
+        },
+        {
+            "amount": 90.0,
+            "date": 1599732000000,
+            "description": "SAVING POTS",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": null,
+                        "instant": "2020-09-10T08:23:58.343Z"
+                    }
+                }
+            ]
+        },
+        {
+            "amount": -39.78,
+            "date": 1599732000000,
+            "description": "Lidl Gb Shirebrook",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": null,
+                        "instant": "2020-09-10T11:31:54.388Z"
+                    }
+                }
+            ]
+        },
+        {
+            "amount": -7.5,
+            "date": 1599732000000,
+            "description": "Co-op",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": null,
+                        "instant": "2020-09-10T11:56:45.151Z"
+                    }
+                }
+            ]
+        },
+        {
+            "amount": -2.3,
+            "date": 1599732000000,
+            "description": "Brinsley Fish Bar",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": null,
+                        "instant": "2020-09-10T16:34:33.606Z"
+                    }
+                }
+            ]
+        },
+        {
+            "amount": -10.03,
+            "date": 1599904800000,
+            "description": "Morrisons Petrol Station",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": null,
+                        "instant": "2020-09-12T13:12:29.774Z"
+                    }
+                }
+            ]
+        },
+        {
+            "amount": -2.2,
+            "date": 1599904800000,
+            "description": "John Fretwell Sporting",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": null,
+                        "instant": "2020-09-12T14:50:14.578Z"
+                    }
+                }
+            ]
+        },
+        {
+            "amount": -7.85,
+            "date": 1599904800000,
+            "description": "John Fretwell Sporting",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": null,
+                        "instant": "2020-09-12T15:36:49.783Z"
+                    }
+                }
+            ]
+        },
+        {
+            "amount": -3.0,
+            "date": 1600077600000,
+            "description": "Morrisons",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": null,
+                        "instant": "2020-09-14T18:42:10.059Z"
+                    }
+                }
+            ]
+        },
+        {
+            "amount": -10.0,
+            "date": 1600855200000,
+            "description": "Sent from Monzo",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": null,
+                        "instant": "2020-09-23T23:13:31.791Z"
+                    }
+                }
+            ]
+        },
+        {
+            "amount": 210.0,
+            "date": 1601719200000,
+            "description": "SAVING POTS",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": null,
+                        "instant": "2020-10-03T18:44:52.661Z"
+                    }
+                }
+            ]
+        },
+        {
+            "amount": -50.0,
+            "date": 1601719200000,
+            "description": "Season Ticket ",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": null,
+                        "instant": "2020-10-03T18:45:34.496Z"
+                    }
+                }
+            ]
+        },
+        {
+            "amount": -70.0,
+            "date": 1601719200000,
+            "description": "Straya Fund",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": null,
+                        "instant": "2020-10-03T18:45:34.497Z"
+                    }
+                }
+            ]
+        },
+        {
+            "amount": -70.0,
+            "date": 1601719200000,
+            "description": "Car Insurance Simon ",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": null,
+                        "instant": "2020-10-03T18:45:34.510Z"
+                    }
+                }
+            ]
+        },
+        {
+            "amount": -10.0,
+            "date": 1601892000000,
+            "description": "Annual Bills ",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": null,
+                        "instant": "2020-10-05T12:02:02.749Z"
+                    }
+                }
+            ]
+        },
+        {
+            "amount": 10.0,
+            "date": 1602410400000,
+            "description": "Annual Bills ",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": null,
+                        "instant": "2020-10-11T20:48:02.077Z"
+                    }
+                }
+            ]
+        },
+        {
+            "amount": 5.0,
+            "date": 1602410400000,
+            "description": "Mat Leave",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": null,
+                        "instant": "2020-10-11T20:48:08.444Z"
+                    }
+                }
+            ]
+        },
+        {
+            "amount": 5.0,
+            "date": 1602410400000,
+            "description": "Wedding",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": null,
+                        "instant": "2020-10-11T20:48:12.721Z"
+                    }
+                }
+            ]
+        },
+        {
+            "amount": 40.0,
+            "date": 1602410400000,
+            "description": "Straya Fund",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": null,
+                        "instant": "2020-10-11T20:49:55.591Z"
+                    }
+                }
+            ]
+        },
+        {
+            "amount": -56.0,
+            "date": 1602410400000,
+            "description": "Sent from Monzo",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": null,
+                        "instant": "2020-10-11T20:50:40.394Z"
+                    }
+                }
+            ]
+        },
+        {
+            "amount": 35.0,
+            "date": 1602842400000,
+            "description": "Straya Fund",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": null,
+                        "instant": "2020-10-16T10:58:43.410Z"
+                    }
+                }
+            ]
+        },
+        {
+            "amount": 1.0,
+            "date": 1603101600000,
+            "description": "Xmas / Birthdays ",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": null,
+                        "instant": "2020-10-19T00:22:48.218Z"
+                    }
+                }
+            ]
+        },
+        {
+            "amount": 150.0,
+            "date": 1603101600000,
+            "description": "Season Ticket ",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": null,
+                        "instant": "2020-10-19T10:39:18.687Z"
+                    }
+                }
+            ]
+        },
+        {
+            "amount": -150.0,
+            "date": 1603101600000,
+            "description": "Sent from Monzo",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": null,
+                        "instant": "2020-10-19T10:39:36.918Z"
+                    }
+                }
+            ]
+        },
+        {
+            "amount": -16.22,
+            "date": 1603101600000,
+            "description": "McDonald's",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": null,
+                        "instant": "2020-10-19T17:57:25.391Z"
+                    }
+                }
+            ]
+        },
+        {
+            "amount": -14.98,
+            "date": 1603188000000,
+            "description": "Teddykave",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": null,
+                        "instant": "2020-10-20T13:22:30.442Z"
+                    }
+                }
+            ]
+        },
+        {
+            "amount": -5.5,
+            "date": 1603188000000,
+            "description": "Jump Warriors",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": null,
+                        "instant": "2020-10-20T14:15:48.584Z"
+                    }
+                }
+            ]
+        },
+        {
+            "amount": -10.0,
+            "date": 1603274400000,
+            "description": "ATM",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": null,
+                        "instant": "2020-10-21T09:58:55.684Z"
+                    }
+                }
+            ]
+        },
+        {
+            "amount": 120.0,
+            "date": 1603360800000,
+            "description": "Car Insurance Simon ",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": null,
+                        "instant": "2020-10-22T16:53:18.620Z"
+                    }
+                }
+            ]
+        },
+        {
+            "amount": -130.0,
+            "date": 1603360800000,
+            "description": "Sent from Monzo",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": null,
+                        "instant": "2020-10-22T16:53:39.472Z"
+                    }
+                }
+            ]
+        },
+        {
+            "amount": 355.0,
+            "date": 1604055600000,
+            "description": "SAVING POTS",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": null,
+                        "instant": "2020-10-30T10:29:46.577Z"
+                    }
+                }
+            ]
+        },
+        {
+            "amount": -100.0,
+            "date": 1604055600000,
+            "description": "Xmas / Birthdays ",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": null,
+                        "instant": "2020-10-30T10:30:03.857Z"
+                    }
+                }
+            ]
+        },
+        {
+            "amount": -175.0,
+            "date": 1604055600000,
+            "description": "Straya Fund",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": null,
+                        "instant": "2020-10-30T10:30:15.765Z"
+                    }
+                }
+            ]
+        },
+        {
+            "amount": -80.0,
+            "date": 1604055600000,
+            "description": "Last Man Standing Winner",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": null,
+                        "instant": "2020-10-30T10:30:49.933Z"
+                    }
+                }
+            ]
+        },
+        {
+            "amount": 185.0,
+            "date": 1604228400000,
+            "description": "SAVING POTS",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": null,
+                        "instant": "2020-11-01T00:46:05.433Z"
+                    }
+                }
+            ]
+        },
+        {
+            "amount": -185.0,
+            "date": 1604228400000,
+            "description": "Last Man Standing Club",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": null,
+                        "instant": "2020-11-01T00:47:02.364Z"
+                    }
+                }
+            ]
+        },
+        {
+            "amount": 50.0,
+            "date": 1604228400000,
+            "description": "Xmas / Birthdays ",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": null,
+                        "instant": "2020-11-01T21:36:58.661Z"
+                    }
+                }
+            ]
+        },
+        {
+            "amount": -50.0,
+            "date": 1604228400000,
+            "description": "Sent from Monzo",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": null,
+                        "instant": "2020-11-01T21:37:28.339Z"
+                    }
+                }
+            ]
+        },
+        {
+            "amount": 5.0,
+            "date": 1604314800000,
+            "description": "SAVING POTS",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": null,
+                        "instant": "2020-11-02T08:38:52.952Z"
+                    }
+                }
+            ]
+        },
+        {
+            "amount": -5.0,
+            "date": 1604314800000,
+            "description": "Last Man Standing Club",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": null,
+                        "instant": "2020-11-02T08:39:17.090Z"
+                    }
+                }
+            ]
+        },
+        {
+            "amount": 50.0,
+            "date": 1604487600000,
+            "description": "Xmas / Birthdays ",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": null,
+                        "instant": "2020-11-04T13:03:34.791Z"
+                    }
+                }
+            ]
+        },
+        {
+            "amount": -50.0,
+            "date": 1604487600000,
+            "description": "Sent from Monzo",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": null,
+                        "instant": "2020-11-04T13:04:42.359Z"
+                    }
+                }
+            ]
+        },
+        {
+            "amount": 50.0,
+            "date": 1604487600000,
+            "description": "SAVING POTS",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": null,
+                        "instant": "2020-11-04T13:28:22.892Z"
+                    }
+                }
+            ]
+        }
+    ],
+    "identityData": {
+        "nameElements": [
+            {
+                "type": "FULLNAME",
+                "value": "John The Tinker"
+            }
+        ],
+        "dateOfBirth": null
+    }
 }
