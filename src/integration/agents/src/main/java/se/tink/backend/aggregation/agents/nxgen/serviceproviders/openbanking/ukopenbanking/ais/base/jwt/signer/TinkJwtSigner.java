@@ -65,6 +65,9 @@ public class TinkJwtSigner {
         Builder withHeaderClaims(Map<String, Object> headerClaims) {
             this.headerClaims =
                     new JWSHeader.Builder(JWSAlgorithm.parse(algorithm.toString()))
+                            .base64URLEncodePayload(
+                                    !headerClaims.containsKey("b64")
+                                            || (Boolean) headerClaims.get("b64"))
                             .keyID(kidId)
                             .customParams(headerClaims)
                             .build();

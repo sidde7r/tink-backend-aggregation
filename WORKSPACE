@@ -930,7 +930,7 @@ maven_install(
         "com.google.crypto.tink:tink:1.2.2",
         "com.google.errorprone:javac-shaded:9+181-r4173-1",
         "com.google.googlejavaformat:google-java-format:1.7",
-        "com.nimbusds:nimbus-jose-jwt:7.7",
+        "com.nimbusds:nimbus-jose-jwt:8.20.1",
         "com.oracle.substratevm:svm:19.0.0",
         "io.dropwizard:dropwizard-client:0.7.1",
         "io.dropwizard:dropwizard-core:0.7.1",
