@@ -8,15 +8,11 @@ import java.util.UUID;
 import javax.ws.rs.core.MediaType;
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostaleConstants.HeaderKeys;
-import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostaleConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostaleConstants.Payload;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostaleConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostaleConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.authenticator.rpc.TokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.configuration.LaBanquePostaleConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.executor.payment.rpc.CreatePaymentRequest;
-import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.executor.payment.rpc.CreatePaymentResponse;
-import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.executor.payment.rpc.GetPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.fetcher.identity.dto.EndUserIdentityResponseDto;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.fetcher.transactionalaccount.rpc.AccountResponse;
@@ -191,29 +187,6 @@ public class LaBanquePostaleApiClient extends BerlinGroupApiClient<LaBanquePosta
                                 Payload.EMPTY)
                         .get(BalanceResponse.class);
         accountBaseEntityWithHref.setBalances(balanceResponse.getBalances());
-    }
-
-    public CreatePaymentResponse createPayment(CreatePaymentRequest createPaymentRequest) {
-        return buildRequestWithSignature(
-                        getConfiguration().getBaseUrl() + Urls.PAYMENT_INITIATION, Payload.EMPTY)
-                .header(HeaderKeys.CONTENT_TYPE, HeaderValues.CONTENT_TYPE)
-                .post(CreatePaymentResponse.class, createPaymentRequest);
-    }
-
-    public GetPaymentResponse getPayment(int paymentId) {
-        return buildRequestWithSignature(
-                        String.format(
-                                getConfiguration().getBaseUrl() + Urls.GET_PAYMENT, paymentId),
-                        Payload.EMPTY)
-                .get(GetPaymentResponse.class);
-    }
-
-    public GetPaymentResponse confirmPayment(String paymentId) {
-        return buildRequestWithSignature(
-                        String.format(
-                                getConfiguration().getBaseUrl() + Urls.CONFIRM_PAYMENT, paymentId),
-                        Payload.EMPTY)
-                .post(GetPaymentResponse.class);
     }
 
     private Path preparePathForFetchTransactions(String url) {

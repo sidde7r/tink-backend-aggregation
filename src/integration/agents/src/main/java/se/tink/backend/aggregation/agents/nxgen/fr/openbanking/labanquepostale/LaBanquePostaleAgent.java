@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.IDENTITY_DATA;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.LIST_BENEFICIARIES;
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.TRANSFERS;
 
 import com.google.inject.Inject;
 import java.util.List;
@@ -13,10 +14,10 @@ import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.RefreshBeneficiariesExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
+import se.tink.backend.aggregation.agents.agentcapabilities.AgentPisCapability;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.authenticator.LaBanquePostaleAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.configuration.LaBanquePostaleConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.executor.payment.LaBanquePostalPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.fetcher.identity.LaBanquePostaleIdentityDataFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.fetcher.transactionalaccount.LaBanquePostaleAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.fetcher.transactionalaccount.LaBanquePostaleTransactionFetcher;
@@ -25,6 +26,8 @@ import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.f
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.BerlinGroupAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.BerlinGroupTransactionFetcher;
+import se.tink.backend.aggregation.client.provider_configuration.rpc.PisCapability;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.eidassigner.module.QSealcSignerModuleRSASHA256;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
@@ -37,7 +40,8 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDe
 import se.tink.libraries.mapper.PrioritizedValueExtractor;
 
 @AgentDependencyModules(modules = QSealcSignerModuleRSASHA256.class)
-@AgentCapabilities({CHECKING_ACCOUNTS, IDENTITY_DATA, LIST_BENEFICIARIES})
+@AgentCapabilities({CHECKING_ACCOUNTS, IDENTITY_DATA, LIST_BENEFICIARIES, TRANSFERS})
+@AgentPisCapability(capabilities = PisCapability.PIS_SEPA_ICT)
 public final class LaBanquePostaleAgent
         extends BerlinGroupAgent<LaBanquePostaleApiClient, LaBanquePostaleConfiguration>
         implements RefreshIdentityDataExecutor, RefreshBeneficiariesExecutor {
@@ -45,17 +49,26 @@ public final class LaBanquePostaleAgent
     private final QsealcSigner qsealcSigner;
     private final LaBanquePostaleIdentityDataFetcher identityDataFetcher;
     private final TransferDestinationRefreshController transferDestinationRefreshController;
+    private final LaBanquePostalePaymentApiClient paymentApiClient;
+    private AgentConfiguration<LaBanquePostaleConfiguration> agentConfiguration;
 
     @Inject
     public LaBanquePostaleAgent(
             AgentComponentProvider componentProvider, QsealcSigner qsealcSigner) {
         super(componentProvider);
 
+        agentConfiguration =
+                getAgentConfigurationController()
+                        .getAgentConfiguration(LaBanquePostaleConfiguration.class);
+
         this.qsealcSigner = qsealcSigner;
         this.apiClient = createApiClient();
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
         this.identityDataFetcher = new LaBanquePostaleIdentityDataFetcher(this.apiClient);
         this.transferDestinationRefreshController = constructTransferDestinationRefreshController();
+        this.paymentApiClient =
+                new LaBanquePostalePaymentApiClient(
+                        client, sessionStorage, agentConfiguration, qsealcSigner);
     }
 
     @Override
@@ -108,7 +121,14 @@ public final class LaBanquePostaleAgent
 
     @Override
     public Optional<PaymentController> constructPaymentController() {
-        return Optional.of(new PaymentController(new LaBanquePostalPaymentExecutor(apiClient)));
+        LaBanquePostalePaymentExecutor paymentExecutor =
+                new LaBanquePostalePaymentExecutor(
+                        paymentApiClient,
+                        agentConfiguration.getRedirectUrl(),
+                        sessionStorage,
+                        strongAuthenticationState,
+                        supplementalInformationHelper);
+        return Optional.of(new PaymentController(paymentExecutor, paymentExecutor));
     }
 
     @Override
