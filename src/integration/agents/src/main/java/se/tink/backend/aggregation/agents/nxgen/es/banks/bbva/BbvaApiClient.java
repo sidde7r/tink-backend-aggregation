@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.Quer
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.Url;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.authenticator.rpc.LoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.authenticator.rpc.LoginResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.ParticipantsDataEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.UserEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.creditcard.rpc.CreditCardTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.identitydata.rpc.IdentityDataResponse;
@@ -210,6 +211,11 @@ public class BbvaApiClient {
                         .get();
 
         return createRequestInSession(url).get(IdentityDataResponse.class);
+    }
+
+    public ParticipantsDataEntity fetchParticipants(String accountId) {
+        final String url = new URL(Url.PARTICIPANTS).parameter(Url.PARAM_ID, accountId).get();
+        return createRequestInSession(url).get(ParticipantsDataEntity.class);
     }
 
     private String getUserAgent() {

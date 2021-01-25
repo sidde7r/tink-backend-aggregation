@@ -93,6 +93,8 @@ public final class BbvaConstants {
                 BASE_URL + "/ASO/contracts/v0/financial-investment/historical-date";
         public static final String FINANCIAL_INVESTMENTS =
                 BASE_URL + "/ASO/contracts/v0/financial-investment/daily-summaries";
+        public static final String PARTICIPANTS =
+                BASE_URL + "/ASO/contracts/V01/{" + PARAM_ID + "}/participants/";
     }
 
     public enum Headers implements HeaderEnum {
