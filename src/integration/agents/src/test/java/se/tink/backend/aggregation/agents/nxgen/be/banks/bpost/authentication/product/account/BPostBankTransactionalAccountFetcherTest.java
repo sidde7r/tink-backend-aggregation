@@ -29,7 +29,7 @@ public class BPostBankTransactionalAccountFetcherTest {
     }
 
     @Test
-    public void fetchAccountsShouldReturnCheckingAccount() throws RequestException {
+    public void fetchAccountsShouldNotReturnAnyCheckingAccount() throws RequestException {
         // given
         BPostBankAccountDTO regularAccount = createDummyAccount();
         BPostBankAccountsResponseDTO responseDTO = new BPostBankAccountsResponseDTO();
@@ -41,19 +41,7 @@ public class BPostBankTransactionalAccountFetcherTest {
         // when
         Collection<TransactionalAccount> result = objectUnderTest.fetchAccounts();
         // then
-        TransactionalAccount transactionalAccount = result.iterator().next();
-        Assert.assertEquals(regularAccount.alias, transactionalAccount.getName());
-        Assert.assertEquals(
-                new BigDecimal(regularAccount.bookedBalance),
-                transactionalAccount.getExactBalance().getExactValue());
-        Assert.assertEquals(
-                TransactionalAccountType.CHECKING.toAccountType(), transactionalAccount.getType());
-        Assert.assertEquals(
-                regularAccount.accountIdentification.get(0).id,
-                transactionalAccount.getAccountNumber());
-        Assert.assertEquals(
-                regularAccount.accountIdentification.get(0).id,
-                transactionalAccount.getIdModule().getUniqueId());
+        Assert.assertTrue(result.isEmpty());
     }
 
     @Test
@@ -98,7 +86,7 @@ public class BPostBankTransactionalAccountFetcherTest {
         accountDTO.clientName = "Name Surname";
         accountDTO.currency = "EUR";
         BPostBankAccountsResponseDTO responseDTO = new BPostBankAccountsResponseDTO();
-        responseDTO.currentAccounts = Lists.newArrayList(accountDTO);
+        responseDTO.savingsAccounts = Lists.newArrayList(accountDTO);
         Mockito.when(apiClient.fetchAccounts(authContext)).thenReturn(responseDTO);
         BPostBankTransactionalAccountFetcher objectUnderTest =
                 new BPostBankTransactionalAccountFetcher(apiClient, authContext);

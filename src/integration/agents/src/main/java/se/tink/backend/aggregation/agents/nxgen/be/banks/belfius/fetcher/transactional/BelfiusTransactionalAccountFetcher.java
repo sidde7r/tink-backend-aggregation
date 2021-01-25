@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.BelfiusApiClient;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.BelfiusConstants;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.BelfiusSessionStorage;
@@ -58,6 +59,7 @@ public class BelfiusTransactionalAccountFetcher
                                         entry.getValue().toTransactionalAccount(entry.getKey()),
                                         entry.getValue()))
                 .filter(pair -> pair.first != null)
+                .filter(pair -> onlySavings(pair.first))
                 .collect(Collectors.toList());
     }
 
@@ -117,5 +119,9 @@ public class BelfiusTransactionalAccountFetcher
         } while (response.hasNext());
 
         return transactionsAll;
+    }
+
+    private boolean onlySavings(TransactionalAccount account) {
+        return AccountTypes.SAVINGS == account.getType();
     }
 }

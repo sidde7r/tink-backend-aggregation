@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.axa.fetcher;
 
 import java.util.Collection;
+import java.util.stream.Collectors;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.AxaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.AxaStorage;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.fetcher.rpc.GetAccountsResponse;
@@ -25,6 +27,12 @@ public final class AxaAccountFetcher implements AccountFetcher<TransactionalAcco
         final GetAccountsResponse response =
                 apiClient.postGetAccounts(customerId, accessToken, locale);
 
-        return response.getAccounts();
+        return response.getAccounts().stream()
+                .filter(this::onlySavings)
+                .collect(Collectors.toList());
+    }
+
+    private boolean onlySavings(TransactionalAccount account) {
+        return AccountTypes.SAVINGS == account.getType();
     }
 }
