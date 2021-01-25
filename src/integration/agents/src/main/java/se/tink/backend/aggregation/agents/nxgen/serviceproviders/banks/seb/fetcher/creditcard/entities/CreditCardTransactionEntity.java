@@ -89,7 +89,6 @@ public class CreditCardTransactionEntity {
                 .setPayload(TransactionPayloadTypes.LOCAL_CURRENCY, originalCurrency)
                 .setPayload(TransactionPayloadTypes.AMOUNT_IN_LOCAL_CURRENCY, getOriginalAmount())
                 .setPayload(TransactionPayloadTypes.EXCHANGE_RATE, String.valueOf(exchangeRate))
-                .setPayload(TransactionPayloadTypes.EXTERNAL_ID, transactionId)
                 .setPayload(TransactionPayloadTypes.SUB_ACCOUNT, cardNumber);
     }
 
