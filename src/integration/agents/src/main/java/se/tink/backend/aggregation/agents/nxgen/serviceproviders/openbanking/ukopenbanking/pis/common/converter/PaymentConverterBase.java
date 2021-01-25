@@ -125,12 +125,14 @@ public abstract class PaymentConverterBase {
     }
 
     private DebtorAccount convertDebtorToDebtorAccount(Debtor debtor) {
-        final String schemeName = getSchemeName(debtor.getAccountIdentifierType());
-
-        return DebtorAccount.builder()
-                .schemeName(schemeName)
-                .identification(debtor.getAccountNumber())
-                .build();
+        return Optional.ofNullable(debtor.getAccountIdentifier())
+                .map(
+                        accountIdentifier ->
+                                DebtorAccount.builder()
+                                        .schemeName(getSchemeName(accountIdentifier.getType()))
+                                        .identification(accountIdentifier.getIdentifier())
+                                        .build())
+                .orElse(null);
     }
 
     private CreditorAccount convertCreditorToCreditorAccount(Creditor creditor) {

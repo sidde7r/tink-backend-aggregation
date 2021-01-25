@@ -73,6 +73,20 @@ public class DomesticPaymentConverterTest {
     }
 
     @Test
+    public void shouldDebtorAccountBeNullWhenPaymentDebtorHasNoAccountifier() {
+        // given
+        final Payment paymentMock = createPayment();
+
+        when(paymentMock.getDebtor()).thenReturn(new Debtor(null));
+
+        // when
+        final DebtorAccount returned = domesticPaymentConverter.getDebtorAccount(paymentMock);
+
+        // then
+        assertThat(returned).isNull();
+    }
+
+    @Test
     public void shouldGetCreditorAccount() {
         // given
         final Payment paymentMock = createPayment();
