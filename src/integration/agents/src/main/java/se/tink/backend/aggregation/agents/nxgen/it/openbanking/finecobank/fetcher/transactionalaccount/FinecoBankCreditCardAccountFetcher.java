@@ -10,6 +10,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.ErrorMessages;
@@ -25,19 +26,18 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 @Slf4j
+@RequiredArgsConstructor
 public class FinecoBankCreditCardAccountFetcher
         implements AccountFetcher<CreditCardAccount>, TransactionMonthPaginator<CreditCardAccount> {
 
     private static final int MAX_MONTHS_ALLOWED_TO_FETCH = 3;
+    private static final int MAX_MONTHS_BG_REFRESH = 1;
+
     private final FinecoBankApiClient finecoBankApiClient;
     private final PersistentStorage persistentStorage;
-    private int monthsRequestCounter = 0;
+    private final boolean isManual;
 
-    public FinecoBankCreditCardAccountFetcher(
-            FinecoBankApiClient finecoBankApiClient, PersistentStorage persistentStorage) {
-        this.finecoBankApiClient = finecoBankApiClient;
-        this.persistentStorage = persistentStorage;
-    }
+    private int monthsRequestCounter = 0;
 
     @Override
     public Collection<CreditCardAccount> fetchAccounts() {
@@ -71,7 +71,7 @@ public class FinecoBankCreditCardAccountFetcher
         }
         LocalDate fromDateAdjusted = prepareFromDate(year, month);
         try {
-            if (monthsRequestCounter == MAX_MONTHS_ALLOWED_TO_FETCH) {
+            if (shouldStopFetchingTransactions()) {
                 return PaginatorResponseImpl.createEmpty(false);
             }
             return finecoBankApiClient.getCreditTransactions(account, fromDateAdjusted);
@@ -108,5 +108,10 @@ public class FinecoBankCreditCardAccountFetcher
 
     private LocalDate prepareFromDate(Year year, Month month) {
         return LocalDate.of(year.getValue(), month, 1);
+    }
+
+    private boolean shouldStopFetchingTransactions() {
+        return (monthsRequestCounter == MAX_MONTHS_ALLOWED_TO_FETCH)
+                || (!isManual && monthsRequestCounter == MAX_MONTHS_BG_REFRESH);
     }
 }

@@ -163,7 +163,8 @@ public final class FinecoBankAgent extends NextGenerationAgent
 
     private CreditCardRefreshController getCreditCardRefreshController() {
         final FinecoBankCreditCardAccountFetcher accountFetcher =
-                new FinecoBankCreditCardAccountFetcher(apiClient, persistentStorage);
+                new FinecoBankCreditCardAccountFetcher(
+                        apiClient, persistentStorage, request.isManual());
 
         return new CreditCardRefreshController(
                 metricRefreshController,
