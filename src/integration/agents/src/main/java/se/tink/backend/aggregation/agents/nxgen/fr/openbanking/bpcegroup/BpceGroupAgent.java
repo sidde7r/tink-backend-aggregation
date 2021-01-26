@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
@@ -20,6 +21,9 @@ import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModul
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.apiclient.BpceGroupApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.authenticator.BpceGroupAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.configuration.BpceGroupConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.creditcard.BpceGroupCardTransactionsFetcher;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.creditcard.BpceGroupCreditCardFetcher;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.creditcard.converter.BpceGroupCreditCardConverter;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.fetcher.transfer.BpceGroupTransferDestinationFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.payment.BpceGroupPaymentApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.signature.BpceGroupRequestSigner;
@@ -41,6 +45,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.Au
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
@@ -52,13 +57,15 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 public final class BpceGroupAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor,
-                RefreshTransferDestinationExecutor {
+                RefreshTransferDestinationExecutor,
+                RefreshCreditCardAccountsExecutor {
 
     private final BpceGroupApiClient bpceGroupApiClient;
     private final BpceGroupPaymentApiClient bpceGroupPaymentApiClient;
     private final BpceOAuth2TokenStorage bpceOAuth2TokenStorage;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final TransferDestinationRefreshController transferDestinationRefreshController;
+    private final CreditCardRefreshController creditCardRefreshController;
 
     @Inject
     @SneakyThrows
@@ -97,6 +104,8 @@ public final class BpceGroupAgent extends NextGenerationAgent
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
 
         this.transferDestinationRefreshController = constructTransferDestinationRefreshController();
+
+        this.creditCardRefreshController = getCreditCardRefreshController();
     }
 
     @Override
@@ -144,6 +153,16 @@ public final class BpceGroupAgent extends NextGenerationAgent
     }
 
     @Override
+    public FetchAccountsResponse fetchCreditCardAccounts() {
+        return creditCardRefreshController.fetchCreditCardAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCreditCardTransactions() {
+        return creditCardRefreshController.fetchCreditCardTransactions();
+    }
+
+    @Override
     public SessionHandler constructSessionHandler() {
         return SessionHandler.alwaysFail();
     }
@@ -181,6 +200,22 @@ public final class BpceGroupAgent extends NextGenerationAgent
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
                         new TransactionPagePaginationController<>(transactionFetcher, 1)));
+    }
+
+    private CreditCardRefreshController getCreditCardRefreshController() {
+        final BpceGroupCreditCardConverter converter = new BpceGroupCreditCardConverter();
+        final BpceGroupCreditCardFetcher creditCardFetcher =
+                new BpceGroupCreditCardFetcher(bpceGroupApiClient, converter);
+        final BpceGroupCardTransactionsFetcher transactionsFetcher =
+                new BpceGroupCardTransactionsFetcher(bpceGroupApiClient);
+
+        return new CreditCardRefreshController(
+                metricRefreshController,
+                updateController,
+                creditCardFetcher,
+                new TransactionFetcherController<>(
+                        transactionPaginationHelper,
+                        new TransactionPagePaginationController<>(transactionsFetcher, 1)));
     }
 
     @Override

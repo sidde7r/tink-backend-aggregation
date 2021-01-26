@@ -28,6 +28,10 @@ public class AccountEntity {
         return AccountType.TRANSACTIONAL.getType().equalsIgnoreCase(cashAccountType);
     }
 
+    public boolean isCard() {
+        return AccountType.CARD.getType().equalsIgnoreCase(cashAccountType);
+    }
+
     public String getIban() {
         return getAccountId().getIban();
     }
