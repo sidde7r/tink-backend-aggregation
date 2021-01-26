@@ -13,7 +13,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.authenticator.steps.fetch_authorization_url.N26FetchAuthorizationUrlStep;
-import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentDetailsResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.authenticator.steps.validate_consent.rpc.ValidateConsentCombinedResponse;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationPersistedData;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationProcessStepIdentifier;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.request.AgentProceedNextStepAuthenticationRequest;
@@ -44,7 +44,7 @@ public class N26AutoAuthValidateConsentStepTest extends N26ValidateConsentStepBa
 
         when(request.getAuthenticationPersistedData()).thenReturn(agentAuthenticationPersistedData);
 
-        ExternalApiCallResult<ConsentDetailsResponse> apiCallResult =
+        ExternalApiCallResult<ValidateConsentCombinedResponse> apiCallResult =
                 prepareSuccessfulApiCallResult(true);
         when(apiCall.execute(any(), any(), any())).thenReturn(apiCallResult);
 
@@ -63,7 +63,7 @@ public class N26AutoAuthValidateConsentStepTest extends N26ValidateConsentStepBa
 
         when(request.getAuthenticationPersistedData()).thenReturn(agentAuthenticationPersistedData);
 
-        ExternalApiCallResult<ConsentDetailsResponse> apiCallResult =
+        ExternalApiCallResult<ValidateConsentCombinedResponse> apiCallResult =
                 prepareSuccessfulApiCallResult(false);
         when(apiCall.execute(any(), any(), any())).thenReturn(apiCallResult);
 
@@ -91,7 +91,7 @@ public class N26AutoAuthValidateConsentStepTest extends N26ValidateConsentStepBa
         AgentAuthenticationPersistedData agentAuthenticationPersistedData = preparePersistedData();
         when(request.getAuthenticationPersistedData()).thenReturn(agentAuthenticationPersistedData);
 
-        ExternalApiCallResult<ConsentDetailsResponse> apiCallResult =
+        ExternalApiCallResult<ValidateConsentCombinedResponse> apiCallResult =
                 mock(ExternalApiCallResult.class);
         when(apiCallResult.getAgentBankApiError()).thenReturn(Optional.of(new ServerError()));
         when(apiCall.execute(any(), any(), any())).thenReturn(apiCallResult);

@@ -50,4 +50,9 @@ public class N26Constants {
     public static class ErrorCodes {
         public static final String PERIOD_INVALID = "PERIOD_INVALID";
     }
+
+    public static class ConsentErrorMessages {
+        public static final String INVALID_TOKEN = "invalid_token";
+        public static final String LOGIN_TIMEOUT = "Login attempt expired";
+    }
 }
