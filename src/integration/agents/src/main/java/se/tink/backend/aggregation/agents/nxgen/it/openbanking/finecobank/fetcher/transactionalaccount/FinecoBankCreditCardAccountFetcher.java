@@ -38,6 +38,7 @@ public class FinecoBankCreditCardAccountFetcher
     private final boolean isManual;
 
     private int monthsRequestCounter = 0;
+    private CreditCardAccount lastFetchedCreditCard;
 
     @Override
     public Collection<CreditCardAccount> fetchAccounts() {
@@ -69,6 +70,12 @@ public class FinecoBankCreditCardAccountFetcher
         if (isEmptyCreditAccountConsent(account)) {
             throw new IllegalStateException(ErrorMessages.INVALID_CONSENT_TRANSACTIONS);
         }
+
+        setLastFetchCreditCardIfNull(account);
+        if (isNewCreditCardFetched(account)) {
+            setLastFetchedCreditCardAndResetCounter(account);
+        }
+
         LocalDate fromDateAdjusted = prepareFromDate(year, month);
         try {
             if (shouldStopFetchingTransactions()) {
@@ -104,6 +111,21 @@ public class FinecoBankCreditCardAccountFetcher
         }
 
         return true;
+    }
+
+    private void setLastFetchCreditCardIfNull(CreditCardAccount account) {
+        if (lastFetchedCreditCard == null) {
+            lastFetchedCreditCard = account;
+        }
+    }
+
+    private boolean isNewCreditCardFetched(CreditCardAccount account) {
+        return !lastFetchedCreditCard.getApiIdentifier().equals(account.getApiIdentifier());
+    }
+
+    private void setLastFetchedCreditCardAndResetCounter(CreditCardAccount account) {
+        lastFetchedCreditCard = account;
+        monthsRequestCounter = 0;
     }
 
     private LocalDate prepareFromDate(Year year, Month month) {
