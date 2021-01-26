@@ -31,6 +31,8 @@ public class AccountEntity {
 
     private List<BalanceBaseEntity> balances;
 
+    private String linkedAccount;
+
     @JsonProperty("_links")
     private AccountLinksWithHrefEntity links;
 
