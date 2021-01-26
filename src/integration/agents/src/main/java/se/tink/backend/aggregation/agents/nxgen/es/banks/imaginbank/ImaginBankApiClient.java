@@ -22,13 +22,13 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.fetcher.iden
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.fetcher.identitydata.rpc.UserDataResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.fetcher.transactionalaccount.rpc.AccountTransactionResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.fetcher.transactionalaccount.rpc.AccountsResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.fetcher.transactionalaccount.rpc.ListHoldersResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.rpc.ImaginBankErrorResponse;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @Slf4j
 public class ImaginBankApiClient {
@@ -79,27 +79,11 @@ public class ImaginBankApiClient {
         }
     }
 
-    public AccountsResponse fetchAccounts(boolean fromBegin) {
-
-        String accountsResponseRaw =
-                createRequest(
-                                ImaginBankConstants.Urls.FETCH_ACCOUNTS.queryParam(
-                                        ImaginBankConstants.QueryParams.FROM_BEGIN,
-                                        String.valueOf(fromBegin)))
-                        .get(String.class);
-
-        AccountsResponse accountsResponse =
-                SerializationUtils.deserializeFromString(
-                        accountsResponseRaw, AccountsResponse.class);
-
-        // currently imagin bank only allows one account for a customer, log if we get more
-        if (accountsResponse != null && accountsResponse.getNumberOfAccounts() > 1) {
-            logger.warn(
-                    "tag={} Got more than one account",
-                    ImaginBankConstants.LogTags.MULTIPLE_ACCOUNTS);
-        }
-
-        return accountsResponse;
+    public AccountsResponse fetchAccounts() {
+        return createRequest(
+                        ImaginBankConstants.Urls.FETCH_ACCOUNTS.queryParam(
+                                ImaginBankConstants.QueryParams.FROM_BEGIN, "true"))
+                .get(AccountsResponse.class);
     }
 
     public AccountTransactionResponse fetchNextAccountTransactions(
@@ -148,6 +132,13 @@ public class ImaginBankApiClient {
                                         ImaginBankConstants.QueryParams.PROFILE,
                                         ImaginBankConstants.QueryParams.PROFILE_VALUE))
                 .get(CardsResponse.class);
+    }
+
+    public ListHoldersResponse fetchHolderList(String accountReference) {
+        return createRequest(ImaginBankConstants.Urls.HOLDERS_LIST)
+                .queryParam(ImaginBankConstants.QueryParams.FROM_BEGIN, "true")
+                .queryParam(ImaginBankConstants.QueryParams.ACCOUNT_NUMBER, accountReference)
+                .get(ListHoldersResponse.class);
     }
 
     public CardTransactionsResponse fetchCardTransactions(

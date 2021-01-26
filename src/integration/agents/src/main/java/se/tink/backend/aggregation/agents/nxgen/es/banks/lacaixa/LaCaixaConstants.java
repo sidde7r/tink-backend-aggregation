@@ -184,14 +184,14 @@ public final class LaCaixaConstants {
     }
 
     public static class RetryFilterValues {
-        RetryFilterValues() {}
+        private RetryFilterValues() {}
 
         public static final int MAX_ATTEMPTS = 3;
         public static final int RETRY_SLEEP_MILLISECONDS = 1000;
     }
 
     public static class HolderTypes {
-        HolderTypes() {}
+        private HolderTypes() {}
 
         public static final String OWNER = "Titular";
         public static final String AUTHORIZED_USER = "Autorizado";

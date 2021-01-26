@@ -1,15 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.fetcher.transactionalaccount.rpc;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
 @JsonObject
 public class AccountsResponse {
@@ -20,20 +16,10 @@ public class AccountsResponse {
     private double totalBalance;
 
     @JsonProperty("cuenta")
-    private List<AccountEntity> account;
+    private List<AccountEntity> accounts;
 
-    @JsonIgnore
-    public List<TransactionalAccount> getTinkAccounts(HolderName holderName) {
-        return Optional.ofNullable(account).orElseGet(Collections::emptyList).stream()
-                .map(account -> account.toTinkAccount(holderName))
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .collect(Collectors.toList());
-    }
-
-    @JsonIgnore
-    public int getNumberOfAccounts() {
-        return Optional.ofNullable(account).orElseGet(Collections::emptyList).size();
+    public List<AccountEntity> getAccounts() {
+        return Optional.ofNullable(accounts).orElseGet(Collections::emptyList);
     }
 
     public boolean isMoreData() {
