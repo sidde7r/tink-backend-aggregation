@@ -116,6 +116,18 @@ public class SebApiClient extends SebBaseApiClient {
         return requestBuilder.get(FetchTransactionsResponse.class);
     }
 
+    public FetchTransactionsResponse fetchTransactions(
+            String accountId, LocalDate from, LocalDate to) {
+        return createRequestInSession(
+                        new URL(Urls.BASE_URL)
+                                .concat(SebConstants.Urls.TRANSACTIONS)
+                                .parameter(SebCommonConstants.IdTags.ACCOUNT_ID, accountId))
+                .queryParam(QueryKeys.DATE_FROM, from.toString())
+                .queryParam(QueryKeys.DATE_TO, to.toString())
+                .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.PENDING_AND_BOOKED_TRANSACTIONS)
+                .get(FetchTransactionsResponse.class);
+    }
+
     public FetchTransactionsResponse fetchUpcomingTransactions(URL url) {
         return createRequestInSession(url)
                 .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.PENDING)

@@ -112,7 +112,8 @@ public final class SebAgent extends SebBaseAgent<SebApiClient>
                 new TransactionFetcherController<>(
                         this.transactionPaginationHelper,
                         new TransactionKeyPaginationController<>(
-                                new SebTransactionFetcher(apiClient))));
+                                new SebTransactionFetcher(
+                                        apiClient, transactionPaginationHelper))));
     }
 
     private CreditCardRefreshController getCreditCardRefreshController() {
