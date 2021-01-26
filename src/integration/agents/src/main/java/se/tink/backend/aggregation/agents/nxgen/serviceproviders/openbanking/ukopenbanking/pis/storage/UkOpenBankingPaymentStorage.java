@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.storage;
 
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.rpc.SigningAlgorithm;
-import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.entity.UkPisAuthToken;
 import se.tink.backend.aggregation.nxgen.storage.Storage;
 
 public class UkOpenBankingPaymentStorage {
@@ -11,13 +11,17 @@ public class UkOpenBankingPaymentStorage {
 
     private final Storage storage = new Storage();
 
-    public OAuth2Token getToken() {
-        return storage.get(TOKEN_KEY, OAuth2Token.class)
+    public UkPisAuthToken getToken() {
+        return storage.get(TOKEN_KEY, UkPisAuthToken.class)
                 .orElseThrow(() -> new IllegalArgumentException("Token not found in the storage"));
     }
 
-    public void storeToken(OAuth2Token token) {
+    public void storeToken(UkPisAuthToken token) {
         storage.put(TOKEN_KEY, token);
+    }
+
+    public boolean hasToken() {
+        return storage.containsKey(TOKEN_KEY);
     }
 
     public SigningAlgorithm getPreferredSigningAlgorithm() {

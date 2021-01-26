@@ -33,6 +33,7 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepReq
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.signing.SigningStepConstants;
+import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.storage.Storage;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
@@ -336,6 +337,10 @@ public class UkOpenBankingPaymentTestFixtures {
         when(paymentMock.getExecutionDate()).thenReturn(executionDate);
 
         return paymentMock;
+    }
+
+    public static OAuth2Token createToken() {
+        return mock(OAuth2Token.class);
     }
 
     static PaymentMultiStepRequest createPaymentMultiStepRequestFoAuthenticateStep() {

@@ -70,7 +70,7 @@ public class UkOpenBankingPisRequestFilter extends Filter {
     }
 
     private void addAuthorizationHeader(MultivaluedMap<String, Object> headers) {
-        final OAuth2Token accessToken = storage.getToken();
+        final OAuth2Token accessToken = storage.getToken().getOAuth2Token();
         headers.add(OpenIdConstants.HttpHeaders.AUTHORIZATION, accessToken.toAuthorizeHeader());
     }
 
