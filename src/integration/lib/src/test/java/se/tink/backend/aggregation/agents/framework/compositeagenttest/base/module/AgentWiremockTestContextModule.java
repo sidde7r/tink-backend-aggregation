@@ -12,6 +12,7 @@ import java.util.Map;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.agents.rpc.Provider;
+import se.tink.backend.aggregation.agents.contexts.ProviderSessionCacheContext;
 import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.base.provider.SupplementalInformationControllerProvider;
@@ -20,6 +21,7 @@ import se.tink.backend.aggregation.configuration.ProviderConfig;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.configuration.AgentConfigurationController;
 import se.tink.backend.aggregation.nxgen.controllers.configuration.iface.AgentConfigurationControllerable;
+import se.tink.backend.aggregation.nxgen.controllers.utils.MockSessionCacheProvider;
 import se.tink.backend.aggregation.nxgen.controllers.utils.MockSupplementalRequester;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
@@ -45,6 +47,7 @@ public final class AgentWiremockTestContextModule extends AbstractModule {
     private final String credentialPayload;
     private final Map<String, String> callbackData;
     private final Map<String, String> persistentStorageData;
+    private final Map<String, String> cache;
 
     public AgentWiremockTestContextModule(
             MarketCode marketCode,
@@ -53,7 +56,8 @@ public final class AgentWiremockTestContextModule extends AbstractModule {
             Map<String, String> loginDetails,
             String credentialPayload,
             Map<String, String> callbackData,
-            Map<String, String> persistentStorageData) {
+            Map<String, String> persistentStorageData,
+            Map<String, String> cache) {
         this.marketCode = marketCode;
         this.providerName = providerName;
         this.configuration = configuration;
@@ -61,6 +65,7 @@ public final class AgentWiremockTestContextModule extends AbstractModule {
         this.credentialPayload = credentialPayload;
         this.callbackData = callbackData;
         this.persistentStorageData = persistentStorageData;
+        this.cache = cache;
     }
 
     @Override
@@ -85,6 +90,12 @@ public final class AgentWiremockTestContextModule extends AbstractModule {
     @Singleton
     private SupplementalRequester provideSupplementalRequester() {
         return new MockSupplementalRequester(callbackData);
+    }
+
+    @Provides
+    @Singleton
+    private ProviderSessionCacheContext providerSessionCacheContext() {
+        return new MockSessionCacheProvider(cache);
     }
 
     @Provides
@@ -161,12 +172,14 @@ public final class AgentWiremockTestContextModule extends AbstractModule {
             Credentials credential,
             Provider provider,
             AgentConfigurationControllerable agentConfigurationControllerable,
-            SupplementalRequester supplementalRequester) {
+            SupplementalRequester supplementalRequester,
+            ProviderSessionCacheContext providerSessionCacheContext) {
         NewAgentTestContext context =
                 new NewAgentTestContext(
                         user,
                         credential,
                         supplementalRequester,
+                        providerSessionCacheContext,
                         32,
                         DEFAULT_APP_ID,
                         "oxford-preprod",

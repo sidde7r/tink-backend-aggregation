@@ -27,6 +27,7 @@ import se.tink.backend.agents.rpc.AccountHolder;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Provider;
+import se.tink.backend.aggregation.agents.contexts.ProviderSessionCacheContext;
 import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.framework.dao.AccountDataDao;
@@ -70,6 +71,7 @@ public final class NewAgentTestContext extends AgentContext {
     private Credentials credential;
     private final AgentTestServerClient agentTestServerClient;
     private final SupplementalRequester supplementalRequester;
+    private final ProviderSessionCacheContext providerSessionCacheContext;
     private final Provider provider;
 
     // configuration
@@ -79,6 +81,7 @@ public final class NewAgentTestContext extends AgentContext {
             User user,
             Credentials credential,
             SupplementalRequester supplementalRequester,
+            ProviderSessionCacheContext providerSessionCacheContext,
             int transactionsToPrint,
             String appId,
             String clusterId,
@@ -87,6 +90,7 @@ public final class NewAgentTestContext extends AgentContext {
         this.user = user;
         this.credential = credential;
         this.supplementalRequester = supplementalRequester;
+        this.providerSessionCacheContext = providerSessionCacheContext;
         this.transactionsToPrint = transactionsToPrint;
         this.provider = provider;
         this.setClusterId(MoreObjects.firstNonNull(clusterId, TEST_CLUSTERID));
@@ -595,16 +599,12 @@ public final class NewAgentTestContext extends AgentContext {
 
     @Override
     public String getProviderSessionCache() {
-        log.info(
-                "Requesting provider session cache info for Financial institution id: {} from client.",
-                provider.getFinancialInstitutionId());
-        return agentTestServerClient.getProviderSessionCache(provider.getFinancialInstitutionId());
+        return providerSessionCacheContext.getProviderSessionCache();
     }
 
     @Override
     public void setProviderSessionCache(String value, int expiredTimeInSeconds) {
-        agentTestServerClient.setProviderSessionCache(
-                provider.getFinancialInstitutionId(), value, expiredTimeInSeconds);
+        providerSessionCacheContext.setProviderSessionCache(value, expiredTimeInSeconds);
     }
 
     public void validateCredentials() {

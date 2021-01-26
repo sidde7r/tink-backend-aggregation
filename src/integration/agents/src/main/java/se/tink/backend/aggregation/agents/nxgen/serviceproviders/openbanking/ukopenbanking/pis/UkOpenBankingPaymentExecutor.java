@@ -2,6 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 
 import com.google.common.util.concurrent.Uninterruptibles;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
@@ -26,6 +28,7 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepReq
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
+import se.tink.backend.aggregation.nxgen.controllers.utils.ProviderSessionCacheController;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.libraries.payment.enums.PaymentStatus;
@@ -38,6 +41,7 @@ public class UkOpenBankingPaymentExecutor implements PaymentExecutor, FetchableP
     private final UkOpenBankingPaymentAuthenticator authenticator;
     private final UkOpenBankingPisAuthFilterInstantiator authFilterInstantiator;
     private final UkOpenBankingPaymentRequestValidator paymentRequestValidator;
+    private final ProviderSessionCacheController providerSessionCacheController;
 
     @Override
     public PaymentResponse create(PaymentRequest paymentRequest) throws PaymentException {
@@ -116,8 +120,19 @@ public class UkOpenBankingPaymentExecutor implements PaymentExecutor, FetchableP
             throw new PaymentRejectedException();
         }
 
+        savePaymentId(paymentResponse);
+
         return new PaymentMultiStepResponse(
                 paymentResponse, AuthenticationStepConstants.STEP_FINALIZE, new ArrayList<>());
+    }
+
+    private void savePaymentId(PaymentResponse paymentResponse) {
+        String paymentId =
+                paymentResponse.getStorage().get(UkOpenBankingPaymentConstants.PAYMENT_ID_KEY);
+
+        Map<String, String> cache =
+                Collections.singletonMap(UkOpenBankingPaymentConstants.PAYMENT_ID_KEY, paymentId);
+        providerSessionCacheController.setProviderSessionCacheInfo(cache);
     }
 
     /**

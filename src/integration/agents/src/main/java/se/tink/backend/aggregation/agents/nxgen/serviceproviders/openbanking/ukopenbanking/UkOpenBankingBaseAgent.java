@@ -407,7 +407,8 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
                         paymentApiClient,
                         paymentAuthenticator,
                         authFilterInstantiator,
-                        getPaymentRequestValidator());
+                        getPaymentRequestValidator(),
+                        providerSessionCacheController);
 
         return Optional.of(new PaymentController(paymentExecutor, paymentExecutor));
     }
