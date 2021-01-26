@@ -5,7 +5,6 @@ java_library(
     runtime_deps = [
         "//po:i18n",
         "//src/integration/agents",
-        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/legacy/banks/danskebank/v2",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/legacy/banks/sbab",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/legacy/banks/seb",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/at/banks/bankaustria",
