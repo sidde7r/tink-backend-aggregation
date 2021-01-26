@@ -53,7 +53,8 @@ public class AccountEntity extends AbstractContractDetailsEntity {
     }
 
     @JsonIgnore
-    public Optional<TransactionalAccount> toTinkTransactionalAccount() {
+    public Optional<TransactionalAccount> toTinkTransactionalAccount(
+            List<ParticipantAccountEntity> participantAccountEntities) {
         String iban = getAccountNumber();
         String accountProductId = getAccountProductId();
 
@@ -76,19 +77,8 @@ public class AccountEntity extends AbstractContractDetailsEntity {
                                 .addIdentifier(ibanIdentifier)
                                 .build())
                 .setApiIdentifier(getId())
-                .addHolders(getHolders())
+                .addHolders(getHolders(participantAccountEntities))
                 .build();
-    }
-
-    @JsonIgnore
-    public List<Holder> getHolders() {
-        return getParticipants()
-                .map(ParticipantEntity::getRelationship)
-                .filter(
-                        relationshipEntity ->
-                                HolderTypes.OWNER.equals(relationshipEntity.getType().getId()))
-                .map(this::createOwnerHolder)
-                .collect(Collectors.toList());
     }
 
     @JsonIgnore
@@ -122,12 +112,58 @@ public class AccountEntity extends AbstractContractDetailsEntity {
     }
 
     @JsonIgnore
-    private ExactCurrencyAmount getBalance() {
-        return availableBalance.toTinkAmount();
+    public List<Holder> getHolders(List<ParticipantAccountEntity> participantAccountEntities) {
+        if (isOneAccountHolder(participantAccountEntities)) {
+            return participantAccountEntities.stream()
+                    .map(this::createHolder)
+                    .collect(Collectors.toList());
+        }
+        log.info(
+                "Account has {} owners with roles {}",
+                participantAccountEntities.size(),
+                participantAccountEntities.stream()
+                        .map(ParticipantAccountEntity::getRelationship)
+                        .map(RelationshipEntity::getType));
+
+        List<RelationshipEntity> accountRelationships =
+                getParticipants()
+                        .map(ParticipantEntity::getRelationship)
+                        .collect(Collectors.toList());
+
+        return participantAccountEntities.stream()
+                .filter(
+                        participantAccountEntity ->
+                                accountRelationships.stream()
+                                        .anyMatch(
+                                                relationshipEntity ->
+                                                        relationshipEntity
+                                                                .getType()
+                                                                .getId()
+                                                                .equals(
+                                                                        participantAccountEntity
+                                                                                .getRelationship()
+                                                                                .getType()
+                                                                                .getId())))
+                .map(this::createHolder)
+                .collect(Collectors.toList());
     }
 
     @JsonIgnore
-    private Holder createOwnerHolder(RelationshipEntity relationshipEntity) {
-        return Holder.of(relationshipEntity.getType().getName(), Role.HOLDER);
+    private Holder createHolder(ParticipantAccountEntity participant) {
+        String role = participant.getRelationship().getType().getId();
+        if (HolderTypes.OWNER.equals(role)) {
+            return Holder.of(participant.getName() + " " + participant.getLastName(), Role.HOLDER);
+        }
+        return Holder.of(participant.getName() + " " + participant.getLastName(), Role.OTHER);
+    }
+
+    @JsonIgnore
+    private boolean isOneAccountHolder(List<ParticipantAccountEntity> participantAccountEntities) {
+        return participantAccountEntities.size() == 1;
+    }
+
+    @JsonIgnore
+    private ExactCurrencyAmount getBalance() {
+        return availableBalance.toTinkAmount();
     }
 }

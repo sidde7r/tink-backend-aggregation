@@ -1,0 +1,42 @@
+{
+    "participants": [
+        {
+            "id": "ES01",
+            "identityDocument": [
+                {
+                    "type": {
+                        "code": "1",
+                        "name": "D.N.I. O N.I.F. DE PERSONA FISICA"
+                    },
+                    "number": "1"
+                }
+            ],
+            "name": "ROCKY",
+            "type": "F",
+            "lastName": "BALBOA",
+            "mothersLastName": "WAPNER",
+            "relationship": {
+                "type": {
+                    "id": "TIT",
+                    "name": "TITULAR"
+                },
+                "order": 1
+            },
+            "signature": {
+                "type": {
+                    "id": "I",
+                    "name": "INDISTINTA"
+                },
+                "isMandatary": false
+            },
+            "signatureContractDetail": {
+                "joinType": {
+                    "id": " ",
+                    "name": "NO APLICA"
+                },
+                "signaturesRequiredNumber": 0
+            }
+        }
+    ],
+    "hasMoreData": "N"
+}

@@ -20,6 +20,7 @@ import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.AccountEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.ParticipantsDataEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.ProductEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.rpc.AccountTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.rpc.FinancialDashboardResponse;
@@ -70,13 +71,26 @@ public class AccountTransactionsFetcherTest {
     public void testAccountFetcher() throws IOException {
         final FinancialDashboardResponse financialDashboardResponse =
                 loadSampleData("financial_dashboard.json", FinancialDashboardResponse.class);
+        final ParticipantsDataEntity participantsDataEntity =
+                loadSampleData("participants.json", ParticipantsDataEntity.class);
 
         when(apiClient.fetchFinancialDashboard()).thenReturn(financialDashboardResponse);
+        when(apiClient.fetchParticipants(any())).thenReturn(participantsDataEntity);
 
         final BbvaAccountFetcher fetcher = new BbvaAccountFetcher(apiClient);
         final Collection<TransactionalAccount> transactionalAccounts = fetcher.fetchAccounts();
 
         Assert.assertEquals(3, transactionalAccounts.size());
+    }
+
+    @Test
+    public void testFetchingParticipants() throws IOException {
+        final ParticipantsDataEntity participantsDataEntity =
+                loadSampleData("participants.json", ParticipantsDataEntity.class);
+
+        when(apiClient.fetchParticipants(any())).thenReturn(participantsDataEntity);
+
+        Assert.assertEquals(1, participantsDataEntity.getParticipants().size());
     }
 
     @Test
@@ -107,13 +121,14 @@ public class AccountTransactionsFetcherTest {
 
     @Test
     public void shouldGetHolderNamesList() {
-        when(accountEntity.getHolders())
+
+        when(accountEntity.getHolders(any()))
                 .thenReturn(
                         Arrays.asList(
                                 Holder.of("OWNER", Role.HOLDER),
                                 Holder.of("AUTH", Role.AUTHORIZED_USER)));
 
-        List<Holder> holders = accountEntity.getHolders();
+        List<Holder> holders = accountEntity.getHolders(any());
 
         Assert.assertEquals(holders.get(0).getName(), "OWNER");
         Assert.assertEquals(holders.get(0).getRole(), Role.HOLDER);
@@ -123,13 +138,13 @@ public class AccountTransactionsFetcherTest {
 
     @Test
     public void shouldAddHolderNameList() {
-        when(accountEntity.toTinkTransactionalAccount()).thenReturn(transactionalAccount);
+        when(accountEntity.toTinkTransactionalAccount(any())).thenReturn(transactionalAccount);
 
         Assert.assertEquals(
-                accountEntity.toTinkTransactionalAccount().get().getHolders().get(0).getName(),
+                accountEntity.toTinkTransactionalAccount(any()).get().getHolders().get(0).getName(),
                 "OWNER");
         Assert.assertEquals(
-                accountEntity.toTinkTransactionalAccount().get().getHolders().get(0).getRole(),
+                accountEntity.toTinkTransactionalAccount(any()).get().getHolders().get(0).getRole(),
                 Role.HOLDER);
     }
 
