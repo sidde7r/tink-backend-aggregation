@@ -16,13 +16,13 @@ import org.mockito.Answers;
 import org.mockito.ArgumentMatcher;
 import org.modelmapper.TypeMap;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.utils.mappers.CoreCredentialsMapper;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateCredentialsStatusRequest;
 import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
+import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
 
 public class UpdateCredentialsStatusAgentWorkerCommandTest {
     private UpdateCredentialsStatusAgentWorkerCommand command;

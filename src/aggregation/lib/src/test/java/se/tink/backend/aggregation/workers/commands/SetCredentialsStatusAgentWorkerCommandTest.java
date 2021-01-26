@@ -7,9 +7,9 @@ import static org.mockito.Mockito.verify;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Answers;
-import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
+import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
 
 public class SetCredentialsStatusAgentWorkerCommandTest {
     private SetCredentialsStatusAgentWorkerCommand command;

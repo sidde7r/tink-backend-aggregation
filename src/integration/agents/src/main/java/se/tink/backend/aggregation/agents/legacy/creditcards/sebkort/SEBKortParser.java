@@ -22,7 +22,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.agents.AgentParsingUtils;
 import se.tink.backend.aggregation.agents.creditcards.sebkort.model.CardGroupEntity;
 import se.tink.backend.aggregation.agents.creditcards.sebkort.model.ContractEntity;
@@ -33,6 +32,7 @@ import se.tink.backend.aggregation.agents.creditcards.sebkort.model.TransactionE
 import se.tink.backend.aggregation.agents.creditcards.sebkort.model.TransactionGroupEntity;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.models.TransactionTypes;
+import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
 import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 

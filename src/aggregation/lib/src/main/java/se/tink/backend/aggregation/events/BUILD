@@ -73,6 +73,7 @@ java_library(
         "@aggregation//:net_sourceforge_cssparser_cssparser",
         "@com_tink_api_grpc//event_producer_service:event_producer_service_java_proto",
         "@com_tink_api_grpc//event_producer_service/events:events_java_proto",
+        "@tink_backend//src/aggregation-controller/api/src/main/java/se/tink/backend/aggregationcontroller/v1/rpc/enums",
         "@tink_backend//src/libraries/event_producer_service_client",
         "@tink_backend//src/libraries/protobuf_type_utils",
     ],

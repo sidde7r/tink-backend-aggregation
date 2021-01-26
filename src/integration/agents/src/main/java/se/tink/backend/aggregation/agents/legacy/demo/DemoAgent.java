@@ -31,7 +31,6 @@ import java.util.concurrent.TimeUnit;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.AbstractAgent;
@@ -70,6 +69,7 @@ import se.tink.backend.aggregation.agents.utils.authentication.bankid.signicat.S
 import se.tink.backend.aggregation.agents.utils.demo.DemoDataUtils;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.http.filter.factory.ClientFilterFactory;
+import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.credentials.demo.DemoCredentials;
 import se.tink.libraries.credentials.demo.DemoCredentials.DemoUserFeature;

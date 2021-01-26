@@ -1,12 +1,12 @@
 package se.tink.backend.aggregation.workers.commands;
 
+import java.util.EnumSet;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Predicate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.utils.mappers.CoreCredentialsMapper;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateCredential
 import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
+import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
 
 public class UpdateCredentialsStatusAgentWorkerCommand extends AgentWorkerCommand {
     private static final Logger log =
@@ -23,6 +24,12 @@ public class UpdateCredentialsStatusAgentWorkerCommand extends AgentWorkerComman
     private final Provider provider;
     private final AgentWorkerCommandContext context;
     private final Predicate<AgentWorkerCommandContext> setStatusUpdatedPredicate;
+
+    private static final EnumSet<CredentialsStatus> FAILED_STATUSES =
+            EnumSet.of(
+                    CredentialsStatus.UNCHANGED,
+                    CredentialsStatus.TEMPORARY_ERROR,
+                    CredentialsStatus.AUTHENTICATION_ERROR);
 
     public UpdateCredentialsStatusAgentWorkerCommand(
             ControllerWrapper controllerWrapper,
@@ -68,7 +75,7 @@ public class UpdateCredentialsStatusAgentWorkerCommand extends AgentWorkerComman
 
         log.info("Credentials contain - status: {}", credentials.getStatus());
 
-        if (CredentialsStatus.FAILED_OPERATION_STATUSES.contains(credentials.getStatus())) {
+        if (FAILED_STATUSES.contains(credentials.getStatus())) {
             log.info(
                     "Credentials status does not warrant status update - Status: {}",
                     credentials.getStatus());

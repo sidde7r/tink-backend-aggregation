@@ -7,8 +7,8 @@ import com.google.common.collect.Sets;
 import java.util.Objects;
 import java.util.Set;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.CredentialsTypes;
+import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class AbnAmroIcsCredentials {

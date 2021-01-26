@@ -41,8 +41,8 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.BankServiceInternalErrorFilter;
+import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsRequestType;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.credentials.service.CredentialsRequestType;
 
 @AgentCapabilities({SAVINGS_ACCOUNTS, TRANSFERS})
 public final class SbabAgent extends NextGenerationAgent

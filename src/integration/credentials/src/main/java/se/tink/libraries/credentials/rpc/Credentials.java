@@ -10,7 +10,7 @@ import com.google.common.collect.Maps;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import se.tink.libraries.credentials.enums.CredentialsStatus;
+import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
 import se.tink.libraries.credentials.enums.CredentialsTypes;
 import se.tink.libraries.field.rpc.Field;
 import se.tink.libraries.serialization.utils.SerializationUtils;

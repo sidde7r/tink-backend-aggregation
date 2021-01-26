@@ -1,10 +1,10 @@
 package se.tink.backend.aggregation.workers.commands;
 
-import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
 import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
+import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
 
 public class SetCredentialsStatusAgentWorkerCommand extends AgentWorkerCommand {
     private StatusUpdater statusUpdater;

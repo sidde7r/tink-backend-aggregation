@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.google.common.collect.Sets;
 import org.junit.Test;
-import se.tink.libraries.credentials.enums.CredentialsStatus;
+import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
 
 public class AbnAmroIcsCredentialsTest {
 

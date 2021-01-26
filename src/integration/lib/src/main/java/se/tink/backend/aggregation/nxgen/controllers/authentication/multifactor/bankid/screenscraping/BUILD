@@ -11,5 +11,6 @@ java_library(
         "//third_party:lombok_libs",
         "//third_party:org_slf4j_slf4j_api",
         "@selenium//:org_seleniumhq_selenium_selenium_api",
+        "@tink_backend//src/aggregation-controller/api/src/main/java/se/tink/backend/aggregationcontroller/v1/rpc/enums",
     ],
 )

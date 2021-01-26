@@ -1,12 +1,12 @@
 package se.tink.backend.aggregation.workers.commands;
 
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.agents.AgentEventListener;
 import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
 import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.listeners.CredentialsStatusEventListener;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommand;
+import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
 import se.tink.libraries.signableoperation.rpc.SignableOperation;
 
 abstract class SignableOperationAgentWorkerCommand extends AgentWorkerCommand {

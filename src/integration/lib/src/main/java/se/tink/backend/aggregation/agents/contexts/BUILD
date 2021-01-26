@@ -13,5 +13,6 @@ java_library(
         "//src/libraries/i18n",
         "//src/libraries/metrics:registry",
         "//third_party:com_google_code_findbugs_jsr305",
+        "@tink_backend//src/aggregation-controller/api/src/main/java/se/tink/backend/aggregationcontroller/v1/rpc/enums",
     ],
 )

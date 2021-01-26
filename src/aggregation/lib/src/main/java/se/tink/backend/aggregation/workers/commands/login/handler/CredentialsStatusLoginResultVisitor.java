@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.workers.commands.login.handler;
 
 import lombok.AllArgsConstructor;
-import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
 import se.tink.backend.aggregation.agents.exceptions.agent.AgentException;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AuthenticationError;
@@ -18,6 +17,7 @@ import se.tink.backend.aggregation.workers.commands.login.handler.result.LoginRe
 import se.tink.backend.aggregation.workers.commands.login.handler.result.LoginSuccessResult;
 import se.tink.backend.aggregation.workers.commands.login.handler.result.LoginUnknownErrorResult;
 import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
+import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
 
 @AllArgsConstructor
 public class CredentialsStatusLoginResultVisitor implements LoginResultVisitor {

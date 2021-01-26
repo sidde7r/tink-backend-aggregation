@@ -10,5 +10,6 @@ java_library(
         "//third_party:com_fasterxml_jackson_core_jackson_databind",
         "//third_party:com_sun_jersey_jersey_server",
         "//third_party:org_slf4j_slf4j_api",
+        "@tink_backend//src/aggregation-controller/api/src/main/java/se/tink/backend/aggregationcontroller/v1/rpc/enums",
     ],
 )
