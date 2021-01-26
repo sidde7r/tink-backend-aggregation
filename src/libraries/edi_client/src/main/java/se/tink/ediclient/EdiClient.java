@@ -23,6 +23,7 @@ import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.security.interfaces.RSAPublicKey;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.Locale;
@@ -87,7 +88,7 @@ public class EdiClient {
             X509Certificate certificate = (X509Certificate) keyStore.getCertificate(CERT_ALIAS);
             if (certificate != null) {
                 LOG.info("Certificate exists, checking expiry");
-                if (certificateAboutToExpire(certificate.getNotAfter())) {
+                if (certificateAboutToExpire(certificate.getNotAfter(), ZonedDateTime.now())) {
                     LOG.info("Certificate is about to expire, should be renewed");
                     Files.delete(devCertKeystore.toPath());
                 } else {
@@ -166,8 +167,9 @@ public class EdiClient {
         return new File(System.getProperty("user.home"), ".edi-client");
     }
 
-    private static boolean certificateAboutToExpire(Date notAfter) {
-        Date aboutToExpire = Date.from(ZonedDateTime.now().minusHours(4).toInstant());
-        return notAfter.before(aboutToExpire);
+    static boolean certificateAboutToExpire(Date notAfter, ZonedDateTime now) {
+        ZonedDateTime aboutToExpire =
+                ZonedDateTime.ofInstant(notAfter.toInstant(), ZoneId.systemDefault()).minusHours(4);
+        return now.isAfter(aboutToExpire);
     }
 }

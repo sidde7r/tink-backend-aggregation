@@ -20,6 +20,8 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbank
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingTestValidator.validatePaymentResponsesForDomesticPaymentAreEqual;
 
 import java.time.Clock;
+import java.util.Collections;
+import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
@@ -34,6 +36,7 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepReq
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
+import se.tink.backend.aggregation.nxgen.controllers.utils.ProviderSessionCacheController;
 
 public class UkOpenBankingPaymentExecutorTest {
 
@@ -42,6 +45,7 @@ public class UkOpenBankingPaymentExecutorTest {
     private UkOpenBankingPisAuthFilterInstantiator authFilterInstantiatorMock;
     private Clock clockMock;
     private UkOpenBankingPaymentRequestValidator paymentRequestValidatorMock;
+    private ProviderSessionCacheController providerSessionCacheControllerMock;
 
     @Before
     public void setUp() throws PaymentAuthorizationException {
@@ -50,13 +54,15 @@ public class UkOpenBankingPaymentExecutorTest {
         apiClientMock = mock(UkOpenBankingPaymentApiClient.class);
         authFilterInstantiatorMock = mock(UkOpenBankingPisAuthFilterInstantiator.class);
         paymentRequestValidatorMock = mock(UkOpenBankingPaymentRequestValidator.class);
+        providerSessionCacheControllerMock = mock(ProviderSessionCacheController.class);
 
         ukOpenBankingPaymentExecutor =
                 new UkOpenBankingPaymentExecutor(
                         apiClientMock,
                         paymentAuthenticatorMock,
                         authFilterInstantiatorMock,
-                        paymentRequestValidatorMock);
+                        paymentRequestValidatorMock,
+                        providerSessionCacheControllerMock);
 
         clockMock = createClockMock();
     }
@@ -145,11 +151,15 @@ public class UkOpenBankingPaymentExecutorTest {
         when(apiClientMock.executePayment(request, CONSENT_ID, INSTRUCTION_ID, INSTRUCTION_ID))
                 .thenReturn(responseMock);
 
+        final Map<String, String> cache =
+                Collections.singletonMap(UkOpenBankingPaymentConstants.PAYMENT_ID_KEY, PAYMENT_ID);
+
         // when
         final PaymentMultiStepResponse returned = ukOpenBankingPaymentExecutor.sign(request);
 
         // then
         assertThat(returned.getStep()).isEqualTo(AuthenticationStepConstants.STEP_FINALIZE);
+        verify(providerSessionCacheControllerMock).setProviderSessionCacheInfo(cache);
     }
 
     private static UkOpenBankingPaymentAuthenticator createPaymentAuthenticatorMock()

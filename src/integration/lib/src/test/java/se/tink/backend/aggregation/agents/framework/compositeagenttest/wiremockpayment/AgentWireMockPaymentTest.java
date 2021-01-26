@@ -43,6 +43,7 @@ public final class AgentWireMockPaymentTest {
             Map<String, String> loginDetails,
             Map<String, String> callbackData,
             Map<String, String> persistentStorageData,
+            Map<String, String> cache,
             TestModule agentModule,
             Payment payment,
             Transfer transfer,
@@ -68,7 +69,8 @@ public final class AgentWireMockPaymentTest {
                                 loginDetails,
                                 null,
                                 callbackData,
-                                persistentStorageData),
+                                persistentStorageData,
+                                cache),
                         new RefreshRequestModule(
                                 RefreshableItem.REFRESHABLE_ITEMS_ALL, true, false, false),
                         new PaymentRequestModule(payment),
@@ -121,6 +123,7 @@ public final class AgentWireMockPaymentTest {
         private final Map<String, String> credentialFields;
         private final Map<String, String> callbackData;
         private final Map<String, String> persistentStorageData;
+        private final Map<String, String> cache;
         private boolean httpDebugTrace = false;
 
         private Payment payment;
@@ -136,6 +139,7 @@ public final class AgentWireMockPaymentTest {
             this.credentialFields = new HashMap<>();
             this.callbackData = new HashMap<>();
             this.persistentStorageData = new HashMap<>();
+            this.cache = new HashMap<>();
         }
 
         /**
@@ -195,6 +199,20 @@ public final class AgentWireMockPaymentTest {
         }
 
         /**
+         * Add data to session cache.
+         *
+         * <p>Can be called multiple times to add several items.
+         *
+         * @param key Key of data to put to persistent storage.
+         * @param value Value of data to put to persistent storage.
+         * @return This builder.
+         */
+        public Builder addDataIntoCache(String key, String value) {
+            cache.put(key, value);
+            return this;
+        }
+
+        /**
          * Allows adding additional dependencies via Guice dependency injection to agent.
          * Dependencies bound in the provided module will be available in the agents constructor,
          * typically this should be used to bind fake/mock versions of dependencies used in
@@ -249,6 +267,7 @@ public final class AgentWireMockPaymentTest {
                     credentialFields,
                     callbackData,
                     persistentStorageData,
+                    cache,
                     agentTestModule,
                     payment,
                     transfer,
@@ -272,6 +291,7 @@ public final class AgentWireMockPaymentTest {
                     credentialFields,
                     callbackData,
                     persistentStorageData,
+                    cache,
                     agentTestModule,
                     payment,
                     transfer,

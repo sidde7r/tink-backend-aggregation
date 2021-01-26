@@ -144,6 +144,8 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                         credential,
                         new AgentTestServerSupplementalRequester(
                                 credential, AgentTestServerClient.getInstance()),
+                        new AgentTestServerSessionCacheProvider(
+                                provider, AgentTestServerClient.getInstance()),
                         builder.getTransactionsToPrint(),
                         builder.getAppId(),
                         builder.getClusterId(),
