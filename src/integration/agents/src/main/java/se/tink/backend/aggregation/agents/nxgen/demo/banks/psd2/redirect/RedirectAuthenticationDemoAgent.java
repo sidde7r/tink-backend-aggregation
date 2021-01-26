@@ -30,6 +30,7 @@ import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
+import se.tink.backend.aggregation.agents.agentcapabilities.AgentPisCapability;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
@@ -43,6 +44,7 @@ import se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.executo
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.executor.beneficiary.RedirectDemoCreateBeneficaryExecutor;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.executor.transfer.RedirectDemoPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.executor.transfer.RedirectDemoTransferExecutor;
+import se.tink.backend.aggregation.client.provider_configuration.rpc.PisCapability;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.demo.DemoAccountDefinitionGenerator;
 import se.tink.backend.aggregation.nxgen.agents.demo.DemoConstants.MarketRegex;
@@ -78,6 +80,9 @@ import se.tink.libraries.identitydata.NameElement;
     INVESTMENTS,
     MORTGAGE_AGGREGATION
 })
+@AgentPisCapability(
+        capabilities = {PisCapability.PIS_SEPA, PisCapability.PIS_SEPA_ICT},
+        markets = {"IT"})
 public final class RedirectAuthenticationDemoAgent extends NextGenerationDemoAgent
         implements RefreshTransferDestinationExecutor {
     private static final Logger log =
