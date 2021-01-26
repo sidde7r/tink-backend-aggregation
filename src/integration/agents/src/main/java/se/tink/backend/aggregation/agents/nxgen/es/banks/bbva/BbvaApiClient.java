@@ -80,16 +80,17 @@ public class BbvaApiClient {
     }
 
     public LoginResponse login(LoginRequest loginRequest) {
-        HttpResponse httpResponse =
-                createRequest(BbvaConstants.Url.TICKET)
-                        .header(Headers.CONSUMER_ID)
-                        .header(Headers.BBVA_USER_AGENT.getKey(), getUserAgent())
-                        .post(HttpResponse.class, loginRequest);
+        HttpResponse httpResponse = createLoginRequest().post(HttpResponse.class, loginRequest);
         LoginResponse loginResponse = httpResponse.getBody(LoginResponse.class);
-
         setTsec(httpResponse.getHeaders().getFirst(HeaderKeys.TSEC_KEY));
         setUserId(loginResponse.getUser().getId());
         return loginResponse;
+    }
+
+    private RequestBuilder createLoginRequest() {
+        return createRequest(BbvaConstants.Url.TICKET)
+                .header(Headers.CONSUMER_ID)
+                .header(Headers.BBVA_USER_AGENT.getKey(), getUserAgent());
     }
 
     public void logout() {
@@ -224,7 +225,7 @@ public class BbvaApiClient {
 
     private RequestBuilder buildAccountTransactionRequest(String pageKey, boolean firstLogin) {
         if (firstLogin && isFirstPageOfAccountTransactions(pageKey)) {
-            return createRequestOtpInSession(Url.ACCOUNT_TRANSACTION)
+            return createRequestOtpInSession()
                     .queryParam(QueryKeys.PAGINATION_OFFSET, QueryValues.FIRST_PAGE_KEY)
                     .queryParam(QueryKeys.PAGE_SIZE, String.valueOf(Fetchers.PAGE_SIZE));
         }
@@ -238,23 +239,22 @@ public class BbvaApiClient {
 
     private RequestBuilder createAccountTransactionsHistoryRequestWithOtp(HttpResponse response) {
         String otp = supplementalInformationHelper.waitForOtpInput();
-        return createRequestOtpInSession(Url.ACCOUNT_TRANSACTION, response, otp)
+        return createRequestOtpInSession(response, otp)
                 .queryParam(QueryKeys.PAGINATION_OFFSET, QueryValues.FIRST_PAGE_KEY)
                 .queryParam(QueryKeys.PAGE_SIZE, String.valueOf(Fetchers.PAGE_SIZE));
     }
 
-    private RequestBuilder createRequestOtpInSession(String url) {
-        return createRequestInSession(url)
+    private RequestBuilder createRequestOtpInSession() {
+        return createRequestInSession(Url.ACCOUNT_TRANSACTION)
                 .header(HeaderKeys.AUTHENTICATION_TYPE, PostParameter.AUTH_OTP_STATE);
     }
 
-    private RequestBuilder createRequestOtpInSession(
-            String url, HttpResponse httpResponse, String otp) {
+    private RequestBuilder createRequestOtpInSession(HttpResponse httpResponse, String otp) {
         String authenticationState =
                 httpResponse.getHeaders().getFirst(HeaderKeys.AUTHENTICATION_STATE);
         String authenticationData =
                 httpResponse.getHeaders().getFirst(HeaderKeys.AUTHENTICATION_DATA) + "=" + otp;
-        return createRequestOtpInSession(url)
+        return createRequestOtpInSession()
                 .header(HeaderKeys.AUTHENTICATION_STATE, authenticationState)
                 .header(HeaderKeys.AUTHENTICATION_DATA, authenticationData);
     }
@@ -293,7 +293,6 @@ public class BbvaApiClient {
     private TransactionsRequest createAccountTransactionsAllHistoryRequest(
             Account account, String fromDate, String toDate) {
         final DateFilterEntity dateFilterEntity = new DateFilterEntity(fromDate, toDate);
-
         return TransactionsRequest.builder()
                 .withCustomer(new UserEntity(getUserId()))
                 .withSearchType(BbvaConstants.PostParameter.SEARCH_TYPE)
