@@ -99,8 +99,7 @@ public final class ImaginBankAgent extends NextGenerationAgent
     }
 
     private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
-        ImaginBankAccountFetcher accountFetcher =
-                new ImaginBankAccountFetcher(apiClient, imaginBankSessionStorage);
+        ImaginBankAccountFetcher accountFetcher = new ImaginBankAccountFetcher(apiClient);
         ImaginBankTransactionFetcher transactionFetcher =
                 new ImaginBankTransactionFetcher(apiClient);
 

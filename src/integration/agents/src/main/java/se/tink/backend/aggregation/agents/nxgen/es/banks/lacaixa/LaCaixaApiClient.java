@@ -73,18 +73,18 @@ public class LaCaixaApiClient {
                     .post(StatusResponse.class, loginRequest);
         } catch (HttpResponseException e) {
             HttpResponse response = e.getResponse();
-            LaCaixaErrorResponse errorResponse = response.getBody(LaCaixaErrorResponse.class);
             if (response.getStatus() == HttpStatus.SC_CONFLICT) {
+                LaCaixaErrorResponse errorResponse = response.getBody(LaCaixaErrorResponse.class);
                 if (errorResponse.isAccountBlocked()) {
                     throw AuthorizationError.ACCOUNT_BLOCKED.exception();
                 } else if (errorResponse.isIdentificationIncorrect()) {
                     throw LoginError.INCORRECT_CREDENTIALS.exception(e);
                 }
+                log.info(
+                        "Unknown error code {} with message {}",
+                        errorResponse.getCode(),
+                        errorResponse.getMessage());
             }
-            log.info(
-                    "Unknown error code {} with message {}",
-                    errorResponse.getCode(),
-                    errorResponse.getMessage());
             throw LoginError.DEFAULT_MESSAGE.exception();
         }
     }
