@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: VERSION\n"
-"POT-Creation-Date: 2021-01-23 14:16+0000\n"
-"PO-Revision-Date: 2021-01-23 14:16+0000\n"
+"POT-Creation-Date: 2021-01-26 15:26+0000\n"
+"PO-Revision-Date: 2021-01-26 15:26+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE TEAM <EMAIL@ADDRESS>\n"
 "Language: it\n"
@@ -1367,6 +1367,17 @@ msgstr "C'è stato un problema nel connettersi alla banca."
 
 msgid "The value you entered is not valid."
 msgstr "Il valore inserito non è valido."
+
+msgid "Please confirm the login in your N26 app and then click \"Submit\"."
+msgstr ""
+"Per favore conferma il login nella tua app N26 e poi clicca su “Invia“."
+
+msgid ""
+"You haven't confirmed your login in the N26 app yet. Please confirm it and "
+"click \"Submit\"."
+msgstr ""
+"Non hai ancora confermato il tuo login nell’app N26. Per favore confermalo e "
+"clicca su “Invia“."
 
 msgid "Do you have UBI Banca mobile app installed on this phone?"
 msgstr "Su questo telefono è installata l'app mobile UBI Banca?"
