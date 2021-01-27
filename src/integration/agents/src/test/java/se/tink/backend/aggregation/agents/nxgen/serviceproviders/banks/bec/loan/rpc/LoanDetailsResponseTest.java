@@ -244,21 +244,7 @@ public class LoanDetailsResponseTest {
                     + "            \"detailsInGroup\": [\n"
                     + "                {\n"
                     + "                    \"detailName\": \"Rentesats\",\n"
-                    + "                    \"detailValue\": \"3,250 %\"\n"
-                    + "                }"
-                    + "            ]\n"
-                    + "        }\n"
-                    + "    ]\n"
-                    + "}";
-
-    private static final String INTEREST_RATE_YEARLY_INTEREST =
-            "{\n"
-                    + "    \"mortgageLoanDetails\": [\n"
-                    + "        {\n"
-                    + "            \"detailsInGroup\": [\n"
-                    + "                {\n"
-                    + "                    \"detailName\": \"Yearly interest\",\n"
-                    + "                    \"detailValue\": \"-0,1637%\"\n"
+                    + "                    \"detailValue\": \"-3,250 %\"\n"
                     + "                }"
                     + "            ]\n"
                     + "        }\n"
@@ -268,8 +254,7 @@ public class LoanDetailsResponseTest {
     private Object[] interestRateParams() {
         return new Object[] {
             new Object[] {INTEREST_RATE_ENGLISH, 0.0183},
-            new Object[] {INTEREST_RATE_RENTESATS, 0.0325},
-            new Object[] {INTEREST_RATE_YEARLY_INTEREST, -0.001637},
+            new Object[] {INTEREST_RATE_RENTESATS, -0.0325},
             new Object[] {DUMMY_DETAILS, null} // without details about balance
         };
     }

@@ -33,7 +33,7 @@ public class LoanDetailsResponse {
 
         return findFirstMatchingDetail(
                         details ->
-                                Arrays.asList("Rentesats", "Interest rate", "Yearly interest")
+                                Arrays.asList("Rentesats", "Interest rate")
                                         .contains(details.getDetailName()))
                 .map(
                         detail ->
