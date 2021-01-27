@@ -58,7 +58,7 @@ spec:
         summary: Threshold exceed for ( <{ $labels.className }> ) for transfers with outcome ( <{ $labels.outcome }> ).
 
     - alert: TransferUnavailableOutcomeThresholdIsPassedForSwedenTier2Banks
-      expr: sum by (className, outcome) (increase(tink_agent_transfer_total{market="SE", className!~".*(nordea|seb|swedbank|handelsbanken).*", outcome=~"unavailable"}[15m])) >= 8
+      expr: sum by (className, outcome) (increase(tink_agent_transfer_total{market="SE", className!~".*(nordea|seb|swedbank|handelsbanken).*", outcome=~"unavailable"}[15m])) >= 15
       labels:
         severity: urgent
         who: payments
@@ -68,7 +68,7 @@ spec:
         summary: Threshold exceed for ( <{ $labels.className }> ) for transfers with outcome ( <{ $labels.outcome }> ).
 
     - alert: TransferUnavailableOutcomeThresholdIsPassedForSwedenTier1Banks
-      expr: sum by (className, outcome) (increase(tink_agent_transfer_total{market="SE", className=~".*(nordea|seb|swedbank|handelsbanken).*", outcome=~"unavailable"}[15m])) >= 8
+      expr: sum by (className, outcome) (increase(tink_agent_transfer_total{market="SE", className=~".*(nordea|seb|swedbank|handelsbanken).*", outcome=~"unavailable"}[15m])) >= 15
       labels:
         severity: urgent
         who: payments
