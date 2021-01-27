@@ -109,8 +109,8 @@ public class FinecoBankAuthenticationHelperTest {
         authenticationHelper.storeConsents();
 
         // then
-        verify(persistentStorage, times(1)).put(StorageKeys.BALANCE_ACCOUNTS, consent);
-        verify(persistentStorage, times(1)).put(StorageKeys.TRANSACTION_ACCOUNTS, consent);
+        verify(persistentStorage, times(1)).put(StorageKeys.BALANCES_CONSENTS, consent);
+        verify(persistentStorage, times(1)).put(StorageKeys.TRANSACTIONS_CONSENTS, consent);
         verify(credentials).setSessionExpiryDate(eq(FORMATTER_DAILY.parse(TEST_DATE)));
     }
 

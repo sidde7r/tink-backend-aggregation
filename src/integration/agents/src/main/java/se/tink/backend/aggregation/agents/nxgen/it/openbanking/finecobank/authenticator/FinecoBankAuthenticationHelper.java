@@ -77,9 +77,9 @@ public final class FinecoBankAuthenticationHelper {
                     ErrorMessages.INVALID_CONSENT_TRANSACTIONS);
         }
 
-        persistentStorage.put(StorageKeys.BALANCE_ACCOUNTS, accessItem.getBalancesConsents());
+        persistentStorage.put(StorageKeys.BALANCES_CONSENTS, accessItem.getBalancesConsents());
         persistentStorage.put(
-                StorageKeys.TRANSACTION_ACCOUNTS, accessItem.getTransactionsConsents());
+                StorageKeys.TRANSACTIONS_CONSENTS, accessItem.getTransactionsConsents());
 
         storeSessionExpiryDateInCredentials(consentAuthorizations);
     }

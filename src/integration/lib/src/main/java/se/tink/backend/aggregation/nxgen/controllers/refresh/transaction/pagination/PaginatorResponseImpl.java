@@ -3,8 +3,10 @@ package se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagina
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;
+import lombok.EqualsAndHashCode;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
+@EqualsAndHashCode
 public class PaginatorResponseImpl implements PaginatorResponse {
 
     private static final Collection<? extends Transaction> EMPTY_LIST = Collections.emptyList();

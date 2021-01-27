@@ -75,7 +75,7 @@ public class FinecoBankTransactionalAccountFetcher
         List<AccountConsent> transactionsConsents =
                 persistentStorage
                         .get(
-                                StorageKeys.TRANSACTION_ACCOUNTS,
+                                StorageKeys.TRANSACTIONS_CONSENTS,
                                 new TypeReference<List<AccountConsent>>() {})
                         .orElse(Collections.emptyList());
         for (AccountConsent transactionsConsent : transactionsConsents) {
