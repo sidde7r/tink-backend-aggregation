@@ -76,8 +76,8 @@ public final class FinecoBankConstants {
         public static final String CONSENT_ID = "consentId";
         public static final String ACCOUNT_ID = "accountId";
         public static final String CARD_ID = "cardId";
-        public static final String TRANSACTION_ACCOUNTS = "transactionAccounts";
-        public static final String BALANCE_ACCOUNTS = "balanceAccounts";
+        public static final String TRANSACTIONS_CONSENTS = "transactionAccounts";
+        public static final String BALANCES_CONSENTS = "balanceAccounts";
         public static final String STATE = "STATE";
     }
 

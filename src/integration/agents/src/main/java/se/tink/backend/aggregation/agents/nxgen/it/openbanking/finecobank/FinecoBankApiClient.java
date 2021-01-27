@@ -179,7 +179,7 @@ public class FinecoBankApiClient {
 
     private List<AccountConsent> getBalancesConsentsFromStorage() {
         return persistentStorage
-                .get(StorageKeys.BALANCE_ACCOUNTS, new TypeReference<List<AccountConsent>>() {})
+                .get(StorageKeys.BALANCES_CONSENTS, new TypeReference<List<AccountConsent>>() {})
                 .orElse(Collections.emptyList());
     }
 

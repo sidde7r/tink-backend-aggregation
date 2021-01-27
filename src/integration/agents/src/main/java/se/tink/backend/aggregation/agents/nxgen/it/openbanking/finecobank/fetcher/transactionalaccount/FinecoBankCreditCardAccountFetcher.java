@@ -1,13 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.fetcher.transactionalaccount;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.google.common.base.Strings;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.Year;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -37,8 +39,18 @@ public class FinecoBankCreditCardAccountFetcher
     private final PersistentStorage persistentStorage;
     private final boolean isManual;
 
-    private int monthsRequestCounter = 0;
-    private CreditCardAccount lastFetchedCreditCard;
+    private final Map<String, Integer> transactionsRequestsCounterPerApiIdentifier;
+
+    public FinecoBankCreditCardAccountFetcher(
+            FinecoBankApiClient finecoBankApiClient,
+            PersistentStorage persistentStorage,
+            boolean isManual) {
+        this.finecoBankApiClient = finecoBankApiClient;
+        this.persistentStorage = persistentStorage;
+        this.isManual = isManual;
+
+        this.transactionsRequestsCounterPerApiIdentifier = new HashMap<>();
+    }
 
     @Override
     public Collection<CreditCardAccount> fetchAccounts() {
@@ -67,73 +79,73 @@ public class FinecoBankCreditCardAccountFetcher
      */
     @Override
     public PaginatorResponse getTransactionsFor(CreditCardAccount account, Year year, Month month) {
-        if (isEmptyCreditAccountConsent(account)) {
+
+        if (!transactionsConsentForCreditCardAccountExists(account)) {
             throw new IllegalStateException(ErrorMessages.INVALID_CONSENT_TRANSACTIONS);
         }
 
-        setLastFetchCreditCardIfNull(account);
-        if (isNewCreditCardFetched(account)) {
-            setLastFetchedCreditCardAndResetCounter(account);
+        if (hasReachedTransactionsRequestsLimit(account.getApiIdentifier())) {
+            return PaginatorResponseImpl.createEmpty(false);
         }
 
-        LocalDate fromDateAdjusted = prepareFromDate(year, month);
         try {
-            if (shouldStopFetchingTransactions()) {
-                return PaginatorResponseImpl.createEmpty(false);
-            }
+            LocalDate fromDateAdjusted = prepareFromDate(year, month);
             return finecoBankApiClient.getCreditTransactions(account, fromDateAdjusted);
+
         } catch (HttpResponseException e) {
-            if (e.getResponse().getStatus() == ErrorMessages.ACCESS_EXCEEDED_ERROR_CODE
-                    || e.getResponse().getStatus() == ErrorMessages.BAD_REQUEST_ERROR_CODE) {
+
+            int responseStatus = e.getResponse().getStatus();
+            if (responseStatus == ErrorMessages.ACCESS_EXCEEDED_ERROR_CODE) {
                 log.warn("Fineco returned 429 - verify number of requests", e);
                 return PaginatorResponseImpl.createEmpty(false);
-            } else {
-                throw e;
             }
+            if (responseStatus == ErrorMessages.BAD_REQUEST_ERROR_CODE) {
+                log.warn("Fineco returned 400", e);
+                return PaginatorResponseImpl.createEmpty(false);
+            }
+            throw e;
+
         } finally {
-            monthsRequestCounter++;
+            incrementRequestsCounter(account.getApiIdentifier());
         }
     }
 
-    private boolean isEmptyCreditAccountConsent(CreditCardAccount creditCardAccount) {
-        List<AccountConsent> transactionsConsents =
-                persistentStorage
-                        .get(
-                                StorageKeys.TRANSACTION_ACCOUNTS,
-                                new TypeReference<List<AccountConsent>>() {})
-                        .orElse(Collections.emptyList());
-        for (AccountConsent transactionsConsent : transactionsConsents) {
-            String maskedPan = transactionsConsent.getMaskedPan();
-            if (!Strings.isNullOrEmpty(maskedPan)
-                    && maskedPan.equals(creditCardAccount.getIdModule().getAccountNumber())) {
-                return false;
-            }
+    private boolean transactionsConsentForCreditCardAccountExists(
+            CreditCardAccount creditCardAccount) {
+        return getTransactionsConsentsFromStorage().stream()
+                .anyMatch(
+                        transactionsConsent -> {
+                            String maskedPan = transactionsConsent.getMaskedPan();
+                            String creditCardAccountNumber = creditCardAccount.getAccountNumber();
+
+                            return Objects.equals(maskedPan, creditCardAccountNumber);
+                        });
+    }
+
+    private List<AccountConsent> getTransactionsConsentsFromStorage() {
+        return persistentStorage
+                .get(
+                        StorageKeys.TRANSACTIONS_CONSENTS,
+                        new TypeReference<List<AccountConsent>>() {})
+                .orElse(Collections.emptyList());
+    }
+
+    private boolean hasReachedTransactionsRequestsLimit(String apiIdentifier) {
+        int requestsCount =
+                transactionsRequestsCounterPerApiIdentifier.getOrDefault(apiIdentifier, 0);
+        if (isManual) {
+            return requestsCount == MAX_MONTHS_ALLOWED_TO_FETCH;
         }
-
-        return true;
-    }
-
-    private void setLastFetchCreditCardIfNull(CreditCardAccount account) {
-        if (lastFetchedCreditCard == null) {
-            lastFetchedCreditCard = account;
-        }
-    }
-
-    private boolean isNewCreditCardFetched(CreditCardAccount account) {
-        return !lastFetchedCreditCard.getApiIdentifier().equals(account.getApiIdentifier());
-    }
-
-    private void setLastFetchedCreditCardAndResetCounter(CreditCardAccount account) {
-        lastFetchedCreditCard = account;
-        monthsRequestCounter = 0;
+        return requestsCount == MAX_MONTHS_BG_REFRESH;
     }
 
     private LocalDate prepareFromDate(Year year, Month month) {
         return LocalDate.of(year.getValue(), month, 1);
     }
 
-    private boolean shouldStopFetchingTransactions() {
-        return (monthsRequestCounter == MAX_MONTHS_ALLOWED_TO_FETCH)
-                || (!isManual && monthsRequestCounter == MAX_MONTHS_BG_REFRESH);
+    private void incrementRequestsCounter(String apiIdentifier) {
+        transactionsRequestsCounterPerApiIdentifier.putIfAbsent(apiIdentifier, 0);
+        transactionsRequestsCounterPerApiIdentifier.computeIfPresent(
+                apiIdentifier, (key, counter) -> counter + 1);
     }
 }

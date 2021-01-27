@@ -116,7 +116,7 @@ public class FinecoBankApiClientTest {
         PersistentStorage persistentStorage = mock(PersistentStorage.class);
         FinecoBankConfiguration configuration = mock(FinecoBankConfiguration.class);
         when(persistentStorage.get(
-                        ArgumentMatchers.eq(StorageKeys.BALANCE_ACCOUNTS),
+                        ArgumentMatchers.eq(StorageKeys.BALANCES_CONSENTS),
                         ArgumentMatchers.<TypeReference<List<AccountConsent>>>any()))
                 .thenReturn(Optional.of(balancesItems));
 
