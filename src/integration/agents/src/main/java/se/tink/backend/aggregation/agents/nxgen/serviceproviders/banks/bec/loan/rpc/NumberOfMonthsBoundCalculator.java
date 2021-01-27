@@ -13,6 +13,9 @@ class NumberOfMonthsBoundCalculator {
     private static final String YEARS_IN_DANISH = "år";
     private static final String YEARS_IN_ENGLISH = "years";
 
+    private static final List<ToMonthCalculator> toMonthCalculators =
+            ImmutableList.of(new MonthToMonthCalculator(), new YearToMonthCalculator());
+
     interface ToMonthCalculator {
         boolean canHandle(final String s);
 
@@ -47,9 +50,6 @@ class NumberOfMonthsBoundCalculator {
                             s.replace(YEARS_IN_DANISH, "").replace(YEARS_IN_ENGLISH, "").trim());
         }
     }
-
-    private static final List<ToMonthCalculator> toMonthCalculators =
-            ImmutableList.of(new MonthToMonthCalculator(), new YearToMonthCalculator());
 
     public int calculate(String s) {
         String[] parts = s.split(",");
