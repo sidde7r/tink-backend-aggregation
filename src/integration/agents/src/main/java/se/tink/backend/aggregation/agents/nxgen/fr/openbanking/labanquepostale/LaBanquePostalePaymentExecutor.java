@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.map.CaseInsensitiveMap;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
@@ -117,16 +118,13 @@ public class LaBanquePostalePaymentExecutor implements PaymentExecutor, Fetchabl
                                                 new PaymentAuthenticationException(
                                                         "Payment authentication failed. There is no authorization url!",
                                                         new PaymentRejectedException()));
-                Optional<Map<String, String>> queryParameters =
-                        openThirdPartyApp(new URL(authorizationUrl));
-                if (!queryParameters.isPresent()) {
-                    throw new PaymentException(
-                            "Missing payment request response for request: "
-                                    + paymentMultiStepRequest);
-                }
-                sessionStorage.put(
-                        PSU_AUTHORIZATION_FACTOR,
-                        queryParameters.get().get(PSU_AUTHORIZATION_FACTOR_KEY));
+                Map<String, String> queryParametersMap =
+                        new CaseInsensitiveMap<>(
+                                openThirdPartyApp(
+                                        new URL(authorizationUrl), paymentMultiStepRequest));
+                String psuAuthenticationFactor =
+                        queryParametersMap.get(PSU_AUTHORIZATION_FACTOR_KEY);
+                sessionStorage.put(PSU_AUTHORIZATION_FACTOR, psuAuthenticationFactor);
                 nextStep = CONFIRM_PAYMENT;
                 break;
             case CONFIRM_PAYMENT:
@@ -201,11 +199,22 @@ public class LaBanquePostalePaymentExecutor implements PaymentExecutor, Fetchabl
         return paymentStatus;
     }
 
-    private Optional<Map<String, String>> openThirdPartyApp(URL authorizationUrl) {
+    private Map<String, String> openThirdPartyApp(
+            URL authorizationUrl, PaymentMultiStepRequest paymentMultiStepRequest)
+            throws PaymentException {
         this.supplementalInformationHelper.openThirdPartyApp(
                 ThirdPartyAppAuthenticationPayload.of(authorizationUrl));
-        return supplementalInformationHelper.waitForSupplementalInformation(
-                strongAuthenticationState.getSupplementalKey(), WAIT_FOR_MINUTES, TimeUnit.MINUTES);
+        Optional<Map<String, String>> queryParameters =
+                supplementalInformationHelper.waitForSupplementalInformation(
+                        strongAuthenticationState.getSupplementalKey(),
+                        WAIT_FOR_MINUTES,
+                        TimeUnit.MINUTES);
+
+        return queryParameters.orElseThrow(
+                () ->
+                        new PaymentException(
+                                "Missing payment request response for request: "
+                                        + paymentMultiStepRequest));
     }
 
     @Override
