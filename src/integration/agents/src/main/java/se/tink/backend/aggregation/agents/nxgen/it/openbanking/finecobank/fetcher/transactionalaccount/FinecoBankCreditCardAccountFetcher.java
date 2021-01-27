@@ -144,8 +144,7 @@ public class FinecoBankCreditCardAccountFetcher
     }
 
     private void incrementRequestsCounter(String apiIdentifier) {
-        transactionsRequestsCounterPerApiIdentifier.putIfAbsent(apiIdentifier, 0);
-        transactionsRequestsCounterPerApiIdentifier.computeIfPresent(
-                apiIdentifier, (key, counter) -> counter + 1);
+        transactionsRequestsCounterPerApiIdentifier.compute(
+                apiIdentifier, (key, counter) -> counter == null ? 1 : counter + 1);
     }
 }

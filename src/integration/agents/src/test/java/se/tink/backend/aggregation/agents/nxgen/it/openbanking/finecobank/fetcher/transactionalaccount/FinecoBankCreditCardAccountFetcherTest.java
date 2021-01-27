@@ -53,17 +53,8 @@ public class FinecoBankCreditCardAccountFetcherTest {
         // given
         CreditCardAccount account = createCreditCardAccount("accountNumber", "apiIdentifier");
 
-        List<AccountConsent> transactionsConsents =
-                Stream.of(
-                                sampleTransactionsConsentForAccountNumber(null),
-                                sampleTransactionsConsentForAccountNumber(""),
-                                sampleTransactionsConsentForAccountNumber("accountNumber1"),
-                                sampleTransactionsConsentForAccountNumber("accountNumber2"))
-                        .collect(Collectors.toList());
-        when(persistentStorage.get(
-                        StorageKeys.TRANSACTIONS_CONSENTS,
-                        new TypeReference<List<AccountConsent>>() {}))
-                .thenReturn(Optional.of(transactionsConsents));
+        mockTransactionsConsentExistsForAccountNumbers(
+                null, "", "accountNumber1", "accountNumber2");
 
         // when
         Throwable t =
@@ -200,12 +191,13 @@ public class FinecoBankCreditCardAccountFetcherTest {
     }
 
     @Test
-    public void shouldReturnEmptyResponseOn429ResponseCode() {
+    @Parameters(value = {"400", "429"})
+    public void shouldReturnEmptyResponseOn429And400ResponseCodes(Integer responseCode) {
         // given
         CreditCardAccount account = createCreditCardAccount("irrelevant", "irrelevant");
         mockTransactionsConsentExistsForAccountNumbers("irrelevant");
 
-        HttpResponseException responseException = httpResponseExceptionWithStatus(429);
+        HttpResponseException responseException = httpResponseExceptionWithStatus(responseCode);
         when(finecoBankApiClient.getCreditTransactions(any(), any())).thenThrow(responseException);
 
         // when
@@ -217,31 +209,13 @@ public class FinecoBankCreditCardAccountFetcherTest {
     }
 
     @Test
-    public void shouldReturnEmptyResponseOn400ResponseCode() {
-        // given
-        CreditCardAccount account = createCreditCardAccount("irrelevant123", "irrelevant");
-        mockTransactionsConsentExistsForAccountNumbers("irrelevant123");
-
-        HttpResponseException responseException = httpResponseExceptionWithStatus(400);
-        when(finecoBankApiClient.getCreditTransactions(any(), any())).thenThrow(responseException);
-
-        // when
-        PaginatorResponse paginatorResponse =
-                commonTestFetcher.getTransactionsFor(account, Year.of(2000), Month.JANUARY);
-
-        // then
-        assertThat(paginatorResponse).isEqualTo(PaginatorResponseImpl.createEmpty(false));
-    }
-
-    @Test
     @Parameters(value = {"401", "403", "404", "500"})
-    public void shouldNotHandleOtherResponseCodes(String responseCodeAsString) {
+    public void shouldNotHandleOtherResponseCodes(int responseCode) {
         // given
         CreditCardAccount account = createCreditCardAccount("irrelevant123", "irrelevant");
         mockTransactionsConsentExistsForAccountNumbers("irrelevant123");
 
-        HttpResponseException responseException =
-                httpResponseExceptionWithStatus(Integer.parseInt(responseCodeAsString));
+        HttpResponseException responseException = httpResponseExceptionWithStatus(responseCode);
         when(finecoBankApiClient.getCreditTransactions(any(), any())).thenThrow(responseException);
 
         // when
