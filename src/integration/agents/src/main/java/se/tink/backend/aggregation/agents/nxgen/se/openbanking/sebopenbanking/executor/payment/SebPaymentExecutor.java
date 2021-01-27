@@ -1,8 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.executor.payment;
 
+import com.google.common.util.concurrent.Uninterruptibles;
 import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -114,6 +116,12 @@ public class SebPaymentExecutor implements PaymentExecutor, FetchablePaymentExec
                     nextStep = SigningStepConstants.STEP_SIGN;
                     break;
                 } else {
+                    // SEB api docs suggest 5s polling interval.
+                    // "RCVD, Received, The payment has been received by SEB. To determine if
+                    // payment is ready for signing, check the links block. Recommended polling
+                    // interval is 5 seconds;"
+                    // https://developer.sebgroup.com/node/6054
+                    Uninterruptibles.sleepUninterruptibly(5, TimeUnit.SECONDS);
                     return new PaymentMultiStepResponse(
                             payment, SigningStepConstants.STEP_INIT, new ArrayList<>());
                 }
