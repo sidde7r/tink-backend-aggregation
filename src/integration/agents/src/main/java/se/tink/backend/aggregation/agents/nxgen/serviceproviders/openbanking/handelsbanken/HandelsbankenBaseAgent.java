@@ -39,14 +39,14 @@ public abstract class HandelsbankenBaseAgent extends NextGenerationAgent
         super(request, context, signatureKeyPair);
         client.addFilter(new TimeoutFilter());
         client.addFilter(new HandelsbankenRejectedFilter());
-        apiClient = new HandelsbankenBaseApiClient(client, persistentStorage, getMarket());
+        apiClient = constructApiClient();
     }
 
     public HandelsbankenBaseAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
         client.addFilter(new TimeoutFilter());
         client.addFilter(new HandelsbankenRejectedFilter());
-        apiClient = new HandelsbankenBaseApiClient(client, persistentStorage, getMarket());
+        apiClient = constructApiClient();
     }
 
     protected abstract HandelsbankenBaseAccountConverter getAccountConverter();
@@ -54,6 +54,10 @@ public abstract class HandelsbankenBaseAgent extends NextGenerationAgent
     protected abstract LocalDate getMaxPeriodTransactions();
 
     protected abstract String getMarket();
+
+    public HandelsbankenBaseApiClient constructApiClient() {
+        return new HandelsbankenBaseApiClient(client, persistentStorage, getMarket());
+    }
 
     @Override
     public void setConfiguration(AgentsServiceConfiguration configuration) {

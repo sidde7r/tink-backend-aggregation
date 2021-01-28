@@ -53,6 +53,10 @@ public class AccountsItemEntity {
         return accountType;
     }
 
+    public String getName() {
+        return name;
+    }
+
     public Optional<TransactionalAccount> toTinkAccount(
             TransactionalAccountType type, BalancesItemEntity balance) {
         return TransactionalAccount.nxBuilder()

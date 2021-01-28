@@ -106,7 +106,7 @@ public class HandelsbankenBaseApiClient {
                                                 .TOKEN_NOT_FOUND));
     }
 
-    private RequestBuilder createRequest(URL url) {
+    protected RequestBuilder createRequest(URL url) {
 
         return client.request(url)
                 .addBearerToken(getOauthToken())
@@ -371,7 +371,7 @@ public class HandelsbankenBaseApiClient {
      * still active during the authentication, but expires directly after later. This method will
      * refresh the access token if it's expired, and will then retry the request with the new token.
      */
-    private <T> T requestRefreshableGet(RequestBuilder request, Class<T> responseType) {
+    protected <T> T requestRefreshableGet(RequestBuilder request, Class<T> responseType) {
         try {
             return get(request, responseType);
         } catch (HttpResponseException hre) {
