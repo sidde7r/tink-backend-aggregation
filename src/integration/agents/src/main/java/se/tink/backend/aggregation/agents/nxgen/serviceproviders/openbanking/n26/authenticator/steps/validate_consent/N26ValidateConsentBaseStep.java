@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.authenticator.steps.fetch_consent.N26ConsentAccessor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.authenticator.steps.fetch_consent.N26ConsentPersistentData;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.authenticator.steps.validate_consent.rpc.ValidateConsentCombinedResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentDetailsResponse;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationPersistedData;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationProcessState;
@@ -18,6 +19,7 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.AgentRefreshableAccessTokenAuthenticationPersistedDataAccessorFactory;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.common.authentication.Token;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AgentBankApiError;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.error.SessionExpiredError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.http.AuthenticationPersistedDataCookieStoreAccessorFactory;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.http.ExternalApiCallResult;
 
@@ -30,12 +32,12 @@ public abstract class N26ValidateConsentBaseStep {
     protected Token accessToken;
 
     protected abstract AgentAuthenticationResult parseResponseToResult(
-            ExternalApiCallResult<ConsentDetailsResponse> callResult,
+            ExternalApiCallResult<ValidateConsentCombinedResponse> callResult,
             AgentAuthenticationPersistedData persistedData,
             AgentAuthenticationProcessState processState);
 
     protected Optional<AgentAuthenticationResult> parseCommonResponseToResult(
-            ExternalApiCallResult<ConsentDetailsResponse> callResult,
+            ExternalApiCallResult<ValidateConsentCombinedResponse> callResult,
             AgentAuthenticationPersistedData persistedData) {
 
         Optional<AgentBankApiError> optionalBankError = callResult.getAgentBankApiError();
@@ -45,19 +47,15 @@ public abstract class N26ValidateConsentBaseStep {
                     new AgentFailedAuthenticationResult(optionalBankError.get(), persistedData));
         }
 
-        ConsentDetailsResponse consentStatusResponse = callResult.getResponse().get();
-        if (consentStatusResponse.isValid()) {
-            Instant validUntil =
-                    consentStatusResponse
-                            .getValidUntil()
-                            .atStartOfDay(ZoneId.systemDefault())
-                            .toInstant();
-            return Optional.of(new AgentSucceededAuthenticationResult(validUntil, persistedData));
+        if (callResult.getResponse().isPresent()) {
+            return parseValidateConsentCombinedResponse(
+                    callResult.getResponse().get(), persistedData);
         }
-        return Optional.empty();
+        return Optional.of(
+                new AgentFailedAuthenticationResult(new SessionExpiredError(), persistedData));
     }
 
-    protected ExternalApiCallResult<ConsentDetailsResponse> buildAndExecuteRequest(
+    protected ExternalApiCallResult<ValidateConsentCombinedResponse> buildAndExecuteRequest(
             AgentAuthenticationPersistedData persistedData) {
 
         accessToken = getAccessToken(persistedData);
@@ -96,5 +94,24 @@ public abstract class N26ValidateConsentBaseStep {
                 .getRefreshableAccessToken()
                 .get()
                 .getAccessToken();
+    }
+
+    private Optional<AgentAuthenticationResult> parseValidateConsentCombinedResponse(
+            ValidateConsentCombinedResponse callResultResponse,
+            AgentAuthenticationPersistedData persistedData) {
+        if (callResultResponse.hasValidDetails()) {
+            ConsentDetailsResponse consentDetailsResponse = callResultResponse.getValidResponse();
+            Instant validUntil =
+                    consentDetailsResponse
+                            .getValidUntil()
+                            .atStartOfDay(ZoneId.systemDefault())
+                            .toInstant();
+            return Optional.of(new AgentSucceededAuthenticationResult(validUntil, persistedData));
+
+        } else if (callResultResponse.isLoginExpired()) {
+            return Optional.of(
+                    new AgentFailedAuthenticationResult(new SessionExpiredError(), persistedData));
+        }
+        return Optional.empty();
     }
 }

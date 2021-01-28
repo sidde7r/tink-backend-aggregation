@@ -10,6 +10,7 @@ import org.junit.Ignore;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.authenticator.steps.N26BaseTestStep;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.authenticator.steps.fetch_consent.N26ConsentAccessor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.authenticator.steps.fetch_consent.N26ConsentPersistentData;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.authenticator.steps.validate_consent.rpc.ValidateConsentCombinedResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentDetailsResponse;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationPersistedData;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.AgentRefreshableAccessTokenAuthenticationPersistedData;
@@ -29,15 +30,20 @@ public abstract class N26ValidateConsentStepBaseTest extends N26BaseTestStep {
         return n26ConsentAccessor.storeN26ConsentPersistentData(n26ConsentPersistentData);
     }
 
-    protected ExternalApiCallResult<ConsentDetailsResponse> prepareSuccessfulApiCallResult(
+    protected ExternalApiCallResult<ValidateConsentCombinedResponse> prepareSuccessfulApiCallResult(
             boolean valid) {
-        ExternalApiCallResult<ConsentDetailsResponse> apiCallResult =
+        ExternalApiCallResult<ValidateConsentCombinedResponse> apiCallResult =
                 mock(ExternalApiCallResult.class);
         when(apiCallResult.getAgentBankApiError()).thenReturn(Optional.empty());
         ConsentDetailsResponse consentStatusResponse = mock(ConsentDetailsResponse.class);
-        when(consentStatusResponse.isValid()).thenReturn(valid);
         when(consentStatusResponse.getValidUntil()).thenReturn(LocalDate.parse("2021-01-01"));
-        when(apiCallResult.getResponse()).thenReturn(Optional.of(consentStatusResponse));
+
+        ValidateConsentCombinedResponse validateConsentCombinedResponse =
+                mock(ValidateConsentCombinedResponse.class);
+        when(validateConsentCombinedResponse.hasValidDetails()).thenReturn(valid);
+        when(validateConsentCombinedResponse.getValidResponse()).thenReturn(consentStatusResponse);
+
+        when(apiCallResult.getResponse()).thenReturn(Optional.of(validateConsentCombinedResponse));
         return apiCallResult;
     }
 

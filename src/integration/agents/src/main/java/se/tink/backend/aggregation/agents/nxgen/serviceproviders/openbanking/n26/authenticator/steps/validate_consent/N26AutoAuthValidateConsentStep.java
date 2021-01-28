@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.authenticator.steps.fetch_authorization_url.N26FetchAuthorizationUrlStep;
-import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentDetailsResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.authenticator.steps.validate_consent.rpc.ValidateConsentCombinedResponse;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationPersistedData;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationProcessState;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationProcessStepIdentifier;
@@ -26,7 +26,7 @@ public class N26AutoAuthValidateConsentStep extends N26ValidateConsentBaseStep
     @Override
     public AgentAuthenticationResult execute(AgentProceedNextStepAuthenticationRequest request) {
 
-        ExternalApiCallResult<ConsentDetailsResponse> callResult =
+        ExternalApiCallResult<ValidateConsentCombinedResponse> callResult =
                 buildAndExecuteRequest(request.getAuthenticationPersistedData());
 
         return parseResponseToResult(
@@ -37,7 +37,7 @@ public class N26AutoAuthValidateConsentStep extends N26ValidateConsentBaseStep
 
     @Override
     protected AgentAuthenticationResult parseResponseToResult(
-            ExternalApiCallResult<ConsentDetailsResponse> callResult,
+            ExternalApiCallResult<ValidateConsentCombinedResponse> callResult,
             AgentAuthenticationPersistedData persistedData,
             AgentAuthenticationProcessState processState) {
 
