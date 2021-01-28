@@ -76,7 +76,6 @@ public final class AgentsFrameworkFatJarTest {
                         // Permissible unshaded libraries for now
                         "ch/qos/logback/",
                         "com/fasterxml/",
-                        "com/nimbusds/",
                         "io/protostuff/",
                         "io/swagger/",
                         "javax/",
