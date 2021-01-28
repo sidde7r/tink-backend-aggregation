@@ -97,6 +97,10 @@ public class DanskeBankSEConfiguration implements DanskeBankConfiguration {
                 .add("2AE")
                 // 2AF: "Företagskonto" - "Company account"
                 .add("2AF")
+                // 2AG: "Huvudkonto YFFV" - "Main account", access to credit
+                .add("2AG")
+                // 2AH: "<USERNAME> Företag - Company account
+                .add("2AH")
                 // 2A3: "Mastercard Guld" - "Mastercard Gold"
                 .add("2A3")
                 // 2A4: "Företagskort" - "Company card"
@@ -127,12 +131,18 @@ public class DanskeBankSEConfiguration implements DanskeBankConfiguration {
                 .add("2DE")
                 // 2DI: "June" - Account with access to credit
                 .add("2DI")
+                // 2D7: "Danske Direkt" - "Danske Direct"
+                .add("2D7")
+                // 2D8: "Danske Direkt Ung" - "Danske Direct Young"
+                .add("2D8")
                 // 2EX: "Danske konto" - "Danske account"
                 .add("2EX")
                 // 3BG: "Danske Business ONE"
                 .add("3BG")
                 // 3BH: "Danske Business PLUS"
                 .add("3BH")
+                // 19C: "Mastercard"
+                .add("19C")
                 // 62C: "Valutakonto" - "Currency account"
                 .add("62C")
                 .build();
@@ -157,6 +167,10 @@ public class DanskeBankSEConfiguration implements DanskeBankConfiguration {
                 .add("2CF")
                 // 2C2: "Sparkonto XL" - "Savings account XL"
                 .add("2C2")
+                // 2CI: "V-Sparkonto" - "Savings account"
+                .add("2CI")
+                // 2DA: "Aktiv kapitalportfölj" - "Active capital portfolio"
+                .add("2DA")
                 // 2DC: "Investeringssparkonto"/"Individuellt sparkonto"
                 // - "Investment savings account/Individual savings account"
                 .add("2DC")
@@ -164,6 +178,8 @@ public class DanskeBankSEConfiguration implements DanskeBankConfiguration {
                 .add("2DD")
                 // 2DH: "AKP ISK" - "Investment savings account"
                 .add("2DH")
+                // 2DJ: "Sparkonto Premium Pl" - "Savings account Premium"
+                .add("2DJ")
                 // 2ED: "Fastränteplacering" - "Fixed-rate investment"
                 .add("2ED")
                 // 2EH: "<USERNAME> Spar" - Savings account that the user has named.
@@ -176,6 +192,8 @@ public class DanskeBankSEConfiguration implements DanskeBankConfiguration {
                 .add("3CA")
                 // 3CB: "HSB Fasträntekonto" - "HSB fixed-rate account"
                 .add("3CB")
+                // 62A: "Depåkonto valuta" - "Depot account currency"
+                .add("62A")
                 .build();
     }
 
