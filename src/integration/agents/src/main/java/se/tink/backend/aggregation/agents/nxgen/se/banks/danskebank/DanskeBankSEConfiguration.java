@@ -93,8 +93,6 @@ public class DanskeBankSEConfiguration implements DanskeBankConfiguration {
         return ImmutableList.<String>builder()
                 // 2AA: "Byggnadskredit" - "Building credit"
                 .add("2AA")
-                // 2AB: "Depåkonto" - "Depot account"
-                .add("2AB")
                 // 2AE: Missing logs for this product code
                 .add("2AE")
                 // 2AF: "Företagskonto" - "Company account"
@@ -127,8 +125,8 @@ public class DanskeBankSEConfiguration implements DanskeBankConfiguration {
                 .add("2CZ")
                 // 2DE: "Gårdskonto" - "Farm account" with access to credit.
                 .add("2DE")
-                // 2EH: "<USERNAME> Spar" - Savings account that the user has named.
-                .add("2EH")
+                // 2DI: "June" - Account with access to credit
+                .add("2DI")
                 // 2EX: "Danske konto" - "Danske account"
                 .add("2EX")
                 // 3BG: "Danske Business ONE"
@@ -143,6 +141,8 @@ public class DanskeBankSEConfiguration implements DanskeBankConfiguration {
     @Override
     public List<String> getSavingsAccountTypes() {
         return ImmutableList.<String>builder()
+                // 2AB: "Depåkonto" - "Depot account"
+                .add("2AB")
                 // 2AN: "Specialinlåning" - "Special deposits"
                 .add("2AN")
                 // 2BP: "Sparkonto" - "Savings account".
@@ -164,10 +164,10 @@ public class DanskeBankSEConfiguration implements DanskeBankConfiguration {
                 .add("2DD")
                 // 2DH: "AKP ISK" - "Investment savings account"
                 .add("2DH")
-                // 2DI: "June" - Account with access to credit
-                .add("2DI")
                 // 2ED: "Fastränteplacering" - "Fixed-rate investment"
                 .add("2ED")
+                // 2EH: "<USERNAME> Spar" - Savings account that the user has named.
+                .add("2EH")
                 // 2EK: "Sparkonto XL Kampanj" - "Savings account XL campaign"
                 .add("2EK")
                 // 2SF: "Sparkonto Företag" - Savings account Company"
