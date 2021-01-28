@@ -1,5 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.investment;
 
+import org.junit.Ignore;
+
+@Ignore
 public class BankiaInvestmentTestConstants {
 
     public static String BALANCE_JSON =

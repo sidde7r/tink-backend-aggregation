@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.loan.rpc;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Objects;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.BankiaConstants;
@@ -33,6 +34,7 @@ public class LoanDetailsRequest implements BankiaRequest {
     }
 
     @Override
+    @JsonIgnore
     public URL getURL() {
         return URL.of(
                 BankiaConstants.URL_BASE_OIP

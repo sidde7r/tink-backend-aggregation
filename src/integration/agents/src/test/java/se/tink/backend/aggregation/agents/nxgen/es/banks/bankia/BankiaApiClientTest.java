@@ -15,6 +15,9 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.RequestFactory.S
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.loan.rpc.LoanDetailsErrorCode;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.loan.rpc.LoanDetailsRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.loan.rpc.LoanDetailsResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.transactional.rpc.AccountDetailsErrorCode;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.transactional.rpc.AccountDetailsRequest;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.transactional.rpc.AccountDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.rpc.ErrorResponse;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
@@ -27,6 +30,7 @@ public class BankiaApiClientTest {
     public static final String PRODUCT_CODE = "product_code";
     public static final String LOAN_IDENTIFIER = "loan_identifier";
     public static final String UNKNOWN_EXTERNAL_ERROR_CODE = "111";
+    private static final String IBAN = "iban";
     @Mock private TinkHttpClient client;
     @Mock private PersistentStorage persistentStorage;
     @Mock private RequestFactory requestFactory;
@@ -130,5 +134,46 @@ public class BankiaApiClientTest {
         // then
         assertThat(loanDetails.isLeft()).isTrue();
         assertThat(loanDetails.getLeft()).isEqualTo(LoanDetailsErrorCode.NOT_EXISTS);
+    }
+
+    @Test
+    public void shouldGetAccountDetails() {
+        // given
+        AccountDetailsRequest request = new AccountDetailsRequest(IBAN);
+
+        RequestBuilder requestBuilder = mock(RequestBuilder.class);
+        when(requestFactory.create(Scope.WITH_SESSION, request.getURL()))
+                .thenReturn(requestBuilder);
+        when(requestBuilder.body(request, MediaType.APPLICATION_JSON)).thenReturn(requestBuilder);
+        when(requestBuilder.post(AccountDetailsResponse.class))
+                .thenReturn(mock(AccountDetailsResponse.class));
+
+        // when
+        Either<AccountDetailsErrorCode, AccountDetailsResponse> accountDetails =
+                bankiaApiClient.getAccountDetails(request);
+
+        // then
+        assertThat(accountDetails.isRight()).isTrue();
+    }
+
+    @Test
+    public void
+            shouldMapErrorCodeAsUnknownWhenTheExceptionWasThrownDuringFetchingAccountsDetails() {
+        // given
+        AccountDetailsRequest request = new AccountDetailsRequest(IBAN);
+
+        RequestBuilder requestBuilder = mock(RequestBuilder.class);
+        when(requestFactory.create(Scope.WITH_SESSION, request.getURL()))
+                .thenReturn(requestBuilder);
+        when(requestBuilder.body(request, MediaType.APPLICATION_JSON)).thenReturn(requestBuilder);
+        when(requestBuilder.post(AccountDetailsResponse.class)).thenThrow(new RuntimeException());
+
+        // when
+        Either<AccountDetailsErrorCode, AccountDetailsResponse> accountDetails =
+                bankiaApiClient.getAccountDetails(request);
+
+        // then
+        assertThat(accountDetails.isLeft()).isTrue();
+        assertThat(accountDetails.getLeft()).isEqualTo(AccountDetailsErrorCode.UNKNOWN_ERROR);
     }
 }

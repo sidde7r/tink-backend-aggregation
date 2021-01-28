@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.BankiaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.creditcard.entities.CardEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.creditcard.entities.CardTransactionEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.creditcard.rpc.CardTransactionsRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.creditcard.rpc.CardTransactionsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcher;
@@ -52,7 +53,8 @@ public class BankiaCreditCardFetcher
         String id = account.getApiIdentifier();
 
         int maxLimit = 100;
-        CardTransactionsResponse response = apiClient.getCardTransactions(id, maxLimit);
+        CardTransactionsResponse response =
+                apiClient.getCardTransactions(CardTransactionsRequest.create(id, maxLimit));
         boolean hasMore = response.isIndicateMoreTransactions();
         List<AggregationTransaction> transactions =
                 response.getTransactions().stream()

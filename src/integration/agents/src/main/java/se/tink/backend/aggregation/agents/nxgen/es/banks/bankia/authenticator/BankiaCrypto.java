@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.es.banks.bankia;
+package se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.authenticator;
 
 import java.security.interfaces.RSAPublicKey;
 import se.tink.backend.aggregation.agents.utils.crypto.RSA;

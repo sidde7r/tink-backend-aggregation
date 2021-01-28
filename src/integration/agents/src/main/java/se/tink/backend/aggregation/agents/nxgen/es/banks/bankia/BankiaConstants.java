@@ -24,7 +24,7 @@ public abstract class BankiaConstants {
         public static final String LOGIN_KEY = URL_BASE_OIP + "/api/1.0/login/key";
         public static final String DISCONNECT = URL_BASE_OIP + "/es/desconectar";
         public static final String SERVICES_CONTRACTS =
-                URL_BASE_OIP + "/api/1.0/servicios/contratos/6.0/contratos";
+                URL_BASE_OIP + "/api/1.0/servicios/contratos/12.0/contratos";
         public static final String SERVICES_ACCOUNT_MOVEMENT =
                 URL_BASE_OIP + "/api/1.0/servicios/cuenta.movimiento/3.0/cuenta/movimiento";
         public static final String CREDIT_CARD_TRANSACTIONS =
@@ -36,7 +36,7 @@ public abstract class BankiaConstants {
                 URL_BASE_OIP + "/api/1.0/servicios/cliente.datos/5.0/cliente/datos";
         public static final String CUSTOMER_SCENARIO =
                 URL_BASE_OIP
-                        + "/api/1.0/servicios/contexto.escenariocliente/5.0/contexto/escenariocliente";
+                        + "/api/1.0/servicios/contexto.escenariocliente/13.0/contexto/escenariocliente";
     }
 
     public static class Query {

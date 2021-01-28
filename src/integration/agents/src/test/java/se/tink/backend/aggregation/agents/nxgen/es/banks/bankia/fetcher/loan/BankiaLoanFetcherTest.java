@@ -17,7 +17,6 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.BankiaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.loan.entities.LoanAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.loan.rpc.LoanDetailsErrorCode;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.loan.rpc.LoanDetailsResponse;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.rpc.ErrorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
@@ -60,10 +59,7 @@ public class BankiaLoanFetcherTest {
         when(bankiaApiClientTest.getLoans()).thenReturn(Collections.singletonList(accountEntity));
 
         HttpResponse response = mock(HttpResponse.class);
-        ErrorResponse errorResponse = mock(ErrorResponse.class);
-        when(errorResponse.getOperationResult()).thenReturn("CPPT990E");
 
-        when(response.getBody(ErrorResponse.class)).thenReturn(errorResponse);
         when(bankiaApiClientTest.getLoanDetails(Mockito.any()))
                 .thenThrow(new HttpResponseException(null, response));
 
@@ -78,12 +74,7 @@ public class BankiaLoanFetcherTest {
     public void shouldReturnEmptyListWhenWeAreNotAbleToFetchLoans() {
         // given
         HttpResponse response = mock(HttpResponse.class);
-        ErrorResponse errorResponse = mock(ErrorResponse.class);
-        when(errorResponse.getOperationResult()).thenReturn("CPPT990E");
 
-        when(response.getBody(ErrorResponse.class)).thenReturn(errorResponse);
-        when(bankiaApiClientTest.getLoanDetails(Mockito.any()))
-                .thenThrow(new HttpResponseException(null, response));
         when(bankiaApiClientTest.getLoans()).thenThrow(new HttpResponseException(null, response));
 
         // when
