@@ -2,8 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.un
 
 import java.util.concurrent.TimeUnit;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants.ErrorMessages;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditPersistentStorage;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
@@ -13,19 +13,18 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class UnicreditPaymentController extends PaymentController {
 
     private static final long WAIT_FOR_MINUTES = 9L;
     private final SupplementalInformationHelper supplementalInformationHelper;
-    private final PersistentStorage persistentStorage;
+    private final UnicreditPersistentStorage persistentStorage;
     private final StrongAuthenticationState strongAuthenticationState;
 
     public UnicreditPaymentController(
             UnicreditPaymentExecutor paymentExecutor,
             SupplementalInformationHelper supplementalInformationHelper,
-            PersistentStorage persistentStorage,
+            UnicreditPersistentStorage persistentStorage,
             StrongAuthenticationState strongAuthenticationState) {
         super(paymentExecutor, paymentExecutor);
 
@@ -43,12 +42,11 @@ public class UnicreditPaymentController extends PaymentController {
 
     @Override
     public PaymentResponse create(PaymentRequest paymentRequest) throws PaymentException {
-        persistentStorage.put(
-                UnicreditConstants.StorageKeys.STATE, strongAuthenticationState.getState());
+        persistentStorage.saveAuthenticationState(strongAuthenticationState.getState());
         PaymentResponse paymentResponse = super.create(paymentRequest);
 
-        String id = paymentResponse.getPayment().getUniqueId();
-        URL authorizeUrl = getAuthorizeUrlFromStorage(id);
+        String paymentId = paymentResponse.getPayment().getUniqueId();
+        URL authorizeUrl = getAuthorizeUrlFromStorage(paymentId);
         openThirdPartyApp(authorizeUrl);
         this.supplementalInformationHelper.waitForSupplementalInformation(
                 strongAuthenticationState.getSupplementalKey(), WAIT_FOR_MINUTES, TimeUnit.MINUTES);
@@ -56,10 +54,10 @@ public class UnicreditPaymentController extends PaymentController {
         return paymentResponse;
     }
 
-    private URL getAuthorizeUrlFromStorage(String id) {
+    private URL getAuthorizeUrlFromStorage(String paymentId) {
         return new URL(
                 persistentStorage
-                        .get(id, String.class)
+                        .getScaRedirectUrlForPayment(paymentId)
                         .orElseThrow(
                                 () -> new IllegalStateException(ErrorMessages.MISSING_SCA_URL)));
     }

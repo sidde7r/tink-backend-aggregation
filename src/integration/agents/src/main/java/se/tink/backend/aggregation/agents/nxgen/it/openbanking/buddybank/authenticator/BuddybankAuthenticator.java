@@ -14,7 +14,7 @@ public class BuddybankAuthenticator {
     }
 
     public BuddybankCreateConsentResponse createConsentRequest(String state) {
-        return apiClient.createConsent(state);
+        return apiClient.createBuddybankConsent(state);
     }
 
     public ConsentStatusResponse getConsentStatus() throws SessionException {

@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.un
 
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.ThirdPartyAppException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
@@ -17,21 +18,15 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.i18n.LocalizableKey;
 
+@RequiredArgsConstructor
 public class UnicreditAuthenticationController
         implements AutoAuthenticator, ThirdPartyAppAuthenticator<String> {
+
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final UnicreditAuthenticator authenticator;
     private final StrongAuthenticationState strongAuthenticationState;
 
-    public UnicreditAuthenticationController(
-            SupplementalInformationHelper supplementalInformationHelper,
-            UnicreditAuthenticator authenticator,
-            StrongAuthenticationState strongAuthenticationState) {
-        this.supplementalInformationHelper = supplementalInformationHelper;
-        this.authenticator = authenticator;
-        this.strongAuthenticationState = strongAuthenticationState;
-    }
-
+    @Override
     public ThirdPartyAppResponse<String> init() {
         return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.WAITING);
     }
@@ -39,6 +34,7 @@ public class UnicreditAuthenticationController
     @Override
     public void autoAuthenticate() throws SessionException, BankServiceException {
         authenticator.autoAuthenticate();
+        authenticator.setSessionExpiryDateBasedOnConsent();
     }
 
     @Override
@@ -50,7 +46,8 @@ public class UnicreditAuthenticationController
                 ThirdPartyAppConstants.WAIT_FOR_MINUTES,
                 TimeUnit.MINUTES);
 
-        if (!authenticator.isConsentValid()) {
+        if (authenticator.isSavedConsentInvalid()) {
+            authenticator.clearConsent();
             return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.AUTHENTICATION_ERROR);
         }
 
@@ -59,6 +56,7 @@ public class UnicreditAuthenticationController
         return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.DONE);
     }
 
+    @Override
     public ThirdPartyAppAuthenticationPayload getAppPayload() {
         URL authorizeUrl =
                 this.authenticator.buildAuthorizeUrl(strongAuthenticationState.getState());
