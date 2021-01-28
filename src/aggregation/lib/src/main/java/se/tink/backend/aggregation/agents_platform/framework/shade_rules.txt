@@ -35,5 +35,5 @@ rule assets.** agents_platform_framework.assets.@1
 rule aj.** agents_platform_framework.aj.@1
 rule android.** agents_platform_framework.android.@1
 rule se.tink.libraries.** agents_platform_framework.se.tink.libraries.@1
-rule grpc.gateway.** agents_platform_agents_framework.grpc.gateway.@1
-rule de.jollyday.** agents_platform_agents_framework.de.jollyday.@1
+rule grpc.gateway.** agents_platform_framework.grpc.gateway.@1
+rule de.jollyday.** agents_platform_framework.de.jollyday.@1
