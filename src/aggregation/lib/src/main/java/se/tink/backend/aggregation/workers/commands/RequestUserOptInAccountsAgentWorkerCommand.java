@@ -226,8 +226,18 @@ public class RequestUserOptInAccountsAgentWorkerCommand extends AgentWorkerComma
     private AgentWorkerCommandResult handleNonEmptyRequestAccountsCase(
             List<Pair<Account, AccountFeatures>> accountsInContext, List<Account> accountsInRequest)
             throws SupplementalInfoException {
-        Map<String, String> supplementalInformation =
-                askAccountSupplementalInformation(accountsInContext, accountsInRequest);
+
+        Map<String, String> supplementalInformation;
+        try {
+            supplementalInformation =
+                    askAccountSupplementalInformation(accountsInContext, accountsInRequest);
+        } catch (SupplementalInfoException exception) {
+            if (exception.getError() == SupplementalInfoError.NO_VALID_CODE) {
+                emitOptInTimeoutEvent();
+            }
+            statusUpdater.updateStatus(CredentialsStatus.AUTHENTICATION_ERROR);
+            return AgentWorkerCommandResult.ABORT;
+        }
 
         // Abort if the supplemental information is null or empty.
         if (supplementalInformation == null || supplementalInformation.isEmpty()) {
