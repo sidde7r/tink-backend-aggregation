@@ -11,20 +11,21 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 @RequiredArgsConstructor
 class ToExactCurrencyAmountMapper {
 
-    private final Locale locale;
-    private final String separator;
+    private static final Locale LOCALE_DA = new Locale("da");
+    private static final String DEFAULT_SEPARATOR = " ";
 
-    ExactCurrencyAmount parse(final String s) {
-        String[] parts = s.split(separator);
+    static ExactCurrencyAmount parse(final String s) {
+        String[] parts = s.split(DEFAULT_SEPARATOR);
         if (parts.length != 2) {
             return null;
         }
 
         try {
             return ExactCurrencyAmount.of(
-                    NumberFormat.getNumberInstance(locale).parse(parts[0]).doubleValue(), parts[1]);
+                    NumberFormat.getNumberInstance(LOCALE_DA).parse(parts[0]).doubleValue(),
+                    parts[1]);
         } catch (ParseException e) {
-            log.error("Could not parse value {} to locale {}", parts[0], locale);
+            log.error("Could not parse value {} to locale {}", parts[0], LOCALE_DA);
             return null;
         }
     }
