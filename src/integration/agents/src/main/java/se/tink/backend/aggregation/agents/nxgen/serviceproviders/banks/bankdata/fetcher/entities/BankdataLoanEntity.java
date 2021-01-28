@@ -27,6 +27,7 @@ public class BankdataLoanEntity extends BankdataAccountEntity {
                 .withBalance(ExactCurrencyAmount.of(getBalance(), getCurrencyCode()))
                 .withInterestRate(0) // not supported by the app
                 .setInitialBalance(ExactCurrencyAmount.of(getDrawingRight(), getCurrencyCode()))
+                .setLoanNumber(getAccountNo())
                 .build();
     }
 
