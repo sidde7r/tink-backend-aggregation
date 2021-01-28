@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.handelsbanken;
 
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
-import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
 
 import java.time.LocalDate;
 import java.util.Optional;
@@ -20,7 +19,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-@AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS})
+@AgentCapabilities({CHECKING_ACCOUNTS})
 public final class HandelsbankenAgent extends HandelsbankenBaseAgent {
 
     private static final int MAX_FETCH_PERIOD_MONTHS = 12;
