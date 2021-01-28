@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.steps;
 
-import lombok.RequiredArgsConstructor;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.LunarConstants.Storage;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.fields.AgentField;
@@ -12,7 +11,6 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.userinteraction.fielddefinition.AgentPasswordFieldDefinition;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.userinteraction.fielddefinition.AgentUsernameFieldDefinition;
 
-@RequiredArgsConstructor
 public class GetUserCredentialsStep
         implements AgentAuthenticationProcessStep<AgentProceedNextStepAuthenticationRequest> {
 

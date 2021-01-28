@@ -6,6 +6,7 @@ import static se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.LunarConst
 import static se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.LunarConstants.Uri;
 
 import agents_platform_agents_framework.org.springframework.http.HttpMethod;
+import agents_platform_agents_framework.org.springframework.http.MediaType;
 import agents_platform_agents_framework.org.springframework.http.RequestEntity;
 import agents_platform_agents_framework.org.springframework.http.RequestEntity.BodyBuilder;
 import java.net.URI;
@@ -40,7 +41,7 @@ public class AgentPlatformLunarApiClient {
 
         BodyBuilder requestBuilder =
                 getDefaultBodyBuilder(HttpMethod.POST, Uri.NEM_ID_AUTHENTICATE, deviceId)
-                        .header(Headers.CONTENT_TYPE, APPLICATION_JSON);
+                        .contentType(MediaType.APPLICATION_JSON);
 
         return client.exchange(
                         requestBuilder.body(getSerializedAccessTokenRequest(accessTokenRequest)),
@@ -87,7 +88,7 @@ public class AgentPlatformLunarApiClient {
                 .header(Headers.ACCEPT_LANGUAGE, HeaderValues.DA_LANGUAGE_ACCEPT)
                 .header(Headers.ORIGIN, HeaderValues.APP_ORIGIN)
                 .header(Headers.APP_VERSION, LunarConstants.APP_VERSION)
-                .header(Headers.ACCEPT, HeaderValues.ACCEPT_ALL)
-                .header(Headers.ACCEPT_ENCODING, HeaderValues.ENCODING);
+                .header(Headers.ACCEPT_ENCODING, HeaderValues.ENCODING)
+                .accept(MediaType.ALL);
     }
 }

@@ -8,12 +8,24 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AgentBan
 @Data
 @Builder(builderMethodName = "requiredBuilder")
 public class KnownErrorResponse {
-    private String reasonCode;
     private String reasonDisplayMessage;
     private Pattern pattern;
     private AgentBankApiError errorToReturn;
 
-    public static KnownErrorResponseBuilder builder(String reasonCode, AgentBankApiError error) {
-        return requiredBuilder().reasonCode(reasonCode).errorToReturn(error);
+    public static KnownErrorResponseBuilder builder(AgentBankApiError error) {
+        return requiredBuilder().errorToReturn(error);
+    }
+
+    public static KnownErrorResponse withoutMessage(AgentBankApiError error) {
+        return KnownErrorResponse.builder(error).build();
+    }
+
+    public static KnownErrorResponse withMessage(
+            String reasonDisplayMessage, AgentBankApiError error) {
+        return KnownErrorResponse.builder(error).reasonDisplayMessage(reasonDisplayMessage).build();
+    }
+
+    public static KnownErrorResponse withPattern(Pattern pattern, AgentBankApiError error) {
+        return KnownErrorResponse.builder(error).pattern(pattern).build();
     }
 }

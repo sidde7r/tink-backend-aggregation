@@ -64,11 +64,12 @@ public class GetLunarAccessTokenStep
                     request.getAuthenticationPersistedData());
         }
         authData.setAccessToken(accessTokenResponse.getAccessToken());
+        processState.setAutoAuth(false);
 
         return new AgentProceedNextStepAuthenticationResult(
                 AgentAuthenticationProcessStepIdentifier.of(
                         SignInToLunarStep.class.getSimpleName()),
-                request.getAuthenticationProcessState(),
+                processStateAccessor.storeState(processState),
                 authDataAccessor.storeData(authData));
     }
 }

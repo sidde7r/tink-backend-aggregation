@@ -15,9 +15,13 @@ import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SupplementalInfoError;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.exception.ErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.exception.KnownErrorResponse;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.request.AgentProceedNextStepAuthenticationRequest;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentFailedAuthenticationResult;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AccessTokenFetchingFailureError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AgentBankApiError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AuthorizationError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.InvalidCredentialsError;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.error.SessionExpiredError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.ThirdPartyAppCancelledError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.ThirdPartyAppNoClientError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.ThirdPartyAppTimedOutError;
@@ -30,9 +34,9 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 public class LunarAuthenticationExceptionHandler {
 
     private static final Pattern INCORRECT_PASSWORD_PATTERN =
-            Pattern.compile("You have 1 (attempt|attempts) left\\.");
-    private static final Pattern LAST_ATTEMPT_PATTERN =
             Pattern.compile("You have [2345] attempts left\\.");
+    private static final Pattern LAST_ATTEMPT_PATTERN =
+            Pattern.compile("You have 1 (attempt|attempts) left\\.");
 
     private static final String INCORRECT_PASSWORD = "USER_PASSWORD_INCORRECT";
 
@@ -41,24 +45,18 @@ public class LunarAuthenticationExceptionHandler {
                     .put(
                             INCORRECT_PASSWORD,
                             Arrays.asList(
-                                    KnownErrorResponse.builder(
-                                                    INCORRECT_PASSWORD,
-                                                    new InvalidCredentialsError())
-                                            .pattern(INCORRECT_PASSWORD_PATTERN)
-                                            .build(),
-                                    KnownErrorResponse.builder(
-                                                    INCORRECT_PASSWORD,
-                                                    // set some new error to indicate last attempt!
-                                                    new InvalidCredentialsError())
-                                            .pattern(LAST_ATTEMPT_PATTERN)
-                                            .build()))
+                                    KnownErrorResponse.withPattern(
+                                            INCORRECT_PASSWORD_PATTERN,
+                                            new InvalidCredentialsError()),
+                                    KnownErrorResponse.withPattern(
+                                            LAST_ATTEMPT_PATTERN,
+                                            // set some new error to indicate last attempt!
+                                            new InvalidCredentialsError())))
                     .put(
                             "USER_NOT_FOUND",
                             Collections.singletonList(
-                                    KnownErrorResponse.builder(
-                                                    "USER_NOT_FOUND",
-                                                    new ThirdPartyAppNoClientError())
-                                            .build()))
+                                    KnownErrorResponse.withoutMessage(
+                                            new ThirdPartyAppNoClientError())))
                     .build();
 
     public static AgentBankApiError toKnownErrorFromResponseOrDefault(
@@ -116,6 +114,9 @@ public class LunarAuthenticationExceptionHandler {
             case INCORRECT_CREDENTIALS:
                 log.error(e.getMessage());
                 return new InvalidCredentialsError();
+            case DEFAULT_MESSAGE:
+                log.error(e.getMessage());
+                return new ThirdPartyAppUnknownError();
             default:
                 return new ThirdPartyAppUnknownError();
         }
@@ -143,5 +144,21 @@ public class LunarAuthenticationExceptionHandler {
             return new NoUserInteractionResponseError();
         }
         throw e;
+    }
+
+    public static AgentFailedAuthenticationResult getSignInFailedAuthResult(
+            AgentProceedNextStepAuthenticationRequest request,
+            HttpResponseException e,
+            boolean isAutoAuth) {
+        if (isAutoAuth) {
+            log.error("Failed to signIn to Lunar during autoAuth", e);
+            return new AgentFailedAuthenticationResult(
+                    new SessionExpiredError(), request.getAuthenticationPersistedData());
+        }
+        log.error("Failed to signIn to Lunar", e);
+        return new AgentFailedAuthenticationResult(
+                LunarAuthenticationExceptionHandler.toKnownErrorFromResponseOrDefault(
+                        e, new AccessTokenFetchingFailureError()),
+                request.getAuthenticationPersistedData());
     }
 }

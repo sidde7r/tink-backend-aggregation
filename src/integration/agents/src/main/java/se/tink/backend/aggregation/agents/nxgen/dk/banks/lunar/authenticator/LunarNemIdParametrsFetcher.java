@@ -47,8 +47,7 @@ public class LunarNemIdParametrsFetcher implements NemIdParametersFetcher {
         try {
             return apiClient.getNemIdParameters(deviceId);
         } catch (HttpResponseException e) {
-            log.error("Could not get NemId Iframe parameters");
-            throw LoginError.DEFAULT_MESSAGE.exception();
+            throw LoginError.DEFAULT_MESSAGE.exception("Could not get NemId Iframe parameters");
         }
     }
 }

@@ -36,13 +36,13 @@ public final class LunarDkAgent extends AgentPlatformAgent
     private final LunarApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final LunarAuthenticationConfig lunarAuthenticationConfig;
+    private final RandomValueGenerator randomValueGenerator;
 
     @Inject
     public LunarDkAgent(AgentComponentProvider agentComponentProvider) {
         super(agentComponentProvider);
         configureHttpClient(client);
-        RandomValueGenerator randomValueGenerator =
-                agentComponentProvider.getRandomValueGenerator();
+        randomValueGenerator = agentComponentProvider.getRandomValueGenerator();
 
         this.apiClient = new LunarApiClient(client, getPersistentStorage(), randomValueGenerator);
 
@@ -55,12 +55,11 @@ public final class LunarDkAgent extends AgentPlatformAgent
 
         this.lunarAuthenticationConfig =
                 createLunarAuthenticationConfig(
-                        agentComponentProvider, randomValueGenerator, agentPlatformLunarApiClient);
+                        agentComponentProvider, agentPlatformLunarApiClient);
     }
 
     private LunarAuthenticationConfig createLunarAuthenticationConfig(
             AgentComponentProvider agentComponentProvider,
-            RandomValueGenerator randomValueGenerator,
             AgentPlatformLunarApiClient agentPlatformLunarApiClient) {
         return new LunarAuthenticationConfig(
                 agentPlatformLunarApiClient,

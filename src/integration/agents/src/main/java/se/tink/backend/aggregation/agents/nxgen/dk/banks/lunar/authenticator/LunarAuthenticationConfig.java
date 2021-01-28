@@ -39,7 +39,7 @@ public class LunarAuthenticationConfig {
                 addStep(new GetLunarAccessTokenStep(getDataAccessorFactory(), apiClient));
                 addStep(new SignInToLunarStep(getDataAccessorFactory(), apiClient));
 
-                addStep(new AutoAuthenticationStep(getDataAccessorFactory(), apiClient));
+                addStep(new AutoAuthenticationStep(getDataAccessorFactory()));
             }
 
             @Override

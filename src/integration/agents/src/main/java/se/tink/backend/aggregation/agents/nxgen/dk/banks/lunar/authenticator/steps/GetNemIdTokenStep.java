@@ -91,7 +91,7 @@ public class GetNemIdTokenStep
                 AgentAuthenticationProcessStepIdentifier.of(
                         GetLunarAccessTokenStep.class.getSimpleName()),
                 authDataAccessor.storeData(authData),
-                processStateAccessor.store(processState));
+                processStateAccessor.storeState(processState));
     }
 
     private String decodeToken(String b64Token) {

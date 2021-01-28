@@ -22,8 +22,7 @@ public class LunarProcessStateAccessor
         return super.getFromStorage().orElseGet(LunarProcessState::new);
     }
 
-    @Override
-    public AgentAuthenticationProcessState store(LunarProcessState value) {
+    public AgentAuthenticationProcessState storeState(LunarProcessState value) {
         return super.store(value);
     }
 }

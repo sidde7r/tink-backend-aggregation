@@ -37,11 +37,11 @@ public class LunarApiClient {
                 .header(Headers.REQUEST_ID, randomValueGenerator.getUUID().toString())
                 .header(Headers.DEVICE_ID, authData.getDeviceId())
                 .header(Headers.AUTHORIZATION, authData.getAccessToken())
-                .header(Headers.ACCEPT_LANGUAGE, HeaderValues.DA_LANGUAGE_ACCEPT)
                 .header(Headers.ORIGIN, HeaderValues.APP_ORIGIN)
                 .header(Headers.APP_VERSION, LunarConstants.APP_VERSION)
-                .header(Headers.ACCEPT, HeaderValues.ACCEPT_ALL)
                 .header(Headers.ACCEPT_ENCODING, HeaderValues.ENCODING)
+                .acceptLanguage(HeaderValues.DA_LANGUAGE_ACCEPT)
+                .accept(MediaType.WILDCARD_TYPE)
                 .type(MediaType.APPLICATION_JSON_TYPE)
                 .get(AccountsResponse.class);
     }
