@@ -57,40 +57,49 @@ public final class BecAgent extends SubsequentProgressiveGenerationAgent
 
     @Inject
     public BecAgent(AgentComponentProvider agentComponentProvider) {
-
         super(agentComponentProvider);
 
-        BecSecurityHelper securityHelper =
-                new BecSecurityHelper(
-                        new String(
-                                EncodingUtils.decodeBase64String(
-                                        BecConstants.Crypto.SIGNING_CERTIFICATE_B64)),
-                        BecConstants.Crypto.PUBLIC_KEY_SALT);
-
-        this.apiClient =
-                new BecApiClient(
-                        securityHelper,
-                        this.client,
-                        new BecUrlConfiguration(request.getProvider().getPayload()),
-                        catalog);
+        this.apiClient = createBecApiClient();
 
         this.transactionFetcher = new BecAccountTransactionsFetcher(this.apiClient);
-        this.investmentRefreshController =
-                new InvestmentRefreshController(
-                        this.metricRefreshController,
-                        this.updateController,
-                        new BecInvestmentFetcher(this.apiClient));
-        this.loanRefreshController =
-                new LoanRefreshController(
-                        this.metricRefreshController,
-                        this.updateController,
-                        new BecLoanFetcher(this.apiClient));
+        this.investmentRefreshController = createInvestmentRefreshController();
+        this.loanRefreshController = createLoanRefreshController();
         this.creditCardRefreshController = constructCreditCardRefreshController();
         this.transactionalAccountRefreshController =
                 constructTransactionalAccountRefreshController();
 
         this.client.setResponseStatusHandler(new BecResponseStatusHandler());
         client.setTimeout(60 * 1000); // increase standard 30sec into 1 minute
+    }
+
+    private BecApiClient createBecApiClient() {
+        return new BecApiClient(
+                createSecurityHelper(),
+                client,
+                new BecUrlConfiguration(request.getProvider().getPayload()),
+                catalog);
+    }
+
+    private BecSecurityHelper createSecurityHelper() {
+        return new BecSecurityHelper(
+                new String(
+                        EncodingUtils.decodeBase64String(
+                                BecConstants.Crypto.SIGNING_CERTIFICATE_B64)),
+                BecConstants.Crypto.PUBLIC_KEY_SALT);
+    }
+
+    private InvestmentRefreshController createInvestmentRefreshController() {
+        return new InvestmentRefreshController(
+                this.metricRefreshController,
+                this.updateController,
+                new BecInvestmentFetcher(this.apiClient));
+    }
+
+    private LoanRefreshController createLoanRefreshController() {
+        return new LoanRefreshController(
+                this.metricRefreshController,
+                this.updateController,
+                new BecLoanFetcher(this.apiClient));
     }
 
     @Override
