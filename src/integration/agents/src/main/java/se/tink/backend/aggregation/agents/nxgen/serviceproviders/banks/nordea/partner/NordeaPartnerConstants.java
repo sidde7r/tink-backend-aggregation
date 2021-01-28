@@ -58,8 +58,4 @@ public class NordeaPartnerConstants {
         public static final String COMBINED = "combined";
         public static final String CREDIT = "credit";
     }
-
-    public static class TransactionDetails {
-        public static final String TRANSACTION_ID = "transaction_id";
-    }
 }

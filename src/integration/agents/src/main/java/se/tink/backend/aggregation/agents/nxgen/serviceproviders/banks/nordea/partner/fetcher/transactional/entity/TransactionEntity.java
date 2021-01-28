@@ -6,8 +6,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Objects;
+import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType;
 import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.NordeaPartnerUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.entity.CardEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
@@ -139,14 +139,16 @@ public class TransactionEntity {
 
     public Transaction toTinkTransaction() {
         Builder builder =
-                Transaction.builder()
-                        .setAmount(ExactCurrencyAmount.of(amount, currency))
-                        .setDate(getDate())
-                        .setDescription(getTransactionDescription())
-                        .setPending(!booked)
-                        .setPayload(
-                                TransactionPayloadTypes.DETAILS,
-                                NordeaPartnerUtils.getTransactionDetails(transactionId));
+                (Builder)
+                        Transaction.builder()
+                                .setAmount(ExactCurrencyAmount.of(amount, currency))
+                                .setDate(getDate())
+                                .setDescription(getTransactionDescription())
+                                .setPending(!booked)
+                                .addExternalSystemIds(
+                                        TransactionExternalSystemIdType
+                                                .PROVIDER_GIVEN_TRANSACTION_ID,
+                                        transactionId);
         if (Objects.nonNull(exchange)) {
             builder.setPayload(TransactionPayloadTypes.EXCHANGE_RATE, exchange.getOriginalRate());
             builder.setPayload(
