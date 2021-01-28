@@ -28,6 +28,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 public class NemIdTokenValidatorTest {
 
     private static final String SAMPLE_TOKEN_BASE_64 = "-- SAMPLE TOKEN --";
+    private static final String LUNAR_ISSUER = "THVuYXI=";
 
     private NemIdTokenParser tokenParser;
     private NemIdTokenValidator tokenValidator;
@@ -135,6 +136,48 @@ public class NemIdTokenValidatorTest {
                                         setTestCaseTokenStatusCode(testCase, "sSDT#$T@#")))
                 .flatMap(List::stream)
                 .toArray(Object[]::new);
+    }
+
+    @Test
+    public void should_not_throw_on_known_request_issuer() {
+        // given
+        when(tokenParser.extractNemIdTokenStatus(SAMPLE_TOKEN_BASE_64))
+                .thenReturn(
+                        NemIdTokenStatus.builder()
+                                .code("")
+                                .message("")
+                                .requestIssuer(LUNAR_ISSUER)
+                                .build());
+
+        // when
+        tokenValidator.verifyTokenIsValid(SAMPLE_TOKEN_BASE_64);
+
+        // then
+        verify(tokenParser).extractNemIdTokenStatus(SAMPLE_TOKEN_BASE_64);
+    }
+
+    @Test
+    public void should_throw_exception_on_unknown_request_issuer() {
+        // given
+        when(tokenParser.extractNemIdTokenStatus(SAMPLE_TOKEN_BASE_64))
+                .thenReturn(
+                        NemIdTokenStatus.builder()
+                                .code("")
+                                .message("")
+                                .requestIssuer("Test")
+                                .build());
+
+        // when
+        Throwable throwable =
+                catchThrowable(
+                        () ->
+                                tokenValidator.throwInvalidTokenExceptionWithoutValidation(
+                                        SAMPLE_TOKEN_BASE_64));
+
+        // then
+        verifyThatFromUsersPerspectiveThrowableIsTheSameAsGivenAgentException(
+                throwable, LoginError.CREDENTIALS_VERIFICATION_ERROR.exception());
+        verify(tokenParser).extractNemIdTokenStatus(SAMPLE_TOKEN_BASE_64);
     }
 
     private static List<TokenValidatorTestCase> invalidTokenStatusWithExpectedException() {

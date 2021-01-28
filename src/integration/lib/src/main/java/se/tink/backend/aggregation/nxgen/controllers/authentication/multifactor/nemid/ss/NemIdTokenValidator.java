@@ -5,10 +5,12 @@ import static se.tink.backend.aggregation.nxgen.controllers.authentication.multi
 import com.google.common.collect.ImmutableMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import com.google.common.collect.ImmutableList;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.exceptions.agent.AgentError;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
+import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.NemIdErrorCodes;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.exception.NemIdError;
@@ -16,6 +18,11 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 @Slf4j
 @RequiredArgsConstructor
 public class NemIdTokenValidator {
+
+    private static final String LUNAR_ISSUER_BASE64 = "THVuYXI=";
+
+    private static final ImmutableList<String> KNOWN_REQUEST_ISSUERS =
+            ImmutableList.of(LUNAR_ISSUER_BASE64);
 
     private static final Map<String, AgentError> ERR_CODE_MAPPING =
             ImmutableMap.<String, AgentError>builder()
@@ -34,6 +41,11 @@ public class NemIdTokenValidator {
     public void verifyTokenIsValid(String tokenBase64) {
         NemIdTokenStatus tokenStatus = nemIdTokenParser.extractNemIdTokenStatus(tokenBase64);
         if (containsIgnoreCase(tokenStatus.getCode(), "success")) {
+            return;
+        }
+        if (StringUtils.isBlank(tokenStatus.getCode())
+                && StringUtils.isBlank(tokenStatus.getMessage())
+                && KNOWN_REQUEST_ISSUERS.contains(tokenStatus.getRequestIssuer())) {
             return;
         }
         throwInvalidTokenException(tokenBase64, tokenStatus);

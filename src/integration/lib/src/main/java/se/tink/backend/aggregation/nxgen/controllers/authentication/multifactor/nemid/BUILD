@@ -20,6 +20,7 @@ java_library(
         "//src/libraries/pair",
         "//src/libraries/serialization",
         "//third_party:lombok_libs",
+        "//third_party:org_apache_commons_commons_lang3",
         "//third_party:org_apache_httpcomponents_httpclient",
         "//third_party:org_jsoup_jsoup",
         "//third_party:org_slf4j_slf4j_api",
