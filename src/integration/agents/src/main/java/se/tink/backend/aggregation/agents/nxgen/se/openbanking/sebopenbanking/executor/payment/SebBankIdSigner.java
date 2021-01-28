@@ -1,7 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.executor.payment;
 
-import static se.tink.libraries.payment.enums.PaymentStatus.CANCELLED;
-
 import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
@@ -58,12 +56,8 @@ public class SebBankIdSigner implements BankIdSigner<PaymentRequest> {
         try {
             PaymentStatusResponse paymentStatusResponse =
                     apiClient.getPaymentStatus(paymentId, paymentProduct);
-            if (paymentStatusResponse.isPaymentCancelled()) {
-                return CANCELLED;
-            } else {
-                return SebPaymentStatus.mapToTinkPaymentStatus(
-                        SebPaymentStatus.fromString(paymentStatusResponse.getTransactionStatus()));
-            }
+            return SebPaymentStatus.mapToTinkPaymentStatus(
+                    SebPaymentStatus.fromString(paymentStatusResponse.getTransactionStatus()));
         } catch (PaymentException e) {
             throw BankIdError.UNKNOWN.exception();
         }
