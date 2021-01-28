@@ -65,8 +65,7 @@ public class SEBWireMockPaymentTest {
             agentWireMockPaymentTest.executePayment();
             Assert.fail();
         } catch (PaymentAuthorizationException e) {
-            Assert.assertEquals(
-                    "BankID signing of payment was cancelled by the user.", e.getMessage());
+            Assert.assertEquals("BankID signing of payment timed out.", e.getMessage());
         }
     }
 

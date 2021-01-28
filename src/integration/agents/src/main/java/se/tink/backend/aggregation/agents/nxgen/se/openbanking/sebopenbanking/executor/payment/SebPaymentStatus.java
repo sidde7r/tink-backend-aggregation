@@ -10,6 +10,7 @@ public enum SebPaymentStatus {
     ACTC("ACTC"),
     RJCT("RJCT"),
     ACSC("ACSC"),
+    CANC("CANC"),
     UNKNOWN("Unknown");
 
     private String statusText;
@@ -23,6 +24,7 @@ public enum SebPaymentStatus {
         sebPaymentStatusToTinkPaymentStatusMapper.put(RJCT, PaymentStatus.REJECTED);
         sebPaymentStatusToTinkPaymentStatusMapper.put(ACSC, PaymentStatus.PAID);
         sebPaymentStatusToTinkPaymentStatusMapper.put(ACTC, PaymentStatus.PAID);
+        sebPaymentStatusToTinkPaymentStatusMapper.put(CANC, PaymentStatus.CANCELLED);
     }
 
     SebPaymentStatus(String status) {
