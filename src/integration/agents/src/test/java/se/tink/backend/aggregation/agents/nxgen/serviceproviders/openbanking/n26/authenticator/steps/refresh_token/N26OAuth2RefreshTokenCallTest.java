@@ -19,7 +19,11 @@ public class N26OAuth2RefreshTokenCallTest extends N26BaseApiCallTest {
     @Before
     public void init() {
         N26RefreshTokenParameters parameters =
-                N26RefreshTokenParameters.builder().baseUrl(BASE_URL).clientId(CLIENT_ID).build();
+                N26RefreshTokenParameters.builder()
+                        .baseUrl(BASE_URL)
+                        .clientId(CLIENT_ID)
+                        .scope("DEDICATED_AISP")
+                        .build();
         n26OAuth2RefreshTokenCall = new N26OAuth2RefreshTokenCall(agentHttpClient, parameters);
     }
 
