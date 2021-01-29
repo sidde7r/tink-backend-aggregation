@@ -53,6 +53,8 @@ public class RateLimitedExecutorService implements Managed {
                                                         "other.CSNAgent",
                                                         0.1,
                                                         "pt-caixa-ob",
+                                                        0.05,
+                                                        "dk-danskebank-servicecode",
                                                         0.05),
                                                 new DefaultProviderRateLimiterFactory(0.1)))));
 
