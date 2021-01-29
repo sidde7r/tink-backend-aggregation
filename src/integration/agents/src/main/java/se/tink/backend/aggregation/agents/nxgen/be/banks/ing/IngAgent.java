@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngConstants.Headers;
+import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentProgressiveGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.StatelessProgressiveAuthenticator;
@@ -16,6 +17,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
+import se.tink.backend.aggregation.nxgen.http.MultiIpGateway;
 import se.tink.backend.aggregation.nxgen.http.client.LoggingStrategy;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.TimeoutFilter;
@@ -29,9 +31,11 @@ public final class IngAgent extends SubsequentProgressiveGenerationAgent
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
     @Inject
-    public IngAgent(final AgentComponentProvider componentProvider) {
+    public IngAgent(
+            final AgentComponentProvider componentProvider,
+            AgentsServiceConfiguration agentsServiceConfiguration) {
         super(componentProvider);
-        configureHttpClient(client);
+        configureHttpClient(client, agentsServiceConfiguration);
 
         ingConfiguration =
                 new IngConfiguration(componentProvider, persistentStorage, sessionStorage, client);
@@ -41,11 +45,16 @@ public final class IngAgent extends SubsequentProgressiveGenerationAgent
         transactionalAccountRefreshController = constructRefreshController();
     }
 
-    private void configureHttpClient(TinkHttpClient client) {
+    private void configureHttpClient(
+            TinkHttpClient client, AgentsServiceConfiguration agentsServiceConfiguration) {
         client.setUserAgent(Headers.USER_AGENT_VALUE);
         client.setFollowRedirects(false);
         client.addFilter(new TimeoutFilter());
         client.setLoggingStrategy(LoggingStrategy.DISABLED);
+
+        final MultiIpGateway gateway =
+                new MultiIpGateway(client, credentials.getUserId(), credentials.getId());
+        gateway.setMultiIpGateway(agentsServiceConfiguration.getIntegrations());
     }
 
     private TransactionalAccountRefreshController constructRefreshController() {
