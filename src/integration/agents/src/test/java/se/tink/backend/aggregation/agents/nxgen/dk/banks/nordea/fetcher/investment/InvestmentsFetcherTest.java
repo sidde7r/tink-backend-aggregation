@@ -8,6 +8,7 @@ import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.models.Instrument;
+import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaDkApiClient;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaDkApiClientMockWrapper;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaTestData.InvestmentTestData;
@@ -33,8 +34,13 @@ public class InvestmentsFetcherTest {
         // when
         Collection<InvestmentAccount> investments = fetcher.fetchAccounts();
         // then
-        assertThat(investments).hasSize(2);
+        assertThat(investments).hasSize(3);
         // and
+        validateFirstInvestment(investments);
+        validatePension(investments);
+    }
+
+    private void validateFirstInvestment(Collection<InvestmentAccount> investments) {
         Optional<InvestmentAccount> investment1 =
                 investments.stream()
                         .filter(
@@ -59,5 +65,23 @@ public class InvestmentsFetcherTest {
         assertThat(instrument.getPrice()).isEqualByComparingTo(0.98);
         assertThat(instrument.getProfit()).isEqualByComparingTo(-98.24);
         assertThat(instrument.getQuantity()).isEqualByComparingTo(9985.0);
+    }
+
+    private void validatePension(Collection<InvestmentAccount> investments) {
+        Optional<InvestmentAccount> pension =
+                investments.stream()
+                        .filter(
+                                i ->
+                                        InvestmentTestData.PENSION_ID.equals(
+                                                i.getIdModule().getUniqueId()))
+                        .findAny();
+        assertThat(pension.isPresent()).isTrue();
+        assertThat(pension.get().getIdModule().getAccountNumber()).isEqualTo("9999 999 999");
+        assertThat(pension.get().getName()).isEqualTo("Kapitalpension-pulje");
+        assertThat(pension.get().getSystemPortfolios()).hasSize(1);
+        assertThat(pension.get().getSystemPortfolios().get(0).getInstruments()).isEmpty();
+        assertThat(pension.get().getSystemPortfolios().get(0).getTotalValue()).isEqualTo(57148.21);
+        assertThat(pension.get().getSystemPortfolios().get(0).getType())
+                .isEqualTo(Portfolio.Type.PENSION);
     }
 }
