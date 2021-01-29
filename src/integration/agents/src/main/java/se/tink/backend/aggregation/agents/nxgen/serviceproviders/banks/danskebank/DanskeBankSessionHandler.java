@@ -22,6 +22,10 @@ public class DanskeBankSessionHandler implements SessionHandler {
 
     @Override
     public void keepAlive() throws SessionException {
+        if (!apiClient.hasAuthorizationHeader()) {
+            throw SessionError.SESSION_EXPIRED.exception();
+        }
+
         try {
             apiClient.listAccounts(
                     ListAccountsRequest.createFromLanguageCode(configuration.getLanguageCode()));
