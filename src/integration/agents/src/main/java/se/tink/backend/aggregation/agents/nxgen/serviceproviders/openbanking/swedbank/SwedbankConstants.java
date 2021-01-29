@@ -273,13 +273,29 @@ public final class SwedbankConstants {
                     .put(
                             TransactionalAccountType.CHECKING,
                             AccountFlag.PSD2_PAYMENT_ACCOUNT,
+                            "Bokonto",
+                            "Företagskonto",
+                            "Lönekonto",
+                            "Personalkonto",
                             "Privatkonto",
-                            "Servicekonto")
+                            "Servicekonto",
+                            "Transaktionskonto",
+                            "Ungdomskonto",
+                            "Valutakonto")
                     .put(
                             TransactionalAccountType.SAVINGS,
-                            "e-sparkonto",
+                            "Depåkonto 1",
                             "Framtidskonto",
+                            "HSB Bosparkonto",
+                            "Kapitalkonto",
+                            "Placeringskonto ftg",
+                            "Premiumkonto",
+                            "Private Banking",
+                            "Skogslikvidkonto",
+                            "Spara&Bokonto",
                             "Sparkapitalkonto",
-                            "Depåkonto 1")
+                            "Specialkonto Pri",
+                            "Världsnaturkonto",
+                            "e-sparkonto")
                     .build();
 }
