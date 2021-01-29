@@ -72,6 +72,11 @@ public class DanskeBankApiClient {
         client.addPersistentHeader(key, value);
     }
 
+    boolean hasAuthorizationHeader() {
+        return client.isPersistentHeaderPresent(
+                DanskeBankConstants.DanskeRequestHeaders.AUTHORIZATION);
+    }
+
     public HttpResponse collectDynamicLogonJavascript(String securitySystem, String brand) {
         return client.request(
                         String.format(
