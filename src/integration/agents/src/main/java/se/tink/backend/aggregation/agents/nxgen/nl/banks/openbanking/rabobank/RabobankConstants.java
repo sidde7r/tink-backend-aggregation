@@ -5,6 +5,7 @@ import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants;
 
 public class RabobankConstants {
+
     public static final String UUID_PATTERN =
             "[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}";
     public static final String DATE_FORMAT = "EEE, dd MMM yyyy HH:mm:ss z";
@@ -12,11 +13,16 @@ public class RabobankConstants {
     public static final String TRANSACTION_BOOKING_DATE_FORMAT = "yyyy-MM-dd";
     public static final String BASE_URL = "https://api.rabobank.nl/openapi";
 
+    public static class ErrorCodes {
+        public static final String PERIOD_INVALID = "PERIOD_INVALID";
+        public static final String ACCESS_EXCEEDED = "ACCESS_EXCEEDED";
+    }
+
     public static class ErrorMessages {
+
         public static final String BOOKING_STATUS_INVALID =
                 "currently only bookingstatus booked is allowed";
         public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
-        public static final String UNAVAILABLE_TRX_HISTORY = "date can't be further than";
         public static final ImmutableList<Integer> ERROR_RESPONSES =
                 ImmutableList.of(
                         HttpStatus.SC_INTERNAL_SERVER_ERROR,
@@ -27,12 +33,14 @@ public class RabobankConstants {
     }
 
     public static class Consents {
+
         public static final String EXPIRE = "expire";
         public static final String INVALID = "invalid";
         public static final String REVOKED_BY_USER = "revoked";
     }
 
     public static class StorageKey {
+
         public static final String OAUTH_TOKEN =
                 OAuth2Constants.PersistentStorageKeys.OAUTH_2_TOKEN;
         public static final String RESOURCE_ID = "resource_id";
@@ -41,6 +49,7 @@ public class RabobankConstants {
     }
 
     public static class Signature {
+
         public static final String ALGORITHM = "algorithm";
         public static final String HEADERS = "headers";
         public static final String KEY_ID = "keyId";
@@ -55,6 +64,7 @@ public class RabobankConstants {
     }
 
     public static class QueryParams {
+
         public static final String IBM_CLIENT_ID = "x-ibm-client-id";
         public static final String CLIENT_ID = "client_id";
         public static final String CODE = "code";
@@ -78,6 +88,7 @@ public class RabobankConstants {
     }
 
     public static class QueryValues {
+
         public static final String AUTHORIZATION_CODE = "authorization_code";
         public static final String REFRESH_TOKEN = "refresh_token";
         public static final String CODE = "code";
@@ -88,6 +99,7 @@ public class RabobankConstants {
     }
 
     public static class HttpClient {
+
         public static final int MAX_RETRIES = 5;
         public static final int RETRY_SLEEP_MILLISECONDS = 2000;
     }
