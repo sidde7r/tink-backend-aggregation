@@ -69,5 +69,6 @@ public class NordeaTestData {
         public static final String INVESTMENT_ACCOUNTS_FILE =
                 INVESTMENT_TEST_DATA_DIR + "investment_accounts.json";
         public static final String INVESTMENT_1_ID = "DKWRAP1234123456";
+        public static final String PENSION_ID = "CICS0000000000";
     }
 }
