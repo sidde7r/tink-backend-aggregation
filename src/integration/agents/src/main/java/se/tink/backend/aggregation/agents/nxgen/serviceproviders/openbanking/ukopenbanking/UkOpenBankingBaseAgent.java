@@ -49,6 +49,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.signature.UkOpenBankingPs256WithoutBase64SignatureCreator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.signature.UkOpenBankingRs256SignatureCreator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.configuration.UkOpenBankingPisConfig;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.credentialsupdater.UkOpenBankingCredentialsUpdater;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domestic.DomesticPaymentApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domestic.converter.DomesticPaymentConverter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domestic.converter.RequiredReferenceRemittanceInfoDomesticPaymentConverter;
@@ -402,13 +403,17 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
         UkOpenBankingPaymentApiClient paymentApiClient =
                 createPaymentApiClient(requestBuilder, payment);
 
+        UkOpenBankingCredentialsUpdater credentialsUpdater =
+                new UkOpenBankingCredentialsUpdater(credentials, systemUpdater);
+
         UkOpenBankingPaymentExecutor paymentExecutor =
                 new UkOpenBankingPaymentExecutor(
                         paymentApiClient,
                         paymentAuthenticator,
                         authFilterInstantiator,
                         getPaymentRequestValidator(),
-                        providerSessionCacheController);
+                        providerSessionCacheController,
+                        credentialsUpdater);
 
         return Optional.of(new PaymentController(paymentExecutor, paymentExecutor));
     }

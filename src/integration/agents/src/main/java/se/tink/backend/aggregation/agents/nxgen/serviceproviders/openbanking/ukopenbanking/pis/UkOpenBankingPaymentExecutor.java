@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedExce
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.authenticator.UkOpenBankingPaymentAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.authenticator.UkOpenBankingPisAuthFilterInstantiator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.UkOpenBankingPaymentApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.credentialsupdater.UkOpenBankingCredentialsUpdater;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.entity.ExecutorSignStep;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.validator.UkOpenBankingPaymentRequestValidator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepConstants;
@@ -31,6 +32,7 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.utils.ProviderSessionCacheController;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
+import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
 import se.tink.libraries.payment.enums.PaymentStatus;
 
 @Slf4j
@@ -42,6 +44,7 @@ public class UkOpenBankingPaymentExecutor implements PaymentExecutor, FetchableP
     private final UkOpenBankingPisAuthFilterInstantiator authFilterInstantiator;
     private final UkOpenBankingPaymentRequestValidator paymentRequestValidator;
     private final ProviderSessionCacheController providerSessionCacheController;
+    private final UkOpenBankingCredentialsUpdater credentialsUpdater;
 
     @Override
     public PaymentResponse create(PaymentRequest paymentRequest) throws PaymentException {
@@ -91,6 +94,8 @@ public class UkOpenBankingPaymentExecutor implements PaymentExecutor, FetchableP
         final String authCode = this.authenticator.authenticate(intentId);
 
         authFilterInstantiator.instantiateAuthFilterWithAccessToken(authCode);
+
+        credentialsUpdater.updateCredentialsStatus(CredentialsStatus.UPDATING);
 
         return new PaymentMultiStepResponse(
                 paymentMultiStepRequest,
