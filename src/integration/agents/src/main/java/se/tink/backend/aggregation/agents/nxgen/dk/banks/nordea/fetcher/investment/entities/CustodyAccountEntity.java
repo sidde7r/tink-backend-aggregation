@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
@@ -18,6 +19,7 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
+@Slf4j
 public class CustodyAccountEntity {
     private static final String PENSION = "PENSION";
 
@@ -38,6 +40,7 @@ public class CustodyAccountEntity {
     private List<CustodyHoldingEntity> holdings;
 
     public InvestmentAccount toTinkAccount() {
+        log.info("[Nordea DK] Fetching investment - with type: {}", classification);
         List<InstrumentModule> instruments = Collections.emptyList();
         if (!isPension()) {
             instruments =
