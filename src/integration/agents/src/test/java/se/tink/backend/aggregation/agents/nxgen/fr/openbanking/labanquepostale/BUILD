@@ -22,6 +22,7 @@ junit_test(
         "//src/integration/lib",
         "//src/libraries/account_identifier",
         "//src/libraries/mapper",
+        "//src/libraries/serialization",
         "//third_party:com_sun_jersey_jersey_core",
         "//third_party:lombok_libs",
         "//third_party:org_assertj_assertj_core",
