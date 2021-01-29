@@ -109,6 +109,7 @@ public abstract class N26ValidateConsentBaseStep {
             return Optional.of(new AgentSucceededAuthenticationResult(validUntil, persistedData));
 
         } else if (callResultResponse.isLoginExpired()) {
+            log.warn("Login attempt expired. Returning SessionExpiredError");
             return Optional.of(
                     new AgentFailedAuthenticationResult(new SessionExpiredError(), persistedData));
         }
