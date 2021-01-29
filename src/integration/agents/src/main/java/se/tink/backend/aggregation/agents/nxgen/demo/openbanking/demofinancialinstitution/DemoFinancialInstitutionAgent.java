@@ -95,7 +95,7 @@ public final class DemoFinancialInstitutionAgent extends NextGenerationAgent
     @Override
     protected Authenticator constructAuthenticator() {
         return new PasswordAuthenticationController(
-                new DemoFinancialInstitutionAuthenticator(sessionStorage));
+                new DemoFinancialInstitutionAuthenticator(sessionStorage, credentials, provider));
     }
 
     @Override

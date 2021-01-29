@@ -1,7 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demofinancialinstitution.authenticator;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
+import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
@@ -11,10 +16,16 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.password.Pas
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class DemoFinancialInstitutionAuthenticator implements PasswordAuthenticator {
+    public static final int OB_SESSION_LIFETIME = 90;
     private SessionStorage sessionStorage;
+    private final Credentials credentials;
+    private final Provider provider;
 
-    public DemoFinancialInstitutionAuthenticator(SessionStorage sessionStorage) {
+    public DemoFinancialInstitutionAuthenticator(
+            SessionStorage sessionStorage, Credentials credentials, Provider provider) {
         this.sessionStorage = sessionStorage;
+        this.credentials = credentials;
+        this.provider = provider;
     }
 
     public void authenticate(final String username, final String password)
@@ -34,6 +45,17 @@ public class DemoFinancialInstitutionAuthenticator implements PasswordAuthentica
         if (userExists(userCredentials, username)
                 && userCredentials.get(username).equals(password)) {
             putInSessionStorage(sessionStorage, username, password);
+            if (Provider.AccessType.OPEN_BANKING == provider.getAccessType()) {
+                credentials.setSessionExpiryDate(
+                        Optional.ofNullable(credentials.getSessionExpiryDate())
+                                .map(
+                                        d ->
+                                                d.toInstant()
+                                                        .atZone(ZoneId.systemDefault())
+                                                        .toLocalDate())
+                                .filter(localDate -> localDate.isAfter(LocalDate.now()))
+                                .orElse(LocalDate.now().plusDays(OB_SESSION_LIFETIME)));
+            }
         } else throw ThirdPartyAppError.AUTHENTICATION_ERROR.exception();
     }
 
