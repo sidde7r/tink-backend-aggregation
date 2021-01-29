@@ -15,3 +15,9 @@ java_binary(
     main_class = "none",
     runtime_deps = ["@tink_backend_for_agents_framework//src/agents-platform/agents-platform-framework"],
 )
+
+java_binary(
+    name = "fat_jar_sources",
+    main_class = "none",
+    runtime_deps = [":fat_jar_deploy-src.jar"],
+)
