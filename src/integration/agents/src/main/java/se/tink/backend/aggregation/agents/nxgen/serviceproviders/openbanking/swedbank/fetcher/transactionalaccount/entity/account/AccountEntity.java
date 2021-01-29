@@ -78,24 +78,19 @@ public class AccountEntity {
     private static final Logger logger = LoggerFactory.getLogger(AccountEntity.class);
 
     public Optional<TransactionalAccount> toTinkAccount(List<BalancesItem> balances) {
-        Optional<TransactionalAccount> account =
-                TransactionalAccount.nxBuilder()
-                        .withTypeAndFlagsFrom(SwedbankConstants.ACCOUNT_TYPE_MAPPER, product)
-                        .withBalance(BalanceModule.of(getAvailableBalance(balances)))
-                        .withId(
-                                IdModule.builder()
-                                        .withUniqueIdentifier(bban)
-                                        .withAccountNumber(bban)
-                                        .withAccountName(getAccountName())
-                                        .addIdentifier(new IbanIdentifier(iban))
-                                        .build())
-                        .putInTemporaryStorage(StorageKeys.ACCOUNT_ID, iban)
-                        .setApiIdentifier(resourceId)
-                        .build();
-        if (!account.isPresent()) {
-            logger.warn("Missing product: " + product);
-        }
-        return account;
+        return TransactionalAccount.nxBuilder()
+                .withTypeAndFlagsFrom(SwedbankConstants.ACCOUNT_TYPE_MAPPER, product)
+                .withBalance(BalanceModule.of(getAvailableBalance(balances)))
+                .withId(
+                        IdModule.builder()
+                                .withUniqueIdentifier(bban)
+                                .withAccountNumber(bban)
+                                .withAccountName(getAccountName())
+                                .addIdentifier(new IbanIdentifier(iban))
+                                .build())
+                .putInTemporaryStorage(StorageKeys.ACCOUNT_ID, iban)
+                .setApiIdentifier(resourceId)
+                .build();
     }
 
     private ExactCurrencyAmount getAvailableBalance(List<BalancesItem> balances) {
