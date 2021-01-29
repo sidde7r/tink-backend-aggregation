@@ -60,7 +60,7 @@ public class UserInteractionService {
                 String.format(
                         UNIQUE_PREFIX_TPCB,
                         thirdPartyRequest.getSupplementalWaitRequest().getKey());
-        supplementalInformationController.openThirdPartyApp(thirdPartyRequest.getPayload());
+        supplementalInformationController.openThirdPartyAppAsync(thirdPartyRequest.getPayload());
         return supplementalInformationController.waitForSupplementalInformation(
                 waitOnKey,
                 thirdPartyRequest.getSupplementalWaitRequest().getWaitFor(),

@@ -87,7 +87,7 @@ public class SupplementalInformationControllerImpl implements SupplementalInform
     }
 
     @Override
-    public void openThirdPartyApp(ThirdPartyAppAuthenticationPayload payload) {
+    public void openThirdPartyAppAsync(ThirdPartyAppAuthenticationPayload payload) {
         interactionCounter++;
         Preconditions.checkNotNull(payload);
 

@@ -69,7 +69,7 @@ public final class ProgressiveLoginExecutor {
 
     private void handleThirdPartyAppPayload(SupplementInformationRequester payload) {
         if (payload.getThirdPartyAppPayload().isPresent()) {
-            supplementalInformationController.openThirdPartyApp(
+            supplementalInformationController.openThirdPartyAppAsync(
                     payload.getThirdPartyAppPayload().get());
         }
     }

@@ -173,6 +173,6 @@ public class SupplementalInformationHelperImpl implements SupplementalInformatio
 
     @Override
     public void openThirdPartyApp(ThirdPartyAppAuthenticationPayload payload) {
-        supplementalInformationController.openThirdPartyApp(payload);
+        supplementalInformationController.openThirdPartyAppAsync(payload);
     }
 }

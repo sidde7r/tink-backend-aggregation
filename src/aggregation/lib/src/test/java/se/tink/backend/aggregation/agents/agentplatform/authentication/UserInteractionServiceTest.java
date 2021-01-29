@@ -136,7 +136,7 @@ public class UserInteractionServiceTest {
                 objectUnderTest.redirect(redirectUrl, AgentClientInfo.builder().build());
         // then
         Mockito.verify(supplementalInformationController)
-                .openThirdPartyApp(thirdPartyAppAuthenticationPayloadArgumentCaptor.capture());
+                .openThirdPartyAppAsync(thirdPartyAppAuthenticationPayloadArgumentCaptor.capture());
         Assert.assertEquals(
                 redirectUrl,
                 thirdPartyAppAuthenticationPayloadArgumentCaptor
@@ -174,7 +174,7 @@ public class UserInteractionServiceTest {
                         stateArgumentCapture.capture(), Mockito.eq(waitFor), Mockito.eq(timeUnit));
         String stateValue = stateArgumentCapture.getValue().replace("tpcb_", "");
         Mockito.verify(supplementalInformationController)
-                .openThirdPartyApp(thirdPartyAppAuthenticationPayloadArgumentCaptor.capture());
+                .openThirdPartyAppAsync(thirdPartyAppAuthenticationPayloadArgumentCaptor.capture());
         Assert.assertEquals(
                 redirectUrl + "?state=" + stateValue,
                 thirdPartyAppAuthenticationPayloadArgumentCaptor

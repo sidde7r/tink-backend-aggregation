@@ -125,7 +125,7 @@ public class ProgressiveLoginExecutorTest {
         objectUnderTest.login(credentialsRequest);
         // then
         Mockito.verify(supplementalInformationController)
-                .openThirdPartyApp(thirdPartyAppAuthenticationPayload);
+                .openThirdPartyAppAsync(thirdPartyAppAuthenticationPayload);
         Mockito.verify(supplementalInformationController)
                 .waitForSupplementalInformation(waitRequestKey, waitLong, TimeUnit.MINUTES);
     }
@@ -162,7 +162,7 @@ public class ProgressiveLoginExecutorTest {
         objectUnderTest.login(credentialsRequest);
         // then
         Mockito.verify(supplementalInformationController)
-                .openThirdPartyApp(thirdPartyAppAuthenticationPayload);
+                .openThirdPartyAppAsync(thirdPartyAppAuthenticationPayload);
     }
 
     @Test

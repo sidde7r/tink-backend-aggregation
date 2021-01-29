@@ -45,7 +45,7 @@ public final class MockSupplementalInformationController
     }
 
     @Override
-    public void openThirdPartyApp(final ThirdPartyAppAuthenticationPayload payload) {
+    public void openThirdPartyAppAsync(final ThirdPartyAppAuthenticationPayload payload) {
         // NOOP
     }
 
