@@ -71,7 +71,7 @@ public class BankinterCreditCardFetcher
         final TransactionsResponse response = fetchTransactionsPage(account, key);
 
         TransactionKeyPaginatorResponseImpl<PaginationKey> paginatorResponse =
-                new TransactionKeyPaginatorResponseImpl<PaginationKey>();
+                new TransactionKeyPaginatorResponseImpl<>();
         paginatorResponse.setTransactions(response.toTinkTransactions());
         paginatorResponse.setNext(response.getNextKey());
         return paginatorResponse;
