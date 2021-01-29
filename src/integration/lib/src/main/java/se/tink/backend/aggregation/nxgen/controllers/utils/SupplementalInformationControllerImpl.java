@@ -45,11 +45,6 @@ public class SupplementalInformationControllerImpl implements SupplementalInform
                 .map(SupplementalInformationControllerImpl::stringToMap);
     }
 
-    private static Map<String, String> stringToMap(final String string) {
-        return SerializationUtils.deserializeFromString(
-                string, new TypeReference<HashMap<String, String>>() {});
-    }
-
     @Override
     public Map<String, String> askSupplementalInformationSync(Field... fields)
             throws SupplementalInfoException {
@@ -75,17 +70,6 @@ public class SupplementalInformationControllerImpl implements SupplementalInform
         return suplementalInformation;
     }
 
-    private Map<String, String> deserializeSupplementalInformation(String supplementalInformation) {
-        return Optional.ofNullable(
-                        SerializationUtils.deserializeFromString(
-                                supplementalInformation,
-                                new TypeReference<HashMap<String, String>>() {}))
-                .orElseThrow(
-                        () ->
-                                new IllegalStateException(
-                                        "SupplementalInformationResponse cannot be deserialized"));
-    }
-
     @Override
     public void openThirdPartyAppAsync(ThirdPartyAppAuthenticationPayload payload) {
         interactionCounter++;
@@ -106,5 +90,21 @@ public class SupplementalInformationControllerImpl implements SupplementalInform
     @Override
     public short getInteractionCounter() {
         return interactionCounter;
+    }
+
+    private static Map<String, String> stringToMap(final String string) {
+        return SerializationUtils.deserializeFromString(
+                string, new TypeReference<HashMap<String, String>>() {});
+    }
+
+    private Map<String, String> deserializeSupplementalInformation(String supplementalInformation) {
+        return Optional.ofNullable(
+                SerializationUtils.deserializeFromString(
+                        supplementalInformation,
+                        new TypeReference<HashMap<String, String>>() {}))
+                .orElseThrow(
+                        () ->
+                                new IllegalStateException(
+                                        "SupplementalInformationResponse cannot be deserialized"));
     }
 }
