@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.handelsbanken.executor.payment.HandelsbankenPaymentExecutorSelector;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseAccountConverter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseAgent;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.Market;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.authenticator.HandelsbankenOAuth2Authenticator;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
@@ -71,5 +72,10 @@ public final class HandelsbankenAgent extends HandelsbankenBaseAgent {
         HandelsbankenPaymentExecutorSelector paymentExecutorSelector =
                 new HandelsbankenPaymentExecutorSelector(apiClient);
         return Optional.of(new PaymentController(paymentExecutorSelector, paymentExecutorSelector));
+    }
+
+    @Override
+    public HandelsbankenBaseApiClient constructApiClient() {
+        return new HandelsbankenFiApiClient(client, persistentStorage, getMarket());
     }
 }

@@ -110,7 +110,7 @@ public class TransactionsItemEntity {
         }
     }
 
-    private ExactCurrencyAmount creditOrDebit() {
+    protected ExactCurrencyAmount creditOrDebit() {
         return HandelsbankenBaseConstants.Transactions.CREDITED.equalsIgnoreCase(creditDebit)
                 ? transactionAmountEntity.getAmount()
                 : transactionAmountEntity.getAmount().negate();
