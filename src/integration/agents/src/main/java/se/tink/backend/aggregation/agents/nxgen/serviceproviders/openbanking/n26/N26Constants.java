@@ -12,7 +12,7 @@ public class N26Constants {
     public static class Url {
         public static final String BASE_URL = "https://xs2a.tech26.de";
         public static final String AUTHORIZE = "/oauth2/authorize";
-        public static final String TOKEN = "/oauth2/token?role=";
+        public static final String TOKEN = "/oauth2/token?role=DEDICATED_AISP";
         public static final String CONSENT_FETCH = parseXs2aUrlPath(ApiServices.CONSENT);
         public static final String CONSENT_STATUS = parseXs2aUrlPath(ApiServices.CONSENT_STATUS);
         public static final String CONSENT_DETAILS = parseXs2aUrlPath(ApiServices.CONSENT_DETAILS);
@@ -44,8 +44,7 @@ public class N26Constants {
 
     public static class QueryValues {
         public static final String CODE = "CODE";
-        public static final String AISP_SCOPE = "DEDICATED_AISP";
-        public static final String PISP_SCOPE = "DEDICATED_PISP";
+        public static final String SCOPE = "DEDICATED_AISP";
     }
 
     public static class ErrorCodes {

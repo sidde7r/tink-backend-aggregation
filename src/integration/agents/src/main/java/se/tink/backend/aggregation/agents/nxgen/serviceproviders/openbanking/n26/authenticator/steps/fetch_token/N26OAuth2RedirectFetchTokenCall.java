@@ -86,9 +86,6 @@ public class N26OAuth2RedirectFetchTokenCall extends OAuth2RedirectFetchTokenCal
 
     @Override
     protected URI getAccessTokenEndpoint() {
-        return URI.create(
-                n26FetchTokenParameters.getBaseUrl()
-                        + Url.TOKEN
-                        + n26FetchTokenParameters.getScope());
+        return URI.create(n26FetchTokenParameters.getBaseUrl() + Url.TOKEN);
     }
 }

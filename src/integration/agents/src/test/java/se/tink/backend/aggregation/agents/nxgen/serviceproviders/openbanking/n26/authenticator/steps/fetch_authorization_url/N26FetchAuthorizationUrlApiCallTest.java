@@ -33,12 +33,7 @@ public class N26FetchAuthorizationUrlApiCallTest extends N26BaseApiCallTest {
     @Before
     public void init() {
         n26FetchAuthorizationUrlApiCall =
-                new N26FetchAuthorizationUrlApiCall(
-                        agentHttpClient,
-                        N26FetchAuthorizationUrlApiParameters.builder()
-                                .baseUrl(BASE_URL)
-                                .scope("DEDICATED_AISP")
-                                .build());
+                new N26FetchAuthorizationUrlApiCall(agentHttpClient, BASE_URL);
     }
 
     @Test
