@@ -21,11 +21,12 @@ public class N26FetchAuthorizationUrlApiCall
         extends AgentSimpleExternalApiCall<
                 N26FetchAuthorizationUrlApiCallParameters, URI, String, String> {
 
-    private final String baseUrl;
+    private final N26FetchAuthorizationUrlApiParameters apiParameters;
 
-    public N26FetchAuthorizationUrlApiCall(AgentHttpClient httpClient, String baseUrl) {
+    public N26FetchAuthorizationUrlApiCall(
+            AgentHttpClient httpClient, N26FetchAuthorizationUrlApiParameters apiParameters) {
         super(httpClient, String.class);
-        this.baseUrl = baseUrl;
+        this.apiParameters = apiParameters;
     }
 
     @SneakyThrows
@@ -34,9 +35,9 @@ public class N26FetchAuthorizationUrlApiCall
             N26FetchAuthorizationUrlApiCallParameters parameters,
             AgentExtendedClientInfo clientInfo) {
         URI callUri =
-                new URIBuilder(baseUrl + Url.AUTHORIZE)
+                new URIBuilder(apiParameters.getBaseUrl() + Url.AUTHORIZE)
                         .addParameter(QueryKeys.CLIENT_ID, parameters.getClientId())
-                        .addParameter(QueryKeys.SCOPE, QueryValues.SCOPE)
+                        .addParameter(QueryKeys.SCOPE, apiParameters.getScope())
                         .addParameter(QueryKeys.CODE_CHALLENGE, parameters.getCodeChallenge())
                         .addParameter(QueryKeys.REDIRECT_URL, parameters.getRedirectUri())
                         .addParameter(QueryKeys.STATE, parameters.getState())
