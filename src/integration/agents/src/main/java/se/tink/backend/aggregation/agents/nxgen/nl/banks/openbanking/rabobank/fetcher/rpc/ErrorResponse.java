@@ -6,7 +6,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 @Getter
 public class ErrorResponse {
-    private String httpCode;
-    private String httpMessage;
-    private String moreInformation;
+    private String type;
+    private String title;
+    private String code;
 }

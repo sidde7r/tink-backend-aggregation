@@ -209,7 +209,7 @@ public final class RabobankApiClient {
             ErrorResponse errorResponse = e.getResponse().getBody(ErrorResponse.class);
             if (e.getResponse().getStatus() == HttpStatus.SC_UNAUTHORIZED
                     && errorResponse
-                            .getMoreInformation()
+                            .getTitle()
                             .trim()
                             .equalsIgnoreCase(ErrorMessages.NOT_SUBSCRIBED)) {
                 rabobankConfiguration.getUrls().setConsumeLatest(false);
