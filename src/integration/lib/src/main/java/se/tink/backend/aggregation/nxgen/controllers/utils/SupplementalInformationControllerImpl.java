@@ -16,6 +16,7 @@ import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SupplementalInfoError;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.constants.ThirdPartyAppConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload.Ios;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
@@ -24,6 +25,8 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 public class SupplementalInformationControllerImpl implements SupplementalInformationController {
     private static final Logger logger =
             LoggerFactory.getLogger(SupplementalInformationControllerImpl.class);
+
+    private static final String UNIQUE_PREFIX_TPCB = "tpcb_%s";
 
     private final SupplementalRequester supplementalRequester;
     private final Credentials credentials;
@@ -39,9 +42,9 @@ public class SupplementalInformationControllerImpl implements SupplementalInform
 
     @Override
     public Optional<Map<String, String>> waitForSupplementalInformation(
-            String key, long waitFor, TimeUnit unit) {
+            String barrierKey, long waitFor, TimeUnit unit) {
         return supplementalRequester
-                .waitForSupplementalInformation(key, waitFor, unit)
+                .waitForSupplementalInformation(barrierKey, waitFor, unit)
                 .map(SupplementalInformationControllerImpl::stringToMap);
     }
 
@@ -68,6 +71,16 @@ public class SupplementalInformationControllerImpl implements SupplementalInform
                     logger.info("supplemental information {} {}", key, message);
                 });
         return suplementalInformation;
+    }
+
+    @Override
+    public Optional<Map<String, String>> openThirdPartyAppSync(
+            ThirdPartyAppAuthenticationPayload payload) {
+        openThirdPartyAppAsync(payload);
+
+        String barrierKey = String.format(UNIQUE_PREFIX_TPCB, this.state);
+        return waitForSupplementalInformation(
+                barrierKey, ThirdPartyAppConstants.WAIT_FOR_MINUTES, TimeUnit.MINUTES);
     }
 
     @Override
@@ -99,9 +112,9 @@ public class SupplementalInformationControllerImpl implements SupplementalInform
 
     private Map<String, String> deserializeSupplementalInformation(String supplementalInformation) {
         return Optional.ofNullable(
-                SerializationUtils.deserializeFromString(
-                        supplementalInformation,
-                        new TypeReference<HashMap<String, String>>() {}))
+                        SerializationUtils.deserializeFromString(
+                                supplementalInformation,
+                                new TypeReference<HashMap<String, String>>() {}))
                 .orElseThrow(
                         () ->
                                 new IllegalStateException(

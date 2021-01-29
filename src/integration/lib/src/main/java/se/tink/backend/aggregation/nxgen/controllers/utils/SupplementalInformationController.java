@@ -15,6 +15,8 @@ public interface SupplementalInformationController {
     Map<String, String> askSupplementalInformationSync(Field... fields)
             throws SupplementalInfoException;
 
+    Optional<Map<String, String>> openThirdPartyAppSync(ThirdPartyAppAuthenticationPayload payload);
+
     void openThirdPartyAppAsync(ThirdPartyAppAuthenticationPayload payload);
 
     short getInteractionCounter();

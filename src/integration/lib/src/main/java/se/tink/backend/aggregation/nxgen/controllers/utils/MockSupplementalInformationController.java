@@ -45,6 +45,12 @@ public final class MockSupplementalInformationController
     }
 
     @Override
+    public Optional<Map<String, String>> openThirdPartyAppSync(
+            ThirdPartyAppAuthenticationPayload payload) {
+        return Optional.empty();
+    }
+
+    @Override
     public void openThirdPartyAppAsync(final ThirdPartyAppAuthenticationPayload payload) {
         // NOOP
     }
