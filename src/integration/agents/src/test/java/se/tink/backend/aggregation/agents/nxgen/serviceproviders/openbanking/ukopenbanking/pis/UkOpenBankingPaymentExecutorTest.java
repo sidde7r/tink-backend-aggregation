@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -29,6 +30,7 @@ import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.authenticator.UkOpenBankingPaymentAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.authenticator.UkOpenBankingPisAuthFilterInstantiator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.UkOpenBankingPaymentApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.credentialsupdater.UkOpenBankingCredentialsUpdater;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.entity.ExecutorSignStep;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.validator.UkOpenBankingPaymentRequestValidator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepConstants;
@@ -37,6 +39,7 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRes
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.utils.ProviderSessionCacheController;
+import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
 
 public class UkOpenBankingPaymentExecutorTest {
 
@@ -46,6 +49,7 @@ public class UkOpenBankingPaymentExecutorTest {
     private Clock clockMock;
     private UkOpenBankingPaymentRequestValidator paymentRequestValidatorMock;
     private ProviderSessionCacheController providerSessionCacheControllerMock;
+    private UkOpenBankingCredentialsUpdater credentialsUpdaterMock;
 
     @Before
     public void setUp() throws PaymentAuthorizationException {
@@ -55,6 +59,7 @@ public class UkOpenBankingPaymentExecutorTest {
         authFilterInstantiatorMock = mock(UkOpenBankingPisAuthFilterInstantiator.class);
         paymentRequestValidatorMock = mock(UkOpenBankingPaymentRequestValidator.class);
         providerSessionCacheControllerMock = mock(ProviderSessionCacheController.class);
+        credentialsUpdaterMock = mock(UkOpenBankingCredentialsUpdater.class);
 
         ukOpenBankingPaymentExecutor =
                 new UkOpenBankingPaymentExecutor(
@@ -62,7 +67,8 @@ public class UkOpenBankingPaymentExecutorTest {
                         paymentAuthenticatorMock,
                         authFilterInstantiatorMock,
                         paymentRequestValidatorMock,
-                        providerSessionCacheControllerMock);
+                        providerSessionCacheControllerMock,
+                        credentialsUpdaterMock);
 
         clockMock = createClockMock();
     }
@@ -139,6 +145,7 @@ public class UkOpenBankingPaymentExecutorTest {
         // then
         assertThat(returned.getStep()).isEqualTo(ExecutorSignStep.EXECUTE_PAYMENT.name());
         verify(authFilterInstantiatorMock).instantiateAuthFilterWithAccessToken(AUTH_CODE);
+        verify(credentialsUpdaterMock).updateCredentialsStatus(CredentialsStatus.UPDATING);
     }
 
     @Test
@@ -160,6 +167,7 @@ public class UkOpenBankingPaymentExecutorTest {
         // then
         assertThat(returned.getStep()).isEqualTo(AuthenticationStepConstants.STEP_FINALIZE);
         verify(providerSessionCacheControllerMock).setProviderSessionCacheInfo(cache);
+        verify(credentialsUpdaterMock, never()).updateCredentialsStatus(any());
     }
 
     private static UkOpenBankingPaymentAuthenticator createPaymentAuthenticatorMock()
