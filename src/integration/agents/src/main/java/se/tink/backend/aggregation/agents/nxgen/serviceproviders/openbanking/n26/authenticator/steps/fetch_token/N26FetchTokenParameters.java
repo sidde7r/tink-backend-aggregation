@@ -10,5 +10,4 @@ public class N26FetchTokenParameters {
     private final String clientId;
     private final String redirectUrl;
     private final String baseUrl;
-    private final String scope;
 }

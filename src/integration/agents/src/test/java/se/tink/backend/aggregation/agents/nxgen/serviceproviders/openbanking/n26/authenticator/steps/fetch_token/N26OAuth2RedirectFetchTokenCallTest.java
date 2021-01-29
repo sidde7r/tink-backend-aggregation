@@ -38,7 +38,6 @@ public class N26OAuth2RedirectFetchTokenCallTest extends N26BaseApiCallTest {
                         .baseUrl(BASE_URL)
                         .clientId(CLIENT_ID)
                         .redirectUrl(REDIRECT_URL)
-                        .scope("DEDICATED_AISP")
                         .build();
         apiCall =
                 new N26OAuth2RedirectFetchTokenCall(
