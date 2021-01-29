@@ -98,7 +98,7 @@ public class SparebankCardTransactionMapperTest {
         Transaction transaction = maybeTransaction.get();
         assertThat(transaction.isPending()).isTrue();
         assertThat(transaction.getExactAmount()).isEqualTo(ExactCurrencyAmount.of(100.26, "NOK"));
-        assertThat(transaction.getDate()).isEqualToIgnoringHours("2018-09-01");
+        assertThat(transaction.getDate()).isEqualToIgnoringHours("2020-01-01");
         assertThat(transaction.getDescription()).isEqualTo("Details 1234 of pending");
     }
 
