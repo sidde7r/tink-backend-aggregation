@@ -75,7 +75,7 @@ public class UserInteractionService {
     private List<AgentFieldValue> requestUserForFields(List<AgentFieldDefinition> definitions) {
         try {
             return supplementalInformationController
-                    .askSupplementalInformation(
+                    .askSupplementalInformationSync(
                             agentInteractionDataToSupplementalInformationMapper.toFields(
                                     definitions))
                     .entrySet().stream()

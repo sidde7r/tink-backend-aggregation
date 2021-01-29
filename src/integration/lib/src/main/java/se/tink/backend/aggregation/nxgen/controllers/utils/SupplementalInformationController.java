@@ -12,7 +12,7 @@ public interface SupplementalInformationController {
     Optional<Map<String, String>> waitForSupplementalInformation(
             String key, long waitFor, TimeUnit unit);
 
-    Map<String, String> askSupplementalInformation(Field... fields)
+    Map<String, String> askSupplementalInformationSync(Field... fields)
             throws SupplementalInfoException;
 
     void openThirdPartyApp(ThirdPartyAppAuthenticationPayload payload);

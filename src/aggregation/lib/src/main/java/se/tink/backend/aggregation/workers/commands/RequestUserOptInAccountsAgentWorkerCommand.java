@@ -301,7 +301,7 @@ public class RequestUserOptInAccountsAgentWorkerCommand extends AgentWorkerComma
         SupplementalInformationController supplementalInformationController =
                 new SupplementalInformationControllerImpl(context, request.getCredentials(), null);
 
-        return supplementalInformationController.askSupplementalInformation(fields);
+        return supplementalInformationController.askSupplementalInformationSync(fields);
     }
 
     /**

@@ -80,7 +80,7 @@ public class UserInteractionServiceTest {
                 .thenReturn(Lists.newArrayList(otpField));
         Map<String, String> userResponse = new HashMap<>();
         userResponse.put(otpCodeFieldId, "12345");
-        Mockito.when(supplementalInformationController.askSupplementalInformation(otpField))
+        Mockito.when(supplementalInformationController.askSupplementalInformationSync(otpField))
                 .thenReturn(userResponse);
         UserInteractionService objectUnderTest =
                 new UserInteractionService(supplementalInformationController, credentialsRequest);
@@ -102,7 +102,7 @@ public class UserInteractionServiceTest {
                 .thenReturn(Lists.newArrayList(otpField));
         Map<String, String> userResponse = new HashMap<>();
         userResponse.put(otpCodeFieldId, "12345");
-        Mockito.when(supplementalInformationController.askSupplementalInformation(otpField))
+        Mockito.when(supplementalInformationController.askSupplementalInformationSync(otpField))
                 .thenThrow(SupplementalInfoError.WAIT_TIMEOUT.exception());
         UserInteractionService objectUnderTest =
                 new UserInteractionService(supplementalInformationController, credentialsRequest);

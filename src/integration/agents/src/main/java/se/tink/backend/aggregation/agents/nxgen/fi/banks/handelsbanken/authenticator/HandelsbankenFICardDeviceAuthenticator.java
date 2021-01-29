@@ -85,7 +85,7 @@ public class HandelsbankenFICardDeviceAuthenticator implements TypedAuthenticato
         new SecurityCardResponseValidator(securityCard).validate();
 
         Map<String, String> securityCardCode =
-                supplementalInformationController.askSupplementalInformation(
+                supplementalInformationController.askSupplementalInformationSync(
                         challengeField(securityCard), responseField());
 
         VerifySecurityCodeResponse verifySecurityCode =

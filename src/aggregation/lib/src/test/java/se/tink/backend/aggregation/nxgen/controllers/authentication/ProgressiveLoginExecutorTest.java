@@ -51,7 +51,9 @@ public class ProgressiveLoginExecutorTest {
         Field requestedField = Mockito.mock(Field.class);
         Map<String, String> callbackValue = new HashMap<>();
         callbackValue.put("fieldKey", "fieldValue");
-        Mockito.when(supplementalInformationController.askSupplementalInformation(requestedField))
+        Mockito.when(
+                        supplementalInformationController.askSupplementalInformationSync(
+                                requestedField))
                 .thenReturn(callbackValue);
         SupplementInformationRequester requester =
                 new SupplementInformationRequester.Builder()
@@ -77,7 +79,7 @@ public class ProgressiveLoginExecutorTest {
         objectUnderTest.login(credentialsRequest);
         // then
         Mockito.verify(supplementalInformationController)
-                .askSupplementalInformation(requestedField);
+                .askSupplementalInformationSync(requestedField);
     }
 
     @Test

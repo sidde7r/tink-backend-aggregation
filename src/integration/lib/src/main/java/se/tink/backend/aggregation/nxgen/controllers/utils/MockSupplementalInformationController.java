@@ -34,7 +34,7 @@ public final class MockSupplementalInformationController
     }
 
     @Override
-    public Map<String, String> askSupplementalInformation(final Field... fields)
+    public Map<String, String> askSupplementalInformationSync(final Field... fields)
             throws SupplementalInfoException {
         interactionCounter++;
         return Stream.of(fields)

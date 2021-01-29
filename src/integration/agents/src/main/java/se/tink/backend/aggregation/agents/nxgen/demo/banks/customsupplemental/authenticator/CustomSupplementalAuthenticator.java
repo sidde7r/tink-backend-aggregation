@@ -79,7 +79,7 @@ public class CustomSupplementalAuthenticator implements Authenticator {
     private void askForInfo(List<List<Field>> supplementalScreens) {
         for (List<Field> screen : supplementalScreens) {
             if (screen.size() != 0) {
-                supplementalInformationController.askSupplementalInformation(
+                supplementalInformationController.askSupplementalInformationSync(
                         screen.toArray(new Field[0]));
             }
         }

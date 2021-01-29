@@ -51,7 +51,7 @@ public class SupplementalInformationControllerImpl implements SupplementalInform
     }
 
     @Override
-    public Map<String, String> askSupplementalInformation(Field... fields)
+    public Map<String, String> askSupplementalInformationSync(Field... fields)
             throws SupplementalInfoException {
         interactionCounter++;
         credentials.setSupplementalInformation(SerializationUtils.serializeToString(fields));
