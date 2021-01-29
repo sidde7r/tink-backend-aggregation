@@ -40,7 +40,6 @@ public class SupplementalInformationControllerImpl implements SupplementalInform
     @Override
     public Optional<Map<String, String>> waitForSupplementalInformation(
             String key, long waitFor, TimeUnit unit) {
-        interactionCounter++;
         return supplementalRequester
                 .waitForSupplementalInformation(key, waitFor, unit)
                 .map(SupplementalInformationControllerImpl::stringToMap);
