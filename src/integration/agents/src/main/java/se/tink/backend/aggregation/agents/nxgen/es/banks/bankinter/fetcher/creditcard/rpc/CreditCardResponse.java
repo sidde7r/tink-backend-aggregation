@@ -40,7 +40,7 @@ public class CreditCardResponse extends HtmlResponse {
         // log unknown values
         getCardType()
                 .ifPresent(
-                        (type) -> {
+                        type -> {
                             if (!CardTypes.ALL.contains(type)) {
                                 LOG.warn("Unknown card type: " + type);
                             }
@@ -55,7 +55,7 @@ public class CreditCardResponse extends HtmlResponse {
         final NodeList keyNodes =
                 evaluateXPath("//div[contains(@class,'head_datos_detalle')]/dl/dt", NodeList.class);
 
-        final HashMap<String, String> dataValues = new HashMap<String, String>();
+        final HashMap<String, String> dataValues = new HashMap<>();
         for (int i = 0; i < keyNodes.getLength(); i++) {
             final Node keyNode = keyNodes.item(i);
             final Node valueNode = evaluateXPath(keyNode, "following-sibling::dd", Node.class);
@@ -83,7 +83,7 @@ public class CreditCardResponse extends HtmlResponse {
     }
 
     public boolean isCreditCard() {
-        return getCardType().map(type -> CardTypes.CREDIT.contains(type)).orElse(false);
+        return getCardType().map(CardTypes.CREDIT::contains).orElse(false);
     }
 
     public CreditCardAccount toCreditCardAccount(String accountLink) {
