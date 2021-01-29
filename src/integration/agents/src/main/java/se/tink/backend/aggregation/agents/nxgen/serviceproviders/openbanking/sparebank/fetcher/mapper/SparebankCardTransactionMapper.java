@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ObjectUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.fetcher.card.entities.CardTransactionEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.fetcher.card.entities.CardTransactionsEntity;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
@@ -37,7 +38,10 @@ public class SparebankCardTransactionMapper {
                     Transaction.builder()
                             .setPending(isPending)
                             .setAmount(cardTransactionEntity.getTransactionAmount().toAmount())
-                            .setDate(cardTransactionEntity.getBookingDate())
+                            .setDate(
+                                    ObjectUtils.firstNonNull(
+                                            cardTransactionEntity.getBookingDate(),
+                                            cardTransactionEntity.getTransactionDate()))
                             .setDescription(cardTransactionEntity.getTransactionDetails())
                             .build();
         } catch (RuntimeException e) {

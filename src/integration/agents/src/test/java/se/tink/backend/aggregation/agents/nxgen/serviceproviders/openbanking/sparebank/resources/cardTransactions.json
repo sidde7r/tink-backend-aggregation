@@ -24,7 +24,6 @@
         ],
         "pending": [
             {
-                "bookingDate": "2018-09-01",
                 "transactionAmount": {
                     "amount": "100.26",
                     "currency": "NOK"
