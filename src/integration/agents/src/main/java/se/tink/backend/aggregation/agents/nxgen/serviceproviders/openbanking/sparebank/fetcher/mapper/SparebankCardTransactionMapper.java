@@ -37,7 +37,11 @@ public class SparebankCardTransactionMapper {
             transaction =
                     Transaction.builder()
                             .setPending(isPending)
-                            .setAmount(cardTransactionEntity.getTransactionAmount().toAmount())
+                            .setAmount(
+                                    ObjectUtils.firstNonNull(
+                                                    cardTransactionEntity.getTransactionAmount(),
+                                                    cardTransactionEntity.getOriginalAmount())
+                                            .toAmount())
                             .setDate(
                                     ObjectUtils.firstNonNull(
                                             cardTransactionEntity.getBookingDate(),

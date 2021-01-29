@@ -29,7 +29,15 @@
                     "currency": "NOK"
                 },
                 "transactionDate": "2020-01-01",
-                "transactionDetails": "Details 1234 of pending"
+                "transactionDetails": "TransactionAmount and transactionDate pending"
+            },
+            {
+                "originalAmount": {
+                    "amount": "-200.66",
+                    "currency": "NOK"
+                },
+                "bookingDate": "2020-05-05",
+                "transactionDetails": "OriginalAmount and bookingDate pending"
             }
         ]
     }

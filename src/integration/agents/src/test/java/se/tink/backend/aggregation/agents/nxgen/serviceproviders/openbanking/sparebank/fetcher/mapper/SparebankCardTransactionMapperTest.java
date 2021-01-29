@@ -46,8 +46,8 @@ public class SparebankCardTransactionMapperTest {
                 transactionMapper.toTinkTransactions(testTransactionEntity);
 
         // then
-        assertThat(transactions).hasSize(2);
-        assertThat(transactions.stream().filter(Transaction::isPending).count()).isEqualTo(1);
+        assertThat(transactions).hasSize(3);
+        assertThat(transactions.stream().filter(Transaction::isPending).count()).isEqualTo(2);
     }
 
     @Test
@@ -60,8 +60,8 @@ public class SparebankCardTransactionMapperTest {
                 transactionMapper.toTinkTransactions(testTransactionEntity);
 
         // then
-        assertThat(transactions).hasSize(1);
-        assertThat(transactions.stream().filter(Transaction::isPending).count()).isEqualTo(1);
+        assertThat(transactions).hasSize(2);
+        assertThat(transactions.stream().filter(Transaction::isPending).count()).isEqualTo(2);
     }
 
     @Test
@@ -99,7 +99,28 @@ public class SparebankCardTransactionMapperTest {
         assertThat(transaction.isPending()).isTrue();
         assertThat(transaction.getExactAmount()).isEqualTo(ExactCurrencyAmount.of(100.26, "NOK"));
         assertThat(transaction.getDate()).isEqualToIgnoringHours("2020-01-01");
-        assertThat(transaction.getDescription()).isEqualTo("Details 1234 of pending");
+        assertThat(transaction.getDescription())
+                .isEqualTo("TransactionAmount and transactionDate pending");
+    }
+
+    @Test
+    public void shouldMapPendingTransactionProperlyWhenDifferentFieldsPresent() {
+        // given
+        CardTransactionEntity cardTransactionEntity = testTransactionEntity.getPending().get(1);
+
+        // when
+        Optional<Transaction> maybeTransaction =
+                transactionMapper.toTinkTransaction(cardTransactionEntity, true);
+
+        // then
+        assertThat(maybeTransaction.isPresent()).isTrue();
+
+        Transaction transaction = maybeTransaction.get();
+        assertThat(transaction.isPending()).isTrue();
+        assertThat(transaction.getExactAmount()).isEqualTo(ExactCurrencyAmount.of(-200.66, "NOK"));
+        assertThat(transaction.getDate()).isEqualToIgnoringHours("2020-05-05");
+        assertThat(transaction.getDescription())
+                .isEqualTo("OriginalAmount and bookingDate pending");
     }
 
     private CardTransactionsEntity getCardTransactionsEntity() {
