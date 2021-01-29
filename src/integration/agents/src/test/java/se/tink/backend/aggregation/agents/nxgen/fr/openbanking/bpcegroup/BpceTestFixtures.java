@@ -8,10 +8,14 @@ import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.authent
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.transactionalaccount.rpc.BalancesResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.transactionalaccount.rpc.TransactionsResponse;
+import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.creditcard.CreditCardModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
+import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.serialization.utils.SerializationUtils;
@@ -183,5 +187,31 @@ public final class BpceTestFixtures {
                 .setApiIdentifier(RESOURCE_ID)
                 .build()
                 .orElse(null);
+    }
+
+    public static CreditCardAccount getCreditCardAccount() {
+        final String cardPan = "1234XXXX1234";
+        final ExactCurrencyAmount exactCurrencyAmount =
+                new ExactCurrencyAmount(BigDecimal.valueOf(10.0), "EUR");
+
+        return CreditCardAccount.nxBuilder()
+                .withCardDetails(
+                        CreditCardModule.builder()
+                                .withCardNumber(cardPan)
+                                .withBalance(exactCurrencyAmount)
+                                .withAvailableCredit(exactCurrencyAmount)
+                                .withCardAlias("A card")
+                                .build())
+                .withoutFlags()
+                .withId(
+                        IdModule.builder()
+                                .withUniqueIdentifier(RESOURCE_ID)
+                                .withAccountNumber(cardPan)
+                                .withAccountName("This is a card")
+                                .addIdentifier(
+                                        AccountIdentifier.create(Type.PAYMENT_CARD_NUMBER, cardPan))
+                                .build())
+                .setApiIdentifier(RESOURCE_ID)
+                .build();
     }
 }

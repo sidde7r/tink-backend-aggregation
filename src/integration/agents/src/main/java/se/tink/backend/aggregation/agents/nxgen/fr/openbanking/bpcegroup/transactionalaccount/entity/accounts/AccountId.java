@@ -7,5 +7,5 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class AccountId {
 
     @Getter private String iban;
-    private OtherInformationEntity other;
+    @Getter private OtherInformationEntity other;
 }
