@@ -1,12 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.fetcher.creditcard.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.google.common.base.Strings;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Objects;
-import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType;
 import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
@@ -14,49 +15,30 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction.Builder;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
+@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class CardTransaction {
-    @JsonProperty("transaction_id")
-    private String transactionId;
 
-    @JsonProperty("transaction_date")
-    private LocalDate transactionDate;
+    private double amount;
 
-    @JsonProperty("transaction_type")
-    private String transactionType;
+    private boolean booked;
 
-    // Amount of the transaction in local currency
-    @JsonProperty private BigDecimal amount;
-
-    @JsonProperty private String currency;
-
-    // The amount of the transaction in the original currency
-    @JsonProperty("original_amount")
-    private BigDecimal originalAmount;
-
-    @JsonProperty("original_currency")
-    private String originalCurrency;
-
-    @JsonProperty("exchange_rate")
-    private BigDecimal exchangeRate;
-
-    @JsonProperty private String title;
-
-    @JsonProperty private boolean booked;
-
-    @JsonProperty("booking_date")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate bookingDate;
 
-    @JsonProperty("merchant_city")
-    private String merchantCity;
+    private String currency;
 
-    @JsonProperty("merchant_country")
-    private String merchantCountry;
+    private String description;
 
-    @JsonProperty("invoiced_date")
-    private LocalDate invoicedDate;
+    private BigDecimal exchangeRate;
 
-    @JsonProperty("invoice_status")
-    private String invoiceStatus;
+    private BigDecimal originalAmount;
+
+    private String originalCurrency;
+
+    private String title;
+
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate transactionDate;
 
     @JsonIgnore
     private boolean hasExchangeRateInfo() {
@@ -67,16 +49,11 @@ public class CardTransaction {
     @JsonIgnore
     public Transaction toTinkTransaction() {
         Builder builder =
-                (Builder)
-                        Transaction.builder()
-                                .setAmount(ExactCurrencyAmount.of(amount, currency))
-                                .setDate(getDate())
-                                .setDescription(title)
-                                .setPending(!booked)
-                                .addExternalSystemIds(
-                                        TransactionExternalSystemIdType
-                                                .PROVIDER_GIVEN_TRANSACTION_ID,
-                                        transactionId);
+                Transaction.builder()
+                        .setAmount(ExactCurrencyAmount.of(amount, currency))
+                        .setDate(getDate())
+                        .setDescription(getTransactionDescription())
+                        .setPending(!booked);
         if (hasExchangeRateInfo()) {
             builder.setPayload(TransactionPayloadTypes.EXCHANGE_RATE, exchangeRate.toPlainString());
             builder.setPayload(TransactionPayloadTypes.LOCAL_CURRENCY, originalCurrency);
@@ -86,6 +63,11 @@ public class CardTransaction {
         }
 
         return builder.build();
+    }
+
+    @JsonIgnore
+    private String getTransactionDescription() {
+        return description != null ? description : title;
     }
 
     private LocalDate getDate() {
