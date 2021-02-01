@@ -68,7 +68,9 @@ public class NordnetBankIdAutoStartAuthenticator implements BankIdAuthenticator<
         anonymousLogin();
 
         final InitBankIdResponse response = initBankId();
-        this.autoStartToken = response.getAutostartToken();
+        this.autoStartToken = response.getAutoStartToken();
+        Preconditions.checkNotNull(
+                Strings.emptyToNull(this.autoStartToken), "Autostart token must be present");
 
         return response.getOrderRef();
     }
