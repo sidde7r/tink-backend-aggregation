@@ -182,6 +182,11 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
         return aggregator.getAggregatorIdentifier();
     }
 
+    @Override
+    public HttpResponseStatusHandler getResponseStatusHandler() {
+        return responseStatusHandler;
+    }
+
     // This filter is responsible to send the actual http request and MUST be the tail of the chain.
     @FilterOrder(category = FilterPhases.SEND, order = Integer.MAX_VALUE)
     private class SendRequestFilter extends Filter {

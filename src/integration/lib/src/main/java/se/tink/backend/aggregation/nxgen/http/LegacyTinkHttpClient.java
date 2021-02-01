@@ -181,6 +181,11 @@ public class LegacyTinkHttpClient extends LegacyFilterable<TinkHttpClient>
         return aggregator.getAggregatorIdentifier();
     }
 
+    @Override
+    public HttpResponseStatusHandler getResponseStatusHandler() {
+        return responseStatusHandler;
+    }
+
     // This filter is responsible to send the actual http request and MUST be the tail of the chain.
     private class SendRequestFilter extends Filter {
 
