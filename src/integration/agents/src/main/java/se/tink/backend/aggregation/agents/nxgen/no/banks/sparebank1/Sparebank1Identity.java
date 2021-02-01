@@ -8,11 +8,14 @@ import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Map;
+import java.util.UUID;
+import lombok.Data;
+import org.apache.commons.lang3.ObjectUtils;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
-import se.tink.libraries.strings.StringUtils;
 
+@Data
 public class Sparebank1Identity {
     private static final String STORAGE_KEY_DEVICEID = "deviceId";
     private static final String STORAGE_KEY_KEY_PAIR = "keyPair";
@@ -31,64 +34,8 @@ public class Sparebank1Identity {
     private BigInteger verificator;
     private String token;
 
-    public String getDeviceId() {
-        return deviceId;
-    }
-
-    public void setDeviceId(String deviceId) {
-        this.deviceId = deviceId;
-    }
-
-    public KeyPair getKeyPair() {
-        return keyPair;
-    }
-
-    public void setKeyPair(KeyPair keyPair) {
-        this.keyPair = keyPair;
-    }
-
-    public BigInteger getSalt() {
-        return salt;
-    }
-
-    public void setSalt(BigInteger salt) {
-        this.salt = salt;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public BigInteger getVerificator() {
-        return verificator;
-    }
-
-    public void setVerificator(BigInteger verificator) {
-        this.verificator = verificator;
-    }
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
-
-    public static Sparebank1Identity create(String username) {
-        String deviceId = StringUtils.hashAsUUID("TINK-" + username);
+    public static Sparebank1Identity create() {
+        String deviceId = UUID.randomUUID().toString().toUpperCase();
 
         try {
             KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
@@ -155,5 +102,9 @@ public class Sparebank1Identity {
         }
 
         return identity;
+    }
+
+    public boolean isAutoAuthenticationPossible() {
+        return ObjectUtils.allNotNull(deviceId, token);
     }
 }

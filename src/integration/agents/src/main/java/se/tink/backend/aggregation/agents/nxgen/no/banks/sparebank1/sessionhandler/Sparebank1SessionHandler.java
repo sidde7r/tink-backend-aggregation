@@ -1,53 +1,32 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.sessionhandler;
 
 import com.google.api.client.http.HttpStatusCodes;
-import java.lang.invoke.MethodHandles;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.Sparebank1ApiClient;
-import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.Sparebank1Constants.Keys;
-import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.authenticator.rpc.authentication.RestRootResponse;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
-import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
+@Slf4j
 public class Sparebank1SessionHandler implements SessionHandler {
-    private static final Logger logger =
-            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final Sparebank1ApiClient apiClient;
-    private final RestRootResponse restRootResponse;
 
-    public Sparebank1SessionHandler(
-            Sparebank1ApiClient apiClient, RestRootResponse restRootResponse) {
+    public Sparebank1SessionHandler(Sparebank1ApiClient apiClient) {
         this.apiClient = apiClient;
-        this.restRootResponse = restRootResponse;
     }
 
     @Override
     public void logout() {
-        HttpResponse response =
-                apiClient.logout(restRootResponse.getLinks().get(Keys.LOGOUT_KEY).getHref());
+        HttpResponse response = apiClient.logout();
         if (response.getStatus() != HttpStatusCodes.STATUS_CODE_NO_CONTENT) {
-            logger.warn(String.format("Logout failed with status: %d", response.getStatus()));
+            log.warn("Logout failed with status: " + response.getStatus());
         }
     }
 
     @Override
     public void keepAlive() throws SessionException {
-        try {
-            HttpResponse response =
-                    apiClient.get(
-                            restRootResponse.getLinks().get(Keys.KEEP_ALIVE_KEY).getHref(),
-                            HttpResponse.class);
-
-            if (response.getStatus() != HttpStatusCodes.STATUS_CODE_OK) {
-                throw SessionError.SESSION_EXPIRED.exception();
-            }
-        } catch (HttpResponseException e) {
-            throw SessionError.SESSION_EXPIRED.exception(e);
-        }
+        throw SessionError.SESSION_EXPIRED.exception();
     }
 }
