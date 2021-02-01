@@ -231,7 +231,6 @@ Transfer-Encoding: chunked
 			}
 		},
 		{
-			"transaction_id": "B002020-11-302020-11-30-10.02.05.321289",
 			"has_details": true,
 			"booked": true,
 			"amount": -10.3,

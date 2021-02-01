@@ -227,9 +227,6 @@
             "timestamp": 0,
             "type": "DEFAULT",
             "upcoming": false,
-            "externalSystemIds": {
-                "PROVIDER_GIVEN_TRANSACTION_ID": "B002020-11-302020-11-30-10.02.05.321289"
-            },
             "transactionDates": []
         },
         {
