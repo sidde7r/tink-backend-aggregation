@@ -179,6 +179,9 @@
             "timestamp": 0,
             "type": "DEFAULT",
             "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "B002020-12-142020-12-14-12.26.44.509513"
+            },
             "transactionDates": []
         },
         {
@@ -192,6 +195,9 @@
             "timestamp": 0,
             "type": "DEFAULT",
             "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "B002020-11-302020-11-30-11.43.40.436046"
+            },
             "transactionDates": []
         },
         {
@@ -205,6 +211,9 @@
             "timestamp": 0,
             "type": "DEFAULT",
             "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "B002020-11-302020-11-30-11.35.52.638821"
+            },
             "transactionDates": []
         },
         {
@@ -218,6 +227,9 @@
             "timestamp": 0,
             "type": "DEFAULT",
             "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "B002020-11-302020-11-30-10.02.05.321289"
+            },
             "transactionDates": []
         },
         {
@@ -231,6 +243,9 @@
             "timestamp": 0,
             "type": "DEFAULT",
             "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "B002020-11-272020-11-27-11.31.42.725600"
+            },
             "transactionDates": []
         },
         {
@@ -244,6 +259,9 @@
             "timestamp": 0,
             "type": "DEFAULT",
             "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "-1111111111"
+            },
             "transactionDates": []
         },
         {
@@ -257,6 +275,9 @@
             "timestamp": 0,
             "type": "DEFAULT",
             "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "-2222222222"
+            },
             "transactionDates": []
         },
         {
@@ -270,6 +291,9 @@
             "timestamp": 0,
             "type": "DEFAULT",
             "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "B052020-10-192020-10-19-12.09.33.960092"
+            },
             "transactionDates": []
         },
         {
@@ -283,6 +307,9 @@
             "timestamp": 0,
             "type": "DEFAULT",
             "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "B052020-10-092020-10-09-05.47.18.059769"
+            },
             "transactionDates": []
         },
         {
@@ -296,6 +323,9 @@
             "timestamp": 0,
             "type": "DEFAULT",
             "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "B052020-10-082020-10-08-05.46.22.992202"
+            },
             "transactionDates": []
         },
         {
@@ -309,6 +339,9 @@
             "timestamp": 0,
             "type": "DEFAULT",
             "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "B052020-10-082020-10-08-05.46.08.856335"
+            },
             "transactionDates": []
         },
         {
@@ -322,6 +355,9 @@
             "timestamp": 0,
             "type": "DEFAULT",
             "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "B052020-10-062020-10-06-06.50.01.567411"
+            },
             "transactionDates": []
         },
         {
@@ -335,6 +371,9 @@
             "timestamp": 0,
             "type": "DEFAULT",
             "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "B052020-10-062020-10-06-05.56.15.689676"
+            },
             "transactionDates": []
         },
         {
@@ -348,6 +387,9 @@
             "timestamp": 0,
             "type": "DEFAULT",
             "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "B052020-10-052020-10-05-09.40.23.522801"
+            },
             "transactionDates": []
         },
         {
@@ -361,6 +403,9 @@
             "timestamp": 0,
             "type": "DEFAULT",
             "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "B052020-10-052020-10-05-09.40.05.232278"
+            },
             "transactionDates": []
         },
         {
@@ -374,6 +419,9 @@
             "timestamp": 0,
             "type": "DEFAULT",
             "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "B052020-10-012020-10-01-09.28.30.903571"
+            },
             "transactionDates": []
         },
         {
@@ -387,6 +435,9 @@
             "timestamp": 0,
             "type": "DEFAULT",
             "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "B052020-10-012020-10-01-09.27.50.997082"
+            },
             "transactionDates": []
         },
         {
@@ -400,6 +451,9 @@
             "timestamp": 0,
             "type": "DEFAULT",
             "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "B052020-09-302020-09-30-08.49.34.253004"
+            },
             "transactionDates": []
         },
         {
@@ -413,6 +467,9 @@
             "timestamp": 0,
             "type": "DEFAULT",
             "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "B052020-09-302020-09-30-06.59.40.843995"
+            },
             "transactionDates": []
         },
         {
@@ -426,6 +483,9 @@
             "timestamp": 0,
             "type": "DEFAULT",
             "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "B052020-09-292020-09-29-08.37.05.831364"
+            },
             "transactionDates": []
         },
         {
@@ -439,6 +499,9 @@
             "timestamp": 0,
             "type": "DEFAULT",
             "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "B052020-09-292020-09-29-08.27.49.532974"
+            },
             "transactionDates": []
         },
         {
@@ -452,6 +515,9 @@
             "timestamp": 0,
             "type": "DEFAULT",
             "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "B052020-09-292020-09-29-06.17.45.926630"
+            },
             "transactionDates": []
         },
         {
@@ -465,6 +531,9 @@
             "timestamp": 0,
             "type": "DEFAULT",
             "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "B052020-09-292020-09-29-06.17.15.149445"
+            },
             "transactionDates": []
         },
         {
@@ -478,6 +547,9 @@
             "timestamp": 0,
             "type": "DEFAULT",
             "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "B052020-09-282020-09-28-10.29.41.410192"
+            },
             "transactionDates": []
         },
         {
@@ -491,6 +563,9 @@
             "timestamp": 0,
             "type": "DEFAULT",
             "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "B052020-09-282020-09-28-10.19.10.259195"
+            },
             "transactionDates": []
         },
         {
@@ -504,6 +579,9 @@
             "timestamp": 0,
             "type": "DEFAULT",
             "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "B052020-09-282020-09-28-09.56.05.696480"
+            },
             "transactionDates": []
         },
         {
@@ -517,6 +595,9 @@
             "timestamp": 0,
             "type": "DEFAULT",
             "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "B052020-09-252020-09-25-09.44.17.852679"
+            },
             "transactionDates": []
         },
         {
@@ -530,6 +611,9 @@
             "timestamp": 0,
             "type": "DEFAULT",
             "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "B052020-09-252020-09-25-09.41.37.517792"
+            },
             "transactionDates": []
         },
         {
@@ -543,6 +627,9 @@
             "timestamp": 0,
             "type": "DEFAULT",
             "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "B052020-09-252020-09-25-08.49.35.616878"
+            },
             "transactionDates": []
         },
         {
@@ -556,6 +643,9 @@
             "timestamp": 0,
             "type": "DEFAULT",
             "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "B052020-09-252020-09-25-08.48.36.325640"
+            },
             "transactionDates": []
         }
     ]
