@@ -53,6 +53,7 @@ public class BnpParibasTransactionalAccountFetcherTest {
     public void shouldReturnObjectOnFetchAccounts() {
         // given
         AccountsItemEntity accountsItemEntity = mock(AccountsItemEntity.class);
+        when(accountsItemEntity.isCheckingAccount()).thenReturn(true);
         List<AccountsItemEntity> list = new ArrayList<>();
         list.add(accountsItemEntity);
         TransactionalAccount transactionalAccount = mock(TransactionalAccount.class);
