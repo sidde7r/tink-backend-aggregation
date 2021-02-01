@@ -11,7 +11,9 @@ import java.time.ZoneId;
 import java.util.Locale;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fallback.SwedbankFallbackConstants.Filters;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fallback.configuration.SwedbankPsd2Configuration;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fallback.filter.SwedbankFallbackBadGatewayRetryFilter;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fallback.filter.SwedbankFallbackHttpFilter;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankAbstractAgent;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.configuration.SwedbankConfiguration;
@@ -59,5 +61,8 @@ public final class SwedbankFallbackAgent extends SwedbankAbstractAgent {
                         agentsServiceConfiguration,
                         getEidasIdentity(),
                         qSealc));
+        client.addFilter(
+                new SwedbankFallbackBadGatewayRetryFilter(
+                        Filters.NUMBER_OF_RETRIES, Filters.MS_TO_WAIT));
     }
 }
