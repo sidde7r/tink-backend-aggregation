@@ -19,6 +19,7 @@ import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.agentplatform.AgentPlatformHttpClient;
+import se.tink.backend.aggregation.agents.agentplatform.authentication.AgentPlatformAgent;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.AgentPlatformAuthenticator;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.OAuth2AuthenticationConfig;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.storage.AgentPlatformStorageMigration;
@@ -34,12 +35,10 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
-import se.tink.backend.aggregation.nxgen.agents.SubsequentProgressiveGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.SupplementalInformationProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.SupplementalInformationProviderImpl;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.oauth.progressive.OAuth2Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
@@ -49,7 +48,7 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController
 
 /** Starling documentation is available at https://api-sandbox.starlingbank.com/api/swagger.yaml */
 @AgentCapabilities({CHECKING_ACCOUNTS})
-public final class StarlingAgent extends SubsequentProgressiveGenerationAgent
+public final class StarlingAgent extends AgentPlatformAgent
         implements RefreshTransferDestinationExecutor,
                 RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor,
@@ -62,7 +61,6 @@ public final class StarlingAgent extends SubsequentProgressiveGenerationAgent
     private ClientConfigurationEntity aisConfiguration;
     private ClientConfigurationEntity pisConfiguration;
     private String redirectUrl;
-    private OAuth2Authenticator authenticator;
 
     @Inject
     public StarlingAgent(AgentComponentProvider componentProvider) {
@@ -76,13 +74,6 @@ public final class StarlingAgent extends SubsequentProgressiveGenerationAgent
         aisConfiguration = starlingConfiguration.getAisConfiguration();
         pisConfiguration = starlingConfiguration.getPisConfiguration();
         redirectUrl = agentConfiguration.getRedirectUrl();
-        authenticator =
-                new StarlingOAut2Authenticator(
-                        persistentStorage,
-                        client,
-                        aisConfiguration,
-                        redirectUrl,
-                        strongAuthenticationState);
         apiClient = new StarlingApiClient(client, persistentStorage);
         transferDestinationRefreshController = constructTransferDestinationRefreshController();
         transactionalAccountRefreshController =
@@ -156,11 +147,6 @@ public final class StarlingAgent extends SubsequentProgressiveGenerationAgent
                                 strongAuthenticationState,
                                 supplementalInformationProvider
                                         .getSupplementalInformationHelper())));
-    }
-
-    @Override
-    public OAuth2Authenticator getAuthenticator() {
-        return authenticator;
     }
 
     public AgentAuthenticationProcess getAuthenticationProcess() {
