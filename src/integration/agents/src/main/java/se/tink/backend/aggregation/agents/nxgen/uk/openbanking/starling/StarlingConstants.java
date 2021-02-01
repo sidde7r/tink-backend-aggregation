@@ -106,5 +106,6 @@ public class StarlingConstants {
         private ErrorCode() {}
 
         public static final String INSUFFICIENT_SCOPE = "insufficient_scope";
+        public static final String INVALID_GRANT = "invalid_grant";
     }
 }
