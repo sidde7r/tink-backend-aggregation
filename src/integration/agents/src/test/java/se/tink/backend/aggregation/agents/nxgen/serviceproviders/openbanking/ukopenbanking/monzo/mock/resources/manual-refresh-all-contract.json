@@ -5,18 +5,18 @@
             "accountExclusion": "NONE",
             "exactBalance": {
                 "currencyCode": "GBP",
-                "unscaledValue": 506400,
-                "scale": 4,
                 "exactValue": 50.64,
-                "doubleValue": 50.64
+                "unscaledValue": 506400,
+                "doubleValue": 50.64,
+                "scale": 4
             },
             "currencyCode": "GBP",
             "availableBalance": {
                 "currencyCode": "GBP",
-                "unscaledValue": 506400,
-                "scale": 4,
                 "exactValue": 50.64,
-                "doubleValue": 50.64
+                "unscaledValue": 506400,
+                "doubleValue": 50.64,
+                "scale": 4
             },
             "bankId": "04000484427126",
             "excluded": false,
