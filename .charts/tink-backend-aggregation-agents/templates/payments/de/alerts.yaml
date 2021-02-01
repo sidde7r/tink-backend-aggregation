@@ -1,0 +1,25 @@
+kind: RuleGroup
+apiVersion: monitoring.tink.se/v1
+metadata:
+  name: alerts-payments-de
+  namespace: agents
+spec:
+  rules:
+
+    - alert: TransferSuccessRateLowDE
+      expr: |
+        # Successful/Cancelled/Unavailable transfer outcomes below 50%
+        (sum by(className) (increase(tink_agent_transfer_total{ market="DE", provider_type!="test", outcome=~"completed|cancelled|unavailable" }[1h]))
+          / sum by(className) (increase(tink_agent_transfer_total{ market="DE", provider_type!="test" }[1h]))) < 0.5
+        # # At least this many attempts
+        and sum by(className) (increase(tink_agent_transfer_total{ market="DE", provider_type!="test" }[1h])) > 5
+      for: 5m
+      labels:
+        severity: urgent
+        priority: P3
+        who: connectivity-teletubbies
+      annotations:
+        description: {{ .Values.kibanaLink }}
+          {{ .Values.grafanaLink }}
+        summary: Transfer success rate is below 50% actual % is <{ $value }> for <{ $labels.className }> the last 1h. More than 5 attempts.
+        tags: {{ .Values.teletubbiesTags }}
