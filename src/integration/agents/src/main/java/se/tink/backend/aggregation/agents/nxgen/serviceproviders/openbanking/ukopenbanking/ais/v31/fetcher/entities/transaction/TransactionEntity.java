@@ -14,8 +14,10 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.EntryStatusCode;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.TransactionMutability;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AmountEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.MerchantDetailsEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
+import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction.Builder;
 import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.nxgen.core.transaction.TransactionDate;
@@ -77,7 +79,7 @@ public class TransactionEntity {
 
     @JsonIgnore private String addressLine;
 
-    private Object merchantDetails;
+    private MerchantDetailsEntity merchantDetails;
 
     private Object creditorAgent;
 
@@ -92,20 +94,29 @@ public class TransactionEntity {
     private Object exchangeRate;
 
     public Transaction toTinkTransaction() {
-        return (Transaction)
+        Builder builder =
                 Transaction.builder()
                         .setAmount(getSignedAmount())
                         .setDescription(transactionInformation)
                         .setPending(status == EntryStatusCode.PENDING)
-                        .setDate(getDateOfTransaction())
                         .setMutable(isMutable())
+                        .setDate(getDateOfTransaction())
                         .addTransactionDates(getTransactionDates())
-                        .build();
+                        .setTransactionReference(transactionReference);
+
+        if (merchantDetails != null) {
+            builder.setMerchantName(merchantDetails.getMerchantName())
+                    .setMerchantCategoryCode(merchantDetails.getMerchantCategoryCode());
+        }
+        if (proprietaryBankTransactionCode != null) {
+            builder.setProprietaryFinancialInstitutionType(
+                    proprietaryBankTransactionCode.getCode());
+        }
+        return (Transaction) builder.build();
     }
 
     public CreditCardTransaction toCreditCardTransaction(CreditCardAccount account) {
-
-        return (CreditCardTransaction)
+        Builder builder =
                 CreditCardTransaction.builder()
                         .setCreditAccount(account)
                         .setAmount(getSignedAmount())
@@ -114,7 +125,17 @@ public class TransactionEntity {
                         .setMutable(isMutable())
                         .setDate(getDateOfTransaction())
                         .addTransactionDates(getTransactionDates())
-                        .build();
+                        .setTransactionReference(transactionReference);
+
+        if (merchantDetails != null) {
+            builder.setMerchantName(merchantDetails.getMerchantName())
+                    .setMerchantCategoryCode(merchantDetails.getMerchantCategoryCode());
+        }
+        if (proprietaryBankTransactionCode != null) {
+            builder.setProprietaryFinancialInstitutionType(
+                    proprietaryBankTransactionCode.getCode());
+        }
+        return (CreditCardTransaction) builder.build();
     }
 
     private ArrayList<TransactionDate> getTransactionDates() {

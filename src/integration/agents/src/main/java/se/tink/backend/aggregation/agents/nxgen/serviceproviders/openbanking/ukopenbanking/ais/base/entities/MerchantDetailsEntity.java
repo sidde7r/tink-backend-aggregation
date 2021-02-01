@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.fetcher.entities.transaction;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -8,10 +8,9 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 @JsonNaming(PropertyNamingStrategy.UpperCamelCaseStrategy.class)
 @Data
-public class ProprietaryBankTransactionCodeEntity {
-    private String code;
+public class MerchantDetailsEntity {
 
-    private String subCode;
+    private String merchantName;
 
-    private String issuer;
+    private String merchantCategoryCode;
 }
