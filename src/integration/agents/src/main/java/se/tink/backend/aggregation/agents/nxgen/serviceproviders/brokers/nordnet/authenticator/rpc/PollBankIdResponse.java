@@ -26,6 +26,7 @@ public class PollBankIdResponse {
         }
 
         switch (hintCode.toLowerCase()) {
+            case NordnetBaseConstants.BankIdStatus.STARTED:
             case NordnetBaseConstants.BankIdStatus.OUTSTANDING_TRANSACTION:
             case NordnetBaseConstants.BankIdStatus.NO_CLIENT:
             case NordnetBaseConstants.BankIdStatus.USER_SIGN:

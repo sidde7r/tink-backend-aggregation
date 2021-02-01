@@ -10,7 +10,7 @@ import se.tink.libraries.enums.MarketCode;
 
 public class NordnetWireMockTest {
 
-    private static final String DUMMY_PSU = "199901010000";
+    private static final String DUMMY_PSU = "199001010101";
 
     @Test
     public void testRefresh() throws Exception {
