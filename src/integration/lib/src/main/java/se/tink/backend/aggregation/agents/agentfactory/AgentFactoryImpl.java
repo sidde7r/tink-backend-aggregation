@@ -18,16 +18,26 @@ import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConf
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.libraries.credentials.service.CredentialsRequest;
+import se.tink.libraries.metrics.core.MetricId;
+import se.tink.libraries.metrics.registry.MetricRegistry;
 
 public class AgentFactoryImpl implements AgentFactory {
+    private static final String METRIC_LABEL_AGENT = "agent";
+    private static final String METRIC_LABEL_TYPE = "type";
+    private static final MetricId INSTANTIATION_METRIC_ID =
+            MetricId.newId("agent_instantiation_variant");
     private final AgentsServiceConfiguration configuration;
     private final AgentModuleFactory moduleLoader;
+    private final MetricRegistry metricRegistry;
 
     @Inject
     private AgentFactoryImpl(
-            AgentModuleFactory moduleLoader, AgentsServiceConfiguration configuration) {
+            AgentModuleFactory moduleLoader,
+            AgentsServiceConfiguration configuration,
+            MetricRegistry metricRegistry) {
         this.moduleLoader = moduleLoader;
         this.configuration = configuration;
+        this.metricRegistry = metricRegistry;
     }
 
     /**
@@ -47,7 +57,12 @@ public class AgentFactoryImpl implements AgentFactory {
                 getAgentClass(request.getCredentials(), request.getProvider());
 
         if (AgentFactoryUtils.hasInjectAnnotatedConstructor(agentClass)) {
-
+            metricRegistry
+                    .meter(
+                            INSTANTIATION_METRIC_ID
+                                    .label(METRIC_LABEL_TYPE, "guice-injection")
+                                    .label(METRIC_LABEL_AGENT, agentClass.getSimpleName()))
+                    .inc();
             return create(
                     agentClass,
                     moduleLoader.getAgentModules(agentClass, request, context, configuration));
@@ -100,6 +115,12 @@ public class AgentFactoryImpl implements AgentFactory {
 
         final Agent agent;
         if (hasAgentsServiceConfigurationConstructor) {
+            metricRegistry
+                    .meter(
+                            INSTANTIATION_METRIC_ID
+                                    .label(METRIC_LABEL_TYPE, "ctor-agent-config")
+                                    .label(METRIC_LABEL_AGENT, agentClass.getSimpleName()))
+                    .inc();
             Constructor<?> agentConstructor =
                     agentClass.getConstructor(
                             CredentialsRequest.class,
@@ -108,6 +129,12 @@ public class AgentFactoryImpl implements AgentFactory {
 
             agent = (Agent) agentConstructor.newInstance(request, context, configuration);
         } else {
+            metricRegistry
+                    .meter(
+                            INSTANTIATION_METRIC_ID
+                                    .label(METRIC_LABEL_TYPE, "ctor-signature-key-pair")
+                                    .label(METRIC_LABEL_AGENT, agentClass.getSimpleName()))
+                    .inc();
             Constructor<?> agentConstructor =
                     agentClass.getConstructor(
                             CredentialsRequest.class, AgentContext.class, SignatureKeyPair.class);
