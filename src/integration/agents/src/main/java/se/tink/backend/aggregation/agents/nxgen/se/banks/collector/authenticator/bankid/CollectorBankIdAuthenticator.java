@@ -7,12 +7,14 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.collector.CollectorApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.collector.CollectorConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.collector.authenticator.bankid.rpc.InitBankIdRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.collector.authenticator.bankid.rpc.InitBankIdResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.collector.authenticator.bankid.rpc.PollBankIdResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.collector.authenticator.bankid.rpc.TokenExchangeResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.collector.fetcher.identitydata.rpc.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
@@ -48,6 +50,7 @@ public class CollectorBankIdAuthenticator implements BankIdAuthenticator<String>
             sessionStorage.put(
                     CollectorConstants.Storage.BEARER_TOKEN,
                     tokenExchangeResponse.getBearerToken());
+            checkIsCustomer();
         }
 
         return bankIdStatus;
@@ -85,5 +88,12 @@ public class CollectorBankIdAuthenticator implements BankIdAuthenticator<String>
     @Override
     public Optional<OAuth2Token> refreshAccessToken(String refreshToken) throws SessionException {
         return Optional.empty();
+    }
+
+    private void checkIsCustomer() {
+        final FetchIdentityDataResponse fetchIdentityDataResponse = apiClient.fetchIdentityData();
+        if (!fetchIdentityDataResponse.isCustomer()) {
+            throw LoginError.NOT_CUSTOMER.exception();
+        }
     }
 }
