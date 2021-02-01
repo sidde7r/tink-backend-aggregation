@@ -75,7 +75,7 @@ public class BankIdAuthenticationControllerNO implements TypedAuthenticator {
         String dob = nationalId.substring(0, 6);
         String bankIdReference = authenticator.init(nationalId, dob, mobilenumber);
         handleBankIdReferenceAndPollBankIDStatus(credentials, bankIdReference);
-        authenticator.sendActivationCode();
+        authenticator.finishActivation();
     }
 
     private void handleBankIdReferenceAndPollBankIDStatus(

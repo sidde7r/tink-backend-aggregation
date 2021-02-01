@@ -11,7 +11,7 @@ public interface BankIdAuthenticatorNO {
 
     BankIdStatus collect() throws AuthenticationException, AuthorizationException;
 
-    default void sendActivationCode() throws SupplementalInfoException {
-        // used in Sparebanken Sor & Handelsbanken Agent
+    default void finishActivation() throws SupplementalInfoException {
+        // used in Sparebanken Sor, Handelsbanken, Sparebank1
     }
 }

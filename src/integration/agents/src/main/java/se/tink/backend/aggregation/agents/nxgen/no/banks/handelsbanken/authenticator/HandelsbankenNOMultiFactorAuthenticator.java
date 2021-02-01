@@ -121,7 +121,7 @@ public class HandelsbankenNOMultiFactorAuthenticator implements BankIdAuthentica
     }
 
     @Override
-    public void sendActivationCode() throws SupplementalInfoException {
+    public void finishActivation() throws SupplementalInfoException {
         executeLogin(getActivateEvryToken());
     }
 
