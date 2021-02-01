@@ -17,6 +17,7 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 @Deprecated
 public final class ProductionAgentComponentProvider {
 
+    @Deprecated
     public static AgentComponentProvider create(
             final CredentialsRequest request,
             final AgentContext context,
