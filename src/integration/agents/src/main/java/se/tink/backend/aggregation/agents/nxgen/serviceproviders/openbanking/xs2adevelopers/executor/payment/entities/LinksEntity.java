@@ -13,4 +13,8 @@ public class LinksEntity {
     public String getScaOAuth() {
         return scaOAuth.getHref();
     }
+
+    public String getScaStatus() {
+        return scaStatus.getHref();
+    }
 }
