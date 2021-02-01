@@ -72,7 +72,7 @@ public final class BanquePopulaireAgent extends BpceGroupBaseAgent {
         return new BanquePopulaireAuthenticator(
                 this.apiClient,
                 this.banquePopulaireStorage,
-                this.supplementalInformationProvider,
+                this.supplementalInformationHelper,
                 this.imageRecognizeHelper,
                 validationHelper);
     }

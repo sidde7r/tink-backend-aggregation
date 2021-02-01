@@ -25,7 +25,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bpcegroup
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bpcegroup.authenticator.entities.AuthResponseStatus;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bpcegroup.authenticator.entities.MembershipType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bpcegroup.authenticator.steps.helper.BpceValidationHelper;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.SupplementalInformationProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryExecutor;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepRequest;
@@ -33,6 +32,7 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMu
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryResponse;
 import se.tink.backend.aggregation.nxgen.controllers.signing.SigningStepConstants;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.payment.enums.CreateBeneficiaryStatus;
 
@@ -41,7 +41,7 @@ import se.tink.libraries.payment.enums.CreateBeneficiaryStatus;
 public class CaisseEpargneCreateBeneficiaryExecutor implements CreateBeneficiaryExecutor {
 
     private final CaisseEpargneApiClient apiClient;
-    private final SupplementalInformationProvider supplementalInformationProvider;
+    private final SupplementalInformationHelper supplementalInformationHelper;
     private CaisseEpargneCreateBeneficiaryResponse apiResponse;
     private final CaisseEpargneStorage caisseEpargneStorage;
     private final BpceValidationHelper validationHelper;
@@ -180,9 +180,7 @@ public class CaisseEpargneCreateBeneficiaryExecutor implements CreateBeneficiary
 
     private String getBeneficiaryOtp() throws BeneficiaryException {
         try {
-            return supplementalInformationProvider
-                    .getSupplementalInformationHelper()
-                    .waitForOtpInput();
+            return supplementalInformationHelper.waitForOtpInput();
         } catch (SupplementalInfoException e) {
             throw new BeneficiaryException(e.getMessage(), e);
         }

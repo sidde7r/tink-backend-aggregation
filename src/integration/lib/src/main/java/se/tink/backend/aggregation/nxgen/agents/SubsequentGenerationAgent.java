@@ -101,7 +101,8 @@ public abstract class SubsequentGenerationAgent<Auth> extends SuperAbstractAgent
                         request.getType());
         this.supplementalInformationFormer =
                 new SupplementalInformationFormer(request.getProvider());
-        this.supplementalInformationController = componentProvider.getSupplementalInformationController();
+        this.supplementalInformationController =
+                componentProvider.getSupplementalInformationController();
         this.supplementalInformationHelper = componentProvider.getSupplementalInformationHelper();
         this.appId = context.getAppId();
         this.strongAuthenticationState = new StrongAuthenticationState(request.getState());

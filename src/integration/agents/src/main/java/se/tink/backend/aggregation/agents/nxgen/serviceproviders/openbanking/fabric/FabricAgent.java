@@ -23,8 +23,6 @@ import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConf
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.SupplementalInformationProvider;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.SupplementalInformationProviderImpl;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
@@ -144,14 +142,10 @@ public abstract class FabricAgent extends NextGenerationAgent
 
     @Override
     public Optional<PaymentController> constructPaymentController() {
-
-        final SupplementalInformationProvider supplementalInformationProvider =
-                new SupplementalInformationProviderImpl(supplementalRequester, request);
-
         FabricPaymentExecutor paymentExecutor =
                 new FabricPaymentExecutor(
                         apiClient,
-                        supplementalInformationProvider.getSupplementalInformationHelper(),
+                        supplementalInformationHelper,
                         sessionStorage,
                         strongAuthenticationState);
         return Optional.of(new PaymentController(paymentExecutor, paymentExecutor));

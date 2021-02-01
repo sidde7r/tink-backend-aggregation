@@ -14,7 +14,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bpcegroup
 import se.tink.backend.aggregation.nxgen.agents.SubsequentProgressiveGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.SupplementalInformationProviderImpl;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
@@ -29,14 +28,9 @@ public abstract class BpceGroupBaseAgent extends SubsequentProgressiveGeneration
                 RefreshIdentityDataExecutor,
                 RefreshTransferDestinationExecutor {
 
-    protected final SupplementalInformationProviderImpl supplementalInformationProvider;
-
     protected BpceGroupBaseAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
         configureHttpClient(this.client);
-
-        this.supplementalInformationProvider =
-                new SupplementalInformationProviderImpl(this.supplementalRequester, this.request);
     }
 
     @Override

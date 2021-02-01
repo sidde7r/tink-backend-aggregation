@@ -27,8 +27,6 @@ import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConf
 import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentProgressiveGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.SupplementalInformationProvider;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.SupplementalInformationProviderImpl;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.StatelessProgressiveAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
@@ -141,12 +139,9 @@ public abstract class SibsProgressiveBaseAgent extends SubsequentProgressiveGene
 
     @Override
     public Optional<PaymentController> constructPaymentController() {
-        SupplementalInformationProvider supplementalInformationProvider =
-                new SupplementalInformationProviderImpl(supplementalRequester, request);
         SignPaymentStrategy signPaymentStrategy =
                 SignPaymentStrategyFactory.buildSignPaymentRedirectStrategy(
-                        apiClient,
-                        supplementalInformationProvider.getSupplementalInformationHelper());
+                        apiClient, supplementalInformationHelper);
         SibsPaymentExecutor sibsPaymentExecutor =
                 new SibsPaymentExecutor(apiClient, signPaymentStrategy, strongAuthenticationState);
         return Optional.of(new PaymentController(sibsPaymentExecutor, sibsPaymentExecutor));

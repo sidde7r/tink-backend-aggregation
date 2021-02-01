@@ -23,8 +23,6 @@ import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentProgressiveGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.SupplementalInformationProvider;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.SupplementalInformationProviderImpl;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.StatelessProgressiveAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
@@ -159,14 +157,10 @@ public abstract class CbiGlobeAgent extends SubsequentProgressiveGenerationAgent
 
     @Override
     public Optional<PaymentController> constructPaymentController() {
-
-        final SupplementalInformationProvider supplementalInformationProvider =
-                new SupplementalInformationProviderImpl(supplementalRequester, request);
-
         CbiGlobePaymentExecutor paymentExecutor =
                 new CbiGlobePaymentExecutor(
                         apiClient,
-                        supplementalInformationProvider.getSupplementalInformationHelper(),
+                        supplementalInformationHelper,
                         sessionStorage,
                         strongAuthenticationState,
                         request.getProvider());

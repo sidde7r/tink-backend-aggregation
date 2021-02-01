@@ -15,7 +15,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagr
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.beneficiary.rpc.IbanValidationResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.rpc.DefaultResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.utils.CreditAgricoleAuthUtil;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.SupplementalInformationProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryExecutor;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepRequest;
@@ -23,22 +22,23 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMu
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryResponse;
 import se.tink.backend.aggregation.nxgen.controllers.signing.SigningStepConstants;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.payment.enums.CreateBeneficiaryStatus;
 import se.tink.libraries.payment.rpc.Beneficiary;
 
 public class CreditAgricoleAddBeneficiaryExecutor implements CreateBeneficiaryExecutor {
     private final CreditAgricoleApiClient apiClient;
-    private final SupplementalInformationProvider supplementalInformationProvider;
+    private final SupplementalInformationHelper supplementalInformationHelper;
     private final PersistentStorage persistentStorage;
     private CreateBeneficiaryResponse createBeneficiaryResponse;
 
     public CreditAgricoleAddBeneficiaryExecutor(
             CreditAgricoleApiClient apiClient,
-            SupplementalInformationProvider supplementalInformationProvider,
+            SupplementalInformationHelper supplementalInformationHelper,
             PersistentStorage persistentStorage) {
         this.apiClient = apiClient;
-        this.supplementalInformationProvider = supplementalInformationProvider;
+        this.supplementalInformationHelper = supplementalInformationHelper;
         this.persistentStorage = persistentStorage;
     }
 
@@ -188,9 +188,7 @@ public class CreditAgricoleAddBeneficiaryExecutor implements CreateBeneficiaryEx
 
     private String getBeneficiaryOtp() throws BeneficiaryException {
         try {
-            return supplementalInformationProvider
-                    .getSupplementalInformationHelper()
-                    .waitForOtpInput();
+            return supplementalInformationHelper.waitForOtpInput();
         } catch (SupplementalInfoException e) {
             throw new BeneficiaryException(e.getMessage(), e);
         }
