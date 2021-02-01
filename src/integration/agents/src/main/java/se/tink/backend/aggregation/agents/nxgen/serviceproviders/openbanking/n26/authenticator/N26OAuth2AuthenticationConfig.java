@@ -5,11 +5,13 @@ import lombok.AllArgsConstructor;
 import se.tink.backend.aggregation.agents.agentplatform.AgentPlatformHttpClient;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.OAuth2AuthenticationConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.N26AgentConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.N26Constants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.N26Constants.Url;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.authenticator.steps.authentication_init.N26AuthenticationInitStep;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.authenticator.steps.authorization_redirect.N26RedirectUrlBuilder;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.authenticator.steps.await_user_confirmation.N26AwaitUserConfirmationStep;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.authenticator.steps.fetch_authorization_url.N26FetchAuthorizationUrlApiCall;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.authenticator.steps.fetch_authorization_url.N26FetchAuthorizationUrlApiParameters;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.authenticator.steps.fetch_authorization_url.N26FetchAuthorizationUrlStep;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.authenticator.steps.fetch_consent.N26FetchConsentApiCall;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.authenticator.steps.fetch_consent.N26FetchConsentStep;
@@ -94,7 +96,12 @@ public class N26OAuth2AuthenticationConfig extends OAuth2AuthenticationConfig {
 
     private N26FetchAuthorizationUrlStep getN26FetchAuthorizationUrlStep() {
         N26FetchAuthorizationUrlApiCall apiCall =
-                new N26FetchAuthorizationUrlApiCall(agentHttpClient, Url.BASE_URL);
+                new N26FetchAuthorizationUrlApiCall(
+                        agentHttpClient,
+                        N26FetchAuthorizationUrlApiParameters.builder()
+                                .baseUrl(Url.BASE_URL)
+                                .scope(N26Constants.QueryValues.AISP_SCOPE)
+                                .build());
         return new N26FetchAuthorizationUrlStep(
                 apiCall,
                 n26AgentConfiguration.getClientId(),
@@ -142,6 +149,7 @@ public class N26OAuth2AuthenticationConfig extends OAuth2AuthenticationConfig {
                 .baseUrl(Url.BASE_URL)
                 .clientId(n26AgentConfiguration.getClientId())
                 .redirectUrl(n26AgentConfiguration.getRedirectUrl())
+                .scope(N26Constants.QueryValues.AISP_SCOPE)
                 .build();
     }
 
@@ -149,6 +157,7 @@ public class N26OAuth2AuthenticationConfig extends OAuth2AuthenticationConfig {
         return N26RefreshTokenParameters.builder()
                 .baseUrl(Url.BASE_URL)
                 .clientId(n26AgentConfiguration.getClientId())
+                .scope(N26Constants.QueryValues.AISP_SCOPE)
                 .build();
     }
 

@@ -8,4 +8,5 @@ import lombok.Getter;
 public class N26RefreshTokenParameters {
     private final String clientId;
     private final String baseUrl;
+    private final String scope;
 }

@@ -37,6 +37,9 @@ public class N26OAuth2RefreshTokenCall extends OAuth2RefreshTokenCall {
 
     @Override
     protected URI getRefreshTokenEndpoint() {
-        return URI.create(refreshTokenParameters.getBaseUrl() + Url.TOKEN);
+        return URI.create(
+                refreshTokenParameters.getBaseUrl()
+                        + Url.TOKEN
+                        + refreshTokenParameters.getScope());
     }
 }
