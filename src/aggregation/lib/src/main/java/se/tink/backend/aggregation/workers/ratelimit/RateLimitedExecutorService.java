@@ -24,6 +24,16 @@ public class RateLimitedExecutorService implements Managed {
     private static final Logger logger =
             LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
+    private static final ImmutableMap<String, Double> PROVIDERS_WITH_OVERRIDDEN_RATE_LIMITER =
+            ImmutableMap.<String, Double>builder()
+                    .put("fraud.CreditSafeAgent", 0.1)
+                    .put("abnamro.ics.IcsAgent", 8.)
+                    .put("other.CSNAgent", 0.1)
+                    .put("nxgen.pt.openbanking.caixa.CaixaRedirectAgent", 0.05)
+                    .put("nxgen.dk.banks.danskebank.DanskeBankDKAgent", 0.05)
+                    .put("nxgen.no.banks.danskebank.DanskeBankNOAgent", 0.05)
+                    .build();
+
     private final MetricRegistry metricRegistry;
 
     private LoadingCache<Provider, RateLimitedExecutorProxy>
@@ -41,21 +51,11 @@ public class RateLimitedExecutorService implements Managed {
         this.maxQueuedItems = maxQueuedItems;
 
         this.rateLimiterFactory =
-                new AtomicReference<ProviderRateLimiterFactory>(
+                new AtomicReference<>(
                         new CachingProviderRateLimiterFactory(
                                 new LoggingProviderRateLimiterFactory(
                                         new OverridingProviderRateLimiterFactory(
-                                                ImmutableMap.of(
-                                                        "fraud.CreditSafeAgent",
-                                                        0.1,
-                                                        "abnamro.ics.IcsAgent",
-                                                        8.,
-                                                        "other.CSNAgent",
-                                                        0.1,
-                                                        "nxgen.pt.openbanking.caixa.CaixaRedirectAgent",
-                                                        0.05,
-                                                        "nxgen.dk.banks.danskebank.DanskeBankDKAgent",
-                                                        0.05),
+                                                PROVIDERS_WITH_OVERRIDDEN_RATE_LIMITER,
                                                 new DefaultProviderRateLimiterFactory(0.1)))));
 
         logger.info(
