@@ -20,7 +20,6 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 public class CollectorBankIdAuthenticator implements BankIdAuthenticator<String> {
     private final CollectorApiClient apiClient;
     private final SessionStorage sessionStorage;
-    private String autoStartToken;
 
     public CollectorBankIdAuthenticator(
             CollectorApiClient apiClient, SessionStorage sessionStorage) {
@@ -34,7 +33,6 @@ public class CollectorBankIdAuthenticator implements BankIdAuthenticator<String>
                     AuthenticationException {
         final InitBankIdRequest initBankIdRequest = new InitBankIdRequest(ssn);
         final InitBankIdResponse initBankIdResponse = apiClient.initBankid(initBankIdRequest);
-        autoStartToken = initBankIdResponse.getAutostartToken();
         return initBankIdResponse.getSessionid();
     }
 
@@ -75,7 +73,8 @@ public class CollectorBankIdAuthenticator implements BankIdAuthenticator<String>
 
     @Override
     public Optional<String> getAutostartToken() {
-        return Optional.ofNullable(autoStartToken);
+        // The bank will trigger BankID by the given SSN, showing a QR code confuses users
+        return Optional.empty();
     }
 
     @Override
