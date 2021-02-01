@@ -28,6 +28,7 @@ public class Field {
     private boolean sensitive;
     private boolean checkbox;
     private String additionalInfo;
+    private List<SelectOption> selectOptions;
 
     public String getDefaultValue() {
         return defaultValue;
@@ -99,6 +100,10 @@ public class Field {
 
     public boolean isOptional() {
         return optional;
+    }
+
+    public List<SelectOption> getSelectOptions() {
+        return selectOptions;
     }
 
     public void setDefaultValue(String defaultValue) {
@@ -199,6 +204,10 @@ public class Field {
 
     public void setAdditionalInfo(String additionalInfo) {
         this.additionalInfo = additionalInfo;
+    }
+
+    public void setSelectOptions(List<SelectOption> selectOptions) {
+        this.selectOptions = selectOptions;
     }
 
     /**
