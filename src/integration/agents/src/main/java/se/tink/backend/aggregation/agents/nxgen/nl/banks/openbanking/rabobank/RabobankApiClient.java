@@ -14,6 +14,7 @@ import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
+import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.ErrorCodes;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.QueryParams;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.QueryValues;
@@ -251,15 +252,12 @@ public final class RabobankApiClient {
             try {
                 return getTransactionsPages(url, fromDate, toDate, bookingStatus, isSandbox);
             } catch (HttpResponseException e) {
-                final String message = e.getResponse().getBody(String.class);
-                if (message.toLowerCase().contains(ErrorMessages.BOOKING_STATUS_INVALID)) {
-                    logger.warn("Could not request with booking status \"{}\"", bookingStatus, e);
-                    continue; // Try with some other booking status
-                } else if (message.toLowerCase().contains(ErrorMessages.UNAVAILABLE_TRX_HISTORY)) {
-                    logger.warn(message, e);
+                final ErrorResponse errorResponse = e.getResponse().getBody(ErrorResponse.class);
+                if (errorResponse.getCode().equals(ErrorCodes.PERIOD_INVALID)) {
                     return new EmptyFinalPaginatorResponse();
                 }
-                throw new IllegalStateException(String.format("Unexpected error: %s", message), e);
+                throw new IllegalStateException(
+                        String.format("Unexpected error: %s", errorResponse.getTitle()), e);
             }
         }
         throw new IllegalStateException("Failed to fetch transactions");
