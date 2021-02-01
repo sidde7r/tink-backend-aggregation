@@ -1,9 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.agents.rpc.Field.Key;
+import se.tink.backend.agents.rpc.SelectOption;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankApiClient;
@@ -33,18 +37,49 @@ public class DemobankPasswordAndOtpAuthenticator implements MultiFactorAuthentic
                                 credentials.getField(Key.USERNAME),
                                 credentials.getField(Key.PASSWORD))
                         .getMessage();
-        String otp =
-                supplementalInformationController
-                        .askSupplementalInformationSync(
-                                Field.builder()
-                                        .description("OTP Code")
-                                        .helpText(message)
-                                        .immutable(true)
-                                        .masked(false)
-                                        .name("otpinput")
-                                        .numeric(true)
-                                        .build())
-                        .get("otpinput");
+        final String otp;
+        if ("select".equals(credentials.getField("otptype"))) {
+            List<SelectOption> selectOptions = new ArrayList<>();
+            for (int ii = 0; ii < 10; ii++) {
+                selectOptions.add(new SelectOption(Integer.toString(ii), Integer.toString(ii)));
+            }
+            List<Field> fields = new ArrayList<>();
+            for (int ii = 0; ii < 4; ii++) {
+                Field f =
+                        Field.builder()
+                                .description("OTP digit " + (ii + 1))
+                                .helpText("")
+                                .immutable(true)
+                                .masked(false)
+                                .name("digit" + (ii + 1))
+                                .numeric(true)
+                                .selectOptions(selectOptions)
+                                .build();
+                fields.add(f);
+            }
+            Map<String, String> otpDigits =
+                    supplementalInformationController.askSupplementalInformationSync(
+                            fields.toArray(new Field[0]));
+
+            otp =
+                    otpDigits.get("digit1")
+                            + otpDigits.get("digit2")
+                            + otpDigits.get("digit3")
+                            + otpDigits.get("digit4");
+        } else {
+            otp =
+                    supplementalInformationController
+                            .askSupplementalInformationSync(
+                                    Field.builder()
+                                            .description("OTP Code")
+                                            .helpText(message)
+                                            .immutable(true)
+                                            .masked(false)
+                                            .name("otpinput")
+                                            .numeric(true)
+                                            .build())
+                            .get("otpinput");
+        }
 
         OAuth2Token token =
                 this.apiClient
