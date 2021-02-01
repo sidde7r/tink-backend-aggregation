@@ -41,6 +41,7 @@ public class NordnetBaseConstants {
         public static final String ALREADY_IN_PROGRESS = "already_in_progress";
         public static final String USER_CANCEL = "user_cancel";
         public static final String START_FAILED = "start_failed";
+        public static final String STARTED = "started";
     }
 
     public static class StorageKeys {
