@@ -16,16 +16,11 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public abstract class NextGenerationAgent extends SubsequentGenerationAgent<Authenticator> {
 
-    protected final SupplementalInformationHelper supplementalInformationHelper;
-    protected final SupplementalInformationController supplementalInformationController;
     protected final ProviderSessionCacheController providerSessionCacheController;
     private Authenticator authenticator;
 
     protected NextGenerationAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
-        this.supplementalInformationController =
-                componentProvider.getSupplementalInformationController();
-        this.supplementalInformationHelper = componentProvider.getSupplementalInformationHelper();
         this.providerSessionCacheController =
                 new ProviderSessionCacheController(providerSessionCacheContext);
     }

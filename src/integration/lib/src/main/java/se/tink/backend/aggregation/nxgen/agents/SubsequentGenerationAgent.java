@@ -23,7 +23,9 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationFormer;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.factory.ClientFilterFactory;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
@@ -57,10 +59,15 @@ public abstract class SubsequentGenerationAgent<Auth> extends SuperAbstractAgent
     protected final TransactionPaginationHelper transactionPaginationHelper;
     protected final UpdateController updateController;
     protected final MetricRefreshController metricRefreshController;
-    // TODO auth: remove helper and controller when refactor is done
-    protected final SupplementalInformationFormer supplementalInformationFormer;
     protected final String appId;
     protected final StrongAuthenticationState strongAuthenticationState;
+
+    // The SupplementalInforamtionController is the lowest level of API an agent should use
+    protected final SupplementalInformationController supplementalInformationController;
+    // FIXME: Remove or consolidate different types of helpers. There are now too many variants
+    // FIXME: that rather causes confusion (as opposed to helping).
+    protected final SupplementalInformationHelper supplementalInformationHelper;
+    protected final SupplementalInformationFormer supplementalInformationFormer;
 
     protected PaymentController paymentController;
     private TransferController transferController;
@@ -94,6 +101,8 @@ public abstract class SubsequentGenerationAgent<Auth> extends SuperAbstractAgent
                         request.getType());
         this.supplementalInformationFormer =
                 new SupplementalInformationFormer(request.getProvider());
+        this.supplementalInformationController = componentProvider.getSupplementalInformationController();
+        this.supplementalInformationHelper = componentProvider.getSupplementalInformationHelper();
         this.appId = context.getAppId();
         this.strongAuthenticationState = new StrongAuthenticationState(request.getState());
 
