@@ -52,9 +52,9 @@ public class RateLimitedExecutorService implements Managed {
                                                         8.,
                                                         "other.CSNAgent",
                                                         0.1,
-                                                        "pt-caixa-ob",
+                                                        "nxgen.pt.openbanking.caixa.CaixaRedirectAgent",
                                                         0.05,
-                                                        "dk-danskebank-servicecode",
+                                                        "nxgen.dk.banks.danskebank.DanskeBankDKAgent",
                                                         0.05),
                                                 new DefaultProviderRateLimiterFactory(0.1)))));
 
