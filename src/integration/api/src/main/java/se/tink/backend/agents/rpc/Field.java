@@ -3,6 +3,10 @@ package se.tink.backend.agents.rpc;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Preconditions;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Field {
@@ -29,6 +33,7 @@ public class Field {
     private boolean checkbox; // if the field should be a boolean value displayed as a checkbox
     private String additionalInfo; // This can be used to send additional information, possibly as a
     // serialized JSON.
+    private List<SelectOption> selectOptions;
 
     public String getDescription() {
         return description;
@@ -86,6 +91,10 @@ public class Field {
         return additionalInfo;
     }
 
+    public List<SelectOption> getSelectOptions() {
+        return selectOptions;
+    }
+
     public void setValue(String value) {
         this.value = value;
     }
@@ -120,6 +129,17 @@ public class Field {
                 .pattern(field.getPattern())
                 .patternError(field.getPatternError())
                 .value(field.getValue())
+                .selectOptions(
+                        field.getSelectOptions() != null
+                                ? field.getSelectOptions().stream()
+                                        .map(
+                                                o ->
+                                                        new SelectOption(
+                                                                o.getText(),
+                                                                o.getValue(),
+                                                                o.getIconUrl()))
+                                        .collect(Collectors.toList())
+                                : null)
                 .build();
     }
 
@@ -140,6 +160,7 @@ public class Field {
         private String additionalInfo;
         private boolean checkbox;
         private boolean sensitive;
+        private List<SelectOption> selectOptions;
 
         public Builder description(String description) {
             this.description = description;
@@ -221,6 +242,16 @@ public class Field {
             return this;
         }
 
+        public Builder selectOptions(List<SelectOption> selectOptions) {
+            this.selectOptions = selectOptions;
+            return this;
+        }
+
+        public Builder selectOptions(SelectOption... selectOptions) {
+            this.selectOptions = Arrays.asList(selectOptions);
+            return this;
+        }
+
         public Field build() {
             Preconditions.checkNotNull(description);
             Preconditions.checkNotNull(name);
@@ -247,6 +278,9 @@ public class Field {
             field.value = value;
             field.additionalInfo = additionalInfo;
             field.checkbox = checkbox;
+            if (selectOptions != null) {
+                this.selectOptions = Collections.unmodifiableList(selectOptions);
+            }
 
             return field;
         }
