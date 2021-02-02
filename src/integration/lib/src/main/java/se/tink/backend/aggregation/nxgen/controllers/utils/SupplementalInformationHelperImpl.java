@@ -107,7 +107,7 @@ public class SupplementalInformationHelperImpl implements SupplementalInformatio
             throws SupplementalInfoException {
         Field descriptionField = getField(Field.Key.LOGIN_DESCRIPTION);
         descriptionField.setValue(description);
-        supplementalInformationController.askSupplementalInformation(descriptionField);
+        supplementalInformationController.askSupplementalInformationSync(descriptionField);
     }
 
     private String waitForChallengeResponseExtra(
@@ -138,14 +138,14 @@ public class SupplementalInformationHelperImpl implements SupplementalInformatio
     private String waitForSupplementalInput(Field.Key inputKey) throws SupplementalInfoException {
         Field input = getField(inputKey);
         return supplementalInformationController
-                .askSupplementalInformation(input)
+                .askSupplementalInformationSync(input)
                 .get(inputKey.getFieldKey());
     }
 
     private String waitForSupplementalDescriptionAndInput(
             final Field.Key resultKey, final Field... fields) throws SupplementalInfoException {
         return supplementalInformationController
-                .askSupplementalInformation(fields)
+                .askSupplementalInformationSync(fields)
                 .get(resultKey.getFieldKey());
     }
 
@@ -162,7 +162,7 @@ public class SupplementalInformationHelperImpl implements SupplementalInformatio
     @Override
     public Map<String, String> askSupplementalInformation(Field... fields)
             throws SupplementalInfoException {
-        return supplementalInformationController.askSupplementalInformation(fields);
+        return supplementalInformationController.askSupplementalInformationSync(fields);
     }
 
     @Override
@@ -173,6 +173,6 @@ public class SupplementalInformationHelperImpl implements SupplementalInformatio
 
     @Override
     public void openThirdPartyApp(ThirdPartyAppAuthenticationPayload payload) {
-        supplementalInformationController.openThirdPartyApp(payload);
+        supplementalInformationController.openThirdPartyAppAsync(payload);
     }
 }

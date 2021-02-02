@@ -34,7 +34,7 @@ public final class MockSupplementalInformationController
     }
 
     @Override
-    public Map<String, String> askSupplementalInformation(final Field... fields)
+    public Map<String, String> askSupplementalInformationSync(final Field... fields)
             throws SupplementalInfoException {
         interactionCounter++;
         return Stream.of(fields)
@@ -45,7 +45,13 @@ public final class MockSupplementalInformationController
     }
 
     @Override
-    public void openThirdPartyApp(final ThirdPartyAppAuthenticationPayload payload) {
+    public Optional<Map<String, String>> openThirdPartyAppSync(
+            ThirdPartyAppAuthenticationPayload payload) {
+        return Optional.empty();
+    }
+
+    @Override
+    public void openThirdPartyAppAsync(final ThirdPartyAppAuthenticationPayload payload) {
         // NOOP
     }
 

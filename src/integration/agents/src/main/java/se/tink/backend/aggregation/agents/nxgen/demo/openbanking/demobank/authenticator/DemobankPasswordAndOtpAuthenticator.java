@@ -35,7 +35,7 @@ public class DemobankPasswordAndOtpAuthenticator implements MultiFactorAuthentic
                         .getMessage();
         String otp =
                 supplementalInformationController
-                        .askSupplementalInformation(
+                        .askSupplementalInformationSync(
                                 Field.builder()
                                         .description("OTP Code")
                                         .helpText(message)

@@ -60,7 +60,7 @@ public class UserInteractionService {
                 String.format(
                         UNIQUE_PREFIX_TPCB,
                         thirdPartyRequest.getSupplementalWaitRequest().getKey());
-        supplementalInformationController.openThirdPartyApp(thirdPartyRequest.getPayload());
+        supplementalInformationController.openThirdPartyAppAsync(thirdPartyRequest.getPayload());
         return supplementalInformationController.waitForSupplementalInformation(
                 waitOnKey,
                 thirdPartyRequest.getSupplementalWaitRequest().getWaitFor(),
@@ -75,7 +75,7 @@ public class UserInteractionService {
     private List<AgentFieldValue> requestUserForFields(List<AgentFieldDefinition> definitions) {
         try {
             return supplementalInformationController
-                    .askSupplementalInformation(
+                    .askSupplementalInformationSync(
                             agentInteractionDataToSupplementalInformationMapper.toFields(
                                     definitions))
                     .entrySet().stream()

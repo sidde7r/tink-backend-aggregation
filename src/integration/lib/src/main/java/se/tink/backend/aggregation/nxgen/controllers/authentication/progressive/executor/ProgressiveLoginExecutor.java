@@ -69,7 +69,7 @@ public final class ProgressiveLoginExecutor {
 
     private void handleThirdPartyAppPayload(SupplementInformationRequester payload) {
         if (payload.getThirdPartyAppPayload().isPresent()) {
-            supplementalInformationController.openThirdPartyApp(
+            supplementalInformationController.openThirdPartyAppAsync(
                     payload.getThirdPartyAppPayload().get());
         }
     }
@@ -98,7 +98,7 @@ public final class ProgressiveLoginExecutor {
                     "Fields for which you are requesting: {}",
                     fields.stream().map(Field::getName).collect(Collectors.joining(",")));
             return Optional.of(
-                    supplementalInformationController.askSupplementalInformation(
+                    supplementalInformationController.askSupplementalInformationSync(
                             fields.toArray(new Field[fields.size()])));
         }
         return Optional.empty();

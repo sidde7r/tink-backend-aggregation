@@ -64,7 +64,7 @@ public class HandelsbankenSECardDeviceAuthenticator implements TypedAuthenticato
                 client.initNewProfile(entryPoint, InitNewProfileRequest.create(configuration, tfa));
 
         Map<String, String> supplementalInformation =
-                supplementalInformationController.askSupplementalInformation(
+                supplementalInformationController.askSupplementalInformationSync(
                         challengeField(initNewProfile), responseField());
 
         String code = supplementalInformation.get(HandelsbankenConstants.DeviceAuthentication.CODE);

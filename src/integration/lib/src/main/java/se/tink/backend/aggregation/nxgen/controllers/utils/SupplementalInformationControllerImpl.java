@@ -16,6 +16,7 @@ import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SupplementalInfoError;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.constants.ThirdPartyAppConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload.Ios;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
@@ -24,6 +25,8 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 public class SupplementalInformationControllerImpl implements SupplementalInformationController {
     private static final Logger logger =
             LoggerFactory.getLogger(SupplementalInformationControllerImpl.class);
+
+    private static final String UNIQUE_PREFIX_TPCB = "tpcb_%s";
 
     private final SupplementalRequester supplementalRequester;
     private final Credentials credentials;
@@ -39,19 +42,14 @@ public class SupplementalInformationControllerImpl implements SupplementalInform
 
     @Override
     public Optional<Map<String, String>> waitForSupplementalInformation(
-            String key, long waitFor, TimeUnit unit) {
+            String barrierKey, long waitFor, TimeUnit unit) {
         return supplementalRequester
-                .waitForSupplementalInformation(key, waitFor, unit)
+                .waitForSupplementalInformation(barrierKey, waitFor, unit)
                 .map(SupplementalInformationControllerImpl::stringToMap);
     }
 
-    private static Map<String, String> stringToMap(final String string) {
-        return SerializationUtils.deserializeFromString(
-                string, new TypeReference<HashMap<String, String>>() {});
-    }
-
     @Override
-    public Map<String, String> askSupplementalInformation(Field... fields)
+    public Map<String, String> askSupplementalInformationSync(Field... fields)
             throws SupplementalInfoException {
         interactionCounter++;
         credentials.setSupplementalInformation(SerializationUtils.serializeToString(fields));
@@ -75,19 +73,18 @@ public class SupplementalInformationControllerImpl implements SupplementalInform
         return suplementalInformation;
     }
 
-    private Map<String, String> deserializeSupplementalInformation(String supplementalInformation) {
-        return Optional.ofNullable(
-                        SerializationUtils.deserializeFromString(
-                                supplementalInformation,
-                                new TypeReference<HashMap<String, String>>() {}))
-                .orElseThrow(
-                        () ->
-                                new IllegalStateException(
-                                        "SupplementalInformationResponse cannot be deserialized"));
+    @Override
+    public Optional<Map<String, String>> openThirdPartyAppSync(
+            ThirdPartyAppAuthenticationPayload payload) {
+        openThirdPartyAppAsync(payload);
+
+        String barrierKey = String.format(UNIQUE_PREFIX_TPCB, this.state);
+        return waitForSupplementalInformation(
+                barrierKey, ThirdPartyAppConstants.WAIT_FOR_MINUTES, TimeUnit.MINUTES);
     }
 
     @Override
-    public void openThirdPartyApp(ThirdPartyAppAuthenticationPayload payload) {
+    public void openThirdPartyAppAsync(ThirdPartyAppAuthenticationPayload payload) {
         interactionCounter++;
         Preconditions.checkNotNull(payload);
 
@@ -106,5 +103,21 @@ public class SupplementalInformationControllerImpl implements SupplementalInform
     @Override
     public short getInteractionCounter() {
         return interactionCounter;
+    }
+
+    private static Map<String, String> stringToMap(final String string) {
+        return SerializationUtils.deserializeFromString(
+                string, new TypeReference<HashMap<String, String>>() {});
+    }
+
+    private Map<String, String> deserializeSupplementalInformation(String supplementalInformation) {
+        return Optional.ofNullable(
+                        SerializationUtils.deserializeFromString(
+                                supplementalInformation,
+                                new TypeReference<HashMap<String, String>>() {}))
+                .orElseThrow(
+                        () ->
+                                new IllegalStateException(
+                                        "SupplementalInformationResponse cannot be deserialized"));
     }
 }

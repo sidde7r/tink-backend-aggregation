@@ -172,7 +172,7 @@ public class HandelsbankenNOMultiFactorAuthenticator implements BankIdAuthentica
         }
 
         Map<String, String> activationCodeResponse =
-                supplementalInformationController.askSupplementalInformation(
+                supplementalInformationController.askSupplementalInformationSync(
                         getActivationCodeField());
 
         if (activationCodeResponse.get(ActivationCodeFieldConstants.NAME) == null) {

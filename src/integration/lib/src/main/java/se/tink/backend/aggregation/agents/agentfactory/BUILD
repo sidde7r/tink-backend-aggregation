@@ -474,5 +474,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/agents/componentproviders",
         "//third_party:com_google_guava_guava",
         "//third_party:com_google_inject_guice",
+        "@tink_backend//src/libraries/metrics/core/src/main/java/se/tink/libraries/metrics/core",
+        "@tink_backend//src/libraries/metrics/core/src/main/java/se/tink/libraries/metrics/registry",
     ],
 )
