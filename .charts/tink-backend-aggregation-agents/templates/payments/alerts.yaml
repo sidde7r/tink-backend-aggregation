@@ -9,7 +9,7 @@ spec:
     - alert: TransferSuccessRateLow
       expr: |
         # Successful/Cancelled/Unavailable transfer outcomes below 50%
-        (sum by(className) (increase(tink_agent_transfer_total{provider_type!="test", outcome=~"completed|cancelled|unavailable"}[1h]))
+        (sum by(className) (increase(tink_agent_transfer_total{ market!~"DE|IT", provider_type!="test", outcome=~"completed|cancelled|unavailable"}[1h]))
           / sum by(className) (increase(tink_agent_transfer_total{provider_type!="test"}[1h]))) < 0.5
         # # At least this many attempts
         and sum by(className) (increase(tink_agent_transfer_total{provider_type!="test"}[1h])) > 5
