@@ -279,7 +279,7 @@ public class Field {
             field.additionalInfo = additionalInfo;
             field.checkbox = checkbox;
             if (selectOptions != null) {
-                this.selectOptions = Collections.unmodifiableList(selectOptions);
+                field.selectOptions = Collections.unmodifiableList(selectOptions);
             }
 
             return field;
