@@ -304,12 +304,12 @@ public final class SwedbankApiClient implements SwedbankOpenBankingPaymentApiCli
                 .get(FetchOnlineTransactionsResponse.class);
     }
 
-    public Optional<StatementResponse> postOfflineStatement(
+    public Optional<StatementResponse> postOrGetOfflineStatement(
             String accountId, LocalDate fromDate, LocalDate toDate) {
 
         // Swedbank doesn't allow offline statement without PSU involvement
         if (credentialsRequest.isManual()) {
-            return Optional.of(
+            RequestBuilder requestBuilder =
                     createRequestInSession(
                                     Urls.ACCOUNT_TRANSACTIONS.parameter(
                                             UrlParameters.ACCOUNT_ID, accountId),
@@ -318,11 +318,19 @@ public final class SwedbankApiClient implements SwedbankOpenBankingPaymentApiCli
                             .queryParam(SwedbankConstants.HeaderKeys.TO_DATE, toDate.toString())
                             .queryParam(
                                     SwedbankConstants.QueryKeys.BOOKING_STATUS,
-                                    SwedbankConstants.QueryValues.BOOKING_STATUS_BOTH)
-                            .post(StatementResponse.class));
-        } else {
-            return Optional.empty();
+                                    SwedbankConstants.QueryValues.BOOKING_STATUS_BOTH);
+
+            try {
+                return Optional.of(requestBuilder.post(StatementResponse.class));
+            } catch (HttpResponseException hre) {
+                GenericResponse errorResponse = hre.getResponse().getBody(GenericResponse.class);
+                if (errorResponse.isResourceAlreadySigned()) {
+                    return Optional.of(requestBuilder.get(StatementResponse.class));
+                }
+                throw new IllegalStateException(hre);
+            }
         }
+        return Optional.empty();
     }
 
     public HttpResponse getOfflineTransactions(String endPoint) {
