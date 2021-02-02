@@ -38,7 +38,7 @@ public class DemobankPasswordAndOtpAuthenticator implements MultiFactorAuthentic
                                 credentials.getField(Key.PASSWORD))
                         .getMessage();
         final String otp;
-        if ("select".equals(credentials.getField("otptype"))) {
+        if ("select".equals(credentials.getField("otpmethod"))) {
             List<SelectOption> selectOptions = new ArrayList<>();
             for (int ii = 0; ii < 10; ii++) {
                 selectOptions.add(new SelectOption(Integer.toString(ii), Integer.toString(ii)));
@@ -47,8 +47,8 @@ public class DemobankPasswordAndOtpAuthenticator implements MultiFactorAuthentic
             for (int ii = 0; ii < 4; ii++) {
                 Field f =
                         Field.builder()
-                                .description("OTP digit " + (ii + 1))
-                                .helpText("")
+                                .description("OTP digit " + (ii + 1) + " " + message)
+                                .helpText(message)
                                 .immutable(true)
                                 .masked(false)
                                 .name("digit" + (ii + 1))
