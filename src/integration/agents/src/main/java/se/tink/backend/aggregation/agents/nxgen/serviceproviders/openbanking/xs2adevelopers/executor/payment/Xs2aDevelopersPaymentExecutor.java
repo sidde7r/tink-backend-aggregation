@@ -54,32 +54,26 @@ public class Xs2aDevelopersPaymentExecutor implements PaymentExecutor, Fetchable
                         debtor,
                         new AmountEntity(
                                 payment.getCurrency(),
-                                payment.getExactCurrencyAmount().getExactValue()));
+                                payment.getExactCurrencyAmount().getExactValue()),
+                        payment.getRemittanceInformation().getValue());
 
         CreatePaymentResponse createPaymentResponse = apiClient.createPayment(createPaymentRequest);
         persistentStorage.put(StorageKeys.PAYMENT_ID, createPaymentResponse.getPaymentId());
         persistentStorage.put(
                 StorageKeys.AUTHORISATION_URL, createPaymentResponse.getLinks().getScaOAuth());
 
-        return createPaymentResponse.toTinkPayment(
-                creditor, debtor, payment.getExecutionDate(), payment.getAmount());
+        return createPaymentResponse.toTinkPayment();
     }
 
     @Override
     public PaymentResponse fetch(PaymentRequest paymentRequest) {
         Payment payment = paymentRequest.getPayment();
         final String paymentId = payment.getUniqueId();
-        sign();
-
         return apiClient.getPayment(paymentId).toTinkPayment(paymentId);
     }
 
-    private void sign() {
-        try {
-            controller.authenticate(credentials);
-        } catch (Exception e) {
-            throw new IllegalStateException(e.getMessage());
-        }
+    public void sign() {
+        controller.authenticate(credentials);
     }
 
     @Override
