@@ -8,6 +8,8 @@ import com.google.common.base.Strings;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Objects;
+import lombok.extern.slf4j.Slf4j;
+import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType;
 import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
@@ -15,8 +17,10 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction.Builder;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
+@Slf4j
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class CardTransaction {
+    private String transactionId;
 
     private double amount;
 
@@ -54,6 +58,13 @@ public class CardTransaction {
                         .setDate(getDate())
                         .setDescription(getTransactionDescription())
                         .setPending(!booked);
+        if (!Strings.isNullOrEmpty(transactionId)) {
+            builder.addExternalSystemIds(
+                    TransactionExternalSystemIdType.PROVIDER_GIVEN_TRANSACTION_ID, transactionId);
+        } else {
+            log.warn("Missing card transaction ID");
+        }
+
         if (hasExchangeRateInfo()) {
             builder.setPayload(TransactionPayloadTypes.EXCHANGE_RATE, exchangeRate.toPlainString());
             builder.setPayload(TransactionPayloadTypes.LOCAL_CURRENCY, originalCurrency);

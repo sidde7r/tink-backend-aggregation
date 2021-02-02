@@ -4,8 +4,10 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import com.google.common.base.Strings;
 import java.util.Date;
 import java.util.Objects;
+import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType;
 import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
@@ -15,6 +17,8 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 @JsonObject
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class TransactionEntity {
+    private String transactionId;
+
     private boolean hasDetails;
 
     private boolean booked;
@@ -50,6 +54,12 @@ public class TransactionEntity {
                         .setDate(getDate())
                         .setDescription(getTransactionDescription())
                         .setPending(!booked);
+
+        if (!Strings.isNullOrEmpty(transactionId)) {
+            builder.addExternalSystemIds(
+                    TransactionExternalSystemIdType.PROVIDER_GIVEN_TRANSACTION_ID, transactionId);
+        }
+
         if (Objects.nonNull(exchange)) {
             builder.setPayload(TransactionPayloadTypes.EXCHANGE_RATE, exchange.getOriginalRate());
             builder.setPayload(
