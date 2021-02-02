@@ -25,6 +25,10 @@ import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.net.client.TinkApacheHttpClient4;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
+/**
+ * @deprecated Do not use the AbstractAgent. All existing agents extending AbstractAgent should
+ *     migrate to a newer variant (e.g. AgentPlatformAgent).
+ */
 @Deprecated
 public abstract class AbstractAgent extends SuperAbstractAgent {
 

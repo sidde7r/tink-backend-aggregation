@@ -64,8 +64,8 @@ public abstract class SubsequentGenerationAgent<Auth> extends SuperAbstractAgent
 
     // The SupplementalInforamtionController is the lowest level of API an agent should use
     protected final SupplementalInformationController supplementalInformationController;
-    // FIXME: Remove or consolidate different types of helpers. There are now too many variants
-    // FIXME: that rather causes confusion (as opposed to helping).
+    // Remove or consolidate different types of helpers. There are now too many variants
+    // that rather causes confusion (as opposed to helping).
     protected final SupplementalInformationHelper supplementalInformationHelper;
     protected final SupplementalInformationFormer supplementalInformationFormer;
 
