@@ -29,7 +29,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.executor.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.executor.payment.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.executor.payment.rpc.GetPaymentResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.executor.payment.rpc.PaymentAuthorizationStatus;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.transactionalaccount.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.transactionalaccount.rpc.GetBalanceResponse;
@@ -220,6 +219,10 @@ public class Xs2aDevelopersApiClient {
                 .header(HeaderKeys.PSU_IP_ADDRESS, userIp)
                 .header(HeaderKeys.X_REQUEST_ID, randomValueGenerator.getUUID())
                 .body(createPaymentRequest)
+                .addBearerToken(
+                        persistentStorage
+                                .get(StorageKeys.OAUTH_TOKEN, OAuth2Token.class)
+                                .orElseThrow(SessionError.SESSION_EXPIRED::exception))
                 .post(CreatePaymentResponse.class);
     }
 
@@ -227,10 +230,11 @@ public class Xs2aDevelopersApiClient {
         return createRequest(
                         new URL(configuration.getBaseUrl() + ApiServices.GET_PAYMENT)
                                 .parameter(IdTags.PAYMENT_ID, paymentId))
-                .header(
-                        HeaderKeys.AUTHORIZATION,
-                        getTokenFromStorage(StorageKeys.PIS_TOKEN).getAccessToken())
                 .header(HeaderKeys.X_REQUEST_ID, randomValueGenerator.getUUID())
+                .addBearerToken(
+                        persistentStorage
+                                .get(StorageKeys.OAUTH_TOKEN, OAuth2Token.class)
+                                .orElseThrow(SessionError.SESSION_EXPIRED::exception))
                 .get(GetPaymentResponse.class);
     }
 
@@ -239,11 +243,5 @@ public class Xs2aDevelopersApiClient {
                 .accept(MediaType.APPLICATION_JSON_TYPE)
                 .get(WellKnownResponse.class)
                 .getAuthorizationEndpoint();
-    }
-
-    public PaymentAuthorizationStatus getPaymentAuthorizationStatus(String authorizationUrl) {
-        return createRequestInSession(new URL(configuration.getBaseUrl() + authorizationUrl))
-                .header(HeaderKeys.X_REQUEST_ID, randomValueGenerator.getUUID())
-                .get(PaymentAuthorizationStatus.class);
     }
 }
