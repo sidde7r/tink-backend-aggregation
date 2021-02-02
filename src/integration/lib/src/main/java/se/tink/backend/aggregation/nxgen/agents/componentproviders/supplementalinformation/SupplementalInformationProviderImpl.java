@@ -13,6 +13,13 @@ public final class SupplementalInformationProviderImpl implements SupplementalIn
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final SupplementalInformationController supplementalInformationController;
 
+    /**
+     * Do not construct your own SupplementalInformationProviderImpl. Use the instances of
+     * SupplementalInformationController and SupplementalInformationHelper available to your agent
+     * from SubsequentGenerationAgent instead. Or even better, migrate to AgentPlatformAgent or
+     * SubsequentProgressiveGenerationAgent where the Supplemental information controlling is
+     * outside of the agent and you do not need to have an instance.
+     */
     @Inject
     public SupplementalInformationProviderImpl(
             final SupplementalRequester supplementalRequester,

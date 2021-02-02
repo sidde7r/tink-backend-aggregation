@@ -32,6 +32,12 @@ public class SupplementalInformationControllerImpl implements SupplementalInform
     private final Credentials credentials;
     private final String state;
 
+    /**
+     * Do not construct your own SupplementalInfomationController. Use the instance available to
+     * your agent from SubsequentGenerationAgent instead. Or even better, migrate to
+     * AgentPlatformAgent or SubsequentProgressiveGenerationAgent where the Supplemental information
+     * controlling is outside of the agent and you do not need to have an instance.
+     */
     public SupplementalInformationControllerImpl(
             SupplementalRequester supplementalRequester, Credentials credentials, String state) {
         this.supplementalRequester = supplementalRequester;
