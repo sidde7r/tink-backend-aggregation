@@ -44,6 +44,7 @@ public class BarclaysAgentWireMockTest {
                 AgentWireMockRefreshTest.builder(
                                 MarketCode.UK, "uk-barclays-oauth2", wireMockFilePath)
                         .withConfigurationFile(configuration)
+                        .dumpContentForContractFile()
                         .addCallbackData("code", "DUMMY_AUTH_CODE")
                         .addRefreshableItems(refreshableItems.toArray(new RefreshableItem[0]))
                         .build();
