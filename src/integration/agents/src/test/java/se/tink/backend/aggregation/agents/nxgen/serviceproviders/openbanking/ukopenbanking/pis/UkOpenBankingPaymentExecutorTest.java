@@ -16,6 +16,7 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbank
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentTestFixtures.createDomesticPaymentRequestForNotExecutedPayment;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentTestFixtures.createPaymentMultiStepRequestFoAuthenticateStep;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentTestFixtures.createPaymentMultiStepRequestForExecutePaymentStep;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentTestFixtures.createPaymentRequest;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentTestFixtures.createPaymentResponse;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentTestFixtures.createPaymentResponseForConsent;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingTestValidator.validatePaymentResponsesForDomesticPaymentAreEqual;
@@ -23,6 +24,7 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbank
 import java.time.Clock;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
@@ -132,6 +134,29 @@ public class UkOpenBankingPaymentExecutorTest {
         assertThat(returnedResponse).isEqualTo(paymentResponseMock);
         verify(apiClientMock).getPayment(PAYMENT_ID);
         verify(apiClientMock).getPaymentConsent(CONSENT_ID);
+    }
+
+    @Test
+    public void shouldFetchPaymentIdFromCacheIfNotInStorage() {
+        // given
+        final PaymentRequest paymentRequestMock = createPaymentRequest();
+        final PaymentResponse paymentResponseMock = createPaymentResponse();
+        final Map<String, String> cache =
+                Collections.singletonMap(UkOpenBankingPaymentConstants.PAYMENT_ID_KEY, PAYMENT_ID);
+
+        when(apiClientMock.getPayment(PAYMENT_ID)).thenReturn(paymentResponseMock);
+        when(providerSessionCacheControllerMock.getProviderSessionCacheInformation())
+                .thenReturn(Optional.of(cache));
+
+        // when
+        final PaymentResponse returnedResponse =
+                ukOpenBankingPaymentExecutor.fetch(paymentRequestMock);
+
+        // then
+        assertThat(returnedResponse).isEqualTo(paymentResponseMock);
+        verify(apiClientMock).getPayment(PAYMENT_ID);
+        verify(apiClientMock, times(0)).getPaymentConsent(CONSENT_ID);
+        verify(providerSessionCacheControllerMock).getProviderSessionCacheInformation();
     }
 
     @Test

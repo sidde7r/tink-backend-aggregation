@@ -364,6 +364,17 @@ public class UkOpenBankingPaymentTestFixtures {
         return paymentMultiStepRequestMock;
     }
 
+    public static PaymentRequest createPaymentRequest() {
+        final PaymentRequest paymentRequest = mock(PaymentRequest.class);
+        final Storage storage = createStorageWithConsentId();
+        final Payment paymentMock = createPayment();
+
+        when(paymentRequest.getStorage()).thenReturn(storage);
+        when(paymentRequest.getPayment()).thenReturn(paymentMock);
+
+        return paymentRequest;
+    }
+
     private static Payment createPayment(LocalDate executionDate) {
         final Payment paymentMock = mock(Payment.class);
 
@@ -381,6 +392,8 @@ public class UkOpenBankingPaymentTestFixtures {
     private static void setPaymentIdAndConsentId(PaymentRequest paymentRequestMock) {
         final Storage storageMock = mock(Storage.class);
 
+        when(storageMock.containsKey(UkOpenBankingPaymentConstants.PAYMENT_ID_KEY))
+                .thenReturn(true);
         when(storageMock.get(UkOpenBankingPaymentConstants.PAYMENT_ID_KEY)).thenReturn(PAYMENT_ID);
         when(storageMock.get(UkOpenBankingPaymentConstants.CONSENT_ID_KEY)).thenReturn(CONSENT_ID);
         when(paymentRequestMock.getStorage()).thenReturn(storageMock);

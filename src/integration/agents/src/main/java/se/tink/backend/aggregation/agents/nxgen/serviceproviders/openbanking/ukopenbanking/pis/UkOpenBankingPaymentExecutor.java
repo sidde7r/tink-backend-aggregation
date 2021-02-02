@@ -32,6 +32,7 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.utils.ProviderSessionCacheController;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.storage.Storage;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
 import se.tink.libraries.payment.enums.PaymentStatus;
 
@@ -177,9 +178,21 @@ public class UkOpenBankingPaymentExecutor implements PaymentExecutor, FetchableP
                 "fetchMultiple not yet implemented for " + this.getClass().getName());
     }
 
-    private static Optional<String> getPaymentId(PaymentRequest paymentRequest) {
-        return Optional.ofNullable(
-                paymentRequest.getStorage().get(UkOpenBankingPaymentConstants.PAYMENT_ID_KEY));
+    private Optional<String> getPaymentId(PaymentRequest paymentRequest) {
+        Storage storage = paymentRequest.getStorage();
+        if (!storage.containsKey(UkOpenBankingPaymentConstants.PAYMENT_ID_KEY)) {
+            String paymentId = getPaymentIdFromCache();
+            storage.put(UkOpenBankingPaymentConstants.PAYMENT_ID_KEY, paymentId);
+        }
+
+        return Optional.ofNullable(storage.get(UkOpenBankingPaymentConstants.PAYMENT_ID_KEY));
+    }
+
+    private String getPaymentIdFromCache() {
+        return providerSessionCacheController
+                .getProviderSessionCacheInformation()
+                .map(cache -> cache.get(UkOpenBankingPaymentConstants.PAYMENT_ID_KEY))
+                .orElse(null);
     }
 
     private static String getConsentId(PaymentRequest paymentRequest) {

@@ -6,5 +6,6 @@ public enum SignableOperationStatuses {
     AWAITING_CREDENTIALS,
     CANCELLED,
     FAILED,
-    EXECUTED
+    EXECUTED,
+    SETTLEMENT_COMPLETED
 }
