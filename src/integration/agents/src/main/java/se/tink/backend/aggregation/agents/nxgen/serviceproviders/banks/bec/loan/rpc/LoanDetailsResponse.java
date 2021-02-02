@@ -36,7 +36,7 @@ public class LoanDetailsResponse {
                         detail ->
                                 AgentParsingUtils.parsePercentageFormInterest(
                                         detail.getDetailValue()))
-                .orElse(null);
+                .orElse(0.0d);
     }
 
     public ExactCurrencyAmount getInitialBalance() {
