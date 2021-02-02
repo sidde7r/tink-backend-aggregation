@@ -12,7 +12,6 @@ import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.BecApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.BecUrlConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authenticator.BecSecurityHelper;
@@ -40,7 +39,7 @@ public class BecLoanFetcherTest {
     public void fetch_accounts_returns_known_error(String message) {
         // given
         BecApiClient becApiClient = createBecApiClient(message);
-        BecLoanFetcher becLoanFetcher = new BecLoanFetcher(becApiClient, new Credentials());
+        BecLoanFetcher becLoanFetcher = new BecLoanFetcher(becApiClient);
         // when
         Collection<LoanAccount> collection = becLoanFetcher.fetchAccounts();
 
@@ -53,7 +52,7 @@ public class BecLoanFetcherTest {
     public void fetch_accounts_returns_unknown_error(String message) {
         // given
         BecApiClient becApiClient = createBecApiClient(message);
-        BecLoanFetcher becLoanFetcher = new BecLoanFetcher(becApiClient, new Credentials());
+        BecLoanFetcher becLoanFetcher = new BecLoanFetcher(becApiClient);
         // when
         Throwable throwable = catchThrowable(becLoanFetcher::fetchAccounts);
 

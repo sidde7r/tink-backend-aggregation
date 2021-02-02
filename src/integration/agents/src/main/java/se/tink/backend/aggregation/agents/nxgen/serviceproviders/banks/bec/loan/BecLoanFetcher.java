@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.BecApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.BecConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.loan.entities.MortgageLoanEntity;
@@ -23,14 +22,12 @@ public class BecLoanFetcher implements AccountFetcher<LoanAccount> {
             LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final BecApiClient apiClient;
-    private final Credentials credentials;
 
     private static final String UNKNOWN_ERROR_TEMPLATE =
             BecConstants.Log.LOAN_FAILED + " - Unknown error: [{}] {} HTTP_CODE: {}";
 
-    public BecLoanFetcher(BecApiClient apiClient, Credentials credentials) {
+    public BecLoanFetcher(BecApiClient apiClient) {
         this.apiClient = apiClient;
-        this.credentials = credentials;
     }
 
     @Override
