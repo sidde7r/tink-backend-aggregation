@@ -1,7 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetcher;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.agents.rpc.Provider;
@@ -30,6 +32,8 @@ public class SdcLoanFetcher extends SdcAgreementFetcher implements AccountFetche
     @Override
     public Collection<LoanAccount> fetchAccounts() {
 
+        List<LoanAccount> accountList = new ArrayList<>();
+
         SessionStorageAgreements agreements = getAgreements();
 
         for (SessionStorageAgreement agreement : agreements) {
@@ -41,19 +45,27 @@ public class SdcLoanFetcher extends SdcAgreementFetcher implements AccountFetche
             }
 
             if (serviceConfiguration.get().isLoan()) {
-                ListLoanAccountsResponse loanAccounsResponse = bankClient.listLoans();
-                if (loanAccounsResponse != null) {
-                    return loanAccounsResponse.stream()
-                            .map(la -> la.toTinkLoan(provider.getCurrency()))
-                            .collect(Collectors.toList());
-                }
+                accountList.addAll(sdcAccountsToTinkAccounts(bankClient.listLoans()));
             }
 
             if (serviceConfiguration.get().isTotalkredit()) {
-                totalKreditLoanFetcher.fetchTotalKreditAccounts();
+                accountList.addAll(
+                        totalKreditLoanFetcher.fetchTotalKreditAccounts(
+                                agreement.getAgreementId()));
             }
         }
 
-        return Collections.emptyList();
+        return accountList;
+    }
+
+    private List<LoanAccount> sdcAccountsToTinkAccounts(
+            final ListLoanAccountsResponse loanAccounsResponse) {
+        if (loanAccounsResponse != null) {
+            return loanAccounsResponse.stream()
+                    .map(la -> la.toTinkLoan(provider.getCurrency()))
+                    .collect(Collectors.toList());
+        } else {
+            return Collections.emptyList();
+        }
     }
 }
