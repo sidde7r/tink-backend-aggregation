@@ -27,6 +27,8 @@ import se.tink.libraries.chrono.AvailableDateInformation;
 @JsonObject
 @JsonNaming(PropertyNamingStrategy.UpperCamelCaseStrategy.class)
 public class TransactionEntity {
+    private static final String PROVIDER_MARKET = "UK";
+
     private String accountId;
 
     private String transactionId;
@@ -102,7 +104,8 @@ public class TransactionEntity {
                         .setMutable(isMutable())
                         .setDate(getDateOfTransaction())
                         .addTransactionDates(getTransactionDates())
-                        .setTransactionReference(transactionReference);
+                        .setTransactionReference(transactionReference)
+                        .setProviderMarket(PROVIDER_MARKET);
 
         if (merchantDetails != null) {
             builder.setMerchantName(merchantDetails.getMerchantName())
@@ -125,7 +128,8 @@ public class TransactionEntity {
                         .setMutable(isMutable())
                         .setDate(getDateOfTransaction())
                         .addTransactionDates(getTransactionDates())
-                        .setTransactionReference(transactionReference);
+                        .setTransactionReference(transactionReference)
+                        .setProviderMarket(PROVIDER_MARKET);
 
         if (merchantDetails != null) {
             builder.setMerchantName(merchantDetails.getMerchantName())

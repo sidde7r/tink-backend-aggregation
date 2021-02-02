@@ -163,7 +163,7 @@ public class SwedbankTransactionalAccountFetcher implements AccountFetcher<Trans
         }
 
         Optional<StatementResponse> response =
-                apiClient.postOfflineStatement(account.getApiIdentifier(), fromDate, toDate);
+                apiClient.postOrGetOfflineStatement(account.getApiIdentifier(), fromDate, toDate);
         if (!response.isPresent()) {
             return;
         }
