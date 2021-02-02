@@ -54,4 +54,9 @@ public class SwedbankFallbackConstants {
                             new ProfileParameters(
                                     "savingsbank-fallback", "GPBwgAXfSWUdLoPV", true, null))
                     .build();
+
+    public static class Filters {
+        public static final int NUMBER_OF_RETRIES = 5;
+        public static final long MS_TO_WAIT = 4000;
+    }
 }
