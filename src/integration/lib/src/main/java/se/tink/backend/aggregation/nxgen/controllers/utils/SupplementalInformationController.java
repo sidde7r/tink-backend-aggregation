@@ -18,10 +18,4 @@ public interface SupplementalInformationController {
     Optional<Map<String, String>> openThirdPartyAppSync(ThirdPartyAppAuthenticationPayload payload);
 
     void openThirdPartyAppAsync(ThirdPartyAppAuthenticationPayload payload);
-
-    short getInteractionCounter();
-
-    default boolean isUsed() {
-        return getInteractionCounter() > 0;
-    }
 }

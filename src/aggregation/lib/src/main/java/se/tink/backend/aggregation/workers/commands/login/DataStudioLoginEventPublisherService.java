@@ -22,7 +22,6 @@ import se.tink.backend.aggregation.events.IntegrationParameters;
 import se.tink.backend.aggregation.events.LoginAgentEventProducer;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.exception.NemIdError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.exception.NemIdException;
-import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
 import se.tink.eventproducerservice.events.grpc.AgentLoginCompletedEventProto;
 
@@ -329,11 +328,11 @@ public class DataStudioLoginEventPublisherService {
     private final LoginAgentEventProducer eventPublisher;
     private final long authenticationStartTime;
     private final AgentWorkerCommandContext context;
-    private final SupplementalInformationController supplementalInformationController;
 
     void publishLoginSuccessEvent() {
+        int interactions = context.getSupplementalInteractionCounter().getNumberInteractions();
         AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult result =
-                supplementalInformationController.isUsed()
+                interactions == 0
                         ? AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult
                                 .SUCCESSFUL_LOGIN
                         : AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult
@@ -440,7 +439,8 @@ public class DataStudioLoginEventPublisherService {
         AgentLoginCompletedEventProto.AgentLoginCompletedEvent.UserInteractionInformation
                 userInteractionInformation =
                         AgentLoginCompletedEventUserInteractionInformationProvider
-                                .userInteractionInformation(supplementalInformationController);
+                                .userInteractionInformation(
+                                        context.getSupplementalInteractionCounter());
         log.info(
                 String.format(
                         "Authentication finished with %s and %s",

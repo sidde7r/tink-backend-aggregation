@@ -9,6 +9,8 @@ import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConf
 import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.nxgen.controllers.configuration.iface.AgentConfigurationControllerable;
 import se.tink.libraries.metrics.registry.MetricRegistry;
+import src.libraries.interaction_counter.InteractionCounter;
+import src.libraries.interaction_counter.local.LocalInteractionCounter;
 
 public abstract class AgentContext implements CompositeAgentContext {
     protected ByteArrayOutputStream logOutputStream = new ByteArrayOutputStream();
@@ -22,6 +24,11 @@ public abstract class AgentContext implements CompositeAgentContext {
     private AgentConfigurationControllerable agentConfigurationController;
     private LogMasker logMasker;
     private AgentsServiceConfiguration configuration;
+    protected InteractionCounter supplementalInteractionCounter = new LocalInteractionCounter();
+
+    public InteractionCounter getSupplementalInteractionCounter() {
+        return supplementalInteractionCounter;
+    }
 
     @Override
     public String getAppId() {

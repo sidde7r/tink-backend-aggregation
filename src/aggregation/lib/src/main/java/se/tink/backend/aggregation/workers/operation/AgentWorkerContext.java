@@ -358,6 +358,9 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     @Override
     public String requestSupplementalInformation(
             Credentials credentials, long waitFor, TimeUnit timeUnit, boolean wait) {
+
+        supplementalInteractionCounter.inc();
+
         if (wait) {
             updateCredentialsExcludingSensitiveInformation(credentials, true);
 

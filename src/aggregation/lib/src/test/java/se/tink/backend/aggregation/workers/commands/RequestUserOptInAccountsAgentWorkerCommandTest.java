@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.workers.commands;
 
+import static org.mockito.Mockito.when;
+
 import java.util.List;
 import org.assertj.core.util.Lists;
 import org.junit.Assert;

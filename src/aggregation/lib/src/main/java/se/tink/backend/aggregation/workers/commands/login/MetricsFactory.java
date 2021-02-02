@@ -1,13 +1,13 @@
 package se.tink.backend.aggregation.workers.commands.login;
 
 import lombok.AllArgsConstructor;
-import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.workers.metrics.AgentWorkerCommandMetricState;
 import se.tink.backend.aggregation.workers.metrics.MetricAction;
 import se.tink.backend.aggregation.workers.metrics.MetricActionComposite;
 import se.tink.backend.aggregation.workers.metrics.MetricActionIface;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.metrics.core.MetricId;
+import src.libraries.interaction_counter.InteractionCounter;
 
 @AllArgsConstructor
 public class MetricsFactory {
@@ -23,7 +23,7 @@ public class MetricsFactory {
 
     public MetricActionIface createLoginMetric(
             CredentialsRequest credentialsRequest,
-            SupplementalInformationController supplementalInformationController) {
+            InteractionCounter supplementalInformationInteractionCounter) {
         MetricAction action =
                 agentWorkerCommandMetricState.buildAction(metricForAction(MetricName.LOGIN));
         if (isBackgroundCronRefresh(credentialsRequest)) {
@@ -32,8 +32,9 @@ public class MetricsFactory {
                     agentWorkerCommandMetricState.buildAction(
                             metricForAction(MetricName.LOGIN_CRON)));
         }
+        int interactions = supplementalInformationInteractionCounter.getNumberInteractions();
         MetricAction actionLoginType =
-                supplementalInformationController.isUsed()
+                interactions == 0
                         ? agentWorkerCommandMetricState.buildAction(
                                 metricForAction(MetricName.LOGIN_MANUAL))
                         : agentWorkerCommandMetricState.buildAction(
