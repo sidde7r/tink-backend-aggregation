@@ -255,7 +255,7 @@ public class LoanDetailsResponseTest {
         return new Object[] {
             new Object[] {INTEREST_RATE_ENGLISH, 0.0183},
             new Object[] {INTEREST_RATE_RENTESATS, -0.0325},
-            new Object[] {DUMMY_DETAILS, null} // without details about balance
+            new Object[] {DUMMY_DETAILS, 0.0d} // without details about balance
         };
     }
 }
