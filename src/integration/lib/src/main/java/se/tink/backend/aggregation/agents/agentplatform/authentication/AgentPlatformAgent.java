@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.agentplatform.authentication;
 
-import se.tink.backend.aggregation.agents.agentplatform.AgentPlatformHttpResponseStatusHandler;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 
@@ -9,7 +8,6 @@ public abstract class AgentPlatformAgent extends SubsequentGenerationAgent
 
     protected AgentPlatformAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
-        this.client.setResponseStatusHandler(new AgentPlatformHttpResponseStatusHandler());
     }
 
     @Override

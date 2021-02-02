@@ -32,6 +32,8 @@ public interface TinkHttpClient extends Filterable<TinkHttpClient>, RequestBuild
 
     String getHeaderAggregatorIdentifier();
 
+    HttpResponseStatusHandler getResponseStatusHandler();
+
     void setResponseStatusHandler(HttpResponseStatusHandler responseStatusHandler);
 
     Client getInternalClient();

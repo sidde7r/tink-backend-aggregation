@@ -73,6 +73,11 @@ public class IntegrationWireMockTestTinkHttpClient implements TinkHttpClient {
     }
 
     @Override
+    public HttpResponseStatusHandler getResponseStatusHandler() {
+        return tinkHttpClient.getResponseStatusHandler();
+    }
+
+    @Override
     public void setResponseStatusHandler(HttpResponseStatusHandler responseStatusHandler) {
         tinkHttpClient.setResponseStatusHandler(responseStatusHandler);
     }

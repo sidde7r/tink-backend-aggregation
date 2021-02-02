@@ -1,6 +1,5 @@
-package se.tink.backend.aggregation.agents.agentplatform;
+package se.tink.backend.aggregation.nxgen.http.handler;
 
-import se.tink.backend.aggregation.nxgen.http.handler.HttpResponseStatusHandler;
 import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 
