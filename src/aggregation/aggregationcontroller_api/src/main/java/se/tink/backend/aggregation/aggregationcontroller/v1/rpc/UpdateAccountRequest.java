@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.aggregationcontroller.v1.rpc;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.common.base.MoreObjects;
 import se.tink.backend.aggregation.agents.models.AccountFeatures;
+import se.tink.backend.aggregationcontroller.v1.rpc.accountholder.AccountHolder;
 import se.tink.libraries.account.rpc.Account;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.jersey.utils.SafelyLoggable;
@@ -11,12 +12,22 @@ import se.tink.libraries.jersey.utils.SafelyLoggable;
 public class UpdateAccountRequest implements SafelyLoggable {
     private Account account;
     private AccountFeatures accountFeatures;
+    // NOTE: AccountHolder is sent from AggregationService to AC, but not received on System side
+    private AccountHolder accountHolder;
     private String user;
     private String credentialsId;
     private ExactCurrencyAmount availableBalance;
     private ExactCurrencyAmount creditLimit;
     private String operationId;
     private String correlationId;
+
+    public AccountHolder getAccountHolder() {
+        return accountHolder;
+    }
+
+    public void setAccountHolder(AccountHolder accountHolder) {
+        this.accountHolder = accountHolder;
+    }
 
     public String getCredentialsId() {
         return credentialsId;
