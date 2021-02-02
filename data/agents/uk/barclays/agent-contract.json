@@ -1,131 +1,293 @@
 {
-  "accounts": [
-    {
-      "accountNumber": "00000000000000",
-      "accountExclusion": "NONE",
-      "exactBalance": {
-        "currencyCode": "GBP",
-        "exactValue": 30.0,
-        "scale": 2,
-        "doubleValue": 30.0,
-        "unscaledValue": 3000
-      },
-      "availableBalance": {
-        "currencyCode": "GBP",
-        "exactValue": 30.0,
-        "scale": 2,
-        "doubleValue": 30.0,
-        "unscaledValue": 3000
-      },
-      "currencyCode": "GBP",
-      "bankId": "00000000000000",
-      "name": "00000000000000",
-      "ownership": 1.0,
-      "type": "CHECKING",
-      "identifiers": "[\"sort-code://00000000000000\"]",
-      "closed": false,
-      "holderName": null,
-      "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
-      "availableCredit": 0.0,
-      "balance": 30.0
-    }
-  ],
-  "transactions": [
-    {
-      "amount": 20.0,
-      "date": 1579604400000,
-      "description": "DUMMY_VALUE",
-      "internalPayload": {},
-      "originalAmount": 0.0,
-      "payload": {},
-      "pending": false,
-      "timestamp": 0,
-      "type": "DEFAULT",
-      "upcoming": false
-    },
-    {
-      "amount": 10.0,
-      "date": 1579258800000,
-      "description": "DUMMY_VALUE",
-      "internalPayload": {},
-      "originalAmount": 0.0,
-      "payload": {},
-      "pending": false,
-      "timestamp": 0,
-      "type": "DEFAULT",
-      "upcoming": false
-    },
-    {
-      "amount": -319.31,
-      "date": 1579258800000,
-      "description": "DUMMY_VALUE",
-      "internalPayload": {},
-      "originalAmount": 0.0,
-      "payload": {},
-      "pending": false,
-      "timestamp": 0,
-      "type": "DEFAULT",
-      "upcoming": false
-    },
-    {
-      "amount": -6.5,
-      "date": 1578567600000,
-      "description": "DUMMY_VALUE",
-      "internalPayload": {},
-      "originalAmount": 0.0,
-      "payload": {},
-      "pending": false,
-      "timestamp": 0,
-      "type": "DEFAULT",
-      "upcoming": false
-    },
-    {
-      "amount": -282.29,
-      "date": 1578222000000,
-      "description": "DUMMY_VALUE",
-      "internalPayload": {},
-      "originalAmount": 0.0,
-      "payload": {},
-      "pending": false,
-      "timestamp": 0,
-      "type": "DEFAULT",
-      "upcoming": false
-    },
-    {
-      "amount": -16.34,
-      "date": 1559296800000,
-      "description": "DUMMY_VALUE",
-      "internalPayload": {},
-      "originalAmount": 0.0,
-      "payload": {},
-      "pending": false,
-      "timestamp": 0,
-      "type": "DEFAULT",
-      "upcoming": false
-    },
-    {
-      "amount": -12.0,
-      "date": 1559037600000,
-      "description": "DUMMY_VALUE",
-      "internalPayload": {},
-      "originalAmount": 0.0,
-      "payload": {},
-      "pending": false,
-      "timestamp": 0,
-      "type": "DEFAULT",
-      "upcoming": false
-    },
-    {
-      "amount": -4.5,
-      "date": 1558951200000,
-      "description": "DUMMY_VALUE",
-      "internalPayload": {},
-      "originalAmount": 0.0,
-      "payload": {},
-      "pending": false,
-      "timestamp": 0,
-      "type": "DEFAULT",
-      "upcoming": false
-    }
-  ]
+    "accounts": [
+        {
+            "accountNumber": "00000000000000",
+            "accountExclusion": "NONE",
+            "exactBalance": {
+                "currencyCode": "GBP",
+                "exactValue": 30.0,
+                "scale": 2,
+                "unscaledValue": 3000,
+                "doubleValue": 30.0
+            },
+            "currencyCode": "GBP",
+            "availableBalance": {
+                "currencyCode": "GBP",
+                "exactValue": 30.0,
+                "scale": 2,
+                "unscaledValue": 3000,
+                "doubleValue": 30.0
+            },
+            "bankId": "00000000000000",
+            "excluded": false,
+            "favored": false,
+            "name": "00000000000000",
+            "ownership": 1.0,
+            "type": "CHECKING",
+            "userModifiedExcluded": false,
+            "userModifiedName": false,
+            "userModifiedType": false,
+            "identifiers": "[\"sort-code://00000000000000\"]",
+            "closed": false,
+            "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
+            "balances": [],
+            "availableCredit": 0.0,
+            "balance": 30.0
+        }
+    ],
+    "transactions": [
+        {
+            "amount": 20.0,
+            "date": 1579604400000,
+            "description": "DUMMY_VALUE",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": null,
+                        "instant": "2020-01-21T06:53:08.000Z"
+                    }
+                },
+                {
+                    "type": "VALUE_DATE",
+                    "value": {
+                        "date": null,
+                        "instant": "2020-01-21T00:00:00.000Z"
+                    }
+                }
+            ],
+            "providerMarket": "UK"
+        },
+        {
+            "amount": 10.0,
+            "date": 1579258800000,
+            "description": "DUMMY_VALUE",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": null,
+                        "instant": "2020-01-17T17:29:48.000Z"
+                    }
+                },
+                {
+                    "type": "VALUE_DATE",
+                    "value": {
+                        "date": null,
+                        "instant": "2020-01-17T00:00:00.000Z"
+                    }
+                }
+            ],
+            "providerMarket": "UK"
+        },
+        {
+            "amount": -319.31,
+            "date": 1579258800000,
+            "description": "DUMMY_VALUE",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": null,
+                        "instant": "2020-01-17T17:21:51.000Z"
+                    }
+                },
+                {
+                    "type": "VALUE_DATE",
+                    "value": {
+                        "date": null,
+                        "instant": "2020-01-17T00:00:00.000Z"
+                    }
+                }
+            ],
+            "merchantName": "Barclayscurrentaccount",
+            "providerMarket": "UK"
+        },
+        {
+            "amount": -6.5,
+            "date": 1578567600000,
+            "description": "DUMMY_VALUE",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": null,
+                        "instant": "2020-01-09T00:33:59.000Z"
+                    }
+                },
+                {
+                    "type": "VALUE_DATE",
+                    "value": {
+                        "date": null,
+                        "instant": "2020-01-09T00:00:00.000Z"
+                    }
+                }
+            ],
+            "providerMarket": "UK"
+        },
+        {
+            "amount": -282.29,
+            "date": 1578222000000,
+            "description": "DUMMY_VALUE",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": null,
+                        "instant": "2020-01-05T11:03:10.000Z"
+                    }
+                },
+                {
+                    "type": "VALUE_DATE",
+                    "value": {
+                        "date": null,
+                        "instant": "2020-01-06T00:00:00.000Z"
+                    }
+                }
+            ],
+            "merchantName": "AmericanExpress",
+            "providerMarket": "UK"
+        },
+        {
+            "amount": -16.34,
+            "date": 1559296800000,
+            "description": "DUMMY_VALUE",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": null,
+                        "instant": "2019-05-31T13:39:13.000Z"
+                    }
+                },
+                {
+                    "type": "VALUE_DATE",
+                    "value": {
+                        "date": null,
+                        "instant": "2019-05-31T00:00:00.000Z"
+                    }
+                }
+            ],
+            "merchantName": "CLOUDFLARE",
+            "providerMarket": "UK"
+        },
+        {
+            "amount": -12.0,
+            "date": 1559037600000,
+            "description": "DUMMY_VALUE",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": null,
+                        "instant": "2019-05-28T11:06:00.000Z"
+                    }
+                },
+                {
+                    "type": "VALUE_DATE",
+                    "value": {
+                        "date": null,
+                        "instant": "2019-05-28T00:00:00.000Z"
+                    }
+                }
+            ],
+            "merchantName": "Xero",
+            "providerMarket": "UK"
+        },
+        {
+            "amount": -4.5,
+            "date": 1558951200000,
+            "description": "DUMMY_VALUE",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": null,
+                        "instant": "2019-05-27T14:04:47.000Z"
+                    }
+                },
+                {
+                    "type": "VALUE_DATE",
+                    "value": {
+                        "date": null,
+                        "instant": "2019-05-28T00:00:00.000Z"
+                    }
+                }
+            ],
+            "merchantName": "Microsoft",
+            "providerMarket": "UK"
+        }
+    ]
 }

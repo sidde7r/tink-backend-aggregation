@@ -6,17 +6,17 @@
             "exactBalance": {
                 "currencyCode": "GBP",
                 "exactValue": 50.64,
+                "scale": 4,
                 "unscaledValue": 506400,
-                "doubleValue": 50.64,
-                "scale": 4
+                "doubleValue": 50.64
             },
             "currencyCode": "GBP",
             "availableBalance": {
                 "currencyCode": "GBP",
                 "exactValue": 50.64,
+                "scale": 4,
                 "unscaledValue": 506400,
-                "doubleValue": 50.64,
-                "scale": 4
+                "doubleValue": 50.64
             },
             "bankId": "04000484427126",
             "excluded": false,
@@ -68,7 +68,10 @@
                         "instant": "2020-09-01T08:36:23.353Z"
                     }
                 }
-            ]
+            ],
+            "proprietaryFinancialInstitutionType": "payport_faster_payments",
+            "transactionReference": "400000000710577650",
+            "providerMarket": "UK"
         },
         {
             "amount": -100.0,
@@ -91,7 +94,9 @@
                         "instant": "2020-09-01T08:37:10.977Z"
                     }
                 }
-            ]
+            ],
+            "proprietaryFinancialInstitutionType": "uk_retail_pot",
+            "providerMarket": "UK"
         },
         {
             "amount": -100.0,
@@ -114,7 +119,9 @@
                         "instant": "2020-09-01T08:37:10.978Z"
                     }
                 }
-            ]
+            ],
+            "proprietaryFinancialInstitutionType": "uk_retail_pot",
+            "providerMarket": "UK"
         },
         {
             "amount": -5.0,
@@ -137,7 +144,9 @@
                         "instant": "2020-09-01T08:37:10.984Z"
                     }
                 }
-            ]
+            ],
+            "proprietaryFinancialInstitutionType": "uk_retail_pot",
+            "providerMarket": "UK"
         },
         {
             "amount": -5.0,
@@ -160,7 +169,9 @@
                         "instant": "2020-09-01T08:37:10.988Z"
                     }
                 }
-            ]
+            ],
+            "proprietaryFinancialInstitutionType": "uk_retail_pot",
+            "providerMarket": "UK"
         },
         {
             "amount": -50.0,
@@ -183,7 +194,9 @@
                         "instant": "2020-09-01T08:37:10.991Z"
                     }
                 }
-            ]
+            ],
+            "proprietaryFinancialInstitutionType": "uk_retail_pot",
+            "providerMarket": "UK"
         },
         {
             "amount": -5.0,
@@ -206,7 +219,9 @@
                         "instant": "2020-09-01T08:37:11.168Z"
                     }
                 }
-            ]
+            ],
+            "proprietaryFinancialInstitutionType": "uk_retail_pot",
+            "providerMarket": "UK"
         },
         {
             "amount": 99.0,
@@ -229,7 +244,9 @@
                         "instant": "2020-09-07T18:20:03.650Z"
                     }
                 }
-            ]
+            ],
+            "proprietaryFinancialInstitutionType": "uk_retail_pot",
+            "providerMarket": "UK"
         },
         {
             "amount": -99.0,
@@ -252,7 +269,10 @@
                         "instant": "2020-09-07T18:21:06.574Z"
                     }
                 }
-            ]
+            ],
+            "proprietaryFinancialInstitutionType": "mastercard",
+            "merchantCategoryCode": "5691",
+            "providerMarket": "UK"
         },
         {
             "amount": 90.0,
@@ -275,7 +295,9 @@
                         "instant": "2020-09-10T08:23:58.343Z"
                     }
                 }
-            ]
+            ],
+            "proprietaryFinancialInstitutionType": "payport_faster_payments",
+            "providerMarket": "UK"
         },
         {
             "amount": -39.78,
@@ -298,7 +320,10 @@
                         "instant": "2020-09-10T11:31:54.388Z"
                     }
                 }
-            ]
+            ],
+            "proprietaryFinancialInstitutionType": "mastercard",
+            "merchantCategoryCode": "5411",
+            "providerMarket": "UK"
         },
         {
             "amount": -7.5,
@@ -321,7 +346,10 @@
                         "instant": "2020-09-10T11:56:45.151Z"
                     }
                 }
-            ]
+            ],
+            "proprietaryFinancialInstitutionType": "mastercard",
+            "merchantCategoryCode": "5411",
+            "providerMarket": "UK"
         },
         {
             "amount": -2.3,
@@ -344,7 +372,10 @@
                         "instant": "2020-09-10T16:34:33.606Z"
                     }
                 }
-            ]
+            ],
+            "proprietaryFinancialInstitutionType": "mastercard",
+            "merchantCategoryCode": "5814",
+            "providerMarket": "UK"
         },
         {
             "amount": -10.03,
@@ -367,7 +398,10 @@
                         "instant": "2020-09-12T13:12:29.774Z"
                     }
                 }
-            ]
+            ],
+            "proprietaryFinancialInstitutionType": "mastercard",
+            "merchantCategoryCode": "5541",
+            "providerMarket": "UK"
         },
         {
             "amount": -2.2,
@@ -390,7 +424,10 @@
                         "instant": "2020-09-12T14:50:14.578Z"
                     }
                 }
-            ]
+            ],
+            "proprietaryFinancialInstitutionType": "mastercard",
+            "merchantCategoryCode": "7997",
+            "providerMarket": "UK"
         },
         {
             "amount": -7.85,
@@ -413,7 +450,10 @@
                         "instant": "2020-09-12T15:36:49.783Z"
                     }
                 }
-            ]
+            ],
+            "proprietaryFinancialInstitutionType": "mastercard",
+            "merchantCategoryCode": "7997",
+            "providerMarket": "UK"
         },
         {
             "amount": -3.0,
@@ -436,7 +476,10 @@
                         "instant": "2020-09-14T18:42:10.059Z"
                     }
                 }
-            ]
+            ],
+            "proprietaryFinancialInstitutionType": "mastercard",
+            "merchantCategoryCode": "5411",
+            "providerMarket": "UK"
         },
         {
             "amount": -10.0,
@@ -459,7 +502,9 @@
                         "instant": "2020-09-23T23:13:31.791Z"
                     }
                 }
-            ]
+            ],
+            "proprietaryFinancialInstitutionType": "payport_faster_payments",
+            "providerMarket": "UK"
         },
         {
             "amount": 210.0,
@@ -482,7 +527,9 @@
                         "instant": "2020-10-03T18:44:52.661Z"
                     }
                 }
-            ]
+            ],
+            "proprietaryFinancialInstitutionType": "payport_faster_payments",
+            "providerMarket": "UK"
         },
         {
             "amount": -50.0,
@@ -505,7 +552,9 @@
                         "instant": "2020-10-03T18:45:34.496Z"
                     }
                 }
-            ]
+            ],
+            "proprietaryFinancialInstitutionType": "uk_retail_pot",
+            "providerMarket": "UK"
         },
         {
             "amount": -70.0,
@@ -528,7 +577,9 @@
                         "instant": "2020-10-03T18:45:34.497Z"
                     }
                 }
-            ]
+            ],
+            "proprietaryFinancialInstitutionType": "uk_retail_pot",
+            "providerMarket": "UK"
         },
         {
             "amount": -70.0,
@@ -551,7 +602,9 @@
                         "instant": "2020-10-03T18:45:34.510Z"
                     }
                 }
-            ]
+            ],
+            "proprietaryFinancialInstitutionType": "uk_retail_pot",
+            "providerMarket": "UK"
         },
         {
             "amount": -10.0,
@@ -574,7 +627,9 @@
                         "instant": "2020-10-05T12:02:02.749Z"
                     }
                 }
-            ]
+            ],
+            "proprietaryFinancialInstitutionType": "uk_retail_pot",
+            "providerMarket": "UK"
         },
         {
             "amount": 10.0,
@@ -597,7 +652,9 @@
                         "instant": "2020-10-11T20:48:02.077Z"
                     }
                 }
-            ]
+            ],
+            "proprietaryFinancialInstitutionType": "uk_retail_pot",
+            "providerMarket": "UK"
         },
         {
             "amount": 5.0,
@@ -620,7 +677,9 @@
                         "instant": "2020-10-11T20:48:08.444Z"
                     }
                 }
-            ]
+            ],
+            "proprietaryFinancialInstitutionType": "uk_retail_pot",
+            "providerMarket": "UK"
         },
         {
             "amount": 5.0,
@@ -643,7 +702,9 @@
                         "instant": "2020-10-11T20:48:12.721Z"
                     }
                 }
-            ]
+            ],
+            "proprietaryFinancialInstitutionType": "uk_retail_pot",
+            "providerMarket": "UK"
         },
         {
             "amount": 40.0,
@@ -666,7 +727,9 @@
                         "instant": "2020-10-11T20:49:55.591Z"
                     }
                 }
-            ]
+            ],
+            "proprietaryFinancialInstitutionType": "uk_retail_pot",
+            "providerMarket": "UK"
         },
         {
             "amount": -56.0,
@@ -689,7 +752,9 @@
                         "instant": "2020-10-11T20:50:40.394Z"
                     }
                 }
-            ]
+            ],
+            "proprietaryFinancialInstitutionType": "payport_faster_payments",
+            "providerMarket": "UK"
         },
         {
             "amount": 35.0,
@@ -712,7 +777,9 @@
                         "instant": "2020-10-16T10:58:43.410Z"
                     }
                 }
-            ]
+            ],
+            "proprietaryFinancialInstitutionType": "uk_retail_pot",
+            "providerMarket": "UK"
         },
         {
             "amount": 1.0,
@@ -735,7 +802,9 @@
                         "instant": "2020-10-19T00:22:48.218Z"
                     }
                 }
-            ]
+            ],
+            "proprietaryFinancialInstitutionType": "uk_retail_pot",
+            "providerMarket": "UK"
         },
         {
             "amount": 150.0,
@@ -758,7 +827,9 @@
                         "instant": "2020-10-19T10:39:18.687Z"
                     }
                 }
-            ]
+            ],
+            "proprietaryFinancialInstitutionType": "uk_retail_pot",
+            "providerMarket": "UK"
         },
         {
             "amount": -150.0,
@@ -781,7 +852,9 @@
                         "instant": "2020-10-19T10:39:36.918Z"
                     }
                 }
-            ]
+            ],
+            "proprietaryFinancialInstitutionType": "payport_faster_payments",
+            "providerMarket": "UK"
         },
         {
             "amount": -16.22,
@@ -804,7 +877,10 @@
                         "instant": "2020-10-19T17:57:25.391Z"
                     }
                 }
-            ]
+            ],
+            "proprietaryFinancialInstitutionType": "mastercard",
+            "merchantCategoryCode": "5812",
+            "providerMarket": "UK"
         },
         {
             "amount": -14.98,
@@ -827,7 +903,10 @@
                         "instant": "2020-10-20T13:22:30.442Z"
                     }
                 }
-            ]
+            ],
+            "proprietaryFinancialInstitutionType": "mastercard",
+            "merchantCategoryCode": "5999",
+            "providerMarket": "UK"
         },
         {
             "amount": -5.5,
@@ -850,7 +929,10 @@
                         "instant": "2020-10-20T14:15:48.584Z"
                     }
                 }
-            ]
+            ],
+            "proprietaryFinancialInstitutionType": "mastercard",
+            "merchantCategoryCode": "5812",
+            "providerMarket": "UK"
         },
         {
             "amount": -10.0,
@@ -873,7 +955,10 @@
                         "instant": "2020-10-21T09:58:55.684Z"
                     }
                 }
-            ]
+            ],
+            "proprietaryFinancialInstitutionType": "mastercard",
+            "merchantCategoryCode": "6011",
+            "providerMarket": "UK"
         },
         {
             "amount": 120.0,
@@ -896,7 +981,9 @@
                         "instant": "2020-10-22T16:53:18.620Z"
                     }
                 }
-            ]
+            ],
+            "proprietaryFinancialInstitutionType": "uk_retail_pot",
+            "providerMarket": "UK"
         },
         {
             "amount": -130.0,
@@ -919,7 +1006,9 @@
                         "instant": "2020-10-22T16:53:39.472Z"
                     }
                 }
-            ]
+            ],
+            "proprietaryFinancialInstitutionType": "payport_faster_payments",
+            "providerMarket": "UK"
         },
         {
             "amount": 355.0,
@@ -942,7 +1031,9 @@
                         "instant": "2020-10-30T10:29:46.577Z"
                     }
                 }
-            ]
+            ],
+            "proprietaryFinancialInstitutionType": "payport_faster_payments",
+            "providerMarket": "UK"
         },
         {
             "amount": -100.0,
@@ -965,7 +1056,9 @@
                         "instant": "2020-10-30T10:30:03.857Z"
                     }
                 }
-            ]
+            ],
+            "proprietaryFinancialInstitutionType": "uk_retail_pot",
+            "providerMarket": "UK"
         },
         {
             "amount": -175.0,
@@ -988,7 +1081,9 @@
                         "instant": "2020-10-30T10:30:15.765Z"
                     }
                 }
-            ]
+            ],
+            "proprietaryFinancialInstitutionType": "uk_retail_pot",
+            "providerMarket": "UK"
         },
         {
             "amount": -80.0,
@@ -1011,7 +1106,9 @@
                         "instant": "2020-10-30T10:30:49.933Z"
                     }
                 }
-            ]
+            ],
+            "proprietaryFinancialInstitutionType": "uk_retail_pot",
+            "providerMarket": "UK"
         },
         {
             "amount": 185.0,
@@ -1034,7 +1131,9 @@
                         "instant": "2020-11-01T00:46:05.433Z"
                     }
                 }
-            ]
+            ],
+            "proprietaryFinancialInstitutionType": "payport_faster_payments",
+            "providerMarket": "UK"
         },
         {
             "amount": -185.0,
@@ -1057,7 +1156,9 @@
                         "instant": "2020-11-01T00:47:02.364Z"
                     }
                 }
-            ]
+            ],
+            "proprietaryFinancialInstitutionType": "uk_retail_pot",
+            "providerMarket": "UK"
         },
         {
             "amount": 50.0,
@@ -1080,7 +1181,9 @@
                         "instant": "2020-11-01T21:36:58.661Z"
                     }
                 }
-            ]
+            ],
+            "proprietaryFinancialInstitutionType": "uk_retail_pot",
+            "providerMarket": "UK"
         },
         {
             "amount": -50.0,
@@ -1103,7 +1206,9 @@
                         "instant": "2020-11-01T21:37:28.339Z"
                     }
                 }
-            ]
+            ],
+            "proprietaryFinancialInstitutionType": "payport_faster_payments",
+            "providerMarket": "UK"
         },
         {
             "amount": 5.0,
@@ -1126,7 +1231,9 @@
                         "instant": "2020-11-02T08:38:52.952Z"
                     }
                 }
-            ]
+            ],
+            "proprietaryFinancialInstitutionType": "payport_faster_payments",
+            "providerMarket": "UK"
         },
         {
             "amount": -5.0,
@@ -1149,7 +1256,9 @@
                         "instant": "2020-11-02T08:39:17.090Z"
                     }
                 }
-            ]
+            ],
+            "proprietaryFinancialInstitutionType": "uk_retail_pot",
+            "providerMarket": "UK"
         },
         {
             "amount": 50.0,
@@ -1172,7 +1281,9 @@
                         "instant": "2020-11-04T13:03:34.791Z"
                     }
                 }
-            ]
+            ],
+            "proprietaryFinancialInstitutionType": "uk_retail_pot",
+            "providerMarket": "UK"
         },
         {
             "amount": -50.0,
@@ -1195,7 +1306,9 @@
                         "instant": "2020-11-04T13:04:42.359Z"
                     }
                 }
-            ]
+            ],
+            "proprietaryFinancialInstitutionType": "payport_faster_payments",
+            "providerMarket": "UK"
         },
         {
             "amount": 50.0,
@@ -1218,7 +1331,9 @@
                         "instant": "2020-11-04T13:28:22.892Z"
                     }
                 }
-            ]
+            ],
+            "proprietaryFinancialInstitutionType": "payport_faster_payments",
+            "providerMarket": "UK"
         }
     ],
     "identityData": {

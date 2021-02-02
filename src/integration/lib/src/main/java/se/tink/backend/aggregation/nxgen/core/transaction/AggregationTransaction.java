@@ -141,6 +141,12 @@ public abstract class AggregationTransaction {
         transaction.setDescription(getDescription());
         transaction.setDate(getDate());
         transaction.setType(getType());
+        transaction.setProprietaryFinancialInstitutionType(
+                getProprietaryFinancialInstitutionType());
+        transaction.setMerchantName(getMerchantName());
+        transaction.setMerchantCategoryCode(getMerchantCategoryCode());
+        transaction.setProviderMarket(getProviderMarket());
+        transaction.setTransactionReference(getTransactionReference());
 
         if (!Strings.isNullOrEmpty(getRawDetails()) || multiCurrencyEnabled) {
             transaction.setPayload(
