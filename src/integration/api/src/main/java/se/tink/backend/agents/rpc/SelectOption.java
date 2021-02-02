@@ -1,6 +1,8 @@
 package se.tink.backend.agents.rpc;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SelectOption {
@@ -14,7 +16,11 @@ public class SelectOption {
         this.iconUrl = null;
     }
 
-    public SelectOption(String text, String value, String iconUrl) {
+    @JsonCreator
+    public SelectOption(
+            @JsonProperty("text") String text,
+            @JsonProperty("value") String value,
+            @JsonProperty("iconUrl") String iconUrl) {
         this.text = text;
         this.value = value;
         this.iconUrl = iconUrl;
