@@ -2,7 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.un
 
 import static se.tink.libraries.date.ThreadSafeDateFormat.FORMATTER_DAILY;
 
+import com.google.common.collect.ImmutableList;
 import java.text.ParseException;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
@@ -19,6 +21,12 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 @RequiredArgsConstructor
 public class UnicreditAuthenticator {
+
+    private static final List<ErrorCodes> INVALID_CONSENT_ERROR_CODES =
+            ImmutableList.of(
+                    ErrorCodes.CONSENT_INVALID,
+                    ErrorCodes.CONSENT_EXPIRED,
+                    ErrorCodes.CONSENT_UNKNOWN);
 
     private final UnicreditPersistentStorage unicreditStorage;
     private final UnicreditBaseApiClient apiClient;
@@ -65,9 +73,9 @@ public class UnicreditAuthenticator {
     }
 
     private boolean isInvalidConsentException(HttpResponseException httpResponseException) {
-        final String message = httpResponseException.getResponse().getBody(String.class);
-        return message.contains(ErrorCodes.CONSENT_INVALID.name())
-                || message.contains(ErrorCodes.CONSENT_EXPIRED.name())
-                || message.contains(ErrorCodes.CONSENT_UNKNOWN.name());
+        final String responseBody = httpResponseException.getResponse().getBody(String.class);
+        return INVALID_CONSENT_ERROR_CODES.stream()
+                .map(ErrorCodes::name)
+                .anyMatch(responseBody::contains);
     }
 }

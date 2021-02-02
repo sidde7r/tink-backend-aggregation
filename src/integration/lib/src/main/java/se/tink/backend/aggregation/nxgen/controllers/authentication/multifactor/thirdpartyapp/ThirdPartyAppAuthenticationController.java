@@ -42,18 +42,6 @@ public class ThirdPartyAppAuthenticationController<T> implements TypedAuthentica
     }
 
     @Override
-    public void authenticate(Credentials credentials)
-            throws AuthenticationException, AuthorizationException {
-        ThirdPartyAppResponse<T> response = authenticator.init();
-
-        openThirdPartyApp();
-
-        handleStatus(response.getStatus());
-
-        this.response = poll(response);
-    }
-
-    @Override
     public CredentialsTypes getType() {
         return CredentialsTypes.THIRD_PARTY_APP;
     }
@@ -94,6 +82,18 @@ public class ThirdPartyAppAuthenticationController<T> implements TypedAuthentica
                 throw new IllegalStateException(
                         String.format("Unknown status: %s", status.toString()));
         }
+    }
+
+    @Override
+    public void authenticate(Credentials credentials)
+            throws AuthenticationException, AuthorizationException {
+        ThirdPartyAppResponse<T> response = authenticator.init();
+
+        openThirdPartyApp();
+
+        handleStatus(response.getStatus());
+
+        this.response = poll(response);
     }
 
     public ThirdPartyAppResponse<T> getResponse() {

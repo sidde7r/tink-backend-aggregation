@@ -14,6 +14,7 @@ java_library(
         "//src/libraries/i18n",
         "//third_party:com_github_rholder_guava_retrying",
         "//third_party:com_google_inject_guice",
+        "//third_party:lombok_libs",
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
         "@aggregation//:com_google_guava_guava",
     ],

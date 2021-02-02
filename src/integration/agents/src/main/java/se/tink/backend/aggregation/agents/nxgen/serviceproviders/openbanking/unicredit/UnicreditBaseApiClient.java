@@ -5,6 +5,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Optional;
 import javax.ws.rs.core.MediaType;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants.Endpoints;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants.FormValues;
@@ -39,6 +40,7 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
 @Slf4j
+@RequiredArgsConstructor
 public class UnicreditBaseApiClient {
 
     private static final DateTimeFormatter CONSENT_BODY_DATE_FORMATTER =
@@ -48,17 +50,6 @@ public class UnicreditBaseApiClient {
     protected final UnicreditPersistentStorage unicreditStorage;
     protected final UnicreditProviderConfiguration providerConfiguration;
     protected final UnicreditBaseHeaderValues headerValues;
-
-    public UnicreditBaseApiClient(
-            TinkHttpClient client,
-            UnicreditPersistentStorage unicreditStorage,
-            UnicreditProviderConfiguration providerConfiguration,
-            UnicreditBaseHeaderValues headerValues) {
-        this.client = client;
-        this.unicreditStorage = unicreditStorage;
-        this.providerConfiguration = providerConfiguration;
-        this.headerValues = headerValues;
-    }
 
     protected ConsentRequest getConsentRequest() {
         LocalDateTime validUntil =
