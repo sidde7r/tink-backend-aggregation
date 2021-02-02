@@ -93,6 +93,7 @@ public final class FiduciaAgent extends NextGenerationAgent
     protected Authenticator constructAuthenticator() {
         FiduciaAuthenticator fiduciaAuthenticator =
                 new FiduciaAuthenticator(
+                        credentials,
                         apiClient,
                         persistentStorage,
                         sessionStorage,

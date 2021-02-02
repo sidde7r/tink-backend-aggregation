@@ -11,6 +11,10 @@ import static org.mockito.Mockito.when;
 
 import com.google.common.collect.ImmutableMap;
 import java.nio.file.Paths;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +32,7 @@ import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants.CredentialKeys;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants.StorageKeys;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.rpc.ConsentDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.rpc.ConsentStatus;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.rpc.ScaResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.rpc.ScaStatusResponse;
@@ -51,6 +56,7 @@ public class FiduciaAuthenticatorTest {
     private static final String SCA_METHOD_ID_CHIP_TAN = "962";
     private static final String AUTH_PATH =
             "/v1/consents/dummy_consent_id/authorisations/dummy_authorization_id";
+    private static final String CONSENT_VALID_UNTIL = "2021-03-17";
 
     private FiduciaAuthenticator authenticator;
     private FiduciaApiClient apiClient;
@@ -70,8 +76,11 @@ public class FiduciaAuthenticatorTest {
         supplementalInformationHelper = mock(SupplementalInformationHelper.class);
         Catalog catalog = mock(Catalog.class);
 
+        credentials = new Credentials();
+
         authenticator =
                 new FiduciaAuthenticator(
+                        credentials,
                         apiClient,
                         persistentStorage,
                         sessionStorage,
@@ -88,7 +97,6 @@ public class FiduciaAuthenticatorTest {
     }
 
     private void beforeFullAuth() {
-        credentials = new Credentials();
         credentials.setFields(
                 ImmutableMap.of(
                         CredentialKeys.PSU_ID, USERNAME, CredentialKeys.PASSWORD, PASSWORD));
@@ -113,6 +121,12 @@ public class FiduciaAuthenticatorTest {
                         SerializationUtils.deserializeFromString(
                                 Paths.get(TEST_DATA_PATH, "scaFinalised.json").toFile(),
                                 ScaStatusResponse.class));
+        when(apiClient.getConsentDetails(CONSENT_ID))
+                .thenReturn(
+                        SerializationUtils.deserializeFromString(
+                                Paths.get(TEST_DATA_PATH, "consentDetailsValidConsentResponse.json")
+                                        .toFile(),
+                                ConsentDetailsResponse.class));
 
         // when
         authenticator.authenticate(credentials);
@@ -123,6 +137,7 @@ public class FiduciaAuthenticatorTest {
         verify(apiClient).createConsent();
         verify(apiClient).authorizeConsent(CONSENT_ID, PASSWORD);
         verify(apiClient).authorizeWithOtpCode(AUTH_PATH, OTP_CODE);
+        verify(apiClient).getConsentDetails(CONSENT_ID);
         verifyNoMoreInteractions(apiClient);
 
         // and verify supplement interactions
@@ -130,6 +145,8 @@ public class FiduciaAuthenticatorTest {
         List<Field> allValues = fieldCaptor.getAllValues();
         assertThat(allValues).hasSize(1);
         assertThat(allValues.get(0).getName()).isEqualTo("tanField");
+
+        assertThat(credentials.getSessionExpiryDate()).isEqualTo(parseIsoDate(CONSENT_VALID_UNTIL));
     }
 
     @Test
@@ -153,6 +170,13 @@ public class FiduciaAuthenticatorTest {
                         SerializationUtils.deserializeFromString(
                                 Paths.get(TEST_DATA_PATH, "scaFinalised.json").toFile(),
                                 ScaStatusResponse.class));
+        when(apiClient.getConsentDetails(CONSENT_ID))
+                .thenReturn(
+                        SerializationUtils.deserializeFromString(
+                                Paths.get(TEST_DATA_PATH, "consentDetailsValidConsentResponse.json")
+                                        .toFile(),
+                                ConsentDetailsResponse.class));
+
         // when
         authenticator.authenticate(credentials);
 
@@ -163,6 +187,7 @@ public class FiduciaAuthenticatorTest {
         verify(apiClient).authorizeConsent(CONSENT_ID, PASSWORD);
         verify(apiClient).authorizeWithOtpCode(AUTH_PATH, OTP_CODE);
         verify(apiClient).selectAuthMethod(AUTH_PATH, SCA_METHOD_ID_CHIP_TAN);
+        verify(apiClient).getConsentDetails(CONSENT_ID);
         verifyNoMoreInteractions(apiClient);
 
         // and verify supplement interactions
@@ -174,6 +199,8 @@ public class FiduciaAuthenticatorTest {
         assertThat(allValues.get(1).getName()).isEqualTo("startcodeField");
         assertThat(allValues.get(1).getValue()).isEqualTo(STARTCODE);
         assertThat(allValues.get(2).getName()).isEqualTo("tanField");
+
+        assertThat(credentials.getSessionExpiryDate()).isEqualTo(parseIsoDate(CONSENT_VALID_UNTIL));
     }
 
     @Test
@@ -183,14 +210,17 @@ public class FiduciaAuthenticatorTest {
         String consentId = "consentId";
         when(persistentStorage.get(StorageKeys.CONSENT_ID, String.class))
                 .thenReturn(Optional.of(consentId));
-        when(apiClient.getConsentStatus(consentId)).thenReturn(ConsentStatus.VALID);
+        when(apiClient.getConsentDetails(consentId))
+                .thenReturn(consentDetailsResponse(ConsentStatus.VALID, "2017-01-14"));
 
         // when
         authenticator.autoAuthenticate();
 
         // then
         verify(persistentStorage).get(StorageKeys.CONSENT_ID, String.class);
-        verify(apiClient).getConsentStatus(consentId);
+        verify(apiClient).getConsentDetails(consentId);
+
+        assertThat(credentials.getSessionExpiryDate()).isEqualTo(parseIsoDate("2017-01-14"));
     }
 
     @Test
@@ -207,6 +237,8 @@ public class FiduciaAuthenticatorTest {
                 .isInstanceOf(SessionException.class)
                 .hasMessage("Cause: SessionError.SESSION_EXPIRED");
         verify(persistentStorage).get(StorageKeys.CONSENT_ID, String.class);
+
+        assertThat(credentials.getSessionExpiryDate()).isNull();
     }
 
     @Test
@@ -215,7 +247,8 @@ public class FiduciaAuthenticatorTest {
         String consentId = "consentId";
         when(persistentStorage.get(StorageKeys.CONSENT_ID, String.class))
                 .thenReturn(Optional.of(consentId));
-        when(apiClient.getConsentStatus(consentId)).thenReturn(ConsentStatus.EXPIRED);
+        when(apiClient.getConsentDetails(consentId))
+                .thenReturn(consentDetailsResponse(ConsentStatus.EXPIRED, "2021-11-19"));
 
         // when
         Throwable thrown = catchThrowable(() -> authenticator.autoAuthenticate());
@@ -225,6 +258,21 @@ public class FiduciaAuthenticatorTest {
                 .isInstanceOf(SessionException.class)
                 .hasMessage("Cause: SessionError.SESSION_EXPIRED");
         verify(persistentStorage).get(StorageKeys.CONSENT_ID, String.class);
-        verify(apiClient).getConsentStatus(consentId);
+        verify(apiClient).getConsentDetails(consentId);
+
+        assertThat(credentials.getSessionExpiryDate()).isNull();
+    }
+
+    private ConsentDetailsResponse consentDetailsResponse(
+            ConsentStatus consentStatus, String validUntil) {
+        return new ConsentDetailsResponse(
+                consentStatus.name(), LocalDate.parse(validUntil, DateTimeFormatter.ISO_DATE));
+    }
+
+    private static Date parseIsoDate(String date) {
+        return Date.from(
+                LocalDate.parse(date, DateTimeFormatter.ISO_DATE)
+                        .atStartOfDay(ZoneId.systemDefault())
+                        .toInstant());
     }
 }

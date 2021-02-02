@@ -12,8 +12,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authentic
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.entities.OtpCodeBody;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.entities.PsuData;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.rpc.AuthorizeConsentRequest;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.rpc.ConsentResponse;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.rpc.ConsentStatus;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.rpc.ConsentDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.rpc.CreateConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.rpc.CreateConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.rpc.ScaResponse;
@@ -79,12 +78,11 @@ public class FiduciaApiClient {
                 .getConsentId();
     }
 
-    public ConsentStatus getConsentStatus(String consentId) {
+    public ConsentDetailsResponse getConsentDetails(String consentId) {
         return fiduciaRequestBuilder
                 .createRequest(
                         createUrl(CONSENT_ENDPOINT).parameter(CONSENT_ID, consentId), EMPTY_BODY)
-                .get(ConsentResponse.class)
-                .getConsentStatus();
+                .get(ConsentDetailsResponse.class);
     }
 
     public ScaResponse authorizeConsent(String consentId, String password) {
