@@ -8,10 +8,14 @@ import java.util.Optional;
 import se.tink.backend.aggregation.agents.Href;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.SocieteGeneraleConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.creditcard.CreditCardModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
+import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
@@ -35,6 +39,8 @@ public class AccountsItemEntity {
     private String psuStatus;
 
     private String name;
+
+    private String linkedAccount;
 
     private String bicFi;
 
@@ -63,6 +69,31 @@ public class AccountsItemEntity {
                 .build();
     }
 
+    public CreditCardAccount toTinkCreditCard() {
+        return CreditCardAccount.nxBuilder()
+                .withCardDetails(
+                        CreditCardModule.builder()
+                                .withCardNumber(accountIdEntity.getOther().getIdentification())
+                                .withBalance(getBalance())
+                                .withAvailableCredit(ExactCurrencyAmount.of(0, "EUR"))
+                                .withCardAlias(name)
+                                .build())
+                .withInferredAccountFlags()
+                .withId(
+                        IdModule.builder()
+                                .withUniqueIdentifier(resourceId)
+                                .withAccountNumber(linkedAccount)
+                                .withAccountName(name)
+                                .addIdentifier(
+                                        AccountIdentifier.create(
+                                                Type.PAYMENT_CARD_NUMBER,
+                                                accountIdEntity.getOther().getIdentification()))
+                                .setProductName(name)
+                                .build())
+                .setApiIdentifier(resourceId)
+                .build();
+    }
+
     private TransactionalAccountType getAccountType() {
         return CashAccountTypeEntity.CACC != cashAccountType
                 ? TransactionalAccountType.SAVINGS
@@ -86,5 +117,9 @@ public class AccountsItemEntity {
                         () ->
                                 new IllegalStateException(
                                         SocieteGeneraleConstants.ErrorMessages.MISSING_BALANCE));
+    }
+
+    public boolean isCreditCard() {
+        return CashAccountTypeEntity.CARD == cashAccountType;
     }
 }

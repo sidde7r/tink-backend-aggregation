@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale;
 
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CREDIT_CARDS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.IDENTITY_DATA;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.LIST_BENEFICIARIES;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
@@ -16,6 +17,7 @@ import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.RefreshBeneficiariesExecutor;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
@@ -24,6 +26,7 @@ import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.a
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.authenticator.SocieteGeneraleAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.configuration.SocieteGeneraleConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.executor.payment.SocieteGeneralePaymentExecutor;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.fetcher.card.SocieteGeneraleCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.fetcher.transactionalaccount.SocieteGeneraleIdentityDataFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.fetcher.transactionalaccount.SocieteGeneraleTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.fetcher.transactionalaccount.SocieteGeneraleTransactionalAccountFetcher;
@@ -40,6 +43,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.Au
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
@@ -52,18 +56,21 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
     LIST_BENEFICIARIES,
     SAVINGS_ACCOUNTS,
     IDENTITY_DATA,
-    TRANSFERS
+    TRANSFERS,
+    CREDIT_CARDS
 })
 public final class SocieteGeneraleAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor,
                 RefreshIdentityDataExecutor,
-                RefreshBeneficiariesExecutor {
+                RefreshBeneficiariesExecutor,
+                RefreshCreditCardAccountsExecutor {
 
     private final SocieteGeneraleApiClient apiClient;
     private final SocieteGeneraleAuthenticator authenticator;
 
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
+    private final CreditCardRefreshController creditCardRefreshController;
     private final SocieteGeneraleIdentityDataFetcher societeGeneraleIdentityDataFetcher;
     private final AgentConfiguration<SocieteGeneraleConfiguration> agentConfiguration;
     private final TransferDestinationRefreshController transferDestinationRefreshController;
@@ -93,9 +100,20 @@ public final class SocieteGeneraleAgent extends NextGenerationAgent
 
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
 
+        creditCardRefreshController = constructCreditCardRefresher();
         societeGeneraleIdentityDataFetcher = new SocieteGeneraleIdentityDataFetcher(apiClient);
 
         transferDestinationRefreshController = constructTransferDestinationRefreshController();
+    }
+
+    @Override
+    public FetchAccountsResponse fetchCreditCardAccounts() {
+        return creditCardRefreshController.fetchCreditCardAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCreditCardTransactions() {
+        return creditCardRefreshController.fetchCreditCardTransactions();
     }
 
     @Override
@@ -171,6 +189,20 @@ public final class SocieteGeneraleAgent extends NextGenerationAgent
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
                         new TransactionKeyPaginationController<>(transactionFetcher)));
+    }
+
+    private CreditCardRefreshController constructCreditCardRefresher() {
+        SocieteGeneraleCreditCardFetcher societeGeneraleCreditCardFetcher =
+                new SocieteGeneraleCreditCardFetcher(apiClient);
+
+        return new CreditCardRefreshController(
+                metricRefreshController,
+                updateController,
+                societeGeneraleCreditCardFetcher,
+                new TransactionFetcherController<>(
+                        transactionPaginationHelper,
+                        new TransactionKeyPaginationController<>(
+                                societeGeneraleCreditCardFetcher)));
     }
 
     private TransferDestinationRefreshController constructTransferDestinationRefreshController() {
