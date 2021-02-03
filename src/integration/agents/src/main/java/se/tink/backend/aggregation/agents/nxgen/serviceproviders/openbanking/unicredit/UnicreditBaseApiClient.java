@@ -16,10 +16,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uni
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.authenticator.entity.UnicreditConsentAccessEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.authenticator.rpc.ConsentDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.authenticator.rpc.ConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.authenticator.rpc.ConsentResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.authenticator.rpc.ConsentStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.authenticator.rpc.UnicreditConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.configuration.UnicreditProviderConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.executor.payment.enums.UnicreditPaymentProduct;
@@ -31,6 +29,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uni
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.fetcher.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.fetcher.transactionalaccount.rpc.BalancesResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.fetcher.transactionalaccount.rpc.TransactionsResponse;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentDetailsResponse;
 import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -47,7 +46,7 @@ public class UnicreditBaseApiClient {
             DateTimeFormatter.ofPattern(Formats.DEFAULT_DATE_FORMAT);
 
     private final TinkHttpClient client;
-    protected final UnicreditPersistentStorage unicreditStorage;
+    protected final UnicreditStorage unicreditStorage;
     protected final UnicreditProviderConfiguration providerConfiguration;
     protected final UnicreditBaseHeaderValues headerValues;
 
@@ -109,14 +108,6 @@ public class UnicreditBaseApiClient {
                                 .queryParam(HeaderKeys.CODE, HeaderValues.CODE))
                 .header(HeaderKeys.TPP_REDIRECT_PREFERED, true) // true for redirect auth
                 .post(getConsentResponseType(), getConsentRequest());
-    }
-
-    public ConsentStatusResponse getConsentStatus() {
-        return createRequest(
-                        new URL(providerConfiguration.getBaseUrl() + Endpoints.CONSENT_STATUS)
-                                .parameter(PathParameters.CONSENT_ID, getConsentIdFromStorage()))
-                .header(HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId())
-                .get(ConsentStatusResponse.class);
     }
 
     public ConsentDetailsResponse getConsentDetails() {

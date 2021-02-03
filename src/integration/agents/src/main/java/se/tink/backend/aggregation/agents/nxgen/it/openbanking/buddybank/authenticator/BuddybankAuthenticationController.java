@@ -13,7 +13,7 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.buddybank.authenticator.rpc.BuddybankCreateConsentResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.authenticator.rpc.ConsentStatusResponse;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentDetailsResponse;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.CommonFields;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
@@ -74,9 +74,9 @@ public class BuddybankAuthenticationController implements Authenticator {
     }
 
     private void awaitConsentResponse() {
-        Retryer<ConsentStatusResponse> consentStatusRetryer = getConsentStatusRetryer();
+        Retryer<ConsentDetailsResponse> consentDetailsRetryer = getConsentDetailsRetryer();
         try {
-            consentStatusRetryer.call(authenticator::getConsentStatus);
+            consentDetailsRetryer.call(authenticator::getConsentDetails);
         } catch (RetryException e) {
             throw new IllegalStateException("Authorization status error!");
         } catch (ExecutionException e) {
@@ -84,9 +84,9 @@ public class BuddybankAuthenticationController implements Authenticator {
         }
     }
 
-    private Retryer<ConsentStatusResponse> getConsentStatusRetryer() {
-        return RetryerBuilder.<ConsentStatusResponse>newBuilder()
-                .retryIfResult(status -> !Objects.isNull(status) && !status.isValidConsent())
+    private Retryer<ConsentDetailsResponse> getConsentDetailsRetryer() {
+        return RetryerBuilder.<ConsentDetailsResponse>newBuilder()
+                .retryIfResult(status -> !Objects.isNull(status) && !status.isValid())
                 .withWaitStrategy(WaitStrategies.fixedWait(SLEEP_TIME, TimeUnit.SECONDS))
                 .withStopStrategy(StopStrategies.stopAfterAttempt(RETRY_ATTEMPTS))
                 .build();

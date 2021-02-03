@@ -1,0 +1,12 @@
+{
+    "consentStatus": "received",
+    "consentId": "SAMPLE_CONSENT_ID",
+    "_links": {
+        "scaRedirect": {
+            "href": "https://some.redirect.url"
+        },
+        "scaStatus": {
+            "href": "https://some.sca.status.url"
+        }
+    }
+}

@@ -34,7 +34,7 @@ public abstract class UnicreditBaseAgent extends NextGenerationAgent
                 RefreshTransferDestinationExecutor {
 
     protected final UnicreditBaseApiClient apiClient;
-    protected final UnicreditPersistentStorage unicreditStorage;
+    protected final UnicreditStorage unicreditStorage;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
     public UnicreditBaseAgent(
@@ -43,8 +43,8 @@ public abstract class UnicreditBaseAgent extends NextGenerationAgent
         super(componentProvider);
 
         UnicreditBaseHeaderValues headerValues = setupHeaderValues(componentProvider);
+        unicreditStorage = new UnicreditStorage(getPersistentStorage());
         apiClient = getApiClient(providerConfiguration, headerValues);
-        unicreditStorage = new UnicreditPersistentStorage(getPersistentStorage());
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
 

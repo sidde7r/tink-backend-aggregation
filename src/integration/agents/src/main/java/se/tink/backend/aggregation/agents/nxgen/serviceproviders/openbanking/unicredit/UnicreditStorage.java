@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 @RequiredArgsConstructor
-public class UnicreditPersistentStorage {
+public class UnicreditStorage {
 
     private final PersistentStorage persistentStorage;
 

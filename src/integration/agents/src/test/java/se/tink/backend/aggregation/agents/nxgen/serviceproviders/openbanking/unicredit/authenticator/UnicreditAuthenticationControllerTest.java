@@ -10,11 +10,14 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants.StorageKeys.CONSENT_ID;
-import static se.tink.libraries.date.ThreadSafeDateFormat.FORMATTER_DAILY;
 
 import com.google.common.collect.ImmutableMap;
+import java.nio.file.Paths;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
+import java.util.Date;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -33,10 +36,11 @@ import se.tink.backend.aggregation.agents.exceptions.agent.AgentException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditBaseApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditPersistentStorage;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.authenticator.rpc.ConsentDetailsResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.authenticator.rpc.ConsentResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.authenticator.rpc.ConsentStatusResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.authenticator.rpc.UnicreditConsentResponse;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentDetailsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
@@ -45,6 +49,7 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @RunWith(JUnitParamsRunner.class)
 public class UnicreditAuthenticationControllerTest {
@@ -53,18 +58,29 @@ public class UnicreditAuthenticationControllerTest {
             new StrongAuthenticationState("STRONG_AUTHENTICATION_STATE");
 
     /*
-     * Mock
-     */
+     Test data
+    */
+    private static final String TEST_DATA_PATH =
+            "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/unicredit/resources";
+
+    public static final String CONSENT_ID = "SAMPLE_CONSENT_ID";
+    public static final LocalDate VALID_UNTIL =
+            LocalDate.parse("2020-03-17", DateTimeFormatter.ISO_DATE);
+    public static final Date VALID_UNTIL_AS_DATE = localDateToDate(VALID_UNTIL);
+
+    /*
+     Mock
+    */
     private UnicreditBaseApiClient apiClientMock;
     private SupplementalInformationHelper supplementalInformationHelperMock;
 
     private InOrder mocksInOrder;
 
     /*
-     * Real
-     */
+     Real
+    */
     private PersistentStorage persistentStorage;
-    private UnicreditPersistentStorage unicreditStorage;
+    private UnicreditStorage unicreditStorage;
     private Credentials credentials;
     private UnicreditAuthenticationController authenticatorController;
     private ThirdPartyAppAuthenticationController<String> thirdPartyAppAuthenticationController;
@@ -79,7 +95,7 @@ public class UnicreditAuthenticationControllerTest {
         mockUserImmediatelyComesBackFromThirdPartyUrl();
 
         persistentStorage = new PersistentStorage();
-        unicreditStorage = new UnicreditPersistentStorage(persistentStorage);
+        unicreditStorage = new UnicreditStorage(persistentStorage);
         credentials = new Credentials();
 
         UnicreditAuthenticator authenticator =
@@ -96,72 +112,36 @@ public class UnicreditAuthenticationControllerTest {
 
     @Test
     @SneakyThrows
-    @Parameters({"2010-04-12", "2030-05-01"})
-    public void should_save_consent_id_and_set_session_expiry_date_on_successful_manual_auth(
-            String consentValidUntil) {
+    public void should_save_consent_id_and_set_session_expiry_date_on_successful_manual_auth() {
         // given
-        ConsentResponse consentResponse =
-                mockApiReturnsNewConsentWithIdAndScaRedirect(
-                        "SAMPLE_CONSENT_ID", "https://sca.redirect.com");
-
-        mockConsentHasValidStatus();
-        mockConsentIsValidUntil(consentValidUntil);
+        ConsentResponse consentResponse = mockCreateConsentResponse("createConsentResponse.json");
+        mockConsentDetailsResponse("validConsentDetails.json");
 
         // when
         thirdPartyAppAuthenticationController.authenticate(credentials);
 
         // then
-        assertThat(getConsentIdFromPersistentStorage()).hasValue("SAMPLE_CONSENT_ID");
-        assertThat(credentials.getSessionExpiryDate())
-                .isEqualTo(FORMATTER_DAILY.parse(consentValidUntil));
+        assertThat(getConsentIdFromPersistentStorage()).hasValue(CONSENT_ID);
+        assertThat(credentials.getSessionExpiryDate()).isEqualTo(VALID_UNTIL_AS_DATE);
 
         verifyConsentCreation(consentResponse);
         verifyRedirectingAndWaitingForUser(consentResponse);
-        verifyGettingConsentStatus();
-        verifyGettingConsentValidUntilDate();
+        verifyGettingConsentDetails();
         verifyNoMoreMockInteractions();
     }
 
     @Test
-    @Parameters({"2010/04/12", "01-05-2030"})
+    @Parameters({"EXPIRED", "REVOKED_BY_PSU", "@!%^#$"})
     public void
-            should_throw_third_party_authentication_error_when_consent_valid_until_date_has_invalid_format_in_manual_auth(
-                    String consentValidUntil) {
+            should_throw_third_party_authentication_error_and_clear_consent_when_consent_is_invalid_in_manual_auth(
+                    String consentStatus) {
         // given
-        ConsentResponse consentResponse =
-                mockApiReturnsNewConsentWithIdAndScaRedirect(
-                        "SAMPLE_CONSENT_ID_0", "https://sca.redirect0.com");
+        ConsentResponse consentResponse = mockCreateConsentResponse("createConsentResponse.json");
 
-        mockConsentHasValidStatus();
-        mockConsentIsValidUntil(consentValidUntil);
-
-        // when
-        Throwable throwable =
-                catchThrowable(
-                        () -> thirdPartyAppAuthenticationController.authenticate(credentials));
-
-        // then
-        assertExceptionIsEqualToAgentExceptionFromUsersPerspective(
-                throwable, ThirdPartyAppError.AUTHENTICATION_ERROR.exception());
-
-        assertThat(getConsentIdFromPersistentStorage()).hasValue("SAMPLE_CONSENT_ID_0");
-
-        verifyConsentCreation(consentResponse);
-        verifyRedirectingAndWaitingForUser(consentResponse);
-        verifyGettingConsentStatus();
-        verifyGettingConsentValidUntilDate();
-        verifyNoMoreMockInteractions();
-    }
-
-    @Test
-    public void
-            should_throw_third_party_authentication_error_and_clear_consent_when_consent_is_invalid_in_manual_auth() {
-        // given
-        ConsentResponse consentResponse =
-                mockApiReturnsNewConsentWithIdAndScaRedirect(
-                        "INVALID_MANUAL_AUTH_CONSENT_ID", "https://sca.redirect321.com");
-
-        mockConsentHasInvalidStatus();
+        ConsentDetailsResponse consentDetailsResponse =
+                consentDetailsResponseFromFile("validConsentDetails.json");
+        consentDetailsResponse.setConsentStatus(consentStatus);
+        mockConsentDetailsResponse(consentDetailsResponse);
 
         // when
         Throwable throwable =
@@ -176,7 +156,7 @@ public class UnicreditAuthenticationControllerTest {
 
         verifyConsentCreation(consentResponse);
         verifyRedirectingAndWaitingForUser(consentResponse);
-        verifyGettingConsentStatus();
+        verifyGettingConsentDetails();
         verifyNoMoreMockInteractions();
     }
 
@@ -186,12 +166,10 @@ public class UnicreditAuthenticationControllerTest {
             should_throw_third_party_authentication_error_and_clear_consent_when_consent_is_invalid_by_hre_in_manual_auth(
                     String hreMessage) {
         // given
-        ConsentResponse consentResponse =
-                mockApiReturnsNewConsentWithIdAndScaRedirect(
-                        "INVALID_MANUAL_AUTH_CONSENT_ID_12345", "https://sca.redirect12345.com");
+        ConsentResponse consentResponse = mockCreateConsentResponse("createConsentResponse.json");
 
         HttpResponseException hre = responseExceptionWithMessage(hreMessage);
-        mockGettingConsentStatusThrowsException(hre);
+        mockGettingConsentDetailsThrowsException(hre);
 
         // when
         Throwable throwable =
@@ -206,7 +184,7 @@ public class UnicreditAuthenticationControllerTest {
 
         verifyConsentCreation(consentResponse);
         verifyRedirectingAndWaitingForUser(consentResponse);
-        verifyGettingConsentStatus();
+        verifyGettingConsentDetails();
         verifyNoMoreMockInteractions();
     }
 
@@ -215,12 +193,10 @@ public class UnicreditAuthenticationControllerTest {
     public void should_rethrow_consent_status_fetching_hre_that_has_unknown_message_in_manual_auth(
             String hreMessage) {
         // given
-        ConsentResponse consentResponse =
-                mockApiReturnsNewConsentWithIdAndScaRedirect(
-                        "INVALID_MANUAL_AUTH_CONSENT_ID_777", "https://sca.redirect777.com");
+        ConsentResponse consentResponse = mockCreateConsentResponse("createConsentResponse.json");
 
         HttpResponseException hre = responseExceptionWithMessage(hreMessage);
-        mockGettingConsentStatusThrowsException(hre);
+        mockGettingConsentDetailsThrowsException(hre);
 
         // when
         Throwable throwable =
@@ -229,12 +205,11 @@ public class UnicreditAuthenticationControllerTest {
 
         // then
         assertThat(throwable).isEqualTo(hre);
-        assertThat(getConsentIdFromPersistentStorage())
-                .hasValue("INVALID_MANUAL_AUTH_CONSENT_ID_777");
+        assertThat(getConsentIdFromPersistentStorage()).hasValue(CONSENT_ID);
 
         verifyConsentCreation(consentResponse);
         verifyRedirectingAndWaitingForUser(consentResponse);
-        verifyGettingConsentStatus();
+        verifyGettingConsentDetails();
         verifyNoMoreMockInteractions();
     }
 
@@ -250,12 +225,17 @@ public class UnicreditAuthenticationControllerTest {
     }
 
     @Test
+    @Parameters({"EXPIRED", "REVOKED_BY_PSU", "@!%^#$"})
     public void
-            should_clear_consent_and_throw_session_expired_exception_when_consent_saved_is_invalid_in_auto_auth() {
+            should_clear_consent_and_throw_session_expired_exception_when_consent_saved_is_invalid_in_auto_auth(
+                    String consentStatus) {
         // given
-        unicreditStorage.saveConsentId("INVALID_CONSENT_ID1");
+        unicreditStorage.saveConsentId(CONSENT_ID);
 
-        mockConsentHasInvalidStatus();
+        ConsentDetailsResponse consentDetailsResponse =
+                consentDetailsResponseFromFile("validConsentDetails.json");
+        consentDetailsResponse.setConsentStatus(consentStatus);
+        mockConsentDetailsResponse(consentDetailsResponse);
 
         // when
         Throwable throwable = catchThrowable(() -> authenticatorController.autoAuthenticate());
@@ -263,7 +243,10 @@ public class UnicreditAuthenticationControllerTest {
         // then
         assertExceptionIsEqualToAgentExceptionFromUsersPerspective(
                 throwable, SessionError.SESSION_EXPIRED.exception());
+
         assertThat(getConsentIdFromPersistentStorage()).isEmpty();
+
+        verifyGettingConsentDetails();
     }
 
     @Test
@@ -272,10 +255,10 @@ public class UnicreditAuthenticationControllerTest {
             should_throw_third_party_authentication_error_and_clear_consent_when_consent_is_invalid_by_hre_in_auto_auth(
                     String hreMessage) {
         // given
-        unicreditStorage.saveConsentId("INVALID_CONSENT_ID2");
+        unicreditStorage.saveConsentId(CONSENT_ID);
 
         HttpResponseException hre = responseExceptionWithMessage(hreMessage);
-        mockGettingConsentStatusThrowsException(hre);
+        mockGettingConsentDetailsThrowsException(hre);
 
         // when
         Throwable throwable = catchThrowable(() -> authenticatorController.autoAuthenticate());
@@ -283,7 +266,10 @@ public class UnicreditAuthenticationControllerTest {
         // then
         assertExceptionIsEqualToAgentExceptionFromUsersPerspective(
                 throwable, SessionError.SESSION_EXPIRED.exception());
+
         assertThat(getConsentIdFromPersistentStorage()).isEmpty();
+
+        verifyGettingConsentDetails();
     }
 
     @Test
@@ -291,64 +277,38 @@ public class UnicreditAuthenticationControllerTest {
     public void should_rethrow_consent_status_fetching_hre_that_has_unknown_message_in_auto_auth(
             String hreMessage) {
         // given
-        unicreditStorage.saveConsentId("INVALID_CONSENT_ID3");
+        unicreditStorage.saveConsentId("INVALID_CONSENT_ID123");
 
         HttpResponseException hre = responseExceptionWithMessage(hreMessage);
-        mockGettingConsentStatusThrowsException(hre);
+        mockGettingConsentDetailsThrowsException(hre);
 
         // when
         Throwable throwable = catchThrowable(() -> authenticatorController.autoAuthenticate());
 
         // then
         assertThat(throwable).isEqualTo(hre);
-        assertThat(getConsentIdFromPersistentStorage()).hasValue("INVALID_CONSENT_ID3");
+
+        assertThat(getConsentIdFromPersistentStorage()).hasValue("INVALID_CONSENT_ID123");
+
+        verifyGettingConsentDetails();
     }
 
     @Test
     @SneakyThrows
-    @Parameters({"2010-11-11", "2040-05-14"})
-    public void should_set_session_expiry_date_on_successful_auto_auth(String consentValidUntil) {
+    public void should_set_session_expiry_date_on_successful_auto_auth() {
         // given
-        unicreditStorage.saveConsentId("SAMPLE_CONSENT_ID_123");
+        unicreditStorage.saveConsentId(CONSENT_ID);
 
-        mockConsentHasValidStatus();
-        mockConsentIsValidUntil(consentValidUntil);
+        mockConsentDetailsResponse("validConsentDetails.json");
 
         // when
         authenticatorController.autoAuthenticate();
 
         // then
-        assertThat(unicreditStorage.getConsentId()).hasValue("SAMPLE_CONSENT_ID_123");
-        assertThat(credentials.getSessionExpiryDate())
-                .isEqualTo(FORMATTER_DAILY.parse(consentValidUntil));
+        assertThat(unicreditStorage.getConsentId()).hasValue(CONSENT_ID);
+        assertThat(credentials.getSessionExpiryDate()).isEqualTo(localDateToDate(VALID_UNTIL));
 
-        verifyGettingConsentStatus();
-        verifyGettingConsentValidUntilDate();
-        verifyNoMoreMockInteractions();
-    }
-
-    @Test
-    @Parameters({"2010/04/12", "01-05-2030"})
-    public void
-            should_throw_third_party_authentication_error_on_incorrect_consent_valid_until_date_format_in_auto_auth(
-                    String consentValidUntil) {
-        // given
-        unicreditStorage.saveConsentId("SAMPLE_CONSENT_ID_1234");
-
-        mockConsentHasValidStatus();
-        mockConsentIsValidUntil(consentValidUntil);
-
-        // when
-        Throwable throwable = catchThrowable(() -> authenticatorController.autoAuthenticate());
-
-        // then
-        assertExceptionIsEqualToAgentExceptionFromUsersPerspective(
-                throwable, ThirdPartyAppError.AUTHENTICATION_ERROR.exception());
-
-        assertThat(getConsentIdFromPersistentStorage()).hasValue("SAMPLE_CONSENT_ID_1234");
-
-        verifyGettingConsentStatus();
-        verifyGettingConsentValidUntilDate();
+        verifyGettingConsentDetails();
         verifyNoMoreMockInteractions();
     }
 
@@ -414,14 +374,10 @@ public class UnicreditAuthenticationControllerTest {
     }
 
     private Optional<String> getConsentIdFromPersistentStorage() {
-        return persistentStorage.get(CONSENT_ID, String.class);
+        return persistentStorage.get(UnicreditConstants.StorageKeys.CONSENT_ID, String.class);
     }
 
-    private void verifyGettingConsentStatus() {
-        mocksInOrder.verify(apiClientMock).getConsentStatus();
-    }
-
-    private void verifyGettingConsentValidUntilDate() {
+    private void verifyGettingConsentDetails() {
         mocksInOrder.verify(apiClientMock).getConsentDetails();
     }
 
@@ -447,19 +403,6 @@ public class UnicreditAuthenticationControllerTest {
         return exception;
     }
 
-    private ConsentResponse mockApiReturnsNewConsentWithIdAndScaRedirect(
-            String consentId, String scaRedirect) {
-        ConsentResponse consentResponse = mock(ConsentResponse.class);
-        when(consentResponse.getConsentId()).thenReturn(consentId);
-        when(consentResponse.getScaRedirect()).thenReturn(scaRedirect);
-
-        when(apiClientMock.createConsent(any())).thenReturn(consentResponse);
-        when(apiClientMock.getScaRedirectUrlFromConsentResponse(any()))
-                .thenReturn(URL.of(scaRedirect));
-
-        return consentResponse;
-    }
-
     private void mockUserImmediatelyComesBackFromThirdPartyUrl() {
         when(supplementalInformationHelperMock.waitForSupplementalInformation(
                         eq(STRONG_AUTHENTICATION_STATE.getSupplementalKey()), anyLong(), any()))
@@ -470,28 +413,41 @@ public class UnicreditAuthenticationControllerTest {
         doNothing().when(supplementalInformationHelperMock).openThirdPartyApp(any());
     }
 
-    private void mockConsentHasValidStatus() {
-        ConsentStatusResponse consentStatusResponse = mock(ConsentStatusResponse.class);
-        when(consentStatusResponse.isValidConsent()).thenReturn(true);
-
-        when(apiClientMock.getConsentStatus()).thenReturn(consentStatusResponse);
+    @SuppressWarnings("SameParameterValue")
+    private void mockConsentDetailsResponse(String file) {
+        when(apiClientMock.getConsentDetails()).thenReturn(consentDetailsResponseFromFile(file));
     }
 
-    private void mockConsentHasInvalidStatus() {
-        ConsentStatusResponse consentStatusResponse = mock(ConsentStatusResponse.class);
-        when(consentStatusResponse.isValidConsent()).thenReturn(false);
-
-        when(apiClientMock.getConsentStatus()).thenReturn(consentStatusResponse);
-    }
-
-    private void mockGettingConsentStatusThrowsException(HttpResponseException hre) {
-        when(apiClientMock.getConsentStatus()).thenThrow(hre);
-    }
-
-    private void mockConsentIsValidUntil(String validUntil) {
-        ConsentDetailsResponse consentDetailsResponse = mock(ConsentDetailsResponse.class);
-        when(consentDetailsResponse.getValidUntil()).thenReturn(validUntil);
-
+    private void mockConsentDetailsResponse(ConsentDetailsResponse consentDetailsResponse) {
         when(apiClientMock.getConsentDetails()).thenReturn(consentDetailsResponse);
+    }
+
+    @SuppressWarnings("SameParameterValue")
+    private ConsentResponse mockCreateConsentResponse(String file) {
+        ConsentResponse consentResponse = consentResponseFromFile(file);
+        when(apiClientMock.createConsent(STRONG_AUTHENTICATION_STATE.getState()))
+                .thenReturn(consentResponse);
+        when(apiClientMock.getScaRedirectUrlFromConsentResponse(consentResponse))
+                .thenReturn(URL.of(consentResponse.getScaRedirect()));
+        return consentResponse;
+    }
+
+    private void mockGettingConsentDetailsThrowsException(HttpResponseException hre) {
+        when(apiClientMock.getConsentDetails()).thenThrow(hre);
+    }
+
+    @SuppressWarnings("SameParameterValue")
+    private static Date localDateToDate(LocalDate localDate) {
+        return Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+    }
+
+    public static UnicreditConsentResponse consentResponseFromFile(String file) {
+        return SerializationUtils.deserializeFromString(
+                Paths.get(TEST_DATA_PATH, file).toFile(), UnicreditConsentResponse.class);
+    }
+
+    public static ConsentDetailsResponse consentDetailsResponseFromFile(String file) {
+        return SerializationUtils.deserializeFromString(
+                Paths.get(TEST_DATA_PATH, file).toFile(), ConsentDetailsResponse.class);
     }
 }

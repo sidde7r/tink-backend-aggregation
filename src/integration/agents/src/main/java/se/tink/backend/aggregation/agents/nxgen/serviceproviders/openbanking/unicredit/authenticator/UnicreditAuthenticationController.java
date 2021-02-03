@@ -34,7 +34,6 @@ public class UnicreditAuthenticationController
     @Override
     public void autoAuthenticate() throws SessionException, BankServiceException {
         authenticator.autoAuthenticate();
-        authenticator.setSessionExpiryDateBasedOnConsent();
     }
 
     @Override
@@ -46,12 +45,9 @@ public class UnicreditAuthenticationController
                 ThirdPartyAppConstants.WAIT_FOR_MINUTES,
                 TimeUnit.MINUTES);
 
-        if (authenticator.isSavedConsentInvalid()) {
-            authenticator.clearConsent();
+        if (!authenticator.finishManualConsentAuthorization()) {
             return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.AUTHENTICATION_ERROR);
         }
-
-        authenticator.setSessionExpiryDateBasedOnConsent();
 
         return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.DONE);
     }
