@@ -91,10 +91,10 @@
                         "importeMinimo": "0000000000000.00",
                         "limiteDiaCajeroCredito": "0",
                         "limiteCreditoCuenta": "0000000000000.00",
-                        "saldoDisponibleCredito": "0000000000000.00",
+                        "saldoDisponibleCredito": "0000000000056.79",
                         "descripcionEstado": "PODER CLI.",
                         "importeFijo": "0000000000000.00",
-                        "saldoDispuestoCredito": "0000000000000.00",
+                        "saldoDispuestoCredito": "0000000000058.05",
                         "importeAutorizado": "0000000000000.00",
                         "indicadorTarjetaDual": "I",
                         "porcentaje": "000.0000",
@@ -110,7 +110,7 @@
                     },
                     "numFavoritas": "0",
                     "saldoNoVencido": "0000000000000.00",
-                    "iban": "IBAN3"
+                    "iban": "IBAN4"
                 },
                 {
                     "saldoLimite": "0000000000000.00",
@@ -132,7 +132,7 @@
                         "saldoDisponibleCredito": "0000000000500.00",
                         "descripcionEstado": "E.EST.RENO",
                         "importeFijo": "0000000000000.00",
-                        "saldoDispuestoCredito": "0000000000000.00",
+                        "saldoDispuestoCredito": "0000000000546.56",
                         "descripcionFormaPago": "CONTADO (PAGO FIN DE MES)",
                         "importeAutorizado": "0000000000000.00",
                         "indicadorTarjetaDual": "N",
@@ -142,14 +142,14 @@
                         "tipoTarjeta": "M",
                         "limiteCreditoTarjeta": "0000000000500.00",
                         "titular": "SZYMON MYSIAK",
-                        "panToken": "9999699999999999",
+                        "panToken": "6367346783914455",
                         "codigoBloqueo": "00",
                         "limiteDebitoCuenta": "0000000000000.00",
                         "importeVencido": "0000000000000.00"
                     },
                     "numFavoritas": "0",
                     "saldoNoVencido": "0000000000000.00",
-                    "iban": "IBAN4"
+                    "iban": "IBAN5"
                 }
             ],
             "numeroRegistros": "4"

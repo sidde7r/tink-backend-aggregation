@@ -7,6 +7,7 @@ import static org.mockito.Mockito.when;
 import java.math.BigDecimal;
 import java.nio.file.Paths;
 import java.util.Collection;
+import java.util.Iterator;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoApiClient;
@@ -48,21 +49,12 @@ public class EvoBancoAccountFetcherTest {
                                 GlobalPositionResponse.class));
         // when
         Collection<TransactionalAccount> accounts = accountFetcher.fetchAccounts();
+        accounts.iterator();
 
         // then
-        TransactionalAccount savingAccount =
-                accounts.stream()
-                        .filter(account -> ACCOUNT_1_API_ID.equals(account.getApiIdentifier()))
-                        .findFirst()
-                        .orElse(null);
-        assertSavingAccountValid(savingAccount);
-        // and
-        TransactionalAccount checkingAccount =
-                accounts.stream()
-                        .filter(account -> ACCOUNT_2_API_ID.equals(account.getApiIdentifier()))
-                        .findFirst()
-                        .orElse(null);
-        assertCheckingAccountValid(checkingAccount);
+        Iterator<TransactionalAccount> iterator = accounts.iterator();
+        assertSavingAccountValid(iterator.next());
+        assertCheckingAccountValid(iterator.next());
     }
 
     @Test
