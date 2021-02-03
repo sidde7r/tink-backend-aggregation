@@ -402,6 +402,10 @@ clients:
     aggregatorIdentifier: "SBAB"
   se-avida-finans-se:
     aggregatorIdentifier: "Avida Finans SE"
+  se-axpay-production:
+    aggregatorIdentifier: "AxPay"
+  se-axpay-testing:
+    aggregatorIdentifier: "AxPay"
   se-brabank-se:
     aggregatorIdentifier: "BRABank SE"
   se-ekobanken-medlemsbank-production:
