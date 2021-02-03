@@ -954,6 +954,9 @@ public final class LansforsakringarAgent extends AbstractAgent
                     throw cancelTransfer(EndUserMessage.INVALID_OCR, InternalStatus.INVALID_OCR);
                 case "122422":
                     throw BankServiceError.BANK_SIDE_FAILURE.exception();
+                case "12231":
+                    throw cancelTransfer(
+                            EndUserMessage.USER_UNAUTHORIZED, InternalStatus.USER_UNAUTHORIZED);
                 default:
                     throw cancelTransferWithMessage(
                             String.format(
