@@ -5,7 +5,7 @@ accept: application/json
 Content-Type: application/json
 psu-id: dummy_psu_id
 
-{"access":{"allPsd2":"allAccounts"},"frequencyPerDay":"4","recurringIndicator":"true","validUntil":"9999-12-31","combinedServiceIndicator":"false"}
+{"access":{"allPsd2":"allAccounts"},"recurringIndicator":true,"validUntil":"9999-12-31","frequencyPerDay":4,"combinedServiceIndicator":false}
 
 RESPONSE 1
 201

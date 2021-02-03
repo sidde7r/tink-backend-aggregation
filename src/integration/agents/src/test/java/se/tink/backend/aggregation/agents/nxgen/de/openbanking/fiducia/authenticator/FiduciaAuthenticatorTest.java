@@ -19,8 +19,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import junitparams.JUnitParamsRunner;
+import junitparams.Parameters;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import se.tink.backend.agents.rpc.Credentials;
@@ -32,10 +35,9 @@ import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants.CredentialKeys;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants.StorageKeys;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.rpc.ConsentDetailsResponse;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.rpc.ConsentStatus;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.rpc.ScaResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.rpc.ScaStatusResponse;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentDetailsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
@@ -43,6 +45,7 @@ import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.i18n.LocalizableKey;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
+@RunWith(JUnitParamsRunner.class)
 public class FiduciaAuthenticatorTest {
 
     private static final String TEST_DATA_PATH =
@@ -210,8 +213,12 @@ public class FiduciaAuthenticatorTest {
         String consentId = "consentId";
         when(persistentStorage.get(StorageKeys.CONSENT_ID, String.class))
                 .thenReturn(Optional.of(consentId));
-        when(apiClient.getConsentDetails(consentId))
-                .thenReturn(consentDetailsResponse(ConsentStatus.VALID, "2017-01-14"));
+        when(apiClient.getConsentDetails(CONSENT_ID))
+                .thenReturn(
+                        SerializationUtils.deserializeFromString(
+                                Paths.get(TEST_DATA_PATH, "consentDetailsValidConsentResponse.json")
+                                        .toFile(),
+                                ConsentDetailsResponse.class));
 
         // when
         authenticator.autoAuthenticate();
@@ -220,7 +227,7 @@ public class FiduciaAuthenticatorTest {
         verify(persistentStorage).get(StorageKeys.CONSENT_ID, String.class);
         verify(apiClient).getConsentDetails(consentId);
 
-        assertThat(credentials.getSessionExpiryDate()).isEqualTo(parseIsoDate("2017-01-14"));
+        assertThat(credentials.getSessionExpiryDate()).isEqualTo(parseIsoDate(CONSENT_VALID_UNTIL));
     }
 
     @Test
@@ -242,13 +249,15 @@ public class FiduciaAuthenticatorTest {
     }
 
     @Test
-    public void autoAuthenticateShouldThrowExceptionIfConsentIsInvalid() {
+    @Parameters({"expired", "received", "revokedByPsu", "!%@^!"})
+    public void autoAuthenticateShouldThrowExceptionIfConsentIsInvalid(
+            String invalidConsentStatus) {
         // given
         String consentId = "consentId";
         when(persistentStorage.get(StorageKeys.CONSENT_ID, String.class))
                 .thenReturn(Optional.of(consentId));
         when(apiClient.getConsentDetails(consentId))
-                .thenReturn(consentDetailsResponse(ConsentStatus.EXPIRED, "2021-11-19"));
+                .thenReturn(consentDetailsResponse(CONSENT_ID, invalidConsentStatus, "2021-11-19"));
 
         // when
         Throwable thrown = catchThrowable(() -> authenticator.autoAuthenticate());
@@ -263,12 +272,14 @@ public class FiduciaAuthenticatorTest {
         assertThat(credentials.getSessionExpiryDate()).isNull();
     }
 
+    @SuppressWarnings("SameParameterValue")
     private ConsentDetailsResponse consentDetailsResponse(
-            ConsentStatus consentStatus, String validUntil) {
+            String consentId, String consentStatus, String validUntil) {
         return new ConsentDetailsResponse(
-                consentStatus.name(), LocalDate.parse(validUntil, DateTimeFormatter.ISO_DATE));
+                consentStatus, consentId, LocalDate.parse(validUntil, DateTimeFormatter.ISO_DATE));
     }
 
+    @SuppressWarnings("SameParameterValue")
     private static Date parseIsoDate(String date) {
         return Date.from(
                 LocalDate.parse(date, DateTimeFormatter.ISO_DATE)

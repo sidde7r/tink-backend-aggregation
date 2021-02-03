@@ -22,9 +22,9 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaCo
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.entities.ChallengeData;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.entities.ScaMethod;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.rpc.ConsentDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.rpc.ScaResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.rpc.ScaStatusResponse;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentDetailsResponse;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.CommonFields;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.GermanFields;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.authenticator.AutoAuthenticator;
@@ -66,7 +66,7 @@ public class FiduciaAuthenticator implements MultiFactorAuthenticator, AutoAuthe
 
         ConsentDetailsResponse consentDetailsResponse = apiClient.getConsentDetails(consentId);
 
-        if (!consentDetailsResponse.getConsentStatus().isAcceptedStatus()) {
+        if (!consentDetailsResponse.isValid()) {
             throw SessionError.SESSION_EXPIRED.exception();
         }
 
@@ -84,13 +84,13 @@ public class FiduciaAuthenticator implements MultiFactorAuthenticator, AutoAuthe
         ScaStatusResponse scaStatusResponse = authorizeWithSca(scaResponse);
 
         if (!FINALISED.equalsIgnoreCase(scaStatusResponse.getScaStatus())) {
-            throw LoginError.DEFAULT_MESSAGE.exception();
+            throw LoginError.DEFAULT_MESSAGE.exception("Invalid sca status");
         }
 
         ConsentDetailsResponse detailsResponse = apiClient.getConsentDetails(consentId);
 
-        if (!detailsResponse.getConsentStatus().isAcceptedStatus()) {
-            throw LoginError.DEFAULT_MESSAGE.exception();
+        if (!detailsResponse.isValid()) {
+            throw LoginError.DEFAULT_MESSAGE.exception("Invalid consent status");
         }
 
         persistentStorage.put(StorageKeys.CONSENT_ID, consentId);
