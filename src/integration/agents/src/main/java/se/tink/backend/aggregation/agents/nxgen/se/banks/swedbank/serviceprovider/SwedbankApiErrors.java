@@ -120,7 +120,8 @@ public class SwedbankApiErrors {
         }
 
         ErrorResponse errorResponse = httpResponse.getBody(ErrorResponse.class);
-        return errorResponse.hasErrorCode(ErrorCode.TRANSFER_ALREADY_EXISTS);
+        return errorResponse.hasErrorCode(ErrorCode.TRANSFER_ALREADY_EXISTS)
+                || errorResponse.hasErrorCode(ErrorCode.PAYMENT_ALREADY_EXISTS);
     }
 
     public static boolean isSessionTerminated(HttpResponseException hre) {

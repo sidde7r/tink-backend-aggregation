@@ -495,6 +495,7 @@ public class SwedbankBaseConstants {
                 "STRONGER_AUTHENTICATION_NEEDED";
         public static final String DUPLICATION = "DUPLICATE";
         public static final String TRANSFER_ALREADY_EXISTS = "TRANSFER_ALREADY_EXISTS";
+        public static final String PAYMENT_ALREADY_EXISTS = "PAYMENT_ALREADY_EXISTS";
     }
 
     public static class ErrorField {
