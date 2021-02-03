@@ -93,7 +93,7 @@ public class AgentTestContext extends AgentContext {
 
     @Override
     public Optional<String> waitForSupplementalInformation(
-            String key, long waitFor, TimeUnit unit) {
+            String mfaId, long waitFor, TimeUnit unit) {
         return Optional.empty();
     }
 

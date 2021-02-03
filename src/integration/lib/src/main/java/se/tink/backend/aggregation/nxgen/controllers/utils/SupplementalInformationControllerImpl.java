@@ -47,9 +47,9 @@ public class SupplementalInformationControllerImpl implements SupplementalInform
 
     @Override
     public Optional<Map<String, String>> waitForSupplementalInformation(
-            String barrierKey, long waitFor, TimeUnit unit) {
+            String mfaId, long waitFor, TimeUnit unit) {
         return supplementalRequester
-                .waitForSupplementalInformation(barrierKey, waitFor, unit)
+                .waitForSupplementalInformation(mfaId, waitFor, unit)
                 .map(SupplementalInformationControllerImpl::stringToMap);
     }
 
@@ -80,15 +80,15 @@ public class SupplementalInformationControllerImpl implements SupplementalInform
     @Override
     public Optional<Map<String, String>> openThirdPartyAppSync(
             ThirdPartyAppAuthenticationPayload payload) {
-        openThirdPartyAppAsync(payload);
 
-        String barrierKey = String.format(UNIQUE_PREFIX_TPCB, this.state);
+        String mfaId = openThirdPartyAppAsync(payload);
+
         return waitForSupplementalInformation(
-                barrierKey, ThirdPartyAppConstants.WAIT_FOR_MINUTES, TimeUnit.MINUTES);
+                mfaId, ThirdPartyAppConstants.WAIT_FOR_MINUTES, TimeUnit.MINUTES);
     }
 
     @Override
-    public void openThirdPartyAppAsync(ThirdPartyAppAuthenticationPayload payload) {
+    public String openThirdPartyAppAsync(ThirdPartyAppAuthenticationPayload payload) {
         Preconditions.checkNotNull(payload);
 
         payload.setState(state);
@@ -101,6 +101,9 @@ public class SupplementalInformationControllerImpl implements SupplementalInform
         logger.info("Opening third party app with deep link URL {}, state {}", deepLinkUrl, state);
 
         supplementalRequester.requestSupplementalInformation(credentials, false);
+
+        // return the mfaId that can be listened for.
+        return String.format(UNIQUE_PREFIX_TPCB, this.state);
     }
 
     private static Map<String, String> stringToMap(final String string) {

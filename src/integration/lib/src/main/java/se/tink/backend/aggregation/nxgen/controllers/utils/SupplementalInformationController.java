@@ -10,12 +10,12 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 public interface SupplementalInformationController {
 
     Optional<Map<String, String>> waitForSupplementalInformation(
-            String key, long waitFor, TimeUnit unit);
+            String mfaId, long waitFor, TimeUnit unit);
 
     Map<String, String> askSupplementalInformationSync(Field... fields)
             throws SupplementalInfoException;
 
     Optional<Map<String, String>> openThirdPartyAppSync(ThirdPartyAppAuthenticationPayload payload);
 
-    void openThirdPartyAppAsync(ThirdPartyAppAuthenticationPayload payload);
+    String openThirdPartyAppAsync(ThirdPartyAppAuthenticationPayload payload);
 }

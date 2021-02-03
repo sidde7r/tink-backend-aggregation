@@ -24,8 +24,8 @@ public final class MockSupplementalInformationController
 
     @Override
     public Optional<Map<String, String>> waitForSupplementalInformation(
-            String key, final long waitFor, final TimeUnit unit) {
-        if (key.startsWith("tpcb")) {
+            String mfaId, final long waitFor, final TimeUnit unit) {
+        if (mfaId.startsWith("tpcb")) {
             return Optional.of(callbackData);
         }
         throw new UnsupportedOperationException("Not implemented");
@@ -48,7 +48,8 @@ public final class MockSupplementalInformationController
     }
 
     @Override
-    public void openThirdPartyAppAsync(final ThirdPartyAppAuthenticationPayload payload) {
+    public String openThirdPartyAppAsync(final ThirdPartyAppAuthenticationPayload payload) {
         // NOOP
+        return null;
     }
 }

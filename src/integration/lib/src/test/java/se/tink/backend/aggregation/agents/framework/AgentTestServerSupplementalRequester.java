@@ -87,9 +87,9 @@ public final class AgentTestServerSupplementalRequester implements SupplementalR
 
     @Override
     public Optional<String> waitForSupplementalInformation(
-            String key, long waitFor, TimeUnit unit) {
+            String mfaId, long waitFor, TimeUnit unit) {
         return Optional.ofNullable(
-                agentTestServerClient.waitForSupplementalInformation(key, waitFor, unit));
+                agentTestServerClient.waitForSupplementalInformation(mfaId, waitFor, unit));
     }
 
     private void displaySupplementalInformation(Credentials credentials) {

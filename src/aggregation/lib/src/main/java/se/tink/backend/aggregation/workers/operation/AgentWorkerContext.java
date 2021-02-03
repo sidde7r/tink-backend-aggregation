@@ -285,11 +285,11 @@ public class AgentWorkerContext extends AgentContext implements Managed {
 
     @Override
     public Optional<String> waitForSupplementalInformation(
-            String key, long waitFor, TimeUnit unit) {
+            String mfaId, long waitFor, TimeUnit unit) {
         DistributedBarrier lock =
                 new DistributedBarrier(
                         coordinationClient,
-                        BarrierName.build(BarrierName.Prefix.SUPPLEMENTAL_INFORMATION, key));
+                        BarrierName.build(BarrierName.Prefix.SUPPLEMENTAL_INFORMATION, mfaId));
         SupplementalInformationMetrics.inc(
                 getMetricRegistry(), SupplementalInformationMetrics.attempts, getClusterId());
         Stopwatch stopwatch = Stopwatch.createStarted();
@@ -299,7 +299,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
             lock.setBarrier();
             logger.info(
                     "Supplemental information request of key {} is waiting for {} {}",
-                    key,
+                    mfaId,
                     waitFor,
                     unit);
             logger.info(
@@ -309,7 +309,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
                             .orElse(null));
             if (lock.waitOnBarrier(waitFor, unit)) {
                 String supplementalInformation =
-                        supplementalInformationController.getSupplementalInformation(key);
+                        supplementalInformationController.getSupplementalInformation(mfaId);
 
                 if (Objects.isNull(supplementalInformation)
                         || Objects.equals(supplementalInformation, "null")) {

@@ -11,7 +11,7 @@ public interface SupplementalRequester {
     String requestSupplementalInformation(
             Credentials credentials, long waitFor, TimeUnit unit, boolean wait);
 
-    Optional<String> waitForSupplementalInformation(String key, long waitFor, TimeUnit unit);
+    Optional<String> waitForSupplementalInformation(String mfaId, long waitFor, TimeUnit unit);
 
     default void openBankId() {
         openBankId(null, false);
