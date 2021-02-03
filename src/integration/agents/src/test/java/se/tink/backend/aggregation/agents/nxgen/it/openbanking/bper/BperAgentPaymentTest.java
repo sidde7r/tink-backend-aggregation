@@ -13,6 +13,7 @@ import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.payments.common.model.PaymentScheme;
+import se.tink.libraries.transfer.enums.RemittanceInformationType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 public class BperAgentPaymentTest {
@@ -49,6 +50,7 @@ public class BperAgentPaymentTest {
                 new IbanIdentifier(
                         creditorDebtorManager.get(BperAgentPaymentTest.Arg.CREDITOR_ACCOUNT));
         Creditor creditor = new Creditor(creditorAccountIdentifier, "Creditor Name");
+        remittanceInformation.setType(RemittanceInformationType.UNSTRUCTURED);
         remittanceInformation.setValue("Bper");
 
         AccountIdentifier debtorAccountIdentifier =
