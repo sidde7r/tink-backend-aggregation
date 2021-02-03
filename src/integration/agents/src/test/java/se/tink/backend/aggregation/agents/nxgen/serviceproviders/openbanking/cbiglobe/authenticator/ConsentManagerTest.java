@@ -10,6 +10,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collections;
@@ -34,15 +35,20 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.CredentialsDetailResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.PsuCredentialsRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.PsuCredentialsResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.TppErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.UpdateConsentPsuCredentialsRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @RunWith(JUnitParamsRunner.class)
 public class ConsentManagerTest {
+
+    private final String TEST_DATA_PATH =
+            "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/cbiglobe/resources";
 
     private static final String STATE = "state";
     private static final String CONSENT_ID = "123";
@@ -170,13 +176,7 @@ public class ConsentManagerTest {
         UpdateConsentPsuCredentialsRequest updateConsentPsuCredentialsRequest =
                 createUpdateConsentPsuCredentialsRequest();
 
-        List<CredentialsDetailResponse> credentialsDetails =
-                Arrays.asList(
-                        new CredentialsDetailResponse(USER_KEY, false),
-                        new CredentialsDetailResponse(PASSWORD_KEY, true));
-
-        PsuCredentialsResponse psuCredentialsResponse =
-                new PsuCredentialsResponse(ASPSP_PRODUCT_CODE, credentialsDetails);
+        PsuCredentialsResponse psuCredentialsResponse = prepareConsentResponse();
 
         when(userState.getConsentId()).thenReturn(CONSENT_ID);
 
@@ -187,6 +187,15 @@ public class ConsentManagerTest {
         verify(apiClient)
                 .updateConsentPsuCredentials(
                         eq(CONSENT_ID), eq(updateConsentPsuCredentialsRequest));
+    }
+
+    private PsuCredentialsResponse prepareConsentResponse() {
+        List<CredentialsDetailResponse> credentialsDetails =
+                Arrays.asList(
+                        new CredentialsDetailResponse(USER_KEY, false),
+                        new CredentialsDetailResponse(PASSWORD_KEY, true));
+
+        return new PsuCredentialsResponse(ASPSP_PRODUCT_CODE, credentialsDetails);
     }
 
     @Test
@@ -341,5 +350,42 @@ public class ConsentManagerTest {
         Throwable throwable = catchThrowable(() -> consentManager.verifyIfConsentIsAccepted());
         // then
         verify(apiClient, times(3)).getConsentStatus(any());
+    }
+
+    @Test
+    public void shouldThrowInvalidCredentials() {
+        // given
+        HttpResponseException exception = prepareConsentHttpException();
+
+        UpdateConsentPsuCredentialsRequest updateConsentPsuCredentialsRequest =
+                createUpdateConsentPsuCredentialsRequest();
+
+        PsuCredentialsResponse psuCredentialsResponse = prepareConsentResponse();
+
+        when(userState.getConsentId()).thenReturn(CONSENT_ID);
+        when(apiClient.updateConsentPsuCredentials(CONSENT_ID, updateConsentPsuCredentialsRequest))
+                .thenThrow(exception);
+
+        // when
+        Throwable throwable =
+                catchThrowable(
+                        () ->
+                                consentManager.updatePsuCredentials(
+                                        USERNAME, PASSWORD, psuCredentialsResponse));
+        // then
+        assertThat(throwable)
+                .isInstanceOf(LoginException.class)
+                .hasMessage("Cause: LoginError.INCORRECT_CREDENTIALS");
+    }
+
+    private HttpResponseException prepareConsentHttpException() {
+        HttpRequest httpRequest = mock(HttpRequest.class);
+        HttpResponse httpResponse = mock(HttpResponse.class);
+        when(httpResponse.getBody(TppErrorResponse.class))
+                .thenReturn(
+                        SerializationUtils.deserializeFromString(
+                                Paths.get(TEST_DATA_PATH, "tpp_invalid_credentials.json").toFile(),
+                                TppErrorResponse.class));
+        return new HttpResponseException(httpRequest, httpResponse);
     }
 }
