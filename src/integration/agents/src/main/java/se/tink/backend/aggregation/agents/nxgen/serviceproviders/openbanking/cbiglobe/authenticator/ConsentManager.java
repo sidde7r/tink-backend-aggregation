@@ -19,6 +19,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
@@ -30,6 +31,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.entities.AccountDetailsEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.entities.ConsentType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.entities.MessageCodes;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.entities.TppMessagesEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.ConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.ConsentStatus;
@@ -37,6 +39,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.CredentialsDetailResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.PsuCredentialsRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.PsuCredentialsResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.TppErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.UpdateConsentPsuCredentialsRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.UpdateConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.GetAccountsResponse;
@@ -150,7 +153,26 @@ public class ConsentManager {
         UpdateConsentPsuCredentialsRequest body =
                 new UpdateConsentPsuCredentialsRequest(psuCredentials);
 
-        return apiClient.updateConsentPsuCredentials(consentId, body);
+        try {
+            return apiClient.updateConsentPsuCredentials(consentId, body);
+        } catch (HttpResponseException e) {
+            TppErrorResponse tppErrorResponse = e.getResponse().getBody(TppErrorResponse.class);
+            if (isInvalidCredentials(tppErrorResponse)) {
+                throw LoginError.INCORRECT_CREDENTIALS.exception();
+            }
+            throw e;
+        }
+    }
+
+    private boolean isInvalidCredentials(TppErrorResponse tppErrorResponse) {
+        List<TppMessagesEntity> tppMessages = tppErrorResponse.getTppMessages();
+        return CollectionUtils.isNotEmpty(tppMessages)
+                && tppMessages.stream()
+                        .anyMatch(
+                                tppMessagesEntity ->
+                                        MessageCodes.PSU_CREDENTIALS_INVALID
+                                                .name()
+                                                .equals(tppMessagesEntity.getCode()));
     }
 
     private PsuCredentialsRequest createPsuCredentialsRequest(
