@@ -13,7 +13,6 @@ import org.apache.commons.io.FileUtils;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.Sparebank1ApiClient;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.authenticator.rpc.AgreementsResponse;
@@ -52,8 +51,10 @@ public class Sparebank1AuthenticatorTest {
         String selectMarketHtml =
                 FileUtils.readFileToString(new File(SELECT_MARKET_HTML), StandardCharsets.UTF_8);
         when(apiClient.selectMarketAndAuthentication(any())).thenReturn(selectMarketHtml);
+
         // when
         String pollingElement = authenticator.init("dummyString", "dummyString", "dummyString");
+
         // then
         assertThat(pollingElement).isNotNull();
     }
@@ -70,7 +71,7 @@ public class Sparebank1AuthenticatorTest {
 
         // then
         assertThat(throwable)
-                .isInstanceOf(BankIdException.class)
+                .isInstanceOf(LoginException.class)
                 .hasMessage("Missing bank id init params: dummyHtmlContent");
     }
 
@@ -83,13 +84,15 @@ public class Sparebank1AuthenticatorTest {
         when(apiClient.initLogin()).thenReturn(bankIdInitHtml);
 
         when(apiClient.selectMarketAndAuthentication(any())).thenReturn("dummyHtmlContent");
+
         // when
         Throwable throwable =
                 catchThrowable(
                         () -> authenticator.init("dummyString", "dummyString", "dummyString"));
+
         // then
         assertThat(throwable)
-                .isInstanceOf(BankIdException.class)
+                .isInstanceOf(LoginException.class)
                 .hasMessageContaining("Unknown reason of missing polling element");
     }
 
@@ -100,8 +103,10 @@ public class Sparebank1AuthenticatorTest {
                 .thenReturn(
                         SerializationUtils.deserializeFromString(
                                 "{\"banks\":[]}", BankBranchResponse.class));
+
         // when
         Throwable throwable = catchThrowable(() -> authenticator.finishActivation());
+
         // then
         assertThat(throwable).isInstanceOf(LoginException.class);
     }

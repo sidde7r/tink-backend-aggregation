@@ -20,7 +20,7 @@ public class ScreenScrapingManager {
             form = initBankIdDoc.getElementById("panel-bankID-mobile").select("form").first();
             viewState = form.getElementById("j_id1:javax.faces.ViewState:1");
         } catch (NullPointerException ex) {
-            throw BankIdError.UNKNOWN.exception("Missing bank id init params: " + html);
+            throw LoginError.DEFAULT_MESSAGE.exception("Missing bank id init params: " + html);
         }
         return new InitBankIdParams(form.id(), viewState.val());
     }
@@ -58,7 +58,7 @@ public class ScreenScrapingManager {
             case BankIdErrorCodes.C167:
                 throw BankIdError.INVALID_STATUS_OF_MOBILE_BANKID_CERTIFICATE.exception();
             default:
-                throw BankIdError.UNKNOWN.exception(
+                throw LoginError.DEFAULT_MESSAGE.exception(
                         "Bank Id error code: " + bankIdErrorCode + "\n" + doc.outerHtml());
         }
     }
@@ -73,9 +73,9 @@ public class ScreenScrapingManager {
                             .select("li")
                             .first()
                             .text();
-            throw BankIdError.UNKNOWN.exception(errorMessage);
+            throw LoginError.DEFAULT_MESSAGE.exception(errorMessage);
         } catch (NullPointerException ex) {
-            throw BankIdError.UNKNOWN.exception(
+            throw LoginError.DEFAULT_MESSAGE.exception(
                     "Unknown reason of missing polling element: \n" + doc.outerHtml());
         }
     }

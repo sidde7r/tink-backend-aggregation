@@ -17,13 +17,13 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class Sparebank1ApiClientTest {
-    private Sparebank1ApiClient objUnderTest;
+    private Sparebank1ApiClient sparebank1ApiClient;
     private TinkHttpClient client;
 
     @Before
     public void init() {
         client = mockHttpClient(mock(RequestBuilder.class));
-        objUnderTest = new Sparebank1ApiClient(client, "dummy");
+        sparebank1ApiClient = new Sparebank1ApiClient(client, "dummy");
     }
 
     @Test
@@ -35,17 +35,18 @@ public class Sparebank1ApiClientTest {
                                 new BasicClientCookie("DSESSIONID", "dummySessionCookie")));
 
         // when
-        objUnderTest.retrieveSessionCookie();
+        sparebank1ApiClient.retrieveSessionCookie();
 
         // then
-        assertThat(objUnderTest.getSessionToken()).isEqualTo("dummySessionCookie");
+        assertThat(sparebank1ApiClient.getSessionToken()).isEqualTo("dummySessionCookie");
     }
 
     @Test
     public void getSessionTokenShouldThrowExceptionIfSessionTokenNotFound() {
         // given
+
         // when
-        Throwable ex = catchThrowable(() -> objUnderTest.retrieveSessionCookie());
+        Throwable ex = catchThrowable(() -> sparebank1ApiClient.retrieveSessionCookie());
 
         // then
         assertThat(ex).isInstanceOf(IllegalStateException.class);

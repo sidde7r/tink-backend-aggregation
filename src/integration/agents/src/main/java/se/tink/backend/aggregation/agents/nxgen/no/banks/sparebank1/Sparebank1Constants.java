@@ -5,40 +5,37 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 public class Sparebank1Constants {
 
     public static class Urls {
-        public static final String BASE = "https://mobilbank-pm.sparebank1.no/";
-        public static final String BASE_LOGIN = "https://login.sparebank1.no/";
+        static final String BASE = "https://mobilbank-pm.sparebank1.no/";
+        static final String BASE_LOGIN = "https://login.sparebank1.no/";
 
-        public static final URL SELECT_MARKET_AND_AUTH_TYPE =
+        static final URL SELECT_MARKET_AND_AUTH_TYPE =
                 new URL(BASE_LOGIN + "auth/pages/selectMarketAndAuthType.xhtml");
-        public static final URL POLL_BANKID = new URL(BASE_LOGIN + "auth/api/bim/poll");
-        public static final URL LOGIN_DONE = new URL(BASE_LOGIN + "auth/pages/loginDone.xhtml");
+        static final URL POLL_BANKID = new URL(BASE_LOGIN + "auth/api/bim/poll");
+        static final URL LOGIN_DONE = new URL(BASE_LOGIN + "auth/pages/loginDone.xhtml");
 
         public static final URL ACCOUNTS =
                 new URL(BASE + "{bankName}/nettbank-privat/rest/accounts");
         public static final URL CREDITCARDS =
                 new URL(BASE + "{bankName}/nettbank-privat/kort/rest/cards/credit");
         public static final URL LOANS = new URL(BASE + "{bankName}/nettbank-privat/rest/loans");
-        public static final URL LOAN_DETAILS =
+        static final URL LOAN_DETAILS =
                 new URL(BASE + "{bankName}/nettbank-privat/rest/loans/{accountId}");
-        public static final URL CREDITCARD_TRANSACTIONS =
+        static final URL CREDITCARD_TRANSACTIONS =
                 new URL(
                         BASE
                                 + "{bankName}/nettbank-privat/kort/rest/cards/credit/{accountId}/transactions");
         public static final URL PORTFOLIOS =
                 new URL(BASE + "{bankName}/nettbank-privat/sparing/rest/fond/portefoeljer");
-        public static final URL INIT_LOGIN =
+        static final URL INIT_LOGIN =
                 new URL(BASE + "personal/banking/mobilbank/login-app-dispatcher");
 
-        public static final URL AGREEMENTS = new URL(BASE + "personal/banking/authorization");
-        public static final URL DIGITAL_SESSION =
+        static final URL AGREEMENTS = new URL(BASE + "personal/banking/authorization");
+        static final URL DIGITAL_SESSION =
                 new URL(BASE + "personal/banking/mobilbank/digitalbank-sessionid");
-        public static final URL INITIAL_REQUEST = new URL(BASE + "personal/banking/mobilbank");
-        public static final URL BRANCHES = new URL(BASE + "/personal/banking/bankrelations");
-        public static final URL TOKEN =
-                new URL(BASE + "personal/banking/mobilbank/activation/rest/token");
-        public static final URL SESSION = new URL(BASE + "personal/rest/session");
-        public static final URL KEEP_ALIVE =
-                new URL(BASE + "personal/banking/mobilbank/keep-alive");
+        static final URL INITIAL_REQUEST = new URL(BASE + "personal/banking/mobilbank");
+        static final URL BRANCHES = new URL(BASE + "/personal/banking/bankrelations");
+        static final URL TOKEN = new URL(BASE + "personal/banking/mobilbank/activation/rest/token");
+        static final URL SESSION = new URL(BASE + "personal/rest/session");
     }
 
     public static class Parameters {
@@ -68,6 +65,8 @@ public class Sparebank1Constants {
         public static final String X_REQUESTED_WITH = "X-Requested-With";
         public static final String XML_HTTP_REQUEST = "XMLHttpRequest";
         public static final String CSRFT_TOKEN = "X-CSRFToken";
+        public static final String V_2_JSON = "application/vnd.sparebank1.v2+json;charset=utf-8";
+        public static final String V_3_JSON = "application/vnd.sparebank1.v3+json;charset=utf-8";
     }
 
     public static final class Keys {
@@ -124,7 +123,6 @@ public class Sparebank1Constants {
     }
 
     public static final class FormParams {
-
         public static final String BANKID_MOBILE_NUMBER = "bankid-mobile-number";
         public static final String BANKID_MOBILE_BIRTHDATE = "bankid-mobile-birthdate";
         public static final String NESTE_MOBIL = "nesteMobil";

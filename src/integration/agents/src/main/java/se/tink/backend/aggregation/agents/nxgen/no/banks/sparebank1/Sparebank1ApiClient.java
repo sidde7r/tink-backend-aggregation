@@ -36,7 +36,7 @@ public class Sparebank1ApiClient {
 
     public Sparebank1ApiClient(TinkHttpClient client, String bankId) {
         this.client = client;
-        this.bankId = bankId;
+        this.bankId = bankId.substring(4);
     }
 
     public <T> T get(String url, Class<T> responseClass) {
@@ -48,8 +48,7 @@ public class Sparebank1ApiClient {
     }
 
     public <T> T getAccounts(URL url, Class<T> responseClass) {
-        return client.request(url.parameter(Parameters.BANK_NAME, bankId.substring(4)))
-                .get(responseClass);
+        return client.request(url.parameter(Parameters.BANK_NAME, bankId)).get(responseClass);
     }
 
     public String initLogin() {
@@ -85,7 +84,7 @@ public class Sparebank1ApiClient {
     public CreditCardTransactionsResponse fetchCreditCardTransactions(String bankIdentifier) {
         return client.request(
                         Urls.CREDITCARD_TRANSACTIONS
-                                .parameter(Parameters.BANK_NAME, bankId.substring(4))
+                                .parameter(Parameters.BANK_NAME, bankId)
                                 .parameter(Parameters.ACCOUNT_ID, bankIdentifier))
                 .get(CreditCardTransactionsResponse.class);
     }
@@ -93,7 +92,7 @@ public class Sparebank1ApiClient {
     public LoanDetailsEntity fetchLoanDetails(String loanId) {
         return client.request(
                         Urls.LOAN_DETAILS
-                                .parameter(Parameters.BANK_NAME, bankId.substring(4))
+                                .parameter(Parameters.BANK_NAME, bankId)
                                 .parameter(Parameters.ACCOUNT_ID, loanId))
                 .queryParam(QueryParams.UNDERSCORE, String.valueOf(System.currentTimeMillis()))
                 .get(LoanDetailsEntity.class);
@@ -104,7 +103,7 @@ public class Sparebank1ApiClient {
     }
 
     public HttpResponse logout() {
-        return getJsonSessonRequestBuilder(Urls.SESSION).delete(HttpResponse.class);
+        return getJsonSessionRequestBuilder(Urls.SESSION).delete(HttpResponse.class);
     }
 
     public void requestDigitalSession() {
@@ -134,49 +133,49 @@ public class Sparebank1ApiClient {
                 .header(Headers.X_SB1_REST_VERSION, Headers.X_SB1_REST_VERSION_VALUE);
     }
 
-    public RequestBuilder getJsonSessonRequestBuilder(URL url) {
+    public RequestBuilder getJsonSessionRequestBuilder(URL url) {
         return getSessionRequestBuilder(url)
                 .accept(Headers.APPLICATION_JSON_CHARSET_UTF8)
                 .type(MediaType.APPLICATION_JSON);
     }
 
     public BankBranchResponse getUserBranches() {
-        return getJsonSessonRequestBuilder(Urls.BRANCHES).get(BankBranchResponse.class);
+        return getJsonSessionRequestBuilder(Urls.BRANCHES).get(BankBranchResponse.class);
     }
 
     public void setSpecificUserBranch(Branch request) {
-        getJsonSessonRequestBuilder(Urls.BRANCHES).post(request);
+        getJsonSessionRequestBuilder(Urls.BRANCHES).post(request);
     }
 
     public AgreementsResponse getAgreements() {
-        return getJsonSessonRequestBuilder(Urls.AGREEMENTS).get(AgreementsResponse.class);
+        return getJsonSessionRequestBuilder(Urls.AGREEMENTS).get(AgreementsResponse.class);
     }
 
     public void setSpecificAgreement(String agreementId) {
         AgreementRequest agreementRequest = new AgreementRequest(agreementId);
-        getJsonSessonRequestBuilder(Urls.AGREEMENTS).put(agreementRequest);
+        getJsonSessionRequestBuilder(Urls.AGREEMENTS).put(agreementRequest);
     }
 
     public TokenExpirationTimeResponse requestForTokenExpirationTimestamp() {
         return getSessionRequestBuilder(Urls.TOKEN)
-                .type("application/vnd.sparebank1.v2+json;charset=utf-8")
-                .accept("application/vnd.sparebank1.v2+json;charset=utf-8")
+                .type(Headers.V_2_JSON)
+                .accept(Headers.V_2_JSON)
                 .get(TokenExpirationTimeResponse.class);
     }
 
     public TokenResponse requestForToken(InitTokenRequest signedJwt) {
         return getSessionRequestBuilder(Urls.TOKEN)
-                .type("application/vnd.sparebank1.v3+json;charset=utf-8")
-                .accept("application/vnd.sparebank1.v3+json;charset=utf-8")
+                .type(Headers.V_3_JSON)
+                .accept(Headers.V_3_JSON)
                 .post(TokenResponse.class, signedJwt);
     }
 
     public InitSessionResponse initiateSession(InitSessionRequest authenticationRequest) {
-        return getJsonSessonRequestBuilder(Urls.SESSION)
+        return getJsonSessionRequestBuilder(Urls.SESSION)
                 .post(InitSessionResponse.class, authenticationRequest);
     }
 
     public SessionResponse finishSessionInitiation(SessionRequest request) throws SessionException {
-        return getJsonSessonRequestBuilder(Urls.SESSION).put(SessionResponse.class, request);
+        return getJsonSessionRequestBuilder(Urls.SESSION).put(SessionResponse.class, request);
     }
 }

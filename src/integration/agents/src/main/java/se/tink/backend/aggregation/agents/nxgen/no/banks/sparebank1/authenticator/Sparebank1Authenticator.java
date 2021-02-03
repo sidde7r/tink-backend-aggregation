@@ -227,7 +227,7 @@ public class Sparebank1Authenticator implements BankIdAuthenticatorNO, AutoAuthe
                 createFinishSessionInitiationRequest(clientSession, initSessionResponse, identity);
         SessionResponse step2Response = apiClient.finishSessionInitiation(sessionRequest);
 
-        validateServerEvidenceMesssage(clientSession, step2Response.getM2());
+        validateServerEvidenceMesssage(clientSession, step2Response.getServerEvidenceMessage());
     }
 
     private SessionRequest createFinishSessionInitiationRequest(
