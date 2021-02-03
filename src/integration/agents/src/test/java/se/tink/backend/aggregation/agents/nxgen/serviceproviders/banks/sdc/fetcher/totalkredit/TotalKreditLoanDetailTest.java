@@ -26,11 +26,10 @@ public class TotalKreditLoanDetailTest {
 
     @Test
     @Parameters(method = "detailsArrayForIs")
-    public void is(
-            final String inputData, final String desiredLabel, final boolean expectedResult) {
+    public void is(final String desiredLabel, final boolean expectedResult) {
         // given
         TotalKreditLoanDetail detail =
-                SerializationUtils.deserializeFromString(inputData, TotalKreditLoanDetail.class);
+                SerializationUtils.deserializeFromString(INPUT_DATA, TotalKreditLoanDetail.class);
 
         // when
         boolean result = detail.is(desiredLabel);
@@ -41,11 +40,10 @@ public class TotalKreditLoanDetailTest {
 
     @Test
     @Parameters(method = "detailsArrayForIsSimilar")
-    public void isSimilar(
-            final String inputData, final String desiredLabel, final boolean expectedResult) {
+    public void isSimilar(final String desiredLabel, final boolean expectedResult) {
         // given
         TotalKreditLoanDetail detail =
-                SerializationUtils.deserializeFromString(inputData, TotalKreditLoanDetail.class);
+                SerializationUtils.deserializeFromString(INPUT_DATA, TotalKreditLoanDetail.class);
 
         // when
         boolean result = detail.isSimilar(desiredLabel);
@@ -59,18 +57,18 @@ public class TotalKreditLoanDetailTest {
 
     private Object[] detailsArrayForIs() {
         return new Object[] {
-            new Object[] {INPUT_DATA, "not matching desired label", false},
-            new Object[] {INPUT_DATA, "", false},
-            new Object[] {INPUT_DATA, null, false},
-            new Object[] {INPUT_DATA, "sample label", true}
+            new Object[] {"not matching desired label", false},
+            new Object[] {"", false},
+            new Object[] {null, false},
+            new Object[] {"sample label", true}
         };
     }
 
     private Object[] detailsArrayForIsSimilar() {
         return new Object[] {
-            new Object[] {INPUT_DATA, "not matching desired label", false},
-            new Object[] {INPUT_DATA, "sample", true},
-            new Object[] {INPUT_DATA, "sample label", true}
+            new Object[] {"not matching desired label", false},
+            new Object[] {"sample", true},
+            new Object[] {"sample label", true}
         };
     }
 }
