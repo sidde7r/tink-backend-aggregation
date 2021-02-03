@@ -27,6 +27,7 @@ public class SupplementalInformationControllerImpl implements SupplementalInform
             LoggerFactory.getLogger(SupplementalInformationControllerImpl.class);
 
     private static final String UNIQUE_PREFIX_TPCB = "tpcb_%s";
+    private static final int TIMEOUT_MINUTES_EMBEDDED_FIELDS = 2;
 
     private final SupplementalRequester supplementalRequester;
     private final Credentials credentials;
@@ -56,16 +57,17 @@ public class SupplementalInformationControllerImpl implements SupplementalInform
     @Override
     public Map<String, String> askSupplementalInformationSync(Field... fields)
             throws SupplementalInfoException {
-        credentials.setSupplementalInformation(SerializationUtils.serializeToString(fields));
-        credentials.setStatus(CredentialsStatus.AWAITING_SUPPLEMENTAL_INFORMATION);
-        String names = Arrays.stream(fields).map(Field::getName).collect(Collectors.joining(","));
-        logger.info("Requesting for fields: {}", names);
+
+        String mfaId = askSupplementalInformationAsync(fields);
+
+        Optional<String> results =
+                supplementalRequester.waitForSupplementalInformation(
+                        mfaId, TIMEOUT_MINUTES_EMBEDDED_FIELDS, TimeUnit.MINUTES);
+
         String supplementalInformation =
-                Optional.ofNullable(
-                                Strings.emptyToNull(
-                                        supplementalRequester.requestSupplementalInformation(
-                                                credentials)))
+                Optional.ofNullable(Strings.emptyToNull(results.orElse(null)))
                         .orElseThrow(SupplementalInfoError.NO_VALID_CODE::exception);
+
         Map<String, String> suplementalInformation =
                 deserializeSupplementalInformation(supplementalInformation);
         logger.info("Finished requesting supplemental information");
@@ -75,6 +77,19 @@ public class SupplementalInformationControllerImpl implements SupplementalInform
                     logger.info("supplemental information {} {}", key, message);
                 });
         return suplementalInformation;
+    }
+
+    @Override
+    public String askSupplementalInformationAsync(Field... fields) {
+        credentials.setSupplementalInformation(SerializationUtils.serializeToString(fields));
+        credentials.setStatus(CredentialsStatus.AWAITING_SUPPLEMENTAL_INFORMATION);
+        String names = Arrays.stream(fields).map(Field::getName).collect(Collectors.joining(","));
+        logger.info("Requesting for fields: {}", names);
+
+        supplementalRequester.requestSupplementalInformation(credentials, false);
+
+        // in case of embedded supplemental information, we use credentialsId as mfaId
+        return credentials.getId();
     }
 
     @Override

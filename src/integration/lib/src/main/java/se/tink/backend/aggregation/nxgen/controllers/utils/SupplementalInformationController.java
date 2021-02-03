@@ -28,8 +28,9 @@ public interface SupplementalInformationController {
             String mfaId, long waitFor, TimeUnit unit);
 
     /**
-     * Starts an embedded dynamic authentication flow. Requests for the client to render a new set
-     * of embedded input Fields to answer by the end-user.
+     * Starts an embedded dynamic authentication flow. This methods does the same as {@link
+     * SupplementalInformationController#askSupplementalInformationAsync}, but also starts waiting
+     * synchronously.
      *
      * @param fields the embedded Fields that the client should render.
      * @return The results of the request.
@@ -37,6 +38,15 @@ public interface SupplementalInformationController {
      */
     Map<String, String> askSupplementalInformationSync(Field... fields)
             throws SupplementalInfoException;
+
+    /**
+     * Starts an embedded dynamic authentication flow. Requests for the client to render a new set
+     * of embedded input Fields to answer by the end-user.
+     *
+     * @param fields
+     * @return the mfaId that can be used to wait for the results.
+     */
+    String askSupplementalInformationAsync(Field... fields);
 
     /**
      * Starts a redirect/decoupled dynamic authentication flow. This methods does the same as {@link

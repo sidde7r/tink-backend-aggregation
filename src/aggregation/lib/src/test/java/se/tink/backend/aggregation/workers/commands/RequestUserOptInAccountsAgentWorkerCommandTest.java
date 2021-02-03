@@ -1,8 +1,12 @@
 package se.tink.backend.aggregation.workers.commands;
 
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.eq;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 import org.assertj.core.util.Lists;
 import org.junit.Assert;
 import org.junit.Before;
@@ -13,7 +17,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.aggregation.agents.exceptions.errors.SupplementalInfoError;
 import se.tink.backend.aggregation.agents.models.AccountFeatures;
 import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
@@ -65,7 +68,10 @@ public class RequestUserOptInAccountsAgentWorkerCommandTest {
         Mockito.when(request.getCredentials()).thenReturn(credentials);
         Mockito.when(context.getCachedAccountsWithFeatures())
                 .thenReturn(getAccountsInContext(AccountTypes.INVESTMENT, false, true));
-        Mockito.when(context.requestSupplementalInformation(credentials)).thenReturn("{}");
+        Mockito.when(
+                        context.waitForSupplementalInformation(
+                                eq(credentials.getId()), anyLong(), any(TimeUnit.class)))
+                .thenReturn(Optional.of("{}"));
 
         // when
         command.execute();
@@ -87,7 +93,10 @@ public class RequestUserOptInAccountsAgentWorkerCommandTest {
         Mockito.when(request.getCredentials()).thenReturn(credentials);
         Mockito.when(context.getCachedAccountsWithFeatures())
                 .thenReturn(getAccountsInContext(AccountTypes.CHECKING, false, false));
-        Mockito.when(context.requestSupplementalInformation(credentials)).thenReturn("{}");
+        Mockito.when(
+                        context.waitForSupplementalInformation(
+                                eq(credentials.getId()), anyLong(), any(TimeUnit.class)))
+                .thenReturn(Optional.of("{}"));
 
         // when
         command.execute();
@@ -105,7 +114,10 @@ public class RequestUserOptInAccountsAgentWorkerCommandTest {
         Mockito.when(request.getCredentials()).thenReturn(credentials);
         Mockito.when(context.getCachedAccountsWithFeatures())
                 .thenReturn(getAccountsInContext(AccountTypes.CHECKING, true, false));
-        Mockito.when(context.requestSupplementalInformation(credentials)).thenReturn("{}");
+        Mockito.when(
+                        context.waitForSupplementalInformation(
+                                eq(credentials.getId()), anyLong(), any(TimeUnit.class)))
+                .thenReturn(Optional.of("{}"));
 
         // when
         command.execute();
@@ -128,8 +140,10 @@ public class RequestUserOptInAccountsAgentWorkerCommandTest {
         Mockito.when(request.getCredentials()).thenReturn(credentials);
         Mockito.when(context.getCachedAccountsWithFeatures())
                 .thenReturn(getAccountsInContext(AccountTypes.CHECKING, false, false));
-        Mockito.when(context.requestSupplementalInformation(credentials))
-                .thenThrow(SupplementalInfoError.NO_VALID_CODE.exception());
+        Mockito.when(
+                        context.waitForSupplementalInformation(
+                                eq(credentials.getId()), anyLong(), any(TimeUnit.class)))
+                .thenReturn(Optional.empty());
         Mockito.when(context.getRequest()).thenReturn(mockedRequest);
 
         // when
@@ -141,9 +155,9 @@ public class RequestUserOptInAccountsAgentWorkerCommandTest {
         Mockito.verify(eventProducer)
                 .sendLoginCompletedEvent(
                         Mockito.any(),
-                        Mockito.eq(LoginResult.OPTIN_ERROR_TIMEOUT),
-                        Mockito.anyLong(),
-                        Mockito.eq(
+                        eq(LoginResult.OPTIN_ERROR_TIMEOUT),
+                        anyLong(),
+                        eq(
                                 AgentLoginCompletedEventProto.AgentLoginCompletedEvent
                                         .UserInteractionInformation
                                         .MULTIPLE_FACTOR_USER_INTERACTION));

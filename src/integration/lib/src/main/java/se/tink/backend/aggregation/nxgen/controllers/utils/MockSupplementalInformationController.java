@@ -42,6 +42,11 @@ public final class MockSupplementalInformationController
     }
 
     @Override
+    public String askSupplementalInformationAsync(Field... fields) {
+        return null;
+    }
+
+    @Override
     public Optional<Map<String, String>> openThirdPartyAppSync(
             ThirdPartyAppAuthenticationPayload payload) {
         return Optional.empty();
