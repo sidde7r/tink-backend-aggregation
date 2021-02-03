@@ -11,6 +11,9 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 @RunWith(JUnitParamsRunner.class)
 public class TotalKreditLoanDetailTest {
 
+    private static final String INPUT_DATA =
+            "{\"label\": \"sample label\", \"value\": \"sample value\"}";
+
     @Test
     public void value() {
         // given
@@ -51,9 +54,6 @@ public class TotalKreditLoanDetailTest {
         // then
         assertThat(result).isEqualTo(expectedResult);
     }
-
-    private static final String INPUT_DATA =
-            "{\"label\": \"sample label\", \"value\": \"sample value\"}";
 
     private Object[] detailsArrayForIs() {
         return new Object[] {

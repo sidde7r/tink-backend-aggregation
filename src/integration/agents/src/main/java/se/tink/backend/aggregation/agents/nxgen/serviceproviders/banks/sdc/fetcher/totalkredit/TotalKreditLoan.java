@@ -23,9 +23,14 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.loan.Lo
 import se.tink.libraries.account.identifiers.DanishIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
+@Slf4j
 @JsonObject
 @EqualsAndHashCode
 class TotalKreditLoan {
+    private static final DateTimeFormatter DA_DATE_TIME_FORMATTER =
+            DateTimeFormatter.ofPattern("dd-MM-yyyy");
+    private static final Locale LOCALE_DA = new Locale("da");
+
     private String title;
     private String description;
     private TotalKreditLoanAmount amount;
@@ -34,8 +39,8 @@ class TotalKreditLoan {
     private final NumberOfMonthsBoundCalculator numberOfMonthsBoundCalculator =
             new NumberOfMonthsBoundCalculator();
 
-    public LoanAccount toTinkLoan(final String aggreementNumber) {
-        final String loanNumber = aggreementNumber + " " + title;
+    public LoanAccount toTinkLoan(final String agreementId) {
+        final String loanNumber = agreementId + " " + title;
         return LoanAccount.nxBuilder()
                 .withLoanDetails(createLoanModule(loanNumber))
                 .withId(
@@ -73,18 +78,17 @@ class TotalKreditLoan {
                 .orElse(0.0d);
     }
 
-    private static final Locale LOCALE_DA = new Locale("da");
-
     private static Double parseToDoubleOrNull(final String value) {
         try {
             return NumberFormat.getNumberInstance(LOCALE_DA).parse(value).doubleValue();
         } catch (ParseException e) {
+            log.error("Couldn't parse value {} using locale {}", value, LOCALE_DA);
             return null;
         }
     }
 
     private ExactCurrencyAmount initialBalance() {
-        return valueToExactCurrencyAmount(d -> d.is("Hovedstol"));
+        return detailValueToExactCurrencyAmount(d -> d.is("Hovedstol"));
     }
 
     private String loanSecurity() {
@@ -101,14 +105,18 @@ class TotalKreditLoan {
 
     private LocalDate parseToLocalDateOrNull(final String value) {
         try {
-            return LocalDate.parse(value, DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+            return LocalDate.parse(value, DA_DATE_TIME_FORMATTER);
         } catch (DateTimeParseException e) {
+            log.error(
+                    "Couldn't parse value {} using date formatter {}",
+                    value,
+                    DA_DATE_TIME_FORMATTER);
             return null;
         }
     }
 
     private ExactCurrencyAmount monthlyAmortization() {
-        return valueToExactCurrencyAmount(d -> d.isSimilar("Ydelse"));
+        return detailValueToExactCurrencyAmount(d -> d.isSimilar("Ydelse"));
     }
 
     private ExactCurrencyAmount amortized() {
@@ -129,10 +137,10 @@ class TotalKreditLoan {
     }
 
     private ExactCurrencyAmount balance() {
-        return valueToExactCurrencyAmount(d -> d.is("Obligationsrestgæld"));
+        return detailValueToExactCurrencyAmount(d -> d.is("Obligationsrestgæld"));
     }
 
-    private ExactCurrencyAmount valueToExactCurrencyAmount(
+    private ExactCurrencyAmount detailValueToExactCurrencyAmount(
             Predicate<TotalKreditLoanDetail> predicate) {
         Optional<Double> balance =
                 findFirstMatchingDetail(predicate).map(d -> parseToDoubleOrNull(d.value()));

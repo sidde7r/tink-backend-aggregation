@@ -14,10 +14,10 @@ public class TotalKreditLoanFetcher {
 
     private final SdcApiClient bankClient;
 
-    public List<LoanAccount> fetchTotalKreditAccounts(final String aggrementId) {
+    public List<LoanAccount> fetchTotalKreditAccounts(final String agreementId) {
         try {
             return bankClient.listTotalKreditLoans().stream()
-                    .map(totalKreditLoan -> totalKreditLoan.toTinkLoan(aggrementId))
+                    .map(totalKreditLoan -> totalKreditLoan.toTinkLoan(agreementId))
                     .collect(Collectors.toList());
         } catch (RuntimeException re) {
             log.error("An error occured when fetching totalkredit products.", re);
