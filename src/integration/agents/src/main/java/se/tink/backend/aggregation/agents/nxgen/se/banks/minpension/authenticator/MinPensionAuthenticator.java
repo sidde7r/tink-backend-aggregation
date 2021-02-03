@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.minpension.MinPensionCo
 import se.tink.backend.aggregation.agents.nxgen.se.banks.minpension.MinPensionConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.minpension.authenticator.rpc.InitBankIdResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.minpension.authenticator.rpc.PollBankIdResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.minpension.authenticator.rpc.UserTOCResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticator;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
@@ -60,7 +61,9 @@ public class MinPensionAuthenticator implements BankIdAuthenticator<String> {
     }
 
     private void completeAuthentication(PollBankIdResponse pollBankIdResponse) {
-        if (minPensionApiClient.fetchUserTOCStatus().isRegistrationTocIsRequired()) {
+        final UserTOCResponse userResponse = minPensionApiClient.fetchUserTOCStatus();
+
+        if (userResponse.isRegistrationTocIsRequired() && !userResponse.isUserAgreementApproved()) {
             throw AuthorizationError.ACCOUNT_BLOCKED.exception(ErrorMessage.KNOW_YOUR_CUSTOMER);
         }
         sessionStorage.put(
