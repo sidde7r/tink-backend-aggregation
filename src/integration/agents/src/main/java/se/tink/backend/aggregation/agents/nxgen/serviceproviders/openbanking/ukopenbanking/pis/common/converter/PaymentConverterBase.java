@@ -42,8 +42,8 @@ public abstract class PaymentConverterBase {
                     .put(
                             PaymentStatus.PAID,
                             "AcceptedSettlementCompleted",
-                            "AcceptedCreditSettlementCompleted",
                             "AcceptedSettlementInProcess")
+                    .put(PaymentStatus.SETTLEMENT_COMPLETED, "AcceptedCreditSettlementCompleted")
                     .build();
 
     private static final String PAYMENT_CREDITOR_DEFAULT_NAME = "Payment Receiver";

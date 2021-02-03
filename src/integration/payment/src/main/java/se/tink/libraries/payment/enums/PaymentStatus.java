@@ -9,4 +9,5 @@ public enum PaymentStatus {
     REJECTED,
     USER_APPROVAL_FAILED,
     CANCELLED,
+    SETTLEMENT_COMPLETED
 }
