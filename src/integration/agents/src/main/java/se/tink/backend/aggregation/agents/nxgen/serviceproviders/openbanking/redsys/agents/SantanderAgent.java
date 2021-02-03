@@ -41,6 +41,6 @@ public final class SantanderAgent extends RedsysAgent {
 
     @Override
     public LocalDate oldestTransactionDate() {
-        return LocalDate.now().minusYears(2).plusDays(2);
+        return LocalDate.now().minusYears(2).plusDays(1);
     }
 }
