@@ -1,20 +1,25 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26;
 
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.TRANSFERS;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;
+import java.util.Optional;
 import lombok.SneakyThrows;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
+import se.tink.backend.aggregation.agents.agentcapabilities.AgentPisCapability;
 import se.tink.backend.aggregation.agents.agentplatform.AgentPlatformHttpClient;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.AgentPlatformAgent;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.storage.RedirectTokensAccessor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.N26Constants.Url;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.authenticator.N26OAuth2AuthenticationConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.authenticator.steps.fetch_consent.N26ConsentAccessor;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.executor.payment.N26OauthPaymentAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.executor.payment.N26Xs2aPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.fetcher.N26DevelopersTransactionDateFromFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.xs2a.N26Xs2aApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.xs2a.N26Xs2aAuthenticationDataAccessor;
@@ -24,16 +29,22 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.transactionalaccount.Xs2aDevelopersTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationPersistedData;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationProcess;
+import se.tink.backend.aggregation.client.provider_configuration.rpc.PisCapability;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionKeyWithInitDateFromFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
-@AgentCapabilities({CHECKING_ACCOUNTS})
+@AgentCapabilities({CHECKING_ACCOUNTS, TRANSFERS})
+@AgentPisCapability(capabilities = {PisCapability.PIS_SEPA})
 public final class N26Agent extends AgentPlatformAgent implements RefreshCheckingAccountsExecutor {
 
     private final Xs2aAuthenticationDataAccessor xs2aAuthenticationDataAccessor;
@@ -41,6 +52,7 @@ public final class N26Agent extends AgentPlatformAgent implements RefreshCheckin
     private final Xs2aDevelopersForAgentPlatformApiClient xs2aApiClient;
     private final RedirectTokensAccessor oAuth2TokenAccessor;
     private final ObjectMapper objectMapper;
+    private final SupplementalInformationHelper supplementalInformationHelper;
 
     @Inject
     public N26Agent(AgentComponentProvider componentProvider) {
@@ -58,6 +70,7 @@ public final class N26Agent extends AgentPlatformAgent implements RefreshCheckin
         transactionalAccountRefreshController =
                 constructTransactionalAccountRefreshController(
                         componentProvider, oAuth2TokenAccessor);
+        this.supplementalInformationHelper = componentProvider.getSupplementalInformationHelper();
     }
 
     @Override
@@ -135,5 +148,35 @@ public final class N26Agent extends AgentPlatformAgent implements RefreshCheckin
     private Xs2aAuthenticationDataAccessor constructXs2aAuthenticationDataAccessor(
             RedirectTokensAccessor oAuth2TokenAccessor, N26ConsentAccessor n26ConsentAccessor) {
         return new N26Xs2aAuthenticationDataAccessor(oAuth2TokenAccessor, n26ConsentAccessor);
+    }
+
+    private OAuth2AuthenticationController constructOAuth2AuthenticationController() {
+        client.setEidasProxy(configuration.getEidasProxy());
+        client.setFollowRedirects(false);
+        return new OAuth2AuthenticationController(
+                persistentStorage,
+                supplementalInformationHelper,
+                new N26OauthPaymentAuthenticator(
+                        new AgentPlatformHttpClient(client),
+                        getN26AgentConfiguration(),
+                        request,
+                        objectMapper),
+                credentials,
+                strongAuthenticationState);
+    }
+
+    @Override
+    public Optional<PaymentController> constructPaymentController() {
+
+        N26Xs2aPaymentExecutor n26Xs2aPaymentExecutor =
+                new N26Xs2aPaymentExecutor(
+                        xs2aApiClient,
+                        new ThirdPartyAppAuthenticationController<>(
+                                constructOAuth2AuthenticationController(),
+                                supplementalInformationHelper),
+                        credentials,
+                        persistentStorage);
+
+        return Optional.of(new PaymentController(n26Xs2aPaymentExecutor, n26Xs2aPaymentExecutor));
     }
 }
