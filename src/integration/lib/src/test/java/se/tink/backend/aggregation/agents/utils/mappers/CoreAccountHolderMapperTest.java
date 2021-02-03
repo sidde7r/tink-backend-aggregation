@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.utils.mappers;
 import static org.junit.Assert.assertEquals;
 
 import com.google.common.collect.Lists;
+import java.util.Optional;
 import org.junit.Assert;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.AccountHolderType;
@@ -18,9 +19,9 @@ public class CoreAccountHolderMapperTest {
     }
 
     @Test
-    public void nullIsMappableFromAggregation() {
-        AccountHolder holder = CoreAccountHolderMapper.fromAggregation(null);
-        Assert.assertNull(holder);
+    public void nullIsMappableButReturnsEmpty() {
+        Optional<AccountHolder> holder = CoreAccountHolderMapper.fromAggregation(null);
+        Assert.assertFalse(holder.isPresent());
     }
 
     @Test
@@ -46,7 +47,7 @@ public class CoreAccountHolderMapperTest {
 
         holder.setIdentities(Lists.newArrayList(hi1, hi2, hi3));
 
-        AccountHolder acAccountHolder = CoreAccountHolderMapper.fromAggregation(holder);
+        AccountHolder acAccountHolder = CoreAccountHolderMapper.fromAggregation(holder).get();
 
         assertEquals(accountId, acAccountHolder.getAccountId());
         assertEquals("BUSINESS", acAccountHolder.getType().toString());

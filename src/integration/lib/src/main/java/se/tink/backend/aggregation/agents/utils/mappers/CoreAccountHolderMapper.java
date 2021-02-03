@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.utils.mappers;
 
 import com.google.common.annotations.VisibleForTesting;
+import java.util.Optional;
 import javax.annotation.Nullable;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeMap;
@@ -13,11 +14,11 @@ public class CoreAccountHolderMapper {
             new ModelMapper()
                     .typeMap(se.tink.backend.agents.rpc.AccountHolder.class, AccountHolder.class);
 
-    public static AccountHolder fromAggregation(
+    public static Optional<AccountHolder> fromAggregation(
             @Nullable se.tink.backend.agents.rpc.AccountHolder holder) {
         if (holder == null) {
-            return null;
+            return Optional.empty();
         }
-        return fromAggregationTypeMap.map(holder);
+        return Optional.of(fromAggregationTypeMap.map(holder));
     }
 }

@@ -445,13 +445,18 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         updateAccountRequest.setUser(request.getCredentials().getUserId());
         updateAccountRequest.setAccount(CoreAccountMapper.fromAggregation(account));
         updateAccountRequest.setAccountFeatures(accountFeatures);
-        updateAccountRequest.setAccountHolder(
-                CoreAccountHolderMapper.fromAggregation(account.getAccountHolder()));
         updateAccountRequest.setCredentialsId(request.getCredentials().getId());
         updateAccountRequest.setAvailableBalance(account.getAvailableBalance());
         updateAccountRequest.setCreditLimit(account.getCreditLimit());
         updateAccountRequest.setOperationId(request.getOperationId());
         updateAccountRequest.setCorrelationId(getCorrelationId());
+
+        Optional<se.tink.backend.aggregationcontroller.v1.rpc.accountholder.AccountHolder>
+                acAccountHolder =
+                        CoreAccountHolderMapper.fromAggregation(account.getAccountHolder());
+        if (acAccountHolder.isPresent()) {
+            updateAccountRequest.setAccountHolder(acAccountHolder.get());
+        }
 
         Account updatedAccount;
         try {
