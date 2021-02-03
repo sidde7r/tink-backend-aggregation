@@ -28,6 +28,7 @@ public class SupplementalInformationControllerImpl implements SupplementalInform
 
     private static final String UNIQUE_PREFIX_TPCB = "tpcb_%s";
     private static final int TIMEOUT_MINUTES_EMBEDDED_FIELDS = 2;
+    private static final int TIMEOUT_MINUTES_MOBILE_BANKID = 2;
 
     private final SupplementalRequester supplementalRequester;
     private final Credentials credentials;
@@ -119,6 +120,25 @@ public class SupplementalInformationControllerImpl implements SupplementalInform
 
         // return the mfaId that can be listened for.
         return String.format(UNIQUE_PREFIX_TPCB, this.state);
+    }
+
+    @Override
+    public void openMobileBankIdSync(String autoStartToken) {
+        String mfaId = openMobileBankIdAsync(autoStartToken);
+
+        supplementalRequester.waitForSupplementalInformation(
+                mfaId, TIMEOUT_MINUTES_MOBILE_BANKID, TimeUnit.MINUTES);
+    }
+
+    @Override
+    public String openMobileBankIdAsync(String autoStartToken) {
+        credentials.setSupplementalInformation(autoStartToken);
+        credentials.setStatus(CredentialsStatus.AWAITING_MOBILE_BANKID_AUTHENTICATION);
+
+        supplementalRequester.requestSupplementalInformation(credentials, false);
+
+        // in case of swedish bankid, we use credentialsId as mfaId
+        return credentials.getId();
     }
 
     private static Map<String, String> stringToMap(final String string) {

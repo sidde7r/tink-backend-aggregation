@@ -57,4 +57,14 @@ public final class MockSupplementalInformationController
         // NOOP
         return null;
     }
+
+    @Override
+    public void openMobileBankIdSync(String autoStartToken) {
+        // NOOP
+    }
+
+    @Override
+    public String openMobileBankIdAsync(String autoStartToken) {
+        return null;
+    }
 }
