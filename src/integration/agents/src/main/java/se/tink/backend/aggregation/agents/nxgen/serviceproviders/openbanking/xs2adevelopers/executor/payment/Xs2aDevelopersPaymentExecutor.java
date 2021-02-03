@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs
 
 import java.util.stream.Collectors;
 import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.executor.payment.entities.AccountEntity;
@@ -25,10 +26,10 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.payment.rpc.Payment;
 
 public class Xs2aDevelopersPaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
-    private final Xs2aDevelopersApiClient apiClient;
-    private final ThirdPartyAppAuthenticationController controller;
-    private final Credentials credentials;
-    private final PersistentStorage persistentStorage;
+    protected final Xs2aDevelopersApiClient apiClient;
+    protected final ThirdPartyAppAuthenticationController controller;
+    protected final Credentials credentials;
+    protected final PersistentStorage persistentStorage;
 
     public Xs2aDevelopersPaymentExecutor(
             Xs2aDevelopersApiClient apiClient,
@@ -59,8 +60,6 @@ public class Xs2aDevelopersPaymentExecutor implements PaymentExecutor, Fetchable
 
         CreatePaymentResponse createPaymentResponse = apiClient.createPayment(createPaymentRequest);
         persistentStorage.put(StorageKeys.PAYMENT_ID, createPaymentResponse.getPaymentId());
-        persistentStorage.put(
-                StorageKeys.AUTHORISATION_URL, createPaymentResponse.getLinks().getScaOAuth());
 
         return createPaymentResponse.toTinkPayment();
     }
@@ -77,7 +76,8 @@ public class Xs2aDevelopersPaymentExecutor implements PaymentExecutor, Fetchable
     }
 
     @Override
-    public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest) {
+    public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest)
+            throws PaymentException {
         return new PaymentMultiStepResponse(
                 paymentMultiStepRequest.getPayment(), SigningStepConstants.STEP_FINALIZE, null);
     }
