@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: VERSION\n"
-"POT-Creation-Date: 2021-01-26 15:26+0000\n"
-"PO-Revision-Date: 2021-01-26 15:26+0000\n"
+"POT-Creation-Date: 2021-02-03 09:21+0000\n"
+"PO-Revision-Date: 2021-02-03 09:21+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE TEAM <EMAIL@ADDRESS>\n"
 "Language: it\n"
@@ -1367,6 +1367,15 @@ msgstr "C'è stato un problema nel connettersi alla banca."
 
 msgid "The value you entered is not valid."
 msgstr "Il valore inserito non è valido."
+
+msgid "waiting for confirmation"
+msgstr "in attesa di conferma"
+
+msgid "Please open the bank application and confirm the order."
+msgstr "Per favore apri l'App della banca e conferma la richiesta."
+
+msgid "Waiting for confirmation"
+msgstr "In attesa di conferma"
 
 msgid "Please confirm the login in your N26 app and then click \"Submit\"."
 msgstr ""
