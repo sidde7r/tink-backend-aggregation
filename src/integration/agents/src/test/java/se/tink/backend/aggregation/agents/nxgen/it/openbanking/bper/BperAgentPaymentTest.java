@@ -1,33 +1,27 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.bper;
 
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
-
-import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
-import se.tink.libraries.account.AccountIdentifier.Type;
-import se.tink.libraries.amount.ExactCurrencyAmount;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.identifiers.IbanIdentifier;
+import se.tink.libraries.amount.Amount;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
+import se.tink.libraries.payments.common.model.PaymentScheme;
+import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
-@Ignore
 public class BperAgentPaymentTest {
     private AgentIntegrationTest.Builder builder;
 
-    private final String IBAN_WHO_GETS_MONEY = "";
-    private final String NAME_WHO_GETS_MONEY = "";
-
-    private final String IBAN_WHO_GIVES_MONEY = "";
-
-    private final String currency = "EUR";
-    private final int AMOUNT = 1;
+    private final ArgumentManager<ArgumentManager.PsuIdArgumentEnum> manager =
+            new ArgumentManager<>(ArgumentManager.PsuIdArgumentEnum.values());
+    private final ArgumentManager<BperAgentPaymentTest.Arg> creditorDebtorManager =
+            new ArgumentManager<>(BperAgentPaymentTest.Arg.values());
 
     @Before
     public void setup() throws Exception {
@@ -35,6 +29,7 @@ public class BperAgentPaymentTest {
                 new AgentIntegrationTest.Builder("it", "it-bper-oauth2")
                         .setFinancialInstitutionId("bper")
                         .setAppId("tink")
+                        .setClusterId("oxford-preprod")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);
@@ -42,34 +37,52 @@ public class BperAgentPaymentTest {
 
     @Test
     public void testPayments() throws Exception {
-        builder.build().testGenericPayment(createListMockedDomesticPayment(1));
+        manager.before();
+        creditorDebtorManager.before();
+
+        builder.build().testTinkLinkPayment(createRealDomesticPayment());
     }
 
-    private List<Payment> createListMockedDomesticPayment(int numberOfMockedPayments) {
-        List<Payment> listOfMockedPayments = new ArrayList<>();
+    private Payment createRealDomesticPayment() {
+        RemittanceInformation remittanceInformation = new RemittanceInformation();
+        AccountIdentifier creditorAccountIdentifier =
+                new IbanIdentifier(
+                        creditorDebtorManager.get(BperAgentPaymentTest.Arg.CREDITOR_ACCOUNT));
+        Creditor creditor = new Creditor(creditorAccountIdentifier, "Creditor Name");
+        remittanceInformation.setValue("Bper");
 
-        for (int i = 0; i < numberOfMockedPayments; ++i) {
-            Creditor creditor = mock(Creditor.class);
-            doReturn(NAME_WHO_GETS_MONEY).when(creditor).getName();
-            doReturn(Type.IBAN).when(creditor).getAccountIdentifierType();
-            doReturn(IBAN_WHO_GETS_MONEY).when(creditor).getAccountNumber();
+        AccountIdentifier debtorAccountIdentifier =
+                new IbanIdentifier(
+                        creditorDebtorManager.get(BperAgentPaymentTest.Arg.DEBTOR_ACCOUNT));
+        Debtor debtor = new Debtor(debtorAccountIdentifier);
 
-            Debtor debtor = mock(Debtor.class);
-            doReturn(Type.IBAN).when(debtor).getAccountIdentifierType();
-            doReturn(IBAN_WHO_GIVES_MONEY).when(debtor).getAccountNumber();
+        Amount amount = Amount.inEUR(1);
+        LocalDate executionDate = LocalDate.now();
+        String currency = "EUR";
 
-            LocalDate executionDate = LocalDate.now();
+        return new Payment.Builder()
+                .withCreditor(creditor)
+                .withDebtor(debtor)
+                .withAmount(amount)
+                .withExecutionDate(executionDate)
+                .withCurrency(currency)
+                .withRemittanceInformation(remittanceInformation)
+                .withPaymentScheme(PaymentScheme.SEPA_CREDIT_TRANSFER)
+                .build();
+    }
 
-            listOfMockedPayments.add(
-                    new Payment.Builder()
-                            .withCreditor(creditor)
-                            .withDebtor(debtor)
-                            .withExactCurrencyAmount(
-                                    new ExactCurrencyAmount(new BigDecimal(AMOUNT), currency))
-                            .withExecutionDate(executionDate)
-                            .withCurrency(currency)
-                            .build());
+    private enum Arg implements ArgumentManager.ArgumentManagerEnum {
+        DEBTOR_ACCOUNT, // Domestic IBAN account number
+        CREDITOR_ACCOUNT; // Domestic IBAN account number
+
+        @Override
+        public boolean isOptional() {
+            return false;
         }
-        return listOfMockedPayments;
+    }
+
+    @AfterClass
+    public static void afterClass() {
+        ArgumentManager.afterClass();
     }
 }
