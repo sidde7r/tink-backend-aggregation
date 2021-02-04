@@ -57,7 +57,6 @@ public final class DanskeBankSEAgent extends DanskeBankAgent
     @Inject
     public DanskeBankSEAgent(AgentComponentProvider componentProvider) {
         super(componentProvider, new SeAccountEntityMapper());
-        configureHttpClient(client);
         transferDestinationRefreshController = constructTransferDestinationController();
     }
 
@@ -71,10 +70,6 @@ public final class DanskeBankSEAgent extends DanskeBankAgent
             TinkHttpClient client, DanskeBankConfiguration configuration) {
         return new DanskeBankSEApiClient(
                 client, (DanskeBankSEConfiguration) configuration, credentials, catalog);
-    }
-
-    protected void configureHttpClient(TinkHttpClient client) {
-        client.setDebugOutput(false);
     }
 
     @Override
