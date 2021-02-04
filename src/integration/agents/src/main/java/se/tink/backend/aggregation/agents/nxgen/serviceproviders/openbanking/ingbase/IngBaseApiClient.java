@@ -12,7 +12,7 @@ import javax.ws.rs.core.MediaType;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants.ErrorCodes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants.ErrorMessages;
@@ -109,8 +109,8 @@ public class IngBaseApiClient {
         } catch (HttpResponseException e) {
             ErrorResponse errorResponse = e.getResponse().getBody(ErrorResponse.class);
             if (errorResponse.getErrorCode().equals(ErrorCodes.NOT_FOUND)) {
-                clearToken();
-                throw AuthorizationError.UNAUTHORIZED.exception();
+                throw BankServiceError.BANK_SIDE_FAILURE.exception(
+                        "Issue at ING, contact developer support.");
             }
             if (e.getResponse().getStatus() == 401) {
                 clearToken();
