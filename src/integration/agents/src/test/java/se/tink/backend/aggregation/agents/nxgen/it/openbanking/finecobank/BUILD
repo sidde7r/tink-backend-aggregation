@@ -33,6 +33,9 @@ junit_test(
         ["**/*.java"],
         exclude = ["agent/**/*.java"],
     ),
+    data = [
+        "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/it/openbanking/finecobank/resources",
+    ],
     visibility = ["//visibility:public"],
     deps = [
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/it/openbanking/finecobank",

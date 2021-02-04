@@ -27,7 +27,6 @@ public class CardAccountsItem {
 
     private String name;
     private String currency;
-    private String status;
     private CreditLimitEntity creditLimit;
 
     public String getResourceId() {
@@ -58,13 +57,10 @@ public class CardAccountsItem {
         return currency;
     }
 
-    public String getStatus() {
-        return status;
-    }
-
     public CreditLimitEntity getCreditLimit() {
         return creditLimit;
     }
+
 
     @JsonIgnore
     public CreditCardAccount toCreditCardAccount() {

@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.Set;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import lombok.EqualsAndHashCode;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.builder.AccountNameStep;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.builder.AccountNumberStep;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.builder.IdBuildStep;
@@ -16,6 +17,7 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.buil
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.strings.StringUtils;
 
+@EqualsAndHashCode
 public final class IdModule {
 
     private final String uniqueId;

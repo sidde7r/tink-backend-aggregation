@@ -52,7 +52,7 @@ public class FinecoBankCreditCardAccountFetcher
     }
 
     @Override
-    public Collection<CreditCardAccount> fetchAccounts() {
+    public List<CreditCardAccount> fetchAccounts() {
         if (finecoBankApiClient.isEmptyCreditCardAccountBalanceConsent()) {
             return Collections.emptyList();
         }
