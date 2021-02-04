@@ -8,14 +8,9 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaCo
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants.QueryParamsKeys;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants.QueryParamsValues;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants.StorageKeys;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.entities.Access;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.entities.OtpCodeBody;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.entities.PsuData;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.rpc.AuthorizeConsentRequest;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.rpc.ConsentResponse;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.rpc.ConsentStatus;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.rpc.CreateConsentRequest;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.rpc.CreateConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.rpc.ScaResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.rpc.ScaStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.rpc.SelectScaMethodRequest;
@@ -26,6 +21,10 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.executor.
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.fetcher.transactionalaccount.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.fetcher.transactionalaccount.rpc.GetBalancesResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.fetcher.transactionalaccount.rpc.GetTransactionsResponse;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AccessEntity;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentDetailsResponse;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentRequest;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
@@ -62,29 +61,28 @@ public class FiduciaApiClient {
     private final FiduciaRequestBuilder fiduciaRequestBuilder;
 
     public String createConsent() {
-        CreateConsentRequest createConsentRequest =
-                new CreateConsentRequest(
-                        new Access("allAccounts"),
-                        FormValues.FREQUENCY_PER_DAY,
-                        FormValues.TRUE,
+        ConsentRequest createConsentRequest =
+                new ConsentRequest(
+                        new AccessEntity("allAccounts"),
+                        true,
                         FormValues.VALID_UNTIL,
-                        FormValues.FALSE);
+                        FormValues.FREQUENCY_PER_DAY,
+                        false);
 
         return fiduciaRequestBuilder
                 .createRequest(
                         createUrl(CONSENTS_ENDPOINT),
                         SerializationUtils.serializeToString(createConsentRequest))
                 .type(MediaType.APPLICATION_JSON_TYPE)
-                .post(CreateConsentResponse.class, createConsentRequest)
+                .post(ConsentResponse.class, createConsentRequest)
                 .getConsentId();
     }
 
-    public ConsentStatus getConsentStatus(String consentId) {
+    public ConsentDetailsResponse getConsentDetails(String consentId) {
         return fiduciaRequestBuilder
                 .createRequest(
                         createUrl(CONSENT_ENDPOINT).parameter(CONSENT_ID, consentId), EMPTY_BODY)
-                .get(ConsentResponse.class)
-                .getConsentStatus();
+                .get(ConsentDetailsResponse.class);
     }
 
     public ScaResponse authorizeConsent(String consentId, String password) {

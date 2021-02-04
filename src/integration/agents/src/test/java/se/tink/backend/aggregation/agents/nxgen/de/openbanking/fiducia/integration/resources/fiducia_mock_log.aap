@@ -5,7 +5,7 @@ accept: application/json
 Content-Type: application/json
 psu-id: dummy_psu_id
 
-{"access":{"allPsd2":"allAccounts"},"frequencyPerDay":"4","recurringIndicator":"true","validUntil":"9999-12-31","combinedServiceIndicator":"false"}
+{"access":{"allPsd2":"allAccounts"},"recurringIndicator":true,"validUntil":"9999-12-31","frequencyPerDay":4,"combinedServiceIndicator":false}
 
 RESPONSE 1
 201
@@ -45,19 +45,18 @@ Content-Type: application/json;charset=utf-8
 {"scaStatus": "finalised"}
 
 REQUEST 4
-GET https://www.raiba-muc-sued.de/services_xs2a/v1/accounts
+GET https://www.raiba-muc-sued.de/services_xs2a/v1/consents/dummy_consent_id
 accept: application/json
 psu-id: dummy_psu_id
-consent-id: dummy_consent_id
 
 RESPONSE 4
 200
 Content-Type: application/json;charset=utf-8
 
-{"accounts":[{"resourceId":"dummy_resource_id","iban":"some_iban","currency":"EUR","ownerName":"Jan Unknown","name":"Kontokorrent","bic":"GENODEF1M03"}]}
+{"consentStatus": "valid","validUntil": "2021-03-17"}
 
 REQUEST 5
-GET https://www.raiba-muc-sued.de/services_xs2a/v1/accounts/dummy_resource_id/balances
+GET https://www.raiba-muc-sued.de/services_xs2a/v1/accounts
 accept: application/json
 psu-id: dummy_psu_id
 consent-id: dummy_consent_id
@@ -66,10 +65,10 @@ RESPONSE 5
 200
 Content-Type: application/json;charset=utf-8
 
-{"balances":[{"balanceAmount":{"currency":"EUR","amount":"274.56"},"balanceType":"closingBooked"}]}
+{"accounts":[{"resourceId":"dummy_resource_id","iban":"some_iban","currency":"EUR","ownerName":"Jan Unknown","name":"Kontokorrent","bic":"GENODEF1M03"}]}
 
 REQUEST 6
-GET https://www.raiba-muc-sued.de/services_xs2a/v1/accounts/dummy_resource_id/transactions?bookingStatus=booked&dateFrom=1970-01-01
+GET https://www.raiba-muc-sued.de/services_xs2a/v1/accounts/dummy_resource_id/balances
 accept: application/json
 psu-id: dummy_psu_id
 consent-id: dummy_consent_id
@@ -78,15 +77,27 @@ RESPONSE 6
 200
 Content-Type: application/json;charset=utf-8
 
-{"account": {"currency": "EUR", "iban": "some_iban"}, "balances": [{"balanceAmount": {"amount": "277.56", "currency": "EUR"}, "balanceType": "openingBooked", "referenceDate": "2020-01-30"}, {"balanceAmount": {"amount": "274.56", "currency": "EUR"}, "balanceType": "closingBooked", "referenceDate": "2020-03-30"} ], "transactions": {"_links": {"account": {"href": "/v1/accounts/dummy_resource_id"}, "next": {"href": "/v1/accounts/dummy_resource_id/transactions?scrollRef=0_%3D2%23%3D20200420%23%3D16312000%23%3D0%23%3D0%23%3D0&bookingStatus=booked"} }, "booked": [{"bookingDate": "2020-01-30", "creditorAccount": {"iban": "another_iban"}, "creditorName": "Jan Unknown", "debtorAccount": {"iban": "some_iban"}, "debtorName": "Jan Unknown", "endToEndId": "NOTPROVIDED", "proprietaryBankTransactionCode": "NTRF+117+00900", "purposeCode": "RINP", "remittanceInformationUnstructured": "To own account IBAN: another_iban BIC: PBNKDEFFXXX", "transactionAmount": {"amount": "-10.00", "currency": "EUR"}, "valueDate": "2020-01-30"}, {"bookingDate": "2020-03-02", "creditorAccount": {"iban": "another_iban"}, "creditorName": "Jan Unknown", "debtorAccount": {"iban": "some_iban"}, "debtorName": "Jan Unknown", "endToEndId": "NOTPROVIDED", "proprietaryBankTransactionCode": "NTRF+117+00900", "purposeCode": "RINP", "remittanceInformationUnstructured": "To own account IBAN: another_iban BIC: PBNKDEFFXXX", "transactionAmount": {"amount": "30.00", "currency": "EUR"}, "valueDate": "2020-03-02"}, {"bookingDate": "2020-03-30", "creditorAccount": {"iban": "another_iban"}, "creditorName": "Jan Unknown", "debtorAccount": {"iban": "some_iban"}, "debtorName": "Jan Unknown", "endToEndId": "NOTPROVIDED", "proprietaryBankTransactionCode": "NTRF+117+00900", "purposeCode": "RINP", "remittanceInformationUnstructured": "To own account IBAN: another_iban BIC: PBNKDEFFXXX", "transactionAmount": {"amount": "-1.00", "currency": "EUR"}, "valueDate": "2020-03-30"} ] } }
+{"balances":[{"balanceAmount":{"currency":"EUR","amount":"274.56"},"balanceType":"closingBooked"}]}
 
 REQUEST 7
-GET https://www.raiba-muc-sued.de/services_xs2a/v1/accounts/dummy_resource_id/transactions?scrollRef=0_%3D2%23%3D20200420%23%3D16312000%23%3D0%23%3D0%23%3D0&bookingStatus=booked
+GET https://www.raiba-muc-sued.de/services_xs2a/v1/accounts/dummy_resource_id/transactions?bookingStatus=booked&dateFrom=1970-01-01
 accept: application/json
 psu-id: dummy_psu_id
 consent-id: dummy_consent_id
 
 RESPONSE 7
+200
+Content-Type: application/json;charset=utf-8
+
+{"account": {"currency": "EUR", "iban": "some_iban"}, "balances": [{"balanceAmount": {"amount": "277.56", "currency": "EUR"}, "balanceType": "openingBooked", "referenceDate": "2020-01-30"}, {"balanceAmount": {"amount": "274.56", "currency": "EUR"}, "balanceType": "closingBooked", "referenceDate": "2020-03-30"} ], "transactions": {"_links": {"account": {"href": "/v1/accounts/dummy_resource_id"}, "next": {"href": "/v1/accounts/dummy_resource_id/transactions?scrollRef=0_%3D2%23%3D20200420%23%3D16312000%23%3D0%23%3D0%23%3D0&bookingStatus=booked"} }, "booked": [{"bookingDate": "2020-01-30", "creditorAccount": {"iban": "another_iban"}, "creditorName": "Jan Unknown", "debtorAccount": {"iban": "some_iban"}, "debtorName": "Jan Unknown", "endToEndId": "NOTPROVIDED", "proprietaryBankTransactionCode": "NTRF+117+00900", "purposeCode": "RINP", "remittanceInformationUnstructured": "To own account IBAN: another_iban BIC: PBNKDEFFXXX", "transactionAmount": {"amount": "-10.00", "currency": "EUR"}, "valueDate": "2020-01-30"}, {"bookingDate": "2020-03-02", "creditorAccount": {"iban": "another_iban"}, "creditorName": "Jan Unknown", "debtorAccount": {"iban": "some_iban"}, "debtorName": "Jan Unknown", "endToEndId": "NOTPROVIDED", "proprietaryBankTransactionCode": "NTRF+117+00900", "purposeCode": "RINP", "remittanceInformationUnstructured": "To own account IBAN: another_iban BIC: PBNKDEFFXXX", "transactionAmount": {"amount": "30.00", "currency": "EUR"}, "valueDate": "2020-03-02"}, {"bookingDate": "2020-03-30", "creditorAccount": {"iban": "another_iban"}, "creditorName": "Jan Unknown", "debtorAccount": {"iban": "some_iban"}, "debtorName": "Jan Unknown", "endToEndId": "NOTPROVIDED", "proprietaryBankTransactionCode": "NTRF+117+00900", "purposeCode": "RINP", "remittanceInformationUnstructured": "To own account IBAN: another_iban BIC: PBNKDEFFXXX", "transactionAmount": {"amount": "-1.00", "currency": "EUR"}, "valueDate": "2020-03-30"} ] } }
+
+REQUEST 8
+GET https://www.raiba-muc-sued.de/services_xs2a/v1/accounts/dummy_resource_id/transactions?scrollRef=0_%3D2%23%3D20200420%23%3D16312000%23%3D0%23%3D0%23%3D0&bookingStatus=booked
+accept: application/json
+psu-id: dummy_psu_id
+consent-id: dummy_consent_id
+
+RESPONSE 8
 200
 Content-Type: application/json;charset=utf-8
 

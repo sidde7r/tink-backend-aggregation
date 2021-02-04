@@ -24,6 +24,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authentic
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.entities.ScaMethod;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.rpc.ScaResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.rpc.ScaStatusResponse;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentDetailsResponse;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.CommonFields;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.GermanFields;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.authenticator.AutoAuthenticator;
@@ -44,6 +45,7 @@ public class FiduciaAuthenticator implements MultiFactorAuthenticator, AutoAuthe
 
     private static final List<String> UNSUPPORTED_AUTH_METHOD_IDS =
             ImmutableList.of("972", "982"); // These two numbers are optical chiptan and photo tan
+    private final Credentials credentials;
     private final FiduciaApiClient apiClient;
     private final PersistentStorage persistentStorage;
     private final SessionStorage sessionStorage;
@@ -62,9 +64,13 @@ public class FiduciaAuthenticator implements MultiFactorAuthenticator, AutoAuthe
                         .get(StorageKeys.CONSENT_ID, String.class)
                         .orElseThrow(SessionError.SESSION_EXPIRED::exception);
 
-        if (!apiClient.getConsentStatus(consentId).isAcceptedStatus()) {
+        ConsentDetailsResponse consentDetailsResponse = apiClient.getConsentDetails(consentId);
+
+        if (!consentDetailsResponse.isValid()) {
             throw SessionError.SESSION_EXPIRED.exception();
         }
+
+        credentials.setSessionExpiryDate(consentDetailsResponse.getValidUntil());
     }
 
     @Override
@@ -76,11 +82,19 @@ public class FiduciaAuthenticator implements MultiFactorAuthenticator, AutoAuthe
         String consentId = apiClient.createConsent();
         ScaResponse scaResponse = apiClient.authorizeConsent(consentId, password);
         ScaStatusResponse scaStatusResponse = authorizeWithSca(scaResponse);
-        if (FINALISED.equalsIgnoreCase(scaStatusResponse.getScaStatus())) {
-            persistentStorage.put(StorageKeys.CONSENT_ID, consentId);
-        } else {
-            throw LoginError.DEFAULT_MESSAGE.exception();
+
+        if (!FINALISED.equalsIgnoreCase(scaStatusResponse.getScaStatus())) {
+            throw LoginError.DEFAULT_MESSAGE.exception("Invalid sca status");
         }
+
+        ConsentDetailsResponse detailsResponse = apiClient.getConsentDetails(consentId);
+
+        if (!detailsResponse.isValid()) {
+            throw LoginError.DEFAULT_MESSAGE.exception("Invalid consent status");
+        }
+
+        persistentStorage.put(StorageKeys.CONSENT_ID, consentId);
+        credentials.setSessionExpiryDate(detailsResponse.getValidUntil());
     }
 
     private ScaStatusResponse authorizeWithSca(ScaResponse scaResponse) {
