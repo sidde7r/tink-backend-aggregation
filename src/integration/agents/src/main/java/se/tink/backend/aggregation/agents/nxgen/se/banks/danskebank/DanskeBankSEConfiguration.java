@@ -9,22 +9,29 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeban
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
 
 public class DanskeBankSEConfiguration implements DanskeBankConfiguration {
-    // == START Standard configuration ==
+
     private static final String APP_CULTURE = "sv-SE";
     private static final String APP_NAME = "com.danskebank.mobilebank3se";
     private static final String APP_REFERER = "MobileBanking3 SE";
-    private static final String APP_VERSION = "0.43.0";
     private static final String BRAND = "OEB";
     private static final String LANGUAGE_CODE = "SV";
     private static final String MARKET_CODE = "SE";
     private static final String SECURITY_SYSTEM = "SV";
     private static final String CLIENT_ID = "5ec4b8ad-a93d-43e1-831c-8e78ee6e661a";
-    private static final String CLIENT_SECRET =
-            "2cAZCUQGWxm6Eb11pRHBW7CeOgveV9A8cQivaviQHt5qCE156h";
-    private static final String APP_VERSION_HEADER = "MobileBank ios SE 17798";
     private static final String DEVICE_SERIAL_NO_KEY = "x-device-serial-no";
     private static final String STEP_UP_TOKEN_KEY = "x-stepup-token";
-    // == END Standard configuration ==
+    // Update all values below at the same time when there's a version update
+    private static final String CLIENT_SECRET =
+            "2cAZCUQGWxm6Eb11pRHBW7CeOgveV9A8cQivaviQHt5qCE156h";
+    private static final String APP_VERSION = "2020.17";
+    private static final String APP_VERSION_HEADER =
+            "MobileBank ios com danskebank.mobilebank3se 24913";
+    private static final String USER_AGENT =
+            "nyamobilbankendanskebank/2020.17 (com.danskebank.mobilebank3se; build:24913; iOS 13.3.1; SE)";
+
+    public String getUserAgent() {
+        return USER_AGENT;
+    }
 
     @Override
     public String getAppVersionHeader() {

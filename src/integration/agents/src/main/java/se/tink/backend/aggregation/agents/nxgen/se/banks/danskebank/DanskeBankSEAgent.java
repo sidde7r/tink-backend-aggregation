@@ -74,7 +74,6 @@ public final class DanskeBankSEAgent extends DanskeBankAgent
     }
 
     protected void configureHttpClient(TinkHttpClient client) {
-        client.setUserAgent("Mobilbank/813854 CFNetwork/808.2.16 Darwin/16.3.0");
         client.setDebugOutput(false);
     }
 

@@ -34,6 +34,8 @@ public class DanskeBankSEApiClient extends DanskeBankApiClient {
             Credentials credentials,
             Catalog catalog) {
         super(client, configuration, credentials, catalog);
+
+        client.setUserAgent(configuration.getUserAgent());
     }
 
     public InitResponse initiateBankIdLogin(String logonPackage) {
