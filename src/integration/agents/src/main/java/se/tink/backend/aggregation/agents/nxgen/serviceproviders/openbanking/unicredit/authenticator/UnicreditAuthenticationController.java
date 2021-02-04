@@ -5,7 +5,8 @@ import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.ThirdPartyAppException;
-import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentDetailsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.authenticator.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppConstants;
@@ -32,8 +33,25 @@ public class UnicreditAuthenticationController
     }
 
     @Override
-    public void autoAuthenticate() throws SessionException, BankServiceException {
-        authenticator.autoAuthenticate();
+    public void autoAuthenticate() {
+        authenticator.getConsentId().orElseThrow(SessionError.SESSION_EXPIRED::exception);
+
+        Optional<ConsentDetailsResponse> maybeValidConsentDetails =
+                authenticator.getConsentDetailsWithValidStatus();
+
+        if (!maybeValidConsentDetails.isPresent()) {
+            authenticator.clearConsent();
+            throw SessionError.SESSION_EXPIRED.exception();
+        }
+
+        authenticator.setCredentialsSessionExpiryDate(maybeValidConsentDetails.get());
+    }
+
+    @Override
+    public ThirdPartyAppAuthenticationPayload getAppPayload() {
+        URL authorizeUrl =
+                this.authenticator.buildAuthorizeUrl(strongAuthenticationState.getState());
+        return ThirdPartyAppAuthenticationPayload.of(authorizeUrl);
     }
 
     @Override
@@ -45,18 +63,16 @@ public class UnicreditAuthenticationController
                 ThirdPartyAppConstants.WAIT_FOR_MINUTES,
                 TimeUnit.MINUTES);
 
-        if (!authenticator.finishManualConsentAuthorization()) {
+        Optional<ConsentDetailsResponse> maybeValidConsentDetails =
+                authenticator.getConsentDetailsWithValidStatus();
+
+        if (!maybeValidConsentDetails.isPresent()) {
+            authenticator.clearConsent();
             return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.AUTHENTICATION_ERROR);
         }
 
+        authenticator.setCredentialsSessionExpiryDate(maybeValidConsentDetails.get());
         return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.DONE);
-    }
-
-    @Override
-    public ThirdPartyAppAuthenticationPayload getAppPayload() {
-        URL authorizeUrl =
-                this.authenticator.buildAuthorizeUrl(strongAuthenticationState.getState());
-        return ThirdPartyAppAuthenticationPayload.of(authorizeUrl);
     }
 
     @Override
