@@ -221,15 +221,27 @@ public class DanskeBankConstants {
 
         public static String getDeviceInfo(
                 String generateId, String country, String appCodeName, String appVersion) {
+
+            return getDeviceInfo(
+                    generateId, USER_AGENT, country, PRODUCT_SUB, appCodeName, appVersion);
+        }
+
+        public static String getDeviceInfo(
+                String generateId,
+                String userAgent,
+                String country,
+                String productSub,
+                String appCodeName,
+                String appVersion) {
             return MessageFormat.format(
                     DEVICE_INFO,
                     DEVICE_ID,
                     DEVICE_NAME,
                     generateId,
-                    USER_AGENT,
+                    userAgent,
                     LANGUAGE,
                     country,
-                    PRODUCT_SUB,
+                    productSub,
                     PLATFORM,
                     appCodeName,
                     appVersion,
