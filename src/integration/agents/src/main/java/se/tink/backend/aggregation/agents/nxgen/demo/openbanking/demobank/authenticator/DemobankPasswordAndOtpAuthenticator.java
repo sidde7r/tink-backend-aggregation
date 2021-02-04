@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authe
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field;
@@ -43,29 +43,28 @@ public class DemobankPasswordAndOtpAuthenticator implements MultiFactorAuthentic
             for (int ii = 0; ii < 10; ii++) {
                 selectOptions.add(new SelectOption(Integer.toString(ii), Integer.toString(ii)));
             }
-            List<Field> fields = new ArrayList<>();
+            StringBuilder sb = new StringBuilder();
             for (int ii = 0; ii < 4; ii++) {
-                Field f =
+                String name = "digit" + (ii + 1);
+                Field field =
                         Field.builder()
                                 .description("OTP digit " + (ii + 1) + " " + message)
                                 .helpText(message)
                                 .immutable(true)
                                 .masked(false)
-                                .name("digit" + (ii + 1))
+                                .name(name)
                                 .numeric(true)
                                 .selectOptions(selectOptions)
                                 .build();
-                fields.add(f);
-            }
-            Map<String, String> otpDigits =
-                    supplementalInformationController.askSupplementalInformationSync(
-                            fields.toArray(new Field[0]));
 
-            otp =
-                    otpDigits.get("digit1")
-                            + otpDigits.get("digit2")
-                            + otpDigits.get("digit3")
-                            + otpDigits.get("digit4");
+                sb.append(
+                        Optional.ofNullable(
+                                        supplementalInformationController
+                                                .askSupplementalInformationSync(field)
+                                                .get(name))
+                                .orElse(""));
+            }
+            otp = sb.toString();
         } else {
             otp =
                     supplementalInformationController
