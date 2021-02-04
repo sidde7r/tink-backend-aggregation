@@ -1,8 +1,10 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads;
 
 import com.google.common.base.Preconditions;
+import lombok.EqualsAndHashCode;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
+@EqualsAndHashCode
 public class ThirdPartyAppAuthenticationPayload {
     private Android android;
     private Ios ios;
@@ -97,6 +99,7 @@ public class ThirdPartyAppAuthenticationPayload {
         this.state = state;
     }
 
+    @EqualsAndHashCode
     public static class Ios {
         /**
          * Url to AppStore where the app can be downloaded. Example:
@@ -137,6 +140,7 @@ public class ThirdPartyAppAuthenticationPayload {
         }
     }
 
+    @EqualsAndHashCode
     public static class Android {
         /** Name of the package that should be opened. Example: "com.abnamro.nl.mobile.payments" */
         private String packageName;
@@ -178,6 +182,7 @@ public class ThirdPartyAppAuthenticationPayload {
         }
     }
 
+    @EqualsAndHashCode
     public static class Desktop {
         private String url;
 

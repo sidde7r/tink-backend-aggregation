@@ -5,8 +5,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Optional;
 import javax.ws.rs.core.MediaType;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants.Endpoints;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants.Formats;
@@ -15,12 +15,9 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uni
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants.PathParameters;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants.QueryValues;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.authenticator.entity.UnicreditConsentAccessEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.authenticator.rpc.ConsentDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.authenticator.rpc.ConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.authenticator.rpc.ConsentResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.authenticator.rpc.ConsentStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.authenticator.rpc.UnicreditConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.configuration.UnicreditProviderConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.executor.payment.enums.UnicreditPaymentProduct;
@@ -32,36 +29,26 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uni
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.fetcher.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.fetcher.transactionalaccount.rpc.BalancesResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.fetcher.transactionalaccount.rpc.TransactionsResponse;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentDetailsResponse;
 import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
 @Slf4j
+@RequiredArgsConstructor
 public class UnicreditBaseApiClient {
 
     private static final DateTimeFormatter CONSENT_BODY_DATE_FORMATTER =
             DateTimeFormatter.ofPattern(Formats.DEFAULT_DATE_FORMAT);
 
     private final TinkHttpClient client;
-    protected final PersistentStorage persistentStorage;
+    protected final UnicreditStorage unicreditStorage;
     protected final UnicreditProviderConfiguration providerConfiguration;
     protected final UnicreditBaseHeaderValues headerValues;
-
-    public UnicreditBaseApiClient(
-            TinkHttpClient client,
-            PersistentStorage persistentStorage,
-            UnicreditProviderConfiguration providerConfiguration,
-            UnicreditBaseHeaderValues headerValues) {
-        this.client = client;
-        this.persistentStorage = persistentStorage;
-        this.providerConfiguration = providerConfiguration;
-        this.headerValues = headerValues;
-    }
 
     protected ConsentRequest getConsentRequest() {
         LocalDateTime validUntil =
@@ -79,7 +66,7 @@ public class UnicreditBaseApiClient {
         return UnicreditConsentResponse.class;
     }
 
-    protected URL getScaRedirectUrlFromConsentResponse(ConsentResponse consentResponse) {
+    public URL getScaRedirectUrlFromConsentResponse(ConsentResponse consentResponse) {
         return new URL(consentResponse.getScaRedirect());
     }
 
@@ -110,31 +97,17 @@ public class UnicreditBaseApiClient {
                 .header(HeaderKeys.CONSENT_ID, consentId);
     }
 
-    public URL buildAuthorizeUrl(String state) {
-        ConsentResponse consentResponse =
-                createRequest(new URL(providerConfiguration.getBaseUrl() + Endpoints.CONSENTS))
-                        .header(HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId())
-                        .header(HeaderKeys.PSU_ID_TYPE, providerConfiguration.getPsuIdType())
-                        .header(
-                                HeaderKeys.TPP_REDIRECT_URI,
-                                new URL(headerValues.getRedirectUrl())
-                                        .queryParam(HeaderKeys.STATE, state)
-                                        .queryParam(HeaderKeys.CODE, HeaderValues.CODE))
-                        .header(HeaderKeys.TPP_REDIRECT_PREFERED, true) // true for redirect auth
-                        .post(getConsentResponseType(), getConsentRequest());
-
-        persistentStorage.put(
-                UnicreditConstants.StorageKeys.CONSENT_ID, consentResponse.getConsentId());
-
-        return getScaRedirectUrlFromConsentResponse(consentResponse);
-    }
-
-    public ConsentStatusResponse getConsentStatus() {
-        return createRequest(
-                        new URL(providerConfiguration.getBaseUrl() + Endpoints.CONSENT_STATUS)
-                                .parameter(PathParameters.CONSENT_ID, getConsentIdFromStorage()))
+    public ConsentResponse createConsent(String state) {
+        return createRequest(new URL(providerConfiguration.getBaseUrl() + Endpoints.CONSENTS))
                 .header(HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId())
-                .get(ConsentStatusResponse.class);
+                .header(HeaderKeys.PSU_ID_TYPE, providerConfiguration.getPsuIdType())
+                .header(
+                        HeaderKeys.TPP_REDIRECT_URI,
+                        new URL(headerValues.getRedirectUrl())
+                                .queryParam(HeaderKeys.STATE, state)
+                                .queryParam(HeaderKeys.CODE, HeaderValues.CODE))
+                .header(HeaderKeys.TPP_REDIRECT_PREFERED, true) // true for redirect auth
+                .post(getConsentResponseType(), getConsentRequest());
     }
 
     public ConsentDetailsResponse getConsentDetails() {
@@ -146,9 +119,9 @@ public class UnicreditBaseApiClient {
     }
 
     private String getConsentIdFromStorage() {
-        return persistentStorage
-                .get(StorageKeys.CONSENT_ID, String.class)
-                .orElseThrow(SessionError.SESSION_EXPIRED::exception);
+        return unicreditStorage
+                .getConsentId()
+                .orElseThrow(() -> new IllegalStateException("Missing consent id"));
     }
 
     public AccountsResponse fetchAccounts() {
@@ -193,10 +166,6 @@ public class UnicreditBaseApiClient {
         return createRequestInSession(nextUrl).get(TransactionsResponse.class);
     }
 
-    public void removeConsentFromPersistentStorage() {
-        persistentStorage.remove(StorageKeys.CONSENT_ID);
-    }
-
     public CreatePaymentResponse createSepaPayment(
             CreatePaymentRequest request, PaymentRequest paymentRequest) {
         String psuIpAddress =
@@ -221,11 +190,13 @@ public class UnicreditBaseApiClient {
                                 new URL(headerValues.getRedirectUrl())
                                         .queryParam(
                                                 HeaderKeys.STATE,
-                                                persistentStorage.get(StorageKeys.STATE))
+                                                unicreditStorage
+                                                        .getAuthenticationState()
+                                                        .orElse(null))
                                         .queryParam(HeaderKeys.CODE, HeaderValues.CODE))
                         .post(getCreatePaymentResponseType(), request);
 
-        persistentStorage.put(
+        unicreditStorage.saveScaRedirectUrlForPayment(
                 createPaymentResponse.getPaymentId(),
                 getScaRedirectUrlFromCreatePaymentResponse(createPaymentResponse));
 

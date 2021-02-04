@@ -1,79 +1,66 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.authenticator;
 
-import static se.tink.libraries.date.ThreadSafeDateFormat.FORMATTER_DAILY;
-
-import java.text.ParseException;
+import com.google.common.collect.ImmutableList;
+import java.util.List;
+import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.aggregation.agents.exceptions.SessionException;
-import se.tink.backend.aggregation.agents.exceptions.ThirdPartyAppException;
-import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
-import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditBaseApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.authenticator.entity.ErrorCodes;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.authenticator.rpc.ConsentDetailsResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.authenticator.rpc.ConsentStatusResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.authenticator.rpc.ConsentResponse;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentDetailsResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
+@RequiredArgsConstructor
 public class UnicreditAuthenticator {
 
+    private static final List<ErrorCodes> INVALID_CONSENT_ERROR_CODES =
+            ImmutableList.of(
+                    ErrorCodes.CONSENT_INVALID,
+                    ErrorCodes.CONSENT_EXPIRED,
+                    ErrorCodes.CONSENT_UNKNOWN);
+
+    private final UnicreditStorage unicreditStorage;
     private final UnicreditBaseApiClient apiClient;
     private final Credentials credentials;
 
-    public UnicreditAuthenticator(UnicreditBaseApiClient apiClient, Credentials credentials) {
-        this.apiClient = apiClient;
-        this.credentials = credentials;
+    Optional<String> getConsentId() {
+        return unicreditStorage.getConsentId();
     }
 
-    public URL buildAuthorizeUrl(String state) {
-        return apiClient.buildAuthorizeUrl(state);
+    void clearConsent() {
+        unicreditStorage.removeConsentId();
     }
 
-    public boolean isConsentValid() throws SessionException {
-        return apiClient.getConsentStatus().isValidConsent();
-    }
-
-    public void invalidateConsent() {
-        apiClient.removeConsentFromPersistentStorage();
-    }
-
-    public void autoAuthenticate() throws SessionException {
-        ConsentStatusResponse consentStatus;
+    Optional<ConsentDetailsResponse> getConsentDetailsWithValidStatus() {
         try {
-            consentStatus = apiClient.getConsentStatus();
-        } catch (HttpResponseException e) {
-            handleInvalidConsents(e);
-            return;
-        }
+            ConsentDetailsResponse consentDetails = apiClient.getConsentDetails();
+            return consentDetails.isValid() ? Optional.of(consentDetails) : Optional.empty();
 
-        if (!consentStatus.isValidConsent()) {
-            throw SessionError.SESSION_EXPIRED.exception();
+        } catch (HttpResponseException hre) {
+            if (isInvalidConsentException(hre)) {
+                return Optional.empty();
+            }
+            throw hre;
         }
     }
 
-    private void handleInvalidConsents(HttpResponseException httpResponseException)
-            throws SessionException {
-        final String message = httpResponseException.getResponse().getBody(String.class);
-        if (isConsentsProblem(message)) {
-            apiClient.removeConsentFromPersistentStorage();
-            throw SessionError.SESSION_EXPIRED.exception();
-        }
-
-        throw httpResponseException;
+    void setCredentialsSessionExpiryDate(ConsentDetailsResponse consentDetailsResponse) {
+        credentials.setSessionExpiryDate(consentDetailsResponse.getValidUntil());
     }
 
-    private boolean isConsentsProblem(String message) {
-        return message.contains(ErrorCodes.CONSENT_INVALID.name())
-                || message.contains(ErrorCodes.CONSENT_EXPIRED.name())
-                || message.contains(ErrorCodes.CONSENT_UNKNOWN.name());
+    URL buildAuthorizeUrl(String state) {
+        ConsentResponse consentResponse = apiClient.createConsent(state);
+        unicreditStorage.saveConsentId(consentResponse.getConsentId());
+        return apiClient.getScaRedirectUrlFromConsentResponse(consentResponse);
     }
 
-    void setSessionExpiryDateBasedOnConsent() throws SessionException, ThirdPartyAppException {
-        ConsentDetailsResponse consentDetails = apiClient.getConsentDetails();
-        try {
-            credentials.setSessionExpiryDate(FORMATTER_DAILY.parse(consentDetails.getValidUntil()));
-        } catch (ParseException e) {
-            throw new ThirdPartyAppException(ThirdPartyAppError.AUTHENTICATION_ERROR);
-        }
+    private boolean isInvalidConsentException(HttpResponseException httpResponseException) {
+        final String responseBody = httpResponseException.getResponse().getBody(String.class);
+        return INVALID_CONSENT_ERROR_CODES.stream()
+                .map(ErrorCodes::name)
+                .anyMatch(responseBody::contains);
     }
 }

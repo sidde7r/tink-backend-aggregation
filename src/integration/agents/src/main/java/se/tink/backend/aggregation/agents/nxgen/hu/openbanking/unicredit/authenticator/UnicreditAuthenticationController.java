@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.authenticator.rpc.ConsentStatusResponse;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentDetailsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.authenticator.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponse;
@@ -50,10 +50,10 @@ public class UnicreditAuthenticationController
     @Override
     public ThirdPartyAppResponse<String> collect(String reference) {
 
-        Retryer<ConsentStatusResponse> consentStatusRetryer = getConsentStatusRetryer();
+        Retryer<ConsentDetailsResponse> consentDetailsRetryer = getConsentDetailsRetryer();
 
         try {
-            consentStatusRetryer.call(authenticator::getConsentStatus);
+            consentDetailsRetryer.call(authenticator::getConsentDetails);
         } catch (RetryException e) {
             throw new IllegalStateException("Authorization status error!");
         } catch (ExecutionException e) {
@@ -63,9 +63,9 @@ public class UnicreditAuthenticationController
         return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.DONE);
     }
 
-    private Retryer<ConsentStatusResponse> getConsentStatusRetryer() {
-        return RetryerBuilder.<ConsentStatusResponse>newBuilder()
-                .retryIfResult(status -> !Objects.isNull(status) && !status.isValidConsent())
+    private Retryer<ConsentDetailsResponse> getConsentDetailsRetryer() {
+        return RetryerBuilder.<ConsentDetailsResponse>newBuilder()
+                .retryIfResult(status -> !Objects.isNull(status) && !status.isValid())
                 .retryIfException( // TODO remove retryIfException for prod (sandbox bug)
                         throwable ->
                                 throwable instanceof HttpResponseException

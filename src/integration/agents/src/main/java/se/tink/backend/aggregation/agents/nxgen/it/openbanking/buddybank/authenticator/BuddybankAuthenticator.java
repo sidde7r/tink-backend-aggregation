@@ -1,23 +1,21 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.buddybank.authenticator;
 
+import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.buddybank.BuddybankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.buddybank.authenticator.rpc.BuddybankCreateConsentResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.authenticator.rpc.ConsentStatusResponse;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentDetailsResponse;
 
+@RequiredArgsConstructor
 public class BuddybankAuthenticator {
 
     private final BuddybankApiClient apiClient;
 
-    public BuddybankAuthenticator(BuddybankApiClient apiClient) {
-        this.apiClient = apiClient;
-    }
-
     public BuddybankCreateConsentResponse createConsentRequest(String state) {
-        return apiClient.createConsent(state);
+        return apiClient.createBuddybankConsent(state);
     }
 
-    public ConsentStatusResponse getConsentStatus() throws SessionException {
-        return apiClient.getConsentStatus();
+    public ConsentDetailsResponse getConsentDetails() throws SessionException {
+        return apiClient.getConsentDetails();
     }
 }

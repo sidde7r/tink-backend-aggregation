@@ -34,6 +34,7 @@ public abstract class UnicreditBaseAgent extends NextGenerationAgent
                 RefreshTransferDestinationExecutor {
 
     protected final UnicreditBaseApiClient apiClient;
+    protected final UnicreditStorage unicreditStorage;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
     public UnicreditBaseAgent(
@@ -42,6 +43,7 @@ public abstract class UnicreditBaseAgent extends NextGenerationAgent
         super(componentProvider);
 
         UnicreditBaseHeaderValues headerValues = setupHeaderValues(componentProvider);
+        unicreditStorage = new UnicreditStorage(getPersistentStorage());
         apiClient = getApiClient(providerConfiguration, headerValues);
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
@@ -60,7 +62,7 @@ public abstract class UnicreditBaseAgent extends NextGenerationAgent
             UnicreditProviderConfiguration providerConfiguration,
             UnicreditBaseHeaderValues headerValues) {
         return new UnicreditBaseApiClient(
-                client, persistentStorage, providerConfiguration, headerValues);
+                client, unicreditStorage, providerConfiguration, headerValues);
     }
 
     @Override
@@ -74,7 +76,7 @@ public abstract class UnicreditBaseAgent extends NextGenerationAgent
         final UnicreditAuthenticationController controller =
                 new UnicreditAuthenticationController(
                         supplementalInformationHelper,
-                        new UnicreditAuthenticator(apiClient, credentials),
+                        new UnicreditAuthenticator(unicreditStorage, apiClient, credentials),
                         strongAuthenticationState);
 
         return new AutoAuthenticationController(
@@ -123,7 +125,7 @@ public abstract class UnicreditBaseAgent extends NextGenerationAgent
                 new UnicreditPaymentController(
                         new UnicreditPaymentExecutor(apiClient, sessionStorage),
                         supplementalInformationHelper,
-                        persistentStorage,
+                        unicreditStorage,
                         strongAuthenticationState));
     }
 

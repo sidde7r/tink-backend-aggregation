@@ -2,9 +2,11 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.un
 
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.ThirdPartyAppException;
-import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
+import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentDetailsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.authenticator.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponse;
@@ -17,28 +19,39 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.i18n.LocalizableKey;
 
+@RequiredArgsConstructor
 public class UnicreditAuthenticationController
         implements AutoAuthenticator, ThirdPartyAppAuthenticator<String> {
+
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final UnicreditAuthenticator authenticator;
     private final StrongAuthenticationState strongAuthenticationState;
 
-    public UnicreditAuthenticationController(
-            SupplementalInformationHelper supplementalInformationHelper,
-            UnicreditAuthenticator authenticator,
-            StrongAuthenticationState strongAuthenticationState) {
-        this.supplementalInformationHelper = supplementalInformationHelper;
-        this.authenticator = authenticator;
-        this.strongAuthenticationState = strongAuthenticationState;
-    }
-
+    @Override
     public ThirdPartyAppResponse<String> init() {
         return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.WAITING);
     }
 
     @Override
-    public void autoAuthenticate() throws SessionException, BankServiceException {
-        authenticator.autoAuthenticate();
+    public void autoAuthenticate() {
+        authenticator.getConsentId().orElseThrow(SessionError.SESSION_EXPIRED::exception);
+
+        Optional<ConsentDetailsResponse> maybeValidConsentDetails =
+                authenticator.getConsentDetailsWithValidStatus();
+
+        if (!maybeValidConsentDetails.isPresent()) {
+            authenticator.clearConsent();
+            throw SessionError.SESSION_EXPIRED.exception();
+        }
+
+        authenticator.setCredentialsSessionExpiryDate(maybeValidConsentDetails.get());
+    }
+
+    @Override
+    public ThirdPartyAppAuthenticationPayload getAppPayload() {
+        URL authorizeUrl =
+                this.authenticator.buildAuthorizeUrl(strongAuthenticationState.getState());
+        return ThirdPartyAppAuthenticationPayload.of(authorizeUrl);
     }
 
     @Override
@@ -50,19 +63,16 @@ public class UnicreditAuthenticationController
                 ThirdPartyAppConstants.WAIT_FOR_MINUTES,
                 TimeUnit.MINUTES);
 
-        if (!authenticator.isConsentValid()) {
+        Optional<ConsentDetailsResponse> maybeValidConsentDetails =
+                authenticator.getConsentDetailsWithValidStatus();
+
+        if (!maybeValidConsentDetails.isPresent()) {
+            authenticator.clearConsent();
             return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.AUTHENTICATION_ERROR);
         }
 
-        authenticator.setSessionExpiryDateBasedOnConsent();
-
+        authenticator.setCredentialsSessionExpiryDate(maybeValidConsentDetails.get());
         return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.DONE);
-    }
-
-    public ThirdPartyAppAuthenticationPayload getAppPayload() {
-        URL authorizeUrl =
-                this.authenticator.buildAuthorizeUrl(strongAuthenticationState.getState());
-        return ThirdPartyAppAuthenticationPayload.of(authorizeUrl);
     }
 
     @Override
