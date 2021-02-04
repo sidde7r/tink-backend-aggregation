@@ -15,7 +15,6 @@ public final class FinecoBankConstants {
             AccountTypeMapper.builder()
                     .put(AccountTypes.CHECKING, "Multicurrency account", "Main account")
                     .put(AccountTypes.SAVINGS, "SVGS")
-                    .put(AccountTypes.CREDIT_CARD, "FINECO CARD VISA MULTIFUNZIONE CHIP")
                     .ignoreKeys("OTHR")
                     .build();
 

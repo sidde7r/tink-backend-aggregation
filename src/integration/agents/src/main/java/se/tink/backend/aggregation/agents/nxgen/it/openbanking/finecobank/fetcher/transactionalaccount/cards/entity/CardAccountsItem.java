@@ -4,9 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Optional;
-import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.Formats;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.StorageKeys;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -67,18 +64,6 @@ public class CardAccountsItem {
 
     public CreditLimitEntity getCreditLimit() {
         return creditLimit;
-    }
-
-    @JsonIgnore
-    public Optional<CreditCardAccount> toTinkCreditAccount() {
-        final AccountTypes type =
-                FinecoBankConstants.ACCOUNT_TYPE_MAPPER
-                        .translate(product)
-                        .orElse(AccountTypes.CREDIT_CARD);
-
-        return type == AccountTypes.CREDIT_CARD
-                ? Optional.ofNullable(toCreditCardAccount())
-                : Optional.empty();
     }
 
     @JsonIgnore
