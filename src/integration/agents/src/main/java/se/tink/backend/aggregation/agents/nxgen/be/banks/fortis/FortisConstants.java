@@ -6,7 +6,7 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 
 public class FortisConstants {
 
-    public static final String APP_VERSION = "30.0.0";
+    public static final String APP_VERSION = "30.4.6";
     public static final String LANGUAGE = "EN";
     public static final String MINIMUM_DAC_LEVEL = "3";
     public static final String EASY_PIN_PUBLIC_KEY_ID = "prod-bnppf-eps-public-key01";
