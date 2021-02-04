@@ -61,7 +61,6 @@ public class CardAccountsItem {
         return creditLimit;
     }
 
-
     @JsonIgnore
     public CreditCardAccount toCreditCardAccount() {
 

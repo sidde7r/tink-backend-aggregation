@@ -52,7 +52,6 @@ public class FinecoBankCreditCardAccountFetcherTest {
     private PersistentStorage persistentStorage;
     private FinecoBankCreditCardAccountFetcher commonTestFetcher;
     private CardAccountsResponse onlyCreditCardAccountsResponse;
-    private CardAccountsResponse notOnlyCreditCardAccountsResponse;
 
     @Before
     public void setup() {
