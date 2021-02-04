@@ -284,6 +284,8 @@ public final class LansforsakringarAgent extends AbstractAgent
     private String token = null;
     private String loginName = null;
     private String loginSsn = null;
+    private long retrySleepMilliseconds = 500;
+    private int maxNumRetries = 5;
 
     // cache
     private Map<AccountEntity, Account> accounts = null;
@@ -933,9 +935,31 @@ public final class LansforsakringarAgent extends AbstractAgent
 
     private ClientResponse postRequestAndValidateResponse(String url, Object requestEntity) {
         ClientResponse clientResponse = createPostRequest(url, requestEntity);
+        if (shouldRetry(clientResponse)) {
+            clientResponse = retryPostRequest(clientResponse, url, requestEntity);
+        }
         validateTransactionClientResponse(clientResponse);
 
         return clientResponse;
+    }
+
+    private ClientResponse retryPostRequest(
+            ClientResponse clientResponse, String url, Object requestEntity) {
+        long maxSleepMilliseconds;
+        for (int retryCount = 0;
+                shouldRetry(clientResponse) && (retryCount <= maxNumRetries);
+                retryCount++) {
+            maxSleepMilliseconds = (retryCount + 1) * retrySleepMilliseconds;
+            log.warn("Received Error-Code: 12231, retrying....");
+            Uninterruptibles.sleepUninterruptibly(maxSleepMilliseconds, TimeUnit.MILLISECONDS);
+            clientResponse = createPostRequest(url, requestEntity);
+        }
+        return clientResponse;
+    }
+
+    private boolean shouldRetry(ClientResponse clientResponse) {
+        return LFUtils.isClientResponseCancel(clientResponse)
+                && "12231".equals(clientResponse.getHeaders().getFirst("Error-Code"));
     }
 
     /** Helper method to validate a client response in the payment process. */
