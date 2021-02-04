@@ -77,7 +77,9 @@ public class DanskeBankBankIdAuthenticator implements BankIdAuthenticator<String
         dynamicBankIdJavascript =
                 DanskeBankConstants.Javascript.getDeviceInfo(
                                 deviceId,
+                                configuration.getUserAgent(),
                                 configuration.getMarketCode(),
+                                configuration.getProductSub(),
                                 configuration.getAppName(),
                                 configuration.getAppVersion())
                         + getResponse.getBody(String.class);

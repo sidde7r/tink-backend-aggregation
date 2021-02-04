@@ -24,10 +24,15 @@ public class DanskeBankSEConfiguration implements DanskeBankConfiguration {
     private static final String CLIENT_SECRET =
             "2cAZCUQGWxm6Eb11pRHBW7CeOgveV9A8cQivaviQHt5qCE156h";
     private static final String APP_VERSION = "2020.17";
+    private static final String PRODUCT_SUB = "13.3.1";
     private static final String APP_VERSION_HEADER =
             "MobileBank ios com danskebank.mobilebank3se 24913";
     private static final String USER_AGENT =
             "nyamobilbankendanskebank/2020.17 (com.danskebank.mobilebank3se; build:24913; iOS 13.3.1; SE)";
+
+    public String getProductSub() {
+        return PRODUCT_SUB;
+    }
 
     public String getUserAgent() {
         return USER_AGENT;

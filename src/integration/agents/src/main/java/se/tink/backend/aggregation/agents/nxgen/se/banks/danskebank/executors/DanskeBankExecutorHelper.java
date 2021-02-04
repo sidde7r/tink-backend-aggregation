@@ -243,7 +243,9 @@ public class DanskeBankExecutorHelper {
         String dynamicBankIdSignJavascript =
                 DanskeBankConstants.Javascript.getDeviceInfo(
                                 deviceId,
+                                configuration.getUserAgent(),
                                 configuration.getMarketCode(),
+                                configuration.getProductSub(),
                                 configuration.getAppName(),
                                 configuration.getAppVersion())
                         + injectJsCheckStep.getBody(String.class);
