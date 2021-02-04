@@ -10,7 +10,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -59,9 +58,7 @@ public class FinecoBankCreditCardAccountFetcher
         }
 
         return this.finecoBankApiClient.fetchCreditCardAccounts().getCardAccounts().stream()
-                .map(CardAccountsItem::toTinkCreditAccount)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
+                .map(CardAccountsItem::toCreditCardAccount)
                 .collect(Collectors.toList());
     }
 

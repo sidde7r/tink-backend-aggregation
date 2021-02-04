@@ -29,7 +29,7 @@ public class AccountEntity {
                 .withTypeAndFlagsFrom(
                         FinecoBankConstants.ACCOUNT_TYPE_MAPPER,
                         nameTrimmed,
-                        TransactionalAccountType.OTHER)
+                        TransactionalAccountType.CHECKING)
                 .withBalance(FinecoBalanceTransform.calculate(balances))
                 .withId(
                         IdModule.builder()
