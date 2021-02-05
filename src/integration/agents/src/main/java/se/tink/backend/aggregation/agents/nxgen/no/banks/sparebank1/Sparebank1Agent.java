@@ -5,7 +5,7 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.LOANS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
 
-import com.google.common.base.Preconditions;
+import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
@@ -14,23 +14,18 @@ import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
-import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.Sparebank1Constants.Headers;
-import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.Sparebank1Constants.Keys;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.authenticator.Sparebank1Authenticator;
-import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.authenticator.rpc.authentication.RestRootResponse;
-import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.entities.FinancialInstitutionEntity;
-import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.entities.LinkEntity;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.Sparebank1CreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.Sparebank1CreditCardTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.Sparebank1InvestmentsFetcher;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.Sparebank1LoanFetcher;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.Sparebank1TransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.Sparebank1TransactionalAccountFetcher;
-import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.rpc.filters.AddRefererFilter;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.filters.AddRefererFilter;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.sessionhandler.Sparebank1SessionHandler;
-import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.bankid.BankIdAuthenticationControllerNO;
@@ -42,7 +37,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, CREDIT_CARDS, LOANS})
 public final class Sparebank1Agent extends NextGenerationAgent
@@ -51,22 +45,20 @@ public final class Sparebank1Agent extends NextGenerationAgent
                 RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor {
     private final Sparebank1ApiClient apiClient;
-    private final RestRootResponse restRootResponse;
     private final InvestmentRefreshController investmentRefreshController;
     private final LoanRefreshController loanRefreshController;
     private final CreditCardRefreshController creditCardRefreshController;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
+    private String branchId;
 
-    public Sparebank1Agent(
-            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
+    @Inject
+    public Sparebank1Agent(AgentComponentProvider agentComponentProvider) {
+        super(agentComponentProvider);
         configureHttpClient(client);
 
-        String bankId = request.getProvider().getPayload();
-        sessionStorage.put(Keys.BANK_ID, bankId);
-        apiClient = new Sparebank1ApiClient(client, bankId);
-        FinancialInstitutionEntity financialInstitution = apiClient.getFinancialInstitution();
-        restRootResponse = getRestRootResponse(financialInstitution);
+        this.branchId = request.getProvider().getPayload();
+
+        apiClient = new Sparebank1ApiClient(client, branchId);
 
         investmentRefreshController =
                 new InvestmentRefreshController(
@@ -84,15 +76,6 @@ public final class Sparebank1Agent extends NextGenerationAgent
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
     }
 
-    private RestRootResponse getRestRootResponse(FinancialInstitutionEntity financialInstitution) {
-        LinkEntity restRootLink =
-                Preconditions.checkNotNull(
-                        financialInstitution.getLinks().get(Keys.REST_ROOT_KEY),
-                        "Link to the rest root not found");
-
-        return apiClient.get(restRootLink.getHref(), RestRootResponse.class);
-    }
-
     protected void configureHttpClient(TinkHttpClient client) {
         client.setUserAgent(Headers.USER_AGENT);
         AddRefererFilter filter = new AddRefererFilter();
@@ -102,8 +85,7 @@ public final class Sparebank1Agent extends NextGenerationAgent
     @Override
     protected Authenticator constructAuthenticator() {
         Sparebank1Authenticator authenticator =
-                new Sparebank1Authenticator(
-                        apiClient, credentials, persistentStorage, restRootResponse);
+                new Sparebank1Authenticator(apiClient, credentials, persistentStorage, branchId);
 
         return new AutoAuthenticationController(
                 request,
@@ -185,6 +167,6 @@ public final class Sparebank1Agent extends NextGenerationAgent
 
     @Override
     protected SessionHandler constructSessionHandler() {
-        return new Sparebank1SessionHandler(apiClient, restRootResponse);
+        return new Sparebank1SessionHandler(apiClient);
     }
 }

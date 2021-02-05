@@ -5,34 +5,37 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 public class Sparebank1Constants {
 
     public static class Urls {
-        public static final String BASE = "https://mobilbank-pm.sparebank1.no/";
-        public static final String BASE_LOGIN = "https://login.sparebank1.no/";
+        static final String BASE = "https://mobilbank-pm.sparebank1.no/";
+        static final String BASE_LOGIN = "https://login.sparebank1.no/";
 
-        public static final URL CMS = new URL(BASE + "personal/rest/cms");
-        public static final URL LOGIN_DISPATCHER =
-                new URL(BASE_LOGIN + "auth/pages/loginDispatcher.xhtml");
-        public static final URL SELECT_MARKET_AND_AUTH_TYPE =
+        static final URL SELECT_MARKET_AND_AUTH_TYPE =
                 new URL(BASE_LOGIN + "auth/pages/selectMarketAndAuthType.xhtml");
-        public static final URL POLL_BANKID = new URL(BASE_LOGIN + "auth/api/bim/poll");
-        public static final URL LOGIN_DONE = new URL(BASE_LOGIN + "auth/pages/loginDone.xhtml");
-        public static final URL CONTINUE_ACTIVATION =
-                new URL(BASE + "personal/activation/continue-activation");
-        public static final URL AGREEMENTS =
-                new URL(BASE + "{bankName}/nettbank-privat/avtale/rest/avtale");
+        static final URL POLL_BANKID = new URL(BASE_LOGIN + "auth/api/bim/poll");
+        static final URL LOGIN_DONE = new URL(BASE_LOGIN + "auth/pages/loginDone.xhtml");
 
         public static final URL ACCOUNTS =
                 new URL(BASE + "{bankName}/nettbank-privat/rest/accounts");
         public static final URL CREDITCARDS =
                 new URL(BASE + "{bankName}/nettbank-privat/kort/rest/cards/credit");
         public static final URL LOANS = new URL(BASE + "{bankName}/nettbank-privat/rest/loans");
-        public static final URL LOAN_DETAILS =
+        static final URL LOAN_DETAILS =
                 new URL(BASE + "{bankName}/nettbank-privat/rest/loans/{accountId}");
-        public static final URL CREDITCARD_TRANSACTIONS =
+        static final URL CREDITCARD_TRANSACTIONS =
                 new URL(
                         BASE
                                 + "{bankName}/nettbank-privat/kort/rest/cards/credit/{accountId}/transactions");
         public static final URL PORTFOLIOS =
                 new URL(BASE + "{bankName}/nettbank-privat/sparing/rest/fond/portefoeljer");
+        static final URL INIT_LOGIN =
+                new URL(BASE + "personal/banking/mobilbank/login-app-dispatcher");
+
+        static final URL AGREEMENTS = new URL(BASE + "personal/banking/authorization");
+        static final URL DIGITAL_SESSION =
+                new URL(BASE + "personal/banking/mobilbank/digitalbank-sessionid");
+        static final URL INITIAL_REQUEST = new URL(BASE + "personal/banking/mobilbank");
+        static final URL BRANCHES = new URL(BASE + "/personal/banking/bankrelations");
+        static final URL TOKEN = new URL(BASE + "personal/banking/mobilbank/activation/rest/token");
+        static final URL SESSION = new URL(BASE + "personal/rest/session");
     }
 
     public static class Parameters {
@@ -44,13 +47,7 @@ public class Sparebank1Constants {
 
     public static class QueryParams {
         public static final String APP = "app";
-        public static final String APP_VALUE = "mobilbank";
-        public static final String FIN_INST = "finInst";
-        public static final String GOTO = "goto";
         public static final String MARKET = "market";
-        public static final String MARKET_VALUE = "PRIVATE";
-        public static final String CONTINUE_ACTIVATION_URL =
-                "https://mobilbank-pm.sparebank1.no/personal/activation/continue-activation&cid=1";
         public static final String UNDERSCORE = "_";
     }
 
@@ -63,31 +60,23 @@ public class Sparebank1Constants {
                 "application/json; charset=utf-8";
         public static final String TEXT_HTML_APPLICATION_XHTML_XML =
                 "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8";
-        public static final String REFERER_FOR_FINISH_AGREEMENT_SESSION =
-                "/nettbank-privat/avtale/velg-avtale?goto=https://mobilbank-pm.sparebank1.no/personal/activation/continue-activation";
         public static final String X_SB1_REST_VERSION = "X-SB1-Rest-Version";
         public static final String X_SB1_REST_VERSION_VALUE = "1.0.0";
         public static final String X_REQUESTED_WITH = "X-Requested-With";
         public static final String XML_HTTP_REQUEST = "XMLHttpRequest";
         public static final String CSRFT_TOKEN = "X-CSRFToken";
+        public static final String V_2_JSON = "application/vnd.sparebank1.v2+json;charset=utf-8";
+        public static final String V_3_JSON = "application/vnd.sparebank1.v3+json;charset=utf-8";
     }
 
     public static final class Keys {
-        public static final String LOGOUT_KEY = "logout";
-        public static final String KEEP_ALIVE_KEY = "keepAlive";
-        public static final String CHALLENGE_KEY = "challenge";
-        public static final String VALIDATE_SESSION_KEY = "validateSessionKey";
-        public static final String LOGIN_KEY = "login";
-        public static final String ACTIVATION_KEY = "activation";
         public static final String TRANSACTIONS_KEY = "transactions";
-        public static final String REST_ROOT_KEY = "restRoot";
         public static final String MORE_TRANSACTIONS_KEY = "moreTransactions";
         public static final String PORTFOLIO_HOLDINGS_KEY = "portfolioHoldings";
         public static final String SESSION_ID = "dsessionid";
         public static final String TRANSACTIONS_LINK = "transactionsLink";
         public static final String DOB = "dob";
         public static final String NATIONAL_ID = "nationalId";
-        public static final String BANK_ID = "bankId";
     }
 
     public static final class DeviceValues {
@@ -118,8 +107,26 @@ public class Sparebank1Constants {
         public static final String C167 = "bid-c167";
     }
 
-    public static final class ErrorMessages {
-        public static final String SRP_BAD_CREDENTIALS = "error.srp.bad.credentials";
-        public static final String SERVICE_UNAVAILABLE = "SERVICE_UNAVAILABLE";
+    public static final class Encryption {
+        public static final String KEY =
+                "PniCq(]}Ft\"8]xC-java.lang.String(vYO3Z}lxqcbxK_522Q/U?_0]qT>y?Wz_.YxK7JwJ$8Ja2;99QY?i^,<job&uH3-t(ZLMaT%umLx?'\"6X_W:OA^'DK\",OWxR6u]-uUYTJPzy5z{o";
+    }
+
+    public static final class Claims {
+        public static final String DEVICE_ID = "deviceId";
+        public static final String DEVICE_DESCRIPTION = "deviceDescription";
+        public static final String BASE_64_ENCODED_PUBLIC_KEY = "base64EncodedPublicKey";
+        public static final String EXP = "exp";
+        public static final String TYPE = "type";
+        public static final String DEVICE_INFO = "deviceInfo";
+        public static final String PIN_SRP_DATA = "pinSrpData";
+    }
+
+    public static final class FormParams {
+        public static final String BANKID_MOBILE_NUMBER = "bankid-mobile-number";
+        public static final String BANKID_MOBILE_BIRTHDATE = "bankid-mobile-birthdate";
+        public static final String NESTE_MOBIL = "nesteMobil";
+        public static final String NESTE = "Neste";
+        public static final String JAVAX_FACES_VIEW_STATE = "javax.faces.ViewState";
     }
 }

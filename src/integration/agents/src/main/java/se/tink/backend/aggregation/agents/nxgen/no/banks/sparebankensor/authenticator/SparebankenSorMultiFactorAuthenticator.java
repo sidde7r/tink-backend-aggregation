@@ -146,7 +146,7 @@ public class SparebankenSorMultiFactorAuthenticator implements BankIdAuthenticat
     }
 
     @Override
-    public void sendActivationCode() throws SupplementalInfoException {
+    public void finishActivation() throws SupplementalInfoException {
         continueActivation();
     }
 

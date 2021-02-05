@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html><head id="j_idt7">
+  <title>Innlogging - SpareBank 1</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <link rel="icon" href="/auth/icons/loginapp/sb1.ico?v=3Wr_Wu8p46Y1cPq9XDRuEA2tafgwk5cgyRUyYVocf1A" type="image/x-icon" />
+  <link href="/auth/wro/login-iframe.css?v=3Wr_Wu8p46Y1cPq9XDRuEA2tafgwk5cgyRUyYVocf1A" rel="stylesheet" type="text/css" /><!--[if lt IE 9]>
+  <script type="text/javascript" language="javascript" src="/auth/webjars/html5shiv/3.7.2/html5shiv.min.js?v=3Wr_Wu8p46Y1cPq9XDRuEA2tafgwk5cgyRUyYVocf1A"></script><![endif]--></head><body style="display:none"><input id="preSelectedLoginMethod" type="hidden" name="preSelectedLoginMethod" value="bankID-mobile" />
+<div class="container">
+  <div class="col-padding">
+    <section id="tab-block" class="tab-block">
+      <ul class="tabs hidden visible-pad" role="tablist">
+        <li id="tab-bankID" aria-controls="panel-bankID" class="tab" role="tab" aria-selected="false" tabindex="0"><a class="tab-link" tabindex="-1" href="#">BankID</a>
+        </li>
+        <li id="tab-bankID-mobile" aria-controls="panel-bankID-mobile" class="tab" role="tab" aria-selected="true" tabindex="0"><a class="tab-link" tabindex="-1" href="#">BankID på mobil</a>
+        </li>
+        <li id="tab-sparebank1-id" aria-controls="panel-sparebank1-id" class="tab" role="tab" aria-selected="false" tabindex="0"><a class="tab-link" tabindex="-1" href="#">Uten BankID</a>
+        </li>
+      </ul>
+    </section>
+  </div>
+
+  <div>
+    <div class="col-padding">
+      <section id="tab-content" class="mb"><div id="panel-bankID" class="content-block" role="tabpanel" aria-labelledby="tab-bankID" aria-hidden="true">
+
+        <div>
+          <img src="/auth/resources/images/bankid.svg" class="bankID-badge pull-right" alt="" aria-label="BankID Logo" />
+          <h2 role="heading">Identifisering med BankID<br /><small>SpareBank 1</small> </h2>
+        </div>
+        <form id="login" name="login" method="post" action="/auth/pages/selectMarketAndAuthType.xhtml?cid=1" class="credentialform clear" enctype="application/x-www-form-urlencoded">
+          <input type="hidden" name="login" value="login" />
+          <!--[if lt IE 9]><input id="iebugfix" type="text" name="iebugfix" value="Fix IE bug" style="display:none" /><![endif]-->
+          <div class="form-group"><label for="ssn" class="control-label">Fødselsnummer</label><input id="ssn" name="ssn" autocomplete="off" class="form-control placeholder " maxlength="11" type="tel" />
+            <span class="hidden" id="ssn-placeholder">Elleve siffer</span>
+          </div>
+
+          <div class="form-group"><input id="neste" type="submit" name="neste" value="Neste" class="btn btn-primary" />
+          </div><input id="ksd" type="hidden" name="ksd" /><input type="hidden" name="javax.faces.ViewState" id="j_id1:javax.faces.ViewState:0" value="-4818047786543362728:-1860433859868414757" autocomplete="off" />
+        </form>
+
+        <script type="text/javascript" language="javascript" src="/auth/resources/javascript/bid20upbw.min.js?v=3Wr_Wu8p46Y1cPq9XDRuEA2tafgwk5cgyRUyYVocf1A"></script><div class="login-type-links">
+
+        <div class="hidden-pad">
+          <div class="tab-alternate visible-xs visible-sm mt">
+            <strong>Endre metode?</strong><br />
+          </div>
+          <div class="tab-alternate mt" data-id="switch-bankID-mobile">
+            <a href="#" class="login-switch link-text" data-id="switch-bankID-mobile">Bruk BankID på mobil</a>
+          </div>
+          <div class="tab-alternate mt" data-id="switch-sparebank1-id">
+            <a href="#" class="login-switch link-text" data-id="switch-sparebank1-id">Uten BankID</a>
+          </div>
+        </div></div></div><div id="panel-bankID-mobile" class="content-block" role="tabpanel" aria-labelledby="tab-bankID-mobile" aria-hidden="false">
+
+        <div>
+          <img src="/auth/resources/images/bankid.svg" class="bankID-badge pull-right" alt="" aria-label="BankID Logo" />
+          <h2 role="heading">Identifisering med BankID på mobil<br /><small>SpareBank 1</small> </h2>
+        </div>
+        <form id="j_idt197" name="j_idt197" method="post" action="/auth/pages/selectMarketAndAuthType.xhtml?cid=1" class="credentialform clear" enctype="application/x-www-form-urlencoded">
+          <input type="hidden" name="j_idt197" value="j_idt197" />
+
+          <div class="form-group"><label for="bankid-mobile-number" class="control-label">Mobilnummer</label><input id="bankid-mobile-number" name="bankid-mobile-number" autocomplete="off" class="form-control placeholder " maxlength="8" type="tel" />
+            <span class="hidden" id="bankid-mobile-number-placeholder">Åtte siffer</span>
+          </div>
+          <div class="form-group"><label for="bankid-mobile-birthdate" class="control-label">Fødselsdato</label><input id="bankid-mobile-birthdate" name="bankid-mobile-birthdate" class="form-control placeholder " maxlength="6" type="tel" />
+            <span class="hidden" id="bankid-mobile-birthdate-placeholder">ddmmåå</span>
+          </div>
+
+          <div class="form-group"><input id="nesteMobil" type="submit" name="nesteMobil" value="Neste" class="btn btn-primary" />
+          </div><input type="hidden" name="javax.faces.ViewState" id="j_id1:javax.faces.ViewState:1" value="-4818047786543362728:-1860433859868414757" autocomplete="off" />
+        </form><div class="login-type-links">
+
+        <div class="hidden-pad">
+          <div class="tab-alternate visible-xs visible-sm mt">
+            <strong>Endre metode?</strong><br />
+          </div>
+          <div class="tab-alternate mt" data-id="switch-bankID">
+            <a href="#" class="login-switch link-text" data-id="switch-bankID">Bruk BankID</a>
+          </div>
+          <div class="tab-alternate mt" data-id="switch-sparebank1-id">
+            <a href="#" class="login-switch link-text" data-id="switch-sparebank1-id">Uten BankID</a>
+          </div>
+        </div></div></div><div id="panel-sparebank1-id" class="content-block" role="tabpanel" aria-labelledby="tab-sparebank1-id" aria-hidden="true">
+        <h2 class="pull-left" role="heading">Identifisering uten BankID<br /><small>SpareBank 1</small> </h2>
+        <form id="sparebank1IdLogin" name="sparebank1IdLogin" method="post" action="/auth/pages/selectMarketAndAuthType.xhtml?cid=1" class="credentialform clear" enctype="application/x-www-form-urlencoded">
+          <input type="hidden" name="sparebank1IdLogin" value="sparebank1IdLogin" />
+
+          <div class="row">
+            <div class="form-group"><label for="sb1id-username-field" class="control-label">Fødselsnummer</label><input id="sb1id-username-field" name="sb1id-username-field" autocomplete="off" class="form-control placeholder " maxlength="11" type="tel" />
+              <span class="hidden" id="sb1id-username-field-placeholder">Elleve siffer</span>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="form-group"><label for="sb1id-otp-field" class="control-label">Engangskode</label><input id="sb1id-otp-field" type="password" name="sb1id-otp-field" autocomplete="off" maxlength="128" class="form-control placeholder " />
+              <span class="hidden" id="sb1id-otp-field-placeholder">Engangskode</span>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="form-group"><label for="sb1id-password-field" class="control-label">Passord</label><input id="sb1id-password-field" type="password" name="sb1id-password-field" autocomplete="off" maxlength="128" class="form-control placeholder " />
+              <span class="hidden" id="sb1id-password-field-placeholder">Passord</span>
+            </div>
+          </div>
+
+          <div class="form-group"><input id="sb1id-next" type="submit" name="sb1id-next" value="Neste" class="btn btn-primary" />
+          </div><input type="hidden" name="javax.faces.ViewState" id="j_id1:javax.faces.ViewState:2" value="-4818047786543362728:-1860433859868414757" autocomplete="off" />
+        </form><div class="login-type-links">
+
+        <div class="hidden-pad">
+          <div class="tab-alternate visible-xs visible-sm mt">
+            <strong>Endre metode?</strong><br />
+          </div>
+          <div class="tab-alternate mt" data-id="switch-bankID">
+            <a href="#" class="login-switch link-text" data-id="switch-bankID">Bruk BankID</a>
+          </div>
+          <div class="tab-alternate mt" data-id="switch-bankID-mobile">
+            <a href="#" class="login-switch link-text" data-id="switch-bankID-mobile">Bruk BankID på mobil</a>
+          </div>
+          <div class="tab-alternate mt" data-id="switch-sparebank1-id">
+            <a href="#" class="login-switch link-text" data-id="switch-sparebank1-id">Uten BankID</a>
+          </div>
+        </div></div></div>
+      </section>
+
+    </div>
+  </div>
+
+  <div>
+    <div class="col-padding">
+    </div>
+  </div>
+</div><a href="/auth/pages/bankIdCancel.xhtml?app=mobilbank-pm-aktivering&amp;finInst=fid-utvikling&amp;goto=https%3A%2F%2Fmobilbank-pm.sparebank1.no%2Fpersonal%2Fbanking%2Fmobilbank%2Fdigitalbank-sessionid" class="hidden invoke-delayed"></a>
+<span class="invoke-delay-data hidden" data-invoke-delay-seconds="300"></span>
+
+<script type="text/javascript" language="javascript" src="/auth/wro/login.js?v=3Wr_Wu8p46Y1cPq9XDRuEA2tafgwk5cgyRUyYVocf1A"></script>
+<script type="text/javascript" language="javaScript" async="async" src="https://www.sparebank1.no/statistikk/statistikk.js"></script></body>
+</html>
