@@ -146,4 +146,9 @@ public class NordeaDkConstants {
                     .put(AccountTypes.CREDIT_CARD, "credit", "combined")
                     .put(AccountTypes.LOAN, "mortgage")
                     .build();
+
+    static class TimeoutRetryFilterParams {
+        public static final int NUM_TIMEOUT_RETRIES = 3;
+        public static final int TIMEOUT_RETRY_SLEEP_MILLISECONDS = 1000;
+    }
 }
