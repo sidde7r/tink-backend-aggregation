@@ -254,6 +254,7 @@ public class DanskeBankSEConfiguration implements DanskeBankConfiguration {
         public static final String USER_CANCEL = "user_cancel";
         public static final String USER_SIGN = "user_sign";
         public static final String EXPIRED_TRANSACTION = "expired_transaction";
+        public static final String STARTED = "started";
     }
 
     @Override
