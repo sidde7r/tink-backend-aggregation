@@ -53,7 +53,7 @@ public class IBSubscriptionClient extends IBClient {
         ClientResponse response = new IBClientRequestBuilder(url).build().get(ClientResponse.class);
 
         if (response.getStatus() == 403) {
-            throw LoginError.INVALIDATED_CREDENTIALS.exception();
+            throw LoginError.INVALIDATED_CREDENTIALS.exception(response.getEntity(String.class));
         }
 
         validateContentType(response, MediaType.APPLICATION_JSON_TYPE);
