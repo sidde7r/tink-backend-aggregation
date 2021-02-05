@@ -203,6 +203,25 @@ Connection: Keep-Alive
 
 {"statementTimestamp":"2020-09-23T08:38:59+0200","export":[{"format":"XLSX","links":{"next":{"method":"GET","uri":"/v5/engagement/transactions/xlsx/de525608fd7c11eaadc10242ac1200020000002b"}}},{"format":"CSV","links":{"next":{"method":"GET","uri":"/v5/engagement/transactions/csv/de525608fd7c11eaadc10242ac1200020000002b"}}},{"format":"PDF","links":{"next":{"method":"GET","uri":"/v5/engagement/transactions/pdf/de525608fd7c11eaadc10242ac1200020000002b"}}},{"format":"TXT","links":{"next":{"method":"GET","uri":"/v5/engagement/transactions/txt/de525608fd7c11eaadc10242ac1200020000002b"}}},{"format":"PDFVIEW","links":{"next":{"method":"GET","uri":"/v5/engagement/transactions/pdfview/de525608fd7c11eaadc10242ac1200020000002b"}}}],"totalTransactionsCount":0,"account":{"availableAmount":"100 000,00","antalTransaktionerTotalt":96,"currencyAccount":false,"internalAccount":false,"bic":"SWEDSESS","iban":"SE11 1111 1111 1111 1111 1111","accountAuthorizations":{"links":{"next":{"method":"GET","uri":"/v5/engagement/accounts/de525608fd7c11eaadc10242ac1200020000002b/authorizations"}}},"availableForFavouriteAccount":false,"availableForPriorityAccount":false,"id":"de525608fd7c11eaadc10242ac1200020000002b","name":"Företagskonto","accountNumber":"111 111 111-1","clearingNumber":"1111-1","fullyFormattedNumber":"1111-1,111 111 111-1","nonFormattedNumber":"111111111111111","balance":"100 000,00","currency":"SEK","expenseControl":{"status":"UNAVAILABLE"},"originalName":"Företagskonto"},"transactions":[],"reservedTransactions":[],"moreTransactionsAvailable":false,"numberOfTransactions":0,"numberOfReservedTransactions":0,"numberOfBankGiroPrognosisTransactions":1,"bankGiroPrognosisTransactions":[{"categoryId":0,"date":"2020-09-23","amount":"10 000,00","description":"Ingår ej i tillgängligt belopp","currency":"SEK","bgprognosTypeDescription":"Bg prognos.","bgprognosType":"DEFAULT"}]}
 
+REQUEST 11a
+GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/engagement/transactions/de525608fd7c11eaadc10242ac1200020000002b
+Accept: application/json
+
+RESPONSE 11a
+200
+Server: -
+Date: Wed, 23 Sep 2020 06:38:59 GMT
+Content-language: sv_SE
+Content-type: application/json; charset=UTF-8
+Pragma: no-cache
+Cache-control: no-cache, no-store, max-age=0
+Expires: Thu, 01 Jan 1970 00:00:00 GMT
+Vary: Accept-Encoding
+Connection: Keep-Alive
+
+{"statementTimestamp":"2020-09-23T08:38:59+0200","export":[{"format":"XLSX","links":{"next":{"method":"GET","uri":"/v5/engagement/transactions/xlsx/de525608fd7c11eaadc10242ac1200020000002b"}}},{"format":"CSV","links":{"next":{"method":"GET","uri":"/v5/engagement/transactions/csv/de525608fd7c11eaadc10242ac1200020000002b"}}},{"format":"PDF","links":{"next":{"method":"GET","uri":"/v5/engagement/transactions/pdf/de525608fd7c11eaadc10242ac1200020000002b"}}},{"format":"TXT","links":{"next":{"method":"GET","uri":"/v5/engagement/transactions/txt/de525608fd7c11eaadc10242ac1200020000002b"}}},{"format":"PDFVIEW","links":{"next":{"method":"GET","uri":"/v5/engagement/transactions/pdfview/de525608fd7c11eaadc10242ac1200020000002b"}}}],"totalTransactionsCount":0,"account":{"availableAmount":"100 000,00","antalTransaktionerTotalt":96,"currencyAccount":false,"internalAccount":false,"bic":"SWEDSESS","iban":"SE11 1111 1111 1111 1111 1111","accountAuthorizations":{"links":{"next":{"method":"GET","uri":"/v5/engagement/accounts/de525608fd7c11eaadc10242ac1200020000002b/authorizations"}}},"availableForFavouriteAccount":false,"availableForPriorityAccount":false,"id":"de525608fd7c11eaadc10242ac1200020000002b","name":"Företagskonto","accountNumber":"111 111 111-1","clearingNumber":"1111-1","fullyFormattedNumber":"1111-1,111 111 111-1","nonFormattedNumber":"111111111111111","balance":"100 000,00","currency":"SEK","expenseControl":{"status":"UNAVAILABLE"},"originalName":"Företagskonto"},"transactions":[],"reservedTransactions":[],"moreTransactionsAvailable":false,"numberOfTransactions":0,"numberOfReservedTransactions":0,"numberOfBankGiroPrognosisTransactions":1,"bankGiroPrognosisTransactions":[{"categoryId":0,"date":"2020-09-23","amount":"10 000,00","description":"Ingår ej i tillgängligt belopp","currency":"SEK","bgprognosTypeDescription":"Bg prognos.","bgprognosType":"DEFAULT"}]}
+
+
 REQUEST 12 MATCH PAYMENTS_CONFIRMED_1
 GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/payment/confirmed
 Accept: application/json

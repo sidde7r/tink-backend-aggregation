@@ -1,71 +1,96 @@
 {
-    "accounts" : [ {
-        "accountNumber" : "1111-1,111 111 111-1",
-        "accountExclusion" : "NONE",
-        "exactBalance" : {
-            "currencyCode" : "SEK",
-            "scale" : 1,
-            "doubleValue" : 100000.0,
-            "exactValue" : 100000.0,
-            "unscaledValue" : 1000000
-        },
-        "currencyCode" : "SEK",
-        "bankId" : "111111111111111",
-        "excluded" : false,
-        "favored" : false,
-        "name" : "Företagskonto",
-        "ownership" : 1.0,
-        "type" : "CHECKING",
-        "userModifiedExcluded" : false,
-        "userModifiedName" : false,
-        "userModifiedType" : false,
-        "identifiers" : "[\"se://111111111111111\"]",
-        "closed" : false,
-        "holderName" : "My Company AB",
-        "accountHolder" : {
-            "accountId" : null,
-            "type" : "BUSINESS",
-            "identities" : [ {
-                "name" : "My Company AB",
-                "role" : null
-            } ]
-        },
-        "flags" : "[]",
-        "availableCredit" : 0.0,
-        "balance" : 100000.0
-    } ],
-    "transactions" : [ {
-        "amount" : -1000.0,
-        "date" : 1600682400000,
-        "description" : "Kortköp/uttag",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"Market place\",\"ownReference\":\"Market place\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false
-    } ],
-    "identityData" : {
-        "nameElements" : [ {
-            "type" : "FULLNAME",
-            "value" : "Test Testsson"
-        } ],
-        "dateOfBirth" : {
-            "year" : 2000,
-            "month" : "DECEMBER",
-            "monthValue" : 12,
-            "dayOfMonth" : 12,
-            "dayOfWeek" : "TUESDAY",
-            "leapYear" : true,
-            "dayOfYear" : 347,
-            "chronology" : {
-                "id" : "ISO",
-                "calendarType" : "iso8601"
+    "accounts": [
+        {
+            "accountNumber": "1111-1,111 111 111-1",
+            "accountExclusion": "NONE",
+            "exactBalance": {
+                "currencyCode": "SEK",
+                "exactValue": 100000.0,
+                "scale": 1,
+                "unscaledValue": 1000000,
+                "doubleValue": 100000.0
             },
-            "era" : "CE"
+            "currencyCode": "SEK",
+            "availableBalance": {
+                "currencyCode": "SEK",
+                "exactValue": 100000.0,
+                "scale": 1,
+                "unscaledValue": 1000000,
+                "doubleValue": 100000.0
+            },
+            "creditLimit": {
+                "currencyCode": "SEK",
+                "exactValue": 0.0,
+                "scale": 1,
+                "unscaledValue": 0,
+                "doubleValue": 0.0
+            },
+            "bankId": "de525608fd7c11eaadc10242ac1200020000002b",
+            "excluded": false,
+            "favored": false,
+            "name": "Företagskonto",
+            "ownership": 1.0,
+            "type": "CHECKING",
+            "userModifiedExcluded": false,
+            "userModifiedName": false,
+            "userModifiedType": false,
+            "identifiers": "[\"se://111111111111111\"]",
+            "closed": false,
+            "holderName": "My Company AB",
+            "accountHolder": {
+                "accountId": null,
+                "type": "BUSINESS",
+                "identities": [
+                    {
+                        "name": "My Company AB",
+                        "role": null
+                    }
+                ]
+            },
+            "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
+            "balances": [],
+            "availableCredit": 0.0,
+            "balance": 100000.0
+        }
+    ],
+    "transactions": [
+        {
+            "amount": -1000.0,
+            "date": 1600682400000,
+            "description": "Kortköp/uttag",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {
+                "DETAILS": "{\"transactionReference\":\"Market place\",\"ownReference\":\"Market place\"}"
+            },
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        }
+    ],
+    "identityData": {
+        "nameElements": [
+            {
+                "type": "FULLNAME",
+                "value": "Test Testsson"
+            }
+        ],
+        "dateOfBirth": {
+            "year": 2000,
+            "month": "DECEMBER",
+            "chronology": {
+                "calendarType": "iso8601",
+                "id": "ISO"
+            },
+            "era": "CE",
+            "dayOfWeek": "TUESDAY",
+            "leapYear": true,
+            "dayOfYear": 347,
+            "monthValue": 12,
+            "dayOfMonth": 12
         }
     }
 }
