@@ -9,7 +9,7 @@ verify_ssl = true
 asn1crypto = "==0.24.0"
 cffi = "==1.13.2"
 click = "==6.7"
-cryptography = "==2.3.1"
+cryptography = "==3.2"
 enum34 = "==1.1.6"
 future = "==0.17.1"
 idna = "==2.7"
