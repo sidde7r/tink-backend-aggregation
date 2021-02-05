@@ -20,6 +20,7 @@ public class PollResponse extends AbstractBankIdResponse {
         switch (getStatus().toLowerCase()) {
             case DanskeBankSEConfiguration.BankIdStatus.OK:
                 return BankIdStatus.DONE;
+            case DanskeBankSEConfiguration.BankIdStatus.STARTED:
             case DanskeBankSEConfiguration.BankIdStatus.OUTSTANDING_TRANSACTION:
             case DanskeBankSEConfiguration.BankIdStatus.USER_SIGN:
             case DanskeBankSEConfiguration.BankIdStatus.NO_CLIENT:
