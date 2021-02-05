@@ -1,0 +1,483 @@
+
+REQUEST 1
+POST https://api.skandia.se/mobile/v1/oauth2/session/token
+Content-Type: application/x-www-form-urlencoded
+
+client_secret=ow0yt2CUsmrxaX4yVyZsbVJpMKVCWEGSTjIv2enLobIOYJSRmVVMBFUEu3SACLHR&client_id=e_mobile_anonymous_medium&grant_type=client_credentials&scope=mobile_session+mobile_readconfiguration
+
+RESPONSE 1
+200
+Content-Type: application/json; charset=utf-8
+Transfer-Encoding: chunked
+
+{"access_token":"sdfsdf","token_type":"**HASHED:cQ**","expires_in":0}
+
+REQUEST 2
+POST https://api.skandia.se/mobile/v1/session
+Content-Type: application/json
+
+{"pushRegistrationToken":"Qx84uM4y6UkKKVDwSbLJVfNz","applicationInstanceID":"SNQ9XcUyKhNVeuwg6PddhY7w"}
+
+RESPONSE 2
+201
+Transfer-Encoding: chunked
+
+REQUEST 3
+GET https://fsts.skandia.se/as/authorization.oauth2
+
+RESPONSE 3
+200
+Cache-Control: no-cache, no-store
+Pragma: no-cache
+Content-Type: text/html; charset=utf-8
+Expires: -1
+Vary: Accept-Encoding
+X-Frame-Options: DENY
+X-Content-Type-Options: nosniff
+X-Content-Type-Options: nosniff
+Date: Thu, 07 Jan 2021 10:45:36 GMT
+Strict-Transport-Security: max-age=31536000; includeSubDomains
+
+<!DOCTYPE html>
+<div id="autostart-page" class="mobiltbankidpage he-hidden">
+    <form action="/mobiltbankid/autostartauthenticate/" data-ajax="true" data-ajax-begin="login.mobiltbankid.autostart.ajax.beforeRequest" data-ajax-failure="login.mobiltbankid.ajax.error" data-ajax-success="login.mobiltbankid.autostart.ajax.success" id="autostart-form" method="post"><input name="__RequestVerificationToken" type="hidden" value="**HASHED:6u**" /></form>
+</div>
+</body>
+</html>
+
+REQUEST 4
+POST https://login.skandia.se/mobiltbankid/autostartauthenticate
+Content-Type: application/x-www-form-urlencoded
+
+__RequestVerificationToken=**HASHED:6u**&X-Requested-With=XMLHttpRequest
+
+RESPONSE 4
+200
+Cache-Control: no-cache, no-store
+Pragma: no-cache
+Content-Type: application/json; charset=utf-8
+Expires: -1
+X-Frame-Options: DENY
+X-Content-Type-Options: nosniff
+X-Content-Type-Options: nosniff
+Date: Thu, 07 Jan 2021 10:45:36 GMT
+Content-Length: 335
+Strict-Transport-Security: max-age=31536000; includeSubDomains
+
+{"State":1,"IsMobileDevice":false,"AutoStartUrl":"se.skandia.app://bankid/initiated?autostarttoken=mockedAutoStartToken&redirect=se.skandia.app%3A%2F%2Flogin%2Finitiated%3Fcontinue%3Dhttps%253A%252F%252Flogin.skandia.se%252Fmobiltbankid%252Ffromchooserautostart%252F%253Ftimestamp%253D1610019938","IsAjaxResponse":true}
+
+REQUEST 5
+GET https://login.skandia.se/mobiltbankid/fromchooserautostart/
+
+RESPONSE 5
+200
+Cache-Control: no-cache, no-store
+Pragma: no-cache
+Content-Type: text/html; charset=utf-8
+Date: Thu, 07 Jan 2021 10:45:36 GMT
+
+<!DOCTYPE html>
+<div id="collect-page" class="he-hidden">
+    <form action="/mobiltbankid/collecting/" class="he-hidden" data-ajax="true" data-ajax-begin="login.mobiltbankid.collect.ajax.beforeRequest" data-ajax-failure="login.mobiltbankid.ajax.error" data-ajax-method="Post" data-ajax-success="login.mobiltbankid.collect.ajax.success" id="collect-form" method="post"><input name="__RequestVerificationToken" type="hidden" value="mockedRequestVerificationToken" /></form>
+</div>
+</body>
+</html>
+
+REQUEST 6
+POST https://login.skandia.se/mobiltbankid/collecting
+Content-Type: application/x-www-form-urlencoded
+
+__RequestVerificationToken=mockedRequestVerificationToken&X-Requested-With=XMLHttpRequest
+
+RESPONSE 6 SET NEXT_1
+200
+Cache-Control: no-cache, no-store
+Pragma: no-cache
+Content-Type: application/json; charset=utf-8
+Expires: -1
+X-Frame-Options: DENY
+X-Content-Type-Options: nosniff
+X-Content-Type-Options: nosniff
+Date: Thu, 07 Jan 2021 10:45:37 GMT
+Content-Length: 350
+Strict-Transport-Security: max-age=31536000; includeSubDomains
+
+{"State":3,"Message":{"ShowGetBankIdButton":false,"ShowRetryButton":false,"ContinueCollect":true,"ShowManualStartButton":false,"ShowInstallBankIdButton":false,"QrCodeVisible":false,"QrCodeImage":null,"Header":"","Text":"","ShowContinueButton":false,"ShowCancelButton":true,"IsInformationMessage":false,"IsSuccessMessage":false},"IsAjaxResponse":true}
+
+REQUEST 7 MATCH NEXT_1
+POST https://login.skandia.se/mobiltbankid/collecting
+Content-Type: application/x-www-form-urlencoded
+
+__RequestVerificationToken=mockedRequestVerificationToken&X-Requested-With=XMLHttpRequest
+
+RESPONSE 7
+200
+Cache-Control: no-cache, no-store
+Pragma: no-cache
+Content-Type: application/json; charset=utf-8
+Expires: -1
+X-Frame-Options: DENY
+X-Content-Type-Options: nosniff
+X-Content-Type-Options: nosniff
+Date: Thu, 07 Jan 2021 10:45:55 GMT
+Content-Length: 245
+Strict-Transport-Security: max-age=31536000; includeSubDomains
+
+{"ProgressbarMessage":"Strax klar! Du kan snart göra dina ärenden.","State":5,"RedirectUrl":"https://fsts.skandia.se/as/lkBZB/resume/as/authorization.ping?REF=7C645726D303E65762EDABE74F097A983562466BC4C60EDB00C400000002","IsAjaxResponse":true}
+
+REQUEST 8
+GET https://fsts.skandia.se/as/lkBZB/resume/as/authorization.ping?REF=7C645726D303E65762EDABE74F097A983562466BC4C60EDB00C400000002
+
+RESPONSE 8
+302
+Date: Thu, 07 Jan 2021 10:45:55 GMT
+X-Frame-Options: SAMEORIGIN
+Cache-Control: no-cache, no-store
+Pragma: no-cache
+Expires: Thu, 01 Jan 1970 00:00:00 GMT
+Content-Type: text/html;charset=utf-8
+Location: se.skandia.app:/oauth2/code?code=mockedCode&state=mockedState
+Content-Length: 0
+Strict-Transport-Security: max-age=31536000; includeSubDomains
+
+REQUEST 9
+POST https://api.skandia.se/mobile/v1/oauth2/token
+Content-Type: application/x-www-form-urlencoded
+
+RESPONSE 9
+200
+Content-Type: application/json; charset=utf-8
+X-Powered-By: ASP.NET
+Transfer-Encoding: chunked
+
+{"access_token":"**HASHED:eI**","token_type":"**HASHED:cQ**","expires_in":900,"refresh_token":"**HASHED:sy**","offline_token":"**HASHED**","offline_refresh_token":"**HASHED**"}
+
+REQUEST 10
+GET https://api.skandia.se/Customers/V2/Commitments/BankAccounts
+
+RESPONSE 10
+200
+Content-Type: application/json; charset=utf-8
+Cache-Control: no-cache
+Expires: -1
+X-Powered-By: ASP.NET
+Transfer-Encoding: chunked
+
+{"BankAccountsInStatis":[],"BankAccounts":[{"Balance":{"Amount":100.0,"AmountWithoutDecimals":100,"DisposableAmount":100.0,"DisposableAmountWithoutDecimals":100},"Credit":{"Limit":0.0,"LimitWithoutDecimals":0.0,"Used":0.0,"UsedWithoutDecimals":0.0},"Currency":1,"CustomerAccountCategory":null,"DisplayTypeName":"Allt i Ett-konto","DisplayNumber":"1111-111.111-1","EncryptedNumber":"11111","Holder":{"EncryptedNationalIdentificationNumber":"mockedEncryptedNationalIdentificationNumber","Firstname":"Test","NationalIdentificationNumber":"200001011234","Surname":"Testsson"},"Interest":0.0,"LendingInterest":0.0,"OwnedBySelf":true,"Position":1,"Restriction":{"Reason":1,"ReasonText":"No reason","Type":1,"TypeText":"No restriction"},"RoleType":1,"RoleTypeName":"None","Status":2,"StatusName":"Active","Type":1,"CardReferences":[],"Reference":"ref11111","DisplayName":"Allt i Ett-Konto 1","Name":"Allt i Ett-Konto 1","Number":"11111111111","TypeName":"AIE"},{"Balance":{"Amount":200.75,"AmountWithoutDecimals":200,"DisposableAmount":150.75,"DisposableAmountWithoutDecimals":150},"Credit":{"Limit":0.0,"LimitWithoutDecimals":0.0,"Used":0.0,"UsedWithoutDecimals":0.0},"Currency":1,"CustomerAccountCategory":null,"DisplayTypeName":"Allt i Ett-konto","DisplayNumber":"2222-222.222-2","EncryptedNumber":"22222","Holder":{"EncryptedNationalIdentificationNumber":"mockedEncryptedNationalIdentificationNumber","Firstname":"Test","NationalIdentificationNumber":"200001011234","Surname":"Testsson"},"Interest":0.0,"LendingInterest":0.0,"OwnedBySelf":true,"Position":2,"Restriction":{"Reason":1,"ReasonText":"No reason","Type":1,"TypeText":"No restriction"},"RoleType":1,"RoleTypeName":"None","Status":2,"StatusName":"Active","Type":1,"CardReferences":[],"Reference":"ref22222","DisplayName":"Allt i Ett-Konto 2","Name":"Allt i Ett-Konto 2","Number":"22222222222","TypeName":"AIE"},{"Balance":{"Amount":30000.0,"AmountWithoutDecimals":30000,"DisposableAmount":30000.0,"DisposableAmountWithoutDecimals":30000},"Credit":{"Limit":0.0,"LimitWithoutDecimals":0.0,"Used":0.0,"UsedWithoutDecimals":0.0},"Currency":1,"CustomerAccountCategory":null,"DisplayTypeName":"Sparkonto","DisplayNumber":"3333-333.333-3","EncryptedNumber":"33333","Holder":{"EncryptedNationalIdentificationNumber":"mockedEncryptedNationalIdentificationNumber","Firstname":"Test","NationalIdentificationNumber":"200001011234","Surname":"Testsson"},"Interest":0.0,"LendingInterest":0.0,"OwnedBySelf":true,"Position":3,"Restriction":{"Reason":1,"ReasonText":"No reason","Type":1,"TypeText":"No restriction"},"RoleType":1,"RoleTypeName":"None","Status":2,"StatusName":"Active","Type":8,"CardReferences":[],"Reference":"ref33333","DisplayName":"Sparkonto","Name":"","Number":"33333333333","TypeName":"Savings"},{"Balance":{"Amount":-10000.03,"AmountWithoutDecimals":-10000,"DisposableAmount":50000.03,"DisposableAmountWithoutDecimals":50000},"Credit":{"Limit":60000.0,"LimitWithoutDecimals":60000.0,"Used":10000.03,"UsedWithoutDecimals":10000.0},"Currency":1,"CustomerAccountCategory":null,"DisplayTypeName":"Kreditkortskonto","DisplayNumber":"4444-444.444-4","EncryptedNumber":"44444","Holder":{"EncryptedNationalIdentificationNumber":"mockedEncryptedNationalIdentificationNumber","Firstname":"Test","NationalIdentificationNumber":"200001011234","Surname":"Testsson"},"Interest":0.0,"LendingInterest":0.0,"OwnedBySelf":true,"Position":4,"Restriction":{"Reason":1,"ReasonText":"No reason","Type":1,"TypeText":"No restriction"},"RoleType":1,"RoleTypeName":"None","Status":2,"StatusName":"Active","Type":32,"CardReferences":[],"Reference":"ref44444","DisplayName":"Kreditkortskonto","Name":"","Number":"44444444444","TypeName":"CreditCard"},{"Balance":{"Amount":50.0,"AmountWithoutDecimals":50,"DisposableAmount":50.0,"DisposableAmountWithoutDecimals":50},"Credit":{"Limit":0.0,"LimitWithoutDecimals":0.0,"Used":0.0,"UsedWithoutDecimals":0.0},"Currency":2,"CustomerAccountCategory":null,"DisplayTypeName":"Eurokonto","DisplayNumber":"5555-555.555-5","EncryptedNumber":"55555","Holder":{"EncryptedNationalIdentificationNumber":"mockedEncryptedNationalIdentificationNumber","Firstname":"Test","NationalIdentificationNumber":"200001011234","Surname":"Testsson"},"Interest":0.0,"LendingInterest":0.0,"OwnedBySelf":true,"Position":5,"Restriction":{"Reason":1,"ReasonText":"No reason","Type":1,"TypeText":"No restriction"},"RoleType":1,"RoleTypeName":"None","Status":2,"StatusName":"Active","Type":64,"CardReferences":[],"Reference":"ref55555","DisplayName":"Eurokonto","Name":"","Number":"55555555555","TypeName":"Euro"},{"Balance":{"Amount":100000.0,"AmountWithoutDecimals":100000,"DisposableAmount":100000.0,"DisposableAmountWithoutDecimals":100000},"Credit":{"Limit":0.0,"LimitWithoutDecimals":0.0,"Used":0.0,"UsedWithoutDecimals":0.0},"Currency":1,"CustomerAccountCategory":null,"DisplayTypeName":"Fasträntekonto","DisplayNumber":"6666-666.666-6","EncryptedNumber":"66666","Holder":{"EncryptedNationalIdentificationNumber":"mockedEncryptedNationalIdentificationNumber","Firstname":"Test","NationalIdentificationNumber":"200001011234","Surname":"Testsson"},"Interest":0.0,"LendingInterest":0.0,"OwnedBySelf":true,"Position":6,"Restriction":{"Reason":1,"ReasonText":"No reason","Type":1,"TypeText":"No restriction"},"RoleType":1,"RoleTypeName":"None","Status":2,"StatusName":"Active","Type":2,"CardReferences":[],"Reference":"ref66666","DisplayName":"Fasträntekonto","Name":"","Number":"66666666666","TypeName":"FixedInterest"},{"Balance":{"Amount":5000.0,"AmountWithoutDecimals":5000,"DisposableAmount":5000.0,"DisposableAmountWithoutDecimals":0},"Credit":{"Limit":0.0,"LimitWithoutDecimals":0.0,"Used":0.0,"UsedWithoutDecimals":0.0},"Currency":1,"CustomerAccountCategory":null,"DisplayTypeName":"Skandiakonto","DisplayNumber":"7777-777.777-7","EncryptedNumber":"77777","Holder":{"EncryptedNationalIdentificationNumber":"mockedEncryptedNationalIdentificationNumber","Firstname":"Test","NationalIdentificationNumber":"200001011234","Surname":"Testsson"},"Interest":0.0,"LendingInterest":0.0,"OwnedBySelf":true,"Position":7,"Restriction":{"Reason":1,"ReasonText":"No reason","Type":1,"TypeText":"No restriction"},"RoleType":1,"RoleTypeName":"None","Status":2,"StatusName":"Active","Type":16,"CardReferences":[],"Reference":"ref77777","DisplayName":"Skandiakonto","Name":"","Number":"77777777777","TypeName":"Payment"},{"Balance":{"Amount":20123.45,"AmountWithoutDecimals":20123,"DisposableAmount":20123.45,"DisposableAmountWithoutDecimals":20123},"Credit":{"Limit":0.0,"LimitWithoutDecimals":0.0,"Used":0.0,"UsedWithoutDecimals":0.0},"Currency":1,"CustomerAccountCategory":null,"DisplayTypeName":"Likviditetskonto","DisplayNumber":"8888-888.888-8","EncryptedNumber":"88888","Holder":{"EncryptedNationalIdentificationNumber":"mockedEncryptedNationalIdentificationNumber","Firstname":"Test","NationalIdentificationNumber":"200001011234","Surname":"Testsson"},"Interest":0.0,"LendingInterest":0.0,"OwnedBySelf":true,"Position":8,"Restriction":{"Reason":1,"ReasonText":"No reason","Type":1,"TypeText":"No restriction"},"RoleType":1,"RoleTypeName":"None","Status":2,"StatusName":"Active","Type":4,"CardReferences":[],"Reference":"ref88888","DisplayName":"Likviditetskonto","Name":"","Number":"88888888888","TypeName":"Solvency"}]}
+
+REQUEST 11
+GET https://api.skandia.se/Customers/V3/Commitments/Cards
+
+RESPONSE 11
+200
+Content-Type: application/json; charset=utf-8
+Cache-Control: no-cache
+Expires: -1
+X-Powered-By: ASP.NET
+Transfer-Encoding: chunked
+
+{"BankAccountsInStatis":[],"BankAccounts":[],"Cards":[{"Holder":{"Firstname":"Test","Surname":"Testsson","NationalIdentificationNumber":"200001011234","EncryptedNationalIdentificationNumber":"mockedEncryptedNationalIdentificationNumber"},"Status":4,"StatusName":"Active","IsActive":true,"OwnedBySelf":true,"CardType":2,"Expiration":{"ExpireDate":"2022-06-30T00:00:00+02:00","ExpireStatus":4},"EncryptedNumber":"encryptedNumber1","DisplayTypeName":"Bank card","Position":1,"BankAccountReference":"ref22222","Reference":"cardRef1","DisplayName":"1234 56** **** 1111","Name":"Test Testsson","Number":"1234 56** **** 1111","TypeName":"BankCard"},{"Holder":{"Firstname":"Test","Surname":"Testsson","NationalIdentificationNumber":"200001011234","EncryptedNationalIdentificationNumber":"mockedEncryptedNationalIdentificationNumber"},"Status":4,"StatusName":"Active","IsActive":true,"OwnedBySelf":true,"CardType":4,"Expiration":{"ExpireDate":"2023-10-31T00:00:00+01:00","ExpireStatus":4},"EncryptedNumber":"encryptedNumber2","DisplayTypeName":"Debit card","Position":2,"BankAccountReference":"ref44444","Reference":"cardRef2","DisplayName":"1234 56** **** 2222","Name":"Test Testsson","Number":"1234 56** **** 2222","TypeName":"PayAndDebitCard"}],"Pensions":[],"Insurances":[],"Loans":[],"SecuritiesAccounts":[],"Errors":null,"Type":1,"TypeName":"Owner","NationalIdentificationNumber":"200001011234"}
+
+REQUEST 12
+GET https://api.skandia.se/Customers/V2/Commitments/SecuritiesAccounts,Insurances,Pensions
+
+RESPONSE 12
+200
+Content-Type: application/json; charset=utf-8
+Cache-Control: no-cache
+Expires: -1
+X-Powered-By: ASP.NET
+Transfer-Encoding: chunked
+
+{"BankAccountsInStatis":[],"BankAccounts":[],"Cards":[],"Pensions":[],"Insurances":[],"Loans":[],"SecuritiesAccounts":[],"Errors":null,"Type":1,"TypeName":"Owner","NationalIdentificationNumber":"200001011234"}
+
+REQUEST 13
+GET https://api.skandia.se/Banking/V2/Payments/Approved
+
+RESPONSE 13
+200
+Content-Type: application/json; charset=utf-8
+Cache-Control: no-cache
+Transfer-Encoding: chunked
+
+[{"EncryptedPaymentId":"mockedEncryptedPaymentId","Amount":123.25,"Date":"2020-12-30T00:00:00+01:00","Type":3,"TypeName":"CreditCardInvoice","TypeDisplayName":"Credit card invoice","PaymentType":8,"PaymentTypeName":"CreditCardInvoice","PaymentTypeDisplayName":"Credit card invoice","Status":2,"StatusName":"Approved","StatusDisplayName":"Approved","IsChangeable":false,"IsDeletable":false,"HasError":false,"ErrorMessage":null,"HasInformation":false,"InformationMessage":null,"Sender":{"Name":null,"BankAccountTransactionNote":"Upcoming creditcard invoice","BankAccount":{"BankAccountNumber":"11111111111","BankAccountDisplayName":"1111-111.111-1"},"Address":null},"Recipient":{"Name":null,"RecipientNumber":"44444444444","Reference":null},"IsInvoice":false,"Invoice":null}]
+
+REQUEST 14
+GET https://api.skandia.se/Accounts/V2/BankAccounts/Transactions/11111/1/200
+
+RESPONSE 14
+200
+Content-Type: application/json; charset=utf-8
+Cache-Control: no-cache
+Expires: -1
+X-Powered-By: ASP.NET
+Transfer-Encoding: chunked
+
+[{"Amount":-2000.0,"Date":"2020-11-30T00:00:00+01:00","Note":"Invoice payment 1","Type":8,"TypeName":"Withdrawal","DisplayTypeName":"Withdrawal","PurchaseDate":null},{"Amount":300.0,"Date":"2020-11-26T00:00:00+01:00","Note":"Deposit 1","Type":1,"TypeName":"Deposit","DisplayTypeName":"Deposit","PurchaseDate":null},{"Amount":600.0,"Date":"2020-11-26T00:00:00+01:00","Note":"Deposit 2","Type":1,"TypeName":"Deposit","DisplayTypeName":"Deposit","PurchaseDate":null}]
+
+REQUEST 15
+GET https://api.skandia.se/Accounts/V2/BankAccounts/Reservations/11111
+
+RESPONSE 15
+200
+Content-Type: application/json; charset=utf-8
+Cache-Control: no-cache
+Expires: -1
+Transfer-Encoding: chunked
+
+[]
+
+REQUEST 16
+GET https://api.skandia.se/Banking/V2/Payments/Approved
+
+RESPONSE 16
+200
+Content-Type: application/json; charset=utf-8
+Cache-Control: no-cache
+Transfer-Encoding: chunked
+
+[{"EncryptedPaymentId":"mockedEncryptedPaymentId","Amount":123.25,"Date":"2020-12-30T00:00:00+01:00","Type":3,"TypeName":"CreditCardInvoice","TypeDisplayName":"Credit card invoice","PaymentType":8,"PaymentTypeName":"CreditCardInvoice","PaymentTypeDisplayName":"Credit card invoice","Status":2,"StatusName":"Approved","StatusDisplayName":"Approved","IsChangeable":false,"IsDeletable":false,"HasError":false,"ErrorMessage":null,"HasInformation":false,"InformationMessage":null,"Sender":{"Name":null,"BankAccountTransactionNote":"Upcoming creditcard invoice","BankAccount":{"BankAccountNumber":"11111111111","BankAccountDisplayName":"1111-111.111-1"},"Address":null},"Recipient":{"Name":null,"RecipientNumber":"44444444444","Reference":null},"IsInvoice":false,"Invoice":null}]
+
+REQUEST 17
+GET https://api.skandia.se/Accounts/V2/BankAccounts/Transactions/22222/1/200
+
+RESPONSE 17
+200
+Content-Type: application/json; charset=utf-8
+Cache-Control: no-cache
+Expires: -1
+Transfer-Encoding: chunked
+
+[{"Amount":-10.0,"Date":"2020-12-16T00:00:00+01:00","Note":"Transaction 1","Type":2,"TypeName":"CardTransaction","DisplayTypeName":"Card transaction","PurchaseDate":"2020-12-15T00:00:00+01:00"},{"Amount":-500.7,"Date":"2020-12-14T00:00:00+01:00","Note":"Transaction 2","Type":2,"TypeName":"CardTransaction","DisplayTypeName":"Card transaction","PurchaseDate":"2020-12-12T00:00:00+01:00"},{"Amount":-47.8,"Date":"2020-12-14T00:00:00+01:00","Note":"Transaction 3","Type":2,"TypeName":"CardTransaction","DisplayTypeName":"Card transaction","PurchaseDate":"2020-12-11T00:00:00+01:00"}]
+
+REQUEST 18
+GET https://api.skandia.se/Accounts/V2/BankAccounts/Reservations/22222
+
+RESPONSE 18
+200
+Content-Type: application/json; charset=utf-8
+Cache-Control: no-cache
+Expires: -1
+Transfer-Encoding: chunked
+
+[{"Amount":-50.0,"Date":"2020-12-17T00:00:00+01:00","Note":"Reserved transaction","Type":0,"TypeName":"Undefined","DisplayTypeName":"","PurchaseDate":null}]
+
+REQUEST 19
+GET https://api.skandia.se/Banking/V2/Payments/Approved
+
+RESPONSE 19
+200
+Content-Type: application/json; charset=utf-8
+Cache-Control: no-cache
+Transfer-Encoding: chunked
+
+[{"EncryptedPaymentId":"mockedEncryptedPaymentId","Amount":123.25,"Date":"2020-12-30T00:00:00+01:00","Type":3,"TypeName":"CreditCardInvoice","TypeDisplayName":"Credit card invoice","PaymentType":8,"PaymentTypeName":"CreditCardInvoice","PaymentTypeDisplayName":"Credit card invoice","Status":2,"StatusName":"Approved","StatusDisplayName":"Approved","IsChangeable":false,"IsDeletable":false,"HasError":false,"ErrorMessage":null,"HasInformation":false,"InformationMessage":null,"Sender":{"Name":null,"BankAccountTransactionNote":"Upcoming creditcard invoice","BankAccount":{"BankAccountNumber":"11111111111","BankAccountDisplayName":"1111-111.111-1"},"Address":null},"Recipient":{"Name":null,"RecipientNumber":"44444444444","Reference":null},"IsInvoice":false,"Invoice":null}]
+
+REQUEST 20
+GET https://api.skandia.se/Accounts/V2/BankAccounts/Transactions/33333/1/200
+
+RESPONSE 20
+200
+Content-Type: application/json; charset=utf-8
+Cache-Control: no-cache
+Expires: -1
+Transfer-Encoding: chunked
+
+[{"Amount":-1000.0,"Date":"2020-06-18T00:00:00+02:00","Note":"Invoice payment 1","Type":8,"TypeName":"Withdrawal","DisplayTypeName":"Withdrawal","PurchaseDate":null},{"Amount":20000.0,"Date":"2020-02-19T00:00:00+01:00","Note":"Deposit 1","Type":1,"TypeName":"Deposit","DisplayTypeName":"Deposit","PurchaseDate":null}]
+
+REQUEST 21
+GET https://api.skandia.se/Accounts/V2/BankAccounts/Reservations/33333
+
+RESPONSE 21
+200
+Content-Type: application/json; charset=utf-8
+Cache-Control: no-cache
+Expires: -1
+Transfer-Encoding: chunked
+
+[]
+
+REQUEST 22
+GET https://api.skandia.se/Banking/V2/Payments/Approved
+
+RESPONSE 22
+200
+Content-Type: application/json; charset=utf-8
+Cache-Control: no-cache
+Transfer-Encoding: chunked
+
+[{"EncryptedPaymentId":"mockedEncryptedPaymentId","Amount":123.25,"Date":"2020-12-30T00:00:00+01:00","Type":3,"TypeName":"CreditCardInvoice","TypeDisplayName":"Credit card invoice","PaymentType":8,"PaymentTypeName":"CreditCardInvoice","PaymentTypeDisplayName":"Credit card invoice","Status":2,"StatusName":"Approved","StatusDisplayName":"Approved","IsChangeable":false,"IsDeletable":false,"HasError":false,"ErrorMessage":null,"HasInformation":false,"InformationMessage":null,"Sender":{"Name":null,"BankAccountTransactionNote":"Upcoming creditcard invoice","BankAccount":{"BankAccountNumber":"11111111111","BankAccountDisplayName":"1111-111.111-1"},"Address":null},"Recipient":{"Name":null,"RecipientNumber":"44444444444","Reference":null},"IsInvoice":false,"Invoice":null}]
+
+REQUEST 23
+GET https://api.skandia.se/Accounts/V2/BankAccounts/Transactions/44444/1/200
+
+RESPONSE 23
+200
+Content-Type: application/json; charset=utf-8
+Cache-Control: no-cache
+Expires: -1
+Transfer-Encoding: chunked
+
+[{"Amount":-99.0,"Date":"2020-12-16T00:00:00+01:00","Note":"Transaction 1","Type":2,"TypeName":"CardTransaction","DisplayTypeName":"Card transaction","PurchaseDate":"2020-12-15T00:00:00+01:00"},{"Amount":-99.0,"Date":"2020-12-14T00:00:00+01:00","Note":"Transaction 2","Type":2,"TypeName":"CardTransaction","DisplayTypeName":"Card transaction","PurchaseDate":"2020-12-12T00:00:00+01:00"}]
+
+REQUEST 24
+GET https://api.skandia.se/Accounts/V2/BankAccounts/Reservations/44444
+
+RESPONSE 24
+200
+Content-Type: application/json; charset=utf-8
+Cache-Control: no-cache
+Expires: -1
+Transfer-Encoding: chunked
+
+[{"Amount":-70.0,"Date":"2020-12-16T00:00:00+01:00","Note":"Reserved transaction 1","Type":0,"TypeName":"Undefined","DisplayTypeName":"","PurchaseDate":null},{"Amount":-40.05,"Date":"2020-12-15T00:00:00+01:00","Note":"Reserved transaction 2","Type":0,"TypeName":"Undefined","DisplayTypeName":"","PurchaseDate":null}]
+
+REQUEST 25
+GET https://api.skandia.se/Banking/V2/Payments/Approved
+
+RESPONSE 25
+200
+Content-Type: application/json; charset=utf-8
+Cache-Control: no-cache
+Transfer-Encoding: chunked
+
+[{"EncryptedPaymentId":"mockedEncryptedPaymentId","Amount":123.25,"Date":"2020-12-30T00:00:00+01:00","Type":3,"TypeName":"CreditCardInvoice","TypeDisplayName":"Credit card invoice","PaymentType":8,"PaymentTypeName":"CreditCardInvoice","PaymentTypeDisplayName":"Credit card invoice","Status":2,"StatusName":"Approved","StatusDisplayName":"Approved","IsChangeable":false,"IsDeletable":false,"HasError":false,"ErrorMessage":null,"HasInformation":false,"InformationMessage":null,"Sender":{"Name":null,"BankAccountTransactionNote":"Upcoming creditcard invoice","BankAccount":{"BankAccountNumber":"11111111111","BankAccountDisplayName":"1111-111.111-1"},"Address":null},"Recipient":{"Name":null,"RecipientNumber":"44444444444","Reference":null},"IsInvoice":false,"Invoice":null}]
+
+REQUEST 26
+GET https://api.skandia.se/Accounts/V2/BankAccounts/Transactions/55555/1/200
+
+RESPONSE 26
+200
+Content-Type: application/json; charset=utf-8
+Cache-Control: no-cache
+Expires: -1
+Transfer-Encoding: chunked
+
+[]
+
+REQUEST 27
+GET https://api.skandia.se/Accounts/V2/BankAccounts/Reservations/55555
+
+RESPONSE 27
+200
+Content-Type: application/json; charset=utf-8
+Cache-Control: no-cache
+Expires: -1
+Transfer-Encoding: chunked
+
+[]
+
+REQUEST 28
+GET https://api.skandia.se/Banking/V2/Payments/Approved
+
+RESPONSE 28
+200
+Content-Type: application/json; charset=utf-8
+Cache-Control: no-cache
+Transfer-Encoding: chunked
+
+[{"EncryptedPaymentId":"mockedEncryptedPaymentId","Amount":123.25,"Date":"2020-12-30T00:00:00+01:00","Type":3,"TypeName":"CreditCardInvoice","TypeDisplayName":"Credit card invoice","PaymentType":8,"PaymentTypeName":"CreditCardInvoice","PaymentTypeDisplayName":"Credit card invoice","Status":2,"StatusName":"Approved","StatusDisplayName":"Approved","IsChangeable":false,"IsDeletable":false,"HasError":false,"ErrorMessage":null,"HasInformation":false,"InformationMessage":null,"Sender":{"Name":null,"BankAccountTransactionNote":"Upcoming creditcard invoice","BankAccount":{"BankAccountNumber":"11111111111","BankAccountDisplayName":"1111-111.111-1"},"Address":null},"Recipient":{"Name":null,"RecipientNumber":"44444444444","Reference":null},"IsInvoice":false,"Invoice":null}]
+
+REQUEST 29
+GET https://api.skandia.se/Accounts/V2/BankAccounts/Transactions/66666/1/200
+
+RESPONSE 29
+200
+Content-Type: application/json; charset=utf-8
+Cache-Control: no-cache
+Expires: -1
+Transfer-Encoding: chunked
+
+[]
+
+REQUEST 30
+GET https://api.skandia.se/Accounts/V2/BankAccounts/Reservations/66666
+
+RESPONSE 30
+200
+Content-Type: application/json; charset=utf-8
+Cache-Control: no-cache
+Expires: -1
+Transfer-Encoding: chunked
+
+[]
+
+REQUEST 31
+GET https://api.skandia.se/Banking/V2/Payments/Approved
+
+RESPONSE 31
+200
+Content-Type: application/json; charset=utf-8
+Cache-Control: no-cache
+Transfer-Encoding: chunked
+
+[{"EncryptedPaymentId":"mockedEncryptedPaymentId","Amount":123.25,"Date":"2020-12-30T00:00:00+01:00","Type":3,"TypeName":"CreditCardInvoice","TypeDisplayName":"Credit card invoice","PaymentType":8,"PaymentTypeName":"CreditCardInvoice","PaymentTypeDisplayName":"Credit card invoice","Status":2,"StatusName":"Approved","StatusDisplayName":"Approved","IsChangeable":false,"IsDeletable":false,"HasError":false,"ErrorMessage":null,"HasInformation":false,"InformationMessage":null,"Sender":{"Name":null,"BankAccountTransactionNote":"Upcoming creditcard invoice","BankAccount":{"BankAccountNumber":"11111111111","BankAccountDisplayName":"1111-111.111-1"},"Address":null},"Recipient":{"Name":null,"RecipientNumber":"44444444444","Reference":null},"IsInvoice":false,"Invoice":null}]
+
+REQUEST 32
+GET https://api.skandia.se/Accounts/V2/BankAccounts/Transactions/77777/1/200
+
+RESPONSE 32
+200
+Content-Type: application/json; charset=utf-8
+Cache-Control: no-cache
+Expires: -1
+Transfer-Encoding: chunked
+
+[]
+
+REQUEST 33
+GET https://api.skandia.se/Accounts/V2/BankAccounts/Reservations/77777
+
+RESPONSE 33
+200
+Content-Type: application/json; charset=utf-8
+Cache-Control: no-cache
+Expires: -1
+Transfer-Encoding: chunked
+
+[]
+
+REQUEST 34
+GET https://api.skandia.se/Banking/V2/Payments/Approved
+
+RESPONSE 34
+200
+Content-Type: application/json; charset=utf-8
+Cache-Control: no-cache
+Transfer-Encoding: chunked
+
+[{"EncryptedPaymentId":"mockedEncryptedPaymentId","Amount":123.25,"Date":"2020-12-30T00:00:00+01:00","Type":3,"TypeName":"CreditCardInvoice","TypeDisplayName":"Credit card invoice","PaymentType":8,"PaymentTypeName":"CreditCardInvoice","PaymentTypeDisplayName":"Credit card invoice","Status":2,"StatusName":"Approved","StatusDisplayName":"Approved","IsChangeable":false,"IsDeletable":false,"HasError":false,"ErrorMessage":null,"HasInformation":false,"InformationMessage":null,"Sender":{"Name":null,"BankAccountTransactionNote":"Upcoming creditcard invoice","BankAccount":{"BankAccountNumber":"11111111111","BankAccountDisplayName":"1111-111.111-1"},"Address":null},"Recipient":{"Name":null,"RecipientNumber":"44444444444","Reference":null},"IsInvoice":false,"Invoice":null}]
+
+REQUEST 35
+GET https://api.skandia.se/Accounts/V2/BankAccounts/Transactions/88888/1/200
+
+RESPONSE 35
+200
+Content-Type: application/json; charset=utf-8
+Cache-Control: no-cache
+Transfer-Encoding: chunked
+
+[]
+
+REQUEST 36
+GET https://api.skandia.se/Accounts/V2/BankAccounts/Reservations/88888
+
+RESPONSE 36
+200
+Content-Type: application/json; charset=utf-8
+Cache-Control: no-cache
+Expires: -1
+Transfer-Encoding: chunked
+
+[]
+
+REQUEST 37
+GET https://api.skandia.se/Customers/V2/Customer
+
+RESPONSE 37
+200
+Content-Type: application/json; charset=utf-8
+Cache-Control: no-cache
+Transfer-Encoding: chunked
+
+{"AddressCareOf":null,"Address":"Address 1","Advertisement":null,"Citizen":null,"City":"Stockholm","CityOfBirth":null,"CompanyName":null,"CompanyType":null,"Country":"Sverige","CountryCode":"SE","CountryOfTax":null,"CountryOfBirth":null,"DateOfBirth":"2000-01-01T00:00:00+01:00","DateOfRegistration":"10/8/2005 12:00:00 AM","DateUpdated":"6/23/2020 9:57:52 PM","Egiro":null,"Email":"asfd@gmail.com","EmailWork":null,"FamilyType":null,"Fax":null,"Firstname":"Test","Fullname":"Test Testsson","Gender":0,"HandlingOfficer":null,"HasCreditCardInvoice":false,"HasPreliminaryEGiroAgreement":false,"HasProtectedAddress":false,"IdentifiedCode":null,"IsOfLegalAge":true,"IsPrivate":true,"IsVIP":false,"Surname":"Testsson","NationalIdentificationNumber":"200001011234","PackageStatusVardagspaket":0,"PackageVardagspaketKampanjKodList":null,"Phone":"12323","PhoneMobile":"12323","PhoneWork":"23434","PhoneWorkMobile":null,"PinEnvelopeSent":false,"PostalCode":"12345","ShowEGiroNotification":false,"EncryptedNationalIdentificationNumber":"sdfsdfsdfsfdsf","Links":[{"Rel":"resource.securities.accounts","Href":"urn:se.skandia.api.securities.accounts","Title":null},{"Rel":"resource.securities.holdings","Href":"urn:se.skandia.api.securities.holdings","Title":null},{"Rel":"resource.securities.indexes","Href":"urn:se.skandia.api.securities.indexes","Title":null},{"Rel":"resource.securities.watchlist","Href":"urn:se.skandia.api.securities.watchlist","Title":null},{"Rel":"resource.securities.equityorders","Href":"urn:se.skandia.api.securities.equityorders","Title":null},{"Rel":"resource.securities.orders","Href":"urn:se.skandia.api.securities.orders","Title":null},{"Rel":"resource.securities.orderexecutions","Href":"urn:se.skandia.api.securities.orderexecutions","Title":null},{"Rel":"resource.securities.companymessages","Href":"urn:se.skandia.api.securities.companymessages","Title":null},{"Rel":"resource.securities.funds","Href":"urn:se.skandia.api.securities.funds","Title":null},{"Rel":"resource.securities.marketlists","Href":"urn:se.skandia.api.securities.marketlists","Title":null},{"Rel":"resource.securities.charts","Href":"urn:se.skandia.api.securities.charts","Title":null},{"Rel":"resource.securities.accountfunds","Href":"urn:se.skandia.api.securities.accountfunds","Title":null},{"Rel":"resource.securities.instruments","Href":"urn:se.skandia.api.securities.instruments","Title":null},{"Rel":"resource.securities.fundorders","Href":"urn:se.skandia.api.securities.fundorders","Title":null},{"Rel":"resource.pensions","Href":"urn:se.skandia.api.pensions","Title":null},{"Rel":"securitiesaccounts","Href":"/Securities/V2/Accounts","Title":null},{"Rel":"securitiesaccountsavailabletotransferfrom","Href":"/Securities/V2/Accounts/ToTransferFrom","Title":null},{"Rel":"investmentswatchlist","Href":"/Securities/V2/WatchList","Title":null},{"Rel":"investmentsorderexecutions","Href":"/Securities/V2/OrderExecutions","Title":null},{"Rel":"marketlists","Href":"/Securities/V2/MarketLists","Title":null},{"Rel":"marketindexes","Href":"/Securities/V2/Indexes","Title":null},{"Rel":"resource.banking.payments","Href":"urn:se.skandia.api.banking.payments","Title":null},{"Rel":"resource.banking.recipients","Href":"urn:se.skandia.api.banking.recipients","Title":null},{"Rel":"unapprovedpayments","Href":"/Banking/V2/Payments","Title":null},{"Rel":"availabelbankaccountsforpayments","Href":"/Banking/V2/Payments/AvailableAccounts","Title":null},{"Rel":"approvedpayments","Href":"/Banking/V2/Payments/Approved","Title":null},{"Rel":"numberofunapprovedpayments","Href":"/Banking/V2/Payments/Count","Title":null},{"Rel":"resource.customers","Href":"urn:se.skandia.api.customers","Title":null},{"Rel":"resource.banking.transfers","Href":"urn:se.skandia.api.banking.transfers","Title":null},{"Rel":"resource.accounts","Href":"urn:se.skandia.api.accounts","Title":null},{"Rel":"resource.cards","Href":"urn:se.skandia.api.cards","Title":null},{"Rel":"self","Href":"/Customers/V2/Customer","Title":null},{"Rel":"relations","Href":"/Customers/V2/Customer/Relations","Title":null},{"Rel":"advisor","Href":"/Customers/V2/Customer/Advisor","Title":null},{"Rel":"commitments","Href":"/Customers/V2/Commitments","Title":null},{"Rel":"availabelbankaccountsforquickbalance","Href":"/Accounts/V2/BankAccounts/Balance","Title":null},{"Rel":"transfers","Href":"/Banking/V2/Transfers","Title":null},{"Rel":"availabelbankaccountsfortransfers","Href":"/Banking/V2/Transfers/AvailableAccounts","Title":null},{"Rel":"availabelbankaccountsformicrosavings","Href":"/Banking/V2/Transfers/MicroSavings","Title":null},{"Rel":"availabelbankaccountsforquicktransfers","Href":"/Banking/V2/Transfers/QuickTransfers","Title":null},{"Rel":"cardsforactivation","Href":"/Cards/V2/Cards/Activate","Title":null},{"Rel":"cardlimits","Href":"/Cards/V2/Cards/Limits","Title":null},{"Rel":"allowedcardlimits","Href":"/Cards/V2/Cards/Limits/Allowed","Title":null}]}
