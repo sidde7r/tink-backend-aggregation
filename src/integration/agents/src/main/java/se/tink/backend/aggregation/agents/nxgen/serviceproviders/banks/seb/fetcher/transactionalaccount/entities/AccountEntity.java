@@ -116,10 +116,16 @@ public class AccountEntity {
     }
 
     @JsonIgnore
+    private ExactCurrencyAmount getCreditLimit() {
+        return ExactCurrencyAmount.of(creditAmount, getCurrency());
+    }
+
+    @JsonIgnore
     private BalanceModule getBalanceModule() {
         return BalanceModule.builder()
                 .withBalance(getBalance())
                 .setAvailableCredit(getAvailableCredit())
+                .setCreditLimit(getCreditLimit())
                 .build();
     }
 
