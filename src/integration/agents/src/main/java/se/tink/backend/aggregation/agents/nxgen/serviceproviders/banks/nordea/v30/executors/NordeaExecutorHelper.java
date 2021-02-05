@@ -339,13 +339,21 @@ public class NordeaExecutorHelper {
      * payment entity
      */
     protected Optional<PaymentEntity> findInOutbox(Transfer transfer, Date dueDate) {
-        return apiClient.fetchPayments().getPayments().stream()
-                .filter(PaymentEntity::isUnconfirmed)
-                .map(
-                        paymentEntity ->
-                                apiClient.fetchPaymentDetails(paymentEntity.getApiIdentifier()))
-                .filter(paymentEntity -> paymentEntity.isEqualToTransfer(transfer, dueDate))
-                .findFirst();
+        try {
+            return apiClient.fetchPayments().getPayments().stream()
+                    .filter(PaymentEntity::isUnconfirmed)
+                    .map(
+                            paymentEntity ->
+                                    apiClient.fetchPaymentDetails(paymentEntity.getApiIdentifier()))
+                    .filter(paymentEntity -> paymentEntity.isEqualToTransfer(transfer, dueDate))
+                    .findFirst();
+        } catch (HttpResponseException hre) {
+            ErrorResponse error = ErrorResponse.of(hre);
+            if (error.isPaymentNotFoundInOutbox()) {
+                return Optional.empty();
+            }
+            throw hre;
+        }
     }
 
     private TransferExecutionException transferCancelledWithMessage(
