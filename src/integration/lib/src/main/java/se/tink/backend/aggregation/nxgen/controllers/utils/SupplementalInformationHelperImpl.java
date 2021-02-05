@@ -15,6 +15,12 @@ public class SupplementalInformationHelperImpl implements SupplementalInformatio
     private final Map<String, Field> supplementalInformation;
     private final SupplementalInformationController supplementalInformationController;
 
+    /**
+     * Do not construct your own SupplementalInfomationHelper. Use the instance available to your
+     * agent from SubsequentGenerationAgent instead. Or even better, migrate to AgentPlatformAgent
+     * or SubsequentProgressiveGenerationAgent where the Supplemental information controlling is
+     * outside of the agent and you do not need to have an instance.
+     */
     public SupplementalInformationHelperImpl(
             final Provider provider,
             final SupplementalInformationController supplementalInformationController) {

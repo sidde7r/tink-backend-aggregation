@@ -35,6 +35,7 @@ import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
 import se.tink.eventproducerservice.events.grpc.AgentLoginCompletedEventProto;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.i18n.Catalog;
+import src.libraries.interaction_counter.InteractionCounter;
 
 @RunWith(MockitoJUnitRunner.class)
 public class LoginExecutorTest {
@@ -61,6 +62,8 @@ public class LoginExecutorTest {
 
     @Mock private SupplementalInformationController supplementalInformationController;
 
+    @Mock private InteractionCounter interactionCounter;
+
     @Mock private DataStudioLoginEventPublisherService dataStudioLoginEventPublisherService;
 
     @Mock private MetricsFactory metricsFactory;
@@ -75,10 +78,10 @@ public class LoginExecutorTest {
     public void init() {
         Mockito.when(agentWorkerCommandContext.getRequest()).thenReturn(credentialsRequest);
         Mockito.when(agentWorkerCommandContext.getCatalog()).thenReturn(catalog);
+        Mockito.when(agentWorkerCommandContext.getSupplementalInteractionCounter())
+                .thenReturn(interactionCounter);
 
-        Mockito.when(
-                        metricsFactory.createLoginMetric(
-                                credentialsRequest, supplementalInformationController))
+        Mockito.when(metricsFactory.createLoginMetric(credentialsRequest, interactionCounter))
                 .thenReturn(loginMetricAction);
 
         Mockito.when(credentialsRequest.getCredentials()).thenReturn(credentials);

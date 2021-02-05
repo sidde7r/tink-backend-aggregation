@@ -36,8 +36,6 @@ import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.authenticator.rpc.Op
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.authenticator.rpc.OpBankMobileConfigurationsEntity;
 import se.tink.backend.aggregation.logmasker.LogMaskerImpl.LoggingMode;
 import se.tink.backend.aggregation.mocks.ResultCaptor;
-import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
-import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationControllerImpl;
 import se.tink.backend.aggregation.nxgen.http.LegacyTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
@@ -196,8 +194,6 @@ public class OpBankAuthenticatorTest {
         credentials.setField(Field.Key.PASSWORD, password);
         credentials.setType(CredentialsTypes.PASSWORD);
         AgentContext context = new AgentTestContext(credentials);
-        SupplementalInformationController supplementalInformationController =
-                new SupplementalInformationControllerImpl(context, credentials, null);
 
         OpBankApiClient bankClient =
                 spy(

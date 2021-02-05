@@ -21,6 +21,9 @@ public abstract class SuperAbstractAgent implements Agent, AgentEventListener {
     protected AgentsServiceConfiguration configuration;
     protected final CompositeAgentContext context;
     private final AgentAggregatorIdentifier agentAggregatorIdentifier;
+
+    // Remove SupplementalRequester completely from here. No agent should use this API
+    // Instead use SupplementalInformationController (exists in SubsequentGenerationAgent)
     protected final SupplementalRequester supplementalRequester;
     protected final ProviderSessionCacheContext providerSessionCacheContext;
     protected final SystemUpdater systemUpdater;

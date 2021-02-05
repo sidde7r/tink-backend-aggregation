@@ -9,23 +9,16 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponen
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.ProductionAgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.utils.ProviderSessionCacheController;
-import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
-import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.instrumentation.FetcherInstrumentationRegistry;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public abstract class NextGenerationAgent extends SubsequentGenerationAgent<Authenticator> {
 
-    protected final SupplementalInformationHelper supplementalInformationHelper;
-    protected final SupplementalInformationController supplementalInformationController;
     protected final ProviderSessionCacheController providerSessionCacheController;
     private Authenticator authenticator;
 
     protected NextGenerationAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
-        this.supplementalInformationController =
-                componentProvider.getSupplementalInformationController();
-        this.supplementalInformationHelper = componentProvider.getSupplementalInformationHelper();
         this.providerSessionCacheController =
                 new ProviderSessionCacheController(providerSessionCacheContext);
     }

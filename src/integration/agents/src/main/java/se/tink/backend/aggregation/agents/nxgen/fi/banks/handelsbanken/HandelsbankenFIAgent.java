@@ -33,7 +33,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
-import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationControllerImpl;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, CREDIT_CARDS, IDENTITY_DATA, LOANS})
@@ -72,10 +71,7 @@ public final class HandelsbankenFIAgent
                     new HandelsbankenFICardDeviceAuthenticator(
                             bankClient,
                             handelsbankenPersistentStorage,
-                            new SupplementalInformationControllerImpl(
-                                    this.supplementalRequester,
-                                    this.credentials,
-                                    strongAuthenticationState.getState()),
+                            supplementalInformationController,
                             handelsbankenConfiguration,
                             new HandelsbankenAutoAuthenticator(
                                     bankClient,

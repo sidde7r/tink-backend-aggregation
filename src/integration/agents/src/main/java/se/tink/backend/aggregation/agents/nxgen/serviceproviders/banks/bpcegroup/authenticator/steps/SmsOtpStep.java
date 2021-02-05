@@ -8,9 +8,9 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bpcegroup
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bpcegroup.apiclient.dto.authorize.StepDto;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bpcegroup.authenticator.steps.helper.BpceValidationHelper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bpcegroup.storage.BpceStorage;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.SupplementalInformationProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepResponse;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 
 @RequiredArgsConstructor
 public class SmsOtpStep extends AuthenticateBaseStep {
@@ -21,7 +21,7 @@ public class SmsOtpStep extends AuthenticateBaseStep {
 
     private final BpceStorage bpceStorage;
 
-    private final SupplementalInformationProvider supplementalInformationProvider;
+    private final SupplementalInformationHelper supplementalInformationHelper;
 
     private final BpceValidationHelper validationHelper;
 
@@ -32,10 +32,7 @@ public class SmsOtpStep extends AuthenticateBaseStep {
         final String authTransactionPath = bpceStorage.getAuthTransactionPath();
         final StepDto credentialsResponse = bpceStorage.getCredentialsResponse();
 
-        final String otpCode =
-                supplementalInformationProvider
-                        .getSupplementalInformationHelper()
-                        .waitForOtpInput();
+        final String otpCode = supplementalInformationHelper.waitForOtpInput();
 
         final AuthTransactionResponseDto sendOtpResponse =
                 sendOtp(authTransactionPath, credentialsResponse, otpCode);

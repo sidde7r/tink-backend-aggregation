@@ -25,25 +25,21 @@ public class SupplementalInformationController {
         this.coordinationClient = coordinationClient;
     }
 
-    public void setSupplementalInformation(String credentialsId, String fields) {
-        logger.info("Received supplemental information for credentialsId: {}", credentialsId);
+    public void setSupplementalInformation(String mfaId, String fields) {
+        logger.info("Received supplemental information for mfaId: {}", mfaId);
 
         Future<?> future =
                 cacheClient.set(
-                        CacheScope.SUPPLEMENT_CREDENTIALS_BY_CREDENTIALSID,
-                        credentialsId,
-                        60 * 10,
-                        fields);
+                        CacheScope.SUPPLEMENT_CREDENTIALS_BY_CREDENTIALSID, mfaId, 60 * 10, fields);
 
         logger.info(
-                "CacheClient cached the credentialsId: {} with value status {}",
-                credentialsId,
+                "CacheClient cached the mfaId: {} with value status {}",
+                mfaId,
                 fields == null ? "null value" : "non null value");
         DistributedBarrier lock =
                 new DistributedBarrier(
                         coordinationClient,
-                        BarrierName.build(
-                                BarrierName.Prefix.SUPPLEMENTAL_INFORMATION, credentialsId));
+                        BarrierName.build(BarrierName.Prefix.SUPPLEMENTAL_INFORMATION, mfaId));
         try {
             if (future != null) {
                 future.get(5, TimeUnit.SECONDS);
@@ -64,35 +60,33 @@ public class SupplementalInformationController {
             logger.error("Could not remove barrier while supplementing credentials", e);
         }
 
-        logger.info("DistributedBarrier removed for credentialsId: {}", credentialsId);
+        logger.info("DistributedBarrier removed for mfaId: {}", mfaId);
     }
 
-    public String getSupplementalInformation(String credentialsId) {
+    public String getSupplementalInformation(String mfaId) {
         try {
             Object cacheResult =
-                    cacheClient.get(
-                            CacheScope.SUPPLEMENT_CREDENTIALS_BY_CREDENTIALSID, credentialsId);
+                    cacheClient.get(CacheScope.SUPPLEMENT_CREDENTIALS_BY_CREDENTIALSID, mfaId);
 
             logger.info(
-                    "CacheClient find the cache for credentialsId: {} with value status {}",
-                    credentialsId,
+                    "CacheClient find the cache for mfaId: {} with value status {}",
+                    mfaId,
                     cacheResult == null ? "null value" : "non null value");
             return (String) cacheResult;
         } catch (Exception e) {
-            logger.error(
-                    "Could not fetch value for the credentialsId {} with error", credentialsId, e);
+            logger.error("Could not fetch value for the mfaId {} with error", mfaId, e);
             throw e;
         } finally {
-            logger.info("CacheClient clear the cache for credentialsId: {}", credentialsId);
+            logger.info("CacheClient clear the cache for mfaId: {}", mfaId);
             try {
                 Future<Boolean> future =
                         cacheClient.delete(
-                                CacheScope.SUPPLEMENT_CREDENTIALS_BY_CREDENTIALSID, credentialsId);
+                                CacheScope.SUPPLEMENT_CREDENTIALS_BY_CREDENTIALSID, mfaId);
                 if (future == null || !future.get(10, TimeUnit.SECONDS)) {
-                    logger.error("Failed to clear the cache for {}", credentialsId);
+                    logger.error("Failed to clear the cache for {}", mfaId);
                 }
             } catch (Exception e) {
-                logger.error("Failed to clear the cache for {}", credentialsId, e);
+                logger.error("Failed to clear the cache for {}", mfaId, e);
             }
         }
     }

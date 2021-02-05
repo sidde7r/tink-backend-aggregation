@@ -28,16 +28,16 @@ public final class MockSupplementalRequester implements SupplementalRequester {
 
     @Override
     public Optional<String> waitForSupplementalInformation(
-            String key, long waitFor, TimeUnit unit) {
+            String mfaId, long waitFor, TimeUnit unit) {
 
         /*
            TODO: Fix this hack. Probably we need to make SupplementInformationRequester payload
            have deterministic id so we will know here what to expect
         */
-        if (key.startsWith("tpcb")) {
-            key = "tpcb";
+        if (mfaId.startsWith("tpcb")) {
+            mfaId = "tpcb";
         }
 
-        return Optional.ofNullable(callbackData.get(key));
+        return Optional.ofNullable(callbackData.get(mfaId));
     }
 }

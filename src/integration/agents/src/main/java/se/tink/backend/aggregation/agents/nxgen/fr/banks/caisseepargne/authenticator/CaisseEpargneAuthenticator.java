@@ -14,8 +14,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bpcegroup
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bpcegroup.authenticator.steps.SmsOtpStep;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bpcegroup.authenticator.steps.helper.BpceValidationHelper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bpcegroup.authenticator.steps.helper.ImageRecognizeHelper;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.SupplementalInformationProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 
 @RequiredArgsConstructor
 public class CaisseEpargneAuthenticator extends BpceAuthenticator {
@@ -24,7 +24,7 @@ public class CaisseEpargneAuthenticator extends BpceAuthenticator {
 
     @Getter private final CaisseEpargneStorage bpceStorage;
 
-    private final SupplementalInformationProvider supplementalInformationProvider;
+    private final SupplementalInformationHelper supplementalInformationHelper;
 
     private final ImageRecognizeHelper imageRecognizeHelper;
 
@@ -42,7 +42,7 @@ public class CaisseEpargneAuthenticator extends BpceAuthenticator {
                 new SmsOtpStep(
                         caisseEpargneApiClient,
                         bpceStorage,
-                        supplementalInformationProvider,
+                        supplementalInformationHelper,
                         validationHelper),
                 new AuthConsumeStep(caisseEpargneApiClient, bpceStorage),
                 new FinalizeAuthStep(caisseEpargneApiClient, bpceStorage));

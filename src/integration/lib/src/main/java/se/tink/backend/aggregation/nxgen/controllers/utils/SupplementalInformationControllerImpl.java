@@ -27,12 +27,19 @@ public class SupplementalInformationControllerImpl implements SupplementalInform
             LoggerFactory.getLogger(SupplementalInformationControllerImpl.class);
 
     private static final String UNIQUE_PREFIX_TPCB = "tpcb_%s";
+    private static final int TIMEOUT_MINUTES_EMBEDDED_FIELDS = 2;
+    private static final int TIMEOUT_MINUTES_MOBILE_BANKID = 2;
 
     private final SupplementalRequester supplementalRequester;
     private final Credentials credentials;
     private final String state;
-    private short interactionCounter = 0;
 
+    /**
+     * Do not construct your own SupplementalInfomationController. Use the instance available to
+     * your agent from SubsequentGenerationAgent instead. Or even better, migrate to
+     * AgentPlatformAgent or SubsequentProgressiveGenerationAgent where the Supplemental information
+     * controlling is outside of the agent and you do not need to have an instance.
+     */
     public SupplementalInformationControllerImpl(
             SupplementalRequester supplementalRequester, Credentials credentials, String state) {
         this.supplementalRequester = supplementalRequester;
@@ -42,26 +49,26 @@ public class SupplementalInformationControllerImpl implements SupplementalInform
 
     @Override
     public Optional<Map<String, String>> waitForSupplementalInformation(
-            String barrierKey, long waitFor, TimeUnit unit) {
+            String mfaId, long waitFor, TimeUnit unit) {
         return supplementalRequester
-                .waitForSupplementalInformation(barrierKey, waitFor, unit)
+                .waitForSupplementalInformation(mfaId, waitFor, unit)
                 .map(SupplementalInformationControllerImpl::stringToMap);
     }
 
     @Override
     public Map<String, String> askSupplementalInformationSync(Field... fields)
             throws SupplementalInfoException {
-        interactionCounter++;
-        credentials.setSupplementalInformation(SerializationUtils.serializeToString(fields));
-        credentials.setStatus(CredentialsStatus.AWAITING_SUPPLEMENTAL_INFORMATION);
-        String names = Arrays.stream(fields).map(Field::getName).collect(Collectors.joining(","));
-        logger.info("Requesting for fields: {}", names);
+
+        String mfaId = askSupplementalInformationAsync(fields);
+
+        Optional<String> results =
+                supplementalRequester.waitForSupplementalInformation(
+                        mfaId, TIMEOUT_MINUTES_EMBEDDED_FIELDS, TimeUnit.MINUTES);
+
         String supplementalInformation =
-                Optional.ofNullable(
-                                Strings.emptyToNull(
-                                        supplementalRequester.requestSupplementalInformation(
-                                                credentials)))
+                Optional.ofNullable(Strings.emptyToNull(results.orElse(null)))
                         .orElseThrow(SupplementalInfoError.NO_VALID_CODE::exception);
+
         Map<String, String> suplementalInformation =
                 deserializeSupplementalInformation(supplementalInformation);
         logger.info("Finished requesting supplemental information");
@@ -74,18 +81,30 @@ public class SupplementalInformationControllerImpl implements SupplementalInform
     }
 
     @Override
-    public Optional<Map<String, String>> openThirdPartyAppSync(
-            ThirdPartyAppAuthenticationPayload payload) {
-        openThirdPartyAppAsync(payload);
+    public String askSupplementalInformationAsync(Field... fields) {
+        credentials.setSupplementalInformation(SerializationUtils.serializeToString(fields));
+        credentials.setStatus(CredentialsStatus.AWAITING_SUPPLEMENTAL_INFORMATION);
+        String names = Arrays.stream(fields).map(Field::getName).collect(Collectors.joining(","));
+        logger.info("Requesting for fields: {}", names);
 
-        String barrierKey = String.format(UNIQUE_PREFIX_TPCB, this.state);
-        return waitForSupplementalInformation(
-                barrierKey, ThirdPartyAppConstants.WAIT_FOR_MINUTES, TimeUnit.MINUTES);
+        supplementalRequester.requestSupplementalInformation(credentials, false);
+
+        // in case of embedded supplemental information, we use credentialsId as mfaId
+        return credentials.getId();
     }
 
     @Override
-    public void openThirdPartyAppAsync(ThirdPartyAppAuthenticationPayload payload) {
-        interactionCounter++;
+    public Optional<Map<String, String>> openThirdPartyAppSync(
+            ThirdPartyAppAuthenticationPayload payload) {
+
+        String mfaId = openThirdPartyAppAsync(payload);
+
+        return waitForSupplementalInformation(
+                mfaId, ThirdPartyAppConstants.WAIT_FOR_MINUTES, TimeUnit.MINUTES);
+    }
+
+    @Override
+    public String openThirdPartyAppAsync(ThirdPartyAppAuthenticationPayload payload) {
         Preconditions.checkNotNull(payload);
 
         payload.setState(state);
@@ -98,11 +117,28 @@ public class SupplementalInformationControllerImpl implements SupplementalInform
         logger.info("Opening third party app with deep link URL {}, state {}", deepLinkUrl, state);
 
         supplementalRequester.requestSupplementalInformation(credentials, false);
+
+        // return the mfaId that can be listened for.
+        return String.format(UNIQUE_PREFIX_TPCB, this.state);
     }
 
     @Override
-    public short getInteractionCounter() {
-        return interactionCounter;
+    public void openMobileBankIdSync(String autoStartToken) {
+        String mfaId = openMobileBankIdAsync(autoStartToken);
+
+        supplementalRequester.waitForSupplementalInformation(
+                mfaId, TIMEOUT_MINUTES_MOBILE_BANKID, TimeUnit.MINUTES);
+    }
+
+    @Override
+    public String openMobileBankIdAsync(String autoStartToken) {
+        credentials.setSupplementalInformation(autoStartToken);
+        credentials.setStatus(CredentialsStatus.AWAITING_MOBILE_BANKID_AUTHENTICATION);
+
+        supplementalRequester.requestSupplementalInformation(credentials, false);
+
+        // in case of swedish bankid, we use credentialsId as mfaId
+        return credentials.getId();
     }
 
     private static Map<String, String> stringToMap(final String string) {

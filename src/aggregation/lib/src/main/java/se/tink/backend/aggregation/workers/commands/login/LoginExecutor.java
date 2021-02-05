@@ -17,6 +17,7 @@ import se.tink.backend.aggregation.workers.commands.login.handler.result.LoginRe
 import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
 import se.tink.libraries.credentials.service.CredentialsRequest;
+import src.libraries.interaction_counter.InteractionCounter;
 
 public class LoginExecutor {
 
@@ -58,11 +59,7 @@ public class LoginExecutor {
                             context.getRequest(),
                             supplementalInformationController);
             if (result.isPresent()) {
-                postLoginActions(
-                        result.get(),
-                        context,
-                        supplementalInformationController,
-                        dataStudioLoginEventPublisherService);
+                postLoginActions(result.get(), context, dataStudioLoginEventPublisherService);
                 return determineAgentWorkerCommandResult(result.get());
             }
         }
@@ -73,11 +70,11 @@ public class LoginExecutor {
     private void postLoginActions(
             LoginResult loginResult,
             AgentWorkerCommandContext context,
-            SupplementalInformationController supplementalInformationController,
             DataStudioLoginEventPublisherService dataStudioLoginEventPublisherService) {
         loginResult.accept(new LoggerLoginResultVisitor());
-        logUserInteractionStatus(supplementalInformationController);
-        createLoginMetric(loginResult, context.getRequest(), supplementalInformationController);
+        InteractionCounter supplementalInfoCounter = context.getSupplementalInteractionCounter();
+        logUserInteractionStatus(supplementalInfoCounter.getNumberInteractions() == 0);
+        createLoginMetric(loginResult, context.getRequest(), supplementalInfoCounter);
         updateCredentialsStatus(loginResult, context);
         publishDataStudioLoginEvent(loginResult, dataStudioLoginEventPublisherService);
     }
@@ -90,11 +87,11 @@ public class LoginExecutor {
     private void createLoginMetric(
             LoginResult loginResult,
             CredentialsRequest credentialsRequest,
-            SupplementalInformationController supplementalInformationController) {
+            InteractionCounter supplementalInformationInteractionCounter) {
         loginResult.accept(
                 new LoginMetricLoginResultVisitor(
                         metricsFactory.createLoginMetric(
-                                credentialsRequest, supplementalInformationController)));
+                                credentialsRequest, supplementalInformationInteractionCounter)));
     }
 
     private void publishDataStudioLoginEvent(
@@ -105,11 +102,8 @@ public class LoginExecutor {
                         dataStudioLoginEventPublisherService));
     }
 
-    private void logUserInteractionStatus(
-            SupplementalInformationController supplementalInformationController) {
-        LOGGER.info(
-                "Authentication required user intervention: {}",
-                supplementalInformationController.isUsed());
+    private void logUserInteractionStatus(boolean wasSupplementaInfoUsed) {
+        LOGGER.info("Authentication required user intervention: {}", wasSupplementaInfoUsed);
     }
 
     private AgentWorkerCommandResult determineAgentWorkerCommandResult(LoginResult loginResult) {

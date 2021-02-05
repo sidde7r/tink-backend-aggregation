@@ -7,21 +7,82 @@ import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 
+/**
+ * This is the lowest level of interface an Agent or AuthController (a la Progressive auth) should
+ * be using when triggering supplemental information flows. Note that supplemental information here
+ * refers to all three kinds of flows (embedded fields, third-party apps/websites or Swedish
+ * MobileBankID.
+ */
 public interface SupplementalInformationController {
 
+    /**
+     * Waits for the results of the request to the client synchrously on a given mfaId.
+     *
+     * @param mfaId The mfaId to wait for, the key is given back from the Async variants on this
+     *     interface
+     * @param waitFor the duration to wait until timing out the request.
+     * @param unit the unit of the duration.
+     * @return The results of the request, if any.
+     */
     Optional<Map<String, String>> waitForSupplementalInformation(
-            String key, long waitFor, TimeUnit unit);
+            String mfaId, long waitFor, TimeUnit unit);
 
+    /**
+     * Starts an embedded dynamic authentication flow. This methods does the same as {@link
+     * SupplementalInformationController#askSupplementalInformationAsync}, but also starts waiting
+     * synchronously.
+     *
+     * @param fields the embedded Fields that the client should render.
+     * @return The results of the request.
+     * @throws SupplementalInfoException throws if no result is returned from the client.
+     */
     Map<String, String> askSupplementalInformationSync(Field... fields)
             throws SupplementalInfoException;
 
+    /**
+     * Starts an embedded dynamic authentication flow. Requests for the client to render a new set
+     * of embedded input Fields to answer by the end-user.
+     *
+     * @param fields
+     * @return the mfaId that can be used to wait for the results.
+     */
+    String askSupplementalInformationAsync(Field... fields);
+
+    /**
+     * Starts a redirect/decoupled dynamic authentication flow. This methods does the same as {@link
+     * SupplementalInformationController#openThirdPartyAppAsync}, but also starts waiting
+     * synchronously.
+     *
+     * @param payload
+     * @return the results from the request to the client, if any
+     */
     Optional<Map<String, String>> openThirdPartyAppSync(ThirdPartyAppAuthenticationPayload payload);
 
-    void openThirdPartyAppAsync(ThirdPartyAppAuthenticationPayload payload);
+    /**
+     * Starts a redirect/decoupled dynamic authentication flow. Requests the client to open the
+     * third-party app as specified in the payload.
+     *
+     * @param payload
+     * @return the mfaId that can be used to wait for the results.
+     */
+    String openThirdPartyAppAsync(ThirdPartyAppAuthenticationPayload payload);
 
-    short getInteractionCounter();
+    /**
+     * Starts a decoupled dynamic authentication flow with Mobile BankID. This methods does the same
+     * as {@link SupplementalInformationController#openMobileBankIdSync}, but also starts waiting
+     * synchronously.
+     *
+     * @param autoStartToken it is possible to supply null
+     */
+    void openMobileBankIdSync(String autoStartToken);
 
-    default boolean isUsed() {
-        return getInteractionCounter() > 0;
-    }
+    /**
+     * Starts a decoupled dynamic authentication flow with Mobile BankID. Requests the client to
+     * open the decoupled Mobile BankId app. This should probably be deprecated and the generic
+     * {@link SupplementalInformationController#openThirdPartyAppAsync} should be used instead.
+     *
+     * @param autoStartToken it is possible to supply null
+     * @return the mfaId that can be used to wait for the results.
+     */
+    String openMobileBankIdAsync(String autoStartToken);
 }

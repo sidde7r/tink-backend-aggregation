@@ -37,8 +37,6 @@ import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConf
 import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.SupplementalInformationProvider;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.SupplementalInformationProviderImpl;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
@@ -134,8 +132,6 @@ public final class StarlingAgent extends AgentPlatformAgent
 
     @Override
     protected Optional<TransferController> constructTransferController() {
-        SupplementalInformationProvider supplementalInformationProvider =
-                new SupplementalInformationProviderImpl(supplementalRequester, request);
         return Optional.of(
                 new TransferController(
                         null,
@@ -145,8 +141,7 @@ public final class StarlingAgent extends AgentPlatformAgent
                                 redirectUrl,
                                 credentials,
                                 strongAuthenticationState,
-                                supplementalInformationProvider
-                                        .getSupplementalInformationHelper())));
+                                supplementalInformationHelper)));
     }
 
     public AgentAuthenticationProcess getAuthenticationProcess() {

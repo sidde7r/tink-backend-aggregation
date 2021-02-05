@@ -71,7 +71,7 @@ public final class CaisseEpargneAgent extends BpceGroupBaseAgent
         return new CaisseEpargneAuthenticator(
                 this.apiClient,
                 this.caisseEpargneStorage,
-                this.supplementalInformationProvider,
+                this.supplementalInformationHelper,
                 this.imageRecognizeHelper,
                 this.bpceValidationHelper);
     }
@@ -131,7 +131,7 @@ public final class CaisseEpargneAgent extends BpceGroupBaseAgent
                 new CreateBeneficiaryController(
                         new CaisseEpargneCreateBeneficiaryExecutor(
                                 this.apiClient,
-                                this.supplementalInformationProvider,
+                                this.supplementalInformationHelper,
                                 this.caisseEpargneStorage,
                                 this.bpceValidationHelper)));
     }

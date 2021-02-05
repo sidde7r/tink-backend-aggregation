@@ -43,8 +43,6 @@ import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.eidassigner.module.QSealcSignerModuleRSASHA256;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentProgressiveGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.SupplementalInformationProvider;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.SupplementalInformationProviderImpl;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2TokenFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2TokenStorage;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2based.AccessCodeStorage;
@@ -193,16 +191,13 @@ public final class LclAgent extends SubsequentProgressiveGenerationAgent
 
     @Override
     public Optional<PaymentController> constructPaymentController() {
-        final SupplementalInformationProvider supplementalInformationProvider =
-                new SupplementalInformationProviderImpl(supplementalRequester, request);
-
         FrOpenBankingPaymentExecutor paymentExecutor =
                 new FrOpenBankingPaymentExecutor(
                         paymentApiClient,
                         agentConfiguration.getRedirectUrl(),
                         sessionStorage,
                         strongAuthenticationState,
-                        supplementalInformationProvider.getSupplementalInformationHelper());
+                        supplementalInformationHelper);
 
         return Optional.of(new PaymentController(paymentExecutor, paymentExecutor));
     }

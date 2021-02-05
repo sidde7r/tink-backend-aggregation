@@ -57,6 +57,8 @@ junit_test(
         "//src/libraries/account_data_cache",
         "//src/libraries/account_identifier",
         "//src/libraries/i18n",
+        "//src/libraries/interaction_counter",
+        "//src/libraries/interaction_counter/local",
         "//src/libraries/pair",
         "//src/libraries/serialization",
         "//third_party:com_sun_jersey_jersey_core",

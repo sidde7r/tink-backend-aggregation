@@ -17,7 +17,6 @@ public final class MockSupplementalInformationController
         implements SupplementalInformationController {
 
     private final Map<String, String> callbackData;
-    private short interactionCounter;
 
     public MockSupplementalInformationController(Map<String, String> callbackData) {
         this.callbackData = callbackData;
@@ -25,9 +24,8 @@ public final class MockSupplementalInformationController
 
     @Override
     public Optional<Map<String, String>> waitForSupplementalInformation(
-            String key, final long waitFor, final TimeUnit unit) {
-        interactionCounter++;
-        if (key.startsWith("tpcb")) {
+            String mfaId, final long waitFor, final TimeUnit unit) {
+        if (mfaId.startsWith("tpcb")) {
             return Optional.of(callbackData);
         }
         throw new UnsupportedOperationException("Not implemented");
@@ -36,12 +34,16 @@ public final class MockSupplementalInformationController
     @Override
     public Map<String, String> askSupplementalInformationSync(final Field... fields)
             throws SupplementalInfoException {
-        interactionCounter++;
         return Stream.of(fields)
                 .map(Field::getName)
                 .filter(Objects::nonNull)
                 .filter(this.callbackData::containsKey)
                 .collect(Collectors.toMap(Function.identity(), this.callbackData::get));
+    }
+
+    @Override
+    public String askSupplementalInformationAsync(Field... fields) {
+        return null;
     }
 
     @Override
@@ -51,12 +53,18 @@ public final class MockSupplementalInformationController
     }
 
     @Override
-    public void openThirdPartyAppAsync(final ThirdPartyAppAuthenticationPayload payload) {
+    public String openThirdPartyAppAsync(final ThirdPartyAppAuthenticationPayload payload) {
+        // NOOP
+        return null;
+    }
+
+    @Override
+    public void openMobileBankIdSync(String autoStartToken) {
         // NOOP
     }
 
     @Override
-    public short getInteractionCounter() {
-        return interactionCounter;
+    public String openMobileBankIdAsync(String autoStartToken) {
+        return null;
     }
 }

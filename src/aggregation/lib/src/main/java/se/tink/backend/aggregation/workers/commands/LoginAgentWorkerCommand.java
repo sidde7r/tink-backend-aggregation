@@ -139,7 +139,7 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
                 result,
                 elapsedTime,
                 AgentLoginCompletedEventUserInteractionInformationProvider
-                        .userInteractionInformation(supplementalInformationController));
+                        .userInteractionInformation(context.getSupplementalInteractionCounter()));
     }
 
     @Override
@@ -352,10 +352,7 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
                             context,
                             supplementalInformationController,
                             new DataStudioLoginEventPublisherService(
-                                    loginAgentEventProducer,
-                                    startTime,
-                                    context,
-                                    supplementalInformationController));
+                                    loginAgentEventProducer, startTime, context));
 
         } finally {
             stopCommandContexts(loginTimerContext);

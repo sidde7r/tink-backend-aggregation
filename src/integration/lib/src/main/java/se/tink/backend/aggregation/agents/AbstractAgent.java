@@ -12,6 +12,7 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.contexts.CompositeAgentContext;
 import se.tink.backend.aggregation.agents.contexts.FinancialDataCacher;
 import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
+import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.utils.jersey.JerseyClientFactory;
 import se.tink.backend.aggregation.logmasker.LogMaskerImpl;
@@ -24,17 +25,24 @@ import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.net.client.TinkApacheHttpClient4;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
+/**
+ * @deprecated Do not use the AbstractAgent. All existing agents extending AbstractAgent should
+ *     migrate to a newer variant (e.g. AgentPlatformAgent).
+ */
+@Deprecated
 public abstract class AbstractAgent extends SuperAbstractAgent {
 
     protected final JerseyClientFactory clientFactory;
     protected final StatusUpdater statusUpdater;
     protected final FinancialDataCacher financialDataCacher;
     protected final Logger log;
+    protected final SupplementalRequester supplementalRequester;
 
     protected AbstractAgent(CredentialsRequest request, CompositeAgentContext context) {
         super(new AgentContextProviderImpl(request, context));
         this.statusUpdater = context;
         this.financialDataCacher = context;
+        this.supplementalRequester = context;
         this.clientFactory =
                 new JerseyClientFactory(
                         context.getLogMasker(), LogMaskerImpl.shouldLog(request.getProvider()));
