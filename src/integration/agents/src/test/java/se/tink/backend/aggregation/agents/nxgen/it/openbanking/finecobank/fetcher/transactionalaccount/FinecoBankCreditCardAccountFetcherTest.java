@@ -36,7 +36,6 @@ import se.tink.backend.aggregation.nxgen.core.account.entity.Holder;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.amount.ExactCurrencyAmount;
@@ -85,17 +84,16 @@ public class FinecoBankCreditCardAccountFetcherTest {
                 .thenReturn(onlyCreditCardAccountsResponse);
 
         // when
-        Collection<CreditCardAccount> creditCardAccounts = commonTestFetcher.fetchAccounts();
+        List<CreditCardAccount> creditCardAccounts = commonTestFetcher.fetchAccounts();
 
         // then
         assertThat(creditCardAccounts.size()).isEqualTo(2);
 
-        CreditCardAccount card1 = creditCardAccounts.iterator().next();
+        CreditCardAccount card1 = creditCardAccounts.get(0);
         assertThat(card1.getCardModule().getCardNumber()).isEqualTo("1234 **** **** 1000");
         assertThat(card1.getCardModule().getBalance()).isEqualTo(ExactCurrencyAmount.of(1, "EUR"));
         assertThat(card1.getCardModule().getAvailableCredit())
                 .isEqualTo(ExactCurrencyAmount.of(1.123, "EUR"));
-        assertThat(card1.getCardModule().getCardAlias()).isEqualTo("card_account_name_1");
         assertThat(card1.getCardModule().getCardAlias()).isEqualTo("card_account_name_1");
         assertThat(card1.getIdModule().getUniqueId()).isEqualTo("12341000");
         assertThat(card1.getIdModule().getAccountNumber()).isEqualTo("1234 **** **** 1000");
@@ -109,9 +107,28 @@ public class FinecoBankCreditCardAccountFetcherTest {
         assertThat(card1.getApiIdentifier()).isEqualTo("2218836100");
         assertThat(card1.getHolders())
                 .isEqualTo(Collections.singletonList(Holder.of("card_account_name_1")));
-        TemporaryStorage temporaryStorage = new TemporaryStorage();
-        temporaryStorage.put("bankIdentifier", "2218836100");
-        temporaryStorage.put(StorageKeys.CARD_ID, "2218836100");
+        assertThat(card1.getFromTemporaryStorage("bankIdentifier")).isEqualTo("2218836100");
+        assertThat(card1.getFromTemporaryStorage(StorageKeys.CARD_ID)).isEqualTo("2218836100");
+
+        CreditCardAccount card2 = creditCardAccounts.get(1);
+        assertThat(card2.getCardModule().getCardNumber()).isEqualTo("1234 **** **** 1001");
+        assertThat(card2.getCardModule().getBalance()).isEqualTo(ExactCurrencyAmount.of(3, "EUR"));
+        assertThat(card2.getCardModule().getAvailableCredit())
+                .isEqualTo(ExactCurrencyAmount.of(1.123, "EUR"));
+        assertThat(card2.getCardModule().getCardAlias()).isEqualTo("card_account_name_2");
+        assertThat(card2.getIdModule().getUniqueId()).isEqualTo("12341001");
+        assertThat(card2.getIdModule().getAccountNumber()).isEqualTo("1234 **** **** 1001");
+        assertThat(card2.getIdModule().getAccountName()).isEqualTo("some other unknown product");
+        assertThat(card2.getIdModule().getIdentifiers())
+                .isEqualTo(
+                        Collections.singleton(
+                                AccountIdentifier.create(
+                                        Type.PAYMENT_CARD_NUMBER, "1234 **** **** 1001")));
+        assertThat(card2.getApiIdentifier()).isEqualTo("2218836101");
+        assertThat(card2.getHolders())
+                .isEqualTo(Collections.singletonList(Holder.of("card_account_name_2")));
+        assertThat(card2.getFromTemporaryStorage("bankIdentifier")).isEqualTo("2218836101");
+        assertThat(card2.getFromTemporaryStorage(StorageKeys.CARD_ID)).isEqualTo("2218836101");
     }
 
     @Test
