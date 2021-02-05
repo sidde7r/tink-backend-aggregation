@@ -78,6 +78,8 @@ public class AmericanExpressConstants {
                 SERVER_URL.concat("/apiplatform/v2/oauth/token_revocation/mac");
         public static final URL BASE_PATH = SERVER_URL.concat("/servicing/v1");
         public static final URL ENDPOINT_ACCOUNTS = BASE_PATH.concat("/member/accounts");
+        public static final URL ENDPOINT_STATEMENT_PERIODS =
+                BASE_PATH.concat("/financials/statement_periods");
         public static final URL ENDPOINT_BALANCES = BASE_PATH.concat("/financials/balances");
         public static final URL ENDPOINT_TRANSACTIONS =
                 BASE_PATH.concat("/financials/transactions");
