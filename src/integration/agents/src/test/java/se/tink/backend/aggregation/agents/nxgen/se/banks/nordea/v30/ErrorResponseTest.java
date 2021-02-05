@@ -46,6 +46,16 @@ public class ErrorResponseTest {
                     + "}]\n"
                     + "}";
 
+    private static final String PAYMENT_NOT_FOUND_IN_OUTBOX =
+            "{\n"
+                    + "\"http_status\": 404,\n"
+                    + "\"error\": \"not_found\",\n"
+                    + "\"error_description\": \"Payment not found\",\n"
+                    + "\"details\": [{\n"
+                    + "\"param\": \"000000000215909872\"\n"
+                    + "}]\n"
+                    + "}";
+
     @Test
     public void testErrorResponseDeser() {
         ErrorResponse errorResponse =
@@ -81,5 +91,13 @@ public class ErrorResponseTest {
                 .isEqualTo("Invalid destination account");
         assertThat(((TransferExecutionException) thrown).getInternalStatus().toString())
                 .isEqualTo("INVALID_DESTINATION_ACCOUNT");
+    }
+
+    @Test
+    public void testPaymentNotFoundInOutbox() {
+        ErrorResponse errorResponse =
+                SerializationUtils.deserializeFromString(
+                        PAYMENT_NOT_FOUND_IN_OUTBOX, ErrorResponse.class);
+        Assert.assertTrue(errorResponse.isPaymentNotFoundInOutbox());
     }
 }
