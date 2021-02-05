@@ -84,12 +84,12 @@ public class FinecoBankCreditCardAccountFetcherTest {
                 .thenReturn(onlyCreditCardAccountsResponse);
 
         // when
-        List<CreditCardAccount> creditCardAccounts = commonTestFetcher.fetchAccounts();
+        Collection<CreditCardAccount> creditCardAccounts = commonTestFetcher.fetchAccounts();
 
         // then
         assertThat(creditCardAccounts.size()).isEqualTo(2);
 
-        CreditCardAccount card1 = creditCardAccounts.get(0);
+        CreditCardAccount card1 = getCardByCardNumber(creditCardAccounts, "1234 **** **** 1000");
         assertThat(card1.getCardModule().getCardNumber()).isEqualTo("1234 **** **** 1000");
         assertThat(card1.getCardModule().getBalance()).isEqualTo(ExactCurrencyAmount.of(1, "EUR"));
         assertThat(card1.getCardModule().getAvailableCredit())
@@ -110,7 +110,7 @@ public class FinecoBankCreditCardAccountFetcherTest {
         assertThat(card1.getFromTemporaryStorage("bankIdentifier")).isEqualTo("2218836100");
         assertThat(card1.getFromTemporaryStorage(StorageKeys.CARD_ID)).isEqualTo("2218836100");
 
-        CreditCardAccount card2 = creditCardAccounts.get(1);
+        CreditCardAccount card2 = getCardByCardNumber(creditCardAccounts, "1234 **** **** 1001");
         assertThat(card2.getCardModule().getCardNumber()).isEqualTo("1234 **** **** 1001");
         assertThat(card2.getCardModule().getBalance()).isEqualTo(ExactCurrencyAmount.of(3, "EUR"));
         assertThat(card2.getCardModule().getAvailableCredit())
@@ -310,6 +310,14 @@ public class FinecoBankCreditCardAccountFetcherTest {
 
         // then
         assertThat(t).isEqualTo(responseException);
+    }
+
+    private CreditCardAccount getCardByCardNumber(
+            Collection<CreditCardAccount> cards, String accountNumber) {
+        return cards.stream()
+                .filter(card -> card.getCardModule().getCardNumber().equals(accountNumber))
+                .findFirst()
+                .orElseThrow(IllegalStateException::new);
     }
 
     private void mockTransactionsConsentExistsForAccountNumbers(String... accountNumbers) {
