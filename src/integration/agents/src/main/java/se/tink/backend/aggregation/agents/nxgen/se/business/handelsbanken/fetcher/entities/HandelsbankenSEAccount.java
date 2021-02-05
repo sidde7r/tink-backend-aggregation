@@ -35,7 +35,7 @@ public class HandelsbankenSEAccount extends HandelsbankenAccount {
     private String accountName; // e.g. "Affärskonto"
     private String accountNo; // e.g. "123456789" (does not include clearing number)
     private String accountNoFormatted; // e.g. "123 456 789
-    private int approvedCredit; // e.g. 0
+    private BigDecimal approvedCredit; // e.g. 0
     private String approvedCreditFormatted; // e.g "0,00"
     private BigDecimal availableBalance; // e.g. 123456.78 (seems to be same as currentBalance)
     private String availableBalanceFormatted; // e.g. "123 456,78"
@@ -87,6 +87,10 @@ public class HandelsbankenSEAccount extends HandelsbankenAccount {
     private BalanceModule getBalance() {
         return BalanceModule.builder()
                 .withBalance(ExactCurrencyAmount.of(findBalanceAmount(), currencyCode))
+                .setAvailableBalance(
+                        ExactCurrencyAmount.of(
+                                findBalanceAmount().subtract(approvedCredit), currencyCode))
+                .setCreditLimit(ExactCurrencyAmount.of(approvedCredit, currencyCode))
                 .build();
     }
 
