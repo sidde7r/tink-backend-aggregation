@@ -338,10 +338,12 @@ public class NordeaBaseConstants {
         public static final String USER_UNAUTHORIZED = "error_core_unauthorized";
         public static final String USER_UNAUTHORIZED_MESSAGE = "User not authorised to operation";
         public static final String INVALID_BANKGIRO_ACCOUNT = "BESE1008";
+        public static final String NOT_FOUND = "not_found";
     }
 
     public static class ErrorMessages {
         public static final String INVALID_BANKGIRO_ACCOUNT = "Invalid bankgiro account";
+        public static final String PAYMENT_NOT_FOUND = "Payment not found";
     }
 
     public static class LogTags {
