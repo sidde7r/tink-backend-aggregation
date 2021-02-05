@@ -6,7 +6,6 @@ import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.LunarConstants;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.persistance.LunarAuthData;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.persistance.LunarAuthDataAccessor;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.persistance.LunarDataAccessorFactory;
-import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationProcessStepIdentifier;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.request.AgentUserInteractionAuthenticationProcessRequest;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.request.AgentUserInteractionData;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentAuthenticationResult;
@@ -23,26 +22,25 @@ public class SaveUserCredentialsStep
     @Override
     public AgentAuthenticationResult execute(
             AgentUserInteractionAuthenticationProcessRequest request) {
-
-        LunarAuthDataAccessor accessor =
+        LunarAuthDataAccessor authDataAccessor =
                 persistedDataAccessorFactory.createAuthDataAccessor(
                         request.getAuthenticationPersistedData());
-        LunarAuthData authData = accessor.get();
+        LunarAuthData authData = authDataAccessor.get();
 
         AgentUserInteractionData userData = request.getUserInteractionData();
 
         String userId = userData.getFieldValue(Field.Key.USERNAME.getFieldKey());
         String password = userData.getFieldValue(Field.Key.PASSWORD.getFieldKey());
-        String serviceCode = userData.getFieldValue(LunarConstants.Storage.ACCESS_PIN_INPUT_LABEL);
+        String lunarPassword =
+                userData.getFieldValue(LunarConstants.Storage.ACCESS_PIN_INPUT_LABEL);
 
         authData.setUserId(userId);
         authData.setNemIdPassword(password);
-        authData.setLunarPassword(serviceCode);
+        authData.setLunarPassword(lunarPassword);
 
         return new AgentProceedNextStepAuthenticationResult(
-                AgentAuthenticationProcessStepIdentifier.of(
-                        GetNemIdTokenStep.class.getSimpleName()),
+                AgentAuthenticationProcessStep.identifier(GetNemIdTokenStep.class),
                 request.getAuthenticationProcessState(),
-                accessor.storeData(authData));
+                authDataAccessor.storeData(authData));
     }
 }

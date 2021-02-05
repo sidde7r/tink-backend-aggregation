@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.persistance;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.LunarConstants.Storage;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationProcessState;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentJsonRepresentationAuthenticationProcessStateAccessor;
 
@@ -15,7 +16,7 @@ public class LunarProcessStateAccessor
 
     @Override
     protected String storeKey() {
-        return "LunarProcessState";
+        return Storage.PROCESS_STATE_KEY;
     }
 
     public LunarProcessState get() {

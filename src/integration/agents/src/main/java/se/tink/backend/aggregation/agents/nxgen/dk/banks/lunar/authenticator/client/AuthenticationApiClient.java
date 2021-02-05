@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar;
+package se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.client;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.LunarConstants.HeaderValues;
@@ -9,12 +9,15 @@ import agents_platform_agents_framework.org.springframework.http.HttpMethod;
 import agents_platform_agents_framework.org.springframework.http.MediaType;
 import agents_platform_agents_framework.org.springframework.http.RequestEntity;
 import agents_platform_agents_framework.org.springframework.http.RequestEntity.BodyBuilder;
+import agents_platform_agents_framework.org.springframework.http.ResponseEntity;
 import java.net.URI;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.agentplatform.AgentPlatformHttpClient;
-import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
-import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.entites.NemidEntity;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.LunarConstants;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.entites.NemIdEntity;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.rpc.AccessTokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.rpc.AccessTokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.rpc.NemIdParamsResponse;
@@ -24,29 +27,38 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.ran
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @RequiredArgsConstructor
-public class AgentPlatformLunarApiClient {
+@Slf4j
+public class AuthenticationApiClient {
 
     private final AgentPlatformHttpClient client;
     private final RandomValueGenerator randomValueGenerator;
+    private final AuthResponseValidator authResponseValidator;
+
+    public AuthenticationApiClient(
+            AgentPlatformHttpClient client, RandomValueGenerator randomValueGenerator) {
+        this.client = client;
+        this.randomValueGenerator = randomValueGenerator;
+        this.authResponseValidator = new AuthResponseValidator();
+    }
 
     public NemIdParamsResponse getNemIdParameters(String deviceId) {
         BodyBuilder requestBuilder =
                 getDefaultBodyBuilder(HttpMethod.GET, Uri.NEM_ID_AUTHENTICATE, deviceId);
-        return client.exchange(requestBuilder.build(), NemIdParamsResponse.class).getBody();
+        return send(requestBuilder.build(), NemIdParamsResponse.class, new NemIdParamsResponse());
     }
 
     public AccessTokenResponse postNemIdToken(String signature, String challenge, String deviceId) {
         AccessTokenRequest accessTokenRequest =
-                new AccessTokenRequest(new NemidEntity(signature, challenge));
+                new AccessTokenRequest(new NemIdEntity(signature, challenge));
 
         BodyBuilder requestBuilder =
                 getDefaultBodyBuilder(HttpMethod.POST, Uri.NEM_ID_AUTHENTICATE, deviceId)
                         .contentType(MediaType.APPLICATION_JSON);
 
-        return client.exchange(
-                        requestBuilder.body(getSerializedAccessTokenRequest(accessTokenRequest)),
-                        AccessTokenResponse.class)
-                .getBody();
+        return send(
+                requestBuilder.body(getSerializedAccessTokenRequest(accessTokenRequest)),
+                AccessTokenResponse.class,
+                new AccessTokenResponse());
     }
 
     private String getSerializedAccessTokenRequest(AccessTokenRequest accessTokenRequest) {
@@ -55,18 +67,39 @@ public class AgentPlatformLunarApiClient {
         if (serializedAccessTokenRequest != null) {
             return StringUtils.replace(serializedAccessTokenRequest, "/", "\\/");
         }
-        throw LoginError.DEFAULT_MESSAGE.exception("Couldn't serialize access token request");
+        throw new IllegalArgumentException("Couldn't serialize access token request");
     }
 
-    public TokenResponse signIn(String serviceCode, String token, String deviceId) {
-        SignInRequest signInRequest = new SignInRequest(serviceCode);
+    public TokenResponse signIn(String lunarPassword, String token, String deviceId) {
+        SignInRequest signInRequest = new SignInRequest(lunarPassword);
 
         BodyBuilder requestBuilder =
                 getDefaultBodyBuilder(HttpMethod.POST, Uri.SIGN_IN, deviceId)
                         .header(Headers.AUTHORIZATION, token)
                         .header(Headers.CONTENT_TYPE, APPLICATION_JSON);
 
-        return client.exchange(requestBuilder.body(signInRequest), TokenResponse.class).getBody();
+        return send(requestBuilder.body(signInRequest), TokenResponse.class, new TokenResponse());
+    }
+
+    private <T, R> T send(
+            RequestEntity<R> requestEntity, Class<T> responseClass, T defaultResponse) {
+        ResponseEntity<String> responseEntity = client.exchange(requestEntity, String.class);
+        authResponseValidator.validate(responseEntity);
+        return deserializeResponseOrGetDefault(responseClass, defaultResponse, responseEntity);
+    }
+
+    private <T> T deserializeResponseOrGetDefault(
+            Class<T> responseClass, T defaultResponse, ResponseEntity<String> responseEntity) {
+        return Optional.ofNullable(
+                        SerializationUtils.deserializeFromString(
+                                responseEntity.getBody(), responseClass))
+                .orElseGet(
+                        () -> {
+                            log.error(
+                                    "Failed to deserialize response into: {}",
+                                    responseClass.getSimpleName());
+                            return defaultResponse;
+                        });
     }
 
     private BodyBuilder getDefaultBodyBuilder(HttpMethod httpMethod, URI uri, String deviceId) {

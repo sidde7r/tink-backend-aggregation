@@ -1,24 +1,23 @@
 package se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.steps;
 
+import agents_platform_framework.org.springframework.web.server.ResponseStatusException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.AgentPlatformLunarApiClient;
-import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.exception.LunarAuthenticationExceptionHandler;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.client.AuthenticationApiClient;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.exception.AuthenticationExceptionHandler;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.persistance.LunarAuthData;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.persistance.LunarAuthDataAccessor;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.persistance.LunarDataAccessorFactory;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.persistance.LunarProcessState;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.persistance.LunarProcessStateAccessor;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.rpc.AccessTokenResponse;
-import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationProcessStepIdentifier;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.request.AgentUserInteractionAuthenticationProcessRequest;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentFailedAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentProceedNextStepAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.steps.AgentAuthenticationProcessStep;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AccessTokenFetchingFailureError;
-import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -27,7 +26,7 @@ public class GetLunarAccessTokenStep
                 AgentUserInteractionAuthenticationProcessRequest> {
 
     private final LunarDataAccessorFactory dataAccessorFactory;
-    private final AgentPlatformLunarApiClient apiClient;
+    private final AuthenticationApiClient apiClient;
 
     @Override
     public AgentAuthenticationResult execute(
@@ -50,10 +49,10 @@ public class GetLunarAccessTokenStep
 
         try {
             accessTokenResponse = apiClient.postNemIdToken(signature, challenge, deviceId);
-        } catch (HttpResponseException e) {
+        } catch (ResponseStatusException e) {
             log.error("Failed to send NemIdToken and fetch access token", e);
             return new AgentFailedAuthenticationResult(
-                    LunarAuthenticationExceptionHandler.toKnownErrorFromResponseOrDefault(
+                    AuthenticationExceptionHandler.toKnownErrorFromResponseOrDefault(
                             e, new AccessTokenFetchingFailureError()),
                     request.getAuthenticationPersistedData());
         }
@@ -67,8 +66,7 @@ public class GetLunarAccessTokenStep
         processState.setAutoAuth(false);
 
         return new AgentProceedNextStepAuthenticationResult(
-                AgentAuthenticationProcessStepIdentifier.of(
-                        SignInToLunarStep.class.getSimpleName()),
+                AgentAuthenticationProcessStep.identifier(SignInToLunarStep.class),
                 processStateAccessor.storeState(processState),
                 authDataAccessor.storeData(authData));
     }

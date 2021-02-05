@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class LunarProcessState {
-    private String nemIdParameters;
     private String challenge;
     private String nemIdToken;
     private boolean isAutoAuth;

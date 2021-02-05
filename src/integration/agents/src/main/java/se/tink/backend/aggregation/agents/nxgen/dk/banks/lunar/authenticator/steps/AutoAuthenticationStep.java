@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.persistance.LunarDataAccessorFactory;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.persistance.LunarProcessState;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.persistance.LunarProcessStateAccessor;
-import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationProcessStepIdentifier;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.request.AgentProceedNextStepAuthenticationRequest;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentProceedNextStepAuthenticationResult;
@@ -20,7 +19,6 @@ public class AutoAuthenticationStep
 
     @Override
     public AgentAuthenticationResult execute(AgentProceedNextStepAuthenticationRequest request) {
-
         LunarProcessStateAccessor processStateAccessor =
                 dataAccessorFactory.createProcessStateAccessor(
                         request.getAuthenticationProcessState());
@@ -29,8 +27,7 @@ public class AutoAuthenticationStep
         processState.setAutoAuth(true);
 
         return new AgentProceedNextStepAuthenticationResult(
-                AgentAuthenticationProcessStepIdentifier.of(
-                        SignInToLunarStep.class.getSimpleName()),
+                AgentAuthenticationProcessStep.identifier(SignInToLunarStep.class),
                 processStateAccessor.storeState(processState),
                 request.getAuthenticationPersistedData());
     }

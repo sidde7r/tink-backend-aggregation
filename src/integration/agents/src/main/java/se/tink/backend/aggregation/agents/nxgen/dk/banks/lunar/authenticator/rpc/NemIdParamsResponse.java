@@ -12,7 +12,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @Data
 public class NemIdParamsResponse {
 
-    private static final Pattern CHALLENGE_PATTERN = Pattern.compile("challenge=(.*)");
+    private static final Pattern CHALLENGE_PATTERN = Pattern.compile("challenge=(.+)");
 
     @JsonProperty("CLIENTFLOW")
     private String clientflow;

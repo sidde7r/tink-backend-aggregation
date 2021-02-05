@@ -1,15 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.steps;
 
+import agents_platform_framework.org.springframework.web.server.ResponseStatusException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.AgentPlatformLunarApiClient;
-import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.exception.LunarAuthenticationExceptionHandler;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.client.AuthenticationApiClient;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.exception.AuthenticationExceptionHandler;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.persistance.LunarAuthData;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.persistance.LunarAuthDataAccessor;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.persistance.LunarDataAccessorFactory;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.persistance.LunarProcessState;
-import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.persistance.LunarProcessStateAccessor;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.request.AgentProceedNextStepAuthenticationRequest;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentAuthenticationResult;
@@ -19,7 +19,6 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AccessTokenFetchingFailureError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AgentBankApiError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.SessionExpiredError;
-import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -27,19 +26,19 @@ public class SignInToLunarStep
         implements AgentAuthenticationProcessStep<AgentProceedNextStepAuthenticationRequest> {
 
     private final LunarDataAccessorFactory dataAccessorFactory;
-    private final AgentPlatformLunarApiClient apiClient;
+    private final AuthenticationApiClient apiClient;
 
     @Override
     public AgentAuthenticationResult execute(AgentProceedNextStepAuthenticationRequest request) {
-        LunarAuthDataAccessor persistedData =
+        LunarAuthDataAccessor authDataAccessor =
                 dataAccessorFactory.createAuthDataAccessor(
                         request.getAuthenticationPersistedData());
-        LunarAuthData authData = persistedData.get();
+        LunarAuthData authData = authDataAccessor.get();
 
-        LunarProcessStateAccessor processStateAccessor =
-                dataAccessorFactory.createProcessStateAccessor(
-                        request.getAuthenticationProcessState());
-        LunarProcessState processState = processStateAccessor.get();
+        LunarProcessState processState =
+                dataAccessorFactory
+                        .createProcessStateAccessor(request.getAuthenticationProcessState())
+                        .get();
 
         String lunarPassword = authData.getLunarPassword();
         String token = authData.getAccessToken();
@@ -50,23 +49,23 @@ public class SignInToLunarStep
 
         try {
             tokenResponse = apiClient.signIn(lunarPassword, token, deviceId);
-        } catch (HttpResponseException e) {
-            return LunarAuthenticationExceptionHandler.getSignInFailedAuthResult(
-                    request, e, isAutoAuth);
+        } catch (ResponseStatusException e) {
+            return AuthenticationExceptionHandler.getSignInFailedAuthResult(
+                    authDataAccessor, e, isAutoAuth);
         }
 
         if (StringUtils.isBlank(tokenResponse.getToken())) {
             log.error("Token in the response from Lunar is empty!");
             return new AgentFailedAuthenticationResult(
-                    getDefaultError(isAutoAuth), request.getAuthenticationPersistedData());
+                    getDefaultError(isAutoAuth), authDataAccessor.storeData(new LunarAuthData()));
         }
 
-        setNewAccessTokenIfHasChanged(authData, token, tokenResponse);
+        setNewAccessTokenIfDifferent(authData, token, tokenResponse);
 
-        return new AgentSucceededAuthenticationResult(persistedData.storeData(authData));
+        return new AgentSucceededAuthenticationResult(authDataAccessor.storeData(authData));
     }
 
-    private void setNewAccessTokenIfHasChanged(
+    private void setNewAccessTokenIfDifferent(
             LunarAuthData authData, String token, TokenResponse tokenResponse) {
         if (!token.equals(tokenResponse.getToken())) {
             log.warn("Token received from Lunar is different than the one in storage!");

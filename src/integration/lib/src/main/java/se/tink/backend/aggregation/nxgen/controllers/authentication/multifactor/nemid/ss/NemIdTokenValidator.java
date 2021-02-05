@@ -40,15 +40,24 @@ public class NemIdTokenValidator {
 
     public void verifyTokenIsValid(String tokenBase64) {
         NemIdTokenStatus tokenStatus = nemIdTokenParser.extractNemIdTokenStatus(tokenBase64);
+        if (isLunarToken(tokenStatus)) {
+            return;
+        }
         if (containsIgnoreCase(tokenStatus.getCode(), "success")) {
             return;
         }
-        if (StringUtils.isBlank(tokenStatus.getCode())
-                && StringUtils.isBlank(tokenStatus.getMessage())
-                && KNOWN_REQUEST_ISSUERS.contains(tokenStatus.getRequestIssuer())) {
-            return;
-        }
         throwInvalidTokenException(tokenBase64, tokenStatus);
+    }
+
+    private boolean isLunarToken(NemIdTokenStatus tokenStatus) {
+        // Lunar uses different NemID login method - OCESLOGIN2. Retrieved token has different
+        // structure then the ones that we already know. It does not contain information about
+        // success or error message. We send this token to Lunar and then we receive a response with
+        // error message. In case of timeout or NemID being rejected, token is not displayed. Known
+        // request issuers list can be used to add more providers using OCESLOGIN2 method
+        return StringUtils.isBlank(tokenStatus.getCode())
+                && StringUtils.isBlank(tokenStatus.getMessage())
+                && KNOWN_REQUEST_ISSUERS.contains(tokenStatus.getRequestIssuer());
     }
 
     public void throwInvalidTokenExceptionWithoutValidation(String tokenBase64) {

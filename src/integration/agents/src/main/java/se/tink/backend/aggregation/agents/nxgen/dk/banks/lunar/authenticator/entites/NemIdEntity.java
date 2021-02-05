@@ -5,7 +5,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 @Data
-public class NemidEntity {
+public class NemIdEntity {
     private final String signature;
     private final String challenge;
 }

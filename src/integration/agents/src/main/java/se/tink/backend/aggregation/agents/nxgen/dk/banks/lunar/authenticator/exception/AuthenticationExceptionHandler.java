@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.exception;
 
+import agents_platform_framework.org.springframework.web.server.ResponseStatusException;
 import com.google.common.collect.ImmutableMap;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -9,15 +9,18 @@ import java.util.Objects;
 import java.util.regex.Pattern;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import se.tink.backend.aggregation.agents.agentplatform.authentication.result.error.LastAttemptError;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.result.error.NoUserInteractionResponseError;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SupplementalInfoError;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.persistance.LunarAuthData;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.persistance.LunarAuthDataAccessor;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.exception.ErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.exception.KnownErrorResponse;
-import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.request.AgentProceedNextStepAuthenticationRequest;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentFailedAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AccessTokenFetchingFailureError;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AccountBlockedError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AgentBankApiError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AuthorizationError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.InvalidCredentialsError;
@@ -27,45 +30,54 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.error.ThirdPar
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.ThirdPartyAppTimedOutError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.ThirdPartyAppUnknownError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.exception.NemIdException;
-import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
-import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @Slf4j
-public class LunarAuthenticationExceptionHandler {
+public class AuthenticationExceptionHandler {
 
     private static final Pattern INCORRECT_PASSWORD_PATTERN =
             Pattern.compile("You have [2345] attempts left\\.");
-    private static final Pattern LAST_ATTEMPT_PATTERN =
-            Pattern.compile("You have 1 (attempt|attempts) left\\.");
+    private static final String LAST_ATTEMPT_MESSAGE =
+            "If you enter a wrong PIN again, your access to the app is blocked. You will then have to use your NemID to sign in again.";
 
     private static final String INCORRECT_PASSWORD = "USER_PASSWORD_INCORRECT";
+    private static final String LAST_ATTEMPT = "USER_PASSWORD_INCORRECT_RESET_APP";
+    private static final String NOT_A_LUNAR_USER = "USER_NOT_FOUND";
+    private static final String TOKEN_REVOKED = "ACCESS_TOKEN_REVOKED_BY_CUSTOMER_SUPPORT";
 
     private static final Map<String, List<KnownErrorResponse>> KNOWN_ERRORS =
             ImmutableMap.<String, List<KnownErrorResponse>>builder()
                     .put(
                             INCORRECT_PASSWORD,
-                            Arrays.asList(
+                            Collections.singletonList(
                                     KnownErrorResponse.withPattern(
                                             INCORRECT_PASSWORD_PATTERN,
-                                            new InvalidCredentialsError()),
-                                    KnownErrorResponse.withPattern(
-                                            LAST_ATTEMPT_PATTERN,
-                                            // set some new error to indicate last attempt!
                                             new InvalidCredentialsError())))
                     .put(
-                            "USER_NOT_FOUND",
+                            LAST_ATTEMPT,
+                            Collections.singletonList(
+                                    KnownErrorResponse.withMessage(
+                                            LAST_ATTEMPT_MESSAGE,
+                                            new InvalidCredentialsError(
+                                                    LastAttemptError.getError()))))
+                    .put(
+                            NOT_A_LUNAR_USER,
                             Collections.singletonList(
                                     KnownErrorResponse.withoutMessage(
                                             new ThirdPartyAppNoClientError())))
+                    .put(
+                            TOKEN_REVOKED,
+                            Collections.singletonList(
+                                    KnownErrorResponse.withoutMessage(new AccountBlockedError())))
                     .build();
 
     public static AgentBankApiError toKnownErrorFromResponseOrDefault(
-            HttpResponseException e, AgentBankApiError defaultError) {
-        if (!e.getResponse().hasBody()) {
+            ResponseStatusException e, AgentBankApiError defaultError) {
+        if (StringUtils.isBlank(e.getReason())) {
             return defaultError;
         }
 
-        ErrorResponse errorResponse = getBodyAsExpectedType(e.getResponse());
+        ErrorResponse errorResponse = getBodyAsExpectedType(e.getReason());
         if (errorResponse != null && KNOWN_ERRORS.containsKey(errorResponse.getReasonCode())) {
             List<KnownErrorResponse> knownErrorResponses =
                     KNOWN_ERRORS.get(errorResponse.getReasonCode());
@@ -98,9 +110,9 @@ public class LunarAuthenticationExceptionHandler {
                         .matches();
     }
 
-    private static ErrorResponse getBodyAsExpectedType(HttpResponse response) {
+    private static ErrorResponse getBodyAsExpectedType(String response) {
         try {
-            return response.getBody(ErrorResponse.class);
+            return SerializationUtils.deserializeFromString(response, ErrorResponse.class);
         } catch (RuntimeException e) {
             return null;
         }
@@ -147,18 +159,16 @@ public class LunarAuthenticationExceptionHandler {
     }
 
     public static AgentFailedAuthenticationResult getSignInFailedAuthResult(
-            AgentProceedNextStepAuthenticationRequest request,
-            HttpResponseException e,
-            boolean isAutoAuth) {
+            LunarAuthDataAccessor authDataAccessor, ResponseStatusException e, boolean isAutoAuth) {
         if (isAutoAuth) {
             log.error("Failed to signIn to Lunar during autoAuth", e);
             return new AgentFailedAuthenticationResult(
-                    new SessionExpiredError(), request.getAuthenticationPersistedData());
+                    new SessionExpiredError(), authDataAccessor.storeData(new LunarAuthData()));
         }
         log.error("Failed to signIn to Lunar", e);
         return new AgentFailedAuthenticationResult(
-                LunarAuthenticationExceptionHandler.toKnownErrorFromResponseOrDefault(
+                AuthenticationExceptionHandler.toKnownErrorFromResponseOrDefault(
                         e, new AccessTokenFetchingFailureError()),
-                request.getAuthenticationPersistedData());
+                authDataAccessor.storeData(new LunarAuthData()));
     }
 }

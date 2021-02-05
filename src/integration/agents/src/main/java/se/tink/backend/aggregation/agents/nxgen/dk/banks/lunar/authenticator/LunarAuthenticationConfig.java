@@ -1,14 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.AgentPlatformLunarApiClient;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.client.AuthenticationApiClient;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.persistance.LunarDataAccessorFactory;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.steps.AutoAuthenticationStep;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.steps.GetLunarAccessTokenStep;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.steps.GetNemIdTokenStep;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.steps.GetUserCredentialsStep;
-import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.steps.LunarAuthenticationInitStep;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.steps.LunarAuthInitStep;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.steps.SaveUserCredentialsStep;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.steps.SignInToLunarStep;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAbstractMultiStepsAuthenticationProcess;
@@ -19,10 +18,10 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.ran
 @RequiredArgsConstructor
 public class LunarAuthenticationConfig {
 
-    private final AgentPlatformLunarApiClient apiClient;
-    private final ObjectMapper objectMapper;
+    private final AuthenticationApiClient apiClient;
+    private final LunarDataAccessorFactory lunarDataAccessorFactory;
     private final RandomValueGenerator randomValueGenerator;
-    private final NemIdIframeControllerAttributes nemIdIframeControllerAttributes;
+    private final NemIdIframeAttributes nemIdIframeAttributes;
 
     public AgentAuthenticationProcess createAuthProcess() {
         return new AgentAbstractMultiStepsAuthenticationProcess() {
@@ -34,7 +33,7 @@ public class LunarAuthenticationConfig {
                         new GetNemIdTokenStep(
                                 getDataAccessorFactory(),
                                 apiClient,
-                                nemIdIframeControllerAttributes,
+                                nemIdIframeAttributes,
                                 randomValueGenerator));
                 addStep(new GetLunarAccessTokenStep(getDataAccessorFactory(), apiClient));
                 addStep(new SignInToLunarStep(getDataAccessorFactory(), apiClient));
@@ -44,12 +43,12 @@ public class LunarAuthenticationConfig {
 
             @Override
             public AgentAuthenticationProcessStep getStartStep() {
-                return new LunarAuthenticationInitStep(getDataAccessorFactory());
+                return new LunarAuthInitStep(getDataAccessorFactory());
             }
         };
     }
 
     private LunarDataAccessorFactory getDataAccessorFactory() {
-        return new LunarDataAccessorFactory(objectMapper);
+        return lunarDataAccessorFactory;
     }
 }

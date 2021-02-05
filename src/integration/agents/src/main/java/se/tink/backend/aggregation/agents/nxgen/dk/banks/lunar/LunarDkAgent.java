@@ -4,6 +4,7 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
 
 import com.google.inject.Inject;
+import java.time.Clock;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
@@ -14,11 +15,17 @@ import se.tink.backend.aggregation.agents.agentplatform.authentication.AgentPlat
 import se.tink.backend.aggregation.agents.agentplatform.authentication.AgentPlatformAuthenticator;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.ObjectMapperFactory;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.LunarAuthenticationConfig;
-import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.NemIdIframeControllerAttributes;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.LunarNemIdParametersFetcher;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.NemIdIframeAttributes;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.client.AuthenticationApiClient;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.persistance.LunarDataAccessorFactory;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.LunarTransactionalAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.client.FetcherApiClient;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationProcess;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.NemIdIFrameController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.NemIdIFrameControllerInitializer;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
@@ -33,44 +40,58 @@ public final class LunarDkAgent extends AgentPlatformAgent
                 RefreshSavingsAccountsExecutor,
                 AgentPlatformAuthenticator {
 
-    private final LunarApiClient apiClient;
+    private final FetcherApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final LunarAuthenticationConfig lunarAuthenticationConfig;
     private final RandomValueGenerator randomValueGenerator;
+    private final LunarDataAccessorFactory accessorFactory;
 
     @Inject
     public LunarDkAgent(AgentComponentProvider agentComponentProvider) {
         super(agentComponentProvider);
         configureHttpClient(client);
         randomValueGenerator = agentComponentProvider.getRandomValueGenerator();
+        accessorFactory = new LunarDataAccessorFactory(new ObjectMapperFactory().getInstance());
 
-        this.apiClient = new LunarApiClient(client, getPersistentStorage(), randomValueGenerator);
+        this.apiClient =
+                new FetcherApiClient(
+                        client, getPersistentStorage(), accessorFactory, randomValueGenerator);
 
-        AgentPlatformLunarApiClient agentPlatformLunarApiClient =
-                new AgentPlatformLunarApiClient(
+        AuthenticationApiClient authenticationApiClient =
+                new AuthenticationApiClient(
                         new AgentPlatformHttpClient(client), randomValueGenerator);
 
         this.transactionalAccountRefreshController =
                 constructTransactionalAccountRefreshController();
 
         this.lunarAuthenticationConfig =
-                createLunarAuthenticationConfig(
-                        agentComponentProvider, agentPlatformLunarApiClient);
+                createLunarAuthenticationConfig(agentComponentProvider, authenticationApiClient);
     }
 
     private LunarAuthenticationConfig createLunarAuthenticationConfig(
             AgentComponentProvider agentComponentProvider,
-            AgentPlatformLunarApiClient agentPlatformLunarApiClient) {
+            AuthenticationApiClient authenticationApiClient) {
+        LunarNemIdParametersFetcher parametersFetcher =
+                new LunarNemIdParametersFetcher(Clock.systemDefaultZone());
         return new LunarAuthenticationConfig(
-                agentPlatformLunarApiClient,
-                new ObjectMapperFactory().getInstance(),
+                authenticationApiClient,
+                accessorFactory,
                 randomValueGenerator,
-                new NemIdIframeControllerAttributes(
-                        catalog,
-                        agentComponentProvider.getContext(),
-                        agentComponentProvider.getSupplementalRequester(),
-                        agentComponentProvider.getMetricContext(),
-                        agentComponentProvider.getCredentialsRequest().getCredentials()));
+                new NemIdIframeAttributes(
+                        getNemIdIFrameController(agentComponentProvider, parametersFetcher),
+                        credentials,
+                        parametersFetcher));
+    }
+
+    private NemIdIFrameController getNemIdIFrameController(
+            AgentComponentProvider agentComponentProvider,
+            LunarNemIdParametersFetcher parametersFetcher) {
+        return NemIdIFrameControllerInitializer.initNemIdIframeController(
+                parametersFetcher,
+                catalog,
+                agentComponentProvider.getContext(),
+                agentComponentProvider.getSupplementalRequester(),
+                agentComponentProvider.getMetricContext());
     }
 
     protected void configureHttpClient(TinkHttpClient client) {

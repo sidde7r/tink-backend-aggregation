@@ -138,7 +138,7 @@ public class NordeaNemIdAuthenticatorV2 extends StatelessProgressiveAuthenticato
         return new NemIdParameters(
                 String.format(NEM_ID_SCRIPT_FORMAT, params)
                         + String.format(
-                                NemIdConstants.NEM_ID_IFRAME,
+                                NemIdConstants.NEM_ID_IFRAME_FORMAT,
                                 NemIdConstants.NEM_ID_INIT_URL + Instant.now().toEpochMilli()));
     }
 

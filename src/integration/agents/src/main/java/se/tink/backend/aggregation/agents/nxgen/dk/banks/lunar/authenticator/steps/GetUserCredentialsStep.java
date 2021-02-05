@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.st
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.LunarConstants.Storage;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.fields.AgentField;
-import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationProcessStepIdentifier;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.request.AgentProceedNextStepAuthenticationRequest;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentUserInteractionDefinitionResult;
@@ -17,8 +16,7 @@ public class GetUserCredentialsStep
     @Override
     public AgentAuthenticationResult execute(AgentProceedNextStepAuthenticationRequest request) {
         return new AgentUserInteractionDefinitionResult(
-                AgentAuthenticationProcessStepIdentifier.of(
-                        SaveUserCredentialsStep.class.getSimpleName()),
+                AgentAuthenticationProcessStep.identifier(SaveUserCredentialsStep.class),
                 request.getAuthenticationPersistedData(),
                 request.getAuthenticationProcessState(),
                 AgentUsernameFieldDefinition.of(),

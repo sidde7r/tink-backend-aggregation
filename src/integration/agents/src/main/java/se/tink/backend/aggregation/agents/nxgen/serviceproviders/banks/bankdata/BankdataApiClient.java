@@ -203,7 +203,7 @@ public class BankdataApiClient {
                         .getElementsByAttribute("src")
                         .attr("src");
 
-        String iframeTemplate = NemIdConstants.NEM_ID_IFRAME;
+        String iframeTemplate = NemIdConstants.NEM_ID_IFRAME_FORMAT;
         String formattedIframe = String.format(iframeTemplate, launcher);
 
         String nemidParametersScriptTag =

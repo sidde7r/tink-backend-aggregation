@@ -6,62 +6,66 @@ import se.tink.backend.aggregation.utils.deviceprofile.DeviceProfileConfiguratio
 
 public class LunarConstants {
 
-    static final String APP_VERSION = "4.26.0";
-    static final String DA_LANGUAGE = "DA";
+    public static final String APP_VERSION = "4.26.0";
+    public static final String DA_LANGUAGE = "DA";
     private static final String LUNAR_BASE_URL = "https://api.prod.lunarway.com/";
 
-    static class Uri {
-        static final URI NEM_ID_AUTHENTICATE = toLunarUri("authentication/authenticate/nemid");
+    public static class Uri {
+        public static final URI NEM_ID_AUTHENTICATE =
+                toLunarUri("authentication/authenticate/nemid");
 
-        static final URI SIGN_IN = toLunarUri("authentication/signin");
+        public static final URI SIGN_IN = toLunarUri("authentication/signin");
 
         private static URI toLunarUri(String endpoint) {
             return URI.create(LUNAR_BASE_URL + endpoint);
         }
     }
 
-    static class Url {
-        static final URL ACCOUNTS_VIEW = toLunarUrl("accounts-view/accounts");
+    public static class Url {
+        public static final URL ACCOUNTS_VIEW = toLunarUrl("accounts-view/accounts");
 
         private static URL toLunarUrl(String endpoint) {
             return URL.of(LUNAR_BASE_URL + endpoint);
         }
     }
 
-    static class Headers {
-        static final String USER_AGENT = "user-agent";
-        static final String DEVICE_MODEL = "x-devicemodel";
-        static final String REGION = "x-region";
-        static final String OS = "x-os";
-        static final String OS_VERSION = "x-osversion";
-        static final String DEVICE_MANUFACTURER = "x-devicemanufacturer";
-        static final String LANGUAGE = "x-language";
-        static final String ACCEPT_LANGUAGE = "accept-language";
-        static final String REQUEST_ID = "x-requestid";
-        static final String DEVICE_ID = "x-deviceid";
-        static final String ORIGIN = "x-origin";
-        static final String APP_VERSION = "x-appversion";
-        static final String ACCEPT = "accept";
-        static final String ACCEPT_ENCODING = "accept-encoding";
-        static final String AUTHORIZATION = "authorization";
-        static final String CONTENT_TYPE = "content-type";
+    public static class Headers {
+        public static final String USER_AGENT = "user-agent";
+        public static final String DEVICE_MODEL = "x-devicemodel";
+        public static final String REGION = "x-region";
+        public static final String OS = "x-os";
+        public static final String OS_VERSION = "x-osversion";
+        public static final String DEVICE_MANUFACTURER = "x-devicemanufacturer";
+        public static final String LANGUAGE = "x-language";
+        public static final String ACCEPT_LANGUAGE = "accept-language";
+        public static final String REQUEST_ID = "x-requestid";
+        public static final String DEVICE_ID = "x-deviceid";
+        public static final String ORIGIN = "x-origin";
+        public static final String APP_VERSION = "x-appversion";
+        public static final String ACCEPT_ENCODING = "accept-encoding";
+        public static final String AUTHORIZATION = "authorization";
+        public static final String CONTENT_TYPE = "content-type";
     }
 
-    static class HeaderValues {
-        static final String DEVICE_MODEL = DeviceProfileConfiguration.IOS_STABLE.getModelNumber();
-        static final String USER_AGENT_VALUE = "Lunar/99 CFNetwork/1121.2.2 Darwin/19.3.0";
-        static final String DK_REGION = "DK";
-        static final String DA_LANGUAGE_ACCEPT = "da-dk";
-        static final String I_OS = DeviceProfileConfiguration.IOS_STABLE.getOs();
-        static final String OS_VERSION = DeviceProfileConfiguration.IOS_STABLE.getOsVersion();
-        static final String DEVICE_MANUFACTURER = DeviceProfileConfiguration.IOS_STABLE.getMake();
-        static final String APP_ORIGIN = "App";
-        static final String ACCEPT_ALL = "*/*";
-        static final String ENCODING = "gzip, deflate, br";
+    public static class HeaderValues {
+        public static final String DEVICE_MODEL =
+                DeviceProfileConfiguration.IOS_STABLE.getModelNumber();
+        public static final String USER_AGENT_VALUE = "Lunar/99 CFNetwork/1121.2.2 Darwin/19.3.0";
+        public static final String DK_REGION = "DK";
+        public static final String DA_LANGUAGE_ACCEPT = "da-dk";
+        public static final String I_OS = DeviceProfileConfiguration.IOS_STABLE.getOs();
+        public static final String OS_VERSION =
+                DeviceProfileConfiguration.IOS_STABLE.getOsVersion();
+        public static final String DEVICE_MANUFACTURER =
+                DeviceProfileConfiguration.IOS_STABLE.getMake();
+        public static final String APP_ORIGIN = "App";
+        public static final String ENCODING = "gzip, deflate, br";
     }
 
     public static class Storage {
         public static final String ACCESS_PIN_INPUT_LABEL = "accesspininput";
+        public static final String PROCESS_STATE_KEY = "LunarProcessState";
+        public static final String PERSISTED_DATA_KEY = "LunarAuthData";
     }
 
     static class HttpClient {

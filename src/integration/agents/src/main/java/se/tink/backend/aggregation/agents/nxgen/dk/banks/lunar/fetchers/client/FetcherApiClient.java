@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar;
+package se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.client;
 
 import static se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.LunarConstants.HeaderValues;
 import static se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.LunarConstants.Headers;
@@ -6,8 +6,8 @@ import static se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.LunarConst
 
 import javax.ws.rs.core.MediaType;
 import lombok.RequiredArgsConstructor;
-import se.tink.backend.aggregation.agents.agentplatform.authentication.ObjectMapperFactory;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.storage.PersistentStorageService;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.LunarConstants;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.persistance.LunarAuthData;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.persistance.LunarDataAccessorFactory;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.rpc.AccountsResponse;
@@ -16,10 +16,11 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 @RequiredArgsConstructor
-public class LunarApiClient {
+public class FetcherApiClient {
 
     private final TinkHttpClient client;
     private final PersistentStorage persistentStorage;
+    private final LunarDataAccessorFactory accessorFactory;
     private final RandomValueGenerator randomValueGenerator;
     private LunarAuthData authData;
 
@@ -49,7 +50,7 @@ public class LunarApiClient {
     private LunarAuthData getLunarPersistedData() {
         if (authData == null) {
             authData =
-                    new LunarDataAccessorFactory(new ObjectMapperFactory().getInstance())
+                    accessorFactory
                             .createAuthDataAccessor(
                                     new PersistentStorageService(persistentStorage)
                                             .readFromAgentPersistentStorage())

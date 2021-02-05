@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers;
 import java.util.Collection;
 import java.util.Collections;
 import lombok.RequiredArgsConstructor;
-import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.LunarApiClient;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.client.FetcherApiClient;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.UpcomingTransactionFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
@@ -18,7 +18,7 @@ public class LunarTransactionalAccountFetcher
                 TransactionPagePaginator<TransactionalAccount>,
                 UpcomingTransactionFetcher<TransactionalAccount> {
 
-    private final LunarApiClient apiClient;
+    private final FetcherApiClient apiClient;
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
