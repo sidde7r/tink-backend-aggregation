@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.Transactions;
@@ -19,6 +20,7 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2TokenAccessor
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
 @AllArgsConstructor
+@Slf4j
 public class Xs2aDevelopersTransactionalAccountFetcher
         implements AccountFetcher<TransactionalAccount>,
                 TransactionDatePaginator<TransactionalAccount> {
@@ -29,6 +31,15 @@ public class Xs2aDevelopersTransactionalAccountFetcher
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
         GetAccountsResponse getAccountsResponse = apiClient.getAccounts();
+
+        if (getAccountsResponse.getAccounts().stream()
+                .filter(a -> "CARD".equals(a.getCashAccountType()))
+                .findFirst()
+                .isPresent()) {
+            log.info("Account type is CARD."); // MINI-572 Searching for possible CARD accounts in
+            // general accounts endpoint
+        }
+
         return getAccountsResponse.getAccounts().stream()
                 .map(this::transformAccount)
                 .filter(Optional::isPresent)

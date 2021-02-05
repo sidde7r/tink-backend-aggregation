@@ -108,6 +108,10 @@ public class AccountEntity {
         return resourceId;
     }
 
+    public String getCashAccountType() {
+        return cashAccountType;
+    }
+
     private String getAccountNumber() {
         if (!Strings.isNullOrEmpty(iban)) {
             return iban;
