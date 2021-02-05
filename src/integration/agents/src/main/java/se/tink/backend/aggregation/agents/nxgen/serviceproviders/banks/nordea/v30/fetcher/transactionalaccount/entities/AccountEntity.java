@@ -118,9 +118,7 @@ public class AccountEntity implements GeneralAccountEntity {
                 TransactionalAccount.nxBuilder()
                         .withType(accountType)
                         .withInferredAccountFlags()
-                        .withBalance(
-                                BalanceModule.of(
-                                        ExactCurrencyAmount.of(availableBalance, currency)))
+                        .withBalance(buildBalanceModule())
                         .withId(
                                 IdModule.builder()
                                         .withUniqueIdentifier(getIbanFormatted())
@@ -131,6 +129,14 @@ public class AccountEntity implements GeneralAccountEntity {
                         .setApiIdentifier(accountId);
 
         return transactionalBuildStep.build();
+    }
+
+    private BalanceModule buildBalanceModule() {
+        return BalanceModule.builder()
+                .withBalance(ExactCurrencyAmount.of(availableBalance - creditLimit, currency))
+                .setAvailableBalance(ExactCurrencyAmount.of(availableBalance, currency))
+                .setCreditLimit(ExactCurrencyAmount.of(creditLimit, currency))
+                .build();
     }
 
     private TransactionalAccountType getTinkAccountType() {
