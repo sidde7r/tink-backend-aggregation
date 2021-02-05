@@ -8,7 +8,9 @@ import java.text.ParseException;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -19,6 +21,7 @@ import org.junit.Test;
 
 public class CountryDateHelperTest {
     private final CountryDateHelper belgianHelper = new CountryDateHelper(new Locale("nl", "BE"));
+    private final CountryDateHelper frenchHelper = new CountryDateHelper(Locale.FRANCE);
     private final CountryDateHelper swedishHelper = new CountryDateHelper();
     private final CountryDateHelper unitedKingdomHelper =
             new CountryDateHelper(new Locale("en", "GB"), TimeZone.getTimeZone("GMT"));
@@ -221,6 +224,20 @@ public class CountryDateHelperTest {
     }
 
     @Test
+    public void getCurrentOrNextBusinessDayReturnsCurrentDate() {
+        LocalDate localDate = LocalDate.of(2021, 2, 1);
+        LocalDate currentOrNextBusinessDay = frenchHelper.getCurrentOrNextBusinessDay(localDate);
+        Assert.assertEquals(currentOrNextBusinessDay, localDate);
+    }
+
+    @Test
+    public void getCurrentOrNextBusinessDayReturnsNextBusinessDay() {
+        LocalDate localDate = LocalDate.of(2021, 2, 6);
+        LocalDate currentOrNextBusinessDay = frenchHelper.getCurrentOrNextBusinessDay(localDate);
+        Assert.assertEquals(currentOrNextBusinessDay, LocalDate.of(2021, 2, 8));
+    }
+
+    @Test
     public void testGetTransferDateBeforeCuttOffTimeAndDateNotProvided_beforeCutOffTime()
             throws ParseException {
         // 19/march is a Thursday and it's 00:00, way before cutoff
@@ -299,5 +316,19 @@ public class CountryDateHelperTest {
 
         Date transferDate = swedishHelper.getProvidedDateOrBestPossibleDate(anyDate, 00, 00);
         assertEquals(transferDate, anyDate);
+    }
+
+    @Test
+    public void calculateIfWithinCutOffTimeReturnsTrue() {
+        ZonedDateTime zonedDateTime =
+                ZonedDateTime.of(LocalDate.now(), LocalTime.of(17, 20), ZoneId.of("CET"));
+        assertTrue(frenchHelper.calculateIfWithinCutOffTime(zonedDateTime, 17, 30, 900));
+    }
+
+    @Test
+    public void calculateIfWithinCutOffTimeReturnsFalse() {
+        ZonedDateTime zonedDateTime =
+                ZonedDateTime.of(LocalDate.now(), LocalTime.of(17, 14), ZoneId.of("CET"));
+        assertFalse(frenchHelper.calculateIfWithinCutOffTime(zonedDateTime, 17, 30, 900));
     }
 }
