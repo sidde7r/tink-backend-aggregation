@@ -334,9 +334,9 @@ public class DataStudioLoginEventPublisherService {
         AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult result =
                 interactions == 0
                         ? AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult
-                                .SUCCESSFUL_LOGIN
+                                .ALREADY_LOGGED_IN
                         : AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult
-                                .ALREADY_LOGGED_IN;
+                                .SUCCESSFUL_LOGIN;
         publishLoginResultEvent(result);
     }
 

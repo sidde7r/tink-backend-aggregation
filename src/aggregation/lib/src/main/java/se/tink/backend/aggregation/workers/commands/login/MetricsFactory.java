@@ -36,9 +36,9 @@ public class MetricsFactory {
         MetricAction actionLoginType =
                 interactions == 0
                         ? agentWorkerCommandMetricState.buildAction(
-                                metricForAction(MetricName.LOGIN_MANUAL))
+                                metricForAction(MetricName.LOGIN_AUTO))
                         : agentWorkerCommandMetricState.buildAction(
-                                metricForAction(MetricName.LOGIN_AUTO));
+                                metricForAction(MetricName.LOGIN_MANUAL));
         return new MetricActionComposite(action, actionLoginType);
     }
 
