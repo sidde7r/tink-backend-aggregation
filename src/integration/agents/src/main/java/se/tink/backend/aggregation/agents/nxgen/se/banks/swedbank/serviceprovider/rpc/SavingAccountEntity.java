@@ -12,12 +12,15 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 public class SavingAccountEntity extends AccountEntity {
     private static final Logger log = LoggerFactory.getLogger(SavingAccountEntity.class);
 
-    public Optional<TransactionalAccount> toTransactionalAccount(BankProfile bankProfile) {
+    public Optional<TransactionalAccount> toTransactionalAccount(
+            BankProfile bankProfile,
+            EngagementTransactionsResponse engagementTransactionsResponse) {
         if (type != null) {
             if (SwedbankBaseConstants.SavingAccountTypes.PENSION.equalsIgnoreCase(type)) {
                 // Pension accounts are not present in the portfolio (investments) overview and the
                 // AccountEntity does not contain any next links (as `ISK` for example).
-                return toTransactionalAccount(bankProfile, AccountTypes.SAVINGS);
+                return toTransactionalAccount(
+                        bankProfile, AccountTypes.SAVINGS, engagementTransactionsResponse);
             }
 
             // It seems as if the investment accounts has a type and the rest doesn't.
@@ -25,6 +28,7 @@ public class SavingAccountEntity extends AccountEntity {
             return Optional.empty();
         }
 
-        return toTransactionalAccount(bankProfile, AccountTypes.SAVINGS);
+        return toTransactionalAccount(
+                bankProfile, AccountTypes.SAVINGS, engagementTransactionsResponse);
     }
 }

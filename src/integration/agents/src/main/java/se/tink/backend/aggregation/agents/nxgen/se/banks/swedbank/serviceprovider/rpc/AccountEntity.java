@@ -7,12 +7,14 @@ import lombok.Getter;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants.StorageKey;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.utils.SwedbankSeSerializationUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
 import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities.Answer;
-import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Holder;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.strings.StringUtils;
@@ -22,6 +24,7 @@ import se.tink.libraries.strings.StringUtils;
 public abstract class AccountEntity extends AbstractAccountEntity {
     protected boolean selectedForQuickbalance;
     protected LinksEntity links;
+
     protected String priority;
     protected String currency;
     protected DetailsEntity details;
@@ -32,16 +35,15 @@ public abstract class AccountEntity extends AbstractAccountEntity {
     protected String productId;
     protected TransactionsEntity transactions;
 
-    @JsonIgnore
-    public ExactCurrencyAmount getTinkAmount() {
-        return SwedbankSeSerializationUtils.parseAmountForInput(balance, currency);
-    }
-
     public boolean isInvestmentAccount() {
         return SwedbankBaseConstants.ACCOUNT_TYPE_MAPPER
                 .translate(productId)
                 .orElse(AccountTypes.OTHER)
                 .equals(AccountTypes.INVESTMENT);
+    }
+
+    private boolean isBalanceUndefined() {
+        return balance == null || balance.replaceAll("[^0-9]", "").isEmpty();
     }
 
     public boolean isAvailableForFavouriteAccount() {
@@ -56,13 +58,11 @@ public abstract class AccountEntity extends AbstractAccountEntity {
         return type;
     }
 
-    private boolean isBalanceUndefined() {
-        return balance == null || balance.replaceAll("[^0-9]", "").isEmpty();
-    }
-
     @JsonIgnore
     protected Optional<TransactionalAccount> toTransactionalAccount(
-            BankProfile bankProfile, @Nonnull AccountTypes defaultType) {
+            BankProfile bankProfile,
+            @Nonnull AccountTypes defaultType,
+            EngagementTransactionsResponse engagementTransactionsResponse) {
         if (fullyFormattedNumber == null || currency == null || isBalanceUndefined()) {
             return Optional.empty();
         }
@@ -76,30 +76,56 @@ public abstract class AccountEntity extends AbstractAccountEntity {
                                         Answer.UNKNOWN,
                                         Answer.UNKNOWN,
                                         Answer.UNKNOWN));
+        String creditLimit = "0.0";
 
-        return Optional.of(
-                TransactionalAccount.builder(
-                                SwedbankBaseConstants.ACCOUNT_TYPE_MAPPER
-                                        .translate(productId)
-                                        .orElse(defaultType),
-                                fullyFormattedNumber,
-                                ExactCurrencyAmount.of(StringUtils.parseAmount(balance), currency))
-                        .setAccountNumber(fullyFormattedNumber)
-                        .setName(name)
-                        .setBankIdentifier(id)
-                        .canWithdrawCash(capabilities.getCanWithdrawCash())
-                        .canPlaceFunds(capabilities.getCanPlaceFunds())
-                        .canExecuteExternalTransfer(capabilities.getCanExecuteExternalTransfer())
-                        .canReceiveExternalTransfer(capabilities.getCanReceiveExternalTransfer())
-                        .addIdentifier(new SwedishIdentifier(fullyFormattedNumber))
-                        .putInTemporaryStorage(StorageKey.NEXT_LINK, getLinkOrNull())
-                        .putInTemporaryStorage(
-                                SwedbankBaseConstants.StorageKey.PROFILE, bankProfile)
-                        .setHolderName(new HolderName(bankProfile.getProfile().getHolderName()))
-                        .build());
+        if (engagementTransactionsResponse != null) {
+            creditLimit = engagementTransactionsResponse.getAccount().getCreditGranted();
+        }
+        return TransactionalAccount.nxBuilder()
+                .withType(getTinkAccountType(defaultType))
+                .withInferredAccountFlags()
+                .withBalance(buildBalanceModule(creditLimit))
+                .withId(
+                        IdModule.builder()
+                                .withUniqueIdentifier(id)
+                                .withAccountNumber(fullyFormattedNumber)
+                                .withAccountName(name)
+                                .addIdentifier(new SwedishIdentifier(fullyFormattedNumber))
+                                .build())
+                .canWithdrawCash(capabilities.getCanWithdrawCash())
+                .canPlaceFunds(capabilities.getCanPlaceFunds())
+                .canExecuteExternalTransfer(capabilities.getCanExecuteExternalTransfer())
+                .canReceiveExternalTransfer(capabilities.getCanReceiveExternalTransfer())
+                .putInTemporaryStorage(StorageKey.NEXT_LINK, getLinkOrNull())
+                .putInTemporaryStorage(SwedbankBaseConstants.StorageKey.PROFILE, bankProfile)
+                .addHolders(Holder.of(bankProfile.getProfile().getHolderName()))
+                .build();
     }
 
-    private LinkEntity getLinkOrNull() {
+    private BalanceModule buildBalanceModule(String creditLimit) {
+
+        return BalanceModule.builder()
+                .withBalance(
+                        ExactCurrencyAmount.of(
+                                StringUtils.parseAmount(balance)
+                                        - StringUtils.parseAmount(creditLimit),
+                                currency))
+                .setAvailableBalance(
+                        ExactCurrencyAmount.of(StringUtils.parseAmount(balance), currency))
+                .setCreditLimit(
+                        ExactCurrencyAmount.of(StringUtils.parseAmount(creditLimit), currency))
+                .build();
+    }
+
+    private TransactionalAccountType getTinkAccountType(AccountTypes defaultType) {
+        return TransactionalAccountType.from(
+                        SwedbankBaseConstants.ACCOUNT_TYPE_MAPPER
+                                .translate(productId)
+                                .orElse(defaultType))
+                .orElse(TransactionalAccountType.OTHER);
+    }
+
+    public LinkEntity getLinkOrNull() {
         return transactions != null
                 ? transactions.getLinks().getNext()
                 : Optional.ofNullable(links).map(LinksEntity::getNext).orElse(null);

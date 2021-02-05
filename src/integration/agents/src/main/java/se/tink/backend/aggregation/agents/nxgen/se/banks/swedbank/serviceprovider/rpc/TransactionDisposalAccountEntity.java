@@ -8,7 +8,10 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 @JsonObject
 public class TransactionDisposalAccountEntity extends AccountEntity {
 
-    public Optional<TransactionalAccount> toTransactionalAccount(BankProfile bankProfile) {
-        return toTransactionalAccount(bankProfile, AccountTypes.OTHER);
+    public Optional<TransactionalAccount> toTransactionalAccount(
+            BankProfile bankProfile,
+            EngagementTransactionsResponse engagementTransactionsResponse) {
+        return toTransactionalAccount(
+                bankProfile, AccountTypes.OTHER, engagementTransactionsResponse);
     }
 }

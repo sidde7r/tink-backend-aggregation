@@ -18,6 +18,7 @@ import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceErro
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankDefaultApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.rpc.PaymentsConfirmedResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.BankProfile;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.EngagementOverviewResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.EngagementTransactionsResponse;
@@ -71,21 +72,33 @@ public class SwedbankDefaultTransactionalAccountFetcher
             accounts.addAll(
                     engagementOverviewResponse.getTransactionAccounts().stream()
                             .filter(account -> !account.isInvestmentAccount())
-                            .map(account -> account.toTransactionalAccount(bankProfile))
+                            .map(
+                                    account ->
+                                            account.toTransactionalAccount(
+                                                    bankProfile,
+                                                    getEngagementTransactionsResponse(account)))
                             .filter(Optional::isPresent)
                             .map(Optional::get)
                             .collect(Collectors.toList()));
             accounts.addAll(
                     engagementOverviewResponse.getTransactionDisposalAccounts().stream()
                             .filter(account -> !account.isInvestmentAccount())
-                            .map(account -> account.toTransactionalAccount(bankProfile))
+                            .map(
+                                    account ->
+                                            account.toTransactionalAccount(
+                                                    bankProfile,
+                                                    getEngagementTransactionsResponse(account)))
                             .filter(Optional::isPresent)
                             .map(Optional::get)
                             .collect(Collectors.toList()));
             accounts.addAll(
                     engagementOverviewResponse.getSavingAccounts().stream()
                             .filter(account -> !account.isInvestmentAccount())
-                            .map(account -> account.toTransactionalAccount(bankProfile))
+                            .map(
+                                    account ->
+                                            account.toTransactionalAccount(
+                                                    bankProfile,
+                                                    getEngagementTransactionsResponse(account)))
                             .filter(Optional::isPresent)
                             .map(Optional::get)
                             .collect(Collectors.toList()));
@@ -96,6 +109,15 @@ public class SwedbankDefaultTransactionalAccountFetcher
         }
 
         return accounts;
+    }
+
+    private EngagementTransactionsResponse getEngagementTransactionsResponse(
+            AccountEntity account) {
+        LinkEntity linkEntity = account.getLinkOrNull();
+        if (linkEntity != null) {
+            return apiClient.engagementTransactions(linkEntity);
+        }
+        return null;
     }
 
     // DEBUG to see why refresh transactions fails

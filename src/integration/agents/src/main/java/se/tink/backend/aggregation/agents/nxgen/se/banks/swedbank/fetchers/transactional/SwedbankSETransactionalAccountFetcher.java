@@ -15,6 +15,8 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovide
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.BankProfile;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.EngagementOverviewResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.EngagementTransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.LinkEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.SavingAccountEntity;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
@@ -42,18 +44,25 @@ public class SwedbankSETransactionalAccountFetcher
 
             EngagementOverviewResponse engagementOverviewResponse =
                     bankProfile.getEngagementOverViewResponse();
-
             accounts.addAll(
                     engagementOverviewResponse.getTransactionAccounts().stream()
                             .filter(account -> !isInvestmentAccount(account))
-                            .map(account -> account.toTransactionalAccount(bankProfile))
+                            .map(
+                                    account ->
+                                            account.toTransactionalAccount(
+                                                    bankProfile,
+                                                    getEngagementTransactionsResponse(account)))
                             .filter(Optional::isPresent)
                             .map(Optional::get)
                             .collect(Collectors.toList()));
             accounts.addAll(
                     engagementOverviewResponse.getTransactionDisposalAccounts().stream()
                             .filter(account -> !isInvestmentAccount(account))
-                            .map(account -> account.toTransactionalAccount(bankProfile))
+                            .map(
+                                    account ->
+                                            account.toTransactionalAccount(
+                                                    bankProfile,
+                                                    getEngagementTransactionsResponse(account)))
                             .filter(Optional::isPresent)
                             .map(Optional::get)
                             .collect(Collectors.toList()));
@@ -63,7 +72,9 @@ public class SwedbankSETransactionalAccountFetcher
                             .map(
                                     account -> {
                                         tryAccessPensionPortfoliosIfPensionType(account);
-                                        return account.toTransactionalAccount(bankProfile);
+                                        return account.toTransactionalAccount(
+                                                bankProfile,
+                                                getEngagementTransactionsResponse(account));
                                     })
                             .filter(Optional::isPresent)
                             .map(Optional::get)
@@ -76,6 +87,15 @@ public class SwedbankSETransactionalAccountFetcher
         }
 
         return accounts;
+    }
+
+    private EngagementTransactionsResponse getEngagementTransactionsResponse(
+            AccountEntity account) {
+        LinkEntity linkEntity = account.getLinkOrNull();
+        if (linkEntity != null) {
+            return apiClient.engagementTransactions(linkEntity);
+        }
+        return null;
     }
 
     private boolean isInvestmentAccount(AccountEntity account) {
