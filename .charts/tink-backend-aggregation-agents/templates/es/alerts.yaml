@@ -5,49 +5,74 @@ metadata:
   namespace: agents
 spec:
   rules:
-    - alert: LoginSuccessRateLowWithAttemptLimitES
+                      ##### RE #####
+
+    #######################################################
+    ### All login success rates - Temporary Errors - RE ###
+    #######################################################
+
+    - alert: AllLoginSuccessRatesBelow70AndGreater65WithTemporaryErrorsAndAttemptLimitES_RE
       expr: |
-        # Successful/Cancelled attempts above 65%
-        (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled|unavailable", market="ES", provider_type!="test"}[60m])) by (action,className,provider)
-            / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="ES", provider_type!="test"}[60m])) by (action,className,provider) < 0.65)
-        # At least this many attempts.
-        and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="ES", provider_type!="test"}[60m])) by (action,className,provider) > 5
+          (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }}  , market="ES"}))
+                               / (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"})) < 0.7
+                and (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="ES"}))
+                               / (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"})) >= 0.65
+               and sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"}) > 4
       for: 5m
       labels:
         severity: urgent
+        priority: P4
         who: integration-fluffy
       annotations:
         description: {{ .Values.kibanaLink }}
-          {{ .Values.grafanaLink }}
-        summary: Login success rate is below 65% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-          the last hour.
+             {{ .Values.grafanaLink }}
+        summary: Login success rate for RE agents and all authentication types with temporary errors is between 70 - 65% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+                      the last 30 minutes.
         tags: {{ .Values.fluffyTags }}
 
-    - alert: RefreshSuccessRateLowWithAttemptLimitES
+    - alert: AllLoginSuccessRatesBelow65AndGreater55WithTemporaryErrorsAndAttemptLimitES_RE
       expr: |
-        # Successful attempts above 90%
-        (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="ES", provider_type!="test"}[60m])) by (className,provider,type)
-            / sum(increase(tink_agent_refresh_total{market="ES", provider_type!="test"}[60m])) by (className,provider,type) < 0.90)
-        # At least this many attempts.
-        and sum(increase(tink_agent_refresh_total{market="ES", provider_type!="test"}[60m])) by (className,provider,type) > 5
+          (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="ES"}))
+                                / (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"})) < 0.65
+                 and (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="ES"}))
+                                / (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"})) >= 0.55
+                and sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"}) > 4
       for: 5m
       labels:
         severity: urgent
+        priority: P3
         who: integration-fluffy
       annotations:
         description: {{ .Values.kibanaLink }}
-          {{ .Values.grafanaLink }}
-        summary: Refresh success rate is below 90% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-          the last hour for <{ $labels.type }>
+             {{ .Values.grafanaLink }}
+        summary: Login success rate for RE agents and for all authentication types with temporary errors is between 65 - 55% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+             the last 30 minutes.
         tags: {{ .Values.fluffyTags }}
-    ### Bank side failures
-    - alert: BankServerUnavailableForLoginES
+
+    - alert: AllLoginSuccessRatesBelow55AndGreater50WithTemporaryErrorsAndAttemptLimitES_RE
       expr: |
-        # Unavailable outcome above 50%
-        (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"unavailable", market="ES", provider_type!="test"}[30m])) by (action,className)
-            / sum(increase(tink_agent_login_total{action=~"login|is-logged-in"}[30m])) by (action,className) > 0.50)
-        # At least this many attempts.
-        and sum(increase(tink_agent_login_total{action=~"login|is-logged-in"}[30m])) by (action,className) > 10
+          (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="ES"}))
+                            / (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"})) < 0.55
+                 and (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="ES"}))
+                                / (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"})) >= 0.5
+                and sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"}) > 4
+      for: 5m
+      labels:
+        severity: urgent
+        priority: P2
+        who: integration-fluffy
+      annotations:
+        description: {{ .Values.kibanaLink }}
+             {{ .Values.grafanaLink }}
+        summary: Login success rate for RE agents and for all authentication types with temporary errors is between 55 - 50% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+             the last 30 minutes.
+        tags: {{ .Values.fluffyTags }}
+
+    - alert: AllLoginSuccessRatesBelow50WithTemporaryErrorsAndAttemptLimitES_RE
+      expr: |
+          (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="ES"}))
+                                / (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"})) < 0.5
+                and sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"}) > 4
       for: 5m
       labels:
         severity: urgent
@@ -55,70 +80,1235 @@ spec:
         who: integration-fluffy
       annotations:
         description: {{ .Values.kibanaLink }}
-          {{ .Values.grafanaLink }}
-        summary: Login unavailable rate is above 50% ( <{ $value }> ) for <{ $labels.className }>
-          the last 30 minutes.
+             {{ .Values.grafanaLink }}
+        summary: Login success rate for RE agents and for all authentication types with temporary errors is below 50% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+             the last 30 minutes.
         tags: {{ .Values.fluffyTags }}
 
-    - alert: BankServerUnavailableForRefreshES
-      expr: |
-        # Unavailable outcome above 50%
-        (sum(increase(tink_agent_refresh_total{outcome=~"unavailable", market="ES", provider_type!="test"}[30m])) by (className)
-            / sum(increase(tink_agent_refresh_total[30m])) by (className) > 0.50)
-        # At least this many attempts.
-        and sum(increase(tink_agent_refresh_total[30m])) by (className) > 10
-      for: 5m
-      labels:
-        severity: urgent
-        priority: P1
-        who: integration-fluffy
-      annotations:
-        description: {{ .Values.kibanaLink }}
-          {{ .Values.grafanaLink }}
-        summary: Refresh unavailable rate is above 50% ( <{ $value }> ) for <{ $labels.className }>
-          the last 30 minutes.
-        tags: {{ .Values.fluffyTags }}
+    #########################################################
+    ### Split login success rates - Temporary Errors - RE ###
+    #########################################################
 
-    ### Agent level login failures
-    - alert: HighProviderFailedLoginRatioES
+    - alert: SplitLoginSuccessRatesBelow70AndGreater65WithTemporaryErrorsAndAttemptLimitES_RE
       expr: |
-        # Never trigger on agents with less than 40 login attempts past 60 minutes.
-        # This filters out small agents which are less critical to fix quickly
-        sum(increase(tink_agent_login_total{action="login", market="ES", provider_type!="test"}[1h])) BY (className,provider) > 40 and
-        # Agents where more than 20% of the login attempts fail.
-        sum(increase(tink_agent_login_total{action="login",outcome="failed", market="ES"}[30m])) BY (className,provider) / sum(increase(tink_agent_login_total{action="login", market="ES"}[30m])) BY (className,provider) > 0.20
+          (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="ES"}))
+                                / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"})) < 0.7
+                 and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="ES"}))
+                                / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"})) >= 0.65
+          and sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"}) > 4
       for: 30m
       labels:
         severity: urgent
-        priority: P1
+        priority: P4
         who: integration-fluffy
       annotations:
-        description: To learn more check out the metric `tink_agent_login_total`. This
-          alert never triggers on agents that did less than 10 operations in the
-          past 60 minutes.
-          {{ .Values.kibanaLink }}
-          {{ .Values.grafanaLink }}
-        summary: Agent <{ $labels.className }> has failed over 20%
-          of its login attempts the past 60 minutes.
+        description: {{ .Values.kibanaLink }}
+             {{ .Values.grafanaLink }}
+        summary: Login success rate for RE agents and for one of login type with temporary errors is between 70 - 65% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+             the last 30 minutes.
         tags: {{ .Values.fluffyTags }}
 
-    ### Provider level fails
-    - alert: HighProviderErrorRatioES
+    - alert: SplitLoginSuccessRatesBelow65AndGreater55WithTemporaryErrorsAndAttemptLimitES_RE
       expr: |
-        # Never triggers on providers that did less than 10 operations past 60
-        # minutes. This filters out small providers which are less critical to fix
-        # quickly.
-        sum(increase(tink_executions_total{market="ES", provider_type!="test"}[1h])) BY (provider) > 10 and
-        # Providers where over 50% of the requests have failed.
-        ratio:tink_provider_errors:delta60m > 50
-      for: 15m
+          (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="ES"}))
+                          / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"})) < 0.65
+                 and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="ES"}))
+                          / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"})) >= 0.55
+          and sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"}) > 4
+      for: 5m
+      labels:
+        severity: urgent
+        priority: P3
+        who: integration-fluffy
+      annotations:
+        description: {{ .Values.kibanaLink }}
+             {{ .Values.grafanaLink }}
+        summary: Login success rate for RE agents and for one of login type with temporary errors is between 65 - 55% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+             the last 30 minutes.
+        tags: {{ .Values.fluffyTags }}
+
+    - alert: SplitLoginSuccessRatesBelow55AndGreater50WithTemporaryErrorsAndAttemptLimitES_RE
+      expr: |
+          (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="ES"}))
+                          / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"})) < 0.55
+                 and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="ES"}))
+                          / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"})) >= 0.5
+                and sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"}) > 4
+      for: 5m
+      labels:
+        severity: urgent
+        priority: P2
+        who: integration-fluffy
+      annotations:
+        description: {{ .Values.kibanaLink }}
+             {{ .Values.grafanaLink }}
+        summary: Login success rate for RE agents and for one of login type with temporary errors is between 55 - 50% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+             the last 30 minutes.
+        tags: {{ .Values.fluffyTags }}
+
+    - alert: SplitLoginSuccessRatesBelow50WithTemporaryErrorsAndAttemptLimitES_RE
+      expr: |
+          (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="ES"}))
+                          / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"})) < 0.5
+                and sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"}) > 4
+      for: 5m
       labels:
         severity: urgent
         priority: P1
         who: integration-fluffy
       annotations:
         description: {{ .Values.kibanaLink }}
-          {{ .Values.grafanaLink }}
-        summary: Provider <{ $labels.provider }> has failed over 50%
-          of its operations the past 60 minutes
+             {{ .Values.grafanaLink }}
+        summary: Login success rate for RE agents and for one of login type with temporary errors is below 50% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+                        the last 30 minutes.
+        tags: {{ .Values.fluffyTags }}
+
+    ############################################################
+    ### All login success rates - Authentication Errors - RE ###
+    ############################################################
+
+    - alert: AllLoginSuccessRatesBelow70AndGreater65WithAuthenticationErrorsAndAttemptLimitES_RE
+      expr: |
+          (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="ES"}))
+                          / (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"})) < 0.7
+                 and (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="ES"}))
+                          / (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"})) >= 0.65
+                and sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"}) > 4
+      for: 5m
+      labels:
+        severity: urgent
+        priority: P4
+        who: integration-fluffy
+      annotations:
+        description: {{ .Values.kibanaLink }}
+             {{ .Values.grafanaLink }}
+        summary: Login success rate for RE agents and all authentication types with authentication errors is between 70 - 65% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+             the last 30 minutes.
+        tags: {{ .Values.fluffyTags }}
+
+    - alert: AllLoginSuccessRatesBelow65AndGreater55WithAuthenticationErrorsAndAttemptLimitES_RE
+      expr: |
+          (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="ES"}))
+                          / (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"})) < 0.65
+                 and (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="ES"}))
+                          / (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"})) >= 0.55
+                and sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"}) > 4
+      for: 5m
+      labels:
+        severity: urgent
+        priority: P3
+        who: integration-fluffy
+      annotations:
+        description: {{ .Values.kibanaLink }}
+             {{ .Values.grafanaLink }}
+        summary: Login success rate for RE agents and for all authentication types with authentication errors is between 65 - 55% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+             the last 30 minutes.
+        tags: {{ .Values.fluffyTags }}
+
+    - alert: AllLoginSuccessRatesBelow55AndGreater50WithAuthenticationErrorsAndAttemptLimitES_RE
+      expr: |
+          (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="ES"}))
+                          / (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"})) < 0.55
+                 and (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="ES"}))
+                          / (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"})) >= 0.5
+                and sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"}) > 4
+      for: 5m
+      labels:
+        severity: urgent
+        priority: P2
+        who: integration-fluffy
+      annotations:
+        description: {{ .Values.kibanaLink }}
+             {{ .Values.grafanaLink }}
+        summary: Login success rate for RE agents and for all authentication types with authentication errors is between 55 - 50% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+             the last 30 minutes.
+        tags: {{ .Values.fluffyTags }}
+
+    - alert: AllLoginSuccessRatesBelow50WithAuthenticationErrorsAndAttemptLimitES_RE
+      expr: |
+          (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="ES"}))
+                          / (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"})) < 0.5
+                and sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"}) > 4
+      for: 5m
+      labels:
+        severity: urgent
+        priority: P1
+        who: integration-fluffy
+      annotations:
+        description: {{ .Values.kibanaLink }}
+             {{ .Values.grafanaLink }}
+        summary: Login success rate for RE agents and for all authentication types with authentication errors is below 50% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+             the last 30 minutes.
+        tags: {{ .Values.fluffyTags }}
+
+    ##############################################################
+    ### Split login success rates - Authentication Errors - RE ###
+    ##############################################################
+
+    - alert: SplitLoginSuccessRatesBelow70AndGreater65WithAuthenticationErrorsAndAttemptLimitES_RE
+      expr: |
+          (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="ES"}))
+                          / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"})) < 0.7
+                 and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="ES"}))
+                          / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"})) >= 0.65
+                and sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"}) > 4
+      for: 5m
+      labels:
+        severity: urgent
+        priority: P4
+        who: integration-fluffy
+      annotations:
+        description: {{ .Values.kibanaLink }}
+             {{ .Values.grafanaLink }}
+        summary: Login success rate for RE agents and for one of login type with authentication errors is between 70 - 65% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+             the last 30 minutes.
+        tags: {{ .Values.fluffyTags }}
+
+    - alert: SplitLoginSuccessRatesBelow65AndGreater55WithAuthenticationErrorsAndAttemptLimitES_RE
+      expr: |
+          (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="ES"}))
+                          / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"})) < 0.65
+                 and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="ES"}))
+                          / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"})) >= 0.55
+                and sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"}) > 4
+      for: 5m
+      labels:
+        severity: urgent
+        priority: P3
+        who: integration-fluffy
+      annotations:
+        description: {{ .Values.kibanaLink }}
+             {{ .Values.grafanaLink }}
+        summary: Login success rate for RE agents and for one of login type with authentication errors is between 65 - 55% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+             the last 30 minutes.
+        tags: {{ .Values.fluffyTags }}
+
+    - alert: SplitLoginSuccessRatesBelow55AndGreater50WithAuthenticationErrorsAndAttemptLimitES_RE
+      expr: |
+          (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="ES"}))
+                          / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"})) < 0.55
+                 and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="ES"}))
+                          / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"})) >= 0.5
+                and sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"}) > 4
+      for: 5m
+      labels:
+        severity: urgent
+        priority: P2
+        who: integration-fluffy
+      annotations:
+        description: {{ .Values.kibanaLink }}
+             {{ .Values.grafanaLink }}
+        summary: Login success rate for RE agents and for one of login type with authentication errors is between 55 - 50% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+             the last 30 minutes.
+        tags: {{ .Values.fluffyTags }}
+
+    - alert: SplitLoginSuccessRatesBelow50WithAuthenticationErrorsAndAttemptLimitES_RE
+      expr: |
+          (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="ES"}))
+                          / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"})) < 0.5
+                and sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"}) > 4
+      for: 5m
+      labels:
+        severity: urgent
+        priority: P1
+        who: integration-fluffy
+      annotations:
+        description: {{ .Values.kibanaLink }}
+             {{ .Values.grafanaLink }}
+        summary: Login success rate for RE agents and for one of login type with authentication errors is below 50% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+             the last 30 minutes.
+        tags: {{ .Values.fluffyTags }}
+
+    ##################################################
+    ### All login success rates - Bank Errors - RE ###
+    ##################################################
+
+    - alert: AllLoginSuccessRatesBelow70AndGreater65WithBankErrorsAndAttemptLimitES_RE
+      expr: |
+          (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="ES"}))
+                          / (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"})) < 0.7
+                 and (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="ES"}))
+                          / (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"})) >= 0.65
+                and sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"}) > 4
+      for: 5m
+      labels:
+        severity: urgent
+        priority: P4
+        who: integration-fluffy
+      annotations:
+        description: {{ .Values.kibanaLink }}
+             {{ .Values.grafanaLink }}
+        summary: Login success rate for RE agents and all Bank types with Bank errors is between 70 - 65% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+             the last 30 minutes.
+        tags: {{ .Values.fluffyTags }}
+
+    - alert: AllLoginSuccessRatesBelow65AndGreater55WithBankErrorsAndAttemptLimitES_RE
+      expr: |
+          (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="ES"}))
+                      / (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"})) < 0.65
+                 and (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="ES"}))
+                      / (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"})) >= 0.55
+          and sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"}) > 4
+      for: 5m
+      labels:
+        severity: urgent
+        priority: P3
+        who: integration-fluffy
+      annotations:
+        description: {{ .Values.kibanaLink }}
+             {{ .Values.grafanaLink }}
+        summary: Login success rate for RE agents and for all Bank types with Bank errors is between 65 - 55% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+             the last 30 minutes.
+        tags: {{ .Values.fluffyTags }}
+
+    - alert: AllLoginSuccessRatesBelow55AndGreater50WithBankErrorsAndAttemptLimitES_RE
+      expr: |
+          (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="ES"}))
+                      / (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"})) < 0.55
+           and (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="ES"}))
+                      / (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"})) >= 0.5
+          and sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"}) > 4
+      for: 5m
+      labels:
+        severity: urgent
+        priority: P2
+        who: integration-fluffy
+      annotations:
+        description: {{ .Values.kibanaLink }}
+             {{ .Values.grafanaLink }}
+        summary: Login success rate for RE agents and for all Bank types with Bank errors is between 55 - 50% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+             the last 30 minutes.
+        tags: {{ .Values.fluffyTags }}
+
+    - alert: AllLoginSuccessRatesBelow50WithBankErrorsAndAttemptLimitES_RE
+      expr: |
+          (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="ES"}))
+                      / (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"})) < 0.5
+          and sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"}) > 4
+      for: 5m
+      labels:
+        severity: urgent
+        priority: P1
+        who: integration-fluffy
+      annotations:
+        description: {{ .Values.kibanaLink }}
+             {{ .Values.grafanaLink }}
+        summary: Login success rate for RE agents and for all Bank types with Bank errors is below 50% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+             the last 30 minutes.
+        tags: {{ .Values.fluffyTags }}
+
+    ####################################################
+    ### Split login success rates - Bank Errors - RE ###
+    ####################################################
+
+    - alert: SplitLoginSuccessRatesBelow70AndGreater65WithBankErrorsAndAttemptLimitES_RE
+      expr: |
+          (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="ES"}))
+                / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"})) < 0.7
+           and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="ES"}))
+                / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"})) >= 0.65
+          and sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"}) > 4
+      for: 5m
+      labels:
+        severity: urgent
+        priority: P4
+        who: integration-fluffy
+      annotations:
+        description: {{ .Values.kibanaLink }}
+             {{ .Values.grafanaLink }}
+        summary: Login success rate for RE agents and for one of login type with Bank errors is between 70 - 65% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+             the last 30 minutes.
+        tags: {{ .Values.fluffyTags }}
+
+    - alert: SplitLoginSuccessRatesBelow65AndGreater55WithBankErrorsAndAttemptLimitES_RE
+      expr: |
+          (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="ES"}))
+                 / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"})) < 0.65
+           and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="ES"}))
+                 / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"})) >= 0.55
+          and sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"}) > 4
+      for: 5m
+      labels:
+        severity: urgent
+        priority: P3
+        who: integration-fluffy
+      annotations:
+        description: {{ .Values.kibanaLink }}
+             {{ .Values.grafanaLink }}
+        summary: Login success rate for RE agents and for one of login type with Bank errors is between 65 - 55% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+             the last 30 minutes.
+        tags: {{ .Values.fluffyTags }}
+
+    - alert: SplitLoginSuccessRatesBelow55AndGreater50WithBankErrorsAndAttemptLimitES_RE
+      expr: |
+          (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="ES"}))
+                 / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"})) < 0.55
+           and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="ES"}))
+                 / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"})) >= 0.5
+          and sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"}) > 4
+      for: 5m
+      labels:
+        severity: urgent
+        priority: P2
+        who: integration-fluffy
+      annotations:
+        description: {{ .Values.kibanaLink }}
+             {{ .Values.grafanaLink }}
+        summary: Login success rate for RE agents and for one of login type with Bank errors is between 55 - 50% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+             the last 30 minutes.
+        tags: {{ .Values.fluffyTags }}
+
+    - alert: SplitLoginSuccessRatesBelow50WithBankErrorsAndAttemptLimitES_RE
+      expr: |
+          (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="ES"}))
+                      / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"})) < 0.5
+          and sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"}) > 4
+      for: 5m
+      labels:
+        severity: urgent
+        priority: P1
+        who: integration-fluffy
+      annotations:
+        description: {{ .Values.kibanaLink }}
+             {{ .Values.grafanaLink }}
+        summary: Login success rate for RE agents and for one of login type with Bank errors is below 50% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+             the last 30 minutes.
+        tags: {{ .Values.fluffyTags }}
+
+    ###################################################
+    ### All login success rates - Agent Errors - RE ###
+    ###################################################
+
+    - alert: AllLoginSuccessRatesBelow70AndGreater65WithAgentErrorsAndAttemptLimitES_RE
+      expr: |
+          (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.agentErrorsAuth }} , market="ES"}))
+                      / (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"})) < 0.7
+           and (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.agentErrorsAuth }} , market="ES"}))
+                / (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"})) >= 0.65
+          and sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"}) > 4
+      for: 5m
+      labels:
+        severity: urgent
+        priority: P4
+        who: integration-fluffy
+      annotations:
+        description: {{ .Values.kibanaLink }}
+             {{ .Values.grafanaLink }}
+        summary: Login success rate for RE agents and all Agent types with Agent errors is between 70 - 65% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+             the last 30 minutes.
+        tags: {{ .Values.fluffyTags }}
+
+    - alert: AllLoginSuccessRatesBelow65AndGreater55WithAgentErrorsAndAttemptLimitES_RE
+      expr: |
+          (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.agentErrorsAuth }} , market="ES"}))
+                      / (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"})) < 0.65
+           and (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.agentErrorsAuth }} , market="ES"}))
+                      / (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"})) >= 0.55
+          and sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"}) > 4
+      for: 5m
+      labels:
+        severity: urgent
+        priority: P3
+        who: integration-fluffy
+      annotations:
+        description: {{ .Values.kibanaLink }}
+             {{ .Values.grafanaLink }}
+        summary: Login success rate for RE agents and for all Agent types with Agent errors is between 65 - 55% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+             the last 30 minutes.
+        tags: {{ .Values.fluffyTags }}
+
+    - alert: AllLoginSuccessRatesBelow55AndGreater50WithAgentErrorsAndAttemptLimitES_RE
+      expr: |
+          (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.agentErrorsAuth }} , market="ES"}))
+                      / (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"})) < 0.55
+           and (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.agentErrorsAuth }} , market="ES"}))
+                / (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"})) >= 0.5
+          and sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"}) > 4
+      for: 5m
+      labels:
+        severity: urgent
+        priority: P2
+        who: integration-fluffy
+      annotations:
+        description: {{ .Values.kibanaLink }}
+             {{ .Values.grafanaLink }}
+        summary: Login success rate for RE agents and for all Agent types with Agent errors is between 55 - 50% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+             the last 30 minutes.
+        tags: {{ .Values.fluffyTags }}
+
+    - alert: AllLoginSuccessRatesBelow50WithAgentErrorsAndAttemptLimitES_RE
+      expr: |
+          (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.agentErrorsAuth }} , market="ES"}))
+                      / (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"})) < 0.5
+          and sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"}) > 4
+      for: 5m
+      labels:
+        severity: urgent
+        priority: P1
+        who: integration-fluffy
+      annotations:
+        description: {{ .Values.kibanaLink }}
+             {{ .Values.grafanaLink }}
+        summary: Login success rate for RE agents and for all Agent types with Agent errors is below 50% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+             the last 30 minutes.
+        tags: {{ .Values.fluffyTags }}
+
+    #####################################################
+    ### Split login success rates - Agent Errors - RE ###
+    #####################################################
+
+    - alert: SplitLoginSuccessRatesBelow70AndGreater65WithAgentErrorsAndAttemptLimitES_RE
+      expr: |
+          (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.agentErrorsAuth }} , market="ES"}))
+                      / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"})) < 0.7
+           and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.agentErrorsAuth }} , market="ES"}))
+                      / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"})) >= 0.65
+          and sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"}) > 4
+      for: 5m
+      labels:
+        severity: urgent
+        priority: P4
+        who: integration-fluffy
+      annotations:
+        description: {{ .Values.kibanaLink }}
+             {{ .Values.grafanaLink }}
+        summary: Login success rate for RE agents and for one of login type with Agent errors is between 70 - 65% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+             the last 30 minutes.
+        tags: {{ .Values.fluffyTags }}
+
+    - alert: SplitLoginSuccessRatesBelow65AndGreater55WithAgentErrorsAndAttemptLimitES_RE
+      expr: |
+          (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.agentErrorsAuth }} , market="ES"}))
+                      / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"})) < 0.65
+           and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.agentErrorsAuth }} , market="ES"}))
+                      / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"})) >= 0.55
+          and sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"}) > 4
+      for: 5m
+      labels:
+        severity: urgent
+        priority: P3
+        who: integration-fluffy
+      annotations:
+        description: {{ .Values.kibanaLink }}
+             {{ .Values.grafanaLink }}
+        summary: Login success rate for RE agents and for one of login type with Agent errors is between 65 - 55% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+             the last 30 minutes.
+        tags: {{ .Values.fluffyTags }}
+
+    - alert: SplitLoginSuccessRatesBelow55AndGreater50WithAgentErrorsAndAttemptLimitES_RE
+      expr: |
+          (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.agentErrorsAuth }} , market="ES"}))
+                      / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"})) < 0.55
+           and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.agentErrorsAuth }} , market="ES"}))
+                      / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"})) >= 0.5
+          and sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"}) > 4
+      for: 5m
+      labels:
+        severity: urgent
+        priority: P2
+        who: integration-fluffy
+      annotations:
+        description: {{ .Values.kibanaLink }}
+             {{ .Values.grafanaLink }}
+        summary: Login success rate for RE agents and for one of login type with Agent errors is between 55 - 50% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+             the last 30 minutes.
+        tags: {{ .Values.fluffyTags }}
+
+    - alert: SplitLoginSuccessRatesBelow50WithAgentErrorsAndAttemptLimitES_RE
+      expr: |
+          (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.agentErrorsAuth }} , market="ES"}))
+                      / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"})) < 0.5
+          and sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"}) > 4
+      for: 5m
+      labels:
+        severity: urgent
+        priority: P1
+        who: integration-fluffy
+      annotations:
+        description: {{ .Values.kibanaLink }}
+             {{ .Values.grafanaLink }}
+        summary: Login success rate for RE agents and for one of login type with Agent errors is below 50% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+             the last 30 minutes.
+        tags: {{ .Values.fluffyTags }}
+
+    #################################################
+    ### All login success rates - All Errors - RE ###
+    #################################################
+
+    - alert: AllLoginSuccessRatesBelow70AndGreater65WithAllErrorsAndAttemptLimitES_RE
+      expr: |
+          (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="ES"}))
+                      / (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"})) < 0.7
+           and (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="ES"}))
+                        / (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"})) >= 0.65
+          and sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"}) > 4
+      for: 5m
+      labels:
+        severity: urgent
+        priority: P4
+        who: integration-fluffy
+      annotations:
+        description: {{ .Values.kibanaLink }}
+             {{ .Values.grafanaLink }}
+        summary: Login success rate for RE agents and all Agent types with All Errors is between 70 - 65% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+             the last 30 minutes.
+        tags: {{ .Values.fluffyTags }}
+
+    - alert: AllLoginSuccessRatesBelow65AndGreater55WithAllErrorsAndAttemptLimitES_RE
+      expr: |
+          (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="ES"}))
+                      / (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"})) < 0.65
+           and (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="ES"}))
+                      / (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"})) >= 0.55
+          and sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"}) > 4
+      for: 5m
+      labels:
+        severity: urgent
+        priority: P3
+        who: integration-fluffy
+      annotations:
+        description: {{ .Values.kibanaLink }}
+             {{ .Values.grafanaLink }}
+        summary: Login success rate for RE agents and for all Agent types with All Errors is between 65 - 55% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+             the last 30 minutes.
+        tags: {{ .Values.fluffyTags }}
+
+    - alert: AllLoginSuccessRatesBelow55AndGreater50WithAllErrorsAndAttemptLimitES_RE
+      expr: |
+          (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="ES"}))
+                      / (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"})) < 0.55
+           and (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="ES"}))
+                      / (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"})) >= 0.5
+          and sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"}) > 4
+      for: 5m
+      labels:
+        severity: urgent
+        priority: P2
+        who: integration-fluffy
+      annotations:
+        description: {{ .Values.kibanaLink }}
+             {{ .Values.grafanaLink }}
+        summary: Login success rate for RE agents and for all Agent types with All Errors is between 55 - 50% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+             the last 30 minutes.
+        tags: {{ .Values.fluffyTags }}
+
+    - alert: AllLoginSuccessRatesBelow50WithAllErrorsAndAttemptLimitES_RE
+      expr: |
+          (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="ES"}))
+                 / (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"})) < 0.5
+          and sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"}) > 4
+      for: 5m
+      labels:
+        severity: urgent
+        priority: P1
+        who: integration-fluffy
+      annotations:
+        description: {{ .Values.kibanaLink }}
+             {{ .Values.grafanaLink }}
+        summary: Login success rate for RE agents and for all Agent types with All Errors is below 50% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+             the last 30 minutes.
+        tags: {{ .Values.fluffyTags }}
+
+    ###################################################
+    ### Split login success rates - All Errors - RE ###
+    ###################################################
+
+    - alert: SplitLoginSuccessRatesBelow70AndGreater65WithAllErrorsAndAttemptLimitES_RE
+      expr: |
+          (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="ES"}))
+                      / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"})) < 0.7
+           and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="ES"}))
+                      / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"})) >= 0.65
+          and sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"}) > 4
+      for: 5m
+      labels:
+        severity: urgent
+        priority: P4
+        who: integration-fluffy
+      annotations:
+        description: {{ .Values.kibanaLink }}
+             {{ .Values.grafanaLink }}
+        summary: Login success rate for RE agents and for one of login type with All Errors is between 70 - 65% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+             the last 30 minutes.
+        tags: {{ .Values.fluffyTags }}
+
+    - alert: SplitLoginSuccessRatesBelow65AndGreater55WithAllErrorsAndAttemptLimitES_RE
+      expr: |
+          (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="ES"}))
+                      / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"})) < 0.65
+           and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="ES"}))
+                / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"})) >= 0.55
+          and sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"}) > 4
+      for: 5m
+      labels:
+        severity: urgent
+        priority: P3
+        who: integration-fluffy
+      annotations:
+        description: {{ .Values.kibanaLink }}
+             {{ .Values.grafanaLink }}
+        summary: Login success rate for RE agents and for one of login type with All Errors is between 65 - 55% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+             the last 30 minutes.
+        tags: {{ .Values.fluffyTags }}
+
+    - alert: SplitLoginSuccessRatesBelow55AndGreater50WithAllErrorsAndAttemptLimitES_RE
+      expr: |
+          (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="ES"}))
+                      / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"})) < 0.55
+           and (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="ES"}))
+                / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"})) >= 0.5
+          and sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"}) > 4
+      for: 5m
+      labels:
+        severity: urgent
+        priority: P2
+        who: integration-fluffy
+      annotations:
+        description: {{ .Values.kibanaLink }}
+             {{ .Values.grafanaLink }}
+        summary: Login success rate for RE agents and for one of login type with All Errors is between 55 - 50% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+             the last 30 minutes.
+        tags: {{ .Values.fluffyTags }}
+
+    - alert: SplitLoginSuccessRatesBelow50WithAllErrorsAndAttemptLimitES_RE
+      expr: |
+          (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="ES"}))
+                / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"})) < 0.5
+          and sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"}) > 4
+      for: 5m
+      labels:
+        severity: urgent
+        priority: P1
+        who: integration-fluffy
+      annotations:
+        description: {{ .Values.kibanaLink }}
+             {{ .Values.grafanaLink }}
+        summary: Login success rate for RE agents and for one of login type with All Errors is below 50% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+             the last 30 minutes.
+        tags: {{ .Values.fluffyTags }}
+
+    ##### OpenBanking #####
+
+    ############################################################
+    ### All login success rates - Temporary Errors - OB ###
+    ############################################################
+
+    - alert: AllLoginSuccessRatesBelow60WithTemporaryErrorsAndAttemptLimitES_OB
+      expr: |
+          (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="ES"}))
+                      / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="ES"})) <= 0.6
+          and sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="ES"}) > 4
+      for: 5m
+      labels:
+        severity: urgent
+        priority: P1
+        who: integration-fluffy
+      annotations:
+        description: {{ .Values.kibanaLink }}
+             {{ .Values.grafanaLink }}
+        summary: Login success rate for OB agents and for all authentication types with temporary errors is below 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+             the last 30 minutes.
+        tags: {{ .Values.fluffyTags }}
+
+    #########################################################
+    ### Split login success rates - Temporary Errors - OB ###
+    #########################################################
+
+    - alert: SplitLoginSuccessRatesBelow60WithTemporaryErrorsAndAttemptLimitES_OB
+      expr: |
+          (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="ES"}))
+                      / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="ES"})) <= 0.6
+          and sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="ES"}) > 4
+      for: 5m
+      labels:
+        severity: urgent
+        priority: P1
+        who: integration-fluffy
+      annotations:
+        description: {{ .Values.kibanaLink }}
+             {{ .Values.grafanaLink }}
+        summary: Login success rate for OB agents and for one of login type with temporary errors is below 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+             the last 30 minutes.
+        tags: {{ .Values.fluffyTags }}
+
+    ############################################################
+    ### All login success rates - Authentication Errors - OB ###
+    ############################################################
+
+    - alert: AllLoginSuccessRatesBelow60WithAuthenticationErrorsAndAttemptLimitES_OB
+      expr: |
+          (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="ES"}))
+                      / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="ES"})) <= 0.6
+          and sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="ES"}) > 4
+      for: 5m
+      labels:
+        severity: urgent
+        priority: P1
+        who: integration-fluffy
+      annotations:
+        description: {{ .Values.kibanaLink }}
+             {{ .Values.grafanaLink }}
+        summary: Login success rate for OB agents and for all authentication types with authentication errors is below 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+             the last 30 minutes.
+        tags: {{ .Values.fluffyTags }}
+
+    ##############################################################
+    ### Split login success rates - Authentication Errors - OB ###
+    ##############################################################
+
+    - alert: SplitLoginSuccessRatesBelow60WithAuthenticationErrorsAndAttemptLimitES_OB
+      expr: |
+          (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="ES"}))
+                        / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="ES"})) <= 0.6
+          and sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="ES"}) > 4
+      for: 5m
+      labels:
+        severity: urgent
+        priority: P1
+        who: integration-fluffy
+      annotations:
+        description: {{ .Values.kibanaLink }}
+             {{ .Values.grafanaLink }}
+        summary: Login success rate for OB agents and for one of login type with authentication errors is below 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+             the last 30 minutes.
+        tags: {{ .Values.fluffyTags }}
+
+    ##################################################
+    ### All login success rates - Bank Errors - OB ###
+    ##################################################
+
+    - alert: AllLoginSuccessRatesBelow60WithBankErrorsAndAttemptLimitES_OB
+      expr: |
+          (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="ES"}))
+                        / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="ES"})) <= 0.6
+          and sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="ES"}) > 4
+      for: 5m
+      labels:
+        severity: urgent
+        priority: P1
+        who: integration-fluffy
+      annotations:
+        description: {{ .Values.kibanaLink }}
+             {{ .Values.grafanaLink }}
+        summary: Login success rate for OB agents and for all Bank types with Bank errors is below 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+             the last 30 minutes.
+        tags: {{ .Values.fluffyTags }}
+
+    ####################################################
+    ### Split login success rates - Bank Errors - OB ###
+    ####################################################
+
+    - alert: SplitLoginSuccessRatesBelow60WithBankErrorsAndAttemptLimitES_OB
+      expr: |
+          (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="ES"}))
+                        / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="ES"})) <= 0.6
+          and sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="ES"}) > 4
+      for: 5m
+      labels:
+        severity: urgent
+        priority: P1
+        who: integration-fluffy
+      annotations:
+        description: {{ .Values.kibanaLink }}
+             {{ .Values.grafanaLink }}
+        summary: Login success rate for OB agents and for one of login type with Bank errors is below 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+             the last 30 minutes.
+        tags: {{ .Values.fluffyTags }}
+
+    ###################################################
+    ### All login success rates - Agent Errors - OB ###
+    ###################################################
+
+    - alert: AllLoginSuccessRatesBelow60WithAgentErrorsAndAttemptLimitES_OB
+      expr: |
+          (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.agentErrorsAuth }} , market="ES"}))
+                      / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="ES"})) <= 0.6
+          and sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="ES"}) > 4
+      for: 5m
+      labels:
+        severity: urgent
+        priority: P1
+        who: integration-fluffy
+      annotations:
+        description: {{ .Values.kibanaLink }}
+             {{ .Values.grafanaLink }}
+        summary: Login success rate for OB agents and for all Agent types with Agent errors is below 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+             the last 30 minutes.
+        tags: {{ .Values.fluffyTags }}
+
+    #####################################################
+    ### Split login success rates - Agent Errors - OB ###
+    #####################################################
+
+    - alert: SplitLoginSuccessRatesBelow60WithAgentErrorsAndAttemptLimitES_OB
+      expr: |
+          (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.agentErrorsAuth }} , market="ES"}))
+                        / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="ES"})) <= 0.6
+          and sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="ES"}) > 4
+      for: 5m
+      labels:
+        severity: urgent
+        priority: P1
+        who: integration-fluffy
+      annotations:
+        description: {{ .Values.kibanaLink }}
+             {{ .Values.grafanaLink }}
+        summary: Login success rate for OB agents and for one of login type with Agent errors is below 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+             the last 30 minutes.
+        tags: {{ .Values.fluffyTags }}
+
+    #################################################
+    ### All login success rates - All Errors - OB ###
+    #################################################
+
+    - alert: AllLoginSuccessRatesBelow60WithAllErrorsAndAttemptLimitES_OB
+      expr: |
+          (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="ES"}))
+                        / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="ES"})) <= 0.6
+          and sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="ES"}) > 4
+      for: 5m
+      labels:
+        severity: urgent
+        priority: P1
+        who: integration-fluffy
+      annotations:
+        description: {{ .Values.kibanaLink }}
+             {{ .Values.grafanaLink }}
+        summary: Login success rate for OB agents and for all Agent types with All Errors is below 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+             the last 30 minutes.
+        tags: {{ .Values.fluffyTags }}
+
+    ###################################################
+    ### Split login success rates - All Errors - OB ###
+    ###################################################
+
+    - alert: SplitLoginSuccessRatesBelow60WithAllErrorsAndAttemptLimitES_OB
+      expr: |
+          (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="ES"}))
+                        / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="ES"})) <= 0.6
+          and sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="ES"}) > 4
+      for: 5m
+      labels:
+        severity: urgent
+        priority: P1
+        who: integration-fluffy
+      annotations:
+        description: {{ .Values.kibanaLink }}
+             {{ .Values.grafanaLink }}
+        summary: Login success rate for OB agents and for one of login type with All Errors is below 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+             the last 30 minutes.
+        tags: {{ .Values.fluffyTags }}
+
+    #### Agent refresh ####
+
+    ########################################
+    ### BankServerErrors - Agent Refresh ###
+    ########################################
+
+    - alert: AgentRefreshesBelow70Greater65DueToBankServerErrorWithRateLimitES
+      expr: |
+          (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.bankErrorsRefresh }}, market="ES"}))
+              / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="ES"})) < 0.7
+                     and (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.bankErrorsRefresh }}, market="ES"}))
+              / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="ES"})) >= 0.65
+          and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="ES"}) > 4
+      for: 5m
+      labels:
+        severity: urgent
+        priority: P4
+        who: integration-fluffy
+      annotations:
+        description: {{ .Values.kibanaLink }}
+             {{ .Values.grafanaLink }}
+        summary: Refresh unavailable rate is between 70 - 65% because of bank issues ( <{ $value }> ) for <{ $labels.className }>
+                      the last 30 minutes for <{ $labels.type }>
+        tags: {{ .Values.fluffyTags }}
+
+    - alert: AgentRefreshesBelow65Greater55DueToBankServerErrorWithRateLimitES
+      expr: |
+          (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.bankErrorsRefresh }}, market="ES"}))
+              / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="ES"})) < 0.65
+                   and (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.bankErrorsRefresh }}, market="ES"}))
+              / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="ES"})) >= 0.55
+          and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="ES"}) > 4
+      for: 5m
+      labels:
+        severity: urgent
+        priority: P3
+        who: integration-fluffy
+      annotations:
+        description: {{ .Values.kibanaLink }}
+             {{ .Values.grafanaLink }}
+        summary: Refresh unavailable rate is between 65 - 55% because of bank issues ( <{ $value }> ) for <{ $labels.className }>
+                    the last 30 minutes for <{ $labels.type }>
+        tags: {{ .Values.fluffyTags }}
+
+    - alert: AgentRefreshesBelow55Greater50DueToBankServerErrorWithRateLimitES
+      expr: |
+          (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.bankErrorsRefresh }}, market="ES"}))
+                / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="ES"})) < 0.55
+                     and (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.bankErrorsRefresh }}, market="ES"}))
+                / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="ES"})) >= 0.5
+          and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="ES"}) > 4
+      for: 5m
+      labels:
+        severity: urgent
+        priority: P2
+        who: integration-fluffy
+      annotations:
+        description: {{ .Values.kibanaLink }}
+             {{ .Values.grafanaLink }}
+        summary: Refresh unavailable rate is between 55 - 50% because of bank issues ( <{ $value }> ) for <{ $labels.className }>
+                    the last 30 minutes for <{ $labels.type }>
+        tags: {{ .Values.fluffyTags }}
+
+    - alert: AgentRefreshesBelow50DueToBankServerErrorWithRateLimitES
+      expr: |
+          (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.bankErrorsRefresh }}, market="ES"}))
+                / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="ES"})) < 0.5
+          and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="ES"}) > 4
+      for: 5m
+      labels:
+        severity: urgent
+        priority: P1
+        who: integration-fluffy
+      annotations:
+        description: {{ .Values.kibanaLink }}
+             {{ .Values.grafanaLink }}
+        summary: Refresh unavailable rate is below 50% because of bank issues ( <{ $value }> ) for <{ $labels.className }>
+            the last 30 minutes for <{ $labels.type }>
+        tags: {{ .Values.fluffyTags }}
+
+    #########################################
+    ### AgentServerErrors - Agent Refresh ###
+    #########################################
+
+    - alert: AgentRefreshesBelow70Greater65DueToAgentServerErrorWithRateLimitES
+      expr: |
+          (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.agentErrorsRefresh }}, market="ES"}))
+                / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="ES"})) < 0.7
+                     and (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.agentErrorsRefresh }}, market="ES"}))
+                / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="ES"})) >= 0.65
+          and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="ES"}) > 4
+      for: 5m
+      labels:
+        severity: urgent
+        priority: P4
+        who: integration-fluffy
+      annotations:
+        description: {{ .Values.kibanaLink }}
+             {{ .Values.grafanaLink }}
+        summary: Refresh unavailable rate is between 70 - 65% because of agent issues ( <{ $value }> ) for <{ $labels.className }>
+            the last 30 minutes for <{ $labels.type }>
+        tags:  {{ .Values.fluffyTags }}
+
+    - alert: AgentRefreshesBelow65Greater55DueToAgentServerErrorWithRateLimitES
+      expr: |
+          (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.agentErrorsRefresh }}, market="ES"}))
+              / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="ES"})) < 0.65
+                   and (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.agentErrorsRefresh }}, market="ES"}))
+              / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="ES"})) >= 0.55
+          and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="ES"}) > 4
+      for: 5m
+      labels:
+        severity: urgent
+        priority: P3
+        who: integration-fluffy
+      annotations:
+        description: {{ .Values.kibanaLink }}
+             {{ .Values.grafanaLink }}
+        summary: Refresh unavailable rate is between 65 - 55% because of agent issues ( <{ $value }> ) for <{ $labels.className }>
+            the last 30 minutes for <{ $labels.type }>
+        tags:  {{ .Values.fluffyTags }}
+
+    - alert: AgentRefreshesBelow55Greater50DueToAgentServerErrorWithRateLimitES
+      expr: |
+          (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.agentErrorsRefresh }}, market="ES"}))
+              / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="ES"})) < 0.55
+                   and (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.agentErrorsRefresh }}, market="ES"}))
+              / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="ES"})) >= 0.5
+          and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="ES"}) > 4
+      for: 5m
+      labels:
+        severity: urgent
+        priority: P2
+        who: integration-fluffy
+      annotations:
+        description: {{ .Values.kibanaLink }}
+             {{ .Values.grafanaLink }}
+        summary: Refresh unavailable rate is between 55 - 50% because of agent issues ( <{ $value }> ) for <{ $labels.className }>
+            the last 30 minutes for <{ $labels.type }>
+        tags: {{ .Values.fluffyTags }}
+
+    - alert: AgentRefreshesBelow50DueToAgentServerErrorWithRateLimitES
+      expr: |
+          (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.agentErrorsRefresh }}, market="ES"}))
+                / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="ES"})) < 0.5
+          and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="ES"}) > 4
+      for: 5m
+      labels:
+        severity: urgent
+        priority: P1
+        who: integration-fluffy
+      annotations:
+        description: {{ .Values.kibanaLink }}
+             {{ .Values.grafanaLink }}
+        summary: Refresh unavailable rate is below 50% because of agent issues ( <{ $value }> ) for <{ $labels.className }>
+            the last 30 minutes for <{ $labels.type }>
+        tags: {{ .Values.fluffyTags }}
+
+    #################################
+    ### AllErrors - Agent Refresh ###
+    #################################
+
+    - alert: AgentRefreshesBelow70Greater65DueToAllErrorWithRateLimitES
+      expr: |
+          (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.allErrorsRefresh }}, market="ES"}))
+                / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="ES"})) < 0.7
+                   and (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.allErrorsRefresh }}, market="ES"}))
+                / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="ES"})) >= 0.65
+           and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="ES"}) > 4
+      for: 5m
+      labels:
+        severity: urgent
+        priority: P4
+        who: integration-fluffy
+      annotations:
+        description: {{ .Values.kibanaLink }}
+             {{ .Values.grafanaLink }}
+        summary: Refresh unavailable rate is between 70 - 65% because of all issues ( <{ $value }> ) for <{ $labels.className }>
+            the last 30 minutes for <{ $labels.type }>
+        tags: {{ .Values.fluffyTags }}
+
+    - alert: AgentRefreshesBelow65Greater55DueToAllErrorWithRateLimitES
+      expr: |
+          (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.allErrorsRefresh }}, market="ES"}))
+              / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="ES"})) < 0.65
+                 and (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.allErrorsRefresh }}, market="ES"}))
+              / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="ES"})) >= 0.55
+           and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="ES"}) > 4
+      for: 5m
+      labels:
+        severity: urgent
+        priority: P3
+        who: integration-fluffy
+      annotations:
+        description: {{ .Values.kibanaLink }}
+             {{ .Values.grafanaLink }}
+        summary: Refresh unavailable rate is between 65 - 55% because of all issues ( <{ $value }> ) for <{ $labels.className }>
+              the last 30 minutes for <{ $labels.type }>
+        tags: {{ .Values.fluffyTags }}
+
+    - alert: AgentRefreshesBelow55Greater50DueToAllErrorWithRateLimitES
+      expr: |
+          (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.allErrorsRefresh }}, market="ES"}))
+                / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="ES"})) < 0.55
+                   and (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.allErrorsRefresh }}, market="ES"}))
+                / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="ES"})) >= 0.5
+           and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="ES"}) > 4
+      for: 5m
+      labels:
+        severity: urgent
+        priority: P2
+        who: integration-fluffy
+      annotations:
+        description: {{ .Values.kibanaLink }}
+             {{ .Values.grafanaLink }}
+        summary: Refresh unavailable rate is between 55 - 50% because of all issues ( <{ $value }> ) for <{ $labels.className }>
+              the last 30 minutes for <{ $labels.type }>
+        tags: {{ .Values.fluffyTags }}
+
+    - alert: AgentRefreshesBelow50DueToAllErrorWithRateLimitES
+      expr: |
+          (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.allErrorsRefresh }}, market="ES"}))
+              / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="ES"})) < 0.5
+           and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="ES"}) > 4
+      for: 5m
+      labels:
+        severity: urgent
+        priority: P1
+        who: integration-fluffy
+      annotations:
+        description: {{ .Values.kibanaLink }}
+             {{ .Values.grafanaLink }}
+        summary: Refresh unavailable rate is below 50% because of all issues ( <{ $value }> ) for <{ $labels.className }>
+              the last 30 minutes for <{ $labels.type }>
+        tags: {{ .Values.fluffyTags }}
+
+    ###############################################
+    ### AllErrors - Partially Completed Refresh ###
+    ###############################################
+
+    - alert: AgentRefreshesBelow70Greater65DueToPartiallyCompletedErrorWithRateLimitES
+      expr: |
+          (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.partiallyCompletedErrorRefresh }}, market="ES"}))
+                / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="ES"})) < 0.70
+                   and (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.partiallyCompletedErrorRefresh }}, market="ES"}))
+                / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="ES"})) >= 0.65
+           and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="ES"}) > 4
+      for: 5m
+      labels:
+        severity: urgent
+        priority: P4
+        who: integration-fluffy
+      annotations:
+        description: {{ .Values.kibanaLink }}
+             {{ .Values.grafanaLink }}
+        summary: Refresh unavailable rate is between 70 - 65% because of all issues ( <{ $value }> ) for <{ $labels.className }>
+               the last 30 minutes.
+        tags: {{ .Values.fluffyTags }}
+
+    - alert: AgentRefreshesBelow65Greater55DueToPartiallyCompletedErrorWithRateLimitES
+      expr: |
+          (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.partiallyCompletedErrorRefresh }}, market="ES"}))
+                / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="ES"})) < 0.65
+                   and (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.partiallyCompletedErrorRefresh }}, market="ES"}))
+                / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="ES"})) >= 0.55
+           and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="ES"}) > 4
+      for: 5m
+      labels:
+        severity: urgent
+        priority: P3
+        who: integration-fluffy
+      annotations:
+        description: {{ .Values.kibanaLink }}
+             {{ .Values.grafanaLink }}
+        summary: Refresh unavailable rate is between 65 - 55% because of all issues ( <{ $value }> ) for <{ $labels.className }>
+               the last 30 minutes.
+        tags: {{ .Values.fluffyTags }}
+
+    - alert: AgentRefreshesBelow55Greater50DueToPartiallyCompletedErrorWithRateLimitES
+      expr: |
+          (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.partiallyCompletedErrorRefresh }}, market="ES"}))
+                / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="ES"})) < 0.55
+                   and (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.partiallyCompletedErrorRefresh }}, market="ES"}))
+                / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="ES"})) >= 0.5
+           and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="ES"}) > 4
+      for: 5m
+      labels:
+        severity: urgent
+        priority: P2
+        who: integration-fluffy
+      annotations:
+        description: {{ .Values.kibanaLink }}
+             {{ .Values.grafanaLink }}
+        summary: Refresh unavailable rate is between 55 - 50% because of all issues ( <{ $value }> ) for <{ $labels.className }>
+               the last 30 minutes.
+        tags: {{ .Values.fluffyTags }}
+
+    - alert: AgentRefreshesBelow50DueToPartiallyCompletedErrorWithRateLimitES
+      expr: |
+          (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.partiallyCompletedErrorRefresh }}, market="ES"}))
+                / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="ES"})) < 0.5
+           and sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="ES"}) > 4
+      for: 5m
+      labels:
+        severity: urgent
+        priority: P1
+        who: integration-fluffy
+      annotations:
+        description: {{ .Values.kibanaLink }}
+             {{ .Values.grafanaLink }}
+        summary: Refresh unavailable rate is below 5 0% because of all issues ( <{ $value }> ) for <{ $labels.className }>
+               the last 30 minutes.
         tags: {{ .Values.fluffyTags }}
