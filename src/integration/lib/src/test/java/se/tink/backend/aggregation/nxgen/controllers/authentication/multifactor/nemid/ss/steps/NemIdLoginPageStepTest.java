@@ -4,7 +4,7 @@ import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.PASSWORD_INPUT;
-import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.SUBMIT_LOGIN_BUTTON;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.SUBMIT_BUTTON;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.USERNAME_INPUT;
 
 import org.junit.Before;
@@ -55,7 +55,7 @@ public class NemIdLoginPageStepTest {
         mocksToVerifyInOrder
                 .verify(driverWrapper)
                 .setValueToElement(SAMPLE_PASSWORD, PASSWORD_INPUT);
-        mocksToVerifyInOrder.verify(driverWrapper).clickButton(SUBMIT_LOGIN_BUTTON);
+        mocksToVerifyInOrder.verify(driverWrapper).clickButton(SUBMIT_BUTTON);
 
         mocksToVerifyInOrder
                 .verify(statusUpdater)

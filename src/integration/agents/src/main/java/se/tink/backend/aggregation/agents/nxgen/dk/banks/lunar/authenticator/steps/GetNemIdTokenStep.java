@@ -70,7 +70,8 @@ public class GetNemIdTokenStep
 
         try {
             NemIdIFrameController iFrameController = iframeAttributes.getNemIdIFrameController();
-            String b64Token = iFrameController.doLoginWith(iframeAttributes.getCredentials());
+            String b64Token =
+                    iFrameController.logInWithCredentials(iframeAttributes.getCredentials());
             processState.setNemIdToken(decodeToken(b64Token));
         } catch (AuthenticationException e) {
             return new AgentFailedAuthenticationResult(

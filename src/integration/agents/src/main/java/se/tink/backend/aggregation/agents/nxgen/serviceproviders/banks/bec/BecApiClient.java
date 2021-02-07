@@ -256,9 +256,10 @@ public class BecApiClient {
             String decryptedResponse = securityHelper.decrypt(response.getEncryptedPayload());
             return SerializationUtils.deserializeFromString(
                     decryptedResponse, CodeAppTokenEncryptedPayload.class);
+
         } catch (BecAuthenticationException e) {
             logger.error("SCA prepare -> error get token response: {}", e.getMessage());
-            throw new NemIdException(NemIdError.CODEAPP_NOT_REGISTERED);
+            throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception(e.getMessage());
         }
     }
 
@@ -417,15 +418,16 @@ public class BecApiClient {
 
             return SerializationUtils.deserializeFromString(
                     decryptedResponse, ScaOptionsEncryptedPayload.class);
+
         } catch (BecAuthenticationException e) {
             logger.error("SCA prepare -> error get options response: " + e.getMessage());
+
             if (e.getMessage().startsWith("Your chosen PIN code is locked.")) {
                 throw new NemIdException(NemIdError.LOCKED_PIN);
+
             } else if (e.getMessage().startsWith("NemID is blocked. Contact support.")) {
-                // This is guessing (!!!) based on similar message when user tries to auth 2fa using
-                // method which one does not have registered. So it is possible if no 2fa nemid
-                // option is registered it might result in such a message in this place.
-                throw new NemIdException(NemIdError.CODEAPP_NOT_REGISTERED);
+                throw new NemIdException(NemIdError.NEMID_BLOCKED);
+
             } else {
                 throw LoginError.INCORRECT_CREDENTIALS.exception(e);
             }

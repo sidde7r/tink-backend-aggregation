@@ -1624,3 +1624,16 @@ msgstr ""
 
 msgid "NemID password blocked. Please contact NemID support."
 msgstr ""
+
+msgid ""
+"NemID code token authentication is not supported. Please log in to your bank "
+"using NemID mobile app or code card and try again."
+msgstr ""
+
+msgid "The code card code provided by user is incorrect."
+msgstr ""
+
+msgid ""
+"All code card codes have been used. Please log in to your bank using new "
+"code card or NemID mobile app and try again."
+msgstr ""

@@ -31,7 +31,7 @@ public class NemIdAuthenticationController implements TypedAuthenticator {
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
 
-        final String token = iFrameController.doLoginWith(credentials);
+        final String token = iFrameController.logInWithCredentials(credentials);
         final String installId = authenticator.exchangeNemIdToken(token);
 
         authenticator.authenticateUsingInstallId(username, pinCode, installId);

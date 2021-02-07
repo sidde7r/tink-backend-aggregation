@@ -3,7 +3,9 @@ package se.tink.backend.aggregation.nxgen.controllers.authentication.oauth;
 import com.google.common.base.Preconditions;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
 
 public class OAuth2AuthorizationSpecification {
 

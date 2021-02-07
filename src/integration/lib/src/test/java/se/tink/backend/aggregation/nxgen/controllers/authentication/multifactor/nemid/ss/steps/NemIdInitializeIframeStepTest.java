@@ -15,7 +15,6 @@ import static se.tink.backend.aggregation.nxgen.controllers.authentication.multi
 
 import java.util.Base64;
 import java.util.Optional;
-import lombok.RequiredArgsConstructor;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;
@@ -29,7 +28,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.NemIdWebDriverWrapper;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.NemIdCodeAppConstants.UserMessage;
 
-@RequiredArgsConstructor
 public class NemIdInitializeIframeStepTest {
 
     private static final String SAMPLE_NEM_ID_FETCHED_ELEMENTS = "--- SAMPLE NEM ID ELEMENTS ---";

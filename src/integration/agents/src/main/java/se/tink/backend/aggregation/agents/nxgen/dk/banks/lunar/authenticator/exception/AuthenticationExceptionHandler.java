@@ -76,7 +76,7 @@ public class AuthenticationExceptionHandler {
                     case TIMEOUT:
                         log.error(e.getError().name());
                         return new ThirdPartyAppTimedOutError();
-                    case CODEAPP_NOT_REGISTERED:
+                    case CODE_TOKEN_NOT_SUPPORTED:
                         log.error(e.getMessage());
                         return new AuthorizationError();
                     default:

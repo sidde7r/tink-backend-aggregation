@@ -70,26 +70,37 @@ public class NemIdConstants {
                         .build();
 
         public static final String ENTER_ACTIVATION_PASSWORD = "Enter activation password.";
+
+        public static final String INVALID_CODE_CARD_CODE = "Fejl i nøgle";
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class HtmlElements {
         public static final By IFRAME = By.tagName("iframe");
 
-        public static final By USERNAME_INPUT = By.cssSelector("input[type=text]");
-        public static final By PASSWORD_INPUT = By.cssSelector("input[type=password]");
-        public static final By SUBMIT_LOGIN_BUTTON = By.cssSelector("button.button--submit");
-
-        public static final By NEMID_CODE_APP_METHOD = By.className("otp__icon-phone-pulse");
-        public static final By NEMID_CODE_CARD_METHOD = By.className("otp__card-number");
-        public static final By NEMID_CODE_TOKEN_METHOD = By.className("otp__token");
+        public static final By SUBMIT_BUTTON = By.cssSelector("button.button--submit");
         public static final By NOT_EMPTY_ERROR_MESSAGE =
                 By.xpath("//p[@class='error' and text()!='']");
         public static final By NEMID_TOKEN = By.cssSelector("div#tink_nemIdToken");
+        public static final By NEMID_BLOCKED = By.xpath("//*[text()='NemID revoked']");
 
-        public static final By NEMID_CODE_APP_BUTTON = By.cssSelector("button.button--submit");
+        public static final By USERNAME_INPUT = By.cssSelector("input[type=text]");
+        public static final By PASSWORD_INPUT = By.cssSelector("input[type=password]");
 
+        public static final By NEMID_CODE_APP_METHOD = By.className("otp__icon-phone-pulse");
         public static final By NEMID_TIMEOUT_ICON = By.className("otp__icon-noresponse");
+
+        public static final By NEMID_CODE_CARD_METHOD = By.className("otp__card-number");
+        public static final By NEMID_CODE_CARD_NUMBER = NEMID_CODE_CARD_METHOD;
+        public static final By NEMID_CODE_CARD_USE_NEW_CODE_CARD =
+                By.xpath("//*[text()='Use new code card']");
+        public static final By NEMID_CODE_CARD_CODE_NUMBER =
+                By.xpath("//div[@class='otp__frame__row']/div[@class='otp__frame__cell'][1]");
+        public static final By NEMID_CODE_CARD_CODE_INPUT =
+                By.xpath(
+                        "//div[@class='otp__frame__row']/div[@class='otp__frame__cell'][2]//input");
+
+        public static final By NEMID_CODE_TOKEN_METHOD = By.className("otp__token");
     }
 
     // source:

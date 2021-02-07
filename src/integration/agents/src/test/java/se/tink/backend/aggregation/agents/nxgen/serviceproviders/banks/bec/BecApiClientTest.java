@@ -310,7 +310,7 @@ public class BecApiClientTest {
         // then
         assertThat(t)
                 .isInstanceOf(NemIdException.class)
-                .hasMessage("Cause: NemIdError.CODEAPP_NOT_REGISTERED");
+                .hasMessage("Cause: NemIdError.NEMID_BLOCKED");
     }
 
     @Test
@@ -340,7 +340,8 @@ public class BecApiClientTest {
     }
 
     @Test
-    public void getNemIdToken2ShouldThrowNemIdExceptionWhen2ndScaRequestThrowsBecAuthException() {
+    public void
+            getNemIdToken2ShouldThrowCredentialsVerificationExceptionWhen2ndScaRequestThrowsBecAuthException() {
         // given
         given(securityHelper.encrypt(any())).willReturn(ENCRYPTED_PAYLOAD);
         // and
@@ -355,9 +356,7 @@ public class BecApiClientTest {
                 catchThrowable(() -> becApiClient.getNemIdToken(USERNAME, PASSWORD, DEVICE_ID));
 
         // then
-        assertThat(t)
-                .isInstanceOf(NemIdException.class)
-                .hasMessage("Cause: NemIdError.CODEAPP_NOT_REGISTERED");
+        assertThat(t).isInstanceOf(LoginException.class);
     }
 
     @Test

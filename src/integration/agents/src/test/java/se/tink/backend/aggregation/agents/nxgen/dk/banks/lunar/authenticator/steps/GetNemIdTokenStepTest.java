@@ -108,7 +108,7 @@ public class GetNemIdTokenStepTest {
         // given
         when(apiClient.getNemIdParameters(randomValueGenerator.getUUID().toString()))
                 .thenReturn(nemIdParamsResponse);
-        when(iFrameController.doLoginWith(any())).thenReturn(B64_NEM_ID_TOKEN);
+        when(iFrameController.logInWithCredentials(any())).thenReturn(B64_NEM_ID_TOKEN);
 
         // and
         LunarAuthData expectedData = new LunarAuthData();
@@ -172,7 +172,7 @@ public class GetNemIdTokenStepTest {
         // given
         when(apiClient.getNemIdParameters(randomValueGenerator.getUUID().toString()))
                 .thenReturn(nemIdParamsResponse);
-        when(iFrameController.doLoginWith(any())).thenThrow(e);
+        when(iFrameController.logInWithCredentials(any())).thenThrow(e);
 
         // when
         AgentFailedAuthenticationResult result =
@@ -197,7 +197,9 @@ public class GetNemIdTokenStepTest {
             new Object[] {LoginError.NOT_CUSTOMER.exception(), new ThirdPartyAppUnknownError()},
             new Object[] {NemIdError.REJECTED.exception(), new ThirdPartyAppCancelledError()},
             new Object[] {NemIdError.TIMEOUT.exception(), new ThirdPartyAppTimedOutError()},
-            new Object[] {NemIdError.CODEAPP_NOT_REGISTERED.exception(), new AuthorizationError()},
+            new Object[] {
+                NemIdError.CODE_TOKEN_NOT_SUPPORTED.exception(), new AuthorizationError()
+            },
             new Object[] {NemIdError.INTERRUPTED.exception(), new ThirdPartyAppUnknownError()},
             new Object[] {
                 SupplementalInfoError.WAIT_TIMEOUT.exception(), new NoUserInteractionResponseError()
@@ -210,7 +212,7 @@ public class GetNemIdTokenStepTest {
         // given
         when(apiClient.getNemIdParameters(randomValueGenerator.getUUID().toString()))
                 .thenReturn(nemIdParamsResponse);
-        when(iFrameController.doLoginWith(any()))
+        when(iFrameController.logInWithCredentials(any()))
                 .thenThrow(
                         new IllegalStateException(
                                 "Can't instantiate iframe element with NemId form."));

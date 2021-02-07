@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.steps;
+package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.steps.codeapp;
 
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NEMID_TIMEOUT_ICON;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NEMID_TOKEN;
@@ -7,29 +7,25 @@ import static se.tink.backend.aggregation.nxgen.controllers.authentication.multi
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.metrics.NemIdMetricLabel.WAITING_FOR_TOKEN_METRIC;
 
 import com.google.common.base.Strings;
+import com.google.inject.Inject;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.WebElement;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.NemIdTokenValidator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.NemIdWebDriverWrapper;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.metrics.NemIdMetrics;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.exception.NemIdError;
 
 @Slf4j
-@RequiredArgsConstructor
-public class NemIdCollectTokenStep {
+@RequiredArgsConstructor(onConstructor = @__({@Inject}))
+public class NemIdCodeAppCollectTokenStep {
 
     private final NemIdWebDriverWrapper driverWrapper;
     private final NemIdMetrics metrics;
-    private final NemIdTokenValidator nemIdTokenValidator;
 
     public String collectToken() {
-        String token =
-                metrics.executeWithTimer(this::waitForNotEmptyToken, WAITING_FOR_TOKEN_METRIC);
-        nemIdTokenValidator.verifyTokenIsValid(token);
-        return token;
+        return metrics.executeWithTimer(this::waitForNotEmptyToken, WAITING_FOR_TOKEN_METRIC);
     }
 
     private String waitForNotEmptyToken() {
@@ -52,10 +48,6 @@ public class NemIdCollectTokenStep {
             driverWrapper.sleepFor(1_000);
         }
 
-        log.error(
-                "{} Can't find NemId token, please verify page source: {}",
-                NEM_ID_PREFIX,
-                driverWrapper.getFullPageSourceLog());
         throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception(
                 NEM_ID_PREFIX + " Can't find NemId token");
     }

@@ -99,6 +99,10 @@ public class CommonFields {
         private static final LocalizableKey HELPTEXT =
                 new LocalizableKey("Input the code from your code card");
 
+        public static String getFieldKey() {
+            return FIELD_KEY;
+        }
+
         public static Field build(Catalog catalog, String codeIndex, String cardId) {
             String helpText = catalog.getString(HELPTEXT);
             if (cardId != null) {

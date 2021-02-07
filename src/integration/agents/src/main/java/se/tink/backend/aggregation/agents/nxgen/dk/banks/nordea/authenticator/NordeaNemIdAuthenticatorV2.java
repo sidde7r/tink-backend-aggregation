@@ -4,14 +4,13 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Strings;
 import java.time.Instant;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.contexts.MetricContext;
 import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
@@ -25,17 +24,14 @@ import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.authenticator.rp
 import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.authenticator.AutoAuthenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdParameters;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdParametersFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.NemIdIFrameController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.NemIdIFrameControllerInitializer;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.exception.NemIdError;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepResponse;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.StatelessProgressiveAuthenticator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.step.AutomaticAuthenticationStep;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.step.CredentialsAuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
@@ -43,8 +39,8 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.i18n.Catalog;
 
-public class NordeaNemIdAuthenticatorV2 extends StatelessProgressiveAuthenticator
-        implements NemIdParametersFetcher {
+public class NordeaNemIdAuthenticatorV2
+        implements MultiFactorAuthenticator, AutoAuthenticator, NemIdParametersFetcher {
 
     private static final String INVALID_GRANT = "invalid_grant";
     private static final String NEM_ID_SCRIPT_FORMAT =
@@ -60,9 +56,9 @@ public class NordeaNemIdAuthenticatorV2 extends StatelessProgressiveAuthenticato
             final NordeaDkApiClient bankClient,
             final SessionStorage sessionStorage,
             final PersistentStorage persistentStorage,
-            final SupplementalInformationController supplementalInformationController,
             final Catalog catalog,
             final StatusUpdater statusUpdater,
+            final SupplementalInformationController supplementalInformationController,
             final MetricContext metricContext) {
         this.bankClient = Objects.requireNonNull(bankClient);
         this.sessionStorage = Objects.requireNonNull(sessionStorage);
@@ -82,13 +78,12 @@ public class NordeaNemIdAuthenticatorV2 extends StatelessProgressiveAuthenticato
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
 
-        String token = iFrameController.doLoginWith(credentials);
+        String token = iFrameController.logInWithCredentials(credentials);
         final String code = exchangeNemIdToken(token);
         saveToken(exchangeOauthToken(code));
     }
 
-    public AuthenticationStepResponse autoAuthenticate() {
-
+    public void autoAuthenticate() {
         try {
             OAuth2Token token =
                     getToken().orElseThrow(LoginError.CREDENTIALS_VERIFICATION_ERROR::exception);
@@ -110,9 +105,8 @@ public class NordeaNemIdAuthenticatorV2 extends StatelessProgressiveAuthenticato
             throw e;
         } catch (AuthenticationException e) {
             log.info("Refresh token missing or invalid, proceeding to manual authentication");
-            return AuthenticationStepResponse.executeNextStep();
+            throw SessionError.SESSION_EXPIRED.exception();
         }
-        return AuthenticationStepResponse.authenticationSucceeded();
     }
 
     @Override
@@ -186,10 +180,7 @@ public class NordeaNemIdAuthenticatorV2 extends StatelessProgressiveAuthenticato
     }
 
     @Override
-    public List<AuthenticationStep> authenticationSteps() {
-        List<AuthenticationStep> steps = new LinkedList<>();
-        steps.add(new AutomaticAuthenticationStep(this::autoAuthenticate, "autoAuth"));
-        steps.add(new CredentialsAuthenticationStep(this::authenticate));
-        return steps;
+    public CredentialsTypes getType() {
+        return CredentialsTypes.PASSWORD;
     }
 }

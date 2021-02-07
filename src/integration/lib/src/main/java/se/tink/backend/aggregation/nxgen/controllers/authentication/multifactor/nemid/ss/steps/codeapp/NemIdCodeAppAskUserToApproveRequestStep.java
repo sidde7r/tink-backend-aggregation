@@ -1,19 +1,15 @@
-package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.steps;
+package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.steps.codeapp;
 
-import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NEMID_CODE_APP_BUTTON;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.SUBMIT_BUTTON;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.NEM_ID_PREFIX;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.metrics.NemIdMetricLabel.WAITING_FOR_SUPPLEMENTAL_INFO_METRIC;
 
-import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.TimeUnit;
+import com.google.inject.Inject;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
-import se.tink.backend.aggregation.agents.exceptions.errors.SupplementalInfoError;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.DanishFields;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.NemIdCredentialsStatusUpdater;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.NemIdWebDriverWrapper;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.metrics.NemIdMetrics;
@@ -22,8 +18,8 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 import se.tink.libraries.i18n.Catalog;
 
 @Slf4j
-@RequiredArgsConstructor
-public class NemIdWaitForCodeAppResponseStep {
+@RequiredArgsConstructor(onConstructor = @__({@Inject}))
+public class NemIdCodeAppAskUserToApproveRequestStep {
 
     private final NemIdWebDriverWrapper driverWrapper;
     private final NemIdMetrics metrics;
@@ -41,31 +37,15 @@ public class NemIdWaitForCodeAppResponseStep {
     }
 
     private void sendNemIdCodeAppApprovalRequest() {
-        driverWrapper.clickButton(NEMID_CODE_APP_BUTTON);
+        driverWrapper.clickButton(SUBMIT_BUTTON);
         log.info("{} NemId code app request sent", NEM_ID_PREFIX);
     }
 
     private void displayPromptToOpenNemIdAppAndWaitForUserResponse(Credentials credentials) {
-        statusUpdater.updateStatusPayload(
-                credentials, UserMessage.OPEN_NEM_ID_APP_AND_CLICK_BUTTON);
-
         Field field = DanishFields.NemIdInfo.build(catalog);
 
-        String mfaId = supplementalInformationController.askSupplementalInformationAsync(field);
-
-        Optional<Map<String, String>> result =
-                supplementalInformationController.waitForSupplementalInformation(
-                        mfaId,
-                        NemIdConstants.NEM_ID_TIMEOUT_SECONDS_WITH_SAFETY_MARGIN,
-                        TimeUnit.SECONDS,
-                        true);
-
-        /*
-         * When user doesn't click "Ok" button in app we should abandon authentication - otherwise we would
-         * face issues with opt-in feature.
-         */
-        if (!result.isPresent()) {
-            throw SupplementalInfoError.WAIT_TIMEOUT.exception();
-        }
+        statusUpdater.updateStatusPayload(
+                credentials, UserMessage.OPEN_NEM_ID_APP_AND_CLICK_BUTTON);
+        supplementalInformationController.askSupplementalInformationSync(field);
     }
 }

@@ -33,7 +33,8 @@ public final class NemIdCodeAppConstants {
         VALID_CREDS("Credentials are valid"),
         OPEN_NEM_ID_APP("Please open the NemId app and confirm login"),
         OPEN_NEM_ID_APP_AND_CLICK_BUTTON(
-                "Please open the NemId app and confirm login. Then click the \"Submit\" button");
+                "Please open the NemId app and confirm login. Then click the \"Submit\" button"),
+        PROVIDE_CODE_CARD_CODE("Please provide NemId code card key");
 
         private final LocalizableKey message;
 

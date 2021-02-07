@@ -48,7 +48,9 @@ public class AuthenticationExceptionHandlerTest {
             new Object[] {LoginError.NOT_CUSTOMER.exception(), new ThirdPartyAppUnknownError()},
             new Object[] {NemIdError.REJECTED.exception(), new ThirdPartyAppCancelledError()},
             new Object[] {NemIdError.TIMEOUT.exception(), new ThirdPartyAppTimedOutError()},
-            new Object[] {NemIdError.CODEAPP_NOT_REGISTERED.exception(), new AuthorizationError()},
+            new Object[] {
+                NemIdError.CODE_TOKEN_NOT_SUPPORTED.exception(), new AuthorizationError()
+            },
             new Object[] {NemIdError.INTERRUPTED.exception(), new ThirdPartyAppUnknownError()},
             new Object[] {
                 SupplementalInfoError.WAIT_TIMEOUT.exception(), new NoUserInteractionResponseError()
