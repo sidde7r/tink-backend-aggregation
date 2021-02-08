@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.google.common.base.Strings;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.Objects;
 import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType;
 import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
@@ -28,12 +28,12 @@ public class TransactionEntity {
     private String currency;
 
     @JsonFormat(pattern = "yyyy-MM-dd")
-    private Date bookingDate;
+    private LocalDate bookingDate;
 
     private String interestDate;
 
     @JsonFormat(pattern = "yyyy-MM-dd")
-    private Date transactionDate;
+    private LocalDate transactionDate;
 
     private String title;
 
@@ -76,7 +76,7 @@ public class TransactionEntity {
         return description != null ? description : title;
     }
 
-    private Date getDate() {
+    private LocalDate getDate() {
         if (booked && Objects.nonNull(bookingDate)) {
             return bookingDate;
         }
