@@ -22,7 +22,8 @@ public final class BbvaTypeMappers {
                             "0CA0000089", // LIBRETON
                             "0CA0000028", // CUENTA ORDINARIA BBVA
                             "0000015652", // CUENTA DE PAGO ASOCIADA
-                            "0CA0000014" // CUENTA EMPLEADOS BBVA
+                            "0CA0000014", // CUENTA EMPLEADOS BBVA
+                            "0CA0000303" // CUENTA PERSONALES - CUENTA CORRIENTE UNO-E-ALTA
                             )
                     .put(
                             AccountTypes.SAVINGS, "0000011102" // CUENTA METAS - goal account
