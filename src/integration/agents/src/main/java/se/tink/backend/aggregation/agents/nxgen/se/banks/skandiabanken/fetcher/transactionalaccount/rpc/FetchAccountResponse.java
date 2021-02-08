@@ -38,6 +38,7 @@ public class FetchAccountResponse {
     @JsonIgnore
     public List<TransactionalAccount> toTinkAccount() {
         return getAccounts().stream()
+                .filter(BankAccountsEntity::isTransactionalAccount)
                 .map(BankAccountsEntity::toTinkTransactionalAccount)
                 .filter(Optional::isPresent)
                 .map(Optional::get)

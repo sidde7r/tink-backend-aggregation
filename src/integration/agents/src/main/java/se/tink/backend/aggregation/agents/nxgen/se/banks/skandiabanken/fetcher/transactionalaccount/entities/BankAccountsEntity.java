@@ -2,7 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.collect.ImmutableList;
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -75,18 +77,24 @@ public class BankAccountsEntity {
     private String typeName = "";
 
     @JsonIgnore
+    private static final List<TransactionalAccountType> TRANSACTIONAL_ACCOUNT_TYPES =
+            ImmutableList.of(TransactionalAccountType.CHECKING, TransactionalAccountType.SAVINGS);
+
+    @JsonIgnore
     private String getDisplayName() {
         return Optional.ofNullable(displayName).orElse(displayTypeName);
     }
 
     @JsonIgnore
+    public boolean isTransactionalAccount() {
+        return SkandiaBankenConstants.ACCOUNT_TYPE_MAPPER.isOneOf(
+                typeName, TRANSACTIONAL_ACCOUNT_TYPES);
+    }
+
+    @JsonIgnore
     public Optional<TransactionalAccount> toTinkTransactionalAccount() {
         return TransactionalAccount.nxBuilder()
-                .withTypeAndFlagsFrom(
-                        SkandiaBankenConstants.ACCOUNT_TYPE_MAPPER,
-                        typeName,
-                        TransactionalAccountType.OTHER)
-                .withBalance(BalanceModule.of(balance.getAmount()))
+                .withTypeAndFlagsFrom(SkandiaBankenConstants.ACCOUNT_TYPE_MAPPER, typeName)
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(number)

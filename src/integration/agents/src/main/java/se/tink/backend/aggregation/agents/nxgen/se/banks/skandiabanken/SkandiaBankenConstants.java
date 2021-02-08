@@ -189,8 +189,13 @@ public class SkandiaBankenConstants {
 
     public static final TransactionalAccountTypeMapper ACCOUNT_TYPE_MAPPER =
             TransactionalAccountTypeMapper.builder()
-                    .put(TransactionalAccountType.CHECKING, "AIE")
-                    .put(TransactionalAccountType.SAVINGS, "Savings")
+                    .put(TransactionalAccountType.CHECKING, "AIE", "Euro")
+                    .put(
+                            TransactionalAccountType.SAVINGS,
+                            "Savings",
+                            "Payment",
+                            "Solvency",
+                            "FixedInterest")
                     .build();
 
     public static final TypeMapper<Instrument.Type> INSTRUMENT_TYPE_MAP =
