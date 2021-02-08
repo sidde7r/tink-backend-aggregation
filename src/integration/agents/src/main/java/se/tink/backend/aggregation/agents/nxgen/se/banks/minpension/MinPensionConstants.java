@@ -47,7 +47,7 @@ public class MinPensionConstants {
     }
 
     public static class AccountTypes {
-        public static final String GENERAL_PENSION = "GENERAL_PENSION";
+        public static final String GENERAL_PENSION = "GENERALPENSION";
         public static final String INCOME_PENSION = "INCOME_PENSION";
         public static final String PREMIUM_PENSION = "PREMIUM_PENSION";
     }
