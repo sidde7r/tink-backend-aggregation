@@ -1,57 +1,53 @@
 {
-    "accounts": [
-        {
-            "accountNumber": "GENERAL_PENSION",
-            "accountExclusion": "NONE",
-            "exactBalance": {
-                "currencyCode": "SEK",
-                "doubleValue": 1000000.0,
-                "exactValue": 1000000.0,
-                "scale": 1,
-                "unscaledValue": 10000000
-            },
-            "currencyCode": "SEK",
-            "bankId": "GENERALPENSION199012125678",
-            "excluded": false,
-            "favored": false,
-            "name": "GENERAL_PENSION",
-            "ownership": 1.0,
-            "type": "INVESTMENT",
-            "userModifiedExcluded": false,
-            "userModifiedName": false,
-            "userModifiedType": false,
-            "identifiers": "[]",
-            "closed": false,
-            "flags": "[]",
-            "availableCredit": 0.0,
-            "balance": 1000000.0
-        }
-    ],
-    "transactions": [],
-    "identityData": {
-        "nameElements": [
-            {
-                "type": "FIRST_NAME",
-                "value": "FIRST_NAME"
-            },
-            {
-                "type": "SURNAME",
-                "value": "LAST_NAME"
+    "accounts" : [ {
+        "accountNumber" : "GENERALPENSION",
+        "accountExclusion" : "NONE",
+        "exactBalance" : {
+            "currencyCode" : "SEK",
+            "doubleValue" : 1000000.0,
+            "exactValue" : 1000000.0,
+            "scale" : 1,
+            "unscaledValue" : 10000000
+        },
+        "currencyCode" : "SEK",
+        "bankId" : "GENERALPENSION199012125678",
+        "excluded" : false,
+        "favored" : false,
+        "name" : "GENERALPENSION",
+        "ownership" : 1.0,
+        "type" : "INVESTMENT",
+        "userModifiedExcluded" : false,
+        "userModifiedName" : false,
+        "userModifiedType" : false,
+        "identifiers" : "[]",
+        "closed" : false,
+        "flags" : "[]",
+        "balances" : [ ],
+        "availableCredit" : 0.0,
+        "balance" : 1000000.0
+    } ],
+    "transactions" : [ ],
+    "identityData" : {
+        "nameElements" : [ {
+            "type" : "FIRST_NAME",
+            "value" : "FIRST_NAME"
+        }, {
+            "type" : "SURNAME",
+            "value" : "LAST_NAME"
+        } ],
+        "dateOfBirth" : {
+            "year" : 1990,
+            "month" : "DECEMBER",
+            "era" : "CE",
+            "monthValue" : 12,
+            "dayOfMonth" : 12,
+            "dayOfWeek" : "WEDNESDAY",
+            "leapYear" : false,
+            "dayOfYear" : 346,
+            "chronology" : {
+                "id" : "ISO",
+                "calendarType" : "iso8601"
             }
-        ],
-        "dateOfBirth": {
-            "year": 1990,
-            "month": "DECEMBER",
-            "dayOfWeek": "WEDNESDAY",
-            "leapYear": false,
-            "dayOfYear": 346,
-            "chronology": {
-                "id": "ISO",
-                "calendarType": "iso8601"
-            },
-            "era": "CE",
-            "monthValue": 12,
-            "dayOfMonth": 12
         }
     }
 }
