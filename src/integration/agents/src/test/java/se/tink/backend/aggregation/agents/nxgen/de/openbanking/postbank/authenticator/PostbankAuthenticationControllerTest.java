@@ -23,7 +23,6 @@ import org.mockito.internal.matchers.VarargMatcher;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field;
-import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.PostbankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenticator.entities.ScaMethod;
@@ -37,6 +36,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deu
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.configuration.DeutscheMarketConfiguration;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.CommonFields;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.GermanFields;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
@@ -152,7 +152,7 @@ public class PostbankAuthenticationControllerTest {
         return new PostbankAuthenticationController(
                 catalog,
                 supplementalInformationHelper,
-                mock(SupplementalRequester.class),
+                mock(SupplementalInformationController.class),
                 postbankAuthenticator);
     }
 

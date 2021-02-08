@@ -43,6 +43,15 @@ public interface SupplementalInformationController {
      * Starts an embedded dynamic authentication flow. Requests for the client to render a new set
      * of embedded input Fields to answer by the end-user.
      *
+     * <pre>
+     * NB!
+     * NB! Be very careful about using the async variant of embedded dynamic fields without knowing the consequences.
+     * NB! Clients will be required to send in information to Tink Platform, meaning Agent cannot proceed on its own
+     * NB! without waiting for the response. We've had incidents where subsequent SupplementalInformation requests
+     * NB! got the response from the first one because Agent didn't wait for the first response.
+     * NB!
+     * </pre>
+     *
      * @param fields
      * @return the mfaId that can be used to wait for the results.
      */

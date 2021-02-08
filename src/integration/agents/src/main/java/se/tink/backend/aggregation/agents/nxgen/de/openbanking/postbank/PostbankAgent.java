@@ -41,7 +41,7 @@ public final class PostbankAgent extends DeutscheBankAgent {
                 new PostbankAuthenticationController(
                         catalog,
                         supplementalInformationHelper,
-                        supplementalRequester,
+                        supplementalInformationController,
                         postbankAuthenticator);
 
         return new AutoAuthenticationController(

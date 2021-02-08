@@ -7,7 +7,6 @@ import com.github.rholder.retry.StopStrategies;
 import com.github.rholder.retry.WaitStrategies;
 import com.google.common.base.Strings;
 import java.security.KeyPair;
-import java.util.Collections;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import lombok.AllArgsConstructor;
@@ -15,7 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field;
-import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
@@ -36,8 +34,8 @@ import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.entities.Er
 import se.tink.backend.aggregation.agents.utils.crypto.RSA;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.CommonFields;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.i18n.LocalizableKey;
 import se.tink.libraries.serialization.utils.SerializationUtils;
@@ -58,7 +56,7 @@ public class CommerzbankPhotoTanAuthenticator implements TypedAuthenticator {
 
     private final PersistentStorage persistentStorage;
     private final CommerzbankApiClient apiClient;
-    private final SupplementalRequester supplementalRequester;
+    private final SupplementalInformationController supplementalInformationController;
     private final long sleepTime;
     private final int retryAttempts;
     private final Catalog catalog;
@@ -66,12 +64,12 @@ public class CommerzbankPhotoTanAuthenticator implements TypedAuthenticator {
     public CommerzbankPhotoTanAuthenticator(
             final PersistentStorage persistentStorage,
             final CommerzbankApiClient apiClient,
-            final SupplementalRequester supplementalRequester,
+            final SupplementalInformationController supplementalInformationController,
             final Catalog catalog) {
         this(
                 persistentStorage,
                 apiClient,
-                supplementalRequester,
+                supplementalInformationController,
                 SLEEP_TIME,
                 RETRY_ATTEMPTS,
                 catalog);
@@ -106,12 +104,12 @@ public class CommerzbankPhotoTanAuthenticator implements TypedAuthenticator {
             throw LoginError.DEFAULT_MESSAGE.exception();
         }
 
-        scaWithPhotoTan(credentials);
+        scaWithPhotoTan();
 
         pinDevice();
     }
 
-    private void scaWithPhotoTan(Credentials credentials) throws LoginException {
+    private void scaWithPhotoTan() throws LoginException {
         InitScaResponse initScaResponse = apiClient.initScaFlow();
 
         if (!initScaResponse.getInitScaEntity().isPushPhotoTanAvailable()) {
@@ -124,14 +122,14 @@ public class CommerzbankPhotoTanAuthenticator implements TypedAuthenticator {
 
         apiClient.prepareScaApproval(processContextId);
 
-        displayPrompt(credentials);
+        displayPrompt();
 
         approveSca(processContextId);
 
         apiClient.finaliseScaApproval(processContextId);
     }
 
-    private void displayPrompt(Credentials credentials) {
+    private void displayPrompt() {
         Field field =
                 CommonFields.Information.build(
                         FIELD_NAME,
@@ -139,11 +137,7 @@ public class CommerzbankPhotoTanAuthenticator implements TypedAuthenticator {
                         catalog.getString(FIELD_VALUE),
                         catalog.getString(FIELD_HELPTEXT));
 
-        credentials.setSupplementalInformation(
-                SerializationUtils.serializeToString(Collections.singletonList(field)));
-        credentials.setStatus(CredentialsStatus.AWAITING_SUPPLEMENTAL_INFORMATION);
-
-        supplementalRequester.requestSupplementalInformation(credentials, false);
+        supplementalInformationController.askSupplementalInformationAsync(field);
     }
 
     private void approveSca(String processContextId) throws LoginException {
