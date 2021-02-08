@@ -31,7 +31,7 @@ public class FetchAccountResponse {
     }
 
     @JsonIgnore
-    private List<BankAccountsEntity> getAccounts() {
+    public List<BankAccountsEntity> getAccounts() {
         return bankAccounts;
     }
 

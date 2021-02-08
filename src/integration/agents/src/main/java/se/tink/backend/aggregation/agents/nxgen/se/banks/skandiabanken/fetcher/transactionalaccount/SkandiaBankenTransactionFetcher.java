@@ -8,11 +8,11 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.t
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginator;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
-public class SkandiaBankenTransactionFetcher
-        implements TransactionPagePaginator<TransactionalAccount> {
+public class SkandiaBankenTransactionFetcher<T extends Account>
+        implements TransactionPagePaginator<T> {
     private final SkandiaBankenApiClient apiClient;
 
     public SkandiaBankenTransactionFetcher(SkandiaBankenApiClient apiClient) {
@@ -20,7 +20,7 @@ public class SkandiaBankenTransactionFetcher
     }
 
     @Override
-    public PaginatorResponse getTransactionsFor(TransactionalAccount account, int page) {
+    public PaginatorResponse getTransactionsFor(T account, int page) {
         // fetch booked transactions
         final FetchAccountTransactionsResponse transactionsResponse =
                 apiClient.fetchAccountTransactions(
@@ -32,8 +32,7 @@ public class SkandiaBankenTransactionFetcher
                         .collect(Collectors.toList());
 
         if (page == 1) {
-            final List<Transaction> pendingTransactions =
-                    fetchPendingTransactions(account, tinkTransactions);
+            final List<Transaction> pendingTransactions = fetchPendingTransactions(account);
             tinkTransactions.addAll(pendingTransactions);
         }
 
@@ -41,8 +40,7 @@ public class SkandiaBankenTransactionFetcher
                 tinkTransactions, transactionsResponse.size() == Fetcher.TRANSACTIONS_PER_BATCH);
     }
 
-    private List<Transaction> fetchPendingTransactions(
-            TransactionalAccount account, List<Transaction> tinkTransactions) {
+    private List<Transaction> fetchPendingTransactions(T account) {
         // fetch pending transactions
         final FetchAccountTransactionsResponse pendingTransactionsResponse =
                 apiClient.fetchPendingAccountTransactions(account.getApiIdentifier());

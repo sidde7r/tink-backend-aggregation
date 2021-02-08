@@ -190,7 +190,7 @@
         "favored" : false,
         "name" : "Kreditkortskonto",
         "ownership" : 1.0,
-        "type" : "OTHER",
+        "type" : "CREDIT_CARD",
         "userModifiedExcluded" : false,
         "userModifiedName" : false,
         "userModifiedType" : false,
@@ -207,7 +207,7 @@
         },
         "flags" : "[]",
         "balances" : [ ],
-        "availableCredit" : 0.0,
+        "availableCredit" : 49999.97,
         "balance" : -10000.03
     }, {
         "accountNumber" : "22222222222",

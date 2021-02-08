@@ -22,4 +22,8 @@ public class BalanceEntity {
     public ExactCurrencyAmount getAmount(String currency) {
         return ExactCurrencyAmount.of(amount, currency);
     }
+
+    public ExactCurrencyAmount getDisposableAmount(String currency) {
+        return ExactCurrencyAmount.of(disposableAmount, currency);
+    }
 }

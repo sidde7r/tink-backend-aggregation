@@ -51,7 +51,7 @@ public class SkandiaBankenConstants {
                 new URL(BASE + Endpoints.FETCH_ACCOUNT_TRANSACTIONS);
         public static final URL FETCH_PENDING_ACCOUNT_TRANSACTIONS =
                 new URL(BASE + Endpoints.FETCH_PENDING_ACCOUNT_TRANSACTIONS);
-        public static final URL FETCH_CREDIT_CARDS = new URL(BASE + Endpoints.FETCH_CREDIT_CARDS);
+        public static final URL FETCH_CARDS = new URL(BASE + Endpoints.FETCH_CARDS);
         public static final URL FETCH_INVESTMENT_ACCOUNTS =
                 new URL(BASE + Endpoints.FETCH_INVESTMENT_ACCOUNTS);
         public static final URL FETCH_INVESTMENT_ACCOUNT_DETAILS =
@@ -82,7 +82,7 @@ public class SkandiaBankenConstants {
                         + Fetcher.TRANSACTIONS_PER_BATCH;
         public static final String FETCH_PENDING_ACCOUNT_TRANSACTIONS =
                 "/Accounts/V2/BankAccounts/Reservations/{accountId}";
-        public static final String FETCH_CREDIT_CARDS = "/Customers/V3/Commitments/Cards";
+        public static final String FETCH_CARDS = "/Customers/V3/Commitments/Cards";
         public static final String FETCH_INVESTMENT_ACCOUNTS =
                 "/Customers/V2/Commitments/SecuritiesAccounts,Insurances,Pensions";
         public static final String FETCH_INVESTMENT_ACCOUNT_DETAILS =
@@ -205,6 +205,10 @@ public class SkandiaBankenConstants {
         public static final int TIMEOUT_RETRY_SLEEP_MILLISECONDS = 1000;
     }
 
+    public static class AccountType {
+        public static final String CREDITCARD = "CreditCard";
+    }
+
     public static final TransactionalAccountTypeMapper ACCOUNT_TYPE_MAPPER =
             TransactionalAccountTypeMapper.builder()
                     .put(TransactionalAccountType.CHECKING, "AIE", "Euro")
@@ -214,6 +218,7 @@ public class SkandiaBankenConstants {
                             "Payment",
                             "Solvency",
                             "FixedInterest")
+                    .ignoreKeys(AccountType.CREDITCARD)
                     .build();
 
     public static final TypeMapper<Instrument.Type> INSTRUMENT_TYPE_MAP =

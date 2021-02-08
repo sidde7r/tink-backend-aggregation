@@ -1,15 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.creditcard;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.ListUtils;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenApiClient;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.creditcard.rpc.FetchCreditCardsResponse;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.rpc.ErrorResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.creditcard.entities.CardEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.transactionalaccount.entities.BankAccountsEntity;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
-import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
 @Slf4j
 public class SkandiaBankenCreditCardFetcher implements AccountFetcher<CreditCardAccount> {
@@ -22,25 +22,51 @@ public class SkandiaBankenCreditCardFetcher implements AccountFetcher<CreditCard
 
     @Override
     public Collection<CreditCardAccount> fetchAccounts() {
-        try {
-            FetchCreditCardsResponse fetchCreditCardsResponse = apiClient.fetchCreditCards();
+        List<CreditCardAccount> accountList = new ArrayList<>();
 
-            ListUtils.emptyIfNull(fetchCreditCardsResponse.getCards()).stream()
-                    .filter(cardEntity -> !cardEntity.isDebitCard())
-                    .findAny()
-                    .ifPresent(
-                            cardEntity ->
-                                    log.info(
-                                            "Possible credit card found, typeName {}",
-                                            cardEntity.getTypeName()));
+        apiClient.fetchAccounts().getAccounts().stream()
+                .filter(BankAccountsEntity::isCreditCardAccount)
+                .forEach(
+                        accountEntity ->
+                                getAccountOwnerCard(accountEntity)
+                                        .ifPresent(
+                                                cardEntity ->
+                                                        accountList.add(
+                                                                accountEntity.toCreditCardAccount(
+                                                                        cardEntity))));
 
-        } catch (HttpResponseException e) {
-            ErrorResponse error = e.getResponse().getBody(ErrorResponse.class);
-            // Check if expected error response for no available creditcards or keep throwing.
-            if (!error.isNoCreditCardsError()) {
-                throw e;
-            }
+        return accountList;
+    }
+
+    /**
+     * The credit card account is parsed as the Tink credit card account, and an account could have
+     * multiple cards with different owners. Best solution with how our models look is to use the
+     * account owner's card details building the Tink credit card account.
+     */
+    private Optional<CardEntity> getAccountOwnerCard(BankAccountsEntity accountEntity) {
+        Optional<CardEntity> accountOwnerCard =
+                apiClient.fetchCards().getCards().stream()
+                        .filter(
+                                cardEntity ->
+                                        (cardBelongsToAccount(accountEntity, cardEntity)
+                                                && isAccountOwnerCard(accountEntity, cardEntity)))
+                        .findFirst();
+
+        if (!accountOwnerCard.isPresent()) {
+            log.warn("No card exist for account owner, credit card account will be omitted.");
         }
-        return Collections.emptyList();
+
+        return accountOwnerCard;
+    }
+
+    private boolean cardBelongsToAccount(BankAccountsEntity accountEntity, CardEntity cardEntity) {
+        return accountEntity.getReference().equals(cardEntity.getBankAccountReference());
+    }
+
+    private boolean isAccountOwnerCard(BankAccountsEntity accountEntity, CardEntity cardEntity) {
+        return accountEntity
+                .getHolder()
+                .getNationalIdentificationNumber()
+                .equals((cardEntity.getHolder().getNationalIdentificationNumber()));
     }
 }

@@ -68,7 +68,6 @@ public final class SkandiaBankenAgent extends NextGenerationAgent
                         metricRefreshController,
                         updateController,
                         new SkandiaBankenInvestmentFetcher(apiClient));
-
         creditCardRefreshController = constructCreditCardRefreshController();
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
     }
@@ -110,7 +109,8 @@ public final class SkandiaBankenAgent extends NextGenerationAgent
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
                         new TransactionPagePaginationController<>(
-                                new SkandiaBankenTransactionFetcher(apiClient), Fetcher.START_PAGE),
+                                new SkandiaBankenTransactionFetcher<>(apiClient),
+                                Fetcher.START_PAGE),
                         new SkandiaBankenUpcomingTransactionFetcher(apiClient)));
     }
 
@@ -131,7 +131,9 @@ public final class SkandiaBankenAgent extends NextGenerationAgent
                 new SkandiaBankenCreditCardFetcher(apiClient),
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        new TransactionPagePaginationController<>(null, 0)));
+                        new TransactionPagePaginationController<>(
+                                new SkandiaBankenTransactionFetcher<>(apiClient),
+                                Fetcher.START_PAGE)));
     }
 
     @Override

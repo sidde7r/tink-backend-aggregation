@@ -42,6 +42,8 @@ public class SkandiaBankenApiClient {
     private final SessionStorage sessionStorage;
     private final PersistentStorage persistentStorage;
 
+    private FetchAccountResponse cachedAccountsResponse;
+
     public SkandiaBankenApiClient(
             TinkHttpClient httpClient,
             SessionStorage sessionStorage,
@@ -152,11 +154,16 @@ public class SkandiaBankenApiClient {
     }
 
     public FetchAccountResponse fetchAccounts() {
-        return httpClient
-                .request(Urls.FETCH_ACCOUNTS)
-                .addBearerToken(getValidOAuth2Token())
-                .header(HeaderKeys.SK_API_KEY, HeaderValues.SK_API_KEY)
-                .get(FetchAccountResponse.class);
+        if (cachedAccountsResponse == null) {
+            cachedAccountsResponse =
+                    httpClient
+                            .request(Urls.FETCH_ACCOUNTS)
+                            .addBearerToken(getValidOAuth2Token())
+                            .header(HeaderKeys.SK_API_KEY, HeaderValues.SK_API_KEY)
+                            .get(FetchAccountResponse.class);
+        }
+
+        return cachedAccountsResponse;
     }
 
     public FetchAccountTransactionsResponse fetchAccountTransactions(
@@ -189,9 +196,9 @@ public class SkandiaBankenApiClient {
                 .get(FetchApprovedPaymentsResponse.class);
     }
 
-    public FetchCreditCardsResponse fetchCreditCards() {
+    public FetchCreditCardsResponse fetchCards() {
         return httpClient
-                .request(Urls.FETCH_CREDIT_CARDS)
+                .request(Urls.FETCH_CARDS)
                 .addBearerToken(getValidOAuth2Token())
                 .header(HeaderKeys.SK_API_KEY, HeaderValues.SK_API_KEY)
                 .get(FetchCreditCardsResponse.class);
