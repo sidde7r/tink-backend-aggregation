@@ -14,6 +14,7 @@ import java.util.Optional;
 import java.util.function.Predicate;
 import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.AgentParsingUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
@@ -48,7 +49,9 @@ class TotalKreditLoan {
                                 .withUniqueIdentifier(loanNumber)
                                 .withAccountNumber(loanNumber)
                                 .withAccountName(Optional.ofNullable(title).orElse(""))
-                                .addIdentifier(new DanishIdentifier(loanNumber))
+                                .addIdentifier(
+                                        new DanishIdentifier(
+                                                StringUtils.deleteWhitespace(loanNumber)))
                                 .setProductName(title)
                                 .build())
                 .setApiIdentifier(loanNumber)
