@@ -81,7 +81,7 @@ public class TotalKreditLoanTest {
         assertThat(result.getHolderName()).isNull();
         assertThat(result.getHolders()).isEmpty();
         assertThat(result.getIdentifiers())
-                .contains(new DanishIdentifier("sample agreement number FrueSerre 5"));
+                .contains(new DanishIdentifier("sampleagreementnumberFrueSerre5"));
 
         assertThat(result.getIdModule().getAccountName()).isEqualTo("FrueSerre 5");
         assertThat(result.getIdModule().getAccountNumber())
@@ -89,7 +89,7 @@ public class TotalKreditLoanTest {
         assertThat(result.getIdModule().getUniqueId()).isEqualTo("sampleagreementnumberFrueSerre5");
         assertThat(result.getIdModule().getProductName()).isEqualTo("FrueSerre 5");
         assertThat(result.getIdModule().getIdentifiers())
-                .contains(new DanishIdentifier("sample agreement number FrueSerre 5"));
+                .contains(new DanishIdentifier("sampleagreementnumberFrueSerre5"));
 
         assertThat(result.getName()).isEqualTo("FrueSerre 5");
 
