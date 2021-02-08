@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authent
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.util.concurrent.Uninterruptibles;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -16,9 +15,9 @@ import java.util.stream.Collectors;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field;
-import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.exceptions.ThirdPartyAppException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
@@ -30,11 +29,10 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenti
 import se.tink.backend.aggregation.agents.utils.supplementalfields.CommonFields;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.GermanFields;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
-import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
 import se.tink.libraries.i18n.Catalog;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class PostbankAuthenticationController implements TypedAuthenticator {
     private static final Pattern STARTCODE_CHIP_PATTERN = Pattern.compile("Startcode:\\s(\\d+)");
@@ -44,18 +42,18 @@ public class PostbankAuthenticationController implements TypedAuthenticator {
     private static final String PUSH_OTP = "PUSH_OTP";
     private final Catalog catalog;
     private final SupplementalInformationHelper supplementalInformationHelper;
-    private final SupplementalRequester supplementalRequester;
+    private final SupplementalInformationController supplementalInformationController;
     private final PostbankAuthenticator authenticator;
 
     public PostbankAuthenticationController(
             Catalog catalog,
             SupplementalInformationHelper supplementalInformationHelper,
-            SupplementalRequester supplementalRequester,
+            SupplementalInformationController supplementalInformationController,
             PostbankAuthenticator authenticator) {
         this.catalog = Preconditions.checkNotNull(catalog);
         this.supplementalInformationHelper =
                 Preconditions.checkNotNull(supplementalInformationHelper);
-        this.supplementalRequester = supplementalRequester;
+        this.supplementalInformationController = supplementalInformationController;
         this.authenticator = authenticator;
     }
 
@@ -89,18 +87,15 @@ public class PostbankAuthenticationController implements TypedAuthenticator {
                             initValues.getLinks().getScaStatus().getHref());
         }
 
-        authenticateUsingChosenScaMethod(credentials, username, initValues, chosenScaMethod);
+        authenticateUsingChosenScaMethod(username, initValues, chosenScaMethod);
         authenticator.storeConsentDetails();
     }
 
     private void authenticateUsingChosenScaMethod(
-            Credentials credentials,
-            String username,
-            AuthorisationResponse initValues,
-            ScaMethod chosenScaMethod) {
+            String username, AuthorisationResponse initValues, ScaMethod chosenScaMethod) {
         switch (chosenScaMethod.getAuthenticationType().toUpperCase()) {
             case PUSH_OTP:
-                finishWithAcceptingPush(initValues, username, credentials);
+                finishWithAcceptingPush(initValues, username);
                 break;
             case SMS_OTP:
             case CHIP_OTP:
@@ -149,13 +144,12 @@ public class PostbankAuthenticationController implements TypedAuthenticator {
         return scaMethods.get(index);
     }
 
-    private void finishWithAcceptingPush(
-            AuthorisationResponse previousResponse, String username, Credentials credentials) {
-        showInfo(previousResponse.getChosenScaMethod().getName(), credentials);
+    private void finishWithAcceptingPush(AuthorisationResponse previousResponse, String username) {
+        showInfo(previousResponse.getChosenScaMethod().getName());
         poll(username, previousResponse.getLinks().getScaStatus().getHref());
     }
 
-    private void showInfo(String deviceName, Credentials credentials) {
+    private void showInfo(String deviceName) {
         Field informationField =
                 CommonFields.Information.build(
                         PostbankConstants.InfoScreen.FIELD_KEY,
@@ -163,10 +157,12 @@ public class PostbankAuthenticationController implements TypedAuthenticator {
                         deviceName,
                         catalog.getString(PostbankConstants.InfoScreen.HELP_TEXT));
 
-        credentials.setSupplementalInformation(
-                SerializationUtils.serializeToString(Collections.singletonList(informationField)));
-        credentials.setStatus(CredentialsStatus.AWAITING_SUPPLEMENTAL_INFORMATION);
-        supplementalRequester.requestSupplementalInformation(credentials, true);
+        try {
+            supplementalInformationController.askSupplementalInformationSync(informationField);
+        } catch (SupplementalInfoException e) {
+            // ignore empty response!
+            // we're actually not interested in response at all, we just show a text!
+        }
     }
 
     private void poll(String username, String url) throws ThirdPartyAppException {
