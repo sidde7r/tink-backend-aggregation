@@ -33,9 +33,7 @@
         }
       ],
       "maskedPan": "1234 **** **** 1000",
-      "_links": {
-        "href": "https://api.finecobank.com/v1/some_link_1234"
-      }
+      "status": "enabled"
     },
     {
       "name": "card_account_name_2",
@@ -63,9 +61,7 @@
         }
       ],
       "maskedPan": "1234 **** **** 1001",
-      "_links": {
-        "href": "https://api.finecobank.com/v1/some_link_1234"
-      }
+      "status": "enabled"
     }
   ]
 }
