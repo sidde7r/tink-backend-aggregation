@@ -15,6 +15,8 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.Handelsba
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.transactionalaccount.rpc.AccountListSEResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.entities.Link;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.rpc.ApplicationEntryPointResponse;
+import se.tink.backend.aggregation.fakelogmasker.FakeLogMasker;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class HandelsbankenSessionStorageTest {
 
@@ -103,7 +105,9 @@ public class HandelsbankenSessionStorageTest {
     }
 
     private void initiateSessionStorage(HandelsbankenConfiguration configuration) {
-        sessionStorage = new HandelsbankenSessionStorage(configuration);
+        sessionStorage =
+                new HandelsbankenSessionStorage(
+                        configuration, new SessionStorage(), new FakeLogMasker());
     }
 
     private static ApplicationEntryPointResponse createApplicationEntryPoint() {

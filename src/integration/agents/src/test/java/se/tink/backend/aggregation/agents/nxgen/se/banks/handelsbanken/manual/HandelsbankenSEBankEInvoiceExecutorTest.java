@@ -24,9 +24,11 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.Handelsba
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.authenticator.HandelsbankenBankIdAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenPersistentStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenSessionStorage;
+import se.tink.backend.aggregation.fakelogmasker.FakeLogMasker;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticationController;
 import se.tink.backend.aggregation.nxgen.http.LegacyTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.i18n.Catalog;
@@ -59,7 +61,9 @@ public class HandelsbankenSEBankEInvoiceExecutorTest {
         HandelsbankenSEConfiguration configuration = new HandelsbankenSEConfiguration();
         HandelsbankenPersistentStorage persistentStorage =
                 new HandelsbankenPersistentStorage(new PersistentStorage(), Collections.emptyMap());
-        HandelsbankenSessionStorage sessionStorage = new HandelsbankenSessionStorage(configuration);
+        HandelsbankenSessionStorage sessionStorage =
+                new HandelsbankenSessionStorage(
+                        configuration, new SessionStorage(), new FakeLogMasker());
 
         Transfer transfer = new Transfer();
         transfer.setSource(

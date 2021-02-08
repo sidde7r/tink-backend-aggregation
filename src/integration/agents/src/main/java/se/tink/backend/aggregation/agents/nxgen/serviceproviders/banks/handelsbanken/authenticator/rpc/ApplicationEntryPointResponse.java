@@ -56,4 +56,8 @@ public class ApplicationEntryPointResponse extends BaseResponse {
     public HandelsbankenClearingNumber getClearingNumber() {
         return embedded.getClearingNumber();
     }
+
+    public String getAuthToken() {
+        return authToken;
+    }
 }
