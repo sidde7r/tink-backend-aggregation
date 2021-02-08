@@ -12,12 +12,13 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.contexts.CompositeAgentContext;
 import se.tink.backend.aggregation.agents.contexts.FinancialDataCacher;
 import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
-import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.utils.jersey.JerseyClientFactory;
 import se.tink.backend.aggregation.logmasker.LogMaskerImpl;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.agentcontext.AgentContextProviderImpl;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationControllerImpl;
 import se.tink.backend.aggregation.utils.CookieContainer;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
 import se.tink.libraries.credentials.service.CredentialsRequest;
@@ -36,13 +37,15 @@ public abstract class AbstractAgent extends SuperAbstractAgent {
     protected final StatusUpdater statusUpdater;
     protected final FinancialDataCacher financialDataCacher;
     protected final Logger log;
-    protected final SupplementalRequester supplementalRequester;
+    protected final SupplementalInformationController supplementalInformationController;
 
     protected AbstractAgent(CredentialsRequest request, CompositeAgentContext context) {
         super(new AgentContextProviderImpl(request, context));
         this.statusUpdater = context;
         this.financialDataCacher = context;
-        this.supplementalRequester = context;
+        this.supplementalInformationController =
+                new SupplementalInformationControllerImpl(
+                        context, request.getCredentials(), request.getState());
         this.clientFactory =
                 new JerseyClientFactory(
                         context.getLogMasker(), LogMaskerImpl.shouldLog(request.getProvider()));

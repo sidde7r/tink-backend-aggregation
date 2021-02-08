@@ -15,9 +15,9 @@ import se.tink.backend.aggregation.agents.banks.sbab.executor.rpc.PollBankIdResp
 import se.tink.backend.aggregation.agents.banks.sbab.executor.rpc.SignProcessResponse;
 import se.tink.backend.aggregation.agents.banks.sbab.executor.rpc.TransferRequest;
 import se.tink.backend.aggregation.agents.banks.sbab.executor.rpc.ValidateRecipientRequest;
-import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException.EndUserMessage;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.utils.transfer.StringNormalizerSwedish;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageLengthConfig;
@@ -31,12 +31,12 @@ public class SBABTransferExecutor {
     private final TransferClient transferClient;
     private final Catalog catalog;
     private final TransferMessageFormatter messageFormatter;
-    private final SupplementalRequester supplementalRequester;
+    private final SupplementalInformationController supplementalInformationController;
 
     public SBABTransferExecutor(
             TransferClient transferClient,
             Catalog catalog,
-            SupplementalRequester supplementalRequester) {
+            SupplementalInformationController supplementalInformationController) {
         this.transferClient = transferClient;
         this.catalog = catalog;
 
@@ -45,7 +45,7 @@ public class SBABTransferExecutor {
                         catalog,
                         TransferMessageLengthConfig.createWithMaxLength(30, 12, 12),
                         new StringNormalizerSwedish("!+%\"/?,.§\\-"));
-        this.supplementalRequester = supplementalRequester;
+        this.supplementalInformationController = supplementalInformationController;
     }
 
     public void executeBankTransfer(Transfer transfer) {
@@ -140,7 +140,7 @@ public class SBABTransferExecutor {
                     .build();
         }
 
-        supplementalRequester.openBankId();
+        supplementalInformationController.openMobileBankIdAsync(null);
 
         collectBankId(bankIdRef);
     }
