@@ -1,4 +1,0 @@
-<input id="{{inputId}}" type="text" class="form-control" [class.is-invalid]="searchFailed" [ngbTypeahead]="search"
-  placeholder="{{placeholder}}" [(ngModel)]="modelValue" (focus)="onFocus($event)" (ngModelChange)="modelChange($event)" />
-<span *ngIf="searching">searching...</span>
-<div class="invalid-feedback" *ngIf="searchFailed">Sorry, suggestions could not be loaded.</div>
