@@ -30,6 +30,7 @@ import se.tink.backend.aggregation.agents.models.AccountFeatures;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.models.TransactionTypes;
 import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
+import se.tink.backend.aggregation.agents.utils.mappers.CoreAccountHolderMapper;
 import se.tink.backend.aggregation.agents.utils.mappers.CoreAccountMapper;
 import se.tink.backend.aggregation.agents.utils.mappers.CoreCredentialsMapper;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
@@ -452,6 +453,13 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         updateAccountRequest.setCreditLimit(account.getCreditLimit());
         updateAccountRequest.setOperationId(request.getOperationId());
         updateAccountRequest.setCorrelationId(getCorrelationId());
+
+        Optional<se.tink.backend.aggregationcontroller.v1.rpc.accountholder.AccountHolder>
+                acAccountHolder =
+                        CoreAccountHolderMapper.fromAggregation(account.getAccountHolder());
+        if (acAccountHolder.isPresent()) {
+            updateAccountRequest.setAccountHolder(acAccountHolder.get());
+        }
 
         Account updatedAccount;
         try {
