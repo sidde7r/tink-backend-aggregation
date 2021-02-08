@@ -141,7 +141,8 @@ public class SBABAgent extends AbstractAgent
                 new TransferClient(client, credentials, catalog, CommonHeaders.DEFAULT_USER_AGENT);
 
         this.transferExecutor =
-                new SBABTransferExecutor(transferClient, catalog, supplementalRequester);
+                new SBABTransferExecutor(
+                        transferClient, catalog, supplementalInformationController);
     }
 
     @Override
@@ -201,8 +202,7 @@ public class SBABAgent extends AbstractAgent
         String pendingAuthCode = initBankIdResponse.getPendingAuthorizationCode();
         String autostartToken = initBankIdResponse.getAutostartToken();
 
-        credentials.setSupplementalInformation(null);
-        supplementalRequester.openBankId(autostartToken, false);
+        supplementalInformationController.openMobileBankIdAsync(autostartToken);
 
         for (int i = 0; i < BankId.BANKID_MAX_ATTEMPTS; i++) {
             BankIdStatus bankIdStatus = authenticationClient.getLoginStatus(pendingAuthCode);
@@ -217,7 +217,7 @@ public class SBABAgent extends AbstractAgent
                     initBankIdResponse = authenticationClient.initiateBankIdLogin();
                     pendingAuthCode = initBankIdResponse.getPendingAuthorizationCode();
                     autostartToken = initBankIdResponse.getAutostartToken();
-                    supplementalRequester.openBankId(autostartToken, false);
+                    supplementalInformationController.openMobileBankIdAsync(autostartToken);
                     break;
                 case FAILED_UNKNOWN:
                     throw new IllegalStateException("[SBAB - BankId failed with unknown error]");
