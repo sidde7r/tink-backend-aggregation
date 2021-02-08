@@ -29,4 +29,8 @@ public class TransactionsResponseEntity<T extends TransactionEntity> {
                 .map(LinkEntity::getHref)
                 .orElse(null);
     }
+
+    public List<T> getTransactions() {
+        return transactions;
+    }
 }
