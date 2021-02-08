@@ -390,7 +390,7 @@ public final class LansforsakringarAgent extends AbstractAgent
         BankIdLoginResponse bankIdloginResponse =
                 bankIdloginClientResponse.getEntity(BankIdLoginResponse.class);
 
-        supplementalRequester.openBankId();
+        supplementalInformationController.openMobileBankIdAsync(null);
 
         for (int i = 0; i < MAX_ATTEMPTS; i++) {
             ClientResponse clientLoginResponse =
@@ -872,7 +872,7 @@ public final class LansforsakringarAgent extends AbstractAgent
     }
 
     private void signAndValidatePayment(PaymentRequest paymentRequest) throws BankIdException {
-        supplementalRequester.openBankId();
+        supplementalInformationController.openMobileBankIdAsync(null);
 
         collectTransferResponse(SEND_PAYMENT_URL, paymentRequest);
     }
@@ -1077,7 +1077,7 @@ public final class LansforsakringarAgent extends AbstractAgent
             throw failTransfer(EndUserMessage.TRANSFER_EXECUTE_FAILED);
         }
 
-        supplementalRequester.openBankId();
+        supplementalInformationController.openMobileBankIdAsync(null);
 
         try {
             collectTransferResponse(BANKID_COLLECT_DIRECT_TRANSFER_URL, transferRequest);
