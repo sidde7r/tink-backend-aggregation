@@ -8,6 +8,9 @@ import com.google.common.collect.ImmutableSet;
 import com.google.inject.Inject;
 import java.time.ZoneId;
 import java.util.Collection;
+import java.util.Collections;
+import se.tink.backend.aggregation.agents.FetchAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.NordeaPartnerAgent;
@@ -33,5 +36,15 @@ public final class NordeaPartnerFiAgent extends NordeaPartnerAgent {
     @Override
     protected Collection<String> getSupportedLocales() {
         return ImmutableSet.of("fi-FI", "sv-FI", "en-FI");
+    }
+
+    @Override
+    public FetchAccountsResponse fetchCreditCardAccounts() {
+        return new FetchAccountsResponse(Collections.emptyList());
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCreditCardTransactions() {
+        return new FetchTransactionsResponse(Collections.emptyMap());
     }
 }
