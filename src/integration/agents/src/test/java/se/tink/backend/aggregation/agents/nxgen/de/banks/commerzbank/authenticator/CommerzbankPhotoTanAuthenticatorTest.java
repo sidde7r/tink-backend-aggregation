@@ -19,7 +19,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field.Key;
-import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
@@ -40,6 +39,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.entities.Er
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.entities.ErrorMessageEntity;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.entities.MetaDataEntity;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.rpc.ResultEntity;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.i18n.Catalog;
 
@@ -57,7 +57,7 @@ public class CommerzbankPhotoTanAuthenticatorTest {
 
     private PersistentStorage persistentStorage;
     private CommerzbankApiClient apiClient;
-    private SupplementalRequester supplementalRequester;
+    private SupplementalInformationController supplementalInformationController;
     private Catalog catalog;
 
     private Credentials credentials;
@@ -66,12 +66,12 @@ public class CommerzbankPhotoTanAuthenticatorTest {
     public void setup() {
         persistentStorage = mock(PersistentStorage.class);
         apiClient = mock(CommerzbankApiClient.class);
-        supplementalRequester = mock(SupplementalRequester.class);
+        supplementalInformationController = mock(SupplementalInformationController.class);
         catalog = Catalog.getCatalog("EN_US");
 
         authenticator =
                 new CommerzbankPhotoTanAuthenticator(
-                        persistentStorage, apiClient, supplementalRequester, catalog);
+                        persistentStorage, apiClient, supplementalInformationController, catalog);
 
         credentials = mock(Credentials.class);
         given(credentials.getField(Key.USERNAME)).willReturn(USERNAME);
@@ -293,7 +293,7 @@ public class CommerzbankPhotoTanAuthenticatorTest {
                 new CommerzbankPhotoTanAuthenticator(
                         persistentStorage,
                         apiClient,
-                        supplementalRequester,
+                        supplementalInformationController,
                         10,
                         numOfAttempts,
                         catalog);
@@ -320,7 +320,7 @@ public class CommerzbankPhotoTanAuthenticatorTest {
 
         // then
         verify(apiClient).prepareScaApproval(PROCESS_CONTEXT_ID);
-        verify(supplementalRequester).requestSupplementalInformation(credentials, false);
+        verify(supplementalInformationController).askSupplementalInformationAsync(any());
         verify(apiClient).finaliseScaApproval(PROCESS_CONTEXT_ID);
 
         verify(persistentStorage).put(Storage.APP_ID, APP_ID);
