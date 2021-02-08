@@ -6,7 +6,9 @@ import com.google.common.collect.ImmutableList;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.Currency;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
@@ -15,6 +17,7 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 
 @JsonObject
+@Slf4j
 public class BankAccountsEntity {
     @JsonProperty("Balance")
     private BalanceEntity balance;
@@ -93,8 +96,17 @@ public class BankAccountsEntity {
 
     @JsonIgnore
     public Optional<TransactionalAccount> toTinkTransactionalAccount() {
+
+        Currency accountCurrency = Currency.fromCode(currency);
+
+        if (accountCurrency == null) {
+            log.warn("Unknown currency code {} - omitting account", currency);
+            return Optional.empty();
+        }
+
         return TransactionalAccount.nxBuilder()
                 .withTypeAndFlagsFrom(SkandiaBankenConstants.ACCOUNT_TYPE_MAPPER, typeName)
+                .withBalance(BalanceModule.of(balance.getAmount(accountCurrency.toString())))
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(number)

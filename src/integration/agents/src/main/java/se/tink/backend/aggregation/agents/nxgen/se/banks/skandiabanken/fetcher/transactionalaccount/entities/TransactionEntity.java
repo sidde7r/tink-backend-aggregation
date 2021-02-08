@@ -57,7 +57,9 @@ public class TransactionEntity {
     @JsonIgnore
     public Transaction toTinkTransaction(boolean isPending) {
         return Transaction.builder()
-                .setAmount(ExactCurrencyAmount.of(amount, SkandiaBankenConstants.CURRENCY))
+                .setAmount(
+                        ExactCurrencyAmount.of(
+                                amount, SkandiaBankenConstants.Currency.SEK.toString()))
                 .setDate(getDate())
                 .setDescription(getNote())
                 .setPending(isPending)

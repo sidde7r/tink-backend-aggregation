@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
@@ -12,7 +14,23 @@ import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.transfer.enums.TransferType;
 
 public class SkandiaBankenConstants {
-    public static final String CURRENCY = "SEK";
+
+    @AllArgsConstructor
+    @Getter
+    public enum Currency {
+        SEK(1),
+        EUR(2);
+        private int currencyCode;
+
+        public static Currency fromCode(int code) {
+            for (Currency c : Currency.values()) {
+                if (c.currencyCode == code) {
+                    return c;
+                }
+            }
+            return null;
+        }
+    }
 
     public static class Urls {
         public static final String BASE = "https://api.skandia.se";
