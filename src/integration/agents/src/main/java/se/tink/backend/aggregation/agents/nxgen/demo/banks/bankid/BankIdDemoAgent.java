@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
@@ -32,6 +33,7 @@ import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoTransactionAccount
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.credentials.service.CredentialsRequest;
@@ -220,5 +222,12 @@ public final class BankIdDemoAgent extends NextGenerationDemoAgent
     public FetchTransferDestinationsResponse fetchTransferDestinations(List<Account> accounts) {
         return new FetchTransferDestinationsResponse(
                 DemoAccountDefinitionGenerator.generateTransferDestinations(accounts));
+    }
+
+    @Override
+    public Optional<PaymentController> constructPaymentController() {
+        DemoBankIdPaymentExecutor paymentExecutor =
+                new DemoBankIdPaymentExecutor(supplementalRequester);
+        return Optional.of(new PaymentController(paymentExecutor));
     }
 }
