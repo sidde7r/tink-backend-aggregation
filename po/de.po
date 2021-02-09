@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: VERSION\n"
-"POT-Creation-Date: 2021-02-09 10:36+0000\n"
-"PO-Revision-Date: 2021-02-09 10:36+0000\n"
+"POT-Creation-Date: 2021-02-09 15:50+0000\n"
+"PO-Revision-Date: 2021-02-09 15:50+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE TEAM <EMAIL@ADDRESS>\n"
 "Language: de\n"
@@ -10,6 +10,9 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Choose authentication method"
+msgstr "Wählen Sie eine Authentifizierungsmethode"
 
 msgid "Input the code from your code card"
 msgstr "Geben Sie den Code von der Codekarte ein."
@@ -1875,9 +1878,6 @@ msgstr "Anmeldeinformationen sind gültig"
 
 msgid "Startcode"
 msgstr "Startcode"
-
-msgid "Authentication method index"
-msgstr "Wählen Sie eine Authentifizierungsmethode"
 
 #, java-format
 msgid "Select from 1 to {0}"

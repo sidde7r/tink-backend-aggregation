@@ -33,7 +33,7 @@ public class CommonFieldsTest {
 
         // then
         assertThat(result.getName()).isEqualTo("selectAuthMethodField");
-        assertThat(result.getDescription()).isEqualTo("Authentication method index");
+        assertThat(result.getDescription()).isEqualTo("Choose authentication method");
         assertThat(result.getValue()).isNull();
         assertThat(result.getHint()).isEqualTo("Select from 1 to {0}");
         assertThat(result.getHelpText()).contains("First");
