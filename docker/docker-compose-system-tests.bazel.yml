@@ -1,7 +1,7 @@
 version: '2.1'
 services:
   app:
-    image: "gcr.io/tink-containers/bazel:3.6.0"
+    image: "gcr.io/tink-containers/bazel:3.7.2"
     working_dir: /tink-backend
     volumes:
       - "${SSH_AUTH_SOCK}:${SSH_AUTH_SOCK}"
