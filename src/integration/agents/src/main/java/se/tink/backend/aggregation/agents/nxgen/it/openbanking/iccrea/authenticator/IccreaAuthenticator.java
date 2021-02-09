@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.iccrea.authenticator;
 
 import java.util.List;
-import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.AccountFetchingStep;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.CbiGlobeAuthenticator;
@@ -9,11 +8,12 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.CbiGlobeConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.libraries.i18n.Catalog;
 
 public class IccreaAuthenticator extends CbiGlobeAuthenticator {
 
-    private final SupplementalRequester supplementalRequester;
+    private final SupplementalInformationController supplementalInformationController;
     private final Catalog catalog;
     private final ConsentProcessor consentProcessor;
 
@@ -22,10 +22,10 @@ public class IccreaAuthenticator extends CbiGlobeAuthenticator {
             StrongAuthenticationState strongAuthenticationState,
             CbiUserState userState,
             CbiGlobeConfiguration configuration,
-            SupplementalRequester supplementalRequester,
+            SupplementalInformationController supplementalInformationController,
             Catalog catalog) {
         super(apiClient, strongAuthenticationState, userState, configuration);
-        this.supplementalRequester = supplementalRequester;
+        this.supplementalInformationController = supplementalInformationController;
         this.catalog = catalog;
         this.consentProcessor = new ConsentProcessor(consentManager);
     }
@@ -37,7 +37,7 @@ public class IccreaAuthenticator extends CbiGlobeAuthenticator {
                     new AccountConsentDecoupledStep(
                             consentManager,
                             strongAuthenticationState,
-                            supplementalRequester,
+                            supplementalInformationController,
                             catalog,
                             consentProcessor));
             manualAuthenticationSteps.add(new AccountFetchingStep(apiClient, userState));
