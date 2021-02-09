@@ -152,8 +152,7 @@ public final class AgentConfigurationController implements AgentConfigurationCon
             try {
                 // TPA-525: needs to know what certId to use
                 Optional<SecretsEntityCore> allSecretsOpt =
-                        tppSecretsServiceClient.getAllSecrets(
-                                financialInstitutionId, appId, clusterId, "", providerId);
+                        tppSecretsServiceClient.getAllSecrets(appId, clusterId, "", providerId);
 
                 // TODO: Remove if once Access team confirms there are no null appIds around.
                 if (!allSecretsOpt.isPresent()) {

@@ -16,6 +16,7 @@ java_library(
         "//third_party:io_dropwizard_dropwizard_lifecycle",
         "//third_party:io_netty_netty_all",
         "//third_party:netty",
+        "//third_party:org_apache_commons_commons_lang3",
         "//third_party:org_bouncycastle_bcprov_jdk15on",
         "//third_party:org_slf4j_slf4j_api",
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
