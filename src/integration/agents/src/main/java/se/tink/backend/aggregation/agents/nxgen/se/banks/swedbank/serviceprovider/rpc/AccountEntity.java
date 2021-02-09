@@ -87,7 +87,7 @@ public abstract class AccountEntity extends AbstractAccountEntity {
                 .withBalance(buildBalanceModule(creditLimit))
                 .withId(
                         IdModule.builder()
-                                .withUniqueIdentifier(id)
+                                .withUniqueIdentifier(fullyFormattedNumber)
                                 .withAccountNumber(fullyFormattedNumber)
                                 .withAccountName(name)
                                 .addIdentifier(new SwedishIdentifier(fullyFormattedNumber))
