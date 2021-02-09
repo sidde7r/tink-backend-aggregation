@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.steps;
+package se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -23,9 +23,9 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.common.AgentEx
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @Ignore
-public class StepsUtils {
+public class LunarTestUtils {
 
-    static AgentProceedNextStepAuthenticationRequest getProceedNextStepAuthRequest(
+    public static AgentProceedNextStepAuthenticationRequest getProceedNextStepAuthRequest(
             LunarProcessStateAccessor stateAccessor,
             LunarAuthDataAccessor authDataAccessor,
             LunarProcessState processState,
@@ -38,18 +38,19 @@ public class StepsUtils {
                 AgentExtendedClientInfo.builder().build());
     }
 
-    static AgentStartAuthenticationProcessRequest getStartAuthProcessRequest(
+    public static AgentStartAuthenticationProcessRequest getStartAuthProcessRequest(
             LunarAuthDataAccessor authDataAccessor, LunarAuthData authData) {
 
         return new AgentStartAuthenticationProcessRequest(
                 authDataAccessor.storeData(authData), AgentExtendedClientInfo.builder().build());
     }
 
-    static AgentUserInteractionAuthenticationProcessRequest getUserInteractionAuthProcessRequest(
-            LunarProcessStateAccessor stateAccessor,
-            LunarAuthDataAccessor authDataAccessor,
-            LunarProcessState processState,
-            LunarAuthData authData) {
+    public static AgentUserInteractionAuthenticationProcessRequest
+            getUserInteractionAuthProcessRequest(
+                    LunarProcessStateAccessor stateAccessor,
+                    LunarAuthDataAccessor authDataAccessor,
+                    LunarProcessState processState,
+                    LunarAuthData authData) {
 
         return new AgentUserInteractionAuthenticationProcessRequest(
                 AgentAuthenticationProcessStepIdentifier.of("test"),
@@ -59,7 +60,7 @@ public class StepsUtils {
                 AgentExtendedClientInfo.builder().build());
     }
 
-    static LunarProcessStateAccessor getProcessStateAccessor(
+    public static LunarProcessStateAccessor getProcessStateAccessor(
             LunarDataAccessorFactory dataAccessorFactory, LunarProcessState processState) {
         return dataAccessorFactory.createProcessStateAccessor(
                 new AgentAuthenticationProcessState(
@@ -86,17 +87,17 @@ public class StepsUtils {
         assertThat(result.getError().getDetails())
                 .isEqualToIgnoringGivenFields(expected.getError().getDetails(), "uniqueId");
         assertThat(result.getAuthenticationPersistedData())
-                .isEqualTo(expected.getAuthenticationPersistedData());
+                .isEqualToComparingFieldByFieldRecursively(
+                        expected.getAuthenticationPersistedData());
     }
 
-    public static AgentAuthenticationPersistedData getExpectedPersistedData(
-            LunarAuthData expectedData) {
+    public static AgentAuthenticationPersistedData toPersistedData(LunarAuthData expectedData) {
         return AgentAuthenticationPersistedData.of(
                 LunarConstants.Storage.PERSISTED_DATA_KEY,
                 SerializationUtils.serializeToString(expectedData));
     }
 
-    static AgentAuthenticationProcessState getExpectedState(LunarProcessState expectedState) {
+    public static AgentAuthenticationProcessState toProcessState(LunarProcessState expectedState) {
         return AgentAuthenticationProcessState.of(
                 LunarConstants.Storage.PROCESS_STATE_KEY,
                 SerializationUtils.serializeToString(expectedState));

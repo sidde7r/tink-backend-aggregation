@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.client.AuthenticationApiClient;
-import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.exception.AuthenticationExceptionHandler;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.exception.LunarAuthExceptionHandler;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.persistance.LunarAuthData;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.persistance.LunarAuthDataAccessor;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.persistance.LunarDataAccessorFactory;
@@ -52,15 +52,14 @@ public class GetLunarAccessTokenStep
         } catch (ResponseStatusException e) {
             log.error("Failed to send NemIdToken and fetch access token", e);
             return new AgentFailedAuthenticationResult(
-                    AuthenticationExceptionHandler.toKnownErrorFromResponseOrDefault(
+                    LunarAuthExceptionHandler.toKnownErrorFromResponseOrDefault(
                             e, new AccessTokenFetchingFailureError()),
-                    request.getAuthenticationPersistedData());
+                    authDataAccessor.clearData());
         }
 
         if (StringUtils.isBlank(accessTokenResponse.getAccessToken())) {
             return new AgentFailedAuthenticationResult(
-                    new AccessTokenFetchingFailureError(),
-                    request.getAuthenticationPersistedData());
+                    new AccessTokenFetchingFailureError(), authDataAccessor.clearData());
         }
         authData.setAccessToken(accessTokenResponse.getAccessToken());
         processState.setAutoAuth(false);

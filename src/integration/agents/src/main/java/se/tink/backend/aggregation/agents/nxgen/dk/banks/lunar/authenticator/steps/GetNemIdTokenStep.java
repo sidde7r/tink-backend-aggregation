@@ -5,12 +5,12 @@ import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import se.tink.backend.aggregation.agents.exceptions.LoginException;
-import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
+import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.LunarNemIdParametersFetcher;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.NemIdIframeAttributes;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.client.AuthenticationApiClient;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.exception.AuthenticationExceptionHandler;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.exception.LunarAuthExceptionHandler;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.persistance.LunarAuthData;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.persistance.LunarAuthDataAccessor;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.persistance.LunarDataAccessorFactory;
@@ -25,7 +25,6 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AuthorizationError;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.NemIdIFrameController;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.exception.NemIdException;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @RequiredArgsConstructor
@@ -58,9 +57,9 @@ public class GetNemIdTokenStep
         } catch (ResponseStatusException e) {
             log.error("Could not get NemId Iframe parameters");
             return new AgentFailedAuthenticationResult(
-                    AuthenticationExceptionHandler.toKnownErrorFromResponseOrDefault(
+                    LunarAuthExceptionHandler.toKnownErrorFromResponseOrDefault(
                             e, new AuthorizationError()),
-                    request.getAuthenticationPersistedData());
+                    authDataAccessor.clearData());
         }
 
         LunarNemIdParametersFetcher parametersFetcher = iframeAttributes.getParametersFetcher();
@@ -76,18 +75,9 @@ public class GetNemIdTokenStep
                     authDataAccessor,
                     authData,
                     processStateAccessor);
-        } catch (LoginException e) {
+        } catch (AuthenticationException e) {
             return new AgentFailedAuthenticationResult(
-                    AuthenticationExceptionHandler.toErrorFromLoginException(e),
-                    request.getAuthenticationPersistedData());
-        } catch (NemIdException e) {
-            return new AgentFailedAuthenticationResult(
-                    AuthenticationExceptionHandler.toErrorFromNemIdException(e),
-                    request.getAuthenticationPersistedData());
-        } catch (SupplementalInfoException e) {
-            return new AgentFailedAuthenticationResult(
-                    AuthenticationExceptionHandler.toErrorFromSupplementalInfoException(e),
-                    request.getAuthenticationPersistedData());
+                    AuthenticationExceptionHandler.toError(e), authDataAccessor.clearData());
         }
     }
 

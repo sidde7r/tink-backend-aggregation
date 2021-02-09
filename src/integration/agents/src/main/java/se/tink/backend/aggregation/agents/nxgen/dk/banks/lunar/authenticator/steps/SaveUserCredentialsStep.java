@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.st
 
 import lombok.RequiredArgsConstructor;
 import se.tink.backend.agents.rpc.Field;
-import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.LunarConstants;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.persistance.LunarAuthData;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.persistance.LunarAuthDataAccessor;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.persistance.LunarDataAccessorFactory;
@@ -31,8 +30,7 @@ public class SaveUserCredentialsStep
 
         String userId = userData.getFieldValue(Field.Key.USERNAME.getFieldKey());
         String password = userData.getFieldValue(Field.Key.PASSWORD.getFieldKey());
-        String lunarPassword =
-                userData.getFieldValue(LunarConstants.Storage.ACCESS_PIN_INPUT_LABEL);
+        String lunarPassword = userData.getFieldValue(Field.Key.ACCESS_PIN.getFieldKey());
 
         authData.setUserId(userId);
         authData.setNemIdPassword(password);

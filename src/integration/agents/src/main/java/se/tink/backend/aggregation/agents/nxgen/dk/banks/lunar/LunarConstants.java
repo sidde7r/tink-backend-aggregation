@@ -63,7 +63,6 @@ public class LunarConstants {
     }
 
     public static class Storage {
-        public static final String ACCESS_PIN_INPUT_LABEL = "accesspininput";
         public static final String PROCESS_STATE_KEY = "LunarProcessState";
         public static final String PERSISTED_DATA_KEY = "LunarAuthData";
     }

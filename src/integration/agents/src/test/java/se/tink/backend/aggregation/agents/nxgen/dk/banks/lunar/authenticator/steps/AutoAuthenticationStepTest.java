@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.ObjectMapperFactory;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.LunarTestUtils;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.persistance.LunarAuthData;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.persistance.LunarAuthDataAccessor;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.persistance.LunarDataAccessorFactory;
@@ -36,12 +37,12 @@ public class AutoAuthenticationStepTest {
         LunarAuthData initialData = getAuthData();
 
         LunarProcessStateAccessor stateAccessor =
-                StepsUtils.getProcessStateAccessor(dataAccessorFactory, processState);
+                LunarTestUtils.getProcessStateAccessor(dataAccessorFactory, processState);
         LunarAuthDataAccessor authDataAccessor =
-                StepsUtils.getAuthDataAccessor(dataAccessorFactory, initialData);
+                LunarTestUtils.getAuthDataAccessor(dataAccessorFactory, initialData);
 
         request =
-                StepsUtils.getProceedNextStepAuthRequest(
+                LunarTestUtils.getProceedNextStepAuthRequest(
                         stateAccessor, authDataAccessor, processState, initialData);
     }
 
@@ -62,8 +63,8 @@ public class AutoAuthenticationStepTest {
                 .isEqualTo(
                         new AgentProceedNextStepAuthenticationResult(
                                 AgentAuthenticationProcessStep.identifier(SignInToLunarStep.class),
-                                StepsUtils.getExpectedState(expectedState),
-                                StepsUtils.getExpectedPersistedData(expectedData)));
+                                LunarTestUtils.toProcessState(expectedState),
+                                LunarTestUtils.toPersistedData(expectedData)));
     }
 
     private LunarAuthData getAuthData() {

@@ -5,10 +5,9 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.userinteraction.fielddefinition.label.AgentFieldLabel;
 
 @RequiredArgsConstructor
-public class AgentField implements AgentFieldDefinition {
+public class LunarPasswordFieldDefinition implements AgentFieldDefinition {
 
     private final String fieldIdentifier;
-    private final String fieldLabel;
 
     @Override
     public String getFieldIdentifier() {
@@ -17,6 +16,6 @@ public class AgentField implements AgentFieldDefinition {
 
     @Override
     public AgentFieldLabel getFieldLabel() {
-        return () -> fieldLabel;
+        return () -> "";
     }
 }

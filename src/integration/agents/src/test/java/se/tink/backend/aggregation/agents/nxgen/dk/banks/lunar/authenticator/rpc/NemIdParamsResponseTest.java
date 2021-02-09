@@ -40,7 +40,7 @@ public class NemIdParamsResponseTest {
         nemIdParamsResponse.setSignProperties(signProperties);
 
         // when
-        Throwable result = catchThrowable(() -> nemIdParamsResponse.getChallenge());
+        Throwable result = catchThrowable(nemIdParamsResponse::getChallenge);
 
         // then
         assertThat(result)

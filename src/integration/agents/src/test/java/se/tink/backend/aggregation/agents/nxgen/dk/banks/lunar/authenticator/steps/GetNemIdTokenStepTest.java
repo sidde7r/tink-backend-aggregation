@@ -21,6 +21,7 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SupplementalInfoError;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.LunarNemIdParametersFetcher;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.LunarTestUtils;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.NemIdIframeAttributes;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.client.AuthenticationApiClient;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.persistance.LunarAuthData;
@@ -84,12 +85,12 @@ public class GetNemIdTokenStepTest {
         LunarAuthData initialData = new LunarAuthData();
 
         LunarProcessStateAccessor stateAccessor =
-                StepsUtils.getProcessStateAccessor(dataAccessorFactory, processState);
+                LunarTestUtils.getProcessStateAccessor(dataAccessorFactory, processState);
         LunarAuthDataAccessor authDataAccessor =
-                StepsUtils.getAuthDataAccessor(dataAccessorFactory, initialData);
+                LunarTestUtils.getAuthDataAccessor(dataAccessorFactory, initialData);
 
         request =
-                StepsUtils.getProceedNextStepAuthRequest(
+                LunarTestUtils.getProceedNextStepAuthRequest(
                         stateAccessor, authDataAccessor, processState, initialData);
 
         nemIdParamsResponse =
@@ -127,8 +128,8 @@ public class GetNemIdTokenStepTest {
                         new AgentUserInteractionDefinitionResult(
                                 AgentAuthenticationProcessStep.identifier(
                                         GetLunarAccessTokenStep.class),
-                                StepsUtils.getExpectedPersistedData(expectedData),
-                                StepsUtils.getExpectedState(expectedState)));
+                                LunarTestUtils.toPersistedData(expectedData),
+                                LunarTestUtils.toProcessState(expectedState)));
     }
 
     @Test
@@ -142,10 +143,10 @@ public class GetNemIdTokenStepTest {
                 (AgentFailedAuthenticationResult) getNemIdTokenStep.execute(request);
 
         // then
-        StepsUtils.assertFailedResultEquals(
+        LunarTestUtils.assertFailedResultEquals(
                 new AgentFailedAuthenticationResult(
                         new AuthorizationError(),
-                        StepsUtils.getExpectedPersistedData(new LunarAuthData())),
+                        LunarTestUtils.toPersistedData(new LunarAuthData())),
                 result);
     }
 
@@ -178,9 +179,9 @@ public class GetNemIdTokenStepTest {
                 (AgentFailedAuthenticationResult) getNemIdTokenStep.execute(request);
 
         // then
-        StepsUtils.assertFailedResultEquals(
+        LunarTestUtils.assertFailedResultEquals(
                 new AgentFailedAuthenticationResult(
-                        apiError, StepsUtils.getExpectedPersistedData(new LunarAuthData())),
+                        apiError, LunarTestUtils.toPersistedData(new LunarAuthData())),
                 result);
     }
 

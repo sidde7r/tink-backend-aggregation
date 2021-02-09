@@ -1,174 +1,100 @@
 package se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.exception;
 
-import agents_platform_framework.org.springframework.web.server.ResponseStatusException;
 import com.google.common.collect.ImmutableMap;
-import java.util.Collections;
-import java.util.List;
 import java.util.Map;
-import java.util.Objects;
-import java.util.regex.Pattern;
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
-import se.tink.backend.aggregation.agents.agentplatform.authentication.result.error.LastAttemptError;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.result.error.NoUserInteractionResponseError;
+import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SupplementalInfoError;
-import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.persistance.LunarAuthData;
-import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.persistance.LunarAuthDataAccessor;
-import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.exception.ErrorResponse;
-import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.exception.KnownErrorResponse;
-import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentFailedAuthenticationResult;
-import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AccessTokenFetchingFailureError;
-import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AccountBlockedError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AgentBankApiError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AuthorizationError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.InvalidCredentialsError;
-import se.tink.backend.aggregation.agentsplatform.agentsframework.error.SessionExpiredError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.ThirdPartyAppCancelledError;
-import se.tink.backend.aggregation.agentsplatform.agentsframework.error.ThirdPartyAppNoClientError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.ThirdPartyAppTimedOutError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.ThirdPartyAppUnknownError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.exception.NemIdException;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @Slf4j
 public class AuthenticationExceptionHandler {
 
-    private static final Pattern INCORRECT_PASSWORD_PATTERN =
-            Pattern.compile("You have [2345] attempts left\\.");
-    private static final String LAST_ATTEMPT_MESSAGE =
-            "If you enter a wrong PIN again, your access to the app is blocked. You will then have to use your NemID to sign in again.";
-
-    private static final String INCORRECT_PASSWORD = "USER_PASSWORD_INCORRECT";
-    private static final String LAST_ATTEMPT = "USER_PASSWORD_INCORRECT_RESET_APP";
-    private static final String NOT_A_LUNAR_USER = "USER_NOT_FOUND";
-    private static final String TOKEN_REVOKED = "ACCESS_TOKEN_REVOKED_BY_CUSTOMER_SUPPORT";
-
-    private static final Map<String, List<KnownErrorResponse>> KNOWN_ERRORS =
-            ImmutableMap.<String, List<KnownErrorResponse>>builder()
+    private static final Map<String, AuthenticationExceptionMapper> EXCEPTIONS_MAPPERS =
+            ImmutableMap.<String, AuthenticationExceptionMapper>builder()
                     .put(
-                            INCORRECT_PASSWORD,
-                            Collections.singletonList(
-                                    KnownErrorResponse.withPattern(
-                                            INCORRECT_PASSWORD_PATTERN,
-                                            new InvalidCredentialsError())))
+                            LoginException.class.getSimpleName(),
+                            new AuthenticationExceptionMapper.LoginExceptionMapper())
                     .put(
-                            LAST_ATTEMPT,
-                            Collections.singletonList(
-                                    KnownErrorResponse.withMessage(
-                                            LAST_ATTEMPT_MESSAGE,
-                                            new InvalidCredentialsError(
-                                                    LastAttemptError.getError()))))
+                            NemIdException.class.getSimpleName(),
+                            new AuthenticationExceptionMapper.NemIdExceptionMapper())
                     .put(
-                            NOT_A_LUNAR_USER,
-                            Collections.singletonList(
-                                    KnownErrorResponse.withoutMessage(
-                                            new ThirdPartyAppNoClientError())))
-                    .put(
-                            TOKEN_REVOKED,
-                            Collections.singletonList(
-                                    KnownErrorResponse.withoutMessage(new AccountBlockedError())))
+                            SupplementalInfoException.class.getSimpleName(),
+                            new AuthenticationExceptionMapper.SupplementalInfoExceptionMapper())
                     .build();
 
-    public static AgentBankApiError toKnownErrorFromResponseOrDefault(
-            ResponseStatusException e, AgentBankApiError defaultError) {
-        if (StringUtils.isBlank(e.getReason())) {
-            return defaultError;
-        }
+    public static AgentBankApiError toError(AuthenticationException e) {
+        return Optional.ofNullable(EXCEPTIONS_MAPPERS.get(e.getClass().getSimpleName()))
+                .map(mapper -> mapper.toAgentBankApiError(e))
+                .orElse(new AuthorizationError());
+    }
 
-        ErrorResponse errorResponse = getBodyAsExpectedType(e.getReason());
-        if (errorResponse != null && KNOWN_ERRORS.containsKey(errorResponse.getReasonCode())) {
-            List<KnownErrorResponse> knownErrorResponses =
-                    KNOWN_ERRORS.get(errorResponse.getReasonCode());
+    public interface AuthenticationExceptionMapper {
 
-            for (KnownErrorResponse knownErrorResponse : knownErrorResponses) {
-                if (displayMessagesAreEqual(errorResponse, knownErrorResponse)
-                        || displayMessageMatchesPattern(
-                                errorResponse, knownErrorResponse.getPattern())) {
-                    return knownErrorResponse.getErrorToReturn();
+        AgentBankApiError toAgentBankApiError(AuthenticationException e);
+
+        class LoginExceptionMapper implements AuthenticationExceptionMapper {
+
+            @Override
+            public AgentBankApiError toAgentBankApiError(AuthenticationException e) {
+                LoginException loginException = (LoginException) e;
+                switch (loginException.getError()) {
+                    case CREDENTIALS_VERIFICATION_ERROR:
+                        log.error(e.getMessage());
+                        return new AuthorizationError();
+                    case INCORRECT_CREDENTIALS:
+                        log.error(e.getMessage());
+                        return new InvalidCredentialsError();
+                    case DEFAULT_MESSAGE:
+                        log.error(e.getMessage());
+                        return new ThirdPartyAppUnknownError();
+                    default:
+                        return new ThirdPartyAppUnknownError();
                 }
             }
         }
-        return defaultError;
-    }
 
-    private static boolean displayMessagesAreEqual(
-            ErrorResponse errorResponse, KnownErrorResponse knownErrorResponse) {
-        return knownErrorResponse.getPattern() == null
-                && Objects.equals(
-                        knownErrorResponse.getReasonDisplayMessage(),
-                        errorResponse.getReasonDisplayMessage());
-    }
+        class NemIdExceptionMapper implements AuthenticationExceptionMapper {
 
-    private static boolean displayMessageMatchesPattern(
-            ErrorResponse errorResponse, Pattern knownErrorMessagePattern) {
-        return knownErrorMessagePattern != null
-                && StringUtils.isNotBlank(errorResponse.getReasonDisplayMessage())
-                && knownErrorMessagePattern
-                        .matcher(errorResponse.getReasonDisplayMessage())
-                        .matches();
-    }
-
-    private static ErrorResponse getBodyAsExpectedType(String response) {
-        try {
-            return SerializationUtils.deserializeFromString(response, ErrorResponse.class);
-        } catch (RuntimeException e) {
-            return null;
+            @Override
+            public AgentBankApiError toAgentBankApiError(AuthenticationException e) {
+                NemIdException nemIdException = (NemIdException) e;
+                switch (nemIdException.getError()) {
+                    case REJECTED:
+                        log.error(e.getError().name());
+                        return new ThirdPartyAppCancelledError();
+                    case TIMEOUT:
+                        log.error(e.getError().name());
+                        return new ThirdPartyAppTimedOutError();
+                    case CODEAPP_NOT_REGISTERED:
+                        log.error(e.getMessage());
+                        return new AuthorizationError();
+                    default:
+                        return new ThirdPartyAppUnknownError();
+                }
+            }
         }
-    }
 
-    public static AgentBankApiError toErrorFromLoginException(LoginException e) {
-        switch (e.getError()) {
-            case CREDENTIALS_VERIFICATION_ERROR:
-                log.error(e.getMessage());
-                return new AuthorizationError();
-            case INCORRECT_CREDENTIALS:
-                log.error(e.getMessage());
-                return new InvalidCredentialsError();
-            case DEFAULT_MESSAGE:
-                log.error(e.getMessage());
-                return new ThirdPartyAppUnknownError();
-            default:
-                return new ThirdPartyAppUnknownError();
-        }
-    }
+        class SupplementalInfoExceptionMapper implements AuthenticationExceptionMapper {
 
-    public static AgentBankApiError toErrorFromNemIdException(NemIdException e) {
-        switch (e.getError()) {
-            case REJECTED:
-                log.error(e.getError().name());
-                return new ThirdPartyAppCancelledError();
-            case TIMEOUT:
-                log.error(e.getError().name());
-                return new ThirdPartyAppTimedOutError();
-            case CODEAPP_NOT_REGISTERED:
-                log.error(e.getMessage());
-                return new AuthorizationError();
-            default:
-                return new ThirdPartyAppUnknownError();
+            @Override
+            public AgentBankApiError toAgentBankApiError(AuthenticationException e) {
+                SupplementalInfoException supplementalInfoException = (SupplementalInfoException) e;
+                if (supplementalInfoException.getError() == SupplementalInfoError.WAIT_TIMEOUT) {
+                    return new NoUserInteractionResponseError();
+                }
+                throw e;
+            }
         }
-    }
-
-    public static AgentBankApiError toErrorFromSupplementalInfoException(
-            SupplementalInfoException e) {
-        if (e.getError() == SupplementalInfoError.WAIT_TIMEOUT) {
-            return new NoUserInteractionResponseError();
-        }
-        throw e;
-    }
-
-    public static AgentFailedAuthenticationResult getSignInFailedAuthResult(
-            LunarAuthDataAccessor authDataAccessor, ResponseStatusException e, boolean isAutoAuth) {
-        if (isAutoAuth) {
-            log.error("Failed to signIn to Lunar during autoAuth", e);
-            return new AgentFailedAuthenticationResult(
-                    new SessionExpiredError(), authDataAccessor.storeData(new LunarAuthData()));
-        }
-        log.error("Failed to signIn to Lunar", e);
-        return new AgentFailedAuthenticationResult(
-                AuthenticationExceptionHandler.toKnownErrorFromResponseOrDefault(
-                        e, new AccessTokenFetchingFailureError()),
-                authDataAccessor.storeData(new LunarAuthData()));
     }
 }

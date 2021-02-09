@@ -26,4 +26,8 @@ public class LunarAuthDataAccessor
     public AgentAuthenticationPersistedData storeData(LunarAuthData value) {
         return super.store(value);
     }
+
+    public AgentAuthenticationPersistedData clearData() {
+        return super.store(new LunarAuthData());
+    }
 }

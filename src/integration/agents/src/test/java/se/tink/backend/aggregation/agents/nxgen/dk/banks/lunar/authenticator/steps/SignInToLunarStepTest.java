@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.steps;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -13,6 +12,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.ObjectMapperFactory;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.LunarTestUtils;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.client.AuthenticationApiClient;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.persistance.LunarAuthData;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.persistance.LunarAuthDataAccessor;
@@ -57,12 +57,12 @@ public class SignInToLunarStepTest {
         initialData.setAccessToken(ACCESS_TOKEN);
         initialData.setDeviceId(DEVICE_ID);
 
-        stateAccessor = StepsUtils.getProcessStateAccessor(dataAccessorFactory, processState);
+        stateAccessor = LunarTestUtils.getProcessStateAccessor(dataAccessorFactory, processState);
         LunarAuthDataAccessor authDataAccessor =
-                StepsUtils.getAuthDataAccessor(dataAccessorFactory, initialData);
+                LunarTestUtils.getAuthDataAccessor(dataAccessorFactory, initialData);
 
         request =
-                StepsUtils.getProceedNextStepAuthRequest(
+                LunarTestUtils.getProceedNextStepAuthRequest(
                         stateAccessor, authDataAccessor, processState, initialData);
     }
 
@@ -87,7 +87,7 @@ public class SignInToLunarStepTest {
         assertThat(result)
                 .isEqualTo(
                         new AgentSucceededAuthenticationResult(
-                                StepsUtils.getExpectedPersistedData(expectedData)));
+                                LunarTestUtils.toPersistedData(expectedData)));
     }
 
     @Test
@@ -95,7 +95,7 @@ public class SignInToLunarStepTest {
     public void shouldReturnFailedResultWhenSignInRequestFailed(
             boolean isAutoAuth, AgentBankApiError error) {
         // given
-        when(apiClient.signIn(any(), any(), any()))
+        when(apiClient.signIn(LUNAR_PASSWORD, ACCESS_TOKEN, DEVICE_ID))
                 .thenThrow(new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR));
 
         // and
@@ -104,14 +104,14 @@ public class SignInToLunarStepTest {
         // and
         AgentFailedAuthenticationResult expected =
                 new AgentFailedAuthenticationResult(
-                        error, StepsUtils.getExpectedPersistedData(new LunarAuthData()));
+                        error, LunarTestUtils.toPersistedData(new LunarAuthData()));
 
         // when
         AgentFailedAuthenticationResult result =
                 (AgentFailedAuthenticationResult) signInToLunarStep.execute(request);
 
         // then
-        StepsUtils.assertFailedResultEquals(expected, result);
+        LunarTestUtils.assertFailedResultEquals(expected, result);
     }
 
     private Object[] failedSignInRequestParams() {
@@ -141,14 +141,14 @@ public class SignInToLunarStepTest {
         // and
         AgentFailedAuthenticationResult expected =
                 new AgentFailedAuthenticationResult(
-                        error, StepsUtils.getExpectedPersistedData(new LunarAuthData()));
+                        error, LunarTestUtils.toPersistedData(new LunarAuthData()));
 
         // when
         AgentFailedAuthenticationResult result =
                 (AgentFailedAuthenticationResult) signInToLunarStep.execute(request);
 
         // then
-        StepsUtils.assertFailedResultEquals(expected, result);
+        LunarTestUtils.assertFailedResultEquals(expected, result);
     }
 
     private Object[] emptyTokenParams() {

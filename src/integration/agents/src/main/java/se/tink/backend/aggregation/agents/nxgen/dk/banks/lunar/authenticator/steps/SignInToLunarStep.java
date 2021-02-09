@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.client.AuthenticationApiClient;
-import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.exception.AuthenticationExceptionHandler;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.exception.LunarAuthExceptionHandler;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.persistance.LunarAuthData;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.persistance.LunarAuthDataAccessor;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.persistance.LunarDataAccessorFactory;
@@ -50,14 +50,14 @@ public class SignInToLunarStep
         try {
             tokenResponse = apiClient.signIn(lunarPassword, token, deviceId);
         } catch (ResponseStatusException e) {
-            return AuthenticationExceptionHandler.getSignInFailedAuthResult(
+            return LunarAuthExceptionHandler.getSignInFailedAuthResult(
                     authDataAccessor, e, isAutoAuth);
         }
 
         if (StringUtils.isBlank(tokenResponse.getToken())) {
             log.error("Token in the response from Lunar is empty!");
             return new AgentFailedAuthenticationResult(
-                    getDefaultError(isAutoAuth), authDataAccessor.storeData(new LunarAuthData()));
+                    getDefaultError(isAutoAuth), authDataAccessor.clearData());
         }
 
         setNewAccessTokenIfDifferent(authData, token, tokenResponse);

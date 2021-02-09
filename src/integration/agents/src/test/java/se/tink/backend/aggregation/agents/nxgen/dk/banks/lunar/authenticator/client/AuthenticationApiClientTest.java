@@ -27,13 +27,13 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import se.tink.backend.aggregation.agents.agentplatform.AgentPlatformHttpClient;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.LunarTestUtils;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.entites.NemIdEntity;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.rpc.AccessTokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.rpc.AccessTokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.rpc.NemIdParamsResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.rpc.SignInRequest;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.rpc.TokenResponse;
-import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.steps.StepsUtils;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.MockRandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.libraries.serialization.utils.SerializationUtils;
@@ -86,7 +86,7 @@ public class AuthenticationApiClientTest {
                 FileUtils.readFileToString(
                         Paths.get(TEST_DATA_PATH, "nem_id_parameters.json").toFile(),
                         StandardCharsets.UTF_8),
-                StepsUtils.getExpectedNemIdParamsResponse()
+                LunarTestUtils.getExpectedNemIdParamsResponse()
             },
             new Object[] {null, new NemIdParamsResponse()},
         };

@@ -13,6 +13,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.ObjectMapperFactory;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.LunarTestUtils;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.client.AuthenticationApiClient;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.persistance.LunarAuthData;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.persistance.LunarAuthDataAccessor;
@@ -60,12 +61,12 @@ public class GetLunarAccessTokenStepTest {
         initialData.setDeviceId(DEVICE_ID);
 
         LunarProcessStateAccessor stateAccessor =
-                StepsUtils.getProcessStateAccessor(dataAccessorFactory, processState);
+                LunarTestUtils.getProcessStateAccessor(dataAccessorFactory, processState);
         LunarAuthDataAccessor authDataAccessor =
-                StepsUtils.getAuthDataAccessor(dataAccessorFactory, initialData);
+                LunarTestUtils.getAuthDataAccessor(dataAccessorFactory, initialData);
 
         request =
-                StepsUtils.getUserInteractionAuthProcessRequest(
+                LunarTestUtils.getUserInteractionAuthProcessRequest(
                         stateAccessor, authDataAccessor, processState, initialData);
     }
 
@@ -98,8 +99,8 @@ public class GetLunarAccessTokenStepTest {
                 .isEqualTo(
                         new AgentProceedNextStepAuthenticationResult(
                                 AgentAuthenticationProcessStep.identifier(SignInToLunarStep.class),
-                                StepsUtils.getExpectedState(expectedState),
-                                StepsUtils.getExpectedPersistedData(expectedData)));
+                                LunarTestUtils.toProcessState(expectedState),
+                                LunarTestUtils.toPersistedData(expectedData)));
     }
 
     @Test
@@ -112,19 +113,15 @@ public class GetLunarAccessTokenStepTest {
         when(apiClient.postNemIdToken(NEM_ID_TOKEN, CHALLENGE, DEVICE_ID))
                 .thenReturn(accessTokenResponse);
 
-        // and
-        LunarAuthData expectedData = new LunarAuthData();
-        expectedData.setDeviceId(DEVICE_ID);
-
         // when
         AgentFailedAuthenticationResult result =
                 (AgentFailedAuthenticationResult) getLunarAccessTokenStep.execute(request);
 
         // then
-        StepsUtils.assertFailedResultEquals(
+        LunarTestUtils.assertFailedResultEquals(
                 new AgentFailedAuthenticationResult(
                         new AccessTokenFetchingFailureError(),
-                        StepsUtils.getExpectedPersistedData(expectedData)),
+                        LunarTestUtils.toPersistedData(new LunarAuthData())),
                 result);
     }
 
@@ -143,19 +140,15 @@ public class GetLunarAccessTokenStepTest {
                                 HttpStatus.INTERNAL_SERVER_ERROR,
                                 "{\"reasonCode\": \"USER_NOT_FOUND\"}"));
 
-        // and
-        LunarAuthData expectedData = new LunarAuthData();
-        expectedData.setDeviceId(DEVICE_ID);
-
         // when
         AgentFailedAuthenticationResult result =
                 (AgentFailedAuthenticationResult) getLunarAccessTokenStep.execute(request);
 
         // then
-        StepsUtils.assertFailedResultEquals(
+        LunarTestUtils.assertFailedResultEquals(
                 new AgentFailedAuthenticationResult(
                         new ThirdPartyAppNoClientError(),
-                        StepsUtils.getExpectedPersistedData(expectedData)),
+                        LunarTestUtils.toPersistedData(new LunarAuthData())),
                 result);
     }
 }

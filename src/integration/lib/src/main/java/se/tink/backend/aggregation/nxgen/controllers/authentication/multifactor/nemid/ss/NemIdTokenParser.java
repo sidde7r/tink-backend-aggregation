@@ -1,13 +1,12 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss;
 
+import java.nio.charset.StandardCharsets;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
-
-import java.nio.charset.StandardCharsets;
 
 @Slf4j
 public class NemIdTokenParser {

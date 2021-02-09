@@ -8,6 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.ObjectMapperFactory;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.LunarTestUtils;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.persistance.LunarAuthData;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.persistance.LunarAuthDataAccessor;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.persistance.LunarDataAccessorFactory;
@@ -42,9 +43,9 @@ public class LunarAuthInitStepTest {
         LunarAuthData initialData = getAuthData(userId, lunarPassword, token, deviceId);
 
         LunarAuthDataAccessor authDataAccessor =
-                StepsUtils.getAuthDataAccessor(dataAccessorFactory, initialData);
+                LunarTestUtils.getAuthDataAccessor(dataAccessorFactory, initialData);
 
-        request = StepsUtils.getStartAuthProcessRequest(authDataAccessor, initialData);
+        request = LunarTestUtils.getStartAuthProcessRequest(authDataAccessor, initialData);
 
         // and
         LunarAuthData expectedData = getAuthData(userId, lunarPassword, token, deviceId);
@@ -58,7 +59,7 @@ public class LunarAuthInitStepTest {
                         new AgentProceedNextStepAuthenticationResult(
                                 AgentAuthenticationProcessStep.identifier(
                                         GetUserCredentialsStep.class),
-                                StepsUtils.getExpectedPersistedData(expectedData)));
+                                LunarTestUtils.toPersistedData(expectedData)));
     }
 
     private LunarAuthData getAuthData(
@@ -97,9 +98,9 @@ public class LunarAuthInitStepTest {
         LunarAuthData initialData = getAuthData(USER_ID, LUNAR_PASSWORD, ACCESS_TOKEN, DEVICE_ID);
 
         LunarAuthDataAccessor authDataAccessor =
-                StepsUtils.getAuthDataAccessor(dataAccessorFactory, initialData);
+                LunarTestUtils.getAuthDataAccessor(dataAccessorFactory, initialData);
 
-        request = StepsUtils.getStartAuthProcessRequest(authDataAccessor, initialData);
+        request = LunarTestUtils.getStartAuthProcessRequest(authDataAccessor, initialData);
 
         // and
         LunarAuthData expectedData = getAuthData(USER_ID, LUNAR_PASSWORD, ACCESS_TOKEN, DEVICE_ID);
@@ -113,6 +114,6 @@ public class LunarAuthInitStepTest {
                         new AgentProceedNextStepAuthenticationResult(
                                 AgentAuthenticationProcessStep.identifier(
                                         AutoAuthenticationStep.class),
-                                StepsUtils.getExpectedPersistedData(expectedData)));
+                                LunarTestUtils.toPersistedData(expectedData)));
     }
 }

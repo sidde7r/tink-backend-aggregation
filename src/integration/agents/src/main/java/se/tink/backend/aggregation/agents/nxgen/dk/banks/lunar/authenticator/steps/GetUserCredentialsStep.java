@@ -1,8 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.steps;
 
 import se.tink.backend.agents.rpc.Field;
-import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.LunarConstants.Storage;
-import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.fields.AgentField;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.fields.LunarPasswordFieldDefinition;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.request.AgentProceedNextStepAuthenticationRequest;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentUserInteractionDefinitionResult;
@@ -21,6 +20,6 @@ public class GetUserCredentialsStep
                 request.getAuthenticationProcessState(),
                 AgentUsernameFieldDefinition.of(),
                 AgentPasswordFieldDefinition.of(),
-                new AgentField(Field.Key.ACCESS_PIN.getFieldKey(), Storage.ACCESS_PIN_INPUT_LABEL));
+                new LunarPasswordFieldDefinition(Field.Key.ACCESS_PIN.getFieldKey()));
     }
 }
