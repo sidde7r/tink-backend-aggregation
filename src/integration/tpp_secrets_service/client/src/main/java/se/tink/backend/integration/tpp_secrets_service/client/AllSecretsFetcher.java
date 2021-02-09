@@ -50,13 +50,11 @@ class AllSecretsFetcher {
         }
 
         // TODO: Remove this once Access team confirms there are no null appIds
-        if (Strings.emptyToNull(appId) == null
-                || Strings.emptyToNull(financialInstitutionId) == null) {
+        if (Strings.emptyToNull(appId) == null || Strings.emptyToNull(providerId) == null) {
             return Optional.empty();
         }
 
-        GetSecretsRequest getSecretsRequest =
-                buildRequest(financialInstitutionId, appId, clusterId, certId, providerId);
+        GetSecretsRequest getSecretsRequest = buildRequest(appId, clusterId, certId, providerId);
 
         GetAllSecretsResponse response =
                 internalSecretsServiceStub.getAllSecrets(getSecretsRequest);
@@ -80,19 +78,12 @@ class AllSecretsFetcher {
     }
 
     private GetSecretsRequest buildRequest(
-            String financialInstitutionId,
-            String appId,
-            String clusterId,
-            String certId,
-            String providerId) {
-        Preconditions.checkNotNull(
-                financialInstitutionId, "financialInstitutionId must not be null");
+            String appId, String clusterId, String certId, String providerId) {
         Preconditions.checkNotNull(appId, "appId must not be null");
         Preconditions.checkNotNull(clusterId, "clusterId must not be null");
         Preconditions.checkNotNull(providerId, "providerId must not be null");
 
         return GetSecretsRequest.newBuilder()
-                .setFinancialInstitutionId(financialInstitutionId)
                 .setProviderId(providerId)
                 .setAppId(appId)
                 .setClusterId(clusterId)
