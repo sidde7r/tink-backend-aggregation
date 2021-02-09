@@ -115,7 +115,7 @@ public class QsealcSignerImpl implements QsealcSigner {
      * <p>is equivalent to:
      *
      * <pre>{@code
-     * Signature privateSignature = Signature.getInsta<nce("SHA256withRSA");
+     * Signature privateSignature = Signature.getInstance("SHA256withRSA");
      * privateSignature.initSign(privateKey);
      * privateSignature.update(signingData);
      * byte[] sig = privateSignature.sign();

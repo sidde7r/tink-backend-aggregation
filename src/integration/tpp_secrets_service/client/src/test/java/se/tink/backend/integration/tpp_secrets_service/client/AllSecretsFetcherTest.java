@@ -46,8 +46,7 @@ public class AllSecretsFetcherTest {
 
         // when
         Optional<SecretsEntityCore> resp =
-                allSecretsFetcher.getAllSecrets(
-                        financialInstitutionId, appId, clusterId, certId, providerId);
+                allSecretsFetcher.getAllSecrets(appId, clusterId, certId, providerId);
 
         // then
         Assert.assertFalse(resp.isPresent());
@@ -61,8 +60,7 @@ public class AllSecretsFetcherTest {
 
         // when
         Optional<SecretsEntityCore> resp =
-                allSecretsFetcher.getAllSecrets(
-                        financialInstitutionId, appId, clusterId, certId, providerId);
+                allSecretsFetcher.getAllSecrets(appId, clusterId, certId, providerId);
 
         // then
         Assert.assertFalse(resp.isPresent());
@@ -72,12 +70,10 @@ public class AllSecretsFetcherTest {
     public void shouldGetAllSecretsReturnOptionalEmptyWhenFinancialInstitutionIdIsNull() {
         // given
         allSecretsFetcher = new AllSecretsFetcher(enabled, internalSecretsServiceStub);
-        financialInstitutionId = null;
 
         // when
         Optional<SecretsEntityCore> resp =
-                allSecretsFetcher.getAllSecrets(
-                        financialInstitutionId, appId, clusterId, certId, providerId);
+                allSecretsFetcher.getAllSecrets(appId, clusterId, certId, null);
 
         // then
         Assert.assertFalse(resp.isPresent());
@@ -93,8 +89,7 @@ public class AllSecretsFetcherTest {
 
         // when
         Optional<SecretsEntityCore> resp =
-                allSecretsFetcher.getAllSecrets(
-                        financialInstitutionId, appId, clusterId, certId, providerId);
+                allSecretsFetcher.getAllSecrets(appId, clusterId, certId, providerId);
 
         // then, expected exception is thrown
     }

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.integration.tpp_secrets_service.client.entities.SecretsEntityCore;
@@ -31,14 +32,9 @@ class AllSecretsFetcher {
     }
 
     public Optional<SecretsEntityCore> getAllSecrets(
-            String financialInstitutionId,
-            String appId,
-            String clusterId,
-            String certId,
-            String providerId) {
+            String appId, String clusterId, String certId, String providerId) {
         log.info(
-                "calling SecretService getAllSecrets with params: financialInstitutionId:{}, appId:{}, clusterId:{}, certId: {}, providerId:{}",
-                financialInstitutionId,
+                "calling SecretService getAllSecrets with params: appId:{}, clusterId:{}, certId: {}, providerId:{}",
                 appId,
                 clusterId,
                 certId,
@@ -50,7 +46,7 @@ class AllSecretsFetcher {
         }
 
         // TODO: Remove this once Access team confirms there are no null appIds
-        if (Strings.emptyToNull(appId) == null || Strings.emptyToNull(providerId) == null) {
+        if (StringUtils.isBlank(appId) || StringUtils.isBlank(providerId)) {
             return Optional.empty();
         }
 
