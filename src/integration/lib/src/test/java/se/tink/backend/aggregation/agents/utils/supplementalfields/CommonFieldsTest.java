@@ -45,6 +45,13 @@ public class CommonFieldsTest {
         assertThat(result.isImmutable()).isFalse();
         assertThat(result.getPattern()).isNotNull();
         assertThat(result.getPatternError()).isEqualTo("The value you entered is not valid.");
+        assertThat(result.getSelectOptions().size()).isEqualTo(3);
+        assertThat(result.getSelectOptions().get(0).getText()).isEqualTo("First");
+        assertThat(result.getSelectOptions().get(0).getValue()).isEqualTo("1");
+        assertThat(result.getSelectOptions().get(1).getText()).isEqualTo("Second");
+        assertThat(result.getSelectOptions().get(1).getValue()).isEqualTo("2");
+        assertThat(result.getSelectOptions().get(2).getText()).isEqualTo("Third");
+        assertThat(result.getSelectOptions().get(2).getValue()).isEqualTo("3");
 
         verify(catalog, times(2)).getString(any(LocalizableKey.class));
         verify(catalog).getString(any(LocalizableParametrizedKey.class), any());

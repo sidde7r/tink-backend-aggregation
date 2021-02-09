@@ -3,9 +3,11 @@ package se.tink.backend.aggregation.agents.utils.supplementalfields;
 import static java.util.stream.Collectors.joining;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.agents.rpc.Field;
+import se.tink.backend.agents.rpc.SelectOption;
 import se.tink.backend.aggregation.utils.RangeRegex;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.i18n.LocalizableKey;
@@ -58,7 +60,16 @@ public class CommonFields {
                     .maxLength(Integer.toString(maxNumber).length())
                     .pattern(RangeRegex.regexForRange(1, maxNumber))
                     .patternError(catalog.getString(PATTERN_ERROR_MESSAGE))
+                    .selectOptions(prepareSelectOptions(options))
                     .build();
+        }
+
+        private static List<SelectOption> prepareSelectOptions(List<String> options) {
+            return IntStream.range(0, options.size())
+                    .mapToObj(
+                            index ->
+                                    new SelectOption(options.get(index), String.valueOf(index + 1)))
+                    .collect(Collectors.toList());
         }
     }
 
