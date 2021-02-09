@@ -46,7 +46,7 @@ public class LoginAgentEventProducer {
                             .setAppId(integrationParameters.getAppId())
                             .setClusterId(integrationParameters.getClusterId())
                             .setUserId(integrationParameters.getUserId())
-                            .setUserInteractionInformation(userInteractionInformation)
+                            .setUserInteraction(userInteractionInformation)
                             .build();
 
             eventProducerServiceClient.postEventAsync(Any.pack(event));
