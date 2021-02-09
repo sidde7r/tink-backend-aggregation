@@ -12,9 +12,12 @@ public class Sparebank1Constants {
                 new URL(BASE_LOGIN + "auth/pages/selectMarketAndAuthType.xhtml");
         static final URL POLL_BANKID = new URL(BASE_LOGIN + "auth/api/bim/poll");
         static final URL LOGIN_DONE = new URL(BASE_LOGIN + "auth/pages/loginDone.xhtml");
-
-        public static final URL ACCOUNTS =
+        public static final URL ACCOUNT_DETAILS =
+                new URL(BASE + "{bankName}/nettbank-privat/rest/konto/{accountId}/detaljer");
+        public static final URL ACCOUNTS_IDENTIFIERS =
                 new URL(BASE + "{bankName}/nettbank-privat/rest/accounts");
+        public static final URL ACCOUNTS =
+                new URL(BASE + "{bankName}/nettbank-privat/rest/kontoer");
         public static final URL CREDITCARDS =
                 new URL(BASE + "{bankName}/nettbank-privat/kort/rest/cards/credit");
         public static final URL LOANS = new URL(BASE + "{bankName}/nettbank-privat/rest/loans");
@@ -36,6 +39,8 @@ public class Sparebank1Constants {
         static final URL BRANCHES = new URL(BASE + "/personal/banking/bankrelations");
         static final URL TOKEN = new URL(BASE + "personal/banking/mobilbank/activation/rest/token");
         static final URL SESSION = new URL(BASE + "personal/rest/session");
+        static final URL ACCOUNT_TRANSACTION =
+                new URL(BASE + "sr-bank/nettbank-privat/rest/kontoer/{accountId}/kontobevegelser");
     }
 
     public static class Parameters {
@@ -49,6 +54,10 @@ public class Sparebank1Constants {
         public static final String APP = "app";
         public static final String MARKET = "market";
         public static final String UNDERSCORE = "_";
+        public static final String FROM_DATE = "fromDate";
+        public static final String TO_DATE = "toDate";
+        public static final String ROW_LIMIT = "rowLimit";
+        public static final String PAGINATION_LIMIT_VAL = "25000";
     }
 
     public static class Headers {

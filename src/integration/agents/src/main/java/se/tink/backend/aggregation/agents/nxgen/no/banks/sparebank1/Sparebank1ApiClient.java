@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1;
 
+import java.util.Date;
 import javax.ws.rs.core.MediaType;
 import lombok.Data;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
@@ -20,13 +21,18 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.authenticato
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.authenticator.rpc.SessionResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.authenticator.rpc.TokenExpirationTimeResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.authenticator.rpc.TokenResponse;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.account.rpc.AccountApiIdentifiersResponse;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.account.rpc.AccountDetailsResponse;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.account.rpc.AccountListResponse;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.account.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.entities.LoanDetailsEntity;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.rpc.CreditCardTransactionsResponse;
-import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.rpc.TransactionsResponse;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.libraries.date.ThreadSafeDateFormat;
 
 @Data
 public class Sparebank1ApiClient {
@@ -98,8 +104,17 @@ public class Sparebank1ApiClient {
                 .get(LoanDetailsEntity.class);
     }
 
-    public TransactionsResponse fetchTransactions(String url) {
-        return client.request(url).get(TransactionsResponse.class);
+    public PaginatorResponse fetchTransactions(String accountId, Date fromDate, Date toDate) {
+        return client.request(Urls.ACCOUNT_TRANSACTION.parameter(Parameters.ACCOUNT_ID, accountId))
+                .accept(MediaType.APPLICATION_JSON_TYPE)
+                .type(MediaType.APPLICATION_JSON_TYPE)
+                .queryParam(
+                        QueryParams.FROM_DATE,
+                        ThreadSafeDateFormat.FORMATTER_DAILY.format(fromDate))
+                .queryParam(
+                        QueryParams.TO_DATE, ThreadSafeDateFormat.FORMATTER_DAILY.format(toDate))
+                .queryParam(QueryParams.ROW_LIMIT, QueryParams.PAGINATION_LIMIT_VAL)
+                .get(TransactionsResponse.class);
     }
 
     public HttpResponse logout() {
@@ -177,5 +192,24 @@ public class Sparebank1ApiClient {
 
     public SessionResponse finishSessionInitiation(SessionRequest request) throws SessionException {
         return getJsonSessionRequestBuilder(Urls.SESSION).put(SessionResponse.class, request);
+    }
+
+    public AccountListResponse fetchAccounts() {
+        return client.request(Urls.ACCOUNTS_IDENTIFIERS.parameter(Parameters.BANK_NAME, bankId))
+                .get(AccountListResponse.class);
+    }
+
+    public AccountDetailsResponse fetchAccountDetails(String accountId) {
+        return client.request(
+                        Urls.ACCOUNT_DETAILS
+                                .parameter(Parameters.BANK_NAME, bankId)
+                                .parameter(Parameters.ACCOUNT_ID, accountId))
+                .get(AccountDetailsResponse.class);
+    }
+
+    public AccountApiIdentifiersResponse fetchAccountApiIdentifiers() {
+        return client.request(Urls.ACCOUNTS.parameter(Parameters.BANK_NAME, bankId))
+                .queryParam("type", "REGULAR_ACCOUNT")
+                .get(AccountApiIdentifiersResponse.class);
     }
 }
