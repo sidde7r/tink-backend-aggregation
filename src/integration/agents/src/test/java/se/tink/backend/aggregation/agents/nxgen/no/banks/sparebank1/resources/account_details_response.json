@@ -1,0 +1,30 @@
+{
+    "accountName": "Sparekonto",
+    "accountNumber": "accountNumber1",
+    "accountNumberFormatted": "1813 33 85122",
+    "accountType": "SAVING",
+    "owner": "ownerDummyName",
+    "withdrawal": {
+        "freeWithdrawals": true,
+        "freeWithdrawalsNumber": 12,
+        "freeWithdrawalsDate": 1640962006346
+    },
+    "interests": {
+        "interestRate": 0.15000,
+        "interestEarned": 2.190,
+        "interestLastYear": 216.000,
+        "interestExpenses": 0.000
+    },
+    "amount": {
+        "disposableAmount": 8842.290,
+        "blockedPayment": 0.000,
+        "balance": 8842.290,
+        "confirmedAmount": 0.000,
+        "creditLine": 2.340,
+        "suspenseAmount": 0.000
+    },
+    "urls": {
+        "transactionUrl": "https://mobilbank-pm.sparebank1.no/ostlandet/nettbank-privat/kontoer/bevegelser?selectedAccount=8D27587B7F42",
+        "changeAccountNameUrl": "https://mobilbank-pm.sparebank1.no/ostlandet/nettbank-privat/kontoer/innstillinger"
+    }
+}

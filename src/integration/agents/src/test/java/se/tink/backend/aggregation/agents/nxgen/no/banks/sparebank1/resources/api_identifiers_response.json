@@ -1,0 +1,42 @@
+{
+    "accounts": [
+        {
+            "key": "key1",
+            "name": "ALLTID 18-33",
+            "accountNumber": "accountNumber1",
+            "disposableAmountInteger": "0",
+            "disposableAmountFraction": "00",
+            "balanceAmountInteger": "0",
+            "balanceAmountFraction": "00",
+            "currencyCode": "NOK",
+            "balanceIsPreferred": false,
+            "origin": "REGULAR_ACCOUNT",
+            "owner": "SELF",
+            "showPagination": true,
+            "showTransactionDetails": true,
+            "classificationEnabled": true,
+            "expensesEnabled": true,
+            "metadata": {},
+            "defaultAccount": false
+        },
+        {
+            "key": "key2",
+            "name": "Tink test 123",
+            "accountNumber": "accountNumber2",
+            "disposableAmountInteger": "210",
+            "disposableAmountFraction": "00",
+            "balanceAmountInteger": "210",
+            "balanceAmountFraction": "00",
+            "currencyCode": "NOK",
+            "balanceIsPreferred": false,
+            "origin": "REGULAR_ACCOUNT",
+            "owner": "SELF",
+            "showPagination": true,
+            "showTransactionDetails": true,
+            "classificationEnabled": true,
+            "expensesEnabled": true,
+            "metadata": {},
+            "defaultAccount": false
+        }
+    ]
+}

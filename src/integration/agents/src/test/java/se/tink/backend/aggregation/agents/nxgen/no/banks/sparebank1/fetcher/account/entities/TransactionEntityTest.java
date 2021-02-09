@@ -1,8 +1,10 @@
-package se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.entities;
+package se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.account.entities;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.math.BigDecimal;
 import org.junit.Test;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.account.entity.TransactionEntity;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 public class TransactionEntityTest {
@@ -84,18 +86,14 @@ public class TransactionEntityTest {
     private TransactionEntity getTransactionEntity() {
         TransactionEntity te = new TransactionEntity();
         te.setDescription("MERCHANT");
-        te.setDate("2017-01-01");
-        te.setAmountInteger("10");
-        te.setAmountFraction("10");
+        te.setAmount(new BigDecimal("10.25"));
         return te;
     }
 
     private TransactionEntity getTransactionEntityWithDescription(String description) {
         TransactionEntity te = new TransactionEntity();
         te.setDescription(description);
-        te.setDate("2017-01-01");
-        te.setAmountInteger("10");
-        te.setAmountFraction("10");
+        te.setAmount(new BigDecimal("10.25"));
         return te;
     }
 }

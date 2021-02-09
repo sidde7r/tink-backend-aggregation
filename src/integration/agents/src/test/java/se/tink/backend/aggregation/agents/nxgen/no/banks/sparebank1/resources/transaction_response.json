@@ -1,0 +1,54 @@
+{
+    "transactions": [
+        {
+            "id": "818018392555213740|320927579421602453600000",
+            "description": "description1",
+            "accountNumber": "32092757942",
+            "accountNumberFormatted": "3209 27 57942",
+            "accountName": "Tink test 123",
+            "remoteAccountNumber": "12061699803",
+            "remoteAccountNumberFormatted": "1206 16 99803",
+            "amount": 100.00,
+            "categoryId": -1,
+            "subCategoryId": -1,
+            "date": 1602453600000,
+            "type": "Overføring",
+            "typeCode": "014",
+            "currencyCode": "NOK",
+            "accountKey": "swR4Pc5kO2ONejbyjIMw",
+            "source": "ADVH",
+            "classificationInput": {
+                "id": "4c32af50-334e-4ea0-9018-2181a149e388",
+                "amount": 100,
+                "type": "R_014",
+                "text": "Vegard Skaar Haveland",
+                "date": 1602453600000
+            }
+        },
+        {
+            "id": "129317517736754740|320927579421602453600000",
+            "description": "description2",
+            "accountNumber": "32092757942",
+            "accountNumberFormatted": "3209 27 57942",
+            "accountName": "Tink test 123",
+            "remoteAccountNumber": "15031563892",
+            "remoteAccountNumberFormatted": "1503 15 63892",
+            "amount": -50.32,
+            "categoryId": 104,
+            "subCategoryId": 113,
+            "date": 1612523821000,
+            "type": "Overføring",
+            "typeCode": "014",
+            "currencyCode": "NOK",
+            "accountKey": "swR4Pc5kO2ONejbyjIMw",
+            "source": "ADVH",
+            "classificationInput": {
+                "id": "1efa954f-15fd-484d-9a00-f7c392cb7da7",
+                "amount": -50.32,
+                "type": "R_014",
+                "text": "BANK NORWEGIAN",
+                "date": 1612523821000
+            }
+        }
+    ]
+}
