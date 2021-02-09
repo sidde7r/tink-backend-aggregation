@@ -71,7 +71,7 @@ public abstract class NordeaPartnerAgent extends NextGenerationAgent
                         .minus(1, ChronoUnit.YEARS);
         transactionalAccountRefreshController =
                 constructTransactionalAccountRefreshController(transactionDateLimit);
-        creditCardRefreshController = constructCreditCardRefreshController();
+        creditCardRefreshController = constructCreditCardRefreshController(transactionDateLimit);
 
         NordeaPartnerConfiguration nordeaConfiguration =
                 getAgentConfigurationController()
@@ -183,9 +183,10 @@ public abstract class NordeaPartnerAgent extends NextGenerationAgent
 
     protected abstract ZoneId getPaginatorZoneId();
 
-    private CreditCardRefreshController constructCreditCardRefreshController() {
+    private CreditCardRefreshController constructCreditCardRefreshController(
+            LocalDate transactionDateLimit) {
         final NordeaPartnerCreditCardAccountFetcher fetcher =
-                new NordeaPartnerCreditCardAccountFetcher(apiClient);
+                new NordeaPartnerCreditCardAccountFetcher(apiClient, transactionDateLimit);
         return new CreditCardRefreshController(
                 metricRefreshController,
                 updateController,
