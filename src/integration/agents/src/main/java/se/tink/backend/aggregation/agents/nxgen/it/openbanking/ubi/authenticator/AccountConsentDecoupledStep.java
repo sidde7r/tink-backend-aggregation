@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.agents.rpc.Field.Key;
-import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
@@ -18,6 +17,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.i18n.LocalizableKey;
@@ -27,7 +27,7 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 public class AccountConsentDecoupledStep implements AuthenticationStep {
     private final ConsentManager consentManager;
     private final StrongAuthenticationState strongAuthenticationState;
-    private final SupplementalRequester supplementalRequester;
+    private final SupplementalInformationController supplementalInformationController;
     private final Catalog catalog;
 
     private static final LocalizableKey DESCRIPTION =
@@ -66,7 +66,7 @@ public class AccountConsentDecoupledStep implements AuthenticationStep {
                 SerializationUtils.serializeToString(Collections.singletonList(field)));
         credentials.setStatus(CredentialsStatus.AWAITING_SUPPLEMENTAL_INFORMATION);
 
-        supplementalRequester.requestSupplementalInformation(credentials, false);
+        supplementalInformationController.askSupplementalInformationAsync(field);
     }
 
     @Override

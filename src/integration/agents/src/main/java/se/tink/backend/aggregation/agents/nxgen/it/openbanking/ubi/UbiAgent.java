@@ -27,7 +27,7 @@ public final class UbiAgent extends CbiGlobeAgent {
                             strongAuthenticationState,
                             userState,
                             getAgentConfiguration().getProviderSpecificConfiguration(),
-                            supplementalRequester,
+                            supplementalInformationController,
                             catalog);
         }
 
