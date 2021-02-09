@@ -1,0 +1,67 @@
+{
+  "cardAccounts": [
+    {
+      "name": "card_account_name_1",
+      "currency": "EUR",
+      "creditLimit": {
+        "amount": 1.123,
+        "currency": "EUR"
+      },
+      "resourceId": "2218836100",
+      "product": "FINECO CARD VISA MULTIFUNZIONE CHIP",
+      "balances": [
+        {
+          "balanceType": "forwardAvailable",
+          "balanceAmount": {
+            "amount": 1,
+            "currency": "EUR"
+          }
+        },
+        {
+          "balanceType": "interimAvailable",
+          "balanceAmount": {
+            "amount": 2.124,
+            "currency": "EUR"
+          }
+        },
+        {
+          "balanceType": "unknown balance type 12412",
+          "balanceAmount": {
+            "amount": 8.124,
+            "currency": "EUR"
+          }
+        }
+      ],
+      "maskedPan": "1234 **** **** 1000",
+      "status": "enabled"
+    },
+    {
+      "name": "card_account_name_2",
+      "currency": "EUR",
+      "creditLimit": {
+        "amount": 1.123,
+        "currency": "EUR"
+      },
+      "resourceId": "2218836101",
+      "product": "some other unknown product",
+      "balances": [
+        {
+          "balanceType": "interimAvailable",
+          "balanceAmount": {
+            "amount": 3,
+            "currency": "EUR"
+          }
+        },
+        {
+          "balanceType": "Multicurrency account",
+          "balanceAmount": {
+            "amount": 8.124,
+            "currency": "EUR"
+          }
+        }
+      ],
+      "maskedPan": "1234 **** **** 1001",
+      "status": "enabled"
+    }
+  ]
+}

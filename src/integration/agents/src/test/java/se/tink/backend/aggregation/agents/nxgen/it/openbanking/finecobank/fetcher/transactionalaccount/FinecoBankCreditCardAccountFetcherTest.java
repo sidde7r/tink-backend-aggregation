@@ -10,9 +10,12 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import java.io.File;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.Year;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -25,19 +28,29 @@ import org.junit.runner.RunWith;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.authenticator.entities.AccountConsent;
+import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.fetcher.transactionalaccount.cards.rpc.CardAccountsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Holder;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.amount.ExactCurrencyAmount;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @RunWith(JUnitParamsRunner.class)
 public class FinecoBankCreditCardAccountFetcherTest {
 
+    private static final String ONLY_CREDIT_CARD_ACCOUNTS_FILE_PATH =
+            "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/it/openbanking/finecobank/resources/onlyCreditCardAccounts.json";
+
     private FinecoBankApiClient finecoBankApiClient;
     private PersistentStorage persistentStorage;
     private FinecoBankCreditCardAccountFetcher commonTestFetcher;
+    private CardAccountsResponse onlyCreditCardAccountsResponse;
 
     @Before
     public void setup() {
@@ -46,6 +59,76 @@ public class FinecoBankCreditCardAccountFetcherTest {
         commonTestFetcher =
                 new FinecoBankCreditCardAccountFetcher(
                         finecoBankApiClient, persistentStorage, true);
+        onlyCreditCardAccountsResponse =
+                SerializationUtils.deserializeFromString(
+                        new File(ONLY_CREDIT_CARD_ACCOUNTS_FILE_PATH), CardAccountsResponse.class);
+    }
+
+    @Test
+    public void shouldReturnEmptyListIfNoBalanceConsent() {
+        // given
+        when(finecoBankApiClient.isEmptyCreditCardAccountBalanceConsent()).thenReturn(true);
+
+        // when
+        Collection<CreditCardAccount> creditCardAccounts = commonTestFetcher.fetchAccounts();
+
+        // then
+        assertThat(creditCardAccounts.size()).isZero();
+    }
+
+    @Test
+    public void shouldReturnProperlyMappedCreditCards() {
+        // given
+        when(finecoBankApiClient.isEmptyCreditCardAccountBalanceConsent()).thenReturn(false);
+        when(finecoBankApiClient.fetchCreditCardAccounts())
+                .thenReturn(onlyCreditCardAccountsResponse);
+
+        // when
+        Collection<CreditCardAccount> creditCardAccounts = commonTestFetcher.fetchAccounts();
+
+        // then
+        assertThat(creditCardAccounts.size()).isEqualTo(2);
+
+        CreditCardAccount card1 = getCardByCardNumber(creditCardAccounts, "1234 **** **** 1000");
+        assertThat(card1.getCardModule().getCardNumber()).isEqualTo("1234 **** **** 1000");
+        assertThat(card1.getCardModule().getBalance()).isEqualTo(ExactCurrencyAmount.of(1, "EUR"));
+        assertThat(card1.getCardModule().getAvailableCredit())
+                .isEqualTo(ExactCurrencyAmount.of(1.123, "EUR"));
+        assertThat(card1.getCardModule().getCardAlias()).isEqualTo("card_account_name_1");
+        assertThat(card1.getIdModule().getUniqueId()).isEqualTo("12341000");
+        assertThat(card1.getIdModule().getAccountNumber()).isEqualTo("1234 **** **** 1000");
+        assertThat(card1.getIdModule().getAccountName())
+                .isEqualTo("FINECO CARD VISA MULTIFUNZIONE CHIP");
+        assertThat(card1.getIdModule().getIdentifiers())
+                .isEqualTo(
+                        Collections.singleton(
+                                AccountIdentifier.create(
+                                        Type.PAYMENT_CARD_NUMBER, "1234 **** **** 1000")));
+        assertThat(card1.getApiIdentifier()).isEqualTo("2218836100");
+        assertThat(card1.getHolders())
+                .isEqualTo(Collections.singletonList(Holder.of("card_account_name_1")));
+        assertThat(card1.getFromTemporaryStorage("bankIdentifier")).isEqualTo("2218836100");
+        assertThat(card1.getFromTemporaryStorage(StorageKeys.CARD_ID)).isEqualTo("2218836100");
+
+        CreditCardAccount card2 = getCardByCardNumber(creditCardAccounts, "1234 **** **** 1001");
+        assertThat(card2.getCardModule().getCardNumber()).isEqualTo("1234 **** **** 1001");
+        assertThat(card2.getCardModule().getBalance()).isEqualTo(ExactCurrencyAmount.of(3, "EUR"));
+        assertThat(card2.getCardModule().getAvailableCredit())
+                .isEqualTo(ExactCurrencyAmount.of(1.123, "EUR"));
+        assertThat(card2.getCardModule().getCardAlias()).isEqualTo("card_account_name_2");
+        assertThat(card2.getIdModule().getUniqueId()).isEqualTo("12341001");
+        assertThat(card2.getIdModule().getAccountNumber()).isEqualTo("1234 **** **** 1001");
+        assertThat(card2.getIdModule().getAccountName()).isEqualTo("some other unknown product");
+        assertThat(card2.getIdModule().getIdentifiers())
+                .isEqualTo(
+                        Collections.singleton(
+                                AccountIdentifier.create(
+                                        Type.PAYMENT_CARD_NUMBER, "1234 **** **** 1001")));
+        assertThat(card2.getApiIdentifier()).isEqualTo("2218836101");
+        assertThat(card2.getHolders())
+                .isEqualTo(Collections.singletonList(Holder.of("card_account_name_2")));
+        assertThat(card2.getFromTemporaryStorage("bankIdentifier")).isEqualTo("2218836101");
+        assertThat(card2.getFromTemporaryStorage(StorageKeys.CARD_ID)).isEqualTo("2218836101");
     }
 
     @Test
@@ -227,6 +310,14 @@ public class FinecoBankCreditCardAccountFetcherTest {
 
         // then
         assertThat(t).isEqualTo(responseException);
+    }
+
+    private CreditCardAccount getCardByCardNumber(
+            Collection<CreditCardAccount> cards, String accountNumber) {
+        return cards.stream()
+                .filter(card -> card.getCardModule().getCardNumber().equals(accountNumber))
+                .findFirst()
+                .orElseThrow(IllegalStateException::new);
     }
 
     private void mockTransactionsConsentExistsForAccountNumbers(String... accountNumbers) {

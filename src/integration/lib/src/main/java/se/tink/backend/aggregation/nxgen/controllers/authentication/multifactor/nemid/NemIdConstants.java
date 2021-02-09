@@ -96,7 +96,16 @@ public class NemIdConstants {
     // https://www.nets.eu/dk-da/kundeservice/nemid-tjenesteudbyder/NemID-tjenesteudbyderpakken/Documents/NemID%20Error%20Codes.pdf
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class NemIdErrorCodes {
+
+        public static final String TECHNICAL_ERROR = "SRV003";
         public static final String TIMEOUT = "SRV006";
+
         public static final String REJECTED = "CAN007";
+        public static final String INTERRUPTED = "CAN008";
+
+        public static final String NO_AGREEMENT = "AUTH003";
+        public static final String NEMID_LOCKED = "AUTH004";
+        public static final String NEMID_BLOCKED = "AUTH005";
+        public static final String NEMID_PASSWORD_BLOCKED = "AUTH007";
     }
 }
