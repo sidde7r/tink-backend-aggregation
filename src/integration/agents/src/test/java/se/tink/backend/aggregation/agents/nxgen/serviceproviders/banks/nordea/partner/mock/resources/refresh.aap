@@ -186,13 +186,13 @@ Transfer-Encoding: chunked
 {
 	"result": [
 		{
-			"transaction_id": "B002020-12-142020-12-14-12.26.44.509513",
+			"transaction_id": "B001992-04-141992-04-14-12.26.44.509513",
 			"has_details": true,
 			"booked": true,
 			"amount": -10.14,
 			"currency": "SEK",
-			"booking_date": "2020-12-14",
-			"interest_date": "2020-12-14",
+			"booking_date": "1992-04-14",
+			"interest_date": "1992-04-14",
 			"title": "Betalning BG 123-4567 WIREMOCK TEST",
 			"balance_after": 83173.48,
 			"transaction_type": {
@@ -201,13 +201,13 @@ Transfer-Encoding: chunked
 			}
 		},
 		{
-			"transaction_id": "B002020-11-302020-11-30-11.43.40.436046",
+			"transaction_id": "B001992-03-301992-03-30-11.43.40.436046",
 			"has_details": true,
 			"booked": true,
 			"amount": 10.3,
 			"currency": "SEK",
-			"booking_date": "2020-11-30",
-			"interest_date": "2020-11-30",
+			"booking_date": "1992-03-30",
+			"interest_date": "1992-03-30",
 			"title": "Retur BG 123-4567",
 			"balance_after": 83364.79,
 			"transaction_type": {
@@ -216,13 +216,13 @@ Transfer-Encoding: chunked
 			}
 		},
 		{
-			"transaction_id": "B002020-11-302020-11-30-11.35.52.638821",
+			"transaction_id": "B001992-03-301992-03-30-11.35.52.638821",
 			"has_details": true,
 			"booked": true,
 			"amount": -10.3,
 			"currency": "SEK",
-			"booking_date": "2020-11-30",
-			"interest_date": "2020-11-30",
+			"booking_date": "1992-03-30",
+			"interest_date": "1992-03-30",
 			"title": "Betalning BG 123-4567 WIREMOCK TEST",
 			"balance_after": 83354.49,
 			"transaction_type": {
@@ -235,8 +235,8 @@ Transfer-Encoding: chunked
 			"booked": true,
 			"amount": -10.3,
 			"currency": "SEK",
-			"booking_date": "2020-11-30",
-			"interest_date": "2020-11-30",
+			"booking_date": "1992-03-30",
+			"interest_date": "1992-03-30",
 			"title": "Betalning PG 123456-7 WIREMOCK TEST",
 			"balance_after": 83364.79,
 			"transaction_type": {
@@ -245,13 +245,13 @@ Transfer-Encoding: chunked
 			}
 		},
 		{
-			"transaction_id": "B002020-11-272020-11-27-11.31.42.725600",
+			"transaction_id": "B001992-03-271992-03-27-11.31.42.725600",
 			"has_details": true,
 			"booked": true,
 			"amount": 10.27,
 			"currency": "SEK",
-			"booking_date": "2020-11-27",
-			"interest_date": "2020-11-27",
+			"booking_date": "1992-03-27",
+			"interest_date": "1992-03-27",
 			"title": "Retur BG 123-4567",
 			"balance_after": 83375.09,
 			"transaction_type": {
@@ -260,8 +260,138 @@ Transfer-Encoding: chunked
 			}
 		}
 	],
+	"total_size": null,
+	"continuation_key": "B001991-04-141991-04-14-12.26.44.509513",
 	"sub_system_errors": [
+	"the first one"
+	]
+}
 
+REQUEST 6
+GET https://private.nd.test.nordea.se/api/dbf/ca/partners-service-common-v2/partners/aaaaaaaa-bbbb-4444-aaaa-111122223333/accounts/NAID-SE-SEK-9901010000/transactions?continuation_key=B001991-04-141991-04-14-12.26.44.509513
+Accept: application/json
+Accept-Language: sv-SE
+
+RESPONSE 6
+200
+Server: Apache/2.4.6 (Red Hat Enterprise Linux)
+Content-Type: application/json
+X-Global-Transaction-ID: 000000000000000000000006
+Transfer-Encoding: chunked
+
+{
+	"result": [
+		{
+			"transaction_id": "B001991-04-141991-04-14-12.26.44.509513",
+			"has_details": true,
+			"booked": true,
+			"amount": -10.14,
+			"currency": "SEK",
+			"booking_date": "1991-04-14",
+			"interest_date": "1991-04-14",
+			"title": "Betalning BG 123-4567 WIREMOCK TEST",
+			"balance_after": 83173.48,
+			"transaction_type": {
+				"transaction_code": "SE00904",
+				"transaction_code_text": "Betalning BG"
+			}
+		},
+		{
+			"transaction_id": "B001991-03-301991-03-30-11.43.40.436046",
+			"has_details": true,
+			"booked": true,
+			"amount": 10.3,
+			"currency": "SEK",
+			"booking_date": "1991-03-30",
+			"interest_date": "1991-03-30",
+			"title": "Retur BG 123-4567",
+			"balance_after": 83364.79,
+			"transaction_type": {
+				"transaction_code": "SE00318",
+				"transaction_code_text": "Retur BG"
+			}
+		},
+		{
+			"transaction_id": "B001991-03-301991-03-30-11.35.52.638821",
+			"has_details": true,
+			"booked": true,
+			"amount": -10.3,
+			"currency": "SEK",
+			"booking_date": "1991-03-30",
+			"interest_date": "1991-03-30",
+			"title": "Betalning BG 123-4567 WIREMOCK TEST",
+			"balance_after": 83354.49,
+			"transaction_type": {
+				"transaction_code": "SE00904",
+				"transaction_code_text": "Betalning BG"
+			}
+		},
+		{
+			"has_details": true,
+			"booked": true,
+			"amount": -10.3,
+			"currency": "SEK",
+			"booking_date": "1991-03-30",
+			"interest_date": "1991-03-30",
+			"title": "Betalning PG 123456-7 WIREMOCK TEST",
+			"balance_after": 83364.79,
+			"transaction_type": {
+				"transaction_code": "SE00905",
+				"transaction_code_text": "Betalning BG"
+			}
+		},
+		{
+			"transaction_id": "B001991-03-271991-03-27-11.31.42.725600",
+			"has_details": true,
+			"booked": true,
+			"amount": 10.27,
+			"currency": "SEK",
+			"booking_date": "1991-03-27",
+			"interest_date": "1991-03-27",
+			"title": "Retur BG 123-4567",
+			"balance_after": 83375.09,
+			"transaction_type": {
+				"transaction_code": "SE00318",
+				"transaction_code_text": "Retur BG"
+			}
+		}
+	],
+	"total_size": null,
+	"continuation_key": "B001991-03-141991-03-14-11.22.33.444555",
+	"sub_system_errors": [
+	"should be the end"
+	]
+}
+
+REQUEST 7
+GET https://private.nd.test.nordea.se/api/dbf/ca/partners-service-common-v2/partners/aaaaaaaa-bbbb-4444-aaaa-111122223333/accounts/NAID-SE-SEK-9901010000/transactions?continuation_key=B001991-03-141991-03-14-11.22.33.444555
+Accept: application/json
+Accept-Language: sv-SE
+
+RESPONSE 7
+200
+Server: Apache/2.4.6 (Red Hat Enterprise Linux)
+Content-Type: application/json
+X-Global-Transaction-ID: 000000000000000000000007
+Transfer-Encoding: chunked
+
+{
+	"result": [
+		{
+			"transaction_id": "B001991-03-141991-03-14-11.22.33.444555",
+			"has_details": true,
+			"booked": true,
+			"amount": -1234.56,
+			"currency": "SEK",
+			"booking_date": "1991-03-14",
+			"interest_date": "1991-03-14",
+			"title": "OLD TRANSACTION DO NOT AGGREGATE",
+			"balance_after": 83173.48,
+			"transaction_type": {
+				"transaction_code": "SE00904",
+				"transaction_code_text": "Betalning BG"
+			}
+		}
 	]
 }
 
@@ -280,13 +410,13 @@ X-Global-Transaction-ID: 000000000000000000000016
 {
 	"result": [
 		{
-			"transaction_id": "B052020-10-192020-10-19-12.09.33.960092",
+			"transaction_id": "B051992-02-191992-02-19-12.09.33.960092",
 			"has_details": true,
 			"booked": true,
 			"amount": 88.0,
 			"currency": "SEK",
-			"booking_date": "2020-10-19",
-			"interest_date": "2020-10-20",
+			"booking_date": "1992-02-19",
+			"interest_date": "1992-02-20",
 			"title": "Inbetalning mess to rec",
 			"balance_after": 68892.6,
 			"transaction_type": {
@@ -295,13 +425,13 @@ X-Global-Transaction-ID: 000000000000000000000016
 			}
 		},
 		{
-			"transaction_id": "B052020-10-092020-10-09-05.47.18.059769",
+			"transaction_id": "B051992-02-091992-02-09-05.47.18.059769",
 			"has_details": true,
 			"booked": true,
 			"amount": 102.0,
 			"currency": "SEK",
-			"booking_date": "2020-10-09",
-			"interest_date": "2020-10-12",
+			"booking_date": "1992-02-09",
+			"interest_date": "1992-02-12",
 			"title": "Överföring SVENSSON,SVEN",
 			"balance_after": 68804.6,
 			"transaction_type": {
@@ -310,13 +440,13 @@ X-Global-Transaction-ID: 000000000000000000000016
 			}
 		},
 		{
-			"transaction_id": "B052020-10-082020-10-08-05.46.22.992202",
+			"transaction_id": "B051992-02-081992-02-08-05.46.22.992202",
 			"has_details": true,
 			"booked": true,
 			"amount": 12.0,
 			"currency": "SEK",
-			"booking_date": "2020-10-08",
-			"interest_date": "2020-10-09",
+			"booking_date": "1992-02-08",
+			"interest_date": "1992-02-09",
 			"title": "Inbetalning .",
 			"balance_after": 68702.6,
 			"transaction_type": {
@@ -325,13 +455,13 @@ X-Global-Transaction-ID: 000000000000000000000016
 			}
 		},
 		{
-			"transaction_id": "B052020-10-082020-10-08-05.46.08.856335",
+			"transaction_id": "B051992-02-081992-02-08-05.46.08.856335",
 			"has_details": true,
 			"booked": true,
 			"amount": 102.0,
 			"currency": "SEK",
-			"booking_date": "2020-10-08",
-			"interest_date": "2020-10-09",
+			"booking_date": "1992-02-08",
+			"interest_date": "1992-02-09",
 			"title": "Överföring SVENSSON,SVEN",
 			"balance_after": 68690.6,
 			"transaction_type": {
@@ -340,13 +470,13 @@ X-Global-Transaction-ID: 000000000000000000000016
 			}
 		},
 		{
-			"transaction_id": "B052020-10-062020-10-06-06.50.01.567411",
+			"transaction_id": "B051992-02-061992-02-06-06.50.01.567411",
 			"has_details": true,
 			"booked": true,
 			"amount": 16.0,
 			"currency": "SEK",
-			"booking_date": "2020-10-06",
-			"interest_date": "2020-10-07",
+			"booking_date": "1992-02-06",
+			"interest_date": "1992-02-07",
 			"title": "Inbetalning R.",
 			"balance_after": 68588.6,
 			"transaction_type": {
@@ -355,13 +485,13 @@ X-Global-Transaction-ID: 000000000000000000000016
 			}
 		},
 		{
-			"transaction_id": "B052020-10-062020-10-06-05.56.15.689676",
+			"transaction_id": "B051992-02-061992-02-06-05.56.15.689676",
 			"has_details": true,
 			"booked": true,
 			"amount": 12.0,
 			"currency": "SEK",
-			"booking_date": "2020-10-06",
-			"interest_date": "2020-10-07",
+			"booking_date": "1992-02-06",
+			"interest_date": "1992-02-07",
 			"title": "Inbetalning .",
 			"balance_after": 68572.6,
 			"transaction_type": {
@@ -370,13 +500,13 @@ X-Global-Transaction-ID: 000000000000000000000016
 			}
 		},
 		{
-			"transaction_id": "B052020-10-052020-10-05-09.40.23.522801",
+			"transaction_id": "B051992-02-051992-02-05-09.40.23.522801",
 			"has_details": true,
 			"booked": true,
 			"amount": 12.0,
 			"currency": "SEK",
-			"booking_date": "2020-10-05",
-			"interest_date": "2020-10-06",
+			"booking_date": "1992-02-05",
+			"interest_date": "1992-02-06",
 			"title": "Inbetalning .",
 			"balance_after": 68560.6,
 			"transaction_type": {
@@ -385,13 +515,13 @@ X-Global-Transaction-ID: 000000000000000000000016
 			}
 		},
 		{
-			"transaction_id": "B052020-10-052020-10-05-09.40.05.232278",
+			"transaction_id": "B051992-02-051992-02-05-09.40.05.232278",
 			"has_details": true,
 			"booked": true,
 			"amount": 102.0,
 			"currency": "SEK",
-			"booking_date": "2020-10-05",
-			"interest_date": "2020-10-06",
+			"booking_date": "1992-02-05",
+			"interest_date": "1992-02-06",
 			"title": "Överföring SVENSSON,SVEN",
 			"balance_after": 68548.6,
 			"transaction_type": {
@@ -400,13 +530,13 @@ X-Global-Transaction-ID: 000000000000000000000016
 			}
 		},
 		{
-			"transaction_id": "B052020-10-012020-10-01-09.28.30.903571",
+			"transaction_id": "B051992-02-011992-02-01-09.28.30.903571",
 			"has_details": true,
 			"booked": true,
 			"amount": 12.0,
 			"currency": "SEK",
-			"booking_date": "2020-10-01",
-			"interest_date": "2020-10-02",
+			"booking_date": "1992-02-01",
+			"interest_date": "1992-02-02",
 			"title": "Inbetalning .",
 			"balance_after": 68446.6,
 			"transaction_type": {
@@ -415,13 +545,13 @@ X-Global-Transaction-ID: 000000000000000000000016
 			}
 		},
 		{
-			"transaction_id": "B052020-10-012020-10-01-09.27.50.997082",
+			"transaction_id": "B051992-02-011992-02-01-09.27.50.997082",
 			"has_details": true,
 			"booked": true,
 			"amount": 52.0,
 			"currency": "SEK",
-			"booking_date": "2020-10-01",
-			"interest_date": "2020-10-02",
+			"booking_date": "1992-02-01",
+			"interest_date": "1992-02-02",
 			"title": "Överföring SVENSSON|ABCDEF,SVEN",
 			"balance_after": 68434.6,
 			"transaction_type": {
@@ -430,13 +560,13 @@ X-Global-Transaction-ID: 000000000000000000000016
 			}
 		},
 		{
-			"transaction_id": "B052020-09-302020-09-30-08.49.34.253004",
+			"transaction_id": "B051992-01-301992-01-30-08.49.34.253004",
 			"has_details": true,
 			"booked": true,
 			"amount": 12.0,
 			"currency": "SEK",
-			"booking_date": "2020-09-30",
-			"interest_date": "2020-10-01",
+			"booking_date": "1992-01-30",
+			"interest_date": "1992-02-01",
 			"title": "Inbetalning .",
 			"balance_after": 68382.6,
 			"transaction_type": {
@@ -445,13 +575,13 @@ X-Global-Transaction-ID: 000000000000000000000016
 			}
 		},
 		{
-			"transaction_id": "B052020-09-302020-09-30-06.59.40.843995",
+			"transaction_id": "B051992-01-301992-01-30-06.59.40.843995",
 			"has_details": true,
 			"booked": true,
 			"amount": 52.0,
 			"currency": "SEK",
-			"booking_date": "2020-09-30",
-			"interest_date": "2020-10-01",
+			"booking_date": "1992-01-30",
+			"interest_date": "1992-02-01",
 			"title": "Överföring SVENSSON|ABCDEF,SVEN",
 			"balance_after": 68370.6,
 			"transaction_type": {
@@ -460,13 +590,13 @@ X-Global-Transaction-ID: 000000000000000000000016
 			}
 		},
 		{
-			"transaction_id": "B052020-09-292020-09-29-08.37.05.831364",
+			"transaction_id": "B051992-01-291992-01-29-08.37.05.831364",
 			"has_details": true,
 			"booked": true,
 			"amount": 16.0,
 			"currency": "SEK",
-			"booking_date": "2020-09-29",
-			"interest_date": "2020-09-30",
+			"booking_date": "1992-01-29",
+			"interest_date": "1992-01-30",
 			"title": "Inbetalning R.",
 			"balance_after": 68318.6,
 			"transaction_type": {
@@ -475,13 +605,13 @@ X-Global-Transaction-ID: 000000000000000000000016
 			}
 		},
 		{
-			"transaction_id": "B052020-09-292020-09-29-08.27.49.532974",
+			"transaction_id": "B051992-01-291992-01-29-08.27.49.532974",
 			"has_details": true,
 			"booked": true,
 			"amount": 56.0,
 			"currency": "SEK",
-			"booking_date": "2020-09-29",
-			"interest_date": "2020-09-30",
+			"booking_date": "1992-01-29",
+			"interest_date": "1992-01-30",
 			"title": "R. SVENSSON|ABCDEF,SVEN",
 			"balance_after": 68302.6,
 			"transaction_type": {
@@ -490,13 +620,13 @@ X-Global-Transaction-ID: 000000000000000000000016
 			}
 		},
 		{
-			"transaction_id": "B052020-09-292020-09-29-06.17.45.926630",
+			"transaction_id": "B051992-01-291992-01-29-06.17.45.926630",
 			"has_details": true,
 			"booked": true,
 			"amount": 12.0,
 			"currency": "SEK",
-			"booking_date": "2020-09-29",
-			"interest_date": "2020-09-30",
+			"booking_date": "1992-01-29",
+			"interest_date": "1992-01-30",
 			"title": "Inbetalning .",
 			"balance_after": 68246.6,
 			"transaction_type": {
@@ -505,13 +635,13 @@ X-Global-Transaction-ID: 000000000000000000000016
 			}
 		},
 		{
-			"transaction_id": "B052020-09-292020-09-29-06.17.15.149445",
+			"transaction_id": "B051992-01-291992-01-29-06.17.15.149445",
 			"has_details": true,
 			"booked": true,
 			"amount": 52.0,
 			"currency": "SEK",
-			"booking_date": "2020-09-29",
-			"interest_date": "2020-09-30",
+			"booking_date": "1992-01-29",
+			"interest_date": "1992-01-30",
 			"title": "Överföring SVENSSON|ABCDEF,SVEN",
 			"balance_after": 68234.6,
 			"transaction_type": {
@@ -520,13 +650,13 @@ X-Global-Transaction-ID: 000000000000000000000016
 			}
 		},
 		{
-			"transaction_id": "B052020-09-282020-09-28-10.29.41.410192",
+			"transaction_id": "B051992-01-281992-01-28-10.29.41.410192",
 			"has_details": true,
 			"booked": true,
 			"amount": 16.0,
 			"currency": "SEK",
-			"booking_date": "2020-09-28",
-			"interest_date": "2020-09-29",
+			"booking_date": "1992-01-28",
+			"interest_date": "1992-01-29",
 			"title": "Inbetalning R.",
 			"balance_after": 68182.6,
 			"transaction_type": {
@@ -535,13 +665,13 @@ X-Global-Transaction-ID: 000000000000000000000016
 			}
 		},
 		{
-			"transaction_id": "B052020-09-282020-09-28-10.19.10.259195",
+			"transaction_id": "B051992-01-281992-01-28-10.19.10.259195",
 			"has_details": true,
 			"booked": true,
 			"amount": 56.0,
 			"currency": "SEK",
-			"booking_date": "2020-09-28",
-			"interest_date": "2020-09-29",
+			"booking_date": "1992-01-28",
+			"interest_date": "1992-01-29",
 			"title": "R. SVENSSON|ABCDEF,SVEN",
 			"balance_after": 68166.6,
 			"transaction_type": {
@@ -550,13 +680,13 @@ X-Global-Transaction-ID: 000000000000000000000016
 			}
 		},
 		{
-			"transaction_id": "B052020-09-282020-09-28-09.56.05.696480",
+			"transaction_id": "B051992-01-281992-01-28-09.56.05.696480",
 			"has_details": true,
 			"booked": true,
 			"amount": 52.0,
 			"currency": "SEK",
-			"booking_date": "2020-09-28",
-			"interest_date": "2020-09-29",
+			"booking_date": "1992-01-28",
+			"interest_date": "1992-01-29",
 			"title": "Överföring SVENSSON|ABCDEF,SVEN",
 			"balance_after": 68110.6,
 			"transaction_type": {
@@ -565,13 +695,13 @@ X-Global-Transaction-ID: 000000000000000000000016
 			}
 		},
 		{
-			"transaction_id": "B052020-09-252020-09-25-09.44.17.852679",
+			"transaction_id": "B051992-01-251992-01-25-09.44.17.852679",
 			"has_details": true,
 			"booked": true,
 			"amount": 16.0,
 			"currency": "SEK",
-			"booking_date": "2020-09-25",
-			"interest_date": "2020-09-28",
+			"booking_date": "1992-01-25",
+			"interest_date": "1992-01-28",
 			"title": "Inbetalning R.",
 			"balance_after": 68058.6,
 			"transaction_type": {
@@ -580,13 +710,13 @@ X-Global-Transaction-ID: 000000000000000000000016
 			}
 		},
 		{
-			"transaction_id": "B052020-09-252020-09-25-09.41.37.517792",
+			"transaction_id": "B051992-01-251992-01-25-09.41.37.517792",
 			"has_details": true,
 			"booked": true,
 			"amount": 56.0,
 			"currency": "SEK",
-			"booking_date": "2020-09-25",
-			"interest_date": "2020-09-28",
+			"booking_date": "1992-01-25",
+			"interest_date": "1992-01-28",
 			"title": "R. SVENSSON|ABCDEF,SVEN",
 			"balance_after": 68042.6,
 			"transaction_type": {
@@ -595,13 +725,13 @@ X-Global-Transaction-ID: 000000000000000000000016
 			}
 		},
 		{
-			"transaction_id": "B052020-09-252020-09-25-08.49.35.616878",
+			"transaction_id": "B051992-01-251992-01-25-08.49.35.616878",
 			"has_details": true,
 			"booked": true,
 			"amount": 12.0,
 			"currency": "SEK",
-			"booking_date": "2020-09-25",
-			"interest_date": "2020-09-28",
+			"booking_date": "1992-01-25",
+			"interest_date": "1992-01-28",
 			"title": "Inbetalning .",
 			"balance_after": 67986.6,
 			"transaction_type": {
@@ -610,13 +740,13 @@ X-Global-Transaction-ID: 000000000000000000000016
 			}
 		},
 		{
-			"transaction_id": "B052020-09-252020-09-25-08.48.36.325640",
+			"transaction_id": "B051992-01-251992-01-25-08.48.36.325640",
 			"has_details": true,
 			"booked": true,
 			"amount": 52.0,
 			"currency": "SEK",
-			"booking_date": "2020-09-25",
-			"interest_date": "2020-09-28",
+			"booking_date": "1992-01-25",
+			"interest_date": "1992-01-28",
 			"title": "Överföring SVENSSON|ABCDEF,SVEN",
 			"balance_after": 67974.6,
 			"transaction_type": {
@@ -643,13 +773,13 @@ X-Global-Transaction-ID: 000000000000000000000020
 Transfer-Encoding: chunked
 
 {
-    "size": 1,
+    "size": 10,
     "page": 1,
     "page_size": 10,
     "transactions": [
         {
-            "transaction_id": "-1111111111",
-            "transaction_date": "2018-04-06",
+            "transaction_id": "1992040500",
+            "transaction_date": "1992-04-05",
             "transaction_type": null,
             "amount": -85.0,
             "currency": "SEK",
@@ -657,6 +787,372 @@ Transfer-Encoding: chunked
             "original_amount": null,
             "original_currency": null,
             "title": "Påminnelseavgift",
+            "booked": true,
+            "booking_date": null,
+            "merchant_city": "",
+            "merchant_country": "",
+            "invoiced_date": "9999-12-31",
+            "invoice_status": "invoiced"
+        },
+        {
+            "transaction_id": "1992030500",
+            "transaction_date": "1992-03-05",
+            "transaction_type": null,
+            "amount": -85.0,
+            "currency": "SEK",
+            "exchange_rate": 0.0,
+            "original_amount": null,
+            "original_currency": null,
+            "title": "Påminnelseavgift",
+            "booked": true,
+            "booking_date": null,
+            "merchant_city": "",
+            "merchant_country": "",
+            "invoiced_date": "9999-12-31",
+            "invoice_status": "invoiced"
+        },{
+            "transaction_id": "1992020500",
+            "transaction_date": "1992-02-05",
+            "transaction_type": null,
+            "amount": -85.0,
+            "currency": "SEK",
+            "exchange_rate": 0.0,
+            "original_amount": null,
+            "original_currency": null,
+            "title": "Påminnelseavgift",
+            "booked": true,
+            "booking_date": null,
+            "merchant_city": "",
+            "merchant_country": "",
+            "invoiced_date": "9999-12-31",
+            "invoice_status": "invoiced"
+        },{
+            "transaction_id": "1992010500",
+            "transaction_date": "1992-01-05",
+            "transaction_type": null,
+            "amount": -85.0,
+            "currency": "SEK",
+            "exchange_rate": 0.0,
+            "original_amount": null,
+            "original_currency": null,
+            "title": "Påminnelseavgift",
+            "booked": true,
+            "booking_date": null,
+            "merchant_city": "",
+            "merchant_country": "",
+            "invoiced_date": "9999-12-31",
+            "invoice_status": "invoiced"
+        },{
+            "transaction_id": "1991120500",
+            "transaction_date": "1991-12-05",
+            "transaction_type": null,
+            "amount": -85.0,
+            "currency": "SEK",
+            "exchange_rate": 0.0,
+            "original_amount": null,
+            "original_currency": null,
+            "title": "Påminnelseavgift",
+            "booked": true,
+            "booking_date": null,
+            "merchant_city": "",
+            "merchant_country": "",
+            "invoiced_date": "9999-12-31",
+            "invoice_status": "invoiced"
+        },{
+            "transaction_id": "1991110500",
+            "transaction_date": "1991-11-05",
+            "transaction_type": null,
+            "amount": -85.0,
+            "currency": "SEK",
+            "exchange_rate": 0.0,
+            "original_amount": null,
+            "original_currency": null,
+            "title": "Påminnelseavgift",
+            "booked": true,
+            "booking_date": null,
+            "merchant_city": "",
+            "merchant_country": "",
+            "invoiced_date": "9999-12-31",
+            "invoice_status": "invoiced"
+        },{
+            "transaction_id": "1991100500",
+            "transaction_date": "1991-10-05",
+            "transaction_type": null,
+            "amount": -85.0,
+            "currency": "SEK",
+            "exchange_rate": 0.0,
+            "original_amount": null,
+            "original_currency": null,
+            "title": "Påminnelseavgift",
+            "booked": true,
+            "booking_date": null,
+            "merchant_city": "",
+            "merchant_country": "",
+            "invoiced_date": "9999-12-31",
+            "invoice_status": "invoiced"
+        },{
+            "transaction_id": "1991090500",
+            "transaction_date": "1991-09-05",
+            "transaction_type": null,
+            "amount": -85.0,
+            "currency": "SEK",
+            "exchange_rate": 0.0,
+            "original_amount": null,
+            "original_currency": null,
+            "title": "Påminnelseavgift",
+            "booked": true,
+            "booking_date": null,
+            "merchant_city": "",
+            "merchant_country": "",
+            "invoiced_date": "9999-12-31",
+            "invoice_status": "invoiced"
+        },{
+            "transaction_id": "1991080500",
+            "transaction_date": "1991-08-05",
+            "transaction_type": null,
+            "amount": -85.0,
+            "currency": "SEK",
+            "exchange_rate": 0.0,
+            "original_amount": null,
+            "original_currency": null,
+            "title": "Påminnelseavgift",
+            "booked": true,
+            "booking_date": null,
+            "merchant_city": "",
+            "merchant_country": "",
+            "invoiced_date": "9999-12-31",
+            "invoice_status": "invoiced"
+        },{
+            "transaction_id": "1991070500",
+            "transaction_date": "1991-07-05",
+            "transaction_type": null,
+            "amount": -85.0,
+            "currency": "SEK",
+            "exchange_rate": 0.0,
+            "original_amount": null,
+            "original_currency": null,
+            "title": "Påminnelseavgift",
+            "booked": true,
+            "booking_date": null,
+            "merchant_city": "",
+            "merchant_country": "",
+            "invoiced_date": "9999-12-31",
+            "invoice_status": "invoiced"
+        }
+    ],
+    "billing_period": null
+}
+
+REQUEST 21
+GET https://private.nd.test.nordea.se/api/dbf/ca/partners-service-common-v2/partners/aaaaaaaa-bbbb-4444-aaaa-111122223333/cards/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/transactions?page=2&page_size=50
+Accept: application/json
+Accept-Language: sv-SE
+
+RESPONSE 21
+200
+Server: Apache/2.4.6 (Red Hat Enterprise Linux)
+Content-Type: application/json
+X-Global-Transaction-ID: 000000000000000000000021
+Transfer-Encoding: chunked
+
+{
+    "size": 10,
+    "page": 2,
+    "page_size": 10,
+    "transactions": [
+        {
+            "transaction_id": "1991060500",
+            "transaction_date": "1991-06-05",
+            "transaction_type": null,
+            "amount": -85.0,
+            "currency": "SEK",
+            "exchange_rate": 0.0,
+            "original_amount": null,
+            "original_currency": null,
+            "title": "Påminnelseavgift",
+            "booked": true,
+            "booking_date": null,
+            "merchant_city": "",
+            "merchant_country": "",
+            "invoiced_date": "9999-12-31",
+            "invoice_status": "invoiced"
+        },
+        {
+            "transaction_id": "1991050500",
+            "transaction_date": "1991-05-05",
+            "transaction_type": null,
+            "amount": -85.0,
+            "currency": "SEK",
+            "exchange_rate": 0.0,
+            "original_amount": null,
+            "original_currency": null,
+            "title": "Påminnelseavgift",
+            "booked": true,
+            "booking_date": null,
+            "merchant_city": "",
+            "merchant_country": "",
+            "invoiced_date": "9999-12-31",
+            "invoice_status": "invoiced"
+        },{
+            "transaction_id": "1991040500",
+            "transaction_date": "1991-04-05",
+            "transaction_type": null,
+            "amount": -85.0,
+            "currency": "SEK",
+            "exchange_rate": 0.0,
+            "original_amount": null,
+            "original_currency": null,
+            "title": "Påminnelseavgift",
+            "booked": true,
+            "booking_date": null,
+            "merchant_city": "",
+            "merchant_country": "",
+            "invoiced_date": "9999-12-31",
+            "invoice_status": "invoiced"
+        },{
+            "transaction_id": "1991030500",
+            "transaction_date": "1991-03-05",
+            "transaction_type": null,
+            "amount": -85.0,
+            "currency": "SEK",
+            "exchange_rate": 0.0,
+            "original_amount": null,
+            "original_currency": null,
+            "title": "Påminnelseavgift",
+            "booked": true,
+            "booking_date": null,
+            "merchant_city": "",
+            "merchant_country": "",
+            "invoiced_date": "9999-12-31",
+            "invoice_status": "invoiced"
+        },{
+            "transaction_id": "1991020500",
+            "transaction_date": "1991-02-05",
+            "transaction_type": null,
+            "amount": -85.0,
+            "currency": "SEK",
+            "exchange_rate": 0.0,
+            "original_amount": null,
+            "original_currency": null,
+            "title": "Påminnelseavgift",
+            "booked": true,
+            "booking_date": null,
+            "merchant_city": "",
+            "merchant_country": "",
+            "invoiced_date": "9999-12-31",
+            "invoice_status": "invoiced"
+        },{
+            "transaction_id": "1991010500",
+            "transaction_date": "1991-01-05",
+            "transaction_type": null,
+            "amount": -85.0,
+            "currency": "SEK",
+            "exchange_rate": 0.0,
+            "original_amount": null,
+            "original_currency": null,
+            "title": "Påminnelseavgift",
+            "booked": true,
+            "booking_date": null,
+            "merchant_city": "",
+            "merchant_country": "",
+            "invoiced_date": "9999-12-31",
+            "invoice_status": "invoiced"
+        },{
+            "transaction_id": "1990120500",
+            "transaction_date": "1990-12-05",
+            "transaction_type": null,
+            "amount": -85.0,
+            "currency": "SEK",
+            "exchange_rate": 0.0,
+            "original_amount": null,
+            "original_currency": null,
+            "title": "Påminnelseavgift",
+            "booked": true,
+            "booking_date": null,
+            "merchant_city": "",
+            "merchant_country": "",
+            "invoiced_date": "9999-12-31",
+            "invoice_status": "invoiced"
+        },{
+            "transaction_id": "1990110500",
+            "transaction_date": "1990-11-05",
+            "transaction_type": null,
+            "amount": -85.0,
+            "currency": "SEK",
+            "exchange_rate": 0.0,
+            "original_amount": null,
+            "original_currency": null,
+            "title": "Påminnelseavgift",
+            "booked": true,
+            "booking_date": null,
+            "merchant_city": "",
+            "merchant_country": "",
+            "invoiced_date": "9999-12-31",
+            "invoice_status": "invoiced"
+        },{
+            "transaction_id": "1990100500",
+            "transaction_date": "1990-10-05",
+            "transaction_type": null,
+            "amount": -85.0,
+            "currency": "SEK",
+            "exchange_rate": 0.0,
+            "original_amount": null,
+            "original_currency": null,
+            "title": "Påminnelseavgift",
+            "booked": true,
+            "booking_date": null,
+            "merchant_city": "",
+            "merchant_country": "",
+            "invoiced_date": "9999-12-31",
+            "invoice_status": "invoiced"
+        },{
+            "transaction_id": "1990090500",
+            "transaction_date": "1990-09-05",
+            "transaction_type": null,
+            "amount": -85.0,
+            "currency": "SEK",
+            "exchange_rate": 0.0,
+            "original_amount": null,
+            "original_currency": null,
+            "title": "Påminnelseavgift",
+            "booked": true,
+            "booking_date": null,
+            "merchant_city": "",
+            "merchant_country": "",
+            "invoiced_date": "9999-12-31",
+            "invoice_status": "invoiced"
+        }
+    ],
+    "billing_period": null
+}
+
+REQUEST 22
+GET https://private.nd.test.nordea.se/api/dbf/ca/partners-service-common-v2/partners/aaaaaaaa-bbbb-4444-aaaa-111122223333/cards/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/transactions?page=3&page_size=50
+Accept: application/json
+Accept-Language: sv-SE
+
+RESPONSE 22
+200
+Server: Apache/2.4.6 (Red Hat Enterprise Linux)
+Content-Type: application/json
+X-Global-Transaction-ID: 000000000000000000000022
+Transfer-Encoding: chunked
+
+{
+    "size": 1,
+    "page": 3,
+    "page_size": 10,
+    "transactions": [
+        {
+            "transaction_id": "1990080500",
+            "transaction_date": "1990-08-05",
+            "transaction_type": null,
+            "amount": -85.0,
+            "currency": "SEK",
+            "exchange_rate": 0.0,
+            "original_amount": null,
+            "original_currency": null,
+            "title": "OLD TRANSACTION DO NOT AGGREGATE",
             "booked": true,
             "booking_date": null,
             "merchant_city": "",
@@ -687,7 +1183,7 @@ Transfer-Encoding: chunked
     "transactions": [
         {
             "transaction_id": "-2222222222",
-            "transaction_date": "2018-04-05",
+            "transaction_date": "1992-04-05",
             "transaction_type": null,
             "amount": -86.0,
             "currency": "SEK",

@@ -5,16 +5,16 @@
             "accountExclusion": "NONE",
             "exactAvailableCredit": {
                 "currencyCode": "SEK",
+                "exactValue": 0,
                 "unscaledValue": 0,
                 "scale": 0,
-                "exactValue": 0,
                 "doubleValue": 0.0
             },
             "exactBalance": {
                 "currencyCode": "SEK",
+                "exactValue": -68980.46,
                 "unscaledValue": -6898046,
                 "scale": 2,
-                "exactValue": -68980.46,
                 "doubleValue": -68980.46
             },
             "currencyCode": "SEK",
@@ -50,9 +50,9 @@
             "accountExclusion": "NONE",
             "exactBalance": {
                 "currencyCode": "SEK",
+                "exactValue": 68892.6,
                 "unscaledValue": 688926,
                 "scale": 1,
-                "exactValue": 68892.6,
                 "doubleValue": 68892.6
             },
             "currencyCode": "SEK",
@@ -88,9 +88,9 @@
             "accountExclusion": "NONE",
             "exactBalance": {
                 "currencyCode": "SEK",
+                "exactValue": 83173.48,
                 "unscaledValue": 8317348,
                 "scale": 2,
-                "exactValue": 83173.48,
                 "doubleValue": 83173.48
             },
             "currencyCode": "SEK",
@@ -126,16 +126,16 @@
             "accountExclusion": "NONE",
             "exactAvailableCredit": {
                 "currencyCode": "SEK",
+                "exactValue": 0,
                 "unscaledValue": 0,
                 "scale": 0,
-                "exactValue": 0,
                 "doubleValue": 0.0
             },
             "exactBalance": {
                 "currencyCode": "SEK",
+                "exactValue": 1030968.09,
                 "unscaledValue": 103096809,
                 "scale": 2,
-                "exactValue": 1030968.09,
                 "doubleValue": 1030968.09
             },
             "currencyCode": "SEK",
@@ -170,7 +170,7 @@
     "transactions": [
         {
             "amount": -10.14,
-            "date": 1607943600000,
+            "date": 703245600000,
             "description": "Betalning BG 123-4567 WIREMOCK TEST",
             "internalPayload": {},
             "originalAmount": 0.0,
@@ -180,13 +180,13 @@
             "type": "DEFAULT",
             "upcoming": false,
             "externalSystemIds": {
-                "PROVIDER_GIVEN_TRANSACTION_ID": "B002020-12-142020-12-14-12.26.44.509513"
+                "PROVIDER_GIVEN_TRANSACTION_ID": "B001992-04-141992-04-14-12.26.44.509513"
             },
             "transactionDates": []
         },
         {
             "amount": 10.3,
-            "date": 1606734000000,
+            "date": 701949600000,
             "description": "Retur BG 123-4567",
             "internalPayload": {},
             "originalAmount": 0.0,
@@ -196,13 +196,13 @@
             "type": "DEFAULT",
             "upcoming": false,
             "externalSystemIds": {
-                "PROVIDER_GIVEN_TRANSACTION_ID": "B002020-11-302020-11-30-11.43.40.436046"
+                "PROVIDER_GIVEN_TRANSACTION_ID": "B001992-03-301992-03-30-11.43.40.436046"
             },
             "transactionDates": []
         },
         {
             "amount": -10.3,
-            "date": 1606734000000,
+            "date": 701949600000,
             "description": "Betalning BG 123-4567 WIREMOCK TEST",
             "internalPayload": {},
             "originalAmount": 0.0,
@@ -212,13 +212,13 @@
             "type": "DEFAULT",
             "upcoming": false,
             "externalSystemIds": {
-                "PROVIDER_GIVEN_TRANSACTION_ID": "B002020-11-302020-11-30-11.35.52.638821"
+                "PROVIDER_GIVEN_TRANSACTION_ID": "B001992-03-301992-03-30-11.35.52.638821"
             },
             "transactionDates": []
         },
         {
             "amount": -10.3,
-            "date": 1606734000000,
+            "date": 701949600000,
             "description": "Betalning PG 123456-7 WIREMOCK TEST",
             "internalPayload": {},
             "originalAmount": 0.0,
@@ -227,11 +227,12 @@
             "timestamp": 0,
             "type": "DEFAULT",
             "upcoming": false,
+            "externalSystemIds": {},
             "transactionDates": []
         },
         {
             "amount": 10.27,
-            "date": 1606474800000,
+            "date": 701694000000,
             "description": "Retur BG 123-4567",
             "internalPayload": {},
             "originalAmount": 0.0,
@@ -241,13 +242,91 @@
             "type": "DEFAULT",
             "upcoming": false,
             "externalSystemIds": {
-                "PROVIDER_GIVEN_TRANSACTION_ID": "B002020-11-272020-11-27-11.31.42.725600"
+                "PROVIDER_GIVEN_TRANSACTION_ID": "B001992-03-271992-03-27-11.31.42.725600"
+            },
+            "transactionDates": []
+        },
+        {
+            "amount": -10.14,
+            "date": 671623200000,
+            "description": "Betalning BG 123-4567 WIREMOCK TEST",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "B001991-04-141991-04-14-12.26.44.509513"
+            },
+            "transactionDates": []
+        },
+        {
+            "amount": 10.3,
+            "date": 670330800000,
+            "description": "Retur BG 123-4567",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "B001991-03-301991-03-30-11.43.40.436046"
+            },
+            "transactionDates": []
+        },
+        {
+            "amount": -10.3,
+            "date": 670330800000,
+            "description": "Betalning BG 123-4567 WIREMOCK TEST",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "B001991-03-301991-03-30-11.35.52.638821"
+            },
+            "transactionDates": []
+        },
+        {
+            "amount": -10.3,
+            "date": 670330800000,
+            "description": "Betalning PG 123456-7 WIREMOCK TEST",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": 10.27,
+            "date": 670071600000,
+            "description": "Retur BG 123-4567",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "B001991-03-271991-03-27-11.31.42.725600"
             },
             "transactionDates": []
         },
         {
             "amount": -85.0,
-            "date": 1523008800000,
+            "date": 702468000000,
             "description": "Påminnelseavgift",
             "internalPayload": {},
             "originalAmount": 0.0,
@@ -257,13 +336,317 @@
             "type": "DEFAULT",
             "upcoming": false,
             "externalSystemIds": {
-                "PROVIDER_GIVEN_TRANSACTION_ID": "-1111111111"
+                "PROVIDER_GIVEN_TRANSACTION_ID": "1992040500"
+            },
+            "transactionDates": []
+        },
+        {
+            "amount": -85.0,
+            "date": 699793200000,
+            "description": "Påminnelseavgift",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "1992030500"
+            },
+            "transactionDates": []
+        },
+        {
+            "amount": -85.0,
+            "date": 697287600000,
+            "description": "Påminnelseavgift",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "1992020500"
+            },
+            "transactionDates": []
+        },
+        {
+            "amount": -85.0,
+            "date": 694609200000,
+            "description": "Påminnelseavgift",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "1992010500"
+            },
+            "transactionDates": []
+        },
+        {
+            "amount": -85.0,
+            "date": 691930800000,
+            "description": "Påminnelseavgift",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "1991120500"
+            },
+            "transactionDates": []
+        },
+        {
+            "amount": -85.0,
+            "date": 689338800000,
+            "description": "Påminnelseavgift",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "1991110500"
+            },
+            "transactionDates": []
+        },
+        {
+            "amount": -85.0,
+            "date": 686660400000,
+            "description": "Påminnelseavgift",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "1991100500"
+            },
+            "transactionDates": []
+        },
+        {
+            "amount": -85.0,
+            "date": 684064800000,
+            "description": "Påminnelseavgift",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "1991090500"
+            },
+            "transactionDates": []
+        },
+        {
+            "amount": -85.0,
+            "date": 681386400000,
+            "description": "Påminnelseavgift",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "1991080500"
+            },
+            "transactionDates": []
+        },
+        {
+            "amount": -85.0,
+            "date": 678708000000,
+            "description": "Påminnelseavgift",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "1991070500"
+            },
+            "transactionDates": []
+        },
+        {
+            "amount": -85.0,
+            "date": 676116000000,
+            "description": "Påminnelseavgift",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "1991060500"
+            },
+            "transactionDates": []
+        },
+        {
+            "amount": -85.0,
+            "date": 673437600000,
+            "description": "Påminnelseavgift",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "1991050500"
+            },
+            "transactionDates": []
+        },
+        {
+            "amount": -85.0,
+            "date": 670845600000,
+            "description": "Påminnelseavgift",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "1991040500"
+            },
+            "transactionDates": []
+        },
+        {
+            "amount": -85.0,
+            "date": 668170800000,
+            "description": "Påminnelseavgift",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "1991030500"
+            },
+            "transactionDates": []
+        },
+        {
+            "amount": -85.0,
+            "date": 665751600000,
+            "description": "Påminnelseavgift",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "1991020500"
+            },
+            "transactionDates": []
+        },
+        {
+            "amount": -85.0,
+            "date": 663073200000,
+            "description": "Påminnelseavgift",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "1991010500"
+            },
+            "transactionDates": []
+        },
+        {
+            "amount": -85.0,
+            "date": 660394800000,
+            "description": "Påminnelseavgift",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "1990120500"
+            },
+            "transactionDates": []
+        },
+        {
+            "amount": -85.0,
+            "date": 657802800000,
+            "description": "Påminnelseavgift",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "1990110500"
+            },
+            "transactionDates": []
+        },
+        {
+            "amount": -85.0,
+            "date": 655124400000,
+            "description": "Påminnelseavgift",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "1990100500"
+            },
+            "transactionDates": []
+        },
+        {
+            "amount": -85.0,
+            "date": 652528800000,
+            "description": "Påminnelseavgift",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {
+                "PROVIDER_GIVEN_TRANSACTION_ID": "1990090500"
             },
             "transactionDates": []
         },
         {
             "amount": -86.0,
-            "date": 1522922400000,
+            "date": 702468000000,
             "description": "Påminnelseavgift",
             "internalPayload": {},
             "originalAmount": 0.0,
@@ -279,7 +662,7 @@
         },
         {
             "amount": 88.0,
-            "date": 1603101600000,
+            "date": 698497200000,
             "description": "Inbetalning mess to rec",
             "internalPayload": {},
             "originalAmount": 0.0,
@@ -289,13 +672,13 @@
             "type": "DEFAULT",
             "upcoming": false,
             "externalSystemIds": {
-                "PROVIDER_GIVEN_TRANSACTION_ID": "B052020-10-192020-10-19-12.09.33.960092"
+                "PROVIDER_GIVEN_TRANSACTION_ID": "B051992-02-191992-02-19-12.09.33.960092"
             },
             "transactionDates": []
         },
         {
             "amount": 102.0,
-            "date": 1602237600000,
+            "date": 697633200000,
             "description": "Överföring SVENSSON,SVEN",
             "internalPayload": {},
             "originalAmount": 0.0,
@@ -305,13 +688,13 @@
             "type": "DEFAULT",
             "upcoming": false,
             "externalSystemIds": {
-                "PROVIDER_GIVEN_TRANSACTION_ID": "B052020-10-092020-10-09-05.47.18.059769"
+                "PROVIDER_GIVEN_TRANSACTION_ID": "B051992-02-091992-02-09-05.47.18.059769"
             },
             "transactionDates": []
         },
         {
             "amount": 12.0,
-            "date": 1602151200000,
+            "date": 697546800000,
             "description": "Inbetalning .",
             "internalPayload": {},
             "originalAmount": 0.0,
@@ -321,13 +704,13 @@
             "type": "DEFAULT",
             "upcoming": false,
             "externalSystemIds": {
-                "PROVIDER_GIVEN_TRANSACTION_ID": "B052020-10-082020-10-08-05.46.22.992202"
+                "PROVIDER_GIVEN_TRANSACTION_ID": "B051992-02-081992-02-08-05.46.22.992202"
             },
             "transactionDates": []
         },
         {
             "amount": 102.0,
-            "date": 1602151200000,
+            "date": 697546800000,
             "description": "Överföring SVENSSON,SVEN",
             "internalPayload": {},
             "originalAmount": 0.0,
@@ -337,13 +720,13 @@
             "type": "DEFAULT",
             "upcoming": false,
             "externalSystemIds": {
-                "PROVIDER_GIVEN_TRANSACTION_ID": "B052020-10-082020-10-08-05.46.08.856335"
+                "PROVIDER_GIVEN_TRANSACTION_ID": "B051992-02-081992-02-08-05.46.08.856335"
             },
             "transactionDates": []
         },
         {
             "amount": 16.0,
-            "date": 1601978400000,
+            "date": 697374000000,
             "description": "Inbetalning R.",
             "internalPayload": {},
             "originalAmount": 0.0,
@@ -353,13 +736,13 @@
             "type": "DEFAULT",
             "upcoming": false,
             "externalSystemIds": {
-                "PROVIDER_GIVEN_TRANSACTION_ID": "B052020-10-062020-10-06-06.50.01.567411"
+                "PROVIDER_GIVEN_TRANSACTION_ID": "B051992-02-061992-02-06-06.50.01.567411"
             },
             "transactionDates": []
         },
         {
             "amount": 12.0,
-            "date": 1601978400000,
+            "date": 697374000000,
             "description": "Inbetalning .",
             "internalPayload": {},
             "originalAmount": 0.0,
@@ -369,13 +752,13 @@
             "type": "DEFAULT",
             "upcoming": false,
             "externalSystemIds": {
-                "PROVIDER_GIVEN_TRANSACTION_ID": "B052020-10-062020-10-06-05.56.15.689676"
+                "PROVIDER_GIVEN_TRANSACTION_ID": "B051992-02-061992-02-06-05.56.15.689676"
             },
             "transactionDates": []
         },
         {
             "amount": 12.0,
-            "date": 1601892000000,
+            "date": 697287600000,
             "description": "Inbetalning .",
             "internalPayload": {},
             "originalAmount": 0.0,
@@ -385,13 +768,13 @@
             "type": "DEFAULT",
             "upcoming": false,
             "externalSystemIds": {
-                "PROVIDER_GIVEN_TRANSACTION_ID": "B052020-10-052020-10-05-09.40.23.522801"
+                "PROVIDER_GIVEN_TRANSACTION_ID": "B051992-02-051992-02-05-09.40.23.522801"
             },
             "transactionDates": []
         },
         {
             "amount": 102.0,
-            "date": 1601892000000,
+            "date": 697287600000,
             "description": "Överföring SVENSSON,SVEN",
             "internalPayload": {},
             "originalAmount": 0.0,
@@ -401,13 +784,13 @@
             "type": "DEFAULT",
             "upcoming": false,
             "externalSystemIds": {
-                "PROVIDER_GIVEN_TRANSACTION_ID": "B052020-10-052020-10-05-09.40.05.232278"
+                "PROVIDER_GIVEN_TRANSACTION_ID": "B051992-02-051992-02-05-09.40.05.232278"
             },
             "transactionDates": []
         },
         {
             "amount": 12.0,
-            "date": 1601546400000,
+            "date": 696942000000,
             "description": "Inbetalning .",
             "internalPayload": {},
             "originalAmount": 0.0,
@@ -417,13 +800,13 @@
             "type": "DEFAULT",
             "upcoming": false,
             "externalSystemIds": {
-                "PROVIDER_GIVEN_TRANSACTION_ID": "B052020-10-012020-10-01-09.28.30.903571"
+                "PROVIDER_GIVEN_TRANSACTION_ID": "B051992-02-011992-02-01-09.28.30.903571"
             },
             "transactionDates": []
         },
         {
             "amount": 52.0,
-            "date": 1601546400000,
+            "date": 696942000000,
             "description": "Överföring SVENSSON|ABCDEF,SVEN",
             "internalPayload": {},
             "originalAmount": 0.0,
@@ -433,13 +816,13 @@
             "type": "DEFAULT",
             "upcoming": false,
             "externalSystemIds": {
-                "PROVIDER_GIVEN_TRANSACTION_ID": "B052020-10-012020-10-01-09.27.50.997082"
+                "PROVIDER_GIVEN_TRANSACTION_ID": "B051992-02-011992-02-01-09.27.50.997082"
             },
             "transactionDates": []
         },
         {
             "amount": 12.0,
-            "date": 1601460000000,
+            "date": 696769200000,
             "description": "Inbetalning .",
             "internalPayload": {},
             "originalAmount": 0.0,
@@ -449,13 +832,13 @@
             "type": "DEFAULT",
             "upcoming": false,
             "externalSystemIds": {
-                "PROVIDER_GIVEN_TRANSACTION_ID": "B052020-09-302020-09-30-08.49.34.253004"
+                "PROVIDER_GIVEN_TRANSACTION_ID": "B051992-01-301992-01-30-08.49.34.253004"
             },
             "transactionDates": []
         },
         {
             "amount": 52.0,
-            "date": 1601460000000,
+            "date": 696769200000,
             "description": "Överföring SVENSSON|ABCDEF,SVEN",
             "internalPayload": {},
             "originalAmount": 0.0,
@@ -465,13 +848,13 @@
             "type": "DEFAULT",
             "upcoming": false,
             "externalSystemIds": {
-                "PROVIDER_GIVEN_TRANSACTION_ID": "B052020-09-302020-09-30-06.59.40.843995"
+                "PROVIDER_GIVEN_TRANSACTION_ID": "B051992-01-301992-01-30-06.59.40.843995"
             },
             "transactionDates": []
         },
         {
             "amount": 16.0,
-            "date": 1601373600000,
+            "date": 696682800000,
             "description": "Inbetalning R.",
             "internalPayload": {},
             "originalAmount": 0.0,
@@ -481,13 +864,13 @@
             "type": "DEFAULT",
             "upcoming": false,
             "externalSystemIds": {
-                "PROVIDER_GIVEN_TRANSACTION_ID": "B052020-09-292020-09-29-08.37.05.831364"
+                "PROVIDER_GIVEN_TRANSACTION_ID": "B051992-01-291992-01-29-08.37.05.831364"
             },
             "transactionDates": []
         },
         {
             "amount": 56.0,
-            "date": 1601373600000,
+            "date": 696682800000,
             "description": "R. SVENSSON|ABCDEF,SVEN",
             "internalPayload": {},
             "originalAmount": 0.0,
@@ -497,13 +880,13 @@
             "type": "DEFAULT",
             "upcoming": false,
             "externalSystemIds": {
-                "PROVIDER_GIVEN_TRANSACTION_ID": "B052020-09-292020-09-29-08.27.49.532974"
+                "PROVIDER_GIVEN_TRANSACTION_ID": "B051992-01-291992-01-29-08.27.49.532974"
             },
             "transactionDates": []
         },
         {
             "amount": 12.0,
-            "date": 1601373600000,
+            "date": 696682800000,
             "description": "Inbetalning .",
             "internalPayload": {},
             "originalAmount": 0.0,
@@ -513,13 +896,13 @@
             "type": "DEFAULT",
             "upcoming": false,
             "externalSystemIds": {
-                "PROVIDER_GIVEN_TRANSACTION_ID": "B052020-09-292020-09-29-06.17.45.926630"
+                "PROVIDER_GIVEN_TRANSACTION_ID": "B051992-01-291992-01-29-06.17.45.926630"
             },
             "transactionDates": []
         },
         {
             "amount": 52.0,
-            "date": 1601373600000,
+            "date": 696682800000,
             "description": "Överföring SVENSSON|ABCDEF,SVEN",
             "internalPayload": {},
             "originalAmount": 0.0,
@@ -529,13 +912,13 @@
             "type": "DEFAULT",
             "upcoming": false,
             "externalSystemIds": {
-                "PROVIDER_GIVEN_TRANSACTION_ID": "B052020-09-292020-09-29-06.17.15.149445"
+                "PROVIDER_GIVEN_TRANSACTION_ID": "B051992-01-291992-01-29-06.17.15.149445"
             },
             "transactionDates": []
         },
         {
             "amount": 16.0,
-            "date": 1601287200000,
+            "date": 696596400000,
             "description": "Inbetalning R.",
             "internalPayload": {},
             "originalAmount": 0.0,
@@ -545,13 +928,13 @@
             "type": "DEFAULT",
             "upcoming": false,
             "externalSystemIds": {
-                "PROVIDER_GIVEN_TRANSACTION_ID": "B052020-09-282020-09-28-10.29.41.410192"
+                "PROVIDER_GIVEN_TRANSACTION_ID": "B051992-01-281992-01-28-10.29.41.410192"
             },
             "transactionDates": []
         },
         {
             "amount": 56.0,
-            "date": 1601287200000,
+            "date": 696596400000,
             "description": "R. SVENSSON|ABCDEF,SVEN",
             "internalPayload": {},
             "originalAmount": 0.0,
@@ -561,13 +944,13 @@
             "type": "DEFAULT",
             "upcoming": false,
             "externalSystemIds": {
-                "PROVIDER_GIVEN_TRANSACTION_ID": "B052020-09-282020-09-28-10.19.10.259195"
+                "PROVIDER_GIVEN_TRANSACTION_ID": "B051992-01-281992-01-28-10.19.10.259195"
             },
             "transactionDates": []
         },
         {
             "amount": 52.0,
-            "date": 1601287200000,
+            "date": 696596400000,
             "description": "Överföring SVENSSON|ABCDEF,SVEN",
             "internalPayload": {},
             "originalAmount": 0.0,
@@ -577,13 +960,13 @@
             "type": "DEFAULT",
             "upcoming": false,
             "externalSystemIds": {
-                "PROVIDER_GIVEN_TRANSACTION_ID": "B052020-09-282020-09-28-09.56.05.696480"
+                "PROVIDER_GIVEN_TRANSACTION_ID": "B051992-01-281992-01-28-09.56.05.696480"
             },
             "transactionDates": []
         },
         {
             "amount": 16.0,
-            "date": 1601028000000,
+            "date": 696337200000,
             "description": "Inbetalning R.",
             "internalPayload": {},
             "originalAmount": 0.0,
@@ -593,13 +976,13 @@
             "type": "DEFAULT",
             "upcoming": false,
             "externalSystemIds": {
-                "PROVIDER_GIVEN_TRANSACTION_ID": "B052020-09-252020-09-25-09.44.17.852679"
+                "PROVIDER_GIVEN_TRANSACTION_ID": "B051992-01-251992-01-25-09.44.17.852679"
             },
             "transactionDates": []
         },
         {
             "amount": 56.0,
-            "date": 1601028000000,
+            "date": 696337200000,
             "description": "R. SVENSSON|ABCDEF,SVEN",
             "internalPayload": {},
             "originalAmount": 0.0,
@@ -609,13 +992,13 @@
             "type": "DEFAULT",
             "upcoming": false,
             "externalSystemIds": {
-                "PROVIDER_GIVEN_TRANSACTION_ID": "B052020-09-252020-09-25-09.41.37.517792"
+                "PROVIDER_GIVEN_TRANSACTION_ID": "B051992-01-251992-01-25-09.41.37.517792"
             },
             "transactionDates": []
         },
         {
             "amount": 12.0,
-            "date": 1601028000000,
+            "date": 696337200000,
             "description": "Inbetalning .",
             "internalPayload": {},
             "originalAmount": 0.0,
@@ -625,13 +1008,13 @@
             "type": "DEFAULT",
             "upcoming": false,
             "externalSystemIds": {
-                "PROVIDER_GIVEN_TRANSACTION_ID": "B052020-09-252020-09-25-08.49.35.616878"
+                "PROVIDER_GIVEN_TRANSACTION_ID": "B051992-01-251992-01-25-08.49.35.616878"
             },
             "transactionDates": []
         },
         {
             "amount": 52.0,
-            "date": 1601028000000,
+            "date": 696337200000,
             "description": "Överföring SVENSSON|ABCDEF,SVEN",
             "internalPayload": {},
             "originalAmount": 0.0,
@@ -641,7 +1024,7 @@
             "type": "DEFAULT",
             "upcoming": false,
             "externalSystemIds": {
-                "PROVIDER_GIVEN_TRANSACTION_ID": "B052020-09-252020-09-25-08.48.36.325640"
+                "PROVIDER_GIVEN_TRANSACTION_ID": "B051992-01-251992-01-25-08.48.36.325640"
             },
             "transactionDates": []
         }
