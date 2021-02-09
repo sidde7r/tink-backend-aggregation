@@ -7,6 +7,7 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.LOANS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.MORTGAGE_AGGREGATION;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.TRANSFERS;
 
 import com.google.common.collect.Lists;
 import java.net.URI;
@@ -46,6 +47,7 @@ import se.tink.libraries.identitydata.NameElement;
     INVESTMENTS,
     IDENTITY_DATA,
     LOANS,
+    TRANSFERS,
     MORTGAGE_AGGREGATION
 })
 public final class BankIdDemoAgent extends NextGenerationDemoAgent
