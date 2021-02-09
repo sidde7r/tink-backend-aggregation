@@ -63,7 +63,7 @@ message InvalidateCachedSecretsResponse {}
 
 message GetSecretsRequest {
     string appId = 1;
-    string financialInstitutionId = 2;
+    reserved 2;
     string clusterId = 3;
     string certId = 4;
     string providerId = 5;
