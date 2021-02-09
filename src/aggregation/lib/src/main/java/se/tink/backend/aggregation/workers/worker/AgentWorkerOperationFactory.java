@@ -684,7 +684,7 @@ public class AgentWorkerOperationFactory {
                             clientInfo, request, context, operationName, controllerWrapper);
 
             // TODO: this is only for test purposes, remove it later
-            if (request.getProvider().getName().equals("uk-revolut-oauth2")) {
+            if (request.getProvider().getName().equals("uk-natwest-oauth2")) {
                 commands.add(new TransferStatusPollingCommand(context, request));
             }
         }
