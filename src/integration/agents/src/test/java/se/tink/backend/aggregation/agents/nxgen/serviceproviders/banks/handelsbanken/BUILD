@@ -19,6 +19,7 @@ junit_test(
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/banks/handelsbanken",
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
+        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/fakelogmasker",
         "//third_party:com_fasterxml_jackson_core_jackson_core",
         "//third_party:com_github_tomakehurst_wiremock",
         "//third_party:commons_io_commons_io",

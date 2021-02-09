@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.rpc;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Strings;
 import java.util.ArrayList;
@@ -124,6 +125,7 @@ public abstract class BaseResponse {
         this.code = code;
     }
 
+    @JsonIgnore
     public List<Mandate> getMandates() {
         return mandates == null ? new ArrayList<>() : mandates;
     }

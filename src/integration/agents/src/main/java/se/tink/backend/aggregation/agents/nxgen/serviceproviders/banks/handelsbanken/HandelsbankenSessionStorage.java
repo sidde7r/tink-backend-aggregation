@@ -5,29 +5,26 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsba
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.fetcher.creditcard.entities.HandelsbankenCreditCard;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.fetcher.creditcard.rpc.CreditCardsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.fetcher.transactionalaccount.rpc.AccountListResponse;
+import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class HandelsbankenSessionStorage {
     private final SessionStorage sessionStorage;
     private final HandelsbankenConfiguration configuration;
-
-    public HandelsbankenSessionStorage(HandelsbankenConfiguration configuration) {
-        this.sessionStorage = new SessionStorage();
-        this.configuration = configuration;
-    }
-
-    protected HandelsbankenSessionStorage(HandelsbankenSessionStorage sessionStorage) {
-        this(sessionStorage.configuration);
-    }
+    private final LogMasker logMasker;
 
     public HandelsbankenSessionStorage(
-            HandelsbankenConfiguration handelsbankenConfiguration, SessionStorage sessionStorage) {
+            HandelsbankenConfiguration handelsbankenConfiguration,
+            SessionStorage sessionStorage,
+            LogMasker logMasker) {
         this.sessionStorage = sessionStorage;
         this.configuration = handelsbankenConfiguration;
+        this.logMasker = logMasker;
     }
 
     public void persist(ApplicationEntryPointResponse applicationEntryPoint) {
         persist(HandelsbankenConstants.Storage.APPLICATION_ENTRY_POINT, applicationEntryPoint);
+        logMasker.mask(applicationEntryPoint.getAuthToken());
     }
 
     public Optional<ApplicationEntryPointResponse> applicationEntryPoint() {
@@ -66,7 +63,7 @@ public class HandelsbankenSessionStorage {
     }
 
     private void persist(String key, Object value) {
-        this.sessionStorage.put(key, value);
+        this.sessionStorage.put(key, value, false);
     }
 
     private void remove(String key) {
