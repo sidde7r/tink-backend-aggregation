@@ -73,7 +73,6 @@ import se.tink.backend.aggregation.workers.commands.SendDataForProcessingAgentWo
 import se.tink.backend.aggregation.workers.commands.SendPsd2PaymentClassificationToUpdateServiceAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.SetCredentialsStatusAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.TransferAgentWorkerCommand;
-import se.tink.backend.aggregation.workers.commands.TransferStatusPollingCommand;
 import se.tink.backend.aggregation.workers.commands.UpdateCredentialsStatusAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.ValidateProviderAgentWorkerStatus;
 import se.tink.backend.aggregation.workers.commands.state.CircuitBreakerAgentWorkerCommandState;
@@ -682,11 +681,6 @@ public class AgentWorkerOperationFactory {
             commands =
                     createTransferWithoutRefreshBaseCommands(
                             clientInfo, request, context, operationName, controllerWrapper);
-
-            // TODO: this is only for test purposes, remove it later
-            if (request.getProvider().getName().equals("uk-natwest-oauth2")) {
-                commands.add(new TransferStatusPollingCommand(context, request));
-            }
         }
 
         if (shouldRefresh) {
