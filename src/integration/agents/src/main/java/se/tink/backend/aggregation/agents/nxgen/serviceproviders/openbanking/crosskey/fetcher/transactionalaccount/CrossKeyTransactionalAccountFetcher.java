@@ -68,7 +68,7 @@ public class CrossKeyTransactionalAccountFetcher implements AccountFetcher<Trans
                         IdModule.builder()
                                 .withUniqueIdentifier(accountNumber)
                                 .withAccountNumber(accountNumber)
-                                .withAccountName(accountName)
+                                .withAccountName(accountEntity.getDescription())
                                 .addIdentifier(new IbanIdentifier(accountNumber))
                                 .setProductName(accountEntity.getDescription())
                                 .build())
