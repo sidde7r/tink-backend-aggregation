@@ -5,6 +5,7 @@ import static java.util.stream.Collectors.joining;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.agents.rpc.SelectOption;
@@ -13,6 +14,7 @@ import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.i18n.LocalizableKey;
 import se.tink.libraries.i18n.LocalizableParametrizedKey;
 
+@Slf4j
 public class CommonFields {
 
     public static class Selection {
@@ -36,7 +38,7 @@ public class CommonFields {
 
         public static Field build(
                 Catalog catalog, List<String> options, LocalizableKey description) {
-
+            logOptions(options);
             int maxNumber = options.size();
             String helpText =
                     IntStream.range(0, maxNumber)
@@ -62,6 +64,10 @@ public class CommonFields {
                     .patternError(catalog.getString(PATTERN_ERROR_MESSAGE))
                     .selectOptions(prepareSelectOptions(options))
                     .build();
+        }
+
+        private static void logOptions(List<String> options) {
+            log.info("[SelectOption] Available methods to select: {}", options);
         }
 
         private static List<SelectOption> prepareSelectOptions(List<String> options) {
