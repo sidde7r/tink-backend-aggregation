@@ -49,6 +49,7 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.libraries.date.CountryDateHelper;
 import se.tink.libraries.i18n.LocalizableEnum;
 import se.tink.libraries.i18n.LocalizableKey;
 import se.tink.libraries.payment.enums.PaymentType;
@@ -64,6 +65,7 @@ public class SocieteGeneralePaymentExecutor implements PaymentExecutor {
     private final StrongAuthenticationState strongAuthenticationState;
     private static final Logger logger =
             LoggerFactory.getLogger(SocieteGeneralePaymentExecutor.class);
+    private final CountryDateHelper dateHelper;
 
     @Override
     public PaymentResponse create(PaymentRequest paymentRequest) throws PaymentException {
@@ -92,7 +94,7 @@ public class SocieteGeneralePaymentExecutor implements PaymentExecutor {
     @Override
     public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest)
             throws PaymentException {
-        PaymentMultiStepResponse paymentMultiStepResponse = null;
+        PaymentMultiStepResponse paymentMultiStepResponse;
         Payment payment = paymentMultiStepRequest.getPayment();
         String paymentId = payment.getUniqueId();
 
@@ -217,10 +219,32 @@ public class SocieteGeneralePaymentExecutor implements PaymentExecutor {
                                         .orElse(null)))
                 .withBeneficiary(beneficiary)
                 .withChargeBearer(SocieteGeneraleConstants.FormValues.CHARGE_BEARER_SLEV)
-                .withRequestedExecutionDate(getExecutionDate(payment.getExecutionDate()))
+                .withRequestedExecutionDate(
+                        calculateExecutionDate(
+                                Optional.ofNullable(payment.getExecutionDate())
+                                        .orElse(LocalDate.now(DEFAULT_ZONE_ID))))
                 .withCreditTransferTransaction(creditTransferTransaction)
                 .withSupplementaryData(supplementaryData)
                 .build();
+    }
+
+    public String calculateExecutionDate(LocalDate localDate) {
+
+        if (dateHelper.checkIfToday(localDate)
+                && dateHelper.calculateIfWithinCutOffTime(
+                        ZonedDateTime.now(DEFAULT_ZONE_ID), 17, 30, 900)) {
+            // Due to bank cut-off time a transfer initiated (and validated by the customer) before
+            // 17h30 must be confirmed (with a POST / confirmation) before 17h30.
+            // Transfers b/w 17:15 & 17:30 will be moved to next day.
+            return ZonedDateTime.of(localDate.plusDays(1), LocalTime.of(1, 0, 0), DEFAULT_ZONE_ID)
+                    .format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+        }
+
+        // excexutionDate should not be same as creationDate due to bank limitation,so adding 1
+        // minute will resolve this issue.
+        return ZonedDateTime.of(
+                        localDate, LocalTime.now(DEFAULT_ZONE_ID).plusMinutes(1), DEFAULT_ZONE_ID)
+                .format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
     }
 
     private void handleReject(StatusReasonInformationEntity rejectStatus)
@@ -269,24 +293,6 @@ public class SocieteGeneralePaymentExecutor implements PaymentExecutor {
 
     private String getCreationDate() {
         return ZonedDateTime.now(DEFAULT_ZONE_ID).format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
-    }
-
-    private String getExecutionDate(LocalDate localDate) {
-        // excexutionDate should not be same as creationDate due to bank limitation,so adding 1
-        // minute will resolve this issue.
-        return Optional.ofNullable(localDate)
-                .map(
-                        date ->
-                                ZonedDateTime.of(
-                                                date,
-                                                LocalTime.now(DEFAULT_ZONE_ID),
-                                                DEFAULT_ZONE_ID)
-                                        .plusMinutes(1)
-                                        .format(DateTimeFormatter.ISO_OFFSET_DATE_TIME))
-                .orElse(
-                        ZonedDateTime.now(DEFAULT_ZONE_ID)
-                                .plusMinutes(1)
-                                .format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
     }
 
     private enum UserMessage implements LocalizableEnum {

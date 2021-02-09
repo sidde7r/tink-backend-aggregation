@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.
 
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -41,6 +42,7 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.date.CountryDateHelper;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
@@ -58,6 +60,7 @@ public class SocieteGeneralePaymentExecutorTest {
     private final String AUTHENTICATION_URL = "DUMMY_AUTHENTICATION_URL";
     private SocieteGeneralePaymentExecutor paymentExecutor;
     private GetPaymentResponse paymentResponse;
+    private CountryDateHelper dateHelper;
 
     @Before
     public void init() {
@@ -66,13 +69,15 @@ public class SocieteGeneralePaymentExecutorTest {
         supplementalInformationHelper = mock(SupplementalInformationHelper.class);
         strongAuthenticationState = mock(StrongAuthenticationState.class);
         paymentResponse = mock(GetPaymentResponse.class);
+        dateHelper = mock(CountryDateHelper.class);
         paymentExecutor =
                 new SocieteGeneralePaymentExecutor(
                         apiClient,
                         AUTHENTICATION_URL,
                         sessionStorage,
                         supplementalInformationHelper,
-                        strongAuthenticationState);
+                        strongAuthenticationState,
+                        dateHelper);
     }
 
     @Test
@@ -250,6 +255,34 @@ public class SocieteGeneralePaymentExecutorTest {
         // then
         Assertions.assertThat(thrown).isInstanceOf(PaymentRejectedException.class);
         verify(apiClient, times(1)).getPaymentStatus(any());
+    }
+
+    @Test
+    public void verifyExecutionDateIsMovedToNextDay() {
+
+        LocalDate localDate = LocalDate.of(2021, 2, 5);
+
+        when(dateHelper.calculateIfWithinCutOffTime(any(), eq(17), eq(30), eq(900)))
+                .thenReturn(true);
+        when(dateHelper.checkIfToday(eq(localDate))).thenReturn(true);
+
+        String calculatedDate = paymentExecutor.calculateExecutionDate(localDate);
+
+        Assertions.assertThat(calculatedDate).isEqualTo("2021-02-06T01:00:00+01:00");
+    }
+
+    @Test
+    public void verifyExecutionDateIsNotMovedToNextDay() {
+
+        LocalDate localDate = LocalDate.of(2021, 2, 5);
+
+        when(dateHelper.calculateIfWithinCutOffTime(any(), eq(17), eq(30), eq(900)))
+                .thenReturn(false);
+        when(dateHelper.checkIfToday(eq(localDate))).thenReturn(true);
+
+        String calculatedDate = paymentExecutor.calculateExecutionDate(localDate);
+
+        Assertions.assertThat(calculatedDate).contains("2021-02-05");
     }
 
     private PaymentRequest createDomesticPayment() {

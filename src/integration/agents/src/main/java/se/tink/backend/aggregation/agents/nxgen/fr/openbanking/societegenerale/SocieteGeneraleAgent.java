@@ -9,6 +9,7 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 
 import com.google.inject.Inject;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
@@ -49,6 +50,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
+import se.tink.libraries.date.CountryDateHelper;
 
 @AgentDependencyModules(modules = QSealcSignerModuleRSASHA256.class)
 @AgentCapabilities({
@@ -224,6 +226,7 @@ public final class SocieteGeneraleAgent extends NextGenerationAgent
                                 agentConfiguration.getRedirectUrl(),
                                 sessionStorage,
                                 supplementalInformationHelper,
-                                strongAuthenticationState)));
+                                strongAuthenticationState,
+                                new CountryDateHelper(Locale.FRANCE))));
     }
 }
