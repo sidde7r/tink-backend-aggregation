@@ -72,7 +72,16 @@ public final class AgentTestServerSupplementalRequester implements SupplementalR
 
                 return supplementalInformation.orElse(null);
             case AWAITING_MOBILE_BANKID_AUTHENTICATION:
-                // Do nothing as we cannot communicate to the app to open BankId.
+                String autoStartToken = credentials.getSupplementalInformation();
+                if (Strings.isNullOrEmpty(autoStartToken)) {
+                    log.info(String.format("[CredentialsId:%s]: Open BankID", credential.getId()));
+                } else {
+                    log.info(
+                            String.format(
+                                    "[CredentialsId:%s]: Sending autoStartToken to test server: %s",
+                                    credential.getId(), autoStartToken));
+                    agentTestServerClient.sendBankIdAutoStartToken(autoStartToken);
+                }
                 return null;
             case AWAITING_THIRD_PARTY_APP_AUTHENTICATION:
                 agentTestServerClient.openThirdPartyApp(credentials.getSupplementalInformation());
