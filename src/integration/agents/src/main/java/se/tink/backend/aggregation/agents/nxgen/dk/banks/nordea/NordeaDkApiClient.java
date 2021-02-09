@@ -33,11 +33,13 @@ import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.fetcher.loans.rp
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.fetcher.loans.rpc.LoansResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.fetcher.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.fetcher.transactionalaccount.rpc.TransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.filters.ConnectionResetRetryFilter;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.filters.ServerErrorFilter;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.filters.ServerErrorRetryFilter;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.TimeoutFilter;
 import se.tink.backend.aggregation.nxgen.http.form.Form;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
@@ -61,6 +63,8 @@ public class NordeaDkApiClient {
         this.persistentStorage = persistentStorage;
         this.catalog = catalog;
 
+        this.client.addFilter(new TimeoutFilter());
+        this.client.addFilter(new ConnectionResetRetryFilter());
         this.client.addFilter(new ServerErrorFilter());
         this.client.addFilter(new ServerErrorRetryFilter());
     }
