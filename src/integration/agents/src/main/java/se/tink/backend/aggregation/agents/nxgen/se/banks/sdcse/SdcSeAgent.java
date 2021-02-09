@@ -65,7 +65,7 @@ public final class SdcSeAgent extends SdcAgent
     @Override
     protected Authenticator constructAuthenticator() {
         return new BankIdAuthenticationController<>(
-                supplementalRequester,
+                supplementalInformationController,
                 new SdcBankIdAuthenticator(bankClient, sdcSessionStorage, credentials),
                 true,
                 persistentStorage,

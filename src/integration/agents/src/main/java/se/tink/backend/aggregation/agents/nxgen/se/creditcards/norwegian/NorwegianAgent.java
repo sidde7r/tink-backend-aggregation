@@ -52,7 +52,7 @@ public final class NorwegianAgent extends NextGenerationAgent
     @Override
     protected Authenticator constructAuthenticator() {
         return new BankIdAuthenticationController<>(
-                supplementalRequester,
+                supplementalInformationController,
                 new NorwegianAuthenticator(apiClient),
                 persistentStorage,
                 credentials);

@@ -141,7 +141,7 @@ public final class HandelsbankenSEAgent
                             autoAuthenticator),
                     autoAuthenticator),
             new BankIdAuthenticationController<>(
-                    supplementalRequester,
+                    supplementalInformationController,
                     new HandelsbankenBankIdAuthenticator(
                             bankClient,
                             credentials,

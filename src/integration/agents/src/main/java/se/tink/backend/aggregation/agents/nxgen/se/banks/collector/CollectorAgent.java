@@ -47,7 +47,7 @@ public final class CollectorAgent extends NextGenerationAgent
     @Override
     protected Authenticator constructAuthenticator() {
         return new BankIdAuthenticationController<>(
-                supplementalRequester,
+                supplementalInformationController,
                 new CollectorBankIdAuthenticator(apiClient, sessionStorage),
                 persistentStorage,
                 credentials);

@@ -44,7 +44,7 @@ public class MinPensionAgent extends NextGenerationAgent
     @Override
     protected Authenticator constructAuthenticator() {
         return new BankIdAuthenticationController<>(
-                context,
+                supplementalInformationController,
                 new MinPensionAuthenticator(minPensionApiClient, sessionStorage),
                 persistentStorage,
                 credentials);

@@ -95,7 +95,10 @@ public final class SbabAgent extends NextGenerationAgent
                 new SbabAuthenticator(apiClient, sessionStorage, shouldRequestRefreshableToken());
         BankIdAuthenticationController<BankIdResponse> bankIdAuthenticationController =
                 new BankIdAuthenticationController<>(
-                        supplementalRequester, sbabAuthenticator, persistentStorage, credentials);
+                        supplementalInformationController,
+                        sbabAuthenticator,
+                        persistentStorage,
+                        credentials);
 
         return new SbabAuthenticationController(
                 request, systemUpdater, bankIdAuthenticationController);

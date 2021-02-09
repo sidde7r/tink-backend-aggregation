@@ -139,7 +139,7 @@ public class LansforsakringarAgent extends NextGenerationAgent
         BankIdAuthenticationController<BankIdInitResponse>
                 bankIdResponseBankIdAuthenticationController =
                         new BankIdAuthenticationController(
-                                context,
+                                supplementalInformationController,
                                 new LansforsakringarBankIdAuthenticator(apiClient, sessionStorage),
                                 persistentStorage,
                                 credentials);

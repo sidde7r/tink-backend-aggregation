@@ -164,7 +164,7 @@ public abstract class NordeaBaseAgent extends NextGenerationAgent
     protected Authenticator constructAuthenticator() {
         BankIdAuthenticationController<BankIdAutostartResponse> bankIdAuthenticationController =
                 new BankIdAuthenticationController<>(
-                        context,
+                        supplementalInformationController,
                         new NordeaBankIdAuthenticator(
                                 apiClient, sessionStorage, nordeaConfiguration, organisationNumber),
                         persistentStorage,

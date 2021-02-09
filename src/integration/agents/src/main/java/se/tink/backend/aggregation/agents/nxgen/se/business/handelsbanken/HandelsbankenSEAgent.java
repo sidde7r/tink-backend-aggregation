@@ -66,7 +66,7 @@ public final class HandelsbankenSEAgent
 
         return new TypedAuthenticator[] {
             new BankIdAuthenticationController<>(
-                    supplementalRequester,
+                    supplementalInformationController,
                     new HandelsbankenBankIdAuthenticator(
                             bankClient,
                             handelsbankenPersistentStorage,

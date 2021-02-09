@@ -91,7 +91,7 @@ public final class AvanzaAgent extends NextGenerationAgent
     @Override
     protected Authenticator constructAuthenticator() {
         return new BankIdAuthenticationController<>(
-                supplementalRequester,
+                supplementalInformationController,
                 new AvanzaBankIdAuthenticator(
                         apiClient, authSessionStorage, temporaryStorage, sessionStorage),
                 persistentStorage,

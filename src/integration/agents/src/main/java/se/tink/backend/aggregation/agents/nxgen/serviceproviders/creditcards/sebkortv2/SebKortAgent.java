@@ -43,7 +43,7 @@ public class SebKortAgent extends NextGenerationAgent implements RefreshCreditCa
     @Override
     protected Authenticator constructAuthenticator() {
         return new BankIdAuthenticationController<>(
-                supplementalRequester,
+                supplementalInformationController,
                 new SebKortAuthenticator(apiClient, sessionStorage, config),
                 persistentStorage,
                 credentials);

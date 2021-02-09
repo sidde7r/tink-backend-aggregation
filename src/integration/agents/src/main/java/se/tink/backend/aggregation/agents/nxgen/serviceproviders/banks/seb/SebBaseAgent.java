@@ -103,7 +103,7 @@ public abstract class SebBaseAgent extends NextGenerationAgent
     private TypedAuthenticator[] constructAuthenticators() {
         return new TypedAuthenticator[] {
             new BankIdAuthenticationController<>(
-                    supplementalRequester,
+                    supplementalInformationController,
                     new SebBankIdAuthenticator(apiClient, sebConfiguration),
                     persistentStorage,
                     credentials),
