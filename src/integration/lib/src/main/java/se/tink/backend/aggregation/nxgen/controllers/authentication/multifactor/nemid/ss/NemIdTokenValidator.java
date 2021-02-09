@@ -2,8 +2,13 @@ package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor
 
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.NEM_ID_PREFIX;
 
+import com.google.common.collect.ImmutableMap;
+import java.util.Map;
+import java.util.Map.Entry;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import se.tink.backend.aggregation.agents.exceptions.agent.AgentError;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.NemIdErrorCodes;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.exception.NemIdError;
@@ -11,6 +16,18 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 @Slf4j
 @RequiredArgsConstructor
 public class NemIdTokenValidator {
+
+    private static final Map<String, AgentError> ERR_CODE_MAPPING =
+            ImmutableMap.<String, AgentError>builder()
+                    .put(NemIdErrorCodes.REJECTED, NemIdError.REJECTED)
+                    .put(NemIdErrorCodes.INTERRUPTED, NemIdError.INTERRUPTED)
+                    .put(NemIdErrorCodes.TIMEOUT, NemIdError.TIMEOUT)
+                    .put(NemIdErrorCodes.TECHNICAL_ERROR, BankServiceError.BANK_SIDE_FAILURE)
+                    .put(NemIdErrorCodes.NO_AGREEMENT, LoginError.NOT_CUSTOMER)
+                    .put(NemIdErrorCodes.NEMID_LOCKED, NemIdError.NEMID_LOCKED)
+                    .put(NemIdErrorCodes.NEMID_BLOCKED, NemIdError.NEMID_BLOCKED)
+                    .put(NemIdErrorCodes.NEMID_PASSWORD_BLOCKED, NemIdError.NEMID_PASSWORD_BLOCKED)
+                    .build();
 
     private final NemIdTokenParser nemIdTokenParser;
 
@@ -28,12 +45,13 @@ public class NemIdTokenValidator {
     }
 
     private void throwInvalidTokenException(String tokenBase64, NemIdTokenStatus tokenStatus) {
-        if (containsIgnoreCase(tokenStatus.getMessage(), NemIdErrorCodes.REJECTED)) {
-            throw NemIdError.REJECTED.exception();
+
+        for (Entry<String, AgentError> entry : ERR_CODE_MAPPING.entrySet()) {
+            if (containsIgnoreCase(tokenStatus.getMessage(), entry.getKey())) {
+                throw entry.getValue().exception();
+            }
         }
-        if (containsIgnoreCase(tokenStatus.getMessage(), NemIdErrorCodes.TIMEOUT)) {
-            throw NemIdError.TIMEOUT.exception();
-        }
+
         log.error(
                 "{} Unknown NemId token status error message: {}\n"
                         + "Token status code:{}\n"

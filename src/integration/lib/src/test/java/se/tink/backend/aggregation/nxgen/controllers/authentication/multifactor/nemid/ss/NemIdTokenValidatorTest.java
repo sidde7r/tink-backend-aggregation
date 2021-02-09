@@ -19,6 +19,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import se.tink.backend.aggregation.agents.exceptions.agent.AgentException;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.NemIdErrorCodes;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.exception.NemIdError;
@@ -139,22 +140,32 @@ public class NemIdTokenValidatorTest {
     private static List<TokenValidatorTestCase> invalidTokenStatusWithExpectedException() {
         return Stream.of(
                         TokenValidatorTestCase.of(
-                                NemIdTokenStatus.builder()
-                                        .code("fail")
-                                        .message(NemIdErrorCodes.REJECTED)
-                                        .build(),
+                                new NemIdTokenStatus("fail", NemIdErrorCodes.REJECTED),
                                 NemIdError.REJECTED.exception()),
                         TokenValidatorTestCase.of(
-                                NemIdTokenStatus.builder()
-                                        .code("fail")
-                                        .message(NemIdErrorCodes.TIMEOUT)
-                                        .build(),
+                                new NemIdTokenStatus("fail", NemIdErrorCodes.INTERRUPTED),
+                                NemIdError.INTERRUPTED.exception()),
+                        TokenValidatorTestCase.of(
+                                new NemIdTokenStatus("fail", NemIdErrorCodes.TIMEOUT),
                                 NemIdError.TIMEOUT.exception()),
                         TokenValidatorTestCase.of(
-                                NemIdTokenStatus.builder()
-                                        .code("fail")
-                                        .message("SOME_UNKNOWN123")
-                                        .build(),
+                                new NemIdTokenStatus("fail", NemIdErrorCodes.TECHNICAL_ERROR),
+                                BankServiceError.BANK_SIDE_FAILURE.exception()),
+                        TokenValidatorTestCase.of(
+                                new NemIdTokenStatus("fail", NemIdErrorCodes.NO_AGREEMENT),
+                                LoginError.NOT_CUSTOMER.exception()),
+                        TokenValidatorTestCase.of(
+                                new NemIdTokenStatus("fail", NemIdErrorCodes.NEMID_LOCKED),
+                                NemIdError.NEMID_LOCKED.exception()),
+                        TokenValidatorTestCase.of(
+                                new NemIdTokenStatus("fail", NemIdErrorCodes.NEMID_BLOCKED),
+                                NemIdError.NEMID_BLOCKED.exception()),
+                        TokenValidatorTestCase.of(
+                                new NemIdTokenStatus(
+                                        "fail", NemIdErrorCodes.NEMID_PASSWORD_BLOCKED),
+                                NemIdError.NEMID_PASSWORD_BLOCKED.exception()),
+                        TokenValidatorTestCase.of(
+                                new NemIdTokenStatus("fail", "SOME_UNKNOWN123"),
                                 LoginError.CREDENTIALS_VERIFICATION_ERROR.exception()))
                 .map(
                         testCase ->

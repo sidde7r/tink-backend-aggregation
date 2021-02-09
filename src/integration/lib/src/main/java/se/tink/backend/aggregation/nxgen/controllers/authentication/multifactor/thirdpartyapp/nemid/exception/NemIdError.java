@@ -15,6 +15,10 @@ public enum NemIdError implements AgentError {
     SECOND_FACTOR_NOT_REGISTERED(
             new LocalizableKey(
                     "Second factor is not registered option to use. Contact bank support.")),
+    NEMID_LOCKED(new LocalizableKey("Your NemID is temporarily locked.")),
+    NEMID_BLOCKED(new LocalizableKey("Your NemID has been blocked. Please contact NemID support.")),
+    NEMID_PASSWORD_BLOCKED(
+            new LocalizableKey("NemID password blocked. Please contact NemID support.")),
     LOCKED_PIN(
             new LocalizableKey(
                     "Your chosen PIN code is locked. The PIN code must be changed in your Netbank before you can log on."));
