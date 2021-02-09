@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.math.BigDecimal;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
@@ -20,7 +19,11 @@ public class BalanceEntity {
     @JsonProperty("DisposableAmountWithoutDecimals")
     private int disposableAmountWithoutDecimals;
 
-    public ExactCurrencyAmount getAmount() {
-        return ExactCurrencyAmount.of(amount, SkandiaBankenConstants.CURRENCY);
+    public ExactCurrencyAmount getAmount(String currency) {
+        return ExactCurrencyAmount.of(amount, currency);
+    }
+
+    public ExactCurrencyAmount getDisposableAmount(String currency) {
+        return ExactCurrencyAmount.of(disposableAmount, currency);
     }
 }

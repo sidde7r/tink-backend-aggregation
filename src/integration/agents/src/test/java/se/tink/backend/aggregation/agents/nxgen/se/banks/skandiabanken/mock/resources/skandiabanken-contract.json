@@ -1,40 +1,5 @@
 {
     "accounts" : [ {
-        "accountNumber" : "55555555555",
-        "accountExclusion" : "NONE",
-        "exactBalance" : {
-            "currencyCode" : "SEK",
-            "doubleValue" : 50.0,
-            "exactValue" : 50.0,
-            "scale" : 1,
-            "unscaledValue" : 500
-        },
-        "currencyCode" : "SEK",
-        "bankId" : "55555555555",
-        "excluded" : false,
-        "favored" : false,
-        "name" : "Eurokonto",
-        "ownership" : 1.0,
-        "type" : "OTHER",
-        "userModifiedExcluded" : false,
-        "userModifiedName" : false,
-        "userModifiedType" : false,
-        "identifiers" : "[\"se://55555555555\"]",
-        "closed" : false,
-        "holderName" : "Test Testsson",
-        "accountHolder" : {
-            "accountId" : null,
-            "type" : "PERSONAL",
-            "identities" : [ {
-                "name" : "Test Testsson",
-                "role" : null
-            } ]
-        },
-        "flags" : "[]",
-        "balances" : [ ],
-        "availableCredit" : 0.0,
-        "balance" : 50.0
-    }, {
         "accountNumber" : "11111111111",
         "accountExclusion" : "NONE",
         "exactBalance" : {
@@ -85,7 +50,7 @@
         "favored" : false,
         "name" : "Fasträntekonto",
         "ownership" : 1.0,
-        "type" : "OTHER",
+        "type" : "SAVINGS",
         "userModifiedExcluded" : false,
         "userModifiedName" : false,
         "userModifiedType" : false,
@@ -120,7 +85,7 @@
         "favored" : false,
         "name" : "Likviditetskonto",
         "ownership" : 1.0,
-        "type" : "OTHER",
+        "type" : "SAVINGS",
         "userModifiedExcluded" : false,
         "userModifiedName" : false,
         "userModifiedType" : false,
@@ -155,7 +120,7 @@
         "favored" : false,
         "name" : "Skandiakonto",
         "ownership" : 1.0,
-        "type" : "OTHER",
+        "type" : "SAVINGS",
         "userModifiedExcluded" : false,
         "userModifiedName" : false,
         "userModifiedType" : false,
@@ -225,7 +190,7 @@
         "favored" : false,
         "name" : "Kreditkortskonto",
         "ownership" : 1.0,
-        "type" : "OTHER",
+        "type" : "CREDIT_CARD",
         "userModifiedExcluded" : false,
         "userModifiedName" : false,
         "userModifiedType" : false,
@@ -242,7 +207,7 @@
         },
         "flags" : "[]",
         "balances" : [ ],
-        "availableCredit" : 0.0,
+        "availableCredit" : 49999.97,
         "balance" : -10000.03
     }, {
         "accountNumber" : "22222222222",

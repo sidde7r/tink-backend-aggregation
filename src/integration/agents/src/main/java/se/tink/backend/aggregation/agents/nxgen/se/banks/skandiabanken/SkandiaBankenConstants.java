@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
@@ -12,7 +14,23 @@ import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.transfer.enums.TransferType;
 
 public class SkandiaBankenConstants {
-    public static final String CURRENCY = "SEK";
+
+    @AllArgsConstructor
+    @Getter
+    public enum Currency {
+        SEK(1),
+        EUR(2);
+        private int currencyCode;
+
+        public static Currency fromCode(int code) {
+            for (Currency c : Currency.values()) {
+                if (c.currencyCode == code) {
+                    return c;
+                }
+            }
+            return null;
+        }
+    }
 
     public static class Urls {
         public static final String BASE = "https://api.skandia.se";
@@ -33,7 +51,7 @@ public class SkandiaBankenConstants {
                 new URL(BASE + Endpoints.FETCH_ACCOUNT_TRANSACTIONS);
         public static final URL FETCH_PENDING_ACCOUNT_TRANSACTIONS =
                 new URL(BASE + Endpoints.FETCH_PENDING_ACCOUNT_TRANSACTIONS);
-        public static final URL FETCH_CREDIT_CARDS = new URL(BASE + Endpoints.FETCH_CREDIT_CARDS);
+        public static final URL FETCH_CARDS = new URL(BASE + Endpoints.FETCH_CARDS);
         public static final URL FETCH_INVESTMENT_ACCOUNTS =
                 new URL(BASE + Endpoints.FETCH_INVESTMENT_ACCOUNTS);
         public static final URL FETCH_INVESTMENT_ACCOUNT_DETAILS =
@@ -64,7 +82,7 @@ public class SkandiaBankenConstants {
                         + Fetcher.TRANSACTIONS_PER_BATCH;
         public static final String FETCH_PENDING_ACCOUNT_TRANSACTIONS =
                 "/Accounts/V2/BankAccounts/Reservations/{accountId}";
-        public static final String FETCH_CREDIT_CARDS = "/Customers/V3/Commitments/Cards";
+        public static final String FETCH_CARDS = "/Customers/V3/Commitments/Cards";
         public static final String FETCH_INVESTMENT_ACCOUNTS =
                 "/Customers/V2/Commitments/SecuritiesAccounts,Insurances,Pensions";
         public static final String FETCH_INVESTMENT_ACCOUNT_DETAILS =
@@ -187,10 +205,20 @@ public class SkandiaBankenConstants {
         public static final int TIMEOUT_RETRY_SLEEP_MILLISECONDS = 1000;
     }
 
+    public static class AccountType {
+        public static final String CREDITCARD = "CreditCard";
+    }
+
     public static final TransactionalAccountTypeMapper ACCOUNT_TYPE_MAPPER =
             TransactionalAccountTypeMapper.builder()
-                    .put(TransactionalAccountType.CHECKING, "AIE")
-                    .put(TransactionalAccountType.SAVINGS, "Savings")
+                    .put(TransactionalAccountType.CHECKING, "AIE", "Euro")
+                    .put(
+                            TransactionalAccountType.SAVINGS,
+                            "Savings",
+                            "Payment",
+                            "Solvency",
+                            "FixedInterest")
+                    .ignoreKeys(AccountType.CREDITCARD)
                     .build();
 
     public static final TypeMapper<Instrument.Type> INSTRUMENT_TYPE_MAP =

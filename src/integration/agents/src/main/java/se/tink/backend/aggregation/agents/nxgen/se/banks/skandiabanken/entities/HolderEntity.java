@@ -1,21 +1,18 @@
-package se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.transactionalaccount.entities;
+package se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import lombok.Getter;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
+@Getter
 @JsonObject
+@JsonNaming(PropertyNamingStrategy.UpperCamelCaseStrategy.class)
 public class HolderEntity {
-    @JsonProperty("EncryptedNationalIdentificationNumber")
     private String encryptedNationalIdentificationNumber = "";
-
-    @JsonProperty("Firstname")
     private String firstname = "";
-
-    @JsonProperty("NationalIdentificationNumber")
     private String nationalIdentificationNumber = "";
-
-    @JsonProperty("Surname")
     private String surname = "";
 
     @JsonIgnore
