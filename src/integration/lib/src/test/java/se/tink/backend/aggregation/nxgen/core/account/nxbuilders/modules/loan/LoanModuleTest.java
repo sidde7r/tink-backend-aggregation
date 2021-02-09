@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.loan;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -8,31 +10,39 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import org.junit.Test;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails.Type;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.loan.builder.BalanceStep;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.loan.builder.LoanModuleBuildStep;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.loan.builder.TypeStep;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class LoanModuleTest {
 
-    @Test(expected = NullPointerException.class)
-    public void nullArguments() {
-        LoanModule.builder().withType(null).withBalance(null).withInterestRate(0).build();
-    }
-
-    @Test(expected = NullPointerException.class)
+    @Test
     public void nullType() {
-        LoanModule.builder()
-                .withType(null)
-                .withBalance(ExactCurrencyAmount.of(BigDecimal.valueOf(2500), "EUR"))
-                .withInterestRate(0.1)
-                .build();
-    }
+        // given
+        TypeStep<LoanModuleBuildStep> builder = LoanModule.builder();
 
-    @Test(expected = NullPointerException.class)
-    public void nullBalance() {
-        LoanModule.builder().withType(Type.MORTGAGE).withBalance(null).withInterestRate(0).build();
+        // when
+        Throwable t = catchThrowable(() -> builder.withType(null));
+
+        // then
+        assertThat(t).isInstanceOf(NullPointerException.class);
     }
 
     @Test
-    public void shouldAllowNegativeInterestRate() {
+    public void nullBalance() {
+        // given
+        BalanceStep<LoanModuleBuildStep> builder = LoanModule.builder().withType(Type.MORTGAGE);
+
+        // when
+        Throwable t = catchThrowable(() -> builder.withBalance(null));
+
+        // then
+        assertThat(t).isInstanceOf(NullPointerException.class);
+    }
+
+    @Test
+    public void negativeInterestRate() {
         LoanModule.builder()
                 .withType(Type.MORTGAGE)
                 .withBalance(ExactCurrencyAmount.of(BigDecimal.valueOf(2500), "#@!$^#$^"))
@@ -90,14 +100,21 @@ public class LoanModuleTest {
                 .build();
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void negativeMonthsBound() {
-        LoanModule.builder()
-                .withType(Type.MORTGAGE)
-                .withBalance(ExactCurrencyAmount.of(BigDecimal.valueOf(1_560_000.23), "SEK"))
-                .withInterestRate(0.01976)
-                .setNumMonthsBound(-2)
-                .build();
+        // given
+        LoanModuleBuildStep builder =
+                LoanModule.builder()
+                        .withType(Type.MORTGAGE)
+                        .withBalance(
+                                ExactCurrencyAmount.of(BigDecimal.valueOf(1_560_000.23), "SEK"))
+                        .withInterestRate(0.01976);
+
+        // when
+        Throwable t = catchThrowable(() -> builder.setNumMonthsBound(-2));
+
+        // then
+        assertThat(t).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
