@@ -22,13 +22,13 @@ public class DanskeBankSEConfiguration implements DanskeBankConfiguration {
     private static final String STEP_UP_TOKEN_KEY = "x-stepup-token";
     // Update all values below at the same time when there's a version update
     private static final String CLIENT_SECRET =
-            "2cAZCUQGWxm6Eb11pRHBW7CeOgveV9A8cQivaviQHt5qCE156h";
-    private static final String APP_VERSION = "2020.17";
+            "qSNuuOUcXvO3Q6KMVIPPnoPNoE0uf68aer9o3zLYdNDIRU5WRt";
+    private static final String APP_VERSION = "2021.1";
     private static final String PRODUCT_SUB = "13.3.1";
     private static final String APP_VERSION_HEADER =
-            "MobileBank ios com danskebank.mobilebank3se 24913";
+            "MobileBank ios com danskebank.mobilebank3se 27385";
     private static final String USER_AGENT =
-            "nyamobilbankendanskebank/2020.17 (com.danskebank.mobilebank3se; build:24913; iOS 13.3.1; SE)";
+            "nyamobilbankendanskebank/2021.1 (com.danskebank.mobilebank3se; build:27385; iOS 13.3.1; SE)";
 
     public String getProductSub() {
         return PRODUCT_SUB;
