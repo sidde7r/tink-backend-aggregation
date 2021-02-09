@@ -81,7 +81,8 @@ public class CardTransaction {
         return description != null ? description : title;
     }
 
-    private LocalDate getDate() {
+    @JsonIgnore
+    public LocalDate getDate() {
         if (booked && Objects.nonNull(bookingDate)) {
             return bookingDate;
         }
