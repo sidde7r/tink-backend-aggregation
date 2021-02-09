@@ -598,12 +598,6 @@ public class AgentWorkerOperationFactory {
             commands =
                     createTransferWithoutRefreshBaseCommands(
                             clientInfo, request, context, operationName, controllerWrapper);
-
-            // TODO: this is only for test purposes, remove it later
-            if (request.getProvider().getName().equals("uk-revolut-oauth2")) {
-                commands.add(new TransferStatusPollingCommand(context, request));
-            }
-
         } else {
 
             boolean shouldRefresh = !request.isSkipRefresh();
@@ -688,6 +682,11 @@ public class AgentWorkerOperationFactory {
             commands =
                     createTransferWithoutRefreshBaseCommands(
                             clientInfo, request, context, operationName, controllerWrapper);
+
+            // TODO: this is only for test purposes, remove it later
+            if (request.getProvider().getName().equals("uk-revolut-oauth2")) {
+                commands.add(new TransferStatusPollingCommand(context, request));
+            }
         }
 
         if (shouldRefresh) {
