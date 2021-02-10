@@ -23,17 +23,14 @@ public class NemIdCodeAppAuthenticationController
     private static final Logger logger =
             LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    private final Credentials credentials;
     private final SupplementalInformationController supplementalInformationController;
     private final Catalog catalog;
 
     public NemIdCodeAppAuthenticationController(
             NemIdCodeAppAuthenticator authenticator,
-            Credentials credentials,
             SupplementalInformationController supplementalInformationController,
             Catalog catalog) {
         super(authenticator, null);
-        this.credentials = credentials;
         this.supplementalInformationController = supplementalInformationController;
         this.catalog = catalog;
     }

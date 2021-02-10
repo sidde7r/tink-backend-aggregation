@@ -193,10 +193,7 @@ public class DanskeBankChallengeAuthenticator
                         apiClient, client, preferredDevice, username, bindChallengeResponseBody);
         NemIdCodeAppAuthenticationController nemIdAuthenticationController =
                 new NemIdCodeAppAuthenticationController(
-                        codeAppAuthenticator,
-                        credentials,
-                        supplementalInformationController,
-                        catalog);
+                        codeAppAuthenticator, supplementalInformationController, catalog);
 
         try {
             // Credentials are not needed for this implementation

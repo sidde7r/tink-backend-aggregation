@@ -15,7 +15,6 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.contexts.MetricContext;
 import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
-import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
@@ -37,6 +36,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.StatelessProgressiveAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.step.AutomaticAuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.step.CredentialsAuthenticationStep;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
@@ -60,7 +60,7 @@ public class NordeaNemIdAuthenticatorV2 extends StatelessProgressiveAuthenticato
             final NordeaDkApiClient bankClient,
             final SessionStorage sessionStorage,
             final PersistentStorage persistentStorage,
-            final SupplementalRequester supplementalRequester,
+            final SupplementalInformationController supplementalInformationController,
             final Catalog catalog,
             final StatusUpdater statusUpdater,
             final MetricContext metricContext) {
@@ -69,7 +69,11 @@ public class NordeaNemIdAuthenticatorV2 extends StatelessProgressiveAuthenticato
         this.persistentStorage = Objects.requireNonNull(persistentStorage);
         this.iFrameController =
                 NemIdIFrameControllerInitializer.initNemIdIframeController(
-                        this, catalog, statusUpdater, supplementalRequester, metricContext);
+                        this,
+                        catalog,
+                        statusUpdater,
+                        supplementalInformationController,
+                        metricContext);
     }
 
     public void authenticate(final Credentials credentials) throws AuthenticationException {

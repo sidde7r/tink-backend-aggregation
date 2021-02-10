@@ -38,10 +38,7 @@ public final class JyskeNemidAgent extends JyskeAbstractAgent {
                 request,
                 systemUpdater,
                 new NemIdCodeAppAuthenticationController(
-                        jyskeNemidAuthenticator,
-                        credentials,
-                        supplementalInformationController,
-                        catalog),
+                        jyskeNemidAuthenticator, supplementalInformationController, catalog),
                 jyskeNemidAuthenticator);
     }
 }

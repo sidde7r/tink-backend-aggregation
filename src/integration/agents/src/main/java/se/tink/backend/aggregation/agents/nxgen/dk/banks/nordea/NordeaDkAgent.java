@@ -115,7 +115,7 @@ public final class NordeaDkAgent extends SubsequentProgressiveGenerationAgent
                 nordeaClient,
                 sessionStorage,
                 persistentStorage,
-                supplementalRequester,
+                supplementalInformationController,
                 catalog,
                 statusUpdater,
                 metricContext);
