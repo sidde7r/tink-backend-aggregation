@@ -13,7 +13,6 @@ import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field.Key;
-import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
@@ -45,6 +44,7 @@ import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.authenticator.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
@@ -67,7 +67,7 @@ public class NordeaPasswordAuthenticator implements TypedAuthenticator, AutoAuth
 
     public NordeaPasswordAuthenticator(
             CredentialsRequest request,
-            SupplementalRequester supplementalRequester,
+            SupplementalInformationController supplementalInformationController,
             NordeaBaseApiClient apiClient,
             PersistentStorage persistentStorage,
             SessionStorage sessionStorage,
@@ -80,7 +80,7 @@ public class NordeaPasswordAuthenticator implements TypedAuthenticator, AutoAuth
         this.bankIdAuthenticationController = bankIdAuthenticationController;
         this.persistentStorage = persistentStorage;
         this.sessionStorage = sessionStorage;
-        this.signHelper = new NordeaBankIdSignHelper(apiClient, supplementalRequester);
+        this.signHelper = new NordeaBankIdSignHelper(apiClient, supplementalInformationController);
         this.nordeaConfiguration = nordeaConfiguration;
 
         if (persistentStorage.containsKey(StorageKeys.PERSONAL_CODE_ENROLLMENT_ID)) {

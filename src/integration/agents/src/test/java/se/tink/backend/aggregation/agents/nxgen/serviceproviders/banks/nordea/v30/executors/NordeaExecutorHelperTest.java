@@ -10,7 +10,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.mockito.Mockito;
-import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.NordeaBaseApiClient;
@@ -18,12 +17,14 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v3
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.executors.rpc.CompleteTransferRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.executors.rpc.CompleteTransferResponse;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGeneratorImpl;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.libraries.i18n.Catalog;
 
 public class NordeaExecutorHelperTest {
 
     @Rule public ExpectedException expectedException = ExpectedException.none();
-    SupplementalRequester supplementalRequester = mock(SupplementalRequester.class);
+    SupplementalInformationController supplementalInformationController =
+            mock(SupplementalInformationController.class);
     Catalog catalog = mock(Catalog.class);
     NordeaBaseApiClient nordeaBaseApiClient = mock(NordeaBaseApiClient.class);
 
@@ -32,7 +33,7 @@ public class NordeaExecutorHelperTest {
 
         NordeaExecutorHelper nordeaExecutorHelper =
                 new NordeaExecutorHelper(
-                        supplementalRequester,
+                        supplementalInformationController,
                         catalog,
                         nordeaBaseApiClient,
                         new NordeaSEConfiguration(),
@@ -67,7 +68,7 @@ public class NordeaExecutorHelperTest {
 
         NordeaExecutorHelper nordeaExecutorHelper =
                 new NordeaExecutorHelper(
-                        supplementalRequester,
+                        supplementalInformationController,
                         catalog,
                         nordeaBaseApiClient,
                         new NordeaSEConfiguration(),
@@ -94,7 +95,7 @@ public class NordeaExecutorHelperTest {
 
         NordeaExecutorHelper nordeaExecutorHelper =
                 new NordeaExecutorHelper(
-                        supplementalRequester,
+                        supplementalInformationController,
                         catalog,
                         nordeaBaseApiClient,
                         new NordeaSEConfiguration(),

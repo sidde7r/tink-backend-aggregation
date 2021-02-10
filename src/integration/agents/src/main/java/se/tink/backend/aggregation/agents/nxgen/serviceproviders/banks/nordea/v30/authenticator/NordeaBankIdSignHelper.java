@@ -4,7 +4,6 @@ import com.google.common.util.concurrent.Uninterruptibles;
 import java.util.concurrent.TimeUnit;
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
-import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.NordeaBaseApiClient;
@@ -13,16 +12,18 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v3
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.executors.rpc.ResultSignResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.executors.rpc.SignatureRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.executors.rpc.SignatureResponse;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
 public class NordeaBankIdSignHelper {
     private final NordeaBaseApiClient apiClient;
-    private final SupplementalRequester supplementalRequester;
+    private final SupplementalInformationController supplementalInformationController;
 
     public NordeaBankIdSignHelper(
-            NordeaBaseApiClient apiClient, SupplementalRequester supplementalRequester) {
+            NordeaBaseApiClient apiClient,
+            SupplementalInformationController supplementalInformationController) {
         this.apiClient = apiClient;
-        this.supplementalRequester = supplementalRequester;
+        this.supplementalInformationController = supplementalInformationController;
     }
 
     public String sign(String signingItemId) throws BankIdException {
@@ -30,7 +31,7 @@ public class NordeaBankIdSignHelper {
         signatureRequest.add(new SignatureEntity(signingItemId));
         SignatureResponse signatureResponse = apiClient.signTransfer(signatureRequest);
         if (signatureResponse.getSignatureState().equals(BankIdStatus.WAITING)) {
-            supplementalRequester.openBankId(null, false);
+            supplementalInformationController.openMobileBankIdAsync(null);
             poll(signatureResponse.getOrderReference());
             return signatureResponse.getOrderReference();
         } else {

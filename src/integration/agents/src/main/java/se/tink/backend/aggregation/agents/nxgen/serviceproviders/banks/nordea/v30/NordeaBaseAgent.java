@@ -173,7 +173,7 @@ public abstract class NordeaBaseAgent extends NextGenerationAgent
         NordeaPasswordAuthenticator passwordAuthenticator =
                 new NordeaPasswordAuthenticator(
                         request,
-                        context,
+                        supplementalInformationController,
                         apiClient,
                         persistentStorage,
                         sessionStorage,
@@ -249,7 +249,11 @@ public abstract class NordeaBaseAgent extends NextGenerationAgent
     protected Optional<TransferController> constructTransferController() {
         NordeaExecutorHelper executorHelper =
                 new NordeaExecutorHelper(
-                        context, catalog, apiClient, nordeaConfiguration, randomValueGenerator);
+                        supplementalInformationController,
+                        catalog,
+                        apiClient,
+                        nordeaConfiguration,
+                        randomValueGenerator);
 
         return Optional.of(
                 new TransferController(
