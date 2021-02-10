@@ -4,9 +4,11 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.apache.curator.framework.CuratorFramework;
@@ -108,6 +110,7 @@ import se.tink.libraries.uuid.UUIDUtils;
 
 public class AgentWorkerOperationFactory {
     private static final Logger log = LoggerFactory.getLogger(AgentWorkerOperationFactory.class);
+    private final Random random = new Random();
 
     private final CacheClient cacheClient;
     private final CryptoConfigurationDao cryptoConfigurationDao;
@@ -872,45 +875,76 @@ public class AgentWorkerOperationFactory {
                 new CredentialsCrypto(
                         cacheClient, controllerWrapper, cryptoWrapper, metricRegistry);
 
-        return Lists.newArrayList(
-                new ValidateProviderAgentWorkerStatus(context, controllerWrapper),
-                new ExpireSessionAgentWorkerCommand(
-                        request.isManual(),
-                        context,
-                        request.getCredentials(),
-                        request.getProvider()),
-                new CircuitBreakerAgentWorkerCommand(context, circuitBreakAgentWorkerCommandState),
-                new LockAgentWorkerCommand(
-                        context, operationName, interProcessSemaphoreMutexFactory),
-                new DecryptCredentialsWorkerCommand(context, credentialsCrypto),
-                new UpdateCredentialsStatusAgentWorkerCommand(
-                        controllerWrapper,
-                        request.getCredentials(),
-                        request.getProvider(),
-                        context,
-                        c -> true), // is it enough to return true in this predicate?
-                new ReportProviderMetricsAgentWorkerCommand(
-                        context,
-                        operationName,
-                        reportMetricsAgentWorkerCommandState,
-                        new AgentWorkerMetricReporter(
-                                metricRegistry, this.providerTierConfiguration)),
-                new ReportProviderTransferMetricsAgentWorkerCommand(context, operationName),
-                new SendDataForProcessingAgentWorkerCommand( // todo @majid investigate if this is
-                        // needed?
+        ArrayList<AgentWorkerCommand> agentWorkerCommandsPart1 =
+                Lists.newArrayList(
+                        new ValidateProviderAgentWorkerStatus(context, controllerWrapper),
+                        new ExpireSessionAgentWorkerCommand(
+                                request.isManual(),
+                                context,
+                                request.getCredentials(),
+                                request.getProvider()),
+                        new CircuitBreakerAgentWorkerCommand(
+                                context, circuitBreakAgentWorkerCommandState),
+                        new LockAgentWorkerCommand(
+                                context, operationName, interProcessSemaphoreMutexFactory),
+                        new DecryptCredentialsWorkerCommand(context, credentialsCrypto),
+                        new UpdateCredentialsStatusAgentWorkerCommand(
+                                controllerWrapper,
+                                request.getCredentials(),
+                                request.getProvider(),
+                                context,
+                                c -> true), // is it enough to return true in this predicate?
+                        new ReportProviderMetricsAgentWorkerCommand(
+                                context,
+                                operationName,
+                                reportMetricsAgentWorkerCommandState,
+                                new AgentWorkerMetricReporter(
+                                        metricRegistry, this.providerTierConfiguration)),
+                        new ReportProviderTransferMetricsAgentWorkerCommand(
+                                context, operationName));
+
+        SendDataForProcessingAgentWorkerCommand sendDataForProcessingAgentWorkerCommand =
+                new SendDataForProcessingAgentWorkerCommand(
                         context,
                         createCommandMetricState(request),
                         ProcessableItem.fromRefreshableItems(
                                 RefreshableItem.convertLegacyItems(
-                                        RefreshableItem.REFRESHABLE_ITEMS_ALL))),
-                new CreateAgentConfigurationControllerWorkerCommand(
-                        context, tppSecretsServiceClient),
-                new CreateLogMaskerWorkerCommand(context),
-                new DebugAgentWorkerCommand(
-                        context, debugAgentWorkerCommandState, agentDebugStorageHandler),
-                new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState),
-                new TransferAgentWorkerCommand(
-                        context, request, createCommandMetricState(request)));
+                                        RefreshableItem.REFRESHABLE_ITEMS_ALL)));
+
+        ArrayList<AgentWorkerCommand> agentWorkerCommandsPart2 =
+                Lists.newArrayList(
+                        new CreateAgentConfigurationControllerWorkerCommand(
+                                context, tppSecretsServiceClient),
+                        new CreateLogMaskerWorkerCommand(context),
+                        new DebugAgentWorkerCommand(
+                                context, debugAgentWorkerCommandState, agentDebugStorageHandler),
+                        new InstantiateAgentWorkerCommand(
+                                context, instantiateAgentWorkerCommandState),
+                        new TransferAgentWorkerCommand(
+                                context, request, createCommandMetricState(request)));
+
+        // https://tink.slack.com/archives/CS4BJQJBV/p1612518614089100
+        return combineCommandsListWhileMigratingAwayFromCommand(
+                agentWorkerCommandsPart1,
+                agentWorkerCommandsPart2,
+                sendDataForProcessingAgentWorkerCommand);
+    }
+
+    private List<AgentWorkerCommand> combineCommandsListWhileMigratingAwayFromCommand(
+            ArrayList<AgentWorkerCommand> agentWorkerCommandsPart1,
+            ArrayList<AgentWorkerCommand> agentWorkerCommandsPart2,
+            SendDataForProcessingAgentWorkerCommand sendDataForProcessingAgentWorkerCommand) {
+
+        double skipRatio = 0.1;
+        boolean isIncluded = random.nextDouble() > skipRatio;
+        if (isIncluded) {
+            agentWorkerCommandsPart1.add(sendDataForProcessingAgentWorkerCommand);
+        }
+        log.info(
+                "sendDataForProcessingAgentWorkerCommand is used in command chain: {}", isIncluded);
+
+        agentWorkerCommandsPart1.addAll(agentWorkerCommandsPart2);
+        return agentWorkerCommandsPart1;
     }
 
     public AgentWorkerOperation createOperationCreateCredentials(
