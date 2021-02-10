@@ -51,7 +51,7 @@ public final class SBABAgent extends NextGenerationAgent
     @Override
     protected Authenticator constructAuthenticator() {
         return new BankIdAuthenticationController<>(
-                context,
+                supplementalInformationController,
                 new SBABAuthenticator(apiClient, sessionStorage),
                 persistentStorage,
                 credentials);

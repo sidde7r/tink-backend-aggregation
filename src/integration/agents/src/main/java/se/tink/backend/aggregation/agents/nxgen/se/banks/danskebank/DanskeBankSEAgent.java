@@ -76,7 +76,7 @@ public final class DanskeBankSEAgent extends DanskeBankAgent
     protected Authenticator constructAuthenticator() {
         return new TypedAuthenticationController(
                 new BankIdAuthenticationController<>(
-                        supplementalRequester,
+                        supplementalInformationController,
                         new DanskeBankBankIdAuthenticator(
                                 (DanskeBankSEApiClient) apiClient,
                                 deviceId,

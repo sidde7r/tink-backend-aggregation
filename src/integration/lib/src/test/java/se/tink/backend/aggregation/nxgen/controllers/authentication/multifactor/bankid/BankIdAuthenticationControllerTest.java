@@ -10,12 +10,12 @@ import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
-import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
@@ -26,12 +26,12 @@ public class BankIdAuthenticationControllerTest {
     private final Credentials credentials = new Credentials();
     private BankIdAuthenticationController authenticationController;
     private BankIdAuthenticator authenticator;
-    private SupplementalRequester supplementalRequester;
+    private SupplementalInformationController supplementalInformationController;
     private PersistentStorage persistentStorage;
 
     @Before
     public void setup() throws AuthenticationException, AuthorizationException {
-        supplementalRequester = Mockito.mock(SupplementalRequester.class);
+        supplementalInformationController = Mockito.mock(SupplementalInformationController.class);
         authenticator = Mockito.mock(BankIdAuthenticator.class);
         Mockito.when(authenticator.init(Mockito.anyString())).thenReturn(REFERENCE);
         Mockito.when(authenticator.collect(REFERENCE)).thenReturn(BankIdStatus.DONE);
@@ -39,7 +39,10 @@ public class BankIdAuthenticationControllerTest {
         persistentStorage = new PersistentStorage();
         authenticationController =
                 new BankIdAuthenticationController(
-                        supplementalRequester, authenticator, persistentStorage, credentials);
+                        supplementalInformationController,
+                        authenticator,
+                        persistentStorage,
+                        credentials);
 
         credentials.setType(CredentialsTypes.MOBILE_BANKID);
     }
@@ -47,16 +50,17 @@ public class BankIdAuthenticationControllerTest {
     @Test(expected = NullPointerException.class)
     public void ensureExceptionIsThrown_whenBankIdAuthenticator_isNull() {
         new BankIdAuthenticationController(
-                supplementalRequester, null, persistentStorage, credentials);
+                supplementalInformationController, null, persistentStorage, credentials);
     }
 
     @Test(expected = NullPointerException.class)
-    public void ensureExceptionIsThrown_whenContext_isNull() {
+    public void ensureExceptionIsThrown_whenSupplementalInfoCtrl_isNull() {
         new BankIdAuthenticationController(null, authenticator, persistentStorage, credentials);
     }
 
     @Test(expected = NullPointerException.class)
-    public void ensureExceptionIsThrown_whenBothContextAndBankIdAuthenticator_isNull() {
+    public void
+            ensureExceptionIsThrown_whenBothSupplementalInfoCtrlAndBankIdAuthenticator_isNull() {
         new BankIdAuthenticationController(null, null, persistentStorage, credentials);
     }
 
@@ -98,9 +102,9 @@ public class BankIdAuthenticationControllerTest {
         credentials.setField(Field.Key.USERNAME, USERNAME);
         authenticationController.authenticate(credentials);
 
-        InOrder order = Mockito.inOrder(authenticator, supplementalRequester);
+        InOrder order = Mockito.inOrder(authenticator, supplementalInformationController);
         order.verify(authenticator).init(USERNAME);
-        order.verify(supplementalRequester).openBankId(null, false);
+        order.verify(supplementalInformationController).openMobileBankIdAsync(null);
         order.verify(authenticator).collect(REFERENCE);
     }
 

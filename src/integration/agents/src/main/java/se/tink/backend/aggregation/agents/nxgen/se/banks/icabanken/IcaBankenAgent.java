@@ -136,7 +136,7 @@ public final class IcaBankenAgent extends NextGenerationAgent
     @Override
     protected Authenticator constructAuthenticator() {
         return new BankIdAuthenticationController<>(
-                supplementalRequester,
+                supplementalInformationController,
                 new IcaBankenBankIdAuthenticator(apiClient, icaBankenSessionStorage),
                 persistentStorage,
                 credentials);

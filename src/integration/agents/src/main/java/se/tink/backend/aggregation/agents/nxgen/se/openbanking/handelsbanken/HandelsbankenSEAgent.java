@@ -61,7 +61,7 @@ public final class HandelsbankenSEAgent extends HandelsbankenBaseAgent
     protected Authenticator constructAuthenticator() {
         BankIdAuthenticationController bankIdAuthenticationController =
                 new BankIdAuthenticationController<>(
-                        supplementalRequester,
+                        supplementalInformationController,
                         new HandelsbankenBankIdAuthenticator(apiClient, sessionStorage),
                         persistentStorage,
                         credentials);

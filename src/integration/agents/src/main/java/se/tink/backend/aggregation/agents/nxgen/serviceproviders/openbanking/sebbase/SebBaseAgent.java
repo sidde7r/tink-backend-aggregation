@@ -53,7 +53,7 @@ public abstract class SebBaseAgent<C extends SebBaseApiClient> extends NextGener
     protected Authenticator constructAuthenticator() {
         BankIdAuthenticationController bankIdAuthenticationController =
                 new BankIdAuthenticationController<>(
-                        supplementalRequester,
+                        supplementalInformationController,
                         new SebDecoupledAuthenticator(apiClient, agentConfiguration),
                         persistentStorage,
                         credentials);

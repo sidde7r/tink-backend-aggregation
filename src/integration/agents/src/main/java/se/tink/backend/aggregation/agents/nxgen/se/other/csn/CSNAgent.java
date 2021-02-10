@@ -47,7 +47,7 @@ public class CSNAgent extends NextGenerationAgent
     protected Authenticator constructAuthenticator() {
 
         return new BankIdAuthenticationController<>(
-                supplementalRequester,
+                supplementalInformationController,
                 new CSNBankIdAuthenticator(apiClient, sessionStorage),
                 persistentStorage,
                 credentials);
