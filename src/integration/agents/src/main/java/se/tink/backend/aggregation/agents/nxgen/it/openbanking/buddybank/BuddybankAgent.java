@@ -32,7 +32,7 @@ public final class BuddybankAgent extends UnicreditBaseAgent {
         return new BuddybankAuthenticationController(
                 new BuddybankAuthenticator((BuddybankApiClient) apiClient),
                 strongAuthenticationState,
-                supplementalRequester,
+                supplementalInformationController,
                 catalog);
     }
 

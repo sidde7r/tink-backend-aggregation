@@ -40,7 +40,7 @@ public final class IccreaAgent extends CbiGlobeAgent {
                             strongAuthenticationState,
                             userState,
                             getAgentConfiguration().getProviderSpecificConfiguration(),
-                            supplementalRequester,
+                            supplementalInformationController,
                             catalog);
         }
 

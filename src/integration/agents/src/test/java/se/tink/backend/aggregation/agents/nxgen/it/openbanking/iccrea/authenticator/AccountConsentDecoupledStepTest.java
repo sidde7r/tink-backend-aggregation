@@ -19,7 +19,6 @@ import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
@@ -30,6 +29,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.i18n.LocalizableKey;
 
@@ -42,7 +42,8 @@ public class AccountConsentDecoupledStepTest {
     public void init() {
         this.consentManager = mock(ConsentManager.class);
         this.strongAuthenticationState = mock(StrongAuthenticationState.class);
-        SupplementalRequester supplementalRequester = mock(SupplementalRequester.class);
+        SupplementalInformationController supplementalInformationController =
+                mock(SupplementalInformationController.class);
         Catalog catalog = mock(Catalog.class);
         when(catalog.getString(any(LocalizableKey.class))).thenReturn("");
         ConsentProcessor consentProcessor = new ConsentProcessor(consentManager);
@@ -50,7 +51,7 @@ public class AccountConsentDecoupledStepTest {
                 new AccountConsentDecoupledStep(
                         consentManager,
                         strongAuthenticationState,
-                        supplementalRequester,
+                        supplementalInformationController,
                         catalog,
                         consentProcessor);
     }

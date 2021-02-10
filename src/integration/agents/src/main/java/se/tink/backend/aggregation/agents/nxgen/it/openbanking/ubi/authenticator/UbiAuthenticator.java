@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.ubi.authenticator;
 
 import java.util.List;
-import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.ubi.UbiConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.AccountFetchingStep;
@@ -16,12 +15,13 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.utls.CbiGlobeUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.i18n.Catalog;
 
 public class UbiAuthenticator extends CbiGlobeAuthenticator {
 
-    private final SupplementalRequester supplementalRequester;
+    private final SupplementalInformationController supplementalInformationController;
     private final Catalog catalog;
 
     public UbiAuthenticator(
@@ -29,11 +29,11 @@ public class UbiAuthenticator extends CbiGlobeAuthenticator {
             StrongAuthenticationState strongAuthenticationState,
             CbiUserState userState,
             CbiGlobeConfiguration configuration,
-            SupplementalRequester supplementalRequester,
+            SupplementalInformationController supplementalInformationController,
             Catalog catalog) {
         super(apiClient, strongAuthenticationState, userState, configuration);
 
-        this.supplementalRequester = supplementalRequester;
+        this.supplementalInformationController = supplementalInformationController;
         this.catalog = catalog;
     }
 
@@ -51,7 +51,10 @@ public class UbiAuthenticator extends CbiGlobeAuthenticator {
     private void addDecoupledManualSteps() {
         manualAuthenticationSteps.add(
                 new AccountConsentDecoupledStep(
-                        consentManager, strongAuthenticationState, supplementalRequester, catalog));
+                        consentManager,
+                        strongAuthenticationState,
+                        supplementalInformationController,
+                        catalog));
 
         manualAuthenticationSteps.add(new AccountFetchingStep(apiClient, userState));
 
