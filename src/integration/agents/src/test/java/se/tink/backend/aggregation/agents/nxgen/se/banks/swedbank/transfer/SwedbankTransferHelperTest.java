@@ -5,11 +5,11 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.mockito.Mockito;
-import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankDefaultApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.SwedbankTransferHelper;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.rpc.ConfirmTransferResponse;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelperImpl;
 import se.tink.libraries.i18n.Catalog;
@@ -21,7 +21,8 @@ public class SwedbankTransferHelperTest {
 
     @Before
     public void before() {
-        AgentContext context = Mockito.mock(AgentContext.class);
+        SupplementalInformationController supplementalInformationController =
+                Mockito.mock(SupplementalInformationController.class);
         SupplementalInformationHelper supplementalInformationHelper =
                 Mockito.mock(SupplementalInformationHelperImpl.class);
         Catalog catalog = Mockito.mock(Catalog.class);
@@ -30,7 +31,11 @@ public class SwedbankTransferHelperTest {
 
         transferHelper =
                 new SwedbankTransferHelper(
-                        context, catalog, supplementalInformationHelper, apiClient, isBankId);
+                        supplementalInformationController,
+                        catalog,
+                        supplementalInformationHelper,
+                        apiClient,
+                        isBankId);
     }
 
     @Test
