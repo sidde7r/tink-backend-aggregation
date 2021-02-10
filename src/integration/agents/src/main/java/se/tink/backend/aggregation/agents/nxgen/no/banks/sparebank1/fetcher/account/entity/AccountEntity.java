@@ -71,7 +71,7 @@ public class AccountEntity {
                                 Sparebank1AmountUtils.constructDouble(
                                         disposableAmountInteger, disposableAmountFraction),
                                 currencyCode))
-                .setCreditLimit(ExactCurrencyAmount.of(creditLine, "NOK"))
+                .setCreditLimit(ExactCurrencyAmount.of(creditLine, currencyCode))
                 .build();
     }
 
