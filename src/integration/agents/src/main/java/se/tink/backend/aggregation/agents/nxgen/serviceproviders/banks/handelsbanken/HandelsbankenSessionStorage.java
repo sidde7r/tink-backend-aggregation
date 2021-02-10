@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken;
 
+import java.util.Collections;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.rpc.ApplicationEntryPointResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.fetcher.creditcard.entities.HandelsbankenCreditCard;
@@ -24,7 +25,8 @@ public class HandelsbankenSessionStorage {
 
     public void persist(ApplicationEntryPointResponse applicationEntryPoint) {
         persist(HandelsbankenConstants.Storage.APPLICATION_ENTRY_POINT, applicationEntryPoint);
-        logMasker.mask(applicationEntryPoint.getAuthToken());
+        logMasker.addNewSensitiveValuesToMasker(
+                Collections.singleton(applicationEntryPoint.getAuthToken()));
     }
 
     public Optional<ApplicationEntryPointResponse> applicationEntryPoint() {
