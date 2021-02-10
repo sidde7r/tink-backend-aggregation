@@ -5,6 +5,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Range;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import org.joda.time.DateTime;
@@ -28,10 +29,8 @@ import se.tink.backend.aggregation.agents.models.Loan;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.constants.CommonHeaders;
-import se.tink.backend.aggregation.utils.SupplementalInformationUtils;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
 import se.tink.libraries.credentials.service.CredentialsRequest;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class CrossKeyAgent extends AbstractAgent implements DeprecatedRefreshExecutor {
     protected final CrossKeyApiClient apiClient;
@@ -121,9 +120,7 @@ public class CrossKeyAgent extends AbstractAgent implements DeprecatedRefreshExe
     }
 
     private void openBankIdAppWith(String token) {
-        credentials.setSupplementalInformation(Preconditions.checkNotNull(token));
-        credentials.setStatus(CredentialsStatus.AWAITING_MOBILE_BANKID_AUTHENTICATION);
-        supplementalRequester.requestSupplementalInformation(credentials, false);
+        supplementalInformationController.openMobileBankIdAsync(Preconditions.checkNotNull(token));
     }
 
     /** Refresh functions */
@@ -270,15 +267,13 @@ public class CrossKeyAgent extends AbstractAgent implements DeprecatedRefreshExe
     private String requestOneTimeCodeFromUser(String oneTimeCodePosition) throws Exception {
         log.info("Requesting one time code from user with position: " + oneTimeCodePosition);
 
-        List<Field> fields = CrossKeyUtils.createOneTimeCodeChallengeFields(oneTimeCodePosition);
+        Field[] fields = CrossKeyUtils.createOneTimeCodeChallengeFields(oneTimeCodePosition);
 
-        credentials.setStatus(CredentialsStatus.AWAITING_SUPPLEMENTAL_INFORMATION);
-        credentials.setSupplementalInformation(SerializationUtils.serializeToString(fields));
-
-        String supplementalInformation =
-                supplementalRequester.requestSupplementalInformation(credentials, true);
+        Map<String, String> supplementalInformation =
+                supplementalInformationController.askSupplementalInformationSync(fields);
         Optional<String> oneTimeCode =
-                SupplementalInformationUtils.getResponseFields(supplementalInformation, "response");
+                Optional.ofNullable(
+                        supplementalInformation.get(CrossKeyUtils.SUPPLEMENTAL_RESPONSE_NAME));
 
         if (!oneTimeCode.isPresent()) {
             throw LoginError.INCORRECT_CREDENTIALS.exception(
