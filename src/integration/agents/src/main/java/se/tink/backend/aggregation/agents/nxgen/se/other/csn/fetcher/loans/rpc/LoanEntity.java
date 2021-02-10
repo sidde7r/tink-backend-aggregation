@@ -67,7 +67,7 @@ public class LoanEntity {
     private LoanModule getLoanModule(LoanAccountsResponse loanAccountsResponse) {
         return LoanModule.builder()
                 .withType(LoanDetails.Type.STUDENT)
-                .withBalance(ExactCurrencyAmount.of(getOutgoingDebt(), CSNConstants.CURRENCY))
+                .withBalance(getOutgoingDebt())
                 .withInterestRate(loanAccountsResponse.getInterestRate().doubleValue())
                 .setLoanNumber(getAccountNumber())
                 .build();
@@ -82,12 +82,14 @@ public class LoanEntity {
                 .build();
     }
 
-    private BigDecimal getOutgoingDebt() {
-        return debtSpecification.stream()
-                .filter(DebtDetailEntity::isOutgoingDebt)
-                .map(DebtDetailEntity::getAmount)
-                .findFirst()
-                .orElse(null);
+    private ExactCurrencyAmount getOutgoingDebt() {
+        return ExactCurrencyAmount.of(
+                debtSpecification.stream()
+                        .filter(DebtDetailEntity::isOutgoingDebt)
+                        .map(DebtDetailEntity::getAmount)
+                        .findFirst()
+                        .orElse(null),
+                CSNConstants.CURRENCY);
     }
 
     private String getUniqueIdenifier(String ssn) {
