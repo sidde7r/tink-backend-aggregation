@@ -5,7 +5,6 @@ import com.google.common.base.Strings;
 import java.util.Objects;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.CreditorValidationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.DebtorValidationException;
@@ -29,6 +28,7 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRes
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.signing.Signer;
 import se.tink.backend.aggregation.nxgen.controllers.signing.multifactor.bankid.BankIdSigningController;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.core.account.GenericTypeMapper;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.account.AccountIdentifier.Type;
@@ -53,18 +53,18 @@ public class HandelsbankenSEPaymentExecutor extends HandelsbankenBasePaymentExec
                             Type.SE_BG,
                             Type.SE_PG)
                     .build();
-    private final SupplementalRequester supplementalRequester;
+    private final SupplementalInformationController supplementalInformationController;
     private Credentials credentials;
     private final HandelsbankenSEBankIdSigner bankIdSigner;
 
     public HandelsbankenSEPaymentExecutor(
             HandelsbankenBaseApiClient apiClient,
             Credentials credentials,
-            SupplementalRequester supplementalRequester,
+            SupplementalInformationController supplementalInformationController,
             PersistentStorage persistentStorage) {
         super(apiClient);
         this.credentials = credentials;
-        this.supplementalRequester = supplementalRequester;
+        this.supplementalInformationController = supplementalInformationController;
         this.bankIdSigner =
                 new HandelsbankenSEBankIdSigner(persistentStorage, apiClient, credentials);
     }
@@ -172,7 +172,8 @@ public class HandelsbankenSEPaymentExecutor extends HandelsbankenBasePaymentExec
 
     @Override
     public Signer getSigner() {
-        return new BankIdSigningController(supplementalRequester, bankIdSigner);
+        return new BankIdSigningController<PaymentMultiStepResponse>(
+                supplementalInformationController, bankIdSigner);
     }
 
     @Override

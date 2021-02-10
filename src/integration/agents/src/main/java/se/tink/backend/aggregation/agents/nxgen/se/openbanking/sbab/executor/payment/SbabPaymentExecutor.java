@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.ReferenceValidationException;
@@ -34,6 +33,7 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.signing.Signer;
 import se.tink.backend.aggregation.nxgen.controllers.signing.SigningStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.signing.multifactor.bankid.BankIdSigningController;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.core.account.GenericTypeMapper;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.utils.accountidentifier.IntraBankChecker;
@@ -50,7 +50,7 @@ import se.tink.libraries.transfer.rpc.RemittanceInformation;
 public class SbabPaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
 
     private final SbabApiClient apiClient;
-    private final SupplementalRequester supplementalRequester;
+    private final SupplementalInformationController supplementalInformationController;
     private static final Logger log = LoggerFactory.getLogger(SbabPaymentExecutor.class);
 
     private static final GenericTypeMapper<PaymentType, TypePair>
@@ -63,9 +63,10 @@ public class SbabPaymentExecutor implements PaymentExecutor, FetchablePaymentExe
                             .build();
 
     public SbabPaymentExecutor(
-            SbabApiClient apiClient, SupplementalRequester supplementalRequester) {
+            SbabApiClient apiClient,
+            SupplementalInformationController supplementalInformationController) {
         this.apiClient = apiClient;
-        this.supplementalRequester = supplementalRequester;
+        this.supplementalInformationController = supplementalInformationController;
     }
 
     private PaymentType getPaymentType(PaymentRequest paymentRequest) {
@@ -225,6 +226,7 @@ public class SbabPaymentExecutor implements PaymentExecutor, FetchablePaymentExe
     }
 
     private Signer getSigner() {
-        return new BankIdSigningController(supplementalRequester, new SbabBankIdSigner(this));
+        return new BankIdSigningController(
+                supplementalInformationController, new SbabBankIdSigner(this));
     }
 }

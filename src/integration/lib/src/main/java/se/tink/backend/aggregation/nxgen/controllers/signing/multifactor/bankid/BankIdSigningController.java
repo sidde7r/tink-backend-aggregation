@@ -7,10 +7,10 @@ import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
-import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.nxgen.controllers.signing.Signer;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 
 public class BankIdSigningController<T> implements Signer<T> {
     private static final Logger logger =
@@ -18,16 +18,19 @@ public class BankIdSigningController<T> implements Signer<T> {
     private static final int MAX_ATTEMPTS = 90;
 
     private final BankIdSigner<T> signer;
-    private final SupplementalRequester supplementalRequester;
+    private final SupplementalInformationController supplementalInformationController;
 
     public BankIdSigningController(
-            SupplementalRequester supplementalRequester, BankIdSigner signer) {
+            SupplementalInformationController supplementalInformationController,
+            BankIdSigner signer) {
         this.signer = Preconditions.checkNotNull(signer);
-        this.supplementalRequester = Preconditions.checkNotNull(supplementalRequester);
+        this.supplementalInformationController =
+                Preconditions.checkNotNull(supplementalInformationController);
     }
 
     public void sign(T toSign) throws AuthenticationException {
-        supplementalRequester.openBankId(signer.getAutostartToken().orElse(null), false);
+        supplementalInformationController.openMobileBankIdAsync(
+                signer.getAutostartToken().orElse(null));
         poll(toSign);
     }
 

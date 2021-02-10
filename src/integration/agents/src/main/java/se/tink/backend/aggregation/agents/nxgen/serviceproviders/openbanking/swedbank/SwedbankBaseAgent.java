@@ -184,7 +184,8 @@ public abstract class SwedbankBaseAgent extends NextGenerationAgent
                 apiClient,
                 swedbankBankIdSigner,
                 strongAuthenticationState,
-                new BankIdSigningController<>(supplementalRequester, swedbankBankIdSigner),
+                new BankIdSigningController<>(
+                        supplementalInformationController, swedbankBankIdSigner),
                 new SwedbankPaymentAuthenticator(supplementalInformationHelper));
     }
 

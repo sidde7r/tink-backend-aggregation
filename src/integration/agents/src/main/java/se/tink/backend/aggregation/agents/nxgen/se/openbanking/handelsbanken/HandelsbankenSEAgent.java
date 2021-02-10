@@ -77,7 +77,10 @@ public final class HandelsbankenSEAgent extends HandelsbankenBaseAgent
     public Optional<PaymentController> constructPaymentController() {
         final HandelsbankenSEPaymentExecutor paymentExecutor =
                 new HandelsbankenSEPaymentExecutor(
-                        apiClient, credentials, supplementalRequester, persistentStorage);
+                        apiClient,
+                        credentials,
+                        supplementalInformationController,
+                        persistentStorage);
         return Optional.of(new PaymentController(paymentExecutor, paymentExecutor));
     }
 
