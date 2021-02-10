@@ -62,21 +62,7 @@ public class DemoBankIdAuthenticator implements BankIdAuthenticator<String>, Pas
     @Override
     public Optional<String> getAutostartToken() {
         if (credentials.getProviderName().equals("se-test-bankid-qr-successful")) {
-            int leftLimit = 48; // numeral '0'
-            int rightLimit = 101; // letter 'e'
-            int targetStringLength = 32;
-            // Autostart token example: 8dce0218-9cc2-0263-3904-aec17576ec3a
-            String generatedString =
-                    RANDOM.ints(leftLimit, rightLimit + 1)
-                            .filter(i -> (i <= 57 || i >= 97))
-                            .limit(targetStringLength)
-                            .collect(
-                                    StringBuilder::new,
-                                    StringBuilder::appendCodePoint,
-                                    StringBuilder::append)
-                            .toString()
-                            .replaceAll("(.{8})(.{4})(.{4})(.{4})", "$1-$2-$3-$4-");
-            return Optional.of(generatedString);
+            Optional.of(AutostartTokenGenerator.generateFrom(RANDOM));
         }
         return Optional.empty();
     }

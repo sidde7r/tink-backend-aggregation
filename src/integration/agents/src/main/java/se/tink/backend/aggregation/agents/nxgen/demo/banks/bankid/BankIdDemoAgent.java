@@ -7,6 +7,7 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.LOANS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.MORTGAGE_AGGREGATION;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.TRANSFERS;
 
 import com.google.common.collect.Lists;
 import java.net.URI;
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
@@ -32,6 +34,7 @@ import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoTransactionAccount
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.credentials.service.CredentialsRequest;
@@ -44,6 +47,7 @@ import se.tink.libraries.identitydata.NameElement;
     INVESTMENTS,
     IDENTITY_DATA,
     LOANS,
+    TRANSFERS,
     MORTGAGE_AGGREGATION
 })
 public final class BankIdDemoAgent extends NextGenerationDemoAgent
@@ -220,5 +224,12 @@ public final class BankIdDemoAgent extends NextGenerationDemoAgent
     public FetchTransferDestinationsResponse fetchTransferDestinations(List<Account> accounts) {
         return new FetchTransferDestinationsResponse(
                 DemoAccountDefinitionGenerator.generateTransferDestinations(accounts));
+    }
+
+    @Override
+    public Optional<PaymentController> constructPaymentController() {
+        DemoBankIdPaymentExecutor paymentExecutor =
+                new DemoBankIdPaymentExecutor(supplementalRequester);
+        return Optional.of(new PaymentController(paymentExecutor));
     }
 }

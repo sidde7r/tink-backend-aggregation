@@ -172,6 +172,13 @@ public class ErrorResponse {
     }
 
     @JsonIgnore
+    public boolean isPaymentNotFoundInOutbox() {
+        return HttpStatus.SC_NOT_FOUND == httpStatus
+                && ErrorCodes.NOT_FOUND.equalsIgnoreCase(error)
+                && ErrorMessages.PAYMENT_NOT_FOUND.equalsIgnoreCase(errorDescription);
+    }
+
+    @JsonIgnore
     public boolean needsToRefreshToken() {
         return tokenRequired() || isInvalidAccessToken();
     }
