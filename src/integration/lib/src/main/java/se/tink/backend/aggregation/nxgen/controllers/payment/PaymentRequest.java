@@ -5,7 +5,6 @@ import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
-import se.tink.libraries.payments_validations.java.se.tink.libraries.payments.validations.MarketValidationsUtil;
 import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.uuid.UUIDUtils;
 
@@ -53,8 +52,7 @@ public class PaymentRequest {
                         .withPaymentScheme(transfer.getPaymentScheme());
 
         // If source account is optional then populate Debtor only if source is not null
-        if (MarketValidationsUtil.isSourceAccountMandatory(market)
-                || transfer.getSource() != null) {
+        if (transfer.getSource() != null) {
             paymentInRequestBuilder.withDebtor(new Debtor(transfer.getSource()));
         }
 
