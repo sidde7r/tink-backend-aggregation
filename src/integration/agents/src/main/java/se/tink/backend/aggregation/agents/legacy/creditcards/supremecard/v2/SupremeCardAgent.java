@@ -166,7 +166,7 @@ public final class SupremeCardAgent extends AbstractAgent
         URI bankIdCollectReferer = createBankIdCollectRefererQueryURI(signicatFieldsMap);
 
         // Time to collect bankId;
-        openBankID();
+        supplementalInformationController.openMobileBankIdAsync(null);
         CollectBankIdResponse collectBankIdResponse =
                 collectBankId(bankIdCollectReferer, orderBankIdResponse);
 

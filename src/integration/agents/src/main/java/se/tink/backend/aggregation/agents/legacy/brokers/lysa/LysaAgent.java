@@ -103,7 +103,8 @@ public final class LysaAgent extends AbstractAgent implements RefreshInvestmentA
         StartBankIdResponse startBankIdResponse =
                 client.startBankId(credentials.getField(Field.Key.USERNAME));
 
-        openBankID(startBankIdResponse.getAutostartToken());
+        supplementalInformationController.openMobileBankIdAsync(
+                startBankIdResponse.getAutostartToken());
 
         for (int i = 0; i < MAX_ATTEMPTS; i++) {
             PollBankIdResponse pollBankIdResponse =

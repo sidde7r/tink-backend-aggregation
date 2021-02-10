@@ -8,7 +8,6 @@ import org.apache.http.cookie.Cookie;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Account;
-import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.contexts.CompositeAgentContext;
 import se.tink.backend.aggregation.agents.contexts.FinancialDataCacher;
 import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
@@ -16,15 +15,12 @@ import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.utils.jersey.JerseyClientFactory;
 import se.tink.backend.aggregation.logmasker.LogMaskerImpl;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.agentcontext.AgentContextProviderImpl;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationControllerImpl;
 import se.tink.backend.aggregation.utils.CookieContainer;
-import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.net.client.TinkApacheHttpClient4;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 
 /**
  * @deprecated Do not use the AbstractAgent. All existing agents extending AbstractAgent should
@@ -167,25 +163,5 @@ public abstract class AbstractAgent extends SuperAbstractAgent {
 
     protected void clearSessionCookiesFromClient(CookieStore store) {
         store.clear();
-    }
-
-    protected void openBankID(String autostartToken) {
-        Credentials credentials = this.request.getCredentials();
-        credentials.setSupplementalInformation(autostartToken);
-        credentials.setStatus(CredentialsStatus.AWAITING_MOBILE_BANKID_AUTHENTICATION);
-
-        this.supplementalRequester.requestSupplementalInformation(credentials, false);
-    }
-
-    protected void openBankID() {
-        openBankID(null);
-    }
-
-    protected void openThirdPartyApp(ThirdPartyAppAuthenticationPayload payload) {
-        Credentials credentials = this.request.getCredentials();
-        credentials.setSupplementalInformation(SerializationUtils.serializeToString(payload));
-        credentials.setStatus(CredentialsStatus.AWAITING_THIRD_PARTY_APP_AUTHENTICATION);
-
-        this.supplementalRequester.requestSupplementalInformation(credentials, false);
     }
 }
