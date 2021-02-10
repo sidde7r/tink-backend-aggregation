@@ -8,7 +8,6 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
@@ -21,7 +20,6 @@ import se.tink.libraries.transfer.rpc.Transfer;
 
 public class RedirectDemoTransferExecutor implements BankTransferExecutor {
     private final Credentials credentials;
-    private final SupplementalRequester supplementalRequester;
     private final OAuth2AuthenticationController controller;
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final ThirdPartyAppAuthenticationController thirdPartyAppAuthenticationController;
@@ -30,12 +28,10 @@ public class RedirectDemoTransferExecutor implements BankTransferExecutor {
 
     public RedirectDemoTransferExecutor(
             Credentials credentials,
-            SupplementalRequester supplementalRequester,
             OAuth2AuthenticationController controller,
             SupplementalInformationHelper supplementalInformationHelper,
             ThirdPartyAppAuthenticationController thirdPartyAppAuthenticationController) {
         this.credentials = credentials;
-        this.supplementalRequester = supplementalRequester;
         this.controller = controller;
         this.supplementalInformationHelper = supplementalInformationHelper;
         this.thirdPartyAppAuthenticationController = thirdPartyAppAuthenticationController;

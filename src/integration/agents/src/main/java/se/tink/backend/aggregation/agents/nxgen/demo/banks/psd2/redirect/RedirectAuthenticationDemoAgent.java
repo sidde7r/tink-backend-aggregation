@@ -178,7 +178,6 @@ public final class RedirectAuthenticationDemoAgent extends NextGenerationDemoAge
         RedirectDemoTransferExecutor transferExecutor =
                 new RedirectDemoTransferExecutor(
                         credentials,
-                        supplementalRequester,
                         controller,
                         supplementalInformationHelper,
                         thirdPartyAppAuthenticationController);
@@ -212,7 +211,6 @@ public final class RedirectAuthenticationDemoAgent extends NextGenerationDemoAge
         RedirectDemoPaymentExecutor paymentExecutor =
                 new RedirectDemoPaymentExecutor(
                         credentials,
-                        supplementalRequester,
                         controller,
                         supplementalInformationHelper,
                         thirdPartyAppAuthenticationController,

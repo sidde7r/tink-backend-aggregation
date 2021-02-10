@@ -6,7 +6,6 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
@@ -34,7 +33,6 @@ import se.tink.libraries.payment.enums.PaymentStatus;
 
 public class RedirectDemoPaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
     private final Credentials credentials;
-    private final SupplementalRequester supplementalRequester;
     private final OAuth2AuthenticationController controller;
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final ThirdPartyAppAuthenticationController thirdPartyAppAuthenticationController;
@@ -45,13 +43,11 @@ public class RedirectDemoPaymentExecutor implements PaymentExecutor, FetchablePa
 
     public RedirectDemoPaymentExecutor(
             Credentials credentials,
-            SupplementalRequester supplementalRequester,
             OAuth2AuthenticationController controller,
             SupplementalInformationHelper supplementalInformationHelper,
             ThirdPartyAppAuthenticationController thirdPartyAppAuthenticationController,
             StrongAuthenticationState strongAuthenticationState) {
         this.credentials = credentials;
-        this.supplementalRequester = supplementalRequester;
         this.controller = controller;
         this.supplementalInformationHelper = supplementalInformationHelper;
         this.thirdPartyAppAuthenticationController = thirdPartyAppAuthenticationController;

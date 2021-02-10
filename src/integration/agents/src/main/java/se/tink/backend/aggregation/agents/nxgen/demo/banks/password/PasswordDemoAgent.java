@@ -95,7 +95,7 @@ public final class PasswordDemoAgent extends NextGenerationDemoAgent
     @Override
     protected Optional<TransferController> constructTransferController() {
         PasswordDemoTransferExecutor transferExecutor =
-                new PasswordDemoTransferExecutor(credentials, supplementalRequester);
+                new PasswordDemoTransferExecutor(credentials);
         PasswordDemoPaymentExecutor paymentExecutor = new PasswordDemoPaymentExecutor();
 
         return Optional.of(new TransferController(paymentExecutor, transferExecutor));
