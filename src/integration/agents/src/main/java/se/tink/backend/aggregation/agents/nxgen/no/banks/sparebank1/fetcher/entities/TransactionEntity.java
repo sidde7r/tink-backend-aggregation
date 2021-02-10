@@ -3,7 +3,8 @@ package se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.ent
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Objects;
-import java.util.HashMap;
+import java.util.Map;
+import lombok.Getter;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.Sparebank1AmountUtils;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.entities.LinkEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -11,6 +12,7 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.libraries.date.DateUtils;
 
 @JsonObject
+@Getter
 public class TransactionEntity {
     private String id;
     private String amountInteger;
@@ -22,7 +24,7 @@ public class TransactionEntity {
     private Boolean incoming;
 
     @JsonProperty("_links")
-    private HashMap<String, LinkEntity> links;
+    private Map<String, LinkEntity> links;
 
     @JsonIgnore
     public Transaction toTinkTransaction() {
@@ -59,77 +61,5 @@ public class TransactionEntity {
         }
 
         return rawDescription;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getAmountInteger() {
-        return amountInteger;
-    }
-
-    public void setAmountInteger(String amountInteger) {
-        this.amountInteger = amountInteger;
-    }
-
-    public String getAmountFraction() {
-        return amountFraction;
-    }
-
-    public void setAmountFraction(String amountFraction) {
-        this.amountFraction = amountFraction;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getDate() {
-        return date;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
-    }
-
-    public String getInterestDate() {
-        return interestDate;
-    }
-
-    public void setInterestDate(String interestDate) {
-        this.interestDate = interestDate;
-    }
-
-    public Boolean getIncoming() {
-        return incoming;
-    }
-
-    public void setIncoming(Boolean incoming) {
-        this.incoming = incoming;
-    }
-
-    public HashMap<String, LinkEntity> getLinks() {
-        return links;
-    }
-
-    public void setLinks(HashMap<String, LinkEntity> links) {
-        this.links = links;
     }
 }

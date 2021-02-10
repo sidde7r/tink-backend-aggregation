@@ -22,6 +22,7 @@ public class Sparebank1TransactionalAccountFetcher implements AccountFetcher<Tra
         return apiClient.fetchAccounts().getAccounts().stream()
                 .map(acc -> mapAccountApiIdentifier(acc, apiIdentifiers))
                 .map(acc -> acc.toTransactionalAccount(apiClient.fetchAccountDetails(acc.getKey())))
+                .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toList());
     }
