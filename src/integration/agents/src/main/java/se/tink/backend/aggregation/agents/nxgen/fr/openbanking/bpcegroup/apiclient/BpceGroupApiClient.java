@@ -18,7 +18,7 @@ import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.transac
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.transactionalaccount.rpc.BalancesResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.transactionalaccount.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.transfer.FrAispApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.transfer.dto.TrustedBeneficiariesResponseDtoBase;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.transfer.dto.TrustedBeneficiariesResponseDto;
 import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -37,6 +37,7 @@ public class BpceGroupApiClient implements FrAispApiClient {
     private static final String ACCOUNT_RESOURCE_ID_KEY = "account-id";
     private static final String ENDPOINT_ACCOUNTS = "/accounts";
     private static final String ENDPOINT_CONSENTS = "/consents";
+    private static final String ENDPOINT_TRUSTED_BENEFICIARIES = "/trusted-beneficiaries";
     private static final String ENDPOINT_BALANCES =
             "/accounts/{" + ACCOUNT_RESOURCE_ID_KEY + "}/balances";
     private static final String ENDPOINT_TRANSACTIONS =
@@ -177,13 +178,16 @@ public class BpceGroupApiClient implements FrAispApiClient {
     }
 
     @Override
-    public Optional<? extends TrustedBeneficiariesResponseDtoBase> getTrustedBeneficiaries() {
-        return Optional.empty();
+    public Optional<TrustedBeneficiariesResponseDto> getTrustedBeneficiaries() {
+        return getTrustedBeneficiaries(ENDPOINT_TRUSTED_BENEFICIARIES);
     }
 
     @Override
-    public Optional<? extends TrustedBeneficiariesResponseDtoBase> getTrustedBeneficiaries(
-            String path) {
-        return Optional.empty();
+    public Optional<TrustedBeneficiariesResponseDto> getTrustedBeneficiaries(String path) {
+        final RequestBuilder requestBuilder = httpClient.request(createUrlWithBasePath(path));
+
+        return Optional.of(
+                sendRequestAndGetResponse(
+                        requestBuilder, HttpMethod.GET, TrustedBeneficiariesResponseDto.class));
     }
 }
