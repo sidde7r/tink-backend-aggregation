@@ -10,7 +10,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
-import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException.EndUserMessage;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSEApiClient;
@@ -27,6 +26,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.rpc.Payme
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenSessionStorage;
 import se.tink.backend.aggregation.agents.utils.giro.validation.GiroMessageValidator;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.PaymentExecutor;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
@@ -39,19 +39,19 @@ import se.tink.libraries.transfer.rpc.Transfer;
 
 public class HandelsbankenSEPaymentExecutor implements PaymentExecutor {
 
-    private final SupplementalRequester supplementalRequester;
+    private final SupplementalInformationController supplementalInformationController;
     private final Catalog catalog;
     private final HandelsbankenSEApiClient client;
     private final HandelsbankenSessionStorage sessionStorage;
     private final ExecutorExceptionResolver exceptionResolver;
 
     public HandelsbankenSEPaymentExecutor(
-            SupplementalRequester supplementalRequester,
+            SupplementalInformationController supplementalInformationController,
             Catalog catalog,
             HandelsbankenSEApiClient client,
             HandelsbankenSessionStorage sessionStorage,
             ExecutorExceptionResolver exceptionResolver) {
-        this.supplementalRequester = supplementalRequester;
+        this.supplementalInformationController = supplementalInformationController;
         this.catalog = catalog;
         this.client = client;
         this.sessionStorage = sessionStorage;
@@ -179,7 +179,7 @@ public class HandelsbankenSEPaymentExecutor implements PaymentExecutor {
                         confirmInfoResponse.getConfirmationVerificationLink(exceptionResolver));
 
         if (confirmInfoResponse.needsBankIdSign()) {
-            supplementalRequester.openBankId();
+            supplementalInformationController.openMobileBankIdAsync(null);
 
             collectBankId(confirmTransferResponse);
         } else {

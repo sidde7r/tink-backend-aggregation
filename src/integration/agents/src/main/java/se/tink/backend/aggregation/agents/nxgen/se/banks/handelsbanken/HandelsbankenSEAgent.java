@@ -173,7 +173,11 @@ public final class HandelsbankenSEAgent
 
         HandelsbankenSEPaymentExecutor paymentExecutor =
                 new HandelsbankenSEPaymentExecutor(
-                        supplementalRequester, catalog, client, sessionStorage, exceptionResolver);
+                        supplementalInformationController,
+                        catalog,
+                        client,
+                        sessionStorage,
+                        exceptionResolver);
         HandelsbankenSEBankTransferExecutor transferExecutor =
                 new HandelsbankenSEBankTransferExecutor(
                         client,
