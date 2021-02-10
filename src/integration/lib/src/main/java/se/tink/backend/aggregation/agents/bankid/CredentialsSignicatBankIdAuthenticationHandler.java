@@ -4,9 +4,9 @@ import java.lang.invoke.MethodHandles;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.utils.authentication.bankid.signicat.SignicatBankIdHandler;
 import se.tink.backend.aggregation.agents.utils.authentication.bankid.signicat.SignicatBankIdStatus;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
 
 public class CredentialsSignicatBankIdAuthenticationHandler implements SignicatBankIdHandler {
@@ -14,17 +14,17 @@ public class CredentialsSignicatBankIdAuthenticationHandler implements SignicatB
             LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final Credentials credentials;
-    private final SupplementalRequester supplementalRequester;
+    private final SupplementalInformationController supplementalInformationController;
 
     public CredentialsSignicatBankIdAuthenticationHandler(
-            Credentials credentials, SupplementalRequester context) {
+            Credentials credentials,
+            SupplementalInformationController supplementalInformationController) {
         this.credentials = credentials;
-        this.supplementalRequester = context;
+        this.supplementalInformationController = supplementalInformationController;
     }
 
     @Override
-    public void onUpdateStatus(
-            SignicatBankIdStatus status, String statusPayload, String nationalId) {
+    public void onUpdateStatus(SignicatBankIdStatus status) {
         switch (status) {
             case AUTHENTICATED:
                 credentials.setStatus(CredentialsStatus.UPDATING);
@@ -33,10 +33,7 @@ public class CredentialsSignicatBankIdAuthenticationHandler implements SignicatB
                 credentials.setStatus(CredentialsStatus.AUTHENTICATION_ERROR);
                 break;
             case AWAITING_BANKID_AUTHENTICATION:
-                credentials.setSupplementalInformation(null);
-                credentials.setStatus(CredentialsStatus.AWAITING_MOBILE_BANKID_AUTHENTICATION);
-
-                supplementalRequester.requestSupplementalInformation(credentials, false);
+                supplementalInformationController.openMobileBankIdAsync(null);
                 break;
             default:
                 logger.error("Unknown authentication status: " + status);
