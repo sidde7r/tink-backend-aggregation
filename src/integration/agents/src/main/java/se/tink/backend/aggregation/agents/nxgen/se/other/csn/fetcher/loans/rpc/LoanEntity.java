@@ -70,7 +70,6 @@ public class LoanEntity {
                 .withBalance(ExactCurrencyAmount.of(getOutgoingDebt(), CSNConstants.CURRENCY))
                 .withInterestRate(loanAccountsResponse.getInterestRate().doubleValue())
                 .setLoanNumber(getAccountNumber())
-                .setInitialBalance(ExactCurrencyAmount.of(getIncomingDebt(), CSNConstants.CURRENCY))
                 .build();
     }
 
@@ -81,14 +80,6 @@ public class LoanEntity {
                 .withAccountName(getAccountName())
                 .addIdentifier(AccountIdentifier.create(Type.TINK, getAccountNumber()))
                 .build();
-    }
-
-    private BigDecimal getIncomingDebt() {
-        return debtSpecification.stream()
-                .filter(DebtDetailEntity::isIncomingDebt)
-                .map(DebtDetailEntity::getAmount)
-                .findFirst()
-                .orElse(null);
     }
 
     private BigDecimal getOutgoingDebt() {
