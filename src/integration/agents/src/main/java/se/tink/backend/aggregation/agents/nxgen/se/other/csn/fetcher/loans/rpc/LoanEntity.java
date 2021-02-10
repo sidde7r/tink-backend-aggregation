@@ -67,7 +67,7 @@ public class LoanEntity {
     private LoanModule getLoanModule(LoanAccountsResponse loanAccountsResponse) {
         return LoanModule.builder()
                 .withType(LoanDetails.Type.STUDENT)
-                .withBalance(getOutgoingDebt())
+                .withBalance(getOutgoingDebt().negate())
                 .withInterestRate(loanAccountsResponse.getInterestRate().doubleValue())
                 .setLoanNumber(getAccountNumber())
                 .build();
