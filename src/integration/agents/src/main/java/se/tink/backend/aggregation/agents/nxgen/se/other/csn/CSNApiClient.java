@@ -5,6 +5,7 @@ import javax.ws.rs.core.MediaType;
 import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.se.other.csn.authenticator.bankid.rpc.LoginForm;
 import se.tink.backend.aggregation.agents.nxgen.se.other.csn.fetcher.loans.rpc.LoanAccountsResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.other.csn.fetcher.loans.rpc.LoanTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.other.csn.fetcher.loans.rpc.UserInfoResponse;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
@@ -59,6 +60,16 @@ public class CSNApiClient {
                         CSNConstants.HeaderValues.BEARER
                                 + sessionStorage.get(CSNConstants.Storage.ACCESS_TOKEN))
                 .get(LoanAccountsResponse.class);
+    }
+
+    public LoanTransactionsResponse fetchLoanTransactions() {
+        return client.request(CSNConstants.Urls.LOAN_TRANSACTIONS)
+                .type(MediaType.APPLICATION_JSON)
+                .header(
+                        CSNConstants.HeaderKeys.CSN_AUTHORIZATION,
+                        CSNConstants.HeaderValues.BEARER
+                                + sessionStorage.get(CSNConstants.Storage.ACCESS_TOKEN))
+                .get(LoanTransactionsResponse.class);
     }
 
     public UserInfoResponse fetchUserInfo() {
