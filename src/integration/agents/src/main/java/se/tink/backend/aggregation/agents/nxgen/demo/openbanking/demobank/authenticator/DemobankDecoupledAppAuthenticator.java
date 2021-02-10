@@ -4,14 +4,12 @@ import com.github.rholder.retry.RetryException;
 import com.github.rholder.retry.RetryerBuilder;
 import com.github.rholder.retry.StopStrategies;
 import com.github.rholder.retry.WaitStrategies;
-import java.util.Collections;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.agents.rpc.Field.Key;
-import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
@@ -23,19 +21,19 @@ import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authen
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.OpenBankingTokenExpirationDateHelper;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
-import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class DemobankDecoupledAppAuthenticator implements TypedAuthenticator, Authenticator {
 
     private final DemobankApiClient apiClient;
-    private final SupplementalRequester supplementalRequester;
+    private final SupplementalInformationController supplementalInformationController;
 
     public DemobankDecoupledAppAuthenticator(
-            DemobankApiClient apiClient, SupplementalRequester supplementalRequester) {
+            DemobankApiClient apiClient,
+            SupplementalInformationController supplementalInformationController) {
         this.apiClient = apiClient;
-        this.supplementalRequester = supplementalRequester;
+        this.supplementalInformationController = supplementalInformationController;
     }
 
     @Override
@@ -45,7 +43,7 @@ public class DemobankDecoupledAppAuthenticator implements TypedAuthenticator, Au
         CreateTicketResponse response =
                 this.apiClient.initDecoupledAppToApp(
                         credentials.getField(Key.USERNAME), credentials.getField("code"));
-        displayVerificationCode(credentials);
+        displayVerificationCode();
         OAuth2Token token = awaitConfirmation(response.getTicket());
 
         credentials.setSessionExpiryDate(
@@ -78,7 +76,7 @@ public class DemobankDecoupledAppAuthenticator implements TypedAuthenticator, Au
         }
     }
 
-    private void displayVerificationCode(Credentials credentials) {
+    private void displayVerificationCode() {
         Field field =
                 Field.builder()
                         .immutable(true)
@@ -88,10 +86,7 @@ public class DemobankDecoupledAppAuthenticator implements TypedAuthenticator, Au
                         .helpText("Please confirm the login in the Demobank Authenticator app.")
                         .build();
 
-        credentials.setSupplementalInformation(
-                SerializationUtils.serializeToString(Collections.singletonList(field)));
-        credentials.setStatus(CredentialsStatus.AWAITING_SUPPLEMENTAL_INFORMATION);
-        supplementalRequester.requestSupplementalInformation(credentials, false);
+        supplementalInformationController.askSupplementalInformationAsync(field);
     }
 
     @Override
