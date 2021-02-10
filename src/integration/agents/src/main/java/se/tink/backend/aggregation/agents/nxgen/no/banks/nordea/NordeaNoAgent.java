@@ -84,7 +84,7 @@ public final class NordeaNoAgent extends SubsequentProgressiveGenerationAgent
                         authenticationClient,
                         storage,
                         componentProvider.getRandomValueGenerator(),
-                        componentProvider.getSupplementalRequester(),
+                        supplementalInformationController,
                         catalog);
 
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();

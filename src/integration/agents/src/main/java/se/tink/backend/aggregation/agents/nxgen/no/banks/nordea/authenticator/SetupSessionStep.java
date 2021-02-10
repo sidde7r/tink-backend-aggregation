@@ -1,12 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.authenticator;
 
-import java.util.Collections;
 import lombok.RequiredArgsConstructor;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
-import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.NordeaNoStorage;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.authenticator.rpc.AuthenticationsResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.client.AuthenticationClient;
@@ -16,11 +15,10 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.ran
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepResponse;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
-import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.i18n.LocalizableKey;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @RequiredArgsConstructor
 public class SetupSessionStep implements AuthenticationStep {
@@ -32,7 +30,7 @@ public class SetupSessionStep implements AuthenticationStep {
     private final AuthenticationClient authenticationClient;
     private final NordeaNoStorage storage;
     private final RandomValueGenerator randomValueGenerator;
-    private final SupplementalRequester supplementalRequester;
+    private final SupplementalInformationController supplementalInformationController;
     private final Catalog catalog;
 
     @Override
@@ -78,7 +76,7 @@ public class SetupSessionStep implements AuthenticationStep {
 
         String oidcSessionId = oidcSessionDetails.getSessionId();
         storage.storeOidcSessionId(oidcSessionId);
-        displayBankIdPrompt(request.getCredentials(), oidcSessionDetails.getMerchantReference());
+        displayBankIdPrompt(oidcSessionDetails.getMerchantReference());
 
         return AuthenticationStepResponse.executeNextStep();
     }
@@ -87,14 +85,15 @@ public class SetupSessionStep implements AuthenticationStep {
         return EncodingUtils.encodeAsBase64UrlSafe(Hash.sha256(codeVerifier));
     }
 
-    private void displayBankIdPrompt(Credentials credentials, String referenceNumber) {
+    private void displayBankIdPrompt(String referenceNumber) {
         Field field = getBankIdPhraseVerificationField(referenceNumber);
 
-        credentials.setSupplementalInformation(
-                SerializationUtils.serializeToString(Collections.singletonList(field)));
-        credentials.setStatus(CredentialsStatus.AWAITING_SUPPLEMENTAL_INFORMATION);
-
-        supplementalRequester.requestSupplementalInformation(credentials, true);
+        try {
+            supplementalInformationController.askSupplementalInformationSync(field);
+        } catch (SupplementalInfoException e) {
+            // ignore empty response!
+            // we're actually not interested in response at all, we just show a text!
+        }
     }
 
     private Field getBankIdPhraseVerificationField(String referenceNumber) {
