@@ -9,12 +9,10 @@ import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
-import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
-import se.tink.backend.aggregation.agents.exceptions.errors.SupplementalInfoError;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.CommonFields;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
-import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.libraries.i18n.Catalog;
 
@@ -22,25 +20,29 @@ public class KeyCardAuthenticationController implements TypedAuthenticator {
     private static final int DEFAULT_KEY_CARD_VALUE_LENGTH = 6;
 
     private final Catalog catalog;
-    private final SupplementalInformationHelper supplementalInformationHelper;
+    private final SupplementalInformationController supplementalInformationController;
     private final KeyCardAuthenticator authenticator;
     private final int keyCardValueLength;
 
     public KeyCardAuthenticationController(
             Catalog catalog,
-            SupplementalInformationHelper supplementalInformationHelper,
+            SupplementalInformationController supplementalInformationController,
             KeyCardAuthenticator authenticator) {
-        this(catalog, supplementalInformationHelper, authenticator, DEFAULT_KEY_CARD_VALUE_LENGTH);
+        this(
+                catalog,
+                supplementalInformationController,
+                authenticator,
+                DEFAULT_KEY_CARD_VALUE_LENGTH);
     }
 
     public KeyCardAuthenticationController(
             Catalog catalog,
-            SupplementalInformationHelper supplementalInformationHelper,
+            SupplementalInformationController supplementalInformationController,
             KeyCardAuthenticator authenticator,
             int keyCardValueLength) {
         this.catalog = Preconditions.checkNotNull(catalog);
-        this.supplementalInformationHelper =
-                Preconditions.checkNotNull(supplementalInformationHelper);
+        this.supplementalInformationController =
+                Preconditions.checkNotNull(supplementalInformationController);
         this.authenticator = Preconditions.checkNotNull(authenticator);
         this.keyCardValueLength = keyCardValueLength;
     }
@@ -69,15 +71,9 @@ public class KeyCardAuthenticationController implements TypedAuthenticator {
 
         KeyCardInitValues keyCardInitValues = authenticator.init(username, password);
 
-        Map<String, String> supplementalInformation;
-
-        try {
-            supplementalInformation =
-                    supplementalInformationHelper.askSupplementalInformation(
-                            getKeyCardIndexField(keyCardInitValues), getKeyCardValueField());
-        } catch (SupplementalInfoException ex) {
-            throw SupplementalInfoError.NO_VALID_CODE.exception();
-        }
+        Map<String, String> supplementalInformation =
+                supplementalInformationController.askSupplementalInformationSync(
+                        getKeyCardIndexField(keyCardInitValues), getKeyCardValueField());
 
         authenticator.authenticate(
                 supplementalInformation.get(CommonFields.KeyCardCode.getFieldKey()));

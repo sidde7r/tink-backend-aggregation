@@ -86,7 +86,7 @@ public final class OpBankAgent extends NextGenerationAgent
                 systemUpdater,
                 new KeyCardAuthenticationController(
                         catalog,
-                        supplementalInformationHelper,
+                        supplementalInformationController,
                         new OpKeyCardAuthenticator(
                                 apiClient, opBankPersistentStorage, credentials, sessionStorage),
                         OpBankConstants.KEYCARD_PIN_LENGTH),

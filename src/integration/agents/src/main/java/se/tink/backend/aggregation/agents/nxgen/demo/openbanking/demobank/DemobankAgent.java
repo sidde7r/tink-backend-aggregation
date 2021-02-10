@@ -170,7 +170,10 @@ public final class DemobankAgent extends NextGenerationAgent
                 request,
                 systemUpdater,
                 new NemIdCodeAppAuthenticationController(
-                        demobankNemIdAuthenticator, credentials, supplementalRequester, catalog),
+                        demobankNemIdAuthenticator,
+                        credentials,
+                        supplementalInformationController,
+                        catalog),
                 demobankNemIdAuthenticator);
     }
 

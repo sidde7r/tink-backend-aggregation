@@ -42,7 +42,7 @@ public final class AlandsBankenAgent extends CrossKeyAgent {
                 systemUpdater,
                 new KeyCardAuthenticationController(
                         catalog,
-                        supplementalInformationHelper,
+                        supplementalInformationController,
                         new CrossKeyKeyCardAuthenticator(
                                 apiClient, agentConfiguration, agentPersistentStorage, credentials),
                         CrossKeyConstants.MultiFactorAuthentication.KEYCARD_PIN_LENGTH),
