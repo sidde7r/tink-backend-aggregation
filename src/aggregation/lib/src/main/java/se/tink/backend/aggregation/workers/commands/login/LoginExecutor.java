@@ -72,9 +72,9 @@ public class LoginExecutor {
             AgentWorkerCommandContext context,
             DataStudioLoginEventPublisherService dataStudioLoginEventPublisherService) {
         loginResult.accept(new LoggerLoginResultVisitor());
-        InteractionCounter supplementalInfoCounter = context.getSupplementalInteractionCounter();
-        logUserInteractionStatus(supplementalInfoCounter.getNumberInteractions() == 0);
-        createLoginMetric(loginResult, context.getRequest(), supplementalInfoCounter);
+        logUserInteractionStatus(context.getSupplementalInteractionCounter());
+        createLoginMetric(
+                loginResult, context.getRequest(), context.getSupplementalInteractionCounter());
         updateCredentialsStatus(loginResult, context);
         publishDataStudioLoginEvent(loginResult, dataStudioLoginEventPublisherService);
     }
@@ -102,8 +102,10 @@ public class LoginExecutor {
                         dataStudioLoginEventPublisherService));
     }
 
-    private void logUserInteractionStatus(boolean wasSupplementaInfoUsed) {
-        LOGGER.info("Authentication required user intervention: {}", wasSupplementaInfoUsed);
+    private void logUserInteractionStatus(InteractionCounter interactionCounter) {
+        LOGGER.info(
+                "Authentication required user intervention: {}",
+                interactionCounter.getNumberInteractions() > 0);
     }
 
     private AgentWorkerCommandResult determineAgentWorkerCommandResult(LoginResult loginResult) {
