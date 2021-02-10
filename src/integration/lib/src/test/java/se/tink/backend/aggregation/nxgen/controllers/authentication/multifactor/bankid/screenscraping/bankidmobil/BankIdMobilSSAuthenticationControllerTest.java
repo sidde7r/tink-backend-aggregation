@@ -15,11 +15,11 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.screenscraping.bankidmobil.initializer.MobilInitializer;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.selenium.WebDriverHelper;
 import se.tink.libraries.selenium.exceptions.HtmlElementNotFoundException;
@@ -41,13 +41,14 @@ public class BankIdMobilSSAuthenticationControllerTest {
         mobilInitializer = mock(MobilInitializer.class);
         driver = mock(PhantomJSDriver.class);
         webDriverHelper = mock(WebDriverHelper.class);
-        SupplementalRequester supplementalRequester = mock(SupplementalRequester.class);
+        SupplementalInformationController supplementalInformationController =
+                mock(SupplementalInformationController.class);
         objUnderTest =
                 new BankIdMobilSSAuthenticationController(
                         webDriverHelper,
                         driver,
                         mobilInitializer,
-                        supplementalRequester,
+                        supplementalInformationController,
                         Catalog.getCatalog("en"));
         dummyElement = mock(WebElement.class);
         credentials = mock(Credentials.class);
@@ -61,7 +62,7 @@ public class BankIdMobilSSAuthenticationControllerTest {
                 .willThrow(new HtmlElementNotFoundException(""));
 
         // when
-        Throwable throwable = catchThrowable(() -> objUnderTest.doLogin(credentials));
+        Throwable throwable = catchThrowable(() -> objUnderTest.doLogin());
 
         // then
         assertThat(throwable)
@@ -79,7 +80,7 @@ public class BankIdMobilSSAuthenticationControllerTest {
                 .willReturn(Arrays.asList(dummyElement));
 
         // when
-        Throwable throwable = catchThrowable(() -> objUnderTest.doLogin(credentials));
+        Throwable throwable = catchThrowable(() -> objUnderTest.doLogin());
 
         // then
         assertThat(throwable).isInstanceOf(BankIdException.class);
@@ -90,7 +91,7 @@ public class BankIdMobilSSAuthenticationControllerTest {
         // given
 
         // when
-        objUnderTest.doLogin(credentials);
+        objUnderTest.doLogin();
 
         // then
         inOrder.verify(mobilInitializer).initializeBankIdMobilAuthentication();
