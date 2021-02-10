@@ -239,7 +239,7 @@ public final class IcaBankenAgent extends NextGenerationAgent
     protected Optional<TransferController> constructTransferController() {
         IcaBankenExecutorHelper executorHelper =
                 new IcaBankenExecutorHelper(
-                        apiClient, context, catalog, supplementalInformationHelper);
+                        apiClient, context, catalog, supplementalInformationController);
 
         return Optional.of(
                 new TransferController(

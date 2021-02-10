@@ -15,7 +15,6 @@ import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
 import se.tink.backend.aggregation.agents.contexts.CompositeAgentContext;
 import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
-import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException.EndUserMessage;
@@ -33,7 +32,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.trans
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.transfer.rpc.TransferResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.rpc.BaseResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.utils.IcaBankenFormatUtils;
-import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.libraries.account.AccountIdentifier;
@@ -47,20 +46,18 @@ public class IcaBankenExecutorHelper {
 
     private IcaBankenApiClient apiClient;
     private final StatusUpdater statusUpdater;
-    private final SupplementalRequester supplementalRequester;
     private final Catalog catalog;
-    private final SupplementalInformationHelper supplementalInformationHelper;
+    private final SupplementalInformationController supplementalInformationController;
 
     public IcaBankenExecutorHelper(
             IcaBankenApiClient apiClient,
             CompositeAgentContext context,
             Catalog catalog,
-            SupplementalInformationHelper supplementalInformationHelper) {
+            SupplementalInformationController supplementalInformationController) {
         this.apiClient = apiClient;
         this.statusUpdater = context;
-        this.supplementalRequester = context;
         this.catalog = catalog;
-        this.supplementalInformationHelper = supplementalInformationHelper;
+        this.supplementalInformationController = supplementalInformationController;
     }
 
     public AccountEntity findSourceAccount(
@@ -190,7 +187,8 @@ public class IcaBankenExecutorHelper {
     private String askUserForDestinationName() {
         try {
             Map<String, String> nameResponse =
-                    supplementalInformationHelper.askSupplementalInformation(getNameInputField());
+                    supplementalInformationController.askSupplementalInformationSync(
+                            getNameInputField());
             String destinationName =
                     nameResponse.get(IcaBankenConstants.Transfers.RECIPIENT_NAME_FIELD_NAME);
 
@@ -261,7 +259,8 @@ public class IcaBankenExecutorHelper {
             BankIdBodyEntity bankIdResponse = apiClient.initTransferSign();
             String reference = bankIdResponse.getRequestId();
 
-            supplementalRequester.openBankId(bankIdResponse.getAutostartToken(), false);
+            supplementalInformationController.openMobileBankIdAsync(
+                    bankIdResponse.getAutostartToken());
             poll(reference);
             assertSuccessfulSign(reference);
         } catch (Exception initialException) {
