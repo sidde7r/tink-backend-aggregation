@@ -75,7 +75,8 @@ public class LoanEntity {
                 .setLoanNumber(getAccountNumber())
                 .setAmortized(
                         ExactCurrencyAmount.of(
-                                loanTransactions.getTotalAmortization(), CSNConstants.CURRENCY))
+                                loanTransactions.getTotalAmortization(serialNumber),
+                                CSNConstants.CURRENCY))
                 .build();
     }
 

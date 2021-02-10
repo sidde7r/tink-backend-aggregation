@@ -29,4 +29,9 @@ public class TransactionEntity {
     public boolean isAmortized() {
         return loanTransactionDescription.matches("Årsbelopp \\d{4} - kapital");
     }
+
+    @JsonIgnore
+    public boolean isSameLoan(int loanNumber) {
+        return loanNumber == serialNumber;
+    }
 }

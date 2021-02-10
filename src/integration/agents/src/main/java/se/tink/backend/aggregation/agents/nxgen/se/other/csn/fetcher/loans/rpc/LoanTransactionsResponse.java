@@ -24,9 +24,9 @@ public class LoanTransactionsResponse {
     private boolean debtCorrection;
 
     @JsonIgnore
-    public BigDecimal getTotalAmortization() {
+    public BigDecimal getTotalAmortization(int loanNumber) {
         return payments.stream()
-                .map(PaymentEntity::getAmortization)
+                .map(paymentEntity -> paymentEntity.getAmortization(loanNumber))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 }

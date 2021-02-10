@@ -27,9 +27,10 @@ public class PaymentEntity {
     private double transactionsId;
 
     @JsonIgnore
-    public BigDecimal getAmortization() {
+    public BigDecimal getAmortization(int loanNumber) {
         return transactions.stream()
                 .filter(TransactionEntity::isAmortized)
+                .filter(transactionEntity -> transactionEntity.isSameLoan(loanNumber))
                 .map(TransactionEntity::getTransactionAmount)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
