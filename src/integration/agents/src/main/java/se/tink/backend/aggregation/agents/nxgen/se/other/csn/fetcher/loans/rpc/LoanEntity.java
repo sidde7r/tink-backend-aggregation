@@ -56,26 +56,26 @@ public class LoanEntity {
     }
 
     public LoanAccount toTinkLoanAccount(
-            UserInfoResponse userInfoResponse, LoanAccountsResponse loanAccountsResponse) {
+            UserInfoResponse userInfo, LoanAccountsResponse loanAccount) {
         return LoanAccount.nxBuilder()
-                .withLoanDetails(getLoanModule(loanAccountsResponse))
-                .withId(getIdModule(userInfoResponse))
-                .addHolders(Holder.of(userInfoResponse.getName(), Role.HOLDER))
+                .withLoanDetails(getLoanModule(loanAccount))
+                .withId(getIdModule(userInfo))
+                .addHolders(Holder.of(userInfo.getName(), Role.HOLDER))
                 .build();
     }
 
-    private LoanModule getLoanModule(LoanAccountsResponse loanAccountsResponse) {
+    private LoanModule getLoanModule(LoanAccountsResponse loanAccount) {
         return LoanModule.builder()
                 .withType(LoanDetails.Type.STUDENT)
                 .withBalance(getOutgoingDebt().negate())
-                .withInterestRate(loanAccountsResponse.getInterestRate().doubleValue())
+                .withInterestRate(loanAccount.getInterestRate().doubleValue())
                 .setLoanNumber(getAccountNumber())
                 .build();
     }
 
-    private IdModule getIdModule(UserInfoResponse userInfoResponse) {
+    private IdModule getIdModule(UserInfoResponse userInfo) {
         return IdModule.builder()
-                .withUniqueIdentifier(getUniqueIdenifier(userInfoResponse.getSsn()))
+                .withUniqueIdentifier(getUniqueIdenifier(userInfo.getSsn()))
                 .withAccountNumber(getAccountNumber())
                 .withAccountName(getAccountName())
                 .addIdentifier(AccountIdentifier.create(Type.TINK, getAccountNumber()))
