@@ -1,0 +1,20 @@
+{
+    "accounts": [],
+    "_links": {
+        "kontoinnstillinger": {
+            "href": "https://mobilbank-pm.sparebank1.no/sr-bank/nettbank-privat/kontoer/innstillinger"
+        }
+    },
+    "_savingsAccountaggregatedAmountFraction": "00",
+    "_currencyAccountaggregatedAmountInteger": "0",
+    "_currentAccountaggregatedAmountInteger": "210",
+    "_currencyAccountaggregatedAmountFraction": "00",
+    "_savingsAccountaggregatedAmountInteger": "0",
+    "_innsynAccountaggregatedAmountInteger": "0",
+    "_innsynAccountaggregatedAmountFraction": "00",
+    "_disposableAccountaggregatedAmountInteger": "0",
+    "_disposableAccountaggregatedAmountFraction": "00",
+    "_currentAndSavingAccountaggregatedAmountFraction": "00",
+    "_currentAndSavingAccountaggregatedAmountInteger": "210",
+    "_currentAccountaggregatedAmountFraction": "00"
+}

@@ -1,0 +1,99 @@
+{
+    "accounts": [
+        {
+            "id": "id1",
+            "name": "account1",
+            "formattedNumber": "3209 27 57934",
+            "disposableAmountInteger": "-2",
+            "disposableAmountFraction": "32",
+            "balanceAmountInteger": "3",
+            "balanceAmountFraction": "51",
+            "currencyCode": "NOK",
+            "accountType": "currentAccount",
+            "accountNumber": "accountNumber1",
+            "_links": {
+                "transactions_gui": {
+                    "href": "https://mobilbank-pm.sparebank1.no/sr-bank/nettbank-privat/kontoer/bevegelser?selectedAccount=JOknlKjgh650eqK644LU"
+                },
+                "statements": {
+                    "href": "https://mobilbank-pm.sparebank1.no/sr-bank/nettbank-privat/meldinger/arkivsok/KTOUTSKR/JOknlKjgh650eqK644LU/01.02.2020/28.02.2021"
+                },
+                "transactions": {
+                    "href": "https://mobilbank-pm.sparebank1.no/sr-bank/nettbank-privat/rest/accounts/JOknlKjgh650eqK644LU/transactions",
+                    "method": "GET"
+                },
+                "account": {
+                    "href": "https://mobilbank-pm.sparebank1.no/sr-bank/nettbank-privat/rest/accounts/JOknlKjgh650eqK644LU",
+                    "method": "GET"
+                },
+                "annual_summary": {
+                    "href": "https://mobilbank-pm.sparebank1.no/sr-bank/nettbank-privat/meldinger/arkivsok/AARSOPPG/01.02.2016/28.02.2021"
+                },
+                "account_information_gui": {
+                    "href": "https://mobilbank-pm.sparebank1.no/sr-bank/nettbank-privat/kontoer/informasjon?selectedAccount=JOknlKjgh650eqK644LU"
+                }
+            },
+            "transferFromEnabled": true,
+            "transferToEnabled": true,
+            "paymentFromEnabled": true,
+            "defaultAccount": false,
+            "balancePreferred": false
+        },
+        {
+            "id": "id2",
+            "name": "account2",
+            "formattedNumber": "3209 28 94214",
+            "disposableAmountInteger": "0",
+            "disposableAmountFraction": "00",
+            "balanceAmountInteger": "0",
+            "balanceAmountFraction": "00",
+            "currencyCode": "NOK",
+            "accountType": "savingsAccount",
+            "accountNumber": "accountNumber2",
+            "_links": {
+                "transactions_gui": {
+                    "href": "https://mobilbank-pm.sparebank1.no/sr-bank/nettbank-privat/kontoer/bevegelser?selectedAccount=iERb63x2gu9_WHE4kK8x"
+                },
+                "statements": {
+                    "href": "https://mobilbank-pm.sparebank1.no/sr-bank/nettbank-privat/meldinger/arkivsok/KTOUTSKR/iERb63x2gu9_WHE4kK8x/01.02.2020/28.02.2021"
+                },
+                "transactions": {
+                    "href": "https://mobilbank-pm.sparebank1.no/sr-bank/nettbank-privat/rest/accounts/iERb63x2gu9_WHE4kK8x/transactions",
+                    "method": "GET"
+                },
+                "account": {
+                    "href": "https://mobilbank-pm.sparebank1.no/sr-bank/nettbank-privat/rest/accounts/iERb63x2gu9_WHE4kK8x",
+                    "method": "GET"
+                },
+                "annual_summary": {
+                    "href": "https://mobilbank-pm.sparebank1.no/sr-bank/nettbank-privat/meldinger/arkivsok/AARSOPPG/01.02.2016/28.02.2021"
+                },
+                "account_information_gui": {
+                    "href": "https://mobilbank-pm.sparebank1.no/sr-bank/nettbank-privat/kontoer/informasjon?selectedAccount=iERb63x2gu9_WHE4kK8x"
+                }
+            },
+            "transferFromEnabled": true,
+            "transferToEnabled": true,
+            "paymentFromEnabled": true,
+            "defaultAccount": false,
+            "balancePreferred": false
+        }
+    ],
+    "_links": {
+        "kontoinnstillinger": {
+            "href": "https://mobilbank-pm.sparebank1.no/sr-bank/nettbank-privat/kontoer/innstillinger"
+        }
+    },
+    "_savingsAccountaggregatedAmountFraction": "00",
+    "_currencyAccountaggregatedAmountInteger": "0",
+    "_currentAccountaggregatedAmountInteger": "210",
+    "_currencyAccountaggregatedAmountFraction": "00",
+    "_savingsAccountaggregatedAmountInteger": "0",
+    "_innsynAccountaggregatedAmountInteger": "0",
+    "_innsynAccountaggregatedAmountFraction": "00",
+    "_disposableAccountaggregatedAmountInteger": "0",
+    "_disposableAccountaggregatedAmountFraction": "00",
+    "_currentAndSavingAccountaggregatedAmountFraction": "00",
+    "_currentAndSavingAccountaggregatedAmountInteger": "210",
+    "_currentAccountaggregatedAmountFraction": "00"
+}

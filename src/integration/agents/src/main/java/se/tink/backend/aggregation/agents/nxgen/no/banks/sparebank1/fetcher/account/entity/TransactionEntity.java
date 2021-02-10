@@ -1,36 +1,34 @@
-package se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.entities;
+package se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.account.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Objects;
-import java.util.Map;
-import lombok.Getter;
-import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.Sparebank1AmountUtils;
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.HashMap;
+import lombok.Data;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.entities.LinkEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.libraries.date.DateUtils;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
-@Getter
+@Data
 public class TransactionEntity {
     private String id;
-    private String amountInteger;
-    private String amountFraction;
-    private String type;
+    private BigDecimal amount;
     private String description;
-    private String date;
-    private String interestDate;
-    private Boolean incoming;
+    private long date;
+    private String currencyCode;
 
     @JsonProperty("_links")
-    private Map<String, LinkEntity> links;
+    private HashMap<String, LinkEntity> links;
 
     @JsonIgnore
     public Transaction toTinkTransaction() {
         return Transaction.builder()
-                .setAmount(Sparebank1AmountUtils.constructAmount(amountInteger, amountFraction))
-                .setDate(DateUtils.parseDate(date))
+                .setAmount(ExactCurrencyAmount.of(amount, currencyCode))
+                .setDate(new Date(date))
                 .setDescription(getTinkFormattedDescription(description))
                 .setPending(id == null)
                 .build();

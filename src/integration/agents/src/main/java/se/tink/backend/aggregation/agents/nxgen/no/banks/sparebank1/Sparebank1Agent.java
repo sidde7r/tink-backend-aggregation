@@ -6,6 +6,7 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
 
 import com.google.inject.Inject;
+import java.time.temporal.ChronoUnit;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
@@ -20,8 +21,8 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.Spar
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.Sparebank1CreditCardTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.Sparebank1InvestmentsFetcher;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.Sparebank1LoanFetcher;
-import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.Sparebank1TransactionFetcher;
-import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.Sparebank1TransactionalAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.account.Sparebank1TransactionFetcher;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.account.Sparebank1TransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.filters.AddRefererFilter;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.sessionhandler.Sparebank1SessionHandler;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -33,6 +34,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCa
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
@@ -115,12 +117,19 @@ public final class Sparebank1Agent extends NextGenerationAgent
     }
 
     private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
+        Sparebank1TransactionFetcher sparebank1TransactionFetcher =
+                new Sparebank1TransactionFetcher(apiClient);
         return new TransactionalAccountRefreshController(
                 metricRefreshController,
                 updateController,
                 new Sparebank1TransactionalAccountFetcher(apiClient),
                 new TransactionFetcherController<>(
-                        transactionPaginationHelper, new Sparebank1TransactionFetcher(apiClient)));
+                        transactionPaginationHelper,
+                        new TransactionDatePaginationController.Builder<>(
+                                        sparebank1TransactionFetcher)
+                                .setConsecutiveEmptyPagesLimit(2)
+                                .setAmountAndUnitToFetch(6, ChronoUnit.MONTHS)
+                                .build()));
     }
 
     @Override
