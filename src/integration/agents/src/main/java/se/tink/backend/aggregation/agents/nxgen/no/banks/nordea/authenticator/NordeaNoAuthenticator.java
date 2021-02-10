@@ -3,12 +3,12 @@ package se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.authenticator;
 import com.google.common.collect.ImmutableList;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
-import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.NordeaNoStorage;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.client.AuthenticationClient;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.StatelessProgressiveAuthenticator;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.libraries.i18n.Catalog;
 
 @Slf4j
@@ -20,7 +20,7 @@ public class NordeaNoAuthenticator extends StatelessProgressiveAuthenticator {
             AuthenticationClient authenticationClient,
             NordeaNoStorage storage,
             RandomValueGenerator randomValueGenerator,
-            SupplementalRequester supplementalRequester,
+            SupplementalInformationController supplementalInformationController,
             Catalog catalog) {
         mySteps =
                 ImmutableList.of(
@@ -28,7 +28,7 @@ public class NordeaNoAuthenticator extends StatelessProgressiveAuthenticator {
                                 authenticationClient,
                                 storage,
                                 randomValueGenerator,
-                                supplementalRequester,
+                                supplementalInformationController,
                                 catalog),
                         new VerifySessionStep(authenticationClient, storage, randomValueGenerator));
     }

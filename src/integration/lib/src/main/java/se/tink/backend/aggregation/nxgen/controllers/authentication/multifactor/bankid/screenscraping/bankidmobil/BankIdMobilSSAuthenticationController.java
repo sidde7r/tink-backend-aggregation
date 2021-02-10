@@ -1,24 +1,21 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.screenscraping.bankidmobil;
 
-import java.util.Collections;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
-import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
+import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.screenscraping.bankidmobil.initializer.MobilInitializer;
-import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.i18n.LocalizableKey;
 import se.tink.libraries.selenium.WebDriverHelper;
 import se.tink.libraries.selenium.exceptions.HtmlElementNotFoundException;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -33,10 +30,10 @@ public class BankIdMobilSSAuthenticationController {
     private final WebDriverHelper webDriverHelper;
     private final WebDriver driver;
     private final MobilInitializer bankIdMobilInitializer;
-    private final SupplementalRequester supplementalRequester;
+    private final SupplementalInformationController supplementalInformationController;
     private final Catalog catalog;
 
-    public void doLogin(Credentials credentials) throws AuthenticationException {
+    public void doLogin() throws AuthenticationException {
 
         bankIdMobilInitializer.initializeBankIdMobilAuthentication();
 
@@ -54,15 +51,15 @@ public class BankIdMobilSSAuthenticationController {
                     "User provided invalid credentials or bank Id by mobile is not activated");
         }
 
-        if (!isUserAuthenticated(credentials)) {
+        if (!isUserAuthenticated()) {
             throw BankIdError.TIMEOUT.exception();
         }
     }
 
-    private boolean isUserAuthenticated(Credentials credentials) {
+    private boolean isUserAuthenticated() {
         log.info("Waiting for user to accept bank Id in mobile app");
 
-        displayPrompt(credentials);
+        displayPrompt();
 
         for (int i = 0; i < 90; i++) {
             webDriverHelper.sleep(WAIT_RENDER_MILLIS);
@@ -73,7 +70,7 @@ public class BankIdMobilSSAuthenticationController {
         return false;
     }
 
-    private void displayPrompt(Credentials credentials) {
+    private void displayPrompt() {
         Field field =
                 Field.builder()
                         .immutable(true)
@@ -82,11 +79,12 @@ public class BankIdMobilSSAuthenticationController {
                         .name("reference_number")
                         .build();
 
-        credentials.setSupplementalInformation(
-                SerializationUtils.serializeToString(Collections.singletonList(field)));
-        credentials.setStatus(CredentialsStatus.AWAITING_SUPPLEMENTAL_INFORMATION);
-
-        supplementalRequester.requestSupplementalInformation(credentials, true);
+        try {
+            supplementalInformationController.askSupplementalInformationSync(field);
+        } catch (SupplementalInfoException e) {
+            // ignore empty response!
+            // we're actually not interested in response at all, we just show a text!
+        }
     }
 
     private String getReferenceNumber() {

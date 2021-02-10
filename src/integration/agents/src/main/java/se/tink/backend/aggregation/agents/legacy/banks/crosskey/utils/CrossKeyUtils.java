@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.banks.crosskey.utils;
 
 import com.google.common.base.Preconditions;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Range;
 import java.util.List;
 import org.joda.time.DateTime;
@@ -11,11 +10,13 @@ import se.tink.backend.aggregation.utils.TransactionOrdering;
 import se.tink.libraries.strings.StringUtils;
 
 public class CrossKeyUtils {
+    public static final String SUPPLEMENTAL_RESPONSE_NAME = "response";
+
     public static String generateUdIdFor(String username) {
         return StringUtils.hashAsUUID("TINK-" + username);
     }
 
-    public static List<Field> createOneTimeCodeChallengeFields(String challenge) {
+    public static Field[] createOneTimeCodeChallengeFields(String challenge) {
         Field challengeField =
                 Field.builder()
                         .immutable(true)
@@ -29,7 +30,7 @@ public class CrossKeyUtils {
         Field responseField =
                 Field.builder()
                         .description("Engångskod")
-                        .name("response")
+                        .name(SUPPLEMENTAL_RESPONSE_NAME)
                         .numeric(true)
                         .hint("NNNN")
                         .maxLength(4)
@@ -37,7 +38,7 @@ public class CrossKeyUtils {
                         .pattern("([0-9]{4})")
                         .build();
 
-        return Lists.newArrayList(challengeField, responseField);
+        return new Field[] {challengeField, responseField};
     }
 
     /**

@@ -45,13 +45,10 @@ import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.utils.jersey.NoRedirectStrategy;
 import se.tink.backend.aggregation.agents.utils.jersey.filter.JerseyTimeoutRetryFilter;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
-import se.tink.backend.aggregation.utils.SupplementalInformationUtils;
-import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.i18n.LocalizableEnum;
 import se.tink.libraries.i18n.LocalizableKey;
 import se.tink.libraries.net.client.TinkApacheHttpClient4;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @AgentCapabilities(generateFromImplementedExecutors = true)
 public final class SupremeCardAgent extends AbstractAgent
@@ -106,13 +103,9 @@ public final class SupremeCardAgent extends AbstractAgent
                         .pattern("^(19|20)\\d{2}(0\\d|1[0-2])([0-2]\\d|3[0-1])\\d{4}$") // SSN regex
                         .build();
 
-        credentials.setSupplementalInformation(
-                SerializationUtils.serializeToString(Lists.newArrayList(field)));
-        credentials.setStatus(CredentialsStatus.AWAITING_SUPPLEMENTAL_INFORMATION);
-
-        String response = supplementalRequester.requestSupplementalInformation(credentials);
-
-        return SupplementalInformationUtils.getResponseFields(response, supplementalResponseKey);
+        Map<String, String> response =
+                supplementalInformationController.askSupplementalInformationSync(field);
+        return Optional.ofNullable(response.get(supplementalResponseKey));
     }
 
     private boolean loginWithBankId() throws BankIdException, LoginException {
