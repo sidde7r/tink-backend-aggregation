@@ -3,7 +3,7 @@ asn1crypto==0.24.0
 cacheout==0.11.2
 cffi==1.13.2
 click==6.7
-cryptography==3.2
+cryptography==3.3.2
 enum34==1.1.6
 flask==1.0.2
 future==0.17.1
