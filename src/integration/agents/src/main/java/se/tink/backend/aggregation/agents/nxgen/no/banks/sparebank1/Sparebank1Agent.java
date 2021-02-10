@@ -51,7 +51,7 @@ public final class Sparebank1Agent extends NextGenerationAgent
     private final LoanRefreshController loanRefreshController;
     private final CreditCardRefreshController creditCardRefreshController;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
-    private String branchId;
+    private final String branchId;
 
     @Inject
     public Sparebank1Agent(AgentComponentProvider agentComponentProvider) {
@@ -92,7 +92,8 @@ public final class Sparebank1Agent extends NextGenerationAgent
         return new AutoAuthenticationController(
                 request,
                 systemUpdater,
-                new BankIdAuthenticationControllerNO(supplementalRequester, authenticator, catalog),
+                new BankIdAuthenticationControllerNO(
+                        supplementalInformationController, authenticator, catalog),
                 authenticator);
     }
 

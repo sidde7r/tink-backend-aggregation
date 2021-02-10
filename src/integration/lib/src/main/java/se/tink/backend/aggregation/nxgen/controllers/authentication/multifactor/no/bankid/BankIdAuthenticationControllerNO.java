@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
-import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.Uninterruptibles;
 import java.lang.invoke.MethodHandles;
 import java.util.Objects;
@@ -17,7 +16,6 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
-import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
@@ -27,10 +25,9 @@ import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.NorwegianFields;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
-import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
 import se.tink.libraries.i18n.Catalog;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class BankIdAuthenticationControllerNO implements TypedAuthenticator {
     private static final Logger logger =
@@ -38,16 +35,17 @@ public class BankIdAuthenticationControllerNO implements TypedAuthenticator {
     private static final int MAX_ATTEMPTS = 90;
 
     private final BankIdAuthenticatorNO authenticator;
-    private final SupplementalRequester supplementalRequester;
+    private final SupplementalInformationController supplementalInformationController;
     private final Catalog catalog;
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
 
     public BankIdAuthenticationControllerNO(
-            SupplementalRequester supplementalRequester,
+            SupplementalInformationController supplementalInformationController,
             BankIdAuthenticatorNO authenticator,
             Catalog catalog) {
         this.authenticator = Preconditions.checkNotNull(authenticator);
-        this.supplementalRequester = Preconditions.checkNotNull(supplementalRequester);
+        this.supplementalInformationController =
+                Preconditions.checkNotNull(supplementalInformationController);
         this.catalog = catalog;
     }
 
@@ -74,16 +72,15 @@ public class BankIdAuthenticationControllerNO implements TypedAuthenticator {
 
         String dob = nationalId.substring(0, 6);
         String bankIdReference = authenticator.init(nationalId, dob, mobilenumber);
-        handleBankIdReferenceAndPollBankIDStatus(credentials, bankIdReference);
+        handleBankIdReferenceAndPollBankIDStatus(bankIdReference);
         authenticator.finishActivation();
     }
 
-    private void handleBankIdReferenceAndPollBankIDStatus(
-            Credentials credentials, String bankIdReference) {
+    private void handleBankIdReferenceAndPollBankIDStatus(String bankIdReference) {
         // This should be treated as temporary solution.
         // We should not be blocked by supplemental info.
         Future<?> future = startPolling();
-        displayBankIdReference(credentials, bankIdReference);
+        displayBankIdReference(bankIdReference);
         stopPolling(future);
     }
 
@@ -120,15 +117,14 @@ public class BankIdAuthenticationControllerNO implements TypedAuthenticator {
         throw BankIdError.TIMEOUT.exception();
     }
 
-    private void displayBankIdReference(Credentials credentials, String bankIdReference) {
-        credentials.setSupplementalInformation(
-                SerializationUtils.serializeToString(
-                        Lists.newArrayList(
-                                NorwegianFields.BankIdReferenceInfo.build(
-                                        catalog, bankIdReference))));
-        credentials.setStatus(CredentialsStatus.AWAITING_SUPPLEMENTAL_INFORMATION);
-
-        supplementalRequester.requestSupplementalInformation(credentials, true);
+    private void displayBankIdReference(String bankIdReference) {
+        Field field = NorwegianFields.BankIdReferenceInfo.build(catalog, bankIdReference);
+        try {
+            supplementalInformationController.askSupplementalInformationSync(field);
+        } catch (SupplementalInfoException e) {
+            // ignore empty response!
+            // we're actually not interested in response at all, we just show a text!
+        }
     }
 
     private void stopPolling(Future<?> future) throws BankIdException, LoginException {

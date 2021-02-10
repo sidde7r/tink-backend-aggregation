@@ -8,12 +8,12 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
-import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.libraries.i18n.Catalog;
 
@@ -28,12 +28,14 @@ public class BankIdAuthenticationControllerNOTest {
     @Before
     public void setup() throws AuthenticationException, AuthorizationException {
         authenticator = Mockito.mock(BankIdAuthenticatorNO.class);
-        SupplementalRequester supplementalRequester = Mockito.mock(SupplementalRequester.class);
+        SupplementalInformationController supplementalInformationController =
+                Mockito.mock(SupplementalInformationController.class);
         Mockito.when(authenticator.collect()).thenReturn(BankIdStatus.DONE);
         Catalog catalog = Catalog.getCatalog("en");
 
         authenticationController =
-                new BankIdAuthenticationControllerNO(supplementalRequester, authenticator, catalog);
+                new BankIdAuthenticationControllerNO(
+                        supplementalInformationController, authenticator, catalog);
 
         credentials.setType(CredentialsTypes.MOBILE_BANKID);
     }
