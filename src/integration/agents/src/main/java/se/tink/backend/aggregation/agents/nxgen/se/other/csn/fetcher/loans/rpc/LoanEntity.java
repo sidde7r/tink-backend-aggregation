@@ -56,20 +56,26 @@ public class LoanEntity {
     }
 
     public LoanAccount toTinkLoanAccount(
-            UserInfoResponse userInfo, LoanAccountsResponse loanAccount) {
+            LoanTransactionsResponse loanTransactions,
+            UserInfoResponse userInfo,
+            LoanAccountsResponse loanAccount) {
         return LoanAccount.nxBuilder()
-                .withLoanDetails(getLoanModule(loanAccount))
+                .withLoanDetails(getLoanModule(loanTransactions, loanAccount))
                 .withId(getIdModule(userInfo))
                 .addHolders(Holder.of(userInfo.getName(), Role.HOLDER))
                 .build();
     }
 
-    private LoanModule getLoanModule(LoanAccountsResponse loanAccount) {
+    private LoanModule getLoanModule(
+            LoanTransactionsResponse loanTransactions, LoanAccountsResponse loanAccount) {
         return LoanModule.builder()
                 .withType(LoanDetails.Type.STUDENT)
                 .withBalance(getOutgoingDebt().negate())
                 .withInterestRate(loanAccount.getInterestRate().doubleValue())
                 .setLoanNumber(getAccountNumber())
+                .setAmortized(
+                        ExactCurrencyAmount.of(
+                                loanTransactions.getTotalAmortization(), CSNConstants.CURRENCY))
                 .build();
     }
 

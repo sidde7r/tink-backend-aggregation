@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.other.csn.fetcher.loans.rpc;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.math.BigDecimal;
 import java.util.List;
@@ -24,4 +25,12 @@ public class PaymentEntity {
 
     @JsonProperty("transaktionsId")
     private double transactionsId;
+
+    @JsonIgnore
+    public BigDecimal getAmortization() {
+        return transactions.stream()
+                .filter(TransactionEntity::isAmortized)
+                .map(TransactionEntity::getTransactionAmount)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
 }

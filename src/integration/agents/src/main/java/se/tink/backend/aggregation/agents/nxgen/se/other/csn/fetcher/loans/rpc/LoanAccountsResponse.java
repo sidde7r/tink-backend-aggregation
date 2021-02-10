@@ -48,10 +48,11 @@ public class LoanAccountsResponse {
         return interestRate.divide(BigDecimal.valueOf(100.0), 4, RoundingMode.HALF_UP);
     }
 
-    public Collection<LoanAccount> toTinkAccounts(UserInfoResponse userInfo) {
+    public Collection<LoanAccount> toTinkAccounts(
+            LoanTransactionsResponse loanTransactions, UserInfoResponse userInfo) {
         return loanList.stream()
                 .filter(LoanEntity::isLoanAccount)
-                .map(loanEntity -> loanEntity.toTinkLoanAccount(userInfo, this))
+                .map(loanEntity -> loanEntity.toTinkLoanAccount(loanTransactions, userInfo, this))
                 .collect(Collectors.toList());
     }
 }
