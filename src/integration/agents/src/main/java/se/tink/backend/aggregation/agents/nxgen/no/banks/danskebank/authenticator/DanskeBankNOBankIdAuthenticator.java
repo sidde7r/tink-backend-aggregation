@@ -15,7 +15,6 @@ import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field;
-import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
@@ -41,6 +40,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.au
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.screenscraping.bankidiframe.BankIdIframeSSAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.screenscraping.bankidiframe.initializer.BankIdIframeInitializer;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.screenscraping.bankidiframe.initializer.IframeInitializer;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
@@ -59,7 +59,7 @@ public class DanskeBankNOBankIdAuthenticator implements TypedAuthenticator, Auto
     private final String deviceId;
     private final DanskeBankConfiguration configuration;
     private final WebDriverHelper webDriverHelper;
-    private final SupplementalRequester supplementalRequester;
+    private final SupplementalInformationController supplementalInformationController;
     private final Catalog catalog;
 
     @Override
@@ -381,8 +381,7 @@ public class DanskeBankNOBankIdAuthenticator implements TypedAuthenticator, Auto
                             webDriverHelper,
                             driver,
                             iframeInitializer,
-                            credentials,
-                            supplementalRequester,
+                            supplementalInformationController,
                             catalog);
             bankIdIframeSSAuthenticationController.doLogin(bankIdPassword);
 
