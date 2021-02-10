@@ -68,7 +68,6 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.date.ThreadSafeDateFormat;
@@ -191,10 +190,7 @@ public final class NorwegianAgent extends AbstractAgent
 
         // Prompt a BankId authentication client-side.
 
-        credentials.setSupplementalInformation(null);
-        credentials.setStatus(CredentialsStatus.AWAITING_MOBILE_BANKID_AUTHENTICATION);
-
-        supplementalRequester.requestSupplementalInformation(credentials, false);
+        supplementalInformationController.openMobileBankIdAsync(null);
 
         String bankIdCompleteUrl = collectBankId(orderBankIdResponse, bankIdUrl);
 
