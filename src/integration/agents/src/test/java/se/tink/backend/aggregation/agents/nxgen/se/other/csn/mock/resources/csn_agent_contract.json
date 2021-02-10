@@ -1,13 +1,48 @@
 {
     "accounts" : [ {
+        "accountNumber" : "Lån 1 januari 1989-30 juni 2001 (studielån)",
+        "accountExclusion" : "NONE",
+        "exactBalance" : {
+            "currencyCode" : "SEK",
+            "scale" : 0,
+            "unscaledValue" : -80126,
+            "exactValue" : -80126,
+            "doubleValue" : -80126.0
+        },
+        "currencyCode" : "SEK",
+        "bankId" : "9901011234studielan",
+        "excluded" : false,
+        "favored" : false,
+        "name" : "Studielån",
+        "ownership" : 1.0,
+        "type" : "LOAN",
+        "userModifiedExcluded" : false,
+        "userModifiedName" : false,
+        "userModifiedType" : false,
+        "identifiers" : "[]",
+        "closed" : false,
+        "holderName" : "Anka, Karl Johan",
+        "accountHolder" : {
+            "accountId" : null,
+            "type" : "PERSONAL",
+            "identities" : [ {
+                "name" : "Anka, Karl Johan",
+                "role" : "HOLDER"
+            } ]
+        },
+        "flags" : "[]",
+        "balances" : [ ],
+        "availableCredit" : 0.0,
+        "balance" : -80126.0
+    }, {
         "accountNumber" : "Lån efter den 30 juni 2001 (annuitetslån)",
         "accountExclusion" : "NONE",
         "exactBalance" : {
             "currencyCode" : "SEK",
-            "doubleValue" : 36297.0,
-            "exactValue" : 36297,
-            "unscaledValue" : 36297,
-            "scale" : 0
+            "scale" : 0,
+            "unscaledValue" : -11404,
+            "exactValue" : -11404,
+            "doubleValue" : -11404.0
         },
         "currencyCode" : "SEK",
         "bankId" : "9901011234annuitetslan",
@@ -33,7 +68,7 @@
         "flags" : "[]",
         "balances" : [ ],
         "availableCredit" : 0.0,
-        "balance" : 36297.0
+        "balance" : -11404.0
     } ],
     "transactions" : [ ],
     "identityData" : {
@@ -44,15 +79,15 @@
         "dateOfBirth" : {
             "year" : 1999,
             "month" : "JANUARY",
-            "era" : "CE",
             "monthValue" : 1,
             "dayOfMonth" : 1,
+            "era" : "CE",
             "dayOfWeek" : "FRIDAY",
             "leapYear" : false,
             "dayOfYear" : 1,
             "chronology" : {
-                "id" : "ISO",
-                "calendarType" : "iso8601"
+                "calendarType" : "iso8601",
+                "id" : "ISO"
             }
         }
     }
