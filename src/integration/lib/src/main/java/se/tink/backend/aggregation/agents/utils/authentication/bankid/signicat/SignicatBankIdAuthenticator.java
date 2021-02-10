@@ -9,17 +9,11 @@ import com.sun.jersey.client.apache4.ApacheHttpClient4;
 import com.sun.jersey.client.apache4.config.ApacheHttpClient4Config;
 import com.sun.jersey.client.apache4.config.DefaultApacheHttpClient4Config;
 import java.io.PrintStream;
-import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
-import java.util.Base64;
 import java.util.concurrent.TimeUnit;
 import javax.ws.rs.core.MediaType;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.xml.sax.InputSource;
 import se.tink.backend.aggregation.agents.utils.authentication.bankid.signicat.model.CollectBankIdRequest;
 import se.tink.backend.aggregation.agents.utils.authentication.bankid.signicat.model.CollectBankIdResponse;
 import se.tink.backend.aggregation.agents.utils.authentication.bankid.signicat.model.CompleteBankIdResponse;
@@ -27,7 +21,6 @@ import se.tink.backend.aggregation.agents.utils.authentication.bankid.signicat.m
 import se.tink.backend.aggregation.agents.utils.authentication.bankid.signicat.model.InitiateBankIdRequest;
 import se.tink.backend.aggregation.agents.utils.authentication.bankid.signicat.model.InitiateBankIdResponse;
 import se.tink.backend.aggregation.agents.utils.authentication.bankid.signicat.model.StatusMessage;
-import se.tink.libraries.i18n.Catalog;
 
 public class SignicatBankIdAuthenticator implements Runnable {
     private static final int AUTHENTICATION_BANKID_TIMEOUT = 120;
@@ -41,24 +34,16 @@ public class SignicatBankIdAuthenticator implements Runnable {
     private final String socialSecurityNumber;
     private final String credentialsId;
     private final String userId;
-    private final Catalog catalog;
 
     public SignicatBankIdAuthenticator(
             String socialSecurityNumber,
             String userId,
             String credentialsId,
-            Catalog catalog,
             SignicatBankIdHandler handler) {
         this.socialSecurityNumber = socialSecurityNumber;
         this.userId = userId;
         this.credentialsId = credentialsId;
-        this.catalog = catalog;
         this.handler = handler;
-    }
-
-    public SignicatBankIdAuthenticator(
-            String socialSecurityNumber, Catalog catalog, SignicatBankIdHandler handler) {
-        this(socialSecurityNumber, null, null, catalog, handler);
     }
 
     /** Helper method to create a Jersey client. */
@@ -107,22 +92,7 @@ public class SignicatBankIdAuthenticator implements Runnable {
                     userId,
                     credentialsId,
                     "BankID authentication error: " + initiateBankIdResponse.getError().getCode());
-            switch (initiateBankIdResponse.getError().getCode()) {
-                case "ALREADY_IN_PROGRESS":
-                    handler.onUpdateStatus(
-                            SignicatBankIdStatus.AUTHENTICATION_ERROR,
-                            catalog.getString(
-                                    "BankID session already in progress, please try again."),
-                            null);
-                    return;
-                default:
-                    handler.onUpdateStatus(
-                            SignicatBankIdStatus.AUTHENTICATION_ERROR,
-                            catalog.getString(
-                                    "BankID authentication failed. Please verify your Mobil BankID is OK."),
-                            null);
-                    return;
-            }
+            handler.onUpdateStatus(SignicatBankIdStatus.AUTHENTICATION_ERROR);
         }
 
         // Validate authentication.
@@ -155,7 +125,7 @@ public class SignicatBankIdAuthenticator implements Runnable {
                     log.error(userId, credentialsId, logMessage);
                 }
 
-                handler.onUpdateStatus(SignicatBankIdStatus.AUTHENTICATION_ERROR, null, null);
+                handler.onUpdateStatus(SignicatBankIdStatus.AUTHENTICATION_ERROR);
                 return;
             }
 
@@ -167,10 +137,7 @@ public class SignicatBankIdAuthenticator implements Runnable {
                             userId,
                             credentialsId,
                             "BankID authentication is not yet complete, with status " + status);
-                    handler.onUpdateStatus(
-                            SignicatBankIdStatus.AWAITING_BANKID_AUTHENTICATION,
-                            initiateBankIdResponse.getAutoStartToken(),
-                            null);
+                    handler.onUpdateStatus(SignicatBankIdStatus.AWAITING_BANKID_AUTHENTICATION);
 
                     Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
                     continue;
@@ -180,88 +147,28 @@ public class SignicatBankIdAuthenticator implements Runnable {
                             userId,
                             credentialsId,
                             "BankID authentication is not yet complete, with status " + status);
-                    handler.onUpdateStatus(
-                            SignicatBankIdStatus.AUTHENTICATION_ERROR,
-                            catalog.getString(
-                                    "BankID authentication failed. Please verify your Mobil BankID is OK."),
-                            null);
+                    handler.onUpdateStatus(SignicatBankIdStatus.AUTHENTICATION_ERROR);
                     return;
                 case StatusMessage.COMPLETE:
                     log.info(
                             userId,
                             credentialsId,
                             "BankID authentication done, with status " + status);
-                    CompleteBankIdResponse completeResponse =
-                            createClientRequest(collectBankIdResponse.getCompleteUrl(), client)
-                                    .get(CompleteBankIdResponse.class);
+                    createClientRequest(collectBankIdResponse.getCompleteUrl(), client)
+                            .get(CompleteBankIdResponse.class);
 
-                    handler.onUpdateStatus(
-                            SignicatBankIdStatus.AUTHENTICATED,
-                            null,
-                            getNationalId(completeResponse));
+                    handler.onUpdateStatus(SignicatBankIdStatus.AUTHENTICATED);
                     return;
                 default:
                     log.info(
                             userId,
                             credentialsId,
                             "BankID authentication is not yet complete, with status " + status);
-                    handler.onUpdateStatus(
-                            SignicatBankIdStatus.AUTHENTICATION_ERROR,
-                            catalog.getString(
-                                    "BankID authentication failed. Please verify your Mobil BankID is OK."),
-                            null);
+                    handler.onUpdateStatus(SignicatBankIdStatus.AUTHENTICATION_ERROR);
                     throw new RuntimeException("unknown status: " + status);
             }
         }
 
-        handler.onUpdateStatus(
-                SignicatBankIdStatus.AUTHENTICATION_ERROR,
-                catalog.getString(
-                        "BankID authentication failed. Please verify your Mobil BankID is OK."),
-                null);
-    }
-
-    /**
-     * @param completeResponse Contains a Base64 encoded SAML response, that in turn contains
-     *     national ID
-     * @return national-id in SAML response (e.g. social security number in Sweden)
-     */
-    private static String getNationalId(CompleteBankIdResponse completeResponse) {
-        byte[] decodedSamlResponse = Base64.getDecoder().decode(completeResponse.getSamlResponse());
-
-        XPathFactory xpathFactory = XPathFactory.newInstance();
-        XPath xpath = xpathFactory.newXPath();
-
-        try {
-            return xpath.evaluate(
-                    getNationalIdXPath(),
-                    new InputSource(new StringReader(new String(decodedSamlResponse))));
-        } catch (XPathExpressionException e) {
-            log.error("Couldn't read national id from signicat response.", e);
-            throw new IllegalStateException(e);
-        }
-    }
-
-    /**
-     * Ref: https://support.signicat.com/display/S2/Example+SAML+response Example: <Response> …
-     * <Assertion> … <Attribute AttributeName='national-id'> 201212121212 </Attribute> …
-     * </Assertion> </Response>
-     */
-    private static String getNationalIdXPath() {
-        return "/"
-                + subPathWithLocalName("Response")
-                + subPathWithLocalName("Assertion")
-                + subPathWithLocalName("AttributeStatement")
-                + subPathWithAttributeName("national-id")
-                + subPathWithLocalName("AttributeValue");
-    }
-
-    private static String subPathWithLocalName(String path) {
-        return String.format("/*[local-name()='%s']", path);
-    }
-
-    private static String subPathWithAttributeName(String attributeName) {
-        return String.format(
-                "/*[local-name()='Attribute' and @AttributeName = '%s']", attributeName);
+        handler.onUpdateStatus(SignicatBankIdStatus.AUTHENTICATION_ERROR);
     }
 }

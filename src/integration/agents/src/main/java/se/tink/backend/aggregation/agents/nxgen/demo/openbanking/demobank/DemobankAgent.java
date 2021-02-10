@@ -176,7 +176,7 @@ public final class DemobankAgent extends NextGenerationAgent
 
     private Authenticator constructDecoupledAppAuthenticator() {
         DemobankDecoupledAppAuthenticator demobankDecoupledAppAuthenticator =
-                new DemobankDecoupledAppAuthenticator(apiClient, supplementalRequester);
+                new DemobankDecoupledAppAuthenticator(apiClient, supplementalInformationController);
         DemobankAutoAuthenticator autoAuthenticator =
                 new DemobankAutoAuthenticator(persistentStorage, apiClient);
         return new AutoAuthenticationController(

@@ -19,16 +19,6 @@ public interface SupplementalRequester {
 
     Optional<String> waitForSupplementalInformation(String mfaId, long waitFor, TimeUnit unit);
 
-    /**
-     * @deprecated Do not use this interface to open Mobile BanKId, use {@link
-     *     se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController#openMobileBankIdAsync
-     *     instead}
-     */
-    @Deprecated
-    default void openBankId() {
-        openBankId(null, false);
-    }
-
     default String requestSupplementalInformation(Credentials credentials) {
         return requestSupplementalInformation(credentials, true);
     }

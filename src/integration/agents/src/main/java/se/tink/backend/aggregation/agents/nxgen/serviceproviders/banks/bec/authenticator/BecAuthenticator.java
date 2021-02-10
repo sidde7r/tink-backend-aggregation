@@ -8,7 +8,6 @@ import java.util.regex.Pattern;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.agents.rpc.Field;
-import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.BecApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.BecConstants.ScaOptions;
@@ -23,6 +22,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.step.AutomaticAuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.step.SupplementalFieldsAuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.step.UsernamePasswordAuthenticationStep;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.i18n.Catalog;
@@ -36,7 +36,7 @@ public class BecAuthenticator extends StatelessProgressiveAuthenticator {
 
     private final BecApiClient apiClient;
     private final SessionStorage sessionStorage;
-    private final SupplementalRequester supplementalRequester;
+    private final SupplementalInformationController supplementalInformationController;
     private final PersistentStorage persistentStorage;
     private final Catalog catalog;
 
@@ -49,7 +49,7 @@ public class BecAuthenticator extends StatelessProgressiveAuthenticator {
                 new DecisionAuthStep(sessionStorage),
                 new CombinedNemIdAuthenticationStep(
                         apiClient,
-                        supplementalRequester,
+                        supplementalInformationController,
                         sessionStorage,
                         persistentStorage,
                         getDeviceId(),

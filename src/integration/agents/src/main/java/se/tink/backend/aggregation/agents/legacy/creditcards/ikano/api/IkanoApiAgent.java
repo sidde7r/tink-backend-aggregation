@@ -26,7 +26,6 @@ import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.constants.CommonHeaders;
-import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.i18n.LocalizableKey;
 
@@ -165,10 +164,7 @@ public final class IkanoApiAgent extends AbstractAgent
     public void logout() {}
 
     private void openBankIdApp() {
-        credentials.setSupplementalInformation(null);
-        credentials.setStatus(CredentialsStatus.AWAITING_MOBILE_BANKID_AUTHENTICATION);
-
-        supplementalRequester.requestSupplementalInformation(credentials, false);
+        supplementalInformationController.openMobileBankIdAsync(null);
     }
 
     private void stopLoginAttempt(UserErrorException e) throws LoginException {

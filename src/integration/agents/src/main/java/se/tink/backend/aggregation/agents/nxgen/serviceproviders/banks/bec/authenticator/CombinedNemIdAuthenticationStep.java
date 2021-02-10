@@ -1,12 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authenticator;
 
-import java.util.Collections;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.agents.rpc.Field.Key;
-import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.exceptions.ThirdPartyAppException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.BecApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.BecConstants.StorageKeys;
@@ -18,14 +17,13 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepResponse;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.retrypolicy.RetryCallback;
 import se.tink.libraries.retrypolicy.RetryExecutor;
 import se.tink.libraries.retrypolicy.RetryPolicy;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class CombinedNemIdAuthenticationStep implements AuthenticationStep {
 
@@ -34,20 +32,20 @@ public class CombinedNemIdAuthenticationStep implements AuthenticationStep {
     private final SessionStorage sessionStorage;
     private final PersistentStorage persistentStorage;
     private final BecApiClient apiClient;
-    private final SupplementalRequester supplementalRequester;
+    private final SupplementalInformationController supplementalInformationController;
     private final RetryExecutor retryExecutor = new RetryExecutor();
     private final String deviceId;
     private final Catalog catalog;
 
     CombinedNemIdAuthenticationStep(
             BecApiClient apiClient,
-            SupplementalRequester supplementalRequester,
+            SupplementalInformationController supplementalInformationController,
             SessionStorage sessionStorage,
             PersistentStorage persistentStorage,
             String deviceId,
             Catalog catalog) {
         this.apiClient = apiClient;
-        this.supplementalRequester = supplementalRequester;
+        this.supplementalInformationController = supplementalInformationController;
         this.sessionStorage = sessionStorage;
         this.persistentStorage = persistentStorage;
         this.deviceId = deviceId;
@@ -62,20 +60,21 @@ public class CombinedNemIdAuthenticationStep implements AuthenticationStep {
             throws AuthenticationException, AuthorizationException {
         Credentials credentials = request.getCredentials();
         sendNemIdRequest(credentials);
-        displayPrompt(credentials);
+        displayPrompt();
         pollNemId();
         finalizeAuth(credentials);
         return AuthenticationStepResponse.authenticationSucceeded();
     }
 
-    private void displayPrompt(Credentials credentials) {
+    private void displayPrompt() {
         Field field = DanishFields.NemIdInfo.build(catalog);
 
-        credentials.setSupplementalInformation(
-                SerializationUtils.serializeToString(Collections.singletonList(field)));
-        credentials.setStatus(CredentialsStatus.AWAITING_SUPPLEMENTAL_INFORMATION);
-
-        supplementalRequester.requestSupplementalInformation(credentials, true);
+        try {
+            supplementalInformationController.askSupplementalInformationSync(field);
+        } catch (SupplementalInfoException e) {
+            // ignore empty response!
+            // we're actually not interested in response at all, we just show a text!
+        }
     }
 
     private void sendNemIdRequest(final Credentials credentials) throws NemIdException {

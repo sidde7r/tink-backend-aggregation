@@ -141,10 +141,7 @@ public final class SEBKortAgent extends AbstractAgent implements DeprecatedRefre
 
         // Prompt a BankId authentication client-side.
 
-        credentials.setSupplementalInformation(null);
-        credentials.setStatus(CredentialsStatus.AWAITING_MOBILE_BANKID_AUTHENTICATION);
-
-        supplementalRequester.requestSupplementalInformation(credentials, false);
+        supplementalInformationController.openMobileBankIdAsync(null);
 
         // Validate authentication.
 

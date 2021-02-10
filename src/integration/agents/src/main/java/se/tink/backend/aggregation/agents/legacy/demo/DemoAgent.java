@@ -107,11 +107,11 @@ public final class DemoAgent extends AbstractAgent
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
     private static final Locale DEFAULT_LOCALE = Locale.getDefault();
-    private static CountryDateHelper dateHelper = new CountryDateHelper(DEFAULT_LOCALE);
+    private static final CountryDateHelper dateHelper = new CountryDateHelper(DEFAULT_LOCALE);
 
-    private DemoCredentials demoCredentials;
-    private String userPath;
-    private File accountsFile;
+    private final DemoCredentials demoCredentials;
+    private final String userPath;
+    private final File accountsFile;
     private List<Account> accounts = null;
 
     public DemoAgent(
@@ -433,8 +433,8 @@ public final class DemoAgent extends AbstractAgent
                         credentials.getField(Field.Key.USERNAME),
                         credentials.getUserId(),
                         credentials.getId(),
-                        context.getCatalog(),
-                        new CredentialsSignicatBankIdAuthenticationHandler(credentials, context));
+                        new CredentialsSignicatBankIdAuthenticationHandler(
+                                credentials, supplementalInformationController));
 
         // Run the authenticator synchronously.
 
