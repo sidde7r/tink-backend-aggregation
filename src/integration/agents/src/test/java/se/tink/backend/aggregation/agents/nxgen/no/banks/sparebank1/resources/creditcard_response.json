@@ -1,0 +1,225 @@
+{
+    "creditCards": [
+        {
+            "id": "dummyId",
+            "encryptedId": "***",
+            "name": "dummyName",
+            "formattedNumber": "123456789",
+            "cardType": "MASTERCARD_UNG",
+            "formattedNumberForPlacementOnCard": "XXXX XXXX XXXX 6844",
+            "expiryDate": "2023-10-01",
+            "statusCode": "NORMAL",
+            "allowedActions": {
+                "CREDIT_LIMIT_CHANGE": true,
+                "ACTIVATE_CASHBACK": true,
+                "GET_PIN": true,
+                "CASHBACK": true,
+                "STATEMENT": true,
+                "SUBMIT_FRAUD_CLAIM": true,
+                "REPLACE_CREDIT_CARD": true,
+                "SET_WISH_TO_PAY": true,
+                "UPDATE_DUE_DAY": true,
+                "TRANSFER_FROM_CREDITCARD": true,
+                "STATEMENT_SETTINGS": true,
+                "CREDITCARD_DETAILS": true,
+                "BLOCK_CARD": true,
+                "REFINANSIERING": true,
+                "REGIONAL_BLOCK": true,
+                "OUTGOING_PAYMENT_FROM_CREDITCARD": true,
+                "PAY_TO_CREDITCARD": true
+            },
+            "obfuscatedCardId": "8HXdIQgJNopn3_lkhNsRRzKbGMk",
+            "balanceInteger": "-356",
+            "balanceFraction": "05",
+            "cashbackBalanceInteger": "0",
+            "cashbackBalanceFraction": "00",
+            "creditLimitInteger": "10000",
+            "creditLimitFraction": "00",
+            "creditAvailableInteger": "9643",
+            "creditAvailableFraction": "95",
+            "authorizedAmountInteger": "0",
+            "authorizedAmountFraction": "00",
+            "primaryCard": true,
+            "supplementaryCard": false,
+            "inCollection": false,
+            "accountClosed": false,
+            "accountOwner": true,
+            "status": "NORMAL",
+            "dueDay": "20",
+            "wishToPay": "FULL_PAYMENT",
+            "kidNumber": "015433648878",
+            "billingAccountNumber": "42024603940",
+            "billingAccountNumberFormatted": "4202 46 03940",
+            "recommendedPaymentAmountInteger": "356",
+            "recommendedPaymentAmountFraction": "05",
+            "billingPaymentData": "bBJN-e1aPm30BS8b6l1TWioAAsHBLEkjpP3fBfBMzsyIwzsqN0wwV2VZdfeoYFgZujShMz8m0xpyqy0NguTSTYA7zxUjVxLxZD4o1FUIBhaO_OgAvgUG2nMtwhSFrrlVMbvi5jLU5ix10XUZZdsChaux7MLQmXUUFsj9CU1Ueah2",
+            "lastStatementDueDate": "2021-02-20",
+            "lastStatementGeneratedDate": "2021-02-08",
+            "lastStatementDueAmountInteger": "356",
+            "lastStatementDueAmountFraction": "05",
+            "lastStatementMinDueAmountInteger": "300",
+            "lastStatementMinDueAmountFraction": "00",
+            "regionalBlockings": [
+                {
+                    "regionKey": "INTERNET",
+                    "blocked": false
+                },
+                {
+                    "regionKey": "DENMARK_SWEDEN",
+                    "blocked": false
+                },
+                {
+                    "regionKey": "EUROPE",
+                    "blocked": false
+                },
+                {
+                    "regionKey": "AFRICA",
+                    "blocked": false
+                },
+                {
+                    "regionKey": "ASIA",
+                    "blocked": false
+                },
+                {
+                    "regionKey": "NORTH_AMERICA",
+                    "blocked": false
+                },
+                {
+                    "regionKey": "SOUTH_AMERICA",
+                    "blocked": false
+                },
+                {
+                    "regionKey": "OCEANIA",
+                    "blocked": false
+                }
+            ],
+            "statusNormal": true,
+            "statusReplaced": false,
+            "statusBlocked": false,
+            "statusBlockedAndReplaced": false,
+            "statusClosed": false,
+            "statusInactive": false,
+            "_links": {
+                "details": {
+                    "href": "https://mobilbank-pm.sparebank1.no/ostlandet/nettbank-privat/kort/rest/cards/v2/credit/3883510",
+                    "method": "GET"
+                },
+                "transactions": {
+                    "href": "https://mobilbank-pm.sparebank1.no/ostlandet/nettbank-privat/kort/rest/cards/credit/3883510/transactions",
+                    "method": "GET"
+                }
+            }
+        },
+        {
+            "id": "dummyId",
+            "encryptedId": "***",
+            "name": "dummyName",
+            "formattedNumber": "**** **** **** 6844",
+            "cardType": "MASTERCARD_UNG",
+            "formattedNumberForPlacementOnCard": "XXXX XXXX XXXX 6844",
+            "expiryDate": "2023-10-01",
+            "statusCode": "NORMAL",
+            "allowedActions": {
+                "CREDIT_LIMIT_CHANGE": true,
+                "ACTIVATE_CASHBACK": true,
+                "GET_PIN": true,
+                "CASHBACK": true,
+                "STATEMENT": true,
+                "SUBMIT_FRAUD_CLAIM": true,
+                "REPLACE_CREDIT_CARD": true,
+                "SET_WISH_TO_PAY": true,
+                "UPDATE_DUE_DAY": true,
+                "TRANSFER_FROM_CREDITCARD": true,
+                "STATEMENT_SETTINGS": true,
+                "CREDITCARD_DETAILS": true,
+                "BLOCK_CARD": true,
+                "REFINANSIERING": true,
+                "REGIONAL_BLOCK": true,
+                "OUTGOING_PAYMENT_FROM_CREDITCARD": true,
+                "PAY_TO_CREDITCARD": true
+            },
+            "obfuscatedCardId": "8HXdIQgJNopn3_lkhNsRRzKbGMk",
+            "balanceInteger": "-356",
+            "balanceFraction": "05",
+            "cashbackBalanceInteger": "0",
+            "cashbackBalanceFraction": "00",
+            "creditLimitInteger": "10000",
+            "creditLimitFraction": "00",
+            "creditAvailableInteger": "9643",
+            "creditAvailableFraction": "95",
+            "authorizedAmountInteger": "0",
+            "authorizedAmountFraction": "00",
+            "primaryCard": true,
+            "supplementaryCard": false,
+            "inCollection": false,
+            "accountClosed": false,
+            "accountOwner": true,
+            "status": "NORMAL",
+            "dueDay": "20",
+            "wishToPay": "FULL_PAYMENT",
+            "kidNumber": "015433648878",
+            "billingAccountNumber": "42024603940",
+            "billingAccountNumberFormatted": "4202 46 03940",
+            "recommendedPaymentAmountInteger": "356",
+            "recommendedPaymentAmountFraction": "05",
+            "billingPaymentData": "bBJN-e1aPm30BS8b6l1TWioAAsHBLEkjpP3fBfBMzsyIwzsqN0wwV2VZdfeoYFgZujShMz8m0xpyqy0NguTSTYA7zxUjVxLxZD4o1FUIBhaO_OgAvgUG2nMtwhSFrrlVMbvi5jLU5ix10XUZZdsChaux7MLQmXUUFsj9CU1Ueah2",
+            "lastStatementDueDate": "2021-02-20",
+            "lastStatementGeneratedDate": "2021-02-08",
+            "lastStatementDueAmountInteger": "356",
+            "lastStatementDueAmountFraction": "05",
+            "lastStatementMinDueAmountInteger": "300",
+            "lastStatementMinDueAmountFraction": "00",
+            "regionalBlockings": [
+                {
+                    "regionKey": "INTERNET",
+                    "blocked": false
+                },
+                {
+                    "regionKey": "DENMARK_SWEDEN",
+                    "blocked": false
+                },
+                {
+                    "regionKey": "EUROPE",
+                    "blocked": false
+                },
+                {
+                    "regionKey": "AFRICA",
+                    "blocked": false
+                },
+                {
+                    "regionKey": "ASIA",
+                    "blocked": false
+                },
+                {
+                    "regionKey": "NORTH_AMERICA",
+                    "blocked": false
+                },
+                {
+                    "regionKey": "SOUTH_AMERICA",
+                    "blocked": false
+                },
+                {
+                    "regionKey": "OCEANIA",
+                    "blocked": false
+                }
+            ],
+            "statusNormal": true,
+            "statusReplaced": false,
+            "statusBlocked": true,
+            "statusBlockedAndReplaced": false,
+            "statusClosed": false,
+            "statusInactive": false,
+            "_links": {
+                "details": {
+                    "href": "https://mobilbank-pm.sparebank1.no/ostlandet/nettbank-privat/kort/rest/cards/v2/credit/3883510",
+                    "method": "GET"
+                },
+                "transactions": {
+                    "href": "https://mobilbank-pm.sparebank1.no/ostlandet/nettbank-privat/kort/rest/cards/credit/3883510/transactions",
+                    "method": "GET"
+                }
+            }
+        }
+    ],
+    "_links": {}
+}

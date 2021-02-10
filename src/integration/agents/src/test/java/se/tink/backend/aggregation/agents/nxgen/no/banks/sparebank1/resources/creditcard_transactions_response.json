@@ -1,0 +1,62 @@
+{
+    "transactions": [
+        {
+            "transactionReference": "****",
+            "postingDate": "",
+            "transactionDate": "2021-01-11",
+            "transactionText": "description1",
+            "transactionTypeDescription": "description1",
+            "transactionCurrency": "NOK",
+            "transactionAmount": "2111",
+            "transactionAmountFraction": "25",
+            "cashbackAmountCurrency": "NOK",
+            "cashbackAmount": "0",
+            "cashbackAmountFraction": "00",
+            "billingAmount": "2111",
+            "billingAmountFraction": "25",
+            "merchantCategory": "",
+            "merchantCity": "",
+            "externalAccountNo": "18133385106",
+            "exchangeRate": "1",
+            "exchangeRateFraction": "00",
+            "authorization": false,
+            "foreignCurrency": false,
+            "disputeAllowed": false,
+            "fraudClaimed": false,
+            "_links": {}
+        },
+        {
+            "transactionReference": "***",
+            "postingDate": "2021-01-04",
+            "transactionDate": "2021-01-02",
+            "transactionText": "description2",
+            "transactionTypeDescription": "Omkostninger faktura og fakturakopi",
+            "transactionCurrency": "PLN",
+            "transactionAmount": "11",
+            "transactionAmountFraction": "25",
+            "cashbackAmountCurrency": "NOK",
+            "cashbackAmount": "0",
+            "cashbackAmountFraction": "00",
+            "billingAmount": "",
+            "billingAmountFraction": "",
+            "merchantCategory": "",
+            "merchantCity": "",
+            "exchangeRate": "1",
+            "exchangeRateFraction": "00",
+            "authorization": false,
+            "foreignCurrency": false,
+            "disputeAllowed": false,
+            "fraudClaimed": false,
+            "_links": {}
+        }
+    ],
+    "cardNumberFormatted": "**** **** **** 6844",
+    "productName": "Mastercard Ung",
+    "creditCardAuthorizationsFailure": false,
+    "_links": {
+        "moreTransactions": {
+            "href": "https://mobilbank-pm.sparebank1.no/ostlandet/nettbank-privat/kort/rest/cards/credit/***/transactions?beforeDate=10112020",
+            "method": "GET"
+        }
+    }
+}
