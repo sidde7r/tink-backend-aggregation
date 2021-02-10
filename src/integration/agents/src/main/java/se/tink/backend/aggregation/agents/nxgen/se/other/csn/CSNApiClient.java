@@ -56,7 +56,8 @@ public class CSNApiClient {
                 .type(MediaType.APPLICATION_JSON)
                 .header(
                         CSNConstants.HeaderKeys.CSN_AUTHORIZATION,
-                        "Bearer " + sessionStorage.get(CSNConstants.Storage.ACCESS_TOKEN))
+                        CSNConstants.HeaderValues.BEARER
+                                + sessionStorage.get(CSNConstants.Storage.ACCESS_TOKEN))
                 .get(LoanAccountsResponse.class);
     }
 
@@ -65,7 +66,8 @@ public class CSNApiClient {
                 .type(MediaType.APPLICATION_JSON)
                 .header(
                         CSNConstants.HeaderKeys.CSN_AUTHORIZATION,
-                        "Bearer " + sessionStorage.get(CSNConstants.Storage.ACCESS_TOKEN))
+                        CSNConstants.HeaderValues.BEARER
+                                + sessionStorage.get(CSNConstants.Storage.ACCESS_TOKEN))
                 .get(UserInfoResponse.class);
     }
 }

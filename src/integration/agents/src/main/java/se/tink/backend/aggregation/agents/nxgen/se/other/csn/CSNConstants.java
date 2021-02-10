@@ -50,6 +50,7 @@ public class CSNConstants {
     }
 
     static class HeaderValues {
+        static final String BEARER = "Bearer ";
         static final String USER_AGENT = "Mozilla/5.0";
     }
 }
