@@ -32,4 +32,8 @@ public class GetTransactionsResponse<T extends TransactionEntity> extends Nordea
     public String nextKey() {
         return response != null ? response.nextKey() : null;
     }
+
+    protected TransactionsResponseEntity<T> getResponse() {
+        return response;
+    }
 }

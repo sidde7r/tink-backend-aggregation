@@ -95,4 +95,12 @@ public class TransactionEntity {
     private boolean isPending() {
         return status.equalsIgnoreCase(NordeaBaseConstants.StatusResponse.RESERVED);
     }
+
+    public Date getBookingDate() {
+        return bookingDate;
+    }
+
+    public Date getValueDate() {
+        return valueDate;
+    }
 }

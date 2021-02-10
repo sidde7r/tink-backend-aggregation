@@ -12,8 +12,8 @@ import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.nordea.authenticator.NordeaFiAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.nordea.fetcher.creditcard.NordeaFiCreditCardFetcher;
-import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.nordea.fetcher.transactionalaccount.NordeaFiGetTransactionResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.nordea.fetcher.transactionalaccount.NordeaFiTransactionalAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.nordea.fetcher.transactionalaccount.OneYearLimitGetTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.authenticator.NordeaBaseAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.fetcher.creditcard.NordeaBaseCreditCardFetcher;
@@ -87,9 +87,9 @@ public final class NordeaFiAgent extends NordeaBaseAgent
     }
 
     private TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
-        NordeaBaseTransactionalAccountFetcher<NordeaFiGetTransactionResponse> accountFetcher =
+        NordeaBaseTransactionalAccountFetcher<OneYearLimitGetTransactionsResponse> accountFetcher =
                 new NordeaFiTransactionalAccountFetcher<>(
-                        apiClient, NordeaFiGetTransactionResponse.class);
+                        apiClient, OneYearLimitGetTransactionsResponse.class);
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController,

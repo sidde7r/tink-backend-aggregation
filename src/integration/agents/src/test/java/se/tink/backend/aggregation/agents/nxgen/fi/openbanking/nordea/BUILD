@@ -15,3 +15,20 @@ junit_test(
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
     ],
 )
+
+junit_test(
+    name = "nordea-unittests",
+    srcs = glob(
+        ["**/*.java"],
+        exclude = [
+            "NordeaFiAgentTest.java",
+        ],
+    ),
+    visibility = ["//visibility:public"],
+    deps = [
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/fi/openbanking/nordea",
+        "//third_party:org_assertj_assertj_core",
+        "//third_party:org_mockito_mockito_core",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
+    ],
+)
