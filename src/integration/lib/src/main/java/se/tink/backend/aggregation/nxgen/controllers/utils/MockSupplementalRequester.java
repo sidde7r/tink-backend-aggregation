@@ -16,11 +16,6 @@ public final class MockSupplementalRequester implements SupplementalRequester {
     }
 
     @Override
-    public void openBankId(String autoStartToken, boolean wait) {
-        // NOOP
-    }
-
-    @Override
     public String requestSupplementalInformation(
             Credentials credentials, long waitFor, TimeUnit timeUnit, boolean wait) {
         return SerializationUtils.serializeToString(callbackData);

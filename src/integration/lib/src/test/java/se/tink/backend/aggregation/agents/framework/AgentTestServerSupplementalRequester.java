@@ -34,19 +34,6 @@ public final class AgentTestServerSupplementalRequester implements SupplementalR
     }
 
     @Override
-    public void openBankId(String autoStartToken, boolean wait) {
-        if (Strings.isNullOrEmpty(autoStartToken)) {
-            log.info(String.format("[CredentialsId:%s]: Open BankID", credential.getId()));
-        } else {
-            log.info(
-                    String.format(
-                            "[CredentialsId:%s]: Sending autoStartToken to test server: %s",
-                            credential.getId(), autoStartToken));
-            agentTestServerClient.sendBankIdAutoStartToken(autoStartToken);
-        }
-    }
-
-    @Override
     public String requestSupplementalInformation(
             Credentials credentials, long waitFor, TimeUnit timeUnit, boolean wait) {
         log.info(

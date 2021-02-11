@@ -6,14 +6,6 @@ import se.tink.backend.agents.rpc.Credentials;
 
 public interface SupplementalRequester {
 
-    /**
-     * @deprecated Do not use this interface to open Mobile BanKId, use {@link
-     *     se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController#openMobileBankIdAsync
-     *     instead}
-     */
-    @Deprecated
-    void openBankId(String autoStartToken, boolean wait);
-
     String requestSupplementalInformation(
             Credentials credentials, long waitFor, TimeUnit unit, boolean wait);
 

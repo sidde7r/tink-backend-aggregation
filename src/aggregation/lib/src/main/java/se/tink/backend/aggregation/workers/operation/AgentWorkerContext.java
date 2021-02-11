@@ -376,16 +376,6 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         return null;
     }
 
-    @Override
-    public void openBankId(String autoStartToken, boolean wait) {
-        Credentials credentials = request.getCredentials();
-
-        credentials.setSupplementalInformation(autoStartToken);
-        credentials.setStatus(CredentialsStatus.AWAITING_MOBILE_BANKID_AUTHENTICATION);
-
-        requestSupplementalInformation(credentials, wait);
-    }
-
     public AccountDataCache getAccountDataCache() {
         return accountDataCache;
     }

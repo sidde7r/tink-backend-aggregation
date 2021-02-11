@@ -167,11 +167,6 @@ public final class NewAgentTestContext extends AgentContext {
     }
 
     @Override
-    public void openBankId(String autoStartToken, boolean wait) {
-        supplementalRequester.openBankId(autoStartToken, wait);
-    }
-
-    @Override
     public void cacheAccount(Account account, AccountFeatures accountFeatures) {
         accountDataCache.cacheAccount(account);
         accountDataCache.cacheAccountFeatures(account.getBankId(), accountFeatures);

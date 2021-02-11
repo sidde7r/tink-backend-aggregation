@@ -150,18 +150,6 @@ public class AgentTestContext extends AgentContext {
     }
 
     @Override
-    public void openBankId(String autoStartToken, boolean wait) {
-        if (Strings.isNullOrEmpty(autoStartToken)) {
-            log.info(String.format("[CredentialsId:%s]: Open BankID", credentials.getId()));
-        } else {
-            log.info(
-                    String.format(
-                            "[CredentialsId:%s]: Open BankID with autoStartToken: %s",
-                            credentials.getId(), autoStartToken));
-        }
-    }
-
-    @Override
     public void cacheAccount(Account account, AccountFeatures accountFeatures) {
         log.info("Updating account");
 
