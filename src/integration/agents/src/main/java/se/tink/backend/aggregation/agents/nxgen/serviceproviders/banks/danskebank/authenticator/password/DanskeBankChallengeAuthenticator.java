@@ -16,7 +16,6 @@ import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field;
-import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
@@ -56,7 +55,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.keycard.KeyCardInitValues;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.NemIdCodeAppAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.NemIdCodeAppResponse;
-import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
@@ -72,8 +71,7 @@ public class DanskeBankChallengeAuthenticator
             LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private static final Base64.Encoder BASE64_ENCODER = Base64.getEncoder();
     private final Catalog catalog;
-    private final SupplementalInformationHelper supplementalInformationHelper;
-    private final SupplementalRequester supplementalRequester;
+    private final SupplementalInformationController supplementalInformationController;
     private final DanskeBankApiClient apiClient;
     private final TinkHttpClient client;
     private final PersistentStorage persistentStorage;
@@ -88,8 +86,7 @@ public class DanskeBankChallengeAuthenticator
 
     public DanskeBankChallengeAuthenticator(
             Catalog catalog,
-            SupplementalInformationHelper supplementalInformationHelper,
-            SupplementalRequester supplementalRequester,
+            SupplementalInformationController supplementalInformationController,
             DanskeBankApiClient apiClient,
             TinkHttpClient client,
             PersistentStorage persistentStorage,
@@ -97,8 +94,7 @@ public class DanskeBankChallengeAuthenticator
             String deviceId,
             DanskeBankConfiguration configuration) {
         this.catalog = catalog;
-        this.supplementalInformationHelper = supplementalInformationHelper;
-        this.supplementalRequester = supplementalRequester;
+        this.supplementalInformationController = supplementalInformationController;
         this.apiClient = apiClient;
         this.client = client;
         this.persistentStorage = persistentStorage;
@@ -156,7 +152,7 @@ public class DanskeBankChallengeAuthenticator
             this.keyCardOtpChallenge = getKeyCardOtpChallenge(bindDeviceResponse);
             KeyCardAuthenticationController keyCardAuthenticationController =
                     new KeyCardAuthenticationController(
-                            catalog, supplementalInformationHelper, this);
+                            catalog, supplementalInformationController, this);
 
             // Authenticate using key card (supplemental information)
             keyCardAuthenticationController.authenticate(credentials);
@@ -197,7 +193,7 @@ public class DanskeBankChallengeAuthenticator
                         apiClient, client, preferredDevice, username, bindChallengeResponseBody);
         NemIdCodeAppAuthenticationController nemIdAuthenticationController =
                 new NemIdCodeAppAuthenticationController(
-                        codeAppAuthenticator, credentials, supplementalRequester, catalog);
+                        codeAppAuthenticator, supplementalInformationController, catalog);
 
         try {
             // Credentials are not needed for this implementation

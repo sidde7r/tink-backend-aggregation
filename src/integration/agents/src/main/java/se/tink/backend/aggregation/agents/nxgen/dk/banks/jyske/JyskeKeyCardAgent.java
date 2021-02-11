@@ -35,7 +35,7 @@ public final class JyskeKeyCardAgent extends JyskeAbstractAgent {
                 request,
                 systemUpdater,
                 new KeyCardAuthenticationController(
-                        catalog, supplementalInformationHelper, jyskeKeyCardAuthenticator),
+                        catalog, supplementalInformationController, jyskeKeyCardAuthenticator),
                 jyskeKeyCardAuthenticator);
     }
 }

@@ -79,7 +79,7 @@ public final class OmaspAgent extends NextGenerationAgent
                 systemUpdater,
                 new KeyCardAuthenticationController(
                         catalog,
-                        supplementalInformationHelper,
+                        supplementalInformationController,
                         new OmaspKeyCardAuthenticator(
                                 apiClient, persistentStorage, credentials, sessionStorage)),
                 new OmaspAutoAuthenticator(

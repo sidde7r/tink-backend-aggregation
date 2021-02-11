@@ -108,7 +108,7 @@ public class BankdataAgent extends NextGenerationAgent
                                 nemIdAuthenticator,
                                 catalog,
                                 statusUpdater,
-                                supplementalRequester,
+                                supplementalInformationController,
                                 metricContext),
                         nemIdAuthenticator,
                         persistentStorage);

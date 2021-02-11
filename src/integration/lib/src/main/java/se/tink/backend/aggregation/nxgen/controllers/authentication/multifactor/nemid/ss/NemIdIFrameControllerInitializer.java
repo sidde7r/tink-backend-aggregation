@@ -14,7 +14,6 @@ import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import se.tink.backend.aggregation.agents.contexts.MetricContext;
 import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
-import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdParametersFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.metrics.NemIdMetricLabel;
@@ -24,6 +23,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.steps.NemIdLoginPageStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.steps.NemIdVerifyLoginResponseStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.steps.NemIdWaitForCodeAppResponseStep;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.libraries.i18n.Catalog;
 
 /**
@@ -39,7 +39,7 @@ public class NemIdIFrameControllerInitializer {
             NemIdParametersFetcher nemIdParametersFetcher,
             Catalog catalog,
             StatusUpdater statusUpdater,
-            SupplementalRequester supplementalRequester,
+            SupplementalInformationController supplementalInformationController,
             MetricContext metricContext) {
 
         NemIdMetrics metrics = new NemIdMetrics(metricContext.getMetricRegistry());
@@ -68,7 +68,7 @@ public class NemIdIFrameControllerInitializer {
                         metrics,
                         credentialsStatusUpdater,
                         catalog,
-                        supplementalRequester);
+                        supplementalInformationController);
         NemIdCollectTokenStep collectTokenStep =
                 new NemIdCollectTokenStep(driverWrapper, metrics, tokenValidator);
 

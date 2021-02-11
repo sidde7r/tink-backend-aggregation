@@ -74,7 +74,7 @@ public abstract class SamlinkAgent extends NextGenerationAgent
                 systemUpdater,
                 new KeyCardAuthenticationController(
                         catalog,
-                        supplementalInformationHelper,
+                        supplementalInformationController,
                         new SamlinkKeyCardAuthenticator(
                                 apiClient, samlinkPersistentStorage, credentials)),
                 new SamlinkAutoAuthenticator(apiClient, samlinkPersistentStorage, credentials));
