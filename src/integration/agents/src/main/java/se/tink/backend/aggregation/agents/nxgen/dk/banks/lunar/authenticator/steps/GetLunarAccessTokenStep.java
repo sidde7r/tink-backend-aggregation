@@ -12,7 +12,7 @@ import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.per
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.persistance.LunarProcessState;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.persistance.LunarProcessStateAccessor;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.rpc.AccessTokenResponse;
-import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.request.AgentUserInteractionAuthenticationProcessRequest;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.request.AgentProceedNextStepAuthenticationRequest;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentFailedAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentProceedNextStepAuthenticationResult;
@@ -22,15 +22,13 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AccessTo
 @RequiredArgsConstructor
 @Slf4j
 public class GetLunarAccessTokenStep
-        implements AgentAuthenticationProcessStep<
-                AgentUserInteractionAuthenticationProcessRequest> {
+        implements AgentAuthenticationProcessStep<AgentProceedNextStepAuthenticationRequest> {
 
     private final LunarDataAccessorFactory dataAccessorFactory;
     private final AuthenticationApiClient apiClient;
 
     @Override
-    public AgentAuthenticationResult execute(
-            AgentUserInteractionAuthenticationProcessRequest request) {
+    public AgentAuthenticationResult execute(AgentProceedNextStepAuthenticationRequest request) {
         LunarAuthDataAccessor authDataAccessor =
                 dataAccessorFactory.createAuthDataAccessor(
                         request.getAuthenticationPersistedData());

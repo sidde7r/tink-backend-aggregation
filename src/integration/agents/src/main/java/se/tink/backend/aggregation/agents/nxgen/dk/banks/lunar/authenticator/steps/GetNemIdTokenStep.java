@@ -20,7 +20,7 @@ import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.rpc
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.request.AgentProceedNextStepAuthenticationRequest;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentFailedAuthenticationResult;
-import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentUserInteractionDefinitionResult;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentProceedNextStepAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.steps.AgentAuthenticationProcessStep;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AuthorizationError;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
@@ -69,33 +69,18 @@ public class GetNemIdTokenStep
         authData.setDeviceId(deviceId);
 
         try {
-            return loginToNemIdResult(
-                    processState,
-                    iframeAttributes.getNemIdIFrameController(),
-                    authDataAccessor,
-                    authData,
-                    processStateAccessor);
+            NemIdIFrameController iFrameController = iframeAttributes.getNemIdIFrameController();
+            String b64Token = iFrameController.doLoginWith(iframeAttributes.getCredentials());
+            processState.setNemIdToken(decodeToken(b64Token));
         } catch (AuthenticationException e) {
             return new AgentFailedAuthenticationResult(
                     AuthenticationExceptionHandler.toError(e), authDataAccessor.clearData());
         }
-    }
 
-    private AgentUserInteractionDefinitionResult loginToNemIdResult(
-            LunarProcessState processState,
-            NemIdIFrameController iFrameController,
-            LunarAuthDataAccessor authDataAccessor,
-            LunarAuthData authData,
-            LunarProcessStateAccessor processStateAccessor) {
-
-        String b64Token = iFrameController.doLoginWith(iframeAttributes.getCredentials());
-
-        processState.setNemIdToken(decodeToken(b64Token));
-
-        return new AgentUserInteractionDefinitionResult(
+        return new AgentProceedNextStepAuthenticationResult(
                 AgentAuthenticationProcessStep.identifier(GetLunarAccessTokenStep.class),
-                authDataAccessor.storeData(authData),
-                processStateAccessor.storeState(processState));
+                processStateAccessor.storeState(processState),
+                authDataAccessor.storeData(authData));
     }
 
     private String decodeToken(String b64Token) {

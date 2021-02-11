@@ -33,7 +33,7 @@ import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.rpc
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.request.AgentProceedNextStepAuthenticationRequest;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentFailedAuthenticationResult;
-import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentUserInteractionDefinitionResult;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentProceedNextStepAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.steps.AgentAuthenticationProcessStep;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AgentBankApiError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AuthorizationError;
@@ -125,11 +125,11 @@ public class GetNemIdTokenStepTest {
         // then
         assertThat(result)
                 .isEqualTo(
-                        new AgentUserInteractionDefinitionResult(
+                        new AgentProceedNextStepAuthenticationResult(
                                 AgentAuthenticationProcessStep.identifier(
                                         GetLunarAccessTokenStep.class),
-                                LunarTestUtils.toPersistedData(expectedData),
-                                LunarTestUtils.toProcessState(expectedState)));
+                                LunarTestUtils.toProcessState(expectedState),
+                                LunarTestUtils.toPersistedData(expectedData)));
     }
 
     @Test

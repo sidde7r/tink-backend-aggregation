@@ -21,7 +21,7 @@ import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.per
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.persistance.LunarProcessState;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.persistance.LunarProcessStateAccessor;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.rpc.AccessTokenResponse;
-import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.request.AgentUserInteractionAuthenticationProcessRequest;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.request.AgentProceedNextStepAuthenticationRequest;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentFailedAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentProceedNextStepAuthenticationResult;
@@ -44,7 +44,7 @@ public class GetLunarAccessTokenStepTest {
 
     private GetLunarAccessTokenStep getLunarAccessTokenStep;
     private AuthenticationApiClient apiClient;
-    private AgentUserInteractionAuthenticationProcessRequest request;
+    private AgentProceedNextStepAuthenticationRequest request;
 
     @Before
     public void setup() {
@@ -66,7 +66,7 @@ public class GetLunarAccessTokenStepTest {
                 LunarTestUtils.getAuthDataAccessor(dataAccessorFactory, initialData);
 
         request =
-                LunarTestUtils.getUserInteractionAuthProcessRequest(
+                LunarTestUtils.getProceedNextStepAuthRequest(
                         stateAccessor, authDataAccessor, processState, initialData);
     }
 
