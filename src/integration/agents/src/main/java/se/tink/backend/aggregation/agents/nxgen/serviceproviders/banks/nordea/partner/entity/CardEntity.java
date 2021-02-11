@@ -1,94 +1,64 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.google.common.base.MoreObjects;
+import com.google.common.base.Strings;
 import java.math.BigDecimal;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.NordeaPartnerConstants.CardCategory;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.creditcard.CreditCardBuildStep;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.creditcard.CreditCardModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
+@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class CardEntity {
-    // Unique id of the card
-    @JsonProperty("card_id")
+    // Unique id of the card (required)
     private String cardId;
-
-    // Masked number of the debit card used to charge the account. (in transactions)
-    @JsonProperty("card_number")
-    private String cardNumber;
-
-    // Card category
-    @JsonProperty("card_category")
+    // Card category (required)
     private String cardCategory;
-
-    // The city of the merchant where the transaction happened.
-    @JsonProperty("merchant_city")
-    private String merchantCity;
-
-    // Status of the card
-    @JsonProperty("card_status")
+    // Status of the card (required)
     private String cardStatus;
-
-    // The country of the merchant where the transaction happened.
-    @JsonProperty("merchant_country")
-    private String merchantCountry;
-
     // Cardholder's name
-    @JsonProperty("cardholder_name")
     private String cardholderName;
-
-    // Cardholder's type, with following type meanings:\n- principal = Principal cardholder\n-
-    // parallel = Parallel cardholder\n- joint = Parallel cardholder with joint credit liability\n
-    @JsonProperty("cardholder_type")
+    // Cardholder's type, with following type meanings:
+    // - principal = Principal cardholder
+    // - parallel = Parallel cardholder
+    // - joint = Parallel cardholder with joint credit liability
     private String cardholderType;
-
     // Principal cardholder's name. Same as cardholder name if cardholder type is 'principal'
-    @JsonProperty("principal_cardholder_name")
     private String principalCardholderName;
-
-    // Unique code that unambiguously maps to a commercial product name, card image, etc.
-    @JsonProperty("product_code")
+    // Unique code that unambiguously maps to a commercial product name, card image, etc. (required)
     private String productCode;
-
     // Information of card loyalty group for Stockmann MasterCards
-    @JsonProperty("card_loyalty_group")
     private String cardLoyaltyGroup;
-
     // Specifies country the card belongs to. Represented as 2 letter ISO 3166-1 alpha-2 country
-    // code
-    @JsonProperty("country_code")
+    // code (required)
     private String countryCode;
-
     // Currency of the card or the account the card is linked to. Represented as ISO 4217 currency
-    // code
-    @JsonProperty("currency")
+    // code (required)
     private String currency;
-
     // Card's nickname, assigned by the user for the card
-    @JsonProperty("nickname")
     private String nickname;
-
     // Card PAN ID
-    @JsonProperty("pan_id")
     private String panId;
-
     // Bank account number for ATM withdrawals in IBAN format
-    @JsonProperty("atm_account_number")
     private String atmAccountNumber;
-
     // Card's credit feature information. Not available for debit cards
-    @JsonProperty private CardCreditDetails credit;
+    private CardCreditDetails credit;
 
     @JsonIgnore
     private boolean isCreditCard() {
-        return (cardCategory.equalsIgnoreCase(CardCategory.CREDIT)
-                || cardCategory.equalsIgnoreCase(CardCategory.COMBINED));
+        return credit != null
+                && (cardCategory.equalsIgnoreCase(CardCategory.CREDIT)
+                        || cardCategory.equalsIgnoreCase(CardCategory.COMBINED));
     }
 
     @JsonIgnore
@@ -100,14 +70,17 @@ public class CardEntity {
         final String maskedCreditCardNumber = credit.getMaskedCreditCardNumber();
         final String cardAlias = MoreObjects.firstNonNull(nickname, maskedCreditCardNumber);
 
-        return Optional.of(
+        final CreditCardBuildStep builder =
                 CreditCardAccount.nxBuilder()
                         .withCardDetails(
                                 CreditCardModule.builder()
                                         .withCardNumber(maskedCreditCardNumber)
                                         .withBalance(
                                                 ExactCurrencyAmount.of(
-                                                        credit.getAvailableBalance(), currency))
+                                                        MoreObjects.firstNonNull(
+                                                                credit.getCreditAvailableBalance(),
+                                                                BigDecimal.ZERO),
+                                                        currency))
                                         .withAvailableCredit(
                                                 ExactCurrencyAmount.of(
                                                         MoreObjects.firstNonNull(
@@ -124,11 +97,15 @@ public class CardEntity {
                                         .withAccountName(cardAlias)
                                         .addIdentifier(
                                                 AccountIdentifier.create(
-                                                        AccountIdentifier.Type.PAYMENT_CARD_NUMBER,
+                                                        Type.PAYMENT_CARD_NUMBER,
                                                         maskedCreditCardNumber))
                                         .build())
-                        .setApiIdentifier(cardId)
-                        .addHolderName(cardholderName)
-                        .build());
+                        .setApiIdentifier(cardId);
+
+        if (!Strings.isNullOrEmpty(cardholderName)) {
+            builder.addHolderName(cardholderName);
+        }
+
+        return Optional.of(builder.build());
     }
 }

@@ -1,48 +1,26 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.partner;
 
-import java.util.Optional;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.NordeaPartnerConstants;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.fetcher.mapper.NordeaPartnerAccountMapper;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.fetcher.mapper.DefaultPartnerAccountMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.fetcher.transactional.entity.AccountEntity;
-import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
-import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.account.identifiers.NDAPersonalNumberIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
-import se.tink.libraries.amount.ExactCurrencyAmount;
 
-public class NordeaPartnerSeAccountMapper implements NordeaPartnerAccountMapper {
-
+public class NordeaPartnerSeAccountMapper extends DefaultPartnerAccountMapper {
     @Override
-    public Optional<TransactionalAccount> toTinkTransactionalAccount(AccountEntity account) {
-        final SwedishIdentifier seIdentifier = getAccountIdentifier(account);
-        return TransactionalAccount.nxBuilder()
-                .withTypeAndFlagsFrom(
-                        NordeaPartnerConstants.TRANSACTIONAL_ACCOUNT_TYPE_MAPPER,
-                        account.getCategory())
-                .withBalance(
-                        BalanceModule.of(
-                                ExactCurrencyAmount.of(
-                                        account.getAvailableBalance(), account.getCurrency())))
-                .withId(
-                        IdModule.builder()
-                                .withUniqueIdentifier(account.getIban())
-                                .withAccountNumber(seIdentifier.getIdentifier())
-                                .withAccountName(account.getNickname())
-                                .addIdentifier(seIdentifier)
-                                .addIdentifier(
-                                        AccountIdentifier.create(Type.IBAN, account.getIban()))
-                                .build())
-                .addHolderName(account.getHolderName())
-                .setApiIdentifier(account.getAccountId())
-                .build();
+    protected List<AccountIdentifier> getAccountIdentifiers(AccountEntity account) {
+        final List<AccountIdentifier> identifiers = new ArrayList<>();
+        identifiers.add(getSwedishIdentifier(account));
+        identifiers.addAll(super.getAccountIdentifiers(account));
+        return identifiers;
     }
 
-    private SwedishIdentifier getAccountIdentifier(AccountEntity account) {
+    private SwedishIdentifier getSwedishIdentifier(AccountEntity account) {
         final String formattedAccountNumber = formatAccountNumber(account.getAccountId());
         if (formattedAccountNumber.length() == NDAPersonalNumberIdentifier.LENGTH) {
             final AccountIdentifier ssnIdentifier =
