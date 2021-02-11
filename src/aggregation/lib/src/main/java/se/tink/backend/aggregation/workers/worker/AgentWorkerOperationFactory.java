@@ -679,11 +679,11 @@ public class AgentWorkerOperationFactory {
         CryptoWrapper cryptoWrapper =
                 cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
 
-        if (isAisPlusPisFlow(request)) {
+        CredentialsCrypto credentialsCrypto =
+                new CredentialsCrypto(
+                        cacheClient, controllerWrapper, cryptoWrapper, metricRegistry);
 
-            CredentialsCrypto credentialsCrypto =
-                    new CredentialsCrypto(
-                            cacheClient, controllerWrapper, cryptoWrapper, metricRegistry);
+        if (isAisPlusPisFlow(request)) {
 
             commands.add(new ValidateProviderAgentWorkerStatus(context, controllerWrapper));
             commands.add(
@@ -752,9 +752,6 @@ public class AgentWorkerOperationFactory {
                     new TransferAgentWorkerCommand(
                             context, request, createCommandMetricState(request)));
         } else {
-            CredentialsCrypto credentialsCrypto =
-                    new CredentialsCrypto(
-                            cacheClient, controllerWrapper, cryptoWrapper, metricRegistry);
 
             commands.add(new ValidateProviderAgentWorkerStatus(context, controllerWrapper));
             commands.add(
