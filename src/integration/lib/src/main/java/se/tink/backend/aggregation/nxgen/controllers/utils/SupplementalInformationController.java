@@ -24,8 +24,22 @@ public interface SupplementalInformationController {
      * @param unit the unit of the duration.
      * @return The results of the request, if any.
      */
+    default Optional<Map<String, String>> waitForSupplementalInformation(
+            String mfaId, long waitFor, TimeUnit unit) {
+        return waitForSupplementalInformation(mfaId, waitFor, unit, false);
+    }
+
+    /**
+     * VERY TEMPORARY WITH THE EXTRA BOOLEAN FLAG--- DO NOT USE
+     *
+     * @param mfaId
+     * @param waitFor
+     * @param unit
+     * @param allowEmptyString
+     * @return
+     */
     Optional<Map<String, String>> waitForSupplementalInformation(
-            String mfaId, long waitFor, TimeUnit unit);
+            String mfaId, long waitFor, TimeUnit unit, boolean allowEmptyString);
 
     /**
      * Starts an embedded dynamic authentication flow. This methods does the same as {@link

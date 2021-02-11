@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor
 
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
@@ -87,7 +88,8 @@ public class NemIdWaitForCodeAppResponseStepTest {
                 .waitForSupplementalInformation(
                         mfaId,
                         NemIdConstants.NEM_ID_TIMEOUT_SECONDS_WITH_SAFETY_MARGIN,
-                        TimeUnit.SECONDS);
+                        TimeUnit.SECONDS,
+                        true);
         mocksToVerifyInOrder.verifyNoMoreInteractions();
     }
 
@@ -121,13 +123,14 @@ public class NemIdWaitForCodeAppResponseStepTest {
                 .waitForSupplementalInformation(
                         mfaId,
                         NemIdConstants.NEM_ID_TIMEOUT_SECONDS_WITH_SAFETY_MARGIN,
-                        TimeUnit.SECONDS);
+                        TimeUnit.SECONDS,
+                        true);
         mocksToVerifyInOrder.verifyNoMoreInteractions();
     }
 
     private void mockSupplementalInfoResponse(boolean withResponse) {
         when(supplementalInformationController.waitForSupplementalInformation(
-                        any(), anyLong(), any()))
+                        any(), anyLong(), any(), anyBoolean()))
                 .thenReturn(
                         withResponse
                                 ? Optional.of(new HashMap<String, String>())
