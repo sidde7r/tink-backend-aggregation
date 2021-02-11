@@ -4,7 +4,12 @@ teletubbiesTags: <{ $labels.className }> , <{ $labels.provider }> , *#aggregatio
 thundercatsTags: <{ $labels.className }> , <{ $labels.provider }> , *#aggregation-thundercats*
 
 kibanaLink: https://kibana.aggregation-production.tink.network/app/kibana#/discover?_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_a=(columns:!(doc.exception,doc.message),filters:!(('$state':(store:appState),exists:(field:doc.exception),meta:(alias:!n,disabled:!f,index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',key:doc.exception,negate:!f,type:exists,value:exists))),index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',interval:auto,query:(language:kuery,query:'doc.mdc.providerName:%22<{$labels.provider}>%22'),sort:!(!('@timestamp',desc)))
+kibanaMarketLink: https://kibana.aggregation-production.tink.network/app/kibana#/discover?_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:now-4h,to:now))&_a=(columns:!(doc.exception,doc.message,doc.mdc.agentName,doc.mdc.providerName),filters:!(),index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',interval:auto,query:(language:kuery,query:'doc.mdc.agentName%20like%20!'.<{$labels.market}>.!''),sort:!(!('@timestamp',desc)))
+
+#Specific link cause in Prometheus GB as market is used but in Kibana we can search only for UK providers
+kibanaMarketUKLink: https://kibana.aggregation-production.tink.network/app/kibana#/discover?_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:now-4h,to:now))&_a=(columns:!(doc.exception,doc.message,doc.mdc.agentName,doc.mdc.providerName),filters:!(),index:'26fa2220-73b2-11e8-9a34-dbc1936ede52',interval:auto,query:(language:kuery,query:'doc.mdc.agentName%20like%20!'.uk.!''),sort:!(!('@timestamp',desc)))
 grafanaLink: https://grafana.global-production.tink.network/d/000000078/integration-dashboard?orgId=1&from=now-1h&to=now&var-cluster=aggregation&var-environment=production&var-market=All&var-agent=All&var-provider=<{$labels.provider}>&var-interval=15m&var-app=tink-backend-aggregation
+grafanaMarketLink: https://grafana.global-production.tink.network/d/000000078/integration-dashboard?orgId=1&from=now-3h&to=now&var-cluster=aggregation&var-environment=production&var-market=<{$labels.market}>&var-agent=All&var-provider=All&var-interval=15m&var-app=tink-backend-aggregation
 
 # Below we are using negation, but in fact e.g. authErrors has outcome cancelled
 temporaryErrorsAuth: outcome!~"failed"

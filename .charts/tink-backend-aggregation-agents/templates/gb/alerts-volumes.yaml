@@ -17,8 +17,8 @@ spec:
         priority: P1
         who: integration-fluffy
       annotations:
-        description: {{ .Values.kibanaLink }}
-          {{ .Values.grafanaLink }}
+        description: {{ .Values.kibanaMarketUKLink }}
+          {{ .Values.grafanaMarketLink }}
         summary: Login volume dropped significantly
         tags: {{ .Values.fluffyTags }}
 
@@ -33,7 +33,7 @@ spec:
         priority: P1
         who: integration-fluffy
       annotations:
-        description: {{ .Values.kibanaLink }}
-          {{ .Values.grafanaLink }}
+        description: {{ .Values.kibanaMarketUKLink }}
+          {{ .Values.grafanaMarketLink }}
         summary: Login volume dropped significantly for <{ $labels.action }>
         tags: {{ .Values.fluffyTags }}
