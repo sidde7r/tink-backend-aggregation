@@ -13,6 +13,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ame
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmexApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.dto.AccountsResponseDto;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.dto.BalanceDto;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.dto.StatementDto;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.dto.StatementPeriodsDto;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.dto.SupplementaryAccountsItem;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.transactionalaccount.storage.HmacAccountIdStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.transactionalaccount.storage.HmacAccountIds;
@@ -64,13 +66,23 @@ public class AmexCreditCardFetcher implements AccountFetcher<CreditCardAccount> 
 
     private CreditCardAccount createTransactionalAccount(
             HmacToken hmacToken, AccountsResponseDto accountsResponse) {
-        final List<BalanceDto> balances = getBalances(hmacToken);
 
-        return accountsResponse.toCreditCardAccount(balances);
+        final List<BalanceDto> balances = getBalances(hmacToken);
+        final Map<Integer, String> mapStatements =
+                getStatementPeriods(hmacToken).getStatementPeriods().stream()
+                        .collect(
+                                Collectors.toMap(
+                                        StatementDto::getIndex, StatementDto::getEndDateAsString));
+
+        return accountsResponse.toCreditCardAccount(balances, mapStatements);
     }
 
     private List<BalanceDto> getBalances(HmacToken hmacToken) {
         return amexApiClient.fetchBalances(hmacToken);
+    }
+
+    private StatementPeriodsDto getStatementPeriods(HmacToken hmacToken) {
+        return amexApiClient.fetchStatementPeriods(hmacToken);
     }
 
     private Map<HmacToken, AccountsResponseDto> getAccounts() {
