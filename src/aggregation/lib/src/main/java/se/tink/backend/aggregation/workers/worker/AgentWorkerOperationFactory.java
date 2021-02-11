@@ -789,10 +789,11 @@ public class AgentWorkerOperationFactory {
                 new DebugAgentWorkerCommand(
                         context, debugAgentWorkerCommandState, agentDebugStorageHandler));
 
+        commands.add(
+                new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
+
         if (isAisPlusPisFlow(request)) {
 
-            commands.add(
-                    new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
             addClearSensitivePayloadOnForceAuthenticateCommandAndLoginAgentWorkerCommand(
                     commands, context);
             commands.add(
@@ -802,9 +803,6 @@ public class AgentWorkerOperationFactory {
                     new TransferAgentWorkerCommand(
                             context, request, createCommandMetricState(request)));
         } else {
-
-            commands.add(
-                    new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
             commands.add(
                     new TransferAgentWorkerCommand(
                             context, request, createCommandMetricState(request)));
