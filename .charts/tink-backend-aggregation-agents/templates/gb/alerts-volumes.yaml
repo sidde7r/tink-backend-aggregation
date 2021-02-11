@@ -8,13 +8,13 @@ spec:
 
     - alert: LoginVolumeDropOver20%_GB
       expr: |
-        (sum(increase(tink_agent_login_total{market="GB", provider_type!="test"}[12h])) by (market)
-        / (sum(increase(tink_agent_login_total{market="GB", provider_type!="test"}[24h])) by (market)
-        - sum(increase(tink_agent_login_total{market="GB", provider_type!="test"}[12h])) by (market)) - 1) < -0.20
+        (sum(increase(tink_agent_login_total{market="GB", provider_type!="test"}[1d])) by (market)
+        / (sum(increase(tink_agent_login_total{market="GB", provider_type!="test"}[2d])) by (market)
+        - sum(increase(tink_agent_login_total{market="GB", provider_type!="test"}[1d])) by (market)) - 1) < -0.20
       for: 2h
       labels:
         severity: ping
-        who: integration-fluffy
+        who: integration
       annotations:
         description: {{ .Values.kibanaLink }}
           {{ .Values.grafanaLink }}
@@ -23,13 +23,13 @@ spec:
 
     - alert: LoginVolumeDropOver20%ForSpecificAction_GB
       expr: |
-        (sum(increase(tink_agent_login_total{market="GB", provider_type!="test"}[12h])) by (market,action)
-        / (sum(increase(tink_agent_login_total{market="GB", provider_type!="test"}[24h])) by (market,action)
-        - sum(increase(tink_agent_login_total{market="GB", provider_type!="test"}[12h])) by (market,action)) - 1) < -0.20
+        (sum(increase(tink_agent_login_total{market="GB", provider_type!="test"}[1d])) by (market,action)
+        / (sum(increase(tink_agent_login_total{market="GB", provider_type!="test"}[2d])) by (market,action)
+        - sum(increase(tink_agent_login_total{market="GB", provider_type!="test"}[1d])) by (market,action)) - 1) < -0.20
       for: 2h
       labels:
         severity: ping
-        who: integration-fluffy
+        who: integration
       annotations:
         description: {{ .Values.kibanaLink }}
           {{ .Values.grafanaLink }}
