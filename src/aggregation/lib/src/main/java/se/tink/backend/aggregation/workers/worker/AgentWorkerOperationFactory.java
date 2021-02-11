@@ -897,14 +897,6 @@ public class AgentWorkerOperationFactory {
                         new ReportProviderTransferMetricsAgentWorkerCommand(
                                 context, operationName));
 
-        SendDataForProcessingAgentWorkerCommand sendDataForProcessingAgentWorkerCommand =
-                new SendDataForProcessingAgentWorkerCommand(
-                        context,
-                        createCommandMetricState(request),
-                        ProcessableItem.fromRefreshableItems(
-                                RefreshableItem.convertLegacyItems(
-                                        RefreshableItem.REFRESHABLE_ITEMS_ALL)));
-
         ArrayList<AgentWorkerCommand> agentWorkerCommandsPart2 =
                 Lists.newArrayList(
                         new CreateAgentConfigurationControllerWorkerCommand(
@@ -921,6 +913,14 @@ public class AgentWorkerOperationFactory {
         double skipRatio = 0.1;
         boolean isIncluded = random.nextDouble() > skipRatio;
         if (isIncluded) {
+            SendDataForProcessingAgentWorkerCommand sendDataForProcessingAgentWorkerCommand =
+                    new SendDataForProcessingAgentWorkerCommand(
+                            context,
+                            createCommandMetricState(request),
+                            ProcessableItem.fromRefreshableItems(
+                                    RefreshableItem.convertLegacyItems(
+                                            RefreshableItem.REFRESHABLE_ITEMS_ALL)));
+
             commands.add(sendDataForProcessingAgentWorkerCommand);
         }
         log.info(
