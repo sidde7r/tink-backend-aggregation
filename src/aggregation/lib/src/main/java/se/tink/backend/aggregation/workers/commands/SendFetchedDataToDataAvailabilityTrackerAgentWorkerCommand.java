@@ -23,10 +23,11 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.metrics.core.MetricId;
 import se.tink.libraries.pair.Pair;
 
-public class SendAccountsToDataAvailabilityTrackerAgentWorkerCommand extends AgentWorkerCommand
+public class SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand extends AgentWorkerCommand
         implements MetricsCommand {
     private static final Logger log =
-            LoggerFactory.getLogger(SendAccountsToDataAvailabilityTrackerAgentWorkerCommand.class);
+            LoggerFactory.getLogger(
+                    SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand.class);
 
     private static final String METRIC_NAME = "data_availability_tracker_refresh";
     private static final String METRIC_ACTION = "send_refresh_data_to_data_availability_tracker";
@@ -41,7 +42,7 @@ public class SendAccountsToDataAvailabilityTrackerAgentWorkerCommand extends Age
     private final String provider;
     private final String market;
 
-    public SendAccountsToDataAvailabilityTrackerAgentWorkerCommand(
+    public SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand(
             AgentWorkerCommandContext context,
             AgentWorkerCommandMetricState metrics,
             AsAgentDataAvailabilityTrackerClient agentDataAvailabilityTrackerClient,
@@ -139,7 +140,7 @@ public class SendAccountsToDataAvailabilityTrackerAgentWorkerCommand extends Age
                 new MetricId.MetricLabels()
                         .add(
                                 "class",
-                                SendAccountsToDataAvailabilityTrackerAgentWorkerCommand.class
+                                SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand.class
                                         .getSimpleName())
                         .add("command", type.getMetricName());
 

@@ -69,9 +69,9 @@ import se.tink.backend.aggregation.workers.commands.RequestedAccountsRestriction
 import se.tink.backend.aggregation.workers.commands.SendAccountRestrictionEventsWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.SendAccountSourceInfoEventWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.SendAccountsHoldersToUpdateServiceAgentWorkerCommand;
-import se.tink.backend.aggregation.workers.commands.SendAccountsToDataAvailabilityTrackerAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.SendAccountsToUpdateServiceAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.SendDataForProcessingAgentWorkerCommand;
+import se.tink.backend.aggregation.workers.commands.SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.SendPsd2PaymentClassificationToUpdateServiceAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.SetCredentialsStatusAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.TransferAgentWorkerCommand;
@@ -274,7 +274,7 @@ public class AgentWorkerOperationFactory {
             }
 
             commands.add(
-                    new SendAccountsToDataAvailabilityTrackerAgentWorkerCommand(
+                    new SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand(
                             context,
                             createCommandMetricState(request),
                             agentDataAvailabilityTrackerClient,
@@ -331,7 +331,7 @@ public class AgentWorkerOperationFactory {
                             psd2PaymentAccountClassifier,
                             controllerWrapper));
             commands.add(
-                    new SendAccountsToDataAvailabilityTrackerAgentWorkerCommand(
+                    new SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand(
                             context,
                             createCommandMetricState(request),
                             agentDataAvailabilityTrackerClient,
@@ -1468,7 +1468,7 @@ public class AgentWorkerOperationFactory {
             }
 
             commands.add(
-                    new SendAccountsToDataAvailabilityTrackerAgentWorkerCommand(
+                    new SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand(
                             context,
                             createCommandMetricState(request),
                             agentDataAvailabilityTrackerClient,
