@@ -24,7 +24,10 @@ public class HandelsbankenSessionStorage {
     }
 
     public void persist(ApplicationEntryPointResponse applicationEntryPoint) {
-        persist(HandelsbankenConstants.Storage.APPLICATION_ENTRY_POINT, applicationEntryPoint);
+        persist(
+                HandelsbankenConstants.Storage.APPLICATION_ENTRY_POINT,
+                applicationEntryPoint,
+                false);
         logMasker.addNewSensitiveValuesToMasker(
                 Collections.singleton(applicationEntryPoint.getAuthToken()));
     }
@@ -40,7 +43,7 @@ public class HandelsbankenSessionStorage {
     }
 
     public void persist(AccountListResponse accountList) {
-        persist(HandelsbankenConstants.Storage.ACCOUNT_LIST, accountList);
+        persist(HandelsbankenConstants.Storage.ACCOUNT_LIST, accountList, false);
     }
 
     public Optional<? extends AccountListResponse> accountList() {
@@ -50,7 +53,7 @@ public class HandelsbankenSessionStorage {
     }
 
     public void persist(CreditCardsResponse cards) {
-        persist(HandelsbankenConstants.Storage.CREDIT_CARDS, cards);
+        persist(HandelsbankenConstants.Storage.CREDIT_CARDS, cards, false);
     }
 
     public <CreditCard extends HandelsbankenCreditCard>
@@ -64,8 +67,8 @@ public class HandelsbankenSessionStorage {
         return this.sessionStorage.get(key, valueType);
     }
 
-    private void persist(String key, Object value) {
-        this.sessionStorage.put(key, value, false);
+    private void persist(String key, Object value, boolean mask) {
+        this.sessionStorage.put(key, value, mask);
     }
 
     private void remove(String key) {
