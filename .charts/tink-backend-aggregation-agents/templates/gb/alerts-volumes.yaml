@@ -1,0 +1,37 @@
+kind: RuleGroup
+apiVersion: monitoring.tink.se/v1
+metadata:
+  name: alerts-gb-volumes
+  namespace: agents
+spec:
+  rules:
+
+    - alert: LoginVolumeDropOver20%_GB
+      expr: |
+        (sum(increase(tink_agent_login_total{market="GB", provider_type!="test"}[12h])) by (market)
+        / (sum(increase(tink_agent_login_total{market="GB", provider_type!="test"}[24h])) by (market)
+        - sum(increase(tink_agent_login_total{market="GB", provider_type!="test"}[12h])) by (market)) - 1) < -0.20
+      for: 2h
+      labels:
+        severity: ping
+        who: integration-fluffy
+      annotations:
+        description: {{ .Values.kibanaLink }}
+          {{ .Values.grafanaLink }}
+        summary: Login volume dropped significantly
+        tags: {{ .Values.fluffyTags }}
+
+    - alert: LoginVolumeDropOver20%ForSpecificAction_GB
+      expr: |
+        (sum(increase(tink_agent_login_total{market="GB", provider_type!="test"}[12h])) by (market,action)
+        / (sum(increase(tink_agent_login_total{market="GB", provider_type!="test"}[24h])) by (market,action)
+        - sum(increase(tink_agent_login_total{market="GB", provider_type!="test"}[12h])) by (market,action)) - 1) < -0.20
+      for: 2h
+      labels:
+        severity: ping
+        who: integration-fluffy
+      annotations:
+        description: {{ .Values.kibanaLink }}
+          {{ .Values.grafanaLink }}
+        summary: Login volume dropped significantly for <{ $labels.action }>
+        tags: {{ .Values.fluffyTags }}
