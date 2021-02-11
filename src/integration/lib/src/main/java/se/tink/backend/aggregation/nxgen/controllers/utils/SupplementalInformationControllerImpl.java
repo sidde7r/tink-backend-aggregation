@@ -50,9 +50,15 @@ public class SupplementalInformationControllerImpl implements SupplementalInform
     @Override
     public Optional<Map<String, String>> waitForSupplementalInformation(
             String mfaId, long waitFor, TimeUnit unit) {
-        return supplementalRequester
-                .waitForSupplementalInformation(mfaId, waitFor, unit)
-                .map(SupplementalInformationControllerImpl::stringToMap);
+
+        Optional<String> result =
+                supplementalRequester.waitForSupplementalInformation(mfaId, waitFor, unit);
+
+        if (!result.isPresent() || Strings.isNullOrEmpty(result.get())) {
+            return Optional.empty();
+        }
+
+        return Optional.ofNullable(stringToMap(result.get()));
     }
 
     @Override
