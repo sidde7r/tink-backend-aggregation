@@ -9,6 +9,8 @@ public class AmericanExpressConstants {
         throw new IllegalStateException("Utility class");
     }
 
+    public static final int DAYS_TO_FETCH_PENDING = 30;
+
     public static class ErrorMessages {
         private ErrorMessages() {}
 
@@ -45,6 +47,7 @@ public class AmericanExpressConstants {
 
         public static final String QUERY_PARAM_START_DATE = "start_date";
         public static final String QUERY_PARAM_END_DATE = "end_date";
+        public static final String QUERY_PARAM_STATEMENT_END_DATE = "statement_end_date";
         public static final String QUERY_PARAM_LIMIT = "limit";
         public static final String REDIRECT_URI = "redirect_uri";
         public static final String CLIENT_ID = "client_id";
@@ -63,6 +66,10 @@ public class AmericanExpressConstants {
                 SCOPE_LIST_FOR_AUTHORIZE.replace(',', ' ');
         public static final String PENDING = "pending";
         public static final String POSTED = "posted";
+    }
+
+    public static class StorageKey {
+        public static final String STATEMENTS = "STATEMENTS";
     }
 
     public static class Urls {
