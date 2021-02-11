@@ -135,11 +135,11 @@ public class HandelsbankenPersistentStorage {
     }
 
     public void persist(AuthorizeResponse authorize) {
-        persist(HandelsbankenConstants.Storage.AUTHORIZE_END_POINT, authorize);
+        persist(HandelsbankenConstants.Storage.AUTHORIZE_END_POINT, authorize, false);
     }
 
-    private void persist(String storageKey, BaseResponse response) {
-        this.persistentStorage.put(storageKey, response);
+    private void persist(String storageKey, BaseResponse response, boolean mask) {
+        this.persistentStorage.put(storageKey, response, mask);
     }
 
     public Optional<AuthorizeResponse> getAuthorizeResponse() {
