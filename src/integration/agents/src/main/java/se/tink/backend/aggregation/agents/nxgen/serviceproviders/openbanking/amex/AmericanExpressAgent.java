@@ -38,7 +38,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.StatelessProgressiveAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.core.authentication.HmacToken;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.BankServiceInternalErrorFilter;
@@ -155,10 +155,7 @@ public final class AmericanExpressAgent extends SubsequentProgressiveGenerationA
                         amexApiClient, hmacMultiTokenStorage, hmacAccountIdStorage),
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        new TransactionDatePaginationController.Builder<>(cardTransactionFetcher)
-                                .setConsecutiveEmptyPagesLimit(0)
-                                .setLocalDateTimeSource(localDateTimeSource)
-                                .build()));
+                        new TransactionKeyPaginationController<>(cardTransactionFetcher)));
     }
 
     @Override
