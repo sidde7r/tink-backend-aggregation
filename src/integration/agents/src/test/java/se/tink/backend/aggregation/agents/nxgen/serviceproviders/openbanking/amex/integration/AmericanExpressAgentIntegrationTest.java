@@ -26,7 +26,7 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbank
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmexTestFixtures.createMultiTokenWithValidAccessToken;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmexTestFixtures.createRefreshAccessTokenRequestBody;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmexTestFixtures.createRetrieveAccessTokenRequestBody;
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmexTestFixtures.createTransactionRangeErrorResponse;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmexTestFixtures.createStatementPeriodsResponseJsonString;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmexTestFixtures.createTransactionsResponseJsonString;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmexTestFixtures.getAuthorizeUrl;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmexTestValidators.createAuthHeaderMatchingPattern;
@@ -154,7 +154,7 @@ public class AmericanExpressAgentIntegrationTest extends IntegrationTestBase {
         final String accessToken2 = validHmacMultiToken.getTokens().get(1).getAccessToken();
         recordFetchAccountsResponse(accessToken1, accessToken2);
         recordFetchBalancesResponse(accessToken1, accessToken2);
-
+        recordFetchStatementPeriods(accessToken1, accessToken2);
         // when
         final FetchAccountsResponse fetchAccountsResponse =
                 americanExpressAgent.fetchCreditCardAccounts();
@@ -179,6 +179,8 @@ public class AmericanExpressAgentIntegrationTest extends IntegrationTestBase {
         final String accessToken2 = validHmacMultiToken.getTokens().get(1).getAccessToken();
         recordFetchAccountsResponse(accessToken1, accessToken2);
         recordFetchBalancesResponse(accessToken1, accessToken2);
+        recordFetchStatementPeriods(accessToken1, accessToken2);
+        recordFetchPendingTransactionsResponse(accessToken1, accessToken2);
         recordFetchTransactionsResponse(accessToken1, accessToken2);
 
         // when
@@ -463,14 +465,108 @@ public class AmericanExpressAgentIntegrationTest extends IntegrationTestBase {
                                         .withBody(createBalancesResponseJsonString())));
     }
 
+    private void recordFetchStatementPeriods(String accessToken1, String accessToken2) {
+        wireMockRule.stubFor(
+                get(urlPathEqualTo(Urls.ENDPOINT_STATEMENT_PERIODS.toUri().getPath()))
+                        .withHeader(
+                                HttpHeaders.AUTHORIZATION,
+                                matching(createAuthHeaderMatchingPattern(accessToken1)))
+                        .withHeader(
+                                AmericanExpressConstants.Headers.X_AMEX_API_KEY, equalTo(CLIENT_ID))
+                        .withHeader(
+                                AmericanExpressConstants.Headers.X_AMEX_REQUEST_ID,
+                                matching(getAmexRequestIdMatchingRegex()))
+                        .willReturn(
+                                aResponse()
+                                        .withStatus(200)
+                                        .withHeader(
+                                                HttpHeaders.CONTENT_TYPE,
+                                                MediaType.APPLICATION_JSON)
+                                        .withBody(createStatementPeriodsResponseJsonString())));
+
+        wireMockRule.stubFor(
+                get(urlPathEqualTo(Urls.ENDPOINT_STATEMENT_PERIODS.toUri().getPath()))
+                        .withHeader(
+                                HttpHeaders.AUTHORIZATION,
+                                matching(createAuthHeaderMatchingPattern(accessToken2)))
+                        .withHeader(
+                                AmericanExpressConstants.Headers.X_AMEX_API_KEY, equalTo(CLIENT_ID))
+                        .withHeader(
+                                AmericanExpressConstants.Headers.X_AMEX_REQUEST_ID,
+                                matching(getAmexRequestIdMatchingRegex()))
+                        .willReturn(
+                                aResponse()
+                                        .withStatus(200)
+                                        .withHeader(
+                                                HttpHeaders.CONTENT_TYPE,
+                                                MediaType.APPLICATION_JSON)
+                                        .withBody(createStatementPeriodsResponseJsonString())));
+    }
+
+    private void recordFetchPendingTransactionsResponse(String accessToken1, String accessToken2) {
+        final String expectedEndDate = ThreadSafeDateFormat.FORMATTER_DAILY.format(new Date());
+        final String expectedStartDate = LocalDate.now().minusDays(30).toString().substring(0, 7);
+        final String PENDING = "pending";
+        wireMockRule.stubFor(
+                get(urlPathEqualTo(Urls.ENDPOINT_TRANSACTIONS.toUri().getPath()))
+                        .withQueryParam(
+                                AmericanExpressConstants.QueryParams.QUERY_PARAM_START_DATE,
+                                containing(expectedStartDate))
+                        .withQueryParam(
+                                AmericanExpressConstants.QueryParams.QUERY_PARAM_END_DATE,
+                                containing(expectedEndDate))
+                        .withQueryParam(
+                                AmericanExpressConstants.QueryParams.STATUS, containing(PENDING))
+                        .withHeader(
+                                HttpHeaders.AUTHORIZATION,
+                                matching(createAuthHeaderMatchingPattern(accessToken1)))
+                        .withHeader(
+                                AmericanExpressConstants.Headers.X_AMEX_API_KEY, equalTo(CLIENT_ID))
+                        .withHeader(
+                                AmericanExpressConstants.Headers.X_AMEX_REQUEST_ID,
+                                matching(getAmexRequestIdMatchingRegex()))
+                        .willReturn(
+                                aResponse()
+                                        .withStatus(200)
+                                        .withHeader(
+                                                HttpHeaders.CONTENT_TYPE,
+                                                MediaType.APPLICATION_JSON)
+                                        .withBody(createTransactionsResponseJsonString())));
+
+        wireMockRule.stubFor(
+                get(urlPathEqualTo(Urls.ENDPOINT_TRANSACTIONS.toUri().getPath()))
+                        .withQueryParam(
+                                AmericanExpressConstants.QueryParams.QUERY_PARAM_START_DATE,
+                                containing(expectedStartDate))
+                        .withQueryParam(
+                                AmericanExpressConstants.QueryParams.QUERY_PARAM_END_DATE,
+                                containing(expectedEndDate))
+                        .withQueryParam(
+                                AmericanExpressConstants.QueryParams.STATUS, containing(PENDING))
+                        .withHeader(
+                                HttpHeaders.AUTHORIZATION,
+                                matching(createAuthHeaderMatchingPattern(accessToken2)))
+                        .withHeader(
+                                AmericanExpressConstants.Headers.X_AMEX_API_KEY, equalTo(CLIENT_ID))
+                        .withHeader(
+                                AmericanExpressConstants.Headers.X_AMEX_REQUEST_ID,
+                                matching(getAmexRequestIdMatchingRegex()))
+                        .willReturn(
+                                aResponse()
+                                        .withStatus(200)
+                                        .withHeader(
+                                                HttpHeaders.CONTENT_TYPE,
+                                                MediaType.APPLICATION_JSON)
+                                        .withBody(createTransactionsResponseJsonString())));
+    }
+
     private void recordFetchTransactionsResponse(String accessToken1, String accessToken2) {
-        final String expectedEndDateMonth =
-                LocalDate.now().minusMonths(3).minusDays(1).toString().substring(0, 7);
+        final String expectedEndDate = "2021-03-02";
         wireMockRule.stubFor(
                 get(urlPathEqualTo(Urls.ENDPOINT_TRANSACTIONS.toUri().getPath()))
                         .withQueryParam(
-                                AmericanExpressConstants.QueryParams.QUERY_PARAM_END_DATE,
-                                containing(ThreadSafeDateFormat.FORMATTER_DAILY.format(new Date())))
+                                AmericanExpressConstants.QueryParams.QUERY_PARAM_STATEMENT_END_DATE,
+                                containing(expectedEndDate))
                         .withHeader(
                                 HttpHeaders.AUTHORIZATION,
                                 matching(createAuthHeaderMatchingPattern(accessToken1)))
@@ -490,8 +586,8 @@ public class AmericanExpressAgentIntegrationTest extends IntegrationTestBase {
         wireMockRule.stubFor(
                 get(urlPathEqualTo(Urls.ENDPOINT_TRANSACTIONS.toUri().getPath()))
                         .withQueryParam(
-                                AmericanExpressConstants.QueryParams.QUERY_PARAM_END_DATE,
-                                containing(ThreadSafeDateFormat.FORMATTER_DAILY.format(new Date())))
+                                AmericanExpressConstants.QueryParams.QUERY_PARAM_STATEMENT_END_DATE,
+                                containing(expectedEndDate))
                         .withHeader(
                                 HttpHeaders.AUTHORIZATION,
                                 matching(createAuthHeaderMatchingPattern(accessToken2)))
@@ -507,48 +603,6 @@ public class AmericanExpressAgentIntegrationTest extends IntegrationTestBase {
                                                 HttpHeaders.CONTENT_TYPE,
                                                 MediaType.APPLICATION_JSON)
                                         .withBody(createTransactionsResponseJsonString())));
-
-        wireMockRule.stubFor(
-                get(urlPathEqualTo(Urls.ENDPOINT_TRANSACTIONS.toUri().getPath()))
-                        .withQueryParam(
-                                AmericanExpressConstants.QueryParams.QUERY_PARAM_END_DATE,
-                                containing(expectedEndDateMonth))
-                        .withHeader(
-                                HttpHeaders.AUTHORIZATION,
-                                matching(createAuthHeaderMatchingPattern(accessToken1)))
-                        .withHeader(
-                                AmericanExpressConstants.Headers.X_AMEX_API_KEY, equalTo(CLIENT_ID))
-                        .withHeader(
-                                AmericanExpressConstants.Headers.X_AMEX_REQUEST_ID,
-                                matching(getAmexRequestIdMatchingRegex()))
-                        .willReturn(
-                                aResponse()
-                                        .withStatus(400)
-                                        .withHeader(
-                                                HttpHeaders.CONTENT_TYPE,
-                                                MediaType.APPLICATION_JSON)
-                                        .withBody(createTransactionRangeErrorResponse())));
-
-        wireMockRule.stubFor(
-                get(urlPathEqualTo(Urls.ENDPOINT_TRANSACTIONS.toUri().getPath()))
-                        .withQueryParam(
-                                AmericanExpressConstants.QueryParams.QUERY_PARAM_END_DATE,
-                                containing(expectedEndDateMonth))
-                        .withHeader(
-                                HttpHeaders.AUTHORIZATION,
-                                matching(createAuthHeaderMatchingPattern(accessToken2)))
-                        .withHeader(
-                                AmericanExpressConstants.Headers.X_AMEX_API_KEY, equalTo(CLIENT_ID))
-                        .withHeader(
-                                AmericanExpressConstants.Headers.X_AMEX_REQUEST_ID,
-                                matching(getAmexRequestIdMatchingRegex()))
-                        .willReturn(
-                                aResponse()
-                                        .withStatus(400)
-                                        .withHeader(
-                                                HttpHeaders.CONTENT_TYPE,
-                                                MediaType.APPLICATION_JSON)
-                                        .withBody(createTransactionRangeErrorResponse())));
     }
 
     private void recordFetchAccountsResponseAfterAccessTokenHadBeenRevoked(

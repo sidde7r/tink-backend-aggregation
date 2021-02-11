@@ -50,7 +50,6 @@ public class AmexTestFixtures {
     public static final String ACCOUNT_NUMBER_1 = "XXXX-XXXXXX-81007";
     public static final String ACCOUNT_NUMBER_2 = "XXXX-XXXXXX-82009";
     public static final String ORIGINATING_USER_IP = "127.0.0.1";
-    public static final String STATEMENTS = "STATEMENTS";
     public static final String STATEMENT_MAP = "{\"0\":\"2000-01-01\"}";
 
     public static HmacMultiToken createMultiTokenWithExpiredAccessToken() {
@@ -73,52 +72,61 @@ public class AmexTestFixtures {
 
     public static String createAccountsResponseJsonString(String accountNumber) {
         return "{\n"
-                + "  \"identifiers\": {\n"
-                + "    \"display_account_number\": \""
+                + "   \"identifiers\":{\n"
+                + "      \"display_account_number\": \""
                 + accountNumber
                 + "\",\n"
-                + "    \"is_basic\": true,\n"
-                + "    \"supplementary_account_count\": \"0\","
-                + "     \"account_key\": \"123456\""
-                + "  },\n"
-                + "  \"holder\": {\n"
-                + "    \"profile\": {\n"
-                + "      \"title_name\": \"MR\",\n"
-                + "      \"first_name\": \"Nigel\",\n"
-                + "      \"last_name\": \"Smythe\",\n"
-                + "      \"embossed_name\": \"Nigel Smythe\"\n"
-                + "    },\n"
-                + "    \"localization_preferences\": {\n"
-                + "      \"localization_id\": \"nl-NL-revolve-estmt\",\n"
-                + "      \"home_country_locale\": \"nl-NL\",\n"
-                + "      \"currency_locale\": \"nl-NL\",\n"
-                + "      \"date_locale\": \"nl-NL\",\n"
-                + "      \"geo_country_locale\": \"nl-NL\"\n"
-                + "    }\n"
-                + "  },\n"
-                + "  \"product\": {\n"
-                + "    \"digital_info\": {\n"
-                + "      \"digital_asset_url\": \"https://d3live.americanexpress.com/Internet/CardArt/JAPA/au-cardasset-config/images/DAU000000000.gif\"\n"
-                + "    },\n"
-                + "    \"account_types\": {\n"
-                + "      \"plastic_types\": [\n"
-                + "        \"Platinum\",\n"
-                + "        \"AffinityCard\"\n"
+                + "      \"is_basic\":true,\n"
+                + "      \"account_key\":\"123456\",\n"
+                + "      \"supplementary_account_count\":\"0\"\n"
+                + "   },\n"
+                + "   \"holder\":{\n"
+                + "      \"profile\":{\n"
+                + "         \"first_name\":\"Holdername\",\n"
+                + "         \"last_name\":\"Lastname\",\n"
+                + "         \"embossed_name\":\"Holdername Lastname\"\n"
+                + "      },\n"
+                + "      \"localization_preferences\":{\n"
+                + "         \"localization_id\":\"sv-SE-revolve\",\n"
+                + "         \"home_country_locale\":\"sv-SE\",\n"
+                + "         \"currency_locale\":\"sv-SE\",\n"
+                + "         \"date_locale\":\"sv-SE\",\n"
+                + "         \"language_preference\":\"sv-SE\",\n"
+                + "         \"language_preference_code\":\"SV\",\n"
+                + "         \"geo_country_locale\":\"sv-SE\"\n"
+                + "      }\n"
+                + "   },\n"
+                + "   \"product\":{\n"
+                + "      \"digital_info\":{\n"
+                + "         \"product_desc\":\"SAS Amex Classic\",\n"
+                + "         \"digital_asset_url\":\"https://secure.cmax.americanexpress.com/Internet/CardArt/EMEA/se-cardasset-config/images/GSEGREN0SA01.jpg\"\n"
+                + "      },\n"
+                + "      \"account_types\":{\n"
+                + "         \"plastic_types\":[\n"
+                + "            \"Green\",\n"
+                + "            \"AffinityCard\",\n"
+                + "            \"CoBrandCard\"\n"
+                + "         ],\n"
+                + "         \"line_of_business_type\":\"ConsumerCard\",\n"
+                + "         \"payment_type\":\"Revolve\"\n"
+                + "      },\n"
+                + "      \"account_eligibilities\":[\n"
+                + "         \"IntlAllEstmServiceEligible\",\n"
+                + "         \"MembershipRewardsEligible\",\n"
+                + "         \"ProdIDInfoAvailableEligible\"\n"
                 + "      ],\n"
-                + "      \"line_of_business_type\": \"ConsumerCard\",\n"
-                + "      \"payment_type\": \"Revolve\"\n"
-                + "    },\n"
-                + "    \"account_eligibilities\": [\n"
-                + "      \"EStatementEligible\"\n"
-                + "    ],\n"
-                + "    \"account_features\": {},\n"
-                + "    \"line_of_business\": {}\n"
-                + "  },\n"
-                + "  \"status\": {\n"
-                + "    \"account_status\": [\n"
-                + "      \"Active\"\n"
-                + "    ]\n"
-                + "  }\n"
+                + "      \"account_features\":{\n"
+                + "         \n"
+                + "      },\n"
+                + "      \"line_of_business\":{\n"
+                + "         \n"
+                + "      }\n"
+                + "   },\n"
+                + "   \"status\":{\n"
+                + "      \"account_status\":[\n"
+                + "         \"Active\"\n"
+                + "      ]\n"
+                + "   }\n"
                 + "}";
     }
 
@@ -147,6 +155,10 @@ public class AmexTestFixtures {
 
     public static String createBalancesResponseJsonString() {
         return String.format("[\n%s\n]", getBalancesJsonString());
+    }
+
+    public static String createStatementPeriodsResponseJsonString() {
+        return getStatementPeriodJsonString();
     }
 
     public static List<TransactionsResponseDto> createTransactionsResponse() {
@@ -322,6 +334,18 @@ public class AmexTestFixtures {
                 + "    \"payment_due_date\": \"2014-02-15\",\n"
                 + "    \"remaining_statement_balance_amount\": \"55000.00\"\n"
                 + "  }";
+    }
+
+    private static String getStatementPeriodJsonString() {
+        return "  {\n"
+                + "   \"statement_periods\":[\n"
+                + "      {\n"
+                + "         \"start_date\":\"2021-02-03\",\n"
+                + "         \"end_date\":\"2021-03-02\",\n"
+                + "         \"index\":0\n"
+                + "      }\n"
+                + "   ]\n"
+                + "}";
     }
 
     private static String getTransactionJsonString() {
