@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.cre
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Date;
-import java.util.HashMap;
+import java.util.Map;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.Sparebank1AmountUtils;
@@ -26,7 +26,7 @@ public class CreditCardTransactionEntity {
     private String cashbackAmountCurrency;
 
     @JsonProperty("_links")
-    private HashMap<String, LinkEntity> links;
+    private Map<String, LinkEntity> links;
 
     @JsonIgnore
     public CreditCardTransaction toTinkTransaction() {
