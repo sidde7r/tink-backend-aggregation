@@ -147,7 +147,8 @@ public final class AbnAmroAgent extends AbstractAgent
         logger.info("Authenticating with mobile banking.");
         InitiateEnrollmentResponse response = enrollmentService.initiate(phoneNumber);
 
-        openThirdPartyApp(MobileBankingAuthenticationPayload.create(catalog, response.getToken()));
+        supplementalInformationController.openThirdPartyAppAsync(
+                MobileBankingAuthenticationPayload.create(catalog, response.getToken()));
 
         logger.debug("Polling for mobile banking signing completed.");
         Optional<String> bcNumber = collect(response.getToken());

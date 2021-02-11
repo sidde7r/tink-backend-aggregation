@@ -5,7 +5,6 @@ import se.tink.backend.aggregation.agents.contexts.AgentAggregatorIdentifier;
 import se.tink.backend.aggregation.agents.contexts.CompositeAgentContext;
 import se.tink.backend.aggregation.agents.contexts.MetricContext;
 import se.tink.backend.aggregation.agents.contexts.ProviderSessionCacheContext;
-import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.contexts.SystemUpdater;
 import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
@@ -22,9 +21,6 @@ public abstract class SuperAbstractAgent implements Agent, AgentEventListener {
     protected final CompositeAgentContext context;
     private final AgentAggregatorIdentifier agentAggregatorIdentifier;
 
-    // Remove SupplementalRequester completely from here. No agent should use this API
-    // Instead use SupplementalInformationController (exists in SubsequentGenerationAgent)
-    protected final SupplementalRequester supplementalRequester;
     protected final ProviderSessionCacheContext providerSessionCacheContext;
     protected final SystemUpdater systemUpdater;
     protected final MetricContext metricContext;
@@ -34,7 +30,6 @@ public abstract class SuperAbstractAgent implements Agent, AgentEventListener {
         this.request = agentContextProvider.getCredentialsRequest();
         this.context = agentContextProvider.getContext();
         this.agentAggregatorIdentifier = agentContextProvider.getAgentAggregatorIdentifier();
-        this.supplementalRequester = agentContextProvider.getSupplementalRequester();
         this.providerSessionCacheContext = agentContextProvider.getProviderSessionCacheContext();
         this.systemUpdater = agentContextProvider.getSystemUpdater();
         this.metricContext = agentContextProvider.getMetricContext();
