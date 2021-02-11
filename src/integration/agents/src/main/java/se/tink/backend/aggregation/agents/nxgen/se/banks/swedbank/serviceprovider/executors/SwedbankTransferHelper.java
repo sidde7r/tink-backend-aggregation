@@ -9,7 +9,6 @@ import java.util.function.Function;
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants;
@@ -26,6 +25,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovide
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.LinkEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.LinksEntity;
 import se.tink.backend.aggregation.agents.utils.giro.validation.GiroMessageValidator;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
@@ -41,7 +41,7 @@ import se.tink.libraries.transfer.rpc.Transfer;
 
 public class SwedbankTransferHelper {
 
-    private final SupplementalRequester supplementalRequester;
+    private final SupplementalInformationController supplementalInformationController;
     private final Catalog catalog;
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final SwedbankDefaultApiClient apiClient;
@@ -49,12 +49,12 @@ public class SwedbankTransferHelper {
     private final boolean isBankId;
 
     public SwedbankTransferHelper(
-            SupplementalRequester supplementalRequester,
+            SupplementalInformationController supplementalInformationController,
             Catalog catalog,
             SupplementalInformationHelper supplementalInformationHelper,
             SwedbankDefaultApiClient apiClient,
             boolean isBankId) {
-        this.supplementalRequester = supplementalRequester;
+        this.supplementalInformationController = supplementalInformationController;
         this.catalog = catalog;
         this.supplementalInformationHelper = supplementalInformationHelper;
         this.apiClient = apiClient;
@@ -79,9 +79,9 @@ public class SwedbankTransferHelper {
                             final String autoStartToken =
                                     QrCodeParser.decodeBankIdQrCode(encodedImage);
                             log.info("Got autoStartToken from encodedImage: {}", autoStartToken);
-                            supplementalRequester.openBankId(autoStartToken, false);
+                            supplementalInformationController.openMobileBankIdAsync(autoStartToken);
                         } else {
-                            supplementalRequester.openBankId(null, false);
+                            supplementalInformationController.openMobileBankIdAsync(null);
                         }
                         didOpenBankId = true;
                     }

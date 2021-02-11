@@ -14,7 +14,6 @@ import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
-import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
@@ -40,6 +39,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v3
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.rpc.ErrorResponse;
 import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.i18n.Catalog;
@@ -53,19 +53,19 @@ public class NordeaExecutorHelper {
     // TODO extend BankIdSignHelper
     private static final NordeaAccountIdentifierFormatter NORDEA_ACCOUNT_FORMATTER =
             new NordeaAccountIdentifierFormatter();
-    private final SupplementalRequester supplementalRequester;
+    private final SupplementalInformationController supplementalInformationController;
     private final Catalog catalog;
     private final NordeaBaseApiClient apiClient;
     private NordeaConfiguration nordeaConfiguration;
     private final RandomValueGenerator randomValueGenerator;
 
     public NordeaExecutorHelper(
-            SupplementalRequester supplementalRequester,
+            SupplementalInformationController supplementalInformationController,
             Catalog catalog,
             NordeaBaseApiClient apiClient,
             NordeaConfiguration nordeaConfiguration,
             RandomValueGenerator randomValueGenerator) {
-        this.supplementalRequester = supplementalRequester;
+        this.supplementalInformationController = supplementalInformationController;
         this.catalog = catalog;
         this.apiClient = apiClient;
         this.nordeaConfiguration = nordeaConfiguration;
@@ -205,7 +205,8 @@ public class NordeaExecutorHelper {
         BankIdAutostartResponse signatureResponse =
                 signPayment(confirmTransferResponse.getResult());
         if (signatureResponse.getStatus().equals(NordeaBankIdStatus.BANKID_AUTOSTART_PENDING)) {
-            supplementalRequester.openBankId(signatureResponse.getAutoStartToken(), false);
+            supplementalInformationController.openMobileBankIdAsync(
+                    signatureResponse.getAutoStartToken());
             pollSignTransfer(
                     transferId,
                     signatureResponse.getSessionId(),
@@ -249,8 +250,8 @@ public class NordeaExecutorHelper {
                     if (bankIdAutostartResponse
                             .getStatus()
                             .equals(NordeaBankIdStatus.BANKID_AUTOSTART_PENDING)) {
-                        supplementalRequester.openBankId(
-                                bankIdAutostartResponse.getAutoStartToken(), false);
+                        supplementalInformationController.openMobileBankIdAsync(
+                                bankIdAutostartResponse.getAutoStartToken());
                         reference = bankIdAutostartResponse.getSessionId();
                     } else {
                         throw ErrorResponse.signTransferFailedError();

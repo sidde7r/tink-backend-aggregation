@@ -11,7 +11,6 @@ import org.openqa.selenium.WebDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
-import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException.EndUserMessage;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.DanskeBankSEApiClient;
@@ -32,6 +31,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeban
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.DanskeBankWebDriverHelper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.ListAccountsResponse;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
@@ -48,17 +48,17 @@ public class DanskeBankExecutorHelper {
     private final DanskeBankSEApiClient apiClient;
     private final String deviceId;
     private final DanskeBankSEConfiguration configuration;
-    private final SupplementalRequester supplementalRequester;
+    private final SupplementalInformationController supplementalInformationController;
 
     public DanskeBankExecutorHelper(
             DanskeBankSEApiClient apiClient,
             String deviceId,
             DanskeBankConfiguration configuration,
-            SupplementalRequester supplementalRequester) {
+            SupplementalInformationController supplementalInformationController) {
         this.apiClient = apiClient;
         this.deviceId = deviceId;
         this.configuration = (DanskeBankSEConfiguration) configuration;
-        this.supplementalRequester = supplementalRequester;
+        this.supplementalInformationController = supplementalInformationController;
     }
 
     public Date validatePaymentDate(Transfer transfer, String transferType, String payType) {
@@ -191,7 +191,8 @@ public class DanskeBankExecutorHelper {
     }
 
     public void signPayment(RegisterPaymentResponse registerPaymentResponse) {
-        supplementalRequester.openBankId(registerPaymentResponse.getAutoStartToken(), false);
+        supplementalInformationController.openMobileBankIdAsync(
+                registerPaymentResponse.getAutoStartToken());
         poll(registerPaymentResponse.getOrderRef());
     }
 
