@@ -670,20 +670,153 @@ public class AgentWorkerOperationFactory {
                         correlationId,
                         accountInformationServiceEventsProducer);
         String operationName;
-        List<AgentWorkerCommand> commands;
+        List<AgentWorkerCommand> commands = new ArrayList<>();
 
         boolean shouldRefresh = !request.isSkipRefresh();
         operationName =
                 shouldRefresh ? "execute-payment-with-refresh" : "execute-payment-without-refresh";
 
         if (isAisPlusPisFlow(request)) {
-            commands =
-                    createTransferBaseCommands(
-                            clientInfo, request, context, operationName, controllerWrapper);
+            CryptoWrapper cryptoWrapper =
+                    cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
+            CredentialsCrypto credentialsCrypto =
+                    new CredentialsCrypto(
+                            cacheClient, controllerWrapper, cryptoWrapper, metricRegistry);
+
+            commands.add(new ValidateProviderAgentWorkerStatus(context, controllerWrapper));
+            commands.add(
+                    new ExpireSessionAgentWorkerCommand(
+                            request.isManual(),
+                            context,
+                            request.getCredentials(),
+                            request.getProvider()));
+            commands.add(
+                    new CircuitBreakerAgentWorkerCommand(
+                            context, circuitBreakAgentWorkerCommandState));
+            commands.add(
+                    new LockAgentWorkerCommand(
+                                    context, operationName, interProcessSemaphoreMutexFactory)
+                            .withLoginEvent(loginAgentEventProducer));
+            commands.add(new DecryptCredentialsWorkerCommand(context, credentialsCrypto));
+            commands.add(
+                    new MigrateCredentialsAndAccountsWorkerCommand(
+                            context.getRequest(), controllerWrapper, clientInfo));
+            // Update the status to `UPDATED` if the credential isn't waiting on transactions
+            // from the
+            // connector and if
+            // transactions aren't processed in system. The transaction processing in system
+            // will set
+            // the status
+            // to `UPDATED` when transactions have been processed and new statistics are
+            // generated.
+            commands.add(
+                    new UpdateCredentialsStatusAgentWorkerCommand(
+                            controllerWrapper,
+                            request.getCredentials(),
+                            request.getProvider(),
+                            context,
+                            c ->
+                                    !c.isWaitingOnConnectorTransactions()
+                                            && !c.isSystemProcessingTransactions()));
+            commands.add(
+                    new ReportProviderMetricsAgentWorkerCommand(
+                            context,
+                            operationName,
+                            reportMetricsAgentWorkerCommandState,
+                            new AgentWorkerMetricReporter(
+                                    metricRegistry, this.providerTierConfiguration)));
+            commands.add(
+                    new SendDataForProcessingAgentWorkerCommand(
+                            context,
+                            createCommandMetricState(request),
+                            ProcessableItem.fromRefreshableItems(
+                                    RefreshableItem.convertLegacyItems(
+                                            RefreshableItem.REFRESHABLE_ITEMS_ALL))));
+            commands.add(
+                    new CreateAgentConfigurationControllerWorkerCommand(
+                            context, tppSecretsServiceClient));
+            commands.add(new CreateLogMaskerWorkerCommand(context));
+            commands.add(
+                    new DebugAgentWorkerCommand(
+                            context, debugAgentWorkerCommandState, agentDebugStorageHandler));
+            commands.add(
+                    new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
+            addClearSensitivePayloadOnForceAuthenticateCommandAndLoginAgentWorkerCommand(
+                    commands, context);
+            commands.add(
+                    new SetCredentialsStatusAgentWorkerCommand(
+                            context, CredentialsStatus.UPDATING));
+            commands.add(
+                    new TransferAgentWorkerCommand(
+                            context, request, createCommandMetricState(request)));
         } else {
-            commands =
-                    createTransferWithoutRefreshBaseCommands(
-                            clientInfo, request, context, operationName, controllerWrapper);
+            CryptoWrapper cryptoWrapper =
+                    cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
+            CredentialsCrypto credentialsCrypto =
+                    new CredentialsCrypto(
+                            cacheClient, controllerWrapper, cryptoWrapper, metricRegistry);
+
+            commands.add(new ValidateProviderAgentWorkerStatus(context, controllerWrapper));
+            commands.add(
+                    new ExpireSessionAgentWorkerCommand(
+                            request.isManual(),
+                            context,
+                            request.getCredentials(),
+                            request.getProvider()));
+            commands.add(
+                    new CircuitBreakerAgentWorkerCommand(
+                            context, circuitBreakAgentWorkerCommandState));
+            commands.add(
+                    new LockAgentWorkerCommand(
+                            context, operationName, interProcessSemaphoreMutexFactory));
+            commands.add(new DecryptCredentialsWorkerCommand(context, credentialsCrypto));
+            commands.add(
+                    new UpdateCredentialsStatusAgentWorkerCommand(
+                            controllerWrapper,
+                            request.getCredentials(),
+                            request.getProvider(),
+                            context,
+                            c -> true)); // is it enough to return true in this predicate?
+            commands.add(
+                    new ReportProviderMetricsAgentWorkerCommand(
+                            context,
+                            operationName,
+                            reportMetricsAgentWorkerCommandState,
+                            new AgentWorkerMetricReporter(
+                                    metricRegistry, this.providerTierConfiguration)));
+            commands.add(
+                    new ReportProviderTransferMetricsAgentWorkerCommand(context, operationName));
+
+            // https://tink.slack.com/archives/CS4BJQJBV/p1612518614089100
+            double skipRatio = 0.1;
+            boolean isIncluded = random.nextDouble() > skipRatio;
+            if (isIncluded) {
+                SendDataForProcessingAgentWorkerCommand sendDataForProcessingAgentWorkerCommand =
+                        new SendDataForProcessingAgentWorkerCommand(
+                                context,
+                                createCommandMetricState(request),
+                                ProcessableItem.fromRefreshableItems(
+                                        RefreshableItem.convertLegacyItems(
+                                                RefreshableItem.REFRESHABLE_ITEMS_ALL)));
+
+                commands.add(sendDataForProcessingAgentWorkerCommand);
+            }
+            log.info(
+                    "sendDataForProcessingAgentWorkerCommand is used in command chain: {}",
+                    isIncluded);
+
+            commands.add(
+                    new CreateAgentConfigurationControllerWorkerCommand(
+                            context, tppSecretsServiceClient));
+            commands.add(new CreateLogMaskerWorkerCommand(context));
+            commands.add(
+                    new DebugAgentWorkerCommand(
+                            context, debugAgentWorkerCommandState, agentDebugStorageHandler));
+            commands.add(
+                    new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
+            commands.add(
+                    new TransferAgentWorkerCommand(
+                            context, request, createCommandMetricState(request)));
         }
 
         if (shouldRefresh) {
