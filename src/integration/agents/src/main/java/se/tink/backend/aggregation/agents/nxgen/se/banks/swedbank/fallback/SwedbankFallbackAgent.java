@@ -10,6 +10,7 @@ import com.google.inject.Inject;
 import java.time.ZoneId;
 import java.util.Locale;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
+import se.tink.backend.aggregation.agents.agentcapabilities.AgentPisCapability;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fallback.SwedbankFallbackConstants.Filters;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fallback.configuration.SwedbankPsd2Configuration;
@@ -18,6 +19,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fallback.filte
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankAbstractAgent;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.configuration.SwedbankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.utilities.SwedbankDateUtils;
+import se.tink.backend.aggregation.client.provider_configuration.rpc.PisCapability;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.eidassigner.module.QSealcSignerModuleRSASHA256;
@@ -25,6 +27,14 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponen
 
 @AgentDependencyModules(modules = QSealcSignerModuleRSASHA256.class)
 @AgentCapabilities({CHECKING_ACCOUNTS, PAYMENTS, SAVINGS_ACCOUNTS, IDENTITY_DATA, TRANSFERS})
+@AgentPisCapability(
+        capabilities = {
+            PisCapability.PIS_SE_BANK_TRANSFERS,
+            PisCapability.PIS_SE_BG,
+            PisCapability.PIS_SE_PG,
+            PisCapability.PIS_FUTURE_DATE
+        },
+        markets = {"SE"})
 public final class SwedbankFallbackAgent extends SwedbankAbstractAgent {
 
     @Inject

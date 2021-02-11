@@ -11,7 +11,9 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 
 import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
+import se.tink.backend.aggregation.agents.agentcapabilities.AgentPisCapability;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.NordeaBaseAgent;
+import se.tink.backend.aggregation.client.provider_configuration.rpc.PisCapability;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 
 @AgentCapabilities({
@@ -24,6 +26,14 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponen
     INVESTMENTS,
     MORTGAGE_AGGREGATION
 })
+@AgentPisCapability(
+        capabilities = {
+            PisCapability.PIS_SE_BANK_TRANSFERS,
+            PisCapability.PIS_SE_BG,
+            PisCapability.PIS_SE_PG,
+            PisCapability.PIS_FUTURE_DATE
+        },
+        markets = {"SE"})
 public class NordeaSEAgent extends NordeaBaseAgent {
     @Inject
     public NordeaSEAgent(AgentComponentProvider componentProvider) {

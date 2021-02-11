@@ -94,6 +94,7 @@ import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.TransferExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
+import se.tink.backend.aggregation.agents.agentcapabilities.AgentPisCapability;
 import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
 import se.tink.backend.aggregation.agents.banks.seb.SEBApiConstants.SystemCode;
 import se.tink.backend.aggregation.agents.banks.seb.model.AccountEntity;
@@ -164,6 +165,7 @@ import se.tink.backend.aggregation.agents.modules.LegacyAgentWiremockStrategyMod
 import se.tink.backend.aggregation.agents.modules.providers.LegacyAgentStrategyInterface;
 import se.tink.backend.aggregation.agents.utils.giro.validation.GiroMessageValidator;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
+import se.tink.backend.aggregation.client.provider_configuration.rpc.PisCapability;
 import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
@@ -209,6 +211,14 @@ import se.tink.libraries.uuid.UUIDUtils;
     INVESTMENTS,
     MORTGAGE_AGGREGATION
 })
+@AgentPisCapability(
+        capabilities = {
+            PisCapability.PIS_SE_BANK_TRANSFERS,
+            PisCapability.PIS_SE_BG,
+            PisCapability.PIS_SE_PG,
+            PisCapability.PIS_FUTURE_DATE
+        },
+        markets = {"SE"})
 public final class SEBApiAgent extends AbstractAgent
         implements RefreshTransferDestinationExecutor,
                 RefreshEInvoiceExecutor,

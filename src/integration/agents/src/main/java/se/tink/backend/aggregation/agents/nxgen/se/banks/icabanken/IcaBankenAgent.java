@@ -30,6 +30,7 @@ import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
+import se.tink.backend.aggregation.agents.agentcapabilities.AgentPisCapability;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.IcaBankenConstants.TimeoutFilter;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.authenticator.IcaBankenBankIdAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor.IcaBankenBankTransferExecutor;
@@ -45,6 +46,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.trans
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.filter.IcaBankenFilter;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.storage.IcaBankenSessionStorage;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.storage.IcabankenPersistentStorage;
+import se.tink.backend.aggregation.client.provider_configuration.rpc.PisCapability;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -73,6 +75,14 @@ import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.TimeoutRetryF
     INVESTMENTS,
     MORTGAGE_AGGREGATION
 })
+@AgentPisCapability(
+        capabilities = {
+            PisCapability.PIS_SE_BANK_TRANSFERS,
+            PisCapability.PIS_SE_BG,
+            PisCapability.PIS_SE_PG,
+            PisCapability.PIS_FUTURE_DATE
+        },
+        markets = {"SE"})
 public final class IcaBankenAgent extends NextGenerationAgent
         implements RefreshIdentityDataExecutor,
                 RefreshEInvoiceExecutor,

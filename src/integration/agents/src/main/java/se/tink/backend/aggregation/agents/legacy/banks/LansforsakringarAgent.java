@@ -69,6 +69,7 @@ import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.TransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.TransferExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
+import se.tink.backend.aggregation.agents.agentcapabilities.AgentPisCapability;
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.LFUtils;
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.LansforsakringarBaseApiClient;
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.LansforsakringarDateUtil;
@@ -145,6 +146,7 @@ import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModul
 import se.tink.backend.aggregation.agents.modules.LegacyAgentProductionStrategyModule;
 import se.tink.backend.aggregation.agents.modules.LegacyAgentWiremockStrategyModule;
 import se.tink.backend.aggregation.agents.modules.providers.LegacyAgentStrategyInterface;
+import se.tink.backend.aggregation.client.provider_configuration.rpc.PisCapability;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.http.filter.factory.ClientFilterFactory;
 import se.tink.backend.aggregation.utils.transfer.StringNormalizerSwedish;
@@ -182,6 +184,14 @@ import se.tink.libraries.uuid.UUIDUtils;
     INVESTMENTS,
     MORTGAGE_AGGREGATION
 })
+@AgentPisCapability(
+        capabilities = {
+            PisCapability.PIS_SE_BANK_TRANSFERS,
+            PisCapability.PIS_SE_BG,
+            PisCapability.PIS_SE_PG,
+            PisCapability.PIS_FUTURE_DATE
+        },
+        markets = {"SE"})
 @AgentDependencyModulesForProductionMode(modules = LegacyAgentProductionStrategyModule.class)
 @AgentDependencyModulesForDecoupledMode(modules = LegacyAgentWiremockStrategyModule.class)
 public final class LansforsakringarAgent extends AbstractAgent

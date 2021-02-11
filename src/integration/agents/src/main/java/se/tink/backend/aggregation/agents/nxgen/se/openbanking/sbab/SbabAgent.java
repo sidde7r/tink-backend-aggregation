@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
+import se.tink.backend.aggregation.agents.agentcapabilities.AgentPisCapability;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SbabConstants.HttpClient;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.authenticator.SbabAuthenticationController;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.authenticator.SbabAuthenticator;
@@ -25,6 +26,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.fetcher.tran
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.fliter.SbabBadGatewayFilter;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.fliter.SbabRetryFilter;
 import se.tink.backend.aggregation.agents.utils.transfer.InferredTransferDestinations;
+import se.tink.backend.aggregation.client.provider_configuration.rpc.PisCapability;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -45,6 +47,9 @@ import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsRequestType
 import se.tink.libraries.account.AccountIdentifier;
 
 @AgentCapabilities({SAVINGS_ACCOUNTS, TRANSFERS})
+@AgentPisCapability(
+        capabilities = {PisCapability.PIS_SE_BANK_TRANSFERS, PisCapability.PIS_FUTURE_DATE},
+        markets = {"SE"})
 public final class SbabAgent extends NextGenerationAgent
         implements RefreshSavingsAccountsExecutor, RefreshTransferDestinationExecutor {
 
