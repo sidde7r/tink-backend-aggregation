@@ -695,12 +695,19 @@ public class AgentWorkerOperationFactory {
         commands.add(
                 new CircuitBreakerAgentWorkerCommand(context, circuitBreakAgentWorkerCommandState));
 
+        LockAgentWorkerCommand lockAgentWorkerCommand =
+                new LockAgentWorkerCommand(
+                        context, operationName, interProcessSemaphoreMutexFactory);
+
+        // TODO: Ask aggregation why this branch is needed?
+        if (isAisPlusPisFlow(request)) {
+            lockAgentWorkerCommand = lockAgentWorkerCommand.withLoginEvent(loginAgentEventProducer);
+        }
+
+        commands.add(lockAgentWorkerCommand);
+
         if (isAisPlusPisFlow(request)) {
 
-            commands.add(
-                    new LockAgentWorkerCommand(
-                                    context, operationName, interProcessSemaphoreMutexFactory)
-                            .withLoginEvent(loginAgentEventProducer));
             commands.add(new DecryptCredentialsWorkerCommand(context, credentialsCrypto));
             commands.add(
                     new MigrateCredentialsAndAccountsWorkerCommand(
@@ -755,9 +762,6 @@ public class AgentWorkerOperationFactory {
                             context, request, createCommandMetricState(request)));
         } else {
 
-            commands.add(
-                    new LockAgentWorkerCommand(
-                            context, operationName, interProcessSemaphoreMutexFactory));
             commands.add(new DecryptCredentialsWorkerCommand(context, credentialsCrypto));
             commands.add(
                     new UpdateCredentialsStatusAgentWorkerCommand(
