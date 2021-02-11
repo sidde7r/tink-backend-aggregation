@@ -692,11 +692,11 @@ public class AgentWorkerOperationFactory {
                         request.getCredentials(),
                         request.getProvider()));
 
+        commands.add(
+                new CircuitBreakerAgentWorkerCommand(context, circuitBreakAgentWorkerCommandState));
+
         if (isAisPlusPisFlow(request)) {
 
-            commands.add(
-                    new CircuitBreakerAgentWorkerCommand(
-                            context, circuitBreakAgentWorkerCommandState));
             commands.add(
                     new LockAgentWorkerCommand(
                                     context, operationName, interProcessSemaphoreMutexFactory)
@@ -755,9 +755,6 @@ public class AgentWorkerOperationFactory {
                             context, request, createCommandMetricState(request)));
         } else {
 
-            commands.add(
-                    new CircuitBreakerAgentWorkerCommand(
-                            context, circuitBreakAgentWorkerCommandState));
             commands.add(
                     new LockAgentWorkerCommand(
                             context, operationName, interProcessSemaphoreMutexFactory));
