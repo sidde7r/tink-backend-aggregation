@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.fetcher.creditcard.rpc;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import java.time.LocalDate;
@@ -17,15 +16,15 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class CardTransactionListResponse {
     // The number of transactions in the current result
-    @JsonProperty private int size;
+    private int size;
 
     // Which page the result represent
-    @JsonProperty private int page;
+    private int page;
 
     // Maximum number of transactions on a page
-    @JsonProperty private int pageSize;
+    private int pageSize;
 
-    @JsonProperty private List<CardTransaction> transactions;
+    private List<CardTransaction> transactions;
 
     @JsonIgnore
     public Collection<Transaction> getTinkTransactions() {

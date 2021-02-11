@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.fetcher.transactional.rpc;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.google.common.base.Strings;
@@ -20,9 +19,9 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class AccountTransactionsResponse {
 
-    @JsonProperty @Getter private String continuationKey;
-    @JsonProperty private List<TransactionEntity> result;
-    @JsonProperty private int totalSize;
+    @Getter private String continuationKey;
+    private List<TransactionEntity> result;
+    private int totalSize;
 
     @JsonIgnore
     public Collection<Transaction> getTinkTransactions() {
