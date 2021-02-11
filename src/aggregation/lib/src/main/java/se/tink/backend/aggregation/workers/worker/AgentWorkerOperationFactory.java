@@ -869,7 +869,7 @@ public class AgentWorkerOperationFactory {
                 new CredentialsCrypto(
                         cacheClient, controllerWrapper, cryptoWrapper, metricRegistry);
 
-        ArrayList<AgentWorkerCommand> agentWorkerCommandsPart1 =
+        ArrayList<AgentWorkerCommand> commands =
                 Lists.newArrayList(
                         new ValidateProviderAgentWorkerStatus(context, controllerWrapper),
                         new ExpireSessionAgentWorkerCommand(
@@ -921,13 +921,13 @@ public class AgentWorkerOperationFactory {
         double skipRatio = 0.1;
         boolean isIncluded = random.nextDouble() > skipRatio;
         if (isIncluded) {
-            agentWorkerCommandsPart1.add(sendDataForProcessingAgentWorkerCommand);
+            commands.add(sendDataForProcessingAgentWorkerCommand);
         }
         log.info(
                 "sendDataForProcessingAgentWorkerCommand is used in command chain: {}", isIncluded);
 
-        agentWorkerCommandsPart1.addAll(agentWorkerCommandsPart2);
-        return agentWorkerCommandsPart1;
+        commands.addAll(agentWorkerCommandsPart2);
+        return commands;
     }
 
     public AgentWorkerOperation createOperationCreateCredentials(
