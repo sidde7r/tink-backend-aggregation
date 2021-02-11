@@ -714,6 +714,7 @@ public class AgentWorkerOperationFactory {
                             context.getRequest(), controllerWrapper, clientInfo));
         }
 
+        // TODO ask aggregation and then simplify
         if (isAisPlusPisFlow(request)) {
             // Update the status to `UPDATED` if the credential isn't waiting on transactions
             // from the
@@ -732,6 +733,17 @@ public class AgentWorkerOperationFactory {
                             c ->
                                     !c.isWaitingOnConnectorTransactions()
                                             && !c.isSystemProcessingTransactions()));
+        } else {
+            commands.add(
+                    new UpdateCredentialsStatusAgentWorkerCommand(
+                            controllerWrapper,
+                            request.getCredentials(),
+                            request.getProvider(),
+                            context,
+                            c -> true)); // is it enough to return true in this predicate?
+        }
+
+        if (isAisPlusPisFlow(request)) {
             commands.add(
                     new ReportProviderMetricsAgentWorkerCommand(
                             context,
@@ -765,13 +777,6 @@ public class AgentWorkerOperationFactory {
                             context, request, createCommandMetricState(request)));
         } else {
 
-            commands.add(
-                    new UpdateCredentialsStatusAgentWorkerCommand(
-                            controllerWrapper,
-                            request.getCredentials(),
-                            request.getProvider(),
-                            context,
-                            c -> true)); // is it enough to return true in this predicate?
             commands.add(
                     new ReportProviderMetricsAgentWorkerCommand(
                             context,
