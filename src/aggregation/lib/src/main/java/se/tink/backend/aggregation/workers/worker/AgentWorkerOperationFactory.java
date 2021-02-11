@@ -792,10 +792,13 @@ public class AgentWorkerOperationFactory {
         commands.add(
                 new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
 
+        // TODO ask aggregation if this is needed only for aggregation?
         if (isAisPlusPisFlow(request)) {
-
             addClearSensitivePayloadOnForceAuthenticateCommandAndLoginAgentWorkerCommand(
                     commands, context);
+        }
+
+        if (isAisPlusPisFlow(request)) {
             commands.add(
                     new SetCredentialsStatusAgentWorkerCommand(
                             context, CredentialsStatus.UPDATING));
