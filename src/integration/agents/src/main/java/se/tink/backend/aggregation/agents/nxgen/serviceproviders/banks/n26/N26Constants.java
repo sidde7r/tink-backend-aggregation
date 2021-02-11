@@ -11,7 +11,7 @@ import se.tink.backend.aggregation.nxgen.core.account.GenericTypeMapper;
 public class N26Constants {
 
     public static final String BASIC_AUTHENTICATION_TOKEN =
-            "Basic aXBob25lOnNlY3JldA=="; // Decoded: iphone:secret
+            "Basic bmF0aXZlaW9zOg=="; // Decoded value from base64: nativeios:
     public static final String BEARER_TOKEN = "Bearer ";
     public static final String SPACE_ID = "spaceId";
     public static final String DEVICE_TOKEN = "device-token";
