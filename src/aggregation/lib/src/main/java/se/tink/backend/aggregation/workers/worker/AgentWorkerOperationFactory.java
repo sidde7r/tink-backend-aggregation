@@ -798,10 +798,14 @@ public class AgentWorkerOperationFactory {
                     commands, context);
         }
 
+        // TODO ask aggregation why we should do this?
         if (isAisPlusPisFlow(request)) {
             commands.add(
                     new SetCredentialsStatusAgentWorkerCommand(
                             context, CredentialsStatus.UPDATING));
+        }
+
+        if (isAisPlusPisFlow(request)) {
             commands.add(
                     new TransferAgentWorkerCommand(
                             context, request, createCommandMetricState(request)));
