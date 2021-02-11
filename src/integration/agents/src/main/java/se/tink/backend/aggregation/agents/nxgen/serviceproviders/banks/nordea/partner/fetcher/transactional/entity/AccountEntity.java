@@ -2,93 +2,52 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.p
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.google.common.base.Strings;
 import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import lombok.Getter;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
+@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
+@Getter
 public class AccountEntity {
-
-    @JsonProperty("account_id")
-    private String accountId;
-
-    @JsonProperty("main_account_number")
-    private String mainAccountNumber;
-
-    @JsonProperty("display_account_number")
-    private String displayAccountNumber;
-
-    private String iban;
-    private String bic;
-
-    @JsonProperty("registration_number")
-    private String registrationNumber;
-
-    @JsonProperty("country_code")
-    private String countryCode;
-
-    @JsonProperty("product_code")
-    private String productCode;
-
-    @JsonProperty("product_name")
-    private String productName;
-
-    private String nickname;
-
-    @JsonProperty("product_type")
-    private String productType;
-
-    private String category;
-
-    @JsonProperty("account_status")
-    private String accountStatus;
-
-    @JsonProperty("booked_balance")
-    private BigDecimal bookedBalance;
-
-    @JsonProperty("credit_limit")
-    private BigDecimal creditLimit;
-
-    @JsonProperty("available_balance")
-    private BigDecimal availableBalance;
-
-    @JsonProperty("equivalent_balance")
-    private BigDecimal equivalentBalance;
-
-    private String currency;
-
-    @JsonProperty("equivalent_currency")
-    private String equivalentCurrency;
-
-    @JsonProperty("remaining_free_withdrawals")
-    private int remainingFreeWithdrawals;
-
-    @JsonProperty("latest_transaction_date")
-    private String latestTransactionDate;
-
-    @JsonProperty("statement_format")
-    private String statementFormat;
-
-    @JsonProperty("maturity_due_date")
-    private String maturityDueDate;
-
-    @JsonProperty("covered_by_deposit_guarantee")
-    private boolean coveredByDepositGuarantee;
-
-    private List<RolesEntity> roles;
-    private PermissionsEntity permissions;
-
-    @JsonProperty("interest_info")
-    private InterestInfoEntity interestInfo;
-
-    @JsonProperty("flexi_deposit")
-    private FlexiDepositEntity flexiDeposit;
-
-    @JsonProperty("transaction_list_search_criteria")
-    private TransactionListSearchCriteriaEntity transactionListSearchCriteria;
+    /// The unique ID of the account (required)
+    @JsonProperty private String accountId;
+    @JsonProperty private String mainAccountNumber;
+    @JsonProperty private String displayAccountNumber;
+    @JsonProperty private String iban;
+    @JsonProperty private String bic;
+    @JsonProperty private String registrationNumber;
+    @JsonProperty private String countryCode;
+    @JsonProperty private String productCode;
+    @JsonProperty private String productName;
+    @JsonProperty private String nickname;
+    @JsonProperty private String productType;
+    @JsonProperty private String category;
+    @JsonProperty private String accountStatus;
+    @JsonProperty private BigDecimal bookedBalance;
+    @JsonProperty private BigDecimal creditLimit;
+    @JsonProperty private BigDecimal availableBalance;
+    @JsonProperty private BigDecimal equivalentBalance;
+    @JsonProperty private String currency;
+    @JsonProperty private String equivalentCurrency;
+    @JsonProperty private int remainingFreeWithdrawals;
+    @JsonProperty private String latestTransactionDate;
+    @JsonProperty private String statementFormat;
+    @JsonProperty private String maturityDueDate;
+    @JsonProperty private boolean coveredByDepositGuarantee;
+    /// List of users and their roles linked to the account (required)
+    @JsonProperty private List<RolesEntity> roles;
+    /// List of permissions the user has on the account (required)
+    @JsonProperty private PermissionsEntity permissions;
+    @JsonProperty private InterestInfoEntity interestInfo;
+    @JsonProperty private FlexiDepositEntity flexiDeposit;
+    @JsonProperty private TransactionListSearchCriteriaEntity transactionListSearchCriteria;
 
     @JsonIgnore
     public String getHolderName() {
@@ -102,121 +61,5 @@ public class AccountEntity {
     @JsonIgnore
     public boolean hasIban() {
         return !Strings.isNullOrEmpty(iban);
-    }
-
-    public String getAccountId() {
-        return accountId;
-    }
-
-    public String getMainAccountNumber() {
-        return mainAccountNumber;
-    }
-
-    public String getDisplayAccountNumber() {
-        return displayAccountNumber;
-    }
-
-    public String getIban() {
-        return iban;
-    }
-
-    public String getBic() {
-        return bic;
-    }
-
-    public String getRegistrationNumber() {
-        return registrationNumber;
-    }
-
-    public String getCountryCode() {
-        return countryCode;
-    }
-
-    public String getProductCode() {
-        return productCode;
-    }
-
-    public String getProductName() {
-        return productName;
-    }
-
-    public String getNickname() {
-        return nickname;
-    }
-
-    public String getProductType() {
-        return productType;
-    }
-
-    public String getCategory() {
-        return category;
-    }
-
-    public String getAccountStatus() {
-        return accountStatus;
-    }
-
-    public BigDecimal getBookedBalance() {
-        return bookedBalance;
-    }
-
-    public BigDecimal getCreditLimit() {
-        return creditLimit;
-    }
-
-    public BigDecimal getAvailableBalance() {
-        return availableBalance;
-    }
-
-    public BigDecimal getEquivalentBalance() {
-        return equivalentBalance;
-    }
-
-    public String getCurrency() {
-        return currency;
-    }
-
-    public String getEquivalentCurrency() {
-        return equivalentCurrency;
-    }
-
-    public int getRemainingFreeWithdrawals() {
-        return remainingFreeWithdrawals;
-    }
-
-    public String getLatestTransactionDate() {
-        return latestTransactionDate;
-    }
-
-    public String getStatementFormat() {
-        return statementFormat;
-    }
-
-    public String getMaturityDueDate() {
-        return maturityDueDate;
-    }
-
-    public boolean isCoveredByDepositGuarantee() {
-        return coveredByDepositGuarantee;
-    }
-
-    public List<RolesEntity> getRoles() {
-        return roles;
-    }
-
-    public PermissionsEntity getPermissions() {
-        return permissions;
-    }
-
-    public InterestInfoEntity getInterestInfo() {
-        return interestInfo;
-    }
-
-    public FlexiDepositEntity getFlexiDeposit() {
-        return flexiDeposit;
-    }
-
-    public TransactionListSearchCriteriaEntity getTransactionListSearchCriteria() {
-        return transactionListSearchCriteria;
     }
 }

@@ -2,6 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.p
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.google.common.base.Strings;
 import java.time.LocalDate;
 import java.util.Collection;
@@ -15,16 +17,12 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 @JsonObject
+@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class AccountTransactionsResponse {
 
-    @JsonProperty("continuation_key")
-    @Getter
-    private String continuationKey;
-
-    private List<TransactionEntity> result;
-
-    @JsonProperty("total_size")
-    private int totalSize;
+    @JsonProperty @Getter private String continuationKey;
+    @JsonProperty private List<TransactionEntity> result;
+    @JsonProperty private int totalSize;
 
     @JsonIgnore
     public Collection<Transaction> getTinkTransactions() {

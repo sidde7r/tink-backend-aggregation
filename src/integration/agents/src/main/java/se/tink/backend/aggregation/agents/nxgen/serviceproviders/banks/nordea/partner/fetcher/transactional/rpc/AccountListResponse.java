@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.fetcher.transactional.rpc;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -12,7 +13,7 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 
 @JsonObject
 public class AccountListResponse {
-    private List<AccountEntity> result;
+    @JsonProperty private List<AccountEntity> result;
 
     public Collection<TransactionalAccount> toTinkTransactionalAccounts(
             NordeaPartnerAccountMapper accountMapper) {

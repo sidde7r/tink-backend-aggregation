@@ -1,29 +1,16 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.entity;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import java.math.BigDecimal;
+import lombok.Getter;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
+@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
+@Getter
 public class CardCreditDetails {
-    @JsonProperty("credit_limit")
     private BigDecimal creditLimit;
-
-    @JsonProperty("credit_available_balance")
-    private BigDecimal availableBalance;
-
-    @JsonProperty("masked_credit_card_number")
+    private BigDecimal creditAvailableBalance;
     private String maskedCreditCardNumber;
-
-    public BigDecimal getAvailableBalance() {
-        return availableBalance;
-    }
-
-    public BigDecimal getCreditLimit() {
-        return creditLimit;
-    }
-
-    public String getMaskedCreditCardNumber() {
-        return maskedCreditCardNumber;
-    }
 }
