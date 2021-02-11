@@ -709,10 +709,12 @@ public class AgentWorkerOperationFactory {
         commands.add(new DecryptCredentialsWorkerCommand(context, credentialsCrypto));
 
         if (isAisPlusPisFlow(request)) {
-
             commands.add(
                     new MigrateCredentialsAndAccountsWorkerCommand(
                             context.getRequest(), controllerWrapper, clientInfo));
+        }
+
+        if (isAisPlusPisFlow(request)) {
             // Update the status to `UPDATED` if the credential isn't waiting on transactions
             // from the
             // connector and if
