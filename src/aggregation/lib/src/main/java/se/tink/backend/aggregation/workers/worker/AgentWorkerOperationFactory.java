@@ -683,9 +683,10 @@ public class AgentWorkerOperationFactory {
                 new CredentialsCrypto(
                         cacheClient, controllerWrapper, cryptoWrapper, metricRegistry);
 
+        commands.add(new ValidateProviderAgentWorkerStatus(context, controllerWrapper));
+
         if (isAisPlusPisFlow(request)) {
 
-            commands.add(new ValidateProviderAgentWorkerStatus(context, controllerWrapper));
             commands.add(
                     new ExpireSessionAgentWorkerCommand(
                             request.isManual(),
@@ -753,7 +754,6 @@ public class AgentWorkerOperationFactory {
                             context, request, createCommandMetricState(request)));
         } else {
 
-            commands.add(new ValidateProviderAgentWorkerStatus(context, controllerWrapper));
             commands.add(
                     new ExpireSessionAgentWorkerCommand(
                             request.isManual(),
