@@ -757,15 +757,30 @@ public class AgentWorkerOperationFactory {
                     new ReportProviderTransferMetricsAgentWorkerCommand(context, operationName));
         }
 
+        SendDataForProcessingAgentWorkerCommand sendDataForProcessingAgentWorkerCommand =
+                new SendDataForProcessingAgentWorkerCommand(
+                        context,
+                        createCommandMetricState(request),
+                        ProcessableItem.fromRefreshableItems(
+                                RefreshableItem.convertLegacyItems(
+                                        RefreshableItem.REFRESHABLE_ITEMS_ALL)));
+
+        if (isAisPlusPisFlow(request)) {
+            commands.add(sendDataForProcessingAgentWorkerCommand);
+        } else {
+            // https://tink.slack.com/archives/CS4BJQJBV/p1612518614089100
+            double skipRatio = 0.1;
+            boolean isIncluded = random.nextDouble() > skipRatio;
+            if (isIncluded) {
+                commands.add(sendDataForProcessingAgentWorkerCommand);
+            }
+            log.info(
+                    "sendDataForProcessingAgentWorkerCommand is used in command chain: {}",
+                    isIncluded);
+        }
+
         if (isAisPlusPisFlow(request)) {
 
-            commands.add(
-                    new SendDataForProcessingAgentWorkerCommand(
-                            context,
-                            createCommandMetricState(request),
-                            ProcessableItem.fromRefreshableItems(
-                                    RefreshableItem.convertLegacyItems(
-                                            RefreshableItem.REFRESHABLE_ITEMS_ALL))));
             commands.add(
                     new CreateAgentConfigurationControllerWorkerCommand(
                             context, tppSecretsServiceClient));
@@ -784,24 +799,6 @@ public class AgentWorkerOperationFactory {
                     new TransferAgentWorkerCommand(
                             context, request, createCommandMetricState(request)));
         } else {
-
-            // https://tink.slack.com/archives/CS4BJQJBV/p1612518614089100
-            double skipRatio = 0.1;
-            boolean isIncluded = random.nextDouble() > skipRatio;
-            if (isIncluded) {
-                SendDataForProcessingAgentWorkerCommand sendDataForProcessingAgentWorkerCommand =
-                        new SendDataForProcessingAgentWorkerCommand(
-                                context,
-                                createCommandMetricState(request),
-                                ProcessableItem.fromRefreshableItems(
-                                        RefreshableItem.convertLegacyItems(
-                                                RefreshableItem.REFRESHABLE_ITEMS_ALL)));
-
-                commands.add(sendDataForProcessingAgentWorkerCommand);
-            }
-            log.info(
-                    "sendDataForProcessingAgentWorkerCommand is used in command chain: {}",
-                    isIncluded);
 
             commands.add(
                     new CreateAgentConfigurationControllerWorkerCommand(
