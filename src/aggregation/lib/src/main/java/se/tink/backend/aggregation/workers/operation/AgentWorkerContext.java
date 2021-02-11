@@ -358,10 +358,9 @@ public class AgentWorkerContext extends AgentContext implements Managed {
 
     @Override
     public void requestSupplementalInformation(Credentials credentials) {
-
         supplementalInteractionCounter.inc();
 
-        updateStatus(credentials.getStatus());
+        updateCredentialsExcludingSensitiveInformation(credentials, true);
     }
 
     public AccountDataCache getAccountDataCache() {
