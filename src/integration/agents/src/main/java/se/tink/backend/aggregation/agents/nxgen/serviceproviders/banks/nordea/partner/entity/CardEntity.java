@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.google.common.base.MoreObjects;
@@ -22,51 +21,38 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class CardEntity {
     // Unique id of the card (required)
-    @JsonProperty private String cardId;
-
+    private String cardId;
     // Card category (required)
-    @JsonProperty private String cardCategory;
-
+    private String cardCategory;
     // Status of the card (required)
-    @JsonProperty private String cardStatus;
-
+    private String cardStatus;
     // Cardholder's name
-    @JsonProperty private String cardholderName;
-
+    private String cardholderName;
     // Cardholder's type, with following type meanings:
     // - principal = Principal cardholder
     // - parallel = Parallel cardholder
     // - joint = Parallel cardholder with joint credit liability
-    @JsonProperty private String cardholderType;
-
+    private String cardholderType;
     // Principal cardholder's name. Same as cardholder name if cardholder type is 'principal'
-    @JsonProperty private String principalCardholderName;
-
+    private String principalCardholderName;
     // Unique code that unambiguously maps to a commercial product name, card image, etc. (required)
-    @JsonProperty private String productCode;
-
+    private String productCode;
     // Information of card loyalty group for Stockmann MasterCards
-    @JsonProperty private String cardLoyaltyGroup;
-
+    private String cardLoyaltyGroup;
     // Specifies country the card belongs to. Represented as 2 letter ISO 3166-1 alpha-2 country
     // code (required)
-    @JsonProperty private String countryCode;
-
+    private String countryCode;
     // Currency of the card or the account the card is linked to. Represented as ISO 4217 currency
     // code (required)
-    @JsonProperty private String currency;
-
+    private String currency;
     // Card's nickname, assigned by the user for the card
-    @JsonProperty private String nickname;
-
+    private String nickname;
     // Card PAN ID
-    @JsonProperty private String panId;
-
+    private String panId;
     // Bank account number for ATM withdrawals in IBAN format
-    @JsonProperty private String atmAccountNumber;
-
+    private String atmAccountNumber;
     // Card's credit feature information. Not available for debit cards
-    @JsonProperty private CardCreditDetails credit;
+    private CardCreditDetails credit;
 
     @JsonIgnore
     private boolean isCreditCard() {
