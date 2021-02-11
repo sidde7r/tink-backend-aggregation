@@ -1,8 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenticator;
 
-import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.util.concurrent.Uninterruptibles;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -12,6 +12,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field;
@@ -30,10 +31,10 @@ import se.tink.backend.aggregation.agents.utils.supplementalfields.CommonFields;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.GermanFields;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
-import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.libraries.i18n.Catalog;
 
+@RequiredArgsConstructor
 public class PostbankAuthenticationController implements TypedAuthenticator {
     private static final Pattern STARTCODE_CHIP_PATTERN = Pattern.compile("Startcode:\\s(\\d+)");
 
@@ -41,21 +42,8 @@ public class PostbankAuthenticationController implements TypedAuthenticator {
     private static final String SMS_OTP = "SMS_OTP";
     private static final String PUSH_OTP = "PUSH_OTP";
     private final Catalog catalog;
-    private final SupplementalInformationHelper supplementalInformationHelper;
     private final SupplementalInformationController supplementalInformationController;
     private final PostbankAuthenticator authenticator;
-
-    public PostbankAuthenticationController(
-            Catalog catalog,
-            SupplementalInformationHelper supplementalInformationHelper,
-            SupplementalInformationController supplementalInformationController,
-            PostbankAuthenticator authenticator) {
-        this.catalog = Preconditions.checkNotNull(catalog);
-        this.supplementalInformationHelper =
-                Preconditions.checkNotNull(supplementalInformationHelper);
-        this.supplementalInformationController = supplementalInformationController;
-        this.authenticator = authenticator;
-    }
 
     public CredentialsTypes getType() {
         return CredentialsTypes.PASSWORD;
@@ -69,17 +57,20 @@ public class PostbankAuthenticationController implements TypedAuthenticator {
 
         AuthorisationResponse initValues = authenticator.init(username, password);
 
-        List<ScaMethod> scaMethods = getOnlySupportedScaMethods(initValues.getScaMethods());
         ScaMethod chosenScaMethod = initValues.getChosenScaMethod();
 
-        // End process if auto-selected method is not supported
-        if (scaMethods.isEmpty() || (chosenScaMethod != null && !isSupported(chosenScaMethod))) {
+        if (chosenScaMethod != null && !isSupported(chosenScaMethod)) {
             throw LoginError.NO_AVAILABLE_SCA_METHODS.exception();
         }
 
-        // Select SCA method when user has more than one device.
         if (chosenScaMethod == null) {
-            chosenScaMethod = collectScaMethod(scaMethods);
+            List<ScaMethod> supportedScaMethods =
+                    getOnlySupportedScaMethods(initValues.getScaMethods());
+            if (supportedScaMethods.isEmpty()) {
+                throw LoginError.NO_AVAILABLE_SCA_METHODS.exception();
+            }
+
+            chosenScaMethod = collectScaMethod(supportedScaMethods);
             initValues =
                     authenticator.selectScaMethod(
                             chosenScaMethod.getAuthenticationMethodId(),
@@ -119,7 +110,9 @@ public class PostbankAuthenticationController implements TypedAuthenticator {
     }
 
     private List<ScaMethod> getOnlySupportedScaMethods(List<ScaMethod> scaMethods) {
-        return scaMethods.stream().filter(this::isSupported).collect(Collectors.toList());
+        return scaMethods == null
+                ? Collections.emptyList()
+                : scaMethods.stream().filter(this::isSupported).collect(Collectors.toList());
     }
 
     private boolean isSupported(ScaMethod scaMethod) {
@@ -132,7 +125,7 @@ public class PostbankAuthenticationController implements TypedAuthenticator {
         }
 
         Map<String, String> supplementalInformation =
-                supplementalInformationHelper.askSupplementalInformation(
+                supplementalInformationController.askSupplementalInformationSync(
                         CommonFields.Selection.build(
                                 catalog,
                                 scaMethods.stream()
@@ -206,8 +199,8 @@ public class PostbankAuthenticationController implements TypedAuthenticator {
         extractStartcode(authResponse)
                 .ifPresent(x -> fields.add(GermanFields.Startcode.build(catalog, x)));
         fields.add(GermanFields.Tan.build(catalog, scaMethodName));
-        return supplementalInformationHelper
-                .askSupplementalInformation(fields.toArray(new Field[0]))
+        return supplementalInformationController
+                .askSupplementalInformationSync(fields.toArray(new Field[0]))
                 .get(GermanFields.Tan.getFieldKey());
     }
 

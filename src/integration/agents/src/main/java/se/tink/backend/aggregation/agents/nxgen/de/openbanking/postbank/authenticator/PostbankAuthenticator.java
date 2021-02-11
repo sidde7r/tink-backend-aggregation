@@ -17,7 +17,7 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 @Slf4j
 @AllArgsConstructor
-public final class PostbankAuthenticator implements AutoAuthenticator {
+public class PostbankAuthenticator implements AutoAuthenticator {
 
     private final PostbankApiClient apiClient;
     private final PersistentStorage persistentStorage;
