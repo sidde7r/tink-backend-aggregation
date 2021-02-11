@@ -676,9 +676,11 @@ public class AgentWorkerOperationFactory {
         operationName =
                 shouldRefresh ? "execute-payment-with-refresh" : "execute-payment-without-refresh";
 
+        CryptoWrapper cryptoWrapper =
+                cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
+
         if (isAisPlusPisFlow(request)) {
-            CryptoWrapper cryptoWrapper =
-                    cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
+
             CredentialsCrypto credentialsCrypto =
                     new CredentialsCrypto(
                             cacheClient, controllerWrapper, cryptoWrapper, metricRegistry);
@@ -750,8 +752,6 @@ public class AgentWorkerOperationFactory {
                     new TransferAgentWorkerCommand(
                             context, request, createCommandMetricState(request)));
         } else {
-            CryptoWrapper cryptoWrapper =
-                    cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
             CredentialsCrypto credentialsCrypto =
                     new CredentialsCrypto(
                             cacheClient, controllerWrapper, cryptoWrapper, metricRegistry);
