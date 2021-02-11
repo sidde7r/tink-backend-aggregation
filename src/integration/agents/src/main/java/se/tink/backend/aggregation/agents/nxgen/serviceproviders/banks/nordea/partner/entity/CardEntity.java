@@ -3,14 +3,17 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.p
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.MoreObjects;
+import com.google.common.base.Strings;
 import java.math.BigDecimal;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.NordeaPartnerConstants.CardCategory;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.creditcard.CreditCardBuildStep;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.creditcard.CreditCardModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
@@ -87,8 +90,9 @@ public class CardEntity {
 
     @JsonIgnore
     private boolean isCreditCard() {
-        return (cardCategory.equalsIgnoreCase(CardCategory.CREDIT)
-                || cardCategory.equalsIgnoreCase(CardCategory.COMBINED));
+        return credit != null
+                && (cardCategory.equalsIgnoreCase(CardCategory.CREDIT)
+                        || cardCategory.equalsIgnoreCase(CardCategory.COMBINED));
     }
 
     @JsonIgnore
@@ -100,14 +104,17 @@ public class CardEntity {
         final String maskedCreditCardNumber = credit.getMaskedCreditCardNumber();
         final String cardAlias = MoreObjects.firstNonNull(nickname, maskedCreditCardNumber);
 
-        return Optional.of(
+        final CreditCardBuildStep builder =
                 CreditCardAccount.nxBuilder()
                         .withCardDetails(
                                 CreditCardModule.builder()
                                         .withCardNumber(maskedCreditCardNumber)
                                         .withBalance(
                                                 ExactCurrencyAmount.of(
-                                                        credit.getAvailableBalance(), currency))
+                                                        MoreObjects.firstNonNull(
+                                                                credit.getAvailableBalance(),
+                                                                BigDecimal.ZERO),
+                                                        currency))
                                         .withAvailableCredit(
                                                 ExactCurrencyAmount.of(
                                                         MoreObjects.firstNonNull(
@@ -124,11 +131,15 @@ public class CardEntity {
                                         .withAccountName(cardAlias)
                                         .addIdentifier(
                                                 AccountIdentifier.create(
-                                                        AccountIdentifier.Type.PAYMENT_CARD_NUMBER,
+                                                        Type.PAYMENT_CARD_NUMBER,
                                                         maskedCreditCardNumber))
                                         .build())
-                        .setApiIdentifier(cardId)
-                        .addHolderName(cardholderName)
-                        .build());
+                        .setApiIdentifier(cardId);
+
+        if (!Strings.isNullOrEmpty(cardholderName)) {
+            builder.addHolderName(cardholderName);
+        }
+
+        return Optional.of(builder.build());
     }
 }
