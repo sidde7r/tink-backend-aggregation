@@ -103,12 +103,9 @@ public class FakeIntegrationArgumentsCreator {
                     }
 
                     @Override
-                    public String requestSupplementalInformation(
-                            se.tink.backend.agents.rpc.Credentials credentials,
-                            long waitFor,
-                            TimeUnit timeUnit,
-                            boolean wait) {
-                        return null;
+                    public void requestSupplementalInformation(
+                            se.tink.backend.agents.rpc.Credentials credentials) {
+                        // NOOP
                     }
 
                     @Override

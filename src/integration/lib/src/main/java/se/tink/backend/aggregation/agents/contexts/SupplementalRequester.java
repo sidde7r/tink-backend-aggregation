@@ -6,12 +6,7 @@ import se.tink.backend.agents.rpc.Credentials;
 
 public interface SupplementalRequester {
 
-    String requestSupplementalInformation(
-            Credentials credentials, long waitFor, TimeUnit unit, boolean wait);
+    void requestSupplementalInformation(Credentials credentials);
 
     Optional<String> waitForSupplementalInformation(String mfaId, long waitFor, TimeUnit unit);
-
-    default String requestSupplementalInformation(Credentials credentials, boolean wait) {
-        return requestSupplementalInformation(credentials, 2, TimeUnit.MINUTES, wait);
-    }
 }

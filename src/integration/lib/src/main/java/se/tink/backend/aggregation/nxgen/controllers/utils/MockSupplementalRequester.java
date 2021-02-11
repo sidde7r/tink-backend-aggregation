@@ -5,7 +5,6 @@ import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public final class MockSupplementalRequester implements SupplementalRequester {
 
@@ -16,9 +15,8 @@ public final class MockSupplementalRequester implements SupplementalRequester {
     }
 
     @Override
-    public String requestSupplementalInformation(
-            Credentials credentials, long waitFor, TimeUnit timeUnit, boolean wait) {
-        return SerializationUtils.serializeToString(callbackData);
+    public void requestSupplementalInformation(Credentials credentials) {
+        // NOOP
     }
 
     @Override
