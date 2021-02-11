@@ -751,6 +751,12 @@ public class AgentWorkerOperationFactory {
                         new AgentWorkerMetricReporter(
                                 metricRegistry, this.providerTierConfiguration)));
 
+        // TODO this looks like a bug? Ask payments and double check
+        if (!isAisPlusPisFlow(request)) {
+            commands.add(
+                    new ReportProviderTransferMetricsAgentWorkerCommand(context, operationName));
+        }
+
         if (isAisPlusPisFlow(request)) {
 
             commands.add(
@@ -778,8 +784,6 @@ public class AgentWorkerOperationFactory {
                     new TransferAgentWorkerCommand(
                             context, request, createCommandMetricState(request)));
         } else {
-            commands.add(
-                    new ReportProviderTransferMetricsAgentWorkerCommand(context, operationName));
 
             // https://tink.slack.com/archives/CS4BJQJBV/p1612518614089100
             double skipRatio = 0.1;
