@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountBalanceEntity;
@@ -18,6 +19,7 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.creditcard.Cred
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.creditcard.CreditCardModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 
+@Slf4j
 @RequiredArgsConstructor
 public class CreditCardAccountMapper implements AccountMapper<CreditCardAccount> {
 
@@ -38,6 +40,11 @@ public class CreditCardAccountMapper implements AccountMapper<CreditCardAccount>
         AccountIdentifierEntity cardIdentifier =
                 identifierMapper.getCreditCardIdentifier(account.getIdentifiers());
         String displayName = pickDisplayName(account, cardIdentifier);
+        log.info(
+                "Credit card identifier with length {} is masked: {}",
+                CreditCardIdentifierUtils.getCardIdentifierLength(
+                        cardIdentifier.getIdentification()),
+                CreditCardIdentifierUtils.isMaskedIdentifier(cardIdentifier.getIdentification()));
 
         CreditCardBuildStep builder =
                 CreditCardAccount.nxBuilder()
