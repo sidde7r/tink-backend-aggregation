@@ -785,11 +785,12 @@ public class AgentWorkerOperationFactory {
 
         commands.add(new CreateLogMaskerWorkerCommand(context));
 
+        commands.add(
+                new DebugAgentWorkerCommand(
+                        context, debugAgentWorkerCommandState, agentDebugStorageHandler));
+
         if (isAisPlusPisFlow(request)) {
 
-            commands.add(
-                    new DebugAgentWorkerCommand(
-                            context, debugAgentWorkerCommandState, agentDebugStorageHandler));
             commands.add(
                     new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
             addClearSensitivePayloadOnForceAuthenticateCommandAndLoginAgentWorkerCommand(
@@ -802,9 +803,6 @@ public class AgentWorkerOperationFactory {
                             context, request, createCommandMetricState(request)));
         } else {
 
-            commands.add(
-                    new DebugAgentWorkerCommand(
-                            context, debugAgentWorkerCommandState, agentDebugStorageHandler));
             commands.add(
                     new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
             commands.add(
