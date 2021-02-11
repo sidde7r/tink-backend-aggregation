@@ -50,6 +50,8 @@ public class AmexTestFixtures {
     public static final String ACCOUNT_NUMBER_1 = "XXXX-XXXXXX-81007";
     public static final String ACCOUNT_NUMBER_2 = "XXXX-XXXXXX-82009";
     public static final String ORIGINATING_USER_IP = "127.0.0.1";
+    public static final String STATEMENTS = "STATEMENTS";
+    public static final String STATEMENT_MAP = "{\"0\":\"2000-01-01\"}";
 
     public static HmacMultiToken createMultiTokenWithExpiredAccessToken() {
         final HmacToken validHmacToken =
