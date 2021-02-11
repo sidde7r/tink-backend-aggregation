@@ -869,33 +869,36 @@ public class AgentWorkerOperationFactory {
                 new CredentialsCrypto(
                         cacheClient, controllerWrapper, cryptoWrapper, metricRegistry);
 
-        ArrayList<AgentWorkerCommand> commands =
-                Lists.newArrayList(
-                        new ValidateProviderAgentWorkerStatus(context, controllerWrapper),
-                        new ExpireSessionAgentWorkerCommand(
-                                request.isManual(),
-                                context,
-                                request.getCredentials(),
-                                request.getProvider()),
-                        new CircuitBreakerAgentWorkerCommand(
-                                context, circuitBreakAgentWorkerCommandState),
-                        new LockAgentWorkerCommand(
-                                context, operationName, interProcessSemaphoreMutexFactory),
-                        new DecryptCredentialsWorkerCommand(context, credentialsCrypto),
-                        new UpdateCredentialsStatusAgentWorkerCommand(
-                                controllerWrapper,
-                                request.getCredentials(),
-                                request.getProvider(),
-                                context,
-                                c -> true), // is it enough to return true in this predicate?
-                        new ReportProviderMetricsAgentWorkerCommand(
-                                context,
-                                operationName,
-                                reportMetricsAgentWorkerCommandState,
-                                new AgentWorkerMetricReporter(
-                                        metricRegistry, this.providerTierConfiguration)),
-                        new ReportProviderTransferMetricsAgentWorkerCommand(
-                                context, operationName));
+        ArrayList<AgentWorkerCommand> commands = new ArrayList<>();
+
+        commands.add(new ValidateProviderAgentWorkerStatus(context, controllerWrapper));
+        commands.add(
+                new ExpireSessionAgentWorkerCommand(
+                        request.isManual(),
+                        context,
+                        request.getCredentials(),
+                        request.getProvider()));
+        commands.add(
+                new CircuitBreakerAgentWorkerCommand(context, circuitBreakAgentWorkerCommandState));
+        commands.add(
+                new LockAgentWorkerCommand(
+                        context, operationName, interProcessSemaphoreMutexFactory));
+        commands.add(new DecryptCredentialsWorkerCommand(context, credentialsCrypto));
+        commands.add(
+                new UpdateCredentialsStatusAgentWorkerCommand(
+                        controllerWrapper,
+                        request.getCredentials(),
+                        request.getProvider(),
+                        context,
+                        c -> true)); // is it enough to return true in this predicate?
+        commands.add(
+                new ReportProviderMetricsAgentWorkerCommand(
+                        context,
+                        operationName,
+                        reportMetricsAgentWorkerCommandState,
+                        new AgentWorkerMetricReporter(
+                                metricRegistry, this.providerTierConfiguration)));
+        commands.add(new ReportProviderTransferMetricsAgentWorkerCommand(context, operationName));
 
         // https://tink.slack.com/archives/CS4BJQJBV/p1612518614089100
         double skipRatio = 0.1;
@@ -914,18 +917,19 @@ public class AgentWorkerOperationFactory {
         log.info(
                 "sendDataForProcessingAgentWorkerCommand is used in command chain: {}", isIncluded);
 
-        ArrayList<AgentWorkerCommand> agentWorkerCommandsPart2 =
-                Lists.newArrayList(
-                        new CreateAgentConfigurationControllerWorkerCommand(
-                                context, tppSecretsServiceClient),
-                        new CreateLogMaskerWorkerCommand(context),
-                        new DebugAgentWorkerCommand(
-                                context, debugAgentWorkerCommandState, agentDebugStorageHandler),
-                        new InstantiateAgentWorkerCommand(
-                                context, instantiateAgentWorkerCommandState),
-                        new TransferAgentWorkerCommand(
-                                context, request, createCommandMetricState(request)));
-        commands.addAll(agentWorkerCommandsPart2);
+        commands.add(
+                new CreateAgentConfigurationControllerWorkerCommand(
+                        context, tppSecretsServiceClient));
+        commands.add(new CreateLogMaskerWorkerCommand(context));
+        commands.add(
+                new DebugAgentWorkerCommand(
+                        context, debugAgentWorkerCommandState, agentDebugStorageHandler));
+        commands.add(
+                new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
+        commands.add(
+                new TransferAgentWorkerCommand(
+                        context, request, createCommandMetricState(request)));
+
         return commands;
     }
 
