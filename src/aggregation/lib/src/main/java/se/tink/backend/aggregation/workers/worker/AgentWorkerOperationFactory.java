@@ -706,9 +706,10 @@ public class AgentWorkerOperationFactory {
 
         commands.add(lockAgentWorkerCommand);
 
+        commands.add(new DecryptCredentialsWorkerCommand(context, credentialsCrypto));
+
         if (isAisPlusPisFlow(request)) {
 
-            commands.add(new DecryptCredentialsWorkerCommand(context, credentialsCrypto));
             commands.add(
                     new MigrateCredentialsAndAccountsWorkerCommand(
                             context.getRequest(), controllerWrapper, clientInfo));
@@ -762,7 +763,6 @@ public class AgentWorkerOperationFactory {
                             context, request, createCommandMetricState(request)));
         } else {
 
-            commands.add(new DecryptCredentialsWorkerCommand(context, credentialsCrypto));
             commands.add(
                     new UpdateCredentialsStatusAgentWorkerCommand(
                             controllerWrapper,
