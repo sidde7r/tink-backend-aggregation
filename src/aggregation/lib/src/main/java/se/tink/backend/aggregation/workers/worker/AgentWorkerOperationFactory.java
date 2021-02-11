@@ -918,17 +918,6 @@ public class AgentWorkerOperationFactory {
                                 context, request, createCommandMetricState(request)));
 
         // https://tink.slack.com/archives/CS4BJQJBV/p1612518614089100
-        return combineCommandsListWhileMigratingAwayFromCommand(
-                agentWorkerCommandsPart1,
-                agentWorkerCommandsPart2,
-                sendDataForProcessingAgentWorkerCommand);
-    }
-
-    private List<AgentWorkerCommand> combineCommandsListWhileMigratingAwayFromCommand(
-            ArrayList<AgentWorkerCommand> agentWorkerCommandsPart1,
-            ArrayList<AgentWorkerCommand> agentWorkerCommandsPart2,
-            SendDataForProcessingAgentWorkerCommand sendDataForProcessingAgentWorkerCommand) {
-
         double skipRatio = 0.1;
         boolean isIncluded = random.nextDouble() > skipRatio;
         if (isIncluded) {
