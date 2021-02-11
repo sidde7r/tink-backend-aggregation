@@ -783,9 +783,10 @@ public class AgentWorkerOperationFactory {
                 new CreateAgentConfigurationControllerWorkerCommand(
                         context, tppSecretsServiceClient));
 
+        commands.add(new CreateLogMaskerWorkerCommand(context));
+
         if (isAisPlusPisFlow(request)) {
 
-            commands.add(new CreateLogMaskerWorkerCommand(context));
             commands.add(
                     new DebugAgentWorkerCommand(
                             context, debugAgentWorkerCommandState, agentDebugStorageHandler));
@@ -801,7 +802,6 @@ public class AgentWorkerOperationFactory {
                             context, request, createCommandMetricState(request)));
         } else {
 
-            commands.add(new CreateLogMaskerWorkerCommand(context));
             commands.add(
                     new DebugAgentWorkerCommand(
                             context, debugAgentWorkerCommandState, agentDebugStorageHandler));
