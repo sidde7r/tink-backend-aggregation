@@ -13,6 +13,9 @@ public class CSNConstants {
 
         static final String CURRENT_DEBT = BASE_URL + "/api/kund-api-webb/rest/kund/aktuellskuld";
         static final String USER_INFO = BASE_URL + "/api/kund-api-webb/rest/kund/info";
+
+        static final String LOAN_TRANSACTIONS =
+                BASE_URL + "/api/inbetalning-api-webb/rest/inbetalningar/registrerade";
     }
 
     public static class BankIdStatus {
@@ -50,6 +53,7 @@ public class CSNConstants {
     }
 
     static class HeaderValues {
+        static final String BEARER = "Bearer ";
         static final String USER_AGENT = "Mozilla/5.0";
     }
 }

@@ -56,47 +56,47 @@ public class LoanEntity {
     }
 
     public LoanAccount toTinkLoanAccount(
-            UserInfoResponse userInfoResponse, LoanAccountsResponse loanAccountsResponse) {
+            LoanTransactionsResponse loanTransactions,
+            UserInfoResponse userInfo,
+            LoanAccountsResponse loanAccount) {
         return LoanAccount.nxBuilder()
-                .withLoanDetails(getLoanModule(loanAccountsResponse))
-                .withId(getIdModule(userInfoResponse))
-                .addHolders(Holder.of(userInfoResponse.getName(), Role.HOLDER))
+                .withLoanDetails(getLoanModule(loanTransactions, loanAccount))
+                .withId(getIdModule(userInfo))
+                .addHolders(Holder.of(userInfo.getName(), Role.HOLDER))
                 .build();
     }
 
-    private LoanModule getLoanModule(LoanAccountsResponse loanAccountsResponse) {
+    private LoanModule getLoanModule(
+            LoanTransactionsResponse loanTransactions, LoanAccountsResponse loanAccount) {
         return LoanModule.builder()
                 .withType(LoanDetails.Type.STUDENT)
-                .withBalance(ExactCurrencyAmount.of(getOutgoingDebt(), CSNConstants.CURRENCY))
-                .withInterestRate(loanAccountsResponse.getInterestRate().doubleValue())
+                .withBalance(getOutgoingDebt().negate())
+                .withInterestRate(loanAccount.getInterestRate().doubleValue())
                 .setLoanNumber(getAccountNumber())
-                .setInitialBalance(ExactCurrencyAmount.of(getIncomingDebt(), CSNConstants.CURRENCY))
+                .setAmortized(
+                        ExactCurrencyAmount.of(
+                                loanTransactions.getTotalAmortization(serialNumber),
+                                CSNConstants.CURRENCY))
                 .build();
     }
 
-    private IdModule getIdModule(UserInfoResponse userInfoResponse) {
+    private IdModule getIdModule(UserInfoResponse userInfo) {
         return IdModule.builder()
-                .withUniqueIdentifier(getUniqueIdenifier(userInfoResponse.getSsn()))
+                .withUniqueIdentifier(getUniqueIdenifier(userInfo.getSsn()))
                 .withAccountNumber(getAccountNumber())
                 .withAccountName(getAccountName())
                 .addIdentifier(AccountIdentifier.create(Type.TINK, getAccountNumber()))
                 .build();
     }
 
-    private BigDecimal getIncomingDebt() {
-        return debtSpecification.stream()
-                .filter(DebtDetailEntity::isIncomingDebt)
-                .map(DebtDetailEntity::getAmount)
-                .findFirst()
-                .orElse(null);
-    }
-
-    private BigDecimal getOutgoingDebt() {
-        return debtSpecification.stream()
-                .filter(DebtDetailEntity::isOutgoingDebt)
-                .map(DebtDetailEntity::getAmount)
-                .findFirst()
-                .orElse(null);
+    private ExactCurrencyAmount getOutgoingDebt() {
+        return ExactCurrencyAmount.of(
+                debtSpecification.stream()
+                        .filter(DebtDetailEntity::isOutgoingDebt)
+                        .map(DebtDetailEntity::getAmount)
+                        .findFirst()
+                        .orElse(null),
+                CSNConstants.CURRENCY);
     }
 
     private String getUniqueIdenifier(String ssn) {

@@ -20,11 +20,6 @@ public class DebtDetailEntity {
     private BigDecimal amount;
 
     @JsonIgnore
-    public boolean isIncomingDebt() {
-        return "Ingående skuld".equalsIgnoreCase(event);
-    }
-
-    @JsonIgnore
     public boolean isOutgoingDebt() {
         return "Utgående skuld".equalsIgnoreCase(event);
     }
