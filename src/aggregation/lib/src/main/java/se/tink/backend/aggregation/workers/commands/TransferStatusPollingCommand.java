@@ -20,7 +20,6 @@ import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.signableoperation.rpc.SignableOperation;
 import se.tink.libraries.transfer.rpc.Transfer;
-import se.tink.libraries.uuid.UUIDUtils;
 
 @Slf4j
 public class TransferStatusPollingCommand extends AgentWorkerCommand {
@@ -66,7 +65,8 @@ public class TransferStatusPollingCommand extends AgentWorkerCommand {
             return AgentWorkerCommandResult.ABORT;
         }
 
-        PaymentStatus paymentStatus;
+        // FIXME this is only temporary
+        /*PaymentStatus paymentStatus;
         try {
             paymentStatus = pollForStatus(transfer);
         } catch (ExecutionException | RetryException e) {
@@ -80,7 +80,7 @@ public class TransferStatusPollingCommand extends AgentWorkerCommand {
 
         if (paymentStatus != PaymentStatus.SETTLEMENT_COMPLETED) {
             return AgentWorkerCommandResult.ABORT;
-        }
+        }*/
 
         signableOperation.setStatus(SignableOperationStatuses.SETTLEMENT_COMPLETED);
         context.updateSignableOperation(signableOperation);

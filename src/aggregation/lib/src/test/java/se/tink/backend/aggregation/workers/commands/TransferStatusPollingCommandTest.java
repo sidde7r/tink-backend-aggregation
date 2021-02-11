@@ -10,6 +10,7 @@ import static org.mockito.Mockito.withSettings;
 
 import java.util.Optional;
 import lombok.SneakyThrows;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
@@ -30,6 +31,7 @@ import se.tink.libraries.transfer.mocks.TransferMock;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 import se.tink.libraries.transfer.rpc.Transfer;
 
+@Ignore
 @RunWith(MockitoJUnitRunner.class)
 public class TransferStatusPollingCommandTest {
 
