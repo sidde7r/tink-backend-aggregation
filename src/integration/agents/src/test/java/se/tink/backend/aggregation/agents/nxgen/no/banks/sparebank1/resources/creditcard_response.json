@@ -208,7 +208,7 @@
             "statusBlocked": true,
             "statusBlockedAndReplaced": false,
             "statusClosed": false,
-            "statusInactive": false,
+            "statusInactive": true,
             "_links": {
                 "details": {
                     "href": "https://mobilbank-pm.sparebank1.no/ostlandet/nettbank-privat/kort/rest/cards/v2/credit/3883510",
