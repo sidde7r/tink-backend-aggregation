@@ -57,7 +57,8 @@ public class NemIdWaitForCodeAppResponseStep {
                 supplementalInformationController.waitForSupplementalInformation(
                         mfaId,
                         NemIdConstants.NEM_ID_TIMEOUT_SECONDS_WITH_SAFETY_MARGIN,
-                        TimeUnit.SECONDS);
+                        TimeUnit.SECONDS,
+                        true);
 
         /*
          * When user doesn't click "Ok" button in app we should abandon authentication - otherwise we would
