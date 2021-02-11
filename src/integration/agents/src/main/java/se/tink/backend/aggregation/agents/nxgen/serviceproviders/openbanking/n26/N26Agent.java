@@ -5,11 +5,15 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;
+import java.util.List;
 import java.util.Optional;
 import lombok.SneakyThrows;
+import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentPisCapability;
 import se.tink.backend.aggregation.agents.agentplatform.AgentPlatformHttpClient;
@@ -27,6 +31,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.Xs2aAuthenticationDataAccessor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.configuration.Xs2aDevelopersConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.transactionalaccount.Xs2aDevelopersTransactionalAccountFetcher;
+import se.tink.backend.aggregation.agents.utils.transfer.InferredTransferDestinations;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationPersistedData;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationProcess;
 import se.tink.backend.aggregation.client.provider_configuration.rpc.PisCapability;
@@ -42,15 +47,16 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.libraries.account.AccountIdentifier;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, TRANSFERS})
 @AgentPisCapability(capabilities = {PisCapability.PIS_SEPA})
-public final class N26Agent extends AgentPlatformAgent implements RefreshCheckingAccountsExecutor {
+public final class N26Agent extends AgentPlatformAgent
+        implements RefreshCheckingAccountsExecutor, RefreshTransferDestinationExecutor {
 
     private final Xs2aAuthenticationDataAccessor xs2aAuthenticationDataAccessor;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final Xs2aDevelopersForAgentPlatformApiClient xs2aApiClient;
-    private final RedirectTokensAccessor oAuth2TokenAccessor;
     private final ObjectMapper objectMapper;
     private final SupplementalInformationHelper supplementalInformationHelper;
 
@@ -58,7 +64,8 @@ public final class N26Agent extends AgentPlatformAgent implements RefreshCheckin
     public N26Agent(AgentComponentProvider componentProvider) {
         super(componentProvider);
         objectMapper = new ObjectMapper();
-        oAuth2TokenAccessor = new RedirectTokensAccessor(persistentStorage, objectMapper);
+        RedirectTokensAccessor oAuth2TokenAccessor =
+                new RedirectTokensAccessor(persistentStorage, objectMapper);
         xs2aAuthenticationDataAccessor =
                 constructXs2aAuthenticationDataAccessor(
                         oAuth2TokenAccessor,
@@ -178,5 +185,11 @@ public final class N26Agent extends AgentPlatformAgent implements RefreshCheckin
                         persistentStorage);
 
         return Optional.of(new PaymentController(n26Xs2aPaymentExecutor, n26Xs2aPaymentExecutor));
+    }
+
+    @Override
+    public FetchTransferDestinationsResponse fetchTransferDestinations(List<Account> accounts) {
+        return InferredTransferDestinations.forPaymentAccounts(
+                accounts, AccountIdentifier.Type.IBAN);
     }
 }
