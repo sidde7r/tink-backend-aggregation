@@ -131,7 +131,7 @@ public final class SebAgent extends SebBaseAgent<SebApiClient>
     @Override
     public Optional<PaymentController> constructPaymentController() {
         SebPaymentExecutor sebPaymentExecutor =
-                new SebPaymentExecutor(apiClient, supplementalRequester);
+                new SebPaymentExecutor(apiClient, supplementalInformationController);
 
         return Optional.of(new PaymentController(sebPaymentExecutor, sebPaymentExecutor));
     }

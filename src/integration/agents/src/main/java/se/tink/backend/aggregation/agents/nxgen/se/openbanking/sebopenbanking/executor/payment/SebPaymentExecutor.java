@@ -8,7 +8,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.ReferenceValidationException;
@@ -35,6 +34,7 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.signing.Signer;
 import se.tink.backend.aggregation.nxgen.controllers.signing.SigningStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.signing.multifactor.bankid.BankIdSigningController;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.enums.PaymentType;
@@ -47,12 +47,14 @@ public class SebPaymentExecutor implements PaymentExecutor, FetchablePaymentExec
     private static final Logger logger =
             LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    private final SupplementalRequester supplementalRequester;
+    private final SupplementalInformationController supplementalInformationController;
     private SebApiClient apiClient;
 
-    public SebPaymentExecutor(SebApiClient apiClient, SupplementalRequester supplementalRequester) {
+    public SebPaymentExecutor(
+            SebApiClient apiClient,
+            SupplementalInformationController supplementalInformationController) {
         this.apiClient = apiClient;
-        this.supplementalRequester = supplementalRequester;
+        this.supplementalInformationController = supplementalInformationController;
     }
 
     @Override
@@ -223,7 +225,8 @@ public class SebPaymentExecutor implements PaymentExecutor, FetchablePaymentExec
     }
 
     private Signer getSigner() {
-        return new BankIdSigningController(supplementalRequester, new SebBankIdSigner(apiClient));
+        return new BankIdSigningController(
+                supplementalInformationController, new SebBankIdSigner(apiClient));
     }
 
     public PaymentStatus fetchStatus(PaymentRequest paymentRequest) throws PaymentException {

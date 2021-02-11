@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.demo.banks.bankid;
 
 import java.util.ArrayList;
-import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepRequest;
@@ -14,16 +13,18 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.signing.Signer;
 import se.tink.backend.aggregation.nxgen.controllers.signing.SigningStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.signing.multifactor.bankid.BankIdSigningController;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.rpc.Payment;
 
 public class DemoBankIdPaymentExecutor implements PaymentExecutor {
 
-    private final SupplementalRequester supplementalRequester;
+    private final SupplementalInformationController supplementalInformationController;
 
-    public DemoBankIdPaymentExecutor(SupplementalRequester supplementalRequester) {
-        this.supplementalRequester = supplementalRequester;
+    public DemoBankIdPaymentExecutor(
+            SupplementalInformationController supplementalInformationController) {
+        this.supplementalInformationController = supplementalInformationController;
     }
 
     @Override
@@ -59,7 +60,8 @@ public class DemoBankIdPaymentExecutor implements PaymentExecutor {
     }
 
     private Signer getSigner() {
-        return new BankIdSigningController(supplementalRequester, new DemoBankIdSigner());
+        return new BankIdSigningController(
+                supplementalInformationController, new DemoBankIdSigner());
     }
 
     @Override

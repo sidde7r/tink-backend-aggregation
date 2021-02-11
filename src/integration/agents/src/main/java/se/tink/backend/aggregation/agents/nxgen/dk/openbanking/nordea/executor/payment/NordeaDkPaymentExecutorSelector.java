@@ -1,13 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.dk.openbanking.nordea.executor.payment;
 
 import java.util.Collection;
-import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.executor.payment.NordeaBasePaymentExecutor;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.signing.Signer;
 import se.tink.backend.aggregation.nxgen.controllers.signing.multifactor.bankid.BankIdSigningController;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.core.account.GenericTypeMapper;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.libraries.account.AccountIdentifier.Type;
@@ -24,12 +24,13 @@ public class NordeaDkPaymentExecutorSelector extends NordeaBasePaymentExecutor {
                                     new Pair<>(Type.DK, Type.IBAN))
                             .build();
 
-    private final SupplementalRequester supplementalRequester;
+    private final SupplementalInformationController supplementalInformationController;
 
     public NordeaDkPaymentExecutorSelector(
-            NordeaBaseApiClient apiClient, SupplementalRequester supplementalRequester) {
+            NordeaBaseApiClient apiClient,
+            SupplementalInformationController supplementalInformationController) {
         super(apiClient);
-        this.supplementalRequester = supplementalRequester;
+        this.supplementalInformationController = supplementalInformationController;
     }
 
     @Override
@@ -53,6 +54,7 @@ public class NordeaDkPaymentExecutorSelector extends NordeaBasePaymentExecutor {
 
     @Override
     protected Signer getSigner() {
-        return new BankIdSigningController(supplementalRequester, new NordeaDkBankIdSigner(this));
+        return new BankIdSigningController(
+                supplementalInformationController, new NordeaDkBankIdSigner(this));
     }
 }

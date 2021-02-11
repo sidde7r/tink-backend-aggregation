@@ -232,7 +232,7 @@ public final class BankIdDemoAgent extends NextGenerationDemoAgent
     @Override
     public Optional<PaymentController> constructPaymentController() {
         DemoBankIdPaymentExecutor paymentExecutor =
-                new DemoBankIdPaymentExecutor(supplementalRequester);
+                new DemoBankIdPaymentExecutor(supplementalInformationController);
         return Optional.of(new PaymentController(paymentExecutor));
     }
 }
