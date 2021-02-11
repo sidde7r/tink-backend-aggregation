@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.reactivex.rxjava3.plugins.RxJavaPlugins;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -84,6 +85,7 @@ import se.tink.backend.aggregation.nxgen.http.filter.filters.iface.Filter;
 import se.tink.backend.aggregation.nxgen.instrumentation.FetcherInstrumentationRegistry;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SortCodeIdentifier;
+import se.tink.libraries.concurrency.RunnableMdcWrapper;
 import se.tink.libraries.identitydata.IdentityData;
 import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Payment;
@@ -132,6 +134,7 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
         this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
         this.fetcherInstrumentation = new FetcherInstrumentationRegistry();
         this.pisRequestFilter = pisRequestFilter;
+        configureMdcPropagation();
     }
 
     public UkOpenBankingBaseAgent(
@@ -513,5 +516,9 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
 
         return new UkOpenBankingPisRequestFilter(
                 jwtSignatureHelper, paymentStorage, randomValueGenerator);
+    }
+
+    private static void configureMdcPropagation() {
+        RxJavaPlugins.setScheduleHandler(RunnableMdcWrapper::wrap);
     }
 }
