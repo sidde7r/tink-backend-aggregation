@@ -52,7 +52,7 @@ public final class DanskeBankNOAgent extends DanskeBankAgent {
                         deviceId,
                         configuration,
                         new WebDriverHelper(),
-                        supplementalRequester,
+                        supplementalInformationController,
                         catalog);
         return new AutoAuthenticationController(
                 request,

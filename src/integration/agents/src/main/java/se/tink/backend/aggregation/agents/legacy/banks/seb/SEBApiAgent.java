@@ -288,7 +288,7 @@ public final class SEBApiAgent extends AbstractAgent
 
     private static final Predicate<ExternalAccount> EXTERNALACCOUNT_IS_BG_OR_PG =
             externalAccount -> externalAccount.isBankGiro() || externalAccount.isPostGiro();
-    private static ObjectMapper mapper = new ObjectMapper();
+    private static final ObjectMapper mapper = new ObjectMapper();
     // private static final String USER_AGENT =
     // "Dalvik/1.6.0 (Linux; U; Android 4.3; Nexus 4 Build/JWR66Y) SEBapp/1.0 (os=android/4.3;
     // app=se.seb.privatkund/5.2.1)";
@@ -905,7 +905,8 @@ public final class SEBApiAgent extends AbstractAgent
         }
         final AuthenticationResponse authenticationResponse =
                 response.getEntity(AuthenticationResponse.class);
-        supplementalRequester.openBankId(authenticationResponse.getAutoStartToken(), false);
+        supplementalInformationController.openMobileBankIdAsync(
+                authenticationResponse.getAutoStartToken());
         return response.getHeaders().getFirst(X_SEB_CSRF);
     }
 
@@ -2165,7 +2166,7 @@ public final class SEBApiAgent extends AbstractAgent
             throws Exception {
         try {
             initSignExternalPayment();
-            requestSupplementalBankId();
+            supplementalInformationController.openMobileBankIdAsync(null);
             ensureExternalPaymentSignedOrThrow(transfer, transferQueuedUp);
         } catch (Exception e) {
             deleteTransferAndThrowException(transferQueuedUp, e);
@@ -2312,10 +2313,6 @@ public final class SEBApiAgent extends AbstractAgent
         }
 
         return false;
-    }
-
-    private void requestSupplementalBankId() {
-        supplementalRequester.openBankId(null, false);
     }
 
     private boolean deleteTransferFromOutbox(TransferListEntity transferQueuedUp) {

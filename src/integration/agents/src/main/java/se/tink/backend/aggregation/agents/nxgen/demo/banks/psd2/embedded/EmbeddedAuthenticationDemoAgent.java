@@ -91,7 +91,7 @@ public final class EmbeddedAuthenticationDemoAgent extends NextGenerationDemoAge
     @Override
     protected Optional<TransferController> constructTransferController() {
         PasswordDemoTransferExecutor transferExecutor =
-                new PasswordDemoTransferExecutor(credentials, supplementalRequester);
+                new PasswordDemoTransferExecutor(credentials);
 
         return Optional.of(new TransferController(null, transferExecutor));
     }

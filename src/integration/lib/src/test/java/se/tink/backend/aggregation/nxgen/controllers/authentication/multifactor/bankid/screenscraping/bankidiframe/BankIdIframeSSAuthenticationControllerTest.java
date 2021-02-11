@@ -17,13 +17,12 @@ import org.mockito.Mockito;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
-import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.screenscraping.WebScrapingConstants.Xpath;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.screenscraping.bankidiframe.initializer.IframeInitializer;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.i18n.LocalizableKey;
 import se.tink.libraries.selenium.WebDriverHelper;
@@ -63,8 +62,7 @@ public class BankIdIframeSSAuthenticationControllerTest {
                         webDriverHelper,
                         driver,
                         iframeInitializer,
-                        new Credentials(),
-                        mock(SupplementalRequester.class),
+                        mock(SupplementalInformationController.class),
                         catalog);
         initializeWebElements();
     }

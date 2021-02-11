@@ -111,7 +111,7 @@ public final class HandelsbankenNOAgent extends NextGenerationAgent
                 request,
                 systemUpdater,
                 new BankIdAuthenticationControllerNO(
-                        supplementalRequester, multiFactorAuthenticator, catalog),
+                        supplementalInformationController, multiFactorAuthenticator, catalog),
                 autoAuthenticator);
     }
 

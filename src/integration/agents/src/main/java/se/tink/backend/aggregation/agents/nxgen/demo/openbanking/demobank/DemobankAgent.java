@@ -126,7 +126,7 @@ public final class DemobankAgent extends NextGenerationAgent
         if (CredentialsTypes.MOBILE_BANKID.equals(provider.getCredentialsType())
                 && "NO".equals(provider.getMarket())) {
             return new BankIdAuthenticationControllerNO(
-                    supplementalRequester,
+                    supplementalInformationController,
                     new DemobankMockNoBankIdAuthenticator(apiClient),
                     catalog);
         } else if (CredentialsTypes.THIRD_PARTY_APP.equals(provider.getCredentialsType())

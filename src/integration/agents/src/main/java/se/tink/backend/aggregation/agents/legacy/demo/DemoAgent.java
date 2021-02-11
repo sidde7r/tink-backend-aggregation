@@ -10,7 +10,6 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.TRANSFERS;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Objects;
 import com.google.common.base.Strings;
@@ -77,7 +76,6 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.date.CountryDateHelper;
 import se.tink.libraries.enums.SwedishGiroType;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.rpc.Transfer;
@@ -108,6 +106,8 @@ public final class DemoAgent extends AbstractAgent
 
     private static final Locale DEFAULT_LOCALE = Locale.getDefault();
     private static final CountryDateHelper dateHelper = new CountryDateHelper(DEFAULT_LOCALE);
+    private static final String CODE_1 = "code1";
+    private static final String CODE_2 = "code2";
 
     private final DemoCredentials demoCredentials;
     private final String userPath;
@@ -128,7 +128,7 @@ public final class DemoAgent extends AbstractAgent
         accountsFile = new File(userPath + File.separator + "accounts.txt");
     }
 
-    private static List<Field> createChallengeAndResponse(String code) {
+    private static Field[] createChallengeAndResponse(String code) {
         Field challengeField =
                 Field.builder()
                         .immutable(true)
@@ -149,7 +149,7 @@ public final class DemoAgent extends AbstractAgent
                         .pattern("([a-zA-Z0-9]{" + code.length() + "})")
                         .build();
 
-        return Lists.newArrayList(challengeField, responseField);
+        return new Field[] {challengeField, responseField};
     }
 
     @Override
@@ -184,18 +184,15 @@ public final class DemoAgent extends AbstractAgent
         if (demoCredentials != null
                 && demoCredentials.hasFeature(DemoUserFeature.REQUIRES_BANK_ID)) {
             for (int i = 0; i < 10; i++) {
-                credentials.setStatusPayload(null);
-                credentials.setStatus(CredentialsStatus.AWAITING_MOBILE_BANKID_AUTHENTICATION);
-
-                supplementalRequester.requestSupplementalInformation(credentials, false);
+                supplementalInformationController.openMobileBankIdAsync(null);
 
                 Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
             }
         } else if (demoCredentials != null
                 && demoCredentials.hasFeature(DemoUserFeature.REQUIRES_SUPPLEMENTAL_INFORMATION)) {
-            String response = requestChallengeResponse(request.getCredentials(), "code1");
+            String response = requestChallengeResponse(CODE_1);
 
-            if (Strings.isNullOrEmpty(response) || !response.equals("code1")) {
+            if (Strings.isNullOrEmpty(response) || !response.equals(CODE_1)) {
                 throw LoginError.INCORRECT_CHALLENGE_RESPONSE.exception();
             }
         }
@@ -282,15 +279,15 @@ public final class DemoAgent extends AbstractAgent
     @Override
     public void execute(Transfer transfer) throws Exception, TransferExecutionException {
         if (!Objects.equal(demoCredentials.getUsername(), "201212121212")) {
-            String response = requestChallengeResponse(request.getCredentials(), "code1");
-            if (Strings.isNullOrEmpty(response) || !response.equals("code1")) {
+            String response = requestChallengeResponse(CODE_1);
+            if (Strings.isNullOrEmpty(response) || !response.equals(CODE_1)) {
                 throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
                         .setEndUserMessage("Kod nr 1 var felaktig")
                         .build();
             }
 
-            response = requestChallengeResponse(request.getCredentials(), "code2");
-            if (Strings.isNullOrEmpty(response) || !response.equals("code2")) {
+            response = requestChallengeResponse(CODE_2);
+            if (Strings.isNullOrEmpty(response) || !response.equals(CODE_2)) {
                 throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
                         .setEndUserMessage("Kod nr 2 var felaktig")
                         .build();
@@ -362,24 +359,11 @@ public final class DemoAgent extends AbstractAgent
                 countryDateHelper.getProvidedDateOrCurrentDate(currentDueDate));
     }
 
-    private String requestChallengeResponse(Credentials credentials, String code) {
-        List<Field> fields = createChallengeAndResponse(code);
-
-        credentials.setStatus(CredentialsStatus.AWAITING_SUPPLEMENTAL_INFORMATION);
-        credentials.setSupplementalInformation(SerializationUtils.serializeToString(fields));
-
-        String supplementalInformation =
-                supplementalRequester.requestSupplementalInformation(credentials, true);
-
-        log.info("Supplemental Information response is: " + supplementalInformation);
-
-        if (Strings.isNullOrEmpty(supplementalInformation)) {
-            return null;
-        }
+    private String requestChallengeResponse(String code) {
+        Field[] fields = createChallengeAndResponse(code);
 
         Map<String, String> answers =
-                SerializationUtils.deserializeFromString(
-                        supplementalInformation, new TypeReference<HashMap<String, String>>() {});
+                supplementalInformationController.askSupplementalInformationSync(fields);
 
         return answers.get("response");
     }

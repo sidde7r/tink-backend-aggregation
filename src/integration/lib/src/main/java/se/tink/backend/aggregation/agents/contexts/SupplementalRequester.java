@@ -19,10 +19,6 @@ public interface SupplementalRequester {
 
     Optional<String> waitForSupplementalInformation(String mfaId, long waitFor, TimeUnit unit);
 
-    default String requestSupplementalInformation(Credentials credentials) {
-        return requestSupplementalInformation(credentials, true);
-    }
-
     default String requestSupplementalInformation(Credentials credentials, boolean wait) {
         return requestSupplementalInformation(credentials, 2, TimeUnit.MINUTES, wait);
     }

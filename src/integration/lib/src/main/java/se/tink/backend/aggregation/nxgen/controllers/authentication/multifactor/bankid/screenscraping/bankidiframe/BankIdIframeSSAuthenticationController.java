@@ -1,25 +1,23 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.screenscraping.bankidiframe;
 
-import java.util.Collections;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
+import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
+import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.NorwegianFields;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.screenscraping.WebScrapingConstants.Xpath;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.screenscraping.bankidiframe.initializer.IframeInitializer;
-import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.selenium.WebDriverHelper;
 import se.tink.libraries.selenium.exceptions.HtmlElementNotFoundException;
 import se.tink.libraries.selenium.exceptions.ScreenScrapingException;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -30,8 +28,7 @@ public class BankIdIframeSSAuthenticationController {
     private final WebDriverHelper webDriverHelper;
     private final WebDriver driver;
     private final IframeInitializer iframeInitializer;
-    private final Credentials credentials;
-    private final SupplementalRequester supplementalRequester;
+    private final SupplementalInformationController supplementalInformationController;
     private final Catalog catalog;
 
     public void doLogin(String password) throws AuthenticationException {
@@ -48,7 +45,7 @@ public class BankIdIframeSSAuthenticationController {
         }
         webDriverHelper.sleep(WAIT_RENDER_MILLIS);
         webDriverHelper.submitForm(driver, Xpath.FORM_XPATH);
-        displayReferenceWords(credentials);
+        displayReferenceWords();
         waitForUserInteractionAndSendBankIdPassword(driver, password);
     }
 
@@ -92,15 +89,15 @@ public class BankIdIframeSSAuthenticationController {
                 .orElseThrow(() -> new ScreenScrapingException("Couldn't find reference words"));
     }
 
-    private void displayReferenceWords(Credentials credentials) {
-        credentials.setSupplementalInformation(
-                SerializationUtils.serializeToString(
-                        Collections.singletonList(
-                                NorwegianFields.BankIdReferenceInfo.build(
-                                        catalog, getReferenceWords()))));
-        credentials.setStatus(CredentialsStatus.AWAITING_SUPPLEMENTAL_INFORMATION);
+    private void displayReferenceWords() {
+        Field field = NorwegianFields.BankIdReferenceInfo.build(catalog, getReferenceWords());
 
-        supplementalRequester.requestSupplementalInformation(credentials, true);
+        try {
+            supplementalInformationController.askSupplementalInformationSync(field);
+        } catch (SupplementalInfoException e) {
+            // ignore empty response!
+            // we're actually not interested in response at all, we just show a text!
+        }
     }
 
     private void waitForUserInteractionAndSendBankIdPassword(WebDriver driver, String password)
