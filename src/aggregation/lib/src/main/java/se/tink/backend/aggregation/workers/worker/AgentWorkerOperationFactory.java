@@ -743,14 +743,16 @@ public class AgentWorkerOperationFactory {
                             c -> true)); // is it enough to return true in this predicate?
         }
 
+        commands.add(
+                new ReportProviderMetricsAgentWorkerCommand(
+                        context,
+                        operationName,
+                        reportMetricsAgentWorkerCommandState,
+                        new AgentWorkerMetricReporter(
+                                metricRegistry, this.providerTierConfiguration)));
+
         if (isAisPlusPisFlow(request)) {
-            commands.add(
-                    new ReportProviderMetricsAgentWorkerCommand(
-                            context,
-                            operationName,
-                            reportMetricsAgentWorkerCommandState,
-                            new AgentWorkerMetricReporter(
-                                    metricRegistry, this.providerTierConfiguration)));
+
             commands.add(
                     new SendDataForProcessingAgentWorkerCommand(
                             context,
@@ -776,14 +778,6 @@ public class AgentWorkerOperationFactory {
                     new TransferAgentWorkerCommand(
                             context, request, createCommandMetricState(request)));
         } else {
-
-            commands.add(
-                    new ReportProviderMetricsAgentWorkerCommand(
-                            context,
-                            operationName,
-                            reportMetricsAgentWorkerCommandState,
-                            new AgentWorkerMetricReporter(
-                                    metricRegistry, this.providerTierConfiguration)));
             commands.add(
                     new ReportProviderTransferMetricsAgentWorkerCommand(context, operationName));
 
