@@ -897,18 +897,6 @@ public class AgentWorkerOperationFactory {
                         new ReportProviderTransferMetricsAgentWorkerCommand(
                                 context, operationName));
 
-        ArrayList<AgentWorkerCommand> agentWorkerCommandsPart2 =
-                Lists.newArrayList(
-                        new CreateAgentConfigurationControllerWorkerCommand(
-                                context, tppSecretsServiceClient),
-                        new CreateLogMaskerWorkerCommand(context),
-                        new DebugAgentWorkerCommand(
-                                context, debugAgentWorkerCommandState, agentDebugStorageHandler),
-                        new InstantiateAgentWorkerCommand(
-                                context, instantiateAgentWorkerCommandState),
-                        new TransferAgentWorkerCommand(
-                                context, request, createCommandMetricState(request)));
-
         // https://tink.slack.com/archives/CS4BJQJBV/p1612518614089100
         double skipRatio = 0.1;
         boolean isIncluded = random.nextDouble() > skipRatio;
@@ -926,6 +914,17 @@ public class AgentWorkerOperationFactory {
         log.info(
                 "sendDataForProcessingAgentWorkerCommand is used in command chain: {}", isIncluded);
 
+        ArrayList<AgentWorkerCommand> agentWorkerCommandsPart2 =
+                Lists.newArrayList(
+                        new CreateAgentConfigurationControllerWorkerCommand(
+                                context, tppSecretsServiceClient),
+                        new CreateLogMaskerWorkerCommand(context),
+                        new DebugAgentWorkerCommand(
+                                context, debugAgentWorkerCommandState, agentDebugStorageHandler),
+                        new InstantiateAgentWorkerCommand(
+                                context, instantiateAgentWorkerCommandState),
+                        new TransferAgentWorkerCommand(
+                                context, request, createCommandMetricState(request)));
         commands.addAll(agentWorkerCommandsPart2);
         return commands;
     }
