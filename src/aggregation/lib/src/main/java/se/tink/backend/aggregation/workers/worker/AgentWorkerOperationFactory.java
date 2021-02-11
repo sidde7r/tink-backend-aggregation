@@ -805,15 +805,9 @@ public class AgentWorkerOperationFactory {
                             context, CredentialsStatus.UPDATING));
         }
 
-        if (isAisPlusPisFlow(request)) {
-            commands.add(
-                    new TransferAgentWorkerCommand(
-                            context, request, createCommandMetricState(request)));
-        } else {
-            commands.add(
-                    new TransferAgentWorkerCommand(
-                            context, request, createCommandMetricState(request)));
-        }
+        commands.add(
+                new TransferAgentWorkerCommand(
+                        context, request, createCommandMetricState(request)));
 
         if (shouldRefresh) {
             commands.addAll(
