@@ -4,9 +4,11 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import lombok.Data;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmericanExpressConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmericanExpressUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
@@ -26,7 +28,8 @@ public class AccountsResponseDto {
     private StatusDto status;
     private List<SupplementaryAccountsItem> supplementaryAccounts;
 
-    public CreditCardAccount toCreditCardAccount(List<BalanceDto> balances) {
+    public CreditCardAccount toCreditCardAccount(
+            List<BalanceDto> balances, Map<Integer, String> statementMap) {
         final String iban =
                 identifiers
                         .getDisplayAccountNumber()
@@ -56,6 +59,7 @@ public class AccountsResponseDto {
                                 .addIdentifier(new IbanIdentifier(iban.replace("-", "")))
                                 .build())
                 .addHolderName(holder.getProfile().getEmbossedName())
+                .putInTemporaryStorage(AmericanExpressConstants.StorageKey.STATEMENTS, statementMap)
                 .build();
     }
 
