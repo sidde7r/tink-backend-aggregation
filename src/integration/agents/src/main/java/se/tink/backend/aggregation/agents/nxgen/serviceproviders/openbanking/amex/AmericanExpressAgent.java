@@ -25,7 +25,6 @@ import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentProgressiveGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.hmac.HmacMultiTokenFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.hmac.HmacMultiTokenStorage;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2based.AccessCodeStorage;
@@ -51,7 +50,6 @@ public final class AmericanExpressAgent extends SubsequentProgressiveGenerationA
     private final AmexApiClient amexApiClient;
     private final CreditCardRefreshController creditCardRefreshController;
     private final ObjectMapper objectMapper;
-    private final LocalDateTimeSource localDateTimeSource;
     private final TemporaryStorage temporaryStorage;
 
     @VisibleForTesting @Getter private final HmacMultiTokenStorage hmacMultiTokenStorage;
@@ -65,7 +63,6 @@ public final class AmericanExpressAgent extends SubsequentProgressiveGenerationA
         final String redirectUrl = agentConfiguration.getRedirectUrl();
         final MacSignatureCreator macSignatureCreator = new MacSignatureCreator();
         final Clock clock = Clock.systemDefaultZone();
-        this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
         final AmexMacGenerator amexMacGenerator =
                 new AmexMacGenerator(amexConfiguration, macSignatureCreator, clock);
 

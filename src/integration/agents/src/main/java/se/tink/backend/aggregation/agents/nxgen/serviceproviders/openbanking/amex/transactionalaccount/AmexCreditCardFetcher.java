@@ -68,13 +68,13 @@ public class AmexCreditCardFetcher implements AccountFetcher<CreditCardAccount> 
             HmacToken hmacToken, AccountsResponseDto accountsResponse) {
 
         final List<BalanceDto> balances = getBalances(hmacToken);
-        final Map<Integer, String> mapStatements =
+        final Map<Integer, String> statementMap =
                 getStatementPeriods(hmacToken).getStatementPeriods().stream()
                         .collect(
                                 Collectors.toMap(
                                         StatementDto::getIndex, StatementDto::getEndDateAsString));
 
-        return accountsResponse.toCreditCardAccount(balances, mapStatements);
+        return accountsResponse.toCreditCardAccount(balances, statementMap);
     }
 
     private List<BalanceDto> getBalances(HmacToken hmacToken) {
