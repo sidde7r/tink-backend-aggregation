@@ -26,9 +26,9 @@ import se.tink.backend.aggregation.workers.commands.ReportProviderMetricsAgentWo
 import se.tink.backend.aggregation.workers.commands.ReportProviderTransferMetricsAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.RequestUserOptInAccountsAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.SendAccountsHoldersToUpdateServiceAgentWorkerCommand;
-import se.tink.backend.aggregation.workers.commands.SendAccountsToDataAvailabilityTrackerAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.SendAccountsToUpdateServiceAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.SendDataForProcessingAgentWorkerCommand;
+import se.tink.backend.aggregation.workers.commands.SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.SendPsd2PaymentClassificationToUpdateServiceAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.SetCredentialsStatusAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.TransferAgentWorkerCommand;
@@ -78,8 +78,8 @@ public class WorkerCommandNameFormatterTest {
                 "send-accounts-holders-to-update-service",
                 get(SendAccountsHoldersToUpdateServiceAgentWorkerCommand.class));
         assertEquals(
-                "send-accounts-to-data-availability-tracker",
-                get(SendAccountsToDataAvailabilityTrackerAgentWorkerCommand.class));
+                "send-fetched-data-to-data-availability-tracker",
+                get(SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand.class));
         assertEquals(
                 "send-accounts-to-update-service",
                 get(SendAccountsToUpdateServiceAgentWorkerCommand.class));

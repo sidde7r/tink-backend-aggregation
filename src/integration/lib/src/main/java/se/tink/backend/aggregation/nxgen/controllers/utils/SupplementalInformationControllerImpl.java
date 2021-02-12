@@ -27,8 +27,8 @@ public class SupplementalInformationControllerImpl implements SupplementalInform
             LoggerFactory.getLogger(SupplementalInformationControllerImpl.class);
 
     private static final String UNIQUE_PREFIX_TPCB = "tpcb_%s";
-    private static final int TIMEOUT_MINUTES_EMBEDDED_FIELDS = 2;
-    private static final int TIMEOUT_MINUTES_MOBILE_BANKID = 2;
+    private static final int TIMEOUT_MINUTES_EMBEDDED_FIELDS = 5;
+    private static final int TIMEOUT_MINUTES_MOBILE_BANKID = 5;
 
     private final SupplementalRequester supplementalRequester;
     private final Credentials credentials;

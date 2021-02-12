@@ -69,9 +69,9 @@ import se.tink.backend.aggregation.workers.commands.RequestedAccountsRestriction
 import se.tink.backend.aggregation.workers.commands.SendAccountRestrictionEventsWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.SendAccountSourceInfoEventWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.SendAccountsHoldersToUpdateServiceAgentWorkerCommand;
-import se.tink.backend.aggregation.workers.commands.SendAccountsToDataAvailabilityTrackerAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.SendAccountsToUpdateServiceAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.SendDataForProcessingAgentWorkerCommand;
+import se.tink.backend.aggregation.workers.commands.SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.SendPsd2PaymentClassificationToUpdateServiceAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.SetCredentialsStatusAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.TransferAgentWorkerCommand;
@@ -273,13 +273,6 @@ public class AgentWorkerOperationFactory {
                 commands.add(new AbnAmroSpecificCase(context));
             }
 
-            commands.add(
-                    new SendAccountsToDataAvailabilityTrackerAgentWorkerCommand(
-                            context,
-                            createCommandMetricState(request),
-                            agentDataAvailabilityTrackerClient,
-                            dataTrackerEventProducer));
-
             commands.add(new FetcherInstrumentationAgentWorkerCommand(context, itemsToRefresh));
         }
 
@@ -289,9 +282,16 @@ public class AgentWorkerOperationFactory {
                             context,
                             item,
                             createCommandMetricState(request),
-                            agentDataAvailabilityTrackerClient,
-                            dataTrackerEventProducer,
                             refreshEventProducer));
+        }
+
+        if (accountItems.size() > 0) {
+            commands.add(
+                    new SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand(
+                            context,
+                            createCommandMetricState(request),
+                            agentDataAvailabilityTrackerClient,
+                            dataTrackerEventProducer));
         }
 
         // FIXME: remove when Handelsbanken and Avanza have been moved to the nextgen agents. (TOP
@@ -331,7 +331,7 @@ public class AgentWorkerOperationFactory {
                             psd2PaymentAccountClassifier,
                             controllerWrapper));
             commands.add(
-                    new SendAccountsToDataAvailabilityTrackerAgentWorkerCommand(
+                    new SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand(
                             context,
                             createCommandMetricState(request),
                             agentDataAvailabilityTrackerClient,
@@ -1147,8 +1147,6 @@ public class AgentWorkerOperationFactory {
                                 context,
                                 item,
                                 createCommandMetricState(request),
-                                agentDataAvailabilityTrackerClient,
-                                dataTrackerEventProducer,
                                 refreshEventProducer));
             }
         }
@@ -1466,13 +1464,6 @@ public class AgentWorkerOperationFactory {
                     && Objects.equals("nl-abnamro", request.getProvider().getName())) {
                 commands.add(new AbnAmroSpecificCase(context));
             }
-
-            commands.add(
-                    new SendAccountsToDataAvailabilityTrackerAgentWorkerCommand(
-                            context,
-                            createCommandMetricState(request),
-                            agentDataAvailabilityTrackerClient,
-                            dataTrackerEventProducer));
         }
 
         // Add all refreshable items that aren't accounts to refresh them.
@@ -1485,9 +1476,17 @@ public class AgentWorkerOperationFactory {
                                                 context,
                                                 item,
                                                 createCommandMetricState(request),
-                                                agentDataAvailabilityTrackerClient,
-                                                dataTrackerEventProducer,
                                                 refreshEventProducer)));
+
+        if (accountItems.size() > 0) {
+            commands.add(
+                    new SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand(
+                            context,
+                            createCommandMetricState(request),
+                            agentDataAvailabilityTrackerClient,
+                            dataTrackerEventProducer));
+        }
+
         // === END REFRESHING ===
         return commands.build();
     }

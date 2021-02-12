@@ -3,11 +3,14 @@ package se.tink.backend.aggregation.workers.commands;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.models.AccountFeatures;
+import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.events.DataTrackerEventProducer;
 import se.tink.backend.aggregation.workers.commands.metrics.MetricsCommand;
 import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
@@ -18,15 +21,18 @@ import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
 import se.tink.backend.aggregation.workers.operation.type.AgentWorkerOperationMetricType;
 import se.tink.backend.integration.agent_data_availability_tracker.client.AsAgentDataAvailabilityTrackerClient;
 import se.tink.backend.integration.agent_data_availability_tracker.serialization.AccountTrackingSerializer;
+import se.tink.backend.integration.agent_data_availability_tracker.serialization.IdentityDataSerializer;
 import se.tink.backend.integration.agent_data_availability_tracker.serialization.SerializationUtils;
+import se.tink.backend.integration.agent_data_availability_tracker.serialization.TransactionTrackingSerializer;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.metrics.core.MetricId;
 import se.tink.libraries.pair.Pair;
 
-public class SendAccountsToDataAvailabilityTrackerAgentWorkerCommand extends AgentWorkerCommand
+public class SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand extends AgentWorkerCommand
         implements MetricsCommand {
     private static final Logger log =
-            LoggerFactory.getLogger(SendAccountsToDataAvailabilityTrackerAgentWorkerCommand.class);
+            LoggerFactory.getLogger(
+                    SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand.class);
 
     private static final String METRIC_NAME = "data_availability_tracker_refresh";
     private static final String METRIC_ACTION = "send_refresh_data_to_data_availability_tracker";
@@ -41,7 +47,9 @@ public class SendAccountsToDataAvailabilityTrackerAgentWorkerCommand extends Age
     private final String provider;
     private final String market;
 
-    public SendAccountsToDataAvailabilityTrackerAgentWorkerCommand(
+    private static final int MAX_TRANSACTIONS_TO_SEND_TO_BIGQUERY_PER_ACCOUNT = 10;
+
+    public SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand(
             AgentWorkerCommandContext context,
             AgentWorkerCommandMetricState metrics,
             AsAgentDataAvailabilityTrackerClient agentDataAvailabilityTrackerClient,
@@ -69,18 +77,15 @@ public class SendAccountsToDataAvailabilityTrackerAgentWorkerCommand extends Age
             MetricAction action =
                     metrics.buildAction(new MetricId.MetricLabels().add("action", METRIC_ACTION));
             try {
-
                 if (!Strings.isNullOrEmpty(market)) {
-
+                    // Handles process for accounts and their transactions
                     context.getCachedAccountsWithFeatures()
                             .forEach(pair -> processForDataTracker(pair.first, pair.second));
-
+                    sendIdentityToAgentDataAvailabilityTracker();
                     action.completed();
                 } else {
-
                     action.cancelled();
                 }
-
             } catch (Exception e) {
                 action.failed();
                 log.error("Failed sending refresh data to tracking service.", e);
@@ -88,7 +93,6 @@ public class SendAccountsToDataAvailabilityTrackerAgentWorkerCommand extends Age
         } finally {
             metrics.stop();
         }
-
         return AgentWorkerCommandResult.CONTINUE;
     }
 
@@ -96,7 +100,44 @@ public class SendAccountsToDataAvailabilityTrackerAgentWorkerCommand extends Age
         AccountTrackingSerializer serializer =
                 SerializationUtils.serializeAccount(account, features);
 
+        /*
+           We are intentionally sending only account and skipping transaction to data-tracker.
+           We are sending transactions only as data-tracker-event to BigQuery. We are planning
+           to deprecate data-tracker and only use BigQuery and for this reason we are following
+           such an approach for transactions.
+        */
         agentDataAvailabilityTrackerClient.sendAccount(agentName, provider, market, serializer);
+
+        // Sending data to BigQuery by emitting events
+        sendAccountToBigQuery(account, features);
+
+        /*
+           For an account we will pick the most recent MAX_TRANSACTIONS_TO_SEND_TO_BIGQUERY_PER_ACCOUNT
+           transactions. We do not want to send all transactions in order to avoid putting too much
+           load to the system
+        */
+        try {
+            List<Transaction> transactionsOfAccount =
+                    new ArrayList<>(
+                            context.getAccountDataCache()
+                                    .getTransactionsByAccountToBeProcessed()
+                                    .get(account));
+            Collections.shuffle(transactionsOfAccount);
+            List<Transaction> transactionsToProcess =
+                    transactionsOfAccount.size() <= MAX_TRANSACTIONS_TO_SEND_TO_BIGQUERY_PER_ACCOUNT
+                            ? transactionsOfAccount
+                            : transactionsOfAccount.subList(
+                                    0, MAX_TRANSACTIONS_TO_SEND_TO_BIGQUERY_PER_ACCOUNT);
+            transactionsToProcess.forEach(
+                    transaction -> sendTransactionToBigQuery(transaction, account.getType()));
+        } catch (Exception e) {
+            log.warn("Failed to send transaction data to BigQuery", e);
+        }
+    }
+
+    private void sendAccountToBigQuery(final Account account, final AccountFeatures features) {
+        AccountTrackingSerializer serializer =
+                SerializationUtils.serializeAccount(account, features);
 
         List<Pair<String, Boolean>> eventData = new ArrayList<>();
 
@@ -115,9 +156,72 @@ public class SendAccountsToDataAvailabilityTrackerAgentWorkerCommand extends Age
                                 eventData.add(
                                         new Pair<String, Boolean>(
                                                 entry.getName(),
-                                                !entry.getValue().equalsIgnoreCase("null")));
+                                                !("null".equalsIgnoreCase(entry.getValue()))));
                             }
                         });
+
+        dataTrackerEventProducer.sendDataTrackerEvent(
+                context.getRequest().getCredentials().getProviderName(),
+                context.getCorrelationId(),
+                eventData,
+                context.getAppId(),
+                context.getClusterId(),
+                context.getRequest().getCredentials().getUserId());
+    }
+
+    private void sendTransactionToBigQuery(Transaction transaction, AccountTypes accountType) {
+        TransactionTrackingSerializer serializer =
+                new TransactionTrackingSerializer(transaction, accountType);
+
+        List<Pair<String, Boolean>> eventData = new ArrayList<>();
+
+        serializer
+                .buildList()
+                .forEach(
+                        entry ->
+                                eventData.add(
+                                        new Pair<String, Boolean>(
+                                                entry.getName(),
+                                                !("null".equalsIgnoreCase(entry.getValue())))));
+
+        dataTrackerEventProducer.sendDataTrackerEvent(
+                context.getRequest().getCredentials().getProviderName(),
+                context.getCorrelationId(),
+                eventData,
+                context.getAppId(),
+                context.getClusterId(),
+                context.getRequest().getCredentials().getUserId());
+    }
+
+    private void sendIdentityToAgentDataAvailabilityTracker() {
+        if (Strings.isNullOrEmpty(market)) {
+            return;
+        }
+
+        if (context.getCachedIdentityData() == null) {
+            log.info(
+                    "Identity data is null, skipping identity data request to AgentDataAvailabilityTracker");
+            return;
+        }
+
+        log.info("Sending Identity to AgentDataAvailabilityTracker");
+
+        IdentityDataSerializer serializer =
+                SerializationUtils.serializeIdentityData(context.getAggregationIdentityData());
+
+        agentDataAvailabilityTrackerClient.sendIdentityData(
+                agentName, provider, market, serializer);
+
+        List<Pair<String, Boolean>> eventData = new ArrayList<>();
+
+        serializer
+                .buildList()
+                .forEach(
+                        entry ->
+                                eventData.add(
+                                        new Pair<String, Boolean>(
+                                                entry.getName(),
+                                                !entry.getValue().equalsIgnoreCase("null"))));
 
         dataTrackerEventProducer.sendDataTrackerEvent(
                 context.getRequest().getCredentials().getProviderName(),
@@ -139,7 +243,7 @@ public class SendAccountsToDataAvailabilityTrackerAgentWorkerCommand extends Age
                 new MetricId.MetricLabels()
                         .add(
                                 "class",
-                                SendAccountsToDataAvailabilityTrackerAgentWorkerCommand.class
+                                SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand.class
                                         .getSimpleName())
                         .add("command", type.getMetricName());
 
