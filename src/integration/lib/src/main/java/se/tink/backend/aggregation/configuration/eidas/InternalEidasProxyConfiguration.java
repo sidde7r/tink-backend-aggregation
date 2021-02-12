@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.configuration.eidas;
 
 import com.google.common.io.Files;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
@@ -12,7 +11,7 @@ import java.security.PrivateKey;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import se.tink.backend.aggregation.agents.utils.crypto.parser.Pem;
-import se.tink.ediclient.EdiClient;
+import se.tink.backend.eidasdevissuer.client.EdiClient;
 
 public class InternalEidasProxyConfiguration {
     private static final String DUMMY_CERT_NAME = "trustedcert";
@@ -101,16 +100,7 @@ public class InternalEidasProxyConfiguration {
             keyStore.setKeyEntry("clientcert", privateKey, null, certificateChain);
             return keyStore;
         } else if (localEidasDev) {
-            File clientCertificateFile =
-                    new File(System.getProperty("user.home"), "eidas_client.p12");
-            if (clientCertificateFile.exists()) {
-                KeyStore keyStore = KeyStore.getInstance("PKCS12", "BC");
-                keyStore.load(new FileInputStream(clientCertificateFile), "changeme".toCharArray());
-                return keyStore;
-            } else {
-                return EdiClient.requestOrGetDevCert();
-            }
-
+            return EdiClient.requestOrGetDevCert();
         } else {
             throw new IllegalStateException("Client certificate for eIDAS proxy not configured");
         }

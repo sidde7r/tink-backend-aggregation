@@ -1,9 +1,11 @@
 package se.tink.ediclient;
 
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import se.tink.backend.eidasdevissuer.client.EdiClient;
 
 public class EdiMain {
-    private static final Logger LOG = org.slf4j.LoggerFactory.getLogger(EdiMain.class);
+    private static final Logger LOG = LoggerFactory.getLogger(EdiMain.class);
 
     public static void main(String[] args) {
         try {
