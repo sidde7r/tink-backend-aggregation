@@ -68,5 +68,11 @@
       "type": "DEFAULT",
       "upcoming": false
     }
+  ],
+  "transferDestinationPatterns": [
+    {
+      "type": "IBAN",
+      "pattern": ".+"
+    }
   ]
 }
