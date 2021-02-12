@@ -175,6 +175,41 @@
         "availableCredit" : 0.0,
         "balance" : 30000.0
     }, {
+        "accountNumber" : "S12345-1234-12",
+        "accountExclusion" : "NONE",
+        "exactBalance" : {
+            "currencyCode" : "SEK",
+            "scale" : 1,
+            "doubleValue" : 150.0,
+            "unscaledValue" : 1500,
+            "exactValue" : 150.0
+        },
+        "currencyCode" : "SEK",
+        "bankId" : "12345123412",
+        "excluded" : false,
+        "favored" : false,
+        "name" : "Tjänstepension",
+        "ownership" : 1.0,
+        "type" : "INVESTMENT",
+        "userModifiedExcluded" : false,
+        "userModifiedName" : false,
+        "userModifiedType" : false,
+        "identifiers" : "[]",
+        "closed" : false,
+        "holderName" : "Test Testsson",
+        "accountHolder" : {
+            "accountId" : null,
+            "type" : "PERSONAL",
+            "identities" : [ {
+                "name" : "Test Testsson",
+                "role" : null
+            } ]
+        },
+        "flags" : "[]",
+        "balances" : [ ],
+        "availableCredit" : 0.0,
+        "balance" : 150.0
+    }, {
         "accountNumber" : "44444444444",
         "accountExclusion" : "NONE",
         "exactBalance" : {
