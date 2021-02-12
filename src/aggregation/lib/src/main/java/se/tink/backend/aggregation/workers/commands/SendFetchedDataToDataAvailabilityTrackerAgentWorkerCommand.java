@@ -156,7 +156,7 @@ public class SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand extends 
                                 eventData.add(
                                         new Pair<String, Boolean>(
                                                 entry.getName(),
-                                                !entry.getValue().equalsIgnoreCase("null")));
+                                                !("null".equalsIgnoreCase(entry.getValue()))));
                             }
                         });
 
@@ -182,7 +182,7 @@ public class SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand extends 
                                 eventData.add(
                                         new Pair<String, Boolean>(
                                                 entry.getName(),
-                                                !entry.getValue().equalsIgnoreCase("null"))));
+                                                !("null".equalsIgnoreCase(entry.getValue())))));
 
         dataTrackerEventProducer.sendDataTrackerEvent(
                 context.getRequest().getCredentials().getProviderName(),
