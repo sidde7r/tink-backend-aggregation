@@ -798,10 +798,6 @@ public class AgentWorkerOperationFactory {
         if (isAisPlusPisFlow(request)) {
             addClearSensitivePayloadOnForceAuthenticateCommandAndLoginAgentWorkerCommand(
                     commands, context);
-        }
-
-        // TODO ask aggregation why we should do this?
-        if (isAisPlusPisFlow(request)) {
             commands.add(
                     new SetCredentialsStatusAgentWorkerCommand(
                             context, CredentialsStatus.UPDATING));
