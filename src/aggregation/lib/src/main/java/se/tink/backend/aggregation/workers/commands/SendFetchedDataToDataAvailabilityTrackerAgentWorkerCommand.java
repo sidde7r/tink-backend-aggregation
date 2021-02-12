@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Account;
@@ -25,6 +26,7 @@ import se.tink.backend.integration.agent_data_availability_tracker.serialization
 import se.tink.backend.integration.agent_data_availability_tracker.serialization.IdentityDataSerializer;
 import se.tink.backend.integration.agent_data_availability_tracker.serialization.SerializationUtils;
 import se.tink.backend.integration.agent_data_availability_tracker.serialization.TransactionTrackingSerializer;
+import se.tink.libraries.account_data_cache.AccountData;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.metrics.core.MetricId;
 import se.tink.libraries.pair.Pair;
@@ -122,12 +124,26 @@ public class SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand extends 
                     context.getAccountDataCache()
                             .getTransactionsByAccountToBeProcessed()
                             .get(account);
+            boolean foundTransactions = false;
             if (Objects.isNull(originalTransactions)) {
                 log.debug(
                         String.format(
                                 "Could not get transactions of account to send to BigQuery. Account type is %s",
                                 account.getType().toString()));
+                originalTransactions = getTransactionsForAccount(account);
+                if (Objects.isNull(originalTransactions)) {
+                    log.debug(
+                            String.format(
+                                    "Could not get transactions of account again to send to BigQuery. Account type is %s",
+                                    account.getType().toString()));
+                } else {
+                    foundTransactions = true;
+                    log.debug("getTransactionsForAccount method worked!");
+                }
             } else {
+                foundTransactions = true;
+            }
+            if (foundTransactions) {
                 log.debug(
                         String.format(
                                 "We have transactions for account to send to BQ. Account type is %s",
@@ -147,6 +163,12 @@ public class SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand extends 
             // This is set to debug temporarily. Normally the level of this log should be "warn"
             log.debug("Failed to send transaction data to BigQuery", e);
         }
+    }
+
+    private List<Transaction> getTransactionsForAccount(Account account) {
+        return context.getAccountDataCache().getFilteredAccountData().stream()
+                .collect(Collectors.toMap(AccountData::getAccount, AccountData::getTransactions))
+                .get(account);
     }
 
     private void sendAccountToBigQuery(final Account account, final AccountFeatures features) {
