@@ -5,6 +5,7 @@ java_library(
     srcs = glob(["src/main/**/*.java"]),
     visibility = ["//visibility:public"],
     deps = [
+        "@aggregation//:commons_validator_commons_validator",
         "//third_party:org_slf4j_slf4j_api",
         "//src/libraries/uuid",
         "//src/libraries/giro_validation",

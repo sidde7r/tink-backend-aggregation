@@ -119,6 +119,9 @@ public class DemoAccountDefinitionGenerator {
             String bankCode,
             int accountNumberLength) {
         String number = getAccountNumber(key, accountNumberLength);
+
+        // This builder does not handle IBAN for Norway correctly
+        // https://github.com/arturmkrtchyan/iban4j/issues/71
         return new Iban.Builder()
                 .countryCode(countryCode)
                 .nationalCheckDigit(nationalCheckDigit)
@@ -135,10 +138,6 @@ public class DemoAccountDefinitionGenerator {
 
     private static String generateAccountNumbersFR(String deterministicKey) {
         return generateIban(deterministicKey, CountryCode.FR, "0", "01005", "20041", 12);
-    }
-
-    private static String generateAccountNumbersNO(String deterministicKey) {
-        return generateIban(deterministicKey, CountryCode.NO, "7", "", "8601", 4);
     }
 
     private static String getAccountNumber(String userDeterministicKey, int expectedLength) {
@@ -427,8 +426,6 @@ public class DemoAccountDefinitionGenerator {
             return generateAccountNumbersIT(deterministicKey);
         } else if (providerName.matches(MarketRegex.FR_PROVIDERS_REGEX)) {
             return generateAccountNumbersFR(deterministicKey);
-        } else if (providerName.matches(MarketRegex.NO_PROVIDERS_REGEX)) {
-            return generateAccountNumbersNO(deterministicKey);
         } else {
             return generateAccountNumbers(deterministicKey);
         }
@@ -436,7 +433,6 @@ public class DemoAccountDefinitionGenerator {
 
     private static boolean shouldSetIbanAsIdentifier(String providerName) {
         return providerName.matches(MarketRegex.IT_PROVIDERS_REGEX)
-                || providerName.matches(MarketRegex.FR_PROVIDERS_REGEX)
-                || providerName.matches(MarketRegex.NO_PROVIDERS_REGEX);
+                || providerName.matches(MarketRegex.FR_PROVIDERS_REGEX);
     }
 }
