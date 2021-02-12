@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.nxgen.agents.demo;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatCode;
 
 import java.util.List;
 import org.apache.commons.validator.routines.IBANValidator;
@@ -29,8 +28,7 @@ public class FrDemoAccountGeneratorTest {
         assertThat(savingsAccount.getAccountName()).isEqualTo("Savings Account Tink");
         assertThat(savingsAccount.getIdentifiers()).contains(expectedIdentifier);
         assertThat(savingsAccount.getAccountBalance()).isEqualByComparingTo(66361.68);
-        assertThatCode(() -> IBANValidator.getInstance().isValid(savingsAccount.getAccountId()))
-                .doesNotThrowAnyException();
+        assertThat(IBANValidator.getInstance().isValid(savingsAccount.getAccountId())).isTrue();
     }
 
     @Test
@@ -46,8 +44,7 @@ public class FrDemoAccountGeneratorTest {
         assertThat(transactionAccount.getAccountName()).isEqualTo("Checking Account Tink");
         assertThat(transactionAccount.getIdentifiers()).contains(expectedIdentifier);
         assertThat(transactionAccount.getBalance()).isEqualByComparingTo(649.74);
-        assertThatCode(() -> IBANValidator.getInstance().isValid(transactionAccount.getAccountId()))
-                .doesNotThrowAnyException();
+        assertThat(IBANValidator.getInstance().isValid(transactionAccount.getAccountId())).isTrue();
     }
 
     @Test
