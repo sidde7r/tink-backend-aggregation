@@ -32,7 +32,6 @@ import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.fetche
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
-import se.tink.backend.aggregation.nxgen.core.account.entity.Holder;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
@@ -105,8 +104,6 @@ public class FinecoBankCreditCardAccountFetcherTest {
                                 AccountIdentifier.create(
                                         Type.PAYMENT_CARD_NUMBER, "1234 **** **** 1000")));
         assertThat(card1.getApiIdentifier()).isEqualTo("2218836100");
-        assertThat(card1.getHolders())
-                .isEqualTo(Collections.singletonList(Holder.of("card_account_name_1")));
         assertThat(card1.getFromTemporaryStorage("bankIdentifier")).isEqualTo("2218836100");
         assertThat(card1.getFromTemporaryStorage(StorageKeys.CARD_ID)).isEqualTo("2218836100");
 
@@ -125,8 +122,6 @@ public class FinecoBankCreditCardAccountFetcherTest {
                                 AccountIdentifier.create(
                                         Type.PAYMENT_CARD_NUMBER, "1234 **** **** 1001")));
         assertThat(card2.getApiIdentifier()).isEqualTo("2218836101");
-        assertThat(card2.getHolders())
-                .isEqualTo(Collections.singletonList(Holder.of("card_account_name_2")));
         assertThat(card2.getFromTemporaryStorage("bankIdentifier")).isEqualTo("2218836101");
         assertThat(card2.getFromTemporaryStorage(StorageKeys.CARD_ID)).isEqualTo("2218836101");
     }

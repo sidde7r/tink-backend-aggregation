@@ -38,7 +38,6 @@ public class AccountEntity {
                                 .withAccountName(name)
                                 .addIdentifier(AccountIdentifier.create(Type.IBAN, iban))
                                 .build())
-                .addHolderName(name)
                 .setApiIdentifier(resourceId)
                 .setBankIdentifier(iban)
                 .putInTemporaryStorage(StorageKeys.ACCOUNT_ID, resourceId)
