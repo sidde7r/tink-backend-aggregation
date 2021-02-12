@@ -194,7 +194,8 @@ public class CbiGlobeApiClient {
     public GetBalancesResponse getBalances(String resourceId) {
         return addPsuIpAddressHeaderIfNeeded(
                         createRequestWithConsent(
-                                getBalancesUrl().parameter(IdTags.ACCOUNT_ID, resourceId, false)))
+                                getBalancesUrl()
+                                        .parameterNoEncoding(IdTags.ACCOUNT_ID, resourceId)))
                 .get(GetBalancesResponse.class);
     }
 
@@ -214,10 +215,8 @@ public class CbiGlobeApiClient {
                 addPsuIpAddressHeaderIfNeeded(
                                 createRequestWithConsent(
                                                 getTransactionsUrl()
-                                                        .parameter(
-                                                                IdTags.ACCOUNT_ID,
-                                                                apiIdentifier,
-                                                                false))
+                                                        .parameterNoEncoding(
+                                                                IdTags.ACCOUNT_ID, apiIdentifier))
                                         .queryParam(QueryKeys.BOOKING_STATUS, bookingType)
                                         .queryParam(QueryKeys.DATE_FROM, fromDate.toString())
                                         .queryParam(QueryKeys.DATE_TO, toDate.toString())
