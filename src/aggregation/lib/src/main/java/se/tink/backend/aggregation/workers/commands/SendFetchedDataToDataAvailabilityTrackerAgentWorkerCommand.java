@@ -5,6 +5,7 @@ import com.google.common.collect.Lists;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Account;
@@ -117,21 +118,34 @@ public class SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand extends 
            load to the system
         */
         try {
-            List<Transaction> transactionsOfAccount =
-                    new ArrayList<>(
-                            context.getAccountDataCache()
-                                    .getTransactionsByAccountToBeProcessed()
-                                    .get(account));
-            Collections.shuffle(transactionsOfAccount);
-            List<Transaction> transactionsToProcess =
-                    transactionsOfAccount.size() <= MAX_TRANSACTIONS_TO_SEND_TO_BIGQUERY_PER_ACCOUNT
-                            ? transactionsOfAccount
-                            : transactionsOfAccount.subList(
-                                    0, MAX_TRANSACTIONS_TO_SEND_TO_BIGQUERY_PER_ACCOUNT);
-            transactionsToProcess.forEach(
-                    transaction -> sendTransactionToBigQuery(transaction, account.getType()));
+            List<Transaction> originalTransactions =
+                    context.getAccountDataCache()
+                            .getTransactionsByAccountToBeProcessed()
+                            .get(account);
+            if (Objects.isNull(originalTransactions)) {
+                log.debug(
+                        String.format(
+                                "Could not get transactions of account to send to BigQuery. Account type is %s",
+                                account.getType().toString()));
+            } else {
+                log.debug(
+                        String.format(
+                                "We have transactions for account to send to BQ. Account type is %s",
+                                account.getType().toString()));
+                List<Transaction> transactionsOfAccount = new ArrayList<>(originalTransactions);
+                Collections.shuffle(transactionsOfAccount);
+                List<Transaction> transactionsToProcess =
+                        transactionsOfAccount.size()
+                                        <= MAX_TRANSACTIONS_TO_SEND_TO_BIGQUERY_PER_ACCOUNT
+                                ? transactionsOfAccount
+                                : transactionsOfAccount.subList(
+                                        0, MAX_TRANSACTIONS_TO_SEND_TO_BIGQUERY_PER_ACCOUNT);
+                transactionsToProcess.forEach(
+                        transaction -> sendTransactionToBigQuery(transaction, account.getType()));
+            }
         } catch (Exception e) {
-            log.warn("Failed to send transaction data to BigQuery", e);
+            // This is set to debug temporarily. Normally the level of this log should be "warn"
+            log.debug("Failed to send transaction data to BigQuery", e);
         }
     }
 
