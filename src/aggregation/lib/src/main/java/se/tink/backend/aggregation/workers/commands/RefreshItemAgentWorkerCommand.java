@@ -10,10 +10,8 @@ import static se.tink.backend.aggregation.agents.exceptions.bankservice.BankServ
 import static se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError.NO_BANK_SERVICE;
 import static se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError.SESSION_TERMINATED;
 
-import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
-import java.util.ArrayList;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +30,6 @@ import se.tink.backend.aggregation.agents.agent.Agent;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.compliance.customer_restrictions.CustomerDataFetchingRestrictions;
-import se.tink.backend.aggregation.events.DataTrackerEventProducer;
 import se.tink.backend.aggregation.events.RefreshEvent;
 import se.tink.backend.aggregation.events.RefreshEventProducer;
 import se.tink.backend.aggregation.workers.commands.metrics.MetricsCommand;
@@ -43,15 +40,11 @@ import se.tink.backend.aggregation.workers.operation.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
 import se.tink.backend.aggregation.workers.operation.type.AgentWorkerOperationMetricType;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
-import se.tink.backend.integration.agent_data_availability_tracker.client.AsAgentDataAvailabilityTrackerClient;
-import se.tink.backend.integration.agent_data_availability_tracker.serialization.IdentityDataSerializer;
-import se.tink.backend.integration.agent_data_availability_tracker.serialization.SerializationUtils;
 import se.tink.eventproducerservice.events.grpc.RefreshResultEventProto.RefreshResultEvent.AdditionalInfo;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.DataFetchingRestrictions;
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.metrics.core.MetricId;
-import se.tink.libraries.pair.Pair;
 
 public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements MetricsCommand {
     private static final Logger log = LoggerFactory.getLogger(RefreshItemAgentWorkerCommand.class);
@@ -62,16 +55,12 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
     private final AgentWorkerCommandContext context;
     private final RefreshableItem item;
     private final AgentWorkerCommandMetricState metrics;
-    private final AsAgentDataAvailabilityTrackerClient agentDataAvailabilityTrackerClient;
-    private final DataTrackerEventProducer dataTrackerEventProducer;
     private final RefreshEventProducer refreshEventProducer;
     private final List<DataFetchingRestrictions> dataFetchingRestrictions;
     private final CustomerDataFetchingRestrictions customerDataFetchingRestrictions =
             new CustomerDataFetchingRestrictions();
 
-    private final String agentName;
     private final String provider;
-    private final String market;
     private static final ImmutableMap<BankServiceError, AdditionalInfo>
             ADDITIONAL_INFO_ERROR_MAPPER =
                     ImmutableMap.<BankServiceError, AdditionalInfo>builder()
@@ -90,18 +79,12 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
             AgentWorkerCommandContext context,
             RefreshableItem item,
             AgentWorkerCommandMetricState metrics,
-            AsAgentDataAvailabilityTrackerClient agentDataAvailabilityTrackerClient,
-            DataTrackerEventProducer dataTrackerEventProducer,
             RefreshEventProducer refreshEventProducer) {
         this.context = context;
         this.item = item;
-        this.agentDataAvailabilityTrackerClient = agentDataAvailabilityTrackerClient;
-        this.dataTrackerEventProducer = dataTrackerEventProducer;
         this.refreshEventProducer = refreshEventProducer;
         CredentialsRequest request = context.getRequest();
-        this.agentName = request.getProvider().getClassName();
         this.provider = request.getProvider().getName();
-        this.market = request.getProvider().getMarket();
         this.dataFetchingRestrictions = request.getDataFetchingRestrictions();
         this.metrics =
                 metrics.init(
@@ -282,56 +265,13 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
         }
     }
 
-    private void sendIdentityToAgentDataAvailabilityTracker() {
-        if (Strings.isNullOrEmpty(market)) {
-            return;
-        }
-
-        if (context.getCachedIdentityData() == null) {
-            log.info(
-                    "Identity data is null, skipping identity data request to AgentDataAvailabilityTracker");
-            return;
-        }
-
-        log.info("Sending Identity to AgentDataAvailabilityTracker");
-
-        IdentityDataSerializer serializer =
-                SerializationUtils.serializeIdentityData(context.getAggregationIdentityData());
-
-        agentDataAvailabilityTrackerClient.sendIdentityData(
-                agentName, provider, market, serializer);
-
-        List<Pair<String, Boolean>> eventData = new ArrayList<>();
-
-        serializer
-                .buildList()
-                .forEach(
-                        entry ->
-                                eventData.add(
-                                        new Pair<String, Boolean>(
-                                                entry.getName(),
-                                                !entry.getValue().equalsIgnoreCase("null"))));
-
-        dataTrackerEventProducer.sendDataTrackerEvent(
-                context.getRequest().getCredentials().getProviderName(),
-                context.getCorrelationId(),
-                eventData,
-                context.getAppId(),
-                context.getClusterId(),
-                context.getRequest().getCredentials().getUserId());
-    }
-
     @Override
     protected void doPostProcess() throws Exception {
         if (getRefreshableItem() == RefreshableItem.IDENTITY_DATA) {
             try {
-                sendIdentityToAgentDataAvailabilityTracker();
-
                 context.sendIdentityToIdentityAggregatorService();
-
             } catch (Exception e) {
                 log.warn("Couldn't send Identity");
-
                 throw e;
             }
         }

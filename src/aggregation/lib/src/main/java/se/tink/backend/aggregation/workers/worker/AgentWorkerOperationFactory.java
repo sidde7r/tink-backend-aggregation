@@ -282,8 +282,6 @@ public class AgentWorkerOperationFactory {
                             context,
                             item,
                             createCommandMetricState(request),
-                            agentDataAvailabilityTrackerClient,
-                            dataTrackerEventProducer,
                             refreshEventProducer));
         }
 
@@ -1149,8 +1147,6 @@ public class AgentWorkerOperationFactory {
                                 context,
                                 item,
                                 createCommandMetricState(request),
-                                agentDataAvailabilityTrackerClient,
-                                dataTrackerEventProducer,
                                 refreshEventProducer));
             }
         }
@@ -1480,8 +1476,6 @@ public class AgentWorkerOperationFactory {
                                                 context,
                                                 item,
                                                 createCommandMetricState(request),
-                                                agentDataAvailabilityTrackerClient,
-                                                dataTrackerEventProducer,
                                                 refreshEventProducer)));
 
         if (accountItems.size() > 0) {

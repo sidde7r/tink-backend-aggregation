@@ -19,6 +19,7 @@ import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
 import se.tink.backend.aggregation.workers.operation.type.AgentWorkerOperationMetricType;
 import se.tink.backend.integration.agent_data_availability_tracker.client.AsAgentDataAvailabilityTrackerClient;
 import se.tink.backend.integration.agent_data_availability_tracker.serialization.AccountTrackingSerializer;
+import se.tink.backend.integration.agent_data_availability_tracker.serialization.IdentityDataSerializer;
 import se.tink.backend.integration.agent_data_availability_tracker.serialization.SerializationUtils;
 import se.tink.backend.integration.agent_data_availability_tracker.serialization.TransactionTrackingSerializer;
 import se.tink.libraries.credentials.service.CredentialsRequest;
@@ -75,8 +76,10 @@ public class SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand extends 
                     metrics.buildAction(new MetricId.MetricLabels().add("action", METRIC_ACTION));
             try {
                 if (!Strings.isNullOrEmpty(market)) {
+                    // Handles process for accounts and their transactions
                     context.getCachedAccountsWithFeatures()
                             .forEach(pair -> processForDataTracker(pair.first, pair.second));
+                    sendIdentityToAgentDataAvailabilityTracker();
                     action.completed();
                 } else {
                     action.cancelled();
@@ -175,6 +178,45 @@ public class SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand extends 
                                             entry.getName(),
                                             !entry.getValue().equalsIgnoreCase("null")));
                         });
+
+        dataTrackerEventProducer.sendDataTrackerEvent(
+                context.getRequest().getCredentials().getProviderName(),
+                context.getCorrelationId(),
+                eventData,
+                context.getAppId(),
+                context.getClusterId(),
+                context.getRequest().getCredentials().getUserId());
+    }
+
+    private void sendIdentityToAgentDataAvailabilityTracker() {
+        if (Strings.isNullOrEmpty(market)) {
+            return;
+        }
+
+        if (context.getCachedIdentityData() == null) {
+            log.info(
+                    "Identity data is null, skipping identity data request to AgentDataAvailabilityTracker");
+            return;
+        }
+
+        log.info("Sending Identity to AgentDataAvailabilityTracker");
+
+        IdentityDataSerializer serializer =
+                SerializationUtils.serializeIdentityData(context.getAggregationIdentityData());
+
+        agentDataAvailabilityTrackerClient.sendIdentityData(
+                agentName, provider, market, serializer);
+
+        List<Pair<String, Boolean>> eventData = new ArrayList<>();
+
+        serializer
+                .buildList()
+                .forEach(
+                        entry ->
+                                eventData.add(
+                                        new Pair<String, Boolean>(
+                                                entry.getName(),
+                                                !entry.getValue().equalsIgnoreCase("null"))));
 
         dataTrackerEventProducer.sendDataTrackerEvent(
                 context.getRequest().getCredentials().getProviderName(),
