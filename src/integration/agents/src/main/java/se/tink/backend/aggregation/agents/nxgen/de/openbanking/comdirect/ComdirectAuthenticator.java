@@ -22,7 +22,7 @@ public class ComdirectAuthenticator extends Xs2aDevelopersAuthenticator {
                 xs2ADevelopersProviderConfiguration,
                 localDateTimeSource,
                 credentials,
-                false);
+                true);
     }
 
     @Override
