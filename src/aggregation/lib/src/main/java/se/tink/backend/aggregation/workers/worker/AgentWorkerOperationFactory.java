@@ -672,9 +672,11 @@ public class AgentWorkerOperationFactory {
         String operationName;
         List<AgentWorkerCommand> commands = new ArrayList<>();
 
-        boolean shouldRefresh = !request.isSkipRefresh();
+        boolean shouldRefreshAfterPis = !request.isSkipRefresh();
         operationName =
-                shouldRefresh ? "execute-payment-with-refresh" : "execute-payment-without-refresh";
+                shouldRefreshAfterPis
+                        ? "execute-payment-with-refresh"
+                        : "execute-payment-without-refresh";
 
         CryptoWrapper cryptoWrapper =
                 cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
@@ -809,7 +811,7 @@ public class AgentWorkerOperationFactory {
                 new TransferAgentWorkerCommand(
                         context, request, createCommandMetricState(request)));
 
-        if (shouldRefresh) {
+        if (shouldRefreshAfterPis) {
             commands.addAll(
                     createRefreshAccountsCommands(
                             request, context, RefreshableItem.REFRESHABLE_ITEMS_ALL));
