@@ -7,7 +7,7 @@ public class CreditCardIdentifierUtils {
 
     static int getCardIdentifierLength(String cardIdentifier) {
         return StringUtils.isNotBlank(cardIdentifier)
-                ? cardIdentifier.replace("-", "").length()
+                ? StringUtils.deleteWhitespace(cardIdentifier.replace("-", "")).length()
                 : 0;
     }
 
@@ -18,7 +18,7 @@ public class CreditCardIdentifierUtils {
 
         return Optional.of(cardIdentifier)
                 .map(s -> s.replace("-", ""))
-                .map(String::trim)
+                .map(StringUtils::deleteWhitespace)
                 .map(s -> !StringUtils.isNumeric(s))
                 .map(Object::toString)
                 .orElseGet(() -> "unknown");
