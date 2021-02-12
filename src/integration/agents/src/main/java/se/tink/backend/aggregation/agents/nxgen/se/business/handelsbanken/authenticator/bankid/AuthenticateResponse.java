@@ -23,7 +23,8 @@ public class AuthenticateResponse extends BaseResponse {
             return BankIdStatus.DONE;
         }
         if (BankIdAuthentication.MUST_ACTIVATE.equalsIgnoreCase(authenticateResult)) {
-            throw LoginError.INCORRECT_CREDENTIALS.exception(BankIdUserMessages.ACTIVATION_NEEDED);
+            throw LoginError.NO_ACCESS_TO_MOBILE_BANKING.exception(
+                    BankIdUserMessages.ACTIVATION_NEEDED);
         }
 
         String statusCode = getCode();
