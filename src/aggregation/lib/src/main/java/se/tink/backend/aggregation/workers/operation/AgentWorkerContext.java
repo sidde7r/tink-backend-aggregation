@@ -79,6 +79,8 @@ public class AgentWorkerContext extends AgentContext implements Managed {
                 MetricId.newId("aggregation_supplemental_information_requests_started");
         public static final MetricId finished =
                 MetricId.newId("aggregation_supplemental_information_requests_finished");
+        public static final MetricId finished_with_empty =
+                MetricId.newId("aggregation_supplemental_information_requests_finished_empty");
         public static final MetricId cancelled =
                 MetricId.newId("aggregation_supplemental_information_requests_cancelled");
         public static final MetricId timedOut =
@@ -322,11 +324,25 @@ public class AgentWorkerContext extends AgentContext implements Managed {
                             "Supplemental information request was cancelled by client (returned null)");
                     return Optional.empty();
                 }
-                logger.info("Supplemental information response (non-null) has been received");
-                SupplementalInformationMetrics.inc(
-                        getMetricRegistry(),
-                        SupplementalInformationMetrics.finished,
-                        getClusterId());
+
+                if ("".equals(supplementalInformation)) {
+                    logger.info(
+                            "Supplemental information response (empty!) has been received for provider: {}, from appid: {}",
+                            request.getProvider().getName(),
+                            getAppId());
+                    SupplementalInformationMetrics.inc(
+                            getMetricRegistry(),
+                            SupplementalInformationMetrics.finished_with_empty,
+                            getClusterId());
+                } else {
+                    logger.info(
+                            "Supplemental information response (non-null &  non-empty) has been received");
+                    SupplementalInformationMetrics.inc(
+                            getMetricRegistry(),
+                            SupplementalInformationMetrics.finished,
+                            getClusterId());
+                }
+
                 return Optional.of(supplementalInformation);
             } else {
                 logger.info("Supplemental information request timed out");
