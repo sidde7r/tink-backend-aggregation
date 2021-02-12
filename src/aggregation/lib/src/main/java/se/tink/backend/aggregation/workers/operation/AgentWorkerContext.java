@@ -311,11 +311,9 @@ public class AgentWorkerContext extends AgentContext implements Managed {
                             .map(Credentials::getStatus)
                             .orElse(null));
             if (lock.waitOnBarrier(waitFor, unit)) {
-                String supplementalInformation =
-                        supplementalInformationController.getSupplementalInformation(mfaId);
+                String result = supplementalInformationController.getSupplementalInformation(mfaId);
 
-                if (Objects.isNull(supplementalInformation)
-                        || Objects.equals(supplementalInformation, "null")) {
+                if (Objects.isNull(result) || Objects.equals(result, "null")) {
                     SupplementalInformationMetrics.inc(
                             getMetricRegistry(),
                             SupplementalInformationMetrics.cancelled,
@@ -325,7 +323,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
                     return Optional.empty();
                 }
 
-                if ("".equals(supplementalInformation)) {
+                if ("".equals(result)) {
                     logger.info(
                             "Supplemental information response (empty!) has been received for provider: {}, from appid: {}",
                             request.getProvider().getName(),
@@ -343,7 +341,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
                             getClusterId());
                 }
 
-                return Optional.of(supplementalInformation);
+                return Optional.of(result);
             } else {
                 logger.info("Supplemental information request timed out");
                 SupplementalInformationMetrics.inc(
