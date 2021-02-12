@@ -99,7 +99,7 @@ public class SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand extends 
                 SerializationUtils.serializeAccount(account, features);
 
         /*
-           We are intentionally sending only account and identity data and skipping transaction.
+           We are intentionally sending only account and skipping transaction to data-tracker.
            We are sending transactions only as data-tracker-event to BigQuery. We are planning
            to deprecate data-tracker and only use BigQuery and for this reason we are following
            such an approach for transactions.
