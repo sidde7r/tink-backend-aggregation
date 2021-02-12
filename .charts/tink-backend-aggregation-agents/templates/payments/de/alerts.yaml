@@ -22,4 +22,4 @@ spec:
         description: {{ .Values.kibanaLink }}
           {{ .Values.grafanaLink }}
         summary: Transfer success rate is below 50% actual % is <{ $value }> for <{ $labels.className }> the last 1h. More than 5 attempts.
-        tags: {{ .Values.teletubbiesTags }}
+        tags: {{ .Values.tags }}

@@ -22,7 +22,7 @@ spec:
           {{ .Values.grafanaLink }}
         summary: Login success rate is below 90% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
           the last hour.
-        tags: {{ .Values.minionsTags }}
+        tags: {{ .Values.tags }}
 
     - alert: RefreshSuccessRateLowWithAttemptLimitFI
       expr: |
@@ -40,7 +40,7 @@ spec:
           {{ .Values.grafanaLink }}
         summary: Refresh success rate is below 90% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
           the last hour for <{ $labels.type }>
-        tags: {{ .Values.minionsTags }}
+        tags: {{ .Values.tags }}
 
     ### Provider level fails
     - alert: HighProviderErrorRatioFI
@@ -61,7 +61,7 @@ spec:
           {{ .Values.grafanaLink }}
         summary: Provider <{ $labels.provider }> has failed over 50%
           of its operations the past 60 minutes
-        tags: {{ .Values.minionsTags }}
+        tags: {{ .Values.tags }}
 
     ### Agent level login failures
     - alert: HighProviderFailedLoginRatioFI
@@ -84,4 +84,4 @@ spec:
           {{ .Values.grafanaLink }}
         summary: Agent <{ $labels.className }> has failed over 20%
           of its login attempts the past 60 minutes.
-        tags: {{ .Values.minionsTags }}
+        tags: {{ .Values.tags }}

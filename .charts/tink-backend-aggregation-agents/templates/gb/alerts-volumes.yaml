@@ -20,7 +20,7 @@ spec:
         description: {{ .Values.kibanaMarketUKLink }}
           {{ .Values.grafanaMarketLink }}
         summary: Login volume dropped significantly
-        tags: {{ .Values.fluffyTags }}
+        tags: {{ .Values.tags }}
 
     - alert: LoginVolumeDropOver20%ForSpecificAction_GB
       expr: |
@@ -36,4 +36,4 @@ spec:
         description: {{ .Values.kibanaMarketUKLink }}
           {{ .Values.grafanaMarketLink }}
         summary: Login volume dropped significantly for <{ $labels.action }>
-        tags: {{ .Values.fluffyTags }}
+        tags: {{ .Values.tags }}

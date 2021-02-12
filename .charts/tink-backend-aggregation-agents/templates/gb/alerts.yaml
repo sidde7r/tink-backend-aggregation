@@ -22,7 +22,7 @@ spec:
           Please check if the problem is not caused by API maintenance here https://openbanking.atlassian.net/wiki/spaces/DZ/pages/441614754/API+Downtime
         summary: Login success rate is below 90% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
           the last hour.
-        tags: {{ .Values.fluffyTags }}
+        tags: {{ .Values.tags }}
 
     - alert: RefreshSuccessRateLowWithAttemptLimitGB
       expr: |
@@ -41,7 +41,7 @@ spec:
           Please check if the problem is not caused by API maintenance here https://openbanking.atlassian.net/wiki/spaces/DZ/pages/441614754/API+Downtime
         summary: Refresh success rate is below 90% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
           the last hour for <{ $labels.type }>.
-        tags: {{ .Values.fluffyTags }}
+        tags: {{ .Values.tags }}
     ### Bank side failures
     - alert: BankServerUnavailableForLoginGB
       expr: |
@@ -60,7 +60,7 @@ spec:
           {{ .Values.grafanaLink }}
         summary: Login unavailable rate is above 50% ( <{ $value }> ) for <{ $labels.className }>
           the last 30 minutes.
-        tags: {{ .Values.fluffyTags }}
+        tags: {{ .Values.tags }}
 
     - alert: BankServerUnavailableForRefreshGB
       expr: |
@@ -79,7 +79,7 @@ spec:
           {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is above 50% ( <{ $value }> ) for <{ $labels.className }>
           the last 30 minutes for <{ $labels.type }>.
-        tags: {{ .Values.fluffyTags }}
+        tags: {{ .Values.tags }}
     ### Agent level login failures
     - alert: HighProviderFailedLoginRatioGB
       expr: |
@@ -101,7 +101,7 @@ spec:
           {{ .Values.grafanaLink }}
         summary: Agent <{ $labels.className }> has failed over 20%
           of its login attempts the past 60 minutes.
-        tags: {{ .Values.fluffyTags }}
+        tags: {{ .Values.tags }}
 
     ### Provider level fails
     - alert: HighProviderErrorRatioGB
@@ -122,4 +122,4 @@ spec:
           {{ .Values.grafanaLink }}
         summary: Provider <{ $labels.provider }> has failed over 50%
           of its operations the past 60 minutes
-        tags: {{ .Values.fluffyTags }}
+        tags: {{ .Values.tags }}
