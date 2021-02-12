@@ -111,14 +111,20 @@ public class SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand extends 
            transactions. We do not want to send all transactions in order to avoid putting too much
            load to the system
         */
-        List<Transaction> transactionsOfAccount =
-                context.getAccountDataCache().getTransactionsByAccountToBeProcessed().get(account);
-        List<Transaction> transactionsToProcess =
-                transactionsOfAccount.size() <= MAX_TRANSACTIONS_TO_SEND_TO_BIGQUERY_PER_ACCOUNT
-                        ? transactionsOfAccount
-                        : transactionsOfAccount.subList(
-                                0, MAX_TRANSACTIONS_TO_SEND_TO_BIGQUERY_PER_ACCOUNT);
-        transactionsToProcess.forEach(transaction -> sendTransactionToBigQuery(transaction));
+        try {
+            List<Transaction> transactionsOfAccount =
+                    context.getAccountDataCache()
+                            .getTransactionsByAccountToBeProcessed()
+                            .get(account);
+            List<Transaction> transactionsToProcess =
+                    transactionsOfAccount.size() <= MAX_TRANSACTIONS_TO_SEND_TO_BIGQUERY_PER_ACCOUNT
+                            ? transactionsOfAccount
+                            : transactionsOfAccount.subList(
+                                    0, MAX_TRANSACTIONS_TO_SEND_TO_BIGQUERY_PER_ACCOUNT);
+            transactionsToProcess.forEach(transaction -> sendTransactionToBigQuery(transaction));
+        } catch (Exception e) {
+            log.warn("Failed to send transaction data to BigQuery", e);
+        }
     }
 
     private void sendAccountToBigQuery(final Account account, final AccountFeatures features) {
