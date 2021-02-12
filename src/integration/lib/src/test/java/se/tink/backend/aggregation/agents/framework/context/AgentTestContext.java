@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.framework.context;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -94,7 +93,11 @@ public class AgentTestContext extends AgentContext {
     @Override
     public Optional<String> waitForSupplementalInformation(
             String mfaId, long waitFor, TimeUnit unit) {
-        return Optional.empty();
+        return Optional.ofNullable(
+                supplementalClient
+                        .request(SUPPLEMENTAL_TEST_API)
+                        .type(MediaType.APPLICATION_JSON)
+                        .post(String.class, credentials.getSupplementalInformation()));
     }
 
     @Override
@@ -130,35 +133,13 @@ public class AgentTestContext extends AgentContext {
     }
 
     @Override
-    public String requestSupplementalInformation(
-            Credentials credentials, long waitFor, TimeUnit timeUnit, boolean wait) {
+    public void requestSupplementalInformation(Credentials credentials) {
         log.info(
                 "Requesting supplemental information:"
                         + credentials.getStatus().name()
                         + " ("
                         + credentials.getSupplementalInformation()
                         + ")");
-
-        if (!wait) {
-            return null;
-        }
-
-        return supplementalClient
-                .request(SUPPLEMENTAL_TEST_API)
-                .type(MediaType.APPLICATION_JSON)
-                .post(String.class, credentials.getSupplementalInformation());
-    }
-
-    @Override
-    public void openBankId(String autoStartToken, boolean wait) {
-        if (Strings.isNullOrEmpty(autoStartToken)) {
-            log.info(String.format("[CredentialsId:%s]: Open BankID", credentials.getId()));
-        } else {
-            log.info(
-                    String.format(
-                            "[CredentialsId:%s]: Open BankID with autoStartToken: %s",
-                            credentials.getId(), autoStartToken));
-        }
     }
 
     @Override

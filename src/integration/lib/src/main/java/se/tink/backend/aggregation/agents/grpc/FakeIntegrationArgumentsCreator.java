@@ -103,15 +103,9 @@ public class FakeIntegrationArgumentsCreator {
                     }
 
                     @Override
-                    public void openBankId(String autoStartToken, boolean wait) {}
-
-                    @Override
-                    public String requestSupplementalInformation(
-                            se.tink.backend.agents.rpc.Credentials credentials,
-                            long waitFor,
-                            TimeUnit timeUnit,
-                            boolean wait) {
-                        return null;
+                    public void requestSupplementalInformation(
+                            se.tink.backend.agents.rpc.Credentials credentials) {
+                        // NOOP
                     }
 
                     @Override

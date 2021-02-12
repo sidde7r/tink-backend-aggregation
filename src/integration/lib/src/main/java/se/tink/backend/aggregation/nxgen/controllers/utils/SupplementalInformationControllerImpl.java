@@ -99,10 +99,12 @@ public class SupplementalInformationControllerImpl implements SupplementalInform
     public String askSupplementalInformationAsync(Field... fields) {
         credentials.setSupplementalInformation(SerializationUtils.serializeToString(fields));
         credentials.setStatus(CredentialsStatus.AWAITING_SUPPLEMENTAL_INFORMATION);
+        credentials.setStatusPayload(null);
+
         String names = Arrays.stream(fields).map(Field::getName).collect(Collectors.joining(","));
         logger.info("Requesting for fields: {}", names);
 
-        supplementalRequester.requestSupplementalInformation(credentials, false);
+        supplementalRequester.requestSupplementalInformation(credentials);
 
         // in case of embedded supplemental information, we use credentialsId as mfaId
         return credentials.getId();
@@ -125,13 +127,14 @@ public class SupplementalInformationControllerImpl implements SupplementalInform
         payload.setState(state);
         credentials.setSupplementalInformation(SerializationUtils.serializeToString(payload));
         credentials.setStatus(CredentialsStatus.AWAITING_THIRD_PARTY_APP_AUTHENTICATION);
+        credentials.setStatusPayload(null);
 
         final String deepLinkUrl =
                 Optional.ofNullable(payload.getIos()).map(Ios::getDeepLinkUrl).orElse("<none>");
 
         logger.info("Opening third party app with deep link URL {}, state {}", deepLinkUrl, state);
 
-        supplementalRequester.requestSupplementalInformation(credentials, false);
+        supplementalRequester.requestSupplementalInformation(credentials);
 
         // return the mfaId that can be listened for.
         return String.format(UNIQUE_PREFIX_TPCB, this.state);
@@ -149,8 +152,9 @@ public class SupplementalInformationControllerImpl implements SupplementalInform
     public String openMobileBankIdAsync(String autoStartToken) {
         credentials.setSupplementalInformation(autoStartToken);
         credentials.setStatus(CredentialsStatus.AWAITING_MOBILE_BANKID_AUTHENTICATION);
+        credentials.setStatusPayload(null);
 
-        supplementalRequester.requestSupplementalInformation(credentials, false);
+        supplementalRequester.requestSupplementalInformation(credentials);
 
         // in case of swedish bankid, we use credentialsId as mfaId
         return credentials.getId();

@@ -34,25 +34,8 @@ public final class AgentTestServerSupplementalRequester implements SupplementalR
     }
 
     @Override
-    public void openBankId(String autoStartToken, boolean wait) {
-        if (Strings.isNullOrEmpty(autoStartToken)) {
-            log.info(String.format("[CredentialsId:%s]: Open BankID", credential.getId()));
-        } else {
-            log.info(
-                    String.format(
-                            "[CredentialsId:%s]: Sending autoStartToken to test server: %s",
-                            credential.getId(), autoStartToken));
-            agentTestServerClient.sendBankIdAutoStartToken(autoStartToken);
-        }
-    }
-
-    @Override
-    public String requestSupplementalInformation(
-            Credentials credentials, long waitFor, TimeUnit timeUnit, boolean wait) {
-        log.info(
-                "Requesting additional info from client. Status: {}, wait: {}",
-                credentials.getStatus(),
-                wait);
+    public void requestSupplementalInformation(Credentials credentials) {
+        log.info("Requesting additional info from client. Status: {}", credentials.getStatus());
 
         switch (credentials.getStatus()) {
             case AWAITING_SUPPLEMENTAL_INFORMATION:
@@ -61,16 +44,7 @@ public final class AgentTestServerSupplementalRequester implements SupplementalR
                 agentTestServerClient.initiateSupplementalInformation(
                         credentials.getId(), credentials.getSupplementalInformation());
 
-                if (!wait) {
-                    // The agent is not interested in the result. This is the same logic as the
-                    // production code.
-                    return null;
-                }
-
-                Optional<String> supplementalInformation =
-                        waitForSupplementalInformation(credentials.getId(), 2, TimeUnit.MINUTES);
-
-                return supplementalInformation.orElse(null);
+                break;
             case AWAITING_MOBILE_BANKID_AUTHENTICATION:
                 String autoStartToken = credentials.getSupplementalInformation();
                 if (Strings.isNullOrEmpty(autoStartToken)) {
@@ -82,15 +56,15 @@ public final class AgentTestServerSupplementalRequester implements SupplementalR
                                     credential.getId(), autoStartToken));
                     agentTestServerClient.sendBankIdAutoStartToken(autoStartToken);
                 }
-                return null;
+                break;
             case AWAITING_THIRD_PARTY_APP_AUTHENTICATION:
                 agentTestServerClient.openThirdPartyApp(credentials.getSupplementalInformation());
-                return null;
+                break;
             default:
                 Assert.fail(
                         String.format(
                                 "Cannot handle credentials status: %s", credentials.getStatus()));
-                return null;
+                break;
         }
     }
 

@@ -357,33 +357,10 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     }
 
     @Override
-    public String requestSupplementalInformation(
-            Credentials credentials, long waitFor, TimeUnit timeUnit, boolean wait) {
-
+    public void requestSupplementalInformation(Credentials credentials) {
         supplementalInteractionCounter.inc();
 
-        if (wait) {
-            updateCredentialsExcludingSensitiveInformation(credentials, true);
-
-            Optional<String> supplementalInformation =
-                    waitForSupplementalInformation(credentials.getId(), waitFor, timeUnit);
-
-            return supplementalInformation.orElse(null);
-        } else {
-            updateStatus(credentials.getStatus());
-        }
-
-        return null;
-    }
-
-    @Override
-    public void openBankId(String autoStartToken, boolean wait) {
-        Credentials credentials = request.getCredentials();
-
-        credentials.setSupplementalInformation(autoStartToken);
-        credentials.setStatus(CredentialsStatus.AWAITING_MOBILE_BANKID_AUTHENTICATION);
-
-        requestSupplementalInformation(credentials, wait);
+        updateCredentialsExcludingSensitiveInformation(credentials, true);
     }
 
     public AccountDataCache getAccountDataCache() {
