@@ -1,0 +1,18 @@
+{
+    "chosenScaMethod": {
+        "name": "chiptan optical",
+        "authenticationType": "CHIP_OTP",
+        "authenticationMethodId": "1optical"
+    },
+    "scaStatus": "scaMethodSelected",
+    "scaMethods": [
+    ],
+    "_links": {
+        "scaStatus": {
+            "href": "https://xs2a.db.com/ais/DE/Postbank/v1/consents/**HASHED:4Q**/authorisations/e89166ea-2a05-4b3b-b860-cfae5d03a33c"
+        },
+        "authoriseTransaction": {
+            "href": "https://xs2a.db.com/ais/DE/Postbank/v1/consents/authoriseTransaction"
+        }
+    }
+}

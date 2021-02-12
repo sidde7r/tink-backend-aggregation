@@ -1,0 +1,23 @@
+{
+    "scaStatus": "psuAuthenticated",
+    "scaMethods": [
+        {
+            "name": "Optical chiptan",
+            "authenticationType": "CHIP_OTP",
+            "authenticationMethodId": "1optical"
+        },
+        {
+            "name": "Different optical chiptan",
+            "authenticationType": "PHOTO",
+            "authenticationMethodId": "2optical"
+        }
+    ],
+    "_links": {
+        "scaStatus": {
+            "href": "https://xs2a.db.com/ais/DE/Postbank/v1/consents/**HASHED:4Q**/authorisations/e89166ea-2a05-4b3b-b860-cfae5d03a33c"
+        },
+        "selectAuthenticationMethod": {
+            "href": "https://xs2a.db.com/ais/DE/Postbank/v1/consents/**HASHED:4Q**/authorisations/e89166ea-2a05-4b3b-b860-cfae5d03a33c"
+        }
+    }
+}

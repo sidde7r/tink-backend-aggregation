@@ -6,6 +6,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.nio.file.Paths;
@@ -23,6 +25,7 @@ import org.mockito.internal.matchers.VarargMatcher;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field;
+import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.PostbankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank.authenticator.entities.ScaMethod;
@@ -37,7 +40,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deu
 import se.tink.backend.aggregation.agents.utils.supplementalfields.CommonFields;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.GermanFields;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
-import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -53,19 +55,137 @@ public class PostbankAuthenticationControllerTest {
     private static final String CONSENT_DETAILS_EXPIRED = "consent_details_response_expired.json";
     private static final String CONSENT_DETAILS_VALID = "consent_details_response_valid.json";
 
+    private static final String AUTH_RESP = "authorisation_response.json";
+    private static final String AUTH_RESP_UNSUPPORTED = "authorisation_response_unsupported.json";
+    private static final String AUTH_RESP_SINGLE = "authorisation_response_single.json";
+    private static final String AUTH_RESP_SINGLE_UNSUPPORTED =
+            "authorisation_response_single_unsupported.json";
+    private static final String AUTH_RESP_FINALISED = "authorisation_response_status.json";
+
+    private static final String URL_AUTH_TRANSACTION =
+            "https://xs2a.db.com/ais/DE/Postbank/v1/consents/authoriseTransaction";
+    private static final String URL_SCA =
+            "https://xs2a.db.com/ais/DE/Postbank/v1/consents/scaStatus";
+
+    public static final String USERNAME = "username";
+    public static final String PASSWORD = "password";
+    public static final String OTP_CODE = "otpCode";
+
+    private final Catalog catalog = new Catalog(Locale.getDefault());
+
+    private final SupplementalInformationController mockSuppController =
+            mock(SupplementalInformationController.class);
+
+    @Test
+    public void when_one_sca_available_then_should_finish_without_selection() {
+        // given
+        PostbankAuthenticator mockAuthenticator = mock(PostbankAuthenticator.class);
+
+        when(mockAuthenticator.init(USERNAME, PASSWORD))
+                .thenReturn(getAuthorisationResponse(AUTH_RESP_SINGLE));
+        when(mockAuthenticator.authoriseWithOtp(OTP_CODE, USERNAME, URL_AUTH_TRANSACTION))
+                .thenReturn(getAuthorisationResponse(AUTH_RESP_FINALISED));
+
+        mockProvidingOtpCode();
+
+        PostbankAuthenticationController postbankAuthenticationController =
+                new PostbankAuthenticationController(
+                        catalog, mockSuppController, mockAuthenticator);
+
+        // when
+        postbankAuthenticationController.authenticate(createCredentials(null));
+
+        // then
+        verify(mockSuppController).askSupplementalInformationSync(any());
+    }
+
+    @Test
+    public void when_multiple_sca_available_then_should_finish_with_selection() {
+        // given
+        PostbankAuthenticator mockAuthenticator = mock(PostbankAuthenticator.class);
+
+        when(mockAuthenticator.init(USERNAME, PASSWORD))
+                .thenReturn(getAuthorisationResponse(AUTH_RESP));
+        when(mockAuthenticator.selectScaMethod("1", USERNAME, URL_SCA))
+                .thenReturn(getAuthorisationResponse(AUTH_RESP_SINGLE));
+        when(mockAuthenticator.authoriseWithOtp(OTP_CODE, USERNAME, URL_AUTH_TRANSACTION))
+                .thenReturn(getAuthorisationResponse(AUTH_RESP_FINALISED));
+
+        mockScaMethodSelection(getAuthorisationResponse(AUTH_RESP), 1);
+        mockProvidingOtpCode();
+
+        PostbankAuthenticationController postbankAuthenticationController =
+                new PostbankAuthenticationController(
+                        catalog, mockSuppController, mockAuthenticator);
+
+        // when
+        postbankAuthenticationController.authenticate(createCredentials(null));
+
+        // then
+        verify(mockSuppController, times(2)).askSupplementalInformationSync(any());
+    }
+
+    @Test
+    public void when_one_unsupported_sca_available_then_should_throw() {
+        // given
+        PostbankAuthenticator mockAuthenticator = mock(PostbankAuthenticator.class);
+
+        when(mockAuthenticator.init(USERNAME, PASSWORD))
+                .thenReturn(getAuthorisationResponse(AUTH_RESP_SINGLE_UNSUPPORTED));
+
+        PostbankAuthenticationController postbankAuthenticationController =
+                new PostbankAuthenticationController(
+                        catalog, mockSuppController, mockAuthenticator);
+        // when
+        Throwable thrown =
+                catchThrowable(
+                        () ->
+                                postbankAuthenticationController.authenticate(
+                                        createCredentials(null)));
+
+        // then
+        assertThat(thrown)
+                .isInstanceOf(LoginException.class)
+                .hasMessage("Cause: LoginError.NO_AVAILABLE_SCA_METHODS");
+    }
+
+    @Test
+    public void when_multiple_unsupported_sca_available_then_should_throw() {
+        // given
+        PostbankAuthenticator mockAuthenticator = mock(PostbankAuthenticator.class);
+
+        when(mockAuthenticator.init(USERNAME, PASSWORD))
+                .thenReturn(getAuthorisationResponse(AUTH_RESP_UNSUPPORTED));
+
+        PostbankAuthenticationController postbankAuthenticationController =
+                new PostbankAuthenticationController(
+                        new Catalog(Locale.getDefault()), mockSuppController, mockAuthenticator);
+
+        // when
+        Throwable thrown =
+                catchThrowable(
+                        () ->
+                                postbankAuthenticationController.authenticate(
+                                        createCredentials(null)));
+
+        // then
+        assertThat(thrown)
+                .isInstanceOf(LoginException.class)
+                .hasMessage("Cause: LoginError.NO_AVAILABLE_SCA_METHODS");
+    }
+
     @Test
     public void when_user_is_authenticated_then_session_expiry_date_is_set() {
         // given
         Date date = toDate("2030-01-01");
         TinkHttpClient tinkHttpClient = mockHttpClient(CONSENT_DETAILS_VALID);
         Credentials credentials = createCredentials(null);
-        credentials.setType(CredentialsTypes.PASSWORD);
 
         PostbankAuthenticator postbankAuthenticator =
                 createPostbankAuthenticator(tinkHttpClient, new PersistentStorage(), credentials);
 
         PostbankAuthenticationController postbankAuthenticationController =
-                createAutoAuthenticationController(postbankAuthenticator, credentials, true);
+                createAutoAuthenticationController(postbankAuthenticator);
 
         // when
         postbankAuthenticationController.authenticate(credentials);
@@ -115,9 +235,10 @@ public class PostbankAuthenticationControllerTest {
 
     private Credentials createCredentials(Date sessionExpiryDate) {
         Credentials credentials = new Credentials();
-        credentials.setUsername("username");
-        credentials.setPassword("password");
+        credentials.setUsername(USERNAME);
+        credentials.setPassword(PASSWORD);
         credentials.setSessionExpiryDate(sessionExpiryDate);
+        credentials.setType(CredentialsTypes.PASSWORD);
         return credentials;
     }
 
@@ -140,42 +261,24 @@ public class PostbankAuthenticationControllerTest {
     }
 
     private PostbankAuthenticationController createAutoAuthenticationController(
-            PostbankAuthenticator postbankAuthenticator, Credentials credentials, boolean manual) {
-        AuthorisationResponse authorisationResponse = getAuthorisationResponse();
-        Catalog catalog = new Catalog(Locale.getDefault());
-
-        SupplementalInformationHelper supplementalInformationHelper =
-                mock(SupplementalInformationHelper.class);
-        mockScaMethodSelection(authorisationResponse, catalog, supplementalInformationHelper, 3);
-        mockProvidingOtpCode(authorisationResponse, catalog, supplementalInformationHelper, 3);
+            PostbankAuthenticator postbankAuthenticator) {
+        AuthorisationResponse authorisationResponse = getAuthorisationResponse(AUTH_RESP);
+        mockScaMethodSelection(authorisationResponse, 3);
 
         return new PostbankAuthenticationController(
-                catalog,
-                supplementalInformationHelper,
-                mock(SupplementalInformationController.class),
-                postbankAuthenticator);
+                catalog, mockSuppController, postbankAuthenticator);
     }
 
-    private void mockProvidingOtpCode(
-            AuthorisationResponse authorisationResponse,
-            Catalog catalog,
-            SupplementalInformationHelper supplementalInformationHelper,
-            Integer methodNumber) {
+    private void mockProvidingOtpCode() {
         Map<String, String> supplementalInformation = new HashMap<>();
-        supplementalInformation.put(CommonFields.Selection.getFieldKey(), "otpCode");
-        Field tan =
-                GermanFields.Tan.build(
-                        catalog, authorisationResponse.getScaMethods().get(methodNumber).getName());
-        when(supplementalInformationHelper.askSupplementalInformation(
-                        argThat(new FieldMatcher(tan))))
+        supplementalInformation.put(GermanFields.Tan.getFieldKey(), OTP_CODE);
+        Field tan = GermanFields.Tan.build(catalog, "");
+        when(mockSuppController.askSupplementalInformationSync(argThat(new FieldMatcher(tan))))
                 .thenReturn(supplementalInformation);
     }
 
     private void mockScaMethodSelection(
-            AuthorisationResponse authorisationResponse,
-            Catalog catalog,
-            SupplementalInformationHelper supplementalInformationHelper,
-            Integer methodNumber) {
+            AuthorisationResponse authorisationResponse, Integer methodNumber) {
         Map<String, String> supplementalInformation = new HashMap<>();
         supplementalInformation.put(CommonFields.Selection.getFieldKey(), methodNumber.toString());
         Field field =
@@ -184,8 +287,7 @@ public class PostbankAuthenticationControllerTest {
                         authorisationResponse.getScaMethods().stream()
                                 .map(ScaMethod::getName)
                                 .collect(Collectors.toList()));
-        when(supplementalInformationHelper.askSupplementalInformation(
-                        argThat(new FieldMatcher(field))))
+        when(mockSuppController.askSupplementalInformationSync(argThat(new FieldMatcher(field))))
                 .thenReturn(supplementalInformation);
     }
 
@@ -210,7 +312,8 @@ public class PostbankAuthenticationControllerTest {
                         SerializationUtils.deserializeFromString(
                                 Paths.get(TEST_DATA_PATH, "consent_response.json").toFile(),
                                 ConsentResponse.class));
-        when(requestBuilder.put(any(), anyString())).thenReturn(getAuthorisationResponse());
+        when(requestBuilder.put(any(), anyString()))
+                .thenReturn(getAuthorisationResponse(AUTH_RESP));
         when(requestBuilder.put(any(), any(UpdateAuthorisationRequest.class)))
                 .thenReturn(
                         SerializationUtils.deserializeFromString(
@@ -241,10 +344,9 @@ public class PostbankAuthenticationControllerTest {
         return tinkHttpClient;
     }
 
-    private AuthorisationResponse getAuthorisationResponse() {
+    private AuthorisationResponse getAuthorisationResponse(String filename) {
         return SerializationUtils.deserializeFromString(
-                Paths.get(TEST_DATA_PATH, "authorisation_response.json").toFile(),
-                AuthorisationResponse.class);
+                Paths.get(TEST_DATA_PATH, filename).toFile(), AuthorisationResponse.class);
     }
 
     private static class FieldMatcher implements ArgumentMatcher<Field>, VarargMatcher {

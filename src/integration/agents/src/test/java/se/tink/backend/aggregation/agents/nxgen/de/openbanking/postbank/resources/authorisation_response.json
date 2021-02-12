@@ -1,33 +1,33 @@
 {
-  "scaStatus": "psuAuthenticated",
-  "scaMethods": [
-    {
-      "name": "SMS",
-      "authenticationType": "SMS_OTP",
-      "authenticationMethodId": "1"
-    },
-    {
-      "name": "Best signin",
-      "authenticationType": "PUSH_OTP",
-      "authenticationMethodId": "2"
-    },
-    {
-      "name": "iphone1",
-      "authenticationType": "PUSH_OTP",
-      "authenticationMethodId": "3"
-    },
-    {
-      "name": "iphone2",
-      "authenticationType": "PUSH_OTP",
-      "authenticationMethodId": "4"
+    "scaStatus": "psuAuthenticated",
+    "scaMethods": [
+        {
+            "name": "SMS",
+            "authenticationType": "SMS_OTP",
+            "authenticationMethodId": "1"
+        },
+        {
+            "name": "Best signin",
+            "authenticationType": "PUSH_OTP",
+            "authenticationMethodId": "2"
+        },
+        {
+            "name": "iphone1",
+            "authenticationType": "PUSH_OTP",
+            "authenticationMethodId": "3"
+        },
+        {
+            "name": "iphone2",
+            "authenticationType": "PUSH_OTP",
+            "authenticationMethodId": "4"
+        }
+    ],
+    "_links": {
+        "scaStatus": {
+            "href": "https://xs2a.db.com/ais/DE/Postbank/v1/consents/scaStatus"
+        },
+        "selectAuthenticationMethod": {
+            "href": "https://xs2a.db.com/ais/DE/Postbank/v1/consents/selectAuthenticationMethod"
+        }
     }
-  ],
-  "_links": {
-    "scaStatus": {
-      "href": "https://xs2a.db.com/ais/DE/Postbank/v1/consents/**HASHED:4Q**/authorisations/e89166ea-2a05-4b3b-b860-cfae5d03a33c"
-    },
-    "selectAuthenticationMethod": {
-      "href": "https://xs2a.db.com/ais/DE/Postbank/v1/consents/**HASHED:4Q**/authorisations/e89166ea-2a05-4b3b-b860-cfae5d03a33c"
-    }
-  }
 }
