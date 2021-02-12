@@ -80,6 +80,23 @@ public class AccountTrackingSerializerTest {
     }
 
     @Test
+    public void ensureIbanIdentifierIsAlwaysTracked() {
+
+        Account account = new Account();
+
+        // this account has no iban
+        account.putIdentifier(
+                AccountIdentifier.create(AccountIdentifier.Type.SORT_CODE, EXAMPLE_SORTCODE));
+
+        List<FieldEntry> entries = new AccountTrackingSerializer(account).buildList();
+
+        Assert.assertTrue(
+                "Failed: should have null 'identifiers.iban'",
+                TrackingSerializationTestHelper.hasFieldWithValue(
+                        "Account<null>.identifiers.iban", "null", entries));
+    }
+
+    @Test
     public void ensureEmptyIdentifiersList_resultInNullValue() {
 
         ImmutableSet<String> expectedIdentifiers =
