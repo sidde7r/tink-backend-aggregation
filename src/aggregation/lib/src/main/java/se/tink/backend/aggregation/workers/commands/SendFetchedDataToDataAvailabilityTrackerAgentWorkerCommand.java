@@ -7,6 +7,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.models.AccountFeatures;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.events.DataTrackerEventProducer;
@@ -124,7 +125,8 @@ public class SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand extends 
                             ? transactionsOfAccount
                             : transactionsOfAccount.subList(
                                     0, MAX_TRANSACTIONS_TO_SEND_TO_BIGQUERY_PER_ACCOUNT);
-            transactionsToProcess.forEach(transaction -> sendTransactionToBigQuery(transaction));
+            transactionsToProcess.forEach(
+                    transaction -> sendTransactionToBigQuery(transaction, account.getType()));
         } catch (Exception e) {
             log.warn("Failed to send transaction data to BigQuery", e);
         }
@@ -164,8 +166,9 @@ public class SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand extends 
                 context.getRequest().getCredentials().getUserId());
     }
 
-    private void sendTransactionToBigQuery(Transaction transaction) {
-        TransactionTrackingSerializer serializer = new TransactionTrackingSerializer(transaction);
+    private void sendTransactionToBigQuery(Transaction transaction, AccountTypes accountType) {
+        TransactionTrackingSerializer serializer =
+                new TransactionTrackingSerializer(transaction, accountType);
 
         List<Pair<String, Boolean>> eventData = new ArrayList<>();
 

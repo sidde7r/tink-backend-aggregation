@@ -3,6 +3,7 @@ package se.tink.backend.integration.agent_data_availability_tracker.serializatio
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.models.TransactionDate;
 import se.tink.backend.aggregation.agents.models.TransactionDateType;
@@ -14,19 +15,13 @@ public class TransactionTrackingSerializer extends TrackingMapSerializer {
     private static final String TRANSACTION_ENTITY_NAME = "Transaction";
     private final Transaction transaction;
 
-    public TransactionTrackingSerializer(Transaction transaction) {
-        /*
-           TODO (AAP-1039): We should also add the type of the account from where this transaction
-           comes from. In this case we need to get another parameter which will contain
-           this information
-        */
-        super(String.format(TRANSACTION_ENTITY_NAME + "<%s>", ""));
+    public TransactionTrackingSerializer(Transaction transaction, AccountTypes accountType) {
+        super(String.format(TRANSACTION_ENTITY_NAME + "<%s>", accountType.toString()));
         this.transaction = transaction;
     }
 
     @Override
     protected TrackingList populateTrackingMap(TrackingList.Builder listBuilder) {
-
         listBuilder
                 .putRedacted("amount", transaction.getAmount())
                 .putRedacted("description", transaction.getDescription())
