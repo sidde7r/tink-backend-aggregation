@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.workers.commands;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -117,9 +118,11 @@ public class SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand extends 
         */
         try {
             List<Transaction> transactionsOfAccount =
-                    context.getAccountDataCache()
-                            .getTransactionsByAccountToBeProcessed()
-                            .get(account);
+                    new ArrayList<>(
+                            context.getAccountDataCache()
+                                    .getTransactionsByAccountToBeProcessed()
+                                    .get(account));
+            Collections.shuffle(transactionsOfAccount);
             List<Transaction> transactionsToProcess =
                     transactionsOfAccount.size() <= MAX_TRANSACTIONS_TO_SEND_TO_BIGQUERY_PER_ACCOUNT
                             ? transactionsOfAccount
