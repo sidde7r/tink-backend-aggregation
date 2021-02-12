@@ -106,13 +106,30 @@ public final class URL {
      *     removed)
      */
     public URL parameter(String key, String value) {
+        return parameter(key, value, true);
+    }
+
+    /**
+     * Replaces a parameter in a URL with given encoding.
+     *
+     * <p>E.g. "http://www.bank.com/{accountId}", accountId is the key that will be replaced with a
+     * value.
+     *
+     * @param key a key in a URL surrounded around curly brackets
+     * @param value the value which will be URL-encoded and is to replace the key
+     * @param shouldEncodeParameter - states if parameter should be encoded
+     * @return a URL object where the key has replaced the value (curly brackets will also be
+     *     removed)
+     */
+    public URL parameter(String key, String value, boolean shouldEncodeParameter) {
         Preconditions.checkState(!Strings.isNullOrEmpty(key) && !Strings.isNullOrEmpty(value));
 
         String escapedParameterVariable = Pattern.quote("{" + key + "}");
         Matcher matcher = Pattern.compile(escapedParameterVariable).matcher(url);
         Preconditions.checkState(matcher.find());
 
-        return new URL(matcher.replaceAll(urlEncode(value)), query);
+        String parameterValue = shouldEncodeParameter ? urlEncode(value) : value;
+        return new URL(matcher.replaceAll(parameterValue), query);
     }
 
     /**
