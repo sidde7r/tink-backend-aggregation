@@ -144,21 +144,11 @@ public class SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand extends 
         serializer
                 .buildList()
                 .forEach(
-                        entry -> {
-                            if (entry.getName().endsWith(".identifiers")) {
-                                eventData.add(
-                                        new Pair<String, Boolean>(
-                                                entry.getName()
-                                                        + "."
-                                                        + entry.getValue().replace("-", ""),
-                                                true));
-                            } else {
+                        entry ->
                                 eventData.add(
                                         new Pair<String, Boolean>(
                                                 entry.getName(),
-                                                !("null".equalsIgnoreCase(entry.getValue()))));
-                            }
-                        });
+                                                !("null".equalsIgnoreCase(entry.getValue())))));
 
         dataTrackerEventProducer.sendDataTrackerEvent(
                 context.getRequest().getCredentials().getProviderName(),
