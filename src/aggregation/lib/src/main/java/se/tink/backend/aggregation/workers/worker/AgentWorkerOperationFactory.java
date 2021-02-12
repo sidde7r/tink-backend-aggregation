@@ -273,13 +273,6 @@ public class AgentWorkerOperationFactory {
                 commands.add(new AbnAmroSpecificCase(context));
             }
 
-            commands.add(
-                    new SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand(
-                            context,
-                            createCommandMetricState(request),
-                            agentDataAvailabilityTrackerClient,
-                            dataTrackerEventProducer));
-
             commands.add(new FetcherInstrumentationAgentWorkerCommand(context, itemsToRefresh));
         }
 
@@ -292,6 +285,15 @@ public class AgentWorkerOperationFactory {
                             agentDataAvailabilityTrackerClient,
                             dataTrackerEventProducer,
                             refreshEventProducer));
+        }
+
+        if (accountItems.size() > 0) {
+            commands.add(
+                    new SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand(
+                            context,
+                            createCommandMetricState(request),
+                            agentDataAvailabilityTrackerClient,
+                            dataTrackerEventProducer));
         }
 
         // FIXME: remove when Handelsbanken and Avanza have been moved to the nextgen agents. (TOP
@@ -1466,13 +1468,6 @@ public class AgentWorkerOperationFactory {
                     && Objects.equals("nl-abnamro", request.getProvider().getName())) {
                 commands.add(new AbnAmroSpecificCase(context));
             }
-
-            commands.add(
-                    new SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand(
-                            context,
-                            createCommandMetricState(request),
-                            agentDataAvailabilityTrackerClient,
-                            dataTrackerEventProducer));
         }
 
         // Add all refreshable items that aren't accounts to refresh them.
@@ -1488,6 +1483,16 @@ public class AgentWorkerOperationFactory {
                                                 agentDataAvailabilityTrackerClient,
                                                 dataTrackerEventProducer,
                                                 refreshEventProducer)));
+
+        if (accountItems.size() > 0) {
+            commands.add(
+                    new SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand(
+                            context,
+                            createCommandMetricState(request),
+                            agentDataAvailabilityTrackerClient,
+                            dataTrackerEventProducer));
+        }
+
         // === END REFRESHING ===
         return commands.build();
     }
