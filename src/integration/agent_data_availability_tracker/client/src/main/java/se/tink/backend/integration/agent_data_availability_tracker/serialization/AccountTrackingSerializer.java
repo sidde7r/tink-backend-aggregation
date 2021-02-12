@@ -1,6 +1,10 @@
 package se.tink.backend.integration.agent_data_availability_tracker.serialization;
 
+import java.util.List;
+import java.util.Optional;
 import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.agents.rpc.Balance;
+import se.tink.backend.agents.rpc.BalanceType;
 import se.tink.backend.integration.agent_data_availability_tracker.common.serialization.TrackingList;
 import se.tink.backend.integration.agent_data_availability_tracker.common.serialization.TrackingMapSerializer;
 import se.tink.libraries.account.AccountIdentifier;
@@ -37,9 +41,29 @@ public class AccountTrackingSerializer extends TrackingMapSerializer {
             listBuilder.putNull("identifiers");
         }
 
+        // Looping over all possible values here to set null on all non-existing
+        for (BalanceType type : BalanceType.values()) {
+            String key = "balances." + type.toString();
+            Optional<Balance> balance = getBalance(account.getBalances(), type);
+
+            if (!balance.isPresent()) {
+                listBuilder.putNull(key);
+                continue;
+            }
+
+            listBuilder.putRedacted(key, balance.get().getAmount().getDoubleValue());
+        }
+
         // Accounts without flags are currently valid, so we do not track this as null if empty.
         account.getFlags().forEach(value -> listBuilder.putListed("flags", value));
 
         return listBuilder.build();
+    }
+
+    private Optional<Balance> getBalance(List<Balance> balances, BalanceType type) {
+        if (balances == null) {
+            return Optional.empty();
+        }
+        return balances.stream().filter(b -> b.getType() == type).findFirst();
     }
 }
