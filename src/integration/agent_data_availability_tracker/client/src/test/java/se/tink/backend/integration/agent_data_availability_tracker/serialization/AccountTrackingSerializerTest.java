@@ -60,13 +60,6 @@ public class AccountTrackingSerializerTest {
     @Test
     public void ensureIdentifierTypes_areTracked() {
 
-        ImmutableSet<String> expectedIdentifiers =
-                ImmutableSet.<String>builder()
-                        .add(
-                                AccountIdentifier.Type.SORT_CODE.toString(),
-                                AccountIdentifier.Type.IBAN.toString())
-                        .build();
-
         Account account = new Account();
 
         account.putIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN, EXAMPLE_IBAN));
@@ -76,9 +69,14 @@ public class AccountTrackingSerializerTest {
         List<FieldEntry> entries = new AccountTrackingSerializer(account).buildList();
 
         Assert.assertTrue(
-                "Failed: has entries 'identifiers' with values [iban, sort-code]",
-                TrackingSerializationTestHelper.hasFieldWithValues(
-                        "Account<null>.identifiers", expectedIdentifiers, entries));
+                "Failed: has entries 'identifiers.iban' with non-listed-value",
+                TrackingSerializationTestHelper.hasFieldWithValue(
+                        "Account<null>.identifiers.iban", VALUE_NOT_LISTED, entries));
+
+        Assert.assertTrue(
+                "Failed: has entries 'identifiers.sort-code' with non-listed-value",
+                TrackingSerializationTestHelper.hasFieldWithValue(
+                        "Account<null>.identifiers.iban", VALUE_NOT_LISTED, entries));
     }
 
     @Test

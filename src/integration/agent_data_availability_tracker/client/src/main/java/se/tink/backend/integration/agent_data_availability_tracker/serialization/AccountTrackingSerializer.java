@@ -33,10 +33,10 @@ public class AccountTrackingSerializer extends TrackingMapSerializer {
 
         // If no identifiers are present we want to record that as a null value.
         if (!account.getIdentifiers().isEmpty()) {
-            account.getIdentifiers().stream()
-                    .map(AccountIdentifier::getType)
-                    .map(AccountIdentifier.Type::toString)
-                    .forEach(value -> listBuilder.putListed("identifiers", value));
+            for (AccountIdentifier id : account.getIdentifiers()) {
+                String key = "identifiers." + id.getType().toString();
+                listBuilder.putRedacted(key, id.getIdentifier());
+            }
         } else {
             listBuilder.putNull("identifiers");
         }
