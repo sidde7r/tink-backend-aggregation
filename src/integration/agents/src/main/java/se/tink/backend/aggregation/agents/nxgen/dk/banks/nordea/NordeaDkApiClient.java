@@ -28,6 +28,7 @@ import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.authenticator.rp
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.fetcher.creditcard.rpc.CreditCardDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.fetcher.creditcard.rpc.CreditCardTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.fetcher.creditcard.rpc.CreditCardsResponse;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.fetcher.identitydata.rpc.IdentityDataResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.fetcher.investment.rpc.CustodyAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.fetcher.loans.rpc.LoanDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.fetcher.loans.rpc.LoansResponse;
@@ -294,6 +295,10 @@ public class NordeaDkApiClient {
 
     public CustodyAccountsResponse fetchInvestments() {
         return baseAuthorizedRequest(URLs.FETCH_INVESTMENTS).get(CustodyAccountsResponse.class);
+    }
+
+    public IdentityDataResponse fetchIdentityData() {
+        return baseAuthorizedRequest(URLs.FETCH_IDENTITY_DATA).get(IdentityDataResponse.class);
     }
 
     private RequestBuilder baseAuthorizedRequest(String url) {

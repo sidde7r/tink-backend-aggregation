@@ -27,6 +27,8 @@ public class NordeaDkConstants {
         public static final String FETCH_CARD_TRANSACTIONS_FORMAT = FETCH_CARDS + TRANSACTIONS;
         public static final String FETCH_INVESTMENTS =
                 NORDEA_PRIVATE_BASE_URL + "/api/dbf/ca/savings-v1/savings/custodies";
+        public static final String FETCH_IDENTITY_DATA =
+                NORDEA_PRIVATE_BASE_URL + "api/dbf/dk/customerinfo-v3/customers/self/info";
     }
 
     public static class QueryParamKeys {
