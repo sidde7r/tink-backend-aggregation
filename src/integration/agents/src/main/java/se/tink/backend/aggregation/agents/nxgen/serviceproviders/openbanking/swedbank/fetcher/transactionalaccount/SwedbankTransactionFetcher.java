@@ -51,7 +51,7 @@ public class SwedbankTransactionFetcher implements TransactionFetcher<Transactio
     }
 
     private Optional<FetchOfflineTransactionsResponse> downloadZippedTransactions(
-            Optional<StatementResponse> statementResponse) {
+            Optional<StatementResponse> statementResponse, String accountId) {
         if (!statementResponse.isPresent()) {
             return Optional.empty();
         }
@@ -69,7 +69,10 @@ public class SwedbankTransactionFetcher implements TransactionFetcher<Transactio
 
                 String offlineTransactions =
                         IOUtils.toString(zipInputStream, StandardCharsets.UTF_8);
-                log.info("Offline transactions: {}", offlineTransactions);
+                log.info(
+                        "Unzipped transactions for account ID {}: {}",
+                        accountId,
+                        offlineTransactions);
 
                 return Optional.of(
                         SerializationUtils.deserializeFromString(
@@ -101,7 +104,8 @@ public class SwedbankTransactionFetcher implements TransactionFetcher<Transactio
         transactions.addAll(
                 downloadZippedTransactions(
                                 sessionStorage.get(
-                                        account.getApiIdentifier(), StatementResponse.class))
+                                        account.getApiIdentifier(), StatementResponse.class),
+                                account.getApiIdentifier())
                         .map(FetchOfflineTransactionsResponse::getTransactions)
                         .map(
                                 transactionEntities ->
