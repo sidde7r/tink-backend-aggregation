@@ -126,25 +126,25 @@ public class SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand extends 
                             .get(account);
             boolean foundTransactions = false;
             if (Objects.isNull(originalTransactions)) {
-                log.debug(
+                log.info(
                         String.format(
                                 "Could not get transactions of account to send to BigQuery. Account type is %s",
                                 account.getType().toString()));
                 originalTransactions = getTransactionsForAccount(account);
                 if (Objects.isNull(originalTransactions)) {
-                    log.debug(
+                    log.info(
                             String.format(
                                     "Could not get transactions of account again to send to BigQuery. Account type is %s",
                                     account.getType().toString()));
                 } else {
                     foundTransactions = true;
-                    log.debug("getTransactionsForAccount method worked!");
+                    log.info("getTransactionsForAccount method worked!");
                 }
             } else {
                 foundTransactions = true;
             }
             if (foundTransactions) {
-                log.debug(
+                log.info(
                         String.format(
                                 "We have transactions for account to send to BQ. Account type is %s",
                                 account.getType().toString()));
@@ -160,8 +160,8 @@ public class SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand extends 
                         transaction -> sendTransactionToBigQuery(transaction, account.getType()));
             }
         } catch (Exception e) {
-            // This is set to debug temporarily. Normally the level of this log should be "warn"
-            log.debug("Failed to send transaction data to BigQuery", e);
+            // This is set to info temporarily. Normally the level of this log should be "warn"
+            log.info("Failed to send transaction data to BigQuery", e);
         }
     }
 
