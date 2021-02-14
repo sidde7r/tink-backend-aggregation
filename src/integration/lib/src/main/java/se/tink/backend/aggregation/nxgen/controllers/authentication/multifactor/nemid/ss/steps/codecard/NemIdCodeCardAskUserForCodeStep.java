@@ -26,6 +26,8 @@ import se.tink.libraries.i18n.Catalog;
 @RequiredArgsConstructor(onConstructor = @__({@Inject}))
 public class NemIdCodeCardAskUserForCodeStep {
 
+    public static final Integer EXPECTED_CODE_LENGTH = 6;
+
     private static final Pattern VALID_CODE_CARD_NUMBER_REGEX =
             Pattern.compile("^[a-zA-Z]\\d{3}-\\d{3}-\\d{3}$");
     private static final Pattern VALID_CODE_NUMBER_REGEX = Pattern.compile("^\\d{4}$");
@@ -86,7 +88,7 @@ public class NemIdCodeCardAskUserForCodeStep {
 
     private String askUserForCode(String cardNumber, String codeNumber, Credentials credentials) {
         Field codeInfoField = CommonFields.KeyCardInfo.build(catalog, codeNumber, cardNumber);
-        Field codeValueField = CommonFields.KeyCardCode.build(catalog, 4);
+        Field codeValueField = CommonFields.KeyCardCode.build(catalog, EXPECTED_CODE_LENGTH);
 
         statusUpdater.updateStatusPayload(
                 credentials, NemIdCodeAppConstants.UserMessage.PROVIDE_CODE_CARD_CODE);
@@ -94,7 +96,7 @@ public class NemIdCodeCardAskUserForCodeStep {
                 supplementalInformationController.askSupplementalInformationSync(
                         codeInfoField, codeValueField);
 
-        return supplementalInfoResponse.get(CommonFields.KeyCardCode.getFieldKey());
+        return supplementalInfoResponse.get(CommonFields.KeyCardCode.FIELD_KEY);
     }
 
     private void verifyCode(String code) {

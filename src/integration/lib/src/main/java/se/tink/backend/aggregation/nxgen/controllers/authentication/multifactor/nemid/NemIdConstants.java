@@ -61,28 +61,53 @@ public class NemIdConstants {
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class Errors {
+
+        /*
+        Error messages under login & password inputs
+         */
         public static final ImmutableList<Pattern> INCORRECT_CREDENTIALS_ERROR_PATTERNS =
-                ImmutableList.<Pattern>builder()
-                        .add(
-                                Pattern.compile("^incorrect (user|password).*"),
-                                Pattern.compile("^fejl i (bruger|adgangskode).*"),
-                                Pattern.compile("^indtast (bruger|adgangskode).*"))
-                        .build();
+                ImmutableList.of(
+                        Pattern.compile("^incorrect (user|password).*"),
+                        Pattern.compile("^fejl i (bruger|adgangskode).*"),
+                        Pattern.compile("^indtast (bruger|adgangskode).*"));
 
-        public static final String ENTER_ACTIVATION_PASSWORD = "Enter activation password.";
+        public static final ImmutableList<Pattern> ENTER_ACTIVATION_PASSWORD_PATTERNS =
+                ImmutableList.of(
+                        Pattern.compile("^enter activation password.*")
+                        // add for DK
+                        );
 
-        public static final String INVALID_CODE_CARD_CODE = "Fejl i nøgle";
+        /*
+        Error messages from NemId heading
+         */
+        public static final ImmutableList<Pattern> NEM_ID_REVOKED_PATTERNS =
+                ImmutableList.of(
+                        Pattern.compile("^nemid revoked.*")
+                        // add for DK
+                        );
+        public static final ImmutableList<Pattern> USE_NEW_CODE_CARD_PATTERNS =
+                ImmutableList.of(
+                        Pattern.compile("^use new code card.*")
+                        // add for DK
+                        );
+
+        /*
+        NemId code card errors
+         */
+        public static final ImmutableList<Pattern> INVALID_CODE_CARD_CODE_PATTERNS =
+                ImmutableList.of(
+                        Pattern.compile("^incorrect code.*"), Pattern.compile("^fejl i nøgle.*"));
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class HtmlElements {
         public static final By IFRAME = By.tagName("iframe");
+        public static final By NEMID_TOKEN = By.cssSelector("div#tink_nemIdToken");
 
         public static final By SUBMIT_BUTTON = By.cssSelector("button.button--submit");
         public static final By NOT_EMPTY_ERROR_MESSAGE =
                 By.xpath("//p[@class='error' and text()!='']");
-        public static final By NEMID_TOKEN = By.cssSelector("div#tink_nemIdToken");
-        public static final By NEMID_BLOCKED = By.xpath("//*[text()='NemID revoked']");
+        public static final By NEMID_WIDE_INFO_HEADING = By.xpath("//h1[@class='wide-header'][0]");
 
         public static final By USERNAME_INPUT = By.cssSelector("input[type=text]");
         public static final By PASSWORD_INPUT = By.cssSelector("input[type=password]");
@@ -92,8 +117,6 @@ public class NemIdConstants {
 
         public static final By NEMID_CODE_CARD_METHOD = By.className("otp__card-number");
         public static final By NEMID_CODE_CARD_NUMBER = NEMID_CODE_CARD_METHOD;
-        public static final By NEMID_CODE_CARD_USE_NEW_CODE_CARD =
-                By.xpath("//*[text()='Use new code card']");
         public static final By NEMID_CODE_CARD_CODE_NUMBER =
                 By.xpath("//div[@class='otp__frame__row']/div[@class='otp__frame__cell'][1]");
         public static final By NEMID_CODE_CARD_CODE_INPUT =

@@ -10,19 +10,20 @@ import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.util.NemIdTestHelper.nemIdMetricsMock;
-import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.util.NemIdTestHelper.verifyThatFromUsersPerspectiveThrowableIsTheSameAsGivenAgentException;
 
+import junitparams.JUnitParamsRunner;
+import junitparams.Parameters;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InOrder;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.steps.NemIdInitializeIframeStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.steps.NemIdLoginPageStep;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.steps.NemIdPerform2FAStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.steps.NemIdVerifyLoginResponseStep;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.steps.codeapp.NemIdAuthorizeWithCodeAppStep;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.steps.codecard.NemIdAuthorizeWithCodeCardStep;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.exception.NemIdError;
 
+@RunWith(JUnitParamsRunner.class)
 public class NemIdIFrameControllerTest {
 
     private NemIdWebDriverWrapper driverWrapper;
@@ -31,9 +32,7 @@ public class NemIdIFrameControllerTest {
     private NemIdInitializeIframeStep initializeIframeStep;
     private NemIdLoginPageStep loginPageStep;
     private NemIdVerifyLoginResponseStep verifyLoginResponseStep;
-
-    private NemIdAuthorizeWithCodeAppStep authorizeWithCodeAppStep;
-    private NemIdAuthorizeWithCodeCardStep authorizeWithCodeCardStep;
+    private NemIdPerform2FAStep perform2FAStep;
 
     private NemIdIFrameController nemIdIFrameController;
 
@@ -47,8 +46,7 @@ public class NemIdIFrameControllerTest {
         tokenValidator = mock(NemIdTokenValidator.class);
         loginPageStep = mock(NemIdLoginPageStep.class);
         verifyLoginResponseStep = mock(NemIdVerifyLoginResponseStep.class);
-        authorizeWithCodeAppStep = mock(NemIdAuthorizeWithCodeAppStep.class);
-        authorizeWithCodeCardStep = mock(NemIdAuthorizeWithCodeCardStep.class);
+        perform2FAStep = mock(NemIdPerform2FAStep.class);
 
         nemIdIFrameController =
                 new NemIdIFrameController(
@@ -58,8 +56,7 @@ public class NemIdIFrameControllerTest {
                         initializeIframeStep,
                         loginPageStep,
                         verifyLoginResponseStep,
-                        authorizeWithCodeAppStep,
-                        authorizeWithCodeCardStep);
+                        perform2FAStep);
 
         credentials = mock(Credentials.class);
         mocksToVerifyInOrder =
@@ -69,18 +66,18 @@ public class NemIdIFrameControllerTest {
                         tokenValidator,
                         loginPageStep,
                         verifyLoginResponseStep,
-                        authorizeWithCodeAppStep,
-                        authorizeWithCodeCardStep);
+                        perform2FAStep);
     }
 
     @Test
-    public void should_execute_all_steps_in_correct_order_and_close_web_driver_for_code_app_flow() {
+    @Parameters(method = "all2FAMethods")
+    public void should_execute_all_steps_in_correct_order_and_close_web_driver(
+            NemId2FAMethod nemId2FAMethod) {
         // given
         when(verifyLoginResponseStep.checkLoginResultAndGetAvailable2FAMethod(any()))
-                .thenReturn(NemId2FAMethod.CODE_APP);
+                .thenReturn(nemId2FAMethod);
 
-        when(authorizeWithCodeAppStep.getNemIdTokenWithCodeAppAuth(any()))
-                .thenReturn("SAMPLE TOKEN");
+        when(perform2FAStep.authenticateToGetNemIdToken(any(), any())).thenReturn("SAMPLE TOKEN");
 
         mockThatTokenIsValid();
 
@@ -94,79 +91,27 @@ public class NemIdIFrameControllerTest {
                 .verify(verifyLoginResponseStep)
                 .checkLoginResultAndGetAvailable2FAMethod(credentials);
         mocksToVerifyInOrder
-                .verify(authorizeWithCodeAppStep)
-                .getNemIdTokenWithCodeAppAuth(credentials);
+                .verify(perform2FAStep)
+                .authenticateToGetNemIdToken(nemId2FAMethod, credentials);
         mocksToVerifyInOrder.verify(tokenValidator).verifyTokenIsValid("SAMPLE TOKEN");
 
         mocksToVerifyInOrder.verify(driverWrapper).quitDriver();
         mocksToVerifyInOrder.verifyNoMoreInteractions();
     }
 
-    @Test
-    public void
-            should_execute_all_steps_in_correct_order_and_close_web_driver_for_code_card_flow() {
-        // given
-        when(verifyLoginResponseStep.checkLoginResultAndGetAvailable2FAMethod(any()))
-                .thenReturn(NemId2FAMethod.CODE_CARD);
-
-        when(authorizeWithCodeCardStep.getNemIdTokenWithCodeCardAuth(any()))
-                .thenReturn("SAMPLE TOKEN 123");
-
-        mockThatTokenIsValid();
-
-        // when
-        nemIdIFrameController.logInWithCredentials(credentials);
-
-        // then
-        mocksToVerifyInOrder.verify(initializeIframeStep).initializeNemIdIframe(credentials);
-        mocksToVerifyInOrder.verify(loginPageStep).login(credentials);
-        mocksToVerifyInOrder
-                .verify(verifyLoginResponseStep)
-                .checkLoginResultAndGetAvailable2FAMethod(credentials);
-        mocksToVerifyInOrder
-                .verify(authorizeWithCodeCardStep)
-                .getNemIdTokenWithCodeCardAuth(credentials);
-        mocksToVerifyInOrder.verify(tokenValidator).verifyTokenIsValid("SAMPLE TOKEN 123");
-
-        mocksToVerifyInOrder.verify(driverWrapper).quitDriver();
-        mocksToVerifyInOrder.verifyNoMoreInteractions();
+    @SuppressWarnings("unused")
+    private Object[] all2FAMethods() {
+        return NemId2FAMethod.values();
     }
 
     @Test
-    public void should_throw_code_token_not_supported_and_close_web_driver_for_code_token_flow() {
+    @Parameters(method = "all2FAMethods")
+    public void should_throw_token_validation_error(NemId2FAMethod nemId2FAMethod) {
         // given
         when(verifyLoginResponseStep.checkLoginResultAndGetAvailable2FAMethod(any()))
-                .thenReturn(NemId2FAMethod.CODE_TOKEN);
+                .thenReturn(nemId2FAMethod);
 
-        when(authorizeWithCodeCardStep.getNemIdTokenWithCodeCardAuth(any()))
-                .thenReturn("--SAMPLE TOKEN 123");
-        mockThatTokenIsValid();
-
-        // when
-        Throwable throwable =
-                catchThrowable(() -> nemIdIFrameController.logInWithCredentials(credentials));
-
-        // then
-        verifyThatFromUsersPerspectiveThrowableIsTheSameAsGivenAgentException(
-                throwable, NemIdError.CODE_TOKEN_NOT_SUPPORTED.exception());
-
-        mocksToVerifyInOrder.verify(initializeIframeStep).initializeNemIdIframe(credentials);
-        mocksToVerifyInOrder.verify(loginPageStep).login(credentials);
-        mocksToVerifyInOrder
-                .verify(verifyLoginResponseStep)
-                .checkLoginResultAndGetAvailable2FAMethod(credentials);
-
-        mocksToVerifyInOrder.verify(driverWrapper).quitDriver();
-        mocksToVerifyInOrder.verifyNoMoreInteractions();
-    }
-
-    @Test
-    public void should_throw_token_validation_error() {
-        // given
-        when(verifyLoginResponseStep.checkLoginResultAndGetAvailable2FAMethod(any()))
-                .thenReturn(NemId2FAMethod.CODE_CARD);
-
-        when(authorizeWithCodeCardStep.getNemIdTokenWithCodeCardAuth(any()))
+        when(perform2FAStep.authenticateToGetNemIdToken(any(), any()))
                 .thenReturn("SAMPLE INVALID TOKEN 12345");
 
         Throwable tokenValidationError = new RuntimeException("invalid token");
@@ -185,8 +130,8 @@ public class NemIdIFrameControllerTest {
                 .verify(verifyLoginResponseStep)
                 .checkLoginResultAndGetAvailable2FAMethod(credentials);
         mocksToVerifyInOrder
-                .verify(authorizeWithCodeCardStep)
-                .getNemIdTokenWithCodeCardAuth(credentials);
+                .verify(perform2FAStep)
+                .authenticateToGetNemIdToken(nemId2FAMethod, credentials);
         mocksToVerifyInOrder
                 .verify(tokenValidator)
                 .verifyTokenIsValid("SAMPLE INVALID TOKEN 12345");

@@ -1,22 +1,25 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.steps;
 
-import static java.util.Arrays.asList;
-import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.Errors.ENTER_ACTIVATION_PASSWORD;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.Errors.ENTER_ACTIVATION_PASSWORD_PATTERNS;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.Errors.INCORRECT_CREDENTIALS_ERROR_PATTERNS;
-import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NEMID_BLOCKED;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.Errors.NEM_ID_REVOKED_PATTERNS;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.Errors.USE_NEW_CODE_CARD_PATTERNS;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NEMID_CODE_APP_METHOD;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NEMID_CODE_CARD_METHOD;
-import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NEMID_CODE_CARD_USE_NEW_CODE_CARD;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NEMID_CODE_TOKEN_METHOD;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NEMID_TOKEN;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NEMID_WIDE_INFO_HEADING;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NOT_EMPTY_ERROR_MESSAGE;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.NEM_ID_PREFIX;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.metrics.NemIdMetricLabel.WAITING_FOR_CREDENTIALS_VALIDATION_ELEMENTS_METRIC;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.Inject;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
@@ -32,11 +35,19 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.metrics.NemIdMetrics;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.NemIdCodeAppConstants.UserMessage;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.exception.NemIdError;
-import se.tink.libraries.i18n.LocalizableKey;
 
 @Slf4j
 @RequiredArgsConstructor(onConstructor = @__({@Inject}))
 public class NemIdVerifyLoginResponseStep {
+
+    public static final List<By> ELEMENTS_TO_SEARCH_FOR =
+            ImmutableList.of(
+                    NEMID_CODE_APP_METHOD,
+                    NEMID_CODE_CARD_METHOD,
+                    NEMID_CODE_TOKEN_METHOD,
+                    NEMID_TOKEN,
+                    NOT_EMPTY_ERROR_MESSAGE,
+                    NEMID_WIDE_INFO_HEADING);
 
     private static final Map<By, NemId2FAMethod> ELEMENT_SELECTORS_FOR_2FA_METHODS =
             ImmutableMap.of(
@@ -63,16 +74,7 @@ public class NemIdVerifyLoginResponseStep {
 
     private NemId2FAMethod verifyCorrectLoginResponseAndGet2FAMethod() {
         ElementsSearchResult validationElementsSearchResult =
-                driverWrapper.searchForFirstElement(
-                        asList(
-                                NEMID_TOKEN,
-                                NEMID_BLOCKED,
-                                NEMID_CODE_APP_METHOD,
-                                NEMID_CODE_CARD_METHOD,
-                                NEMID_CODE_CARD_USE_NEW_CODE_CARD,
-                                NEMID_CODE_TOKEN_METHOD,
-                                NOT_EMPTY_ERROR_MESSAGE),
-                        30);
+                driverWrapper.searchForFirstElement(ELEMENTS_TO_SEARCH_FOR, 30);
 
         By elementSelector = validationElementsSearchResult.getSelector();
         WebElement element = validationElementsSearchResult.getWebElement();
@@ -93,11 +95,8 @@ public class NemIdVerifyLoginResponseStep {
         if (elementSelector == NOT_EMPTY_ERROR_MESSAGE) {
             throwCredentialsValidationError(element.getText());
         }
-        if (elementSelector == NEMID_CODE_CARD_USE_NEW_CODE_CARD) {
-            throw NemIdError.USE_NEW_CODE_CARD.exception();
-        }
-        if (elementSelector == NEMID_BLOCKED) {
-            throw NemIdError.NEMID_BLOCKED.exception();
+        if (elementSelector == NEMID_WIDE_INFO_HEADING) {
+            throwNemIdError(element.getText());
         }
 
         throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception(
@@ -105,20 +104,37 @@ public class NemIdVerifyLoginResponseStep {
     }
 
     private void throwCredentialsValidationError(String errorText) throws LoginException {
-        log.error("{} NemID credentials validation error: {}", NEM_ID_PREFIX, errorText);
+        String errorTextLowerCase = errorText.toLowerCase();
 
-        String err = errorText.toLowerCase();
-
-        if (INCORRECT_CREDENTIALS_ERROR_PATTERNS.stream()
-                .map(p -> p.matcher(err))
-                .anyMatch(Matcher::matches)) {
-            throw LoginError.INCORRECT_CREDENTIALS.exception(NEM_ID_PREFIX + err);
+        if (valueMatchesAnyPattern(errorTextLowerCase, INCORRECT_CREDENTIALS_ERROR_PATTERNS)) {
+            throw LoginError.INCORRECT_CREDENTIALS.exception(NEM_ID_PREFIX + errorTextLowerCase);
         }
-        if (ENTER_ACTIVATION_PASSWORD.equalsIgnoreCase(err)) {
+
+        if (valueMatchesAnyPattern(errorTextLowerCase, ENTER_ACTIVATION_PASSWORD_PATTERNS)) {
             throw LoginError.INCORRECT_CREDENTIALS.exception(
-                    new LocalizableKey(ENTER_ACTIVATION_PASSWORD));
+                    UserMessage.ENTER_ACTIVATION_PASSWORD.getKey());
         }
+
         throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception(
                 NEM_ID_PREFIX + " Unknown login error: " + errorText);
+    }
+
+    private void throwNemIdError(String errorText) throws LoginException {
+        String errorTextLowerCase = errorText.toLowerCase();
+
+        if (valueMatchesAnyPattern(errorTextLowerCase, NEM_ID_REVOKED_PATTERNS)) {
+            throw NemIdError.NEMID_BLOCKED.exception();
+        }
+
+        if (valueMatchesAnyPattern(errorTextLowerCase, USE_NEW_CODE_CARD_PATTERNS)) {
+            throw NemIdError.USE_NEW_CODE_CARD.exception();
+        }
+
+        throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception(
+                NEM_ID_PREFIX + " Unknown NemId error: " + errorText);
+    }
+
+    private boolean valueMatchesAnyPattern(String value, List<Pattern> patterns) {
+        return patterns.stream().map(p -> p.matcher(value)).anyMatch(Matcher::matches);
     }
 }

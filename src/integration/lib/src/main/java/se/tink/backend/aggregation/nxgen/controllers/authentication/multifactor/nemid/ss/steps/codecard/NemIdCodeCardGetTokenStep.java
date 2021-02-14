@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.steps.codecard;
 
-import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.Errors.INVALID_CODE_CARD_CODE;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.Errors.INVALID_CODE_CARD_CODE_PATTERNS;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NEMID_CODE_CARD_CODE_INPUT;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NEMID_TOKEN;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NOT_EMPTY_ERROR_MESSAGE;
@@ -10,7 +10,10 @@ import static se.tink.backend.aggregation.nxgen.controllers.authentication.multi
 
 import com.google.common.base.Strings;
 import com.google.inject.Inject;
+import java.util.List;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.WebElement;
@@ -84,11 +87,16 @@ public class NemIdCodeCardGetTokenStep {
             return;
         }
 
-        if (errorMessage.toLowerCase().contains(INVALID_CODE_CARD_CODE.toLowerCase())) {
+        String errorMessageLowerCase = errorMessage.toLowerCase();
+        if (valueMatchesAnyPattern(errorMessageLowerCase, INVALID_CODE_CARD_CODE_PATTERNS)) {
             throw NemIdError.INVALID_CODE_CARD_CODE.exception();
         }
 
         throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception(
                 NEM_ID_PREFIX + " Unknown code card code error message: " + errorMessage);
+    }
+
+    private boolean valueMatchesAnyPattern(String value, List<Pattern> patterns) {
+        return patterns.stream().map(p -> p.matcher(value)).anyMatch(Matcher::matches);
     }
 }

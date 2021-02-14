@@ -11,10 +11,8 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.metrics.NemIdMetrics;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.steps.NemIdInitializeIframeStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.steps.NemIdLoginPageStep;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.steps.NemIdPerform2FAStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.steps.NemIdVerifyLoginResponseStep;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.steps.codeapp.NemIdAuthorizeWithCodeAppStep;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.steps.codecard.NemIdAuthorizeWithCodeCardStep;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.exception.NemIdError;
 
 @Slf4j
 @RequiredArgsConstructor(access = AccessLevel.PACKAGE, onConstructor = @__({@Inject}))
@@ -29,9 +27,7 @@ public class NemIdIFrameController {
     private final NemIdInitializeIframeStep initializeIframeStep;
     private final NemIdLoginPageStep loginPageStep;
     private final NemIdVerifyLoginResponseStep verifyLoginResponseStep;
-
-    private final NemIdAuthorizeWithCodeAppStep authorizeWithCodeAppStep;
-    private final NemIdAuthorizeWithCodeCardStep authorizeWithCodeCardStep;
+    private final NemIdPerform2FAStep perform2FAStep;
 
     public String logInWithCredentials(Credentials credentials) {
         try {
@@ -48,12 +44,13 @@ public class NemIdIFrameController {
 
             NemId2FAMethod available2FAMethod =
                     verifyLoginResponseStep.checkLoginResultAndGetAvailable2FAMethod(credentials);
-            String tokenBase64 = getNemIdToken(available2FAMethod, credentials);
+            String tokenBase64 =
+                    perform2FAStep.authenticateToGetNemIdToken(available2FAMethod, credentials);
 
             tokenValidator.verifyTokenIsValid(tokenBase64);
             return tokenBase64;
 
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error(
                     "{} NemId authentication error: {}\n{}",
                     NEM_ID_PREFIX,
@@ -63,20 +60,6 @@ public class NemIdIFrameController {
             throw e;
         } finally {
             driverWrapper.quitDriver();
-        }
-    }
-
-    private String getNemIdToken(NemId2FAMethod nemId2FAMethod, Credentials credentials) {
-        switch (nemId2FAMethod) {
-            case CODE_APP:
-                return authorizeWithCodeAppStep.getNemIdTokenWithCodeAppAuth(credentials);
-            case CODE_CARD:
-                return authorizeWithCodeCardStep.getNemIdTokenWithCodeCardAuth(credentials);
-            case CODE_TOKEN:
-                throw NemIdError.CODE_TOKEN_NOT_SUPPORTED.exception(
-                        NEM_ID_PREFIX + " User has code token.");
-            default:
-                throw new IllegalStateException("Unknown NemId 2FA method");
         }
     }
 

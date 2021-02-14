@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor
 
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.IFRAME;
 
-import com.google.inject.Inject;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import lombok.Data;
@@ -10,11 +10,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
 @Slf4j
-@RequiredArgsConstructor(onConstructor = @__({@Inject}))
+@RequiredArgsConstructor
 public class NemIdWebDriverWrapper {
 
     private final WebDriver driver;
@@ -126,6 +127,15 @@ public class NemIdWebDriverWrapper {
 
     @Data
     public static class ElementsSearchResult {
+
+        private static final By EMPTY_BY =
+                new By() {
+                    @Override
+                    public List<WebElement> findElements(SearchContext context) {
+                        return Collections.emptyList();
+                    }
+                };
+
         private final By selector;
         private final WebElement webElement;
 
@@ -134,7 +144,7 @@ public class NemIdWebDriverWrapper {
         }
 
         public static ElementsSearchResult empty() {
-            return new ElementsSearchResult(null, null);
+            return new ElementsSearchResult(EMPTY_BY, null);
         }
     }
 }

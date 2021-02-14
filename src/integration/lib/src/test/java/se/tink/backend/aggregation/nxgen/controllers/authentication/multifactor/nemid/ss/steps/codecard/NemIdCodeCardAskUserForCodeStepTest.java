@@ -8,6 +8,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NEMID_CODE_CARD_CODE_NUMBER;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NEMID_CODE_CARD_NUMBER;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.steps.codecard.NemIdCodeCardAskUserForCodeStep.EXPECTED_CODE_LENGTH;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.util.NemIdTestHelper.nemIdMetricsMock;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.util.NemIdTestHelper.verifyThatFromUsersPerspectiveThrowableIsTheSameAsGivenAgentException;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.util.NemIdTestHelper.webElementMockWithText;
@@ -113,8 +114,8 @@ public class NemIdCodeCardAskUserForCodeStepTest {
 
         Map<String, String> supplementalInfoResponse =
                 ImmutableMap.of(
-                        CommonFields.KeyCardInfo.getFieldKey(), validCodeNumber,
-                        CommonFields.KeyCardCode.getFieldKey(), validCode);
+                        CommonFields.KeyCardInfo.FIELD_KEY, validCodeNumber,
+                        CommonFields.KeyCardCode.FIELD_KEY, validCode);
         when(supplementalInformationController.askSupplementalInformationSync(any(), any()))
                 .thenReturn(supplementalInfoResponse);
 
@@ -140,7 +141,7 @@ public class NemIdCodeCardAskUserForCodeStepTest {
         assertThat(field1)
                 .isEqualTo(
                         CommonFields.KeyCardInfo.build(catalog, validCodeNumber, validCardNumber));
-        assertThat(field2).isEqualTo(CommonFields.KeyCardCode.build(catalog, 4));
+        assertThat(field2).isEqualTo(CommonFields.KeyCardCode.build(catalog, EXPECTED_CODE_LENGTH));
 
         mocksToVerifyInOrder.verifyNoMoreInteractions();
     }
@@ -257,8 +258,8 @@ public class NemIdCodeCardAskUserForCodeStepTest {
 
         Map<String, String> supplementalInfoResponse =
                 ImmutableMap.of(
-                        CommonFields.KeyCardInfo.getFieldKey(), VALID_CODE_NUMBER,
-                        CommonFields.KeyCardCode.getFieldKey(), invalidCode);
+                        CommonFields.KeyCardInfo.FIELD_KEY, VALID_CODE_NUMBER,
+                        CommonFields.KeyCardCode.FIELD_KEY, invalidCode);
         when(supplementalInformationController.askSupplementalInformationSync(any(), any()))
                 .thenReturn(supplementalInfoResponse);
 
@@ -287,7 +288,7 @@ public class NemIdCodeCardAskUserForCodeStepTest {
                 .isEqualTo(
                         CommonFields.KeyCardInfo.build(
                                 catalog, VALID_CODE_NUMBER, VALID_CARD_NUMBER));
-        assertThat(field2).isEqualTo(CommonFields.KeyCardCode.build(catalog, 4));
+        assertThat(field2).isEqualTo(CommonFields.KeyCardCode.build(catalog, EXPECTED_CODE_LENGTH));
 
         mocksToVerifyInOrder.verifyNoMoreInteractions();
     }

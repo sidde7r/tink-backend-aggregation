@@ -91,7 +91,7 @@ public class KeyCardAndSmsOtpAuthenticationController<T> implements MultiFactorA
         }
 
         keyCarduthenticator.authenticate(
-                supplementalInformation.get(CommonFields.KeyCardCode.getFieldKey()));
+                supplementalInformation.get(CommonFields.KeyCardCode.FIELD_KEY));
     }
 
     private Field getKeyCardIndexField(KeyCardInitValues keyCardInitValues) {

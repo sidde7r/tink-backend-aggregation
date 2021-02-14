@@ -93,7 +93,7 @@ public class CommonFields {
     }
 
     public static class KeyCardInfo {
-        private static final String FIELD_KEY = "keyCardInfoField";
+        public static final String FIELD_KEY = "keyCardInfoField";
 
         private static final LocalizableKey DESCRIPTION = new LocalizableKey("Key card index");
         private static final LocalizableKey HELPTEXT =
@@ -119,13 +119,9 @@ public class CommonFields {
     }
 
     public static class KeyCardCode {
-        private static final String FIELD_KEY = "keyCardValueField";
+        public static final String FIELD_KEY = "keyCardValueField";
 
         private static final LocalizableKey DESCRIPTION = new LocalizableKey("Key card code");
-
-        public static String getFieldKey() {
-            return FIELD_KEY;
-        }
 
         public static Field build(Catalog catalog) {
             return commonBuild(catalog).build();
