@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Account;
@@ -160,8 +161,9 @@ public class SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand extends 
                         transaction -> sendTransactionToBigQuery(transaction, account.getType()));
             }
         } catch (Exception e) {
-            // This is set to info temporarily. Normally the level of this log should be "warn"
-            log.info("Failed to send transaction data to BigQuery", e);
+            log.warn(
+                    "Failed to send transaction data to BigQuery. Cause: {}",
+                    ExceptionUtils.getStackTrace(e));
         }
     }
 
