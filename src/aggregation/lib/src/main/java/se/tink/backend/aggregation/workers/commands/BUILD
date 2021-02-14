@@ -104,6 +104,7 @@ java_library(
         "//third_party:javax_inject_javax_inject",
         "//third_party:lombok_libs",
         "//third_party:org_apache_commons_commons_collections4",
+        "//third_party:org_apache_commons_commons_lang3",
         "//third_party:org_apache_curator_curator_recipes",
         "//third_party:org_assertj_assertj_core",
         "//third_party:org_slf4j_slf4j_api",

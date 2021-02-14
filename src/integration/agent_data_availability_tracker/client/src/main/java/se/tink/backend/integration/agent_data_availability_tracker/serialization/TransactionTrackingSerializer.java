@@ -1,5 +1,6 @@
 package se.tink.backend.integration.agent_data_availability_tracker.serialization;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -9,6 +10,7 @@ import se.tink.backend.aggregation.agents.models.TransactionDate;
 import se.tink.backend.aggregation.agents.models.TransactionDateType;
 import se.tink.backend.integration.agent_data_availability_tracker.common.serialization.TrackingList;
 import se.tink.backend.integration.agent_data_availability_tracker.common.serialization.TrackingMapSerializer;
+import se.tink.libraries.chrono.AvailableDateInformation;
 
 public class TransactionTrackingSerializer extends TrackingMapSerializer {
 
@@ -50,15 +52,24 @@ public class TransactionTrackingSerializer extends TrackingMapSerializer {
 
         for (TransactionDateType type : TransactionDateType.values()) {
             String key = "transactionDate_" + type.toString();
-            Optional<TransactionDate> transactionDate =
+            Optional<TransactionDate> maybeTransactionDate =
                     getTransactionDateByType(transaction.getTransactionDates(), type);
-
-            if (!transactionDate.isPresent()) {
-                listBuilder.putNull(key);
-                continue;
+            boolean isDateFound = false;
+            if (maybeTransactionDate.isPresent()) {
+                Optional<LocalDate> maybeLocalDate =
+                        Optional.ofNullable(maybeTransactionDate)
+                                .map(Optional::get)
+                                .map(TransactionDate::getValue)
+                                .map(AvailableDateInformation::getDate);
+                if (maybeLocalDate.isPresent()) {
+                    isDateFound = true;
+                    listBuilder.putRedacted(key, maybeLocalDate.get().toString());
+                }
             }
 
-            listBuilder.putRedacted(key, transactionDate.get().getValue().getDate().toString());
+            if (!isDateFound) {
+                listBuilder.putNull(key);
+            }
         }
 
         return listBuilder.build();
