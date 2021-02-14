@@ -1,5 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.authentication;
 
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.net.URI;
 import java.util.HashMap;
@@ -12,11 +16,14 @@ import se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.authenticatio
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationPersistedData;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.request.AgentUserInteractionAuthenticationProcessRequest;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.request.AgentUserInteractionData;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentAuthenticationResult;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentFailedAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentProceedNextStepAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.steps.AgentAuthenticationProcessStep;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.userinteraction.fielddefinition.IbanFieldDefinition;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.RedirectPreparationRedirectUrlStep;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.http.ExternalApiCallResult;
+import se.tink.backend.aggregation.agentsplatform.framework.error.Error;
 
 public class KbcFetchConsentAuthenticationStepTest {
 
@@ -33,26 +40,22 @@ public class KbcFetchConsentAuthenticationStepTest {
                 new KbcFetchConsentExternalApiCallParameters(
                         iban, redirectUrl.toString(), psuIdAddress);
         KbcFetchConsentExternalApiCall fetchConsentExternalApiCall =
-                Mockito.mock(KbcFetchConsentExternalApiCall.class);
+                mock(KbcFetchConsentExternalApiCall.class);
         ExternalApiCallResult<String> fetchConsentExternalApiCallResult =
-                Mockito.mock(ExternalApiCallResult.class);
-        Mockito.when(fetchConsentExternalApiCallResult.getResponse())
-                .thenReturn(Optional.of(consent));
-        Mockito.when(
-                        fetchConsentExternalApiCall.execute(
-                                Mockito.eq(fetchConsentExternalApiCallParameters),
-                                Mockito.any(),
-                                Mockito.any()))
+                mock(ExternalApiCallResult.class);
+        when(fetchConsentExternalApiCallResult.getResponse()).thenReturn(Optional.of(consent));
+        when(fetchConsentExternalApiCall.execute(
+                        Mockito.eq(fetchConsentExternalApiCallParameters),
+                        Mockito.any(),
+                        Mockito.any()))
                 .thenReturn(fetchConsentExternalApiCallResult);
         AgentUserInteractionAuthenticationProcessRequest authenticationProcessRequest =
-                Mockito.mock(AgentUserInteractionAuthenticationProcessRequest.class);
-        AgentUserInteractionData agentUserInteractionData =
-                Mockito.mock(AgentUserInteractionData.class);
-        Mockito.when(agentUserInteractionData.getFieldValue(IbanFieldDefinition.id()))
-                .thenReturn(iban);
-        Mockito.when(authenticationProcessRequest.getUserInteractionData())
+                mock(AgentUserInteractionAuthenticationProcessRequest.class);
+        AgentUserInteractionData agentUserInteractionData = mock(AgentUserInteractionData.class);
+        when(agentUserInteractionData.getFieldValue(IbanFieldDefinition.id())).thenReturn(iban);
+        when(authenticationProcessRequest.getUserInteractionData())
                 .thenReturn(agentUserInteractionData);
-        Mockito.when(authenticationProcessRequest.getAuthenticationPersistedData())
+        when(authenticationProcessRequest.getAuthenticationPersistedData())
                 .thenReturn(persistedData);
         KbcPersistedDataAccessorFactory kbcPersistedDataAccessorFactory =
                 new KbcPersistedDataAccessorFactory(new ObjectMapper());
@@ -76,5 +79,42 @@ public class KbcFetchConsentAuthenticationStepTest {
                                 RedirectPreparationRedirectUrlStep.class));
         Assertions.assertThat(kbcPersistedData.getKbcAuthenticationData().getConsentId())
                 .isEqualTo(consent);
+    }
+
+    @Test
+    public void shouldFailWithInvalidIban() {
+        // given
+        final String iban = "BE1234";
+        final URI redirectUrl = URI.create("http://testhost");
+        final String psuIdAddress = "0.0.0.0";
+        AgentAuthenticationPersistedData persistedData =
+                new AgentAuthenticationPersistedData(new HashMap<>());
+        AgentUserInteractionAuthenticationProcessRequest authenticationProcessRequest =
+                mock(AgentUserInteractionAuthenticationProcessRequest.class);
+        AgentUserInteractionData agentUserInteractionData = mock(AgentUserInteractionData.class);
+        when(agentUserInteractionData.getFieldValue(IbanFieldDefinition.id())).thenReturn(iban);
+        when(authenticationProcessRequest.getUserInteractionData())
+                .thenReturn(agentUserInteractionData);
+        when(authenticationProcessRequest.getAuthenticationPersistedData())
+                .thenReturn(persistedData);
+
+        KbcFetchConsentExternalApiCall fetchConsentExternalApiCall =
+                mock(KbcFetchConsentExternalApiCall.class);
+        KbcPersistedDataAccessorFactory kbcPersistedDataAccessorFactory =
+                new KbcPersistedDataAccessorFactory(new ObjectMapper());
+        KbcFetchConsentAuthenticationStep objectUnderTest =
+                new KbcFetchConsentAuthenticationStep(
+                        redirectUrl,
+                        psuIdAddress,
+                        fetchConsentExternalApiCall,
+                        kbcPersistedDataAccessorFactory);
+        // when
+        AgentAuthenticationResult result = objectUnderTest.execute(authenticationProcessRequest);
+        // then
+        assertTrue(result instanceof AgentFailedAuthenticationResult);
+        AgentFailedAuthenticationResult agentFailedAuthenticationResult =
+                (AgentFailedAuthenticationResult) result;
+        Error errorDetails = agentFailedAuthenticationResult.getError().getDetails();
+        Assertions.assertThat(errorDetails.getErrorCode()).isEqualTo("IBAN_REGEX_ERROR");
     }
 }
