@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.agents.agentplatform.AgentPlatformHttpClient;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.AgentPlatformAgent;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.AgentPlatformAuthenticator;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.ObjectMapperFactory;
+import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.LunarAuthenticationConfig;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.LunarNemIdParametersFetcher;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.NemIdIframeAttributes;
@@ -78,20 +79,20 @@ public final class LunarDkAgent extends AgentPlatformAgent
                 accessorFactory,
                 randomValueGenerator,
                 new NemIdIframeAttributes(
-                        getNemIdIFrameController(agentComponentProvider, parametersFetcher),
+                        getNemIdIFrameController(
+                                agentComponentProvider.getContext(), parametersFetcher),
                         credentials,
                         parametersFetcher));
     }
 
     private NemIdIFrameController getNemIdIFrameController(
-            AgentComponentProvider agentComponentProvider,
-            LunarNemIdParametersFetcher parametersFetcher) {
+            StatusUpdater statusUpdater, LunarNemIdParametersFetcher parametersFetcher) {
         return NemIdIFrameControllerInitializer.initNemIdIframeController(
                 parametersFetcher,
                 catalog,
-                agentComponentProvider.getContext(),
-                agentComponentProvider.getSupplementalRequester(),
-                agentComponentProvider.getMetricContext());
+                statusUpdater,
+                supplementalInformationController,
+                metricContext);
     }
 
     protected void configureHttpClient(TinkHttpClient client) {
