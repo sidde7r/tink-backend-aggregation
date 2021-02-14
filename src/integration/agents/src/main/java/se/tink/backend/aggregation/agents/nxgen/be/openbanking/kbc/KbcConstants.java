@@ -85,4 +85,8 @@ public final class KbcConstants {
         public static final String WRONG_PAYMENT_METHOD =
                 "Wrong method used for payment initiation.";
     }
+
+    public static class RegexValues {
+        public static final String IBAN = "^BE[0-9]{14}$";
+    }
 }

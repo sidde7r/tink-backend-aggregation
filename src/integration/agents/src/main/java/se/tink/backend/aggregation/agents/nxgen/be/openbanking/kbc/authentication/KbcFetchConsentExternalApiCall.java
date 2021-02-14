@@ -13,6 +13,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ber
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.rpc.ConsentBaseRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.rpc.ConsentBaseResponse;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.common.AgentExtendedClientInfo;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.error.InvalidRequestError;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.error.ServerError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.http.AgentHttpClient;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.http.AgentSimpleExternalApiCall;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.http.ExternalApiCallResult;
@@ -54,6 +56,11 @@ public class KbcFetchConsentExternalApiCall
     @Override
     protected ExternalApiCallResult<String> parseResponse(
             ResponseEntity<ConsentBaseResponse> httpResponse) {
-        return new ExternalApiCallResult<>(httpResponse.getBody().getConsentId());
+        if (httpResponse.getStatusCode().is2xxSuccessful()) {
+            return new ExternalApiCallResult<>(httpResponse.getBody().getConsentId());
+        } else if (httpResponse.getStatusCode().is5xxServerError()) {
+            return new ExternalApiCallResult<>(new ServerError());
+        }
+        return new ExternalApiCallResult<>(new InvalidRequestError());
     }
 }
