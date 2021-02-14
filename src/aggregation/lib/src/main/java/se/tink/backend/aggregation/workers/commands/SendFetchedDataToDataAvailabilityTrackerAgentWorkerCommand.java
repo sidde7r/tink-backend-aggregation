@@ -121,30 +121,13 @@ public class SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand extends 
            load to the system
         */
         try {
-            List<Transaction> originalTransactions =
-                    context.getAccountDataCache()
-                            .getTransactionsByAccountToBeProcessed()
-                            .get(account);
-            boolean foundTransactions = false;
+            List<Transaction> originalTransactions = getTransactionsForAccount(account);
             if (Objects.isNull(originalTransactions)) {
                 log.info(
                         String.format(
                                 "Could not get transactions of account to send to BigQuery. Account type is %s",
                                 account.getType().toString()));
-                originalTransactions = getTransactionsForAccount(account);
-                if (Objects.isNull(originalTransactions)) {
-                    log.info(
-                            String.format(
-                                    "Could not get transactions of account again to send to BigQuery. Account type is %s",
-                                    account.getType().toString()));
-                } else {
-                    foundTransactions = true;
-                    log.info("getTransactionsForAccount method worked!");
-                }
             } else {
-                foundTransactions = true;
-            }
-            if (foundTransactions) {
                 log.info(
                         String.format(
                                 "We have transactions for account to send to BQ. Account type is %s",
