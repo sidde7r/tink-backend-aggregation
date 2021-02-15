@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.agentplatform.authentication.result.e
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.exceptions.agent.AgentError;
 import se.tink.backend.aggregation.agents.exceptions.agent.AgentException;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AgentBankApiError;
@@ -25,7 +26,7 @@ public class AgentPlatformAuthenticationProcessError implements AgentError {
 
     @Override
     public LocalizableKey userMessage() {
-        return new LocalizableKey(buildExceptionMessage());
+        return new LocalizableKey(buildUserMessage());
     }
 
     @Override
@@ -62,5 +63,13 @@ public class AgentPlatformAuthenticationProcessError implements AgentError {
             }
         }
         return sb.toString();
+    }
+
+    private String buildUserMessage() {
+        if (agentBankApiError.getDetails() != null
+                && StringUtils.isNotBlank(agentBankApiError.getDetails().getErrorMessage())) {
+            return agentBankApiError.getDetails().getErrorMessage();
+        }
+        return agentBankApiError.getClass().getSimpleName();
     }
 }
