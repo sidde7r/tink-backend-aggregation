@@ -160,8 +160,8 @@ public final class NewAgentTestContext extends AgentContext {
     }
 
     @Override
-    public void requestSupplementalInformation(Credentials credentials) {
-        supplementalRequester.requestSupplementalInformation(credentials);
+    public void requestSupplementalInformation(String mfaId, Credentials credentials) {
+        supplementalRequester.requestSupplementalInformation(mfaId, credentials);
     }
 
     @Override

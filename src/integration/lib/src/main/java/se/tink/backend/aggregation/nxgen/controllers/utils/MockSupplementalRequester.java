@@ -15,7 +15,7 @@ public final class MockSupplementalRequester implements SupplementalRequester {
     }
 
     @Override
-    public void requestSupplementalInformation(Credentials credentials) {
+    public void requestSupplementalInformation(String mfaId, Credentials credentials) {
         // NOOP
     }
 

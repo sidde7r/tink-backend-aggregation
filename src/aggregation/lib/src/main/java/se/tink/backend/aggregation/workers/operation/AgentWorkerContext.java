@@ -371,7 +371,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     }
 
     @Override
-    public void requestSupplementalInformation(Credentials credentials) {
+    public void requestSupplementalInformation(String mfaId, Credentials credentials) {
         supplementalInteractionCounter.inc();
 
         updateCredentialsExcludingSensitiveInformation(credentials, true);
