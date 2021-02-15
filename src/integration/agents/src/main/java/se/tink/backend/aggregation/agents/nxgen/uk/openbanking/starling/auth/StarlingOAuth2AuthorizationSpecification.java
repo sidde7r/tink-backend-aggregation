@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling;
+package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.auth;
 
 import static se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.StarlingConstants.CLIENT_ID_PARAM_KEY;
 import static se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.StarlingConstants.CLIENT_SECRET_PARAM_KEY;
