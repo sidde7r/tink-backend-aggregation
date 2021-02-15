@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen;
 
+import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.ErrorMessages.CHALLENGE_FORMAT_INVALID;
 import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.ErrorMessages.PSU_CREDENTIALS_INVALID;
 
 import java.time.LocalDate;
@@ -118,7 +119,10 @@ public class SparkassenApiClient {
                             FinalizeAuthorizationResponse.class,
                             new FinalizeAuthorizationRequest(otp));
         } catch (HttpResponseException e) {
-            if (e.getResponse().getBody(String.class).contains(PSU_CREDENTIALS_INVALID)) {
+            String body = e.getResponse().getBody(String.class);
+            if (body != null
+                    && (body.contains(PSU_CREDENTIALS_INVALID)
+                            || body.contains(CHALLENGE_FORMAT_INVALID))) {
                 throw LoginError.INCORRECT_CHALLENGE_RESPONSE.exception(e);
             }
             throw e;

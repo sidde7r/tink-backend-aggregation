@@ -17,6 +17,8 @@ public final class SparkassenConstants {
         public static final String COULD_NOT_INITIALIZE_JAXBCONTEXT =
                 "Could not initialize JAXBContext";
         static final String PSU_CREDENTIALS_INVALID = "PSU_CREDENTIALS_INVALID";
+        static final String CHALLENGE_FORMAT_INVALID =
+                "Format of certain request fields are not matching the XS2A requirements.";
         public static final String STARTCODE_NOT_FOUND = "Startcode fo Chip tan not found";
     }
 
