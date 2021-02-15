@@ -4,9 +4,13 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 
 import com.google.inject.Inject;
 import java.net.URI;
+import se.tink.backend.aggregation.agents.FetchAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.agentplatform.AgentPlatformHttpClient;
-import se.tink.backend.aggregation.agents.agentplatform.authentication.AgentPlatformAuthenticator;
+import se.tink.backend.aggregation.agents.agentplatform.authentication.AgentPlatformAgent;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.ObjectMapperFactory;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.storage.AgentPlatformStorageMigration;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.storage.AgentPlatformStorageMigrator;
@@ -14,21 +18,25 @@ import se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.authenticatio
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.authentication.KbcStorageMigrator;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.configuration.KbcConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.fetcher.KbcTransactionFetcher;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.BerlinGroupAccountFetcher;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationProcess;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
+import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationFlow;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
+import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 
 @AgentCapabilities({CHECKING_ACCOUNTS})
-public final class KbcAgent extends BerlinGroupAgent<KbcApiClient, KbcConfiguration>
-        implements AgentPlatformAuthenticator, AgentPlatformStorageMigration {
+public final class KbcAgent extends AgentPlatformAgent
+        implements RefreshCheckingAccountsExecutor,
+                RefreshSavingsAccountsExecutor,
+                AgentPlatformStorageMigration {
 
-    private ObjectMapperFactory objectMapperFactory;
+    private final ObjectMapperFactory objectMapperFactory;
+    private final KbcApiClient apiClient;
+    private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
     @Inject
     public KbcAgent(AgentComponentProvider componentProvider) {
@@ -40,36 +48,27 @@ public final class KbcAgent extends BerlinGroupAgent<KbcApiClient, KbcConfigurat
     }
 
     @Override
-    protected KbcApiClient createApiClient() {
+    public void setConfiguration(final AgentsServiceConfiguration configuration) {
+        super.setConfiguration(configuration);
+        client.setEidasProxy(configuration.getEidasProxy());
+    }
+
+    @Override
+    protected SessionHandler constructSessionHandler() {
+        return SessionHandler.alwaysFail();
+    }
+
+    private KbcApiClient createApiClient() {
         return new KbcApiClient(
                 client,
                 getConfiguration().getProviderSpecificConfiguration(),
                 request,
                 getConfiguration().getRedirectUrl(),
-                credentials,
                 persistentStorage,
                 getConfiguration().getQsealc());
     }
 
-    @Override
-    protected Authenticator constructAuthenticator() {
-        return OAuth2AuthenticationFlow.create(
-                request,
-                systemUpdater,
-                persistentStorage,
-                supplementalInformationHelper,
-                new KbcAuthenticator(apiClient),
-                credentials,
-                strongAuthenticationState);
-    }
-
-    @Override
-    protected Class<KbcConfiguration> getConfigurationClassDescription() {
-        return KbcConfiguration.class;
-    }
-
-    @Override
-    protected TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
+    private TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
         final BerlinGroupAccountFetcher accountFetcher = new BerlinGroupAccountFetcher(apiClient);
         final KbcTransactionFetcher transactionFetcher = new KbcTransactionFetcher(apiClient);
 
@@ -98,12 +97,36 @@ public final class KbcAgent extends BerlinGroupAgent<KbcApiClient, KbcConfigurat
     }
 
     @Override
+    public AgentPlatformStorageMigrator getMigrator() {
+        return new KbcStorageMigrator(objectMapperFactory.getInstance());
+    }
+
+    @Override
+    public FetchAccountsResponse fetchCheckingAccounts() {
+        return transactionalAccountRefreshController.fetchCheckingAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCheckingTransactions() {
+        return transactionalAccountRefreshController.fetchCheckingTransactions();
+    }
+
+    @Override
+    public FetchAccountsResponse fetchSavingsAccounts() {
+        return transactionalAccountRefreshController.fetchSavingsAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchSavingsTransactions() {
+        return transactionalAccountRefreshController.fetchSavingsTransactions();
+    }
+
+    @Override
     public boolean isBackgroundRefreshPossible() {
         return true;
     }
 
-    @Override
-    public AgentPlatformStorageMigrator getMigrator() {
-        return new KbcStorageMigrator(objectMapperFactory.getInstance());
+    private AgentConfiguration<KbcConfiguration> getConfiguration() {
+        return getAgentConfigurationController().getAgentConfiguration(KbcConfiguration.class);
     }
 }

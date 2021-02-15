@@ -12,6 +12,7 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 public class KbcRedirectAuthenticationProcess extends RedirectAuthenticationProcess {
 
     private final KbcFetchConsentAuthenticationStep fetchConsentAuthenticationStep;
+    private final KbcConsentValidationStep consentValidationStep;
 
     public KbcRedirectAuthenticationProcess(
             RedirectAuthenticationInitialProcessStep redirectAuthenticationInitialProcessStep,
@@ -19,7 +20,8 @@ public class KbcRedirectAuthenticationProcess extends RedirectAuthenticationProc
             RedirectAuthenticationRefreshTokenStep refreshTokenStep,
             RedirectPreparationRedirectUrlStep redirectPreparationRedirectUrlStep,
             RedirectFetchRefreshableAccessTokenStep redirectFetchAuthenticationTokensStep,
-            KbcFetchConsentAuthenticationStep fetchConsentAuthenticationStep) {
+            KbcFetchConsentAuthenticationStep fetchConsentAuthenticationStep,
+            KbcConsentValidationStep consentValidationStep) {
         super(
                 redirectAuthenticationInitialProcessStep,
                 accessTokenValidationStep,
@@ -27,6 +29,7 @@ public class KbcRedirectAuthenticationProcess extends RedirectAuthenticationProc
                 redirectPreparationRedirectUrlStep,
                 redirectFetchAuthenticationTokensStep);
         this.fetchConsentAuthenticationStep = fetchConsentAuthenticationStep;
+        this.consentValidationStep = consentValidationStep;
     }
 
     @Override
@@ -37,5 +40,6 @@ public class KbcRedirectAuthenticationProcess extends RedirectAuthenticationProc
                         AgentAuthenticationProcessStep.identifier(
                                 KbcFetchConsentAuthenticationStep.class)));
         addStep(fetchConsentAuthenticationStep);
+        addStep(consentValidationStep);
     }
 }

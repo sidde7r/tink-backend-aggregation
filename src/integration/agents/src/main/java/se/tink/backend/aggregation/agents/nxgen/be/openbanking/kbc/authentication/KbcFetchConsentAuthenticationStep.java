@@ -4,7 +4,6 @@ import java.net.URI;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.KbcConstants.RegexValues;
@@ -36,8 +35,6 @@ public class KbcFetchConsentAuthenticationStep
     private final KbcFetchConsentExternalApiCall fetchConsentExternalApiCall;
     private final KbcPersistedDataAccessorFactory kbcPersistedDataAccessorFactory;
 
-    private static final Pattern IBAN_PATTERN = Pattern.compile(RegexValues.IBAN);
-
     @Override
     public AgentAuthenticationResult execute(
             AgentUserInteractionAuthenticationProcessRequest authenticationProcessRequest) {
@@ -46,7 +43,7 @@ public class KbcFetchConsentAuthenticationStep
                         .getUserInteractionData()
                         .getFieldValue(IbanFieldDefinition.id());
 
-        Matcher ibanMatcher = IBAN_PATTERN.matcher(ibanValue);
+        Matcher ibanMatcher = RegexValues.IBAN_PATTERN.matcher(ibanValue);
         if (!ibanMatcher.matches()) {
             return new AgentFailedAuthenticationResult(
                     new AuthenticationError(
