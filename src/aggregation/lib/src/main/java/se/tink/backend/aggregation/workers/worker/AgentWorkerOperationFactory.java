@@ -701,7 +701,6 @@ public class AgentWorkerOperationFactory {
                 new LockAgentWorkerCommand(
                         context, operationName, interProcessSemaphoreMutexFactory);
 
-        // TODO: Ask aggregation why this branch is needed?
         if (isAisPlusPisFlow(request)) {
             lockAgentWorkerCommand = lockAgentWorkerCommand.withLoginEvent(loginAgentEventProducer);
         }
@@ -716,7 +715,6 @@ public class AgentWorkerOperationFactory {
                             context.getRequest(), controllerWrapper, clientInfo));
         }
 
-        // TODO ask aggregation and then simplify
         if (isAisPlusPisFlow(request)) {
             // Update the status to `UPDATED` if the credential isn't waiting on transactions
             // from the
@@ -753,7 +751,6 @@ public class AgentWorkerOperationFactory {
                         new AgentWorkerMetricReporter(
                                 metricRegistry, this.providerTierConfiguration)));
 
-        // TODO this looks like a bug? Ask payments and double check
         if (!isAisPlusPisFlow(request)) {
             commands.add(
                     new ReportProviderTransferMetricsAgentWorkerCommand(context, operationName));
@@ -794,7 +791,6 @@ public class AgentWorkerOperationFactory {
         commands.add(
                 new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
 
-        // TODO ask aggregation if this is needed only for aggregation?
         if (isAisPlusPisFlow(request)) {
             addClearSensitivePayloadOnForceAuthenticateCommandAndLoginAgentWorkerCommand(
                     commands, context);
