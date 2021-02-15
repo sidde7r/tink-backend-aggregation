@@ -44,7 +44,7 @@ public class LclCreditCardFetcherTest {
         assertThat(creditCardAccount.getExactBalance())
                 .isEqualTo(ExactCurrencyAmount.of(100, "EUR"));
         assertThat(creditCardAccount.getName()).isEqualTo("CREDITE CARTE EL FRANCUSO");
-        assertThat(creditCardAccount.getCardModule().getCardNumber()).isEqualTo("12345");
+        assertThat(creditCardAccount.getCardModule().getCardNumber()).isEqualTo("312321412345");
         assertThat(creditCardAccount.getAccountNumber()).isEqualTo("31232141");
     }
 }

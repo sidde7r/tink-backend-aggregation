@@ -29,4 +29,9 @@ public class AccountResourceDto {
     private String resourceId;
 
     private AccountUsage usage;
+
+    public String creditCardIdentifier() {
+        String identification = accountId.getOther().getIdentification();
+        return linkedAccount + identification.substring(identification.length() - 4);
+    }
 }
