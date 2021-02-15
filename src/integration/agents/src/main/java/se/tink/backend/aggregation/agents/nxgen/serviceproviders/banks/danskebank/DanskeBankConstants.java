@@ -307,4 +307,8 @@ public class DanskeBankConstants {
         public static final int NUM_TIMEOUT_RETRIES = 3;
         public static final long RETRY_SLEEP_MILLISECONDS = 1000;
     }
+
+    public static class Storage {
+        public static final String IDENTITY_INFO = "identity-info";
+    }
 }
