@@ -2,15 +2,15 @@ package se.tink.libraries.account.identifiers;
 
 import com.google.common.base.Strings;
 import java.util.Collection;
+import org.apache.commons.validator.routines.IBANValidator;
 import org.iban4j.BicFormatException;
 import org.iban4j.BicUtil;
-import org.iban4j.IbanFormatException;
 import org.iban4j.IbanUtil;
-import org.iban4j.InvalidCheckDigitException;
-import org.iban4j.UnsupportedCountryException;
 import se.tink.libraries.account.AccountIdentifier;
 
 public class IbanIdentifier extends AccountIdentifier {
+
+    private static final IBANValidator IBAN_VALIDATOR = IBANValidator.getInstance();
 
     private final String iban;
     private final String bic;
@@ -78,14 +78,7 @@ public class IbanIdentifier extends AccountIdentifier {
     }
 
     private boolean validateIban(String iban) {
-        try {
-            IbanUtil.validate(iban);
-            return true;
-        } catch (IbanFormatException
-                | InvalidCheckDigitException
-                | UnsupportedCountryException ignored) {
-            return false;
-        }
+        return IBAN_VALIDATOR.isValid(iban);
     }
 
     private boolean validateBic(String bic) {

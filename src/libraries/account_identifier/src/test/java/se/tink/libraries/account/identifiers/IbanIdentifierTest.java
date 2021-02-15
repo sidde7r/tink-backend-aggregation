@@ -12,7 +12,7 @@ import se.tink.libraries.account.identifiers.formatters.DisplayAccountIdentifier
 public class IbanIdentifierTest {
 
     @Test
-    public void testValidIbanAndBic() {
+    public void shouldReturnValidIban() {
 
         IbanIdentifier id = new IbanIdentifier("DEUTDEFF500", "AT611904300234573201");
 
@@ -20,7 +20,15 @@ public class IbanIdentifierTest {
     }
 
     @Test
-    public void testInvalidCountryCode() {
+    public void shouldReturnInvalidIbanForIbanWithSpaces() {
+
+        IbanIdentifier id = new IbanIdentifier("DEUTDEFF500", "AT61 1904 3002 3457 3201");
+
+        Assert.assertFalse(id.isValid());
+    }
+
+    @Test
+    public void shouldReturnInvalidIbanForInvalidCountryCode() {
 
         IbanIdentifier id = new IbanIdentifier("DEUTDEFF500", "QQ8937040044053201300011");
 
@@ -28,7 +36,7 @@ public class IbanIdentifierTest {
     }
 
     @Test
-    public void testInvalidFormat() {
+    public void shouldReturnInvalidIbanForInvalidFormat() {
 
         IbanIdentifier id = new IbanIdentifier("DEUTDEFF500", "QQ893704004405320130001111");
 
@@ -36,7 +44,7 @@ public class IbanIdentifierTest {
     }
 
     @Test
-    public void testInvalidBic() {
+    public void shouldReturnValidBic() {
 
         IbanIdentifier id = new IbanIdentifier("DEUTDEFF5001212", "QQ8937040044053201300011");
 
@@ -44,7 +52,7 @@ public class IbanIdentifierTest {
     }
 
     @Test
-    public void testParseIbanAndBic() {
+    public void shouldParseBicAndIban() {
 
         IbanIdentifier id = new IbanIdentifier("DEUTDEFF500/AT611904300234573201");
 
@@ -52,7 +60,7 @@ public class IbanIdentifierTest {
     }
 
     @Test
-    public void testValidUri() {
+    public void shouldReturnValidUri() {
 
         String number = "DEUTDEFF500/AT611904300234573201";
 
@@ -63,7 +71,7 @@ public class IbanIdentifierTest {
     }
 
     @Test
-    public void testInvalidIban() {
+    public void shouldReturnInvalidIban() {
 
         String number = "DEUTDE/34573201";
 
@@ -74,7 +82,7 @@ public class IbanIdentifierTest {
     }
 
     @Test
-    public void testInvalidUri() {
+    public void shouldReturnInvalidUri() {
 
         AccountIdentifier id = AccountIdentifier.create(URI.create("iban://123123"));
 
@@ -83,7 +91,7 @@ public class IbanIdentifierTest {
     }
 
     @Test
-    public void testDisplayFormat() {
+    public void shouldReturnProperDisplayName() {
         IbanIdentifier identifier = new IbanIdentifier("NDEAFIHH", "FI2112345600000785");
 
         String displayName = identifier.getIdentifier(new DisplayAccountIdentifierFormatter());
@@ -91,7 +99,7 @@ public class IbanIdentifierTest {
     }
 
     @Test
-    public void testIsGiroIdentifierShouldBeFalse() {
+    public void shouldReturnNotGiroIdentifier() {
 
         IbanIdentifier identifier = new IbanIdentifier("DEUTDEFF500/AT611904300234573201");
         assertFalse("IbanIdentifier is not a GiroIdentifier", identifier.isGiroIdentifier());

@@ -769,6 +769,7 @@ maven_install(
         "commons-io:commons-io:2.5",
         "commons-lang:commons-lang:2.6",
         "commons-logging:commons-logging:1.2",
+        "commons-validator:commons-validator:1.7",
         "de.jollyday:jollyday:0.4.7",
         "dom4j:dom4j:1.6.1",
         "eu.geekplace.javapinning:java-pinning-jar:1.0.1",
