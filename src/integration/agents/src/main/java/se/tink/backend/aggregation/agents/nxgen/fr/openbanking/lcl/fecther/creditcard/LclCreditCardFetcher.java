@@ -59,11 +59,7 @@ public class LclCreditCardFetcher
         return CreditCardAccount.nxBuilder()
                 .withCardDetails(
                         CreditCardModule.builder()
-                                .withCardNumber(
-                                        accountResourceDto
-                                                .getAccountId()
-                                                .getOther()
-                                                .getIdentification())
+                                .withCardNumber(accountResourceDto.creditCardIdentifier())
                                 .withBalance(getCreditCardBalance(accountResourceDto))
                                 .withAvailableCredit(getAvailableCredit())
                                 .withCardAlias(accountResourceDto.getProduct())
