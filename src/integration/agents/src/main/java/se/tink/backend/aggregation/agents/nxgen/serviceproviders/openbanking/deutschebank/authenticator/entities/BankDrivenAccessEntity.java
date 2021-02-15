@@ -9,4 +9,5 @@ public class BankDrivenAccessEntity implements AccessEntity {
     List<String> accounts = Collections.emptyList();
     List<String> transactions = Collections.emptyList();
     List<String> balances = Collections.emptyList();
+    AdditionalInformation additionalInformation = new AdditionalInformation();
 }

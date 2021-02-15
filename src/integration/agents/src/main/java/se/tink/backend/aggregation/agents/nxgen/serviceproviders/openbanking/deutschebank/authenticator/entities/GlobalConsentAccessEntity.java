@@ -5,4 +5,5 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class GlobalConsentAccessEntity implements AccessEntity {
     private String allPsd2 = "allAccounts";
+    private AdditionalInformation additionalInformation = new AdditionalInformation();
 }
