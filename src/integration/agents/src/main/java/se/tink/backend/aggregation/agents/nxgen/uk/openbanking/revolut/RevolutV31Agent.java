@@ -38,7 +38,9 @@ import se.tink.libraries.mapper.PrioritizedValueExtractor;
 @AgentDependencyModulesForDecoupledMode(
         modules = UkOpenBankingLocalKeySignerModuleForDecoupledMode.class)
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, TRANSFERS})
-@AgentPisCapability(capabilities = PisCapability.PIS_SEPA, markets = "IT")
+@AgentPisCapability(
+        capabilities = PisCapability.PIS_SEPA,
+        markets = {"FR", "IT"})
 @AgentPisCapability(capabilities = PIS_UK_FASTER_PAYMENT, markets = "GB")
 public final class RevolutV31Agent extends UkOpenBankingBaseAgent {
 
