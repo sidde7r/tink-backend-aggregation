@@ -83,7 +83,6 @@ public class CardAccountsItem {
                                                 Type.PAYMENT_CARD_NUMBER, maskedPan))
                                 .build())
                 .setApiIdentifier(resourceId)
-                .addHolderName(name)
                 .setBankIdentifier(resourceId)
                 .putInTemporaryStorage(StorageKeys.CARD_ID, resourceId)
                 .build();
