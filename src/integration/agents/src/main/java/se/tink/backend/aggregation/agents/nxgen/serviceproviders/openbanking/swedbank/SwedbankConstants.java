@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank;
 
+import com.google.common.collect.ImmutableList;
+import java.util.List;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccountTypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -213,6 +215,7 @@ public final class SwedbankConstants {
         public static final String MISSING_CT_AGREEMENT = "MISSING_CT_AGREEMENT";
         public static final String INVALID_AUTH_TOKEN = "TOKEN_INVALID";
         public static final String RESOURCE_ALREADY_SIGNED = "RESOURCE_ALREADY_SIGNED";
+        public static final String MISSING_BANK_ID = "MISSING_BANK_ID";
     }
 
     public static final class AccountIdentifierPrefix {
@@ -299,4 +302,14 @@ public final class SwedbankConstants {
                             "Världsnaturkonto",
                             "e-sparkonto")
                     .build();
+
+    public static final List<String> BANK_IDS =
+            ImmutableList.of(
+                    "08999", "08191", "08024", "08234", "08050", "08060", "08336", "08129", "08331",
+                    "08138", "08143", "08158", "08183", "08164", "08187", "08393", "08217", "08222",
+                    "08240", "08353", "08242", "08284", "08286", "08295", "08239", "08304", "08059",
+                    "08006", "08403", "08305", "08153", "08314", "08264", "08270", "08032", "08289",
+                    "08313", "08351", "08464", "08182", "08114", "08346", "08321", "08257", "08354",
+                    "08422", "08356", "08380", "08383", "08384", "08388", "08401", "08405", "08431",
+                    "08434", "08440", "08021", "08030");
 }

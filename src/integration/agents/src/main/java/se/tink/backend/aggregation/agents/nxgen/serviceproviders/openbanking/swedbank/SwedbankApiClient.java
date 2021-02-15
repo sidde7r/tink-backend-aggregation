@@ -38,6 +38,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swe
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.rpc.ConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.rpc.RefreshTokenRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.rpc.SupplyBankIdRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.rpc.TokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.common.SwedbankOpenBankingPaymentApiClient;
@@ -210,11 +211,20 @@ public final class SwedbankApiClient implements SwedbankOpenBankingPaymentApiCli
                 .post(AuthenticationResponse.class, authorizeRequest);
     }
 
-    public AuthenticationStatusResponse collectAuthStatus(String ssn, String path) {
+    private RequestBuilder createAuthBaseRequest(String ssn, String path) {
         return createRequest(new URL(Urls.BASE + path))
                 .queryParam(QueryKeys.CLIENT_ID, configuration.getClientId())
-                .header(HeaderKeys.PSU_ID, ssn)
-                .get(AuthenticationStatusResponse.class);
+                .header(HeaderKeys.PSU_ID, ssn);
+    }
+
+    public AuthenticationStatusResponse collectAuthStatus(String ssn, String path) {
+        return createAuthBaseRequest(ssn, path).get(AuthenticationStatusResponse.class);
+    }
+
+    public AuthenticationStatusResponse supplyBankId(String ssn, String path, String bankId) {
+        return createAuthBaseRequest(ssn, path)
+                .body(new SupplyBankIdRequest(bankId), MediaType.APPLICATION_JSON)
+                .put(AuthenticationStatusResponse.class);
     }
 
     public ConsentRequest createConsentRequest() {

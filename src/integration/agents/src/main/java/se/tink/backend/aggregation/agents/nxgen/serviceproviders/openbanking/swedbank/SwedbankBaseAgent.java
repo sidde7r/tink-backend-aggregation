@@ -105,7 +105,8 @@ public abstract class SwedbankBaseAgent extends NextGenerationAgent
         BankIdAuthenticationController<String> bankIdAuthenticationController =
                 new BankIdAuthenticationController<>(
                         supplementalInformationController,
-                        new SwedbankDecoupledAuthenticator(apiClient, isSwedbank()),
+                        new SwedbankDecoupledAuthenticator(
+                                apiClient, isSwedbank(), supplementalInformationHelper),
                         persistentStorage,
                         credentials);
 
