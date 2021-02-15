@@ -13,5 +13,6 @@ java_library(
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/signableoperation/src/main/java/se/tink/libraries/signableoperation/rpc",
         "//third_party:com_sun_jersey_jersey_core",
+        "@tink_backend//src/aggregation-controller/api/src/main/java/se/tink/backend/aggregationcontroller/v1/rpc/credentialsservice",
     ],
 )

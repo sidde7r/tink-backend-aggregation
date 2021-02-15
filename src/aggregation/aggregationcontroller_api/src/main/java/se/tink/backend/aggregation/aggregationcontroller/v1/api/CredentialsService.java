@@ -9,6 +9,7 @@ import javax.ws.rs.core.Response;
 import se.tink.api.annotations.Team;
 import se.tink.api.annotations.TeamOwnership;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateCredentialsSensitiveRequest;
+import se.tink.backend.aggregationcontroller.v1.rpc.credentialsservice.UpdateCredentialsSupplementalInformationRequest;
 
 @Path("/aggregation/controller/v1/credentials")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -20,4 +21,12 @@ public interface CredentialsService {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     Response updateSensitive(UpdateCredentialsSensitiveRequest request);
+
+    @PUT
+    @Path("/supplementalInformation")
+    @TeamOwnership(Team.AGGREGATION)
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
+    Response updateCredentialsSupplementalInformation(
+            UpdateCredentialsSupplementalInformationRequest request);
 }

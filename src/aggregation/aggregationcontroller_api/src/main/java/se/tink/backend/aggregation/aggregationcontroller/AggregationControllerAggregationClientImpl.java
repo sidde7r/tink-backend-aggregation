@@ -41,6 +41,7 @@ import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateTransferDe
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateTransfersRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpsertRegulatoryClassificationRequest;
 import se.tink.backend.aggregation.configuration.models.AccountInformationServiceConfiguration;
+import se.tink.backend.aggregationcontroller.v1.rpc.credentialsservice.UpdateCredentialsSupplementalInformationRequest;
 import se.tink.libraries.http.client.WebResourceFactory;
 import se.tink.libraries.jersey.utils.ClientLoggingFilter;
 import se.tink.libraries.jersey.utils.JerseyUtils;
@@ -268,6 +269,17 @@ public class AggregationControllerAggregationClientImpl
         return requestExecuter(
                 () -> getCredentialsService(hostConfiguration).updateSensitive(request),
                 "Update Credentials Sensitive");
+    }
+
+    @Override
+    public Response updateCredentialSupplementalInformation(
+            HostConfiguration hostConfiguration,
+            UpdateCredentialsSupplementalInformationRequest request) {
+        return requestExecuter(
+                () ->
+                        getCredentialsService(hostConfiguration)
+                                .updateCredentialsSupplementalInformation(request),
+                "Update Credentials Supplemental Information");
     }
 
     @Override

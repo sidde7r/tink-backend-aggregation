@@ -377,6 +377,27 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         updateCredentialsExcludingSensitiveInformation(credentials, true);
     }
 
+    private void updateSupplementalInformation(String mfaId, Credentials credentials) {
+        // Execute any event-listeners; this tells the signable operation to update status
+        for (AgentEventListener eventListener : eventListeners) {
+            eventListener.onUpdateCredentialsStatus();
+        }
+
+        UpdateCredentialsSupplementalInformationRequest suppInfoRequest =
+                new UpdateCredentialsSupplementalInformationRequest();
+        suppInfoRequest.setMfaId(mfaId);
+        suppInfoRequest.setCredentialsId(credentials.getId());
+        suppInfoRequest.setStatus(credentials.getStatus());
+        suppInfoRequest.setSupplementalInformation(credentials.getSupplementalInformation());
+        suppInfoRequest.setUserId(credentials.getUserId());
+        suppInfoRequest.setRequestType(getRequest().getType());
+        suppInfoRequest.setOperationId(getRequest().getOperationId());
+        suppInfoRequest.setManual(getRequest().isManual());
+        suppInfoRequest.setRefreshId(getRefreshId().orElse(null));
+
+        controllerWrapper.updateSupplementalInformation(suppInfoRequest);
+    }
+
     public AccountDataCache getAccountDataCache() {
         return accountDataCache;
     }
