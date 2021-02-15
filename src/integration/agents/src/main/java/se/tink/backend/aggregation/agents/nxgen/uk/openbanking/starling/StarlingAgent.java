@@ -21,16 +21,16 @@ import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.agentplatform.AgentPlatformHttpClient;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.AgentPlatformAgent;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.AgentPlatformAuthenticator;
-import se.tink.backend.aggregation.agents.agentplatform.authentication.OAuth2AuthenticationConfig;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.storage.AgentPlatformStorageMigration;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.storage.AgentPlatformStorageMigrator;
+import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.auth.StarlingOAuth2AuthenticationConfig;
+import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.auth.StarlingOAuth2AuthorizationSpecification;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.configuration.StarlingConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.configuration.entity.ClientConfigurationEntity;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.executor.transfer.StarlingTransferExecutor;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.StarlingTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.StarlingTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transfer.StarlingTransferDestinationFetcher;
-import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.filter.StarlingErrorsFilter;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationProcess;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
@@ -145,7 +145,7 @@ public final class StarlingAgent extends AgentPlatformAgent
     }
 
     public AgentAuthenticationProcess getAuthenticationProcess() {
-        return new OAuth2AuthenticationConfig()
+        return new StarlingOAuth2AuthenticationConfig()
                 .authenticationProcess(
                         new AgentPlatformHttpClient(client),
                         new StarlingOAuth2AuthorizationSpecification(
@@ -167,6 +167,5 @@ public final class StarlingAgent extends AgentPlatformAgent
         client.setEidasProxy(configuration.getEidasProxy());
         client.setEidasIdentity(
                 new EidasIdentity(context.getClusterId(), context.getAppId(), UKOB_CERT_ID, ""));
-        client.addFilter(new StarlingErrorsFilter(persistentStorage, credentials));
     }
 }
