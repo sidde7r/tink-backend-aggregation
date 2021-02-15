@@ -15,7 +15,7 @@ public class NemIdConstants {
     public static final String USER_AGENT =
             "Mozilla/5.0 (iPhone; CPU iPhone OS 10_1_1 like Mac OS X) AppleWebKit/602.2.14 (KHTML, like Gecko) Mobile/14B100";
 
-    public static final String NEM_ID_IFRAME =
+    public static final String NEM_ID_IFRAME_FORMAT =
             "<iframe id=\"nemid_iframe\" allowTransparency=\"true\" name=\"nemid_iframe\" scrolling=\"no\" style=\"z-index: 100; position: relative; width: 275px; height: 350px; border: 0\" src=\"%s\"></iframe>";
 
     // TODO: make sure Nordea will use the old one

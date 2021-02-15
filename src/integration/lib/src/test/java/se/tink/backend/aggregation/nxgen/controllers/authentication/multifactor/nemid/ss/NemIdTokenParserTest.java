@@ -31,12 +31,15 @@ public class NemIdTokenParserTest {
     private static Object[] tokenBase64WithExpectedTokenStatus() {
         List<Object[]> args = new ArrayList<>();
 
-        args.add(asArray(toBase64(""), NemIdTokenStatus.builder().code("").message("").build()));
+        args.add(
+                asArray(
+                        toBase64(""),
+                        NemIdTokenStatus.builder().code("").message("").requestIssuer("").build()));
 
         args.add(
                 asArray(
                         toBase64("<irrelevant></irrelevant>"),
-                        NemIdTokenStatus.builder().code("").message("").build()));
+                        NemIdTokenStatus.builder().code("").message("").requestIssuer("").build()));
 
         args.add(
                 asArray(
@@ -46,7 +49,11 @@ public class NemIdTokenParserTest {
                                         + " AUTH007     "
                                         + "</sp:StatusMessage>"
                                         + "</irrelevant123>"),
-                        NemIdTokenStatus.builder().code("").message("AUTH007").build()));
+                        NemIdTokenStatus.builder()
+                                .code("")
+                                .message("AUTH007")
+                                .requestIssuer("")
+                                .build()));
 
         args.add(
                 asArray(
@@ -58,7 +65,11 @@ public class NemIdTokenParserTest {
                                         + "</sp:StatusMessage>"
                                         + "</whatever>"
                                         + "</irrelevant123>"),
-                        NemIdTokenStatus.builder().code("").message("AUTH007").build()));
+                        NemIdTokenStatus.builder()
+                                .code("")
+                                .message("AUTH007")
+                                .requestIssuer("")
+                                .build()));
 
         args.add(
                 asArray(
@@ -70,7 +81,11 @@ public class NemIdTokenParserTest {
                                         + " AUTH007     "
                                         + "</sp:StatusMessage>"
                                         + "</irrelevant>"),
-                        NemIdTokenStatus.builder().code("").message("AUTH007").build()));
+                        NemIdTokenStatus.builder()
+                                .code("")
+                                .message("AUTH007")
+                                .requestIssuer("")
+                                .build()));
 
         args.add(
                 asArray(
@@ -85,6 +100,7 @@ public class NemIdTokenParserTest {
                         NemIdTokenStatus.builder()
                                 .code("123success123")
                                 .message("AUTH008")
+                                .requestIssuer("")
                                 .build()));
 
         args.add(
@@ -102,6 +118,7 @@ public class NemIdTokenParserTest {
                         NemIdTokenStatus.builder()
                                 .code("123success123")
                                 .message("AUTH008")
+                                .requestIssuer("")
                                 .build()));
 
         args.add(
@@ -114,7 +131,11 @@ public class NemIdTokenParserTest {
                                         + "      "
                                         + "</sp:StatusMessage>"
                                         + "</irrelevant>"),
-                        NemIdTokenStatus.builder().code("123success123").message("").build()));
+                        NemIdTokenStatus.builder()
+                                .code("123success123")
+                                .message("")
+                                .requestIssuer("")
+                                .build()));
 
         args.add(
                 asArray(
@@ -123,7 +144,40 @@ public class NemIdTokenParserTest {
                                         + "<sp:StatusCode Value=\"123success123\">"
                                         + "</sp:StatusCode>"
                                         + "</irrelevant>"),
-                        NemIdTokenStatus.builder().code("123success123").message("").build()));
+                        NemIdTokenStatus.builder()
+                                .code("123success123")
+                                .message("")
+                                .requestIssuer("")
+                                .build()));
+
+        args.add(
+                asArray(
+                        toBase64(
+                                "<irrelevant>"
+                                        + "<ds:SignatureProperties>"
+                                        + "    <ds:SignatureProperty Target=\"signature\">"
+                                        + "        <openoces:Name>RequestIssuer</openoces:Name>"
+                                        + "        <openoces:Value Encoding=\"base64\" VisibleToSigner=\"yes\">THVuYXI=</openoces:Value>"
+                                        + "    </ds:SignatureProperty>"
+                                        + "    <ds:SignatureProperty Target=\"signature\">"
+                                        + "        <openoces:Name>challenge</openoces:Name>"
+                                        + "        <openoces:Value Encoding=\"xml\" VisibleToSigner=\"no\">1234567890</openoces:Value>"
+                                        + "    </ds:SignatureProperty>"
+                                        + "    <ds:SignatureProperty Target=\"signature\">"
+                                        + "        <openoces:Name>TimeStamp</openoces:Name>"
+                                        + "        <openoces:Value Encoding=\"base64\" VisibleToSigner=\"no\">SignatureTestBase64</openoces:Value>"
+                                        + "    </ds:SignatureProperty>"
+                                        + "    <ds:SignatureProperty Target=\"signature\">"
+                                        + "        <openoces:Name>action</openoces:Name>"
+                                        + "        <openoces:Value Encoding=\"xml\" VisibleToSigner=\"no\">logon</openoces:Value>"
+                                        + "    </ds:SignatureProperty>"
+                                        + "</ds:SignatureProperties>"
+                                        + "</irrelevant>"),
+                        NemIdTokenStatus.builder()
+                                .code("")
+                                .message("")
+                                .requestIssuer("THVuYXI=")
+                                .build()));
 
         return args.toArray(new Object[0]);
     }

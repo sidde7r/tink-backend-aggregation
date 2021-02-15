@@ -14,14 +14,19 @@ public class NemIdTokenParser {
     private static final String STATUS_CODE_TAG = "sp:statuscode";
     private static final String STATUS_CODE_TAG_VALUE_ATTR = "value";
     private static final String STATUS_MESSAGE_TAG = "sp:statusmessage";
+    private static final String SIGNATURE_PROPERTY_TAG = "ds:SignatureProperty";
+    private static final String SIGNATURE_PROPERTY_NAME = "openoces:Name";
+    private static final String REQUEST_ISSUER_TEXT = "RequestIssuer";
+    private static final String SIGNATURE_PROPERTY_VALUE = "openoces:Value";
 
-    public NemIdTokenStatus extractNemIdTokenStatus(String nemIdTokenBase64) {
+    NemIdTokenStatus extractNemIdTokenStatus(String nemIdTokenBase64) {
         String nemIdToken = decodeBase64(nemIdTokenBase64);
         Document rootElement = Jsoup.parse(nemIdToken);
 
         return NemIdTokenStatus.builder()
                 .code(extractStatusCode(rootElement))
                 .message(extractStatusMessage(rootElement))
+                .requestIssuer(extractRequestIssuer(rootElement))
                 .build();
     }
 
@@ -39,6 +44,18 @@ public class NemIdTokenParser {
             return "";
         }
         return errorMessageTags.get(0).ownText().trim();
+    }
+
+    private String extractRequestIssuer(Document rootElement) {
+        Elements messageTags = rootElement.getElementsByTag(SIGNATURE_PROPERTY_TAG);
+        return messageTags.stream()
+                .filter(
+                        tag ->
+                                REQUEST_ISSUER_TEXT.equalsIgnoreCase(
+                                        tag.getElementsByTag(SIGNATURE_PROPERTY_NAME).text()))
+                .map(tag -> tag.getElementsByTag(SIGNATURE_PROPERTY_VALUE).text())
+                .findFirst()
+                .orElse("");
     }
 
     @SneakyThrows

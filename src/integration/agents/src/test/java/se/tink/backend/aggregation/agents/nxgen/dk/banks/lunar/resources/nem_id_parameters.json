@@ -1,0 +1,10 @@
+{
+  "CLIENTFLOW": "OCESLOGIN2",
+  "CLIENTMODE": "LIMITED",
+  "DIGEST_SIGNATURE": "digestSignature",
+  "ENABLE_AWAITING_APP_APPROVAL_EVENT": "TRUE",
+  "PARAMS_DIGEST": "paramsDigest",
+  "SIGN_PROPERTIES": "challenge=1234567890123",
+  "SP_CERT": "CoolCertificate",
+  "TIMESTAMP": "MjAyMS0wMS0xOSAxNDo0NDowMCswMDAw"
+}

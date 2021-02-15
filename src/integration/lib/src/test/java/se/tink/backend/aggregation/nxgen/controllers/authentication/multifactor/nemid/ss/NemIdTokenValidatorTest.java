@@ -28,6 +28,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 public class NemIdTokenValidatorTest {
 
     private static final String SAMPLE_TOKEN_BASE_64 = "-- SAMPLE TOKEN --";
+    private static final String LUNAR_ISSUER = "THVuYXI=";
 
     private NemIdTokenParser tokenParser;
     private NemIdTokenValidator tokenValidator;
@@ -137,35 +138,77 @@ public class NemIdTokenValidatorTest {
                 .toArray(Object[]::new);
     }
 
+    @Test
+    public void should_not_throw_on_known_request_issuer() {
+        // given
+        when(tokenParser.extractNemIdTokenStatus(SAMPLE_TOKEN_BASE_64))
+                .thenReturn(
+                        NemIdTokenStatus.builder()
+                                .code("")
+                                .message("")
+                                .requestIssuer(LUNAR_ISSUER)
+                                .build());
+
+        // when
+        tokenValidator.verifyTokenIsValid(SAMPLE_TOKEN_BASE_64);
+
+        // then
+        verify(tokenParser).extractNemIdTokenStatus(SAMPLE_TOKEN_BASE_64);
+    }
+
+    @Test
+    public void should_throw_exception_on_unknown_request_issuer() {
+        // given
+        when(tokenParser.extractNemIdTokenStatus(SAMPLE_TOKEN_BASE_64))
+                .thenReturn(
+                        NemIdTokenStatus.builder()
+                                .code("")
+                                .message("")
+                                .requestIssuer("Test")
+                                .build());
+
+        // when
+        Throwable throwable =
+                catchThrowable(
+                        () ->
+                                tokenValidator.throwInvalidTokenExceptionWithoutValidation(
+                                        SAMPLE_TOKEN_BASE_64));
+
+        // then
+        verifyThatFromUsersPerspectiveThrowableIsTheSameAsGivenAgentException(
+                throwable, LoginError.CREDENTIALS_VERIFICATION_ERROR.exception());
+        verify(tokenParser).extractNemIdTokenStatus(SAMPLE_TOKEN_BASE_64);
+    }
+
     private static List<TokenValidatorTestCase> invalidTokenStatusWithExpectedException() {
         return Stream.of(
                         TokenValidatorTestCase.of(
-                                new NemIdTokenStatus("fail", NemIdErrorCodes.REJECTED),
+                                new NemIdTokenStatus("fail", NemIdErrorCodes.REJECTED, null),
                                 NemIdError.REJECTED.exception()),
                         TokenValidatorTestCase.of(
-                                new NemIdTokenStatus("fail", NemIdErrorCodes.INTERRUPTED),
+                                new NemIdTokenStatus("fail", NemIdErrorCodes.INTERRUPTED, null),
                                 NemIdError.INTERRUPTED.exception()),
                         TokenValidatorTestCase.of(
-                                new NemIdTokenStatus("fail", NemIdErrorCodes.TIMEOUT),
+                                new NemIdTokenStatus("fail", NemIdErrorCodes.TIMEOUT, null),
                                 NemIdError.TIMEOUT.exception()),
                         TokenValidatorTestCase.of(
-                                new NemIdTokenStatus("fail", NemIdErrorCodes.TECHNICAL_ERROR),
+                                new NemIdTokenStatus("fail", NemIdErrorCodes.TECHNICAL_ERROR, null),
                                 BankServiceError.BANK_SIDE_FAILURE.exception()),
                         TokenValidatorTestCase.of(
-                                new NemIdTokenStatus("fail", NemIdErrorCodes.NO_AGREEMENT),
+                                new NemIdTokenStatus("fail", NemIdErrorCodes.NO_AGREEMENT, null),
                                 LoginError.NOT_CUSTOMER.exception()),
                         TokenValidatorTestCase.of(
-                                new NemIdTokenStatus("fail", NemIdErrorCodes.NEMID_LOCKED),
+                                new NemIdTokenStatus("fail", NemIdErrorCodes.NEMID_LOCKED, null),
                                 NemIdError.NEMID_LOCKED.exception()),
                         TokenValidatorTestCase.of(
-                                new NemIdTokenStatus("fail", NemIdErrorCodes.NEMID_BLOCKED),
+                                new NemIdTokenStatus("fail", NemIdErrorCodes.NEMID_BLOCKED, null),
                                 NemIdError.NEMID_BLOCKED.exception()),
                         TokenValidatorTestCase.of(
                                 new NemIdTokenStatus(
-                                        "fail", NemIdErrorCodes.NEMID_PASSWORD_BLOCKED),
+                                        "fail", NemIdErrorCodes.NEMID_PASSWORD_BLOCKED, null),
                                 NemIdError.NEMID_PASSWORD_BLOCKED.exception()),
                         TokenValidatorTestCase.of(
-                                new NemIdTokenStatus("fail", "SOME_UNKNOWN123"),
+                                new NemIdTokenStatus("fail", "SOME_UNKNOWN123", null),
                                 LoginError.CREDENTIALS_VERIFICATION_ERROR.exception()))
                 .map(
                         testCase ->

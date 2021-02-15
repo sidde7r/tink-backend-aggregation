@@ -11,4 +11,5 @@ public class NemIdTokenStatus {
 
     private final String code;
     private final String message;
+    private final String requestIssuer;
 }
