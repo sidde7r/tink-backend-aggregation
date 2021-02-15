@@ -32,13 +32,22 @@ public class AccountTrackingSerializer extends TrackingMapSerializer {
                 .putListed("type", account.getType());
 
         // If no identifiers are present we want to record that as a null value.
+        boolean sawIban = false;
         if (!account.getIdentifiers().isEmpty()) {
-            account.getIdentifiers().stream()
-                    .map(AccountIdentifier::getType)
-                    .map(AccountIdentifier.Type::toString)
-                    .forEach(value -> listBuilder.putListed("identifiers", value));
+            for (AccountIdentifier id : account.getIdentifiers()) {
+                String key = "identifiers." + id.getType().toString();
+                listBuilder.putRedacted(key, id.getIdentifier());
+                if (id.getType() == AccountIdentifier.Type.IBAN) {
+                    sawIban = true;
+                }
+            }
         } else {
             listBuilder.putNull("identifiers");
+        }
+        if (!sawIban) {
+            // Specifically always track IBAN
+            String key = "identifiers." + AccountIdentifier.Type.IBAN.toString();
+            listBuilder.putNull(key);
         }
 
         // Looping over all possible values here to set null on all non-existing
