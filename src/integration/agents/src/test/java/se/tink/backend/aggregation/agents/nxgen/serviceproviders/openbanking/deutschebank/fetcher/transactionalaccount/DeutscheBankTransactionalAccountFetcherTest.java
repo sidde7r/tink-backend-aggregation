@@ -19,6 +19,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deu
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.fetcher.transactionalaccount.rpc.transactions.TransactionsKeyPaginatorBaseResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.serialization.utils.SerializationUtils;
@@ -55,10 +56,7 @@ public class DeutscheBankTransactionalAccountFetcherTest {
         // then
         assertThat(DeutscheBankConstants.ACCOUNT_TYPE_MAPPER.isOf(accountType, CHECKING)).isTrue();
         TransactionalAccount account = accounts.iterator().next();
-        assertThat(account.getAccountNumber()).isEqualTo("PL666");
-        assertThat(account.getType().name()).isEqualTo(CHECKING.name());
-        assertThat(account.getName()).isEqualTo("NAME");
-        assertThat(account.getExactBalance()).isEqualTo(ExactCurrencyAmount.inEUR(12.12));
+        assertAccountWithType(account, CHECKING);
     }
 
     @Test
@@ -76,10 +74,17 @@ public class DeutscheBankTransactionalAccountFetcherTest {
         // then
         assertThat(DeutscheBankConstants.ACCOUNT_TYPE_MAPPER.isOf(accountType, SAVINGS)).isTrue();
         TransactionalAccount account = accounts.iterator().next();
+        assertAccountWithType(account, SAVINGS);
+    }
+
+    private void assertAccountWithType(
+            TransactionalAccount account, TransactionalAccountType type) {
         assertThat(account.getAccountNumber()).isEqualTo("PL666");
-        assertThat(account.getType().name()).isEqualTo(SAVINGS.name());
+        assertThat(account.getType().name()).isEqualTo(type.name());
         assertThat(account.getName()).isEqualTo("NAME");
         assertThat(account.getExactBalance()).isEqualTo(ExactCurrencyAmount.inEUR(12.12));
+        assertThat(account.getHolders()).hasSize(1);
+        assertThat(account.getHolders().get(0).getName()).isEqualTo("Name Surname");
     }
 
     @Test
@@ -112,7 +117,7 @@ public class DeutscheBankTransactionalAccountFetcherTest {
 
     private static FetchAccountsResponse getAccountsResponse(String accountType) {
         return SerializationUtils.deserializeFromString(
-                "{\"accounts\" : [{\"iban\" : \"PL666\", \"resourceId\" : \"1\", \"name\" : \"NAME\", \"currency\" : \"EUR\", \"product\" : \""
+                "{\"accounts\" : [{\"iban\" : \"PL666\", \"resourceId\" : \"1\", \"name\" : \"NAME\", \"ownerName\" : \"Name Surname\", \"currency\" : \"EUR\", \"product\" : \""
                         + accountType
                         + "\"}]}",
                 FetchAccountsResponse.class);
