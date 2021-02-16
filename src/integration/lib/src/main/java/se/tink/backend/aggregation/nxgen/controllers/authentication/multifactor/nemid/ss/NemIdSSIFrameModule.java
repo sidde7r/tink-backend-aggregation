@@ -9,8 +9,8 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.metrics.NemIdMetricLabel;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.metrics.NemIdMetrics;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
+import se.tink.integration.webdriver.WebDriverInitializer;
 import se.tink.libraries.i18n.Catalog;
-import src.integration.webdriver.WebDriverInitializer;
 
 public class NemIdSSIFrameModule extends AbstractModule {
 

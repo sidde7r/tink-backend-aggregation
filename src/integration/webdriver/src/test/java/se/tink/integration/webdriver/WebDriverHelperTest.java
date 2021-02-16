@@ -1,4 +1,4 @@
-package se.tink.libraries.selenium;
+package se.tink.integration.webdriver;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
@@ -12,9 +12,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriver.TargetLocator;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.phantomjs.PhantomJSDriver;
-import se.tink.libraries.selenium.exceptions.HtmlElementNotFoundException;
-import se.tink.libraries.selenium.exceptions.ScreenScrapingException;
+import se.tink.integration.webdriver.exceptions.HtmlElementNotFoundException;
+import se.tink.integration.webdriver.exceptions.ScreenScrapingException;
 
 public class WebDriverHelperTest {
     private WebDriver driver;
@@ -23,7 +22,7 @@ public class WebDriverHelperTest {
     @Before
     public void init() {
         TargetLocator targetLocator = mock(TargetLocator.class);
-        driver = mock(PhantomJSDriver.class);
+        driver = mock(WebDriver.class);
         webDriverHelper = new WebDriverHelper(100);
         given(driver.switchTo()).willReturn(targetLocator);
     }

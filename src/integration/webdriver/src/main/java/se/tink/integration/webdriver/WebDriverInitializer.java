@@ -1,4 +1,4 @@
-package src.integration.webdriver;
+package se.tink.integration.webdriver;
 
 import java.io.File;
 import java.util.concurrent.TimeUnit;

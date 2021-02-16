@@ -1,4 +1,4 @@
-package se.tink.libraries.selenium;
+package se.tink.integration.webdriver;
 
 import com.google.common.base.Strings;
 import java.util.List;
@@ -8,8 +8,8 @@ import org.openqa.selenium.Keys;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import se.tink.libraries.selenium.exceptions.HtmlElementNotFoundException;
-import se.tink.libraries.selenium.exceptions.ScreenScrapingException;
+import se.tink.integration.webdriver.exceptions.HtmlElementNotFoundException;
+import se.tink.integration.webdriver.exceptions.ScreenScrapingException;
 
 public class WebDriverHelper {
     private static final By IFRAME_TAG = By.tagName("iframe");

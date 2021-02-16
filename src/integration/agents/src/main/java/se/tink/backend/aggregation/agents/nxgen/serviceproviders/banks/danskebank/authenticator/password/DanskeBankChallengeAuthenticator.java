@@ -59,11 +59,11 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.integration.webdriver.WebDriverInitializer;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.i18n.LocalizableEnum;
 import se.tink.libraries.i18n.LocalizableKey;
 import se.tink.libraries.serialization.utils.SerializationUtils;
-import src.integration.webdriver.WebDriverInitializer;
 
 public class DanskeBankChallengeAuthenticator
         implements TypedAuthenticator, AutoAuthenticator, KeyCardAuthenticator {

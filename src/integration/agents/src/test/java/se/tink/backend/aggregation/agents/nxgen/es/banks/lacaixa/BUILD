@@ -55,8 +55,6 @@ junit_test(
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/es/banks/lacaixa/resources",
         "//tools:libkbc_wbaes_linux",
         "//tools:libkbc_wbaes_mac",
-        "//tools:phantomjs_linux",
-        "//tools:phantomjs_mac",
     ],
     visibility = ["//visibility:public"],
     runtime_deps = [

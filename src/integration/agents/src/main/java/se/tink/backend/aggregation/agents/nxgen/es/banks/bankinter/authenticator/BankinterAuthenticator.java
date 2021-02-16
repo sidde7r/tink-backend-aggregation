@@ -27,7 +27,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterCons
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import src.integration.webdriver.WebDriverInitializer;
+import se.tink.integration.webdriver.WebDriverInitializer;
 
 public class BankinterAuthenticator implements PasswordAuthenticator {
     private static final Logger logger =

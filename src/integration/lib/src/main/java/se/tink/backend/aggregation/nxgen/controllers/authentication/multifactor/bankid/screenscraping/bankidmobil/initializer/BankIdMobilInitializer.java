@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import se.tink.libraries.selenium.WebDriverHelper;
+import se.tink.integration.webdriver.WebDriverHelper;
 
 public class BankIdMobilInitializer implements MobilInitializer {
     private final String mobileNumber;

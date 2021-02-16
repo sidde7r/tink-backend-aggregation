@@ -44,9 +44,9 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.integration.webdriver.WebDriverHelper;
+import se.tink.integration.webdriver.WebDriverInitializer;
 import se.tink.libraries.i18n.Catalog;
-import se.tink.libraries.selenium.WebDriverHelper;
-import src.integration.webdriver.WebDriverInitializer;
 
 @RequiredArgsConstructor
 public class DanskeBankNOBankIdAuthenticator implements TypedAuthenticator, AutoAuthenticator {

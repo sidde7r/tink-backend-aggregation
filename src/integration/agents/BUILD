@@ -120,10 +120,6 @@ java_library(
         "@aggregation//:io_netty_netty_codec",
         "@aggregation//:io_netty_netty_codec_http",
         "@aggregation//:joda_time_joda_time",
-        "@selenium//:org_seleniumhq_selenium_selenium_api",
-        "@selenium//:org_seleniumhq_selenium_selenium_firefox_driver",
-        "@selenium//:org_seleniumhq_selenium_selenium_htmlunit_driver",
-        "@selenium//:org_seleniumhq_selenium_selenium_remote_driver",
         "@tink_backend//src/aggregation-controller/api/src/main/java/se/tink/backend/aggregationcontroller/v1/rpc/enums",
     ],
 )
@@ -142,8 +138,6 @@ junit_test(
         "//etc:development",
         "//tools:libkbc_wbaes_linux",
         "//tools:libkbc_wbaes_mac",
-        "//tools:phantomjs_linux",
-        "//tools:phantomjs_mac",
     ],
     tags = ["manual"],
     visibility = ["//visibility:public"],
@@ -238,7 +232,6 @@ junit_test(
         "@aggregation//:com_fasterxml_jackson_datatype_jackson_datatype_joda",
         "@aggregation//:com_google_guava_guava",
         "@aggregation//:joda_time_joda_time",
-        "@selenium//:org_seleniumhq_selenium_selenium_firefox_driver",
         "@tink_backend//src/aggregation-controller/api/src/main/java/se/tink/backend/aggregationcontroller/v1/rpc/enums",
     ],
 )

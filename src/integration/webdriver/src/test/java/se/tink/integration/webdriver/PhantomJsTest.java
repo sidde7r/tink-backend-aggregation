@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.phantomjs;
+package se.tink.integration.webdriver;
 
 import java.io.File;
 import java.util.Map;

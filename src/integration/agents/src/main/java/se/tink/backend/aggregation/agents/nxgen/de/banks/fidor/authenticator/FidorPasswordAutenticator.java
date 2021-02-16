@@ -15,7 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.banks.fidor.FidorApiClient;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fidor.FidorConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticator;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import src.integration.webdriver.WebDriverInitializer;
+import se.tink.integration.webdriver.WebDriverInitializer;
 
 public class FidorPasswordAutenticator implements PasswordAuthenticator {
 

@@ -20,9 +20,9 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.screenscraping.bankidmobil.initializer.MobilInitializer;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.integration.webdriver.WebDriverHelper;
+import se.tink.integration.webdriver.WebDriverInitializer;
 import se.tink.libraries.i18n.Catalog;
-import se.tink.libraries.selenium.WebDriverHelper;
-import src.integration.webdriver.WebDriverInitializer;
 
 public class SdcNoBankIdSSAuthenticator implements AutoAuthenticator, TypedAuthenticator {
     private final WebDriver driver;

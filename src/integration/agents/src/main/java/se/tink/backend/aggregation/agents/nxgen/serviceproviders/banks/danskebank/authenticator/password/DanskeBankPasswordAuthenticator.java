@@ -16,7 +16,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeban
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticator;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
-import src.integration.webdriver.WebDriverInitializer;
+import se.tink.integration.webdriver.WebDriverInitializer;
 
 public class DanskeBankPasswordAuthenticator implements PasswordAuthenticator {
 

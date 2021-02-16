@@ -29,7 +29,7 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import src.integration.webdriver.WebDriverInitializer;
+import se.tink.integration.webdriver.WebDriverInitializer;
 
 public class DanskeBankBankIdAuthenticator implements BankIdAuthenticator<String> {
     private static final ObjectMapper mapper = new ObjectMapper();
