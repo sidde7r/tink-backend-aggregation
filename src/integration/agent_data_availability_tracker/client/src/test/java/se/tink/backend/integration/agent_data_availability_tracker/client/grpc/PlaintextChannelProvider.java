@@ -5,7 +5,9 @@ import com.google.inject.Provider;
 import io.grpc.ManagedChannel;
 import io.grpc.netty.NettyChannelBuilder;
 import java.net.InetSocketAddress;
+import org.junit.Ignore;
 
+@Ignore
 public final class PlaintextChannelProvider implements Provider<ManagedChannel> {
 
     private final InetSocketAddress socket;
