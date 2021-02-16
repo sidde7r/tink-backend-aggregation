@@ -8,6 +8,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
+import org.apache.commons.lang.StringUtils;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field;
@@ -42,6 +43,7 @@ public class FiduciaAuthenticator implements MultiFactorAuthenticator, AutoAuthe
     private static final String PSU_AUTHENTICATED = "psuAuthenticated";
     private static final String STARTED = "started";
     private static final String FINALISED = "finalised";
+    private static final int PSU_ID_MAX_ALLOWED_LENGTH = 30;
 
     private static final List<String> UNSUPPORTED_AUTH_METHOD_IDS =
             ImmutableList.of("972", "982"); // These two numbers are optical chiptan and photo tan
@@ -76,6 +78,7 @@ public class FiduciaAuthenticator implements MultiFactorAuthenticator, AutoAuthe
     @Override
     public void authenticate(Credentials credentials) throws SupplementalInfoException {
         String username = credentials.getField(CredentialKeys.PSU_ID);
+        validateUsername(username);
         String password = credentials.getField(CredentialKeys.PASSWORD);
         sessionStorage.put(StorageKeys.PSU_ID, username);
 
@@ -95,6 +98,12 @@ public class FiduciaAuthenticator implements MultiFactorAuthenticator, AutoAuthe
 
         persistentStorage.put(StorageKeys.CONSENT_ID, consentId);
         credentials.setSessionExpiryDate(detailsResponse.getValidUntil());
+    }
+
+    private void validateUsername(String username) {
+        if (StringUtils.isBlank(username) || username.length() > PSU_ID_MAX_ALLOWED_LENGTH) {
+            throw LoginError.INCORRECT_CREDENTIALS.exception();
+        }
     }
 
     private ScaStatusResponse authorizeWithSca(ScaResponse scaResponse) {

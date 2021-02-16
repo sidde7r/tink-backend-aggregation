@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.Optional;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
+import org.apache.commons.lang.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -51,7 +52,8 @@ public class FiduciaAuthenticatorTest {
     private static final String TEST_DATA_PATH =
             "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/de/openbanking/fiducia/resources";
 
-    private static final String USERNAME = "psuId";
+    private static final String USERNAME = StringUtils.repeat("A", 30);
+    private static final String USERNAME_LONGER_THAN_ALLOWED = StringUtils.repeat("1", 31);
     private static final String PASSWORD = "password";
     private static final String CONSENT_ID = "consentId";
     private static final String OTP_CODE = "123456";
@@ -107,6 +109,22 @@ public class FiduciaAuthenticatorTest {
         when(apiClient.createConsent()).thenReturn(CONSENT_ID);
 
         fieldCaptor = ArgumentCaptor.forClass(Field.class);
+    }
+
+    @Test
+    public void authenticateShouldThrowExceptionIfPsuIsInvalid() {
+        // given
+        Map<String, String> fields = new HashMap<>();
+        fields.put(CredentialKeys.PSU_ID, USERNAME_LONGER_THAN_ALLOWED);
+        fields.put(CredentialKeys.PASSWORD, PASSWORD);
+
+        // when
+        Throwable t = catchThrowable(() -> authenticator.authenticate(credentials));
+
+        // then
+        assertThat(t)
+                .isInstanceOf(LoginException.class)
+                .hasMessage("Cause: LoginError.INCORRECT_CREDENTIALS");
     }
 
     @Test
