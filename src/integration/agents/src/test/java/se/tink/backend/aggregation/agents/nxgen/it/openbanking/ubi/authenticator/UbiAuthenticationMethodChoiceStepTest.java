@@ -1,19 +1,18 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.ubi.authenticator;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-import com.google.common.collect.ImmutableMap;
 import junitparams.JUnitParamsRunner;
-import junitparams.Parameters;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
-import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.CbiThirdPartyAppAuthenticationStep;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.entities.ConsentType;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationRequest;
@@ -24,23 +23,22 @@ import se.tink.libraries.i18n.LocalizableKey;
 @RunWith(JUnitParamsRunner.class)
 public class UbiAuthenticationMethodChoiceStepTest {
 
+    private static final String USE_APP_FIELD_KEY = "useApp";
     private UbiAuthenticationMethodChoiceStep step;
 
     @Before
     public void init() {
         Catalog catalog = Mockito.mock(Catalog.class);
         when(catalog.getString(any(LocalizableKey.class))).thenReturn("");
-        step = new UbiAuthenticationMethodChoiceStep(catalog);
+        step = new UbiAuthenticationMethodChoiceStep();
     }
 
     @Test
-    @Parameters({"y", "Y", "yes", "Yes", "s", "S", "sì", "Sì", "SÌ", "si", "Si", "SI"})
-    public void authenticationShouldProceedWithDecoupledFlowIfAppIsInstalled(String answer)
-            throws AuthenticationException, AuthorizationException {
+    public void authenticationShouldProceedWithDecoupledFlowIfAppIsInstalled() {
         // given
-        AuthenticationRequest request =
-                new AuthenticationRequest(new Credentials())
-                        .withUserInputs(ImmutableMap.of("IS_APP_INSTALLED", answer));
+        Credentials credentials = new Credentials();
+        credentials.setField(USE_APP_FIELD_KEY, "yes");
+        AuthenticationRequest request = new AuthenticationRequest(credentials);
 
         // when
         AuthenticationStepResponse response = step.execute(request);
@@ -52,13 +50,11 @@ public class UbiAuthenticationMethodChoiceStepTest {
     }
 
     @Test
-    @Parameters({"n", "N", "no", "No"})
-    public void authenticationShouldProceedWithRedirectFlowIfAppIsNotInstalled(String answer)
-            throws AuthenticationException, AuthorizationException {
+    public void authenticationShouldProceedWithRedirectFlowIfAppIsNotInstalled() {
         // given
-        AuthenticationRequest request =
-                new AuthenticationRequest(new Credentials())
-                        .withUserInputs(ImmutableMap.of("IS_APP_INSTALLED", answer));
+        Credentials credentials = new Credentials();
+        credentials.setField(USE_APP_FIELD_KEY, "no");
+        AuthenticationRequest request = new AuthenticationRequest(credentials);
 
         // when
         AuthenticationStepResponse response = step.execute(request);
@@ -70,5 +66,40 @@ public class UbiAuthenticationMethodChoiceStepTest {
                 CbiThirdPartyAppAuthenticationStep.class.getSimpleName()
                         + "_"
                         + ConsentType.ACCOUNT);
+    }
+
+    @Test
+    public void authenticationShouldThrowWhenSelectionFieldMissing() {
+        // given
+        Credentials credentials = new Credentials();
+        AuthenticationRequest request = new AuthenticationRequest(credentials);
+
+        // when
+
+        // when
+        Throwable t = catchThrowable(() -> step.execute(request));
+
+        // then
+        assertThat(t)
+                .isInstanceOf(LoginException.class)
+                .hasMessage("useApp field missing on credentials.");
+    }
+
+    @Test
+    public void authenticationShouldThrowWhenSelectionFieldHasUnexpectedValue() {
+        // given
+        Credentials credentials = new Credentials();
+        credentials.setField(USE_APP_FIELD_KEY, "unexpected");
+        AuthenticationRequest request = new AuthenticationRequest(credentials);
+
+        // when
+
+        // when
+        Throwable t = catchThrowable(() -> step.execute(request));
+
+        // then
+        assertThat(t)
+                .isInstanceOf(LoginException.class)
+                .hasMessage("Unexpected value in useApp field.");
     }
 }

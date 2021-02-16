@@ -40,7 +40,7 @@ public class UbiAuthenticator extends CbiGlobeAuthenticator {
     @Override
     protected List<AuthenticationStep> getManualAuthenticationSteps() {
         if (manualAuthenticationSteps.isEmpty()) {
-            manualAuthenticationSteps.add(new UbiAuthenticationMethodChoiceStep(catalog));
+            manualAuthenticationSteps.add(new UbiAuthenticationMethodChoiceStep());
             addDecoupledManualSteps();
             addRedirectManualSteps();
         }
