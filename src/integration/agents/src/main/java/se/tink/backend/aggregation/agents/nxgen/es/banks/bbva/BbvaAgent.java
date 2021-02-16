@@ -7,8 +7,7 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.LOANS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
@@ -22,6 +21,7 @@ import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.Defaults;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.Proxy;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.authenticator.BbvaAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.creditcard.BbvaCreditCardFetcher;
@@ -46,6 +46,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.TimeoutRetryFilter;
+import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 @AgentCapabilities({
@@ -56,6 +57,7 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
     IDENTITY_DATA,
     LOANS
 })
+@Slf4j
 public final class BbvaAgent extends NextGenerationAgent
         implements RefreshIdentityDataExecutor,
                 RefreshInvestmentAccountsExecutor,
@@ -63,8 +65,7 @@ public final class BbvaAgent extends NextGenerationAgent
                 RefreshCreditCardAccountsExecutor,
                 RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor {
-    private static final Logger log = LoggerFactory.getLogger(BbvaAgent.class);
-    private BbvaApiClient apiClient;
+    private final BbvaApiClient apiClient;
     private final InvestmentRefreshController investmentRefreshController;
     private final LoanRefreshController loanRefreshController;
     private final CreditCardRefreshController creditCardRefreshController;
@@ -75,7 +76,9 @@ public final class BbvaAgent extends NextGenerationAgent
             AgentContext context,
             AgentsServiceConfiguration configuration) {
         super(request, context, configuration.getSignatureKeyPair());
-        this.apiClient = new BbvaApiClient(client, sessionStorage);
+        this.apiClient =
+                new BbvaApiClient(
+                        client, sessionStorage, supplementalInformationHelper, persistentStorage);
         configureHttpClient(client, configuration);
 
         this.investmentRefreshController =
@@ -96,7 +99,12 @@ public final class BbvaAgent extends NextGenerationAgent
 
     @Override
     protected Authenticator constructAuthenticator() {
-        return new BbvaAuthenticator(apiClient, supplementalInformationHelper, request);
+        Authenticator authenticator =
+                new BbvaAuthenticator(apiClient, supplementalInformationHelper, request);
+        log.info(
+                "Credentials status after authenticating is equal {}",
+                this.credentials.getStatus());
+        return authenticator;
     }
 
     @Override
@@ -106,6 +114,7 @@ public final class BbvaAgent extends NextGenerationAgent
 
     @Override
     public FetchTransactionsResponse fetchCheckingTransactions() {
+        checkIfFirstLogin();
         return transactionalAccountRefreshController.fetchCheckingTransactions();
     }
 
@@ -128,6 +137,17 @@ public final class BbvaAgent extends NextGenerationAgent
                         transactionPaginationHelper,
                         new TransactionKeyPaginationController<>(
                                 new BbvaTransactionFetcher(apiClient))));
+    }
+
+    private void checkIfFirstLogin() {
+        log.info("Credentials status is equal {}", this.credentials.getStatus());
+        if (this.credentials.getStatus() == CredentialsStatus.CREATED) {
+            log.info("Fetching transactions over 90 days");
+            persistentStorage.put(Defaults.FIRST_LOGIN, true);
+        } else {
+            log.info("Fetching the last 90 days of transactions");
+            persistentStorage.put(Defaults.FIRST_LOGIN, false);
+        }
     }
 
     @Override

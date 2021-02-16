@@ -1,0 +1,10 @@
+{
+    "consumer-request-id": "e4e42989-f86e-4c53-9b0a-e3c071510d5e",
+    "error-code": "999",
+    "error-message": "Access denied status change in progress",
+    "http-status": 401,
+    "severity": "FATAL",
+    "system-error-code": "stateChangeGoOn",
+    "system-error-description": "Access denied status change in progress",
+    "version": 1
+}

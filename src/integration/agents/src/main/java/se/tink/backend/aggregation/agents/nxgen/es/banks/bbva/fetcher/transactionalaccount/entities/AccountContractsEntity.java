@@ -1,14 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import java.util.Objects;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class AccountContractsEntity {
     private ContractEntity contract;
     private SimpleAccountEntity account;
+
+    public AccountContractsEntity(ContractEntity contract) {
+        this.contract = contract;
+    }
 
     public ContractEntity getContract() {
         return contract;
@@ -24,15 +25,5 @@ public class AccountContractsEntity {
 
     public void setAccount(SimpleAccountEntity account) {
         this.account = account;
-    }
-
-    @JsonIgnore
-    public boolean isContractId(String id) {
-        return Objects.nonNull(contract) && id.equalsIgnoreCase(contract.getId());
-    }
-
-    @JsonIgnore
-    public ExactCurrencyAmount getAvailableBalanceAsTinkAmount() {
-        return account.getCurrentBalance().getAvailableBalance().toTinkAmount();
     }
 }

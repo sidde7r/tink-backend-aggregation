@@ -1,0 +1,10 @@
+{
+    "version": 1,
+    "severity": "FATAL",
+    "http-status": 500,
+    "error-code": "451",
+    "error-message": "Error al recuperar la información de perfilado del servicio",
+    "consumer-request-id": "9e719fbc-36d7-40c1-8888-30946c901bf9",
+    "system-error-code": "serviceUnavailable",
+    "system-error-description": "Error al recuperar la información de perfilado del servicio"
+}

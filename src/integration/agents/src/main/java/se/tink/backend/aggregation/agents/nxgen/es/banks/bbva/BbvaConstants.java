@@ -1,15 +1,22 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva;
 
+import java.time.Clock;
+import java.time.ZoneId;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.http.header.HeaderEnum;
 
 public final class BbvaConstants {
 
     public static final class Fetchers {
+        public static final Clock CLOCK = Clock.system(ZoneId.of(Defaults.TIMEZONE_CET));
         public static final long BACKOFF = 3000;
         public static final int MAX_TRY_ATTEMPTS = 5;
         public static final int PAGE_SIZE = 40;
+        public static final long MAX_NUM_MONTHS_FOR_FETCH = 72L;
+        public static final List<String> OPERATION_TYPES = Collections.singletonList("BOTH");
     }
 
     public enum Error {
@@ -43,6 +50,7 @@ public final class BbvaConstants {
     public static final class Defaults {
         public static final String CURRENCY = "EUR";
         public static final String TIMEZONE_CET = "CET";
+        public static final String FIRST_LOGIN = "FIRST_LOGIN";
     }
 
     public static final class AccountType {
@@ -95,6 +103,8 @@ public final class BbvaConstants {
                 BASE_URL + "/ASO/contracts/v0/financial-investment/daily-summaries";
         public static final String PARTICIPANTS =
                 BASE_URL + "/ASO/contracts/V01/{" + PARAM_ID + "}/participants/";
+        public static final String IN_FORCE_CONDITIONS =
+                BASE_URL + "/ASO/contracts/V01/{" + PARAM_ID + "}/inForceConditions";
     }
 
     public enum Headers implements HeaderEnum {
@@ -122,12 +132,14 @@ public final class BbvaConstants {
     }
 
     public static final class HeaderKeys {
-
+        public static final String AUTHENTICATION_TYPE = "authenticationtype";
+        public static final String AUTHENTICATION_STATE = "authenticationstate";
+        public static final String AUTHENTICATION_DATA = "authenticationdata";
         public static final String TSEC_KEY = "tsec";
     }
 
     public static final class PostParameter {
-
+        public static final String AUTH_OTP_STATE = "05";
         public static final String SEARCH_TYPE = "SEARCH";
         public static final String ISIN_ID_TYPE = "ISIN";
         public static final String ANY_ISIN = "000000000000";
@@ -177,6 +189,8 @@ public final class BbvaConstants {
 
     public static class ErrorCode {
         public static final String CONTRACT_NOT_OPERABLE = "contractNotOperable";
+        public static final String OTP_VERIFICATION_CODE = "999";
+        public static final String OTP_SYSTEM_ERROR_CODE = "stateChangeGoOn";
     }
 
     public static class ProductTypes {

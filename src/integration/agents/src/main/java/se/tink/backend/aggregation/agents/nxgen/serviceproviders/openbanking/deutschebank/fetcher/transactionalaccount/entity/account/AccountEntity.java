@@ -28,6 +28,7 @@ public class AccountEntity {
     private String status;
     private String name;
     private String cashAccountType;
+    private String ownerName;
     private List<BalanceEntity> balances;
 
     @JsonProperty("_links")
@@ -51,6 +52,7 @@ public class AccountEntity {
                 .setApiIdentifier(resourceId)
                 .setBankIdentifier(getUniqueIdentifier())
                 .addAccountFlags(AccountFlag.PSD2_PAYMENT_ACCOUNT)
+                .addHolderName(ownerName)
                 .build();
     }
 

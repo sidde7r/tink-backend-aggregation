@@ -1,8 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount;
 
 import io.vavr.control.Try;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.Fetchers;
@@ -13,12 +12,11 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 
+@Slf4j
 public class BbvaTransactionFetcher
         implements TransactionKeyPaginator<TransactionalAccount, String> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(BbvaTransactionFetcher.class);
-
-    private BbvaApiClient apiClient;
+    private final BbvaApiClient apiClient;
 
     public BbvaTransactionFetcher(BbvaApiClient apiClient) {
         this.apiClient = apiClient;
@@ -51,7 +49,7 @@ public class BbvaTransactionFetcher
             Thread.sleep(Fetchers.BACKOFF);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            LOGGER.debug("Woke up early", e);
+            log.debug("Woke up early", e);
         }
     }
 
@@ -59,7 +57,7 @@ public class BbvaTransactionFetcher
             TransactionalAccount account, String key, int attempt, HttpClientException e) {
         final String accountNumber = account.getAccountNumber();
 
-        LOGGER.warn(
+        log.warn(
                 "{}: Retrying attempt {} for account {} with key {}",
                 LogTags.TRANSACTIONS_RETRYING,
                 attempt,
