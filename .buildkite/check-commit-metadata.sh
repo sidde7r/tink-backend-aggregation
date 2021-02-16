@@ -30,34 +30,35 @@ echo "--- Checking commit ${COMMIT}..."
 # fail without us knowing.
 COMMIT_MSG_SUBJECT=$(git show --pretty=format:'%s' --no-expand-tabs --no-patch "$COMMIT")
 
-if [ ${#COMMIT_MSG_SUBJECT} -gt 72 ];then
-  print_error_header "$COMMIT"
-  echo " * The subject (first line) is too long. Max length should be 72 characters."
-  echo "   See CONTRIBUTING.md for details."
-fi
-
-# The exact format of commit messages is described in `/CONTRIBUTING.md`.
-EXPECTED_COMMIT_MSG_SUBJECT_FORMAT='^(build|chore|ci|copy|docs|feat|fix|log|perf|refactor|revert|style|test)(\([^()]+\))?: .+$'
-
-# ALLOWED_COMMIT_MSG_SUBJECT_FORMAT also includes the commit message that bors generates.
-ALLOWED_COMMIT_MSG_SUBJECT_FORMAT="^Merge( #[0-9]+)+$|${EXPECTED_COMMIT_MSG_SUBJECT_FORMAT}"
+# The commit message that bors generates.
+BORS_COMMIT_MSG_SUBJECT_FORMAT="^Merge( #[0-9]+)+$"
 
 # Commit message for Try: https://github.com/bors-ng/bors-ng/blob/2121fae8bd0b6e6e3779b5aa563cce4b2f9aea03/lib/worker/attemptor.ex#L206
-ALLOWED_COMMIT_MSG_SUBJECT_FORMAT="^Try #[0-9]+:(.*?)$|${ALLOWED_COMMIT_MSG_SUBJECT_FORMAT}"
+BORS_COMMIT_MSG_SUBJECT_FORMAT="^Try #[0-9]+:(.*?)$|${BORS_COMMIT_MSG_SUBJECT_FORMAT}"
 
+# The exact format of commit messages is described in `/CONTRIBUTING.md`.
+EXPECTED_COMMIT_MSG_SUBJECT_FORMAT='^(build|chore|ci|copy|docs|feat|fix|log|perf|refactor|revert|style|test)(\([^()]+\))?: .+[^.]$'
 
-set +e
-echo "$COMMIT_MSG_SUBJECT" | grep --quiet --extended-regexp "$ALLOWED_COMMIT_MSG_SUBJECT_FORMAT"
-exitCode=$?
-if [ $exitCode -ne 0 ]; then
-  print_error_header "$COMMIT"
-  echo " * The subject (first line) is not matching the expected regular expression"
-  echo
-  echo "       $EXPECTED_COMMIT_MSG_SUBJECT_FORMAT"
-  echo
-  echo "   . See CONTRIBUTING.md for details."
+if ! echo "$COMMIT_MSG_SUBJECT" | grep --quiet --extended-regexp "${BORS_COMMIT_MSG_SUBJECT_FORMAT}"; then
+    if [ ${#COMMIT_MSG_SUBJECT} -gt 72 ];then
+      print_error_header "$COMMIT"
+      echo " * The subject (first line) is too long. Max length should be 72 characters."
+      echo "   See CONTRIBUTING.md for details."
+    fi
+
+    set +e
+    echo "$COMMIT_MSG_SUBJECT" | grep --quiet --extended-regexp "${EXPECTED_COMMIT_MSG_SUBJECT_FORMAT}"
+    exitCode=$?
+    if [ $exitCode -ne 0 ]; then
+      print_error_header "$COMMIT"
+      echo " * The subject (first line) is not matching the expected regular expression"
+      echo
+      echo "       $EXPECTED_COMMIT_MSG_SUBJECT_FORMAT"
+      echo
+      echo "   . See CONTRIBUTING.md for details."
+    fi
+    set -e
 fi
-set -e
 
 if git show --pretty=format:'%B' --no-expand-tabs --no-patch "$COMMIT" | awk 'NR==2 { print; }' | grep -Eqv '^\s*$';then
   print_error_header "$COMMIT"
@@ -65,7 +66,7 @@ if git show --pretty=format:'%B' --no-expand-tabs --no-patch "$COMMIT" | awk 'NR
 fi
 
 check_name () {
-  if echo "$1" | grep -qE 'tink-bors-ng\[bot\]|dependabot-preview\[bot\]|GitHub';then
+  if echo "$1" | grep -qE 'tink-bors-ng\[bot\]|dependabot-preview\[bot\]|dependabot\[bot\]|GitHub';then
     return
   fi
 
@@ -85,5 +86,21 @@ COMMIT_AUTHOR_NAME=$(git show --pretty=format:'%an' --no-expand-tabs --no-patch 
 check_name "$COMMIT_AUTHOR_NAME" "author"
 COMMIT_COMMITTER_NAME=$(git show --pretty=format:'%cn' --no-expand-tabs --no-patch "$COMMIT")
 check_name "$COMMIT_COMMITTER_NAME" "committer"
+
+check_email () {
+  set +e
+  if ! echo "$1" | grep -qE '.*@(tink.(se|com)|users.noreply.github.com|github.com)'; then
+    print_error_header "$COMMIT"
+    echo " * The $2 e-mail doesn't look like a Tink e-mail address. Is the correct"
+    echo "   e-mail address set? See [1] for how to do this."
+    echo
+    echo "   [1] https://help.github.com/en/articles/setting-your-commit-email-address#setting-your-email-address-for-every-repository-on-your-computer"
+  fi
+  set -e
+}
+COMMIT_AUTHOR_EMAIL=$(git show --pretty=format:'%ae' --no-expand-tabs --no-patch "$COMMIT")
+check_email "$COMMIT_AUTHOR_EMAIL" "author"
+COMMIT_COMMITTER_EMAIL=$(git show --pretty=format:'%ce' --no-expand-tabs --no-patch "$COMMIT")
+check_email "$COMMIT_COMMITTER_EMAIL" "committer"
 
 exit $EXITCODE
