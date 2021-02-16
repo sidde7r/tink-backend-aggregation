@@ -103,6 +103,11 @@ public class GenericResponse {
     }
 
     @JsonIgnore
+    public boolean isMissingBankId() {
+        return containsError(ErrorCodes.MISSING_BANK_ID);
+    }
+
+    @JsonIgnore
     private boolean containsError(String errorCode) {
         return ListUtils.emptyIfNull(tppMessages).stream()
                 .anyMatch(
@@ -120,6 +125,7 @@ public class GenericResponse {
                 .getText();
     }
 
+    @JsonIgnore
     public String getErrorText() {
         return tppMessages.stream()
                 .map(TppMessagesEntity::getText)

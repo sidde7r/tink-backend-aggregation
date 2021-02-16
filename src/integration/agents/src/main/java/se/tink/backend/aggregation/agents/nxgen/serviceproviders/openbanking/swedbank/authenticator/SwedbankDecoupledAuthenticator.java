@@ -21,19 +21,25 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swe
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.rpc.AuthenticationStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.rpc.GenericResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticator;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
 public class SwedbankDecoupledAuthenticator implements BankIdAuthenticator<String> {
     private final SwedbankApiClient apiClient;
     private final boolean isSwedbank;
+    private final SupplementalInformationHelper supplementalInformationHelper;
     private String ssn;
     private String autoStartToken;
     private OAuth2Token accessToken;
 
-    public SwedbankDecoupledAuthenticator(SwedbankApiClient apiClient, boolean isSwedbank) {
+    public SwedbankDecoupledAuthenticator(
+            SwedbankApiClient apiClient,
+            boolean isSwedbank,
+            SupplementalInformationHelper supplementalInformationHelper) {
         this.apiClient = apiClient;
         this.isSwedbank = isSwedbank;
+        this.supplementalInformationHelper = supplementalInformationHelper;
     }
 
     @Override
@@ -48,20 +54,33 @@ public class SwedbankDecoupledAuthenticator implements BankIdAuthenticator<Strin
                             .orElseThrow(BankIdError.UNKNOWN::exception);
             return authenticationResponse.getCollectAuthUri();
         } catch (HttpResponseException e) {
-            handleBankIdError(e);
+            handleBankIdError(e.getResponse().getBody(GenericResponse.class));
             throw e;
         }
     }
 
     @Override
     public BankIdStatus collect(String collectAuthUri) throws AuthenticationException {
-        final AuthenticationStatusResponse authenticationStatusResponse;
+        AuthenticationStatusResponse authenticationStatusResponse;
 
         try {
             authenticationStatusResponse = apiClient.collectAuthStatus(ssn, collectAuthUri);
         } catch (HttpResponseException e) {
-            handleBankIdError(e);
-            return BankIdStatus.FAILED_UNKNOWN;
+            GenericResponse errorResponse = e.getResponse().getBody(GenericResponse.class);
+            if (errorResponse.isMissingBankId()) {
+                authenticationStatusResponse =
+                        apiClient.supplyBankId(
+                                ssn,
+                                collectAuthUri,
+                                SwedbankConstants.BANK_IDS.get(
+                                        Integer.parseInt(
+                                                        supplementalInformationHelper
+                                                                .waitForLoginInput())
+                                                - 1));
+            } else {
+                handleBankIdError(errorResponse);
+                throw e;
+            }
         }
 
         if (authenticationStatusResponse.loginCanceled()) {
@@ -84,8 +103,7 @@ public class SwedbankDecoupledAuthenticator implements BankIdAuthenticator<Strin
         }
     }
 
-    private void handleBankIdError(HttpResponseException e) {
-        GenericResponse errorResponse = e.getResponse().getBody(GenericResponse.class);
+    private void handleBankIdError(GenericResponse errorResponse) {
 
         if (errorResponse.isLoginInterrupted()) {
             throw BankIdError.ALREADY_IN_PROGRESS.exception();
@@ -115,8 +133,6 @@ public class SwedbankDecoupledAuthenticator implements BankIdAuthenticator<Strin
         if (errorResponse.hasAuthenticationExpired()) {
             throw BankIdError.TIMEOUT.exception();
         }
-
-        throw e;
     }
 
     @Override
