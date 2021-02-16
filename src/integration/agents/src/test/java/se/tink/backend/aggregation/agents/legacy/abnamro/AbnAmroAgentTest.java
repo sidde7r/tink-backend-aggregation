@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.abnamro;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
@@ -14,6 +15,7 @@ public class AbnAmroAgentTest extends AbstractAgentTest<AbnAmroAgent> {
     }
 
     @Test
+    @Ignore("Broken test")
     public void testEnrollment() throws Exception {
         Credentials credentials = new Credentials();
 

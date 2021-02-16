@@ -1,7 +1,10 @@
 package se.tink.backend.aggregation.agents.creditcards.americanexpress;
 
+import org.junit.Ignore;
+
 /** Common stuff used by multiple American Express tests. */
-class CommonAmericanExpress {
+@Ignore
+public class CommonAmericanExpress {
 
     static final AmericanExpressCredential USER1 =
             new AmericanExpressCredential("fhedberg82", "gablanko24");

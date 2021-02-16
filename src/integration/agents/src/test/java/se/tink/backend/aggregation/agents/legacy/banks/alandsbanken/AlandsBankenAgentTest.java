@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.banks.alandsbanken;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.banks.se.alandsbanken.AlandsBankenAgent;
 import se.tink.backend.aggregation.agents.framework.legacy.AbstractAgentTest;
@@ -20,11 +21,13 @@ public class AlandsBankenAgentTest extends AbstractAgentTest<AlandsBankenAgent> 
     }
 
     @Test
+    @Ignore("Broken test")
     public void testUser1() throws Exception {
         testAgent(USERNAME, PASSWORD);
     }
 
     @Test
+    @Ignore("Broken test")
     public void testExistingUser() throws Exception {
         testAgentWithSensitivePayload(USERNAME, PASSWORD, PAYLOAD);
     }

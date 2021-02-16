@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.demo.banks;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
@@ -17,6 +18,7 @@ import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.rpc.Transfer;
 
+@Ignore("Manual test -- should be put in a separate Bazel package")
 public class RedirectAuthenticationDemoAgentTest {
     private final String SOURCE_IDENTIFIER = "1234567891234";
     private final String DESTINATION_IDENTIFIER = "1434567891234";
