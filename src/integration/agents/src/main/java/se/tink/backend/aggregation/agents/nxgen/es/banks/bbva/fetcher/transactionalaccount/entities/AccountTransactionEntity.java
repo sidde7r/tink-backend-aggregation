@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transacti
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.common.base.Strings;
 import java.util.Date;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.BranchEntity;
@@ -37,8 +38,16 @@ public class AccountTransactionEntity {
         return Transaction.builder()
                 .setAmount(amount.toTinkAmount())
                 .setDate(transactionDate)
-                .setDescription(humanConceptName)
+                .setDescription(createFullDescription())
                 .build();
+    }
+
+    @JsonIgnore
+    public String createFullDescription() {
+        if (!Strings.isNullOrEmpty(humanExtendedConceptName)) {
+            return humanConceptName + " " + humanExtendedConceptName;
+        }
+        return humanConceptName;
     }
 
     public ConceptEntity getConcept() {
