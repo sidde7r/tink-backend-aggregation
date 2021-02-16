@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.apiclient.SocieteGeneraleApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.fetcher.transactionalaccount.entities.AccountsItemEntity;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.fetcher.transactionalaccount.rpc.AccountsResponse;
@@ -15,6 +16,7 @@ import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccou
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 @RequiredArgsConstructor
+@Slf4j
 public class SocieteGeneraleCreditCardFetcher
         implements AccountFetcher<CreditCardAccount>,
                 TransactionKeyPaginator<CreditCardAccount, URL> {
@@ -34,5 +36,14 @@ public class SocieteGeneraleCreditCardFetcher
     public TransactionKeyPaginatorResponse<URL> getTransactionsFor(
             CreditCardAccount account, URL key) {
         return societeGeneraleApiClient.getTransactions(account.getApiIdentifier(), key);
+    }
+
+    private CreditCardAccount toTinkCreditCard(AccountsItemEntity entity) {
+        // temporary call to discover if balances are available for credit card
+        log.debug(
+                "Credit card balance response: "
+                        + societeGeneraleApiClient.getCreditCardBalances(
+                                URL.of(entity.getLinks().getBalancesEntity().getHref())));
+        return entity.toTinkCreditCard();
     }
 }

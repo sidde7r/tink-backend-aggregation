@@ -12,4 +12,8 @@ public class LinksEntity {
 
     @JsonProperty("transactions")
     private Href transactionsEntity;
+
+    public Href getBalancesEntity() {
+        return balancesEntity;
+    }
 }

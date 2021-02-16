@@ -33,8 +33,7 @@ public class SocieteGeneraleCreditCardFetcherTest {
         // then
         CreditCardAccount creditCardAccount = response.iterator().next();
         assertThat(response.size()).isEqualTo(1);
-        assertThat(creditCardAccount.getExactBalance())
-                .isEqualTo(ExactCurrencyAmount.of(4579.53, "EUR"));
+        assertThat(creditCardAccount.getExactBalance()).isEqualTo(ExactCurrencyAmount.of(0, "EUR"));
         assertThat(creditCardAccount.getExactAvailableCredit())
                 .isEqualTo(ExactCurrencyAmount.of(0, "EUR"));
         assertThat(creditCardAccount.getName()).isEqualTo("CB Mastercard");

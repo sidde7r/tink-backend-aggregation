@@ -5,7 +5,6 @@ import com.google.common.base.Strings;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import se.tink.backend.aggregation.agents.Href;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.SocieteGeneraleConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
@@ -32,7 +31,7 @@ public class AccountsItemEntity {
     private List<BalancesItemEntity> balances;
 
     @JsonProperty("_links")
-    private Href links;
+    private LinksEntity links;
 
     private String usage;
 
@@ -70,11 +69,12 @@ public class AccountsItemEntity {
     }
 
     public CreditCardAccount toTinkCreditCard() {
+
         return CreditCardAccount.nxBuilder()
                 .withCardDetails(
                         CreditCardModule.builder()
                                 .withCardNumber(accountIdEntity.getOther().getIdentification())
-                                .withBalance(getBalance())
+                                .withBalance(ExactCurrencyAmount.of(0, "EUR"))
                                 .withAvailableCredit(ExactCurrencyAmount.of(0, "EUR"))
                                 .withCardAlias(name)
                                 .build())
@@ -121,5 +121,13 @@ public class AccountsItemEntity {
 
     public boolean isCreditCard() {
         return CashAccountTypeEntity.CARD == cashAccountType;
+    }
+
+    public AccountIdEntity getAccountIdEntity() {
+        return accountIdEntity;
+    }
+
+    public LinksEntity getLinks() {
+        return links;
     }
 }
