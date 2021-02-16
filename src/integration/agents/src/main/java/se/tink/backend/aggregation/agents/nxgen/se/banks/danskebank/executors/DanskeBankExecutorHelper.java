@@ -28,7 +28,6 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.executors.rp
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankJavascriptStringFormatter;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.DanskeBankWebDriverHelper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.ListAccountsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
@@ -40,6 +39,7 @@ import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 import se.tink.libraries.transfer.rpc.Transfer;
+import src.integration.webdriver.WebDriverInitializer;
 
 public class DanskeBankExecutorHelper {
     private static final Logger logger =
@@ -254,7 +254,9 @@ public class DanskeBankExecutorHelper {
         // Execute javascript to get encrypted signature package and finalize package
         WebDriver driver = null;
         try {
-            driver = DanskeBankWebDriverHelper.constructWebDriver();
+            driver =
+                    WebDriverInitializer.constructWebDriver(
+                            DanskeBankConstants.Javascript.USER_AGENT);
             JavascriptExecutor js = (JavascriptExecutor) driver;
             js.executeScript(
                     DanskeBankJavascriptStringFormatter.createSignSEBankIdJavascript(

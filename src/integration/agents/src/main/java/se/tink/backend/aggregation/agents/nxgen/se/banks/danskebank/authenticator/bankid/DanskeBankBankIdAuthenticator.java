@@ -22,7 +22,6 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.authenticato
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankJavascriptStringFormatter;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.DanskeBankWebDriverHelper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.rpc.FinalizeAuthenticationRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.rpc.FinalizeAuthenticationResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticator;
@@ -30,6 +29,7 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import src.integration.webdriver.WebDriverInitializer;
 
 public class DanskeBankBankIdAuthenticator implements BankIdAuthenticator<String> {
     private static final ObjectMapper mapper = new ObjectMapper();
@@ -87,7 +87,9 @@ public class DanskeBankBankIdAuthenticator implements BankIdAuthenticator<String
         // Execute javascript to get encrypted logon package and finalize package
         WebDriver driver = null;
         try {
-            driver = DanskeBankWebDriverHelper.constructWebDriver();
+            driver =
+                    WebDriverInitializer.constructWebDriver(
+                            DanskeBankConstants.Javascript.USER_AGENT);
             JavascriptExecutor js = (JavascriptExecutor) driver;
             js.executeScript(
                     DanskeBankJavascriptStringFormatter.createBankIdJavascript(

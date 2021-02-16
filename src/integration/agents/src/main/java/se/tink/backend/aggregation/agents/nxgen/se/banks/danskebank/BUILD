@@ -22,6 +22,7 @@ java_library(
         "//src/integration/signableoperation/src/main/java/se/tink/libraries/signableoperation/enums",
         "//src/integration/transfer:enums",
         "//src/integration/transfer:rpc",
+        "//src/integration/webdriver",
         "//src/libraries/account_identifier",
         "//src/libraries/date",
         "//src/libraries/giro_validation",
