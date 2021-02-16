@@ -424,6 +424,8 @@ clients:
     aggregatorIdentifier: "Lån og Spar SE"
   se-lan-spar-sverige-testing:
     aggregatorIdentifier: "Lån & Spar Sverige"
+  se-rocker-production:
+    aggregatorIdentifier: "Rocker"
   se-skandiabanken:
     aggregatorIdentifier: "Skandiabanken"
   se-sparbanken-syd-production:
