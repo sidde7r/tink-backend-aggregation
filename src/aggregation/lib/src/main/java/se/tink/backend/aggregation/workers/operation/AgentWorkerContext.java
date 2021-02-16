@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
@@ -96,14 +95,8 @@ public class AgentWorkerContext extends AgentContext implements Managed {
                 Arrays.asList(
                         0, 10, 20, 30, 40, 50, 60, 80, 100, 120, 240, 270, 300, 360, 420, 480, 600);
 
-        public static void inc(
-                MetricRegistry registry,
-                MetricId metricId,
-                String clusterId,
-                boolean dedicatedSuppInfoPath) {
-            MetricId metricIdWithLabel =
-                    metricId.label(CLUSTER_LABEL, clusterId)
-                            .label("dedicatedpath", String.valueOf(dedicatedSuppInfoPath));
+        public static void inc(MetricRegistry registry, MetricId metricId, String clusterId) {
+            MetricId metricIdWithLabel = metricId.label(CLUSTER_LABEL, clusterId);
             registry.meter(metricIdWithLabel).inc();
         }
 
@@ -305,10 +298,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
                         coordinationClient,
                         BarrierName.build(BarrierName.Prefix.SUPPLEMENTAL_INFORMATION, mfaId));
         SupplementalInformationMetrics.inc(
-                getMetricRegistry(),
-                SupplementalInformationMetrics.attempts,
-                getClusterId(),
-                dedicatedSuppInfoPath);
+                getMetricRegistry(), SupplementalInformationMetrics.attempts, getClusterId());
         Stopwatch stopwatch = Stopwatch.createStarted();
         try {
             // Reset barrier.
@@ -331,8 +321,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
                     SupplementalInformationMetrics.inc(
                             getMetricRegistry(),
                             SupplementalInformationMetrics.cancelled,
-                            getClusterId(),
-                            dedicatedSuppInfoPath);
+                            getClusterId());
                     logger.info(
                             "Supplemental information request was cancelled by client (returned null)");
                     return Optional.empty();
@@ -346,16 +335,14 @@ public class AgentWorkerContext extends AgentContext implements Managed {
                     SupplementalInformationMetrics.inc(
                             getMetricRegistry(),
                             SupplementalInformationMetrics.finished_with_empty,
-                            getClusterId(),
-                            dedicatedSuppInfoPath);
+                            getClusterId());
                 } else {
                     logger.info(
                             "Supplemental information response (non-null &  non-empty) has been received");
                     SupplementalInformationMetrics.inc(
                             getMetricRegistry(),
                             SupplementalInformationMetrics.finished,
-                            getClusterId(),
-                            dedicatedSuppInfoPath);
+                            getClusterId());
                 }
 
                 return Optional.of(result);
@@ -364,8 +351,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
                 SupplementalInformationMetrics.inc(
                         getMetricRegistry(),
                         SupplementalInformationMetrics.timedOut,
-                        getClusterId(),
-                        dedicatedSuppInfoPath);
+                        getClusterId());
                 // Did not get lock, release anyways and return.
                 lock.removeBarrier();
             }
@@ -373,10 +359,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         } catch (Exception e) {
             logger.error("Caught exception while waiting for supplemental information", e);
             SupplementalInformationMetrics.inc(
-                    getMetricRegistry(),
-                    SupplementalInformationMetrics.error,
-                    getClusterId(),
-                    dedicatedSuppInfoPath);
+                    getMetricRegistry(), SupplementalInformationMetrics.error, getClusterId());
         } finally {
             // Always clean up the supplemental information
             Credentials credentials = request.getCredentials();
@@ -391,35 +374,10 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         return Optional.empty();
     }
 
-    // Would have put this in a yml config if we had the plumming for one here, but as we don't,
-    // and this is just to not risk the initial deploy, i'll make the canary release this way.
-    // These will be removed once migration is done.
-    private static final double RATIO_SUPPL_INFO_ENDPOINT = 0.2;
-    private final Random random = new Random();
-    private boolean dedicatedSuppInfoPath;
-
     @Override
     public void requestSupplementalInformation(String mfaId, Credentials credentials) {
         supplementalInteractionCounter.inc();
-        dedicatedSuppInfoPath = false;
 
-        if (random.nextDouble() < RATIO_SUPPL_INFO_ENDPOINT) {
-            // new path
-            dedicatedSuppInfoPath = true;
-            getMetricRegistry()
-                    .meter(supplementalInfoUpdateVariant.label("variant", "dedicated-path"))
-                    .inc();
-            updateSupplementalInformation(mfaId, credentials);
-        } else {
-            // old path
-            getMetricRegistry()
-                    .meter(supplementalInfoUpdateVariant.label("variant", "update-credentials"))
-                    .inc();
-            updateCredentialsExcludingSensitiveInformation(credentials, true);
-        }
-    }
-
-    private void updateSupplementalInformation(String mfaId, Credentials credentials) {
         // Execute any event-listeners; this tells the signable operation to update status
         for (AgentEventListener eventListener : eventListeners) {
             eventListener.onUpdateCredentialsStatus();
