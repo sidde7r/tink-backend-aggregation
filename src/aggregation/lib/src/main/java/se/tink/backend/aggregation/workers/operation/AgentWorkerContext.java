@@ -96,8 +96,14 @@ public class AgentWorkerContext extends AgentContext implements Managed {
                 Arrays.asList(
                         0, 10, 20, 30, 40, 50, 60, 80, 100, 120, 240, 270, 300, 360, 420, 480, 600);
 
-        public static void inc(MetricRegistry registry, MetricId metricId, String clusterId) {
-            MetricId metricIdWithLabel = metricId.label(CLUSTER_LABEL, clusterId);
+        public static void inc(
+                MetricRegistry registry,
+                MetricId metricId,
+                String clusterId,
+                boolean dedicatedSuppInfoPath) {
+            MetricId metricIdWithLabel =
+                    metricId.label(CLUSTER_LABEL, clusterId)
+                            .label("dedicatedpath", String.valueOf(dedicatedSuppInfoPath));
             registry.meter(metricIdWithLabel).inc();
         }
 
@@ -299,7 +305,10 @@ public class AgentWorkerContext extends AgentContext implements Managed {
                         coordinationClient,
                         BarrierName.build(BarrierName.Prefix.SUPPLEMENTAL_INFORMATION, mfaId));
         SupplementalInformationMetrics.inc(
-                getMetricRegistry(), SupplementalInformationMetrics.attempts, getClusterId());
+                getMetricRegistry(),
+                SupplementalInformationMetrics.attempts,
+                getClusterId(),
+                dedicatedSuppInfoPath);
         Stopwatch stopwatch = Stopwatch.createStarted();
         try {
             // Reset barrier.
@@ -322,7 +331,8 @@ public class AgentWorkerContext extends AgentContext implements Managed {
                     SupplementalInformationMetrics.inc(
                             getMetricRegistry(),
                             SupplementalInformationMetrics.cancelled,
-                            getClusterId());
+                            getClusterId(),
+                            dedicatedSuppInfoPath);
                     logger.info(
                             "Supplemental information request was cancelled by client (returned null)");
                     return Optional.empty();
@@ -336,14 +346,16 @@ public class AgentWorkerContext extends AgentContext implements Managed {
                     SupplementalInformationMetrics.inc(
                             getMetricRegistry(),
                             SupplementalInformationMetrics.finished_with_empty,
-                            getClusterId());
+                            getClusterId(),
+                            dedicatedSuppInfoPath);
                 } else {
                     logger.info(
                             "Supplemental information response (non-null &  non-empty) has been received");
                     SupplementalInformationMetrics.inc(
                             getMetricRegistry(),
                             SupplementalInformationMetrics.finished,
-                            getClusterId());
+                            getClusterId(),
+                            dedicatedSuppInfoPath);
                 }
 
                 return Optional.of(result);
@@ -352,7 +364,8 @@ public class AgentWorkerContext extends AgentContext implements Managed {
                 SupplementalInformationMetrics.inc(
                         getMetricRegistry(),
                         SupplementalInformationMetrics.timedOut,
-                        getClusterId());
+                        getClusterId(),
+                        dedicatedSuppInfoPath);
                 // Did not get lock, release anyways and return.
                 lock.removeBarrier();
             }
@@ -360,7 +373,10 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         } catch (Exception e) {
             logger.error("Caught exception while waiting for supplemental information", e);
             SupplementalInformationMetrics.inc(
-                    getMetricRegistry(), SupplementalInformationMetrics.error, getClusterId());
+                    getMetricRegistry(),
+                    SupplementalInformationMetrics.error,
+                    getClusterId(),
+                    dedicatedSuppInfoPath);
         } finally {
             // Always clean up the supplemental information
             Credentials credentials = request.getCredentials();
@@ -380,13 +396,16 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     // These will be removed once migration is done.
     private static final double RATIO_SUPPL_INFO_ENDPOINT = 0;
     private final Random random = new Random();
+    private boolean dedicatedSuppInfoPath;
 
     @Override
     public void requestSupplementalInformation(String mfaId, Credentials credentials) {
         supplementalInteractionCounter.inc();
+        dedicatedSuppInfoPath = false;
 
         if (random.nextDouble() < RATIO_SUPPL_INFO_ENDPOINT) {
             // new path
+            dedicatedSuppInfoPath = true;
             getMetricRegistry()
                     .meter(supplementalInfoUpdateVariant.label("variant", "dedicated-path"))
                     .inc();
