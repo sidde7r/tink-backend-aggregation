@@ -1,8 +1,10 @@
 package se.tink.backend.aggregation.agents.module.agentclass.testobject;
 
+import org.junit.Ignore;
 import se.tink.backend.aggregation.agents.agent.Agent;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 
+@Ignore
 public final class TestAgentClass implements Agent {
 
     @Override
