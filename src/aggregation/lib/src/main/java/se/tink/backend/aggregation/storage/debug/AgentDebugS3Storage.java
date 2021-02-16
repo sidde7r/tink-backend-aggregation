@@ -47,7 +47,8 @@ public class AgentDebugS3Storage implements AgentDebugStorageHandler {
         return Objects.nonNull(configuration)
                 && Objects.nonNull(configuration.getUrl())
                 && Objects.nonNull(configuration.getAgentDebugBucketName())
-                && Objects.nonNull(configuration.getRegion());
+                && Objects.nonNull(configuration.getRegion())
+                && Objects.nonNull(configuration.getLongTermStorageDisputeBasePrefix());
     }
 
     private String putObject(String content, String fileName) throws AmazonServiceException {

@@ -13,6 +13,8 @@ public class S3StorageConfiguration {
 
     @JsonProperty private String agentDebugBucketName;
 
+    @JsonProperty private String longTermStorageDisputeBasePrefix;
+
     public S3StorageConfiguration() {}
 
     public String getUrl() {
@@ -45,5 +47,13 @@ public class S3StorageConfiguration {
 
     public void setAgentDebugBucketName(String agentDebugBucketName) {
         this.agentDebugBucketName = agentDebugBucketName;
+    }
+
+    public String getLongTermStorageDisputeBasePrefix() {
+        return longTermStorageDisputeBasePrefix;
+    }
+
+    public void setLongTermStorageDisputeBasePrefix(String longTermStorageDisputeBasePrefix) {
+        this.longTermStorageDisputeBasePrefix = longTermStorageDisputeBasePrefix;
     }
 }
