@@ -25,7 +25,7 @@ spec:
         {{ .Values.grafanaLink }}
       summary: Login success rate is below 90% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
         the last hour.
-      tags: {{ .Values.thundercatsTags }}
+      tags: {{ .Values.tags }}
 
   - alert: LoginSuccessRateBelow80WithAttemptLimitSE
     expr: |
@@ -46,7 +46,7 @@ spec:
         {{ .Values.grafanaLink }}
       summary: Login success rate is below 80% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
         the last hour.
-      tags: {{ .Values.thundercatsTags }}
+      tags: {{ .Values.tags }}
 
   - alert: LoginSuccessRateBelow70WithAttemptLimitSE
     expr: |
@@ -67,7 +67,7 @@ spec:
         {{ .Values.grafanaLink }}
       summary: Login success rate is below 70% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
         the last hour.
-      tags: {{ .Values.thundercatsTags }}
+      tags: {{ .Values.tags }}
 
   - alert: LoginSuccessRateBelow60WithAttemptLimitSE
     expr: |
@@ -86,7 +86,7 @@ spec:
         {{ .Values.grafanaLink }}
       summary: Login success rate is below 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
         the last hour.
-      tags: {{ .Values.thundercatsTags }}
+      tags: {{ .Values.tags }}
 
   - alert: RefreshSuccessRateBelow90WithAttemptLimitSE
     expr: |
@@ -107,7 +107,7 @@ spec:
         {{ .Values.grafanaLink }}
       summary: Refresh success rate is below 90% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
         the last 30 minutes for <{ $labels.type }>.
-      tags: {{ .Values.thundercatsTags }}
+      tags: {{ .Values.tags }}
 
   - alert: RefreshSuccessRateBelow80WithAttemptLimitSE
     expr: |
@@ -128,7 +128,7 @@ spec:
         {{ .Values.grafanaLink }}
       summary: Refresh success rate is below 80% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
         the last 30 minutes for <{ $labels.type }>.
-      tags: {{ .Values.thundercatsTags }}
+      tags: {{ .Values.tags }}
 
   - alert: RefreshSuccessRateBelow70WithAttemptLimitSE
     expr: |
@@ -149,7 +149,7 @@ spec:
         {{ .Values.grafanaLink }}
       summary: Refresh success rate is below 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
         the last 30 minutes for <{ $labels.type }>.
-      tags: {{ .Values.thundercatsTags }}
+      tags: {{ .Values.tags }}
 
   - alert: RefreshSuccessRateBelow60WithAttemptLimitSE
     expr: |
@@ -168,7 +168,7 @@ spec:
         {{ .Values.grafanaLink }}
       summary: Refresh success rate is below 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
         the last 30 minutes for <{ $labels.type }>.
-      tags: {{ .Values.thundercatsTags }}
+      tags: {{ .Values.tags }}
 
   ### Bank side failures
   - alert: BankServerUnavailableForLoginSE
@@ -188,7 +188,7 @@ spec:
         {{ .Values.grafanaLink }}
       summary: Login unavailable rate is above 50% ( <{ $value }> ) for <{ $labels.className }>
         the last 30 minutes.
-      tags: {{ .Values.thundercatsTags }}
+      tags: {{ .Values.tags }}
 
   - alert: BankServerUnavailableForRefreshSE
     expr: |
@@ -207,7 +207,7 @@ spec:
         {{ .Values.grafanaLink }}
       summary: Refresh unavailable rate is above 50% ( <{ $value }> ) for <{ $labels.className }>
         the last 30 minutes.
-      tags: {{ .Values.thundercatsTags }}
+      tags: {{ .Values.tags }}
 
   ### Provider level fails
   - alert: HighProviderErrorRatioSE
@@ -228,7 +228,7 @@ spec:
         {{ .Values.grafanaLink }}
       summary: Provider <{ $labels.provider }> has failed over 50%
         of its operations the past 60 minutes
-      tags: {{ .Values.thundercatsTags }}
+      tags: {{ .Values.tags }}
 
   ### Agent level login failures
   - alert: HighProviderFailedLoginRatioSE
@@ -251,4 +251,4 @@ spec:
         {{ .Values.grafanaLink }}
       summary: Agent <{ $labels.className }> has failed over 20%
         of its login attempts the past 60 minutes.
-      tags: {{ .Values.thundercatsTags }}
+      tags: {{ .Values.tags }}

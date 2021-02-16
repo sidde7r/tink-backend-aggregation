@@ -28,7 +28,7 @@ spec:
              {{ .Values.grafanaLink }}
         summary: Login success rate for RE agents and all authentication types with temporary errors is between 70 - 65% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
                       the last 30 minutes.
-        tags: {{ .Values.fluffyTags }}
+        tags: {{ .Values.tags }}
 
     - alert: AllLoginSuccessRatesBelow65AndGreater55WithTemporaryErrorsAndAttemptLimitES_RE
       expr: |
@@ -47,7 +47,7 @@ spec:
              {{ .Values.grafanaLink }}
         summary: Login success rate for RE agents and for all authentication types with temporary errors is between 65 - 55% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
              the last 30 minutes.
-        tags: {{ .Values.fluffyTags }}
+        tags: {{ .Values.tags }}
 
     - alert: AllLoginSuccessRatesBelow55AndGreater50WithTemporaryErrorsAndAttemptLimitES_RE
       expr: |
@@ -66,7 +66,7 @@ spec:
              {{ .Values.grafanaLink }}
         summary: Login success rate for RE agents and for all authentication types with temporary errors is between 55 - 50% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
              the last 30 minutes.
-        tags: {{ .Values.fluffyTags }}
+        tags: {{ .Values.tags }}
 
     - alert: AllLoginSuccessRatesBelow50WithTemporaryErrorsAndAttemptLimitES_RE
       expr: |
@@ -83,7 +83,7 @@ spec:
              {{ .Values.grafanaLink }}
         summary: Login success rate for RE agents and for all authentication types with temporary errors is below 50% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
              the last 30 minutes.
-        tags: {{ .Values.fluffyTags }}
+        tags: {{ .Values.tags }}
 
     #########################################################
     ### Split login success rates - Temporary Errors - RE ###
@@ -106,7 +106,7 @@ spec:
              {{ .Values.grafanaLink }}
         summary: Login success rate for RE agents and for one of login type with temporary errors is between 70 - 65% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
              the last 30 minutes.
-        tags: {{ .Values.fluffyTags }}
+        tags: {{ .Values.tags }}
 
     - alert: SplitLoginSuccessRatesBelow65AndGreater55WithTemporaryErrorsAndAttemptLimitES_RE
       expr: |
@@ -125,7 +125,7 @@ spec:
              {{ .Values.grafanaLink }}
         summary: Login success rate for RE agents and for one of login type with temporary errors is between 65 - 55% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
              the last 30 minutes.
-        tags: {{ .Values.fluffyTags }}
+        tags: {{ .Values.tags }}
 
     - alert: SplitLoginSuccessRatesBelow55AndGreater50WithTemporaryErrorsAndAttemptLimitES_RE
       expr: |
@@ -144,7 +144,7 @@ spec:
              {{ .Values.grafanaLink }}
         summary: Login success rate for RE agents and for one of login type with temporary errors is between 55 - 50% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
              the last 30 minutes.
-        tags: {{ .Values.fluffyTags }}
+        tags: {{ .Values.tags }}
 
     - alert: SplitLoginSuccessRatesBelow50WithTemporaryErrorsAndAttemptLimitES_RE
       expr: |
@@ -161,7 +161,7 @@ spec:
              {{ .Values.grafanaLink }}
         summary: Login success rate for RE agents and for one of login type with temporary errors is below 50% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
                         the last 30 minutes.
-        tags: {{ .Values.fluffyTags }}
+        tags: {{ .Values.tags }}
 
     ############################################################
     ### All login success rates - Authentication Errors - RE ###
@@ -184,7 +184,7 @@ spec:
              {{ .Values.grafanaLink }}
         summary: Login success rate for RE agents and all authentication types with authentication errors is between 70 - 65% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
              the last 30 minutes.
-        tags: {{ .Values.fluffyTags }}
+        tags: {{ .Values.tags }}
 
     - alert: AllLoginSuccessRatesBelow65AndGreater55WithAuthenticationErrorsAndAttemptLimitES_RE
       expr: |
@@ -203,7 +203,7 @@ spec:
              {{ .Values.grafanaLink }}
         summary: Login success rate for RE agents and for all authentication types with authentication errors is between 65 - 55% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
              the last 30 minutes.
-        tags: {{ .Values.fluffyTags }}
+        tags: {{ .Values.tags }}
 
     - alert: AllLoginSuccessRatesBelow55AndGreater50WithAuthenticationErrorsAndAttemptLimitES_RE
       expr: |
@@ -222,7 +222,7 @@ spec:
              {{ .Values.grafanaLink }}
         summary: Login success rate for RE agents and for all authentication types with authentication errors is between 55 - 50% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
              the last 30 minutes.
-        tags: {{ .Values.fluffyTags }}
+        tags: {{ .Values.tags }}
 
     - alert: AllLoginSuccessRatesBelow50WithAuthenticationErrorsAndAttemptLimitES_RE
       expr: |
@@ -239,7 +239,7 @@ spec:
              {{ .Values.grafanaLink }}
         summary: Login success rate for RE agents and for all authentication types with authentication errors is below 50% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
              the last 30 minutes.
-        tags: {{ .Values.fluffyTags }}
+        tags: {{ .Values.tags }}
 
     ##############################################################
     ### Split login success rates - Authentication Errors - RE ###
@@ -262,7 +262,7 @@ spec:
              {{ .Values.grafanaLink }}
         summary: Login success rate for RE agents and for one of login type with authentication errors is between 70 - 65% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
              the last 30 minutes.
-        tags: {{ .Values.fluffyTags }}
+        tags: {{ .Values.tags }}
 
     - alert: SplitLoginSuccessRatesBelow65AndGreater55WithAuthenticationErrorsAndAttemptLimitES_RE
       expr: |
@@ -281,7 +281,7 @@ spec:
              {{ .Values.grafanaLink }}
         summary: Login success rate for RE agents and for one of login type with authentication errors is between 65 - 55% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
              the last 30 minutes.
-        tags: {{ .Values.fluffyTags }}
+        tags: {{ .Values.tags }}
 
     - alert: SplitLoginSuccessRatesBelow55AndGreater50WithAuthenticationErrorsAndAttemptLimitES_RE
       expr: |
@@ -300,7 +300,7 @@ spec:
              {{ .Values.grafanaLink }}
         summary: Login success rate for RE agents and for one of login type with authentication errors is between 55 - 50% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
              the last 30 minutes.
-        tags: {{ .Values.fluffyTags }}
+        tags: {{ .Values.tags }}
 
     - alert: SplitLoginSuccessRatesBelow50WithAuthenticationErrorsAndAttemptLimitES_RE
       expr: |
@@ -317,7 +317,7 @@ spec:
              {{ .Values.grafanaLink }}
         summary: Login success rate for RE agents and for one of login type with authentication errors is below 50% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
              the last 30 minutes.
-        tags: {{ .Values.fluffyTags }}
+        tags: {{ .Values.tags }}
 
     ##################################################
     ### All login success rates - Bank Errors - RE ###
@@ -340,7 +340,7 @@ spec:
              {{ .Values.grafanaLink }}
         summary: Login success rate for RE agents and all Bank types with Bank errors is between 70 - 65% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
              the last 30 minutes.
-        tags: {{ .Values.fluffyTags }}
+        tags: {{ .Values.tags }}
 
     - alert: AllLoginSuccessRatesBelow65AndGreater55WithBankErrorsAndAttemptLimitES_RE
       expr: |
@@ -359,7 +359,7 @@ spec:
              {{ .Values.grafanaLink }}
         summary: Login success rate for RE agents and for all Bank types with Bank errors is between 65 - 55% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
              the last 30 minutes.
-        tags: {{ .Values.fluffyTags }}
+        tags: {{ .Values.tags }}
 
     - alert: AllLoginSuccessRatesBelow55AndGreater50WithBankErrorsAndAttemptLimitES_RE
       expr: |
@@ -378,7 +378,7 @@ spec:
              {{ .Values.grafanaLink }}
         summary: Login success rate for RE agents and for all Bank types with Bank errors is between 55 - 50% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
              the last 30 minutes.
-        tags: {{ .Values.fluffyTags }}
+        tags: {{ .Values.tags }}
 
     - alert: AllLoginSuccessRatesBelow50WithBankErrorsAndAttemptLimitES_RE
       expr: |
@@ -395,7 +395,7 @@ spec:
              {{ .Values.grafanaLink }}
         summary: Login success rate for RE agents and for all Bank types with Bank errors is below 50% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
              the last 30 minutes.
-        tags: {{ .Values.fluffyTags }}
+        tags: {{ .Values.tags }}
 
     ####################################################
     ### Split login success rates - Bank Errors - RE ###
@@ -418,7 +418,7 @@ spec:
              {{ .Values.grafanaLink }}
         summary: Login success rate for RE agents and for one of login type with Bank errors is between 70 - 65% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
              the last 30 minutes.
-        tags: {{ .Values.fluffyTags }}
+        tags: {{ .Values.tags }}
 
     - alert: SplitLoginSuccessRatesBelow65AndGreater55WithBankErrorsAndAttemptLimitES_RE
       expr: |
@@ -437,7 +437,7 @@ spec:
              {{ .Values.grafanaLink }}
         summary: Login success rate for RE agents and for one of login type with Bank errors is between 65 - 55% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
              the last 30 minutes.
-        tags: {{ .Values.fluffyTags }}
+        tags: {{ .Values.tags }}
 
     - alert: SplitLoginSuccessRatesBelow55AndGreater50WithBankErrorsAndAttemptLimitES_RE
       expr: |
@@ -456,7 +456,7 @@ spec:
              {{ .Values.grafanaLink }}
         summary: Login success rate for RE agents and for one of login type with Bank errors is between 55 - 50% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
              the last 30 minutes.
-        tags: {{ .Values.fluffyTags }}
+        tags: {{ .Values.tags }}
 
     - alert: SplitLoginSuccessRatesBelow50WithBankErrorsAndAttemptLimitES_RE
       expr: |
@@ -473,7 +473,7 @@ spec:
              {{ .Values.grafanaLink }}
         summary: Login success rate for RE agents and for one of login type with Bank errors is below 50% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
              the last 30 minutes.
-        tags: {{ .Values.fluffyTags }}
+        tags: {{ .Values.tags }}
 
     ###################################################
     ### All login success rates - Agent Errors - RE ###
@@ -496,7 +496,7 @@ spec:
              {{ .Values.grafanaLink }}
         summary: Login success rate for RE agents and all Agent types with Agent errors is between 70 - 65% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
              the last 30 minutes.
-        tags: {{ .Values.fluffyTags }}
+        tags: {{ .Values.tags }}
 
     - alert: AllLoginSuccessRatesBelow65AndGreater55WithAgentErrorsAndAttemptLimitES_RE
       expr: |
@@ -515,7 +515,7 @@ spec:
              {{ .Values.grafanaLink }}
         summary: Login success rate for RE agents and for all Agent types with Agent errors is between 65 - 55% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
              the last 30 minutes.
-        tags: {{ .Values.fluffyTags }}
+        tags: {{ .Values.tags }}
 
     - alert: AllLoginSuccessRatesBelow55AndGreater50WithAgentErrorsAndAttemptLimitES_RE
       expr: |
@@ -534,7 +534,7 @@ spec:
              {{ .Values.grafanaLink }}
         summary: Login success rate for RE agents and for all Agent types with Agent errors is between 55 - 50% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
              the last 30 minutes.
-        tags: {{ .Values.fluffyTags }}
+        tags: {{ .Values.tags }}
 
     - alert: AllLoginSuccessRatesBelow50WithAgentErrorsAndAttemptLimitES_RE
       expr: |
@@ -551,7 +551,7 @@ spec:
              {{ .Values.grafanaLink }}
         summary: Login success rate for RE agents and for all Agent types with Agent errors is below 50% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
              the last 30 minutes.
-        tags: {{ .Values.fluffyTags }}
+        tags: {{ .Values.tags }}
 
     #####################################################
     ### Split login success rates - Agent Errors - RE ###
@@ -574,7 +574,7 @@ spec:
              {{ .Values.grafanaLink }}
         summary: Login success rate for RE agents and for one of login type with Agent errors is between 70 - 65% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
              the last 30 minutes.
-        tags: {{ .Values.fluffyTags }}
+        tags: {{ .Values.tags }}
 
     - alert: SplitLoginSuccessRatesBelow65AndGreater55WithAgentErrorsAndAttemptLimitES_RE
       expr: |
@@ -593,7 +593,7 @@ spec:
              {{ .Values.grafanaLink }}
         summary: Login success rate for RE agents and for one of login type with Agent errors is between 65 - 55% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
              the last 30 minutes.
-        tags: {{ .Values.fluffyTags }}
+        tags: {{ .Values.tags }}
 
     - alert: SplitLoginSuccessRatesBelow55AndGreater50WithAgentErrorsAndAttemptLimitES_RE
       expr: |
@@ -612,7 +612,7 @@ spec:
              {{ .Values.grafanaLink }}
         summary: Login success rate for RE agents and for one of login type with Agent errors is between 55 - 50% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
              the last 30 minutes.
-        tags: {{ .Values.fluffyTags }}
+        tags: {{ .Values.tags }}
 
     - alert: SplitLoginSuccessRatesBelow50WithAgentErrorsAndAttemptLimitES_RE
       expr: |
@@ -629,7 +629,7 @@ spec:
              {{ .Values.grafanaLink }}
         summary: Login success rate for RE agents and for one of login type with Agent errors is below 50% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
              the last 30 minutes.
-        tags: {{ .Values.fluffyTags }}
+        tags: {{ .Values.tags }}
 
     #################################################
     ### All login success rates - All Errors - RE ###
@@ -652,7 +652,7 @@ spec:
              {{ .Values.grafanaLink }}
         summary: Login success rate for RE agents and all Agent types with All Errors is between 70 - 65% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
              the last 30 minutes.
-        tags: {{ .Values.fluffyTags }}
+        tags: {{ .Values.tags }}
 
     - alert: AllLoginSuccessRatesBelow65AndGreater55WithAllErrorsAndAttemptLimitES_RE
       expr: |
@@ -671,7 +671,7 @@ spec:
              {{ .Values.grafanaLink }}
         summary: Login success rate for RE agents and for all Agent types with All Errors is between 65 - 55% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
              the last 30 minutes.
-        tags: {{ .Values.fluffyTags }}
+        tags: {{ .Values.tags }}
 
     - alert: AllLoginSuccessRatesBelow55AndGreater50WithAllErrorsAndAttemptLimitES_RE
       expr: |
@@ -690,7 +690,7 @@ spec:
              {{ .Values.grafanaLink }}
         summary: Login success rate for RE agents and for all Agent types with All Errors is between 55 - 50% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
              the last 30 minutes.
-        tags: {{ .Values.fluffyTags }}
+        tags: {{ .Values.tags }}
 
     - alert: AllLoginSuccessRatesBelow50WithAllErrorsAndAttemptLimitES_RE
       expr: |
@@ -707,7 +707,7 @@ spec:
              {{ .Values.grafanaLink }}
         summary: Login success rate for RE agents and for all Agent types with All Errors is below 50% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
              the last 30 minutes.
-        tags: {{ .Values.fluffyTags }}
+        tags: {{ .Values.tags }}
 
     ###################################################
     ### Split login success rates - All Errors - RE ###
@@ -730,7 +730,7 @@ spec:
              {{ .Values.grafanaLink }}
         summary: Login success rate for RE agents and for one of login type with All Errors is between 70 - 65% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
              the last 30 minutes.
-        tags: {{ .Values.fluffyTags }}
+        tags: {{ .Values.tags }}
 
     - alert: SplitLoginSuccessRatesBelow65AndGreater55WithAllErrorsAndAttemptLimitES_RE
       expr: |
@@ -749,7 +749,7 @@ spec:
              {{ .Values.grafanaLink }}
         summary: Login success rate for RE agents and for one of login type with All Errors is between 65 - 55% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
              the last 30 minutes.
-        tags: {{ .Values.fluffyTags }}
+        tags: {{ .Values.tags }}
 
     - alert: SplitLoginSuccessRatesBelow55AndGreater50WithAllErrorsAndAttemptLimitES_RE
       expr: |
@@ -768,7 +768,7 @@ spec:
              {{ .Values.grafanaLink }}
         summary: Login success rate for RE agents and for one of login type with All Errors is between 55 - 50% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
              the last 30 minutes.
-        tags: {{ .Values.fluffyTags }}
+        tags: {{ .Values.tags }}
 
     - alert: SplitLoginSuccessRatesBelow50WithAllErrorsAndAttemptLimitES_RE
       expr: |
@@ -785,7 +785,7 @@ spec:
              {{ .Values.grafanaLink }}
         summary: Login success rate for RE agents and for one of login type with All Errors is below 50% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
              the last 30 minutes.
-        tags: {{ .Values.fluffyTags }}
+        tags: {{ .Values.tags }}
 
     ##### OpenBanking #####
 
@@ -808,7 +808,7 @@ spec:
              {{ .Values.grafanaLink }}
         summary: Login success rate for OB agents and for all authentication types with temporary errors is below 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
              the last 30 minutes.
-        tags: {{ .Values.fluffyTags }}
+        tags: {{ .Values.tags }}
 
     #########################################################
     ### Split login success rates - Temporary Errors - OB ###
@@ -829,7 +829,7 @@ spec:
              {{ .Values.grafanaLink }}
         summary: Login success rate for OB agents and for one of login type with temporary errors is below 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
              the last 30 minutes.
-        tags: {{ .Values.fluffyTags }}
+        tags: {{ .Values.tags }}
 
     ############################################################
     ### All login success rates - Authentication Errors - OB ###
@@ -850,7 +850,7 @@ spec:
              {{ .Values.grafanaLink }}
         summary: Login success rate for OB agents and for all authentication types with authentication errors is below 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
              the last 30 minutes.
-        tags: {{ .Values.fluffyTags }}
+        tags: {{ .Values.tags }}
 
     ##############################################################
     ### Split login success rates - Authentication Errors - OB ###
@@ -871,7 +871,7 @@ spec:
              {{ .Values.grafanaLink }}
         summary: Login success rate for OB agents and for one of login type with authentication errors is below 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
              the last 30 minutes.
-        tags: {{ .Values.fluffyTags }}
+        tags: {{ .Values.tags }}
 
     ##################################################
     ### All login success rates - Bank Errors - OB ###
@@ -892,7 +892,7 @@ spec:
              {{ .Values.grafanaLink }}
         summary: Login success rate for OB agents and for all Bank types with Bank errors is below 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
              the last 30 minutes.
-        tags: {{ .Values.fluffyTags }}
+        tags: {{ .Values.tags }}
 
     ####################################################
     ### Split login success rates - Bank Errors - OB ###
@@ -913,7 +913,7 @@ spec:
              {{ .Values.grafanaLink }}
         summary: Login success rate for OB agents and for one of login type with Bank errors is below 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
              the last 30 minutes.
-        tags: {{ .Values.fluffyTags }}
+        tags: {{ .Values.tags }}
 
     ###################################################
     ### All login success rates - Agent Errors - OB ###
@@ -934,7 +934,7 @@ spec:
              {{ .Values.grafanaLink }}
         summary: Login success rate for OB agents and for all Agent types with Agent errors is below 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
              the last 30 minutes.
-        tags: {{ .Values.fluffyTags }}
+        tags: {{ .Values.tags }}
 
     #####################################################
     ### Split login success rates - Agent Errors - OB ###
@@ -955,7 +955,7 @@ spec:
              {{ .Values.grafanaLink }}
         summary: Login success rate for OB agents and for one of login type with Agent errors is below 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
              the last 30 minutes.
-        tags: {{ .Values.fluffyTags }}
+        tags: {{ .Values.tags }}
 
     #################################################
     ### All login success rates - All Errors - OB ###
@@ -976,7 +976,7 @@ spec:
              {{ .Values.grafanaLink }}
         summary: Login success rate for OB agents and for all Agent types with All Errors is below 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
              the last 30 minutes.
-        tags: {{ .Values.fluffyTags }}
+        tags: {{ .Values.tags }}
 
     ###################################################
     ### Split login success rates - All Errors - OB ###
@@ -997,7 +997,7 @@ spec:
              {{ .Values.grafanaLink }}
         summary: Login success rate for OB agents and for one of login type with All Errors is below 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
              the last 30 minutes.
-        tags: {{ .Values.fluffyTags }}
+        tags: {{ .Values.tags }}
 
     #### Agent refresh ####
 
@@ -1022,7 +1022,7 @@ spec:
              {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is between 70 - 65% because of bank issues ( <{ $value }> ) for <{ $labels.className }>
                       the last 30 minutes for <{ $labels.type }>
-        tags: {{ .Values.fluffyTags }}
+        tags: {{ .Values.tags }}
 
     - alert: AgentRefreshesBelow65Greater55DueToBankServerErrorWithRateLimitES
       expr: |
@@ -1041,7 +1041,7 @@ spec:
              {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is between 65 - 55% because of bank issues ( <{ $value }> ) for <{ $labels.className }>
                     the last 30 minutes for <{ $labels.type }>
-        tags: {{ .Values.fluffyTags }}
+        tags: {{ .Values.tags }}
 
     - alert: AgentRefreshesBelow55Greater50DueToBankServerErrorWithRateLimitES
       expr: |
@@ -1060,7 +1060,7 @@ spec:
              {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is between 55 - 50% because of bank issues ( <{ $value }> ) for <{ $labels.className }>
                     the last 30 minutes for <{ $labels.type }>
-        tags: {{ .Values.fluffyTags }}
+        tags: {{ .Values.tags }}
 
     - alert: AgentRefreshesBelow50DueToBankServerErrorWithRateLimitES
       expr: |
@@ -1077,7 +1077,7 @@ spec:
              {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is below 50% because of bank issues ( <{ $value }> ) for <{ $labels.className }>
             the last 30 minutes for <{ $labels.type }>
-        tags: {{ .Values.fluffyTags }}
+        tags: {{ .Values.tags }}
 
     #########################################
     ### AgentServerErrors - Agent Refresh ###
@@ -1100,7 +1100,7 @@ spec:
              {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is between 70 - 65% because of agent issues ( <{ $value }> ) for <{ $labels.className }>
             the last 30 minutes for <{ $labels.type }>
-        tags:  {{ .Values.fluffyTags }}
+        tags:  {{ .Values.tags }}
 
     - alert: AgentRefreshesBelow65Greater55DueToAgentServerErrorWithRateLimitES
       expr: |
@@ -1119,7 +1119,7 @@ spec:
              {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is between 65 - 55% because of agent issues ( <{ $value }> ) for <{ $labels.className }>
             the last 30 minutes for <{ $labels.type }>
-        tags:  {{ .Values.fluffyTags }}
+        tags:  {{ .Values.tags }}
 
     - alert: AgentRefreshesBelow55Greater50DueToAgentServerErrorWithRateLimitES
       expr: |
@@ -1138,7 +1138,7 @@ spec:
              {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is between 55 - 50% because of agent issues ( <{ $value }> ) for <{ $labels.className }>
             the last 30 minutes for <{ $labels.type }>
-        tags: {{ .Values.fluffyTags }}
+        tags: {{ .Values.tags }}
 
     - alert: AgentRefreshesBelow50DueToAgentServerErrorWithRateLimitES
       expr: |
@@ -1155,7 +1155,7 @@ spec:
              {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is below 50% because of agent issues ( <{ $value }> ) for <{ $labels.className }>
             the last 30 minutes for <{ $labels.type }>
-        tags: {{ .Values.fluffyTags }}
+        tags: {{ .Values.tags }}
 
     #################################
     ### AllErrors - Agent Refresh ###
@@ -1178,7 +1178,7 @@ spec:
              {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is between 70 - 65% because of all issues ( <{ $value }> ) for <{ $labels.className }>
             the last 30 minutes for <{ $labels.type }>
-        tags: {{ .Values.fluffyTags }}
+        tags: {{ .Values.tags }}
 
     - alert: AgentRefreshesBelow65Greater55DueToAllErrorWithRateLimitES
       expr: |
@@ -1197,7 +1197,7 @@ spec:
              {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is between 65 - 55% because of all issues ( <{ $value }> ) for <{ $labels.className }>
               the last 30 minutes for <{ $labels.type }>
-        tags: {{ .Values.fluffyTags }}
+        tags: {{ .Values.tags }}
 
     - alert: AgentRefreshesBelow55Greater50DueToAllErrorWithRateLimitES
       expr: |
@@ -1216,7 +1216,7 @@ spec:
              {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is between 55 - 50% because of all issues ( <{ $value }> ) for <{ $labels.className }>
               the last 30 minutes for <{ $labels.type }>
-        tags: {{ .Values.fluffyTags }}
+        tags: {{ .Values.tags }}
 
     - alert: AgentRefreshesBelow50DueToAllErrorWithRateLimitES
       expr: |
@@ -1233,7 +1233,7 @@ spec:
              {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is below 50% because of all issues ( <{ $value }> ) for <{ $labels.className }>
               the last 30 minutes for <{ $labels.type }>
-        tags: {{ .Values.fluffyTags }}
+        tags: {{ .Values.tags }}
 
     ###############################################
     ### AllErrors - Partially Completed Refresh ###
@@ -1256,7 +1256,7 @@ spec:
              {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is between 70 - 65% because of all issues ( <{ $value }> ) for <{ $labels.className }>
                the last 30 minutes.
-        tags: {{ .Values.fluffyTags }}
+        tags: {{ .Values.tags }}
 
     - alert: AgentRefreshesBelow65Greater55DueToPartiallyCompletedErrorWithRateLimitES
       expr: |
@@ -1275,7 +1275,7 @@ spec:
              {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is between 65 - 55% because of all issues ( <{ $value }> ) for <{ $labels.className }>
                the last 30 minutes.
-        tags: {{ .Values.fluffyTags }}
+        tags: {{ .Values.tags }}
 
     - alert: AgentRefreshesBelow55Greater50DueToPartiallyCompletedErrorWithRateLimitES
       expr: |
@@ -1294,7 +1294,7 @@ spec:
              {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is between 55 - 50% because of all issues ( <{ $value }> ) for <{ $labels.className }>
                the last 30 minutes.
-        tags: {{ .Values.fluffyTags }}
+        tags: {{ .Values.tags }}
 
     - alert: AgentRefreshesBelow50DueToPartiallyCompletedErrorWithRateLimitES
       expr: |
@@ -1311,4 +1311,4 @@ spec:
              {{ .Values.grafanaLink }}
         summary: Refresh unavailable rate is below 5 0% because of all issues ( <{ $value }> ) for <{ $labels.className }>
                the last 30 minutes.
-        tags: {{ .Values.fluffyTags }}
+        tags: {{ .Values.tags }}

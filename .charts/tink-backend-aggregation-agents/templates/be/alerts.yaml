@@ -21,7 +21,7 @@ spec:
         description: {{ .Values.kibanaLink }}
           {{ .Values.grafanaLink }}
         summary: Login success rate is below 75% ( <{ $value }> ) the last hour.
-        tags: {{ .Values.minionsTags }}
+        tags: {{ .Values.tags }}
 
     - alert: RefreshSuccessRateLowWithAttemptLimitBE
       expr: |
@@ -39,7 +39,7 @@ spec:
           {{ .Values.grafanaLink }}
         summary: Refresh success rate is below 90% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
           the last 30 minutes for <{ $labels.type }>.
-        tags: {{ .Values.minionsTags }}
+        tags: {{ .Values.tags }}
 
     ### Provider level fails
     - alert: HighProviderErrorRatioBE
@@ -60,7 +60,7 @@ spec:
           {{ .Values.grafanaLink }}
         summary: Provider <{ $labels.provider }> has failed over 50%
           of its operations the past 60 minutes
-        tags: {{ .Values.minionsTags }}
+        tags: {{ .Values.tags }}
 
     ### Agent level login failures
     - alert: HighProviderFailedLoginRatioBE
@@ -83,7 +83,7 @@ spec:
           {{ .Values.grafanaLink }}
         summary: Agent <{ $labels.className }> has failed over 20%
           of its login attempts the past 60 minutes.
-        tags: {{ .Values.minionsTags }}
+        tags: {{ .Values.tags }}
 
     - alert: LongTermAuthenticationErrorOver90%BE
       expr: |
@@ -100,7 +100,7 @@ spec:
         description: {{ .Values.kibanaLink }}
           {{ .Values.grafanaLink }}
         summary: Login success rate is below 10% ( <{ $value }> ) the last 6 hours.
-        tags: {{ .Values.minionsTags }}
+        tags: {{ .Values.tags }}
 
     - alert: LongTermAuthenticationCancelledOver90%BE
       expr: |
@@ -121,5 +121,5 @@ spec:
         description: {{ .Values.kibanaLink }}
           {{ .Values.grafanaLink }}
         summary: Login success rate is below 10% ( <{ $value }> ) the last 6 hours.
-        tags: {{ .Values.minionsTags }}
+        tags: {{ .Values.tags }}
 
