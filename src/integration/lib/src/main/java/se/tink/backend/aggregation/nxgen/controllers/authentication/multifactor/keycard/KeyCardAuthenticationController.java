@@ -75,8 +75,7 @@ public class KeyCardAuthenticationController implements TypedAuthenticator {
                 supplementalInformationController.askSupplementalInformationSync(
                         getKeyCardIndexField(keyCardInitValues), getKeyCardValueField());
 
-        authenticator.authenticate(
-                supplementalInformation.get(CommonFields.KeyCardCode.getFieldKey()));
+        authenticator.authenticate(supplementalInformation.get(CommonFields.KeyCardCode.FIELD_KEY));
     }
 
     private Field getKeyCardIndexField(KeyCardInitValues keyCardInitValues) {

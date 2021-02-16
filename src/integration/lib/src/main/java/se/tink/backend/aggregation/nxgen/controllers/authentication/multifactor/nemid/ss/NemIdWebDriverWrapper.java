@@ -2,14 +2,17 @@ package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor
 
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.IFRAME;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import se.tink.libraries.pair.Pair;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -65,10 +68,6 @@ public class NemIdWebDriverWrapper {
                 tryFindDisplayedElement(by)
                         .orElseGet(
                                 () -> {
-                                    log.error(
-                                            "Could not find displayed element by: {}. Page source:\n{}",
-                                            by,
-                                            getFullPageSourceLog());
                                     throw new IllegalStateException(
                                             "Could not find element by " + by);
                                 });
@@ -78,14 +77,7 @@ public class NemIdWebDriverWrapper {
     public void clickButton(By by) {
         tryFindDisplayedElement(by)
                 .orElseThrow(
-                        () -> {
-                            log.error(
-                                    "Could not find displayed button by: {}. Page source:\n{}",
-                                    by,
-                                    getFullPageSourceLog());
-                            return new IllegalStateException(
-                                    "Could not find button element by " + by);
-                        })
+                        () -> new IllegalStateException("Could not find button element by " + by))
                 .click();
     }
 
@@ -100,11 +92,26 @@ public class NemIdWebDriverWrapper {
         return Optional.empty();
     }
 
-    public Optional<Pair<By, WebElement>> searchForFirstElement(By... byArray) {
-        for (By by : byArray) {
+    public ElementsSearchResult searchForFirstElement(
+            List<By> elementSelectors, int timeoutInSeconds) {
+
+        for (int i = 0; i < timeoutInSeconds; i++) {
+
+            Optional<ElementsSearchResult> maybeFindResult =
+                    searchForFirstElement(elementSelectors);
+            if (maybeFindResult.isPresent()) {
+                return maybeFindResult.get();
+            }
+            sleepFor(1_000);
+        }
+        return ElementsSearchResult.empty();
+    }
+
+    private Optional<ElementsSearchResult> searchForFirstElement(List<By> elementSelectors) {
+        for (By by : elementSelectors) {
             Optional<WebElement> maybeElementFound = tryFindElement(by);
             if (maybeElementFound.isPresent()) {
-                return Optional.of(Pair.of(by, maybeElementFound.get()));
+                return Optional.of(ElementsSearchResult.of(by, maybeElementFound.get()));
             }
         }
         return Optional.empty();
@@ -116,5 +123,28 @@ public class NemIdWebDriverWrapper {
 
     private Optional<WebElement> tryFindDisplayedElement(By by) {
         return driver.findElements(by).stream().filter(WebElement::isDisplayed).findFirst();
+    }
+
+    @Data
+    public static class ElementsSearchResult {
+
+        private static final By EMPTY_BY =
+                new By() {
+                    @Override
+                    public List<WebElement> findElements(SearchContext context) {
+                        return Collections.emptyList();
+                    }
+                };
+
+        private final By selector;
+        private final WebElement webElement;
+
+        public static ElementsSearchResult of(By selector, WebElement webElement) {
+            return new ElementsSearchResult(selector, webElement);
+        }
+
+        public static ElementsSearchResult empty() {
+            return new ElementsSearchResult(EMPTY_BY, null);
+        }
     }
 }

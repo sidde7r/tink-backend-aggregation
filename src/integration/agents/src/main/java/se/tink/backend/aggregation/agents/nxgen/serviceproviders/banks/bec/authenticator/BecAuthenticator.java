@@ -89,7 +89,7 @@ public class BecAuthenticator extends StatelessProgressiveAuthenticator {
     }
 
     private AuthenticationStepResponse keyCardAuth(Map<String, String> callbackData) {
-        String challengeResponseValue = callbackData.get(CommonFields.KeyCardCode.getFieldKey());
+        String challengeResponseValue = callbackData.get(CommonFields.KeyCardCode.FIELD_KEY);
         sessionStorage.put(StorageKeys.KEY_CARD_CHALLENGE_RESPONSE_KEY, challengeResponseValue);
 
         return AuthenticationStepResponse.executeStepWithId(FinalKeyCardAuthenticationStep.STEP_ID);

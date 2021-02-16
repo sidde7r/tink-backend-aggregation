@@ -6,6 +6,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.junit.Ignore;
@@ -71,5 +72,12 @@ public class NemIdTestHelper {
 
     public static <T> List<T> asList(T... items) {
         return Stream.of(items).collect(Collectors.toList());
+    }
+
+    public static <T> List<T> joinLists(List<T>... lists) {
+        return Stream.of(lists)
+                .filter(Objects::nonNull)
+                .flatMap(List::stream)
+                .collect(Collectors.toList());
     }
 }

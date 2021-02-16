@@ -1,10 +1,11 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.steps;
 
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.PASSWORD_INPUT;
-import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.SUBMIT_LOGIN_BUTTON;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.SUBMIT_BUTTON;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.USERNAME_INPUT;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.NEM_ID_PREFIX;
 
+import com.google.inject.Inject;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.agents.rpc.Credentials;
@@ -14,7 +15,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.NemIdCodeAppConstants.UserMessage;
 
 @Slf4j
-@RequiredArgsConstructor
+@RequiredArgsConstructor(onConstructor = @__({@Inject}))
 public class NemIdLoginPageStep {
 
     private final NemIdWebDriverWrapper driverWrapper;
@@ -38,6 +39,6 @@ public class NemIdLoginPageStep {
     }
 
     private void clickLogin() {
-        driverWrapper.clickButton(SUBMIT_LOGIN_BUTTON);
+        driverWrapper.clickButton(SUBMIT_BUTTON);
     }
 }

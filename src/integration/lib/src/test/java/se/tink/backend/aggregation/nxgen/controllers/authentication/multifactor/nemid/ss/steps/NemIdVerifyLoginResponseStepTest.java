@@ -3,27 +3,31 @@ package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.Errors.ENTER_ACTIVATION_PASSWORD;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NEMID_CODE_APP_METHOD;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NEMID_CODE_CARD_METHOD;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NEMID_CODE_TOKEN_METHOD;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NEMID_TOKEN;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NEMID_WIDE_INFO_HEADING;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NOT_EMPTY_ERROR_MESSAGE;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.steps.NemIdVerifyLoginResponseStep.ELEMENTS_TO_SEARCH_FOR;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.util.NemIdTestHelper.asArray;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.util.NemIdTestHelper.asList;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.util.NemIdTestHelper.joinLists;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.util.NemIdTestHelper.nemIdMetricsMock;
-import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.util.NemIdTestHelper.verifyNTimes;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.util.NemIdTestHelper.verifyThatFromUsersPerspectiveThrowableIsTheSameAsGivenAgentException;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.util.NemIdTestHelper.webElementMock;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.util.NemIdTestHelper.webElementMockWithText;
 
-import java.util.ArrayList;
+import com.google.common.base.CaseFormat;
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,13 +38,14 @@ import org.openqa.selenium.WebElement;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.agent.AgentException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.NemId2FAMethod;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.NemIdCredentialsStatusUpdater;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.NemIdTokenValidator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.NemIdWebDriverWrapper;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.NemIdWebDriverWrapper.ElementsSearchResult;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.util.ErrorTextTestParams;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.NemIdCodeAppConstants.UserMessage;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.exception.NemIdError;
-import se.tink.libraries.i18n.LocalizableKey;
-import se.tink.libraries.pair.Pair;
 
 @RunWith(JUnitParamsRunner.class)
 public class NemIdVerifyLoginResponseStepTest {
@@ -52,7 +57,6 @@ public class NemIdVerifyLoginResponseStepTest {
     private NemIdVerifyLoginResponseStep verifyLoginResponseStep;
 
     private Credentials credentials;
-    private By[] allWebElementsRelevantToCredentialsVerification;
     private InOrder mocksToVerifyInOrder;
 
     @Before
@@ -66,73 +70,43 @@ public class NemIdVerifyLoginResponseStepTest {
                         driverWrapper, nemIdMetricsMock(), statusUpdater, tokenValidator);
 
         credentials = mock(Credentials.class);
-        allWebElementsRelevantToCredentialsVerification =
-                new By[] {
-                    NEMID_TOKEN,
-                    NEMID_CODE_APP_METHOD,
-                    NEMID_CODE_CARD_METHOD,
-                    NEMID_CODE_TOKEN_METHOD,
-                    NOT_EMPTY_ERROR_MESSAGE
-                };
         mocksToVerifyInOrder = Mockito.inOrder(driverWrapper, tokenValidator, statusUpdater);
     }
 
     @Test
-    public void should_update_status_payload_when_nem_id_is_suggesting_code_app_method() {
+    @Parameters(method = "all2FAWebElementsWithExpected2FAMethod")
+    public void should_return_correct_2FA_method(
+            By elementThatWillBeFound, NemId2FAMethod expectedMethod) {
         // given
-        setCredentialsValidationElementThatWillBeFound(NEMID_CODE_APP_METHOD, webElementMock());
+        setCredentialsValidationElementThatWillBeFound(elementThatWillBeFound, webElementMock());
 
         // when
-        verifyLoginResponseStep.validateLoginResponse(credentials);
+        NemId2FAMethod nemId2FAMethod =
+                verifyLoginResponseStep.checkLoginResultAndGetAvailable2FAMethod(credentials);
 
         // then
+        assertThat(nemId2FAMethod).isEqualTo(expectedMethod);
+
         mocksToVerifyInOrder
                 .verify(driverWrapper)
-                .searchForFirstElement(allWebElementsRelevantToCredentialsVerification);
+                .searchForFirstElement(ELEMENTS_TO_SEARCH_FOR, 30);
         mocksToVerifyInOrder
                 .verify(statusUpdater)
                 .updateStatusPayload(credentials, UserMessage.VALID_CREDS);
         mocksToVerifyInOrder.verifyNoMoreInteractions();
     }
 
-    @Test
-    public void should_fail_when_nem_id_is_suggesting_code_card_method() {
-        // given
-        setCredentialsValidationElementThatWillBeFound(NEMID_CODE_CARD_METHOD, webElementMock());
-
-        // when
-        Throwable throwable =
-                catchThrowable(() -> verifyLoginResponseStep.validateLoginResponse(credentials));
-
-        // then
-        verifyThatFromUsersPerspectiveThrowableIsTheSameAsGivenAgentException(
-                throwable, NemIdError.CODEAPP_NOT_REGISTERED.exception());
-        mocksToVerifyInOrder
-                .verify(driverWrapper)
-                .searchForFirstElement(allWebElementsRelevantToCredentialsVerification);
-        mocksToVerifyInOrder.verifyNoMoreInteractions();
+    @SuppressWarnings("unused")
+    private Object[] all2FAWebElementsWithExpected2FAMethod() {
+        return new Object[] {
+            asArray(NEMID_CODE_APP_METHOD, NemId2FAMethod.CODE_APP),
+            asArray(NEMID_CODE_CARD_METHOD, NemId2FAMethod.CODE_CARD),
+            asArray(NEMID_CODE_TOKEN_METHOD, NemId2FAMethod.CODE_TOKEN)
+        };
     }
 
     @Test
-    public void should_fail_when_nem_id_is_suggesting_code_token_method() {
-        // given
-        setCredentialsValidationElementThatWillBeFound(NEMID_CODE_TOKEN_METHOD, webElementMock());
-
-        // when
-        Throwable throwable =
-                catchThrowable(() -> verifyLoginResponseStep.validateLoginResponse(credentials));
-
-        // then
-        verifyThatFromUsersPerspectiveThrowableIsTheSameAsGivenAgentException(
-                throwable, NemIdError.CODEAPP_NOT_REGISTERED.exception());
-        mocksToVerifyInOrder
-                .verify(driverWrapper)
-                .searchForFirstElement(allWebElementsRelevantToCredentialsVerification);
-        mocksToVerifyInOrder.verifyNoMoreInteractions();
-    }
-
-    @Test
-    @Parameters(method = "errorTextAndExpectedException")
+    @Parameters(method = "errorMessageTextsWithExpectedException")
     public void should_fail_when_there_is_a_not_empty_error_message(
             String errorText, AgentException expectedException) {
         // given
@@ -141,78 +115,159 @@ public class NemIdVerifyLoginResponseStepTest {
 
         // when
         Throwable throwable =
-                catchThrowable(() -> verifyLoginResponseStep.validateLoginResponse(credentials));
+                catchThrowable(
+                        () ->
+                                verifyLoginResponseStep.checkLoginResultAndGetAvailable2FAMethod(
+                                        credentials));
 
         // then
         verifyThatFromUsersPerspectiveThrowableIsTheSameAsGivenAgentException(
                 throwable, expectedException);
         mocksToVerifyInOrder
                 .verify(driverWrapper)
-                .searchForFirstElement(allWebElementsRelevantToCredentialsVerification);
+                .searchForFirstElement(ELEMENTS_TO_SEARCH_FOR, 30);
         mocksToVerifyInOrder.verifyNoMoreInteractions();
     }
 
-    @SuppressWarnings("unused")
-    private static Object[] errorTextAndExpectedException() {
-        List<Object[]> args = new ArrayList<>();
+    @SuppressWarnings({"unused", "unchecked"})
+    private static Object[] errorMessageTextsWithExpectedException() {
+        List<ErrorTextTestParams> knownErrorCases =
+                asList(
+                                ErrorTextTestParams.of(
+                                        "incorrect user",
+                                        LoginError.INCORRECT_CREDENTIALS.exception()),
+                                ErrorTextTestParams.of(
+                                        "incorrect password",
+                                        LoginError.INCORRECT_CREDENTIALS.exception()),
+                                ErrorTextTestParams.of(
+                                        "fejl i bruger",
+                                        LoginError.INCORRECT_CREDENTIALS.exception()),
+                                ErrorTextTestParams.of(
+                                        "fejl i adgangskode",
+                                        LoginError.INCORRECT_CREDENTIALS.exception()),
+                                ErrorTextTestParams.of(
+                                        "indtast bruger",
+                                        LoginError.INCORRECT_CREDENTIALS.exception()),
+                                ErrorTextTestParams.of(
+                                        "indtast adgangskode",
+                                        LoginError.INCORRECT_CREDENTIALS.exception()),
+                                ErrorTextTestParams.of(
+                                        "enter activation password",
+                                        LoginError.INCORRECT_CREDENTIALS.exception(
+                                                UserMessage.ENTER_ACTIVATION_PASSWORD.getKey())))
+                        .stream()
+                        .map(
+                                errorTextTestParams ->
+                                        asList(
+                                                errorTextTestParams,
+                                                errorTextTestParams.modifyErrorText(
+                                                        String::toUpperCase),
+                                                errorTextTestParams.modifyErrorText(
+                                                        StringUtils::capitalize),
+                                                errorTextTestParams.changeErrorTextCase(
+                                                        CaseFormat.LOWER_CAMEL),
+                                                errorTextTestParams.changeErrorTextCase(
+                                                        CaseFormat.UPPER_CAMEL),
+                                                errorTextTestParams.addErrorTextSuffix(
+                                                        "!@$#%$^%&^%*")))
+                        .flatMap(List::stream)
+                        .collect(Collectors.toList());
 
-        args.add(asArray("incorrect user", LoginError.INCORRECT_CREDENTIALS.exception()));
-        args.add(asArray("inCOrrect user!@#^#^", LoginError.INCORRECT_CREDENTIALS.exception()));
-        args.add(asArray("incorrecT passworD", LoginError.INCORRECT_CREDENTIALS.exception()));
-        args.add(asArray("incorrect pASsword!@#^#^", LoginError.INCORRECT_CREDENTIALS.exception()));
+        List<ErrorTextTestParams> unknownErrorCases =
+                knownErrorCases.stream()
+                        .map(
+                                errorTextTestParams ->
+                                        asList(
+                                                errorTextTestParams.addErrorTextPrefix("@#%"),
+                                                errorTextTestParams.changeErrorTextCompletely(""),
+                                                errorTextTestParams.changeErrorTextCompletely(" "),
+                                                errorTextTestParams.changeErrorTextCompletely(
+                                                        "some unknown text")))
+                        .flatMap(List::stream)
+                        .map(
+                                errorTextTestParams ->
+                                        errorTextTestParams.changeExpectedError(
+                                                LoginError.CREDENTIALS_VERIFICATION_ERROR
+                                                        .exception()))
+                        .collect(Collectors.toList());
 
-        args.add(
-                asArray(
-                        "-incorrect user!@#^#^",
-                        LoginError.CREDENTIALS_VERIFICATION_ERROR.exception()));
-        args.add(
-                asArray(
-                        "-incorrect password!@#^#^",
-                        LoginError.CREDENTIALS_VERIFICATION_ERROR.exception()));
+        return joinLists(knownErrorCases, unknownErrorCases).stream()
+                .map(ErrorTextTestParams::toTestParameters)
+                .toArray();
+    }
 
-        args.add(asArray("fEjl i Bruger", LoginError.INCORRECT_CREDENTIALS.exception()));
-        args.add(asArray("fejl i bRUger!@$#%$^#&%", LoginError.INCORRECT_CREDENTIALS.exception()));
-        args.add(asArray("fejl i aDGangskode", LoginError.INCORRECT_CREDENTIALS.exception()));
-        args.add(
-                asArray(
-                        "fejl i adgangskode!@$#%$^#&%",
-                        LoginError.INCORRECT_CREDENTIALS.exception()));
+    @Test
+    @Parameters(method = "errorHeadingTextsWithExpectedException")
+    public void should_fail_when_there_is_a_nem_id_info_heading(
+            String errorText, AgentException expectedException) {
+        // given
+        setCredentialsValidationElementThatWillBeFound(
+                NEMID_WIDE_INFO_HEADING, webElementMockWithText(errorText));
 
-        args.add(asArray("-fejl i bruger", LoginError.CREDENTIALS_VERIFICATION_ERROR.exception()));
-        args.add(
-                asArray(
-                        "-fejl i adgangskode",
-                        LoginError.CREDENTIALS_VERIFICATION_ERROR.exception()));
+        // when
+        Throwable throwable =
+                catchThrowable(
+                        () ->
+                                verifyLoginResponseStep.checkLoginResultAndGetAvailable2FAMethod(
+                                        credentials));
 
-        args.add(asArray("Indtast bruger", LoginError.INCORRECT_CREDENTIALS.exception()));
-        args.add(asArray("indtast bRugeR!@$#%$^#&%", LoginError.INCORRECT_CREDENTIALS.exception()));
-        args.add(asArray("indtast adgangskode", LoginError.INCORRECT_CREDENTIALS.exception()));
-        args.add(
-                asArray(
-                        "indtast adgangskode!@$#%$^#&%",
-                        LoginError.INCORRECT_CREDENTIALS.exception()));
+        // then
+        verifyThatFromUsersPerspectiveThrowableIsTheSameAsGivenAgentException(
+                throwable, expectedException);
+        mocksToVerifyInOrder
+                .verify(driverWrapper)
+                .searchForFirstElement(ELEMENTS_TO_SEARCH_FOR, 30);
+        mocksToVerifyInOrder.verifyNoMoreInteractions();
+    }
 
-        args.add(asArray("-indtast bruger", LoginError.CREDENTIALS_VERIFICATION_ERROR.exception()));
-        args.add(
-                asArray(
-                        "-indtast adgangskode",
-                        LoginError.CREDENTIALS_VERIFICATION_ERROR.exception()));
+    @SuppressWarnings({"unused", "unchecked"})
+    private static Object[] errorHeadingTextsWithExpectedException() {
+        List<ErrorTextTestParams> knownErrorCases =
+                asList(
+                                ErrorTextTestParams.of(
+                                        "use new code card",
+                                        NemIdError.USE_NEW_CODE_CARD.exception()),
+                                ErrorTextTestParams.of(
+                                        "nemid revoked", NemIdError.NEMID_BLOCKED.exception()))
+                        .stream()
+                        .map(
+                                errorTextTestParams ->
+                                        asList(
+                                                errorTextTestParams,
+                                                errorTextTestParams.modifyErrorText(
+                                                        String::toUpperCase),
+                                                errorTextTestParams.modifyErrorText(
+                                                        StringUtils::capitalize),
+                                                errorTextTestParams.changeErrorTextCase(
+                                                        CaseFormat.LOWER_CAMEL),
+                                                errorTextTestParams.changeErrorTextCase(
+                                                        CaseFormat.UPPER_CAMEL),
+                                                errorTextTestParams.addErrorTextSuffix(
+                                                        "!@$#%$^%  &^%*")))
+                        .flatMap(List::stream)
+                        .collect(Collectors.toList());
 
-        args.add(
-                asArray(
-                        "Enter activAtIoN password.",
-                        LoginError.INCORRECT_CREDENTIALS.exception(
-                                new LocalizableKey(ENTER_ACTIVATION_PASSWORD))));
-        args.add(
-                asArray(
-                        "enter activation paSSworD.",
-                        LoginError.INCORRECT_CREDENTIALS.exception(
-                                new LocalizableKey(ENTER_ACTIVATION_PASSWORD))));
+        List<ErrorTextTestParams> unknownErrorCases =
+                knownErrorCases.stream()
+                        .map(
+                                errorTextTestParams ->
+                                        asList(
+                                                errorTextTestParams.addErrorTextPrefix("@#%123"),
+                                                errorTextTestParams.changeErrorTextCompletely(""),
+                                                errorTextTestParams.changeErrorTextCompletely(" "),
+                                                errorTextTestParams.changeErrorTextCompletely(
+                                                        "some unknown text")))
+                        .flatMap(List::stream)
+                        .map(
+                                errorTextTestParams ->
+                                        errorTextTestParams.changeExpectedError(
+                                                LoginError.CREDENTIALS_VERIFICATION_ERROR
+                                                        .exception()))
+                        .collect(Collectors.toList());
 
-        args.add(asArray(" ", LoginError.CREDENTIALS_VERIFICATION_ERROR.exception()));
-        args.add(asArray("sadfsdg", LoginError.CREDENTIALS_VERIFICATION_ERROR.exception()));
-
-        return args.toArray(new Object[0]);
+        return joinLists(knownErrorCases, unknownErrorCases).stream()
+                .map(ErrorTextTestParams::toTestParameters)
+                .toArray();
     }
 
     @Test
@@ -228,13 +283,16 @@ public class NemIdVerifyLoginResponseStepTest {
 
         // when
         Throwable throwable =
-                catchThrowable(() -> verifyLoginResponseStep.validateLoginResponse(credentials));
+                catchThrowable(
+                        () ->
+                                verifyLoginResponseStep.checkLoginResultAndGetAvailable2FAMethod(
+                                        credentials));
 
         // then
         assertThat(throwable).isEqualTo(tokenValidationError);
         mocksToVerifyInOrder
                 .verify(driverWrapper)
-                .searchForFirstElement(allWebElementsRelevantToCredentialsVerification);
+                .searchForFirstElement(ELEMENTS_TO_SEARCH_FOR, 30);
         mocksToVerifyInOrder
                 .verify(tokenValidator)
                 .throwInvalidTokenExceptionWithoutValidation("--- SAMPLE TOKEN ---");
@@ -247,28 +305,28 @@ public class NemIdVerifyLoginResponseStepTest {
 
         // when
         Throwable throwable =
-                catchThrowable(() -> verifyLoginResponseStep.validateLoginResponse(credentials));
+                catchThrowable(
+                        () ->
+                                verifyLoginResponseStep.checkLoginResultAndGetAvailable2FAMethod(
+                                        credentials));
 
         // then
-        verifyNTimes(
-                () -> {
-                    mocksToVerifyInOrder
-                            .verify(driverWrapper)
-                            .searchForFirstElement(allWebElementsRelevantToCredentialsVerification);
-                    mocksToVerifyInOrder.verify(driverWrapper).sleepFor(1_000);
-                },
-                30);
         verifyThatFromUsersPerspectiveThrowableIsTheSameAsGivenAgentException(
                 throwable, LoginError.CREDENTIALS_VERIFICATION_ERROR.exception());
+
+        mocksToVerifyInOrder
+                .verify(driverWrapper)
+                .searchForFirstElement(ELEMENTS_TO_SEARCH_FOR, 30);
     }
 
     private void setCredentialsValidationElementThatWillBeFound(By by, WebElement webElement) {
-        Pair<By, WebElement> findFirstElementResult = Pair.of(by, webElement);
-        when(driverWrapper.searchForFirstElement(any()))
-                .thenReturn(Optional.of(findFirstElementResult));
+        ElementsSearchResult findFirstElementResult = ElementsSearchResult.of(by, webElement);
+        when(driverWrapper.searchForFirstElement(any(), anyInt()))
+                .thenReturn(findFirstElementResult);
     }
 
     private void setEmptyCredentialsVerificationElementsSearchResult() {
-        when(driverWrapper.searchForFirstElement(any())).thenReturn(Optional.empty());
+        when(driverWrapper.searchForFirstElement(any(), anyInt()))
+                .thenReturn(ElementsSearchResult.empty());
     }
 }

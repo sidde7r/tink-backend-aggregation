@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: VERSION\n"
-"POT-Creation-Date: 2021-02-09 15:50+0000\n"
-"PO-Revision-Date: 2021-02-09 15:50+0000\n"
+"POT-Creation-Date: 2021-02-14 22:35+0000\n"
+"PO-Revision-Date: 2021-02-14 22:35+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE TEAM <EMAIL@ADDRESS>\n"
 "Language: da\n"
@@ -10,15 +10,6 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-msgid "Your NemID is temporarily locked."
-msgstr "Dit NemID er midlertidigt låst."
-
-msgid "Your NemID has been blocked. Please contact NemID support."
-msgstr "Dit NemID er spærret. Kontakt NemID support."
-
-msgid "NemID password blocked. Please contact NemID support."
-msgstr "Din NemID-adgangskode er spærret. Kontakt NemID support."
 
 msgid "Input the code from your code card"
 msgstr "Indtast koden fra dit kodekort"
@@ -224,3 +215,29 @@ msgid ""
 msgstr ""
 "Du har ikke bekræftet dit login i N26 app’en. Bekræft det venligst og klik "
 "“Indsend”."
+
+msgid "Your NemID is temporarily locked."
+msgstr "Dit NemID er midlertidigt låst."
+
+msgid "Your NemID has been blocked. Please contact NemID support."
+msgstr "Dit NemID er spærret. Kontakt NemID support."
+
+msgid "NemID password blocked. Please contact NemID support."
+msgstr "Din NemID-adgangskode er spærret. Kontakt NemID support."
+
+msgid ""
+"NemID code token authentication is not supported. Please log in to your bank "
+"using NemID mobile app or code card and try again."
+msgstr ""
+"Godkendelse af NemID-kodetoken er ikke understøttet. Log venligst ind på din "
+"bank ved brug af et nyt nøglekort eller NemID mobil-app’en og forsøg igen."
+
+msgid "The code card code provided by user is incorrect."
+msgstr "Nøglekort-koden angivet af bruger er ikke korrekt."
+
+msgid ""
+"All code card codes have been used. Please log in to your bank using new "
+"code card or NemID mobile app and try again."
+msgstr ""
+"Alle nøglekort-koder er blevet brugt. Log venligst ind på din bank ved brug "
+"af et nyt nøglekort eller NemID mobil-app’en og forsøg igen."

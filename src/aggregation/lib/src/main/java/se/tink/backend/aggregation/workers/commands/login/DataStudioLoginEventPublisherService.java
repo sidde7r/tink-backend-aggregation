@@ -300,7 +300,7 @@ public class DataStudioLoginEventPublisherService {
                                             .LoginResult>
                                     builder()
                             .put(
-                                    NemIdError.CODEAPP_NOT_REGISTERED,
+                                    NemIdError.CODE_TOKEN_NOT_SUPPORTED,
                                     AgentLoginCompletedEventProto.AgentLoginCompletedEvent
                                             .LoginResult.LOGIN_ERROR_NOT_SUPPORTED)
                             .put(

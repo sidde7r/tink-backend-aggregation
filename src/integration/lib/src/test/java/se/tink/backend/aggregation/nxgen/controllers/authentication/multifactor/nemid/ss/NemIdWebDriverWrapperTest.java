@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -13,6 +14,7 @@ import static se.tink.backend.aggregation.nxgen.controllers.authentication.multi
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.util.NemIdTestHelper.verifyNTimes;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.util.NemIdTestHelper.webElementMock;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -21,11 +23,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Answers;
 import org.mockito.InOrder;
-import org.mockito.Mockito;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriver.TargetLocator;
 import org.openqa.selenium.WebElement;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.NemIdWebDriverWrapper.ElementsSearchResult;
 
 public class NemIdWebDriverWrapperTest {
 
@@ -129,6 +131,7 @@ public class NemIdWebDriverWrapperTest {
         assertThat(throwable).isInstanceOf(IllegalStateException.class);
 
         verify(driver).findElements(by);
+        verifyNoMoreInteractions(driver);
     }
 
     @Test
@@ -198,6 +201,7 @@ public class NemIdWebDriverWrapperTest {
         assertThat(throwable).isInstanceOf(IllegalStateException.class);
 
         verify(driver).findElements(by);
+        verifyNoMoreInteractions(driver);
     }
 
     @Test
@@ -216,6 +220,7 @@ public class NemIdWebDriverWrapperTest {
         assertThat(throwable).isInstanceOf(IllegalStateException.class);
 
         verify(driver).findElements(by);
+        verifyNoMoreInteractions(driver);
 
         verify(button1).isDisplayed();
         verifyNoMoreInteractions(button1);
@@ -236,13 +241,14 @@ public class NemIdWebDriverWrapperTest {
         // then
         assertThat(maybeWebElement).isEmpty();
 
-        InOrder inOrder = Mockito.inOrder(driver, sleeper);
+        InOrder inOrder = inOrder(driver, sleeper);
         verifyNTimes(
                 () -> {
                     inOrder.verify(driver).findElements(by);
                     inOrder.verify(sleeper).sleepFor(1_000);
                 },
                 30);
+        inOrder.verifyNoMoreInteractions();
     }
 
     @Test
@@ -263,7 +269,7 @@ public class NemIdWebDriverWrapperTest {
         // then
         assertThat(maybeWebElement).hasValue(element1);
 
-        InOrder inOrder = Mockito.inOrder(driver, sleeper);
+        InOrder inOrder = inOrder(driver, sleeper);
         verifyNTimes(
                 () -> {
                     inOrder.verify(driver).findElements(by);
@@ -271,5 +277,71 @@ public class NemIdWebDriverWrapperTest {
                 },
                 2);
         inOrder.verify(driver).findElements(by);
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void should_search_for_elements_in_given_intervals_and_return_correct_element() {
+        // given
+        By by1 = By.id("id1");
+        By by2 = By.id("id2 - WILL BE FOUND");
+        By by3 = By.id("id3");
+
+        WebElement elementToBeFound = webElementMock();
+
+        when(driver.findElements(by1)).thenReturn(Collections.emptyList());
+        when(driver.findElements(by2))
+                .thenReturn(Collections.emptyList())
+                .thenReturn(Collections.emptyList())
+                .thenReturn(Collections.singletonList(elementToBeFound));
+        when(driver.findElements(by3)).thenReturn(Collections.emptyList());
+
+        // when
+        ElementsSearchResult searchResult =
+                driverWrapper.searchForFirstElement(Arrays.asList(by1, by2, by3), 10);
+
+        // then
+        assertThat(searchResult).isEqualTo(ElementsSearchResult.of(by2, elementToBeFound));
+
+        InOrder inOrder = inOrder(driver, sleeper);
+        verifyNTimes(
+                () -> {
+                    inOrder.verify(driver).findElements(by1);
+                    inOrder.verify(driver).findElements(by2);
+                    inOrder.verify(driver).findElements(by3);
+                    inOrder.verify(sleeper).sleepFor(1_000);
+                },
+                2);
+        inOrder.verify(driver).findElements(by1);
+        inOrder.verify(driver).findElements(by2);
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void
+            should_search_for_elements_in_given_intervals_and_return_empty_result_after_timeout() {
+        // given
+        By by1 = By.id("id1");
+        By by2 = By.id("id2");
+
+        when(driver.findElements(by1)).thenReturn(Collections.emptyList());
+        when(driver.findElements(by2)).thenReturn(Collections.emptyList());
+
+        // when
+        ElementsSearchResult searchResult =
+                driverWrapper.searchForFirstElement(Arrays.asList(by1, by2), 10);
+
+        // then
+        assertThat(searchResult).isEqualTo(ElementsSearchResult.empty());
+
+        InOrder inOrder = inOrder(driver, sleeper);
+        verifyNTimes(
+                () -> {
+                    inOrder.verify(driver).findElements(by1);
+                    inOrder.verify(driver).findElements(by2);
+                    inOrder.verify(sleeper).sleepFor(1_000);
+                },
+                10);
+        inOrder.verifyNoMoreInteractions();
     }
 }

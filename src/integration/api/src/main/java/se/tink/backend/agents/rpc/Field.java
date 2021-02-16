@@ -7,7 +7,11 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
+@ToString
+@EqualsAndHashCode
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Field {
     private String description; // This will be the headline in the view in the app

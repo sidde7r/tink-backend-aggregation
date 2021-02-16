@@ -15,6 +15,7 @@ java_library(
         "//src/libraries/serialization",
         "//src/libraries/strings",
         "//src/libraries/uuid",
+        "//third_party:lombok_libs",
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
         "@aggregation//:com_fasterxml_jackson_core_jackson_core",
         "@aggregation//:com_google_guava_guava",

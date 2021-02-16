@@ -28,9 +28,10 @@ import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.fetcher.identity
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.fetcher.investment.NordeaInvestmentFetcher;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.fetcher.loans.NordeaDkLoansFetcher;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.fetcher.transactionalaccount.NordeaAccountFetcher;
-import se.tink.backend.aggregation.nxgen.agents.SubsequentProgressiveGenerationAgent;
+import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.StatelessProgressiveAuthenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshController;
@@ -48,7 +49,7 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
     MORTGAGE_AGGREGATION,
     IDENTITY_DATA
 })
-public final class NordeaDkAgent extends SubsequentProgressiveGenerationAgent
+public final class NordeaDkAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor,
                 RefreshCreditCardAccountsExecutor,
                 RefreshInvestmentAccountsExecutor,
@@ -72,6 +73,21 @@ public final class NordeaDkAgent extends SubsequentProgressiveGenerationAgent
         this.investmentRefreshController = contructInvestmentRefreshController();
         this.loanRefreshController = constructLoanRefreshController();
         statusUpdater = agentComponentProvider.getContext();
+    }
+
+    @Override
+    protected Authenticator constructAuthenticator() {
+        NordeaNemIdAuthenticatorV2 nordeaNemIdAuthenticatorV2 =
+                new NordeaNemIdAuthenticatorV2(
+                        nordeaClient,
+                        sessionStorage,
+                        persistentStorage,
+                        catalog,
+                        statusUpdater,
+                        supplementalInformationController,
+                        metricContext);
+        return new AutoAuthenticationController(
+                request, systemUpdater, nordeaNemIdAuthenticatorV2, nordeaNemIdAuthenticatorV2);
     }
 
     private InvestmentRefreshController contructInvestmentRefreshController() {
@@ -119,18 +135,6 @@ public final class NordeaDkAgent extends SubsequentProgressiveGenerationAgent
     @Override
     protected SessionHandler constructSessionHandler() {
         return SessionHandler.alwaysFail();
-    }
-
-    @Override
-    public StatelessProgressiveAuthenticator getAuthenticator() {
-        return new NordeaNemIdAuthenticatorV2(
-                nordeaClient,
-                sessionStorage,
-                persistentStorage,
-                supplementalInformationController,
-                catalog,
-                statusUpdater,
-                metricContext);
     }
 
     @Override

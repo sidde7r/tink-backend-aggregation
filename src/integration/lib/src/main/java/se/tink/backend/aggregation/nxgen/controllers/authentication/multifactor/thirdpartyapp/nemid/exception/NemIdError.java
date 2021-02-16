@@ -9,12 +9,16 @@ public enum NemIdError implements AgentError {
             new LocalizableKey(
                     "Another authentication attempt was initiated while authenticating. Please try again.")),
     REJECTED(new LocalizableKey("Authentication rejected by the user.")),
-    CODEAPP_NOT_REGISTERED(
+    CODE_TOKEN_NOT_SUPPORTED(
             new LocalizableKey(
-                    "NemID Code App is not registered option to use. Contact bank support.")),
+                    "NemID code token authentication is not supported. Please log in to your bank using NemID mobile app or code card and try again.")),
     SECOND_FACTOR_NOT_REGISTERED(
             new LocalizableKey(
                     "Second factor is not registered option to use. Contact bank support.")),
+    INVALID_CODE_CARD_CODE(new LocalizableKey("The code card code provided by user is incorrect.")),
+    USE_NEW_CODE_CARD(
+            new LocalizableKey(
+                    "All code card codes have been used. Please log in to your bank using new code card or NemID mobile app and try again.")),
     NEMID_LOCKED(new LocalizableKey("Your NemID is temporarily locked.")),
     NEMID_BLOCKED(new LocalizableKey("Your NemID has been blocked. Please contact NemID support.")),
     NEMID_PASSWORD_BLOCKED(

@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss;
 
+import com.google.inject.Inject;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.agents.rpc.Credentials;
@@ -8,7 +9,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.libraries.i18n.Catalog;
 
 @Slf4j
-@RequiredArgsConstructor
+@RequiredArgsConstructor(onConstructor = @__({@Inject}))
 public class NemIdCredentialsStatusUpdater {
 
     private final StatusUpdater statusUpdater;
