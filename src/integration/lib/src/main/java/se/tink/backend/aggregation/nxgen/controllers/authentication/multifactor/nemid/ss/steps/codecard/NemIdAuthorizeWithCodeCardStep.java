@@ -2,10 +2,8 @@ package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor
 
 import com.google.inject.Inject;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.agents.rpc.Credentials;
 
-@Slf4j
 @RequiredArgsConstructor(onConstructor = @__({@Inject}))
 public class NemIdAuthorizeWithCodeCardStep {
 
