@@ -1,10 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.authenticator;
 
+import org.assertj.core.api.Assertions;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsUserState;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.authenticator.entity.ConsentLinksEntity;
@@ -76,5 +79,23 @@ public class ConsentManagerTest {
         // then
         Assert.assertEquals(redirectUrl, url.getUrl().get());
         Mockito.verify(userState).startManualAuthentication(consentId);
+    }
+
+    @Test
+    public void shouldThrowBankServiceExceptionForRateLimitExceededResponse() {
+        // given
+        HttpResponseException httpResponseException = Mockito.mock(HttpResponseException.class);
+        HttpResponse rateLimitExceededResponse = Mockito.mock(HttpResponse.class);
+        Mockito.when(rateLimitExceededResponse.getStatus()).thenReturn(429);
+        Mockito.when(httpResponseException.getResponse()).thenReturn(rateLimitExceededResponse);
+        Mockito.when(apiClient.getConsentStatus()).thenThrow(httpResponseException);
+
+        // when
+        Throwable thrown = Assertions.catchThrowable(() -> objectUnderTest.getStatus());
+
+        // then
+        Assertions.assertThat(thrown)
+                .isInstanceOf(BankServiceException.class)
+                .hasMessageContaining(BankServiceError.ACCESS_EXCEEDED.name());
     }
 }
