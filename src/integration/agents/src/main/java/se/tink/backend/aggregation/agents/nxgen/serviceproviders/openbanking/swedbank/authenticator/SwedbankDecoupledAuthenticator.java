@@ -27,7 +27,6 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
 public class SwedbankDecoupledAuthenticator implements BankIdAuthenticator<String> {
     private final SwedbankApiClient apiClient;
-    private final boolean isSwedbank;
     private final SupplementalInformationHelper supplementalInformationHelper;
     private String ssn;
     private String autoStartToken;
@@ -35,10 +34,8 @@ public class SwedbankDecoupledAuthenticator implements BankIdAuthenticator<Strin
 
     public SwedbankDecoupledAuthenticator(
             SwedbankApiClient apiClient,
-            boolean isSwedbank,
             SupplementalInformationHelper supplementalInformationHelper) {
         this.apiClient = apiClient;
-        this.isSwedbank = isSwedbank;
         this.supplementalInformationHelper = supplementalInformationHelper;
     }
 
@@ -68,15 +65,7 @@ public class SwedbankDecoupledAuthenticator implements BankIdAuthenticator<Strin
         } catch (HttpResponseException e) {
             GenericResponse errorResponse = e.getResponse().getBody(GenericResponse.class);
             if (errorResponse.isMissingBankId()) {
-                authenticationStatusResponse =
-                        apiClient.supplyBankId(
-                                ssn,
-                                collectAuthUri,
-                                SwedbankConstants.BANK_IDS.get(
-                                        Integer.parseInt(
-                                                        supplementalInformationHelper
-                                                                .waitForLoginInput())
-                                                - 1));
+                authenticationStatusResponse = handleMultipleEngagements(collectAuthUri);
             } else {
                 handleBankIdError(errorResponse);
                 throw e;
@@ -103,6 +92,18 @@ public class SwedbankDecoupledAuthenticator implements BankIdAuthenticator<Strin
         }
     }
 
+    private AuthenticationStatusResponse handleMultipleEngagements(String collectAuthUri) {
+        if (apiClient.isSwedbank()) {
+            return apiClient.supplyBankId(ssn, collectAuthUri, SwedbankConstants.BANK_IDS.get(0));
+        } else {
+            return apiClient.supplyBankId(
+                    ssn,
+                    collectAuthUri,
+                    SwedbankConstants.BANK_IDS.get(
+                            Integer.parseInt(supplementalInformationHelper.waitForLoginInput())));
+        }
+    }
+
     private void handleBankIdError(GenericResponse errorResponse) {
 
         if (errorResponse.isLoginInterrupted()) {
@@ -116,7 +117,7 @@ public class SwedbankDecoupledAuthenticator implements BankIdAuthenticator<Strin
             throw LoginError.NOT_CUSTOMER.exception();
         }
         if (errorResponse.isNoProfileAvailable()) {
-            if (isSwedbank) {
+            if (apiClient.isSwedbank()) {
                 // This should be somehow extended - there are more than one savingsbank,
                 // but we do not have possibility to check what savings bank it is.
                 // Currently we are supporting only Swedbank through Decoupled flow.
