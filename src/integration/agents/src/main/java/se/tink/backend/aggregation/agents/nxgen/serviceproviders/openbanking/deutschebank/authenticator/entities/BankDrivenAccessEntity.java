@@ -6,8 +6,8 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class BankDrivenAccessEntity implements AccessEntity {
-    List<String> accounts = Collections.emptyList();
-    List<String> transactions = Collections.emptyList();
-    List<String> balances = Collections.emptyList();
-    AdditionalInformation additionalInformation = new AdditionalInformation();
+    private List<String> accounts = Collections.emptyList();
+    private List<String> transactions = Collections.emptyList();
+    private List<String> balances = Collections.emptyList();
+    private AdditionalInformation additionalInformation = new AdditionalInformation();
 }

@@ -6,5 +6,5 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class AdditionalInformation {
-    List<String> ownerName = Collections.emptyList();
+    private List<String> ownerName = Collections.emptyList();
 }
