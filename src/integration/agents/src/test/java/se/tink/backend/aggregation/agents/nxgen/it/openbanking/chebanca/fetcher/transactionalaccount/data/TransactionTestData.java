@@ -1,10 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.fetcher.transactionalaccount.data;
 
 import java.nio.file.Paths;
+import org.junit.Ignore;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.fetcher.transactionalaccount.entities.TransactionEntity;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.fetcher.transactionalaccount.rpc.GetTransactionsResponse;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
+@Ignore
 public class TransactionTestData {
     private static final String AMOUNT = "50.000";
     private static final String CURRENCY = "EUR";
