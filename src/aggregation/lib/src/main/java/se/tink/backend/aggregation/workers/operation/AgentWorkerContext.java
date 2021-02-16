@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
@@ -42,6 +43,7 @@ import se.tink.backend.aggregation.controllers.ProviderSessionCacheController;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
 import se.tink.backend.aggregation.events.AccountInformationServiceEventsProducer;
 import se.tink.backend.aggregation.locks.BarrierName;
+import se.tink.backend.aggregationcontroller.v1.rpc.credentialsservice.UpdateCredentialsSupplementalInformationRequest;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account_data_cache.AccountData;
@@ -58,6 +60,9 @@ import se.tink.libraries.transfer.rpc.Transfer;
 public class AgentWorkerContext extends AgentContext implements Managed {
     private static final Logger logger =
             LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
+    public static final MetricId supplementalInfoUpdateVariant =
+            MetricId.newId("aggregation_supplemental_info_update_variant");
 
     private Catalog catalog;
     protected CuratorFramework coordinationClient;
@@ -370,11 +375,50 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         return Optional.empty();
     }
 
+    // Would have put this in a yml config if we had the plumming for one here, but as we don't,
+    // and this is just to not risk the initial deploy, i'll make the canary release this way.
+    // These will be removed once migration is done.
+    private static final double RATIO_SUPPL_INFO_ENDPOINT = 0;
+    private final Random random = new Random();
+
     @Override
-    public void requestSupplementalInformation(Credentials credentials) {
+    public void requestSupplementalInformation(String mfaId, Credentials credentials) {
         supplementalInteractionCounter.inc();
 
-        updateCredentialsExcludingSensitiveInformation(credentials, true);
+        if (random.nextDouble() < RATIO_SUPPL_INFO_ENDPOINT) {
+            // new path
+            getMetricRegistry()
+                    .meter(supplementalInfoUpdateVariant.label("variant", "dedicated-path"))
+                    .inc();
+            updateSupplementalInformation(mfaId, credentials);
+        } else {
+            // old path
+            getMetricRegistry()
+                    .meter(supplementalInfoUpdateVariant.label("variant", "update-credentials"))
+                    .inc();
+            updateCredentialsExcludingSensitiveInformation(credentials, true);
+        }
+    }
+
+    private void updateSupplementalInformation(String mfaId, Credentials credentials) {
+        // Execute any event-listeners; this tells the signable operation to update status
+        for (AgentEventListener eventListener : eventListeners) {
+            eventListener.onUpdateCredentialsStatus();
+        }
+
+        UpdateCredentialsSupplementalInformationRequest suppInfoRequest =
+                new UpdateCredentialsSupplementalInformationRequest();
+        suppInfoRequest.setMfaId(mfaId);
+        suppInfoRequest.setCredentialsId(credentials.getId());
+        suppInfoRequest.setStatus(credentials.getStatus());
+        suppInfoRequest.setSupplementalInformation(credentials.getSupplementalInformation());
+        suppInfoRequest.setUserId(credentials.getUserId());
+        suppInfoRequest.setRequestType(getRequest().getType());
+        suppInfoRequest.setOperationId(getRequest().getOperationId());
+        suppInfoRequest.setManual(getRequest().isManual());
+        suppInfoRequest.setRefreshId(getRefreshId().orElse(null));
+
+        controllerWrapper.updateSupplementalInformation(suppInfoRequest);
     }
 
     public AccountDataCache getAccountDataCache() {

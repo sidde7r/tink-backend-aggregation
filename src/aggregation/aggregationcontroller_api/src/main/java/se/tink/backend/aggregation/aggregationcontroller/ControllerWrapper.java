@@ -20,6 +20,7 @@ import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateTransactio
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateTransferDestinationPatternsRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateTransfersRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpsertRegulatoryClassificationRequest;
+import se.tink.backend.aggregationcontroller.v1.rpc.credentialsservice.UpdateCredentialsSupplementalInformationRequest;
 import se.tink.libraries.signableoperation.rpc.SignableOperation;
 
 public class ControllerWrapper {
@@ -98,6 +99,11 @@ public class ControllerWrapper {
             Credentials credentials, String sensitiveData, String operationId) {
         return client.updateCredentialSensitive(
                 configuration, credentials, sensitiveData, operationId);
+    }
+
+    public Response updateSupplementalInformation(
+            UpdateCredentialsSupplementalInformationRequest request) {
+        return client.updateCredentialSupplementalInformation(configuration, request);
     }
 
     public Response checkConnectivity() {

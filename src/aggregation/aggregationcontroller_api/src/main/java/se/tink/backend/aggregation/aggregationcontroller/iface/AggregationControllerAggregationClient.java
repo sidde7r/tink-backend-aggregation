@@ -18,6 +18,7 @@ import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateTransactio
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateTransferDestinationPatternsRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateTransfersRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpsertRegulatoryClassificationRequest;
+import se.tink.backend.aggregationcontroller.v1.rpc.credentialsservice.UpdateCredentialsSupplementalInformationRequest;
 import se.tink.libraries.signableoperation.rpc.SignableOperation;
 
 public interface AggregationControllerAggregationClient {
@@ -57,6 +58,10 @@ public interface AggregationControllerAggregationClient {
             Credentials credentials,
             String sensitiveData,
             String operationId);
+
+    Response updateCredentialSupplementalInformation(
+            HostConfiguration hostConfiguration,
+            UpdateCredentialsSupplementalInformationRequest request);
 
     Response checkConnectivity(HostConfiguration hostConfiguration);
 

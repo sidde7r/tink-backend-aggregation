@@ -37,6 +37,7 @@ import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateTransactio
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateTransferDestinationPatternsRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateTransfersRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpsertRegulatoryClassificationRequest;
+import se.tink.backend.aggregationcontroller.v1.rpc.credentialsservice.UpdateCredentialsSupplementalInformationRequest;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.signableoperation.rpc.SignableOperation;
 
@@ -194,6 +195,14 @@ public class FakeAggregationControllerAggregationClient
             String operationId) {
         callFakeAggregationController("updateCredentialSensitive", credentials);
         callFakeAggregationController("updateCredentialSensitiveString", sensitiveData);
+        return Response.ok().build();
+    }
+
+    @Override
+    public Response updateCredentialSupplementalInformation(
+            HostConfiguration hostConfiguration,
+            UpdateCredentialsSupplementalInformationRequest request) {
+        callFakeAggregationController("updateCredentialSupplementalInformation", request);
         return Response.ok().build();
     }
 

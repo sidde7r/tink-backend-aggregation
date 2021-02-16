@@ -34,7 +34,7 @@ public final class AgentTestServerSupplementalRequester implements SupplementalR
     }
 
     @Override
-    public void requestSupplementalInformation(Credentials credentials) {
+    public void requestSupplementalInformation(String mfaId, Credentials credentials) {
         log.info("Requesting additional info from client. Status: {}", credentials.getStatus());
 
         switch (credentials.getStatus()) {

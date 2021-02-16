@@ -133,7 +133,7 @@ public class AgentTestContext extends AgentContext {
     }
 
     @Override
-    public void requestSupplementalInformation(Credentials credentials) {
+    public void requestSupplementalInformation(String mfaId, Credentials credentials) {
         log.info(
                 "Requesting supplemental information:"
                         + credentials.getStatus().name()

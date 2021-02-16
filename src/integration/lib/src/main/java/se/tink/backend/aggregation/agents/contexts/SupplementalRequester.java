@@ -6,7 +6,7 @@ import se.tink.backend.agents.rpc.Credentials;
 
 public interface SupplementalRequester {
 
-    void requestSupplementalInformation(Credentials credentials);
+    void requestSupplementalInformation(String mfaId, Credentials credentials);
 
     Optional<String> waitForSupplementalInformation(String mfaId, long waitFor, TimeUnit unit);
 }

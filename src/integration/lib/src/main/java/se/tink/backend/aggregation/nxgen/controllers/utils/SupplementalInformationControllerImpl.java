@@ -104,10 +104,11 @@ public class SupplementalInformationControllerImpl implements SupplementalInform
         String names = Arrays.stream(fields).map(Field::getName).collect(Collectors.joining(","));
         logger.info("Requesting for fields: {}", names);
 
-        supplementalRequester.requestSupplementalInformation(credentials);
-
         // in case of embedded supplemental information, we use credentialsId as mfaId
-        return credentials.getId();
+        String mfaId = credentials.getId();
+        supplementalRequester.requestSupplementalInformation(mfaId, credentials);
+
+        return mfaId;
     }
 
     @Override
@@ -134,10 +135,11 @@ public class SupplementalInformationControllerImpl implements SupplementalInform
 
         logger.info("Opening third party app with deep link URL {}, state {}", deepLinkUrl, state);
 
-        supplementalRequester.requestSupplementalInformation(credentials);
-
         // return the mfaId that can be listened for.
-        return String.format(UNIQUE_PREFIX_TPCB, this.state);
+        String mfaId = String.format(UNIQUE_PREFIX_TPCB, this.state);
+        supplementalRequester.requestSupplementalInformation(mfaId, credentials);
+
+        return mfaId;
     }
 
     @Override
@@ -154,10 +156,11 @@ public class SupplementalInformationControllerImpl implements SupplementalInform
         credentials.setStatus(CredentialsStatus.AWAITING_MOBILE_BANKID_AUTHENTICATION);
         credentials.setStatusPayload(null);
 
-        supplementalRequester.requestSupplementalInformation(credentials);
-
         // in case of swedish bankid, we use credentialsId as mfaId
-        return credentials.getId();
+        String mfaId = credentials.getId();
+        supplementalRequester.requestSupplementalInformation(mfaId, credentials);
+
+        return mfaId;
     }
 
     private static Map<String, String> stringToMap(final String string) {

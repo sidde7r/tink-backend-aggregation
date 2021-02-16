@@ -104,7 +104,7 @@ public class FakeIntegrationArgumentsCreator {
 
                     @Override
                     public void requestSupplementalInformation(
-                            se.tink.backend.agents.rpc.Credentials credentials) {
+                            String mfaId, se.tink.backend.agents.rpc.Credentials credentials) {
                         // NOOP
                     }
 
