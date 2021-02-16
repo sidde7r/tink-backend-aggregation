@@ -1,10 +1,6 @@
 java_library(
     name = "fidor",
     srcs = glob(["**/*.java"]),
-    data = [
-        "//tools:phantomjs_linux",
-        "//tools:phantomjs_mac",
-    ],
     visibility = ["//visibility:public"],
     deps = [
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/client/provider_configuration/rpc",
@@ -21,13 +17,12 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/filter/filterable/request",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
+        "//src/integration/webdriver",
         "//src/libraries/account_identifier",
         "//third_party:com_sun_jersey_jersey_core",
         "//third_party:org_apache_commons_commons_lang3",
         "//third_party:org_slf4j_slf4j_api",
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
-        "@selenium//:com_codeborne_phantomjsdriver",
         "@selenium//:org_seleniumhq_selenium_selenium_api",
-        "@selenium//:org_seleniumhq_selenium_selenium_remote_driver",
     ],
 )
