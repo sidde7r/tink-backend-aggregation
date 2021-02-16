@@ -30,7 +30,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeban
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankDeserializer;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankJavascriptStringFormatter;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.DanskeBankWebDriverHelper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password.rpc.BindDeviceRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password.rpc.BindDeviceResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password.rpc.CheckDeviceResponse;
@@ -64,6 +63,7 @@ import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.i18n.LocalizableEnum;
 import se.tink.libraries.i18n.LocalizableKey;
 import se.tink.libraries.serialization.utils.SerializationUtils;
+import src.integration.webdriver.WebDriverInitializer;
 
 public class DanskeBankChallengeAuthenticator
         implements TypedAuthenticator, AutoAuthenticator, KeyCardAuthenticator {
@@ -332,7 +332,9 @@ public class DanskeBankChallengeAuthenticator
         // Execute Js to build step up token
         WebDriver driver = null;
         try {
-            driver = DanskeBankWebDriverHelper.constructWebDriver();
+            driver =
+                    WebDriverInitializer.constructWebDriver(
+                            DanskeBankConstants.Javascript.USER_AGENT);
             JavascriptExecutor js = (JavascriptExecutor) driver;
             // Initiate with username and OtpChallenge
             js.executeScript(
@@ -452,7 +454,9 @@ public class DanskeBankChallengeAuthenticator
         // Execute javascript to get encrypted logon package and finalize package
         WebDriver driver = null;
         try {
-            driver = DanskeBankWebDriverHelper.constructWebDriver();
+            driver =
+                    WebDriverInitializer.constructWebDriver(
+                            DanskeBankConstants.Javascript.USER_AGENT);
             JavascriptExecutor js = (JavascriptExecutor) driver;
             js.executeScript(
                     DanskeBankJavascriptStringFormatter.createLoginJavascript(
@@ -476,7 +480,9 @@ public class DanskeBankChallengeAuthenticator
 
     private <T> T decryptOtpChallenge(String username, String otpChallenge, Class<T> clazz) {
         try {
-            this.driver = DanskeBankWebDriverHelper.constructWebDriver();
+            this.driver =
+                    WebDriverInitializer.constructWebDriver(
+                            DanskeBankConstants.Javascript.USER_AGENT);
             JavascriptExecutor js = (JavascriptExecutor) driver;
             js.executeScript(
                     DanskeBankJavascriptStringFormatter.createChallengeJavascript(
