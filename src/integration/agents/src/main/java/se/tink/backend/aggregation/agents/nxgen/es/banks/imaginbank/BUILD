@@ -1,10 +1,6 @@
 java_library(
     name = "imaginbank",
     srcs = glob(["**/*.java"]),
-    data = [
-        "//tools:phantomjs_linux",
-        "//tools:phantomjs_mac",
-    ],
     visibility = ["//visibility:public"],
     deps = [
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/client/provider_configuration/rpc",

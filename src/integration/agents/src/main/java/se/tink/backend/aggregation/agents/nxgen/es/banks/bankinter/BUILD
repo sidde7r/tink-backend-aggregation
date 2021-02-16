@@ -1,10 +1,6 @@
 java_library(
     name = "bankinter",
     srcs = glob(["**/*.java"]),
-    data = [
-        "//tools:phantomjs_linux",
-        "//tools:phantomjs_mac",
-    ],
     visibility = ["//visibility:public"],
     deps = [
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/client/provider_configuration/rpc",
@@ -25,6 +21,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
         "//src/integration/models",
+        "//src/integration/webdriver",
         "//src/libraries/account_identifier",
         "//src/libraries/serialization",
         "//third_party:com_google_code_findbugs_jsr305",
@@ -43,11 +40,7 @@ java_library(
         "@aggregation//:com_fasterxml_jackson_core_jackson_core",
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
         "@aggregation//:com_google_guava_guava",
-        "@selenium//:com_codeborne_phantomjsdriver",
         "@selenium//:org_seleniumhq_selenium_selenium_api",
-        "@selenium//:org_seleniumhq_selenium_selenium_firefox_driver",
-        "@selenium//:org_seleniumhq_selenium_selenium_htmlunit_driver",
-        "@selenium//:org_seleniumhq_selenium_selenium_remote_driver",
         "@selenium//:org_seleniumhq_selenium_selenium_support",
     ],
 )
