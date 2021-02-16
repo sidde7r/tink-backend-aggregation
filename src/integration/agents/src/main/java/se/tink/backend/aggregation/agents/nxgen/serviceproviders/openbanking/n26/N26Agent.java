@@ -37,6 +37,7 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.client.provider_configuration.rpc.PisCapability;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils;
+import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationController;
@@ -87,8 +88,6 @@ public final class N26Agent extends AgentPlatformAgent
 
     @Override
     public AgentAuthenticationProcess getAuthenticationProcess() {
-        client.setEidasProxy(configuration.getEidasProxy());
-        client.setFollowRedirects(false);
         return new N26OAuth2AuthenticationConfig(
                         new AgentPlatformHttpClient(client),
                         objectMapper,
@@ -110,6 +109,13 @@ public final class N26Agent extends AgentPlatformAgent
     @Override
     public FetchTransactionsResponse fetchCheckingTransactions() {
         return transactionalAccountRefreshController.fetchCheckingTransactions();
+    }
+
+    @Override
+    public void setConfiguration(AgentsServiceConfiguration configuration) {
+        super.setConfiguration(configuration);
+        client.setEidasProxy(configuration.getEidasProxy());
+        client.setFollowRedirects(false);
     }
 
     @SneakyThrows
@@ -158,8 +164,6 @@ public final class N26Agent extends AgentPlatformAgent
     }
 
     private OAuth2AuthenticationController constructOAuth2AuthenticationController() {
-        client.setEidasProxy(configuration.getEidasProxy());
-        client.setFollowRedirects(false);
         return new OAuth2AuthenticationController(
                 persistentStorage,
                 supplementalInformationHelper,
