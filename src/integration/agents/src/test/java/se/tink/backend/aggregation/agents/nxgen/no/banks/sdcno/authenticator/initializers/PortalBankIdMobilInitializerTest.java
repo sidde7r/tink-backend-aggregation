@@ -10,7 +10,6 @@ import org.mockito.Mockito;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.authenticator.bankidinitializers.PortalBankIdMobilInitializer;
 import se.tink.libraries.selenium.WebDriverHelper;
 
@@ -30,7 +29,7 @@ public class PortalBankIdMobilInitializerTest {
 
     @Before
     public void initSetup() {
-        driver = mock(PhantomJSDriver.class);
+        driver = mock(WebDriver.class);
         webDriverHelper = mock(WebDriverHelper.class);
         objUnderTest =
                 new PortalBankIdMobilInitializer(

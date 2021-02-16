@@ -22,6 +22,7 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.selenium.WebDriverHelper;
+import src.integration.webdriver.WebDriverInitializer;
 
 public class SdcNoBankIdSSAuthenticator implements AutoAuthenticator, TypedAuthenticator {
     private final WebDriver driver;
@@ -37,7 +38,7 @@ public class SdcNoBankIdSSAuthenticator implements AutoAuthenticator, TypedAuthe
             SupplementalInformationController supplementalInformationController,
             Catalog catalog) {
         this.webDriverHelper = new WebDriverHelper();
-        this.driver = webDriverHelper.constructPhantomJsWebDriver(WebScrapingConstants.USER_AGENT);
+        this.driver = WebDriverInitializer.constructWebDriver(WebScrapingConstants.USER_AGENT);
         this.configuration = configuration;
         this.postAuthDriverProcessor =
                 new PostAuthDriverProcessor(driver, webDriverHelper, tinkHttpClient, configuration);

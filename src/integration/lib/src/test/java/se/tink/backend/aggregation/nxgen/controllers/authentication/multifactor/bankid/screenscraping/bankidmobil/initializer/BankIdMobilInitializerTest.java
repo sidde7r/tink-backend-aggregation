@@ -10,7 +10,6 @@ import org.mockito.Mockito;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import se.tink.libraries.selenium.WebDriverHelper;
 
 public class BankIdMobilInitializerTest {
@@ -28,7 +27,7 @@ public class BankIdMobilInitializerTest {
 
     @Before
     public void initSetup() {
-        driver = mock(PhantomJSDriver.class);
+        driver = mock(WebDriver.class);
         webDriverHelper = mock(WebDriverHelper.class);
         objUnderTest =
                 new BankIdMobilInitializer(

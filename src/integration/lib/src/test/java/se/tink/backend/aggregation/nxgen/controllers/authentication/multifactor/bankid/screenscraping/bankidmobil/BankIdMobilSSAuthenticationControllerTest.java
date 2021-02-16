@@ -13,7 +13,6 @@ import org.mockito.Mockito;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
@@ -39,7 +38,7 @@ public class BankIdMobilSSAuthenticationControllerTest {
     @Before
     public void initSetup() {
         mobilInitializer = mock(MobilInitializer.class);
-        driver = mock(PhantomJSDriver.class);
+        driver = mock(WebDriver.class);
         webDriverHelper = mock(WebDriverHelper.class);
         SupplementalInformationController supplementalInformationController =
                 mock(SupplementalInformationController.class);

@@ -26,7 +26,6 @@ junit_test(
         "//third_party:com_sun_jersey_jersey_core",
         "//third_party:org_assertj_assertj_core",
         "//third_party:org_mockito_mockito_core",
-        "@selenium//:com_codeborne_phantomjsdriver",
         "@selenium//:org_seleniumhq_selenium_selenium_api",
     ],
 )
@@ -57,7 +56,6 @@ junit_test(
         "//third_party:com_github_tomakehurst_wiremock",
         "//third_party:org_assertj_assertj_core",
         "//third_party:org_mockito_mockito_core",
-        "@selenium//:com_codeborne_phantomjsdriver",
         "@selenium//:org_seleniumhq_selenium_selenium_api",
     ],
 )

@@ -15,8 +15,8 @@ import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.Mockito;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
@@ -35,7 +35,7 @@ public class BankIdIframeSSAuthenticationControllerTest {
     private IframeInitializer iframeInitializer;
     private WebDriverHelper webDriverHelper;
     private InOrder inOrder;
-    private PhantomJSDriver driver;
+    private WebDriver driver;
 
     private WebElement buttonBankId;
     private WebElement selectAuthenticationButton;
@@ -51,7 +51,7 @@ public class BankIdIframeSSAuthenticationControllerTest {
 
     @Before
     public void init() {
-        driver = mock(PhantomJSDriver.class);
+        driver = mock(WebDriver.class);
         webDriverHelper = mock(WebDriverHelper.class);
         iframeInitializer = mock(IframeInitializer.class);
         inOrder = Mockito.inOrder(iframeInitializer, driver, webDriverHelper);
