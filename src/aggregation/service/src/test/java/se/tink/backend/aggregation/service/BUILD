@@ -1,4 +1,4 @@
-load("//tools/bzl:junit_old.bzl", "junit_test")
+load("//tools/bzl:junit.bzl", "junit_test")
 
 data = [
     "//data:agents",
@@ -30,6 +30,7 @@ deps = [
     "@system_tests//:org_assertj_assertj_core",
     "@system_tests//:org_hamcrest_hamcrest_core",
     "@system_tests//:org_hamcrest_hamcrest_library",
+    "@system_tests//:org_slf4j_slf4j_api",
     "@system_tests//:org_springframework_boot_spring_boot_test",
     "@system_tests//:org_springframework_spring_test",
     "@system_tests//:org_springframework_spring_web",
