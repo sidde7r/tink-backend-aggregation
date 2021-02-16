@@ -394,7 +394,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     // Would have put this in a yml config if we had the plumming for one here, but as we don't,
     // and this is just to not risk the initial deploy, i'll make the canary release this way.
     // These will be removed once migration is done.
-    private static final double RATIO_SUPPL_INFO_ENDPOINT = 0.01;
+    private static final double RATIO_SUPPL_INFO_ENDPOINT = 0.05;
     private final Random random = new Random();
     private boolean dedicatedSuppInfoPath;
 
