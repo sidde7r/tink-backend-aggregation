@@ -27,12 +27,15 @@ public class LaCaixaMockServerAgentTest {
                         .parseContractOnBasisOfFile(wireMockContractFilePath);
 
         final AgentWireMockRefreshTest agentWireMockRefreshTest =
-                AgentWireMockRefreshTest.builder(
-                                MarketCode.ES, "es-lacaixa-password", wireMockServerFilePath)
-                        .addCredentialField(Key.USERNAME.getFieldKey(), USERNAME)
-                        .addCredentialField(Key.PASSWORD.getFieldKey(), PASSWORD)
+                AgentWireMockRefreshTest.nxBuilder()
+                        .withMarketCode(MarketCode.ES)
+                        .withProviderName("es-lacaixa-password")
+                        .withWireMockFilePath(wireMockServerFilePath)
+                        .withoutConfigFile()
                         .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
                         .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
+                        .addCredentialField(Key.USERNAME.getFieldKey(), USERNAME)
+                        .addCredentialField(Key.PASSWORD.getFieldKey(), PASSWORD)
                         .build();
 
         // When
