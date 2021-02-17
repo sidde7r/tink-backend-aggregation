@@ -28,7 +28,7 @@ public class ClientConfigurationTemplateBuilder {
     private static final String PRETTY_PRINTING_INDENT_PADDING =
             new String(new char[NUM_SPACES_INDENT]).replace((char) 0, ' ');
     private static final String FIN_IDS_KEY = "finId";
-    private static final String PROVIDER_NAME_KEY = "providerName";
+    private static final String PROVIDER_NAME_KEY = "providerId";
     private static final String KEY_DESCRIPTION = "description";
     private static final String KEY_EXAMPLES = "examples";
     private final boolean includeDescriptions;
