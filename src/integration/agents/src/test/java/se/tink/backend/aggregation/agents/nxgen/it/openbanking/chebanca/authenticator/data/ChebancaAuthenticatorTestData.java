@@ -1,8 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.authenticator.data;
 
+import org.junit.Ignore;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.authenticator.rpc.TokenResponse;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
+@Ignore
 public class ChebancaAuthenticatorTestData {
     public static final String ACCESS_TOKEN = "db65aa52-b500-4217-9840-b432270dffff";
     public static final String REFRESH_TOKEN = "db65aa52-b500-4217-9840-b432270dffff";

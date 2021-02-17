@@ -5,8 +5,10 @@ import io.grpc.netty.NettyServerBuilder;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.concurrent.CompletableFuture;
+import org.junit.Ignore;
 
-final class GrpcServerService {
+@Ignore
+public final class GrpcServerService {
 
     private final Server server;
 

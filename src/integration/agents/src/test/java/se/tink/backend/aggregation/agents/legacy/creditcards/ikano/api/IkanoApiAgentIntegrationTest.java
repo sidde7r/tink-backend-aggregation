@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.creditcards.ikano.api;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.framework.legacy.AbstractAgentTest;
@@ -11,6 +12,7 @@ public class IkanoApiAgentIntegrationTest extends AbstractAgentTest<IkanoApiAgen
     }
 
     @Test
+    @Ignore("Broken test")
     public void testUser1() throws Exception {
         testAgent(TestSSN.AL, null);
     }

@@ -2,11 +2,13 @@ package se.tink.backend.integration.agent_data_availability_tracker.client.grpc;
 
 import io.grpc.stub.StreamObserver;
 import java.util.concurrent.CompletableFuture;
+import org.junit.Ignore;
 import se.tink.backend.integration.agent_data_availability_tracker.api.AgentDataAvailabilityTrackerServiceGrpc.AgentDataAvailabilityTrackerServiceImplBase;
 import se.tink.backend.integration.agent_data_availability_tracker.api.TrackAccountRequest;
 import se.tink.backend.integration.agent_data_availability_tracker.api.Void;
 
-final class AgentDataAvailabilityTrackerTestService
+@Ignore
+public final class AgentDataAvailabilityTrackerTestService
         extends AgentDataAvailabilityTrackerServiceImplBase {
 
     private final CompletableFuture<String> future;

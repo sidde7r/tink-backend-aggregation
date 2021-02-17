@@ -1,7 +1,7 @@
-load("//tools/bzl:junit_old.bzl", "junit_test")
+load("//tools/bzl:junit.bzl", "junit_test")
 
 junit_test(
-    name = "qsealc-signer",
+    name = "eidassigner",
     srcs = glob(["**/*.java"]),
     data = [
         "//data:qsealc_crt",

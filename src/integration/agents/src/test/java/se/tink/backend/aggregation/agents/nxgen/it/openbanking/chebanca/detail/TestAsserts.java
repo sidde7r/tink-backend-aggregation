@@ -5,8 +5,10 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import org.junit.Ignore;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 
+@Ignore
 public class TestAsserts {
 
     public static void assertValid(OAuth2Token token) {

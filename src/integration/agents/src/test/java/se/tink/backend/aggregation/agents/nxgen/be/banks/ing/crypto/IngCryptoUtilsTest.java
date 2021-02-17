@@ -7,15 +7,21 @@ import java.nio.file.Paths;
 import java.security.KeyFactory;
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.security.Security;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 import javax.crypto.spec.SecretKeySpec;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.util.encoders.Hex;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.utils.crypto.EllipticCurve;
 
 public class IngCryptoUtilsTest {
+
+    static {
+        Security.addProvider(new BouncyCastleProvider());
+    }
 
     private static final String MY_PRIVATE_KEY =
             "MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQg3GiofKICcwb2JFlV"

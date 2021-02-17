@@ -2,11 +2,13 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.axa.utils;
 
 import java.security.KeyPair;
 import java.security.PublicKey;
+import java.security.Security;
 import java.security.interfaces.ECPrivateKey;
 import java.security.interfaces.ECPublicKey;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import org.assertj.core.api.Assertions;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.junit.Assert;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.utils.crypto.EllipticCurve;
@@ -16,6 +18,10 @@ public class AxaCryptoUtilTest {
 
     private static final String EC_PUBLIC_KEY_BASE64 =
             "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEJgA//oZrkFVUZFbL5iG1Fbysyn1d+8RTtR6/u0qAOH38Q5mN3mgG3rkk/cy8wp+rD4rOb8Oco+w/nRh9/GnHnQ==";
+
+    static {
+        Security.addProvider(new BouncyCastleProvider());
+    }
 
     @Test
     public void testGeneratingRSAKeyPair() {

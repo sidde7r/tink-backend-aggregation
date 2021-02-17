@@ -3,9 +3,11 @@ package se.tink.backend.integration.agent_data_availability_tracker.serializatio
 import com.google.common.collect.ImmutableSet;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.junit.Ignore;
 import se.tink.backend.integration.agent_data_availability_tracker.common.serialization.FieldEntry;
 import se.tink.backend.integration.agent_data_availability_tracker.common.serialization.TrackingList.Builder;
 
+@Ignore
 public class TrackingSerializationTestHelper {
 
     static boolean isAllUnlisted(

@@ -1,4 +1,4 @@
-load("//tools/bzl:junit_old.bzl", "junit_test")
+load("//tools/bzl:junit.bzl", "junit_test")
 
 java_library(
     name = "agents",
@@ -145,7 +145,6 @@ junit_test(
         "//tools:phantomjs_linux",
         "//tools:phantomjs_mac",
     ],
-    tags = ["manual"],
     visibility = ["//visibility:public"],
     runtime_deps = [
         "//third_party:ch_qos_logback_logback_classic",

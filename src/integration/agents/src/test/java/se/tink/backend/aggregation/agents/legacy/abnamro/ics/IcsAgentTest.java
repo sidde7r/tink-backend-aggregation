@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.abnamro.ics;
 
 import com.google.common.collect.ImmutableSet;
+import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.abnamro.utils.AbnAmroIcsCredentials;
 import se.tink.backend.aggregation.agents.framework.legacy.AbstractAgentTest;
@@ -13,6 +14,7 @@ public class IcsAgentTest extends AbstractAgentTest<IcsAgent> {
     }
 
     @Test
+    @Ignore("Broken test")
     public void testUserWithOneCreditCard() throws Exception {
 
         // The credentials below changes after every data refresh at ABN so it is not sure that test

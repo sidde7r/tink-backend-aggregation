@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.fetcher.transactionalaccount.data;
 
+import org.junit.Ignore;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.fetcher.transactionalaccount.rpc.ConsentAuthorizationResponse;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.fetcher.transactionalaccount.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.fetcher.transactionalaccount.rpc.CustomerIdResponse;
@@ -7,6 +8,7 @@ import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.fetcher.
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.fetcher.transactionalaccount.rpc.GetBalancesResponse;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
+@Ignore
 public class TransactionalAccountTestData {
 
     public static ConsentResponse getCreateConsentResponse() {

@@ -2,9 +2,11 @@ package se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.detail.
 
 import java.util.Arrays;
 import java.util.List;
+import org.junit.Ignore;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
+@Ignore
 public class AccountProductCodeTestData {
     public static List<String> getCreditCardCodes() {
         return Arrays.asList("CAPC", "CA30");

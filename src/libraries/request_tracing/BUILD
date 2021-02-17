@@ -1,4 +1,4 @@
-load("//tools/bzl:junit_old.bzl", "junit_test")
+load("//tools/bzl:junit.bzl", "junit_test")
 
 java_library(
     name = "request_tracing",
@@ -19,6 +19,7 @@ junit_test(
         "//third_party:ch_qos_logback_logback_classic",
         "//third_party:junit_junit",
         "//third_party:org_assertj_assertj_core",
+        "//third_party:org_slf4j_slf4j_api",
         "@aggregation//:com_google_guava_guava",
     ],
 )
