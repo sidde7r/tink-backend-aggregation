@@ -129,7 +129,7 @@ public class SwedbankSETransactionalAccountFetcher
 
         if (investmentAccountNumbers == null) {
             PortfolioHoldingsResponse portfolioHoldings = apiClient.portfolioHoldings();
-            investmentAccountNumbers = portfolioHoldings.investmentAccountNumbers();
+            investmentAccountNumbers = portfolioHoldings.getInvestmentAccountNumbers();
         }
 
         return investmentAccountNumbers;

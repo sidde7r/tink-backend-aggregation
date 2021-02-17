@@ -60,7 +60,7 @@ public class PortfolioHoldingsResponse {
     // i.e. not savings accounts.
     // These accounts will be fetched by the investment fetcher,
     // all other can be handled by transactional account fetcher
-    public List<String> investmentAccountNumbers() {
+    public List<String> getInvestmentAccountNumbers() {
         if (!hasInvestments()) {
             return Collections.emptyList();
         }
