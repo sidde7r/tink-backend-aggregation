@@ -5,13 +5,13 @@ metadata:
   namespace: agents
 spec:
   rules:
-                      ##### RE #####
+    ##### RE #####
 
     #######################################################
     ### All login success rates - Temporary Errors - RE ###
     #######################################################
 
-    - alert: AllLoginSuccessRatesBelow50AndGreater40WithTemporaryErrorsAndAttemptLimitIT_RE
+    - alert: all_login_success_rates_below50_and_greater40_with_temporary_errors_and_attempt_limit_it_re
       expr: |
         (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="IT"}))
                     / (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="IT"})) < 0.5
@@ -30,7 +30,7 @@ spec:
           the last 30 minutes.
         tags: {{ .Values.tags }}
 
-    - alert: AllLoginSuccessRatesBelow40AndGreater30WithTemporaryErrorsAndAttemptLimitIT_RE
+    - alert: all_login_success_rates_below40_and_greater30_with_temporary_errors_and_attempt_limit_it_re
       expr: |
         (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="IT"}))
                     / (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="IT"})) < 0.4
@@ -49,7 +49,7 @@ spec:
           the last 30 minutes.
         tags: {{ .Values.tags }}
 
-    - alert: AllLoginSuccessRatesBelow30AndGreater20WithTemporaryErrorsAndAttemptLimitIT_RE
+    - alert: all_login_success_rates_below30_and_greater20_with_temporary_errors_and_attempt_limit_it_re
       expr: |
         (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="IT"}))
                     / (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="IT"})) < 0.3
@@ -68,7 +68,7 @@ spec:
           the last 30 minutes.
         tags: {{ .Values.tags }}
 
-    - alert: AllLoginSuccessRatesBelow20WithTemporaryErrorsAndAttemptLimitIT_RE
+    - alert: all_login_success_rates_below20_with_temporary_errors_and_attempt_limit_it_re
       expr: |
         (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="IT"}))
                     / (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="IT"})) < 0.2
@@ -89,7 +89,7 @@ spec:
     ### Split login success rates - Temporary Errors - RE ###
     #########################################################
 
-    - alert: SplitLoginSuccessRatesBelow50AndGreater40WithTemporaryErrorsAndAttemptLimitIT_RE
+    - alert: split_login_success_rates_below50_and_greater40_with_temporary_errors_and_attempt_limit_it_re
       expr: |
         (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="IT"}))
                     / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="IT"})) < 0.5
@@ -108,7 +108,7 @@ spec:
           the last 30 minutes.
         tags: {{ .Values.tags }}
 
-    - alert: SplitLoginSuccessRatesBelow40AndGreater30WithTemporaryErrorsAndAttemptLimitIT_RE
+    - alert: split_login_success_rates_below40_and_greater30_with_temporary_errors_and_attempt_limit_it_re
       expr: |
         (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="IT"}))
                     / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="IT"})) < 0.4
@@ -127,7 +127,7 @@ spec:
           the last 30 minutes.
         tags: {{ .Values.tags }}
 
-    - alert: SplitLoginSuccessRatesBelow30AndGreater20WithTemporaryErrorsAndAttemptLimitIT_RE
+    - alert: split_login_success_rates_below30_and_greater20_with_temporary_errors_and_attempt_limit_it_re
       expr: |
         (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="IT"}))
                     / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="IT"})) < 0.3
@@ -146,7 +146,7 @@ spec:
           the last 30 minutes.
         tags: {{ .Values.tags }}
 
-    - alert: SplitLoginSuccessRatesBelow20WithTemporaryErrorsAndAttemptLimitIT_RE
+    - alert: split_login_success_rates_below20_with_temporary_errors_and_attempt_limit_it_re
       expr: |
         (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="IT"}))
                     / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="IT"})) < 0.2
@@ -167,7 +167,7 @@ spec:
     ### All login success rates - Authentication Errors - RE ###
     ############################################################
 
-    - alert: AllLoginSuccessRatesBelow40AndGreater30WithAuthenticationErrorsAndAttemptLimitIT_RE
+    - alert: all_login_success_rates_below40_and_greater30_with_authentication_errors_and_attempt_limit_it_re
       expr: |
         (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="IT"}))
                     / (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="IT"})) < 0.4
@@ -186,7 +186,7 @@ spec:
           the last 30 minutes.
         tags: {{ .Values.tags }}
 
-    - alert: AllLoginSuccessRatesBelow30AndGreater20WithAuthenticationErrorsAndAttemptLimitIT_RE
+    - alert: all_login_success_rates_below30_and_greater20_with_authentication_errors_and_attempt_limit_it_re
       expr: |
         (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="IT"}))
                     / (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="IT"})) < 0.3
@@ -205,7 +205,7 @@ spec:
           the last 30 minutes.
         tags: {{ .Values.tags }}
 
-    - alert: AllLoginSuccessRatesBelow20AndGreater10WithAuthenticationErrorsAndAttemptLimitIT_RE
+    - alert: all_login_success_rates_below20_and_greater10_with_authentication_errors_and_attempt_limit_it_re
       expr: |
         (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="IT"}))
                     / (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="IT"})) < 0.2
@@ -224,7 +224,7 @@ spec:
           the last 30 minutes.
         tags: {{ .Values.tags }}
 
-    - alert: AllLoginSuccessRatesBelow10WithAuthenticationErrorsAndAttemptLimitIT_RE
+    - alert: all_login_success_rates_below10_with_authentication_errors_and_attempt_limit_it_re
       expr: |
         (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="IT"}))
                     / (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="IT"})) < 0.1
@@ -245,7 +245,7 @@ spec:
     ### Split login success rates - Authentication Errors - RE ###
     ##############################################################
 
-    - alert: SplitLoginSuccessRatesBelow40AndGreater30WithAuthenticationErrorsAndAttemptLimitIT_RE
+    - alert: split_login_success_rates_below40_and_greater30_with_authentication_errors_and_attempt_limit_it_re
       expr: |
         (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="IT"}))
                     / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="IT"})) < 0.4
@@ -264,7 +264,7 @@ spec:
           the last 30 minutes.
         tags: {{ .Values.tags }}
 
-    - alert: SplitLoginSuccessRatesBelow30AndGreater20WithAuthenticationErrorsAndAttemptLimitIT_RE
+    - alert: split_login_success_rates_below30_and_greater20_with_authentication_errors_and_attempt_limit_it_re
       expr: |
         (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="IT"}))
                     / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="IT"})) < 0.3
@@ -283,7 +283,7 @@ spec:
           the last 30 minutes.
         tags: {{ .Values.tags }}
 
-    - alert: SplitLoginSuccessRatesBelow20AndGreater10WithAuthenticationErrorsAndAttemptLimitIT_RE
+    - alert: split_login_success_rates_below20_and_greater10_with_authentication_errors_and_attempt_limit_it_re
       expr: |
         (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="IT"}))
                     / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="IT"})) < 0.2
@@ -302,7 +302,7 @@ spec:
           the last 30 minutes.
         tags: {{ .Values.tags }}
 
-    - alert: SplitLoginSuccessRatesBelow10WithAuthenticationErrorsAndAttemptLimitIT_RE
+    - alert: split_login_success_rates_below10_with_authentication_errors_and_attempt_limit_it_re
       expr: |
         (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="IT"}))
                     / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="IT"})) < 0.1
@@ -323,7 +323,7 @@ spec:
     ### All login success rates - Bank Errors - RE ###
     ##################################################
 
-    - alert: AllLoginSuccessRatesBelow40AndGreater30WithBankErrorsAndAttemptLimitIT_RE
+    - alert: all_login_success_rates_below40_and_greater30_with_bank_errors_and_attempt_limit_it_re
       expr: |
         (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="IT"}))
                     / (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="IT"})) < 0.4
@@ -342,7 +342,7 @@ spec:
           the last 30 minutes.
         tags: {{ .Values.tags }}
 
-    - alert: AllLoginSuccessRatesBelow30AndGreater20WithBankErrorsAndAttemptLimitIT_RE
+    - alert: all_login_success_rates_below30_and_greater20_with_bank_errors_and_attempt_limit_it_re
       expr: |
         (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="IT"}))
                     / (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="IT"})) < 0.3
@@ -361,7 +361,7 @@ spec:
           the last 30 minutes.
         tags: {{ .Values.tags }}
 
-    - alert: AllLoginSuccessRatesBelow20AndGreater10WithBankErrorsAndAttemptLimitIT_RE
+    - alert: all_login_success_rates_below20_and_greater10_with_bank_errors_and_attempt_limit_it_re
       expr: |
         (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="IT"}))
                     / (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="IT"})) < 0.2
@@ -380,7 +380,7 @@ spec:
           the last 30 minutes.
         tags: {{ .Values.tags }}
 
-    - alert: AllLoginSuccessRatesBelow10WithBankErrorsAndAttemptLimitIT_RE
+    - alert: all_login_success_rates_below10_with_bank_errors_and_attempt_limit_it_re
       expr: |
         (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="IT"}))
                     / (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="IT"})) < 0.1
@@ -401,7 +401,7 @@ spec:
     ### Split login success rates - Bank Errors - RE ###
     ####################################################
 
-    - alert: SplitLoginSuccessRatesBelow40AndGreater30WithBankErrorsAndAttemptLimitIT_RE
+    - alert: split_login_success_rates_below40_and_greater30_with_bank_errors_and_attempt_limit_it_re
       expr: |
         (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="IT"}))
                     / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="IT"})) < 0.4
@@ -420,7 +420,7 @@ spec:
           the last 30 minutes.
         tags: {{ .Values.tags }}
 
-    - alert: SplitLoginSuccessRatesBelow30AndGreater20WithBankErrorsAndAttemptLimitIT_RE
+    - alert: split_login_success_rates_below30_and_greater20_with_bank_errors_and_attempt_limit_it_re
       expr: |
         (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="IT"}))
                     / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="IT"})) < 0.3
@@ -439,7 +439,7 @@ spec:
           the last 30 minutes.
         tags: {{ .Values.tags }}
 
-    - alert: SplitLoginSuccessRatesBelow20AndGreater10WithBankErrorsAndAttemptLimitIT_RE
+    - alert: split_login_success_rates_below20_and_greater10_with_bank_errors_and_attempt_limit_it_re
       expr: |
         (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="IT"}))
                     / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="IT"})) < 0.2
@@ -458,7 +458,7 @@ spec:
           the last 30 minutes.
         tags: {{ .Values.tags }}
 
-    - alert: SplitLoginSuccessRatesBelow10WithBankErrorsAndAttemptLimitIT_RE
+    - alert: split_login_success_rates_below10_with_bank_errors_and_attempt_limit_it_re
       expr: |
         (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="IT"}))
                     / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="IT"})) < 0.1
@@ -479,7 +479,7 @@ spec:
     ### All login success rates - Agent Errors - RE ###
     ###################################################
 
-    - alert: AllLoginSuccessRatesBelow35AndGreater30WithAgentErrorsAndAttemptLimitIT_RE
+    - alert: all_login_success_rates_below35_and_greater30_with_agent_errors_and_attempt_limit_it_re
       expr: |
         (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.agentErrorsAuth }} , market="IT"}))
                     / (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="IT"})) < 0.35
@@ -498,7 +498,7 @@ spec:
           the last 30 minutes.
         tags: {{ .Values.tags }}
 
-    - alert: AllLoginSuccessRatesBelow30AndGreater20WithAgentErrorsAndAttemptLimitIT_RE
+    - alert: all_login_success_rates_below30_and_greater20_with_agent_errors_and_attempt_limit_it_re
       expr: |
         (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.agentErrorsAuth }} , market="IT"}))
                     / (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="IT"})) < 0.3
@@ -517,7 +517,7 @@ spec:
           the last 30 minutes.
         tags: {{ .Values.tags }}
 
-    - alert: AllLoginSuccessRatesBelow20AndGreater10WithAgentErrorsAndAttemptLimitIT_RE
+    - alert: all_login_success_rates_below20_and_greater10_with_agent_errors_and_attempt_limit_it_re
       expr: |
         (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.agentErrorsAuth }} , market="IT"}))
                     / (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="IT"})) < 0.2
@@ -536,7 +536,7 @@ spec:
           the last 30 minutes.
         tags: {{ .Values.tags }}
 
-    - alert: AllLoginSuccessRatesBelow10WithAgentErrorsAndAttemptLimitIT_RE
+    - alert: all_login_success_rates_below10_with_agent_errors_and_attempt_limit_it_re
       expr: |
         (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.agentErrorsAuth }} , market="IT"}))
                     / (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="IT"})) < 0.1
@@ -557,7 +557,7 @@ spec:
     ### Split login success rates - Agent Errors - RE ###
     #####################################################
 
-    - alert: SplitLoginSuccessRatesBelow35AndGreater30WithAgentErrorsAndAttemptLimitIT_RE
+    - alert: split_login_success_rates_below35_and_greater30_with_agent_errors_and_attempt_limit_it_re
       expr: |
         (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.agentErrorsAuth }} , market="IT"}))
                     / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="IT"})) < 0.35
@@ -576,7 +576,7 @@ spec:
           the last 30 minutes.
         tags: {{ .Values.tags }}
 
-    - alert: SplitLoginSuccessRatesBelow30AndGreater20WithAgentErrorsAndAttemptLimitIT_RE
+    - alert: split_login_success_rates_below30_and_greater20_with_agent_errors_and_attempt_limit_it_re
       expr: |
         (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.agentErrorsAuth }} , market="IT"}))
                     / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="IT"})) < 0.3
@@ -595,7 +595,7 @@ spec:
           the last 30 minutes.
         tags: {{ .Values.tags }}
 
-    - alert: SplitLoginSuccessRatesBelow20AndGreater10WithAgentErrorsAndAttemptLimitIT_RE
+    - alert: split_login_success_rates_below20_and_greater10_with_agent_errors_and_attempt_limit_it_re
       expr: |
         (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.agentErrorsAuth }} , market="IT"}))
                     / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="IT"})) < 0.2
@@ -614,7 +614,7 @@ spec:
           the last 30 minutes.
         tags: {{ .Values.tags }}
 
-    - alert: SplitLoginSuccessRatesBelow10WithAgentErrorsAndAttemptLimitIT_RE
+    - alert: split_login_success_rates_below10_with_agent_errors_and_attempt_limit_it_re
       expr: |
         (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.agentErrorsAuth }} , market="IT"}))
                     / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="IT"})) < 0.1
@@ -635,7 +635,7 @@ spec:
     ### All login success rates - All Errors - RE ###
     #################################################
 
-    - alert: AllLoginSuccessRatesBelow30AndGreater25WithAllErrorsAndAttemptLimitIT_RE
+    - alert: all_login_success_rates_below30_and_greater25_with_all_errors_and_attempt_limit_it_re
       expr: |
         (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="IT"}))
                     / (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="IT"})) < 0.30
@@ -654,7 +654,7 @@ spec:
           the last 30 minutes.
         tags: {{ .Values.tags }}
 
-    - alert: AllLoginSuccessRatesBelow25AndGreater15WithAllErrorsAndAttemptLimitIT_RE
+    - alert: all_login_success_rates_below25_and_greater15_with_all_errors_and_attempt_limit_it_re
       expr: |
         (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="IT"}))
                     / (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="IT"})) < 0.25
@@ -673,7 +673,7 @@ spec:
           the last 30 minutes.
         tags: {{ .Values.tags }}
 
-    - alert: AllLoginSuccessRatesBelow15AndGreater10WithAllErrorsAndAttemptLimitIT_RE
+    - alert: all_login_success_rates_below15_and_greater10_with_all_errors_and_attempt_limit_it_re
       expr: |
         (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="IT"}))
                     / (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="IT"})) < 0.15
@@ -692,7 +692,7 @@ spec:
           the last 30 minutes.
         tags: {{ .Values.tags }}
 
-    - alert: AllLoginSuccessRatesBelow10WithAllErrorsAndAttemptLimitIT_RE
+    - alert: all_login_success_rates_below10_with_all_errors_and_attempt_limit_it_re
       expr: |
         (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="IT"}))
                     / (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="IT"})) < 0.1
@@ -713,7 +713,7 @@ spec:
     ### Split login success rates - All Errors - RE ###
     ###################################################
 
-    - alert: SplitLoginSuccessRatesBelow30AndGreater25WithAllErrorsAndAttemptLimitIT_RE
+    - alert: split_login_success_rates_below30_and_greater25_with_all_errors_and_attempt_limit_it_re
       expr: |
         (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="IT"}))
                     / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="IT"})) < 0.30
@@ -732,7 +732,7 @@ spec:
           the last 30 minutes.
         tags: {{ .Values.tags }}
 
-    - alert: SplitLoginSuccessRatesBelow25AndGreater15WithAllErrorsAndAttemptLimitIT_RE
+    - alert: split_login_success_rates_below25_and_greater15_with_all_errors_and_attempt_limit_it_re
       expr: |
         (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="IT"}))
                     / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="IT"})) < 0.25
@@ -751,7 +751,7 @@ spec:
           the last 30 minutes.
         tags: {{ .Values.tags }}
 
-    - alert: SplitLoginSuccessRatesBelow15AndGreater10WithAllErrorsAndAttemptLimitIT_RE
+    - alert: split_login_success_rates_below15_and_greater10_with_all_errors_and_attempt_limit_it_re
       expr: |
         (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="IT"}))
                     / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="IT"})) < 0.15
@@ -770,7 +770,7 @@ spec:
           the last 30 minutes.
         tags: {{ .Values.tags }}
 
-    - alert: SplitLoginSuccessRatesBelow10WithAllErrorsAndAttemptLimitIT_RE
+    - alert: split_login_success_rates_below10_with_all_errors_and_attempt_limit_it_re
       expr: |
         (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="IT"}))
                     / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="IT"})) < 0.1
@@ -793,7 +793,7 @@ spec:
     ### All login success rates - Temporary Errors - OB ###
     ############################################################
 
-    - alert: AllLoginSuccessRatesBelow75AndGreater60WithTemporaryErrorsAndAttemptLimitIT_OB
+    - alert: all_login_success_rates_below75_and_greater60_with_temporary_errors_and_attempt_limit_it_ob
       expr: |
         (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="IT"}))
                     / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="IT"})) < 0.75
@@ -812,7 +812,7 @@ spec:
           the last 30 minutes.
         tags: {{ .Values.tags }}
 
-    - alert: AllLoginSuccessRatesBelow60AndGreater50WithTemporaryErrorsAndAttemptLimitIT_OB
+    - alert: all_login_success_rates_below60_and_greater50_with_temporary_errors_and_attempt_limit_it_ob
       expr: |
         (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="IT"}))
                     / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="IT"})) < 0.6
@@ -831,7 +831,7 @@ spec:
           the last 30 minutes.
         tags: {{ .Values.tags }}
 
-    - alert: AllLoginSuccessRatesBelow50AndGreater40WithTemporaryErrorsAndAttemptLimitIT_OB
+    - alert: all_login_success_rates_below50_and_greater40_with_temporary_errors_and_attempt_limit_it_ob
       expr: |
         (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="IT"}))
                     / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="IT"})) < 0.5
@@ -850,7 +850,7 @@ spec:
           the last 30 minutes.
         tags: {{ .Values.tags }}
 
-    - alert: AllLoginSuccessRatesBelow40WithTemporaryErrorsAndAttemptLimitIT_OB
+    - alert: all_login_success_rates_below40_with_temporary_errors_and_attempt_limit_it_ob
       expr: |
         (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="IT"}))
                     / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="IT"})) < 0.4
@@ -872,7 +872,7 @@ spec:
     ### Split login success rates - Temporary Errors - OB ###
     #########################################################
 
-    - alert: SplitLoginSuccessRatesBelow75AndGreater60WithTemporaryErrorsAndAttemptLimitIT_OB
+    - alert: split_login_success_rates_below75_and_greater60_with_temporary_errors_and_attempt_limit_it_ob
       expr: |
         (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="IT"}))
                     / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="IT"})) < 0.75
@@ -891,7 +891,7 @@ spec:
           the last 30 minutes.
         tags: {{ .Values.tags }}
 
-    - alert: SplitLoginSuccessRatesBelow60AndGreater50WithTemporaryErrorsAndAttemptLimitIT_OB
+    - alert: split_login_success_rates_below60_and_greater50_with_temporary_errors_and_attempt_limit_it_ob
       expr: |
         (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="IT"}))
                     / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="IT"})) < 0.6
@@ -910,7 +910,7 @@ spec:
           the last 30 minutes.
         tags: {{ .Values.tags }}
 
-    - alert: SplitLoginSuccessRatesBelow50AndGreater40WithTemporaryErrorsAndAttemptLimitIT_OB
+    - alert: split_login_success_rates_below50_and_greater40_with_temporary_errors_and_attempt_limit_it_ob
       expr: |
         (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="IT"}))
                     / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="IT"})) < 0.5
@@ -929,7 +929,7 @@ spec:
           the last 30 minutes.
         tags: {{ .Values.tags }}
 
-    - alert: SplitLoginSuccessRatesBelow40WithTemporaryErrorsAndAttemptLimitIT_OB
+    - alert: split_login_success_rates_below40_with_temporary_errors_and_attempt_limit_it_ob
       expr: |
         (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.temporaryErrorsAuth }} , market="IT"}))
                     / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="IT"})) < 0.4
@@ -950,7 +950,7 @@ spec:
     ### All login success rates - Authentication Errors - OB ###
     ############################################################
 
-    - alert: AllLoginSuccessRatesBelow50AndGreater30WithAuthenticationErrorsAndAttemptLimitIT_OB
+    - alert: all_login_success_rates_below50_and_greater30_with_authentication_errors_and_attempt_limit_it_ob
       expr: |
         (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="IT"}))
                     / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="IT"})) < 0.5
@@ -969,7 +969,7 @@ spec:
           the last 30 minutes.
         tags: {{ .Values.tags }}
 
-    - alert: AllLoginSuccessRatesBelow30AndGreater20WithAuthenticationErrorsAndAttemptLimitIT_OB
+    - alert: all_login_success_rates_below30_and_greater20_with_authentication_errors_and_attempt_limit_it_ob
       expr: |
         (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="IT"}))
                     / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="IT"})) < 0.3
@@ -988,7 +988,7 @@ spec:
           the last 30 minutes.
         tags: {{ .Values.tags }}
 
-    - alert: AllLoginSuccessRatesBelow20AndGreater10WithAuthenticationErrorsAndAttemptLimitIT_OB
+    - alert: all_login_success_rates_below20_and_greater10_with_authentication_errors_and_attempt_limit_it_ob
       expr: |
         (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="IT"}))
                     / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="IT"})) < 0.2
@@ -1007,7 +1007,7 @@ spec:
           the last 30 minutes.
         tags: {{ .Values.tags }}
 
-    - alert: AllLoginSuccessRatesBelow10WithAuthenticationErrorsAndAttemptLimitIT_OB
+    - alert: all_login_success_rates_below10_with_authentication_errors_and_attempt_limit_it_ob
       expr: |
         (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="IT"}))
                     / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="IT"})) < 0.1
@@ -1028,7 +1028,7 @@ spec:
     ### Split login success rates - Authentication Errors - OB ###
     ##############################################################
 
-    - alert: SplitLoginSuccessRatesBelow50AndGreater30WithAuthenticationErrorsAndAttemptLimitIT_OB
+    - alert: split_login_success_rates_below50_and_greater30_with_authentication_errors_and_attempt_limit_it_ob
       expr: |
         (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="IT"}))
                     / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="IT"})) < 0.5
@@ -1047,7 +1047,7 @@ spec:
           the last 30 minutes.
         tags: {{ .Values.tags }}
 
-    - alert: SplitLoginSuccessRatesBelow30AndGreater20WithAuthenticationErrorsAndAttemptLimitIT_OB
+    - alert: split_login_success_rates_below30_and_greater20_with_authentication_errors_and_attempt_limit_it_ob
       expr: |
         (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="IT"}))
                     / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="IT"})) < 0.3
@@ -1066,7 +1066,7 @@ spec:
           the last 30 minutes.
         tags: {{ .Values.tags }}
 
-    - alert: SplitLoginSuccessRatesBelow20AndGreater10WithAuthenticationErrorsAndAttemptLimitIT_OB
+    - alert: split_login_success_rates_below20_and_greater10_with_authentication_errors_and_attempt_limit_it_ob
       expr: |
         (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="IT"}))
                     / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="IT"})) < 0.2
@@ -1085,7 +1085,7 @@ spec:
           the last 30 minutes.
         tags: {{ .Values.tags }}
 
-    - alert: SplitLoginSuccessRatesBelow10WithAuthenticationErrorsAndAttemptLimitIT_OB
+    - alert: split_login_success_rates_below10_with_authentication_errors_and_attempt_limit_it_ob
       expr: |
         (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="IT"}))
                     / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="IT"})) < 0.1
@@ -1106,7 +1106,7 @@ spec:
     ### All login success rates - Bank Errors - OB ###
     ##################################################
 
-    - alert: AllLoginSuccessRatesBelow70AndGreater60WithBankErrorsAndAttemptLimitIT_OB
+    - alert: all_login_success_rates_below70_and_greater60_with_bank_errors_and_attempt_limit_it_ob
       expr: |
         (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="IT"}))
                     / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="IT"})) < 0.7
@@ -1125,7 +1125,7 @@ spec:
           the last 30 minutes.
         tags: {{ .Values.tags }}
 
-    - alert: AllLoginSuccessRatesBelow60AndGreater50WithBankErrorsAndAttemptLimitIT_OB
+    - alert: all_login_success_rates_below60_and_greater50_with_bank_errors_and_attempt_limit_it_ob
       expr: |
         (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="IT"}))
                     / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="IT"})) < 0.6
@@ -1144,7 +1144,7 @@ spec:
           the last 30 minutes.
         tags: {{ .Values.tags }}
 
-    - alert: AllLoginSuccessRatesBelow50AndGreater40WithBankErrorsAndAttemptLimitIT_OB
+    - alert: all_login_success_rates_below50_and_greater40_with_bank_errors_and_attempt_limit_it_ob
       expr: |
         (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="IT"}))
                     / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="IT"})) < 0.5
@@ -1163,7 +1163,7 @@ spec:
           the last 30 minutes.
         tags: {{ .Values.tags }}
 
-    - alert: AllLoginSuccessRatesBelow40WithBankErrorsAndAttemptLimitIT_OB
+    - alert: all_login_success_rates_below40_with_bank_errors_and_attempt_limit_it_ob
       expr: |
         (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="IT"}))
                     / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="IT"})) < 0.4
@@ -1184,7 +1184,7 @@ spec:
     ### Split login success rates - Bank Errors - OB ###
     ####################################################
 
-    - alert: SplitLoginSuccessRatesBelow70AndGreater60WithBankErrorsAndAttemptLimitIT_OB
+    - alert: split_login_success_rates_below70_and_greater60_with_bank_errors_and_attempt_limit_it_ob
       expr: |
         (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="IT"}))
                     / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="IT"})) < 0.7
@@ -1203,7 +1203,7 @@ spec:
           the last 30 minutes.
         tags: {{ .Values.tags }}
 
-    - alert: SplitLoginSuccessRatesBelow60AndGreater50WithBankErrorsAndAttemptLimitIT_OB
+    - alert: split_login_success_rates_below60_and_greater50_with_bank_errors_and_attempt_limit_it_ob
       expr: |
         (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="IT"}))
                     / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="IT"})) < 0.6
@@ -1222,7 +1222,7 @@ spec:
           the last 30 minutes.
         tags: {{ .Values.tags }}
 
-    - alert: SplitLoginSuccessRatesBelow50AndGreater40WithBankErrorsAndAttemptLimitIT_OB
+    - alert: split_login_success_rates_below50_and_greater40_with_bank_errors_and_attempt_limit_it_ob
       expr: |
         (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="IT"}))
                     / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="IT"})) < 0.5
@@ -1241,7 +1241,7 @@ spec:
           the last 30 minutes.
         tags: {{ .Values.tags }}
 
-    - alert: SplitLoginSuccessRatesBelow40WithBankErrorsAndAttemptLimitIT_OB
+    - alert: split_login_success_rates_below40_with_bank_errors_and_attempt_limit_it_ob
       expr: |
         (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.bankErrorsAuth }} , market="IT"}))
                     / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="IT"})) < 0.4
@@ -1262,7 +1262,7 @@ spec:
     ### All login success rates - Agent Errors - OB ###
     ###################################################
 
-    - alert: AllLoginSuccessRatesBelow40AndGreater30WithAgentErrorsAndAttemptLimitIT_OB
+    - alert: all_login_success_rates_below40_and_greater30_with_agent_errors_and_attempt_limit_it_ob
       expr: |
         (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.agentErrorsAuth }} , market="IT"}))
                     / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="IT"})) < 0.4
@@ -1281,7 +1281,7 @@ spec:
           the last 30 minutes.
         tags: {{ .Values.tags }}
 
-    - alert: AllLoginSuccessRatesBelow30AndGreater20WithAgentErrorsAndAttemptLimitIT_OB
+    - alert: all_login_success_rates_below30_and_greater20_with_agent_errors_and_attempt_limit_it_ob
       expr: |
         (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.agentErrorsAuth }} , market="IT"}))
                     / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="IT"})) < 0.3
@@ -1300,7 +1300,7 @@ spec:
           the last 30 minutes.
         tags: {{ .Values.tags }}
 
-    - alert: AllLoginSuccessRatesBelow20AndGreater10WithAgentErrorsAndAttemptLimitIT_OB
+    - alert: all_login_success_rates_below20_and_greater10_with_agent_errors_and_attempt_limit_it_ob
       expr: |
         (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.agentErrorsAuth }} , market="IT"}))
                     / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="IT"})) < 0.2
@@ -1319,7 +1319,7 @@ spec:
           the last 30 minutes.
         tags: {{ .Values.tags }}
 
-    - alert: AllLoginSuccessRatesBelow10WithAgentErrorsAndAttemptLimitIT_OB
+    - alert: all_login_success_rates_below10_with_agent_errors_and_attempt_limit_it_ob
       expr: |
         (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.agentErrorsAuth }} , market="IT"}))
                     / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="IT"})) < 0.1
@@ -1340,7 +1340,7 @@ spec:
     ### Split login success rates - Agent Errors - OB ###
     #####################################################
 
-    - alert: SplitLoginSuccessRatesBelow40AndGreater30WithAgentErrorsAndAttemptLimitIT_OB
+    - alert: split_login_success_rates_below40_and_greater30_with_agent_errors_and_attempt_limit_it_ob
       expr: |
         (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.agentErrorsAuth }} , market="IT"}))
                     / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="IT"})) < 0.4
@@ -1359,7 +1359,7 @@ spec:
           the last 30 minutes.
         tags: {{ .Values.tags }}
 
-    - alert: SplitLoginSuccessRatesBelow30AndGreater20WithAgentErrorsAndAttemptLimitIT_OB
+    - alert: split_login_success_rates_below30_and_greater20_with_agent_errors_and_attempt_limit_it_ob
       expr: |
         (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.agentErrorsAuth }} , market="IT"}))
                     / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="IT"})) < 0.3
@@ -1378,7 +1378,7 @@ spec:
           the last 30 minutes.
         tags: {{ .Values.tags }}
 
-    - alert: SplitLoginSuccessRatesBelow20AndGreater10WithAgentErrorsAndAttemptLimitIT_OB
+    - alert: split_login_success_rates_below20_and_greater10_with_agent_errors_and_attempt_limit_it_ob
       expr: |
         (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.agentErrorsAuth }} , market="IT"}))
                     / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="IT"})) < 0.2
@@ -1397,7 +1397,7 @@ spec:
           the last 30 minutes.
         tags: {{ .Values.tags }}
 
-    - alert: SplitLoginSuccessRatesBelow10WithAgentErrorsAndAttemptLimitIT_OB
+    - alert: split_login_success_rates_below10_with_agent_errors_and_attempt_limit_it_ob
       expr: |
         (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.agentErrorsAuth }} , market="IT"}))
                     / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="IT"})) < 0.1
@@ -1418,7 +1418,7 @@ spec:
     ### All login success rates - All Errors - OB ###
     #################################################
 
-    - alert: AllLoginSuccessRatesBelow30AndGreater20WithAllErrorsAndAttemptLimitIT_OB
+    - alert: all_login_success_rates_below30_and_greater20_with_all_errors_and_attempt_limit_it_ob
       expr: |
         (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="IT"}))
                     / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="IT"})) < 0.3
@@ -1437,7 +1437,7 @@ spec:
           the last 30 minutes.
         tags: {{ .Values.tags }}
 
-    - alert: AllLoginSuccessRatesBelow20AndGreater10WithAllErrorsAndAttemptLimitIT_OB
+    - alert: all_login_success_rates_below20_and_greater10_with_all_errors_and_attempt_limit_it_ob
       expr: |
         (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="IT"}))
                     / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="IT"})) < 0.2
@@ -1456,7 +1456,7 @@ spec:
           the last 30 minutes.
         tags: {{ .Values.tags }}
 
-    - alert: AllLoginSuccessRatesBelow10AndGreater5WithAllErrorsAndAttemptLimitIT_OB
+    - alert: all_login_success_rates_below10_and_greater5_with_all_errors_and_attempt_limit_it_ob
       expr: |
         (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="IT"}))
                     / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="IT"})) < 0.1
@@ -1475,7 +1475,7 @@ spec:
           the last 30 minutes.
         tags: {{ .Values.tags }}
 
-    - alert: AllLoginSuccessRatesBelow5WithAllErrorsAndAttemptLimitIT_OB
+    - alert: all_login_success_rates_below5_with_all_errors_and_attempt_limit_it_ob
       expr: |
         (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="IT"}))
                     / (sum by (provider) (tink_agent_login_total{ {{ .Values.obAgents }}, provider_type!="test", market="IT"})) < 0.5
@@ -1496,7 +1496,7 @@ spec:
     ### Split login success rates - All Errors - OB ###
     ###################################################
 
-    - alert: SplitLoginSuccessRatesBelow30AndGreater20WithAllErrorsAndAttemptLimitIT_OB
+    - alert: split_login_success_rates_below30_and_greater20_with_all_errors_and_attempt_limit_it_ob
       expr: |
         (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="IT"}))
                     / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="IT"})) < 0.3
@@ -1515,7 +1515,7 @@ spec:
           the last 30 minutes.
         tags: {{ .Values.tags }}
 
-    - alert: SplitLoginSuccessRatesBelow20AndGreater10WithAllErrorsAndAttemptLimitIT_OB
+    - alert: split_login_success_rates_below20_and_greater10_with_all_errors_and_attempt_limit_it_ob
       expr: |
         (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="IT"}))
                     / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="IT"})) < 0.2
@@ -1534,7 +1534,7 @@ spec:
           the last 30 minutes.
         tags: {{ .Values.tags }}
 
-    - alert: SplitLoginSuccessRatesBelow15AndGreater5WithAllErrorsAndAttemptLimitIT_OB
+    - alert: split_login_success_rates_below15_and_greater5_with_all_errors_and_attempt_limit_it_ob
       expr: |
         (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="IT"}))
                     / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="IT"})) < 0.1
@@ -1552,7 +1552,7 @@ spec:
           the last 30 minutes.
         tags: {{ .Values.tags }}
 
-    - alert: SplitLoginSuccessRatesBelow5WithAllErrorsAndAttemptLimitIT_OB
+    - alert: split_login_success_rates_below5_with_all_errors_and_attempt_limit_it_ob
       expr: |
         (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="IT"}))
                     / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.obAgents }}, provider_type!="test", market="IT"})) < 0.05
@@ -1569,13 +1569,13 @@ spec:
           the last 30 minutes.
         tags: {{ .Values.tags }}
 
-          #### Agent refresh ####
+        #### Agent refresh ####
 
     ########################################
     ### BankServerErrors - Agent Refresh ###
     ########################################
 
-    - alert: AgentRefreshesBelow60Greater50DueToBankServerErrorWithRateLimitIT
+    - alert: agent_refreshes_below60_greater50_due_to_bank_server_error_with_rate_limit_it
       expr: |
         (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.bankErrorsRefresh }}, market="IT"}))
             / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="IT"})) < 0.6
@@ -1594,7 +1594,7 @@ spec:
           the last 30 minutes for <{ $labels.type }>
         tags: {{ .Values.tags }}
 
-    - alert: AgentRefreshesBelow50Greater40DueToBankServerErrorWithRateLimitIT
+    - alert: agent_refreshes_below50_greater40_due_to_bank_server_error_with_rate_limit_it
       expr: |
         (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.bankErrorsRefresh }}, market="IT"}))
             / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="IT"})) < 0.5
@@ -1613,7 +1613,7 @@ spec:
           the last 30 minutes for <{ $labels.type }>
         tags: {{ .Values.tags }}
 
-    - alert: AgentRefreshesBelow40Greater30DueToBankServerErrorWithRateLimitIT
+    - alert: agent_refreshes_below40_greater30_due_to_bank_server_error_with_rate_limit_it
       expr: |
         (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.bankErrorsRefresh }}, market="IT"}))
             / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="IT"})) < 0.4
@@ -1632,7 +1632,7 @@ spec:
           the last 30 minutes for <{ $labels.type }>
         tags: {{ .Values.tags }}
 
-    - alert: AgentRefreshesBelow30DueToBankServerErrorWithRateLimitIT
+    - alert: agent_refreshes_below30_due_to_bank_server_error_with_rate_limit_it
       expr: |
         (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.bankErrorsRefresh }}, market="IT"}))
             / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="IT"})) < 0.3
@@ -1653,7 +1653,7 @@ spec:
     ### AgentServerErrors - Agent Refresh ###
     #########################################
 
-    - alert: AgentRefreshesBelow60Greater50DueToAgentServerErrorWithRateLimitIT
+    - alert: agent_refreshes_below60_greater50_due_to_agent_server_error_with_rate_limit_it
       expr: |
         (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.agentErrorsRefresh }}, market="IT"}))
             / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="IT"})) < 0.6
@@ -1672,7 +1672,7 @@ spec:
           the last 30 minutes for <{ $labels.type }>
         tags: {{ .Values.tags }}
 
-    - alert: AgentRefreshesBelow50Greater40DueToAgentServerErrorWithRateLimitIT
+    - alert: agent_refreshes_below50_greater40_due_to_agent_server_error_with_rate_limit_it
       expr: |
         (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.agentErrorsRefresh }}, market="IT"}))
             / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="IT"})) < 0.5
@@ -1691,7 +1691,7 @@ spec:
           the last 30 minutes for <{ $labels.type }>
         tags: {{ .Values.tags }}
 
-    - alert: AgentRefreshesBelow40Greater30DueToAgentServerErrorWithRateLimitIT
+    - alert: agent_refreshes_below40_greater30_due_to_agent_server_error_with_rate_limit_it
       expr: |
         (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.agentErrorsRefresh }}, market="IT"}))
             / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="IT"})) < 0.4
@@ -1710,7 +1710,7 @@ spec:
           the last 30 minutes for <{ $labels.type }>
         tags: {{ .Values.tags }}
 
-    - alert: AgentRefreshesBelow30DueToAgentServerErrorWithRateLimitIT
+    - alert: agent_refreshes_below30_due_to_agent_server_error_with_rate_limit_it
       expr: |
         (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.agentErrorsRefresh }}, market="IT"}))
             / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="IT"})) < 0.3
@@ -1731,7 +1731,7 @@ spec:
     ### AllErrors - Agent Refresh ###
     #################################
 
-    - alert: AgentRefreshesBelow45Greater35DueToAllErrorWithRateLimitIT
+    - alert: agent_refreshes_below45_greater35_due_to_all_error_with_rate_limit_it
       expr: |
         (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.allErrorsRefresh }}, market="IT"}))
             / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="IT"})) < 0.45
@@ -1750,7 +1750,7 @@ spec:
           the last 30 minutes for <{ $labels.type }>
         tags: {{ .Values.tags }}
 
-    - alert: AgentRefreshesBelow35Greater25DueToAllErrorWithRateLimitIT
+    - alert: agent_refreshes_below35_greater25_due_to_all_error_with_rate_limit_it
       expr: |
         (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.allErrorsRefresh }}, market="IT"}))
             / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="IT"})) < 0.35
@@ -1769,7 +1769,7 @@ spec:
           the last 30 minutes for <{ $labels.type }>
         tags: {{ .Values.tags }}
 
-    - alert: AgentRefreshesBelow25Greater15DueToAllErrorWithRateLimitIT
+    - alert: agent_refreshes_below25_greater15_due_to_all_error_with_rate_limit_it
       expr: |
         (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.allErrorsRefresh }}, market="IT"}))
             / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="IT"})) < 0.25
@@ -1788,7 +1788,7 @@ spec:
           the last 30 minutes for <{ $labels.type }>
         tags: {{ .Values.tags }}
 
-    - alert: AgentRefreshesBelow15DueToAllErrorWithRateLimitIT
+    - alert: agent_refreshes_below15_due_to_all_error_with_rate_limit_it
       expr: |
         (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.allErrorsRefresh }}, market="IT"}))
             / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="IT"})) < 0.15
@@ -1809,7 +1809,7 @@ spec:
     ### AllErrors - Partially Completed Refresh ###
     ###############################################
 
-    - alert: AgentRefreshesBelow60Greater50DueToPartiallyCompletedErrorWithRateLimitIT
+    - alert: agent_refreshes_below60_greater50_due_to_partially_completed_error_with_rate_limit_it
       expr: |
         (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.partiallyCompletedErrorRefresh }}, market="IT"}))
             / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="IT"})) < 0.6
@@ -1828,7 +1828,7 @@ spec:
           the last 30 minutes.
         tags: {{ .Values.tags }}
 
-    - alert: AgentRefreshesBelow50Greater40DueToPartiallyCompletedErrorWithRateLimitIT
+    - alert: agent_refreshes_below50_greater40_due_to_partially_completed_error_with_rate_limit_it
       expr: |
         (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.partiallyCompletedErrorRefresh }}, market="IT"}))
             / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="IT"})) < 0.5
@@ -1847,7 +1847,7 @@ spec:
           the last 30 minutes.
         tags: {{ .Values.tags }}
 
-    - alert: AgentRefreshesBelow40Greater30DueToPartiallyCompletedErrorWithRateLimitIT
+    - alert: agent_refreshes_below40_greater30_due_to_partially_completed_error_with_rate_limit_it
       expr: |
         (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.partiallyCompletedErrorRefresh }}, market="IT"}))
             / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="IT"})) < 0.4
@@ -1866,7 +1866,7 @@ spec:
           the last 30 minutes.
         tags: {{ .Values.tags }}
 
-    - alert: AgentRefreshesBelow30DueToPartiallyCompletedErrorWithRateLimitIT
+    - alert: agent_refreshes_below30_due_to_partially_completed_error_with_rate_limit_it
       expr: |
         (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", {{ .Values.partiallyCompletedErrorRefresh }}, market="IT"}))
             / (sum by (className,type) (tink_agent_refresh_total{provider_type!="test", market="IT"})) < 0.3
