@@ -44,7 +44,6 @@ public final class BbvaConstants {
 
     public static final class StorageKeys {
         public static final String USER_ID = "userId";
-        public static final String TSEC = "tsec";
     }
 
     public static final class Defaults {
@@ -81,20 +80,20 @@ public final class BbvaConstants {
     }
 
     public static final class Url {
-        public static final String BASE_URL = "https://servicios.bbva.es";
-
         public static final String PARAM_ID = "ID";
+        public static final String BASE_URL = "https://servicios.bbva.es";
+        public static final String ASO = BASE_URL + "/ASO";
 
         public static final String TICKET = BASE_URL + "/ASO/TechArchitecture/grantingTickets/V02";
+        public static final String FINANCIAL_DASHBOARD = BASE_URL + "/ASO/financialDashBoard/V03";
+        public static final String LOAN_DETAILS = BASE_URL + "/ASO/loans/V01/{" + PARAM_ID + "}";
+
         public static final String REFRESH_TICKET =
                 BASE_URL + "/ASO/grantingTicketActions/V01/refreshGrantingTicket";
-        public static final String FINANCIAL_DASHBOARD = BASE_URL + "/ASO/financialDashBoard/V03";
-        public static final String ASO = BASE_URL + "/ASO";
         public static final String ACCOUNT_TRANSACTION =
                 BASE_URL + "/ASO/accountTransactions/V02/accountTransactionsAdvancedSearch";
         public static final String CREDIT_CARD_TRANSACTIONS =
                 BASE_URL + "/ASO/cardTransactions/V01/";
-        public static final String LOAN_DETAILS = BASE_URL + "/ASO/loans/V01/{" + PARAM_ID + "}";
         public static final String IDENTITY_DATA =
                 BASE_URL + "/ASO/contextualData/V02/{" + PARAM_ID + "}";
         public static final String HISTORICAL_DATE =
@@ -112,7 +111,7 @@ public final class BbvaConstants {
         BBVA_USER_AGENT(
                 "BBVA-User-Agent",
                 "%s;iPhone;Apple;iPhone9,3;750x1334;iOS;10.1.1;WOODY;6.14.1;xhdpi"),
-        REFERER("Referer", "https://movil.bbva.es/versions/woody/7.3.7/index.html");
+        REFERER("Referer", "https://movil.bbva.es/versions/woody/9.0.7/index.html");
 
         private final String key;
         private final String value;

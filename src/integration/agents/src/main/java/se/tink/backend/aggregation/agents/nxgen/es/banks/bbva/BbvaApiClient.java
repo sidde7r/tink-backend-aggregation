@@ -325,11 +325,11 @@ public class BbvaApiClient {
     }
 
     private String getTsec() {
-        return sessionStorage.get(BbvaConstants.StorageKeys.TSEC);
+        return sessionStorage.get(BbvaConstants.HeaderKeys.TSEC_KEY);
     }
 
     private void setTsec(String tsec) {
-        sessionStorage.put(BbvaConstants.StorageKeys.TSEC, tsec);
+        sessionStorage.put(BbvaConstants.HeaderKeys.TSEC_KEY, tsec);
     }
 
     public String getUserId() {
