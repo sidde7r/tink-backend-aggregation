@@ -64,6 +64,7 @@ import se.tink.libraries.identitydata.NameElement;
             PisCapability.PIS_SE_PG
         },
         markets = {"SE"})
+@AgentPisCapability(capabilities = PisCapability.PIS_SEPA, markets = "PT")
 public final class PasswordDemoAgent extends NextGenerationDemoAgent
         implements RefreshTransferDestinationExecutor {
     private final String username;
