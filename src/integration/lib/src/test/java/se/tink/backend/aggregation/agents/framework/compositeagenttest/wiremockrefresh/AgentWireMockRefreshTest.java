@@ -499,6 +499,11 @@ public final class AgentWireMockRefreshTest {
         }
 
         @Override
+        public RefreshOrAuthOnlyStep withoutConfigFile() {
+            return this;
+        }
+
+        @Override
         public RefreshableItemStep addRefreshableItems(RefreshableItem... items) {
             this.refreshableItems.addAll(Arrays.asList(items));
             return this;
@@ -635,13 +640,14 @@ public final class AgentWireMockRefreshTest {
     public interface ConfigurationStep {
 
         /**
-         * Use specified AgentsServiceConfiguration for agent. Agent will get an empty configuration
-         * if none is specified.
+         * Use specified AgentsServiceConfiguration for agent.
          *
          * @param configuration
          * @return This builder.
          */
         RefreshOrAuthOnlyStep withConfigFile(AgentsServiceConfiguration configuration);
+
+        RefreshOrAuthOnlyStep withoutConfigFile();
     }
 
     public interface RefreshOrAuthOnlyStep {
