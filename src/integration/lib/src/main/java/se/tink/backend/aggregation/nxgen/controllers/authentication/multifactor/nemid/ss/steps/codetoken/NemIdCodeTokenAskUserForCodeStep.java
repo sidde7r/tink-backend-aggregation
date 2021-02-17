@@ -1,7 +1,6 @@
-package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.steps.codecard;
+package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.steps.codetoken;
 
-import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NEMID_CODE_CARD_CODE_NUMBER;
-import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NEMID_CODE_CARD_NUMBER;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NEMID_CODE_TOKEN_SERIAL_NUMBER;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.metrics.NemIdMetricLabel.WAITING_FOR_SUPPLEMENTAL_INFO_METRIC;
 
 import com.google.inject.Inject;
@@ -22,13 +21,10 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 import se.tink.libraries.i18n.Catalog;
 
 @RequiredArgsConstructor(onConstructor = @__({@Inject}))
-public class NemIdCodeCardAskUserForCodeStep {
+public class NemIdCodeTokenAskUserForCodeStep {
 
-    public static final Integer EXPECTED_CODE_LENGTH = 6;
-
-    private static final Pattern VALID_CODE_CARD_NUMBER_REGEX =
-            Pattern.compile("^[a-zA-Z]\\d{3}-\\d{3}-\\d{3}$");
-    private static final Pattern VALID_CODE_NUMBER_REGEX = Pattern.compile("^\\d{4}$");
+    private static final Pattern VALID_SERIAL_NUMBER_REGEX =
+            Pattern.compile("^\\d{4} \\d{4} \\d{4} \\d{4}$");
     private static final Pattern VALID_CODE_REGEX = Pattern.compile("^\\d{6}$");
 
     private final NemIdWebDriverWrapper driverWrapper;
@@ -40,68 +36,50 @@ public class NemIdCodeCardAskUserForCodeStep {
     public String askForCodeAndValidateResponse(Credentials credentials) {
         return metrics.executeWithTimer(
                 () -> {
-                    String cardNumber = getCodeCardNumber();
-                    verifyCodeCardNumber(cardNumber);
+                    String tokenSerialNumber = getCodeTokenSerialNumber();
+                    verifySerialNumber(tokenSerialNumber);
 
-                    String codeNumber = getCodeNumber();
-                    verifyCodeNumber(codeNumber);
-
-                    String code = askUserForCode(cardNumber, codeNumber, credentials);
+                    String code = askUserForCode(tokenSerialNumber, credentials);
                     verifyCode(code);
                     return code;
                 },
                 WAITING_FOR_SUPPLEMENTAL_INFO_METRIC);
     }
 
-    private String getCodeCardNumber() {
+    private String getCodeTokenSerialNumber() {
         return driverWrapper
-                .tryFindElement(NEMID_CODE_CARD_NUMBER)
-                .map(WebElement::getText)
-                .map(String::trim)
-                .orElseThrow(() -> new IllegalStateException("Cannot find NemId card number"));
-    }
-
-    private void verifyCodeCardNumber(String cardNumber) {
-        if (valueDoesNotMatchPattern(cardNumber, VALID_CODE_CARD_NUMBER_REGEX)) {
-            throw new IllegalStateException(
-                    String.format("Invalid NemId code card number: \"%s\"", cardNumber));
-        }
-    }
-
-    private String getCodeNumber() {
-        return driverWrapper
-                .tryFindElement(NEMID_CODE_CARD_CODE_NUMBER)
+                .tryFindElement(NEMID_CODE_TOKEN_SERIAL_NUMBER)
                 .map(WebElement::getText)
                 .map(String::trim)
                 .orElseThrow(
-                        () -> new IllegalStateException("Cannot find NemId code card code number"));
+                        () -> new IllegalStateException("Cannot find NemId token serial number"));
     }
 
-    private void verifyCodeNumber(String codeNumber) {
-        if (valueDoesNotMatchPattern(codeNumber, VALID_CODE_NUMBER_REGEX)) {
+    private void verifySerialNumber(String serialNumber) {
+        if (valueDoesNotMatchPattern(serialNumber, VALID_SERIAL_NUMBER_REGEX)) {
             throw new IllegalStateException(
-                    String.format("Invalid NemId code number: \"%s\"", codeNumber));
+                    String.format("Invalid NemId code token serial number: \"%s\"", serialNumber));
         }
     }
 
-    private String askUserForCode(String cardNumber, String codeNumber, Credentials credentials) {
-        Field codeInfoField = CommonFields.KeyCardInfo.build(catalog, codeNumber, cardNumber);
-        Field codeValueField = CommonFields.KeyCardCode.build(catalog, EXPECTED_CODE_LENGTH);
+    private String askUserForCode(String codeTokenSerialNumber, Credentials credentials) {
+        Field codeInfoField = CommonFields.CodeTokenInfo.build(catalog, codeTokenSerialNumber);
+        Field codeValueField = CommonFields.CodeTokenCode.build(catalog);
 
         statusUpdater.updateStatusPayload(
-                credentials, NemIdCodeAppConstants.UserMessage.PROVIDE_CODE_CARD_CODE);
+                credentials, NemIdCodeAppConstants.UserMessage.PROVIDE_CODE_TOKEN_CODE);
         Map<String, String> supplementalInfoResponse =
                 supplementalInformationController.askSupplementalInformationSync(
                         codeInfoField, codeValueField);
 
-        return supplementalInfoResponse.get(CommonFields.KeyCardCode.FIELD_KEY);
+        return supplementalInfoResponse.get(CommonFields.CodeTokenCode.FIELD_KEY);
     }
 
     private void verifyCode(String code) {
         if (valueDoesNotMatchPattern(code, VALID_CODE_REGEX)) {
             String errorMessage =
-                    NemIdConstants.NEM_ID_PREFIX + "Invalid code card code format:" + code;
-            throw NemIdError.INVALID_CODE_CARD_CODE.exception(errorMessage);
+                    NemIdConstants.NEM_ID_PREFIX + "Invalid code token code format:" + code;
+            throw NemIdError.INVALID_CODE_TOKEN_CODE.exception(errorMessage);
         }
     }
 

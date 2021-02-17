@@ -19,6 +19,8 @@ public enum NemIdError implements AgentError {
     USE_NEW_CODE_CARD(
             new LocalizableKey(
                     "All code card codes have been used. Please log in to your bank using new code card or NemID mobile app and try again.")),
+    INVALID_CODE_TOKEN_CODE(
+            new LocalizableKey("The code token code provided by user is incorrect.")),
     NEMID_LOCKED(new LocalizableKey("Your NemID is temporarily locked.")),
     NEMID_BLOCKED(new LocalizableKey("Your NemID has been blocked. Please contact NemID support.")),
     NEMID_PASSWORD_BLOCKED(

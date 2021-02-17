@@ -1,5 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea;
 
+import org.junit.Ignore;
+
+@Ignore
 public class NordeaTestData {
 
     private static final String TEST_DATA_PATH =

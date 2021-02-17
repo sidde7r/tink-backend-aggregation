@@ -1,7 +1,7 @@
-package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.steps.codecard;
+package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.steps.codetoken;
 
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.Errors.INVALID_CARD_OR_TOKEN_CODE_PATTERNS;
-import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NEMID_CODE_CARD_CODE_INPUT;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NEMID_CODE_TOKEN_INPUT;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NOT_EMPTY_ERROR_MESSAGE;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NOT_EMPTY_NEMID_TOKEN;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.SUBMIT_BUTTON;
@@ -20,7 +20,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.exception.NemIdError;
 
 @RequiredArgsConstructor(onConstructor = @__({@Inject}))
-public class NemIdCodeCardGetTokenStep {
+public class NemIdCodeTokenGetTokenStep {
 
     private final NemIdWebDriverWrapper driverWrapper;
     private final NemIdMetrics metrics;
@@ -37,7 +37,7 @@ public class NemIdCodeCardGetTokenStep {
     }
 
     private void enterCode(String code) {
-        driverWrapper.setValueToElement(code, NEMID_CODE_CARD_CODE_INPUT);
+        driverWrapper.setValueToElement(code, NEMID_CODE_TOKEN_INPUT);
     }
 
     private void clickSendButton() {
@@ -57,22 +57,22 @@ public class NemIdCodeCardGetTokenStep {
             return searchResult.getElementTextTrimmed();
         }
         if (elementSelector == NOT_EMPTY_ERROR_MESSAGE) {
-            throwThereIsACodeCardErrorMessage(searchResult.getElementTextTrimmed());
+            throwThereIsACodeTokenErrorMessage(searchResult.getElementTextTrimmed());
         }
 
         throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception(
-                NEM_ID_PREFIX + " Can't find NemId token for code card authentication");
+                NEM_ID_PREFIX + " Can't find NemId token for code token authentication");
     }
 
-    private void throwThereIsACodeCardErrorMessage(String errorMessage) {
+    private void throwThereIsACodeTokenErrorMessage(String errorMessage) {
         String errorMessageLowerCase = errorMessage.toLowerCase();
 
         if (NemIdUtils.valueMatchesAnyPattern(
                 errorMessageLowerCase, INVALID_CARD_OR_TOKEN_CODE_PATTERNS)) {
-            throw NemIdError.INVALID_CODE_CARD_CODE.exception();
+            throw NemIdError.INVALID_CODE_TOKEN_CODE.exception();
         }
 
         throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception(
-                NEM_ID_PREFIX + " Unknown code card code error message: " + errorMessage);
+                NEM_ID_PREFIX + " Unknown code token error message: " + errorMessage);
     }
 }

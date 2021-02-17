@@ -7,9 +7,9 @@ import static se.tink.backend.aggregation.nxgen.controllers.authentication.multi
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NEMID_CODE_APP_METHOD;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NEMID_CODE_CARD_METHOD;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NEMID_CODE_TOKEN_METHOD;
-import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NEMID_TOKEN;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NEMID_WIDE_INFO_HEADING;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NOT_EMPTY_ERROR_MESSAGE;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NOT_EMPTY_NEMID_TOKEN;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.NEM_ID_PREFIX;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.metrics.NemIdMetricLabel.WAITING_FOR_CREDENTIALS_VALIDATION_ELEMENTS_METRIC;
 
@@ -30,9 +30,10 @@ import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.NemId2FAMethod;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.NemIdCredentialsStatusUpdater;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.NemIdTokenValidator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.NemIdWebDriverWrapper;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.NemIdWebDriverWrapper.ElementsSearchResult;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.metrics.NemIdMetrics;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.utils.ElementsSearchQuery;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.utils.ElementsSearchResult;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.utils.NemIdWebDriverWrapper;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.NemIdCodeAppConstants.UserMessage;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.exception.NemIdError;
 
@@ -45,7 +46,7 @@ public class NemIdVerifyLoginResponseStep {
                     NEMID_CODE_APP_METHOD,
                     NEMID_CODE_CARD_METHOD,
                     NEMID_CODE_TOKEN_METHOD,
-                    NEMID_TOKEN,
+                    NOT_EMPTY_NEMID_TOKEN,
                     NOT_EMPTY_ERROR_MESSAGE,
                     NEMID_WIDE_INFO_HEADING);
 
@@ -74,7 +75,11 @@ public class NemIdVerifyLoginResponseStep {
 
     private NemId2FAMethod verifyCorrectLoginResponseAndGet2FAMethod() {
         ElementsSearchResult validationElementsSearchResult =
-                driverWrapper.searchForFirstElement(ELEMENTS_TO_SEARCH_FOR, 30);
+                driverWrapper.searchForFirstElement(
+                        ElementsSearchQuery.builder()
+                                .searchInAnIframe(ELEMENTS_TO_SEARCH_FOR)
+                                .searchForSeconds(30)
+                                .build());
 
         By elementSelector = validationElementsSearchResult.getSelector();
         WebElement element = validationElementsSearchResult.getWebElement();
@@ -83,7 +88,7 @@ public class NemIdVerifyLoginResponseStep {
             // some 2FA method is ready to use
             return ELEMENT_SELECTORS_FOR_2FA_METHODS.get(elementSelector);
         }
-        if (elementSelector == NEMID_TOKEN) {
+        if (elementSelector == NOT_EMPTY_NEMID_TOKEN) {
             /*
             When NemId token is present it means that our custom JavaScript has received an event from NemId iframe
             by window.parent.postMessage. This in turn means that NemId iframe has handed over control to us

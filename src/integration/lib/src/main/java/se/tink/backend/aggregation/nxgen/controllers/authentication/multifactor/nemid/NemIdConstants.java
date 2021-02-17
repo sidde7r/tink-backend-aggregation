@@ -92,9 +92,9 @@ public class NemIdConstants {
                         );
 
         /*
-        NemId code card errors
+        NemId code card & code token errors
          */
-        public static final ImmutableList<Pattern> INVALID_CODE_CARD_CODE_PATTERNS =
+        public static final ImmutableList<Pattern> INVALID_CARD_OR_TOKEN_CODE_PATTERNS =
                 ImmutableList.of(
                         Pattern.compile("^incorrect code.*"), Pattern.compile("^fejl i nøgle.*"));
     }
@@ -102,7 +102,8 @@ public class NemIdConstants {
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class HtmlElements {
         public static final By IFRAME = By.tagName("iframe");
-        public static final By NEMID_TOKEN = By.cssSelector("div#tink_nemIdToken");
+        public static final By NOT_EMPTY_NEMID_TOKEN =
+                By.xpath("//div[@id='tink_nemIdToken' and text()!='']");
 
         public static final By SUBMIT_BUTTON = By.cssSelector("button.button--submit");
         public static final By NOT_EMPTY_ERROR_MESSAGE =
@@ -124,6 +125,9 @@ public class NemIdConstants {
                         "//div[@class='otp__frame__row']/div[@class='otp__frame__cell'][2]//input");
 
         public static final By NEMID_CODE_TOKEN_METHOD = By.className("otp__token");
+        public static final By NEMID_CODE_TOKEN_SERIAL_NUMBER =
+                By.xpath("//*[@class='frame__row']//div[1]//span");
+        public static final By NEMID_CODE_TOKEN_INPUT = By.xpath("//*[@class='input otp-input']");
     }
 
     // source:

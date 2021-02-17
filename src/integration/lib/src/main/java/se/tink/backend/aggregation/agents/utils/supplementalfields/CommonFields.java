@@ -138,4 +138,43 @@ public class CommonFields {
                     .numeric(true);
         }
     }
+
+    public static class CodeTokenInfo {
+
+        public static final String FIELD_KEY = "codeTokenInfoField";
+
+        private static final LocalizableKey DESCRIPTION =
+                new LocalizableKey("Code token serial number");
+        private static final LocalizableKey HELPTEXT =
+                new LocalizableKey("Enter the code generated with your code token");
+
+        public static Field build(Catalog catalog, String codeTokenSerialNumber) {
+            return Field.builder()
+                    .immutable(true)
+                    .name(FIELD_KEY)
+                    .description(catalog.getString(DESCRIPTION))
+                    .value(codeTokenSerialNumber)
+                    .helpText(catalog.getString(HELPTEXT))
+                    .build();
+        }
+    }
+
+    public static class CodeTokenCode {
+
+        public static final String FIELD_KEY = "codeTokenCodeValueField";
+
+        private static final Integer EXPECTED_CODE_LENGTH = 6;
+        private static final LocalizableKey DESCRIPTION = new LocalizableKey("Code token code");
+
+        public static Field build(Catalog catalog) {
+            return Field.builder()
+                    .name(FIELD_KEY)
+                    .description(catalog.getString(DESCRIPTION))
+                    .numeric(true)
+                    .minLength(EXPECTED_CODE_LENGTH)
+                    .maxLength(EXPECTED_CODE_LENGTH)
+                    .hint(StringUtils.repeat("N", EXPECTED_CODE_LENGTH))
+                    .build();
+        }
+    }
 }
