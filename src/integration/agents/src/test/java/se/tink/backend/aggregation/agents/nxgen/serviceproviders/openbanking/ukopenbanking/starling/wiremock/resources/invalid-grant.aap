@@ -1,0 +1,14 @@
+
+
+REQUEST 0
+POST https://token-api.starlingbank.com/oauth/access-token
+Content-Type: application/x-www-form-urlencoded
+
+refresh_token=DUMMY_REFRESH_TOKEN&grant_type=refresh_token&client_secret=DUMMY_AIS_CLIENT_SECRET&client_id=DUMMY_AIS_CLIENT_ID
+
+RESPONSE 0
+200
+Content-Type: application/json
+Connection: keep-alive
+
+{"error":"invalid_grant","error_description":"refresh_token could not be verified, it could be invalid, expired or revoked"}

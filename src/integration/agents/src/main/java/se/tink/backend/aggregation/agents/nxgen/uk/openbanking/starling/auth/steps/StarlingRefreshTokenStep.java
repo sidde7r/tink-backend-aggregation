@@ -7,19 +7,18 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationProcessState;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.request.AgentProceedNextStepAuthenticationRequest;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentAuthenticationResult;
-import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentProceedNextStepAuthenticationResult;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentFailedAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentSucceededAuthenticationResult;
-import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.steps.AgentAuthenticationProcessStep;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.AgentRefreshableAccessTokenAuthenticationPersistedData;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.AgentRefreshableAccessTokenAuthenticationPersistedDataAccessorFactory;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.RedirectAuthenticationRefreshTokenStep;
-import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.RedirectPreparationRedirectUrlStep;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.RedirectRefreshTokenCall;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.RedirectRefreshTokenCallAuthenticationParameters;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.common.AgentExtendedClientInfo;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.common.authentication.RefreshableAccessToken;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.common.authentication.RefreshableAccessTokenValidator;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.common.authentication.TokenExpirationDateHelper;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.error.RefreshTokenFailureError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.http.AuthenticationPersistedDataCookieStoreAccessorFactory;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.http.ExternalApiCallResult;
 
@@ -68,7 +67,7 @@ public class StarlingRefreshTokenStep extends RedirectAuthenticationRefreshToken
                         accessToken ->
                                 tryToRefreshAccessToken(
                                         accessToken, persistedData, authProcessState, clientInfo))
-                .orElseGet(() -> prepareNewRedirect(persistedData));
+                .orElseGet(this::prepareFailedAuthResult);
     }
 
     private AgentAuthenticationResult tryToRefreshAccessToken(
@@ -78,13 +77,13 @@ public class StarlingRefreshTokenStep extends RedirectAuthenticationRefreshToken
             AgentExtendedClientInfo clientInfo) {
 
         if (isNotRefreshable(accessToken)) {
-            return prepareNewRedirect(persistedData);
+            return prepareFailedAuthResult();
         }
 
         return executeRefreshTokenCall(accessToken, persistedData, authProcessState, clientInfo)
                 .filter(this::isRefreshTokenPresent)
-                .map(token -> prepareAuthSuccess(token, persistedData))
-                .orElseGet(() -> prepareNewRedirect(persistedData));
+                .map(token -> prepareSuccessAuthResult(token, persistedData))
+                .orElseGet(this::prepareFailedAuthResult);
     }
 
     private boolean isNotRefreshable(RefreshableAccessToken refreshableAccessToken) {
@@ -95,27 +94,11 @@ public class StarlingRefreshTokenStep extends RedirectAuthenticationRefreshToken
         return token.getRefreshToken() != null;
     }
 
-    private AgentAuthenticationResult prepareNewRedirect(
-            AgentAuthenticationPersistedData persistedData) {
-        log.info(
-                "Something went wrong during token refresh - clearing persistent storage and starting full auth flow");
-
-        removeStoredRefreshableToken(persistedData);
-
-        return new AgentProceedNextStepAuthenticationResult(
-                AgentAuthenticationProcessStep.identifier(RedirectPreparationRedirectUrlStep.class),
-                AgentAuthenticationPersistedData.of());
+    private AgentAuthenticationResult prepareFailedAuthResult() {
+        return new AgentFailedAuthenticationResult(new RefreshTokenFailureError(), null);
     }
 
-    private void removeStoredRefreshableToken(AgentAuthenticationPersistedData persistedData) {
-        AgentRefreshableAccessTokenAuthenticationPersistedData refreshableAccessTokenPersistedData =
-                agentRefreshableAccessTokenAuthenticationPersistedDataAccessorFactory
-                        .createAgentRefreshableAccessTokenAuthenticationPersistedData(
-                                persistedData);
-        refreshableAccessTokenPersistedData.storeRefreshableAccessToken(null);
-    }
-
-    private AgentAuthenticationResult prepareAuthSuccess(
+    private AgentAuthenticationResult prepareSuccessAuthResult(
             RefreshableAccessToken token,
             AgentAuthenticationPersistedData authenticationPersistedData) {
         AgentRefreshableAccessTokenAuthenticationPersistedData refreshableAccessTokenPersistedData =

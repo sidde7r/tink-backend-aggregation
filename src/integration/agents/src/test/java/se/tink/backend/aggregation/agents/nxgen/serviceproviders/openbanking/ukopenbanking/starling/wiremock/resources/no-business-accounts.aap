@@ -1,30 +1,24 @@
 
 REQUEST 2
 GET https://api.starlingbank.com/api/v2/accounts
-Authorization: Bearer DUMMY_OAUTH2_TOKEN
+Authorization: Bearer DUMMY_ACCESS_TOKEN
 Accept: application/json
 
 RESPONSE 2
 200
-Date: Thu, 27 Aug 2020 03:15:33 GMT
 Content-Type: application/json
-Transfer-Encoding: chunked
 Connection: keep-alive
-Server-Timing: ***
 
 {"accounts":[{"accountUid":"account-uuid-1234567","defaultCategory":"5d3c6070-1972-4f93-8f2a-44c0ccce5719","currency":"GBP","createdAt":"2018-09-18T15:25:21.764Z"}]}
 
 REQUEST 3
 GET https://api.starlingbank.com/api/v2/account-holder
-Authorization: Bearer DUMMY_OAUTH2_TOKEN
+Authorization: Bearer DUMMY_ACCESS_TOKEN
 Accept: application/json
 
 RESPONSE 3
 200
-Date: Thu, 27 Aug 2020 03:15:33 GMT
 Content-Type: application/json
-Transfer-Encoding: chunked
 Connection: keep-alive
-Server-Timing: ***
 
 {"accountHolderUid":"1f1c43dd-88de-4b10-b9ef-1a927eba81e1","accountHolderType":"BUSINESS"}
