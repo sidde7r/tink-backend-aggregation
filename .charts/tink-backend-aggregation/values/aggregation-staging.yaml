@@ -14,7 +14,6 @@ s3StorageConfiguration:
   url: "https://s3.eu-west-1.amazonaws.com"
   region: "eu-west-1"
   agentDebugBucketName: "aggregation-staging-agent-debug-20180917063035423800000001"
-  longTermStorageDisputeBasePrefix: "long-term-payments-dispute"
 
 agents:
   danskeBankDK: true
@@ -63,6 +62,7 @@ tppSecretsServiceConfiguration:
   enabledRetryPolicy: true
 
 debugLogFrequencyPercent: 100
+longTermStorageDisputeBasePrefix: "long-term-payments-dispute"
 
 eventProducerServiceConfiguration:
   url: event-producer-service.internal.staging.aggregation.tink.network

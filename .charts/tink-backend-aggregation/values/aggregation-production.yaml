@@ -27,7 +27,6 @@ s3StorageConfiguration:
   url: "https://s3.eu-west-1.amazonaws.com"
   region: "eu-west-1"
   agentDebugBucketName: "aggregation-production-agent-debug-20180918120109492100000001"
-  longTermStorageDisputeBasePrefix: "long-term-payments-dispute"
 
 agents:
   demoFinancialInstitution:
@@ -458,6 +457,7 @@ tppSecretsServiceConfiguration:
   enabledRetryPolicy: false
 
 debugLogFrequencyPercent: 100
+longTermStorageDisputeBasePrefix: "long-term-payments-dispute"
 
 eventProducerServiceConfiguration:
   url: event-producer-service.internal.production.aggregation.tink.network
