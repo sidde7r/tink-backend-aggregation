@@ -5,7 +5,6 @@ import java.time.ZoneId;
 import java.util.Date;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.SebApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.SebConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.fetcher.transactionalaccount.entities.TransactionPaginationLinksEntity;
@@ -18,7 +17,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
-@Slf4j
 @RequiredArgsConstructor
 public class SebTransactionFetcher
         implements TransactionKeyPaginator<TransactionalAccount, String> {
@@ -32,10 +30,8 @@ public class SebTransactionFetcher
         Optional<Date> certainDate = paginationHelper.getContentWithRefreshDate(account);
 
         if (!certainDate.isPresent()) {
-            log.info("No certainDate present, fetch all transactions.");
             return getAllTransactions(account, key);
         } else {
-            log.info("Certain date present: {}", certainDate.get());
             FetchTransactionsResponse transactionsResponse =
                     apiClient.fetchTransactions(
                             account.getApiIdentifier(),
