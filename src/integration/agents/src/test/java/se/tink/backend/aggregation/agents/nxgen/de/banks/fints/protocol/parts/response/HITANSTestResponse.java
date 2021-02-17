@@ -1,5 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.parts.response;
 
+import org.junit.Ignore;
+
+@Ignore
 public class HITANSTestResponse {
 
     public static String[][] genHITANSResponseV6() {
