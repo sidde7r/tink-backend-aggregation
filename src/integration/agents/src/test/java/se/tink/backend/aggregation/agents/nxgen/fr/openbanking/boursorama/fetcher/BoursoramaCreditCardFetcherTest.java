@@ -46,7 +46,7 @@ public class BoursoramaCreditCardFetcherTest {
         assertThat(creditCardAccount.getExactAvailableCredit())
                 .isEqualTo(ExactCurrencyAmount.of(0, "EUR"));
         assertThat(creditCardAccount.getName()).isEqualTo("Visa classique MLE Bli Bla Blo");
-        assertThat(creditCardAccount.getCardModule().getCardNumber()).isEqualTo("FR21312313123123");
+        assertThat(creditCardAccount.getCardModule().getCardNumber()).isEqualTo("4000000001210944");
         assertThat(creditCardAccount.getAccountNumber())
                 .isEqualTo("3B9F0FCF487ECF9FCDC4CBAFDD0A2E6D");
     }

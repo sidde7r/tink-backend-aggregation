@@ -7,7 +7,13 @@ public class AccountIdEntity {
 
     private String iban;
 
+    private AccountIdEntityOther other;
+
     public String getIban() {
         return iban;
+    }
+
+    public AccountIdEntityOther getOther() {
+        return other;
     }
 }

@@ -89,7 +89,8 @@ public class BoursoramaCreditCardFetcher
         return CreditCardAccount.nxBuilder()
                 .withCardDetails(
                         CreditCardModule.builder()
-                                .withCardNumber(accountEntity.getAccountId().getIban())
+                                .withCardNumber(
+                                        accountEntity.getAccountId().getOther().getIdentification())
                                 .withBalance(
                                         ExactCurrencyAmount.of(
                                                 balance.getAmount(), balance.getCurrency()))
@@ -104,8 +105,11 @@ public class BoursoramaCreditCardFetcher
                                 .withAccountName(accountEntity.getName())
                                 .addIdentifier(
                                         AccountIdentifier.create(
-                                                Type.PAYMENT_CARD_NUMBER,
-                                                accountEntity.getAccountId().getIban()))
+                                                Type.TINK,
+                                                accountEntity
+                                                        .getAccountId()
+                                                        .getOther()
+                                                        .getIdentification()))
                                 .setProductName(accountEntity.getProduct())
                                 .build())
                 .setApiIdentifier(accountEntity.getResourceId())

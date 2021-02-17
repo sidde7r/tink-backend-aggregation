@@ -160,6 +160,11 @@ public class SocieteGeneraleApiClient implements FrAispApiClient {
         }
     }
 
+    public String getCreditCardBalances(URL url) {
+        // for now it is just to discover if balances are available for credit cards
+        return createRequest(url).get(String.class);
+    }
+
     private void getAndSavePisToken() {
         PisTokenRequest request = new PisTokenRequest(redirectUrl);
         TokenResponse getTokenResponse = exchangeAuthorizationCodeOrRefreshToken(request);
