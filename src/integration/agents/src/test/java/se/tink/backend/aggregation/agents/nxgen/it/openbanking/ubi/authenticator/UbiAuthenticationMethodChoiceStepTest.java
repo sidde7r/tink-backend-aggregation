@@ -6,7 +6,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import junitparams.JUnitParamsRunner;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -44,9 +43,9 @@ public class UbiAuthenticationMethodChoiceStepTest {
         AuthenticationStepResponse response = step.execute(request);
 
         // then
-        Assert.assertTrue(response.getNextStepId().isPresent());
-        Assert.assertEquals(
-                response.getNextStepId().get(), AccountConsentDecoupledStep.class.getSimpleName());
+        assertThat(response.getNextStepId().isPresent()).isTrue();
+        assertThat(response.getNextStepId().get())
+                .isEqualTo(AccountConsentDecoupledStep.class.getSimpleName());
     }
 
     @Test
@@ -60,12 +59,12 @@ public class UbiAuthenticationMethodChoiceStepTest {
         AuthenticationStepResponse response = step.execute(request);
 
         // then
-        Assert.assertTrue(response.getNextStepId().isPresent());
-        Assert.assertEquals(
-                response.getNextStepId().get(),
-                CbiThirdPartyAppAuthenticationStep.class.getSimpleName()
-                        + "_"
-                        + ConsentType.ACCOUNT);
+        assertThat(response.getNextStepId().isPresent()).isTrue();
+        assertThat(response.getNextStepId().get())
+                .isEqualTo(
+                        CbiThirdPartyAppAuthenticationStep.class.getSimpleName()
+                                + "_"
+                                + ConsentType.ACCOUNT);
     }
 
     @Test
