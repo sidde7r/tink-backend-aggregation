@@ -20,9 +20,10 @@ public class Sparebank1Constants {
                 new URL(BASE + "{bankName}/nettbank-privat/rest/kontoer");
         public static final URL CREDITCARDS =
                 new URL(BASE + "{bankName}/nettbank-privat/kort/rest/cards/v2/credit");
-        public static final URL LOANS = new URL(BASE + "{bankName}/nettbank-privat/rest/loans");
+        public static final URL LOANS =
+                new URL(BASE + "{bankName}/nettbank-privat/finansiering/rest/v2/loans");
         static final URL LOAN_DETAILS =
-                new URL(BASE + "{bankName}/nettbank-privat/rest/loans/{accountId}");
+                new URL(BASE + "{bankName}/nettbank-privat/finansiering/rest/v2/loans/{accountId}");
         static final URL CREDITCARD_TRANSACTIONS =
                 new URL(
                         BASE

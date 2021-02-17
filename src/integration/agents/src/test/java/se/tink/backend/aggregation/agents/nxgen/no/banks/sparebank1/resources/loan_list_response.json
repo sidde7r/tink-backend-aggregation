@@ -1,0 +1,30 @@
+{
+    "loans": [
+        {
+            "id": "1FE3yHx2IGbjXHjqjQ7CS2-plnlRNSDvaSBpq1r4rwI",
+            "name": "LOFAVØR FØRSTEHJEMSLÅN",
+            "formattedNumber": "1234 56 78910",
+            "disposableAmountInteger": "0",
+            "disposableAmountFraction": "00",
+            "balanceAmountInteger": "-2234684",
+            "balanceAmountFraction": "00",
+            "type": "LOAN",
+            "detailsFetched": false,
+            "owned": false,
+            "prescored": false,
+            "balancePreferred": false,
+            "paymentFromEnabled": false,
+            "transferToEnabled": false,
+            "transferFromEnabled": false,
+            "_links": {
+                "lan-detaljer-html": {
+                    "href": "https://mobilbank-pm.sparebank1.no/ostlandet/nettbank-privat/finansiering/lan#/detaljer/1FE3yHx2IGbjXHjqjQ7CS2-plnlRNSDvaSBpq1r4rwI"
+                }
+            }
+        }
+    ],
+    "errors": [],
+    "_links": {},
+    "_aggregatedAmountFraction": "00",
+    "_aggregatedAmountInteger": "-2234684"
+}
