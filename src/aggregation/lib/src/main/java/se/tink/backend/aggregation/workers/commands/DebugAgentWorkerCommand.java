@@ -203,8 +203,7 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
     }
 
     private boolean shouldStoreInLongTermStorageForPaymentsDisputes(String appId) {
-        PaymentsLegalConstraints legalConstraints = PaymentsLegalConstraints.get(appId);
-        return legalConstraints.isOnTinksLicense();
+        return PaymentsLegalConstraints.get(appId).isOnTinksLicense();
     }
 
     private String getCleanLogContent(Credentials credentials)
