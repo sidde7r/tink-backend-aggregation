@@ -4,11 +4,13 @@ import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import org.junit.Ignore;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.detail.InvestmentAccountDto;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.rpc.investment.GetInvestmentsResponse;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
+@Ignore
 public class InvestmentTestData {
     public static final String INVESTMENTS_AVAILABLE = "INVESTMENTS_AVAILABLE";
     public static final String FAILED_CALL = "FAILED_CALL";

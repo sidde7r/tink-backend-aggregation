@@ -2,9 +2,11 @@ package se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.component.au
 
 import java.util.HashMap;
 import java.util.Map;
+import org.junit.Ignore;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.authenticator.rpc.Login0Response;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
+@Ignore
 public class Login0TestData {
     public static final String SUCCESSFUL_LOGIN = "SUCCESSFUL_LOGIN";
     public static final String INCORRECT_CREDENTIALS = "INCORRECT_CREDENTIALS";
