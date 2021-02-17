@@ -365,44 +365,6 @@ spec:
     ### All login success rates - All Errors - RE ###
     #################################################
 
-    - alert: AllLoginSuccessRatesBelow70AndGreater60WithAllErrorsAndAttemptLimitES_RE
-      expr: |
-          (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="ES"}))
-                      / (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"})) < 0.7
-           and (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="ES"}))
-                      / (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"})) >= 0.6
-          and sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"}) > 4
-      for: 5m
-      labels:
-        severity: urgent
-        priority: P3
-        who: integration-fluffy
-      annotations:
-        description: {{ .Values.kibanaLink }}
-             {{ .Values.grafanaLink }}
-        summary: Login success rate for RE agents and for all Agent types with All Errors is between 70 - 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-             the last 60 minutes.
-        tags: {{ .Values.tags }}
-
-    - alert: AllLoginSuccessRatesBelow60AndGreater50WithAllErrorsAndAttemptLimitES_RE
-      expr: |
-          (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="ES"}))
-                      / (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"})) < 0.6
-           and (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="ES"}))
-                      / (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"})) >= 0.5
-          and sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"}) > 4
-      for: 5m
-      labels:
-        severity: urgent
-        priority: P2
-        who: integration-fluffy
-      annotations:
-        description: {{ .Values.kibanaLink }}
-             {{ .Values.grafanaLink }}
-        summary: Login success rate for RE agents and for all Agent types with All Errors is between 60 - 50% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-             the last 60 minutes.
-        tags: {{ .Values.tags }}
-
     - alert: AllLoginSuccessRatesBelow50WithAllErrorsAndAttemptLimitES_RE
       expr: |
           (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.allErrorsAuth }} , market="ES"}))
