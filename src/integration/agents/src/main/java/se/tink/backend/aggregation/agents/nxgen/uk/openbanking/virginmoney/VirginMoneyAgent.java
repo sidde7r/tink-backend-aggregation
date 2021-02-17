@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.virginmoney;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CREDIT_CARDS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.IDENTITY_DATA;
-import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.INVESTMENTS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
 
 import com.google.inject.Inject;
@@ -25,8 +24,8 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponen
 @AgentDependencyModulesForProductionMode(
         modules = {UkOpenBankingModule.class, JwtSignerModule.class})
 // TODO: Capability LOANS should be adding after implementation RefreshLoansAccountsExecutor in
-// UkOpenBankingBaseAgent
-@AgentCapabilities({CHECKING_ACCOUNTS, CREDIT_CARDS, INVESTMENTS, SAVINGS_ACCOUNTS, IDENTITY_DATA})
+// UkOpenBankingBaseAgent, INVESTMENTS probably too in  the  future
+@AgentCapabilities({CHECKING_ACCOUNTS, CREDIT_CARDS, SAVINGS_ACCOUNTS, IDENTITY_DATA})
 public class VirginMoneyAgent extends UkOpenBankingBaseAgent {
 
     private static final UkOpenBankingAisConfig aisConfig;
