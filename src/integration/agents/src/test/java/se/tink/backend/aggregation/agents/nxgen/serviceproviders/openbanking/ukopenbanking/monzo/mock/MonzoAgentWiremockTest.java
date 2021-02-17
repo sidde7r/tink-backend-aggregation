@@ -114,15 +114,16 @@ public class MonzoAgentWiremockTest {
                         .parseContractOnBasisOfFile(wireMockContractFilePath);
 
         final AgentWireMockRefreshTest agentWireMockRefreshTest =
-                AgentWireMockRefreshTest.builder(
-                                MarketCode.UK, PROVIDER_NAME, wireMockServerFilePath)
-                        .withConfigurationFile(
-                                AgentsServiceConfigurationReader.read(configFilePath))
-                        .dumpContentForContractFile()
+                AgentWireMockRefreshTest.nxBuilder()
+                        .withMarketCode(MarketCode.UK)
+                        .withProviderName(PROVIDER_NAME)
+                        .withWireMockFilePath(wireMockServerFilePath)
+                        .withConfigFile(AgentsServiceConfigurationReader.read(configFilePath))
                         .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
                         .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
                         .addCallbackData("code", "DUMMY_ACCESS_TOKEN2")
-                        .withHttpDebugTrace()
+                        .enableHttpDebugTrace()
+                        .enableDataDumpForContractFile()
                         .build();
 
         // When
@@ -151,11 +152,11 @@ public class MonzoAgentWiremockTest {
                 "{\"PartyId\": \"user_11119x3OpXVihQdEO1EoXC\", \"Name\": \"John Tinker\", \"FullLegalName\":\"John The Tinker2\"}";
 
         final AgentWireMockRefreshTest agentWireMockRefreshTest =
-                AgentWireMockRefreshTest.builder(
-                                MarketCode.UK, PROVIDER_NAME, wireMockServerFilePath)
-                        .withConfigurationFile(
-                                AgentsServiceConfigurationReader.read(configFilePath))
-                        .dumpContentForContractFile()
+                AgentWireMockRefreshTest.nxBuilder()
+                        .withMarketCode(MarketCode.UK)
+                        .withProviderName(PROVIDER_NAME)
+                        .withWireMockFilePath(wireMockServerFilePath)
+                        .withConfigFile(AgentsServiceConfigurationReader.read(configFilePath))
                         .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
                         .addPersistentStorageData(
                                 UkOpenBankingV31Constants.PersistentStorageKeys.AIS_ACCESS_TOKEN,
@@ -165,7 +166,8 @@ public class MonzoAgentWiremockTest {
                                 LocalDateTime.now().minusMinutes(6).toString())
                         .addPersistentStorageData(
                                 MonzoConstants.RECENT_IDENTITY_DATA, identityDataV31Entity)
-                        .withHttpDebugTrace()
+                        .enableHttpDebugTrace()
+                        .enableDataDumpForContractFile()
                         .build();
 
         // When

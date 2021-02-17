@@ -161,13 +161,10 @@ public final class AgentWireMockRefreshTest {
     }
 
     /**
-     * Construct builder for creating an AgentWireMockRefreshTest.
-     *
-     * @param market MarketCode for provider to test.
-     * @param providerName Provider name as specified in provider configuration.
-     * @param wireMockFilePath Path to WireMock server instruction file.
-     * @return A builder for AgentWireMockRefreshTest.
+     * @deprecated Consider using nxBuilder() instead - it adds ability to test authentication flow
+     *     without data fetch
      */
+    @Deprecated
     public static Builder builder(MarketCode market, String providerName, String wireMockFilePath) {
         return new Builder(market, providerName, wireMockFilePath);
     }
@@ -188,6 +185,7 @@ public final class AgentWireMockRefreshTest {
         private boolean requestManual = true;
         private boolean requestCreate = false;
         private boolean requestUpdate = false;
+        private boolean testAuthenticationOnly = false;
 
         private AgentsServiceConfiguration configuration;
         private TestModule agentTestModule;
@@ -387,8 +385,18 @@ public final class AgentWireMockRefreshTest {
             return this;
         }
 
+        /**
+         * Allows execution of refresh without any refreshable items
+         *
+         * @return This builder.
+         */
+        public Builder testAuthenticationOnly() {
+            this.testAuthenticationOnly = true;
+            return this;
+        }
+
         public AgentWireMockRefreshTest build() {
-            if (refreshableItems.isEmpty()) {
+            if (refreshableItems.isEmpty() && !testAuthenticationOnly) {
                 refreshableItems.addAll(
                         RefreshableItem.sort(RefreshableItem.REFRESHABLE_ITEMS_ALL));
             }
@@ -412,5 +420,298 @@ public final class AgentWireMockRefreshTest {
                     requestCreate,
                     requestUpdate);
         }
+    }
+
+    /** Next gen step builder which adds ability to test authentication flow without data fetch */
+    public static MarketCodeStep nxBuilder() {
+        return new NxBuilder();
+    }
+
+    public static class NxBuilder
+            implements MarketCodeStep,
+                    ProviderNameStep,
+                    WireMockFilePathsStep,
+                    ConfigurationStep,
+                    RefreshOrAuthOnlyStep,
+                    RefreshableItemStep,
+                    BuildStep {
+        private MarketCode marketCode;
+        private String providerName;
+        private Set<String> wireMockFilePaths;
+        private Map<String, String> credentialFields;
+        private AgentsServiceConfiguration configuration;
+        private Map<String, String> loginDetails;
+        private String credentialPayload;
+        private Map<String, String> callbackData;
+        private Map<String, String> persistentStorageData;
+        private Map<String, String> cache;
+        private TestModule agentTestModule;
+        private Set<RefreshableItem> refreshableItems;
+        private List<Class<? extends CompositeAgentTestCommand>> commandSequence;
+        private boolean httpDebugTrace;
+        private boolean dumpContentForContractFile;
+        private boolean requestFlagManual;
+        private boolean requestFlagCreate;
+        private boolean requestFlagUpdate;
+
+        private NxBuilder() {
+            this.configuration = new AgentsServiceConfiguration();
+            this.credentialFields = new HashMap<>();
+            this.callbackData = new HashMap<>();
+            this.persistentStorageData = new HashMap<>();
+            this.cache = new HashMap<>();
+            this.refreshableItems = new HashSet<>();
+            this.httpDebugTrace = false;
+            this.dumpContentForContractFile = false;
+            this.requestFlagManual = true;
+            this.requestFlagCreate = false;
+            this.requestFlagUpdate = false;
+        }
+
+        @Override
+        public ProviderNameStep withMarketCode(MarketCode marketCode) {
+            this.marketCode = marketCode;
+            return this;
+        }
+
+        @Override
+        public WireMockFilePathsStep withProviderName(String providerName) {
+            this.providerName = providerName;
+            return this;
+        }
+
+        @Override
+        public ConfigurationStep withWireMockFilePath(String wireMockFilePath) {
+            this.wireMockFilePaths = new HashSet<>(Collections.singleton(wireMockFilePath));
+            return this;
+        }
+
+        @Override
+        public ConfigurationStep withWireMockFilePaths(Set<String> wireMockFilePaths) {
+            this.wireMockFilePaths = wireMockFilePaths;
+            return this;
+        }
+
+        @Override
+        public RefreshOrAuthOnlyStep withConfigFile(AgentsServiceConfiguration configuration) {
+            this.configuration = configuration;
+            return this;
+        }
+
+        @Override
+        public RefreshableItemStep addRefreshableItems(RefreshableItem... items) {
+            this.refreshableItems.addAll(Arrays.asList(items));
+            return this;
+        }
+
+        @Override
+        public RefreshableItemStep withRefreshableItems(Set<RefreshableItem> refreshableItems) {
+            this.refreshableItems = refreshableItems;
+            return this;
+        }
+
+        @Override
+        public BuildStep testAuthenticationOnly() {
+            this.refreshableItems = new HashSet<>();
+            return this;
+        }
+
+        @Override
+        public BuildStep withLoginDetails(Map<String, String> loginDetails) {
+            this.loginDetails = loginDetails;
+            return this;
+        }
+
+        @Override
+        public BuildStep withCredentialPayload(String credentialPayload) {
+            this.credentialPayload = credentialPayload;
+            return this;
+        }
+
+        @Override
+        public BuildStep addCredentialField(String key, String value) {
+            this.credentialFields.put(key, value);
+            return this;
+        }
+
+        @Override
+        public BuildStep addCallbackData(String key, String value) {
+            this.callbackData.put(key, value);
+            return this;
+        }
+
+        @Override
+        public BuildStep addPersistentStorageData(String key, String value) {
+            this.persistentStorageData.put(key, value);
+            return this;
+        }
+
+        @Override
+        public BuildStep addDataIntoCache(String key, String value) {
+            this.cache.put(key, value);
+            return this;
+        }
+
+        @Override
+        public BuildStep withAgentTestModule(TestModule agentTestModule) {
+            this.agentTestModule = agentTestModule;
+            return this;
+        }
+
+        @Override
+        public BuildStep withCommandSequence(
+                List<Class<? extends CompositeAgentTestCommand>> commandSequence) {
+            this.commandSequence = commandSequence;
+            return this;
+        }
+
+        @Override
+        public BuildStep withRequestFlagManual(boolean requestFlagManual) {
+            this.requestFlagManual = requestFlagManual;
+            return this;
+        }
+
+        @Override
+        public BuildStep withRequestFlagCreate(boolean requestFlagCreate) {
+            this.requestFlagCreate = requestFlagCreate;
+            return this;
+        }
+
+        @Override
+        public BuildStep withRequestFlagUpdate(boolean requestFlagUpdate) {
+            this.requestFlagUpdate = requestFlagUpdate;
+            return this;
+        }
+
+        @Override
+        public BuildStep enableHttpDebugTrace() {
+            this.httpDebugTrace = true;
+            return this;
+        }
+
+        @Override
+        public BuildStep enableDataDumpForContractFile() {
+            this.dumpContentForContractFile = true;
+            return this;
+        }
+
+        @Override
+        public AgentWireMockRefreshTest build() {
+            return new AgentWireMockRefreshTest(
+                    marketCode,
+                    providerName,
+                    wireMockFilePaths,
+                    configuration,
+                    credentialFields,
+                    credentialPayload,
+                    callbackData,
+                    persistentStorageData,
+                    cache,
+                    agentTestModule,
+                    refreshableItems,
+                    of(LoginCommand.class, RefreshCommand.class),
+                    httpDebugTrace,
+                    dumpContentForContractFile,
+                    requestFlagManual,
+                    requestFlagCreate,
+                    requestFlagUpdate);
+        }
+    }
+
+    public interface MarketCodeStep {
+        ProviderNameStep withMarketCode(MarketCode marketCode);
+    }
+
+    public interface ProviderNameStep {
+        WireMockFilePathsStep withProviderName(String providerName);
+    }
+
+    public interface WireMockFilePathsStep {
+        ConfigurationStep withWireMockFilePath(String wireMockFilePath);
+
+        ConfigurationStep withWireMockFilePaths(Set<String> wireMockFilePaths);
+    }
+
+    public interface ConfigurationStep {
+
+        /**
+         * Use specified AgentsServiceConfiguration for agent. Agent will get an empty configuration
+         * if none is specified.
+         *
+         * @param configuration
+         * @return This builder.
+         */
+        RefreshOrAuthOnlyStep withConfigFile(AgentsServiceConfiguration configuration);
+    }
+
+    public interface RefreshOrAuthOnlyStep {
+        RefreshableItemStep addRefreshableItems(RefreshableItem... items);
+
+        RefreshableItemStep withRefreshableItems(Set<RefreshableItem> refreshableItems);
+
+        /** Test will be executed without any refreshable items */
+        BuildStep testAuthenticationOnly();
+    }
+
+    public interface RefreshableItemStep extends BuildStep {
+        RefreshableItemStep addRefreshableItems(RefreshableItem... items);
+
+        RefreshableItemStep withRefreshableItems(Set<RefreshableItem> refreshableItems);
+    }
+
+    public interface BuildStep {
+
+        BuildStep withLoginDetails(Map<String, String> loginDetails);
+
+        BuildStep withCredentialPayload(String credentialPayload);
+
+        /**
+         * Add credential field to the map
+         *
+         * <p>Can be called multiple times to add several items
+         *
+         * <p>Example:
+         *
+         * <pre>
+         * .addCredentialField(Key.USERNAME.getFieldKey(), DUMMY_USERNAME)
+         * .addCredentialField(Key.PASSWORD.getFieldKey(), DUMMY_PASSWORD)
+         * </pre>
+         */
+        BuildStep addCredentialField(String key, String value);
+
+        BuildStep addCallbackData(String key, String value);
+
+        /**
+         * Add data to persistent storage map
+         *
+         * <p>Can be called multiple times to add several items
+         */
+        BuildStep addPersistentStorageData(String key, String value);
+
+        BuildStep addDataIntoCache(String key, String value);
+
+        BuildStep withAgentTestModule(TestModule agentTestModule);
+
+        BuildStep withCommandSequence(
+                List<Class<? extends CompositeAgentTestCommand>> commandSequence);
+
+        BuildStep withRequestFlagManual(boolean requestFlagManual);
+
+        BuildStep withRequestFlagCreate(boolean requestFlagCreate);
+
+        BuildStep withRequestFlagUpdate(boolean requestFlagUpdate);
+
+        /** Enable printing of http debug trace */
+        BuildStep enableHttpDebugTrace();
+
+        /**
+         * Enable printing of processed data from .aap file (response body mapped to tink model)
+         * Output can be used to fill contract json file
+         *
+         * <p>Search "This is the content for building the contract file" phrase in console output
+         */
+        BuildStep enableDataDumpForContractFile();
+
+        AgentWireMockRefreshTest build();
     }
 }
