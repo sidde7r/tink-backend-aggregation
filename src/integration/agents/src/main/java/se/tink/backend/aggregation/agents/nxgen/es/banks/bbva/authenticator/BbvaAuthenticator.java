@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.authenticator;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
@@ -12,11 +11,9 @@ import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceErro
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.AuthenticationStates;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.CredentialKeys;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.authenticator.rpc.LoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.authenticator.rpc.LoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.rpc.BbvaErrorResponse;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.utils.BbvaUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
@@ -41,15 +38,14 @@ public class BbvaAuthenticator implements MultiFactorAuthenticator {
     @Override
     public void authenticate(Credentials credentials)
             throws AuthenticationException, AuthorizationException {
-        String username = BbvaUtils.formatUsername(credentials.getField(CredentialKeys.USERNAME));
-        String password = credentials.getField(CredentialKeys.PASSWORD);
-        final LoginRequest loginRequest = new LoginRequest(username, password, null, false);
+        final UserCredentials userCredentials = new UserCredentials(credentials);
+        final LoginRequest loginRequest = new LoginRequest(userCredentials);
         try {
             LoginResponse loginResponse = apiClient.login(loginRequest);
             String authenticationState = loginResponse.getAuthenticationState();
             log.info("Authentication state: {}", authenticationState);
             if (isTwoFactorAuthenticationNeeded(authenticationState)) {
-                loginWithOtp(loginResponse.getMultistepProcessId(), username);
+                loginWithOtp(loginResponse.getMultistepProcessId(), userCredentials);
             }
         } catch (HttpResponseException ex) {
             mapHttpErrors(ex);
@@ -61,15 +57,14 @@ public class BbvaAuthenticator implements MultiFactorAuthenticator {
         return CredentialsTypes.PASSWORD;
     }
 
-    private void loginWithOtp(String multistepProcessId, String username) {
+    private void loginWithOtp(String multistepProcessId, UserCredentials userCredentials) {
         log.info("Process Otp has been started");
-        final LoginRequest loginOtpRequest = new LoginRequest(username, multistepProcessId);
+        final LoginRequest loginOtpRequest = new LoginRequest(userCredentials, multistepProcessId);
         LoginResponse loginOtpResponse = apiClient.login(loginOtpRequest);
         String otpCode = supplementalInformationHelper.waitForOtpInput();
-        String multistepId =
-                StringUtils.firstNonEmpty(
-                        loginOtpResponse.getMultistepProcessId(), multistepProcessId);
-        final LoginRequest otpRequest = new LoginRequest(username, otpCode, multistepId, true);
+        final LoginRequest otpRequest =
+                new LoginRequest(
+                        userCredentials, otpCode, loginOtpResponse.getMultistepProcessId());
         apiClient.login(otpRequest);
     }
 

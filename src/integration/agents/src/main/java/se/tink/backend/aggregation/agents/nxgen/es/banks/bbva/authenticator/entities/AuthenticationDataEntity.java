@@ -9,8 +9,8 @@ public class AuthenticationDataEntity {
     private List<String> authenticationData;
     private String idAuthenticationData;
 
-    AuthenticationDataEntity(String password, String dataId) {
-        authenticationData = Collections.singletonList(password);
+    public AuthenticationDataEntity(String password, String dataId) {
+        this.authenticationData = Collections.singletonList(password);
         this.idAuthenticationData = dataId;
     }
 }
