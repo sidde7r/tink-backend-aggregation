@@ -1,11 +1,11 @@
-package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.steps.codecard;
+package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.steps.codetoken;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NEMID_CODE_CARD_CODE_INPUT;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NEMID_CODE_TOKEN_INPUT;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NOT_EMPTY_ERROR_MESSAGE;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NOT_EMPTY_NEMID_TOKEN;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.SUBMIT_BUTTON;
@@ -36,21 +36,21 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.exception.NemIdError;
 
 @RunWith(JUnitParamsRunner.class)
-public class NemIdCodeCardGetTokenStepTest {
+public class NemIdCodeTokenGetTokenStepTest {
 
-    private static final String CODE_CARD_CODE = "SAMPLE CODE CARD CODE";
+    private static final String CODE_TOKEN_CODE = "SAMPLE CODE CARD CODE";
 
     private NemIdWebDriverWrapper driverWrapper;
     private InOrder mocksToVerifyInOrder;
 
-    private NemIdCodeCardGetTokenStep getTokenStep;
+    private NemIdCodeTokenGetTokenStep getTokenStep;
 
     @Before
     public void setUp() {
         driverWrapper = mock(NemIdWebDriverWrapper.class);
         mocksToVerifyInOrder = Mockito.inOrder(driverWrapper);
 
-        getTokenStep = new NemIdCodeCardGetTokenStep(driverWrapper, nemIdMetricsMock());
+        getTokenStep = new NemIdCodeTokenGetTokenStep(driverWrapper, nemIdMetricsMock());
     }
 
     @Test
@@ -61,14 +61,14 @@ public class NemIdCodeCardGetTokenStepTest {
                 .thenReturn(ElementsSearchResult.of(NOT_EMPTY_NEMID_TOKEN, element));
 
         // when
-        String nemIdToken = getTokenStep.enterCodeAndGetToken(CODE_CARD_CODE);
+        String nemIdToken = getTokenStep.enterCodeAndGetToken(CODE_TOKEN_CODE);
 
         // then
         assertThat(nemIdToken).isEqualTo("--- SAMPLE TOKEN ---");
 
         mocksToVerifyInOrder
                 .verify(driverWrapper)
-                .setValueToElement(CODE_CARD_CODE, NEMID_CODE_CARD_CODE_INPUT);
+                .setValueToElement(CODE_TOKEN_CODE, NEMID_CODE_TOKEN_INPUT);
         mocksToVerifyInOrder.verify(driverWrapper).clickButton(SUBMIT_BUTTON);
         mocksToVerifyInOrder
                 .verify(driverWrapper)
@@ -91,7 +91,7 @@ public class NemIdCodeCardGetTokenStepTest {
 
         // when
         Throwable throwable =
-                catchThrowable(() -> getTokenStep.enterCodeAndGetToken(CODE_CARD_CODE));
+                catchThrowable(() -> getTokenStep.enterCodeAndGetToken(CODE_TOKEN_CODE));
 
         // then
         verifyThatFromUsersPerspectiveThrowableIsTheSameAsGivenAgentException(
@@ -99,7 +99,7 @@ public class NemIdCodeCardGetTokenStepTest {
 
         mocksToVerifyInOrder
                 .verify(driverWrapper)
-                .setValueToElement(CODE_CARD_CODE, NEMID_CODE_CARD_CODE_INPUT);
+                .setValueToElement(CODE_TOKEN_CODE, NEMID_CODE_TOKEN_INPUT);
         mocksToVerifyInOrder.verify(driverWrapper).clickButton(SUBMIT_BUTTON);
         mocksToVerifyInOrder
                 .verify(driverWrapper)
@@ -117,10 +117,10 @@ public class NemIdCodeCardGetTokenStepTest {
                 asList(
                                 ErrorTextTestParams.of(
                                         "incorrect code",
-                                        NemIdError.INVALID_CODE_CARD_CODE.exception()),
+                                        NemIdError.INVALID_CODE_TOKEN_CODE.exception()),
                                 ErrorTextTestParams.of(
                                         "fejl i nøgle",
-                                        NemIdError.INVALID_CODE_CARD_CODE.exception()))
+                                        NemIdError.INVALID_CODE_TOKEN_CODE.exception()))
                         .stream()
                         .map(
                                 errorTextTestParams ->
@@ -169,7 +169,7 @@ public class NemIdCodeCardGetTokenStepTest {
 
         // when
         Throwable throwable =
-                catchThrowable(() -> getTokenStep.enterCodeAndGetToken(CODE_CARD_CODE));
+                catchThrowable(() -> getTokenStep.enterCodeAndGetToken(CODE_TOKEN_CODE));
 
         // then
         verifyThatFromUsersPerspectiveThrowableIsTheSameAsGivenAgentException(
@@ -177,7 +177,7 @@ public class NemIdCodeCardGetTokenStepTest {
 
         mocksToVerifyInOrder
                 .verify(driverWrapper)
-                .setValueToElement(CODE_CARD_CODE, NEMID_CODE_CARD_CODE_INPUT);
+                .setValueToElement(CODE_TOKEN_CODE, NEMID_CODE_TOKEN_INPUT);
         mocksToVerifyInOrder.verify(driverWrapper).clickButton(SUBMIT_BUTTON);
         mocksToVerifyInOrder
                 .verify(driverWrapper)
