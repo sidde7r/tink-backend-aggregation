@@ -35,6 +35,7 @@ public class TransactionConsentDecoupledStep implements AuthenticationStep {
         consentManager.waitForAcceptance();
 
         userState.finishManualAuthenticationStep();
+        consentManager.storeConsentValidUntilDateInCredentials();
         return AuthenticationStepResponse.authenticationSucceeded();
     }
 }

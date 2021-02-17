@@ -69,6 +69,7 @@ public class TransactionConsentDecoupledStepTest {
         verify(consentManager).createTransactionsConsent(state);
         verify(consentManager).updateAuthenticationMethod(FormValues.SCA_DECOUPLED);
         verify(consentManager).updatePsuCredentials(username, password, psuCredentials);
+        verify(consentManager).storeConsentValidUntilDateInCredentials();
         verify(consentManager).waitForAcceptance();
         assertThat(response.isAuthenticationFinished()).isTrue();
     }
