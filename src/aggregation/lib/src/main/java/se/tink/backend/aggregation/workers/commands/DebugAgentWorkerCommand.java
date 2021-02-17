@@ -140,44 +140,11 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
 
     private void writeToDebugFile(Credentials credentials, TransferRequest transferRequest) {
         try {
-            File logFile = null;
             String logContent = getCleanLogContent(credentials);
-            if (agentDebugStorage.isLocalStorage() && state.isSaveLocally()) {
-                logFile =
-                        new File(
-                                state.getDebugDirectory(),
-                                getFormattedFileName(logContent, credentials, false));
-            }
-
-            if (!agentDebugStorage.isLocalStorage()) {
-                logFile = new File(getFormattedFileName(logContent, credentials, false));
-            }
-
-            if (Objects.isNull(logFile)) {
-                log.warn(
-                        "Created debug log but local storage cannot be used & no S3 storage configuration available.");
-                return;
-            }
+            writeLogToStorage(logContent, credentials, transferRequest);
 
             if (shouldStoreInLongTermStorageForPaymentsDisputes(context.getAppId())) {
                 writeToPaymentsLongTermDisputeStorage(logContent, credentials, transferRequest);
-            }
-
-            String storagePath = agentDebugStorage.store(logContent, logFile);
-
-            if (transferRequest != null) {
-                String id = UUIDUtils.toTinkUUID(transferRequest.getTransfer().getId());
-                log.info(
-                        "Flushed transfer ("
-                                + id
-                                + ") debug log for further investigation: "
-                                + storagePath);
-
-            } else {
-                log.info(
-                        "Credential Status: {} \nFlushed http log: {}",
-                        credentials.getStatus(),
-                        storagePath);
             }
 
         } catch (EmptyDebugLogException e) {
@@ -199,6 +166,47 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
                             + ltsStoragePath);
         } catch (IOException e) {
             log.error("Could not write debug log file to payments dispute long term storage.", e);
+        }
+    }
+
+    private void writeLogToStorage(
+            String logContent, Credentials credentials, TransferRequest transferRequest) {
+        try {
+            File logFile = null;
+            if (agentDebugStorage.isLocalStorage() && state.isSaveLocally()) {
+                logFile =
+                        new File(
+                                state.getDebugDirectory(),
+                                getFormattedFileName(logContent, credentials, false));
+            }
+
+            if (!agentDebugStorage.isLocalStorage()) {
+                logFile = new File(getFormattedFileName(logContent, credentials, false));
+            }
+
+            if (Objects.isNull(logFile)) {
+                log.warn(
+                        "Created debug log but local storage cannot be used & no S3 storage configuration available.");
+                return;
+            }
+            String storagePath = agentDebugStorage.store(logContent, logFile);
+
+            if (transferRequest != null) {
+                String id = UUIDUtils.toTinkUUID(transferRequest.getTransfer().getId());
+                log.info(
+                        "Flushed transfer ("
+                                + id
+                                + ") debug log for further investigation: "
+                                + storagePath);
+
+            } else {
+                log.info(
+                        "Credential Status: {} \nFlushed http log: {}",
+                        credentials.getStatus(),
+                        storagePath);
+            }
+        } catch (IOException e) {
+            log.error("Could not write debug logFile.", e);
         }
     }
 
