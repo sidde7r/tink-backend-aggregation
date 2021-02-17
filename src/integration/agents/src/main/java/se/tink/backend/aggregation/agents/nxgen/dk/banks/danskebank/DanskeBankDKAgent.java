@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.dk.banks.danskebank;
 
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CREDIT_CARDS;
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.IDENTITY_DATA;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.INVESTMENTS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.LOANS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.MORTGAGE_AGGREGATION;
@@ -9,13 +10,16 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 
 import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.danskebank.fetcher.identitydata.DanskeBankDKIdentityFetcher;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.danskebank.mapper.DkAccountEntityMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankApiClient;
@@ -43,6 +47,7 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
     SAVINGS_ACCOUNTS,
     CREDIT_CARDS,
     INVESTMENTS,
+    IDENTITY_DATA,
     LOANS,
     MORTGAGE_AGGREGATION
 })
@@ -50,7 +55,8 @@ public final class DanskeBankDKAgent extends DanskeBankAgent
         implements RefreshLoanAccountsExecutor,
                 RefreshCreditCardAccountsExecutor,
                 RefreshCheckingAccountsExecutor,
-                RefreshSavingsAccountsExecutor {
+                RefreshSavingsAccountsExecutor,
+                RefreshIdentityDataExecutor {
 
     private static final int DK_MAX_CONSECUTIVE_EMPTY_PAGES = 8;
     private final LoanRefreshController loanRefreshController;
@@ -175,6 +181,12 @@ public final class DanskeBankDKAgent extends DanskeBankAgent
                         .setConsecutiveEmptyPagesLimit(DK_MAX_CONSECUTIVE_EMPTY_PAGES)
                         .build(),
                 transactionFetcher);
+    }
+
+    @Override
+    public FetchIdentityDataResponse fetchIdentityData() {
+        return new FetchIdentityDataResponse(
+                new DanskeBankDKIdentityFetcher(persistentStorage).fetchIdentityData());
     }
 
     @Override

@@ -25,8 +25,4 @@ public class DanskeBankSEConstants {
         public static final int DESTINATION_MESSAGE_MAX_LENGTH = 12;
         public static final String WHITE_LISTED_CHARACTER_STRING = ",._-?!/:()&`~";
     }
-
-    public static class Storage {
-        public static final String IDENTITY_INFO = "identity-info";
-    }
 }
