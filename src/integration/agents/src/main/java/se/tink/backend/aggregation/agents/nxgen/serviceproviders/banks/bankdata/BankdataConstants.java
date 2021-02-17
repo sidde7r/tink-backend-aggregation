@@ -90,6 +90,10 @@ public class BankdataConstants {
         public static final int TIMEOUT_RETRY_SLEEP_MILLISECONDS = 1000;
     }
 
+    public static class StorageKeys {
+        public static final String IDENTITY_DATA = "IDENTITY_DATA";
+    }
+
     static class HttpClientParams {
         static final int CLIENT_TIMEOUT = 60 * 1000;
     }

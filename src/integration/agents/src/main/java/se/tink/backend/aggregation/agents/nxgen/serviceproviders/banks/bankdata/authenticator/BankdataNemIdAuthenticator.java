@@ -8,7 +8,9 @@ import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.BankdataApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.BankdataConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.CryptoHelper;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.authenticator.rpc.CompleteEnrollResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdParameters;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
@@ -50,7 +52,11 @@ public class BankdataNemIdAuthenticator implements NemIdAuthenticator {
     @Override
     public String exchangeNemIdToken(String nemIdToken) {
         bankClient.eventDoContinue(nemIdToken);
-        return bankClient.completeEnrollment(cryptoHelper).getInstallId();
+        final CompleteEnrollResponse completeEnrollResponse =
+                bankClient.completeEnrollment(cryptoHelper);
+        storage.put(StorageKeys.IDENTITY_DATA, completeEnrollResponse);
+
+        return completeEnrollResponse.getInstallId();
     }
 
     @Override
