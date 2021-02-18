@@ -1,0 +1,244 @@
+{
+  "accounts" : [ {
+    "accountNumber" : "ES98 2095 8631 1457 2787 4921",
+    "accountExclusion" : "NONE",
+    "exactBalance" : {
+      "currencyCode" : "EUR",
+      "unscaledValue" : 219802,
+      "scale" : 2,
+      "exactValue" : 2198.02,
+      "doubleValue" : 2198.02
+    },
+    "currencyCode" : "EUR",
+    "bankId" : "ES9820958631145727874921",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "CUENTA RELACIÓN",
+    "ownership" : 1.0,
+    "type" : "CHECKING",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[\"iban://ES9820958631145727874921\"]",
+    "closed" : false,
+    "holderName" : "**MisterM**",
+    "accountHolder" : {
+      "accountId" : null,
+      "type" : "PERSONAL",
+      "identities" : [ {
+        "name" : "**MisterM**",
+        "role" : "HOLDER"
+      } ]
+    },
+    "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
+    "balances" : [ ],
+    "availableCredit" : 0.0,
+    "balance" : 2198.02
+  }, {
+    "accountNumber" : "ES69 2100 1516 0615 3822 6938",
+    "accountExclusion" : "NONE",
+    "exactBalance" : {
+      "currencyCode" : "EUR",
+      "unscaledValue" : 1023672,
+      "scale" : 2,
+      "exactValue" : 10236.72,
+      "doubleValue" : 10236.72
+    },
+    "currencyCode" : "EUR",
+    "bankId" : "ES6921001516061538226938",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "CUENTA EXPANSIÓN",
+    "ownership" : 1.0,
+    "type" : "CHECKING",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[\"iban://ES6921001516061538226938\"]",
+    "closed" : false,
+    "holderName" : "JUAN ANTONIO **MisterY** SALAFRANCA",
+    "accountHolder" : {
+      "accountId" : null,
+      "type" : "PERSONAL",
+      "identities" : [ {
+        "name" : "JUAN ANTONIO **MisterY** SALAFRANCA",
+        "role" : "AUTHORIZED_USER"
+      } ]
+    },
+    "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
+    "balances" : [ ],
+    "availableCredit" : 0.0,
+    "balance" : 10236.72
+  } ],
+  "transactions" : [ {
+    "amount" : 1132.0,
+    "date" : 1612350000000,
+    "description" : "SUBSIDIO DESEMPLEO T.G.S.S. POR CUENTA SPEE",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : -4.99,
+    "date" : 1612177200000,
+    "description" : "COMPRA TARJ. PAYPAL *STARZPLAY-35314369001 5402..4026",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : -35.0,
+    "date" : 1611054000000,
+    "description" : "CUOTA PROFESIONAL CDL ARAGON",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : 91.6,
+    "date" : 1610622000000,
+    "description" : "INTERESES Y/O COMISIONES",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : -82.44,
+    "date" : 1609758000000,
+    "description" : "ADEUDO RECIBO SANITAS S A DE SEGUROS",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : -30.0,
+    "date" : 1609758000000,
+    "description" : "ASOCIACION ASOCIACION ESPANOLA CONTRA EL CANCER",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : -118.0,
+    "date" : 1612177200000,
+    "description" : "FINANCIERA FINANCIERA EL CORTE INGLES E.F. ECITC0014667034",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : -226.46,
+    "date" : 1612177200000,
+    "description" : "ADEUDO RECIBO PSA FINANCIAL SERVICES SPAIN, E VEA EN WWW.PSAFIN",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : 568.64,
+    "date" : 1611918000000,
+    "description" : "TRANSFERENCIA AXA AURORA VIDA S.A. DE SEGUROS Y REASEG",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : -634.56,
+    "date" : 1611918000000,
+    "description" : "FINANCIERA SERVICIOS FINANCIEROS CARREFOUR FINANCIE-ENERO",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : -300.0,
+    "date" : 1611745200000,
+    "description" : "REINTEGRO CAJERO AUTOMATICO 27.01 5402..6028",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : -129.83,
+    "date" : 1611658800000,
+    "description" : "SEGUROS AXA SEGUROS GENERALES CIF A-60917978",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  } ],
+  "identityData" : {
+    "nameElements" : [ {
+      "type" : "FIRST_NAME",
+      "value" : "**MisterX**"
+    }, {
+      "type" : "SURNAME",
+      "value" : "**MisterY**"
+    } ],
+    "dateOfBirth" : null,
+    "nieNumber" : null,
+    "nifNumber" : null,
+    "passportNumber" : null,
+    "otherDocumentNumber" : "**MisterZ**"
+  }
+}

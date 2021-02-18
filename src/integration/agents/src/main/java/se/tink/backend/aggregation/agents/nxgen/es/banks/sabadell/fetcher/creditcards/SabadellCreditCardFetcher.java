@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.creditcards;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.SabadellApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.SabadellConstants;
@@ -19,6 +21,14 @@ public class SabadellCreditCardFetcher implements AccountFetcher<CreditCardAccou
     @Override
     public Collection<CreditCardAccount> fetchAccounts() {
         FetchCreditCardsResponse fetchCardsResponse = apiClient.fetchCreditCards();
+
+        /*
+           response does not contain a field called "cards" so fetchCardsResponse.getCards()
+           is null and without this if-block the code was throwing NPE.
+        */
+        if (Objects.isNull(fetchCardsResponse.getCards())) {
+            return Collections.emptyList();
+        }
 
         return fetchCardsResponse.getCards().stream()
                 .filter(this::isCreditCard)
