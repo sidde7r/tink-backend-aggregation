@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
+import se.tink.backend.aggregation.agents.RefreshBeneficiariesExecutor;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
@@ -91,7 +92,8 @@ import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Payment;
 
 public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
-        implements RefreshTransferDestinationExecutor,
+        implements RefreshBeneficiariesExecutor,
+                RefreshTransferDestinationExecutor,
                 RefreshCreditCardAccountsExecutor,
                 RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor,
@@ -303,6 +305,11 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
 
     @Override
     public FetchTransferDestinationsResponse fetchTransferDestinations(List<Account> accounts) {
+        return transferDestinationRefreshController.fetchTransferDestinations(accounts);
+    }
+
+    @Override
+    public FetchTransferDestinationsResponse fetchBeneficiaries(List<Account> accounts) {
         return transferDestinationRefreshController.fetchTransferDestinations(accounts);
     }
 
