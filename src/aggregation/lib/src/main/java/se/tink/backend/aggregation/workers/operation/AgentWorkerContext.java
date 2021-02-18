@@ -60,9 +60,6 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     private static final Logger logger =
             LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    public static final MetricId supplementalInfoUpdateVariant =
-            MetricId.newId("aggregation_supplemental_info_update_variant");
-
     private Catalog catalog;
     protected CuratorFramework coordinationClient;
     protected CredentialsRequest request;
