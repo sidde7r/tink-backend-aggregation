@@ -1,5 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.fetcher.data;
 
+import org.junit.Ignore;
+
+@Ignore
 public class TransactionsData {
 
     public static final String FETCH_TRANSACTIONS_RESPONSE =

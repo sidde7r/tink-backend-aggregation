@@ -3,12 +3,14 @@ package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama;
 import java.util.Collections;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import org.junit.Ignore;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.fetcher.transfer.dto.TrustedBeneficiariesResponseDto;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
+@Ignore
 public final class BoursoramaTestFixtures {
 
     private static final String CURRENCY = "EUR";
