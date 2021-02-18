@@ -147,7 +147,7 @@ public class EvoBancoConstants {
                             TransactionalAccountType.CHECKING,
                             "I#Cuenta Inteligente EVO",
                             "I#Cuenta Inteligente")
-                    .put(TransactionalAccountType.SAVINGS, "I#Depósito")
+                    .put(TransactionalAccountType.SAVINGS, "I#Depósito", "I#Deposito")
                     .build();
 
     public static class Constants {
