@@ -2,16 +2,19 @@ package se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1;
 
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CREDIT_CARDS;
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.IDENTITY_DATA;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.LOANS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
 
 import com.google.inject.Inject;
 import java.time.temporal.ChronoUnit;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
@@ -22,6 +25,7 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.acco
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.account.Sparebank1TransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.creditcards.Sparebank1CreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.creditcards.Sparebank1CreditCardTransactionFetcher;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.identity.Sparebank1identityFetcher;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.loan.Sparebank1LoanFetcher;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.filters.AddRefererFilter;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.sessionhandler.Sparebank1SessionHandler;
@@ -40,12 +44,13 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 
-@AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, CREDIT_CARDS, LOANS})
+@AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, CREDIT_CARDS, LOANS, IDENTITY_DATA})
 public final class Sparebank1Agent extends NextGenerationAgent
         implements RefreshLoanAccountsExecutor,
                 RefreshCreditCardAccountsExecutor,
                 RefreshCheckingAccountsExecutor,
-                RefreshSavingsAccountsExecutor {
+                RefreshSavingsAccountsExecutor,
+                RefreshIdentityDataExecutor {
     private final Sparebank1ApiClient apiClient;
     private final InvestmentRefreshController investmentRefreshController;
     private final LoanRefreshController loanRefreshController;
@@ -178,5 +183,11 @@ public final class Sparebank1Agent extends NextGenerationAgent
     @Override
     protected SessionHandler constructSessionHandler() {
         return new Sparebank1SessionHandler(apiClient);
+    }
+
+    @Override
+    public FetchIdentityDataResponse fetchIdentityData() {
+        return new FetchIdentityDataResponse(
+                new Sparebank1identityFetcher(persistentStorage).fetchIdentityData());
     }
 }

@@ -11,6 +11,8 @@ import java.util.Map;
 import java.util.UUID;
 import lombok.Data;
 import org.apache.commons.lang3.ObjectUtils;
+import se.tink.backend.aggregation.agents.exceptions.refresh.IdentityRefreshException;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.identity.entities.IdentityDataEntity;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
@@ -24,6 +26,7 @@ public class Sparebank1Identity {
     private static final String STORAGE_KEY_PASSWORD = "password";
     private static final String STORAGE_KEY_VERIFICATOR = "verificator";
     private static final String STORAGE_KEY_TOKEN = "token";
+    private static final String STORAGE_IDENTITY_DATA = "identityData";
 
     private String deviceId;
     private KeyPair keyPair;
@@ -33,6 +36,7 @@ public class Sparebank1Identity {
     private String password;
     private BigInteger verificator;
     private String token;
+    private IdentityDataEntity identityData;
 
     public static Sparebank1Identity create() {
         String deviceId = UUID.randomUUID().toString().toUpperCase();
@@ -72,6 +76,7 @@ public class Sparebank1Identity {
         persistentStorage.put(STORAGE_KEY_PASSWORD, password);
         persistentStorage.put(STORAGE_KEY_VERIFICATOR, String.valueOf(verificator));
         persistentStorage.put(STORAGE_KEY_TOKEN, token);
+        persistentStorage.put(STORAGE_IDENTITY_DATA, identityData);
     }
 
     public static Sparebank1Identity load(Map<String, String> persistentStorage) {
@@ -106,5 +111,14 @@ public class Sparebank1Identity {
 
     public boolean isAutoAuthenticationPossible() {
         return ObjectUtils.allNotNull(deviceId, token);
+    }
+
+    public static IdentityDataEntity loadIdentityData(PersistentStorage persistentStorage) {
+        return persistentStorage
+                .get(STORAGE_IDENTITY_DATA, IdentityDataEntity.class)
+                .orElseThrow(
+                        () ->
+                                new IdentityRefreshException(
+                                        " Identity data not retrieved from persistent storage"));
     }
 }
