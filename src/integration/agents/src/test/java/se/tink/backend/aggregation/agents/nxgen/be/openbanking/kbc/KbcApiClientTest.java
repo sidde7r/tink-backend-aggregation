@@ -1,41 +1,42 @@
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.catchThrowable;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import java.util.UUID;
-import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MultivaluedMap;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.authentication.persistence.KbcAuthenticationData;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.configuration.KbcConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.rpc.ConsentBaseResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.common.authentication.RefreshableAccessToken;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.common.authentication.Token;
+import se.tink.backend.aggregation.nxgen.http.NextGenRequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
+import se.tink.backend.aggregation.nxgen.http.request.HttpMethod;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.credentials.service.CredentialsRequest;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class KbcApiClientTest {
 
     private static final String BASE_URL = "https://base-url";
     private static final String REDIRECT_URL = "https://redirect-url";
-    private static final String CONSENT_URL = BASE_URL + "/psd2/v2/consents";
+    private static final String TEST_URL = BASE_URL + "/psd2/v2";
     private static final String PSU_IP_ADDR = "0.0.0.0";
     private static final String CONSENT_ID = "1234";
     private static final String QSEALC = "QSEALC";
 
+    private PersistentStorage persistentStorage;
     private KbcApiClient kbcApiClient;
-    private Credentials credentialsMock;
 
     @Before
     public void setUp() {
         final TinkHttpClient httpClientMock = mock(TinkHttpClient.class);
-        final PersistentStorage persistentStorageMock = mock(PersistentStorage.class);
+        persistentStorage = new PersistentStorage();
         final KbcConfiguration kbcConfigurationMock = mock(KbcConfiguration.class);
         final CredentialsRequest requestMock = mock(CredentialsRequest.class);
 
@@ -44,154 +45,46 @@ public class KbcApiClientTest {
 
         setUpHttpClientMock(httpClientMock);
 
-        credentialsMock = mock(Credentials.class);
-
         kbcApiClient =
                 new KbcApiClient(
                         httpClientMock,
                         kbcConfigurationMock,
                         requestMock,
                         REDIRECT_URL,
-                        credentialsMock,
-                        persistentStorageMock,
+                        persistentStorage,
                         QSEALC);
     }
 
     @Test
-    public void shouldGetConsentIdForCorrectIban() {
+    public void shouldBuildTransactionsRequestFromStorage() {
         // given
-        final String dummyIban = "BE75846503538653";
-        when(credentialsMock.getField(KbcConstants.CredentialKeys.IBAN)).thenReturn(dummyIban);
-
+        Token accessToken =
+                Token.builder().body("TOKEN").tokenType("Bearer").expiresIn(0L, 0L).build();
+        Token refreshToken = Token.builder().body("TOKEN").tokenType("refreshToken").build();
+        RefreshableAccessToken refreshableAccessToken =
+                RefreshableAccessToken.builder()
+                        .accessToken(accessToken)
+                        .refreshToken(refreshToken)
+                        .build();
+        KbcAuthenticationData kbcAuthenticationData = new KbcAuthenticationData();
+        kbcAuthenticationData.setConsentId(CONSENT_ID);
+        persistentStorage.put(
+                "RedirectTokens", SerializationUtils.serializeToString(refreshableAccessToken));
+        persistentStorage.put(
+                "KBC_AUTHENTICATION_DATA",
+                SerializationUtils.serializeToString(kbcAuthenticationData));
         // when
-        final String returnedConsentId = kbcApiClient.getConsentId();
-
+        RequestBuilder requestBuilder = kbcApiClient.getTransactionsRequestBuilder(TEST_URL);
         // then
-        assertThat(returnedConsentId).isEqualTo(CONSENT_ID);
-    }
-
-    @Test
-    public void shouldThrowExceptionForNullIban() {
-        // given
-        when(credentialsMock.getField(KbcConstants.CredentialKeys.IBAN)).thenReturn(null);
-
-        // when
-        final Throwable thrown = catchThrowable(kbcApiClient::getConsentId);
-
-        // then
-        assertThat(thrown)
-                .isExactlyInstanceOf(IllegalArgumentException.class)
-                .hasMessage("Iban has incorrect format.");
-    }
-
-    @Test
-    public void shouldThrowExceptionForEmptyIban() {
-        // given
-        when(credentialsMock.getField(KbcConstants.CredentialKeys.IBAN)).thenReturn("");
-
-        // when
-        final Throwable thrown = catchThrowable(kbcApiClient::getConsentId);
-
-        // then
-        assertThat(thrown)
-                .isExactlyInstanceOf(IllegalArgumentException.class)
-                .hasMessage("Iban has incorrect format.");
-    }
-
-    @Test
-    public void shouldThrowExceptionWhenIbanStartsWithLowerCase() {
-        // given
-        final String dummyIban = "be75846503538653";
-        when(credentialsMock.getField(KbcConstants.CredentialKeys.IBAN)).thenReturn(dummyIban);
-
-        // when
-        final Throwable thrown = catchThrowable(kbcApiClient::getConsentId);
-
-        // then
-        assertThat(thrown)
-                .isExactlyInstanceOf(IllegalArgumentException.class)
-                .hasMessage("Iban has incorrect format.");
-    }
-
-    @Test
-    public void shouldThrowExceptionWhenIbanIsTooShort() {
-        // given
-        final String dummyIban = "BE7584650353865";
-        when(credentialsMock.getField(KbcConstants.CredentialKeys.IBAN)).thenReturn(dummyIban);
-
-        // when
-        final Throwable thrown = catchThrowable(kbcApiClient::getConsentId);
-
-        // then
-        assertThat(thrown)
-                .isExactlyInstanceOf(IllegalArgumentException.class)
-                .hasMessage("Iban has incorrect format.");
-    }
-
-    @Test
-    public void shouldThrowExceptionWhenIbanIsTooLong() {
-        // given
-        final String dummyIban = "BE758465035386538";
-        when(credentialsMock.getField(KbcConstants.CredentialKeys.IBAN)).thenReturn(dummyIban);
-
-        // when
-        final Throwable thrown = catchThrowable(kbcApiClient::getConsentId);
-
-        // then
-        assertThat(thrown)
-                .isExactlyInstanceOf(IllegalArgumentException.class)
-                .hasMessage("Iban has incorrect format.");
-    }
-
-    @Test
-    public void shouldThrowExceptionWhenIbanDoesNotFollowFormat() {
-        // given
-        final String dummyIban = "BE758465C353865";
-        when(credentialsMock.getField(KbcConstants.CredentialKeys.IBAN)).thenReturn(dummyIban);
-
-        // when
-        final Throwable thrown = catchThrowable(kbcApiClient::getConsentId);
-
-        // then
-        assertThat(thrown)
-                .isExactlyInstanceOf(IllegalArgumentException.class)
-                .hasMessage("Iban has incorrect format.");
-    }
-
-    @Test
-    public void shouldThrowExceptionWhenIbanHasSpace() {
-        // given
-        final String dummyIban = "BE758465 353865";
-        when(credentialsMock.getField(KbcConstants.CredentialKeys.IBAN)).thenReturn(dummyIban);
-
-        // when
-        final Throwable thrown = catchThrowable(kbcApiClient::getConsentId);
-
-        // then
-        assertThat(thrown)
-                .isExactlyInstanceOf(IllegalArgumentException.class)
-                .hasMessage("Iban has incorrect format.");
+        MultivaluedMap<String, Object> headers = requestBuilder.build(HttpMethod.GET).getHeaders();
+        String authorizationHeader = (String) headers.getFirst(HttpHeaders.AUTHORIZATION);
+        String consentId = (String) headers.getFirst(BerlinGroupConstants.HeaderKeys.CONSENT_ID);
+        Assert.assertEquals("Bearer TOKEN", authorizationHeader);
+        Assert.assertEquals(CONSENT_ID, consentId);
     }
 
     private static void setUpHttpClientMock(TinkHttpClient httpClientMock) {
-        final RequestBuilder requestBuilderMock = mock(RequestBuilder.class);
-
-        when(requestBuilderMock.body(anyString(), any(MediaType.class)))
-                .thenReturn(requestBuilderMock);
-
-        when(requestBuilderMock.header("TPP-Redirect-Uri", REDIRECT_URL))
-                .thenReturn(requestBuilderMock);
-        when(requestBuilderMock.header("PSU-IP-Address", PSU_IP_ADDR))
-                .thenReturn(requestBuilderMock);
-        when(requestBuilderMock.header(eq("X-Request-ID"), any(UUID.class)))
-                .thenReturn(requestBuilderMock);
-
-        final ConsentBaseResponse consentBaseResponseMock = mock(ConsentBaseResponse.class);
-        when(consentBaseResponseMock.getConsentId()).thenReturn(CONSENT_ID);
-
-        when(requestBuilderMock.post(ConsentBaseResponse.class))
-                .thenReturn(consentBaseResponseMock);
-
-        when(httpClientMock.request(CONSENT_URL)).thenReturn(requestBuilderMock);
+        final NextGenRequestBuilder requestBuilder = new NextGenRequestBuilder(null, "test", null);
+        when(httpClientMock.request(TEST_URL)).thenReturn(requestBuilder);
     }
 }

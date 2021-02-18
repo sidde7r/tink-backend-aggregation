@@ -5,10 +5,13 @@ import java.net.URI;
 import lombok.AllArgsConstructor;
 import se.tink.backend.aggregation.agents.agentplatform.AgentPlatformHttpClient;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.OAuth2AuthenticationConfig;
+import se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.KbcRedirectAuthenticationAccessTokenValidationStep;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.authentication.persistence.KbcPersistedDataAccessorFactory;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.configuration.KbcConfiguration;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.RedirectAuthenticationAccessTokenValidationStep;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.RedirectAuthenticationInitialProcessStep;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.RedirectAuthenticationProcess;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.RedirectAuthenticationRefreshTokenStep;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.RedirectFetchTokenCall;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.RedirectPreparationRedirectUrlStep;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.redirect.RedirectRefreshTokenCall;
@@ -29,7 +32,8 @@ public class KbcOauth2AuthenticationConfig extends OAuth2AuthenticationConfig {
                 refreshTokenStep(refreshTokenCall()),
                 preparationRedirectUrlStep(redirectUrlBuilder()),
                 fetchAuthenticationTokensStep(redirectFetchTokenCall()),
-                kbcFetchConsentAuthenticationStep());
+                kbcFetchConsentAuthenticationStep(),
+                kbcConsentValidationStep());
     }
 
     @Override
@@ -43,6 +47,22 @@ public class KbcOauth2AuthenticationConfig extends OAuth2AuthenticationConfig {
             RedirectUrlBuilder redirectUrlBuilder) {
         return new KbcRedirectPreparationRedirectUrlStep(
                 redirectUrlBuilder, kbcPersistedDataAccessorFactory());
+    }
+
+    @Override
+    public RedirectAuthenticationAccessTokenValidationStep accessTokenValidationStep() {
+        return new KbcRedirectAuthenticationAccessTokenValidationStep(
+                agentRedirectTokensAuthenticationPersistedDataAccessorFactory(),
+                redirectTokensValidator());
+    }
+
+    @Override
+    public RedirectAuthenticationRefreshTokenStep refreshTokenStep(
+            RedirectRefreshTokenCall refreshTokenCall) {
+        return new KbcRedirectAuthenticationRefreshTokenStep(
+                refreshTokenCall,
+                agentRedirectTokensAuthenticationPersistedDataAccessorFactory(),
+                redirectTokensValidator());
     }
 
     public KbcPersistedDataAccessorFactory kbcPersistedDataAccessorFactory() {
@@ -73,5 +93,14 @@ public class KbcOauth2AuthenticationConfig extends OAuth2AuthenticationConfig {
 
     public KbcFetchConsentExternalApiCall kbcFetchConsentExternalApiCall() {
         return new KbcFetchConsentExternalApiCall(httpClient, kbcConfiguration.getBaseUrl());
+    }
+
+    private KbcConsentValidationStep kbcConsentValidationStep() {
+        return new KbcConsentValidationStep(
+                kbcConsentValidationCall(), objectMapper, kbcConfiguration);
+    }
+
+    private KbcConsentValidationCall kbcConsentValidationCall() {
+        return new KbcConsentValidationCall(httpClient);
     }
 }

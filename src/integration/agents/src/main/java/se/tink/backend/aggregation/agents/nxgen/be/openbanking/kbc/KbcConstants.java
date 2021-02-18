@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc;
 
 import com.google.common.collect.ImmutableList;
 import java.util.List;
+import java.util.regex.Pattern;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccountTypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.enums.AccountFlag;
@@ -81,12 +82,11 @@ public final class KbcConstants {
         public static final String BEARER = "Bearer";
     }
 
-    public static class ErrorMessages {
-        public static final String WRONG_PAYMENT_METHOD =
-                "Wrong method used for payment initiation.";
+    public static class RegexValues {
+        public static final Pattern IBAN_PATTERN = Pattern.compile("BE[0-9]{14}");
     }
 
-    public static class RegexValues {
-        public static final String IBAN = "^BE[0-9]{14}$";
+    public static class ErrorCodes {
+        public static final String CONSENT_EXPIRED = "CONSENT_EXPIRED";
     }
 }

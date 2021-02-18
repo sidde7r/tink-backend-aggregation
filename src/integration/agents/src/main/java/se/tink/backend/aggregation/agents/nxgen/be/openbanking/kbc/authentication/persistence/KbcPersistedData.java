@@ -7,7 +7,7 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 public class KbcPersistedData
         extends AgentJsonRepresentationAuthenticationPersistedDataAccessor<KbcAuthenticationData> {
 
-    KbcPersistedData(
+    public KbcPersistedData(
             AgentAuthenticationPersistedData agentAuthenticationPersistedData,
             ObjectMapper objectMapper) {
         super(agentAuthenticationPersistedData, objectMapper, KbcAuthenticationData.class);
