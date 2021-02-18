@@ -36,8 +36,7 @@ public class UbiAuthenticationMethodChoiceStep implements AuthenticationStep {
                 return AuthenticationStepResponse.executeStepWithId(
                         CbiThirdPartyAppAuthenticationStep.getStepIdentifier(ConsentType.ACCOUNT));
             default:
-                throw LoginError.INCORRECT_CREDENTIALS.exception(
-                        "Unexpected value in useApp field.");
+                throw LoginError.DEFAULT_MESSAGE.exception("Unexpected value in useApp field.");
         }
     }
 }
