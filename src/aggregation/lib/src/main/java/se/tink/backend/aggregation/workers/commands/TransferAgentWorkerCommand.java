@@ -231,6 +231,8 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
                             TransferExecutionException.EndUserMessage.GENERIC_PAYMENT_ERROR_MESSAGE
                                     .getKey()
                                     .get()));
+            signableOperation.setInternalStatus(
+                    InternalStatus.BANK_CONNECTION_INTERRUPTED.toString());
             context.updateSignableOperation(signableOperation);
 
             return AgentWorkerCommandResult.ABORT;

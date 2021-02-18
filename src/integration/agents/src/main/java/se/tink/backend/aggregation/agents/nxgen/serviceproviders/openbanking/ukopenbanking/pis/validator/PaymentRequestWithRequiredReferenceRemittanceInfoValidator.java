@@ -4,6 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.assertj.core.util.VisibleForTesting;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
+import se.tink.libraries.signableoperation.enums.InternalStatus;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 
 public class PaymentRequestWithRequiredReferenceRemittanceInfoValidator
@@ -22,6 +23,7 @@ public class PaymentRequestWithRequiredReferenceRemittanceInfoValidator
             throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                     .setMessage(ERROR_MESSAGE)
                     .setEndUserMessage(ERROR_MESSAGE)
+                    .setInternalStatus(InternalStatus.INVALID_DESTINATION_MESSAGE.toString())
                     .build();
         }
     }

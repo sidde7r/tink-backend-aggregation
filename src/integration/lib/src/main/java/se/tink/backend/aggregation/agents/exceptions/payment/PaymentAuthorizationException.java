@@ -20,8 +20,13 @@ public class PaymentAuthorizationException extends PaymentException {
         super(DEFAULT_MESSAGE);
     }
 
-    public PaymentAuthorizationException(ErrorEntity errorEntity, String message) {
-        super(message);
+    public PaymentAuthorizationException(InternalStatus internalStatus) {
+        super(DEFAULT_MESSAGE, internalStatus);
+    }
+
+    public PaymentAuthorizationException(
+            ErrorEntity errorEntity, String message, InternalStatus internalStatus) {
+        super(message, internalStatus);
         this.errorEntity = errorEntity;
     }
 
