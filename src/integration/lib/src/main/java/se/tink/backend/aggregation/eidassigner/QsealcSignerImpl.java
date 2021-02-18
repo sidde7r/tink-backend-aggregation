@@ -49,7 +49,6 @@ public class QsealcSignerImpl implements QsealcSigner {
     public static QsealcSigner build(
             InternalEidasProxyConfiguration conf, QsealcAlg alg, EidasIdentity eidasIdentity) {
         try {
-            log.info("Return a singleton httpclient");
             return new QsealcSignerImpl(
                     QsealcSignerHttpClient.create(conf), alg, conf.getHost(), eidasIdentity);
         } catch (Exception e) {
