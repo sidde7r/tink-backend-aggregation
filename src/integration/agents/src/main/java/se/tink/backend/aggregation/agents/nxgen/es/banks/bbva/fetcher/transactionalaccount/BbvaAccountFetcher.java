@@ -16,7 +16,7 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 
 public class BbvaAccountFetcher implements AccountFetcher<TransactionalAccount> {
 
-    private BbvaApiClient apiClient;
+    private final BbvaApiClient apiClient;
 
     public BbvaAccountFetcher(BbvaApiClient apiClient) {
         this.apiClient = apiClient;

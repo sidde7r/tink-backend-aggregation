@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaApiClient;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 
 public class BbvaSessionHandler implements SessionHandler {
-    private BbvaApiClient apiClient;
+    private final BbvaApiClient apiClient;
 
     public BbvaSessionHandler(BbvaApiClient apiClient) {
         this.apiClient = apiClient;

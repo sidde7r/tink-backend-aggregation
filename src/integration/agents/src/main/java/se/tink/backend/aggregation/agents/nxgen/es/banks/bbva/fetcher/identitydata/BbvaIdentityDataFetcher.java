@@ -2,8 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.identityd
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.identitydata.rpc.IdentityDataResponse;
@@ -12,8 +11,8 @@ import se.tink.libraries.identitydata.IdentityData;
 import se.tink.libraries.identitydata.countries.EsIdentityData;
 import se.tink.libraries.identitydata.countries.EsIdentityData.EsIdentityDataBuilder;
 
+@Slf4j
 public class BbvaIdentityDataFetcher implements IdentityDataFetcher {
-    private static final Logger LOGGER = LoggerFactory.getLogger(BbvaIdentityDataFetcher.class);
     private static final DateTimeFormatter DATE_FORMATTER =
             DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
 
@@ -38,7 +37,7 @@ public class BbvaIdentityDataFetcher implements IdentityDataFetcher {
                 builder.setNieNumber(documentNumber);
                 break;
             default:
-                LOGGER.warn("ES BBVA: Unhandled document type: {}", documentType);
+                log.warn("ES BBVA: Unhandled document type: {}", documentType);
         }
 
         return builder.addFirstNameElement(identityDataResponse.getName())
