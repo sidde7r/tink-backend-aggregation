@@ -1,6 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount;
 
-class CreditAgricoleBaseTransactionalAccountFetcherTestData {
+import org.junit.Ignore;
+
+@Ignore
+public class CreditAgricoleBaseTransactionalAccountFetcherTestData {
 
     static final String ACCOUNT_WITH_ALL_LINKS =
             fromTemplate(

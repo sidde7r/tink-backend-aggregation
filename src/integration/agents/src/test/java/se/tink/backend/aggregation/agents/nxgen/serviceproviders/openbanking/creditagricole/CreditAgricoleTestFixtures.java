@@ -3,10 +3,12 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cr
 import java.time.LocalDate;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import org.junit.Ignore;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.rpc.GetTransactionsResponse;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
+@Ignore
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class CreditAgricoleTestFixtures {
 
