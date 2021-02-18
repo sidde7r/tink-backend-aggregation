@@ -139,11 +139,9 @@ public class LaCaixaCreditCardFetcher
                 LOG.info(
                         String.format(
                                 "Failed to fetch transaction for credit card %s",
-                                account.getAccountNumber()),
-                        hre);
+                                account.getAccountNumber()));
                 return PaginatorResponseImpl.createEmpty(false);
             }
-
             throw hre;
         }
     }
