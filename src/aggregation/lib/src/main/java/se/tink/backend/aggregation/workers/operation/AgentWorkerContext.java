@@ -16,6 +16,7 @@ import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.recipes.barriers.DistributedBarrier;
 import org.slf4j.Logger;
@@ -50,6 +51,7 @@ import se.tink.libraries.account_data_cache.AccountDataCache;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.enums.StatisticMode;
+import se.tink.libraries.giro.validation.LuhnCheck;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.identitydata.IdentityData;
 import se.tink.libraries.metrics.core.MetricId;
@@ -59,6 +61,9 @@ import se.tink.libraries.transfer.rpc.Transfer;
 public class AgentWorkerContext extends AgentContext implements Managed {
     private static final Logger logger =
             LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
+    public static final MetricId SUSPICIOUS_NUMBER_SERIES =
+            MetricId.newId("aggregation_account_suspicious_number_series");
 
     private Catalog catalog;
     protected CuratorFramework coordinationClient;
@@ -443,6 +448,9 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         account.setUserId(request.getCredentials().getUserId());
         account.setFinancialInstitutionId(request.getProvider().getFinancialInstitutionId());
 
+        measureSuspiciousNumberSeries("accountnumber", account.getAccountNumber());
+        measureSuspiciousNumberSeries("bankid", account.getBankId());
+
         // This is to handle legacy agents. Once all legacy agents are gone this can be removed.
         // The logic of adding currency code for next gen agents is done in Account.toSystemAccount
         if (Strings.isNullOrEmpty(account.getCurrencyCode())) {
@@ -486,6 +494,32 @@ public class AgentWorkerContext extends AgentContext implements Managed {
                 updatedAccount.getBankId(), updatedAccount.getId());
 
         return updatedAccount;
+    }
+
+    private void measureSuspiciousNumberSeries(String label, String numberSeries) {
+        if (Strings.isNullOrEmpty(numberSeries)) {
+            return;
+        }
+
+        String cleaned = numberSeries.replace("-", "").replace(" ", "");
+
+        // 12-19 digits, and luhn validation comes from:
+        // https://en.wikipedia.org/wiki/Payment_card_number
+        if (StringUtils.isNumeric(cleaned)
+                && cleaned.length() >= 12
+                && cleaned.length() <= 19
+                && LuhnCheck.isLastCharCorrectLuhnMod10Check(cleaned)) {
+
+            String agent = request.getProvider().getClassName();
+            getMetricRegistry()
+                    .meter(SUSPICIOUS_NUMBER_SERIES.label("agent", agent).label("label", label))
+                    .inc();
+            logger.warn(
+                    "Found suspicous number series ({}) from {}, credentialsId: {}.",
+                    label,
+                    agent,
+                    request.getCredentials().getId());
+        }
     }
 
     public AccountHolder sendAccountHolderToUpdateService(Account processedAccount) {
