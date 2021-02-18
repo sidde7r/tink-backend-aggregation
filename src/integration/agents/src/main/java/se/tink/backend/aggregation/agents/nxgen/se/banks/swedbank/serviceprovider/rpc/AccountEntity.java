@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants.StorageKey;
@@ -24,6 +25,7 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.strings.StringUtils;
 
 @Getter
+@Slf4j
 @JsonObject
 public abstract class AccountEntity extends AbstractAccountEntity {
     protected boolean selectedForQuickbalance;
@@ -68,6 +70,14 @@ public abstract class AccountEntity extends AbstractAccountEntity {
             @Nonnull AccountTypes defaultType,
             EngagementTransactionsResponse engagementTransactionsResponse) {
         if (fullyFormattedNumber == null || currency == null || isBalanceUndefined()) {
+            return Optional.empty();
+        }
+
+        if (type != null) {
+            // Only ISK and PENSION accounts have a type, and they are filtered out by the
+            // transactional fetcher by cross-checking the account number in investment/pensions
+            // endpoint (RE), or productID (fallback)
+            log.info("Unknown Swedbank account type:[{}]", type);
             return Optional.empty();
         }
 
