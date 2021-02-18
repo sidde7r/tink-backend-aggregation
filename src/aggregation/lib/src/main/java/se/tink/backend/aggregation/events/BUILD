@@ -75,6 +75,11 @@ java_library(
         "@com_tink_api_grpc//event_producer_service/events:events_java_proto",
         "@tink_backend//src/aggregation-controller/api/src/main/java/se/tink/backend/aggregationcontroller/v1/rpc/enums",
         "@tink_backend//src/libraries/event_producer_service_client",
+        "@tink_backend//src/libraries/events:event_submitter_api",
+        "@tink_backend//src/libraries/events:event_submitter_batching",
+        "@tink_backend//src/libraries/events:event_submitter_configuration",
+        "@tink_backend//src/libraries/events:event_submitter_mock",
+        "@tink_backend//src/libraries/events:event_submitter_module",
         "@tink_backend//src/libraries/protobuf_type_utils",
     ],
 )

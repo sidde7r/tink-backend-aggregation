@@ -96,6 +96,8 @@ import se.tink.libraries.event_producer_service_client.grpc.EventProducerService
 import se.tink.libraries.event_producer_service_client.grpc.EventProducerServiceClientProvider;
 import se.tink.libraries.event_producer_service_client.grpc.EventProducerServiceEndpointConfiguration;
 import se.tink.libraries.events.api.EventSubmitter;
+import se.tink.libraries.events.guice.EventsChannelBuilder;
+import se.tink.libraries.events.guice.configuration.EventsEndpointConfiguration;
 import se.tink.libraries.events.guice.mock.MockEventSubmitter;
 import se.tink.libraries.http.client.LoggingFilter;
 import se.tink.libraries.http.client.RequestTracingFilter;
@@ -305,12 +307,27 @@ public class AggregationDecoupledModule extends AbstractModule {
         OptionalBinder.newOptionalBinder(binder(), EventSubmitter.class)
                 .setDefault()
                 .toInstance(new MockEventSubmitter());
+
         OptionalBinder.newOptionalBinder(
                 binder(),
                 Key.get(
                         ManagedChannelBuilder.class,
                         EventProducerServiceClientChannelBuilder.class));
         bind(EventProducerServiceClient.class).toProvider(EventProducerServiceClientProvider.class);
+
+        OptionalBinder.newOptionalBinder(
+                        binder(), Key.get(String.class, Names.named("eventSource")))
+                .setDefault()
+                .toInstance("aggregation");
+        OptionalBinder.newOptionalBinder(
+                binder(), Key.get(ManagedChannelBuilder.class, EventsChannelBuilder.class));
+        bind(EndpointConfiguration.class)
+                .annotatedWith(EventsEndpointConfiguration.class)
+                .toProvider(
+                        Providers.of(
+                                configuration
+                                        .getEndpoints()
+                                        .getEventProducerServiceConfiguration()));
 
         // AgentFactoryWireMockModule
         bind(WireMockConfiguration.class).toProvider(WireMockConfigurationProvider.class);
