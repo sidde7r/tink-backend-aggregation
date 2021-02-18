@@ -13,5 +13,6 @@ java_library(
         "//third_party:com_google_guava_guava",
         "//third_party:com_google_inject_guice",
         "//third_party:org_slf4j_slf4j_api",
+        "@tink_backend//src/libraries/payments_legal_constraints/src/main/java/se/tink/libraries/payments_legal_constraints",
     ],
 )

@@ -112,6 +112,7 @@ java_library(
         "@maven//:io_prometheus_simpleclient",
         "@tink_backend//src/agent-data-availability-tracker/src/main/java/se/tink/backend/agent_data_availability_tracker/client",
         "@tink_backend//src/aggregation-controller/api/src/main/java/se/tink/backend/aggregationcontroller/v1/rpc/enums",
+        "@tink_backend//src/libraries/payments_legal_constraints/src/main/java/se/tink/libraries/payments_legal_constraints",
         "@tink_backend//src/libraries/provider",
     ],
 )

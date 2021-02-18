@@ -4,7 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Objects;
 import org.slf4j.Logger;
@@ -25,6 +26,7 @@ import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsRequestType;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
 import se.tink.libraries.date.ThreadSafeDateFormat;
+import se.tink.libraries.payments_legal_constraints.PaymentsLegalConstraints;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.user.rpc.User;
 import se.tink.libraries.uuid.UUIDUtils;
@@ -138,17 +140,48 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
 
     private void writeToDebugFile(Credentials credentials, TransferRequest transferRequest) {
         try {
-            File logFile = null;
             String logContent = getCleanLogContent(credentials);
+            writeLogToStorage(logContent, credentials, transferRequest);
+
+            if (shouldStoreInLongTermStorageForPaymentsDisputes(context.getAppId())) {
+                writeToPaymentsLongTermDisputeStorage(logContent, credentials, transferRequest);
+            }
+
+        } catch (EmptyDebugLogException e) {
+            log.info(e.getMessage());
+        } catch (IOException e) {
+            log.error("Could not write debug logFile.", e);
+        }
+    }
+
+    private void writeToPaymentsLongTermDisputeStorage(
+            String logContent, Credentials credentials, TransferRequest transferRequest) {
+        try {
+            File ltsLogFile = new File(getFormattedFileName(logContent, credentials, true));
+            String ltsStoragePath = agentDebugStorage.store(logContent, ltsLogFile);
+            log.info(
+                    "Flushed transfer to long term storage for payments disputes ("
+                            + UUIDUtils.toTinkUUID(transferRequest.getTransfer().getId())
+                            + ") debug log for further investigation: "
+                            + ltsStoragePath);
+        } catch (IOException e) {
+            log.error("Could not write debug log file to payments dispute long term storage.", e);
+        }
+    }
+
+    private void writeLogToStorage(
+            String logContent, Credentials credentials, TransferRequest transferRequest) {
+        try {
+            File logFile = null;
             if (agentDebugStorage.isLocalStorage() && state.isSaveLocally()) {
                 logFile =
                         new File(
                                 state.getDebugDirectory(),
-                                getFormattedFileName(logContent, credentials));
+                                getFormattedFileName(logContent, credentials, false));
             }
 
             if (!agentDebugStorage.isLocalStorage()) {
-                logFile = new File(getFormattedFileName(logContent, credentials));
+                logFile = new File(getFormattedFileName(logContent, credentials, false));
             }
 
             if (Objects.isNull(logFile)) {
@@ -156,7 +189,6 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
                         "Created debug log but local storage cannot be used & no S3 storage configuration available.");
                 return;
             }
-
             String storagePath = agentDebugStorage.store(logContent, logFile);
 
             if (transferRequest != null) {
@@ -166,19 +198,20 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
                                 + id
                                 + ") debug log for further investigation: "
                                 + storagePath);
-            } else {
 
+            } else {
                 log.info(
                         "Credential Status: {} \nFlushed http log: {}",
                         credentials.getStatus(),
                         storagePath);
             }
-
-        } catch (EmptyDebugLogException e) {
-            log.info(e.getMessage());
         } catch (IOException e) {
             log.error("Could not write debug logFile.", e);
         }
+    }
+
+    private boolean shouldStoreInLongTermStorageForPaymentsDisputes(String appId) {
+        return PaymentsLegalConstraints.get(appId).isOnTinksLicense();
     }
 
     private String getCleanLogContent(Credentials credentials)
@@ -193,11 +226,25 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
         return maskSensitiveOutputLog(logContent, credentials);
     }
 
-    private String getFormattedFileName(String logContent, Credentials credentials) {
+    private String getFormattedFileName(
+            String logContent, Credentials credentials, boolean isLtsPaymentsDisputeFile) {
+        LocalDateTime now = LocalDateTime.now();
+        String disputePrefix = "";
+        if (isLtsPaymentsDisputeFile) {
+            disputePrefix =
+                    String.format(
+                            "%s/%s/%s/%s/",
+                            state.getLongTermStorageDisputeBasePrefixFromConfig(),
+                            now.getYear(),
+                            now.getMonthValue(),
+                            now.getDayOfMonth());
+        }
         return String.format(
-                        "%s_%s_u%s_c%s_%s.log",
+                        "%s%s_%s_u%s_c%s_%s.log",
+                        disputePrefix,
                         credentials.getProviderName(),
-                        ThreadSafeDateFormat.FORMATTER_FILENAME_SAFE.format(new Date()),
+                        ThreadSafeDateFormat.FORMATTER_FILENAME_SAFE.format(
+                                now.atZone(ZoneId.systemDefault()).toInstant()),
                         credentials.getUserId(),
                         credentials.getId(),
                         getFormattedSize(logContent))

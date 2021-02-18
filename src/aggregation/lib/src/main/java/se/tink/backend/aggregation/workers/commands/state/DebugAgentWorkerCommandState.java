@@ -12,12 +12,15 @@ public class DebugAgentWorkerCommandState {
     private static final Logger log = LoggerFactory.getLogger(DebugAgentWorkerCommandState.class);
     private final String debugLogDir;
     private final int debugLogFrequencyPercent;
+    private final String longTermStorageDisputeBasePrefix;
     private File debugDirectory;
 
     @Inject
     public DebugAgentWorkerCommandState(AgentsServiceConfiguration configuration) {
         debugLogDir = getDebugLogDirFromConfig(configuration);
         debugLogFrequencyPercent = getDebugLogFrequencyFromConfig(configuration);
+        longTermStorageDisputeBasePrefix =
+                getLongTermStorageDisputeBasePrefixFromConfig(configuration);
     }
 
     public boolean isSaveLocally() {
@@ -67,7 +70,19 @@ public class DebugAgentWorkerCommandState {
         return configuration.getAggregationWorker().getDebugFrequencyPercent();
     }
 
+    private String getLongTermStorageDisputeBasePrefixFromConfig(
+            AgentsServiceConfiguration configuration) {
+        if (Objects.isNull(configuration) || Objects.isNull(configuration.getAggregationWorker())) {
+            return "";
+        }
+        return configuration.getAggregationWorker().getLongTermStorageDisputeBasePrefix();
+    }
+
     public int getDebugFrequencyPercent() {
         return debugLogFrequencyPercent;
+    }
+
+    public String getLongTermStorageDisputeBasePrefixFromConfig() {
+        return longTermStorageDisputeBasePrefix;
     }
 }

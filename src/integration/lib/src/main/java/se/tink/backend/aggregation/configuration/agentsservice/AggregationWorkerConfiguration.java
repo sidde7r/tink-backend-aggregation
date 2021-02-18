@@ -11,6 +11,8 @@ public class AggregationWorkerConfiguration {
 
     @JsonProperty private int debugLogFrequencyPercent;
 
+    @JsonProperty private String longTermStorageDisputeBasePrefix;
+
     @JsonProperty
     private CircuitBreakerConfiguration circuitBreaker = new CircuitBreakerConfiguration();
 
@@ -31,5 +33,13 @@ public class AggregationWorkerConfiguration {
 
     public int getDebugFrequencyPercent() {
         return debugLogFrequencyPercent;
+    }
+
+    public void setLongTermStorageDisputeBasePrefix(String longTermStorageDisputeBasePrefix) {
+        this.longTermStorageDisputeBasePrefix = longTermStorageDisputeBasePrefix;
+    }
+
+    public String getLongTermStorageDisputeBasePrefix() {
+        return longTermStorageDisputeBasePrefix;
     }
 }

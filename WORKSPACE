@@ -239,16 +239,20 @@ http_file(
     name = "libm4ri_dev",
     downloaded_file_path = "libm4ri-dev_20140914-2+b1_amd64.deb",
     sha256 = "040b81df10945380424d8874d38c062f45a5fee6886ae8e6963c87393ba84cd9",
-    urls = ["https://mirror.deepines.com/deepin/pool/main/libm/libm4ri/libm4ri-dev_20140914-2%2Bb1_amd64.deb",
-            "http://ftp.br.debian.org/debian/pool/main/libm/libm4ri/libm4ri-dev_20140914-2+b1_amd64.deb"],
+    urls = [
+        "https://mirror.deepines.com/deepin/pool/main/libm/libm4ri/libm4ri-dev_20140914-2%2Bb1_amd64.deb",
+        "http://ftp.br.debian.org/debian/pool/main/libm/libm4ri/libm4ri-dev_20140914-2+b1_amd64.deb",
+    ],
 )
 
 http_file(
     name = "libm4ri_0.0.20140914",
     downloaded_file_path = "libm4ri-0.0.20140914_20140914-2+b1_amd64.deb",
     sha256 = "c2f38d51730b6e9a73e2f4d2e0edfadf647a9889da9d06a15abca07d3eccc6f1",
-    urls = ["https://mirror.deepines.com/deepin/pool/main/libm/libm4ri/libm4ri-0.0.20140914_20140914-2%2Bb1_amd64.deb",
-            "http://ftp.br.debian.org/debian/pool/main/libm/libm4ri/libm4ri-0.0.20140914_20140914-2+b1_amd64.deb"],
+    urls = [
+        "https://mirror.deepines.com/deepin/pool/main/libm/libm4ri/libm4ri-0.0.20140914_20140914-2%2Bb1_amd64.deb",
+        "http://ftp.br.debian.org/debian/pool/main/libm/libm4ri/libm4ri-0.0.20140914_20140914-2+b1_amd64.deb",
+    ],
 )
 
 # libtesseract, needed by some RE agents

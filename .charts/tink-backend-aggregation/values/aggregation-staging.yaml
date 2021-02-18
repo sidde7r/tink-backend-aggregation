@@ -62,6 +62,7 @@ tppSecretsServiceConfiguration:
   enabledRetryPolicy: true
 
 debugLogFrequencyPercent: 100
+longTermStorageDisputeBasePrefix: "long-term-payments-dispute"
 
 eventProducerServiceConfiguration:
   url: event-producer-service.internal.staging.aggregation.tink.network
