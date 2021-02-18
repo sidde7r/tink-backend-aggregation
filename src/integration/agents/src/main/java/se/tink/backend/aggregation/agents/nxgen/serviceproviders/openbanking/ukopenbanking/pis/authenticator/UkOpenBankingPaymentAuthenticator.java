@@ -53,7 +53,7 @@ public class UkOpenBankingPaymentAuthenticator {
             if (e.getError() instanceof ThirdPartyAppError
                     && ThirdPartyAppError.TIMED_OUT.equals(e.getError())) {
                 throw new PaymentAuthorizationTimeOutException(
-                        InternalStatus.PAYMENT_AUTHORISATION_TIMEOUT);
+                        InternalStatus.PAYMENT_AUTHORIZATION_TIMEOUT);
             }
 
             throw createFailedTransferException();
@@ -126,23 +126,23 @@ public class UkOpenBankingPaymentAuthenticator {
 
             if (StringUtils.isBlank(errorDescription)) {
                 throw new PaymentAuthorizationException(
-                        InternalStatus.PAYMENT_AUTHORISATION_UNKNOWN_EXCEPTION);
+                        InternalStatus.PAYMENT_AUTHORIZATION_UNKNOWN_EXCEPTION);
             } else if (authenticationErrorMatcher.isAuthorizationCancelledByUser(
                     errorDescription)) {
                 throw new PaymentAuthorizationCancelledByUserException(
-                        errorEntity, InternalStatus.PAYMENT_AUTHORISATION_CANCELLED);
+                        errorEntity, InternalStatus.PAYMENT_AUTHORIZATION_CANCELLED);
             } else if (authenticationErrorMatcher.isAuthorizationTimeOut(errorDescription)) {
                 throw new PaymentAuthorizationTimeOutException(
-                        errorEntity, InternalStatus.PAYMENT_AUTHORISATION_TIMEOUT);
+                        errorEntity, InternalStatus.PAYMENT_AUTHORIZATION_TIMEOUT);
             } else if (authenticationErrorMatcher.isAuthorizationFailedByUser(errorDescription)) {
                 throw new PaymentAuthorizationFailedByUserException(
-                        errorEntity, InternalStatus.PAYMENT_AUTHORISATION_FAILED);
+                        errorEntity, InternalStatus.PAYMENT_AUTHORIZATION_FAILED);
             } else {
                 log.warn(
                         "Unknown error message from bank during payment authorisation: {}",
                         errorDescription);
                 throw new PaymentAuthorizationException(
-                        InternalStatus.PAYMENT_AUTHORISATION_UNKNOWN_EXCEPTION);
+                        InternalStatus.PAYMENT_AUTHORIZATION_UNKNOWN_EXCEPTION);
             }
         } else if (OpenIdConstants.Errors.SERVER_ERROR.equalsIgnoreCase(errorType)) {
             throw BANK_SIDE_FAILURE.exception(errorDescription);
