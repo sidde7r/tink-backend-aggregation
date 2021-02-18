@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.loa
 
 import java.util.Collection;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.Sparebank1ApiClient;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.Sparebank1Constants.Urls;
@@ -12,12 +13,9 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 
 @Slf4j
+@RequiredArgsConstructor
 public class Sparebank1LoanFetcher implements AccountFetcher<LoanAccount> {
     private final Sparebank1ApiClient apiClient;
-
-    public Sparebank1LoanFetcher(Sparebank1ApiClient apiClient) {
-        this.apiClient = apiClient;
-    }
 
     @Override
     public Collection<LoanAccount> fetchAccounts() {

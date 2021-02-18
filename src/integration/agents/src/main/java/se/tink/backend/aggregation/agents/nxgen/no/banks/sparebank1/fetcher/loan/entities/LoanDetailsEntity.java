@@ -65,7 +65,7 @@ public class LoanDetailsEntity {
         return ImmutableList.of(ownerFirstName + " " + ownerLastName);
     }
 
-    public int getNumMonthsOfBouds() {
+    public int getNumMonthsBounds() {
         if (type.equals("ANNUITY")) {
             return period * 12;
         }

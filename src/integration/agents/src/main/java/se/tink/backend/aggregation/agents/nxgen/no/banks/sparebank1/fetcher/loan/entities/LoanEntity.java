@@ -41,7 +41,7 @@ public class LoanEntity {
 
     private LoanModule buildLoanDetails(LoanDetailsEntity loanDetails) {
         return LoanModule.builder()
-                .withType(Type.CREDIT)
+                .withType(getLoanType())
                 .withBalance(ExactCurrencyAmount.inNOK(loanDetails.getBalance()))
                 .withInterestRate(loanDetails.getInterestRate())
                 .setApplicants(loanDetails.getAplicants())
@@ -49,9 +49,17 @@ public class LoanEntity {
                 .setAmortized(ExactCurrencyAmount.inNOK(loanDetails.getAmortized()))
                 .setLoanNumber((StringUtils.removeNonAlphaNumeric(formattedNumber)))
                 .setInitialDate(loanDetails.getInitialDate())
-                .setNumMonthsBound(loanDetails.getNumMonthsOfBouds())
+                .setNumMonthsBound(loanDetails.getNumMonthsBounds())
                 .setMonthlyAmortization(
                         ExactCurrencyAmount.inNOK(loanDetails.getMonthlyAmortization()))
                 .build();
+    }
+
+    private Type getLoanType() {
+        // this is very basic mapping and will be improved as more data will come
+        if (type.equals("LOAN")) {
+            return Type.CREDIT;
+        }
+        return Type.OTHER;
     }
 }
