@@ -11,8 +11,6 @@ import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
-import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
-import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.ubi.UbiConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.ConsentManager;
@@ -52,8 +50,7 @@ public class AccountConsentDecoupledStepTest {
     }
 
     @Test
-    public void executeShouldExecuteConsentManager()
-            throws AuthenticationException, AuthorizationException {
+    public void executeShouldExecuteExpectedMethods() {
         // given
         String username = "username";
         String password = "password";
@@ -80,6 +77,7 @@ public class AccountConsentDecoupledStepTest {
         verify(consentManager).updateAuthenticationMethod(FormValues.SCA_DECOUPLED);
         verify(consentManager).updatePsuCredentials(username, password, psuCredentials);
         verify(consentManager).waitForAcceptance();
+        verify(userPrompter).displayPrompt();
         assertThat(response.isAuthenticationFinished()).isFalse();
         assertThat(response.getNextStepId()).isEqualTo(Optional.empty());
     }
