@@ -133,12 +133,12 @@ spec:
   - alert: RefreshSuccessRateBelow70WithAttemptLimitNL
     expr: |
       # Successful attempts < 70% and >= 60%
-      (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="NL", provider_type!="test"}[30m])) by (className,provider,type)
-          / sum(increase(tink_agent_refresh_total{market="NL", provider_type!="test"}[30m])) by (className,provider,type) < 0.70)
-      and (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="NL", provider_type!="test"}[30m])) by (className,provider,type)
-              / sum(increase(tink_agent_refresh_total{market="NL", provider_type!="test"}[30m])) by (className,provider,type) >= 0.60)
+      (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="NL", provider_type!="test", className!~"nxgen.nl.banks.openbanking.rabobank.RabobankAgent"}[30m])) by (className,provider,type)
+          / sum(increase(tink_agent_refresh_total{market="NL", provider_type!="test", className!~"nxgen.nl.banks.openbanking.rabobank.RabobankAgent"}[30m])) by (className,provider,type) < 0.70)
+      and (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="NL", provider_type!="test", className!~"nxgen.nl.banks.openbanking.rabobank.RabobankAgent"}[30m])) by (className,provider,type)
+              / sum(increase(tink_agent_refresh_total{market="NL", provider_type!="test", className!~"nxgen.nl.banks.openbanking.rabobank.RabobankAgent"}[30m])) by (className,provider,type) >= 0.60)
       # At least this many attempts.
-        and sum(increase(tink_agent_refresh_total{market="NL", provider_type!="test"}[30m])) by (className,provider,type) > 20
+        and sum(increase(tink_agent_refresh_total{market="NL", provider_type!="test", className!~"nxgen.nl.banks.openbanking.rabobank.RabobankAgent"}[30m])) by (className,provider,type) > 20
     for: 5m
     labels:
       severity: urgent
@@ -147,7 +147,7 @@ spec:
     annotations:
       description: {{ .Values.kibanaLink }}
         {{ .Values.grafanaLink }}
-      summary: Refresh success rate is below 60% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
+      summary: Refresh success rate is below 70% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
         the last 30 minutes for <{ $labels.type }>.
       tags: {{ .Values.tags }}
 
