@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.creditc
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.strings.StringUtils;
 
 @JsonObject
 @Data
@@ -50,7 +51,9 @@ public class CreditCardAccountEntity {
                 .withUniqueIdentifier(id)
                 .withAccountNumber(formattedNumber)
                 .withAccountName(name)
-                .addIdentifier(AccountIdentifier.create(Type.PAYMENT_CARD_NUMBER, formattedNumber))
+                .addIdentifier(
+                        AccountIdentifier.create(
+                                Type.NO, StringUtils.removeNonAlphaNumeric(formattedNumber)))
                 .setProductName(cardType)
                 .build();
     }

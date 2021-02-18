@@ -1,0 +1,98 @@
+{
+    "id": "fw24xK-oZgYWGBx5veSpodwyAoU2jP_17HwFB9VXGhg",
+    "name": "LOFAVØR FØRSTEHJEMSLÅN",
+    "formattedNumber": "1829 69 33313",
+    "disposableAmountInteger": "0",
+    "disposableAmountFraction": "00",
+    "balanceAmountInteger": "-2234684",
+    "balanceAmountFraction": "51",
+    "accountType": "ANNLOAN",
+    "type": "ANNUITY",
+    "loanAmountInteger": "-2250000",
+    "loanAmountFraction": "51",
+    "interestRateInteger": "1",
+    "interestRateFraction": "30",
+    "actualInterestRateInteger": "1",
+    "actualInterestRateFraction": "36",
+    "discountingDate": "2020-11-03",
+    "period": 30,
+    "periodExpensesInteger": "-50",
+    "periodExpensesFraction": "00",
+    "debitingType": 3,
+    "maturityDate": "2050-10-25",
+    "collateral": "Adkomstdokumenter m/leierett",
+    "installment": {
+        "dueDate": "2021-02-25",
+        "amountInteger": "-7602",
+        "amountFraction": "51",
+        "interestAmountInteger": "-2468",
+        "interestAmountFraction": "00",
+        "costsInteger": "-50",
+        "costsFraction": "00",
+        "balanceInteger": "-2229600",
+        "balanceFraction": "00",
+        "principalInteger": "-5084",
+        "principalFraction": "00",
+        "debitingAccountNumber": "1813 33 85106"
+    },
+    "creditLineInteger": "",
+    "netCalculatedCreditLineInterestInteger": "",
+    "termAmountInteger": "-7552",
+    "termAmountFraction": "00",
+    "netCalculatedCreditLineInterestFraction": "",
+    "ownerFirstName": "ownerName",
+    "ownerLastName": "ownerLastName",
+    "detailsFetched": true,
+    "productType": "LOAN",
+    "owned": true,
+    "prescored": false,
+    "paymentFromEnabled": false,
+    "transferToEnabled": false,
+    "transferFromEnabled": false,
+    "balancePreferred": false,
+    "_links": {
+        "lan-endre-belastningskonto": {
+            "href": "https://mobilbank-pm.sparebank1.no/ostlandet/nettbank-privat/finansiering/rest/selfservice/O2dsTOQhEml_-llaF-HRwEMPxZmKplYWrTGMrb6PIm0/debitAccount",
+            "method": "PUT",
+            "mediaTypes": [
+                "application/json; charset=utf-8"
+            ]
+        },
+        "loan": {
+            "href": "https://mobilbank-pm.sparebank1.no/ostlandet/nettbank-privat/finansiering/rest/v2/loans/O2dsTOQhEml_-llaF-HRwEMPxZmKplYWrTGMrb6PIm0",
+            "method": "GET"
+        },
+        "lan-nedbetalingsplan": {
+            "href": "https://mobilbank-pm.sparebank1.no/ostlandet/nettbank-privat/finansiering/rest/v2/loans/O2dsTOQhEml_-llaF-HRwEMPxZmKplYWrTGMrb6PIm0/paymentPlan",
+            "method": "GET"
+        },
+        "lan-endre-trekkdato": {
+            "href": "https://mobilbank-pm.sparebank1.no/ostlandet/nettbank-privat/finansiering/rest/selfservice/O2dsTOQhEml_-llaF-HRwEMPxZmKplYWrTGMrb6PIm0/dueDate",
+            "method": "PUT",
+            "mediaTypes": [
+                "application/json; charset=utf-8"
+            ]
+        },
+        "lan-endre-oke-terminsbelop": {
+            "href": "https://mobilbank-pm.sparebank1.no/ostlandet/nettbank-privat/finansiering/rest/selfservice/O2dsTOQhEml_-llaF-HRwEMPxZmKplYWrTGMrb6PIm0/update/annuity",
+            "method": "PUT",
+            "mediaTypes": [
+                "application/json; charset=utf-8"
+            ]
+        },
+        "lan-detaljer-html": {
+            "href": "https://mobilbank-pm.sparebank1.no/ostlandet/nettbank-privat/finansiering/lan#/detaljer/fw24xK-oZgYWGBx5veSpodwyAoU2jP_17HwFB9VXGhg"
+        },
+        "transactions": {
+            "href": "https://mobilbank-pm.sparebank1.no/ostlandet/nettbank-privat/finansiering/rest/transactions/O2dsTOQhEml_-llaF-HRwEMPxZmKplYWrTGMrb6PIm0",
+            "method": "GET"
+        },
+        "lan-endre-ekstra-innbetaling": {
+            "href": "https://mobilbank-pm.sparebank1.no/ostlandet/nettbank-privat/finansiering/rest/selfservice/O2dsTOQhEml_-llaF-HRwEMPxZmKplYWrTGMrb6PIm0/createPayment",
+            "method": "POST",
+            "mediaTypes": [
+                "application/json; charset=utf-8"
+            ]
+        }
+    }
+}
