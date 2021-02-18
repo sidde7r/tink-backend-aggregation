@@ -1,7 +1,9 @@
 package se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockrefresh;
 
 import static com.google.common.collect.ImmutableList.of;
+import static se.tink.backend.aggregation.agents.agentplatform.authentication.storage.UpgradingPersistentStorageService.MARKER;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -13,6 +15,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import lombok.SneakyThrows;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.ListUtils;
 import org.junit.Assert;
@@ -35,6 +38,7 @@ import se.tink.backend.aggregation.agents.framework.wiremock.utils.AapFileParser
 import se.tink.backend.aggregation.agents.framework.wiremock.utils.RequestResponseParser;
 import se.tink.backend.aggregation.agents.framework.wiremock.utils.ResourceFileReader;
 import se.tink.backend.aggregation.agents.module.loader.TestModule;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.common.authentication.RefreshableAccessToken;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.enums.MarketCode;
@@ -551,6 +555,34 @@ public final class AgentWireMockRefreshTest {
             return this;
         }
 
+        @SneakyThrows
+        @Override
+        public BuildStep addRefreshableAccessToken(RefreshableAccessToken token) {
+            String json = new ObjectMapper().writeValueAsString(token);
+
+            // Based on
+            // AgentRefreshableAccessTokenAuthenticationPersistedDataAccessorFactory.DEFAULT_TOKEN_STORE_KEY
+            this.persistentStorageData.put("RedirectTokens", json);
+
+            // This provides compatibility for agents implementing AgentPlatformStorageMigration
+            this.persistentStorageData.put(MARKER, "true");
+            return this;
+        }
+
+        @SneakyThrows
+        @Override
+        public BuildStep addRefreshableAccessTokenJson(String json) {
+
+            // Based on
+            // AgentRefreshableAccessTokenAuthenticationPersistedDataAccessorFactory.DEFAULT_TOKEN_STORE_KEY
+            this.persistentStorageData.put("RedirectTokens", json);
+
+            // This provides compatibility for agents implementing AgentPlatformStorageMigration
+            this.persistentStorageData.put(MARKER, "true");
+
+            return this;
+        }
+
         @Override
         public BuildStep addDataIntoCache(String key, String value) {
             this.cache.put(key, value);
@@ -693,6 +725,12 @@ public final class AgentWireMockRefreshTest {
          * <p>Can be called multiple times to add several items
          */
         BuildStep addPersistentStorageData(String key, String value);
+
+        /** Add RefreshableAccessToken to persistent storage map */
+        BuildStep addRefreshableAccessToken(RefreshableAccessToken token);
+
+        /** Add RefreshableAccessToken as json string to persistent storage map */
+        BuildStep addRefreshableAccessTokenJson(String json);
 
         BuildStep addDataIntoCache(String key, String value);
 

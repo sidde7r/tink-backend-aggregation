@@ -1,95 +1,49 @@
 
-
-REQUEST 0
-POST https://token-api.starlingbank.com/oauth/access-token
-Content-Type: application/x-www-form-urlencoded
-
-refresh_token=DUMMY_REFRESH_TOKEN&grant_type=refresh_token&client_secret=DUMMY_AIS_CLIENT_SECRET&client_id=DUMMY_AIS_CLIENT_ID
-
-RESPONSE 0
-200
-Content-Type: application/json
-Transfer-Encoding: chunked
-Connection: keep-alive
-
-{"error":"invalid_grant","error_description":"refresh_token could not be verified, it could be invalid, expired or revoked"}
-
-
-REQUEST 1
-POST https://token-api.starlingbank.com/oauth/access-token
-Content-Type: application/x-www-form-urlencoded
-
-code=DUMMY_CODE&grant_type=authorization_code&redirect_uri=https%3A%2F%2Fapi.tink.com&client_secret=DUMMY_AIS_CLIENT_SECRET&client_id=DUMMY_AIS_CLIENT_ID
-
-RESPONSE 1
-200
-Content-Type: application/json
-Transfer-Encoding: chunked
-Connection: keep-alive
-
-{"access_token":"NEW_DUMMY_OAUTH2_TOKEN","refresh_token":"NEW_DUMMY_REFRESH_TOKEN","token_type":"bearer","expires_in":999999999,"scope":"account-holder-name:read account-holder-type:read account-identifier:read account:read balance:read transaction:read"}
-
-
 REQUEST 2
 GET https://api.starlingbank.com/api/v2/accounts
-Authorization: Bearer NEW_DUMMY_OAUTH2_TOKEN
+Authorization: Bearer DUMMY_ACCESS_TOKEN
 Accept: application/json
 
 RESPONSE 2
 200
-Date: Thu, 27 Aug 2020 03:15:33 GMT
 Content-Type: application/json
-Transfer-Encoding: chunked
 Connection: keep-alive
-Server-Timing: ***
 
 {"accounts":[{"accountUid":"account-uuid-1234567","defaultCategory":"5d3c6070-1972-4f93-8f2a-44c0ccce5719","currency":"GBP","createdAt":"2018-09-18T15:25:21.764Z"}]}
 
-
 REQUEST 3
 GET https://api.starlingbank.com/api/v2/account-holder
-Authorization: Bearer NEW_DUMMY_OAUTH2_TOKEN
+Authorization: Bearer DUMMY_ACCESS_TOKEN
 Accept: application/json
 
 RESPONSE 3
 200
-Date: Thu, 27 Aug 2020 03:15:33 GMT
 Content-Type: application/json
-Transfer-Encoding: chunked
 Connection: keep-alive
-Server-Timing: ***
 
 {"accountHolderUid":"1f1c43dd-88de-4b10-b9ef-1a927eba81e1","accountHolderType":"INDIVIDUAL"}
 
-
 REQUEST 4
 GET https://api.starlingbank.com/api/v2/account-holder/name
-Authorization: Bearer NEW_DUMMY_OAUTH2_TOKEN
+Authorization: Bearer DUMMY_ACCESS_TOKEN
 Accept: application/json
 
 RESPONSE 4
 200
-Date: Thu, 27 Aug 2020 03:15:33 GMT
 Content-Type: application/json
-Transfer-Encoding: chunked
 Connection: keep-alive
-Server-Timing: ***
 
 {"accountHolderName":"Martin Tinkowsky"}
 
-
 REQUEST 5
 GET https://api.starlingbank.com/api/v2/accounts/account-uuid-1234567/identifiers
-Authorization: Bearer NEW_DUMMY_OAUTH2_TOKEN
+Authorization: Bearer DUMMY_ACCESS_TOKEN
 Accept: application/json
 
 RESPONSE 5
 200
-Date: Thu, 27 Aug 2020 03:15:33 GMT
 Content-Type: application/json
-Transfer-Encoding: chunked
 Connection: keep-alive
-Server-Timing: ***
 
 {
     "accountIdentifier": "22222222",
@@ -112,32 +66,25 @@ Server-Timing: ***
 
 REQUEST 6
 GET https://api.starlingbank.com/api/v2/accounts/account-uuid-1234567/balance
-Authorization: Bearer NEW_DUMMY_OAUTH2_TOKEN
+Authorization: Bearer DUMMY_ACCESS_TOKEN
 Accept: application/json
 
 RESPONSE 6
 200
-Date: Thu, 27 Aug 2020 03:15:33 GMT
 Content-Type: application/json
-Transfer-Encoding: chunked
 Connection: keep-alive
-Server-Timing: ***
 
 {"clearedBalance":{"currency":"GBP","minorUnits":3394},"effectiveBalance":{"currency":"GBP","minorUnits":3394},"pendingTransactions":{"currency":"GBP","minorUnits":0},"acceptedOverdraft":{"currency":"GBP","minorUnits":0},"amount":{"currency":"GBP","minorUnits":3394}}
 
-
 REQUEST 7
 GET https://api.starlingbank.com/api/v2/feed/account/account-uuid-1234567/category/5d3c6070-1972-4f93-8f2a-44c0ccce5719/transactions-between?minTransactionTimestamp=1992-01-12T00%3A00%3A00.000Z&maxTransactionTimestamp=1992-04-10T00%3A00%3A00.000Z
-Authorization: Bearer NEW_DUMMY_OAUTH2_TOKEN
+Authorization: Bearer DUMMY_ACCESS_TOKEN
 Accept: application/json
 
 RESPONSE 7
 200
-Date: Thu, 27 Aug 2020 03:15:33 GMT
 Content-Type: application/json
-Transfer-Encoding: chunked
 Connection: keep-alive
-Server-Timing: ***
 
 {
     "feedItems": [
@@ -198,55 +145,43 @@ Server-Timing: ***
     ]
 }
 
-
 REQUEST 8
 GET https://api.starlingbank.com/api/v2/feed/account/account-uuid-1234567/category/5d3c6070-1972-4f93-8f2a-44c0ccce5719/transactions-between?minTransactionTimestamp=1991-10-14T00%3A00%3A00.000Z&maxTransactionTimestamp=1992-01-11T23%3A59%3A59.999Z
-Authorization: Bearer NEW_DUMMY_OAUTH2_TOKEN
+Authorization: Bearer DUMMY_ACCESS_TOKEN
 Accept: application/json
 
 RESPONSE 8
 200
-Date: Thu, 27 Aug 2020 03:15:33 GMT
 Content-Type: application/json
-Transfer-Encoding: chunked
 Connection: keep-alive
-Server-Timing: ***
 
 {
     "feedItems": []
 }
 
-
 REQUEST 9
 GET https://api.starlingbank.com/api/v2/feed/account/account-uuid-1234567/category/5d3c6070-1972-4f93-8f2a-44c0ccce5719/transactions-between?minTransactionTimestamp=1991-07-16T00%3A00%3A00.000Z&maxTransactionTimestamp=1991-10-13T23%3A59%3A59.999Z
-Authorization: Bearer NEW_DUMMY_OAUTH2_TOKEN
+Authorization: Bearer DUMMY_ACCESS_TOKEN
 Accept: application/json
 
 RESPONSE 9
 200
-Date: Thu, 27 Aug 2020 03:15:33 GMT
 Content-Type: application/json
-Transfer-Encoding: chunked
 Connection: keep-alive
-Server-Timing: ***
 
 {
     "feedItems": []
 }
 
-
 REQUEST 10
 GET https://api.starlingbank.com/api/v2/feed/account/account-uuid-1234567/category/5d3c6070-1972-4f93-8f2a-44c0ccce5719/transactions-between?minTransactionTimestamp=1991-04-17T00%3A00%3A00.000Z&maxTransactionTimestamp=1991-07-15T23%3A59%3A59.999Z
-Authorization: Bearer NEW_DUMMY_OAUTH2_TOKEN
+Authorization: Bearer DUMMY_ACCESS_TOKEN
 Accept: application/json
 
 RESPONSE 10
 200
-Date: Thu, 27 Aug 2020 03:15:33 GMT
 Content-Type: application/json
-Transfer-Encoding: chunked
 Connection: keep-alive
-Server-Timing: ***
 
 {
     "feedItems": []
