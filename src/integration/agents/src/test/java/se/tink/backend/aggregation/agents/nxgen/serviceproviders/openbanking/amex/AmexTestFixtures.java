@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import org.junit.Ignore;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmericanExpressConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.dto.AccountsResponseDto;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.dto.BalanceDto;
@@ -21,6 +22,7 @@ import se.tink.backend.aggregation.nxgen.core.authentication.HmacToken;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
+@Ignore
 public class AmexTestFixtures {
 
     public static final String ACCESS_TOKEN_1 = "3f705eb0-f432-4211-aa7c-c16b8cb9f39f";

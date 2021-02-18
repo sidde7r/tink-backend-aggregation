@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.Optional;
 import net.minidev.json.JSONObject;
+import org.junit.Ignore;
 import org.junit.Rule;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Provider;
@@ -50,6 +51,7 @@ import se.tink.libraries.metrics.types.timers.Timer;
 import se.tink.libraries.user.rpc.User;
 import se.tink.libraries.user.rpc.UserProfile;
 
+@Ignore
 public abstract class IntegrationTestBase {
 
     @Rule
