@@ -2,7 +2,10 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.am
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.Date;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Optional;
@@ -31,7 +34,6 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
-import se.tink.libraries.date.ThreadSafeDateFormat;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -145,8 +147,14 @@ public class AmexApiClient {
     }
 
     public StatementPeriodsDto fetchStatementPeriods(HmacToken hmacToken) {
-        return sendRequestAndGetResponse(
-                Urls.ENDPOINT_STATEMENT_PERIODS, hmacToken, StatementPeriodsDto.class);
+        final String response =
+                sendRequestAndGetResponse(Urls.ENDPOINT_STATEMENT_PERIODS, hmacToken, String.class);
+        objectMapper.registerModule(new JavaTimeModule());
+        try {
+            return objectMapper.readValue(response, StatementPeriodsDto.class);
+        } catch (IOException e) {
+            throw new IllegalStateException("Unable to parse json string to map", e);
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -159,15 +167,12 @@ public class AmexApiClient {
     }
 
     /*
-     * The API only provides transaction fetching for the past 90 days. The fetcher will try to
-     * catch all transactions in one call. The response when calling the transaction-endpoint will
-     * contain the transactions together with an integer of how many transaction where found in the
-     * 90 day period = total_transaction_count. If total_transaction_count > 1000 then we have
-     * fetched to few transaction and will make a new call to fetch all transaction during our 90
-     * day period. This solution were selected since the API wont work properly with pagination.
+     * The API provides an option to fetch posted transactions for more than 90 days based on statement periods.
+     * First call is to fetch any pending transactions for last 30 days from request date. Subsequently after,
+     * the function will fetch posted transactions based on the statement periods data.
      */
     public List<TransactionsResponseDto> fetchTransactions(
-            HmacToken hmacToken, Date fromDate, Date toDate) {
+            HmacToken hmacToken, LocalDate fromDate, LocalDate toDate) {
 
         List<TransactionsResponseDto> transactionResponses =
                 fetchTransactionsWithGivenLimit(
@@ -182,8 +187,10 @@ public class AmexApiClient {
                         .mapToInt(Integer::intValue)
                         .sum();
 
-        // If we have more transaction than our limit (currently set to 1000)
-        // during the past 90 days the we will make a new call and fetch all transactions.
+        /*
+         *If we have more transaction than our limit (currently set to 1000)
+         * during the past 90 days the we will make a new call and fetch all transactions.
+         */
         if (transactionCount > AmericanExpressConstants.QueryValues.TRANSACTION_TO_FETCH) {
             transactionResponses =
                     fetchTransactionsWithGivenLimit(hmacToken, transactionCount, fromDate, toDate);
@@ -192,12 +199,12 @@ public class AmexApiClient {
         return transactionResponses;
     }
 
-    private URL buildTransactionsUrl(int limit, Date fromDate, Date toDate) {
+    private URL buildTransactionsUrl(int limit, LocalDate fromDate, LocalDate toDate) {
         if (fromDate == null) {
             return Urls.ENDPOINT_TRANSACTIONS
                     .queryParam(
                             AmericanExpressConstants.QueryParams.QUERY_PARAM_STATEMENT_END_DATE,
-                            ThreadSafeDateFormat.FORMATTER_DAILY.format(toDate))
+                            toDate.format(DateTimeFormatter.ISO_LOCAL_DATE))
                     .queryParam(
                             AmericanExpressConstants.QueryParams.QUERY_PARAM_LIMIT,
                             Integer.toString(limit));
@@ -205,10 +212,10 @@ public class AmexApiClient {
         return Urls.ENDPOINT_TRANSACTIONS
                 .queryParam(
                         AmericanExpressConstants.QueryParams.QUERY_PARAM_START_DATE,
-                        ThreadSafeDateFormat.FORMATTER_DAILY.format(fromDate))
+                        fromDate.format(DateTimeFormatter.ISO_LOCAL_DATE))
                 .queryParam(
                         AmericanExpressConstants.QueryParams.QUERY_PARAM_END_DATE,
-                        ThreadSafeDateFormat.FORMATTER_DAILY.format(toDate))
+                        toDate.format(DateTimeFormatter.ISO_LOCAL_DATE))
                 .queryParam(
                         AmericanExpressConstants.QueryParams.QUERY_PARAM_LIMIT,
                         Integer.toString(limit));
@@ -218,7 +225,7 @@ public class AmexApiClient {
      * Will fetch posted and pending transactions in two separate Api-calls. The resulting lists will then be merged.
      */
     private List<TransactionsResponseDto> fetchTransactionsWithGivenLimit(
-            HmacToken hmacToken, int limit, Date fromDate, Date toDate) {
+            HmacToken hmacToken, int limit, LocalDate fromDate, LocalDate toDate) {
 
         URL url = buildTransactionsUrl(limit, fromDate, toDate);
 
@@ -235,7 +242,7 @@ public class AmexApiClient {
         // store the response to be used for account-specific mapping.
         temporaryStorage.put(
                 AmericanExpressUtils.createAndGetStorageString(
-                        ThreadSafeDateFormat.FORMATTER_DAILY.format(toDate)),
+                        toDate.format(DateTimeFormatter.ISO_LOCAL_DATE)),
                 transactions);
 
         /* this workaround is necessary since the response from Amex cannot be directly mapped to a

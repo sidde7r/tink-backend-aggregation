@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.am
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CREDIT_CARDS;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.inject.Inject;
 import java.time.Clock;
 import lombok.Getter;
@@ -83,7 +84,8 @@ public final class AmericanExpressAgent extends SubsequentProgressiveGenerationA
                         temporaryStorage,
                         hmacMultiTokenStorage);
 
-        this.creditCardRefreshController = constructCreditCardController();
+        this.creditCardRefreshController = constructCreditCardController(componentProvider);
+        client.registerJacksonModule(new JavaTimeModule());
         client.addFilter(new AmexInvalidTokenFilter(hmacMultiTokenStorage));
         client.addFilter(
                 new AmexRetryFilter(
@@ -138,12 +140,17 @@ public final class AmericanExpressAgent extends SubsequentProgressiveGenerationA
         return getAgentConfigurationController().getAgentConfiguration(AmexConfiguration.class);
     }
 
-    private CreditCardRefreshController constructCreditCardController() {
+    private CreditCardRefreshController constructCreditCardController(
+            AgentComponentProvider agentComponentProvider) {
         final HmacAccountIdStorage hmacAccountIdStorage = new HmacAccountIdStorage(sessionStorage);
 
         AmexCreditCardTransactionFetcher cardTransactionFetcher =
                 new AmexCreditCardTransactionFetcher(
-                        amexApiClient, hmacAccountIdStorage, temporaryStorage, this.objectMapper);
+                        amexApiClient,
+                        hmacAccountIdStorage,
+                        temporaryStorage,
+                        this.objectMapper,
+                        agentComponentProvider.getLocalDateTimeSource());
 
         return new CreditCardRefreshController(
                 metricRefreshController,

@@ -4,19 +4,14 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang.time.DateUtils;
-import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmericanExpressConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmericanExpressUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmexApiClient;
@@ -26,9 +21,9 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ame
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.dto.TransactionsResponseDto;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.transactionalaccount.storage.HmacAccountIdStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.transactionalaccount.storage.HmacAccountIds;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.authentication.HmacToken;
@@ -43,16 +38,17 @@ public class AmexCreditCardTransactionFetcher
     private final HmacAccountIdStorage hmacAccountIdStorage;
     private final TemporaryStorage temporaryStorage;
     private final ObjectMapper objectMapper;
+    private final LocalDateTimeSource localDateTimeSource;
 
     @Override
     public TransactionKeyPaginatorResponse<String> getTransactionsFor(
             CreditCardAccount account, String key) {
 
         try {
-            final Map<Integer, Date> mapStatements =
+            final Map<Integer, LocalDate> statementMap =
                     getMapStatementEndDate(
                             account.getFromTemporaryStorage(
-                                    AmericanExpressConstants.Storage.STATEMENTS));
+                                    AmericanExpressConstants.StorageKey.STATEMENTS));
 
             final HmacToken hmacToken = getHmacTokenForAccountId(account.getAccountNumber());
 
@@ -61,16 +57,18 @@ public class AmexCreditCardTransactionFetcher
             // Initially fetch pending transactions and follow by posted transactions
             if (key == null) {
 
-                final Date now = new Date();
+                final LocalDate now = localDateTimeSource.now().toLocalDate();
                 response =
                         amexApiClient.fetchTransactions(
-                                hmacToken, DateUtils.addDays(now, -30), now);
+                                hmacToken,
+                                now.minusDays(AmericanExpressConstants.DAYS_TO_FETCH_PENDING),
+                                now);
 
                 return mapTransactionsToAccountAndReturnNewResponse(
-                        account, response, getNextKey(mapStatements, null));
+                        account, response, getNextKey(statementMap, null));
 
             } else {
-                Date nextEndDate = getStatementEndDate(key);
+                LocalDate nextEndDate = LocalDate.parse(key, DateTimeFormatter.ISO_LOCAL_DATE);
 
                 if (!getStoredTransactions(key).isEmpty()) {
                     return mapTransactionsToAccountAndReturnNewResponse(
@@ -78,40 +76,26 @@ public class AmexCreditCardTransactionFetcher
                 } else {
                     response = amexApiClient.fetchTransactions(hmacToken, null, nextEndDate);
                     return mapTransactionsToAccountAndReturnNewResponse(
-                            account, response, getNextKey(mapStatements, nextEndDate));
+                            account, response, getNextKey(statementMap, nextEndDate));
                 }
             }
         } catch (HttpResponseException e) {
             ErrorResponseDto errorResponse = e.getResponse().getBody(ErrorResponseDto.class);
-            if (errorResponse.getCode() == AmericanExpressConstants.ErrorCodes.DATE_OUT_OF_RANGE
-                    && AmericanExpressConstants.ErrorMessages.DATE_OUT_OF_RANGE.equalsIgnoreCase(
-                            errorResponse.getMessage())) {
-                return new TransactionKeyPaginatorResponseImpl<>();
-            }
-            throw BankServiceError.BANK_SIDE_FAILURE.exception();
+            throw new IllegalStateException(errorResponse.getMessage(), e);
         }
     }
 
     private Map<Integer, LocalDate> getMapStatementEndDate(String fromTemporaryStorage) {
         objectMapper.registerModule(new JavaTimeModule());
         try {
-            return new ObjectMapper()
-                    .readValue(fromTemporaryStorage, new TypeReference<Map<Integer, Date>>() {});
+            return objectMapper.readValue(
+                    fromTemporaryStorage, new TypeReference<Map<Integer, LocalDate>>() {});
         } catch (IOException e) {
             throw new IllegalStateException("Unable to parse json string to map", e);
         }
     }
 
-    private Date getStatementEndDate(String key) {
-        DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
-        try {
-            return dateFormatter.parse(key);
-        } catch (ParseException e) {
-            throw new IllegalStateException(String.format("Unable to parse %s", key), e);
-        }
-    }
-
-    private Date getNextKey(Map<Integer, Date> map, Date nextEndDate) {
+    private LocalDate getNextKey(Map<Integer, LocalDate> map, LocalDate nextEndDate) {
         if (nextEndDate == null) {
             return map.get(0);
         }
@@ -119,8 +103,8 @@ public class AmexCreditCardTransactionFetcher
         return map.get(currentKey + 1);
     }
 
-    private static Integer getKeysByValue(Map<Integer, Date> statementMap, Date value) {
-        Optional<Map<Integer, Date>> map = Optional.ofNullable(statementMap);
+    private static Integer getKeysByValue(Map<Integer, LocalDate> statementMap, LocalDate value) {
+        Optional<Map<Integer, LocalDate>> map = Optional.ofNullable(statementMap);
         if (!map.isPresent()) {
             throw new IllegalStateException("Statement map is empty.");
         }
@@ -135,7 +119,9 @@ public class AmexCreditCardTransactionFetcher
      * This function will map each transaction to the given account and return a formatted TransactionResponse with the mapped transactions.
      */
     private TransactionResponseFormatted mapTransactionsToAccountAndReturnNewResponse(
-            Account account, List<TransactionsResponseDto> transactionsResponse, Date endDate) {
+            Account account,
+            List<TransactionsResponseDto> transactionsResponse,
+            LocalDate endDate) {
         List<TransactionDto> transactions =
                 transactionsResponse.stream()
                         .flatMap(a -> a.getTransactions().stream())
