@@ -33,6 +33,7 @@ import se.tink.backend.aggregation.rpc.ConfigureWhitelistInformationRequest;
 import se.tink.backend.aggregation.rpc.CreateBeneficiaryCredentialsRequest;
 import se.tink.backend.aggregation.rpc.KeepAliveRequest;
 import se.tink.backend.aggregation.rpc.ReEncryptCredentialsRequest;
+import se.tink.backend.aggregation.rpc.RecurringPaymentRequest;
 import se.tink.backend.aggregation.rpc.RefreshWhitelistInformationRequest;
 import se.tink.backend.aggregation.rpc.SecretsNamesValidationRequest;
 import se.tink.backend.aggregation.rpc.SecretsNamesValidationResponse;
@@ -204,6 +205,11 @@ public class AggregationServiceResource implements AggregationService {
         } catch (Exception e) {
             logger.error("Error while calling createOperationExecutePayment", e);
         }
+    }
+
+    @Override
+    public void recurringPayment(RecurringPaymentRequest request, ClientInfo clientInfo) {
+        logger.info("Recurring Payment Request received from main.");
     }
 
     @Override
