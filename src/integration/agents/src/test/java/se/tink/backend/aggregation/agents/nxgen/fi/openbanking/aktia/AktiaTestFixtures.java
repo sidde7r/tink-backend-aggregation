@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import org.junit.Ignore;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.apiclient.dto.data.ErrorCode;
@@ -37,6 +38,7 @@ import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
+@Ignore
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class AktiaTestFixtures {
 
