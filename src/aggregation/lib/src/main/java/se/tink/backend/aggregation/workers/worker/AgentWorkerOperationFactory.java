@@ -768,7 +768,7 @@ public class AgentWorkerOperationFactory {
             commands.add(sendDataForProcessingAgentWorkerCommand);
         } else {
             // https://tink.slack.com/archives/CS4BJQJBV/p1612518614089100
-            double skipRatio = 0.1;
+            double skipRatio = 0.5;
             boolean isIncluded = random.nextDouble() > skipRatio;
             if (isIncluded) {
                 commands.add(sendDataForProcessingAgentWorkerCommand);
