@@ -49,18 +49,17 @@ public class UbiAuthenticator extends CbiGlobeAuthenticator {
     }
 
     private void addDecoupledManualSteps() {
+
+        UserPrompter userPrompter = new UserPrompter(supplementalInformationController, catalog);
         manualAuthenticationSteps.add(
                 new AccountConsentDecoupledStep(
-                        consentManager,
-                        strongAuthenticationState,
-                        supplementalInformationController,
-                        catalog));
+                        consentManager, strongAuthenticationState, userPrompter));
 
         manualAuthenticationSteps.add(new AccountFetchingStep(apiClient, userState));
 
         manualAuthenticationSteps.add(
                 new TransactionConsentDecoupledStep(
-                        consentManager, strongAuthenticationState, userState));
+                        consentManager, strongAuthenticationState, userState, userPrompter));
     }
 
     private void addRedirectManualSteps() {

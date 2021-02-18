@@ -28,6 +28,7 @@ public class TransactionConsentDecoupledStepTest {
     private ConsentManager consentManager;
     private StrongAuthenticationState strongAuthenticationState;
     private CbiUserState userState;
+    private UserPrompter userPrompter;
 
     @Before
     public void init() {
@@ -36,9 +37,11 @@ public class TransactionConsentDecoupledStepTest {
         Catalog catalog = mock(Catalog.class);
         when(catalog.getString(any(LocalizableKey.class))).thenReturn("");
         this.userState = mock(CbiUserState.class);
+        this.userPrompter = mock(UserPrompter.class);
+
         this.step =
                 new TransactionConsentDecoupledStep(
-                        consentManager, strongAuthenticationState, userState);
+                        consentManager, strongAuthenticationState, userState, userPrompter);
     }
 
     @Test
