@@ -46,7 +46,7 @@ public class RecurringPaymentRequest extends CredentialsRequest {
 
     @Override
     public CredentialsRequestType getType() {
-        return CredentialsRequestType.TRANSFER;
+        return CredentialsRequestType.RECURRING_PAYMENT;
     }
 
     public void setSignableOperation(SignableOperation signableOperation) {
