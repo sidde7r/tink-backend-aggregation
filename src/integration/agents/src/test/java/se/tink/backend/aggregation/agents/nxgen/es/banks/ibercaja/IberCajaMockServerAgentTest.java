@@ -32,11 +32,9 @@ public class IberCajaMockServerAgentTest {
                         .withProviderName("es-ibercaja-password")
                         .withWireMockFilePath(wireMockServerFilePath)
                         .withoutConfigFile()
-                        // all the items except checking transactions
                         .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
                         .addRefreshableItems(RefreshableItem.CHECKING_ACCOUNTS)
                         .addRefreshableItems(RefreshableItem.SAVING_ACCOUNTS)
-                        // .addRefreshableItems(RefreshableItem.SAVING_TRANSACTIONS)
                         .addRefreshableItems(RefreshableItem.CREDITCARD_ACCOUNTS)
                         .addRefreshableItems(RefreshableItem.CREDITCARD_TRANSACTIONS)
                         .addRefreshableItems(RefreshableItem.LOAN_ACCOUNTS)
