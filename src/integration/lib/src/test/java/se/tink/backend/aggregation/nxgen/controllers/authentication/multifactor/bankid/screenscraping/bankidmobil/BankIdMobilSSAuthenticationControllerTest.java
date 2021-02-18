@@ -13,16 +13,15 @@ import org.mockito.Mockito;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.screenscraping.bankidmobil.initializer.MobilInitializer;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
+import se.tink.integration.webdriver.WebDriverHelper;
+import se.tink.integration.webdriver.exceptions.HtmlElementNotFoundException;
 import se.tink.libraries.i18n.Catalog;
-import se.tink.libraries.selenium.WebDriverHelper;
-import se.tink.libraries.selenium.exceptions.HtmlElementNotFoundException;
 
 public class BankIdMobilSSAuthenticationControllerTest {
     private WebDriverHelper webDriverHelper;
@@ -39,7 +38,7 @@ public class BankIdMobilSSAuthenticationControllerTest {
     @Before
     public void initSetup() {
         mobilInitializer = mock(MobilInitializer.class);
-        driver = mock(PhantomJSDriver.class);
+        driver = mock(WebDriver.class);
         webDriverHelper = mock(WebDriverHelper.class);
         SupplementalInformationController supplementalInformationController =
                 mock(SupplementalInformationController.class);

@@ -12,10 +12,10 @@ import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.screenscraping.bankidmobil.initializer.MobilInitializer;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
+import se.tink.integration.webdriver.WebDriverHelper;
+import se.tink.integration.webdriver.exceptions.HtmlElementNotFoundException;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.i18n.LocalizableKey;
-import se.tink.libraries.selenium.WebDriverHelper;
-import se.tink.libraries.selenium.exceptions.HtmlElementNotFoundException;
 
 @Slf4j
 @RequiredArgsConstructor

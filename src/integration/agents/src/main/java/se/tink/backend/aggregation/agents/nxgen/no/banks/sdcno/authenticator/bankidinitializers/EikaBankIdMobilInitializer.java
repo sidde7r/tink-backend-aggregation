@@ -4,7 +4,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.screenscraping.bankidmobil.initializer.MobilInitializer;
-import se.tink.libraries.selenium.WebDriverHelper;
+import se.tink.integration.webdriver.WebDriverHelper;
 
 public class EikaBankIdMobilInitializer implements MobilInitializer {
     private final String mobileNummer;

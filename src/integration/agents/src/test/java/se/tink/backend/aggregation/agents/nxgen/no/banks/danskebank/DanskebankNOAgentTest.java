@@ -7,7 +7,7 @@ import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 
-public class DanskebankAgentTest {
+public class DanskebankNOAgentTest {
 
     private enum Arg implements ArgumentManager.ArgumentManagerEnum {
         USERNAME,

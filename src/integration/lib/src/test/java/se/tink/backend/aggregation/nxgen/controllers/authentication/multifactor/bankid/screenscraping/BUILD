@@ -13,11 +13,10 @@ junit_test(
         "//src/integration/lib",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/supplementalfields",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/authentication/multifactor/bankid/screenscraping",
-        "//src/libraries/selenium",
+        "//src/integration/webdriver/src/main/java/se/tink/integration/webdriver",
         "//third_party:org_assertj_assertj_core",
         "//third_party:org_mockito_mockito_core",
         "//third_party:pl_pragmatists_junitparams",
-        "@selenium//:com_codeborne_phantomjsdriver",
         "@selenium//:org_seleniumhq_selenium_selenium_api",
     ],
 )

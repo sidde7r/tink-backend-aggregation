@@ -15,7 +15,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.screenscraping.WebScrapingConstants.Xpath;
-import se.tink.libraries.selenium.WebDriverHelper;
+import se.tink.integration.webdriver.WebDriverInitializer;
 
 @RunWith(JUnitParamsRunner.class)
 public class BankIdIframeDriverXpathsTest {
@@ -43,10 +43,7 @@ public class BankIdIframeDriverXpathsTest {
 
     @Before
     public void setup() {
-        WebDriverHelper webDriverHelper = new WebDriverHelper();
-        driver =
-                webDriverHelper.constructPhantomJsWebDriver(
-                        DanskeBankConstants.Javascript.USER_AGENT);
+        driver = WebDriverInitializer.constructWebDriver(DanskeBankConstants.Javascript.USER_AGENT);
     }
 
     @Test

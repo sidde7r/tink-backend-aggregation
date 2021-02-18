@@ -14,8 +14,6 @@ junit_test(
         "//etc:development",
         "//tools:libkbc_wbaes_linux",
         "//tools:libkbc_wbaes_mac",
-        "//tools:phantomjs_linux",
-        "//tools:phantomjs_mac",
     ],
     tags = ["manual"],
     visibility = ["//visibility:public"],
@@ -39,8 +37,6 @@ junit_test(
         "//data:tesseract_training_set",
         "//tools:libkbc_wbaes_linux",
         "//tools:libkbc_wbaes_mac",
-        "//tools:phantomjs_linux",
-        "//tools:phantomjs_mac",
     ],
     visibility = ["//visibility:public"],
     runtime_deps = [

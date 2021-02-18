@@ -3,21 +3,15 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.authenticato
 import com.google.common.base.Function;
 import com.google.common.base.Strings;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.lang.invoke.MethodHandles;
 import java.util.concurrent.TimeUnit;
-import org.apache.http.HttpHeaders;
 import org.openqa.selenium.By;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.phantomjs.PhantomJSDriver;
-import org.openqa.selenium.phantomjs.PhantomJSDriverService;
-import org.openqa.selenium.remote.CapabilityType;
-import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,11 +27,11 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterCons
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.integration.webdriver.WebDriverInitializer;
 
 public class BankinterAuthenticator implements PasswordAuthenticator {
     private static final Logger logger =
             LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    private static final File phantomJsFile;
     private final BankinterApiClient apiClient;
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final PrintStream logStream;
@@ -55,44 +49,10 @@ public class BankinterAuthenticator implements PasswordAuthenticator {
         }
     }
 
-    static {
-        boolean mac = System.getProperty("os.name").toLowerCase().contains("mac");
-
-        if (mac) {
-            phantomJsFile = new File("tools/phantomjs-tink-mac64-2.1.1");
-        } else {
-            phantomJsFile = new File("tools/phantomjs-tink-linux-x86_64-2.1.1");
-        }
-    }
-
     private WebDriver createWebDriver() {
-        DesiredCapabilities capabilities = new DesiredCapabilities();
-        capabilities.setCapability(
-                PhantomJSDriverService.PHANTOMJS_EXECUTABLE_PATH_PROPERTY,
-                phantomJsFile.getAbsolutePath());
-
-        capabilities.setCapability(CapabilityType.TAKES_SCREENSHOT, false);
-        capabilities.setCapability(CapabilityType.SUPPORTS_ALERTS, false);
-        capabilities.setCapability(
-                PhantomJSDriverService.PHANTOMJS_PAGE_SETTINGS_PREFIX + "userAgent",
-                HeaderValues.USER_AGENT);
-        capabilities.setCapability(
-                PhantomJSDriverService.PHANTOMJS_PAGE_CUSTOMHEADERS_PREFIX
-                        + HttpHeaders.ACCEPT_LANGUAGE,
-                HeaderValues.ACCEPT_LANGUAGE);
-
-        final String[] phantomArgs =
-                new String[] {
-                    // No need to load images
-                    "--load-images=false",
-                    // For debugging, activate these:
-                    // "--webdriver-loglevel=DEBUG",
-                    // "--debug=true",
-                    // "--proxy=http://127.0.0.1:8888",
-                    // "--ignore-ssl-errors=yes"
-                };
-        capabilities.setCapability(PhantomJSDriverService.PHANTOMJS_CLI_ARGS, phantomArgs);
-        final WebDriver driver = new PhantomJSDriver(capabilities);
+        WebDriver driver =
+                WebDriverInitializer.constructWebDriver(
+                        HeaderValues.USER_AGENT, HeaderValues.ACCEPT_LANGUAGE);
         driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
         return driver;
     }

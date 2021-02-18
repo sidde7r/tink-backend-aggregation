@@ -2,7 +2,7 @@ load("//tools/bzl:junit.bzl", "junit_test")
 
 junit_test(
     name = "danskebank",
-    srcs = glob(["DanskebankAgentTest.java"]),
+    srcs = glob(["DanskebankNOAgentTest.java"]),
     data = [
         "//data:aggregation_test",
         "//data:cryptography_test",
@@ -22,8 +22,6 @@ junit_test(
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
         "//third_party:org_assertj_assertj_core",
         "//third_party:org_mockito_mockito_core",
-        "@selenium//:com_codeborne_phantomjsdriver",
-        "@selenium//:org_seleniumhq_selenium_selenium_api",
     ],
 )
 
@@ -32,7 +30,7 @@ junit_test(
     srcs = glob(
         ["**/*.java"],
         exclude = [
-            "DanskebankAgentTest.java",
+            "DanskebankNOAgentTest.java",
         ],
     ),
     visibility = ["//visibility:public"],

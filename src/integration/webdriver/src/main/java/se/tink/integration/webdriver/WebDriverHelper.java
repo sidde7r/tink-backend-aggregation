@@ -1,8 +1,6 @@
-package se.tink.libraries.selenium;
+package se.tink.integration.webdriver;
 
 import com.google.common.base.Strings;
-import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import org.openqa.selenium.By;
@@ -10,28 +8,13 @@ import org.openqa.selenium.Keys;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.phantomjs.PhantomJSDriver;
-import org.openqa.selenium.phantomjs.PhantomJSDriverService;
-import org.openqa.selenium.remote.CapabilityType;
-import org.openqa.selenium.remote.DesiredCapabilities;
-import se.tink.libraries.selenium.exceptions.HtmlElementNotFoundException;
-import se.tink.libraries.selenium.exceptions.ScreenScrapingException;
+import se.tink.integration.webdriver.exceptions.HtmlElementNotFoundException;
+import se.tink.integration.webdriver.exceptions.ScreenScrapingException;
 
 public class WebDriverHelper {
     private static final By IFRAME_TAG = By.tagName("iframe");
-    private static final File phantomJsdriverFile;
 
     private final long waitForRenderInMillis;
-
-    static {
-        boolean mac = System.getProperty("os.name").toLowerCase().contains("mac");
-
-        if (mac) {
-            phantomJsdriverFile = new File("tools/phantomjs-tink-mac64-2.1.1");
-        } else {
-            phantomJsdriverFile = new File("tools/phantomjs-tink-linux-x86_64-2.1.1");
-        }
-    }
 
     public WebDriverHelper() {
         this(2_000L);
@@ -39,46 +22,6 @@ public class WebDriverHelper {
 
     WebDriverHelper(final long waitForRenderInMillis) {
         this.waitForRenderInMillis = waitForRenderInMillis;
-    }
-
-    public WebDriver constructPhantomJsWebDriver(String userAgent) {
-        return constructPhantomJsWebDriver(userAgent, false, "");
-    }
-
-    public WebDriver constructPhantomJsWebDriver(
-            String userAgent, boolean withDebugLogs, String proxyServer) {
-        DesiredCapabilities capabilities = new DesiredCapabilities();
-        capabilities.setCapability(
-                PhantomJSDriverService.PHANTOMJS_EXECUTABLE_PATH_PROPERTY,
-                phantomJsdriverFile.getAbsolutePath());
-
-        capabilities.setCapability(CapabilityType.TAKES_SCREENSHOT, false);
-        capabilities.setCapability(CapabilityType.SUPPORTS_ALERTS, false);
-
-        List<String> cliArguments = new ArrayList<>();
-
-        // To allow iframe-hacking.
-        cliArguments.add("--web-security=false");
-        // No need to load images.
-        cliArguments.add("--load-images=false");
-
-        if (withDebugLogs) {
-            cliArguments.add("--debug=true");
-            cliArguments.add("--webdriver-loglevel=DEBUG");
-        }
-
-        if (!Strings.isNullOrEmpty(proxyServer)) {
-            cliArguments.add("--proxy-type=http");
-            // E.g.: `http://127.0.0.1:8080`
-            cliArguments.add("--proxy=" + proxyServer);
-            cliArguments.add("--ignore-ssl-errors=true");
-        }
-
-        capabilities.setCapability(
-                PhantomJSDriverService.PHANTOMJS_CLI_ARGS, cliArguments.toArray(new String[0]));
-        capabilities.setCapability(
-                PhantomJSDriverService.PHANTOMJS_PAGE_SETTINGS_PREFIX + "userAgent", userAgent);
-        return new PhantomJSDriver(capabilities);
     }
 
     public void sleep(long waitTime) {

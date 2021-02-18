@@ -1,15 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.de.banks.fidor.authenticator;
 
-import java.io.File;
 import java.util.concurrent.TimeUnit;
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.phantomjs.PhantomJSDriver;
-import org.openqa.selenium.phantomjs.PhantomJSDriverService;
-import org.openqa.selenium.remote.CapabilityType;
-import org.openqa.selenium.remote.DesiredCapabilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
@@ -20,48 +15,15 @@ import se.tink.backend.aggregation.agents.nxgen.de.banks.fidor.FidorApiClient;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fidor.FidorConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticator;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.integration.webdriver.WebDriverInitializer;
 
 public class FidorPasswordAutenticator implements PasswordAuthenticator {
 
     private FidorApiClient client;
-    private static final File phantomJsFile;
     private Logger logger = LoggerFactory.getLogger(FidorPasswordAutenticator.class);
 
     public FidorPasswordAutenticator(FidorApiClient client) {
         this.client = client;
-    }
-
-    static {
-        boolean mac = System.getProperty("os.name").toLowerCase().contains("mac");
-
-        if (mac) {
-            phantomJsFile = new File("tools/phantomjs-tink-mac64-2.1.1");
-        } else {
-            phantomJsFile = new File("tools/phantomjs-tink-linux-x86_64-2.1.1");
-        }
-    }
-
-    private WebDriver createWebdriver() {
-        DesiredCapabilities capabilities = new DesiredCapabilities();
-        capabilities.setCapability(
-                PhantomJSDriverService.PHANTOMJS_EXECUTABLE_PATH_PROPERTY,
-                phantomJsFile.getAbsolutePath());
-
-        capabilities.setCapability(CapabilityType.TAKES_SCREENSHOT, false);
-        capabilities.setCapability(CapabilityType.SUPPORTS_ALERTS, false);
-
-        String[] phantomArgs =
-                new String[] {
-                    // To allow iframe-hacking
-                    "--web-security=false",
-                    // No need to load images
-                    "--load-images=false",
-                    // For debugging, activate these:
-                    // "--webdriver-loglevel=DEBUG",
-                    // "--debug=true",
-                };
-        capabilities.setCapability(PhantomJSDriverService.PHANTOMJS_CLI_ARGS, phantomArgs);
-        return new PhantomJSDriver(capabilities);
     }
 
     private String getCode(
@@ -118,7 +80,7 @@ public class FidorPasswordAutenticator implements PasswordAuthenticator {
     @Override
     public void authenticate(String username, String password)
             throws AuthenticationException, AuthorizationException {
-        WebDriver driver = createWebdriver();
+        WebDriver driver = WebDriverInitializer.constructWebDriver();
         String code =
                 getCode(
                         driver,

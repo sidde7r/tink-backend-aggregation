@@ -6,7 +6,7 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.authenticator.ban
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.authenticator.bankidinitializers.PortalBankIdMobilInitializer;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.screenscraping.bankidmobil.initializer.BankIdMobilInitializer;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.screenscraping.bankidmobil.initializer.MobilInitializer;
-import se.tink.libraries.selenium.WebDriverHelper;
+import se.tink.integration.webdriver.WebDriverHelper;
 
 public enum AuthenticationType {
     NETTBANK(Key.DATE_OF_BIRTH) {

@@ -1,10 +1,6 @@
 java_library(
     name = "danskebank",
     srcs = glob(["**/*.java"]),
-    data = [
-        "//tools:phantomjs_linux",
-        "//tools:phantomjs_mac",
-    ],
     visibility = ["//visibility:public"],
     deps = [
         "//po:i18n",
@@ -36,6 +32,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/source_info",
         "//src/integration/models",
         "//src/integration/nemid",
+        "//src/integration/webdriver/src/main/java/se/tink/integration/webdriver",
         "//src/libraries/account_identifier",
         "//src/libraries/date",
         "//src/libraries/i18n",
@@ -53,9 +50,6 @@ java_library(
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
         "@aggregation//:com_google_guava_guava",
         "@aggregation//:org_apache_commons_commons_text",
-        "@selenium//:com_codeborne_phantomjsdriver",
         "@selenium//:org_seleniumhq_selenium_selenium_api",
-        "@selenium//:org_seleniumhq_selenium_selenium_htmlunit_driver",
-        "@selenium//:org_seleniumhq_selenium_selenium_remote_driver",
     ],
 )

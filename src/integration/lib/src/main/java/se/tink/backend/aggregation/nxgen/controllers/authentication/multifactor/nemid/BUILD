@@ -1,10 +1,6 @@
 java_library(
     name = "nemid",
     srcs = glob(["**/*.java"]),
-    data = [
-        "//tools:phantomjs_linux",
-        "//tools:phantomjs_mac",
-    ],
     visibility = ["//visibility:public"],
     deps = [
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
@@ -17,6 +13,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/authentication/multifactor/thirdpartyapp/nemid",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/authentication/multifactor/thirdpartyapp/nemid/exception",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
+        "//src/integration/webdriver/src/main/java/se/tink/integration/webdriver",
         "//src/libraries/pair",
         "//src/libraries/serialization",
         "//third_party:com_google_inject_guice",
@@ -28,13 +25,7 @@ java_library(
         "@aggregation//:com_fasterxml_jackson_core_jackson_core",
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
         "@aggregation//:com_google_guava_guava",
-        "@selenium//:com_codeborne_phantomjsdriver",
         "@selenium//:org_seleniumhq_selenium_selenium_api",
-        "@selenium//:org_seleniumhq_selenium_selenium_chrome_driver",
-        "@selenium//:org_seleniumhq_selenium_selenium_firefox_driver",
-        "@selenium//:org_seleniumhq_selenium_selenium_htmlunit_driver",
-        "@selenium//:org_seleniumhq_selenium_selenium_java",
-        "@selenium//:org_seleniumhq_selenium_selenium_remote_driver",
         "@tink_backend//src/aggregation-controller/api/src/main/java/se/tink/backend/aggregationcontroller/v1/rpc/enums",
         "@tink_backend//src/libraries/metrics/core/src/main/java/se/tink/libraries/metrics/core",
         "@tink_backend//src/libraries/metrics/core/src/main/java/se/tink/libraries/metrics/registry",

@@ -46,7 +46,6 @@ public class NemIdConstants {
                     + "    </body>\n"
                     + "</html>";
 
-    public static final long PHANTOMJS_TIMEOUT_SECONDS = 30;
     public static final String NEM_ID_PREFIX = "[NemId]";
 
     // value from docs

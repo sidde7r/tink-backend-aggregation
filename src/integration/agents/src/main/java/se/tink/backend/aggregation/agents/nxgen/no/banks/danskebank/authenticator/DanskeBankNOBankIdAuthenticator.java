@@ -44,8 +44,9 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.integration.webdriver.WebDriverHelper;
+import se.tink.integration.webdriver.WebDriverInitializer;
 import se.tink.libraries.i18n.Catalog;
-import se.tink.libraries.selenium.WebDriverHelper;
 
 @RequiredArgsConstructor
 public class DanskeBankNOBankIdAuthenticator implements TypedAuthenticator, AutoAuthenticator {
@@ -132,7 +133,7 @@ public class DanskeBankNOBankIdAuthenticator implements TypedAuthenticator, Auto
         WebDriver driver = null;
         try {
             driver =
-                    webDriverHelper.constructPhantomJsWebDriver(
+                    WebDriverInitializer.constructWebDriver(
                             DanskeBankConstants.Javascript.USER_AGENT);
             JavascriptExecutor js = (JavascriptExecutor) driver;
 
@@ -306,7 +307,7 @@ public class DanskeBankNOBankIdAuthenticator implements TypedAuthenticator, Auto
         WebDriver driver = null;
         try {
             driver =
-                    webDriverHelper.constructPhantomJsWebDriver(
+                    WebDriverInitializer.constructWebDriver(
                             DanskeBankConstants.Javascript.USER_AGENT);
             JavascriptExecutor js = (JavascriptExecutor) driver;
 
@@ -362,7 +363,7 @@ public class DanskeBankNOBankIdAuthenticator implements TypedAuthenticator, Auto
         WebDriver driver = null;
         try {
             driver =
-                    webDriverHelper.constructPhantomJsWebDriver(
+                    WebDriverInitializer.constructWebDriver(
                             DanskeBankConstants.Javascript.USER_AGENT);
 
             String epochInSeconds = Long.toString(System.currentTimeMillis() / 1000);
@@ -428,7 +429,7 @@ public class DanskeBankNOBankIdAuthenticator implements TypedAuthenticator, Auto
         WebDriver driver = null;
         try {
             driver =
-                    webDriverHelper.constructPhantomJsWebDriver(
+                    WebDriverInitializer.constructWebDriver(
                             DanskeBankConstants.Javascript.USER_AGENT);
             JavascriptExecutor js = (JavascriptExecutor) driver;
 

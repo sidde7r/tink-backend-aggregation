@@ -1,4 +1,4 @@
-package se.tink.libraries.selenium.exceptions;
+package se.tink.integration.webdriver.exceptions;
 
 public class ScreenScrapingException extends RuntimeException {
 

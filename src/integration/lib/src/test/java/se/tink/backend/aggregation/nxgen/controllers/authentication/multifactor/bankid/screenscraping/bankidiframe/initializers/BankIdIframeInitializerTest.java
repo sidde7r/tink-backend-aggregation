@@ -11,12 +11,11 @@ import org.mockito.InOrder;
 import org.mockito.Mockito;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.screenscraping.WebScrapingConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.screenscraping.bankidiframe.initializer.BankIdIframeInitializer;
-import se.tink.libraries.selenium.WebDriverHelper;
-import se.tink.libraries.selenium.exceptions.HtmlElementNotFoundException;
-import se.tink.libraries.selenium.exceptions.ScreenScrapingException;
+import se.tink.integration.webdriver.WebDriverHelper;
+import se.tink.integration.webdriver.exceptions.HtmlElementNotFoundException;
+import se.tink.integration.webdriver.exceptions.ScreenScrapingException;
 
 public class BankIdIframeInitializerTest {
     private WebDriver driver;
@@ -29,7 +28,7 @@ public class BankIdIframeInitializerTest {
 
     @Before
     public void initSetup() {
-        driver = mock(PhantomJSDriver.class);
+        driver = mock(WebDriver.class);
         webDriverHelper = mock(WebDriverHelper.class);
         usernameInput = mock(WebElement.class);
         objUnderTest = new BankIdIframeInitializer(DUMMY_USERNAME, driver, webDriverHelper);

@@ -14,10 +14,10 @@ import se.tink.backend.aggregation.agents.utils.supplementalfields.NorwegianFiel
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.screenscraping.WebScrapingConstants.Xpath;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.screenscraping.bankidiframe.initializer.IframeInitializer;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
+import se.tink.integration.webdriver.WebDriverHelper;
+import se.tink.integration.webdriver.exceptions.HtmlElementNotFoundException;
+import se.tink.integration.webdriver.exceptions.ScreenScrapingException;
 import se.tink.libraries.i18n.Catalog;
-import se.tink.libraries.selenium.WebDriverHelper;
-import se.tink.libraries.selenium.exceptions.HtmlElementNotFoundException;
-import se.tink.libraries.selenium.exceptions.ScreenScrapingException;
 
 @RequiredArgsConstructor
 @Slf4j

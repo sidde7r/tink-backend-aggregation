@@ -6,7 +6,7 @@ java_library(
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/lib",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/supplementalfields",
-        "//src/libraries/selenium",
+        "//src/integration/webdriver/src/main/java/se/tink/integration/webdriver",
         "//src/libraries/serialization",
         "//third_party:lombok_libs",
         "//third_party:org_slf4j_slf4j_api",

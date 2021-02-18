@@ -13,8 +13,8 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.config.Authentica
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.config.SdcNoConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.config.SdcNoConstants;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
-import se.tink.libraries.selenium.WebDriverHelper;
-import se.tink.libraries.selenium.exceptions.HtmlElementNotFoundException;
+import se.tink.integration.webdriver.WebDriverHelper;
+import se.tink.integration.webdriver.exceptions.HtmlElementNotFoundException;
 
 @Slf4j
 public class PostAuthDriverProcessor {
