@@ -27,6 +27,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.Strong
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.serialization.utils.SerializationUtils;
+import se.tink.libraries.signableoperation.enums.InternalStatus;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 
 @RequiredArgsConstructor
@@ -51,7 +52,8 @@ public class UkOpenBankingPaymentAuthenticator {
         } catch (AuthenticationException | AuthorizationException e) {
             if (e.getError() instanceof ThirdPartyAppError
                     && ThirdPartyAppError.TIMED_OUT.equals(e.getError())) {
-                throw new PaymentAuthorizationTimeOutException();
+                throw new PaymentAuthorizationTimeOutException(
+                        InternalStatus.PAYMENT_AUTHORISATION_TIMEOUT);
             }
 
             throw createFailedTransferException();
@@ -123,19 +125,24 @@ public class UkOpenBankingPaymentAuthenticator {
             final ErrorEntity errorEntity = ErrorEntity.create(errorType, errorDescription);
 
             if (StringUtils.isBlank(errorDescription)) {
-                throw new PaymentAuthorizationException();
+                throw new PaymentAuthorizationException(
+                        InternalStatus.PAYMENT_AUTHORISATION_UNKNOWN_EXCEPTION);
             } else if (authenticationErrorMatcher.isAuthorizationCancelledByUser(
                     errorDescription)) {
-                throw new PaymentAuthorizationCancelledByUserException(errorEntity);
+                throw new PaymentAuthorizationCancelledByUserException(
+                        errorEntity, InternalStatus.PAYMENT_AUTHORISATION_CANCELLED);
             } else if (authenticationErrorMatcher.isAuthorizationTimeOut(errorDescription)) {
-                throw new PaymentAuthorizationTimeOutException(errorEntity);
+                throw new PaymentAuthorizationTimeOutException(
+                        errorEntity, InternalStatus.PAYMENT_AUTHORISATION_TIMEOUT);
             } else if (authenticationErrorMatcher.isAuthorizationFailedByUser(errorDescription)) {
-                throw new PaymentAuthorizationFailedByUserException(errorEntity);
+                throw new PaymentAuthorizationFailedByUserException(
+                        errorEntity, InternalStatus.PAYMENT_AUTHORISATION_FAILED);
             } else {
                 log.warn(
                         "Unknown error message from bank during payment authorisation: {}",
                         errorDescription);
-                throw new PaymentAuthorizationException();
+                throw new PaymentAuthorizationException(
+                        InternalStatus.PAYMENT_AUTHORISATION_UNKNOWN_EXCEPTION);
             }
         } else if (OpenIdConstants.Errors.SERVER_ERROR.equalsIgnoreCase(errorType)) {
             throw BANK_SIDE_FAILURE.exception(errorDescription);
