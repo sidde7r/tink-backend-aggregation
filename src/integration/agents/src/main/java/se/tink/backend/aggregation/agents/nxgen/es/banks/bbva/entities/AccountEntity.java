@@ -118,12 +118,20 @@ public class AccountEntity extends AbstractContractDetailsEntity {
                     .map(this::createHolder)
                     .collect(Collectors.toList());
         }
-        log.info(
-                "Account has {} owners with roles {}",
-                participantAccountEntities.size(),
+
+        List<String> holders =
                 participantAccountEntities.stream()
                         .map(ParticipantAccountEntity::getRelationship)
-                        .map(RelationshipEntity::getType));
+                        .map(RelationshipEntity::getType)
+                        .map(
+                                typeEntity ->
+                                        "id: "
+                                                + typeEntity.getId()
+                                                + " name: "
+                                                + typeEntity.getName())
+                        .collect(Collectors.toList());
+
+        log.info("Account has {} owners {}", participantAccountEntities.size(), holders);
 
         List<RelationshipEntity> accountRelationships =
                 getParticipants()
