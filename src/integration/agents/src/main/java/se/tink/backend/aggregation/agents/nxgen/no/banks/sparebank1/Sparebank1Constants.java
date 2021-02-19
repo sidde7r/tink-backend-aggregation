@@ -41,7 +41,9 @@ public class Sparebank1Constants {
         static final URL TOKEN = new URL(BASE + "personal/banking/mobilbank/activation/rest/token");
         static final URL SESSION = new URL(BASE + "personal/rest/session");
         static final URL ACCOUNT_TRANSACTION =
-                new URL(BASE + "sr-bank/nettbank-privat/rest/kontoer/{accountId}/kontobevegelser");
+                new URL(
+                        BASE
+                                + "{bankName}/nettbank-privat/rest/kontoer/{accountId}/kontobevegelser");
     }
 
     public static class Parameters {

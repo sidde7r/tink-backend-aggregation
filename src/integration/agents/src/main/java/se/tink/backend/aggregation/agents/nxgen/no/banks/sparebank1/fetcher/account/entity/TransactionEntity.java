@@ -20,6 +20,7 @@ public class TransactionEntity {
     private String description;
     private long date;
     private String currencyCode;
+    private String type;
 
     @JsonProperty("_links")
     private HashMap<String, LinkEntity> links;
@@ -29,7 +30,8 @@ public class TransactionEntity {
         return Transaction.builder()
                 .setAmount(ExactCurrencyAmount.of(amount, currencyCode))
                 .setDate(new Date(date))
-                .setDescription(getTinkFormattedDescription(description))
+                .setDescription(
+                        description == null ? type : getTinkFormattedDescription(description))
                 .setPending(id == null)
                 .build();
     }

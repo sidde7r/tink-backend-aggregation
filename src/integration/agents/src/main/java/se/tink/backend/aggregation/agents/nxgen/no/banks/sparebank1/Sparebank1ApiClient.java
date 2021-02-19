@@ -105,7 +105,10 @@ public class Sparebank1ApiClient {
     }
 
     public PaginatorResponse fetchTransactions(String accountId, Date fromDate, Date toDate) {
-        return client.request(Urls.ACCOUNT_TRANSACTION.parameter(Parameters.ACCOUNT_ID, accountId))
+        return client.request(
+                        Urls.ACCOUNT_TRANSACTION
+                                .parameter(Parameters.ACCOUNT_ID, accountId)
+                                .parameter(Parameters.BANK_NAME, bankId))
                 .accept(MediaType.APPLICATION_JSON_TYPE)
                 .type(MediaType.APPLICATION_JSON_TYPE)
                 .queryParam(
