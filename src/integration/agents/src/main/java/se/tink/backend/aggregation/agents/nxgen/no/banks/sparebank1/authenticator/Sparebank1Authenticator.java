@@ -49,6 +49,7 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.authenticato
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.authenticator.rpc.SessionRequest;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.authenticator.rpc.SessionResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.authenticator.rpc.TokenResponse;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.identity.entities.IdentityDataEntity;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.authenticator.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.bankid.BankIdAuthenticatorNO;
 import se.tink.backend.aggregation.nxgen.http.form.Form;
@@ -182,6 +183,8 @@ public class Sparebank1Authenticator implements BankIdAuthenticatorNO, AutoAuthe
         String signedJwt = generateJwt(identity);
         TokenResponse response = apiClient.requestForToken(new InitTokenRequest(signedJwt));
         identity.setToken(response.getRememberMeToken());
+        identity.setIdentityData(
+                new IdentityDataEntity(response.getFullName(), response.getObfuscatedSsn()));
     }
 
     @SneakyThrows
