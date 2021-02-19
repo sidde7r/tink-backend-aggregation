@@ -67,7 +67,6 @@ public final class SdcSeAgent extends SdcAgent
         return new BankIdAuthenticationController<>(
                 supplementalInformationController,
                 new SdcBankIdAuthenticator(bankClient, sdcSessionStorage, credentials),
-                true,
                 persistentStorage,
                 credentials);
     }
