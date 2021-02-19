@@ -11,16 +11,14 @@ import io.vavr.control.Try;
 import java.net.URISyntaxException;
 import java.util.Random;
 import java.util.regex.Pattern;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.http.client.utils.URIBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.QueryKeys;
 
+@Slf4j
 public class BbvaUtils {
-    private static final Logger LOGGER = LoggerFactory.getLogger(BbvaUtils.class);
     private static final Random RANDOM = new Random();
-
     private static final Pattern NIE_PATTERN = Pattern.compile("(?i)^[XY].+[A-Z]$");
     private static final Pattern PASSPORT_PATTERN = Pattern.compile("^[a-zA-Z]{2}[0-9]{6}$");
     private static final Pattern ES_PASSPORT_PATTERN = Pattern.compile("^[a-zA-Z]{4}[0-9]{6}$");
@@ -36,7 +34,7 @@ public class BbvaUtils {
                 .onFailure(
                         URISyntaxException.class,
                         e ->
-                                LOGGER.error(
+                                log.error(
                                         "{}: Could not parse next page key in: {}",
                                         UTILS_SPLIT_GET_PAGINATION_KEY,
                                         uriToSplit,
@@ -49,7 +47,7 @@ public class BbvaUtils {
                 .headOption()
                 .onEmpty(
                         () ->
-                                LOGGER.warn(
+                                log.warn(
                                         "{}: Trying to get next pagination key when none exists",
                                         UTILS_SPLIT_GET_PAGINATION_KEY));
     }

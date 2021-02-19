@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
 public class BbvaCreditCardTransactionFetcher
         implements TransactionKeyPaginator<CreditCardAccount, String> {
-    private BbvaApiClient apiClient;
+    private final BbvaApiClient apiClient;
 
     public BbvaCreditCardTransactionFetcher(BbvaApiClient apiClient) {
         this.apiClient = apiClient;
@@ -26,7 +26,6 @@ public class BbvaCreditCardTransactionFetcher
             if (e.getResponse().getStatus() == HttpStatus.SC_NO_CONTENT) {
                 return TransactionKeyPaginatorResponseImpl.createEmpty();
             }
-
             throw e;
         }
     }

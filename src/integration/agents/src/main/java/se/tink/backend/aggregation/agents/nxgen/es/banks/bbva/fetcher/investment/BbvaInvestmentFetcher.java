@@ -27,7 +27,7 @@ import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccou
 
 public class BbvaInvestmentFetcher implements AccountFetcher<InvestmentAccount> {
 
-    private BbvaApiClient apiClient;
+    private final BbvaApiClient apiClient;
 
     public BbvaInvestmentFetcher(BbvaApiClient apiClient) {
         this.apiClient = apiClient;
