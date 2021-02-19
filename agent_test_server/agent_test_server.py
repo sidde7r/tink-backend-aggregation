@@ -4,14 +4,13 @@ import argparse
 import os
 import sys
 import webbrowser
-from builtins import input
-from builtins import object
 
 from cacheout import Cache
 from flask import Flask, jsonify, request, abort, Response, redirect
 
 from bankid import generate_bankid_qrcode
 from memqueue import MemoryMessageQueue
+from supplemental_stdin import SupplementalStdin
 
 cache = Cache()
 queue = MemoryMessageQueue()
@@ -19,37 +18,6 @@ queue = MemoryMessageQueue()
 app = Flask(__name__, static_url_path='/static')
 
 CREDENTIALS_PATH = os.path.dirname(os.path.realpath(__file__)) + "/credentials/"
-
-
-class SupplementalStdin(object):
-    def __init__(self, fields):
-        self.answers = {}
-        print("-" * 20)
-        for field in fields:
-            key = field.get("name")
-            desc = self.get_description(field)
-            if field.get("value"):
-                value = field.get("value")
-                print("%s: %s" % (desc, value))
-                input("Press enter to continue.")
-            else:
-                value = input("%s: " % desc)
-
-            self.answers[key] = value
-        print("-" * 20)
-
-    def get_answers(self):
-        return self.answers
-
-    @staticmethod
-    def get_description(field):
-        desc = ''
-        if field.get("description"):
-            desc += field.get("description")
-        if field.get("helpText"):
-            desc += " (%s)" % field.get("helpText")
-
-        return desc
 
 
 # fields are a key:value map. This function returns the same type of
