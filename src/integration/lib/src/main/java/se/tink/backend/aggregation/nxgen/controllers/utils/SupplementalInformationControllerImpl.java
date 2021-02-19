@@ -97,6 +97,14 @@ public class SupplementalInformationControllerImpl implements SupplementalInform
 
     @Override
     public String askSupplementalInformationAsync(Field... fields) {
+        if (fields == null) {
+            throw new IllegalStateException("Requires non-null fields");
+        }
+        if (fields.length == 0) {
+            logger.error("Asking for Supplemental Information with no fields");
+            // This should throw, will implement this once we've seen impact isn't too big
+        }
+
         credentials.setSupplementalInformation(SerializationUtils.serializeToString(fields));
         credentials.setStatus(CredentialsStatus.AWAITING_SUPPLEMENTAL_INFORMATION);
         credentials.setStatusPayload(null);
