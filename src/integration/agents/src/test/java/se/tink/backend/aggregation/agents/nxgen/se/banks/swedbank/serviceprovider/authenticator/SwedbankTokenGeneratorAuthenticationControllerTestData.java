@@ -1,5 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.authenticator;
 
+import org.junit.Ignore;
+
+@Ignore
 public class SwedbankTokenGeneratorAuthenticationControllerTestData {
 
     private SwedbankTokenGeneratorAuthenticationControllerTestData() {

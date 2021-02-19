@@ -1,5 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.fetchers.creditcard;
 
+import org.junit.Ignore;
+
+@Ignore
 public class SwedbankDefaultCreditCardFetcherTestData {
     public static final String ENGAGEMENT_OVERVIEW_RESPONSE =
             "{\n"
