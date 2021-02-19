@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsba
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.entities.HandelsbankenAccount;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.entities.HandelsbankenAmount;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.fetcher.transactionalaccount.rpc.AccountInfoResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
@@ -49,7 +50,9 @@ public class HandelsbankenSEAccount extends HandelsbankenAccount {
         BankIdValidator.validate(number);
 
         final String accountNumber = getAccountNumber(transactionsResponse);
-        final String accountTypeName = getAccountTypeName(client, transactionsResponse);
+        final AccountInfoResponse accountInfoResponse =
+                getAccountInfoResponse(client, transactionsResponse);
+        final String accountTypeName = getAccountTypeName(accountInfoResponse);
 
         return TransactionalAccount.nxBuilder()
                 .withTypeAndFlagsFrom(
@@ -129,16 +132,24 @@ public class HandelsbankenSEAccount extends HandelsbankenAccount {
      * Account type name is only present if the account name has been changed. Otherwise the account
      * name contains the account type name.
      */
-    private String getAccountTypeName(
-            HandelsbankenApiClient client, TransactionsSEResponse transactionsResponse) {
-        final Optional<URL> accountInfoURL = transactionsResponse.getAccount().getAccountInfoUrl();
-
-        if (accountInfoURL.isPresent()) {
-            return client.accountInfo(accountInfoURL.get())
+    private String getAccountTypeName(AccountInfoResponse accountInfoResponse) {
+        if (accountInfoResponse != null) {
+            return accountInfoResponse
                     .getValuesByLabel()
                     .getOrDefault(HandelsbankenSEConstants.Accounts.ACCOUNT_TYPE_NAME_LABEL, name);
         }
         return name;
+    }
+
+    private AccountInfoResponse getAccountInfoResponse(
+            HandelsbankenApiClient client, TransactionsSEResponse transactionsResponse) {
+        final Optional<URL> accountInfoURL = transactionsResponse.getAccount().getAccountInfoUrl();
+
+        if (accountInfoURL.isPresent()) {
+            return client.accountInfo(accountInfoURL.get());
+        }
+        LOG.info("Failed to fetch account info response.");
+        return null;
     }
 
     /**
