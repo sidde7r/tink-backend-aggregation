@@ -5,6 +5,7 @@ import static org.mockito.Mockito.when;
 
 import java.io.File;
 import lombok.RequiredArgsConstructor;
+import org.junit.Ignore;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.fetcher.creditcard.rpc.CreditCardDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.fetcher.creditcard.rpc.CreditCardTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.fetcher.creditcard.rpc.CreditCardsResponse;
@@ -12,6 +13,7 @@ import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.fetcher.investme
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.fetcher.transactionalaccount.rpc.AccountsResponse;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
+@Ignore
 @RequiredArgsConstructor
 public class NordeaDkApiClientMockWrapper {
 
