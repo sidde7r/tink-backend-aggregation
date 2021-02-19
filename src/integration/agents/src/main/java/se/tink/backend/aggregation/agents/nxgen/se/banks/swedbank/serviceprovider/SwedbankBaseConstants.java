@@ -148,7 +148,6 @@ public class SwedbankBaseConstants {
                             "FSI02302", /* Specialkonto Ftg */
                             "FST02101", /* Fasträntekonto */
                             "HSB", /* HSB Fondkonto */
-                            "IP-SPAR", /* Pensionssparande */
                             "PMK02403", /* Depåkonto PM */
                             "PSI02301", /* Specialinlåning */
                             "PSI02303", /* Specialkonto Pri */
@@ -191,6 +190,7 @@ public class SwedbankBaseConstants {
                             "FSP001", /* FolksamLivränta */
                             "FSP002", /* FolksamKapital */
                             "FVR", /* Fond */
+                            "IP-SPAR", /* Pensionssparande */
                             "ISK00101", /* Investeringsspar */
                             "ISKPRV01", /* Investeringssparande */
                             "KAPPFOND", /* Kapitalspar Pension */

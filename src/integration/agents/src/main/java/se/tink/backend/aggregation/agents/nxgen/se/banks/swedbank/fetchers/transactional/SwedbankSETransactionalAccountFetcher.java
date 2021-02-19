@@ -122,14 +122,16 @@ public class SwedbankSETransactionalAccountFetcher
         }
     }
 
-    // fetch all account number from investment accounts BUT savings accounts, this is because we
-    // want savings accounts
-    // to be fetched by transactional fetcher to get any transactions
+    // fetch all account numbers from investment and pension accounts EXCLUDING savings accounts,
+    // this is because we want savings accounts to be fetched by transactional fetcher to get any
+    // transactions
     private List<String> getInvestmentAccountNumbers() {
-
         if (investmentAccountNumbers == null) {
             PortfolioHoldingsResponse portfolioHoldings = apiClient.portfolioHoldings();
-            investmentAccountNumbers = portfolioHoldings.investmentAccountNumbers();
+            PensionPortfoliosResponse pensionPortfolios = apiClient.getPensionPortfolios();
+            investmentAccountNumbers = new ArrayList<>();
+            investmentAccountNumbers.addAll(portfolioHoldings.getInvestmentAccountNumbers());
+            investmentAccountNumbers.addAll(pensionPortfolios.getPensionAccountNumbers());
         }
 
         return investmentAccountNumbers;
