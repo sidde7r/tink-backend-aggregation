@@ -83,6 +83,13 @@ public class TransactionEntityTest {
         assertThat(transaction.isPending()).isEqualTo(true);
     }
 
+    @Test
+    public void transaction_description_is_set_to_type_if_description_null() {
+        TransactionEntity te = getTransactionEntityWithNullDescription();
+        Transaction transaction = te.toTinkTransaction();
+        assertThat(transaction.getDescription()).isEqualTo("dummyType");
+    }
+
     private TransactionEntity getTransactionEntity() {
         TransactionEntity te = new TransactionEntity();
         te.setDescription("MERCHANT");
@@ -93,6 +100,14 @@ public class TransactionEntityTest {
     private TransactionEntity getTransactionEntityWithDescription(String description) {
         TransactionEntity te = new TransactionEntity();
         te.setDescription(description);
+        te.setAmount(new BigDecimal("10.25"));
+        return te;
+    }
+
+    private TransactionEntity getTransactionEntityWithNullDescription() {
+        TransactionEntity te = new TransactionEntity();
+        te.setDescription(null);
+        te.setType("dummyType");
         te.setAmount(new BigDecimal("10.25"));
         return te;
     }
