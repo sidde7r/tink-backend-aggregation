@@ -24,7 +24,7 @@ public class ClientConfigurationJsonSchemaBuilder {
     private static final String KEY_SECRETS = "secrets";
     private static final String KEY_ENCRYPTED_SECRETS = "encryptedSecrets";
     private static final String KEY_PROPERTIES = "properties";
-    private static final String PROVIDER_NAME_KEY = "providerName";
+    private static final String PROVIDER_NAME_KEY = "providerId";
 
     private final String financialInstitutionId;
     private final String providerName;
