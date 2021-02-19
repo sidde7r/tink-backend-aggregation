@@ -15,6 +15,10 @@ public class BankdataIdentitydataFetcher implements IdentityDataFetcher {
 
     @Override
     public IdentityData fetchIdentityData() {
+        if (!persistentStorage.containsKey(StorageKeys.IDENTITY_DATA)) {
+            return null;
+        }
+
         return persistentStorage
                 .get(StorageKeys.IDENTITY_DATA, CompleteEnrollResponse.class)
                 .map(user -> DkIdentityData.of(user.getCustomerName(), user.getCprNo()))
