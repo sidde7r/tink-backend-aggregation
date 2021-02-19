@@ -275,6 +275,11 @@ public class AggregationControllerAggregationClientImpl
     public Response updateCredentialSupplementalInformation(
             HostConfiguration hostConfiguration,
             UpdateCredentialsSupplementalInformationRequest request) {
+
+        if ("[]".equals(request.getSupplementalInformation())) {
+            log.info("[SuppInfoDebug]: Seeing empty list on AS, sending to AC");
+        }
+
         return requestExecuter(
                 () ->
                         getCredentialsService(hostConfiguration)
