@@ -1,224 +1,208 @@
 {
-    "accounts": [
-        {
-            "accountNumber": "2222-2,222 222 222-2",
-            "accountExclusion": "NONE",
-            "exactBalance": {
-                "currencyCode": "SEK",
-                "unscaledValue": 0,
-                "doubleValue": 0.0,
-                "exactValue": 0.0,
-                "scale": 1
-            },
-            "currencyCode": "SEK",
-            "availableBalance": {
-                "currencyCode": "SEK",
-                "unscaledValue": 0,
-                "doubleValue": 0.0,
-                "exactValue": 0.0,
-                "scale": 1
-            },
-            "creditLimit": {
-                "currencyCode": "SEK",
-                "unscaledValue": 0,
-                "doubleValue": 0.0,
-                "exactValue": 0.0,
-                "scale": 1
-            },
-            "bankId": "74c0287cfd7d11eaadc10242ac120002ce190083",
-            "excluded": false,
-            "favored": false,
-            "name": "Placeringskonto ftg",
-            "ownership": 1.0,
-            "type": "SAVINGS",
-            "userModifiedExcluded": false,
-            "userModifiedName": false,
-            "userModifiedType": false,
-            "identifiers": "[]",
-            "closed": false,
-            "holderName": "My Company AB",
-            "accountHolder": {
-                "accountId": null,
-                "type": "BUSINESS",
-                "identities": [
-                    {
-                        "name": "My Company AB",
-                        "role": null
-                    }
-                ]
-            },
-            "flags": "[]",
-            "balances": [],
-            "availableCredit": 0.0,
-            "balance": 0.0
+    "accounts" : [ {
+        "accountNumber" : "2222-2,222 222 222-2",
+        "accountExclusion" : "NONE",
+        "exactBalance" : {
+            "currencyCode" : "SEK",
+            "doubleValue" : 0.0,
+            "exactValue" : 0.0,
+            "scale" : 1,
+            "unscaledValue" : 0
         },
-        {
-            "accountNumber": "1111-1,111 111 111-1",
-            "accountExclusion": "NONE",
-            "exactBalance": {
-                "currencyCode": "SEK",
-                "unscaledValue": 1000000,
-                "doubleValue": 100000.0,
-                "exactValue": 100000.0,
-                "scale": 1
-            },
-            "currencyCode": "SEK",
-            "availableBalance": {
-                "currencyCode": "SEK",
-                "unscaledValue": 1000000,
-                "doubleValue": 100000.0,
-                "exactValue": 100000.0,
-                "scale": 1
-            },
-            "creditLimit": {
-                "currencyCode": "SEK",
-                "unscaledValue": 0,
-                "doubleValue": 0.0,
-                "exactValue": 0.0,
-                "scale": 1
-            },
-            "bankId": "de525608fd7c11eaadc10242ac1200020000002b",
-            "excluded": false,
-            "favored": false,
-            "name": "Företagskonto",
-            "ownership": 1.0,
-            "type": "CHECKING",
-            "userModifiedExcluded": false,
-            "userModifiedName": false,
-            "userModifiedType": false,
-            "identifiers": "[\"se://111111111111111\"]",
-            "closed": false,
-            "holderName": "My Company AB",
-            "accountHolder": {
-                "accountId": null,
-                "type": "BUSINESS",
-                "identities": [
-                    {
-                        "name": "My Company AB",
-                        "role": null
-                    }
-                ]
-            },
-            "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
-            "balances": [],
-            "availableCredit": 0.0,
-            "balance": 100000.0
-        }
-    ],
-    "transactions": [
-        {
-            "amount": -1.0,
-            "date": 1600682400000,
-            "description": "Kortköp/uttag",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {
-                "DETAILS": "{\"transactionReference\":\"Market place2\",\"ownReference\":\"Market place2\"}"
-            },
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
+        "currencyCode" : "SEK",
+        "availableBalance" : {
+            "currencyCode" : "SEK",
+            "doubleValue" : 0.0,
+            "exactValue" : 0.0,
+            "scale" : 1,
+            "unscaledValue" : 0
         },
-        {
-            "amount": 10.0,
-            "date": 1600855200000,
-            "description": "Betalning",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {
-                "DETAILS": "{\"transactionReference\":\"12324345345345\",\"ownReference\":\"12324345345345\"}"
-            },
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
+        "creditLimit" : {
+            "currencyCode" : "SEK",
+            "doubleValue" : 0.0,
+            "exactValue" : 0.0,
+            "scale" : 1,
+            "unscaledValue" : 0
         },
-        {
-            "amount": -1.5,
-            "date": 1600855200000,
-            "description": "Pris betalning",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {
-                "DETAILS": "{\"transactionReference\":\"12324345345345\",\"ownReference\":\"12324345345345\"}"
-            },
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
+        "bankId" : "222222222222222",
+        "excluded" : false,
+        "favored" : false,
+        "name" : "Placeringskonto ftg",
+        "ownership" : 1.0,
+        "type" : "SAVINGS",
+        "userModifiedExcluded" : false,
+        "userModifiedName" : false,
+        "userModifiedType" : false,
+        "identifiers" : "[]",
+        "closed" : false,
+        "holderName" : "My Company AB",
+        "accountHolder" : {
+            "accountId" : null,
+            "type" : "BUSINESS",
+            "identities" : [ {
+                "name" : "My Company AB",
+                "role" : null
+            } ]
         },
-        {
-            "amount": -1000.0,
-            "date": 1600682400000,
-            "description": "Kortköp/uttag",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {
-                "DETAILS": "{\"transactionReference\":\"Market place\",\"ownReference\":\"Market place\"}"
-            },
-            "pending": false,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
+        "flags" : "[]",
+        "balances" : [ ],
+        "availableCredit" : 0.0,
+        "balance" : 0.0
+    }, {
+        "accountNumber" : "1111-1,111 111 111-1",
+        "accountExclusion" : "NONE",
+        "exactBalance" : {
+            "currencyCode" : "SEK",
+            "doubleValue" : 100000.0,
+            "exactValue" : 100000.0,
+            "scale" : 1,
+            "unscaledValue" : 1000000
         },
-        {
-            "amount": -500.0,
-            "date": 1600768800000,
-            "description": "Skyddat belopp",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": true,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
+        "currencyCode" : "SEK",
+        "availableBalance" : {
+            "currencyCode" : "SEK",
+            "doubleValue" : 100000.0,
+            "exactValue" : 100000.0,
+            "scale" : 1,
+            "unscaledValue" : 1000000
         },
-        {
-            "amount": -50.0,
-            "date": 1600768800000,
-            "description": "Recent purchase",
-            "internalPayload": {},
-            "originalAmount": 0.0,
-            "payload": {},
-            "pending": true,
-            "timestamp": 0,
-            "type": "DEFAULT",
-            "upcoming": false,
-            "externalSystemIds": {},
-            "transactionDates": []
-        }
-    ],
-    "identityData": {
-        "nameElements": [
-            {
-                "type": "FULLNAME",
-                "value": "Test Testsson"
+        "creditLimit" : {
+            "currencyCode" : "SEK",
+            "doubleValue" : 0.0,
+            "exactValue" : 0.0,
+            "scale" : 1,
+            "unscaledValue" : 0
+        },
+        "bankId" : "111111111111111",
+        "excluded" : false,
+        "favored" : false,
+        "name" : "Företagskonto",
+        "ownership" : 1.0,
+        "type" : "CHECKING",
+        "userModifiedExcluded" : false,
+        "userModifiedName" : false,
+        "userModifiedType" : false,
+        "identifiers" : "[\"se://111111111111111\"]",
+        "closed" : false,
+        "holderName" : "My Company AB",
+        "accountHolder" : {
+            "accountId" : null,
+            "type" : "BUSINESS",
+            "identities" : [ {
+                "name" : "My Company AB",
+                "role" : null
+            } ]
+        },
+        "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
+        "balances" : [ ],
+        "availableCredit" : 0.0,
+        "balance" : 100000.0
+    } ],
+    "transactions" : [ {
+        "amount" : -1.0,
+        "date" : 1600682400000,
+        "description" : "Kortköp/uttag",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "DETAILS" : "{\"transactionReference\":\"Market place2\",\"ownReference\":\"Market place2\"}"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : 10.0,
+        "date" : 1600855200000,
+        "description" : "Betalning",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "DETAILS" : "{\"transactionReference\":\"12324345345345\",\"ownReference\":\"12324345345345\"}"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -1.5,
+        "date" : 1600855200000,
+        "description" : "Pris betalning",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "DETAILS" : "{\"transactionReference\":\"12324345345345\",\"ownReference\":\"12324345345345\"}"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -1000.0,
+        "date" : 1600682400000,
+        "description" : "Kortköp/uttag",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : {
+            "DETAILS" : "{\"transactionReference\":\"Market place\",\"ownReference\":\"Market place\"}"
+        },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -500.0,
+        "date" : 1600768800000,
+        "description" : "Skyddat belopp",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : true,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -50.0,
+        "date" : 1600768800000,
+        "description" : "Recent purchase",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : true,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    } ],
+    "identityData" : {
+        "nameElements" : [ {
+            "type" : "FULLNAME",
+            "value" : "Test Testsson"
+        } ],
+        "dateOfBirth" : {
+            "year" : 2000,
+            "month" : "DECEMBER",
+            "era" : "CE",
+            "monthValue" : 12,
+            "dayOfMonth" : 12,
+            "dayOfWeek" : "TUESDAY",
+            "leapYear" : true,
+            "dayOfYear" : 347,
+            "chronology" : {
+                "id" : "ISO",
+                "calendarType" : "iso8601"
             }
-        ],
-        "dateOfBirth": {
-            "year": 2000,
-            "month": "DECEMBER",
-            "chronology": {
-                "id": "ISO",
-                "calendarType": "iso8601"
-            },
-            "era": "CE",
-            "monthValue": 12,
-            "dayOfMonth": 12,
-            "dayOfWeek": "TUESDAY",
-            "leapYear": true,
-            "dayOfYear": 347
         }
     }
 }

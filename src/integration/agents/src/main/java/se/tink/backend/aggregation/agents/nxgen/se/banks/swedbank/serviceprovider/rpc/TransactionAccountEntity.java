@@ -17,6 +17,7 @@ public class TransactionAccountEntity {
     private String accountNumber;
     private String clearingNumber;
     private String fullyFormattedNumber;
+    private String iban;
     private boolean availableForFavouriteAccount;
     private boolean availableForPriorityAccount;
     private String originalName;
@@ -72,6 +73,10 @@ public class TransactionAccountEntity {
 
     public String getFullyFormattedNumber() {
         return fullyFormattedNumber;
+    }
+
+    public String getIban() {
+        return iban;
     }
 
     public boolean isAvailableForFavouriteAccount() {

@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 import lombok.Getter;
@@ -15,6 +17,8 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
+import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.strings.StringUtils;
@@ -77,9 +81,11 @@ public abstract class AccountEntity extends AbstractAccountEntity {
                                         Answer.UNKNOWN,
                                         Answer.UNKNOWN));
         String creditLimit = "0.0";
+        String iban = null;
 
         if (engagementTransactionsResponse != null) {
             creditLimit = engagementTransactionsResponse.getAccount().getCreditGranted();
+            iban = engagementTransactionsResponse.getAccount().getIban();
         }
         return TransactionalAccount.nxBuilder()
                 .withType(getTinkAccountType(defaultType))
@@ -90,7 +96,7 @@ public abstract class AccountEntity extends AbstractAccountEntity {
                                 .withUniqueIdentifier(fullyFormattedNumber)
                                 .withAccountNumber(fullyFormattedNumber)
                                 .withAccountName(name)
-                                .addIdentifier(new SwedishIdentifier(fullyFormattedNumber))
+                                .addIdentifiers(getIdentifiers(iban))
                                 .build())
                 .canWithdrawCash(capabilities.getCanWithdrawCash())
                 .canPlaceFunds(capabilities.getCanPlaceFunds())
@@ -100,6 +106,16 @@ public abstract class AccountEntity extends AbstractAccountEntity {
                 .putInTemporaryStorage(SwedbankBaseConstants.StorageKey.PROFILE, bankProfile)
                 .addHolders(Holder.of(bankProfile.getProfile().getHolderName()))
                 .build();
+    }
+
+    private List<AccountIdentifier> getIdentifiers(String iban) {
+        List<AccountIdentifier> identifiers = new ArrayList<>();
+        identifiers.add(new SwedishIdentifier(fullyFormattedNumber));
+        if (iban != null) {
+            identifiers.add(
+                    AccountIdentifier.create(Type.IBAN, StringUtils.removeNonAlphaNumeric(iban)));
+        }
+        return identifiers;
     }
 
     private BalanceModule buildBalanceModule(String creditLimit) {
