@@ -68,20 +68,21 @@ public class UbiAuthenticationMethodChoiceStepTest {
     }
 
     @Test
-    public void authenticationShouldThrowWhenSelectionFieldMissing() {
+    public void authenticationShouldTreatAsRedirectIfAppSelectionMissing() {
         // given
         Credentials credentials = new Credentials();
         AuthenticationRequest request = new AuthenticationRequest(credentials);
 
         // when
-
-        // when
-        Throwable t = catchThrowable(() -> step.execute(request));
+        AuthenticationStepResponse response = step.execute(request);
 
         // then
-        assertThat(t)
-                .isInstanceOf(LoginException.class)
-                .hasMessage("useApp field missing on credentials.");
+        assertThat(response.getNextStepId().isPresent()).isTrue();
+        assertThat(response.getNextStepId().get())
+                .isEqualTo(
+                        CbiThirdPartyAppAuthenticationStep.class.getSimpleName()
+                                + "_"
+                                + ConsentType.ACCOUNT);
     }
 
     @Test

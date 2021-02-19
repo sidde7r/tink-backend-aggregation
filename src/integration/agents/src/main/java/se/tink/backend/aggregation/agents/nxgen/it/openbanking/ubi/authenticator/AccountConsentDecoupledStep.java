@@ -19,7 +19,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.Strong
 public class AccountConsentDecoupledStep implements AuthenticationStep {
     private final ConsentManager consentManager;
     private final StrongAuthenticationState strongAuthenticationState;
-    private final UserPrompter userPrompter;
+    private final UserInteractions userInteractions;
 
     @Override
     public AuthenticationStepResponse execute(AuthenticationRequest request)
@@ -36,7 +36,7 @@ public class AccountConsentDecoupledStep implements AuthenticationStep {
         consentManager.updatePsuCredentials(
                 username, password, consentResponse.getPsuCredentials());
 
-        userPrompter.displayPrompt();
+        userInteractions.displayPromptAndWaitForAcceptance();
         consentManager.waitForAcceptance();
 
         return AuthenticationStepResponse.executeNextStep();

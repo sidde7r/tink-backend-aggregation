@@ -23,14 +23,14 @@ public class TransactionConsentDecoupledStepTest {
     private ConsentManager consentManager;
     private StrongAuthenticationState strongAuthenticationState;
     private CbiUserState userState;
-    private UserPrompter userPrompter;
+    private UserInteractions userPrompter;
 
     @Before
     public void init() {
         this.consentManager = mock(ConsentManager.class);
         this.strongAuthenticationState = mock(StrongAuthenticationState.class);
         this.userState = mock(CbiUserState.class);
-        this.userPrompter = mock(UserPrompter.class);
+        this.userPrompter = mock(UserInteractions.class);
 
         this.step =
                 new TransactionConsentDecoupledStep(
@@ -66,7 +66,7 @@ public class TransactionConsentDecoupledStepTest {
         verify(consentManager).updatePsuCredentials(username, password, psuCredentials);
         verify(consentManager).storeConsentValidUntilDateInCredentials();
         verify(consentManager).waitForAcceptance();
-        verify(userPrompter).displayPrompt();
+        verify(userPrompter).displayPromptAndWaitForAcceptance();
         assertThat(response.isAuthenticationFinished()).isTrue();
     }
 }

@@ -18,7 +18,7 @@ public class TransactionConsentDecoupledStep implements AuthenticationStep {
     private final ConsentManager consentManager;
     private final StrongAuthenticationState strongAuthenticationState;
     private final CbiUserState userState;
-    private final UserPrompter userPrompter;
+    private final UserInteractions userInteractions;
 
     @Override
     public AuthenticationStepResponse execute(AuthenticationRequest request)
@@ -33,7 +33,7 @@ public class TransactionConsentDecoupledStep implements AuthenticationStep {
         consentManager.updatePsuCredentials(
                 username, password, consentResponse.getPsuCredentials());
 
-        userPrompter.displayPrompt();
+        userInteractions.displayPromptAndWaitForAcceptance();
         consentManager.waitForAcceptance();
 
         userState.finishManualAuthenticationStep();

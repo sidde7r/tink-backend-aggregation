@@ -23,9 +23,11 @@ public class UbiAuthenticationMethodChoiceStep implements AuthenticationStep {
 
         String yesNoShouldUseApp = request.getCredentials().getField(USE_APP_FIELD_KEY);
 
+        // No choice came with credentials, it could mean old credentials without this field.
+        // In such case, assume that user doesn't have the application and route them through full
+        // redirect path.
         if (yesNoShouldUseApp == null) {
-            throw LoginError.INCORRECT_CREDENTIALS.exception(
-                    "useApp field missing on credentials.");
+            yesNoShouldUseApp = NO;
         }
 
         switch (yesNoShouldUseApp.toLowerCase()) {

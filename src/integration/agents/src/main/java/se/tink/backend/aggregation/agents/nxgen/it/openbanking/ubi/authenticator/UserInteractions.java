@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.ubi.authenticator;
 
+import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.CommonFields;
@@ -8,7 +9,7 @@ import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.i18n.LocalizableKey;
 
 @RequiredArgsConstructor
-public class UserPrompter {
+public class UserInteractions {
 
     private final SupplementalInformationController supplementalInformationController;
     private final Catalog catalog;
@@ -18,10 +19,14 @@ public class UserPrompter {
     private static final String FIELD_NAME = "name";
     private static final LocalizableKey VALUE = new LocalizableKey("waiting for confirmation");
 
-    void displayPrompt() {
+    private static final long PROMPT_WAIT_FOR_MINUTES = 2;
+
+    void displayPromptAndWaitForAcceptance() {
         Field field =
                 CommonFields.Information.build(
                         FIELD_NAME, catalog.getString(VALUE), catalog.getString(DESCRIPTION), "");
-        supplementalInformationController.askSupplementalInformationAsync(field);
+        String mfaId = supplementalInformationController.askSupplementalInformationAsync(field);
+        supplementalInformationController.waitForSupplementalInformation(
+                mfaId, PROMPT_WAIT_FOR_MINUTES, TimeUnit.MINUTES);
     }
 }

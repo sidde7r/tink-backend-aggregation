@@ -24,13 +24,13 @@ public class AccountConsentDecoupledStepTest {
     private AccountConsentDecoupledStep step;
     private ConsentManager consentManager;
     private StrongAuthenticationState strongAuthenticationState;
-    private UserPrompter userPrompter;
+    private UserInteractions userPrompter;
 
     @Before
     public void init() {
         this.consentManager = mock(ConsentManager.class);
         this.strongAuthenticationState = mock(StrongAuthenticationState.class);
-        this.userPrompter = mock(UserPrompter.class);
+        this.userPrompter = mock(UserInteractions.class);
         this.step =
                 new AccountConsentDecoupledStep(
                         consentManager, strongAuthenticationState, userPrompter);
@@ -77,7 +77,7 @@ public class AccountConsentDecoupledStepTest {
         verify(consentManager).updateAuthenticationMethod(FormValues.SCA_DECOUPLED);
         verify(consentManager).updatePsuCredentials(username, password, psuCredentials);
         verify(consentManager).waitForAcceptance();
-        verify(userPrompter).displayPrompt();
+        verify(userPrompter).displayPromptAndWaitForAcceptance();
         assertThat(response.isAuthenticationFinished()).isFalse();
         assertThat(response.getNextStepId()).isEqualTo(Optional.empty());
     }
