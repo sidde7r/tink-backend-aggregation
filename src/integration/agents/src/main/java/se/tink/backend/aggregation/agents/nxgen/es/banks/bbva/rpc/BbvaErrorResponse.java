@@ -74,10 +74,6 @@ public class BbvaErrorResponse {
         return ErrorCode.CONTRACT_NOT_OPERABLE.equalsIgnoreCase(errorCode);
     }
 
-    public boolean isIncorrectCredentials() {
-        return httpStatus == HttpStatus.SC_FORBIDDEN;
-    }
-
     public boolean isConflictStatus() {
         return httpStatus == HttpStatus.SC_CONFLICT;
     }

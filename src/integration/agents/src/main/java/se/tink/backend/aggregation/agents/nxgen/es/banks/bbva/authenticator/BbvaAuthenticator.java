@@ -81,20 +81,23 @@ public class BbvaAuthenticator implements MultiFactorAuthenticator {
     private void mapHttpErrors(HttpResponseException e) throws LoginException {
         HttpResponse response = e.getResponse();
         if (response.getStatus() == HttpStatus.SC_FORBIDDEN
-                || response.getStatus() == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
+                || response.getStatus() == HttpStatus.SC_INTERNAL_SERVER_ERROR
+                || response.getStatus() == HttpStatus.SC_UNAUTHORIZED) {
             BbvaErrorResponse errorResponse = e.getResponse().getBody(BbvaErrorResponse.class);
-            if (errorResponse.isIncorrectCredentials()) {
-                throw LoginError.INCORRECT_CREDENTIALS.exception();
+            switch (errorResponse.getHttpStatus()) {
+                case HttpStatus.SC_UNAUTHORIZED:
+                case HttpStatus.SC_FORBIDDEN:
+                    throw LoginError.INCORRECT_CREDENTIALS.exception();
+                case HttpStatus.SC_INTERNAL_SERVER_ERROR:
+                    throw LoginError.NOT_SUPPORTED.exception();
+                default:
+                    log.warn(
+                            "Unknown error: httpStatus {}, code {}, message {}",
+                            errorResponse.getHttpStatus(),
+                            errorResponse.getErrorCode(),
+                            errorResponse.getErrorMessage());
+                    throw LoginError.DEFAULT_MESSAGE.exception();
             }
-            if (errorResponse.isInternalServerError()) {
-                throw LoginError.NOT_SUPPORTED.exception();
-            }
-            log.info(
-                    "Unknown error: httpStatus {}, code {}, message {}",
-                    errorResponse.getHttpStatus(),
-                    errorResponse.getErrorCode(),
-                    errorResponse.getErrorMessage());
-            throw LoginError.DEFAULT_MESSAGE.exception();
         }
         throw e;
     }
