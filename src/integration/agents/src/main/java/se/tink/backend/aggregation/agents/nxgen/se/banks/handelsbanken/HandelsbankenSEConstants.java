@@ -70,6 +70,7 @@ public class HandelsbankenSEConstants {
 
     public static class Accounts {
         public static final String ACCOUNT_TYPE_NAME_LABEL = "kontoform";
+        public static final String IBAN = "iban";
         public static final String CREDIT_CARD_IGNORE_TYPE = "A";
 
         public static final TransactionalAccountTypeMapper ACCOUNT_TYPE_MAPPER =
