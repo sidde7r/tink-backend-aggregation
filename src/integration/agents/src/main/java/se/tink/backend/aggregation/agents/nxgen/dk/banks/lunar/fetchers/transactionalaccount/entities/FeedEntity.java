@@ -5,16 +5,12 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Optional;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
-@EqualsAndHashCode(callSuper = true)
 @JsonObject
-@Data
 public class FeedEntity extends BaseResponseEntity {
-    private String goalId;
     private DepositEntity deposit;
 
     @JsonIgnore

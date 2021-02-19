@@ -52,7 +52,7 @@ public final class LunarDkAgent extends AgentPlatformAgent
         configureHttpClient(client);
         randomValueGenerator = agentComponentProvider.getRandomValueGenerator();
         accessorFactory = new LunarDataAccessorFactory(new ObjectMapperFactory().getInstance());
-        String language = HeaderValues.getLanguageHeaderValue(request.getUser().getLocale());
+        String languageCode = HeaderValues.getLanguageCode(request.getUser().getLocale());
 
         this.apiClient =
                 new FetcherApiClient(
@@ -60,11 +60,11 @@ public final class LunarDkAgent extends AgentPlatformAgent
                         getPersistentStorage(),
                         accessorFactory,
                         randomValueGenerator,
-                        language);
+                        languageCode);
 
         AuthenticationApiClient authenticationApiClient =
                 new AuthenticationApiClient(
-                        new AgentPlatformHttpClient(client), randomValueGenerator, language);
+                        new AgentPlatformHttpClient(client), randomValueGenerator, languageCode);
 
         this.transactionalAccountRefreshController =
                 constructTransactionalAccountRefreshController();

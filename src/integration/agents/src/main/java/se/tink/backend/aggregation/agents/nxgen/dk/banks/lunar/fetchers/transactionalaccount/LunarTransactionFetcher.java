@@ -5,8 +5,8 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.LunarPredicates;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.client.FetcherApiClient;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.transactionalaccount.entities.BaseResponseEntity;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.transactionalaccount.entities.FeedEntity;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.transactionalaccount.entities.TransactionEntity;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginator;
@@ -34,7 +34,7 @@ public class LunarTransactionFetcher
 
     private List<Transaction> getGoalTransactions(TransactionalAccount account) {
         return apiClient.fetchGoalDetails(account.getApiIdentifier()).getFeed().stream()
-                .filter(LunarPredicates.notDeleted())
+                .filter(BaseResponseEntity::notDeleted)
                 .filter(FeedEntity::containsAmount)
                 .map(FeedEntity::toTinkTransaction)
                 .collect(Collectors.toList());
@@ -44,7 +44,7 @@ public class LunarTransactionFetcher
         // Delete logs when user with 500 or more transactions is found
         List<Transaction> transactions =
                 apiClient.fetchTransactions(account.getApiIdentifier()).getTransactions().stream()
-                        .filter(LunarPredicates.notDeleted())
+                        .filter(BaseResponseEntity::notDeleted)
                         .map(TransactionEntity::toTinkTransaction)
                         .collect(Collectors.toList());
 

@@ -7,13 +7,16 @@ import static org.mockito.Mockito.when;
 import java.math.BigDecimal;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import org.apache.commons.collections4.ListUtils;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.client.FetcherApiClient;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.transactionalaccount.rpc.AccountsResponse;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.transactionalaccount.rpc.CardsResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.transactionalaccount.rpc.GoalsResponse;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Holder;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -28,6 +31,9 @@ public class LunarTransactionalAccountFetcherTest {
 
     private static final String TEST_DATA_PATH =
             "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/dk/banks/lunar/resources";
+
+    private static final String FIRST_CHECKING_ACCOUNT_ID = "833293fc-282c-4b99-8b86-2035218abeac";
+    private static final String SECOND_CHECKING_ACCOUNT_ID = "ced8297b-1b58-401c-9002-60a70194f625";
 
     private static final String CURRENCY = "DKK";
 
@@ -44,18 +50,29 @@ public class LunarTransactionalAccountFetcherTest {
                         SerializationUtils.deserializeFromString(
                                 Paths.get(TEST_DATA_PATH, "accounts_response.json").toFile(),
                                 AccountsResponse.class));
-        when(apiClient.fetchGoals())
+        when(apiClient.fetchSavingGoals())
                 .thenReturn(
                         SerializationUtils.deserializeFromString(
                                 Paths.get(TEST_DATA_PATH, "goals_response.json").toFile(),
                                 GoalsResponse.class));
+        when(apiClient.fetchCardsByAccount(FIRST_CHECKING_ACCOUNT_ID))
+                .thenReturn(
+                        SerializationUtils.deserializeFromString(
+                                Paths.get(TEST_DATA_PATH, "cards_by_account.json").toFile(),
+                                CardsResponse.class));
+        when(apiClient.fetchCardsByAccount(SECOND_CHECKING_ACCOUNT_ID))
+                .thenReturn(
+                        SerializationUtils.deserializeFromString(
+                                Paths.get(TEST_DATA_PATH, "cards_by_second_account.json").toFile(),
+                                CardsResponse.class));
     }
 
     @Test
     public void shouldFetchAllAccountsAndFilterNotSuitableOnes() {
         // given & when
         List<TransactionalAccount> expected =
-                ListUtils.union(getExpectedCheckingAccounts(), getExpectedSavingsAccounts());
+                ListUtils.union(
+                        getExpectedCheckingAccounts(), getExpectedSavingsAccounts(getAllHolders()));
         List<TransactionalAccount> result =
                 (List<TransactionalAccount>) accountFetcher.fetchAccounts();
 
@@ -69,7 +86,7 @@ public class LunarTransactionalAccountFetcherTest {
     @Test
     public void shouldReturnOnlyCheckingAccountsWhenUserHasNoGoals() {
         // given
-        when(apiClient.fetchGoals()).thenReturn(new GoalsResponse());
+        when(apiClient.fetchSavingGoals()).thenReturn(new GoalsResponse());
 
         // when
         List<TransactionalAccount> expected = getExpectedCheckingAccounts();
@@ -89,7 +106,7 @@ public class LunarTransactionalAccountFetcherTest {
         when(apiClient.fetchAccounts()).thenReturn(new AccountsResponse());
 
         // when
-        List<TransactionalAccount> expected = getExpectedSavingsAccounts();
+        List<TransactionalAccount> expected = getExpectedSavingsAccounts(Collections.emptyList());
         List<TransactionalAccount> result =
                 (List<TransactionalAccount>) accountFetcher.fetchAccounts();
 
@@ -109,7 +126,8 @@ public class LunarTransactionalAccountFetcherTest {
                         "250514683417965",
                         "2505-14683417965",
                         "Account",
-                        "833293fc-282c-4b99-8b86-2035218abeac"),
+                        "833293fc-282c-4b99-8b86-2035218abeac",
+                        Collections.singletonList(Holder.of("Account Holder"))),
                 getExpectedCheckingAccount(
                         BigDecimal.valueOf(123.12),
                         BigDecimal.valueOf(113.12),
@@ -117,25 +135,34 @@ public class LunarTransactionalAccountFetcherTest {
                         "50514417454687",
                         "5051-4417454687",
                         "Account With Null Deleted",
-                        "ced8297b-1b58-401c-9002-60a70194f625"));
+                        "ced8297b-1b58-401c-9002-60a70194f625",
+                        Arrays.asList(
+                                Holder.of("Second account first holder"),
+                                Holder.of("Second account second holder"))));
     }
 
-    private List<TransactionalAccount> getExpectedSavingsAccounts() {
+    private List<TransactionalAccount> getExpectedSavingsAccounts(List<Holder> holders) {
         return Arrays.asList(
                 getExpectedSavingsAccount(
                         BigDecimal.valueOf(1),
                         "For a rainy day",
-                        "ada079e2-472d-4d9c-856d-526a9e964b8f"),
+                        "ada079e2-472d-4d9c-856d-526a9e964b8f",
+                        holders),
                 getExpectedSavingsAccount(
                         BigDecimal.valueOf(2),
                         "Deleted null Goal",
-                        "fab472fa-a646-4b54-91fa-6a6e3653e3f0"),
+                        "fab472fa-a646-4b54-91fa-6a6e3653e3f0",
+                        holders),
                 getExpectedSavingsAccount(
                         BigDecimal.valueOf(0.01),
                         "Visible null field",
-                        "df999b47-2ad9-4b12-adec-8525b687140b"),
+                        "df999b47-2ad9-4b12-adec-8525b687140b",
+                        holders),
                 getExpectedSavingsAccount(
-                        BigDecimal.valueOf(99.99), "", "9f7416ac-e860-4df1-bc71-fd27b5209b25"));
+                        BigDecimal.valueOf(99.99),
+                        "",
+                        "9f7416ac-e860-4df1-bc71-fd27b5209b25",
+                        holders));
     }
 
     private TransactionalAccount getExpectedCheckingAccount(
@@ -145,7 +172,8 @@ public class LunarTransactionalAccountFetcherTest {
             String bban,
             String accountNumber,
             String name,
-            String id) {
+            String id,
+            List<Holder> holders) {
         return TransactionalAccount.nxBuilder()
                 .withType(TransactionalAccountType.CHECKING)
                 .withoutFlags()
@@ -165,12 +193,13 @@ public class LunarTransactionalAccountFetcherTest {
                                 .build())
                 .setApiIdentifier(id)
                 .setBankIdentifier(id)
+                .addHolders(holders)
                 .build()
                 .orElseThrow(IllegalStateException::new);
     }
 
     private TransactionalAccount getExpectedSavingsAccount(
-            BigDecimal balance, String name, String id) {
+            BigDecimal balance, String name, String id, List<Holder> holders) {
         return TransactionalAccount.nxBuilder()
                 .withType(TransactionalAccountType.SAVINGS)
                 .withoutFlags()
@@ -188,7 +217,15 @@ public class LunarTransactionalAccountFetcherTest {
                                 .build())
                 .setApiIdentifier(id)
                 .setBankIdentifier(id)
+                .addHolders(holders)
                 .build()
                 .orElseThrow(IllegalStateException::new);
+    }
+
+    private List<Holder> getAllHolders() {
+        return Arrays.asList(
+                Holder.of("Account Holder"),
+                Holder.of("Second account first holder"),
+                Holder.of("Second account second holder"));
     }
 }

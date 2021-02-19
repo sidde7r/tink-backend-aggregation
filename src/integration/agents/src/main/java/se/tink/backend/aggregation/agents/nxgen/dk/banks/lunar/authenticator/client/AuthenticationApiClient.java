@@ -31,15 +31,15 @@ public class AuthenticationApiClient {
     private final AgentPlatformHttpClient client;
     private final RandomValueGenerator randomValueGenerator;
     private final AuthResponseValidator authResponseValidator;
-    private final String language;
+    private final String languageCode;
 
     public AuthenticationApiClient(
             AgentPlatformHttpClient client,
             RandomValueGenerator randomValueGenerator,
-            String language) {
+            String languageCode) {
         this.client = client;
         this.randomValueGenerator = randomValueGenerator;
-        this.language = language;
+        this.languageCode = languageCode;
         this.authResponseValidator = new AuthResponseValidator();
     }
 
@@ -117,7 +117,7 @@ public class AuthenticationApiClient {
                 .header(Headers.OS, HeaderValues.I_OS)
                 .header(Headers.DEVICE_MANUFACTURER, HeaderValues.DEVICE_MANUFACTURER)
                 .header(Headers.OS_VERSION, HeaderValues.OS_VERSION)
-                .header(Headers.LANGUAGE, language)
+                .header(Headers.LANGUAGE, languageCode)
                 .header(Headers.REQUEST_ID, randomValueGenerator.getUUID().toString())
                 .header(Headers.DEVICE_ID, deviceId)
                 .header(Headers.ACCEPT_LANGUAGE, HeaderValues.DA_LANGUAGE_ACCEPT)

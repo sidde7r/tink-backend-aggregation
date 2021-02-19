@@ -1,0 +1,37 @@
+{
+    "accountId": "833293fc-282c-4b99-8b86-2035218abeac",
+    "cards": [
+        {
+            "accountId": "833293fc-282c-4b99-8b86-2035218abeac",
+            "cardholderName": "Account Holder",
+            "id": "7042a06a-2d74-4ceb-82fc-885420519e74",
+            "maskedPan": "123456XXXXXX1234",
+            "name": "Lunar Test Card",
+            "panLast4": "1234",
+            "sort": 0,
+            "status": "active",
+            "type": "physical"
+        },
+        {
+            "accountId": "833293fc-282c-4b99-8b86-2035218abeac",
+            "cardholderName": "Account Holder",
+            "id": "1ea99440-047f-4f65-80b9-4641f75f569d",
+            "maskedPan": "123456XXXXXX1234",
+            "name": "Virtuelt kort With Same Account Holder",
+            "panLast4": "1234",
+            "sort": 0,
+            "status": "active",
+            "type": "virtual"
+        },
+        {
+            "accountId": "833293fc-282c-4b99-8b86-2035218abeac",
+            "id": "fa8a5228-b67d-41b2-a02f-2b7fbb9e5091",
+            "maskedPan": "123456XXXXXX1234",
+            "name": "Card without holder name",
+            "panLast4": "1234",
+            "sort": 0,
+            "status": "active",
+            "type": "physical"
+        }
+    ]
+}

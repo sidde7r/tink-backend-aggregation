@@ -14,8 +14,10 @@ import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.LunarConstants;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.persistance.LunarAuthData;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.persistance.LunarDataAccessorFactory;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.transactionalaccount.rpc.AccountsResponse;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.transactionalaccount.rpc.CardsResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.transactionalaccount.rpc.GoalDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.transactionalaccount.rpc.GoalsResponse;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.transactionalaccount.rpc.MembersResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.transactionalaccount.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -30,7 +32,7 @@ public class FetcherApiClient {
     private final PersistentStorage persistentStorage;
     private final LunarDataAccessorFactory accessorFactory;
     private final RandomValueGenerator randomValueGenerator;
-    private final String language;
+    private final String languageCode;
     private LunarAuthData authData;
 
     public AccountsResponse fetchAccounts() {
@@ -39,7 +41,7 @@ public class FetcherApiClient {
                 .get(AccountsResponse.class);
     }
 
-    public GoalsResponse fetchGoals() {
+    public GoalsResponse fetchSavingGoals() {
         return getDefaultRequestBuilder(Url.GOALS).get(GoalsResponse.class);
     }
 
@@ -56,6 +58,17 @@ public class FetcherApiClient {
                 .get(GoalDetailsResponse.class);
     }
 
+    public CardsResponse fetchCardsByAccount(String accountId) {
+        return getDefaultRequestBuilder(
+                        Url.CARDS_BY_ACCOUNT.parameter(PathParams.ACCOUNT_ID, accountId))
+                .get(CardsResponse.class);
+    }
+
+    public MembersResponse fetchMembers(String accountId) {
+        return getDefaultRequestBuilder(Url.MEMBERS.parameter(PathParams.ACCOUNT_ID, accountId))
+                .get(MembersResponse.class);
+    }
+
     private RequestBuilder getDefaultRequestBuilder(URL url) {
         authData = getLunarPersistedData();
         return client.request(url)
@@ -65,7 +78,7 @@ public class FetcherApiClient {
                 .header(Headers.OS, HeaderValues.I_OS)
                 .header(Headers.DEVICE_MANUFACTURER, HeaderValues.DEVICE_MANUFACTURER)
                 .header(Headers.OS_VERSION, HeaderValues.OS_VERSION)
-                .header(Headers.LANGUAGE, language)
+                .header(Headers.LANGUAGE, languageCode)
                 .header(Headers.REQUEST_ID, randomValueGenerator.getUUID().toString())
                 .header(Headers.DEVICE_ID, authData.getDeviceId())
                 .header(Headers.AUTHORIZATION, authData.getAccessToken())

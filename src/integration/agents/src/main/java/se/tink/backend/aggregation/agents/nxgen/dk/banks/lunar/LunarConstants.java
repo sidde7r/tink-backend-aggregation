@@ -27,6 +27,10 @@ public class LunarConstants {
         public static final URL GOALS = toLunarUrl("goals/v2/goals");
         public static final URL TRANSACTIONS = toLunarUrl("transaction-view/transactions");
         public static final URL GOAL_DETAILS = toLunarUrl("goals/v2/goals/{goalId}/feed?from=0");
+        public static final URL CARDS_BY_ACCOUNT =
+                toLunarUrl("card-management/cards-by-account/{accountId}");
+        public static final URL MEMBERS =
+                toLunarUrl("account-management/accounts/{accountId}/members");
 
         private static URL toLunarUrl(String endpoint) {
             return URL.of(LUNAR_BASE_URL + endpoint);
@@ -67,7 +71,7 @@ public class LunarConstants {
         public static final String APP_ORIGIN = "App";
         public static final String ENCODING = "gzip, deflate, br";
 
-        static String getLanguageHeaderValue(String userLocale) {
+        static String getLanguageCode(String userLocale) {
             String userLanguageCode =
                     Optional.ofNullable(StringUtils.left(userLocale, 2))
                             .orElse(HeaderValues.DA_LANGUAGE);
@@ -89,6 +93,7 @@ public class LunarConstants {
 
     public static class PathParams {
         public static final String GOAL_ID = "goalId";
+        public static final String ACCOUNT_ID = "accountId";
     }
 
     public static class Storage {

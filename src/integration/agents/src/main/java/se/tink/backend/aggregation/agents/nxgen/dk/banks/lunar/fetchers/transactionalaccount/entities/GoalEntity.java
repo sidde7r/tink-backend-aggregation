@@ -11,8 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.ListUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
-import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.LunarPredicates;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Holder;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -20,10 +20,8 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.libraries.account.identifiers.TinkIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
-@EqualsAndHashCode(callSuper = true)
 @Slf4j
 @JsonObject
-@Data
 public class GoalEntity extends BaseResponseEntity {
 
     private static final String TITLE_IDENTIFIER = "title";
@@ -39,7 +37,7 @@ public class GoalEntity extends BaseResponseEntity {
     }
 
     @JsonIgnore
-    public Optional<TransactionalAccount> toTransactionalAccount() {
+    public Optional<TransactionalAccount> toTransactionalAccount(List<Holder> accountHolders) {
         if (BooleanUtils.isTrue(cashedOut)) {
             log.info("Lunar goal was cashed out");
         }
@@ -50,6 +48,7 @@ public class GoalEntity extends BaseResponseEntity {
                 .withId(buildIdModule())
                 .setApiIdentifier(id)
                 .setBankIdentifier(id)
+                .addHolders(accountHolders)
                 .build();
     }
 
@@ -73,14 +72,14 @@ public class GoalEntity extends BaseResponseEntity {
         // Wiski delete logs and refactor it after getting more data from logs
         List<String> titles =
                 fields.stream()
-                        .filter(LunarPredicates.notDeleted())
+                        .filter(BaseResponseEntity::notDeleted)
                         .filter(this::isTitleField)
                         .map(FieldEntity::getValue)
                         .collect(Collectors.toList());
         if (titles.size() > 1) {
             log.info("Lunar goal has more than one title! Titles: {}", titles);
         } else if (titles.isEmpty()) {
-            log.info("Lunar goal has no title!}");
+            log.info("Lunar goal has no title!");
             return "";
         }
         return titles.get(0);
