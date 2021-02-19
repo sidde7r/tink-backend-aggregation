@@ -198,5 +198,7 @@ public final class BbvaConstants {
 
     public static class HolderTypes {
         public static final String OWNER = "TIT";
+        public static final String AUTHORIZED = "PAU";
+        public static final String REPRESENTATIVE = "REP";
     }
 }
