@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.entity.IngHolder;
@@ -18,6 +19,7 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
+@Slf4j
 public class IngTransactionalAccountFetcher implements AccountFetcher<TransactionalAccount> {
 
     private final IngApiClient ingApiClient;
@@ -40,6 +42,10 @@ public class IngTransactionalAccountFetcher implements AccountFetcher<Transactio
 
     public Optional<TransactionalAccount> toTransactionalAccount(IngProduct product) {
         if (!product.isActiveTransactionalAccount()) {
+            log.warn(
+                    "Unknown product type for name and type: {}, {}",
+                    product.getName(),
+                    product.getType());
             return Optional.empty();
         }
 
