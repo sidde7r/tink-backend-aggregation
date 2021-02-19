@@ -229,7 +229,42 @@ RESPONSE 2
 200
 Content-Type: application/json; charset=utf-8
 
-{"Ticket":"true","FechaUltimoAcceso":"2021-02-17T02:12:03","Nombre":"HASHE","NIF":"HASHED0f","NIP":"false","Clalf":"false:pQ","TipoUsuario":1,"CodigoUsuario":"false","Version":1,"Contratos":[{"Codigo":"K02314","Valor":"","Nombre":""}],"FirmaMIFID":"0","SoloConsulta":false,"OfertaPersonalizada":false,"TiempoExpiracion":"00:07:00","ContratoEnCurso":"HASHED:0x","EsEspecialista":false,"CondicionesAceptadas":true,"CondicionesTxt":"Declaro conocer y aceptar las condiciones generales del “Contrato Servicio Ibercaja Directo Negocios” (de 3 hojas), copia del cual el Titular ha puesto a mi disposición, habiéndome entregado, así mismo, las claves de acceso y, en su caso, firma del sistema. En particular, expresamente declaro conocer y aceptar que las operaciones que efectúe con las claves entregadas tendrán pleno valor jurídico y que las claves que me han sido proporcionadas son secretas, personales y únicas; por ello, quedo obligado a tomar las debidas precauciones para garantizar la seguridad y confidencialidad de las mismas, debiendo, como mínimo y sin excluir otras medidas:\r\n\r\na) Conservar y utilizar correctamente las claves personales secretas de acceso y firma, adoptando cuantas precauciones sean convenientes para evitar el conocimiento o la utilización de las mismas por terceras personas, no manifestando la composición de dichas claves, ni anotándolas en ningún soporte que permita o facilite su utilización por terceros.\r\n\r\nb) Solicitar la suspensión o anulación inmediata de las claves personales en caso de sustracción, pérdida, robo o posible conocimiento por terceros no autorizados, tan pronto tenga constancia o sospecha de ello.\r\n\r\nConozco que el servicio “Ibercaja Directo Negocios” está dotado de un sistema de seguridad y fiabilidad para la transferencia electrónica de datos entre Ibercaja y sus clientes Usuarios. Dicho sistema de seguridad está basado en la encriptación de toda la información.\r\n\r\nDeclaro conocer la existencia de un fichero de Ibercaja en el que figuran los datos de carácter personal obtenidos en el desarrollo de este contrato para poder concertar, desarrollar e incrementar la relación negocial con Ibercaja, destinataria de la información. Consiento el tratamiento de dichos datos, los cuales residen en el fichero de dicha Entidad ubicado en su sede social, sita en la Pza. Paraíso, 2 -50008 Zaragoza-.\r\n\r\nDeclaro conocer los derechos que me asisten de acceso, oposición, rectificación y cancelación de los datos de los ficheros de Ibercaja y del resto de entidades de su grupo. Asimismo me obligo a comunicar a Ibercaja cualquier variación o modificación que pudieran sufrir estos datos.","CondicionesPdfUrl":"https://www1.ibercajadirecto.com/ibercaja/pdf/c00700v0505aa.pdf","CondicionesPdfUrlCatalan":"","NICI":"false","Telefono":"607926967","TieneTelefono":true,"LopdUrl":"https://media.ibercaja.net/ibercaja-es/gdpr/privacidad.pdf","GDPRMostrar":false,"TokenIberfabric":"","ValidacionSCA":false,"TokenIdentity":""}
+{
+    "Ticket": "true",
+    "FechaUltimoAcceso": "2021-02-17T02:12:03",
+    "Nombre": "HASHE",
+    "NIF": "HASHED0f",
+    "NIP": "false",
+    "Clalf": "false:pQ",
+    "TipoUsuario": 1,
+    "CodigoUsuario": "false",
+    "Version": 1,
+    "Contratos": [
+        {
+            "Codigo": "K02314",
+            "Valor": "",
+            "Nombre": ""
+        }
+    ],
+    "FirmaMIFID": "0",
+    "SoloConsulta": false,
+    "OfertaPersonalizada": false,
+    "TiempoExpiracion": "00:07:00",
+    "ContratoEnCurso": "HASHED:0x",
+    "EsEspecialista": false,
+    "CondicionesAceptadas": true,
+    "CondicionesTxt": "Declaro conocer y aceptar las condiciones generales del “Contrato Servicio Ibercaja Directo Negocios” (de 3 hojas), copia del cual el Titular ha puesto a mi disposición, habiéndome entregado, así mismo, las claves de acceso y, en su caso, firma del sistema. En particular, expresamente declaro conocer y aceptar que las operaciones que efectúe con las claves entregadas tendrán pleno valor jurídico y que las claves que me han sido proporcionadas son secretas, personales y únicas; por ello, quedo obligado a tomar las debidas precauciones para garantizar la seguridad y confidencialidad de las mismas, debiendo, como mínimo y sin excluir otras medidas:\r\n\r\na) Conservar y utilizar correctamente las claves personales secretas de acceso y firma, adoptando cuantas precauciones sean convenientes para evitar el conocimiento o la utilización de las mismas por terceras personas, no manifestando la composición de dichas claves, ni anotándolas en ningún soporte que permita o facilite su utilización por terceros.\r\n\r\nb) Solicitar la suspensión o anulación inmediata de las claves personales en caso de sustracción, pérdida, robo o posible conocimiento por terceros no autorizados, tan pronto tenga constancia o sospecha de ello.\r\n\r\nConozco que el servicio “Ibercaja Directo Negocios” está dotado de un sistema de seguridad y fiabilidad para la transferencia electrónica de datos entre Ibercaja y sus clientes Usuarios. Dicho sistema de seguridad está basado en la encriptación de toda la información.\r\n\r\nDeclaro conocer la existencia de un fichero de Ibercaja en el que figuran los datos de carácter personal obtenidos en el desarrollo de este contrato para poder concertar, desarrollar e incrementar la relación negocial con Ibercaja, destinataria de la información. Consiento el tratamiento de dichos datos, los cuales residen en el fichero de dicha Entidad ubicado en su sede social, sita en la Pza. Paraíso, 2 -50008 Zaragoza-.\r\n\r\nDeclaro conocer los derechos que me asisten de acceso, oposición, rectificación y cancelación de los datos de los ficheros de Ibercaja y del resto de entidades de su grupo. Asimismo me obligo a comunicar a Ibercaja cualquier variación o modificación que pudieran sufrir estos datos.",
+    "CondicionesPdfUrl": "https://www1.ibercajadirecto.com/ibercaja/pdf/c00700v0505aa.pdf",
+    "CondicionesPdfUrlCatalan": "",
+    "NICI": "false",
+    "Telefono": "607926967",
+    "TieneTelefono": true,
+    "LopdUrl": "https://media.ibercaja.net/ibercaja-es/gdpr/privacidad.pdf",
+    "GDPRMostrar": false,
+    "TokenIberfabric": "",
+    "ValidacionSCA": false,
+    "TokenIdentity": ""
+}
 
 REQUEST 3
 GET https://ewm.ibercajadirecto.com/api/misproductos/productos
@@ -240,4 +275,53 @@ RESPONSE 3
 200
 Content-Type: application/json; charset=utf-8
 
-{"Productos":[{"Orden":1,"Numero":"20858347830330130640","Nombre":"20858347830330130640-c.cte","Prefijo":"AH","Tipo":0,"TipoTarjeta":0,"TipoTarjetaFamilia":0,"EmisorTarjeta":0,"Alias":"Cuenta corriente","Propietario":1,"Porcentaje":100.0,"Saldo":1030.88,"Limite":0.0,"Dispuesto":1030.88,"Moneda":"€","Cargos":0.0,"Abonos":0.0,"Operable":true,"FechaConsulta":"0001-01-01T00:00:00","Periodo":"","FechaOperabilidad":"0001-01-01T00:00:00","IBAN":"ES0220858347830330130640","Activo":false,"Bloqueable":false,"EsPrincipal":true,"EsProductoPfm":true,"PuedoCargarTarjetaDesdeCuenta":false,"PuedoDescargarTarjetaACuenta":false,"PuedoCargarTarjetaDesdeTarjeta":false,"PuedoDescargarTarjetaATarjeta":false,"PuedoModificarCancelarDomiciliaciones":true,"PuedoSerDestinoModificarDomiciliaciones":true,"Permisos":7,"PuedoDescargarCuentaATarjeta":true,"PuedoCargarCuentaDesdeTarjeta":true,"PuedoDescargarCuentaACuentaPropia":true,"PuedoDescargarCuentaACuentaAjena":true,"Estado":0,"PendActivacion":0,"EsProductoRestringido":false,"EsInformacionExtraDisponible":false,"TipoCuentaPlanPensiones":"","IdProductoInterno":"683470330130640","RealmIdentifier":""}]}
+{
+    "Productos": [
+        {
+            "Orden": 1,
+            "Numero": "20858347830330130640",
+            "Nombre": "20858347830330130640-c.cte",
+            "Prefijo": "AH",
+            "Tipo": 0,
+            "TipoTarjeta": 0,
+            "TipoTarjetaFamilia": 0,
+            "EmisorTarjeta": 0,
+            "Alias": "Cuenta corriente",
+            "Propietario": 1,
+            "Porcentaje": 100,
+            "Saldo": 1030.88,
+            "Limite": 0,
+            "Dispuesto": 1030.88,
+            "Moneda": "€",
+            "Cargos": 0,
+            "Abonos": 0,
+            "Operable": true,
+            "FechaConsulta": "0001-01-01T00:00:00",
+            "Periodo": "",
+            "FechaOperabilidad": "0001-01-01T00:00:00",
+            "IBAN": "ES0229999999999999999999",
+            "Activo": false,
+            "Bloqueable": false,
+            "EsPrincipal": true,
+            "EsProductoPfm": true,
+            "PuedoCargarTarjetaDesdeCuenta": false,
+            "PuedoDescargarTarjetaACuenta": false,
+            "PuedoCargarTarjetaDesdeTarjeta": false,
+            "PuedoDescargarTarjetaATarjeta": false,
+            "PuedoModificarCancelarDomiciliaciones": true,
+            "PuedoSerDestinoModificarDomiciliaciones": true,
+            "Permisos": 7,
+            "PuedoDescargarCuentaATarjeta": true,
+            "PuedoCargarCuentaDesdeTarjeta": true,
+            "PuedoDescargarCuentaACuentaPropia": true,
+            "PuedoDescargarCuentaACuentaAjena": true,
+            "Estado": 0,
+            "PendActivacion": 0,
+            "EsProductoRestringido": false,
+            "EsInformacionExtraDisponible": false,
+            "TipoCuentaPlanPensiones": "",
+            "IdProductoInterno": "683470330130640",
+            "RealmIdentifier": ""
+        }
+    ]
+}
