@@ -48,16 +48,24 @@ import se.tink.backend.aggregation.workers.worker.AgentWorker;
 import se.tink.backend.aggregation.workers.worker.AgentWorkerOperationFactory;
 import se.tink.backend.aggregation.workers.worker.AgentWorkerRefreshOperationCreatorWrapper;
 import se.tink.libraries.credentials.service.CreateCredentialsRequest;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.ManualAuthenticateRequest;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.credentials.service.UpdateCredentialsRequest;
 import se.tink.libraries.draining.ApplicationDrainMode;
 import se.tink.libraries.http.utils.HttpResponseHelper;
+import se.tink.libraries.metrics.core.MetricId;
+import se.tink.libraries.metrics.registry.MetricRegistry;
 import se.tink.libraries.queue.QueueProducer;
 
 @Path("/aggregation")
 public class AggregationServiceResource implements AggregationService {
+
+    private static final MetricId USER_AVAILABILITY =
+            MetricId.newId("aggregation_user_availability");
+
+    private final MetricRegistry metricRegistry;
     private final QueueProducer producer;
     @Context private HttpServletRequest httpRequest;
 
@@ -77,7 +85,8 @@ public class AggregationServiceResource implements AggregationService {
             SupplementalInformationController supplementalInformationController,
             ApplicationDrainMode applicationDrainMode,
             ProviderConfigurationService providerConfigurationService,
-            StartupChecksHandler startupChecksHandler) {
+            StartupChecksHandler startupChecksHandler,
+            MetricRegistry metricRegistry) {
         this.agentWorker = agentWorker;
         this.agentWorkerCommandFactory = agentWorkerOperationFactory;
         this.supplementalInformationController = supplementalInformationController;
@@ -85,6 +94,21 @@ public class AggregationServiceResource implements AggregationService {
         this.applicationDrainMode = applicationDrainMode;
         this.providerConfigurationService = providerConfigurationService;
         this.startupChecksHandler = startupChecksHandler;
+        this.metricRegistry = metricRegistry;
+    }
+
+    private void trackUserPresentFlagPresence(String method, CredentialsRequest request) {
+        if (metricRegistry == null) {
+            // just a safeguard for the initial deploy.
+            logger.error("metric registry not instantiated");
+            return;
+        }
+        metricRegistry
+                .meter(
+                        USER_AVAILABILITY
+                                .label("method", method)
+                                .label("is_present", request.getUserAvailability() != null))
+                .inc();
     }
 
     @Override
@@ -117,6 +141,9 @@ public class AggregationServiceResource implements AggregationService {
     public void configureWhitelistInformation(
             final ConfigureWhitelistInformationRequest request, ClientInfo clientInfo)
             throws Exception {
+
+        trackUserPresentFlagPresence("configure_whitelist", request);
+
         Set<RefreshableItem> itemsToRefresh = request.getItemsToRefresh();
 
         // If the caller don't set any refreshable items, we won't do a refresh
@@ -143,6 +170,9 @@ public class AggregationServiceResource implements AggregationService {
     public void refreshWhitelistInformation(
             final RefreshWhitelistInformationRequest request, ClientInfo clientInfo)
             throws Exception {
+
+        trackUserPresentFlagPresence("refresh_whitelist", request);
+
         // If the caller don't set any accounts to refresh, we won't do a refresh.
         if (Objects.isNull(request.getAccounts()) || request.getAccounts().isEmpty()) {
             HttpResponseHelper.error(Response.Status.BAD_REQUEST);
@@ -166,6 +196,8 @@ public class AggregationServiceResource implements AggregationService {
     @Override
     public void refreshInformation(final RefreshInformationRequest request, ClientInfo clientInfo)
             throws Exception {
+        trackUserPresentFlagPresence("refresh", request);
+
         if (request.isManual()) {
             agentWorker.execute(
                     agentWorkerCommandFactory.createOperationRefresh(request, clientInfo));
@@ -183,12 +215,14 @@ public class AggregationServiceResource implements AggregationService {
     @Override
     public void authenticate(final ManualAuthenticateRequest request, ClientInfo clientInfo)
             throws Exception {
+        trackUserPresentFlagPresence("authenticate", request);
         agentWorker.execute(
                 agentWorkerCommandFactory.createOperationAuthenticate(request, clientInfo));
     }
 
     @Override
     public void transfer(final TransferRequest request, ClientInfo clientInfo) throws Exception {
+        trackUserPresentFlagPresence("transfer", request);
         logger.info(
                 "Transfer Request received from main. skipRefresh is: {}", request.isSkipRefresh());
         agentWorker.execute(
@@ -197,6 +231,7 @@ public class AggregationServiceResource implements AggregationService {
 
     @Override
     public void payment(final TransferRequest request, ClientInfo clientInfo) {
+        trackUserPresentFlagPresence("payment", request);
         logger.info(
                 "Transfer Request received from main. skipRefresh is: {}", request.isSkipRefresh());
         try {
@@ -209,12 +244,14 @@ public class AggregationServiceResource implements AggregationService {
 
     @Override
     public void recurringPayment(RecurringPaymentRequest request, ClientInfo clientInfo) {
+        trackUserPresentFlagPresence("recurring_payment", request);
         logger.info("Recurring Payment Request received from main.");
     }
 
     @Override
     public void whitelistedTransfer(final WhitelistedTransferRequest request, ClientInfo clientInfo)
             throws Exception {
+        trackUserPresentFlagPresence("whitelisted_transfer", request);
         agentWorker.execute(
                 agentWorkerCommandFactory.createOperationExecuteWhitelistedTransfer(
                         request, clientInfo));
@@ -392,6 +429,7 @@ public class AggregationServiceResource implements AggregationService {
     @Override
     public void createBeneficiary(
             CreateBeneficiaryCredentialsRequest request, ClientInfo clientInfo) throws Exception {
+        trackUserPresentFlagPresence("create_beneficiary", request);
         logger.info("Received create beneficiary request");
         // Only execute if feature is enabled with feature flag.
         Optional<AgentWorkerOperation> workerCommand =
