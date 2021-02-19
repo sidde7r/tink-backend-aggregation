@@ -41,12 +41,11 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 @RequiredArgsConstructor(onConstructor = @__({@Inject}))
 public class NemIdVerifyLoginResponseStep {
 
-    public static final List<By> ELEMENTS_TO_SEARCH_FOR =
+    public static final List<By> ELEMENTS_TO_SEARCH_FOR_IN_IFRAME =
             ImmutableList.of(
                     NEMID_CODE_APP_METHOD,
                     NEMID_CODE_CARD_METHOD,
                     NEMID_CODE_TOKEN_METHOD,
-                    NOT_EMPTY_NEMID_TOKEN,
                     NOT_EMPTY_ERROR_MESSAGE,
                     NEMID_WIDE_INFO_HEADING);
 
@@ -77,7 +76,8 @@ public class NemIdVerifyLoginResponseStep {
         ElementsSearchResult validationElementsSearchResult =
                 driverWrapper.searchForFirstElement(
                         ElementsSearchQuery.builder()
-                                .searchInAnIframe(ELEMENTS_TO_SEARCH_FOR)
+                                .searchInParentWindow(NOT_EMPTY_NEMID_TOKEN)
+                                .searchInAnIframe(ELEMENTS_TO_SEARCH_FOR_IN_IFRAME)
                                 .searchForSeconds(30)
                                 .build());
 

@@ -57,14 +57,14 @@ public class NemIdCodeCardGetTokenStep {
             return searchResult.getElementTextTrimmed();
         }
         if (elementSelector == NOT_EMPTY_ERROR_MESSAGE) {
-            throwThereIsACodeCardErrorMessage(searchResult.getElementTextTrimmed());
+            throwCodeCardErrorMessage(searchResult.getElementTextTrimmed());
         }
 
         throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception(
                 NEM_ID_PREFIX + " Can't find NemId token for code card authentication");
     }
 
-    private void throwThereIsACodeCardErrorMessage(String errorMessage) {
+    private void throwCodeCardErrorMessage(String errorMessage) {
         String errorMessageLowerCase = errorMessage.toLowerCase();
 
         if (NemIdUtils.valueMatchesAnyPattern(

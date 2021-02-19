@@ -12,7 +12,7 @@ import static se.tink.backend.aggregation.nxgen.controllers.authentication.multi
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NEMID_WIDE_INFO_HEADING;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NOT_EMPTY_ERROR_MESSAGE;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NOT_EMPTY_NEMID_TOKEN;
-import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.steps.NemIdVerifyLoginResponseStep.ELEMENTS_TO_SEARCH_FOR;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.steps.NemIdVerifyLoginResponseStep.ELEMENTS_TO_SEARCH_FOR_IN_IFRAME;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.util.NemIdTestHelper.asArray;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.util.NemIdTestHelper.asList;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.util.NemIdTestHelper.joinLists;
@@ -92,7 +92,8 @@ public class NemIdVerifyLoginResponseStepTest {
                 .verify(driverWrapper)
                 .searchForFirstElement(
                         ElementsSearchQuery.builder()
-                                .searchInAnIframe(ELEMENTS_TO_SEARCH_FOR)
+                                .searchInParentWindow(NOT_EMPTY_NEMID_TOKEN)
+                                .searchInAnIframe(ELEMENTS_TO_SEARCH_FOR_IN_IFRAME)
                                 .searchForSeconds(30)
                                 .build());
         mocksToVerifyInOrder
@@ -133,7 +134,8 @@ public class NemIdVerifyLoginResponseStepTest {
                 .verify(driverWrapper)
                 .searchForFirstElement(
                         ElementsSearchQuery.builder()
-                                .searchInAnIframe(ELEMENTS_TO_SEARCH_FOR)
+                                .searchInParentWindow(NOT_EMPTY_NEMID_TOKEN)
+                                .searchInAnIframe(ELEMENTS_TO_SEARCH_FOR_IN_IFRAME)
                                 .searchForSeconds(30)
                                 .build());
         mocksToVerifyInOrder.verifyNoMoreInteractions();
@@ -229,7 +231,8 @@ public class NemIdVerifyLoginResponseStepTest {
                 .verify(driverWrapper)
                 .searchForFirstElement(
                         ElementsSearchQuery.builder()
-                                .searchInAnIframe(ELEMENTS_TO_SEARCH_FOR)
+                                .searchInParentWindow(NOT_EMPTY_NEMID_TOKEN)
+                                .searchInAnIframe(ELEMENTS_TO_SEARCH_FOR_IN_IFRAME)
                                 .searchForSeconds(30)
                                 .build());
         mocksToVerifyInOrder.verifyNoMoreInteractions();
@@ -310,7 +313,8 @@ public class NemIdVerifyLoginResponseStepTest {
                 .verify(driverWrapper)
                 .searchForFirstElement(
                         ElementsSearchQuery.builder()
-                                .searchInAnIframe(ELEMENTS_TO_SEARCH_FOR)
+                                .searchInParentWindow(NOT_EMPTY_NEMID_TOKEN)
+                                .searchInAnIframe(ELEMENTS_TO_SEARCH_FOR_IN_IFRAME)
                                 .searchForSeconds(30)
                                 .build());
         mocksToVerifyInOrder
@@ -338,7 +342,8 @@ public class NemIdVerifyLoginResponseStepTest {
                 .verify(driverWrapper)
                 .searchForFirstElement(
                         ElementsSearchQuery.builder()
-                                .searchInAnIframe(ELEMENTS_TO_SEARCH_FOR)
+                                .searchInParentWindow(NOT_EMPTY_NEMID_TOKEN)
+                                .searchInAnIframe(ELEMENTS_TO_SEARCH_FOR_IN_IFRAME)
                                 .searchForSeconds(30)
                                 .build());
     }
