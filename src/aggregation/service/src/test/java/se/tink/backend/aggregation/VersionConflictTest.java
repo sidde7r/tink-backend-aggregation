@@ -35,7 +35,8 @@ public final class VersionConflictTest {
                     "jetty-util",
                     "jetty-http",
                     "httpclient",
-                    "httpcore");
+                    "httpcore",
+                    "log4j");
 
     /**
      * If this test is failing for you, that likely means that you made some changes that introduced

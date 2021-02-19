@@ -1,5 +1,6 @@
 package se.tink.libraries.discovery;
 
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import org.apache.curator.CuratorZookeeperClient;
 import org.apache.curator.framework.CuratorFramework;
@@ -31,6 +32,16 @@ import org.apache.zookeeper.Watcher;
 import org.apache.zookeeper.server.quorum.flexible.QuorumVerifier;
 
 public class FakeCuratorFramework implements CuratorFramework {
+
+    @Override
+    public CompletableFuture<Void> runSafe(Runnable runnable) {
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    @Override
+    public CompletableFuture<Void> postSafeNotify(Object monitorHolder) {
+        throw new UnsupportedOperationException("Not implemented");
+    }
 
     @Override
     public void start() {
