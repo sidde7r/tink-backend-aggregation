@@ -18,7 +18,7 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class SabadellAccountFetcherTest {
     private static final String TEST_DATA_PATH =
-            "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/es/banks/sabadell/resources";
+            "se/tink/backend/aggregation/agents/nxgen/es/banks/sabadell/wiremock/resources";
     private static final String FIRST_ACCOUNT_IBAN = "ES0820952954871624915582";
     private static final String SECOND_ACCOUNT_IBAN = "ES3831906561918657847255";
 

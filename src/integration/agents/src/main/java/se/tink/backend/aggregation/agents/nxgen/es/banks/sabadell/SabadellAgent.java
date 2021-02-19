@@ -33,6 +33,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.session.Sabade
 import se.tink.backend.aggregation.agents.progressive.ProgressiveAuthAgent;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentProgressiveGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.StatelessProgressiveAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
@@ -64,10 +65,12 @@ public final class SabadellAgent extends SubsequentProgressiveGenerationAgent
     private final LoanRefreshController loanRefreshController;
     private final CreditCardRefreshController creditCardRefreshController;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
+    private final RandomValueGenerator randomValueGenerator;
 
     @Inject
     public SabadellAgent(final AgentComponentProvider componentProvider) {
         super(componentProvider);
+        this.randomValueGenerator = componentProvider.getRandomValueGenerator();
         this.apiClient = new SabadellApiClient(client);
 
         this.investmentRefreshController =
@@ -178,6 +181,10 @@ public final class SabadellAgent extends SubsequentProgressiveGenerationAgent
     @Override
     public StatelessProgressiveAuthenticator getAuthenticator() {
         return new SabadellAuthenticator(
-                apiClient, sessionStorage, persistentStorage, supplementalInformationFormer);
+                apiClient,
+                sessionStorage,
+                persistentStorage,
+                supplementalInformationFormer,
+                randomValueGenerator);
     }
 }

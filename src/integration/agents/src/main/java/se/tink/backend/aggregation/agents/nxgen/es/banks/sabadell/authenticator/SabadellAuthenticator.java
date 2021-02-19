@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.authenticator
 
 import com.google.common.collect.ImmutableList;
 import java.util.List;
-import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
@@ -13,6 +12,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.authenticator.
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.authenticator.entities.SabadellSessionData;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.authenticator.entities.SecurityInputEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.authenticator.entities.SessionResponse;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.StatelessProgressiveAuthenticator;
@@ -29,12 +29,14 @@ public class SabadellAuthenticator extends StatelessProgressiveAuthenticator {
     private final SessionStorage sessionStorage;
     private final PersistentStorage persistentStorage;
     private final List<AuthenticationStep> authenticationSteps;
+    private final RandomValueGenerator randomValueGenerator;
 
     public SabadellAuthenticator(
             SabadellApiClient apiClient,
             SessionStorage sessionStorage,
             PersistentStorage persistentStorage,
-            SupplementalInformationFormer supplementalInformationFormer) {
+            SupplementalInformationFormer supplementalInformationFormer,
+            RandomValueGenerator randomValueGenerator) {
         this.apiClient = apiClient;
         this.sessionStorage = sessionStorage;
         this.persistentStorage = persistentStorage;
@@ -43,6 +45,7 @@ public class SabadellAuthenticator extends StatelessProgressiveAuthenticator {
                         new UsernamePasswordAuthenticationStep(this::login),
                         new AutomaticAuthenticationStep(this::checkSCA, "checkSCA"),
                         new OtpStep(this::processOtp, supplementalInformationFormer));
+        this.randomValueGenerator = randomValueGenerator;
     }
 
     @Override
@@ -112,7 +115,8 @@ public class SabadellAuthenticator extends StatelessProgressiveAuthenticator {
 
     private String getCSID() {
         if (!persistentStorage.containsKey(Storage.CSID_KEY)) {
-            persistentStorage.put(Storage.CSID_KEY, UUID.randomUUID().toString().toUpperCase());
+            persistentStorage.put(
+                    Storage.CSID_KEY, randomValueGenerator.getUUID().toString().toUpperCase());
         }
         return persistentStorage.get(Storage.CSID_KEY);
     }
