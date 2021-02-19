@@ -94,55 +94,6 @@
         "availableCredit" : 31382.67,
         "balance" : -3617.33
     }, {
-        "accountNumber" : "8327-9,904 316 121-6",
-        "accountExclusion" : "NONE",
-        "exactBalance" : {
-            "currencyCode" : "SEK",
-            "exactValue" : 67267.69,
-            "doubleValue" : 67267.69,
-            "unscaledValue" : 6726769,
-            "scale" : 2
-        },
-        "currencyCode" : "SEK",
-        "availableBalance" : {
-            "currencyCode" : "SEK",
-            "exactValue" : 67267.69,
-            "doubleValue" : 67267.69,
-            "unscaledValue" : 6726769,
-            "scale" : 2
-        },
-        "creditLimit" : {
-            "currencyCode" : "SEK",
-            "exactValue" : 0.0,
-            "doubleValue" : 0.0,
-            "unscaledValue" : 0,
-            "scale" : 1
-        },
-        "bankId" : "832799043161216",
-        "excluded" : false,
-        "favored" : false,
-        "name" : "Pensionssparande",
-        "ownership" : 1.0,
-        "type" : "SAVINGS",
-        "userModifiedExcluded" : false,
-        "userModifiedName" : false,
-        "userModifiedType" : false,
-        "identifiers" : "[\"se://832799043161216\"]",
-        "closed" : false,
-        "holderName" : "Wiremock User",
-        "accountHolder" : {
-            "accountId" : null,
-            "type" : "PERSONAL",
-            "identities" : [ {
-                "name" : "Wiremock User",
-                "role" : null
-            } ]
-        },
-        "flags" : "[]",
-        "balances" : [ ],
-        "availableCredit" : 0.0,
-        "balance" : 67267.69
-    }, {
         "accountNumber" : "515 215 792-0",
         "accountExclusion" : "NONE",
         "exactBalance" : {
