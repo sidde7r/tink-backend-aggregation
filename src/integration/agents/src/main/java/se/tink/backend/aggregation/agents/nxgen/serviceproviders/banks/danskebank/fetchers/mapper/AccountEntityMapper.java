@@ -86,6 +86,9 @@ public class AccountEntityMapper {
                                 .build())
                 .withId(
                         IdModule.builder()
+                                // Do not change the uniqueIdentifier to use getUniqueIdentifier()
+                                // The SE account mapper overrides it to use accountNoExt, which
+                                // will cause duplicates!!!!
                                 .withUniqueIdentifier(accountEntity.getAccountNoInt())
                                 .withAccountNumber(accountEntity.getAccountNoExt())
                                 .withAccountName(accountEntity.getAccountName())
