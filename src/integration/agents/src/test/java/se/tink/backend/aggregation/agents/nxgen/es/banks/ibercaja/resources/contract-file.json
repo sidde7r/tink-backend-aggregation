@@ -1,16 +1,16 @@
 {
   "accounts" : [ {
-    "accountNumber" : "ES0220858347830330130640",
+    "accountNumber" : "ES0229999999999999999999",
     "accountExclusion" : "NONE",
     "exactBalance" : {
       "currencyCode" : "EUR",
-      "scale" : 2,
       "unscaledValue" : 103088,
-      "exactValue" : 1030.88,
-      "doubleValue" : 1030.88
+      "scale" : 2,
+      "doubleValue" : 1030.88,
+      "exactValue" : 1030.88
     },
     "currencyCode" : "EUR",
-    "bankId" : "ES0220858347830330130640",
+    "bankId" : "ES0229999999999999999999",
     "excluded" : false,
     "favored" : false,
     "name" : "Cuenta corriente",
@@ -19,7 +19,7 @@
     "userModifiedExcluded" : false,
     "userModifiedName" : false,
     "userModifiedType" : false,
-    "identifiers" : "[\"iban://ES0220858347830330130640\"]",
+    "identifiers" : "[]",
     "closed" : false,
     "flags" : "[]",
     "balances" : [ ],
