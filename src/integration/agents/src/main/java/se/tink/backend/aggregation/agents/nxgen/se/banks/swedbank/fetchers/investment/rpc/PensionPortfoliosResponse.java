@@ -52,8 +52,7 @@ public class PensionPortfoliosResponse {
 
     /**
      * Pension accounts appear both under pension portfolios and engagement overview (as savings
-     * accounts). The the transactional account fetcher should exclude them so they are not
-     * duplicated.
+     * accounts). The transactional account fetcher should exclude them so they are not duplicated.
      */
     @JsonIgnore
     public List<String> getPensionAccountNumbers() {
