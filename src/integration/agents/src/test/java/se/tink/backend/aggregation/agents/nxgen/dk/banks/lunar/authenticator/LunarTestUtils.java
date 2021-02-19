@@ -17,7 +17,6 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationProcessStepIdentifier;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.request.AgentProceedNextStepAuthenticationRequest;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.request.AgentStartAuthenticationProcessRequest;
-import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.request.AgentUserInteractionAuthenticationProcessRequest;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentFailedAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.common.AgentExtendedClientInfo;
 import se.tink.libraries.serialization.utils.SerializationUtils;
@@ -43,21 +42,6 @@ public class LunarTestUtils {
 
         return new AgentStartAuthenticationProcessRequest(
                 authDataAccessor.storeData(authData), AgentExtendedClientInfo.builder().build());
-    }
-
-    public static AgentUserInteractionAuthenticationProcessRequest
-            getUserInteractionAuthProcessRequest(
-                    LunarProcessStateAccessor stateAccessor,
-                    LunarAuthDataAccessor authDataAccessor,
-                    LunarProcessState processState,
-                    LunarAuthData authData) {
-
-        return new AgentUserInteractionAuthenticationProcessRequest(
-                AgentAuthenticationProcessStepIdentifier.of("test"),
-                authDataAccessor.storeData(authData),
-                stateAccessor.storeState(processState),
-                Collections.emptyList(),
-                AgentExtendedClientInfo.builder().build());
     }
 
     public static LunarProcessStateAccessor getProcessStateAccessor(

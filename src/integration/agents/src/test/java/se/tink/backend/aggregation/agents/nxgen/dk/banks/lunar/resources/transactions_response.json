@@ -1,0 +1,205 @@
+{
+    "latestRequestTime": 1604063669290,
+    "oldest": 1591343356482,
+    "originGroupId": "833293fc-282c-4b99-8b86-2035218abeac",
+    "transactions": [
+        {
+            "amount": -1.23,
+            "appReference": {
+                "created": 1604063669290,
+                "deleted": true,
+                "id": "cf91f002-f48e-4cb1-9a03-c26412ccbcb7-appReference",
+                "updated": 1604063669290
+            },
+            "attachments": [],
+            "canAddNote": true,
+            "canAttach": true,
+            "canCategorize": true,
+            "canExclude": true,
+            "canHide": true,
+            "canReact": true,
+            "categoryId": "other",
+            "color": "#687990",
+            "conversion": {
+                "created": 1604063669290,
+                "deleted": true,
+                "id": "cf91f002-f48e-4cb1-9a03-c26412ccbcb7-conversion",
+                "updated": 1604063669290
+            },
+            "created": 1604063668852,
+            "currency": "DKK",
+            "deleted": true,
+            "details": [
+                {
+                    "label": "Merchant",
+                    "sort": 1,
+                    "type": "merchant",
+                    "value": "Test*Ram pam pam\nWarsaw"
+                },
+                {
+                    "label": "Status",
+                    "sort": 2,
+                    "type": "status",
+                    "value": "Reserved"
+                },
+                {
+                    "label": "Card",
+                    "sort": 3,
+                    "type": "card",
+                    "value": "123456******1234"
+                }
+            ],
+            "displayDate": "2020-10-30T13:14:28Z",
+            "groupId": "000000000123456-merchant",
+            "groupSpend": {
+                "id": "000000000123456-merchant",
+                "updated": 0
+            },
+            "iconUrl": "https://s3-eu-west-1.amazonaws.com/lunarway-prod-cdn/pfm/category_other.png",
+            "id": "cf91f002-f48e-4cb1-9a03-c26412ccbcb7",
+            "location": {
+                "created": 1604063669290,
+                "deleted": true,
+                "id": "cf91f002-f48e-4cb1-9a03-c26412ccbcb7-location",
+                "updated": 1604063669290
+            },
+            "month": 10,
+            "reactions": null,
+            "sort": 1604063668748,
+            "status": "authorization",
+            "subtitle": "Reserved",
+            "title": "Test*Ram pam pam",
+            "transactionOrigin": "dklb",
+            "transactionOriginGroupId": "833293fc-282c-4b99-8b86-2035218abeac",
+            "transactionOriginType": "account",
+            "type": "card",
+            "updated": 1604063669290,
+            "year": 2020
+        },
+        {
+            "amount": -100,
+            "appReference": {
+                "created": 1592321652454,
+                "deleted": true,
+                "id": "50b24ebe-894d-44ff-9b1a-66918ef87f9e-appReference",
+                "updated": 1592321652454
+            },
+            "attachments": [],
+            "canAddNote": true,
+            "canAttach": true,
+            "canCategorize": true,
+            "canExclude": true,
+            "canHide": true,
+            "canReact": true,
+            "categoryId": "other",
+            "color": "#687990",
+            "conversion": {
+                "created": 1592321652454,
+                "deleted": true,
+                "id": "50b24ebe-894d-44ff-9b1a-66918ef87f9e-conversion",
+                "updated": 1592321652454
+            },
+            "created": 1592321652260,
+            "currency": "DKK",
+            "deleted": null,
+            "details": [
+                {
+                    "label": "Reference",
+                    "sort": 1,
+                    "type": "reference",
+                    "value": "123c1231243c234234c"
+                }
+            ],
+            "displayDate": "2020-06-16T03:30:00Z",
+            "groupId": "12345678901234-transfer",
+            "groupSpend": {
+                "id": "12345678901234-transfer",
+                "updated": 0
+            },
+            "iconUrl": "https://s3-eu-west-1.amazonaws.com/lunarway-prod-cdn/transaction-default-icons/Bank.png",
+            "id": "50b24ebe-894d-44ff-9b1a-66918ef87f9e",
+            "location": {
+                "created": 1592321652454,
+                "deleted": true,
+                "id": "50b24ebe-894d-44ff-9b1a-66918ef87f9e-location",
+                "updated": 1592321652454
+            },
+            "month": 6,
+            "reactions": null,
+            "sort": 1592278200000,
+            "status": "financial",
+            "title": "Deposit",
+            "transactionOrigin": "dklb",
+            "transactionOriginGroupId": "833293fc-282c-4b99-8b86-2035218abeac",
+            "transactionOriginType": "account",
+            "type": "account",
+            "updated": 1592321652454,
+            "year": 2020
+        },
+        {
+            "amount": 1234.12,
+            "appReference": {
+                "created": 1591343356542,
+                "deleted": true,
+                "id": "df117a31-c443-4ce6-bf53-ffdaa901006b-appReference",
+                "updated": 1591343356542
+            },
+            "attachments": [],
+            "canAddNote": true,
+            "canAttach": true,
+            "canHide": true,
+            "canReact": true,
+            "categoryId": "other",
+            "color": "#292F36",
+            "conversion": {
+                "created": 1591343356542,
+                "deleted": true,
+                "id": "df117a31-c443-4ce6-bf53-ffdaa901006b-conversion",
+                "updated": 1591343356542
+            },
+            "created": 1591343356542,
+            "currency": "DKK",
+            "deleted": null,
+            "details": [
+                {
+                    "label": "From",
+                    "sort": 1,
+                    "type": "from",
+                    "value": "From Testoviron"
+                },
+                {
+                    "label": "Message",
+                    "sort": 2,
+                    "type": "message",
+                    "value": "Test message"
+                }
+            ],
+            "displayDate": "2020-06-05T07:49:16Z",
+            "groupId": "unknown-transfer",
+            "groupSpend": {
+                "id": "unknown-transfer",
+                "updated": 0
+            },
+            "iconUrl": "https://s3-eu-west-1.amazonaws.com/lunarway-prod-cdn/transaction-default-icons/Person.png",
+            "id": "df117a31-c443-4ce6-bf53-ffdaa901006b",
+            "location": {
+                "created": 1591343356542,
+                "deleted": true,
+                "id": "df117a31-c443-4ce6-bf53-ffdaa901006b-location",
+                "updated": 1591343356542
+            },
+            "month": 6,
+            "reactions": null,
+            "sort": 1591343356482,
+            "status": "financial",
+            "subtitle": "Test message",
+            "title": "Transfer",
+            "transactionOrigin": "dklb",
+            "transactionOriginGroupId": "833293fc-282c-4b99-8b86-2035218abeac",
+            "transactionOriginType": "account",
+            "type": "account",
+            "updated": 1591343356542,
+            "year": 2020
+        }
+    ]
+}

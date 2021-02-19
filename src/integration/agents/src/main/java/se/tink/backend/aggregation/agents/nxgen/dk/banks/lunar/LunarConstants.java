@@ -1,13 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar;
 
 import java.net.URI;
+import java.util.Optional;
+import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.utils.deviceprofile.DeviceProfileConfiguration;
 
 public class LunarConstants {
 
-    public static final String APP_VERSION = "4.26.0";
-    public static final String DA_LANGUAGE = "DA";
+    public static final String APP_VERSION = "4.27.0";
     private static final String LUNAR_BASE_URL = "https://api.prod.lunarway.com/";
 
     public static class Uri {
@@ -23,6 +24,9 @@ public class LunarConstants {
 
     public static class Url {
         public static final URL ACCOUNTS_VIEW = toLunarUrl("accounts-view/accounts");
+        public static final URL GOALS = toLunarUrl("goals/v2/goals");
+        public static final URL TRANSACTIONS = toLunarUrl("transaction-view/transactions");
+        public static final URL GOAL_DETAILS = toLunarUrl("goals/v2/goals/{goalId}/feed?from=0");
 
         private static URL toLunarUrl(String endpoint) {
             return URL.of(LUNAR_BASE_URL + endpoint);
@@ -52,6 +56,8 @@ public class LunarConstants {
                 DeviceProfileConfiguration.IOS_STABLE.getModelNumber();
         public static final String USER_AGENT_VALUE = "Lunar/99 CFNetwork/1121.2.2 Darwin/19.3.0";
         public static final String DK_REGION = "DK";
+        public static final String DA_LANGUAGE = "da";
+        private static final String EN_LANGUAGE = "en";
         public static final String DA_LANGUAGE_ACCEPT = "da-dk";
         public static final String I_OS = DeviceProfileConfiguration.IOS_STABLE.getOs();
         public static final String OS_VERSION =
@@ -60,6 +66,29 @@ public class LunarConstants {
                 DeviceProfileConfiguration.IOS_STABLE.getMake();
         public static final String APP_ORIGIN = "App";
         public static final String ENCODING = "gzip, deflate, br";
+
+        static String getLanguageHeaderValue(String userLocale) {
+            String userLanguageCode =
+                    Optional.ofNullable(StringUtils.left(userLocale, 2))
+                            .orElse(HeaderValues.DA_LANGUAGE);
+
+            return HeaderValues.EN_LANGUAGE.equalsIgnoreCase(userLanguageCode)
+                    ? HeaderValues.EN_LANGUAGE
+                    : HeaderValues.DA_LANGUAGE;
+        }
+    }
+
+    public static class QueryParams {
+        public static final String ORIGIN_GROUP_ID = "originGroupId";
+        public static final String PAGE_SIZE = "pageSize";
+    }
+
+    public static class QueryParamsValues {
+        public static final String MAX_PAGE_SIZE = "500";
+    }
+
+    public static class PathParams {
+        public static final String GOAL_ID = "goalId";
     }
 
     public static class Storage {

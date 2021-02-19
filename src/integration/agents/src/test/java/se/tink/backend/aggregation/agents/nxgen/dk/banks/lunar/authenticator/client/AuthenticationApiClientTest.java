@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.LunarConstants.APP_VERSION;
-import static se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.LunarConstants.DA_LANGUAGE;
 import static se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.LunarConstants.HeaderValues;
 import static se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.LunarConstants.Headers;
 import static se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.LunarConstants.Uri;
@@ -60,7 +59,8 @@ public class AuthenticationApiClientTest {
     public void setup() {
         client = mock(AgentPlatformHttpClient.class);
         randomValueGenerator = new MockRandomValueGenerator();
-        authenticationApiClient = new AuthenticationApiClient(client, randomValueGenerator);
+        authenticationApiClient =
+                new AuthenticationApiClient(client, randomValueGenerator, HeaderValues.DA_LANGUAGE);
     }
 
     @Test
@@ -100,7 +100,7 @@ public class AuthenticationApiClientTest {
                 .header(Headers.OS, HeaderValues.I_OS)
                 .header(Headers.DEVICE_MANUFACTURER, HeaderValues.DEVICE_MANUFACTURER)
                 .header(Headers.OS_VERSION, HeaderValues.OS_VERSION)
-                .header(Headers.LANGUAGE, DA_LANGUAGE)
+                .header(Headers.LANGUAGE, HeaderValues.DA_LANGUAGE)
                 .header(Headers.REQUEST_ID, randomValueGenerator.getUUID().toString())
                 .header(Headers.DEVICE_ID, DEVICE_ID)
                 .header(Headers.ACCEPT_LANGUAGE, HeaderValues.DA_LANGUAGE_ACCEPT)
