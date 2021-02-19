@@ -159,11 +159,19 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
         try {
             File ltsLogFile = new File(getFormattedFileName(logContent, credentials, true));
             String ltsStoragePath = agentDebugStorage.store(logContent, ltsLogFile);
-            log.info(
-                    "Flushed transfer to long term storage for payments disputes ("
-                            + UUIDUtils.toTinkUUID(transferRequest.getTransfer().getId())
-                            + ") debug log for further investigation: "
-                            + ltsStoragePath);
+            if (transferRequest != null) {
+                log.info(
+                        "Flushed transfer to long term storage for payments disputes ("
+                                + UUIDUtils.toTinkUUID(transferRequest.getTransfer().getId())
+                                + ") debug log for further investigation: "
+                                + ltsStoragePath);
+
+            } else {
+                log.info(
+                        "Credential Status: {} \nFlushed http log to long term storage for payments disputes: {}",
+                        credentials.getStatus(),
+                        ltsStoragePath);
+            }
         } catch (IOException e) {
             log.error("Could not write debug log file to payments dispute long term storage.", e);
         }
