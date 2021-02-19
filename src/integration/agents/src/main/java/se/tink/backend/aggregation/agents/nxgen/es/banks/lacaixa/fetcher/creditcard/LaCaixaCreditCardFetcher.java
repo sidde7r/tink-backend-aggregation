@@ -87,7 +87,7 @@ public class LaCaixaCreditCardFetcher
         } catch (NoSuchElementException e) {
             // If there are no predicted settlements, sum disposed balances from contract
             // This matches what is shown in the overview of the app
-            LOG.warn("Unable to fetch card balance", e);
+            LOG.warn("Unable to fetch card balance");
             return card.toTinkCard(getBalanceForContract(cardsInContract));
         } catch (HttpResponseException hre) {
             if (isCurrentlyUnavailable(hre.getResponse())) {
