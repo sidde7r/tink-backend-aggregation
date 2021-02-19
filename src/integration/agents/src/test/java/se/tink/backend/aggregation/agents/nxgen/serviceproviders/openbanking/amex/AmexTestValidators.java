@@ -1,5 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex;
 
+import org.junit.Ignore;
+
+@Ignore
 public class AmexTestValidators {
 
     public static String getSupplementalKeyMatchingRegex() {

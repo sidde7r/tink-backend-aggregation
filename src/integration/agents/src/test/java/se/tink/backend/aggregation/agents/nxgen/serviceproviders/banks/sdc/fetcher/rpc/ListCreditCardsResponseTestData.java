@@ -1,7 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetcher.rpc;
 
+import org.junit.Ignore;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
+@Ignore
 public class ListCreditCardsResponseTestData {
 
     static ListCreditCardsResponse getTestDataOneCreditCard() {

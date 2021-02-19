@@ -6,6 +6,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.MediaType;
 import lombok.RequiredArgsConstructor;
+import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.authenticator.rpc.RefreshRequest;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.authenticator.rpc.TokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.authenticator.rpc.TokenResponse;
@@ -184,10 +185,17 @@ public class BpceGroupApiClient implements FrAispApiClient {
 
     @Override
     public Optional<TrustedBeneficiariesResponseDto> getTrustedBeneficiaries(String path) {
-        final RequestBuilder requestBuilder = httpClient.request(createUrlWithBasePath(path));
+        final RequestBuilder requestBuilder =
+                addHeadersToRequest(
+                        httpClient.request(createUrlWithBasePath(path)), HttpMethod.GET);
 
-        return Optional.of(
-                sendRequestAndGetResponse(
-                        requestBuilder, HttpMethod.GET, TrustedBeneficiariesResponseDto.class));
+        final HttpResponse httpResponse =
+                sendRequestAndGetResponse(requestBuilder, HttpMethod.GET, HttpResponse.class);
+
+        if (HttpStatus.SC_NO_CONTENT == httpResponse.getStatus()) {
+            return Optional.empty();
+        }
+
+        return Optional.of(httpResponse.getBody(TrustedBeneficiariesResponseDto.class));
     }
 }

@@ -1,9 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.nationwide;
 
+import org.junit.Ignore;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountBalanceEntity;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
-class BalanceFixtures {
+@Ignore
+public class BalanceFixtures {
 
     private static final String BALANCE_CLOSING_AVAILABLE =
             "{\"AccountId\":\"4cc\",\"Amount\":{\"Amount\":\"123.05\",\"Currency\":\"GBP\"},\"CreditDebitIndicator\":\"Credit\",\"Type\":\"ClosingAvailable\",\"DateTime\":\"2019-11-20T14:24:56Z\"}";

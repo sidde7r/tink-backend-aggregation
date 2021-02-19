@@ -35,6 +35,7 @@ public final class NemIdCodeAppConstants {
         OPEN_NEM_ID_APP_AND_CLICK_BUTTON(
                 "Please open the NemId app and confirm login. Then click the \"Submit\" button"),
         PROVIDE_CODE_CARD_CODE("Please provide NemId code card key"),
+        PROVIDE_CODE_TOKEN_CODE("Please provide NemId code token code"),
         ENTER_ACTIVATION_PASSWORD("Enter activation password.");
 
         private final LocalizableKey message;

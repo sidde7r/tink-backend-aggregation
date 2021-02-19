@@ -8,7 +8,9 @@ import java.math.BigInteger;
 import java.security.KeyPair;
 import java.security.interfaces.RSAPrivateCrtKey;
 import javax.ws.rs.core.MultivaluedMap;
+import org.junit.Ignore;
 
+@Ignore
 public class TestFixtures {
 
     public static String givenBaseUrl() {

@@ -6,6 +6,7 @@ import static org.mockito.Mockito.when;
 import java.util.Arrays;
 import java.util.Collections;
 import org.apache.commons.lang3.tuple.Pair;
+import org.junit.Ignore;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.FinTsAccountInformation;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.FinTsDialogContext;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.configuration.Bank;
@@ -19,6 +20,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.parts.re
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.security.tan.SegmentType;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.security.tan.TanByOperationLookup;
 
+@Ignore
 public class TestFixtures {
 
     private TestFixtures() {}

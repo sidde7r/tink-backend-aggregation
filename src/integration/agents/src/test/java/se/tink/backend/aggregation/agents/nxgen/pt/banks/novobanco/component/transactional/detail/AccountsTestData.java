@@ -5,12 +5,14 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.junit.Ignore;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.detail.TransactionDto;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.detail.TransactionalAccountDto;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.rpc.GetAccountsResponse;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
+@Ignore
 public class AccountsTestData {
     public static final String PAYLOAD_ACCOUNT_ID_1 = "330000123456";
     public static final String PAYLOAD_ACCOUNT_ID_2 = "1005967000002";

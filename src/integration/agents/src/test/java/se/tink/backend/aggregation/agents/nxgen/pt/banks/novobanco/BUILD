@@ -1,4 +1,4 @@
-load("//tools/bzl:junit_old.bzl", "junit_test")
+load("//tools/bzl:junit.bzl", "junit_test")
 
 junit_test(
     name = "novobanco",
@@ -8,6 +8,7 @@ junit_test(
     visibility = ["//visibility:public"],
     deps = [
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/pt/banks/novobanco",
+        "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/pt/banks/novobanco/detail",
         "//src/integration/amount",
         "//src/integration/lib",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",

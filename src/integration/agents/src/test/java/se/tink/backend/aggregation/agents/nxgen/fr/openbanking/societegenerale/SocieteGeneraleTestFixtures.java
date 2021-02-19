@@ -2,7 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import org.junit.Ignore;
 
+@Ignore
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class SocieteGeneraleTestFixtures {
 

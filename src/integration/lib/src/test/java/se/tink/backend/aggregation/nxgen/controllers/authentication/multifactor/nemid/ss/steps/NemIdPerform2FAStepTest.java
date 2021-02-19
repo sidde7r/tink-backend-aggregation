@@ -1,9 +1,7 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.steps;
 
-import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
-import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.util.NemIdTestHelper.verifyThatFromUsersPerspectiveThrowableIsTheSameAsGivenAgentException;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -12,12 +10,13 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.NemId2FAMethod;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.steps.codeapp.NemIdAuthorizeWithCodeAppStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.steps.codecard.NemIdAuthorizeWithCodeCardStep;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.exception.NemIdError;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.steps.codetoken.NemIdAuthorizeWithCodeTokenStep;
 
 public class NemIdPerform2FAStepTest {
 
     private NemIdAuthorizeWithCodeAppStep authorizeWithCodeAppStep;
     private NemIdAuthorizeWithCodeCardStep authorizeWithCodeCardStep;
+    private NemIdAuthorizeWithCodeTokenStep authorizeWithCodeTokenStep;
     private InOrder mocksToVerifyInOrder;
 
     private Credentials credentials;
@@ -28,12 +27,20 @@ public class NemIdPerform2FAStepTest {
     public void setup() {
         authorizeWithCodeAppStep = mock(NemIdAuthorizeWithCodeAppStep.class);
         authorizeWithCodeCardStep = mock(NemIdAuthorizeWithCodeCardStep.class);
-        mocksToVerifyInOrder = inOrder(authorizeWithCodeAppStep, authorizeWithCodeCardStep);
+        authorizeWithCodeTokenStep = mock(NemIdAuthorizeWithCodeTokenStep.class);
+        mocksToVerifyInOrder =
+                inOrder(
+                        authorizeWithCodeAppStep,
+                        authorizeWithCodeCardStep,
+                        authorizeWithCodeTokenStep);
 
         credentials = mock(Credentials.class);
 
         perform2FAStep =
-                new NemIdPerform2FAStep(authorizeWithCodeAppStep, authorizeWithCodeCardStep);
+                new NemIdPerform2FAStep(
+                        authorizeWithCodeAppStep,
+                        authorizeWithCodeCardStep,
+                        authorizeWithCodeTokenStep);
     }
 
     @Test
@@ -61,18 +68,14 @@ public class NemIdPerform2FAStepTest {
     }
 
     @Test
-    public void should_throw_code_token_not_supported_error() {
+    public void should_authenticate_with_code_token() {
         // when
-        Throwable throwable =
-                catchThrowable(
-                        () ->
-                                perform2FAStep.authenticateToGetNemIdToken(
-                                        NemId2FAMethod.CODE_TOKEN, credentials));
+        perform2FAStep.authenticateToGetNemIdToken(NemId2FAMethod.CODE_TOKEN, credentials);
 
         // then
-        verifyThatFromUsersPerspectiveThrowableIsTheSameAsGivenAgentException(
-                throwable, NemIdError.CODE_TOKEN_NOT_SUPPORTED.exception());
-
+        mocksToVerifyInOrder
+                .verify(authorizeWithCodeTokenStep)
+                .getNemIdTokenWithCodeTokenAuth(credentials);
         mocksToVerifyInOrder.verifyNoMoreInteractions();
     }
 }

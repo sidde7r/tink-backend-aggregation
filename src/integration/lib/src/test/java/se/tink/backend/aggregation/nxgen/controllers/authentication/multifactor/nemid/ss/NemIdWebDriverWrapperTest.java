@@ -14,7 +14,6 @@ import static se.tink.backend.aggregation.nxgen.controllers.authentication.multi
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.util.NemIdTestHelper.verifyNTimes;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.util.NemIdTestHelper.webElementMock;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -27,13 +26,19 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriver.TargetLocator;
 import org.openqa.selenium.WebElement;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.NemIdWebDriverWrapper.ElementsSearchResult;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.utils.ElementsSearchQuery;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.utils.ElementsSearchResult;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.utils.NemIdWebDriverWrapper;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.utils.Sleeper;
 
 public class NemIdWebDriverWrapperTest {
 
     private WebDriver driver;
     private TargetLocator targetLocator;
     private Sleeper sleeper;
+    private WebElement iframeElement;
+
+    private InOrder mocksToVerifyInOrder;
 
     private NemIdWebDriverWrapper driverWrapper;
 
@@ -47,6 +52,9 @@ public class NemIdWebDriverWrapperTest {
         when(driver.switchTo()).thenReturn(targetLocator);
 
         sleeper = mock(Sleeper.class);
+        iframeElement = mock(WebElement.class);
+
+        mocksToVerifyInOrder = inOrder(driver, targetLocator, sleeper);
 
         driverWrapper = new NemIdWebDriverWrapper(driver, sleeper);
     }
@@ -62,8 +70,8 @@ public class NemIdWebDriverWrapperTest {
         // then
         assertThat(switchResult).isFalse();
 
-        verify(driver).findElements(IFRAME);
-        verifyNoMoreInteractions(driver);
+        mocksToVerifyInOrder.verify(driver).findElements(IFRAME);
+        mocksToVerifyInOrder.verifyNoMoreInteractions();
     }
 
     @Test
@@ -80,10 +88,10 @@ public class NemIdWebDriverWrapperTest {
         // then
         assertThat(switchResult).isTrue();
 
-        verify(driver).findElements(IFRAME);
-        verify(driver).switchTo();
-        verify(targetLocator).frame(iframe1);
-        verifyNoMoreInteractions(driver, targetLocator);
+        mocksToVerifyInOrder.verify(driver).findElements(IFRAME);
+        mocksToVerifyInOrder.verify(driver).switchTo();
+        mocksToVerifyInOrder.verify(targetLocator).frame(iframe1);
+        mocksToVerifyInOrder.verifyNoMoreInteractions();
 
         verifyZeroInteractions(iframe2);
     }
@@ -103,8 +111,8 @@ public class NemIdWebDriverWrapperTest {
         driverWrapper.setValueToElement(value, by);
 
         // then
-        verify(driver).findElements(by);
-        verifyNoMoreInteractions(driver);
+        mocksToVerifyInOrder.verify(driver).findElements(by);
+        mocksToVerifyInOrder.verifyNoMoreInteractions();
 
         verify(element1).isDisplayed();
         verifyNoMoreInteractions(element1);
@@ -130,8 +138,8 @@ public class NemIdWebDriverWrapperTest {
         // then
         assertThat(throwable).isInstanceOf(IllegalStateException.class);
 
-        verify(driver).findElements(by);
-        verifyNoMoreInteractions(driver);
+        mocksToVerifyInOrder.verify(driver).findElements(by);
+        mocksToVerifyInOrder.verifyNoMoreInteractions();
     }
 
     @Test
@@ -151,7 +159,8 @@ public class NemIdWebDriverWrapperTest {
         // then
         assertThat(throwable).isInstanceOf(IllegalStateException.class);
 
-        verify(driver).findElements(by);
+        mocksToVerifyInOrder.verify(driver).findElements(by);
+        mocksToVerifyInOrder.verifyNoMoreInteractions();
 
         verify(element1).isDisplayed();
         verifyNoMoreInteractions(element1);
@@ -174,8 +183,8 @@ public class NemIdWebDriverWrapperTest {
         driverWrapper.clickButton(by);
 
         // then
-        verify(driver).findElements(by);
-        verifyNoMoreInteractions(driver);
+        mocksToVerifyInOrder.verify(driver).findElements(by);
+        mocksToVerifyInOrder.verifyNoMoreInteractions();
 
         verify(element1).isDisplayed();
         verifyNoMoreInteractions(element1);
@@ -200,8 +209,8 @@ public class NemIdWebDriverWrapperTest {
         // then
         assertThat(throwable).isInstanceOf(IllegalStateException.class);
 
-        verify(driver).findElements(by);
-        verifyNoMoreInteractions(driver);
+        mocksToVerifyInOrder.verify(driver).findElements(by);
+        mocksToVerifyInOrder.verifyNoMoreInteractions();
     }
 
     @Test
@@ -219,8 +228,8 @@ public class NemIdWebDriverWrapperTest {
         // then
         assertThat(throwable).isInstanceOf(IllegalStateException.class);
 
-        verify(driver).findElements(by);
-        verifyNoMoreInteractions(driver);
+        mocksToVerifyInOrder.verify(driver).findElements(by);
+        mocksToVerifyInOrder.verifyNoMoreInteractions();
 
         verify(button1).isDisplayed();
         verifyNoMoreInteractions(button1);
@@ -241,14 +250,13 @@ public class NemIdWebDriverWrapperTest {
         // then
         assertThat(maybeWebElement).isEmpty();
 
-        InOrder inOrder = inOrder(driver, sleeper);
         verifyNTimes(
                 () -> {
-                    inOrder.verify(driver).findElements(by);
-                    inOrder.verify(sleeper).sleepFor(1_000);
+                    mocksToVerifyInOrder.verify(driver).findElements(by);
+                    mocksToVerifyInOrder.verify(sleeper).sleepFor(1_000);
                 },
                 30);
-        inOrder.verifyNoMoreInteractions();
+        mocksToVerifyInOrder.verifyNoMoreInteractions();
     }
 
     @Test
@@ -269,79 +277,170 @@ public class NemIdWebDriverWrapperTest {
         // then
         assertThat(maybeWebElement).hasValue(element1);
 
-        InOrder inOrder = inOrder(driver, sleeper);
         verifyNTimes(
                 () -> {
-                    inOrder.verify(driver).findElements(by);
-                    inOrder.verify(sleeper).sleepFor(1_000);
+                    mocksToVerifyInOrder.verify(driver).findElements(by);
+                    mocksToVerifyInOrder.verify(sleeper).sleepFor(1_000);
                 },
                 2);
-        inOrder.verify(driver).findElements(by);
-        inOrder.verifyNoMoreInteractions();
+        mocksToVerifyInOrder.verify(driver).findElements(by);
+        mocksToVerifyInOrder.verifyNoMoreInteractions();
     }
 
     @Test
-    public void should_search_for_elements_in_given_intervals_and_return_correct_element() {
+    public void should_search_for_elements_in_1_second_intervals_and_return_correct_element() {
         // given
-        By by1 = By.id("id1");
-        By by2 = By.id("id2 - WILL BE FOUND");
-        By by3 = By.id("id3");
+        By parentWindowBy1 = By.id("parentWindowBy1");
+        By parentWindowBy2 = By.id("parentWindowBy2");
+        By iframeBy1 = By.id("iframeBy1 - WILL BE FOUND");
+        By iframeBy2 = By.id("iframeBy2");
+
+        mockThereIsNemIdIframe();
 
         WebElement elementToBeFound = webElementMock();
+        WebElement secondElementThatWontBeFound = webElementMock();
 
-        when(driver.findElements(by1)).thenReturn(Collections.emptyList());
-        when(driver.findElements(by2))
+        when(driver.findElements(parentWindowBy1)).thenReturn(Collections.emptyList());
+        when(driver.findElements(parentWindowBy2)).thenReturn(Collections.emptyList());
+        when(driver.findElements(iframeBy1))
                 .thenReturn(Collections.emptyList())
                 .thenReturn(Collections.emptyList())
-                .thenReturn(Collections.singletonList(elementToBeFound));
-        when(driver.findElements(by3)).thenReturn(Collections.emptyList());
+                .thenReturn(asList(elementToBeFound, secondElementThatWontBeFound));
+        when(driver.findElements(iframeBy2)).thenReturn(Collections.emptyList());
 
         // when
         ElementsSearchResult searchResult =
-                driverWrapper.searchForFirstElement(Arrays.asList(by1, by2, by3), 10);
+                driverWrapper.searchForFirstElement(
+                        ElementsSearchQuery.builder()
+                                .searchInParentWindow(parentWindowBy1, parentWindowBy2)
+                                .searchInAnIframe(iframeBy1, iframeBy2)
+                                .build());
 
         // then
-        assertThat(searchResult).isEqualTo(ElementsSearchResult.of(by2, elementToBeFound));
+        assertThat(searchResult).isEqualTo(ElementsSearchResult.of(iframeBy1, elementToBeFound));
 
-        InOrder inOrder = inOrder(driver, sleeper);
         verifyNTimes(
                 () -> {
-                    inOrder.verify(driver).findElements(by1);
-                    inOrder.verify(driver).findElements(by2);
-                    inOrder.verify(driver).findElements(by3);
-                    inOrder.verify(sleeper).sleepFor(1_000);
+                    verifySwitchingToParentWindow();
+                    mocksToVerifyInOrder.verify(driver).findElements(parentWindowBy1);
+                    mocksToVerifyInOrder.verify(driver).findElements(parentWindowBy2);
+
+                    verifySwitchingToIframe();
+                    mocksToVerifyInOrder.verify(driver).findElements(iframeBy1);
+                    mocksToVerifyInOrder.verify(driver).findElements(iframeBy2);
+
+                    mocksToVerifyInOrder.verify(sleeper).sleepFor(1_000);
                 },
                 2);
-        inOrder.verify(driver).findElements(by1);
-        inOrder.verify(driver).findElements(by2);
-        inOrder.verifyNoMoreInteractions();
+        verifySwitchingToParentWindow();
+        mocksToVerifyInOrder.verify(driver).findElements(parentWindowBy1);
+        mocksToVerifyInOrder.verify(driver).findElements(parentWindowBy2);
+
+        verifySwitchingToIframe();
+        mocksToVerifyInOrder.verify(driver).findElements(iframeBy1);
+
+        mocksToVerifyInOrder.verifyNoMoreInteractions();
     }
 
     @Test
-    public void
-            should_search_for_elements_in_given_intervals_and_return_empty_result_after_timeout() {
+    public void should_search_not_search_for_elements_in_iframe_if_it_doesnt_exist() {
         // given
-        By by1 = By.id("id1");
-        By by2 = By.id("id2");
+        By parentWindowBy1 = By.id("parentWindowBy1");
+        By parentWindowBy2 = By.id("parentWindowBy2  - WILL BE FOUND");
+        By iframeBy1 = By.id("iframeBy1");
+        By iframeBy2 = By.id("iframeBy2");
 
-        when(driver.findElements(by1)).thenReturn(Collections.emptyList());
-        when(driver.findElements(by2)).thenReturn(Collections.emptyList());
+        mockThereIsNoNemIdIframe();
+
+        WebElement elementToBeFound = webElementMock();
+        WebElement secondElementThatWontBeFound = webElementMock();
+
+        when(driver.findElements(parentWindowBy1)).thenReturn(Collections.emptyList());
+        when(driver.findElements(parentWindowBy2))
+                .thenReturn(Collections.emptyList())
+                .thenReturn(Collections.emptyList())
+                .thenReturn(asList(elementToBeFound, secondElementThatWontBeFound));
 
         // when
         ElementsSearchResult searchResult =
-                driverWrapper.searchForFirstElement(Arrays.asList(by1, by2), 10);
+                driverWrapper.searchForFirstElement(
+                        ElementsSearchQuery.builder()
+                                .searchInParentWindow(parentWindowBy1, parentWindowBy2)
+                                .searchInAnIframe(iframeBy1, iframeBy2)
+                                .build());
+
+        // then
+        assertThat(searchResult)
+                .isEqualTo(ElementsSearchResult.of(parentWindowBy2, elementToBeFound));
+
+        verifyNTimes(
+                () -> {
+                    verifySwitchingToParentWindow();
+                    mocksToVerifyInOrder.verify(driver).findElements(parentWindowBy1);
+                    mocksToVerifyInOrder.verify(driver).findElements(parentWindowBy2);
+
+                    verifyTryingSwitchingToIframe();
+
+                    mocksToVerifyInOrder.verify(sleeper).sleepFor(1_000);
+                },
+                2);
+        verifySwitchingToParentWindow();
+        mocksToVerifyInOrder.verify(driver).findElements(parentWindowBy1);
+        mocksToVerifyInOrder.verify(driver).findElements(parentWindowBy2);
+
+        mocksToVerifyInOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void should_search_for_elements_and_return_empty_result_after_timeout() {
+        // given
+        By by = By.id("by");
+        when(driver.findElements(by)).thenReturn(Collections.emptyList());
+
+        // when
+        ElementsSearchResult searchResult =
+                driverWrapper.searchForFirstElement(
+                        ElementsSearchQuery.builder()
+                                .searchInParentWindow(by)
+                                .searchForSeconds(10)
+                                .build());
 
         // then
         assertThat(searchResult).isEqualTo(ElementsSearchResult.empty());
 
-        InOrder inOrder = inOrder(driver, sleeper);
         verifyNTimes(
                 () -> {
-                    inOrder.verify(driver).findElements(by1);
-                    inOrder.verify(driver).findElements(by2);
-                    inOrder.verify(sleeper).sleepFor(1_000);
+                    verifySwitchingToParentWindow();
+                    mocksToVerifyInOrder.verify(driver).findElements(by);
+
+                    verifyTryingSwitchingToIframe();
+
+                    mocksToVerifyInOrder.verify(sleeper).sleepFor(1_000);
                 },
                 10);
-        inOrder.verifyNoMoreInteractions();
+        mocksToVerifyInOrder.verifyNoMoreInteractions();
+    }
+
+    private void mockThereIsNemIdIframe() {
+        when(driver.findElements(IFRAME)).thenReturn(asList(iframeElement));
+    }
+
+    private void mockThereIsNoNemIdIframe() {
+        when(driver.findElements(IFRAME)).thenReturn(Collections.emptyList());
+    }
+
+    private void verifySwitchingToParentWindow() {
+        mocksToVerifyInOrder.verify(driver).switchTo();
+        mocksToVerifyInOrder.verify(targetLocator).defaultContent();
+    }
+
+    private void verifySwitchingToIframe() {
+        mocksToVerifyInOrder.verify(driver).findElements(IFRAME);
+        mocksToVerifyInOrder.verify(driver).switchTo();
+        mocksToVerifyInOrder.verify(targetLocator).frame(iframeElement);
+    }
+
+    private void verifyTryingSwitchingToIframe() {
+        mocksToVerifyInOrder.verify(driver).findElements(IFRAME);
     }
 }

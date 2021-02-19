@@ -7,11 +7,13 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbank
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.junit.Ignore;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.TransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
 import se.tink.libraries.account.AccountIdentifier;
 
+@Ignore
 public abstract class FrTransferDestinationFetcherTestBase {
 
     protected static void verifyTransferDestinationsResponse(

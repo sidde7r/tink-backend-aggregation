@@ -8,6 +8,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.assertj.core.util.Lists;
+import org.junit.Ignore;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.NovoBancoApiClient;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.authenticator.entity.response.AccountDetailsEntity;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.detail.LoanAccountDto;
@@ -15,6 +16,7 @@ import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.rpc.G
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.rpc.loan.GetLoanDetailsResponse;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
+@Ignore
 public class LoanTestData {
     public static final String PAYLOAD_ACCOUNT_ID = "330000123456";
     public static final String ACCOUNT_DESCR = "Conta DO";

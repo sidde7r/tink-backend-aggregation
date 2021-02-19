@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: VERSION\n"
-"POT-Creation-Date: 2021-02-14 22:35+0000\n"
-"PO-Revision-Date: 2021-02-14 22:35+0000\n"
+"POT-Creation-Date: 2021-02-17 14:38+0000\n"
+"PO-Revision-Date: 2021-02-17 14:38+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE TEAM <EMAIL@ADDRESS>\n"
 "Language: da\n"
@@ -241,3 +241,15 @@ msgid ""
 msgstr ""
 "Alle nøglekort-koder er blevet brugt. Log venligst ind på din bank ved brug "
 "af et nyt nøglekort eller NemID mobil-app’en og forsøg igen."
+
+msgid "The code token code provided by user is incorrect."
+msgstr "Kode token koden angivet af bruger er ukorrekt."
+
+msgid "Code token serial number"
+msgstr "Kode token serienummer"
+
+msgid "Enter the code generated with your code token"
+msgstr "Indtast kodegeneratoren med dit kode token"
+
+msgid "Code token code"
+msgstr "Kode token kode"

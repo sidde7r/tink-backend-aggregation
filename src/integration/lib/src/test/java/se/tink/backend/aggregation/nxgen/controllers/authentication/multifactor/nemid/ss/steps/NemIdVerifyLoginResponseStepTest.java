@@ -3,17 +3,16 @@ package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NEMID_CODE_APP_METHOD;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NEMID_CODE_CARD_METHOD;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NEMID_CODE_TOKEN_METHOD;
-import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NEMID_TOKEN;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NEMID_WIDE_INFO_HEADING;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NOT_EMPTY_ERROR_MESSAGE;
-import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.steps.NemIdVerifyLoginResponseStep.ELEMENTS_TO_SEARCH_FOR;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NOT_EMPTY_NEMID_TOKEN;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.steps.NemIdVerifyLoginResponseStep.ELEMENTS_TO_SEARCH_FOR_IN_IFRAME;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.util.NemIdTestHelper.asArray;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.util.NemIdTestHelper.asList;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.util.NemIdTestHelper.joinLists;
@@ -41,8 +40,9 @@ import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.NemId2FAMethod;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.NemIdCredentialsStatusUpdater;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.NemIdTokenValidator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.NemIdWebDriverWrapper;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.NemIdWebDriverWrapper.ElementsSearchResult;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.utils.ElementsSearchQuery;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.utils.ElementsSearchResult;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.utils.NemIdWebDriverWrapper;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.util.ErrorTextTestParams;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.NemIdCodeAppConstants.UserMessage;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.exception.NemIdError;
@@ -78,7 +78,8 @@ public class NemIdVerifyLoginResponseStepTest {
     public void should_return_correct_2FA_method(
             By elementThatWillBeFound, NemId2FAMethod expectedMethod) {
         // given
-        setCredentialsValidationElementThatWillBeFound(elementThatWillBeFound, webElementMock());
+        when(driverWrapper.searchForFirstElement(any()))
+                .thenReturn(ElementsSearchResult.of(elementThatWillBeFound, webElementMock()));
 
         // when
         NemId2FAMethod nemId2FAMethod =
@@ -89,7 +90,12 @@ public class NemIdVerifyLoginResponseStepTest {
 
         mocksToVerifyInOrder
                 .verify(driverWrapper)
-                .searchForFirstElement(ELEMENTS_TO_SEARCH_FOR, 30);
+                .searchForFirstElement(
+                        ElementsSearchQuery.builder()
+                                .searchInParentWindow(NOT_EMPTY_NEMID_TOKEN)
+                                .searchInAnIframe(ELEMENTS_TO_SEARCH_FOR_IN_IFRAME)
+                                .searchForSeconds(30)
+                                .build());
         mocksToVerifyInOrder
                 .verify(statusUpdater)
                 .updateStatusPayload(credentials, UserMessage.VALID_CREDS);
@@ -110,8 +116,9 @@ public class NemIdVerifyLoginResponseStepTest {
     public void should_fail_when_there_is_a_not_empty_error_message(
             String errorText, AgentException expectedException) {
         // given
-        setCredentialsValidationElementThatWillBeFound(
-                NOT_EMPTY_ERROR_MESSAGE, webElementMockWithText(errorText));
+        WebElement errorElement = webElementMockWithText(errorText);
+        when(driverWrapper.searchForFirstElement(any()))
+                .thenReturn(ElementsSearchResult.of(NOT_EMPTY_ERROR_MESSAGE, errorElement));
 
         // when
         Throwable throwable =
@@ -125,7 +132,12 @@ public class NemIdVerifyLoginResponseStepTest {
                 throwable, expectedException);
         mocksToVerifyInOrder
                 .verify(driverWrapper)
-                .searchForFirstElement(ELEMENTS_TO_SEARCH_FOR, 30);
+                .searchForFirstElement(
+                        ElementsSearchQuery.builder()
+                                .searchInParentWindow(NOT_EMPTY_NEMID_TOKEN)
+                                .searchInAnIframe(ELEMENTS_TO_SEARCH_FOR_IN_IFRAME)
+                                .searchForSeconds(30)
+                                .build());
         mocksToVerifyInOrder.verifyNoMoreInteractions();
     }
 
@@ -201,8 +213,9 @@ public class NemIdVerifyLoginResponseStepTest {
     public void should_fail_when_there_is_a_nem_id_info_heading(
             String errorText, AgentException expectedException) {
         // given
-        setCredentialsValidationElementThatWillBeFound(
-                NEMID_WIDE_INFO_HEADING, webElementMockWithText(errorText));
+        WebElement headingElement = webElementMockWithText(errorText);
+        when(driverWrapper.searchForFirstElement(any()))
+                .thenReturn(ElementsSearchResult.of(NEMID_WIDE_INFO_HEADING, headingElement));
 
         // when
         Throwable throwable =
@@ -216,7 +229,12 @@ public class NemIdVerifyLoginResponseStepTest {
                 throwable, expectedException);
         mocksToVerifyInOrder
                 .verify(driverWrapper)
-                .searchForFirstElement(ELEMENTS_TO_SEARCH_FOR, 30);
+                .searchForFirstElement(
+                        ElementsSearchQuery.builder()
+                                .searchInParentWindow(NOT_EMPTY_NEMID_TOKEN)
+                                .searchInAnIframe(ELEMENTS_TO_SEARCH_FOR_IN_IFRAME)
+                                .searchForSeconds(30)
+                                .build());
         mocksToVerifyInOrder.verifyNoMoreInteractions();
     }
 
@@ -273,8 +291,9 @@ public class NemIdVerifyLoginResponseStepTest {
     @Test
     public void should_fail_when_there_is_a_nem_id_token() {
         // given
-        setCredentialsValidationElementThatWillBeFound(
-                NEMID_TOKEN, webElementMockWithText("--- SAMPLE TOKEN ---"));
+        WebElement tokenElement = webElementMockWithText("--- SAMPLE TOKEN ---");
+        when(driverWrapper.searchForFirstElement(any()))
+                .thenReturn(ElementsSearchResult.of(NOT_EMPTY_NEMID_TOKEN, tokenElement));
 
         Throwable tokenValidationError = new RuntimeException("token validation error");
         doThrow(tokenValidationError)
@@ -292,7 +311,12 @@ public class NemIdVerifyLoginResponseStepTest {
         assertThat(throwable).isEqualTo(tokenValidationError);
         mocksToVerifyInOrder
                 .verify(driverWrapper)
-                .searchForFirstElement(ELEMENTS_TO_SEARCH_FOR, 30);
+                .searchForFirstElement(
+                        ElementsSearchQuery.builder()
+                                .searchInParentWindow(NOT_EMPTY_NEMID_TOKEN)
+                                .searchInAnIframe(ELEMENTS_TO_SEARCH_FOR_IN_IFRAME)
+                                .searchForSeconds(30)
+                                .build());
         mocksToVerifyInOrder
                 .verify(tokenValidator)
                 .throwInvalidTokenExceptionWithoutValidation("--- SAMPLE TOKEN ---");
@@ -301,7 +325,7 @@ public class NemIdVerifyLoginResponseStepTest {
     @Test
     public void should_search_credentials_validation_elements_for_30_seconds_and_then_fail() {
         // given
-        setEmptyCredentialsVerificationElementsSearchResult();
+        when(driverWrapper.searchForFirstElement(any())).thenReturn(ElementsSearchResult.empty());
 
         // when
         Throwable throwable =
@@ -316,17 +340,11 @@ public class NemIdVerifyLoginResponseStepTest {
 
         mocksToVerifyInOrder
                 .verify(driverWrapper)
-                .searchForFirstElement(ELEMENTS_TO_SEARCH_FOR, 30);
-    }
-
-    private void setCredentialsValidationElementThatWillBeFound(By by, WebElement webElement) {
-        ElementsSearchResult findFirstElementResult = ElementsSearchResult.of(by, webElement);
-        when(driverWrapper.searchForFirstElement(any(), anyInt()))
-                .thenReturn(findFirstElementResult);
-    }
-
-    private void setEmptyCredentialsVerificationElementsSearchResult() {
-        when(driverWrapper.searchForFirstElement(any(), anyInt()))
-                .thenReturn(ElementsSearchResult.empty());
+                .searchForFirstElement(
+                        ElementsSearchQuery.builder()
+                                .searchInParentWindow(NOT_EMPTY_NEMID_TOKEN)
+                                .searchInAnIframe(ELEMENTS_TO_SEARCH_FOR_IN_IFRAME)
+                                .searchForSeconds(30)
+                                .build());
     }
 }

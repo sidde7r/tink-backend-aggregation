@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.de.banks.fints.fetcher.transact
 
 import java.util.Collections;
 import org.apache.commons.lang3.tuple.Pair;
+import org.junit.Ignore;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.FinTsAccountInformation;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.FinTsDialogContext;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.configuration.Bank;
@@ -14,6 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.parts.re
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.security.tan.SegmentType;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.security.tan.TanByOperationLookup;
 
+@Ignore
 public class TestFixtures {
 
     static final String FETCH_TRANSACTIONS_RESPONSE_IN_XML =
