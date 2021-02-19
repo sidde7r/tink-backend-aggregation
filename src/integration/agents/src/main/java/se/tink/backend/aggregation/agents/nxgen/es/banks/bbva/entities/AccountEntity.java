@@ -119,7 +119,9 @@ public class AccountEntity extends AbstractContractDetailsEntity {
                     .collect(Collectors.toList());
         }
 
-        List<String> holders =
+        log.info(
+                "Account has {} owners {}",
+                participantAccountEntities.size(),
                 participantAccountEntities.stream()
                         .map(ParticipantAccountEntity::getRelationship)
                         .map(RelationshipEntity::getType)
@@ -129,9 +131,7 @@ public class AccountEntity extends AbstractContractDetailsEntity {
                                                 + typeEntity.getId()
                                                 + " name: "
                                                 + typeEntity.getName())
-                        .collect(Collectors.toList());
-
-        log.info("Account has {} owners {}", participantAccountEntities.size(), holders);
+                        .collect(Collectors.toList()));
 
         List<RelationshipEntity> accountRelationships =
                 getParticipants()
@@ -142,7 +142,7 @@ public class AccountEntity extends AbstractContractDetailsEntity {
                 .filter(
                         participantAccountEntity ->
                                 accountRelationships.stream()
-                                        .anyMatch(
+                                        .allMatch(
                                                 relationshipEntity ->
                                                         relationshipEntity
                                                                 .getType()
@@ -158,11 +158,19 @@ public class AccountEntity extends AbstractContractDetailsEntity {
 
     @JsonIgnore
     private Holder createHolder(ParticipantAccountEntity participant) {
-        String role = participant.getRelationship().getType().getId();
-        if (HolderTypes.OWNER.equals(role)) {
-            return Holder.of(participant.getName() + " " + participant.getLastName(), Role.HOLDER);
+        switch (participant.getRoleId()) {
+            case HolderTypes.OWNER:
+                return Holder.of(
+                        participant.getName() + " " + participant.getLastName(), Role.HOLDER);
+            case HolderTypes.AUTHORIZED:
+                return Holder.of(
+                        participant.getName() + " " + participant.getLastName(),
+                        Role.AUTHORIZED_USER);
+            case HolderTypes.REPRESENTATIVE:
+            default:
+                return Holder.of(
+                        participant.getName() + " " + participant.getLastName(), Role.OTHER);
         }
-        return Holder.of(participant.getName() + " " + participant.getLastName(), Role.OTHER);
     }
 
     @JsonIgnore

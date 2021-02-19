@@ -16,4 +16,8 @@ public class ParticipantAccountEntity {
     private SignatureEntity signature;
     private SignatureContractDetailEntity signatureContractDetail;
     private String type;
+
+    public String getRoleId() {
+        return relationship.getType().getId();
+    }
 }
