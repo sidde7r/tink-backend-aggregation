@@ -180,6 +180,7 @@ public class UkOpenBankingPaymentAuthenticator {
                 .setMessage(
                         "Payment failed - authorisation of payment failed, needs further investigation.")
                 .setEndUserMessage("Authorisation of payment failed.")
+                .setInternalStatus(InternalStatus.PAYMENT_AUTHORIZATION_FAILED.toString())
                 .build();
     }
 
