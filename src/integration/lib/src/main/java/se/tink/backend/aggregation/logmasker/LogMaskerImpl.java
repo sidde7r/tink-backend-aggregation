@@ -28,6 +28,7 @@ public class LogMaskerImpl implements LogMasker {
                     .add("se")
                     .add("es")
                     .add("pt")
+                    .add("ie")
                     .add("fr")
                     .add("it")
                     .add("nl")
