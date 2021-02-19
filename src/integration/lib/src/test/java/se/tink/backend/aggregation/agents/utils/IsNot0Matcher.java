@@ -2,7 +2,9 @@ package se.tink.backend.aggregation.agents.utils;
 
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
+import org.junit.Ignore;
 
+@Ignore
 public class IsNot0Matcher extends BaseMatcher<Double> {
     private IsNot0Matcher() {}
 

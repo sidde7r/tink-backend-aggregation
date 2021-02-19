@@ -1,7 +1,9 @@
 package se.tink.backend.aggregation.nxgen.storage.configuration;
 
+import org.junit.Ignore;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
+@Ignore
 @JsonObject
 public class OuterConfiguration {
     private String stringLevel1;

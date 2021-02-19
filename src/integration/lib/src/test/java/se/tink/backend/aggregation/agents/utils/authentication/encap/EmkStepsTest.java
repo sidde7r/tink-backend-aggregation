@@ -1,14 +1,18 @@
 package se.tink.backend.aggregation.agents.utils.authentication.encap;
 
 import com.google.common.primitives.Bytes;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.security.KeyPair;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.Security;
+
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
 import org.assertj.core.api.Assertions;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.utils.crypto.AES;
@@ -40,6 +44,10 @@ public class EmkStepsTest {
     private static byte[] aesKey;
     private static byte[] aesEcbOutput;
     private static byte[] hmacKey;
+
+    static {
+        Security.addProvider(new BouncyCastleProvider());
+    }
 
     @Before
     public void setUp() throws DecoderException {
