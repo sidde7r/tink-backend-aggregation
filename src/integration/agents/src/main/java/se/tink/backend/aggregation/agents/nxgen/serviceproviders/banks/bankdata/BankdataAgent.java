@@ -2,13 +2,11 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata
 
 import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
-import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
-import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
@@ -20,7 +18,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.authenticator.BankdataPasswordAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher.BankdataCreditCardAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher.BankdataCreditCardTransactionFetcher;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher.BankdataIdentitydataFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher.BankdataInvestmentFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher.BankdataLoanFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher.BankdataTransactionFetcher;
@@ -54,8 +51,7 @@ public class BankdataAgent extends NextGenerationAgent
                 RefreshCreditCardAccountsExecutor,
                 RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor,
-                RefreshLoanAccountsExecutor,
-                RefreshIdentityDataExecutor {
+                RefreshLoanAccountsExecutor {
     private final BankdataApiClient bankClient;
     private final InvestmentRefreshController investmentRefreshController;
     private final CreditCardRefreshController creditCardRefreshController;
@@ -242,11 +238,5 @@ public class BankdataAgent extends NextGenerationAgent
     @Override
     public FetchTransactionsResponse fetchLoanTransactions() {
         return loanRefreshController.fetchLoanTransactions();
-    }
-
-    @Override
-    public FetchIdentityDataResponse fetchIdentityData() {
-        return new FetchIdentityDataResponse(
-                new BankdataIdentitydataFetcher(persistentStorage).fetchIdentityData());
     }
 }
