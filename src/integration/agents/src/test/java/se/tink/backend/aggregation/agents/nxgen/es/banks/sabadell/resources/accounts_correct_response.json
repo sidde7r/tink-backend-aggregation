@@ -1,0 +1,162 @@
+{
+  "cards": [
+    {
+      "bsprotect": "S",
+      "description": "VISA CLASSIC BS",
+      "isMarsans": "false",
+      "name": "**HASHED:sr**",
+      "productType": "TA",
+      "reference": "3",
+      "type": "OPERAC.",
+      "shortDescription": "VISA CLASSIC BS",
+      "number": "4106________0000",
+      "realNumber": "xxxxxxxxxxx",
+      "numcard": "TA xxxxx",
+      "isOwner": true,
+      "activatedLE": "",
+      "codret": "",
+      "contractCCC": "xxxxxxxxxxxx",
+      "operativeCode": "0",
+      "cvv2": "",
+      "dni": "",
+      "entity": "",
+      "mail": "",
+      "mailChecked": "",
+      "phoneNumber": "",
+      "phoneNumberChecked": "",
+      "alias": "",
+      "expirationDate": "31-03-2023",
+      "balance": {
+        "value": "5,00",
+        "currency": "EUR"
+      },
+      "availableBalance": {
+        "value": "1.295,00",
+        "currency": "EUR"
+      },
+      "dms": "",
+      "indAlert": "",
+      "selectableIndex": "",
+      "canActivate": false,
+      "cardType": {
+        "background": "7",
+        "type": "visa",
+        "subtype": "credit",
+        "textColor": "#ffffff",
+        "iconColor": "#ffffff",
+        "logo": "visa1"
+      },
+      "status": "active",
+      "availableOperations": [],
+      "isInternational": false,
+      "isInternet": true,
+      "isSticker": true,
+      "stickerCard": false,
+      "nfcCard": {
+        "isNfc": true,
+        "isActive": false,
+        "expirationDate": "01-03-23"
+      },
+      "stickerPan": "",
+      "deteriorationLock": false,
+      "isPrepaidAnonymous": false,
+      "beneficiary": false,
+      "enterprise": false,
+      "atm": false,
+      "digitalCard": [
+        {
+          "application": "",
+          "deviceId": "",
+          "deviceType": ""
+        }
+      ],
+      "switchedOff": false,
+      "switchable": true,
+      "hashPan": "xxxxxxxxxxxx",
+      "cardProfileOptionShown": true
+    },
+    {
+      "bsprotect": "S",
+      "description": "VISA CLASSIC BS",
+      "isMarsans": "false",
+      "name": "**HASHED:sr**",
+      "productType": "TA",
+      "reference": "3",
+      "type": "OPERAC.",
+      "shortDescription": "VISA CLASSIC BS",
+      "number": "xxxxxx",
+      "realNumber": "xxxxxxxxxxx",
+      "numcard": "TA xxxxxx",
+      "isOwner": true,
+      "activatedLE": "",
+      "codret": "",
+      "contractCCC": "xxxxxxxxxxxx",
+      "operativeCode": "0",
+      "cvv2": "",
+      "dni": "",
+      "entity": "",
+      "mail": "",
+      "mailChecked": "",
+      "phoneNumber": "",
+      "phoneNumberChecked": "",
+      "alias": "",
+      "expirationDate": "31-03-2023",
+      "balance": {
+        "value": "5,00",
+        "currency": "EUR"
+      },
+      "availableBalance": {
+        "value": "1.295,00",
+        "currency": "EUR"
+      },
+      "dms": "",
+      "indAlert": "",
+      "selectableIndex": "",
+      "canActivate": false,
+      "cardType": {
+        "background": "7",
+        "type": "visa",
+        "subtype": "credit",
+        "textColor": "#ffffff",
+        "iconColor": "#ffffff",
+        "logo": "visa1"
+      },
+      "status": "active",
+      "availableOperations": [],
+      "isInternational": false,
+      "isInternet": true,
+      "isSticker": true,
+      "stickerCard": false,
+      "nfcCard": {
+        "isNfc": true,
+        "isActive": false,
+        "expirationDate": "01-03-23"
+      },
+      "stickerPan": "",
+      "deteriorationLock": false,
+      "isPrepaidAnonymous": false,
+      "beneficiary": false,
+      "enterprise": false,
+      "atm": false,
+      "digitalCard": [
+        {
+          "application": "",
+          "deviceId": "",
+          "deviceType": ""
+        }
+      ],
+      "switchedOff": false,
+      "switchable": true,
+      "hashPan": "xxxxxxxxxxxxxxxx",
+      "cardProfileOptionShown": true
+    }
+  ],
+  "paginator": {
+    "page": 0,
+    "itemsPerPage": 20,
+    "order": "desc",
+    "totalItems": 3
+  }
+}
+
+

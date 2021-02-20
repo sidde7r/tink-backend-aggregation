@@ -1,0 +1,238 @@
+{
+  "cards": [
+    {
+      "bsprotect": "S",
+      "description": "BSCARD MASTERCARD BS",
+      "isMarsans": "false",
+      "name": "**HASHED:sr**",
+      "productType": "TD",
+      "reference": "0",
+      "type": "OPERAC.",
+      "shortDescription": "BSCARD MASTERCARD BS",
+      "number": "xxxxxxxxx",
+      "realNumber": "xxxxxx",
+      "numcard": "TA xxxxxxxx",
+      "isOwner": true,
+      "activatedLE": "",
+      "codret": "",
+      "contractCCC": "xxxxxxxxx",
+      "operativeCode": "4",
+      "cvv2": "",
+      "dni": "",
+      "entity": "",
+      "mail": "",
+      "mailChecked": "",
+      "phoneNumber": "",
+      "phoneNumberChecked": "",
+      "alias": "",
+      "expirationDate": "30-09-2021",
+      "balance": {
+        "value": "",
+        "currency": ""
+      },
+      "availableBalance": {
+        "value": "",
+        "currency": ""
+      },
+      "dms": "",
+      "indAlert": "",
+      "selectableIndex": "",
+      "canActivate": false,
+      "cardType": {
+        "background": "1",
+        "type": "mastercard",
+        "subtype": "debit",
+        "textColor": "#ffffff",
+        "iconColor": "#ffffff",
+        "logo": "mastercard1"
+      },
+      "status": "active",
+      "availableOperations": [],
+      "isInternational": false,
+      "isInternet": true,
+      "isSticker": true,
+      "stickerCard": false,
+      "nfcCard": {
+        "isNfc": true,
+        "isActive": true,
+        "expirationDate": "01-09-21"
+      },
+      "stickerPan": "",
+      "deteriorationLock": false,
+      "isPrepaidAnonymous": false,
+      "beneficiary": false,
+      "enterprise": false,
+      "atm": false,
+      "digitalCard": [
+        {
+          "application": "",
+          "deviceId": "",
+          "deviceType": ""
+        }
+      ],
+      "switchedOff": false,
+      "switchable": true,
+      "hashPan": "xxxxxxxx",
+      "cardProfileOptionShown": true
+    },
+    {
+      "bsprotect": "X",
+      "description": "REPSOL MAXIMA",
+      "isMarsans": "false",
+      "name": "**HASHED:sr**",
+      "productType": "TA",
+      "reference": "2",
+      "type": "OPERAC.",
+      "shortDescription": "REPSOL MAXIMA",
+      "number": "xxxxxx",
+      "realNumber": "xxxxxxxxx",
+      "numcard": "TA xxxxxx",
+      "isOwner": true,
+      "activatedLE": "",
+      "codret": "",
+      "contractCCC": "xxxxxxxxxx",
+      "operativeCode": "1",
+      "cvv2": "",
+      "dni": "",
+      "entity": "",
+      "mail": "",
+      "mailChecked": "",
+      "phoneNumber": "",
+      "phoneNumberChecked": "",
+      "alias": "",
+      "expirationDate": "30-09-2021",
+      "balance": {
+        "value": "56,72",
+        "currency": "EUR"
+      },
+      "availableBalance": {
+        "value": "243,28",
+        "currency": "EUR"
+      },
+      "dms": "",
+      "indAlert": "",
+      "selectableIndex": "",
+      "canActivate": false,
+      "cardType": {
+        "background": "19",
+        "type": "repsol",
+        "subtype": "solredrepsol",
+        "textColor": "#ffffff",
+        "iconColor": "#ffffff",
+        "logo": ""
+      },
+      "status": "active",
+      "availableOperations": [],
+      "isInternational": false,
+      "isInternet": false,
+      "isSticker": false,
+      "stickerCard": false,
+      "nfcCard": {
+        "isNfc": false,
+        "isActive": false,
+        "expirationDate": "01--"
+      },
+      "stickerPan": "",
+      "deteriorationLock": false,
+      "isPrepaidAnonymous": false,
+      "beneficiary": false,
+      "enterprise": false,
+      "atm": false,
+      "digitalCard": [
+        {
+          "application": "",
+          "deviceId": "",
+          "deviceType": ""
+        }
+      ],
+      "switchedOff": false,
+      "switchable": false,
+      "hashPan": "xxxxxxxxxxxx",
+      "cardProfileOptionShown": true
+    },
+    {
+      "bsprotect": "S",
+      "description": "VISA CLASSIC BS",
+      "isMarsans": "false",
+      "name": "**HASHED:sr**",
+      "productType": "TA",
+      "reference": "3",
+      "type": "OPERAC.",
+      "shortDescription": "VISA CLASSIC BS",
+      "number": "xxxxxx",
+      "realNumber": "xxxxxxxxx",
+      "numcard": "TA 70101",
+      "isOwner": true,
+      "activatedLE": "",
+      "codret": "",
+      "contractCCC": "xxxxxxxxxxx",
+      "operativeCode": "0",
+      "cvv2": "",
+      "dni": "",
+      "entity": "",
+      "mail": "",
+      "mailChecked": "",
+      "phoneNumber": "",
+      "phoneNumberChecked": "",
+      "alias": "",
+      "expirationDate": "31-03-2023",
+      "balance": {
+        "value": "5,00",
+        "currency": "EUR"
+      },
+      "availableBalance": {
+        "value": "1.295,00",
+        "currency": "EUR"
+      },
+      "dms": "",
+      "indAlert": "",
+      "selectableIndex": "",
+      "canActivate": false,
+      "cardType": {
+        "background": "7",
+        "type": "visa",
+        "subtype": "credit",
+        "textColor": "#ffffff",
+        "iconColor": "#ffffff",
+        "logo": "visa1"
+      },
+      "status": "active",
+      "availableOperations": [],
+      "isInternational": false,
+      "isInternet": true,
+      "isSticker": true,
+      "stickerCard": false,
+      "nfcCard": {
+        "isNfc": true,
+        "isActive": false,
+        "expirationDate": "01-03-23"
+      },
+      "stickerPan": "",
+      "deteriorationLock": false,
+      "isPrepaidAnonymous": false,
+      "beneficiary": false,
+      "enterprise": false,
+      "atm": false,
+      "digitalCard": [
+        {
+          "application": "",
+          "deviceId": "",
+          "deviceType": ""
+        }
+      ],
+      "switchedOff": false,
+      "switchable": true,
+      "hashPan": "xxxxxxxxxxxx",
+      "cardProfileOptionShown": true
+    }
+  ],
+  "paginator": {
+    "page": 0,
+    "itemsPerPage": 20,
+    "order": "desc",
+    "totalItems": 3
+  }
+}
+
+
+
