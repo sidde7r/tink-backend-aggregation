@@ -3,11 +3,13 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 import com.google.common.collect.ImmutableList;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import org.junit.Ignore;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
+@Ignore
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-final class UkOpenBankingTestFixtures {
+public final class UkOpenBankingTestFixtures {
 
     static final String WELL_KNOWN_EXAMPLE =
             "{\n"
