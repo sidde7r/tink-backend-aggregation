@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.nxgen.storage.configuration;
 
 import com.google.common.collect.ImmutableList;
 import java.util.List;
-
 import org.junit.Ignore;
 import se.tink.backend.aggregation.annotations.JsonObject;
 

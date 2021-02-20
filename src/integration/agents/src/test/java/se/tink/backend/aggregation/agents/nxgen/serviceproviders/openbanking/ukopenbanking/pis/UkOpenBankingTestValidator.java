@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.assertj.core.api.AssertionsForClassTypes;
@@ -7,8 +9,6 @@ import org.junit.Ignore;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.payment.rpc.Payment;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 @Ignore
 @NoArgsConstructor(access = AccessLevel.PRIVATE)

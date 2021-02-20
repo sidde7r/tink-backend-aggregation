@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.nxgen.core.account;
 
 import java.util.List;
-
 import org.junit.Ignore;
 import org.mockito.Mockito;
 import se.tink.libraries.account.AccountIdentifier;

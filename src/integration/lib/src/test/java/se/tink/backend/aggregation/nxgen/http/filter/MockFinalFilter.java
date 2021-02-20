@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.nxgen.http.filter;
 
 import java.net.SocketTimeoutException;
-
 import org.junit.Ignore;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.iface.Filter;
