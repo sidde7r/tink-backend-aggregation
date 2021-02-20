@@ -11,6 +11,8 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
 import java.util.Map;
+
+import org.junit.Ignore;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.configuration.ClientInfo;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.dto.CreditorAccount;
@@ -45,6 +47,7 @@ import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
+@Ignore
 public class UkOpenBankingPaymentTestFixtures {
 
     public static final String PAYMENT_ID = "DUMMY_PAYMENT_ID";
