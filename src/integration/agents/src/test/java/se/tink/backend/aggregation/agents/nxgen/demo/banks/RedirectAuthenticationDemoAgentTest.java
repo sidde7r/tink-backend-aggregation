@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.rpc.Beneficiary;
 import se.tink.libraries.payment.rpc.CreateBeneficiary;
 import se.tink.libraries.payment.rpc.Creditor;
@@ -214,7 +215,7 @@ public class RedirectAuthenticationDemoAgentTest {
                     new Debtor(
                             AccountIdentifier.create(AccountIdentifier.Type.IBAN, SOURCE_ACCOUNT));
 
-            Amount amount = Amount.inEUR(1.0);
+            ExactCurrencyAmount amount = ExactCurrencyAmount.inEUR(1.0);
             LocalDate executionDate = LocalDate.now();
             String currency = "EUR";
 
@@ -222,7 +223,7 @@ public class RedirectAuthenticationDemoAgentTest {
                     new Payment.Builder()
                             .withCreditor(creditor)
                             .withDebtor(debtor)
-                            .withAmount(amount)
+                            .withExactCurrencyAmount(amount)
                             .withExecutionDate(executionDate)
                             .withCurrency(currency)
                             .build());

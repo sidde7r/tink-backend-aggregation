@@ -41,7 +41,7 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.date.CountryDateHelper;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.rpc.Creditor;
@@ -294,13 +294,13 @@ public class SocieteGeneralePaymentExecutorTest {
         AccountIdentifier debtorAccountIdentifier = new IbanIdentifier(destinationIban.toString());
         Debtor debtor = new Debtor(debtorAccountIdentifier);
 
-        Amount amount = Amount.inEUR(1);
+        ExactCurrencyAmount amount = ExactCurrencyAmount.inEUR(1);
         LocalDate executionDate = LocalDate.now();
         return new PaymentRequest(
                 new Payment.Builder()
                         .withCreditor(creditor)
                         .withDebtor(debtor)
-                        .withAmount(amount)
+                        .withExactCurrencyAmount(amount)
                         .withExecutionDate(executionDate)
                         .withRemittanceInformation(
                                 RemittanceInformationUtils

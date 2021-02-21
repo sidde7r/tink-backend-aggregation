@@ -12,7 +12,7 @@ import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.LoadBeforeSaveAfterArgumentEnum;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
@@ -59,7 +59,7 @@ public class FinecoBankAgentPaymentTest {
             Mockito.doReturn(Type.IBAN).when(debtor).getAccountIdentifierType();
             Mockito.doReturn(Iban.random().toString()).when(debtor).getAccountNumber();
 
-            Amount amount = Amount.inEUR(123.5);
+            ExactCurrencyAmount amount = ExactCurrencyAmount.inEUR(123.5);
             LocalDate executionDate = LocalDate.now();
             String currency = "EUR";
             remittanceInformation.setValue("causale pagamento");
@@ -68,7 +68,7 @@ public class FinecoBankAgentPaymentTest {
                     new Payment.Builder()
                             .withCreditor(creditor)
                             .withDebtor(debtor)
-                            .withAmount(amount)
+                            .withExactCurrencyAmount(amount)
                             .withExecutionDate(executionDate)
                             .withCurrency(currency)
                             .withRemittanceInformation(remittanceInformation)

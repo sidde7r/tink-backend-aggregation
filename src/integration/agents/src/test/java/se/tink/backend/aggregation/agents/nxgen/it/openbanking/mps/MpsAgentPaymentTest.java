@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
@@ -49,7 +49,7 @@ public class MpsAgentPaymentTest {
                 new IbanIdentifier(creditorDebtorManager.get(Arg.DEBTOR_ACCOUNT));
         Debtor debtor = new Debtor(debtorAccountIdentifier);
 
-        Amount amount = Amount.inEUR(1);
+        ExactCurrencyAmount amount = ExactCurrencyAmount.inEUR(1);
         LocalDate executionDate = LocalDate.now();
         String currency = "EUR";
 
@@ -57,7 +57,7 @@ public class MpsAgentPaymentTest {
         return new Payment.Builder()
                 .withCreditor(creditor)
                 .withDebtor(debtor)
-                .withAmount(amount)
+                .withExactCurrencyAmount(amount)
                 .withExecutionDate(executionDate)
                 .withCurrency(currency)
                 .withRemittanceInformation(remittanceInformation)

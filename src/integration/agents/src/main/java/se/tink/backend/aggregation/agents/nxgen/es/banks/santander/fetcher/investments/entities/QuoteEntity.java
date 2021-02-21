@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Strings;
 import javax.xml.bind.annotation.XmlRootElement;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.strings.StringUtils;
 
 @JsonObject
@@ -26,12 +26,12 @@ public class QuoteEntity {
     }
 
     @JsonIgnore
-    public Amount getTinkAmount() {
+    public ExactCurrencyAmount getTinkAmount() {
         if (!Strings.isNullOrEmpty(currency)) {
-            return new Amount(currency, getValueAsDouble());
+            return ExactCurrencyAmount.of(getValueAsDouble(), currency);
         }
 
-        return Amount.inEUR(getValueAsDouble());
+        return ExactCurrencyAmount.inEUR(getValueAsDouble());
     }
 
     @JsonIgnore

@@ -61,7 +61,7 @@ public class FundDetailsResponse {
         Instrument instrument = new Instrument();
         instrument.setCurrency(marketValue.getTinkAmount().getCurrencyCode());
         instrument.setMarketValue(marketValue.getTinkAmount().getDoubleValue());
-        instrument.setPrice(marketPrice.getTinkAmount().doubleValue());
+        instrument.setPrice(marketPrice.getTinkAmount().getDoubleValue());
         instrument.setType(Instrument.Type.FUND);
         instrument.setQuantity(quantity);
         instrument.setName(name);

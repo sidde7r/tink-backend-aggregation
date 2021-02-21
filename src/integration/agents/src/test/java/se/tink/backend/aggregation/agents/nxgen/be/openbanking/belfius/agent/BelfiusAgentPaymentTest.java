@@ -13,7 +13,7 @@ import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.ArgumentManagerEnum;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusConstants.CredentialKeys;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
@@ -65,7 +65,7 @@ public class BelfiusAgentPaymentTest {
             doReturn(AccountIdentifier.Type.IBAN).when(debtor).getAccountIdentifierType();
             doReturn(Arg.DEBTORS_IBAN).when(debtor).getAccountNumber();
 
-            Amount amount = Amount.inEUR(1);
+            ExactCurrencyAmount amount = ExactCurrencyAmount.inEUR(1);
             LocalDate executionDate = LocalDate.now();
             String currency = "EUR";
 
@@ -74,7 +74,7 @@ public class BelfiusAgentPaymentTest {
                             .withUniqueId(UUID.randomUUID().toString().substring(5))
                             .withCreditor(creditor)
                             .withDebtor(debtor)
-                            .withAmount(amount)
+                            .withExactCurrencyAmount(amount)
                             .withExecutionDate(executionDate)
                             .withRemittanceInformation(remittanceInformation)
                             .withCurrency(currency)

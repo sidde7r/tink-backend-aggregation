@@ -9,8 +9,6 @@ import java.util.Objects;
 
 @Deprecated
 public class Amount extends Number {
-    @JsonIgnore
-    private static final String CURRENCY_ERROR_MESSAGE = "The currencies must be the same.";
 
     private static final int SCALE = 2;
 
@@ -52,24 +50,8 @@ public class Amount extends Number {
         return new Amount("SEK", value);
     }
 
-    public static Amount inNOK(Number value) {
-        return new Amount("NOK", value);
-    }
-
-    public static Amount inDKK(Number value) {
-        return new Amount("DKK", value);
-    }
-
-    public static Amount inEUR(Number value) {
-        return new Amount("EUR", value);
-    }
-
     public String getCurrency() {
         return currency;
-    }
-
-    public void setCurrency(String currency) {
-        this.currency = currency != null ? currency.toUpperCase() : null;
     }
 
     /**
@@ -79,18 +61,6 @@ public class Amount extends Number {
      */
     public Double getValue() {
         return value;
-    }
-
-    public void setValue(Number amount) {
-        if (amount != null) {
-            setValue(amount.doubleValue());
-        } else {
-            setValue(Double.NaN);
-        }
-    }
-
-    public void setValue(double amount) {
-        this.value = amount;
     }
 
     @Override
@@ -124,16 +94,6 @@ public class Amount extends Number {
     @JsonIgnore
     public boolean isEmpty() {
         return Strings.isNullOrEmpty(currency) || !Double.isFinite(value);
-    }
-
-    @JsonIgnore
-    public boolean isZero() {
-        return value == 0;
-    }
-
-    @JsonIgnore
-    public boolean isPositive() {
-        return Double.isFinite(value) && value > 0;
     }
 
     @JsonIgnore

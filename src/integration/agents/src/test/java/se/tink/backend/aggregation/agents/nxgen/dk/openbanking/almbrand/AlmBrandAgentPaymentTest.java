@@ -10,7 +10,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.libraries.account.AccountIdentifier.Type;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
@@ -42,7 +42,7 @@ public class AlmBrandAgentPaymentTest {
             doReturn(Type.DK).when(debtor).getAccountIdentifierType();
             doReturn("").when(debtor).getAccountNumber();
 
-            Amount amount = Amount.inDKK(2);
+            ExactCurrencyAmount amount = ExactCurrencyAmount.inDKK(2);
             LocalDate executionDate = LocalDate.now();
             String currency = "DKK";
 
@@ -50,7 +50,7 @@ public class AlmBrandAgentPaymentTest {
                     new Payment.Builder()
                             .withCreditor(creditor)
                             .withDebtor(debtor)
-                            .withAmount(amount)
+                            .withExactCurrencyAmount(amount)
                             .withExecutionDate(executionDate)
                             .withCurrency(currency)
                             .build());

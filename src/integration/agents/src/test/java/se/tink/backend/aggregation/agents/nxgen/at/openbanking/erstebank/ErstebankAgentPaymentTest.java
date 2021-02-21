@@ -13,7 +13,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
@@ -44,7 +44,7 @@ public class ErstebankAgentPaymentTest {
             doReturn(AccountIdentifier.Type.IBAN).when(debtor).getAccountIdentifierType();
             doReturn(Iban.random(CountryCode.AT).toString()).when(debtor).getAccountNumber();
 
-            Amount amount = Amount.inEUR(new Random().nextInt(50000));
+            ExactCurrencyAmount amount = ExactCurrencyAmount.inEUR(new Random().nextInt(50000));
             LocalDate executionDate = LocalDate.now().plusYears(i + 1L);
             String currency = "EUR";
 
@@ -52,7 +52,7 @@ public class ErstebankAgentPaymentTest {
                     new Payment.Builder()
                             .withCreditor(creditor)
                             .withDebtor(debtor)
-                            .withAmount(amount)
+                            .withExactCurrencyAmount(amount)
                             .withExecutionDate(executionDate)
                             .withCurrency(currency)
                             .build());
