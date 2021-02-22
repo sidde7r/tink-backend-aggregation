@@ -118,6 +118,35 @@ public class KbcAgentWireMockTest {
         assertThat(sourceAgentPlatformError).isExactlyInstanceOf(SessionExpiredError.class);
     }
 
+    @Test
+    public void shouldFailWithInvalidConsent() {
+        // given
+        final String wireMockFilePath = BASE_PATH + "invalid_consent_log.app";
+        final AgentWireMockRefreshTest agentWireMockRefreshTest =
+                AgentWireMockRefreshTest.nxBuilder()
+                        .withMarketCode(MarketCode.BE)
+                        .withProviderName(PROVIDER_NAME)
+                        .withWireMockFilePath(wireMockFilePath)
+                        .withConfigFile(configuration)
+                        .testAuthenticationOnly()
+                        .addPersistentStorageData("oauth2_access_token", getToken())
+                        .addPersistentStorageData("consentId", "dummy_consent_id")
+                        .enableHttpDebugTrace()
+                        .enableDataDumpForContractFile()
+                        .addCredentialField("iban", "BE39000000076000")
+                        .build();
+
+        // when
+        final Throwable thrown = catchThrowable(agentWireMockRefreshTest::executeRefresh);
+        // then
+        assertThat(thrown).isExactlyInstanceOf(AgentPlatformAuthenticationProcessException.class);
+        AgentPlatformAuthenticationProcessException agentPlatformAuthenticationProcessException =
+                (AgentPlatformAuthenticationProcessException) thrown;
+        AgentBankApiError sourceAgentPlatformError =
+                agentPlatformAuthenticationProcessException.getSourceAgentPlatformError();
+        assertThat(sourceAgentPlatformError).isExactlyInstanceOf(SessionExpiredError.class);
+    }
+
     private String getToken() {
         return SerializationUtils.serializeToString(
                 OAuth2Token.create("refreshToken", "accessToken", "refreshToken", 90));
