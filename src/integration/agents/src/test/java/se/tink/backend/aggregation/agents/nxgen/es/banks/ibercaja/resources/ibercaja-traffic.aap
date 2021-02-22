@@ -9,209 +9,79 @@ RESPONSE 1
 Content-Type: text/html; charset=utf-8
 
 <!DOCTYPE html>
-
 <html>
-
-<head>
-
-    <meta charset="utf-8" />
-
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-    <title>Identidad</title>
-
-    <link rel="icon" type="image/x-icon" href="/soporte/plataforma/identidad/api/v1/favicon.ico" />
-
-    <link rel="shortcut icon" type="image/x-icon" href="/soporte/plataforma/identidad/api/v1/favicon.ico" />
-
-    <link rel="stylesheet" href="/soporte/plataforma/identidad/api/v1/css/ibercaja-icon-font.css">
-
-    <link rel="stylesheet" href="/soporte/plataforma/identidad/api/v1/css/main.css">
-
-</head>
-
 <body>
-
-
-
     <div class="login-container">
 
-        
+        <div class="content-container">
 
+            <div class="content">
 
+                <section class="left">
 
-<header>
+                    <h1>Acceso Clientes</h1>
 
-    <a href="#" class="ibercaja-icon-Ibercaja-logo-completo"></a>
+                    <span id="okMessage" class="subtitle">Introduce los datos solicitados</span>
 
-</header>
+                    <form id="login" action="" method="post">
 
+                        <input type="hidden" id="ReturnUrl" name="ReturnUrl"
+                            value="/soporte/plataforma/identidad/api/v1/connect/authorize/callback?client_id=bancamovil-app.hybrid&amp;redirect_uri=https%3A%2F%2Fewm.ibercajadirecto.com%2Fsignin-oidc&amp;response_mode=form_post&amp;response_type=code%20id_token%20token&amp;scope=openid%20iberfabric.soporte.plataforma.identidad.api.self%20ibercaja.sgv.apigateway%20iberfabric.omnicanalidad.canales.sgv.apigateway&amp;state=OpenIdConnect.AuthenticationProperties%3DsR8dY_IkwhFhLB8M-GWzA8M2DlKMBqdEZ0Lb-XWKxwF-pSr6KeO4Zv4gI5G9IiitB9NRilUBTogAio9eJeuGyjG1oPhpoqiCG-ekD9-1CscBNIld1HSWnuJLn6ydwrEo3hT-SRGLaoEiA8swctGCfloVNdvkZWqYtcHXLXWooVOYaX8bkkJBzAdrykzrmKaiH6lN5bvwVREyEOVFsI7DI0GD4K4b8_GEvVK_cIIUZvZUAsbptISe1JVxZdBLu763TrK4mOpI7pjizIxMMk1zPg&amp;nonce=637491536430840557.MjdkMDA1YTYtMGI3ZS00ODAwLWFjMDUtNGRkYzE4ZDFkNzA0ZTcxNDc2YzMtNGU1OC00NmRlLWIzZTMtY2VhNDI0MTBhZDIw&amp;x-client-SKU=ID_NET461&amp;x-client-ver=5.3.0.0" />
 
-
-<div class="content-container">
-
-    <div class="content">
-
-        <section class="left">
-
-                <h1>Acceso Clientes</h1>
-
-                        <span id="okMessage" class="subtitle">Introduce los datos solicitados</span>
-
-                <form id="login" action="" method="post">
-
-                    <input type="hidden" id="ReturnUrl" name="ReturnUrl" value="/soporte/plataforma/identidad/api/v1/connect/authorize/callback?client_id=bancamovil-app.hybrid&amp;redirect_uri=https%3A%2F%2Fewm.ibercajadirecto.com%2Fsignin-oidc&amp;response_mode=form_post&amp;response_type=code%20id_token%20token&amp;scope=openid%20iberfabric.soporte.plataforma.identidad.api.self%20ibercaja.sgv.apigateway%20iberfabric.omnicanalidad.canales.sgv.apigateway&amp;state=OpenIdConnect.AuthenticationProperties%3DsR8dY_IkwhFhLB8M-GWzA8M2DlKMBqdEZ0Lb-XWKxwF-pSr6KeO4Zv4gI5G9IiitB9NRilUBTogAio9eJeuGyjG1oPhpoqiCG-ekD9-1CscBNIld1HSWnuJLn6ydwrEo3hT-SRGLaoEiA8swctGCfloVNdvkZWqYtcHXLXWooVOYaX8bkkJBzAdrykzrmKaiH6lN5bvwVREyEOVFsI7DI0GD4K4b8_GEvVK_cIIUZvZUAsbptISe1JVxZdBLu763TrK4mOpI7pjizIxMMk1zPg&amp;nonce=637491536430840557.MjdkMDA1YTYtMGI3ZS00ODAwLWFjMDUtNGRkYzE4ZDFkNzA0ZTcxNDc2YzMtNGU1OC00NmRlLWIzZTMtY2VhNDI0MTBhZDIw&amp;x-client-SKU=ID_NET461&amp;x-client-ver=5.3.0.0" />
-
-                    <input type="hidden" value="0rPhUCDeapWNxPvde5Qy7rhMgzGgatbuYpO0z/k&#x2B;jPNXqITZWcpRenkAUU5M0sIe;VUnmv&#x2B;ABUUxh3k2B7d73O8I72CtPxmzOIs4D7lMMFKLVjExpZMNeUo5hwrjTkCXtbLrhtpfAiYte2bZbl3R&#x2B;i/Gf96vv&#x2B;oLEijJHlX5pOh&#x2B;3rsBoTA10vGQnB5j/dN7UvVR3iCnbwXK7/gyKpkCsXh6Q17421tbA7ZLggjH7CcqYjJMkZhElPUog0EbXolCnezvFTsG64G&#x2B;2EbPpg7Fcirf5zaO8Sbqq0bg/x8u1KyY=;Nk4ZggzdLYJl4O/5aQP4/Rups6FE3/dfODynhuHeSxOpjG0gVjU4JWdkwdHsMP32;ViV2D0RSU6dPTCGGzxD1qBbyW0m6jyfeluEdVjp8PMl/tqXTNnY&#x2B;VI0qAtezDOFKQrgvkbjOpuCgn4uMQQIAxA==;jNAmMIjb7L&#x2B;515M/d49BkNNzPVHmsd4d4TESk9M&#x2B;CdGHPV&#x2B;Z1SFhUqfrIF9T4oSq;" id="Data" name="Data" />
+                        <input type="hidden"
+                            value="0rPhUCDeapWNxPvde5Qy7rhMgzGgatbuYpO0z/k&#x2B;jPNXqITZWcpRenkAUU5M0sIe;VUnmv&#x2B;ABUUxh3k2B7d73O8I72CtPxmzOIs4D7lMMFKLVjExpZMNeUo5hwrjTkCXtbLrhtpfAiYte2bZbl3R&#x2B;i/Gf96vv&#x2B;oLEijJHlX5pOh&#x2B;3rsBoTA10vGQnB5j/dN7UvVR3iCnbwXK7/gyKpkCsXh6Q17421tbA7ZLggjH7CcqYjJMkZhElPUog0EbXolCnezvFTsG64G&#x2B;2EbPpg7Fcirf5zaO8Sbqq0bg/x8u1KyY=;Nk4ZggzdLYJl4O/5aQP4/Rups6FE3/dfODynhuHeSxOpjG0gVjU4JWdkwdHsMP32;ViV2D0RSU6dPTCGGzxD1qBbyW0m6jyfeluEdVjp8PMl/tqXTNnY&#x2B;VI0qAtezDOFKQrgvkbjOpuCgn4uMQQIAxA==;jNAmMIjb7L&#x2B;515M/d49BkNNzPVHmsd4d4TESk9M&#x2B;CdGHPV&#x2B;Z1SFhUqfrIF9T4oSq;"
+                            id="Data" name="Data" />
 
                         <input type="hidden" value="" id="CidusKey" name="CidusKey" />
 
-                <div class="form-group input">
+                        <div class="form-group input">
 
-                    <label class="label" for="Username">C&#xF3;digo de identificaci&#xF3;n</label>
+                            <label class="label" for="Username">C&#xF3;digo de identificaci&#xF3;n</label>
 
-                    <input class="form-control input-uppercase" autofocus autocomplete="off" type="text" data-val="true" data-val-required="El C&#xF3;digo de identificaci&#xF3;n es obligatorio" id="Username" name="Username" value="">
+                            <input class="form-control input-uppercase" autofocus autocomplete="off" type="text"
+                                data-val="true" data-val-required="El C&#xF3;digo de identificaci&#xF3;n es obligatorio"
+                                id="Username" name="Username" value="">
 
-                </div>
+                        </div>
 
-                <div class="form-group custom-password">
+                        <div class="form-group custom-password">
 
-                    <label class="label" for="Password">Clave de acceso</label>
+                            <label class="label" for="Password">Clave de acceso</label>
 
-                    <input type="password" class="form-control input-uppercase" autocomplete="off" data-val="true" data-val-required="La Clave de acceso es obligatoria" id="Password" name="Password">
+                            <input type="password" class="form-control input-uppercase" autocomplete="off"
+                                data-val="true" data-val-required="La Clave de acceso es obligatoria" id="Password"
+                                name="Password">
 
-                    <div id="passwordButton" class="ibercaja-icon-Mostrar" onclick="showHidePassword('Password','passwordButton')"></div>
+                            <div id="passwordButton" class="ibercaja-icon-Mostrar"
+                                onclick="showHidePassword('Password','passwordButton')"></div>
 
-                </div>
+                        </div>
 
-                                        <div class="form-group buttons">
+                        <div class="form-group buttons">
 
-                        <button class="btn-primary-icon ibercaja-icon-Chevron-abajo" id="EntrarBtn" name="button" value="login" type="submit" disabled>
+                            <button class="btn-primary-icon ibercaja-icon-Chevron-abajo" id="EntrarBtn" name="button"
+                                value="login" type="submit" disabled>
 
-                            <span>entrar</span>
+                                <span>entrar</span>
 
-                        </button>
+                            </button>
 
-                    </div>
+                        </div>
 
-                <input name="__RequestVerificationToken" type="hidden" value="CfDJ8NpZJcMSVMtFjBHpMzj87Ac747W1ew8ZEjx6b3pA0s98hRbKwmpxMc2M6KbZqXKddZdnRoHBfNShuDgUBLpV-2qB1dDm-YM4u9oD6kDxxZw3t79WaxVNptH0YtCWJ2bcfwH0YRp2IAi0sPzL6zsHI_g" /></form>
+                        <input name="__RequestVerificationToken" type="hidden"
+                            value="CfDJ8NpZJcMSVMtFjBHpMzj87Ac747W1ew8ZEjx6b3pA0s98hRbKwmpxMc2M6KbZqXKddZdnRoHBfNShuDgUBLpV-2qB1dDm-YM4u9oD6kDxxZw3t79WaxVNptH0YtCWJ2bcfwH0YRp2IAi0sPzL6zsHI_g" />
+                    </form>
 
+                </section>
 
+            </div>
 
+        </div>
 
-
-        </section>
-
-
-
-        <aside class="right">
-
-            <section>
-
-                    <div class="sidebar-element-container">
-
-                        <p>Si ya eres cliente de Ibercaja y quieres operar con tus cuentas, solicita aquí este servicio.</p>
-
-                        <button class="btn-secondary" onclick="window.open('https://www.ibercaja.es/negocios/banca-online-negocios/servicios/conoce-banca-online-negocios/')">solicitar acceso</button>
-
-                    </div>
-
-                <div class="sidebar-element-container">
-
-                    <a href="https://www.ibercaja.es/particulares/banca-online/servicios/gestiona-tus-cuentas/" target="_blank">¿Necesitas ayuda?</a>
-
-                </div>
-
-                <div class="sidebar-element-container">
-
-                    <a href="https://www.ibercaja.es/particulares/banca-online/servicios/hazte-fan-de-la-seguridad/" target="_blank">Recomendaciones de seguridad:</a>
-
-                    <p>Sigue nuestros consejos y ponte al día en seguridad.</p>
-
-                </div>
-
-                <div class="sidebar-element-container">
-
-                    <h3>Descarga nuestra App en tu móvil:</h3>
-
-                    <div class="links">
-
-                        <a href="https://apps.apple.com/us/app/ibercaja/id515972019?l=es&ls=1" target="_blank" class="store-link"><img src="/soporte/plataforma/identidad/api/v1/css/images/AppStore.svg" alt="App Store"></a>
-
-                        <a href="https://play.google.com/store/apps/details?id=es.ibercaja.ibercajaapp" target="_blank" class="store-link"><img src="/soporte/plataforma/identidad/api/v1/css/images/GooglePlay.png" alt="Google Play"></a>
-
-                    </div>
-
-                </div>
-
-            </section>
-
-        </aside>
-
-
-
-    </div>
-
-
-
-</div>
-
-
-
-<footer>
-
-    <a class="ibercaja-icon-Ibercaja-logo"></a>
-
-    <ul>
-
-        <li onclick="openInNewTab('https://www.ibercaja.es/particulares/documentacion-a-clientes/');"><a title="documentación a clientes">documentación a clientes</a></li>
-
-        <li onclick="openInNewTab('https://www.ibercaja.es/particulares/condiciones-de-uso/');"><a title="aviso legal">aviso legal</a></li>
-
-        <li onclick="openInNewTab('https://www.ibercaja.es/forms/ejercicio-de-derechos/');"><a title="ejercicio de derechos">ejercicio de derechos</a></li>
-
-        <li onclick="openInNewTab('https://www.ibercaja.es/forms/revocacion/');"><a title="revocación">revocación</a></li>
-
-        <li onclick="openInNewTab('https://www.ibercaja.es/tarifas-y-cotizaciones/');"><a title="tarifas y cotizaciones">tarifas y cotizaciones</a></li>
-
-        <li onclick="openInNewTab('https://www3.ibercajadirecto.com/htmanuncio/nm025738a.pdf');"><a title="tablón de anuncios">tablón de anuncios</a></li>
-
-    </ul>
-
-    <script>
-
-        function openInNewTab(url) {
-
-            var win = window.open(url, '_blank');
-
-            win.focus();
-
-        }
-
-    </script>
-
-</footer>
-
-
-
-
-
-
-
-    <script src="/soporte/plataforma/identidad/api/v1/js/login_javascript.js"></script>
+        <script src="/soporte/plataforma/identidad/api/v1/js/login_javascript.js"></script>
 
         <script>setWhiteList('https://ebeprup.ibercaja.es,https://ewmpprod.ibercajadirecto.com:443,https://ebe.ibercaja.es,https://ewm.ibercajadirecto.com:443');</script>
-
-
-
     </div>
-
-
-
-    
-
 </body>
 
 </html>
