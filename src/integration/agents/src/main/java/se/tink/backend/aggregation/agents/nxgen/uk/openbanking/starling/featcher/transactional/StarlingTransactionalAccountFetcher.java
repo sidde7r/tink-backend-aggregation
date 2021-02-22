@@ -15,7 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.rpc.AccountBalanceResponse;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.rpc.AccountIdentifiersResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
-import se.tink.backend.aggregation.nxgen.core.account.entity.Holder;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Party;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -45,7 +45,7 @@ public class StarlingTransactionalAccountFetcher implements AccountFetcher<Trans
         return accounts;
     }
 
-    private Collection<String> getAccountHolderNames(String accountHolderType) {
+    private Collection<String> getAccountPartiesNames(String accountHolderType) {
 
         switch (accountHolderType) {
             case AccountHolderType.INDIVIDUAL:
@@ -71,9 +71,9 @@ public class StarlingTransactionalAccountFetcher implements AccountFetcher<Trans
     private Optional<TransactionalAccount> constructAccount(
             AccountEntity account, String accountHolderType) {
 
-        List<Holder> holders =
-                getAccountHolderNames(accountHolderType).stream()
-                        .map(Holder::of)
+        List<Party> parties =
+                getAccountPartiesNames(accountHolderType).stream()
+                        .map(name -> new Party(name, Party.Role.HOLDER))
                         .collect(Collectors.toList());
         String accountUid = account.getAccountUid();
         String defaultCategoryId = account.getDefaultCategory();
@@ -94,7 +94,7 @@ public class StarlingTransactionalAccountFetcher implements AccountFetcher<Trans
                                 .addIdentifier(identifiers.getSortCodeAccountNumber())
                                 .addIdentifier(identifiers.getIbanIdentifier())
                                 .build())
-                .addHolders(holders)
+                .addParties(parties)
                 .putInTemporaryStorage(UrlParams.CATEGORY_UID, defaultCategoryId)
                 .setApiIdentifier(accountUid)
                 .build();
