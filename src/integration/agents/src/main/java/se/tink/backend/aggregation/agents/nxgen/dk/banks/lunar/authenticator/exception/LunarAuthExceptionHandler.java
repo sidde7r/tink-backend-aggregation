@@ -2,19 +2,14 @@ package se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.ex
 
 import agents_platform_framework.org.springframework.web.server.ResponseStatusException;
 import com.google.common.collect.ImmutableMap;
-import java.util.Collections;
-import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.UUID;
-import java.util.regex.Pattern;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.result.error.LastAttemptError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.persistance.LunarAuthDataAccessor;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.exception.ErrorResponse;
-import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.exception.KnownErrorResponse;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentFailedAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AccessTokenFetchingFailureError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AccountBlockedError;
@@ -29,48 +24,27 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 @Slf4j
 public class LunarAuthExceptionHandler {
 
-    private static final Pattern INCORRECT_PASSWORD_PATTERN =
-            Pattern.compile("You have [2345] attempts left\\.");
-    private static final String LAST_ATTEMPT_MESSAGE =
-            "If you enter a wrong PIN again, your access to the app is blocked. You will then have to use your NemID to sign in again.";
-
     private static final String INCORRECT_PASSWORD = "USER_PASSWORD_INCORRECT";
     private static final String LAST_ATTEMPT = "USER_PASSWORD_INCORRECT_RESET_APP";
     private static final String NOT_A_LUNAR_USER = "USER_NOT_FOUND";
     private static final String TOKEN_REVOKED = "ACCESS_TOKEN_REVOKED_BY_CUSTOMER_SUPPORT";
 
-    private static final Map<String, List<KnownErrorResponse>> KNOWN_ERRORS =
-            ImmutableMap.<String, List<KnownErrorResponse>>builder()
-                    .put(
-                            INCORRECT_PASSWORD,
-                            Collections.singletonList(
-                                    KnownErrorResponse.withPattern(
-                                            INCORRECT_PASSWORD_PATTERN,
-                                            new InvalidCredentialsError())))
-                    .put(
-                            LAST_ATTEMPT,
-                            Collections.singletonList(
-                                    KnownErrorResponse.withMessage(
-                                            LAST_ATTEMPT_MESSAGE,
-                                            new InvalidCredentialsError(
-                                                    LastAttemptError.getError()))))
+    private static final Map<String, AgentBankApiError> KNOWN_ERRORS =
+            ImmutableMap.<String, AgentBankApiError>builder()
+                    .put(INCORRECT_PASSWORD, new InvalidCredentialsError())
+                    .put(LAST_ATTEMPT, new InvalidCredentialsError(LastAttemptError.getError()))
                     .put(
                             NOT_A_LUNAR_USER,
-                            Collections.singletonList(
-                                    KnownErrorResponse.withoutMessage(
-                                            new ThirdPartyAppNoClientError(
-                                                    getErrorWithChangedUserMessage(
-                                                            AgentError.THIRD_PARTY_APP_NO_CLIENT
-                                                                    .getCode(),
-                                                            LoginError.NOT_CUSTOMER)))))
+                            new ThirdPartyAppNoClientError(
+                                    getErrorWithChangedUserMessage(
+                                            AgentError.THIRD_PARTY_APP_NO_CLIENT.getCode(),
+                                            LoginError.NOT_CUSTOMER)))
                     .put(
                             TOKEN_REVOKED,
-                            Collections.singletonList(
-                                    KnownErrorResponse.withoutMessage(
-                                            new AccountBlockedError(
-                                                    getErrorWithChangedUserMessage(
-                                                            AgentError.ACCOUNT_BLOCKED.getCode(),
-                                                            LoginError.INVALIDATED_CREDENTIALS)))))
+                            new AccountBlockedError(
+                                    getErrorWithChangedUserMessage(
+                                            AgentError.ACCOUNT_BLOCKED.getCode(),
+                                            LoginError.INVALIDATED_CREDENTIALS)))
                     .build();
 
     private static Error getErrorWithChangedUserMessage(
@@ -90,35 +64,9 @@ public class LunarAuthExceptionHandler {
 
         ErrorResponse errorResponse = deserializeBodyToErrorResponse(e.getReason());
         if (errorResponse != null && KNOWN_ERRORS.containsKey(errorResponse.getReasonCode())) {
-            List<KnownErrorResponse> knownErrorResponses =
-                    KNOWN_ERRORS.get(errorResponse.getReasonCode());
-
-            for (KnownErrorResponse knownErrorResponse : knownErrorResponses) {
-                if (displayMessagesAreEqual(errorResponse, knownErrorResponse)
-                        || displayMessageMatchesPattern(
-                                errorResponse, knownErrorResponse.getPattern())) {
-                    return knownErrorResponse.getErrorToReturn();
-                }
-            }
+            return KNOWN_ERRORS.get(errorResponse.getReasonCode());
         }
         return defaultError;
-    }
-
-    private static boolean displayMessagesAreEqual(
-            ErrorResponse errorResponse, KnownErrorResponse knownErrorResponse) {
-        return knownErrorResponse.getPattern() == null
-                && Objects.equals(
-                        knownErrorResponse.getReasonDisplayMessage(),
-                        errorResponse.getReasonDisplayMessage());
-    }
-
-    private static boolean displayMessageMatchesPattern(
-            ErrorResponse errorResponse, Pattern knownErrorMessagePattern) {
-        return knownErrorMessagePattern != null
-                && StringUtils.isNotBlank(errorResponse.getReasonDisplayMessage())
-                && knownErrorMessagePattern
-                        .matcher(errorResponse.getReasonDisplayMessage())
-                        .matches();
     }
 
     private static ErrorResponse deserializeBodyToErrorResponse(String response) {

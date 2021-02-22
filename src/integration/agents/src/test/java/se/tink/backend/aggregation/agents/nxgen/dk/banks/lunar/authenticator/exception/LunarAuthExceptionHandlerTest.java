@@ -66,24 +66,6 @@ public class LunarAuthExceptionHandlerTest {
             new Object[] {
                 new ResponseStatusException(
                         HttpStatus.BAD_REQUEST, "{\"reasonCode\": \"USER_PASSWORD_INCORRECT\"}"),
-                new AuthorizationError()
-            },
-            new Object[] {
-                new ResponseStatusException(
-                        HttpStatus.BAD_REQUEST,
-                        "{\"reasonCode\": \"USER_PASSWORD_INCORRECT\", \"reasonDisplayMessage\": \"You have 1 attempts left.\"}"),
-                new AuthorizationError()
-            },
-            new Object[] {
-                new ResponseStatusException(
-                        HttpStatus.BAD_REQUEST,
-                        "{\"reasonCode\": \"USER_PASSWORD_INCORRECT\", \"reasonDisplayMessage\": \"You have 2 attempts left.\"}"),
-                new InvalidCredentialsError()
-            },
-            new Object[] {
-                new ResponseStatusException(
-                        HttpStatus.BAD_REQUEST,
-                        "{\"reasonCode\": \"USER_PASSWORD_INCORRECT\", \"reasonDisplayMessage\": \"You have 3 attempts left.\"}"),
                 new InvalidCredentialsError()
             },
             new Object[] {
@@ -95,20 +77,8 @@ public class LunarAuthExceptionHandlerTest {
             new Object[] {
                 new ResponseStatusException(
                         HttpStatus.BAD_REQUEST,
-                        "{\"reasonCode\": \"USER_PASSWORD_INCORRECT\", \"reasonDisplayMessage\": \"You have 5 attempts left.\"}"),
-                new InvalidCredentialsError()
-            },
-            new Object[] {
-                new ResponseStatusException(
-                        HttpStatus.BAD_REQUEST,
                         "{\"reasonCode\": \"USER_PASSWORD_INCORRECT_RESET_APP\"}"),
-                new AuthorizationError()
-            },
-            new Object[] {
-                new ResponseStatusException(
-                        HttpStatus.BAD_REQUEST,
-                        "{\"reasonCode\": \"USER_PASSWORD_INCORRECT_RESET_APP\", \"reasonDisplayMessage\": \"Wrong text\"}"),
-                new AuthorizationError()
+                new InvalidCredentialsError(LastAttemptError.getError())
             },
             new Object[] {
                 new ResponseStatusException(
