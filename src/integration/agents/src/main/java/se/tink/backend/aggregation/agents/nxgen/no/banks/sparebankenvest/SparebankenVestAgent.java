@@ -95,11 +95,11 @@ public final class SparebankenVestAgent extends NextGenerationAgent
 
     protected void configureHttpClient(TinkHttpClient client) {
         client.setUserAgent(SparebankenVestConstants.Headers.USER_AGENT);
+        client.addFilter(new SparebankenVestKnownErrorsFilter());
         client.addFilter(
                 new SparebankenVestRetryFilter(
                         SparebankenVestConstants.RetryFilter.NUM_TIMEOUT_RETRIES,
                         SparebankenVestConstants.RetryFilter.RETRY_SLEEP_MILLISECONDS));
-        client.addFilter(new SparebankenVestKnownErrorsFilter());
     }
 
     @Override

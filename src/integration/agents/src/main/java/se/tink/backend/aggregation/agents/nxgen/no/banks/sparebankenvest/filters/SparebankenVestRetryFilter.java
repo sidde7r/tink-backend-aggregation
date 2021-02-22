@@ -14,6 +14,7 @@ public class SparebankenVestRetryFilter extends AbstractRandomRetryFilter {
     @Override
     protected boolean shouldRetry(HttpResponse response) {
         return response.getStatus() == 403
+                && response.hasBody()
                 && response.getBody(String.class).contains(SYSTEM_CLOSED);
     }
 }

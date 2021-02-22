@@ -25,6 +25,7 @@ public class SparebankenVestKnownErrorsFilter extends Filter {
 
     private boolean isBankSideFailure(HttpResponse response) {
         return response.getStatus() == 403
+                && response.hasBody()
                 && response.getBody(String.class).contains(SYSTEM_CLOSED);
     }
 }
