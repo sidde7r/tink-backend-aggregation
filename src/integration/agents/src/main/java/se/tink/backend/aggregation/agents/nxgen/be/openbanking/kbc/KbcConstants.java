@@ -88,5 +88,6 @@ public final class KbcConstants {
 
     public static class ErrorCodes {
         public static final String CONSENT_EXPIRED = "CONSENT_EXPIRED";
+        public static final String CONSENT_INVALID = "CONSENT_INVALID";
     }
 }

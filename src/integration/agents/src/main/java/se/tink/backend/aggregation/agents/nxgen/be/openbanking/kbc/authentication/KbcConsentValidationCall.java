@@ -68,7 +68,8 @@ public class KbcConsentValidationCall
         KbcErrorMessage errorResponse =
                 SerializationUtils.deserializeFromString(
                         httpResponse.getBody(), KbcErrorMessage.class);
-        if (doesResponseContainCode(errorResponse, ErrorCodes.CONSENT_EXPIRED)) {
+        if (doesResponseContainCode(errorResponse, ErrorCodes.CONSENT_EXPIRED)
+                || doesResponseContainCode(errorResponse, ErrorCodes.CONSENT_INVALID)) {
             return new ExternalApiCallResult<>(new SessionExpiredError());
         }
         return new ExternalApiCallResult<>(new AuthorizationError());
