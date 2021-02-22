@@ -24,6 +24,8 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.fetcher
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.fetcher.loan.SparebankenVestLoanFetcher;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.fetcher.transactionalaccount.SparebankenVestTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.fetcher.transactionalaccount.SparebankenVestTransactionalAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.filters.SparebankenVestKnownErrorsFilter;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.filters.SparebankenVestRetryFilter;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.session.SparebankenVestSessionHandler;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.EncapClient;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.module.EncapClientModule;
@@ -93,6 +95,11 @@ public final class SparebankenVestAgent extends NextGenerationAgent
 
     protected void configureHttpClient(TinkHttpClient client) {
         client.setUserAgent(SparebankenVestConstants.Headers.USER_AGENT);
+        client.addFilter(new SparebankenVestKnownErrorsFilter());
+        client.addFilter(
+                new SparebankenVestRetryFilter(
+                        SparebankenVestConstants.RetryFilter.NUM_TIMEOUT_RETRIES,
+                        SparebankenVestConstants.RetryFilter.RETRY_SLEEP_MILLISECONDS));
     }
 
     @Override
