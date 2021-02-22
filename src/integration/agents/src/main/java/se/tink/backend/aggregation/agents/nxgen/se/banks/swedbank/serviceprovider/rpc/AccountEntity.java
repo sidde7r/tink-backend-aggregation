@@ -13,7 +13,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovide
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
 import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities.Answer;
-import se.tink.backend.aggregation.nxgen.core.account.entity.Holder;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Party;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -114,7 +114,7 @@ public abstract class AccountEntity extends AbstractAccountEntity {
                 .canReceiveExternalTransfer(capabilities.getCanReceiveExternalTransfer())
                 .putInTemporaryStorage(StorageKey.NEXT_LINK, getLinkOrNull())
                 .putInTemporaryStorage(SwedbankBaseConstants.StorageKey.PROFILE, bankProfile)
-                .addHolders(Holder.of(bankProfile.getProfile().getHolderName()))
+                .addParties(new Party(bankProfile.getProfile().getHolderName(), Party.Role.HOLDER))
                 .build();
     }
 
