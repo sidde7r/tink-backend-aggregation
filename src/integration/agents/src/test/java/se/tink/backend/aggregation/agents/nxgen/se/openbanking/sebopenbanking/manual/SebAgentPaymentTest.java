@@ -14,7 +14,7 @@ import se.tink.backend.aggregation.agents.framework.ArgumentManager.SsnArgumentE
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.BankGiroIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
@@ -70,7 +70,7 @@ public class SebAgentPaymentTest {
         RemittanceInformation remittanceInformation = new RemittanceInformation();
         remittanceInformation.setValue("ToSomeone");
 
-        Amount amount = Amount.inSEK(1);
+        ExactCurrencyAmount amount = ExactCurrencyAmount.inSEK(1);
         LocalDate executionDate = LocalDate.now();
         String currency = "SEK";
 
@@ -78,7 +78,7 @@ public class SebAgentPaymentTest {
                 new Builder()
                         .withCreditor(creditor)
                         .withDebtor(debtor)
-                        .withAmount(amount)
+                        .withExactCurrencyAmount(amount)
                         .withExecutionDate(executionDate)
                         .withCurrency(currency)
                         .withRemittanceInformation(remittanceInformation)
@@ -100,7 +100,7 @@ public class SebAgentPaymentTest {
         remittanceInformation.setType(RemittanceInformationType.OCR);
         remittanceInformation.setValue("50000038393");
 
-        Amount amount = Amount.inSEK(1);
+        ExactCurrencyAmount amount = ExactCurrencyAmount.inSEK(1);
         LocalDate executionDate = LocalDate.now().plusDays(1);
         String currency = "SEK";
 
@@ -108,7 +108,7 @@ public class SebAgentPaymentTest {
                 new Builder()
                         .withCreditor(creditor)
                         .withDebtor(debtor)
-                        .withAmount(amount)
+                        .withExactCurrencyAmount(amount)
                         .withExecutionDate(executionDate)
                         .withCurrency(currency)
                         .withRemittanceInformation(remittanceInformation)

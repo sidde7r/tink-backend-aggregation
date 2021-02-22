@@ -5,7 +5,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.executor.payment.entities.LinksEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Payment;
@@ -21,13 +21,16 @@ public class DomesticPaymentResponse {
     private String transactionStatus;
 
     public PaymentResponse toTinkPayment(
-            AccountEntity creditor, AccountEntity debtor, Amount amount, PaymentStatus status) {
+            AccountEntity creditor,
+            AccountEntity debtor,
+            ExactCurrencyAmount amount,
+            PaymentStatus status) {
         Payment.Builder buildingPaymentResponse =
                 new Payment.Builder()
                         .withCreditor(creditor.toTinkCreditor())
                         .withDebtor(debtor.toTinkDebtor())
-                        .withAmount(amount)
-                        .withCurrency(amount.getCurrency())
+                        .withExactCurrencyAmount(amount)
+                        .withCurrency(amount.getCurrencyCode())
                         .withUniqueId(paymentId)
                         .withStatus(status)
                         .withType(PaymentType.DOMESTIC);

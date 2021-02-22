@@ -27,7 +27,7 @@ public class CrossBorderTransactionEntity {
                 new Payment.Builder()
                         .withCreditor(creditorAccountIban.toTinkCreditor())
                         .withDebtor(debtorAccount.toTinkDebtor())
-                        .withAmount(amount.toAmount())
+                        .withExactCurrencyAmount(amount.toAmount())
                         .withCurrency(amount.getCurrency())
                         .withUniqueId(paymentId)
                         .withStatus(

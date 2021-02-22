@@ -12,7 +12,7 @@ import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.IbanArgumentEnum;
 import se.tink.libraries.account.AccountIdentifier.Type;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
@@ -48,7 +48,7 @@ public class RaiffeisenAgentPaymentTest {
             doReturn(Type.IBAN).when(debtor).getAccountIdentifierType();
             doReturn("AT439900000000010017").when(debtor).getAccountNumber();
 
-            Amount amount = Amount.inSEK(new Random().nextInt(100));
+            ExactCurrencyAmount amount = ExactCurrencyAmount.inSEK(new Random().nextInt(100));
             LocalDate executionDate = LocalDate.now();
             String currency = "EUR";
 
@@ -56,7 +56,7 @@ public class RaiffeisenAgentPaymentTest {
                     new Payment.Builder()
                             .withCreditor(creditor)
                             .withDebtor(debtor)
-                            .withAmount(amount)
+                            .withExactCurrencyAmount(amount)
                             .withExecutionDate(executionDate)
                             .withCurrency(currency)
                             .build());

@@ -12,7 +12,7 @@ import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
@@ -44,7 +44,7 @@ public class LansforsakringarAgentPaymentTest {
             doReturn(AccountIdentifier.Type.SE).when(debtor).getAccountIdentifierType();
             doReturn("11111111111").when(debtor).getAccountNumber();
 
-            Amount amount = Amount.inSEK(new Random().nextInt(50000));
+            ExactCurrencyAmount amount = ExactCurrencyAmount.inSEK(new Random().nextInt(50000));
             LocalDate executionDate = LocalDate.now();
             String currency = "SEK";
 
@@ -52,7 +52,7 @@ public class LansforsakringarAgentPaymentTest {
                     new Payment.Builder()
                             .withCreditor(creditor)
                             .withDebtor(debtor)
-                            .withAmount(amount)
+                            .withExactCurrencyAmount(amount)
                             .withExecutionDate(executionDate)
                             .withCurrency(currency)
                             .build());

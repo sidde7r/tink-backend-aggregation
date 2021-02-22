@@ -35,7 +35,7 @@ public class FetchPaymentResponse {
                 new Payment.Builder()
                         .withCreditor(creditorAccount.toTinkCreditor(type))
                         .withDebtor(debtorAccount.toTinkDebtor(type))
-                        .withAmount(instructedAmount.toAmount())
+                        .withExactCurrencyAmount(instructedAmount.toAmount())
                         .withCurrency(instructedAmount.getCurrency())
                         .withUniqueId(paymentId)
                         .withStatus(

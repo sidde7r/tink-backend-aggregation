@@ -24,7 +24,7 @@ public class FetchPaymentResponse {
                 new Payment.Builder()
                         .withCreditor(paymentFromRequest.getCreditor())
                         .withDebtor(paymentFromRequest.getDebtor())
-                        .withAmount(paymentFromRequest.getAmount())
+                        .withExactCurrencyAmount(paymentFromRequest.getExactCurrencyAmount())
                         .withExecutionDate(paymentFromRequest.getExecutionDate())
                         .withCurrency(paymentFromRequest.getAmount().getCurrency())
                         .withUniqueId(paymentId)

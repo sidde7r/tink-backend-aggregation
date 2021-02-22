@@ -21,7 +21,7 @@ public class CreatePaymentResponse {
                         .withUniqueId(paymentId)
                         .withCreditor(payment.getCreditor())
                         .withDebtor(payment.getDebtor())
-                        .withAmount(payment.getAmount())
+                        .withExactCurrencyAmount(payment.getExactCurrencyAmount())
                         .withStatus(
                                 DkbPaymentStatus.mapToTinkPaymentStatus(
                                         DkbPaymentStatus.fromString(transactionStatus)));

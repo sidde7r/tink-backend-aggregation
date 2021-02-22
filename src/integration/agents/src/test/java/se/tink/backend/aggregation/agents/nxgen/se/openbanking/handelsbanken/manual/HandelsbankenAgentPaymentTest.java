@@ -13,7 +13,7 @@ import se.tink.backend.aggregation.agents.framework.ArgumentManager.UsernameArgu
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.handelsbanken.HandelsbankenSEConstants.CredentialKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.Scope;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
@@ -72,7 +72,7 @@ public class HandelsbankenAgentPaymentTest {
         Debtor debtor = new Debtor(debtorAccount);
         Creditor creditor = new Creditor(creditorAccount, creditorAccount.getName().orElse(null));
 
-        Amount amount = Amount.inSEK(1);
+        ExactCurrencyAmount amount = ExactCurrencyAmount.inSEK(1);
         LocalDate executionDate = LocalDate.now();
         RemittanceInformation remittanceInformation = new RemittanceInformation();
         remittanceInformation.setValue("Testing PIS");
@@ -80,9 +80,9 @@ public class HandelsbankenAgentPaymentTest {
         return new Payment.Builder()
                 .withCreditor(creditor)
                 .withDebtor(debtor)
-                .withAmount(amount)
+                .withExactCurrencyAmount(amount)
                 .withExecutionDate(executionDate)
-                .withCurrency(amount.getCurrency())
+                .withCurrency(amount.getCurrencyCode())
                 .withRemittanceInformation(remittanceInformation)
                 .build();
     }

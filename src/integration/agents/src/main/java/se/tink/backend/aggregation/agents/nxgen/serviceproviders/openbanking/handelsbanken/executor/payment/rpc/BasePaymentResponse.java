@@ -1,13 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.executor.payment.rpc;
 
-import static se.tink.libraries.amount.ExactCurrencyAmount.of;
-
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.executor.payment.enums.HandelsbankenPaymentStatus;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.executor.payment.enums.HandelsbankenPaymentType;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
@@ -21,13 +19,13 @@ public class BasePaymentResponse {
             Payment payment, HandelsbankenPaymentType paymentType) {
         final Creditor creditor = payment.getCreditor();
         final Debtor debtor = payment.getDebtor();
-        final Amount amount = payment.getAmount();
+        final ExactCurrencyAmount amount = payment.getExactCurrencyAmount();
 
         Payment.Builder buildingPaymentResponse =
                 new Payment.Builder()
                         .withCreditor(getTinkCreditor(creditor))
                         .withDebtor(getTinkDebtor(debtor))
-                        .withExactCurrencyAmount(of(amount.getValue(), amount.getCurrency()))
+                        .withExactCurrencyAmount(amount)
                         .withCurrency(payment.getCurrency())
                         .withUniqueId(paymentId)
                         .withType(paymentType.getTinkPaymentType())

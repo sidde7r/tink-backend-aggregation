@@ -74,7 +74,7 @@ public class ErstebankPaymentExecutor implements PaymentExecutor, FetchablePayme
                 .toTinkPaymentResponse(
                         creditorAccount,
                         debtorAccount,
-                        payment.getAmount(),
+                        payment.getExactCurrencyAmount(),
                         payment.getExecutionDate());
     }
 

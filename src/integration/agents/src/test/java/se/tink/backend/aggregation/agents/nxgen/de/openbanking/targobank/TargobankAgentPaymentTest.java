@@ -13,7 +13,7 @@ import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.LoadBeforeSaveAfterArgumentEnum;
 import se.tink.libraries.account.AccountIdentifier.Type;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
@@ -55,7 +55,7 @@ public class TargobankAgentPaymentTest {
             doReturn(Type.IBAN).when(debtor).getAccountIdentifierType();
             doReturn("DE51250400903312345678").when(debtor).getAccountNumber();
 
-            Amount amount = Amount.inSEK(new Random().nextInt(100));
+            ExactCurrencyAmount amount = ExactCurrencyAmount.inSEK(new Random().nextInt(100));
             LocalDate executionDate = LocalDate.now();
             String currency = "EUR";
 
@@ -63,7 +63,7 @@ public class TargobankAgentPaymentTest {
                     new Payment.Builder()
                             .withCreditor(creditor)
                             .withDebtor(debtor)
-                            .withAmount(amount)
+                            .withExactCurrencyAmount(amount)
                             .withExecutionDate(executionDate)
                             .withCurrency(currency)
                             .build());

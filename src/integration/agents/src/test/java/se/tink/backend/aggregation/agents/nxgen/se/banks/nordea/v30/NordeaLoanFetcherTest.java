@@ -7,14 +7,12 @@ import com.google.common.collect.Lists;
 import java.math.BigDecimal;
 import java.util.Optional;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.fetcher.loan.rpc.FetchLoanDetailsResponse;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.util.LoanInterpreter;
-import se.tink.libraries.amount.Amount;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.enums.MarketCode;
 import se.tink.libraries.serialization.utils.SerializationUtils;
@@ -350,7 +348,6 @@ public class NordeaLoanFetcherTest {
                     + "}";
 
     @Test
-    @Ignore // TODO previously unmaintained -- should be fixed
     public void testLoanParsingWithSubLoans() {
         Optional<LoanAccount> loanAccountOptional =
                 SerializationUtils.deserializeFromString(
@@ -366,7 +363,7 @@ public class NordeaLoanFetcherTest {
                 ExactCurrencyAmount.of(BigDecimal.valueOf(95468.0), "SEK"),
                 loanAccount.getDetails().getExactAmortized());
         Assert.assertEquals(
-                new Amount("SEK", 1678750.0).negate(),
+                ExactCurrencyAmount.inSEK(1678750.0).negate(),
                 loanAccount.getDetails().getInitialBalance());
         Assert.assertEquals(new HolderName("NAME SURNAME"), loanAccount.getHolderName());
         Assert.assertTrue(loanAccount.isUniqueIdentifierEqual("************8901"));
@@ -386,7 +383,8 @@ public class NordeaLoanFetcherTest {
                 ExactCurrencyAmount.of(BigDecimal.valueOf(65205.0), "SEK"),
                 loanAccount.getDetails().getExactAmortized());
         Assert.assertEquals(
-                new Amount("SEK", 144816.0).negate(), loanAccount.getDetails().getInitialBalance());
+                ExactCurrencyAmount.inSEK(144816.0).negate(),
+                loanAccount.getDetails().getInitialBalance());
         Assert.assertEquals(new HolderName("NAME SURNAME"), loanAccount.getHolderName());
         Assert.assertTrue(loanAccount.isUniqueIdentifierEqual("************1111"));
 
@@ -405,7 +403,8 @@ public class NordeaLoanFetcherTest {
                 ExactCurrencyAmount.of(BigDecimal.valueOf(112652.0), "SEK"),
                 loanAccount.getDetails().getExactAmortized());
         Assert.assertEquals(
-                new Amount("SEK", 425000.0).negate(), loanAccount.getDetails().getInitialBalance());
+                ExactCurrencyAmount.inSEK(425000.0).negate(),
+                loanAccount.getDetails().getInitialBalance());
         Assert.assertEquals(new HolderName("NAME SURNAME"), loanAccount.getHolderName());
         Assert.assertTrue(loanAccount.isUniqueIdentifierEqual("************2222"));
 

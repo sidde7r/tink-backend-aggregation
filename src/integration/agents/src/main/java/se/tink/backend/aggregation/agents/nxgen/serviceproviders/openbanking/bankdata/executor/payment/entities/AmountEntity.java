@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.executor.payment.entities;
 
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class AmountEntity {
@@ -15,8 +15,8 @@ public class AmountEntity {
 
     public AmountEntity() {}
 
-    public Amount toAmount() {
-        return new Amount(currency, Double.parseDouble(amount));
+    public ExactCurrencyAmount toAmount() {
+        return ExactCurrencyAmount.of(amount, currency);
     }
 
     public String getCurrency() {

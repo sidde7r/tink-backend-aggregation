@@ -16,7 +16,7 @@ import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.PsuIdArgumentEnum;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
@@ -68,7 +68,7 @@ public class BuddybankAgentPaymentTest {
             doReturn(Iban.random(CountryCode.IT).toString()).when(debtor).getAccountNumber();
 
             RemittanceInformation remittanceInformation = new RemittanceInformation();
-            Amount amount = Amount.inSEK(new Random().nextInt(1000));
+            ExactCurrencyAmount amount = ExactCurrencyAmount.inSEK(new Random().nextInt(1000));
             LocalDate executionDate = LocalDate.now();
             String currency = "EUR";
             remittanceInformation.setValue("Buddy");
@@ -77,7 +77,7 @@ public class BuddybankAgentPaymentTest {
                     new Payment.Builder()
                             .withCreditor(creditor)
                             .withDebtor(debtor)
-                            .withAmount(amount)
+                            .withExactCurrencyAmount(amount)
                             .withType(PaymentType.DOMESTIC)
                             .withExecutionDate(executionDate)
                             .withRemittanceInformation(remittanceInformation)

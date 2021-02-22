@@ -52,7 +52,11 @@ public abstract class NordeaBasePaymentExecutor
 
         CreatePaymentRequest createPaymentRequest =
                 new CreatePaymentRequest.Builder()
-                        .withAmount(paymentRequest.getPayment().getAmount().doubleValue())
+                        .withAmount(
+                                paymentRequest
+                                        .getPayment()
+                                        .getExactCurrencyAmount()
+                                        .getDoubleValue())
                         .withCreditor(creditorEntity)
                         .withCurrency(paymentRequest.getPayment().getCurrency())
                         .withDebtor(debtorEntity)
