@@ -24,7 +24,7 @@ import se.tink.libraries.i18n.Catalog;
 @RequiredArgsConstructor(onConstructor = @__({@Inject}))
 public class NemIdCodeCardAskUserForCodeStep {
 
-    public static final Integer EXPECTED_CODE_LENGTH = 6;
+    static final Integer EXPECTED_CODE_LENGTH = 6;
 
     private static final Pattern VALID_CODE_CARD_NUMBER_REGEX =
             Pattern.compile("^[a-zA-Z]\\d{3}-\\d{3}-\\d{3}$");
@@ -37,7 +37,7 @@ public class NemIdCodeCardAskUserForCodeStep {
     private final NemIdCredentialsStatusUpdater statusUpdater;
     private final SupplementalInformationController supplementalInformationController;
 
-    public String askForCodeAndValidateResponse(Credentials credentials) {
+    String askForCodeAndValidateResponse(Credentials credentials) {
         return metrics.executeWithTimer(
                 () -> {
                     String cardNumber = getCodeCardNumber();

@@ -10,6 +10,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.ObjectMapperFactory;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.result.error.LastAttemptError;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.LunarTestUtils;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.persistance.LunarAuthData;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.persistance.LunarAuthDataAccessor;
@@ -18,6 +19,7 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AccessTokenFetchingFailureError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AccountBlockedError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AgentBankApiError;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AgentError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AuthorizationError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.InvalidCredentialsError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.SessionExpiredError;
@@ -117,13 +119,19 @@ public class LunarAuthExceptionHandlerTest {
             new Object[] {
                 new ResponseStatusException(
                         HttpStatus.BAD_REQUEST, "{\"reasonCode\": \"USER_NOT_FOUND\"}"),
-                new ThirdPartyAppNoClientError()
+                new ThirdPartyAppNoClientError(
+                        LunarTestUtils.getExpectedErrorDetails(
+                                AgentError.THIRD_PARTY_APP_NO_CLIENT.getCode(),
+                                LoginError.NOT_CUSTOMER))
             },
             new Object[] {
                 new ResponseStatusException(
                         HttpStatus.BAD_REQUEST,
                         "{\"reasonCode\": \"ACCESS_TOKEN_REVOKED_BY_CUSTOMER_SUPPORT\"}"),
-                new AccountBlockedError()
+                new AccountBlockedError(
+                        LunarTestUtils.getExpectedErrorDetails(
+                                AgentError.ACCOUNT_BLOCKED.getCode(),
+                                LoginError.INVALIDATED_CREDENTIALS))
             },
         };
     }

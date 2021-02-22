@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.UUID;
 import org.junit.Ignore;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.LunarConstants;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.persistance.LunarAuthData;
@@ -19,6 +20,7 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.request.AgentStartAuthenticationProcessRequest;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentFailedAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.common.AgentExtendedClientInfo;
+import se.tink.backend.aggregation.agentsplatform.framework.error.Error;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @Ignore
@@ -98,5 +100,14 @@ public class LunarTestUtils {
         expected.setSpCert("CoolCertificate");
         expected.setTimestamp("MjAyMS0wMS0xOSAxNDo0NDowMCswMDAw");
         return expected;
+    }
+
+    public static Error getExpectedErrorDetails(
+            String errorCode, se.tink.backend.aggregation.agents.exceptions.agent.AgentError e) {
+        return Error.builder()
+                .uniqueId(UUID.randomUUID().toString())
+                .errorCode(errorCode)
+                .errorMessage(e.userMessage().get())
+                .build();
     }
 }

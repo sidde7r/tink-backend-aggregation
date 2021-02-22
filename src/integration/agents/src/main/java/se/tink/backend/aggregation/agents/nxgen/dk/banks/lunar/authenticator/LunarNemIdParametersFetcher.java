@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator;
 import java.time.Clock;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdParameters;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdParametersFetcher;
@@ -19,7 +18,7 @@ public class LunarNemIdParametersFetcher implements NemIdParametersFetcher {
     private String nemIdParameters;
 
     @Override
-    public NemIdParameters getNemIdParameters() throws AuthenticationException {
+    public NemIdParameters getNemIdParameters() {
         return new NemIdParameters(
                 String.format(NEM_ID_SCRIPT_FORMAT, nemIdParameters)
                         + String.format(

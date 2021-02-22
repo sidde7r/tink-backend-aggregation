@@ -110,7 +110,7 @@ public class NordeaNemIdAuthenticatorV2
     }
 
     @Override
-    public NemIdParameters getNemIdParameters() throws AuthenticationException {
+    public NemIdParameters getNemIdParameters() {
         String codeVerifier = generateCodeVerifier();
         sessionStorage.put(StorageKeys.CODE_VERIFIER, codeVerifier);
         String state = generateState();

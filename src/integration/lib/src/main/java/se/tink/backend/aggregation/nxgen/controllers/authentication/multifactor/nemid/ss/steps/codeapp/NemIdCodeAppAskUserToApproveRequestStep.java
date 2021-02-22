@@ -27,7 +27,7 @@ public class NemIdCodeAppAskUserToApproveRequestStep {
     private final Catalog catalog;
     private final SupplementalInformationController supplementalInformationController;
 
-    public void sendCodeAppRequestAndWaitForResponse(Credentials credentials) {
+    void sendCodeAppRequestAndWaitForResponse(Credentials credentials) {
         metrics.executeWithTimer(
                 () -> {
                     sendNemIdCodeAppApprovalRequest();

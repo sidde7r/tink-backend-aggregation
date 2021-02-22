@@ -13,6 +13,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.ObjectMapperFactory;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.LunarTestUtils;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.client.AuthenticationApiClient;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.persistance.LunarAuthData;
@@ -27,6 +28,7 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentProceedNextStepAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.steps.AgentAuthenticationProcessStep;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AccessTokenFetchingFailureError;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AgentError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.ThirdPartyAppNoClientError;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -147,7 +149,10 @@ public class GetLunarAccessTokenStepTest {
         // then
         LunarTestUtils.assertFailedResultEquals(
                 new AgentFailedAuthenticationResult(
-                        new ThirdPartyAppNoClientError(),
+                        new ThirdPartyAppNoClientError(
+                                LunarTestUtils.getExpectedErrorDetails(
+                                        AgentError.THIRD_PARTY_APP_NO_CLIENT.getCode(),
+                                        LoginError.NOT_CUSTOMER)),
                         LunarTestUtils.toPersistedData(new LunarAuthData())),
                 result);
     }

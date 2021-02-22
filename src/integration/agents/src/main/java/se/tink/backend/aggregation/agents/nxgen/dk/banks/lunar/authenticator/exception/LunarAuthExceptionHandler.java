@@ -6,10 +6,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 import java.util.regex.Pattern;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.result.error.LastAttemptError;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.persistance.LunarAuthDataAccessor;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.exception.ErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.exception.KnownErrorResponse;
@@ -17,9 +19,11 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AccessTokenFetchingFailureError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AccountBlockedError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AgentBankApiError;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AgentError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.InvalidCredentialsError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.SessionExpiredError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.ThirdPartyAppNoClientError;
+import se.tink.backend.aggregation.agentsplatform.framework.error.Error;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @Slf4j
@@ -54,12 +58,29 @@ public class LunarAuthExceptionHandler {
                             NOT_A_LUNAR_USER,
                             Collections.singletonList(
                                     KnownErrorResponse.withoutMessage(
-                                            new ThirdPartyAppNoClientError())))
+                                            new ThirdPartyAppNoClientError(
+                                                    getErrorWithChangedUserMessage(
+                                                            AgentError.THIRD_PARTY_APP_NO_CLIENT
+                                                                    .getCode(),
+                                                            LoginError.NOT_CUSTOMER)))))
                     .put(
                             TOKEN_REVOKED,
                             Collections.singletonList(
-                                    KnownErrorResponse.withoutMessage(new AccountBlockedError())))
+                                    KnownErrorResponse.withoutMessage(
+                                            new AccountBlockedError(
+                                                    getErrorWithChangedUserMessage(
+                                                            AgentError.ACCOUNT_BLOCKED.getCode(),
+                                                            LoginError.INVALIDATED_CREDENTIALS)))))
                     .build();
+
+    private static Error getErrorWithChangedUserMessage(
+            String errorCode, se.tink.backend.aggregation.agents.exceptions.agent.AgentError e) {
+        return Error.builder()
+                .uniqueId(UUID.randomUUID().toString())
+                .errorCode(errorCode)
+                .errorMessage(e.userMessage().get())
+                .build();
+    }
 
     public static AgentBankApiError toKnownErrorFromResponseOrDefault(
             ResponseStatusException e, AgentBankApiError defaultError) {
@@ -109,7 +130,9 @@ public class LunarAuthExceptionHandler {
         if (isAutoAuth) {
             log.error("Failed to signIn to Lunar during autoAuth", e);
             return new AgentFailedAuthenticationResult(
-                    new SessionExpiredError(), authDataAccessor.clearData());
+                    LunarAuthExceptionHandler.toKnownErrorFromResponseOrDefault(
+                            e, new SessionExpiredError()),
+                    authDataAccessor.clearData());
         }
         log.error("Failed to signIn to Lunar", e);
         return new AgentFailedAuthenticationResult(
