@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.danskebank;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.danskebank.configuration;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableSet;

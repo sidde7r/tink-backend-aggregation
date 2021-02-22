@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.danskebank;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.danskebank.configuration;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kjetland.jackson.jsonSchema.annotations.JsonSchemaDescription;

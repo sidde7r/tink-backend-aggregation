@@ -16,8 +16,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 public class EidasProxyWithFallbackJwtSigner implements JwtSigner {
 
     private final EidasProxyJwtSigner eidasProxyJwtSigner;
-
-    private final SecretServiceJwtSigner secretServiceJwtSigner;
+    private final JwtSigner fallbackJwtSigner;
 
     @Override
     public String sign(
@@ -32,8 +31,7 @@ public class EidasProxyWithFallbackJwtSigner implements JwtSigner {
             log.warn(
                     "Couldn't sign JWT using eIDAS-Proxy. Run fallback with legacy signing process. Cause: \n{}",
                     ExceptionUtils.getStackTrace(e));
-            return secretServiceJwtSigner.sign(
-                    algorithm, headerClaims, payloadClaims, detachedPayload);
+            return fallbackJwtSigner.sign(algorithm, headerClaims, payloadClaims, detachedPayload);
         }
     }
 }

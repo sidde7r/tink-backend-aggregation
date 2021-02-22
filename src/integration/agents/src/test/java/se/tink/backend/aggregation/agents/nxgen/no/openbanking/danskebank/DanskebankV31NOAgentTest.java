@@ -9,7 +9,7 @@ public class DanskebankV31NOAgentTest {
     public void testRefresh() throws Exception {
         new AgentIntegrationTest.Builder("no", "no-danskebank-ob")
                 .setAppId("tink")
-                .setFinancialInstitutionId("3971c3c470774db8bb9db8892b92c175")
+                .setFinancialInstitutionId("bf1f1d0ad7a04c64a32b998c4d2cd2bb")
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(false)
                 .expectLoggedIn(false)
