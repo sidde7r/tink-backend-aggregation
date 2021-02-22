@@ -21,6 +21,9 @@ public class TransactionResponseFormatted implements TransactionKeyPaginatorResp
 
     @Override
     public String nextKey() {
+        if (nextEndDate == null) {
+            return null;
+        }
         return nextEndDate.format(DateTimeFormatter.ISO_LOCAL_DATE);
     }
 
