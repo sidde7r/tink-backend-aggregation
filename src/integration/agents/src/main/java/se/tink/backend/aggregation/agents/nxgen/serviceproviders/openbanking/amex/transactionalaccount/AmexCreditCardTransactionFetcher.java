@@ -68,15 +68,15 @@ public class AmexCreditCardTransactionFetcher
                         account, response, getNextKey(statementMap, null));
 
             } else {
-                LocalDate nextEndDate = LocalDate.parse(key, DateTimeFormatter.ISO_LOCAL_DATE);
+                LocalDate endDate = LocalDate.parse(key, DateTimeFormatter.ISO_LOCAL_DATE);
 
                 if (!getStoredTransactions(key).isEmpty()) {
                     return mapTransactionsToAccountAndReturnNewResponse(
-                            account, getStoredTransactions(key), nextEndDate);
+                            account, getStoredTransactions(key), getNextKey(statementMap, endDate));
                 } else {
-                    response = amexApiClient.fetchTransactions(hmacToken, null, nextEndDate);
+                    response = amexApiClient.fetchTransactions(hmacToken, null, endDate);
                     return mapTransactionsToAccountAndReturnNewResponse(
-                            account, response, getNextKey(statementMap, nextEndDate));
+                            account, response, getNextKey(statementMap, endDate));
                 }
             }
         } catch (HttpResponseException e) {
@@ -95,11 +95,12 @@ public class AmexCreditCardTransactionFetcher
         }
     }
 
-    private LocalDate getNextKey(Map<Integer, LocalDate> map, LocalDate nextEndDate) {
-        if (nextEndDate == null) {
+    private LocalDate getNextKey(Map<Integer, LocalDate> map, LocalDate currentEndDate) {
+        // The latest statement always index = 0
+        if (currentEndDate == null) {
             return map.get(0);
         }
-        Integer currentKey = getKeysByValue(map, nextEndDate);
+        Integer currentKey = getKeysByValue(map, currentEndDate);
         return map.get(currentKey + 1);
     }
 
