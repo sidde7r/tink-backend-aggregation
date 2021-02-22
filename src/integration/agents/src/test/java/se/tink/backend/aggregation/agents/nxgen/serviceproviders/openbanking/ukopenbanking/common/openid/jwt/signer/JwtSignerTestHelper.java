@@ -10,10 +10,12 @@ import java.util.Collections;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.junit.Assert;
+import org.junit.Ignore;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.signer.iface.JwtSigner;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.signer.iface.JwtSigner.Algorithm;
 
+@Ignore
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class JwtSignerTestHelper {
 

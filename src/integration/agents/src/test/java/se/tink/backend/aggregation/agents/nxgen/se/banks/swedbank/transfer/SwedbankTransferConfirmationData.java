@@ -1,5 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.transfer;
 
+import org.junit.Ignore;
+
+@Ignore
 public class SwedbankTransferConfirmationData {
 
     public static final String TRANSFER_ID = "1234567";

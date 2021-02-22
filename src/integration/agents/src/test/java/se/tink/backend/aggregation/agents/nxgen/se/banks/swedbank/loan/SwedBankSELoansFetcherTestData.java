@@ -1,5 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan;
 
+import org.junit.Ignore;
+
+@Ignore
 public class SwedBankSELoansFetcherTestData {
     public static final String ENGAGEMENT_OVERVIEW =
             "{\n"

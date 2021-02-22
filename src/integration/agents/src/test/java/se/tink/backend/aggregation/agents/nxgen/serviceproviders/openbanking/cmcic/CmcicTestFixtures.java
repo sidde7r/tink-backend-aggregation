@@ -3,7 +3,9 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cm
 import java.net.URI;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import org.junit.Ignore;
 
+@Ignore
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class CmcicTestFixtures {
 

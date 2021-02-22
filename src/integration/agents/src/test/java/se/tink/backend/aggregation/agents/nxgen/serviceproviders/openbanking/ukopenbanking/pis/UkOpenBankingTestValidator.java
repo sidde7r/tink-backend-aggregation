@@ -5,10 +5,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.assertj.core.api.AssertionsForClassTypes;
+import org.junit.Ignore;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.payment.rpc.Payment;
 
+@Ignore
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class UkOpenBankingTestValidator {
 

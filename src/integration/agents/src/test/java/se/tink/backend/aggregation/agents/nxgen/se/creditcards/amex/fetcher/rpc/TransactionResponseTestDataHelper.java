@@ -2,8 +2,10 @@ package se.tink.backend.aggregation.agents.nxgen.se.creditcards.amex.fetcher.rpc
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
+import org.junit.Ignore;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.rpc.TransactionResponse;
 
+@Ignore
 public class TransactionResponseTestDataHelper {
     private static final String END_OF_MESSAGE = "} }";
     public static String PROPER_MESSAGE_CONSTANTS =

@@ -1,5 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.se.creditcards.amex;
 
+import org.junit.Ignore;
+
+@Ignore
 public class AmericanExpressV62PredicatesTestData {
     public static final String CARD_NUMBER = "12345";
     public static final String PARTNER_CARD_NUMBER = "12346";
