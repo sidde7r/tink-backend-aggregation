@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.ubi.authenticator;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
@@ -11,6 +12,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepResponse;
 
 @RequiredArgsConstructor
+@Slf4j
 public class UbiAuthenticationMethodChoiceStep implements AuthenticationStep {
 
     private static final String USE_APP_FIELD_KEY = "useApp";
@@ -28,6 +30,7 @@ public class UbiAuthenticationMethodChoiceStep implements AuthenticationStep {
         // redirect path.
         if (yesNoShouldUseApp == null) {
             yesNoShouldUseApp = NO;
+            log.info("Found credentials without filled useApp field! Assuming no app installed.");
         }
 
         switch (yesNoShouldUseApp.toLowerCase()) {
