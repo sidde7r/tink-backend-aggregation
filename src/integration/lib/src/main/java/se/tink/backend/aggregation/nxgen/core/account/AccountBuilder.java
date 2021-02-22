@@ -8,10 +8,12 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
 import se.tink.backend.aggregation.nxgen.core.account.entity.Holder;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Party;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.builder.BuildStep;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.builder.WithIdStep;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
@@ -50,26 +52,59 @@ public abstract class AccountBuilder<A extends Account, B extends BuildStep<A, B
     }
 
     @Override
+    @Deprecated
     public B addHolderName(@Nullable String holderName) {
         if (!Strings.isNullOrEmpty(holderName)) {
-            holders.add(Holder.of(holderName));
+            holders.add(Holder.of(holderName, Holder.Role.HOLDER));
         }
-
         return buildStep();
     }
 
     @Override
+    @Deprecated
     public B addHolders(@Nonnull List<Holder> holders) {
         Preconditions.checkNotNull(holders, "holders List must not be null.");
-
         this.holders.addAll(holders);
         return buildStep();
     }
 
     @Override
+    @Deprecated
     public B addHolders(@Nonnull Holder... holders) {
         Preconditions.checkNotNull(holders, "holders Array must not be null.");
         return this.addHolders(Arrays.asList(holders));
+    }
+
+    @Override
+    public B addParties(@Nonnull Party... parties) {
+        Preconditions.checkNotNull(parties, "parties array must not be null.");
+        addParties(Arrays.asList(parties));
+        return buildStep();
+    }
+
+    @Override
+    public B addParties(@Nonnull List<Party> parties) {
+        Preconditions.checkNotNull(parties, "parties list must not be null.");
+        this.holders.addAll(
+                parties.stream()
+                        .map(party -> Holder.of(party.getName(), toHolderRole(party.getRole())))
+                        .collect(Collectors.toList()));
+        return buildStep();
+    }
+
+    private Holder.Role toHolderRole(Party.Role partyRole) {
+        switch (partyRole) {
+            case HOLDER:
+                return Holder.Role.HOLDER;
+            case AUTHORIZED_USER:
+                return Holder.Role.AUTHORIZED_USER;
+            case OTHER:
+                return Holder.Role.OTHER;
+            case UNKNOWN:
+                return null;
+            default:
+                return null;
+        }
     }
 
     @Override

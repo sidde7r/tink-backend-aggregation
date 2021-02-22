@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.nxgen.core.account;
 
+import static se.tink.backend.aggregation.nxgen.core.account.entity.Holder.Role.HOLDER;
+
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
@@ -111,7 +113,9 @@ public abstract class Account {
         this.holders =
                 Optional.ofNullable(builder.getHolderName())
                         .filter(holderName -> !Strings.isNullOrEmpty(holderName.toString()))
-                        .map(holderName -> ImmutableList.of(Holder.of(holderName.toString())))
+                        .map(
+                                holderName ->
+                                        ImmutableList.of(Holder.of(holderName.toString(), HOLDER)))
                         .orElse(ImmutableList.of());
         this.temporaryStorage = builder.getTransientStorage();
         this.accountFlags = ImmutableSet.copyOf(builder.getAccountFlags());
@@ -157,7 +161,7 @@ public abstract class Account {
                 Optional.ofNullable(builder.getHolderNames()).orElse(Collections.emptyList())
                         .stream()
                         .filter(holderName -> !Strings.isNullOrEmpty(holderName))
-                        .map(Holder::of)
+                        .map(holderName -> Holder.of(holderName, HOLDER))
                         .collect(Collectors.toList());
     }
 
@@ -314,7 +318,10 @@ public abstract class Account {
     }
 
     private Optional<String> getFirstHolder() {
-        return holders.stream().findFirst().map(Holder::getName);
+        return holders.stream()
+                .filter(holder -> HOLDER.equals(holder.getRole()))
+                .findFirst()
+                .map(Holder::getName);
     }
 
     public HolderName getHolderName() {

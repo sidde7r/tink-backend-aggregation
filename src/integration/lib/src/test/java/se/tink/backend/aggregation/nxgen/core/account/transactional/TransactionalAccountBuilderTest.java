@@ -13,6 +13,8 @@ import se.tink.backend.aggregation.nxgen.core.account.AccountBuilder;
 import se.tink.backend.aggregation.nxgen.core.account.AccountHolderType;
 import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.entity.Holder;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Holder.Role;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Party;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.libraries.account.AccountIdentifier;
@@ -254,7 +256,7 @@ public class TransactionalAccountBuilderTest {
                                         .setProductName("UltraSavings ZeroFX")
                                         .build())
                         .addHolderName("Jürgen Flughaubtkopf")
-                        .addHolders(Holder.of("Millie-Jo Morales", Holder.Role.AUTHORIZED_USER))
+                        .addParties(new Party("Millie-Jo Morales", Party.Role.AUTHORIZED_USER))
                         .setHolderType(AccountHolderType.PERSONAL)
                         .setApiIdentifier("2a3ffe-38320c")
                         .putInTemporaryStorage("box", box)
@@ -293,7 +295,7 @@ public class TransactionalAccountBuilderTest {
         assertThat(account.getHolderName().toString()).isEqualTo("Jürgen Flughaubtkopf");
         assertThat(account.getHolders()).hasSize(2);
         assertThat(account.getHolders().get(0).getName()).isEqualTo("Jürgen Flughaubtkopf");
-        assertThat(account.getHolders().get(0).getRole()).isNull();
+        assertThat(account.getHolders().get(0).getRole()).isEqualTo(Role.HOLDER);
         assertThat(account.getHolders().get(1).getName()).isEqualTo("Millie-Jo Morales");
         assertThat(account.getHolders().get(1).getRole()).isEqualTo(Holder.Role.AUTHORIZED_USER);
         assertThat(account.getHolderType()).isEqualTo(AccountHolderType.PERSONAL);

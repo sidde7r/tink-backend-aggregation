@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.account.AccountHolderType;
 import se.tink.backend.aggregation.nxgen.core.account.Balance;
 import se.tink.backend.aggregation.nxgen.core.account.entity.Holder;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Party;
 import se.tink.backend.aggregation.source_info.AccountSourceInfo;
 import se.tink.libraries.account.enums.AccountFlag;
 
@@ -24,9 +25,9 @@ public interface BuildStep<A extends Account, B extends BuildStep<A, B>> {
     B setApiIdentifier(@Nonnull String identifier);
 
     /**
-     * Adds a name as a holder of the account. For shared accounts this method can be invoked
-     * several times to add multiple holders. If the role of each holder can be specified use {@link
-     * BuildStep#addHolders(Holder...)}
+     * Adds holderName as a party of type HOLDER to the account. For shared accounts this method can
+     * be invoked several times to add multiple holders. If the party has another role than holder
+     * use {@link BuildStep#addParties(List)} (Party...)}
      *
      * @param holderName Name of the account holder.
      * @return The next step of the builder.
@@ -35,21 +36,38 @@ public interface BuildStep<A extends Account, B extends BuildStep<A, B>> {
 
     /**
      * Adds multiple holders to the account. If this method is invoked several times all holders
-     * specified in all calls will be added.
+     * specified in all calls will be added. Deprecated use addParties
      *
      * @param holders list of holder entities to be added to the account
      * @return The next step of the builder.
      */
+    @Deprecated
     B addHolders(@Nonnull List<Holder> holders);
 
     /**
      * Adds multiple holders to the account. If this method is invoked several times all holders
-     * specified in all calls will be added.
+     * specified in all calls will be added. Deprecated use addParties
      *
      * @param holders array of holder entities to be added to the account
      * @return The next step of the builder.
      */
+    @Deprecated
     B addHolders(@Nonnull Holder... holders);
+
+    /**
+     * Add multiple parties to the account. If this method is invoked several times all parties
+     * specified in all calls will be added.
+     */
+    B addParties(@Nonnull List<Party> parties);
+
+    /**
+     * Adds multiple parties to the account. If this method is invoked several times all parties
+     * specified in all calls will be added.
+     *
+     * @param parties array of party entities to be added to the account
+     * @return The next step of the builder.
+     */
+    B addParties(@Nonnull Party... parties);
 
     /**
      * Set the type the account holder. {@link AccountHolderType}
