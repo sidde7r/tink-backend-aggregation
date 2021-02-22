@@ -15,52 +15,44 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.utls.CbiGlobeUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
-import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.libraries.i18n.Catalog;
 
 public class UbiAuthenticator extends CbiGlobeAuthenticator {
 
-    private final SupplementalInformationController supplementalInformationController;
-    private final Catalog catalog;
+    private final UserInteractions userInteractions;
 
     public UbiAuthenticator(
             CbiGlobeApiClient apiClient,
             StrongAuthenticationState strongAuthenticationState,
             CbiUserState userState,
             CbiGlobeConfiguration configuration,
-            SupplementalInformationController supplementalInformationController,
-            Catalog catalog) {
+            UserInteractions userInteractions) {
         super(apiClient, strongAuthenticationState, userState, configuration);
-
-        this.supplementalInformationController = supplementalInformationController;
-        this.catalog = catalog;
+        this.userInteractions = userInteractions;
     }
 
     @Override
     protected List<AuthenticationStep> getManualAuthenticationSteps() {
         if (manualAuthenticationSteps.isEmpty()) {
-            manualAuthenticationSteps.add(new UbiAuthenticationMethodChoiceStep(catalog));
-            addDecoupledManualSteps();
+            manualAuthenticationSteps.add(new UbiAuthenticationMethodChoiceStep());
+            addDecoupledManualSteps(userInteractions);
             addRedirectManualSteps();
         }
 
         return manualAuthenticationSteps;
     }
 
-    private void addDecoupledManualSteps() {
+    private void addDecoupledManualSteps(UserInteractions userInteractions) {
+
         manualAuthenticationSteps.add(
                 new AccountConsentDecoupledStep(
-                        consentManager,
-                        strongAuthenticationState,
-                        supplementalInformationController,
-                        catalog));
+                        consentManager, strongAuthenticationState, userInteractions));
 
         manualAuthenticationSteps.add(new AccountFetchingStep(apiClient, userState));
 
         manualAuthenticationSteps.add(
                 new TransactionConsentDecoupledStep(
-                        consentManager, strongAuthenticationState, userState));
+                        consentManager, strongAuthenticationState, userState, userInteractions));
     }
 
     private void addRedirectManualSteps() {

@@ -1,5 +1,6 @@
-package se.tink.backend.aggregation.agents.nxgen.it.openbanking.ubi;
+package se.tink.backend.aggregation.agents.nxgen.it.openbanking.ubi.agent;
 
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
@@ -13,6 +14,11 @@ public class UbiAgentTest {
             new ArgumentManager<>(UsernamePasswordArgumentEnum.values());
 
     private AgentIntegrationTest.Builder builder;
+
+    @AfterClass
+    public static void afterClass() {
+        ArgumentManager.afterClass();
+    }
 
     @Before
     public void setup() {
@@ -30,7 +36,10 @@ public class UbiAgentTest {
                                 usernamePasswordManager.get(UsernamePasswordArgumentEnum.USERNAME))
                         .addCredentialField(
                                 Field.Key.PASSWORD,
-                                usernamePasswordManager.get(UsernamePasswordArgumentEnum.PASSWORD));
+                                usernamePasswordManager.get(UsernamePasswordArgumentEnum.PASSWORD))
+                        // yes - will go through decoupled route
+                        // no - will go redirect route
+                        .addCredentialField("useApp", "no");
     }
 
     @Test

@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.ubi.authenticator;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -10,8 +9,6 @@ import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
-import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
-import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.ubi.UbiConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.CbiUserState;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.ConsentManager;
@@ -20,30 +17,28 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
-import se.tink.libraries.i18n.Catalog;
-import se.tink.libraries.i18n.LocalizableKey;
 
 public class TransactionConsentDecoupledStepTest {
     private TransactionConsentDecoupledStep step;
     private ConsentManager consentManager;
     private StrongAuthenticationState strongAuthenticationState;
     private CbiUserState userState;
+    private UserInteractions userPrompter;
 
     @Before
     public void init() {
         this.consentManager = mock(ConsentManager.class);
         this.strongAuthenticationState = mock(StrongAuthenticationState.class);
-        Catalog catalog = mock(Catalog.class);
-        when(catalog.getString(any(LocalizableKey.class))).thenReturn("");
         this.userState = mock(CbiUserState.class);
+        this.userPrompter = mock(UserInteractions.class);
+
         this.step =
                 new TransactionConsentDecoupledStep(
-                        consentManager, strongAuthenticationState, userState);
+                        consentManager, strongAuthenticationState, userState, userPrompter);
     }
 
     @Test
-    public void executeShouldExecuteConsentManager()
-            throws AuthenticationException, AuthorizationException {
+    public void executeShouldCallExpectedMethods() {
         // given
         String username = "username";
         String password = "password";
@@ -69,7 +64,9 @@ public class TransactionConsentDecoupledStepTest {
         verify(consentManager).createTransactionsConsent(state);
         verify(consentManager).updateAuthenticationMethod(FormValues.SCA_DECOUPLED);
         verify(consentManager).updatePsuCredentials(username, password, psuCredentials);
+        verify(consentManager).storeConsentValidUntilDateInCredentials();
         verify(consentManager).waitForAcceptance();
+        verify(userPrompter).displayPromptAndWaitForAcceptance();
         assertThat(response.isAuthenticationFinished()).isTrue();
     }
 }

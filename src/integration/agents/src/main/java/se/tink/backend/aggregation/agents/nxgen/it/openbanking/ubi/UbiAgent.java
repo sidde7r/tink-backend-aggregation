@@ -6,6 +6,7 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.ubi.authenticator.UbiAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.it.openbanking.ubi.authenticator.UserInteractions;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.StatelessProgressiveAuthenticator;
@@ -20,6 +21,8 @@ public final class UbiAgent extends CbiGlobeAgent {
 
     @Override
     public StatelessProgressiveAuthenticator getAuthenticator() {
+        UserInteractions userInteractions =
+                new UserInteractions(supplementalInformationController, catalog);
         if (authenticator == null) {
             authenticator =
                     new UbiAuthenticator(
@@ -27,10 +30,8 @@ public final class UbiAgent extends CbiGlobeAgent {
                             strongAuthenticationState,
                             userState,
                             getAgentConfiguration().getProviderSpecificConfiguration(),
-                            supplementalInformationController,
-                            catalog);
+                            userInteractions);
         }
-
         return authenticator;
     }
 }

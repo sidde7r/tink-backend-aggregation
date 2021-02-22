@@ -14,6 +14,7 @@ java_library(
         "//src/libraries/serialization",
         "//third_party:com_google_inject_guice",
         "//third_party:lombok_libs",
+        "//third_party:org_slf4j_slf4j_api",
         "@aggregation//:com_google_guava_guava",
         "@tink_backend//src/aggregation-controller/api/src/main/java/se/tink/backend/aggregationcontroller/v1/rpc/enums",
     ],
