@@ -26,8 +26,8 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.ProductEn
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.rpc.AccountTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.rpc.BbvaErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.rpc.FinancialDashboardResponse;
-import se.tink.backend.aggregation.nxgen.core.account.entity.Holder;
-import se.tink.backend.aggregation.nxgen.core.account.entity.Holder.Role;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Party;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Party.Role;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -65,7 +65,7 @@ public class AccountTransactionsFetcherTest {
                                                         Type.IBAN, "ES0201821048600000000000"))
                                         .build())
                         .setApiIdentifier("ES0XXXXXXXXXXXXXXXXXXXXXXXXXXX")
-                        .addHolders(Arrays.asList(Holder.of("OWNER", Role.HOLDER)))
+                        .addParties(Arrays.asList(new Party("OWNER", Party.Role.HOLDER)))
                         .build();
     }
 
@@ -124,18 +124,18 @@ public class AccountTransactionsFetcherTest {
     @Test
     public void shouldGetHolderNamesList() {
 
-        when(accountEntity.getHolders(any()))
+        when(accountEntity.getParties(any()))
                 .thenReturn(
                         Arrays.asList(
-                                Holder.of("OWNER", Role.HOLDER),
-                                Holder.of("AUTH", Role.AUTHORIZED_USER)));
+                                new Party("OWNER", Party.Role.HOLDER),
+                                new Party("AUTH", Party.Role.AUTHORIZED_USER)));
 
-        List<Holder> holders = accountEntity.getHolders(any());
+        List<Party> parties = accountEntity.getParties(any());
 
-        Assert.assertEquals("OWNER", holders.get(0).getName());
-        Assert.assertEquals(Role.HOLDER, holders.get(0).getRole());
-        Assert.assertEquals("AUTH", holders.get(1).getName());
-        Assert.assertEquals(Role.AUTHORIZED_USER, holders.get(1).getRole());
+        Assert.assertEquals("OWNER", parties.get(0).getName());
+        Assert.assertEquals(Role.HOLDER, parties.get(0).getRole());
+        Assert.assertEquals("AUTH", parties.get(1).getName());
+        Assert.assertEquals(Role.AUTHORIZED_USER, parties.get(1).getRole());
     }
 
     @Test

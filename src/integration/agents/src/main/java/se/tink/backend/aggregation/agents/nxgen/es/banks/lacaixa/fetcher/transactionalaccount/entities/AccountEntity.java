@@ -7,7 +7,7 @@ import java.util.Optional;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.core.account.entity.Holder;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Party;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -34,7 +34,7 @@ public class AccountEntity {
     }
 
     @JsonIgnore
-    public Optional<TransactionalAccount> toTinkAccount(List<Holder> holders) {
+    public Optional<TransactionalAccount> toTinkAccount(List<Party> parties) {
         AccountTypes type =
                 LaCaixaConstants.ACCOUNT_TYPE_MAPPER
                         .translate(accountType)
@@ -59,7 +59,7 @@ public class AccountEntity {
                                 .withAccountName(alias)
                                 .addIdentifier(ibanIdentifier)
                                 .build())
-                .addHolders(holders)
+                .addParties(parties)
                 .putInTemporaryStorage(
                         LaCaixaConstants.TemporaryStorage.ACCOUNT_REFERENCE,
                         identifiers.getAccountReference())

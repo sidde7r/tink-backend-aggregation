@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.fetcher.transactionalaccount.entities;
 
-import se.tink.backend.aggregation.nxgen.core.account.entity.Holder.Role;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Party.Role;
 
 public class BankinterHolder {
     private final String xPath;

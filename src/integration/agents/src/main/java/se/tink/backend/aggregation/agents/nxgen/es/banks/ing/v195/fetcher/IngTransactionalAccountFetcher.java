@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.entity.IngHolder;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.entity.IngProduct;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
-import se.tink.backend.aggregation.nxgen.core.account.entity.Holder;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Party;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -55,7 +55,7 @@ public class IngTransactionalAccountFetcher implements AccountFetcher<Transactio
                         ExactCurrencyAmount.of(product.getBalance(), product.getCurrency()));
         final IdModule id = getId(product);
         final String apiIdentifier = product.getUuid();
-        final List<Holder> holders = IngHolder.getHolders(product);
+        final List<Party> parties = IngHolder.getParties(product);
 
         return TransactionalAccount.nxBuilder()
                 .withType(type)
@@ -63,7 +63,7 @@ public class IngTransactionalAccountFetcher implements AccountFetcher<Transactio
                 .withBalance(balance)
                 .withId(id)
                 .setApiIdentifier(apiIdentifier)
-                .addHolders(holders)
+                .addParties(parties)
                 .build();
     }
 

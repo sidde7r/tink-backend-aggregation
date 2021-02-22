@@ -6,11 +6,10 @@ import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transactionalaccount.rpc.ListHoldersResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.core.account.entity.Holder;
-import se.tink.backend.aggregation.nxgen.core.account.entity.Holder.Role;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Party;
 
 @JsonObject
-public class HolderEntity {
+public class PartyEntity {
     @JsonProperty("nombre")
     private String name;
 
@@ -31,24 +30,24 @@ public class HolderEntity {
         return description;
     }
 
-    private static Role toHolderRole(String holderDescription) {
+    private static Party.Role toHolderRole(String holderDescription) {
         switch (holderDescription) {
             case LaCaixaConstants.HolderTypes.OWNER:
-                return Holder.Role.HOLDER;
+                return Party.Role.HOLDER;
             case LaCaixaConstants.HolderTypes.AUTHORIZED_USER:
-                return Holder.Role.AUTHORIZED_USER;
+                return Party.Role.AUTHORIZED_USER;
             default:
-                return Holder.Role.OTHER;
+                return Party.Role.OTHER;
         }
     }
 
-    private static Holder toHolder(HolderEntity holder) {
-        return Holder.of(holder.getFullHolderName(), toHolderRole(holder.getDescription()));
+    private static Party toParty(PartyEntity holder) {
+        return new Party(holder.getFullHolderName(), toHolderRole(holder.getDescription()));
     }
 
-    public static List<Holder> toTinkHolders(ListHoldersResponse response) {
+    public static List<Party> toTinkParties(ListHoldersResponse response) {
         return response.getHolders().stream()
-                .map(HolderEntity::toHolder)
+                .map(PartyEntity::toParty)
                 .collect(Collectors.toList());
     }
 }

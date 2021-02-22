@@ -16,8 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.util.Strings;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.HolderTypes;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.core.account.entity.Holder;
-import se.tink.backend.aggregation.nxgen.core.account.entity.Holder.Role;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Party;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -77,7 +76,7 @@ public class AccountEntity extends AbstractContractDetailsEntity {
                                 .addIdentifier(ibanIdentifier)
                                 .build())
                 .setApiIdentifier(getId())
-                .addHolders(getHolders(participantAccountEntities))
+                .addParties(getParties(participantAccountEntities))
                 .build();
     }
 
@@ -112,10 +111,10 @@ public class AccountEntity extends AbstractContractDetailsEntity {
     }
 
     @JsonIgnore
-    public List<Holder> getHolders(List<ParticipantAccountEntity> participantAccountEntities) {
+    public List<Party> getParties(List<ParticipantAccountEntity> participantAccountEntities) {
         if (isOneAccountHolder(participantAccountEntities)) {
             return participantAccountEntities.stream()
-                    .map(this::createHolder)
+                    .map(this::createParty)
                     .collect(Collectors.toList());
         }
 
@@ -152,24 +151,24 @@ public class AccountEntity extends AbstractContractDetailsEntity {
                                                                                 .getRelationship()
                                                                                 .getType()
                                                                                 .getId())))
-                .map(this::createHolder)
+                .map(this::createParty)
                 .collect(Collectors.toList());
     }
 
     @JsonIgnore
-    private Holder createHolder(ParticipantAccountEntity participant) {
+    private Party createParty(ParticipantAccountEntity participant) {
         switch (participant.getRoleId()) {
             case HolderTypes.OWNER:
-                return Holder.of(
-                        participant.getName() + " " + participant.getLastName(), Role.HOLDER);
+                return new Party(
+                        participant.getName() + " " + participant.getLastName(), Party.Role.HOLDER);
             case HolderTypes.AUTHORIZED:
-                return Holder.of(
+                return new Party(
                         participant.getName() + " " + participant.getLastName(),
-                        Role.AUTHORIZED_USER);
+                        Party.Role.AUTHORIZED_USER);
             case HolderTypes.REPRESENTATIVE:
             default:
-                return Holder.of(
-                        participant.getName() + " " + participant.getLastName(), Role.OTHER);
+                return new Party(
+                        participant.getName() + " " + participant.getLastName(), Party.Role.OTHER);
         }
     }
 

@@ -8,12 +8,12 @@ import java.util.stream.Collectors;
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transactionalaccount.entities.AccountEntity;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transactionalaccount.entities.HolderEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transactionalaccount.entities.PartyEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transactionalaccount.rpc.ListAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transactionalaccount.rpc.ListHoldersResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.rpc.LaCaixaErrorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
-import se.tink.backend.aggregation.nxgen.core.account.entity.Holder;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Party;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
@@ -45,16 +45,16 @@ public class LaCaixaAccountFetcher implements AccountFetcher<TransactionalAccoun
         }
     }
 
-    private List<Holder> fetchHoldersForAccount(AccountEntity accountEntity) {
+    private List<Party> fetchPartiesForAccount(AccountEntity accountEntity) {
         ListHoldersResponse listHoldersResponse =
                 apiClient.fetchHolderList(accountEntity.getIdentifiers().getAccountReference());
-        return HolderEntity.toTinkHolders(listHoldersResponse);
+        return PartyEntity.toTinkParties(listHoldersResponse);
     }
 
     private Collection<TransactionalAccount> getTransactionalAccounts(
             ListAccountsResponse accountResponse) {
         return accountResponse.getAccounts().stream()
-                .map(account -> account.toTinkAccount(fetchHoldersForAccount(account)))
+                .map(account -> account.toTinkAccount(fetchPartiesForAccount(account)))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toList());

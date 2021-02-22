@@ -25,7 +25,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.fetcher.trans
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.fetcher.transactionalaccount.entities.PaginationKey;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.rpc.HtmlResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.rpc.JsfUpdateResponse;
-import se.tink.backend.aggregation.nxgen.core.account.entity.Holder;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Party;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -94,12 +94,12 @@ public class AccountResponse extends HtmlResponse {
                                 .withAccountName(getAccountName())
                                 .addIdentifier(accountIdentifier)
                                 .build())
-                .addHolders(getHolders(accountDetails))
+                .addParties(getParties(accountDetails))
                 .setApiIdentifier(accountLink)
                 .build();
     }
 
-    private List<Holder> getHolders(Document accountDetails) {
+    private List<Party> getParties(Document accountDetails) {
         ImmutableSet<BankinterHolder> bankinterHolders =
                 ImmutableSet.of(
                         Holders.TITULAR_HOLDER_NAME,
@@ -107,19 +107,19 @@ public class AccountResponse extends HtmlResponse {
                         Holders.TITULARS_HOLDER_NAME);
 
         return bankinterHolders.stream()
-                .map(bankinterHolder -> createHolders(accountDetails, bankinterHolder))
+                .map(bankinterHolder -> createParties(accountDetails, bankinterHolder))
                 .flatMap(List::stream)
                 .collect(Collectors.toList());
     }
 
-    private List<Holder> createHolders(Document accountDetails, BankinterHolder bankinterHolder) {
+    private List<Party> createParties(Document accountDetails, BankinterHolder bankinterHolder) {
         NodeList holders =
                 evaluateXPath(accountDetails, bankinterHolder.getxPath(), NodeList.class);
-        ArrayList<Holder> holderNames = new ArrayList<>();
+        ArrayList<Party> parties = new ArrayList<>();
         for (int i = 0; i < holders.getLength(); i++) {
-            holderNames.add(Holder.of(holders.item(i).getTextContent(), bankinterHolder.getRole()));
+            parties.add(new Party(holders.item(i).getTextContent(), bankinterHolder.getRole()));
         }
-        return holderNames;
+        return parties;
     }
 
     private String getUrlParameter(String url, String paramName) {

@@ -81,10 +81,10 @@ public class AccountEntity {
                                     .withAccountName(getAccountName(iban))
                                     .addIdentifier(new IbanIdentifier(iban))
                                     .build())
-                    .addHolders(
+                    .addParties(
                             apiClient
                                     .getAccountDetails(new AccountDetailsRequest(iban))
-                                    .map(AccountDetailsResponse::getHolders)
+                                    .map(AccountDetailsResponse::getParties)
                                     .getOrElse(Collections.emptyList()))
                     .setApiIdentifier(Iban.BANK_IDENTIFIER.extract(iban))
                     .putInTemporaryStorage(
