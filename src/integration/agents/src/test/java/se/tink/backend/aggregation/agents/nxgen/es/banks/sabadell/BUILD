@@ -7,6 +7,7 @@ junit_test(
         "//data:aggregation_test",
         "//data:provider_configurations",
         "//etc:development",
+        "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/es/banks/sabadell/resources",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/es/banks/sabadell/wiremock/resources",
     ],
     tags = [
