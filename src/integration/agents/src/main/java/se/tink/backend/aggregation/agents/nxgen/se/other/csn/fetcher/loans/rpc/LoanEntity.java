@@ -6,8 +6,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.se.other.csn.CSNConstants;
-import se.tink.backend.aggregation.nxgen.core.account.entity.Holder;
-import se.tink.backend.aggregation.nxgen.core.account.entity.Holder.Role;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Party;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
@@ -62,7 +61,7 @@ public class LoanEntity {
         return LoanAccount.nxBuilder()
                 .withLoanDetails(getLoanModule(loanTransactions, loanAccount))
                 .withId(getIdModule(userInfo))
-                .addHolders(Holder.of(userInfo.getName(), Role.HOLDER))
+                .addParties(new Party(userInfo.getName(), Party.Role.HOLDER))
                 .build();
     }
 
