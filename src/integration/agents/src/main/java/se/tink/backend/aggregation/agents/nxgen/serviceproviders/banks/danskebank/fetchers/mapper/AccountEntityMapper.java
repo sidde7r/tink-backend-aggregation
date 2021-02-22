@@ -14,7 +14,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeban
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.AccountEntity;
 import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
-import se.tink.backend.aggregation.nxgen.core.account.entity.Holder;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Party;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
@@ -115,7 +115,7 @@ public class AccountEntityMapper {
                                 .build())
                 .setBankIdentifier(accountEntity.getAccountNoInt())
                 .setApiIdentifier(accountEntity.getAccountNoInt())
-                .addHolders(getAccountHolders(accountOwners))
+                .addParties(getAccountParties(accountOwners))
                 .canExecuteExternalTransfer(
                         configuration.canExecuteExternalTransfer(accountEntity.getAccountProduct()))
                 .canReceiveExternalTransfer(
@@ -134,8 +134,10 @@ public class AccountEntityMapper {
                         getAccountIdentifierType(marketCode), accountEntity.getAccountNoExt());
     }
 
-    private List<Holder> getAccountHolders(List<String> accountOwners) {
-        return accountOwners.stream().map(Holder::of).collect(Collectors.toList());
+    private List<Party> getAccountParties(List<String> accountOwners) {
+        return accountOwners.stream()
+                .map(owner -> new Party(owner, Party.Role.HOLDER))
+                .collect(Collectors.toList());
     }
 
     private LoanDetails.Type getLoanType(
