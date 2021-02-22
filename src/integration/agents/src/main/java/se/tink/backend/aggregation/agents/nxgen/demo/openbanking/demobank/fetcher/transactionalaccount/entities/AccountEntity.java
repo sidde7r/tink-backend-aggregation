@@ -13,7 +13,7 @@ import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.Demoba
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.AccountHolderType;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
-import se.tink.backend.aggregation.nxgen.core.account.entity.Holder;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Party;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.builder.BalanceBuilderStep;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.creditcard.CreditCardModule;
@@ -69,10 +69,10 @@ public class AccountEntity {
                                 .addIdentifiers(getIdentifiers())
                                 .build())
                 .setHolderType(getAccountHolderType())
-                .addHolders(
+                .addParties(
                         accountHolders.stream()
                                 .map(AccountHolder::getName)
-                                .map(Holder::of)
+                                .map(name -> new Party(name, Party.Role.HOLDER))
                                 .collect(Collectors.toList()))
                 .setApiIdentifier(getId())
                 .build()
@@ -132,10 +132,10 @@ public class AccountEntity {
                                 .addIdentifiers(getIdentifiers())
                                 .build())
                 .setHolderType(getAccountHolderType())
-                .addHolders(
+                .addParties(
                         accountHolders.stream()
                                 .map(AccountHolder::getName)
-                                .map(Holder::of)
+                                .map(name -> new Party(name, Party.Role.HOLDER))
                                 .collect(Collectors.toList()))
                 .setApiIdentifier(getId())
                 .build();
