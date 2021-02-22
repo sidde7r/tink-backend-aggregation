@@ -10,7 +10,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.libraries.account.AccountIdentifier.Type;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
@@ -41,7 +41,7 @@ public class HandelsbankenPaymentAgentTest {
             doReturn(Type.NO).when(debtor).getAccountIdentifierType();
             doReturn("NO1594830638614").when(debtor).getAccountNumber();
 
-            Amount amount = Amount.inNOK(10);
+            ExactCurrencyAmount amount = ExactCurrencyAmount.inNOK(10);
             LocalDate executionDate = LocalDate.now();
             String currency = "NOK";
 
@@ -49,7 +49,7 @@ public class HandelsbankenPaymentAgentTest {
                     new Payment.Builder()
                             .withCreditor(creditor)
                             .withDebtor(debtor)
-                            .withAmount(amount)
+                            .withExactCurrencyAmount(amount)
                             .withExecutionDate(executionDate)
                             .withCurrency(currency)
                             .build());

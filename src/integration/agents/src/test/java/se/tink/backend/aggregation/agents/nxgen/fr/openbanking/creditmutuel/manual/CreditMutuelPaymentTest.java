@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.backend.aggregation.agents.utils.remittanceinformation.RemittanceInformationUtils;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
@@ -54,12 +54,12 @@ public class CreditMutuelPaymentTest {
                         creditorDebtorManager.get(CreditMutuelPaymentTest.Arg.DEBTOR_ACCOUNT));
         Debtor debtor = new Debtor(debtorAccountIdentifier);
 
-        Amount amount = Amount.inEUR(1);
+        ExactCurrencyAmount amount = ExactCurrencyAmount.inEUR(1);
         LocalDate executionDate = LocalDate.now();
         return new Payment.Builder()
                 .withCreditor(creditor)
                 .withDebtor(debtor)
-                .withAmount(amount)
+                .withExactCurrencyAmount(amount)
                 .withExecutionDate(executionDate)
                 .withRemittanceInformation(
                         RemittanceInformationUtils.generateUnstructuredRemittanceInformation(

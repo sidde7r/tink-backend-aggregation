@@ -9,6 +9,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
@@ -117,7 +118,7 @@ public class PaymentControllerTest {
 
         Payment payment =
                 new Payment.Builder()
-                        .withAmount(Amount.inEUR(1.0))
+                        .withExactCurrencyAmount(ExactCurrencyAmount.inEUR(1.0))
                         .withCreditor(
                                 new Creditor(
                                         AccountIdentifier.create(
@@ -147,7 +148,7 @@ public class PaymentControllerTest {
 
         Payment payment =
                 new Payment.Builder()
-                        .withAmount(Amount.inEUR(1.0))
+                        .withExactCurrencyAmount(ExactCurrencyAmount.inEUR(1.0))
                         .withCreditor(
                                 new Creditor(
                                         AccountIdentifier.create(

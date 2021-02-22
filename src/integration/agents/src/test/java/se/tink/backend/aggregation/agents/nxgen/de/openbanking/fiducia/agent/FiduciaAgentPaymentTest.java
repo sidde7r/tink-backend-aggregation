@@ -15,7 +15,7 @@ import se.tink.backend.aggregation.agents.framework.ArgumentManager.PasswordArgu
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.PsuIdArgumentEnum;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants.CredentialKeys;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
@@ -65,7 +65,7 @@ public class FiduciaAgentPaymentTest {
 
             Debtor debtor = new Debtor(new IbanIdentifier("DE39499999600000005111"));
 
-            Amount amount = Amount.inEUR(new Random().nextInt(50000));
+            ExactCurrencyAmount amount = ExactCurrencyAmount.inEUR(new Random().nextInt(50000));
             LocalDate executionDate = LocalDate.now();
             String currency = "EUR";
 
@@ -73,7 +73,7 @@ public class FiduciaAgentPaymentTest {
                     new Payment.Builder()
                             .withCreditor(creditor)
                             .withDebtor(debtor)
-                            .withAmount(amount)
+                            .withExactCurrencyAmount(amount)
                             .withExecutionDate(executionDate)
                             .withCurrency(currency)
                             .build());

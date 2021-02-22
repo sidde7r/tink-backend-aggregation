@@ -43,7 +43,7 @@ public class PortfolioContentEntity {
         instrument.setQuantity((double) quantity);
         instrument.setType(Instrument.Type.STOCK);
         instrument.setCurrency(marketPrice.getCurrency());
-        instrument.setPrice(marketPrice.getTinkAmount().doubleValue());
+        instrument.setPrice(marketPrice.getTinkAmount().getDoubleValue());
         instrument.setTicker(tickerValue);
 
         return instrument;

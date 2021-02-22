@@ -11,7 +11,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.libraries.account.AccountIdentifier.Type;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
@@ -43,7 +43,7 @@ public class SparebankSorPaymentTest {
             doReturn(Type.NO).when(debtor).getAccountIdentifierType();
             doReturn("99961000617").when(debtor).getAccountNumber();
 
-            Amount amount = Amount.inNOK(new Random().nextInt(50000));
+            ExactCurrencyAmount amount = ExactCurrencyAmount.inNOK(new Random().nextInt(50000));
             LocalDate executionDate = LocalDate.now();
             String currency = "NOK";
 
@@ -51,7 +51,7 @@ public class SparebankSorPaymentTest {
                     new Payment.Builder()
                             .withCreditor(creditor)
                             .withDebtor(debtor)
-                            .withAmount(amount)
+                            .withExactCurrencyAmount(amount)
                             .withExecutionDate(executionDate)
                             .withCurrency(currency)
                             .build());

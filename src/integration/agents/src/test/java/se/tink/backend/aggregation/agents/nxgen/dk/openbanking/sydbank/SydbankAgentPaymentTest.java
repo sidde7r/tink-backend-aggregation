@@ -11,7 +11,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
@@ -42,7 +42,7 @@ public class SydbankAgentPaymentTest {
             doReturn(AccountIdentifier.Type.DK).when(debtor).getAccountIdentifierType();
             doReturn("99992233445566").when(debtor).getAccountNumber();
 
-            Amount amount = Amount.inDKK(new Random().nextInt(50000));
+            ExactCurrencyAmount amount = ExactCurrencyAmount.inDKK(new Random().nextInt(50000));
             LocalDate executionDate = LocalDate.now();
             String currency = "DKK";
 
@@ -50,7 +50,7 @@ public class SydbankAgentPaymentTest {
                     new Payment.Builder()
                             .withCreditor(creditor)
                             .withDebtor(debtor)
-                            .withAmount(amount)
+                            .withExactCurrencyAmount(amount)
                             .withExecutionDate(executionDate)
                             .withCurrency(currency)
                             .build());
