@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar;
 
+import static se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.LunarConstants.HeaderValues;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
 
@@ -14,21 +15,19 @@ import se.tink.backend.aggregation.agents.agentplatform.AgentPlatformHttpClient;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.AgentPlatformAgent;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.AgentPlatformAuthenticator;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.ObjectMapperFactory;
-import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.LunarAuthenticationConfig;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.LunarNemIdParametersFetcher;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.NemIdIframeAttributes;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.client.AuthenticationApiClient;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.persistance.LunarDataAccessorFactory;
-import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.LunarTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.client.FetcherApiClient;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.transactionalaccount.LunarTransactionFetcher;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.transactionalaccount.LunarTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationProcess;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.NemIdIFrameController;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.NemIdIFrameControllerInitializer;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginationController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -53,14 +52,19 @@ public final class LunarDkAgent extends AgentPlatformAgent
         configureHttpClient(client);
         randomValueGenerator = agentComponentProvider.getRandomValueGenerator();
         accessorFactory = new LunarDataAccessorFactory(new ObjectMapperFactory().getInstance());
+        String languageCode = HeaderValues.getLanguageCode(request.getUser().getLocale());
 
         this.apiClient =
                 new FetcherApiClient(
-                        client, getPersistentStorage(), accessorFactory, randomValueGenerator);
+                        client,
+                        getPersistentStorage(),
+                        accessorFactory,
+                        randomValueGenerator,
+                        languageCode);
 
         AuthenticationApiClient authenticationApiClient =
                 new AuthenticationApiClient(
-                        new AgentPlatformHttpClient(client), randomValueGenerator);
+                        new AgentPlatformHttpClient(client), randomValueGenerator, languageCode);
 
         this.transactionalAccountRefreshController =
                 constructTransactionalAccountRefreshController();
@@ -79,20 +83,12 @@ public final class LunarDkAgent extends AgentPlatformAgent
                 accessorFactory,
                 randomValueGenerator,
                 new NemIdIframeAttributes(
-                        getNemIdIFrameController(
-                                agentComponentProvider.getContext(), parametersFetcher),
-                        credentials,
-                        parametersFetcher));
-    }
-
-    private NemIdIFrameController getNemIdIFrameController(
-            StatusUpdater statusUpdater, LunarNemIdParametersFetcher parametersFetcher) {
-        return NemIdIFrameControllerInitializer.initNemIdIframeController(
-                parametersFetcher,
-                catalog,
-                statusUpdater,
-                supplementalInformationController,
-                metricContext);
+                        parametersFetcher,
+                        catalog,
+                        agentComponentProvider.getContext(),
+                        supplementalInformationController,
+                        metricContext,
+                        credentials));
     }
 
     protected void configureHttpClient(TinkHttpClient client) {
@@ -124,18 +120,14 @@ public final class LunarDkAgent extends AgentPlatformAgent
     }
 
     private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
-        LunarTransactionalAccountFetcher accountFetcher =
-                new LunarTransactionalAccountFetcher(apiClient);
-
-        // Just for now to check if user is authenticated
         return new TransactionalAccountRefreshController(
                 metricRefreshController,
                 updateController,
-                accountFetcher,
+                new LunarTransactionalAccountFetcher(apiClient),
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        new TransactionPagePaginationController<>(accountFetcher, 1),
-                        accountFetcher));
+                        new TransactionKeyPaginationController<>(
+                                new LunarTransactionFetcher(apiClient))));
     }
 
     @Override

@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.handelsbanken;
+package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.handelsbanken.agent;
 
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;

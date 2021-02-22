@@ -2,10 +2,13 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.annotations.VisibleForTesting;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSEConstants;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSEConstants.Accounts;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.creditcard.entities.CardInvoiceInfo;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.transactionalaccount.rpc.TransactionsSEResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.validators.BankIdValidator;
@@ -13,6 +16,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsba
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.entities.HandelsbankenAccount;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.entities.HandelsbankenAmount;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.fetcher.transactionalaccount.rpc.AccountInfoResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
@@ -21,9 +25,12 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.account.identifiers.SwedishSHBInternalIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
+import se.tink.libraries.strings.StringUtils;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 @JsonObject
@@ -49,7 +56,10 @@ public class HandelsbankenSEAccount extends HandelsbankenAccount {
         BankIdValidator.validate(number);
 
         final String accountNumber = getAccountNumber(transactionsResponse);
-        final String accountTypeName = getAccountTypeName(client, transactionsResponse);
+        final AccountInfoResponse accountInfoResponse =
+                getAccountInfoResponse(client, transactionsResponse);
+        final String accountTypeName = getAccountTypeName(accountInfoResponse);
+        final String iban = getIban(accountInfoResponse);
 
         return TransactionalAccount.nxBuilder()
                 .withTypeAndFlagsFrom(
@@ -60,8 +70,7 @@ public class HandelsbankenSEAccount extends HandelsbankenAccount {
                                 .withUniqueIdentifier(number)
                                 .withAccountNumber(accountNumber)
                                 .withAccountName(name)
-                                .addIdentifier(new SwedishIdentifier(accountNumber))
-                                .addIdentifier(new SwedishSHBInternalIdentifier(number))
+                                .addIdentifiers(getIdentifiers(accountNumber, iban))
                                 .build())
                 .addHolderName(holderName)
                 .setApiIdentifier(number)
@@ -97,6 +106,17 @@ public class HandelsbankenSEAccount extends HandelsbankenAccount {
                         .build());
     }
 
+    private List<AccountIdentifier> getIdentifiers(String accountNumber, String iban) {
+        List<AccountIdentifier> identifiers = new ArrayList<>();
+        identifiers.add(new SwedishIdentifier(accountNumber));
+        identifiers.add(new SwedishSHBInternalIdentifier(number));
+        if (iban != null) {
+            identifiers.add(
+                    AccountIdentifier.create(Type.IBAN, StringUtils.removeNonAlphaNumeric(iban)));
+        }
+        return identifiers;
+    }
+
     /**
      * Spendable and amountAvailable should always be the same value. Trying to use any of those as
      * available credit. Doesn't seem likely that they are ever null, but you never know with
@@ -129,16 +149,31 @@ public class HandelsbankenSEAccount extends HandelsbankenAccount {
      * Account type name is only present if the account name has been changed. Otherwise the account
      * name contains the account type name.
      */
-    private String getAccountTypeName(
-            HandelsbankenApiClient client, TransactionsSEResponse transactionsResponse) {
-        final Optional<URL> accountInfoURL = transactionsResponse.getAccount().getAccountInfoUrl();
-
-        if (accountInfoURL.isPresent()) {
-            return client.accountInfo(accountInfoURL.get())
+    private String getAccountTypeName(AccountInfoResponse accountInfoResponse) {
+        if (accountInfoResponse != null) {
+            return accountInfoResponse
                     .getValuesByLabel()
                     .getOrDefault(HandelsbankenSEConstants.Accounts.ACCOUNT_TYPE_NAME_LABEL, name);
         }
         return name;
+    }
+
+    private String getIban(AccountInfoResponse accountInfoResponse) {
+        if (accountInfoResponse != null) {
+            return accountInfoResponse.getValuesByLabel().get(Accounts.IBAN);
+        }
+        return null;
+    }
+
+    private AccountInfoResponse getAccountInfoResponse(
+            HandelsbankenApiClient client, TransactionsSEResponse transactionsResponse) {
+        final Optional<URL> accountInfoURL = transactionsResponse.getAccount().getAccountInfoUrl();
+
+        if (accountInfoURL.isPresent()) {
+            return client.accountInfo(accountInfoURL.get());
+        }
+        LOG.info("Failed to fetch account info response.");
+        return null;
     }
 
     /**

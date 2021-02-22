@@ -12,7 +12,6 @@ import agents_platform_agents_framework.org.springframework.http.RequestEntity.B
 import agents_platform_agents_framework.org.springframework.http.ResponseEntity;
 import java.net.URI;
 import java.util.Optional;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.agentplatform.AgentPlatformHttpClient;
@@ -26,18 +25,21 @@ import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.rpc
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
-@RequiredArgsConstructor
 @Slf4j
 public class AuthenticationApiClient {
 
     private final AgentPlatformHttpClient client;
     private final RandomValueGenerator randomValueGenerator;
     private final AuthResponseValidator authResponseValidator;
+    private final String languageCode;
 
     public AuthenticationApiClient(
-            AgentPlatformHttpClient client, RandomValueGenerator randomValueGenerator) {
+            AgentPlatformHttpClient client,
+            RandomValueGenerator randomValueGenerator,
+            String languageCode) {
         this.client = client;
         this.randomValueGenerator = randomValueGenerator;
+        this.languageCode = languageCode;
         this.authResponseValidator = new AuthResponseValidator();
     }
 
@@ -115,7 +117,7 @@ public class AuthenticationApiClient {
                 .header(Headers.OS, HeaderValues.I_OS)
                 .header(Headers.DEVICE_MANUFACTURER, HeaderValues.DEVICE_MANUFACTURER)
                 .header(Headers.OS_VERSION, HeaderValues.OS_VERSION)
-                .header(Headers.LANGUAGE, LunarConstants.DA_LANGUAGE)
+                .header(Headers.LANGUAGE, languageCode)
                 .header(Headers.REQUEST_ID, randomValueGenerator.getUUID().toString())
                 .header(Headers.DEVICE_ID, deviceId)
                 .header(Headers.ACCEPT_LANGUAGE, HeaderValues.DA_LANGUAGE_ACCEPT)

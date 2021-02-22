@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.handelsbanken;
+package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.handelsbanken.agent;
 
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;

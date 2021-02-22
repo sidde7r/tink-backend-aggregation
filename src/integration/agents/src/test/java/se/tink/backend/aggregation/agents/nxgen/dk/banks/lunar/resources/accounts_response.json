@@ -1,0 +1,345 @@
+{
+    "accounts": [
+        {
+            "BIC": "TEST_BIC",
+            "IBAN": "DK0250514683417965",
+            "accountNumber": "250514683417965",
+            "balanceAmount": 12.12,
+            "balanceAvailableAmount": 12.12,
+            "balanceGoalAmount": 1,
+            "balanceUsableAmount": 11.12,
+            "bankName": "Lunar",
+            "bban": "250514683417965",
+            "bbanType": "DK",
+            "canCustomize": true,
+            "canDelete": false,
+            "canShare": false,
+            "canTopUp": true,
+            "canTransferFrom": true,
+            "canTransferInstant": true,
+            "canTransferTo": true,
+            "canTransferWithFutureDate": true,
+            "capabilities": [
+                {
+                    "id": "canTransferTo"
+                },
+                {
+                    "id": "canTransferWithFutureDate"
+                },
+                {
+                    "id": "canCustomize"
+                },
+                {
+                    "id": "canTransferFrom"
+                },
+                {
+                    "id": "canTransferInstant"
+                },
+                {
+                    "id": "canTopup"
+                },
+                {
+                    "id": "canTransferToInvest"
+                },
+                {
+                    "id": "canCreateDirectDebitMandate"
+                },
+                {
+                    "id": "canApprovePayMyBill"
+                },
+                {
+                    "id": "canCreateAutomaticTransfer"
+                },
+                {
+                    "id": "canOrderNemKonto"
+                }
+            ],
+            "color": "#FD4274",
+            "created": 1590256662878,
+            "currency": "DKK",
+            "deleted": false,
+            "displayAccountNumber": "2505-14683417965",
+            "displayAccountNumberFormat": "BBAN_DK",
+            "displayName": "Account",
+            "easyAccountStatus": "none",
+            "iconBackgroundId": "red",
+            "iconBackgroundUrl": "https://s3-eu-west-1.amazonaws.com/lunarway-prod-cdn/accounts-view/backgrounds/red.png",
+            "iconId": "user",
+            "iconUrl": "https://s3-eu-west-1.amazonaws.com/lunarway-prod-cdn/accounts-view/icons/user.png",
+            "id": "833293fc-282c-4b99-8b86-2035218abeac",
+            "isPrimaryAccount": true,
+            "isShared": false,
+            "origin": "lunar",
+            "originGroupId": "833293fc-282c-4b99-8b86-2035218abeac",
+            "sort": 1590256662878,
+            "state": "active",
+            "updated": 1604063669270
+        },
+        {
+            "BIC": "TEST_BIC_2",
+            "IBAN": "DK9009870987654321",
+            "accountNumber": "09870987654321",
+            "balanceAmount": 15,
+            "balanceAvailableAmount": 15,
+            "balanceUsableAmount": 15,
+            "bankName": "Lunar",
+            "bban": "09870987654321",
+            "bbanType": "DK",
+            "canCustomize": true,
+            "canDelete": false,
+            "canShare": false,
+            "canTopUp": true,
+            "canTransferFrom": true,
+            "canTransferInstant": true,
+            "canTransferTo": true,
+            "canTransferWithFutureDate": true,
+            "capabilities": [
+                {
+                    "id": "canTransferTo"
+                },
+                {
+                    "id": "canTransferWithFutureDate"
+                },
+                {
+                    "id": "canCustomize"
+                },
+                {
+                    "id": "canTransferFrom"
+                },
+                {
+                    "id": "canTransferInstant"
+                },
+                {
+                    "id": "canTopup"
+                },
+                {
+                    "id": "canTransferToInvest"
+                },
+                {
+                    "id": "canCreateDirectDebitMandate"
+                },
+                {
+                    "id": "canApprovePayMyBill"
+                },
+                {
+                    "id": "canCreateAutomaticTransfer"
+                },
+                {
+                    "id": "canOrderNemKonto"
+                }
+            ],
+            "color": "#FD4274",
+            "created": 1590256662878,
+            "currency": "DKK",
+            "deleted": true,
+            "displayAccountNumber": "0987-0987654321",
+            "displayAccountNumberFormat": "BBAN_DK",
+            "displayName": "DeletedAccount",
+            "easyAccountStatus": "none",
+            "iconBackgroundId": "red",
+            "iconBackgroundUrl": "https://s3-eu-west-1.amazonaws.com/lunarway-prod-cdn/accounts-view/backgrounds/red.png",
+            "iconId": "user",
+            "iconUrl": "https://s3-eu-west-1.amazonaws.com/lunarway-prod-cdn/accounts-view/icons/user.png",
+            "id": "86a286e95-877e-4908-8e69-d3b310257f9f",
+            "isPrimaryAccount": false,
+            "isShared": false,
+            "origin": "lunar",
+            "originGroupId": "6a286e95-877e-4908-8e69-d3b310257f9f",
+            "sort": 1590256662878,
+            "state": "active",
+            "updated": 1604063669270
+        },
+        {
+            "BIC": "TEST_BIC_3",
+            "IBAN": "DK5350514417454687",
+            "accountNumber": "50514417454687",
+            "balanceAmount": 123.12,
+            "balanceAvailableAmount": 123.12,
+            "balanceGoalAmount": 10,
+            "balanceUsableAmount": 113.12,
+            "bankName": "Lunar",
+            "bban": "50514417454687",
+            "bbanType": "DK",
+            "canCustomize": true,
+            "canDelete": false,
+            "canShare": false,
+            "canTopUp": true,
+            "canTransferFrom": true,
+            "canTransferInstant": true,
+            "canTransferTo": true,
+            "canTransferWithFutureDate": true,
+            "capabilities": [
+                {
+                    "id": "canTransferTo"
+                },
+                {
+                    "id": "canTransferWithFutureDate"
+                },
+                {
+                    "id": "canCustomize"
+                },
+                {
+                    "id": "canTransferFrom"
+                },
+                {
+                    "id": "canTransferInstant"
+                },
+                {
+                    "id": "canTopup"
+                },
+                {
+                    "id": "canTransferToInvest"
+                },
+                {
+                    "id": "canCreateDirectDebitMandate"
+                },
+                {
+                    "id": "canApprovePayMyBill"
+                },
+                {
+                    "id": "canCreateAutomaticTransfer"
+                },
+                {
+                    "id": "canOrderNemKonto"
+                }
+            ],
+            "color": "#FD4274",
+            "created": 1613391599000,
+            "currency": "DKK",
+            "deleted": null,
+            "displayAccountNumber": "5051-4417454687",
+            "displayAccountNumberFormat": "BBAN_DK",
+            "displayName": "Account With Null Deleted",
+            "easyAccountStatus": "none",
+            "iconBackgroundId": "red",
+            "iconBackgroundUrl": "https://s3-eu-west-1.amazonaws.com/lunarway-prod-cdn/accounts-view/backgrounds/red.png",
+            "iconId": "user",
+            "iconUrl": "https://s3-eu-west-1.amazonaws.com/lunarway-prod-cdn/accounts-view/icons/user.png",
+            "id": "ced8297b-1b58-401c-9002-60a70194f625",
+            "isPrimaryAccount": false,
+            "isShared": false,
+            "origin": "lunar",
+            "originGroupId": "ced8297b-1b58-401c-9002-60a70194f625",
+            "sort": 1613391599000,
+            "state": "active",
+            "updated": 1613391599000
+        },
+        {
+            "BIC": "TEST_BIC_4",
+            "IBAN": "DK1243211234123412",
+            "accountNumber": "43211234123412",
+            "balanceAmount": 123.12,
+            "balanceAvailableAmount": 123.12,
+            "balanceGoalAmount": 10,
+            "balanceUsableAmount": 113.12,
+            "bban": "43211234123412",
+            "bbanType": "DK",
+            "canCustomize": true,
+            "canDelete": false,
+            "canShare": false,
+            "canTopUp": true,
+            "canTransferFrom": true,
+            "canTransferInstant": true,
+            "canTransferTo": true,
+            "canTransferWithFutureDate": true,
+            "capabilities": [
+                {
+                    "id": "canTransferTo"
+                },
+                {
+                    "id": "canTransferWithFutureDate"
+                },
+                {
+                    "id": "canCustomize"
+                },
+                {
+                    "id": "canTransferFrom"
+                },
+                {
+                    "id": "canTransferInstant"
+                },
+                {
+                    "id": "canTopup"
+                },
+                {
+                    "id": "canTransferToInvest"
+                },
+                {
+                    "id": "canCreateDirectDebitMandate"
+                },
+                {
+                    "id": "canApprovePayMyBill"
+                },
+                {
+                    "id": "canCreateAutomaticTransfer"
+                },
+                {
+                    "id": "canOrderNemKonto"
+                }
+            ],
+            "color": "#FD4274",
+            "created": 1613391599000,
+            "currency": "DKK",
+            "deleted": false,
+            "displayAccountNumber": "4321-1234123412",
+            "displayAccountNumberFormat": "BBAN_DK",
+            "displayName": "Null Bank Name",
+            "easyAccountStatus": "none",
+            "iconBackgroundId": "red",
+            "iconBackgroundUrl": "https://s3-eu-west-1.amazonaws.com/lunarway-prod-cdn/accounts-view/backgrounds/red.png",
+            "iconId": "user",
+            "iconUrl": "https://s3-eu-west-1.amazonaws.com/lunarway-prod-cdn/accounts-view/icons/user.png",
+            "id": "ced8297b-1b58-401c-9002-60a70194f625",
+            "isPrimaryAccount": false,
+            "isShared": false,
+            "origin": "lunar",
+            "originGroupId": "ced8297b-1b58-401c-9002-60a70194f625",
+            "sort": 1613391599000,
+            "state": "active",
+            "updated": 1613391599000
+        },
+        {
+            "IBAN": "DK9911111234512345",
+            "accountNumber": "11111234512345",
+            "balanceAmount": 1500.89,
+            "balanceAvailableAmount": 1500.89,
+            "balanceUsableAmount": 1500.89,
+            "bankName": "Danske Bank",
+            "bban": "11111234512345",
+            "canCustomize": false,
+            "canDelete": false,
+            "canShare": false,
+            "canTopUp": false,
+            "canTransferFrom": true,
+            "canTransferInstant": false,
+            "canTransferTo": true,
+            "canTransferWithFutureDate": true,
+            "capabilities": [
+                {
+                    "id": "canTransferFrom"
+                },
+                {
+                    "id": "canTransferTo"
+                },
+                {
+                    "id": "canTransferWithFutureDate"
+                }
+            ],
+            "created": 1610548962013,
+            "currency": "DKK",
+            "deleted": false,
+            "displayAccountNumber": "1111-1234512345",
+            "displayAccountNumberFormat": "BBAN_DK",
+            "displayName": "PBS Konto           ",
+            "easyAccountStatus": "notApplicable",
+            "iconUrl": "https://cdn.prod.lunarway.com/external-accounts/bank-logos/DK_DanskeBank.png",
+            "id": "eb810f25-1a04-4341-858c-60be4f1bb018-sfsjdkfnkjsdnfkd123123sjnfkjdsnfkjsdn",
+            "isPrimaryAccount": false,
+            "isShared": false,
+            "origin": "external",
+            "originGroupId": "eb810f25-1a04-4341-858c-60be4f1bb018-sfsjdkfnkjsdnfkd123123sjnfkjdsnfkjsdn",
+            "sort": 1610548962013,
+            "updated": 1613382443288
+        }
+    ]
+}

@@ -46,7 +46,7 @@
       "userModifiedExcluded": false,
       "userModifiedName": false,
       "userModifiedType": false,
-      "identifiers": "[\"se-internal://222222222\",\"se://6025222222222\"]",
+      "identifiers" : "[\"se-internal://222222222\",\"se://6025222222222\",\"iban://SE4360000006025222222222\"]",
       "closed": false,
       "holderName": "John Doe",
       "accountHolder": {
@@ -83,7 +83,7 @@
       "userModifiedExcluded": false,
       "userModifiedName": false,
       "userModifiedType": false,
-      "identifiers": "[\"se://6025111111111\",\"se-internal://111111111\"]",
+      "identifiers" : "[\"se://6025111111111\",\"se-internal://111111111\",\"iban://SE4560000006025111111111\"]",
       "closed": false,
       "holderName": "John Doe",
       "accountHolder": {
@@ -120,7 +120,7 @@
       "userModifiedExcluded": false,
       "userModifiedName": false,
       "userModifiedType": false,
-      "identifiers": "[\"se-internal://000000000\",\"se://6025000000000\"]",
+      "identifiers" : "[\"se-internal://000000000\",\"iban://SE4760000006025000000000\",\"se://6025000000000\"]",
       "closed": false,
       "holderName": "John Doe",
       "accountHolder": {

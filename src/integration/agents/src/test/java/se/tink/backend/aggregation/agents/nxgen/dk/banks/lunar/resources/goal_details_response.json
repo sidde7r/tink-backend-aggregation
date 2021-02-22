@@ -1,0 +1,73 @@
+{
+    "feed": [
+        {
+            "activity": {
+                "displayDate": "2021-02-17T08:44:32Z",
+                "displayType": "info",
+                "id": "bb56477b-e408-43f3-a47f-5931e7abde58",
+                "imageUrl": "https://api.prod.lunarway.com/user/user/06a6f622-acc2-41f8-ac89-401ec3e056df/avatar/1234567890123/thumbnail",
+                "text": "You created test goal",
+                "type": "goalCreated"
+            },
+            "deleted": false,
+            "goalId": "fab472fa-a646-4b54-91fa-6a6e3653e3f0",
+            "id": "fab472fa-a646-4b54-91fa-6a6e3653e3f0-1bbcf610-abeb-4d22-b3ed-3db5ca1992b1",
+            "sort": 1613551472329,
+            "type": "activity",
+            "updated": 1613551472329
+        },
+        {
+            "deleted": false,
+            "deposit": {
+                "amount": 1.01,
+                "currency": "DKK",
+                "displayDate": "2021-02-17T08:44:51Z",
+                "id": "b3e7ee6e-f6f8-4ed0-8380-fc1718fee6e1",
+                "imageUrl": "https://api.prod.lunarway.com/user/user/06a6f622-acc2-41f8-ac89-401ec3e056df/avatar/1234567890123/thumbnail",
+                "text": "You added funds",
+                "type": "manual"
+            },
+            "goalId": "fab472fa-a646-4b54-91fa-6a6e3653e3f0",
+            "id": "fab472fa-a646-4b54-91fa-6a6e3653e3f0-64c1b702-4547-4f8a-a2c3-bff88211e3b1",
+            "sort": 1613551491501,
+            "type": "deposit",
+            "updated": 1613551491501
+        },
+        {
+            "deleted": true,
+            "deposit": {
+                "amount": 1,
+                "currency": "DKK",
+                "displayDate": "2021-02-17T08:44:51Z",
+                "id": "b3e7ee6e-f6f8-4ed0-8380-fc1718fee6e1",
+                "imageUrl": "https://api.prod.lunarway.com/user/user/06a6f622-acc2-41f8-ac89-401ec3e056df/avatar/1234567890123/thumbnail",
+                "text": "Deleted",
+                "type": "manual"
+            },
+            "goalId": "fab472fa-a646-4b54-91fa-6a6e3653e3f0",
+            "id": "fab472fa-a646-4b54-91fa-6a6e3653e3f0-15d5f3ea-e14d-4d8d-adfe-ef63bbfbff2d",
+            "sort": 1613551491501,
+            "type": "deposit",
+            "updated": 1613551491501
+        },
+        {
+            "deleted": false,
+            "deposit": {
+                "currency": "DKK",
+                "displayDate": "2021-02-17T08:44:51Z",
+                "id": "b3e7ee6e-f6f8-4ed0-8380-fc1718fee6e1",
+                "imageUrl": "https://api.prod.lunarway.com/user/user/06a6f622-acc2-41f8-ac89-401ec3e056df/avatar/1234567890123/thumbnail",
+                "text": "No amount",
+                "type": "manual"
+            },
+            "goalId": "fab472fa-a646-4b54-91fa-6a6e3653e3f0",
+            "id": "fab472fa-a646-4b54-91fa-6a6e3653e3f0-58a6be14-76fc-43e0-8717-eef4e98b1fdc",
+            "sort": 1613551491501,
+            "type": "deposit",
+            "updated": 1613551491501
+        }
+    ],
+    "from": 0,
+    "goalId": "fab472fa-a646-4b54-91fa-6a6e3653e3f0",
+    "to": 1613551472329
+}
