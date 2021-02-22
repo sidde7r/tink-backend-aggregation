@@ -38,7 +38,7 @@ public class CbiUserState {
     boolean isManualAuthenticationInProgress() {
         return persistentStorage
                 .get(CBI_MANUAL_AUTHENTICATION_IN_PROGRESS, Boolean.class)
-                .orElse(false);
+                .orElse(true);
     }
 
     void resetAuthenticationState() {
