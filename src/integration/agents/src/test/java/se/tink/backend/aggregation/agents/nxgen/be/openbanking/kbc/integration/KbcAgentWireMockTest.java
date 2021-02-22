@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEnti
 import se.tink.backend.aggregation.agents.framework.assertions.entities.AgentContractEntity;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockrefresh.AgentWireMockRefreshTest;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AgentBankApiError;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AuthenticationError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.SessionExpiredError;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationReader;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
@@ -129,8 +130,6 @@ public class KbcAgentWireMockTest {
                         .withWireMockFilePath(wireMockFilePath)
                         .withConfigFile(configuration)
                         .testAuthenticationOnly()
-                        .addPersistentStorageData("oauth2_access_token", getToken())
-                        .addPersistentStorageData("consentId", "dummy_consent_id")
                         .enableHttpDebugTrace()
                         .enableDataDumpForContractFile()
                         .addCredentialField("iban", "BE39000000076000")
@@ -144,7 +143,7 @@ public class KbcAgentWireMockTest {
                 (AgentPlatformAuthenticationProcessException) thrown;
         AgentBankApiError sourceAgentPlatformError =
                 agentPlatformAuthenticationProcessException.getSourceAgentPlatformError();
-        assertThat(sourceAgentPlatformError).isExactlyInstanceOf(SessionExpiredError.class);
+        assertThat(sourceAgentPlatformError).isExactlyInstanceOf(AuthenticationError.class);
     }
 
     private String getToken() {
