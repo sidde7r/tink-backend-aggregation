@@ -73,7 +73,7 @@
       "type" : "PERSONAL",
       "identities" : [ {
         "name" : "ASDF ASDF ASDF",
-        "role" : null
+        "role": "HOLDER"
       } ]
     },
     "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",

@@ -55,7 +55,7 @@
         "identities": [
           {
             "name": "John Doe",
-            "role": null
+            "role": "HOLDER"
           }
         ]
       },
@@ -92,7 +92,7 @@
         "identities": [
           {
             "name": "John Doe",
-            "role": null
+            "role": "HOLDER"
           }
         ]
       },
@@ -129,7 +129,7 @@
         "identities": [
           {
             "name": "John Doe",
-            "role": null
+            "role": "HOLDER"
           }
         ]
       },

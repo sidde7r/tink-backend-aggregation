@@ -21,7 +21,7 @@
         "identities": [
           {
             "name": "SubholderName Lastname",
-            "role": null
+            "role": "HOLDER"
           }
         ]
       },
@@ -57,7 +57,7 @@
         "identities": [
           {
             "name": "Holdername Lastname",
-            "role": null
+            "role": "HOLDER"
           }
         ]
       },
@@ -86,7 +86,7 @@
         "identities": [
           {
             "name": "SubholderName Lastname",
-            "role": null
+            "role": "HOLDER"
           }
         ]
       },

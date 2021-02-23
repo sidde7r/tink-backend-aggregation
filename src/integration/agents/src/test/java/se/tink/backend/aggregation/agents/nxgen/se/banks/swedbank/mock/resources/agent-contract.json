@@ -41,7 +41,7 @@
             "type" : "PERSONAL",
             "identities" : [ {
                 "name" : "Wiremock Agent",
-                "role" : null
+                "role": "HOLDER"
             } ]
         },
         "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
@@ -90,7 +90,7 @@
             "type" : "PERSONAL",
             "identities" : [ {
                 "name" : "Wiremock Agent",
-                "role" : null
+                "role": "HOLDER"
             } ]
         },
         "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
@@ -139,7 +139,7 @@
             "type" : "PERSONAL",
             "identities" : [ {
                 "name" : "Wiremock Agent",
-                "role" : null
+                "role": "HOLDER"
             } ]
         },
         "flags" : "[]",

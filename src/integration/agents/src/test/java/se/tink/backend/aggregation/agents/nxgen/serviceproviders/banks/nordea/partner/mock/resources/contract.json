@@ -36,7 +36,7 @@
                 "identities": [
                     {
                         "name": "SVEN SVENSSON",
-                        "role": null
+                        "role": "HOLDER"
                     }
                 ]
             },
@@ -74,7 +74,7 @@
                 "identities": [
                     {
                         "name": "SVENSSON,SVEN",
-                        "role": null
+                        "role": "HOLDER"
                     }
                 ]
             },
@@ -112,7 +112,7 @@
                 "identities": [
                     {
                         "name": "SVENSSON,SVEN",
-                        "role": null
+                        "role": "HOLDER"
                     }
                 ]
             },
@@ -157,7 +157,7 @@
                 "identities": [
                     {
                         "name": "SVEN SVENSSON",
-                        "role": null
+                        "role": "HOLDER"
                     }
                 ]
             },

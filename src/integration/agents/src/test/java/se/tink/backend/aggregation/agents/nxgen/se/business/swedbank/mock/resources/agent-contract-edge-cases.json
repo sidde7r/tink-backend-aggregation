@@ -41,7 +41,7 @@
             "type" : "BUSINESS",
             "identities" : [ {
                 "name" : "My Company AB",
-                "role" : null
+                "role": "HOLDER"
             } ]
         },
         "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
