@@ -8,7 +8,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.amount.Amount;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Creditor;
@@ -31,7 +30,7 @@ public class PaymentControllerTest {
     public void testGetPaymentProductTypeForBbanToBbanIsDomestic() {
         Payment payment =
                 new Payment.Builder()
-                        .withAmount(Amount.inSEK(1.0))
+                        .withExactCurrencyAmount(ExactCurrencyAmount.inSEK(1.0))
                         .withCreditor(
                                 new Creditor(
                                         AccountIdentifier.create(
@@ -60,7 +59,7 @@ public class PaymentControllerTest {
 
         Payment payment =
                 new Payment.Builder()
-                        .withAmount(Amount.inSEK(1.0))
+                        .withExactCurrencyAmount(ExactCurrencyAmount.inSEK(1.0))
                         .withCreditor(
                                 new Creditor(
                                         AccountIdentifier.create(
@@ -89,7 +88,7 @@ public class PaymentControllerTest {
 
         Payment payment =
                 new Payment.Builder()
-                        .withAmount(Amount.inSEK(1.0))
+                        .withExactCurrencyAmount(ExactCurrencyAmount.inSEK(1.0))
                         .withCreditor(
                                 new Creditor(
                                         AccountIdentifier.create(
@@ -176,7 +175,7 @@ public class PaymentControllerTest {
 
         Payment payment =
                 new Payment.Builder()
-                        .withAmount(Amount.inSEK(1.0))
+                        .withExactCurrencyAmount(ExactCurrencyAmount.inSEK(1.0))
                         .withCreditor(
                                 new Creditor(
                                         AccountIdentifier.create(

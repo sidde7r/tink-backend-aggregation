@@ -20,7 +20,7 @@ import se.tink.backend.aggregation.agents.framework.ArgumentManager.LoadBeforeSa
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.SsnArgumentEnum;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
@@ -75,7 +75,7 @@ public class NordeaSEAgentDomesticPaymentTest {
                 new SwedishIdentifier(creditorDebtorManager.get(Arg.DEBTOR_ACCOUNT));
         Debtor debtor = new Debtor(debtorAccountIdentifier);
 
-        Amount amount = Amount.inSEK(1);
+        ExactCurrencyAmount amount = ExactCurrencyAmount.inSEK(1);
         LocalDate executionDate = LocalDate.now();
         String currency = "SEK";
 
@@ -83,7 +83,7 @@ public class NordeaSEAgentDomesticPaymentTest {
                 new Payment.Builder()
                         .withCreditor(creditor)
                         .withDebtor(debtor)
-                        .withAmount(amount)
+                        .withExactCurrencyAmount(amount)
                         .withExecutionDate(executionDate)
                         .withCurrency(currency)
                         .build());
@@ -101,7 +101,7 @@ public class NordeaSEAgentDomesticPaymentTest {
             doReturn(AccountIdentifier.Type.SE).when(debtor).getAccountIdentifierType();
             doReturn("41351300039").when(debtor).getAccountNumber();
 
-            Amount amount = Amount.inSEK(1);
+            ExactCurrencyAmount amount = ExactCurrencyAmount.inSEK(1);
             LocalDate executionDate = LocalDate.now();
             String currency = "SEK";
 
@@ -109,7 +109,7 @@ public class NordeaSEAgentDomesticPaymentTest {
                     new Payment.Builder()
                             .withCreditor(creditor)
                             .withDebtor(debtor)
-                            .withAmount(amount)
+                            .withExactCurrencyAmount(amount)
                             .withExecutionDate(executionDate)
                             .withCurrency(currency)
                             .build());

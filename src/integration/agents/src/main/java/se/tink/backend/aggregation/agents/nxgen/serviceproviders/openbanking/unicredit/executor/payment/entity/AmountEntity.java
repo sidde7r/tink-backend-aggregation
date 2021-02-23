@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.un
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.strings.StringUtils;
 
 @JsonObject
@@ -23,7 +23,7 @@ public class AmountEntity {
     }
 
     @JsonIgnore
-    public Amount toTinkAmount() {
-        return new Amount(currency, StringUtils.parseAmount(amount));
+    public ExactCurrencyAmount toTinkAmount() {
+        return ExactCurrencyAmount.of(StringUtils.parseAmount(amount), currency);
     }
 }

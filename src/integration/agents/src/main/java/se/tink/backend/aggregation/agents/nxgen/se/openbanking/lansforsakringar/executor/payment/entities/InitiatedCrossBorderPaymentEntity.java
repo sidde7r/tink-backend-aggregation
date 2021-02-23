@@ -30,7 +30,7 @@ public class InitiatedCrossBorderPaymentEntity {
                 new Payment.Builder()
                         .withCreditor(creditor.toTinkCreditor())
                         .withDebtor(debtor.toTinkDebtor())
-                        .withAmount(actualAmount.toAmount())
+                        .withExactCurrencyAmount(actualAmount.toAmount())
                         .withCurrency(actualAmount.getCurrency())
                         .withUniqueId(paymentId)
                         .withStatus(status)

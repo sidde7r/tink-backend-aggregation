@@ -54,7 +54,7 @@ public class CrosskeyPaymentDetails {
         builder.withCurrency(paymentRequest.getPayment().getCurrency())
                 .withStatus(paymentStatus)
                 .withType(PaymentType.INTERNATIONAL)
-                .withAmount(paymentRequest.getPayment().getAmount())
+                .withExactCurrencyAmount(paymentRequest.getPayment().getExactCurrencyAmount())
                 .withUniqueId(data.getConsentId())
                 .withDebtor(paymentRequest.getPayment().getDebtor())
                 .withCreditor(paymentRequest.getPayment().getCreditor());

@@ -54,7 +54,7 @@ public class BawagPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
 
         InstructedAmountRequest instructedAmount =
                 InstructedAmountRequest.builder()
-                        .amount(payment.getAmount().doubleValue())
+                        .amount(payment.getExactCurrencyAmount().getDoubleValue())
                         .currency(payment.getCurrency())
                         .build();
 
@@ -75,7 +75,7 @@ public class BawagPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
                 .toTinkPayment(
                         creditorAccount,
                         debtorAccount,
-                        payment.getAmount(),
+                        payment.getExactCurrencyAmount(),
                         payment.getExecutionDate(),
                         payment.getType());
     }

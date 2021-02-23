@@ -12,7 +12,7 @@ import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.paypal.PayPalConstants.RunConfigurationKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.paypal.PayPalConstants.RunConfigurationValues;
 import se.tink.libraries.account.AccountIdentifier.Type;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
@@ -42,12 +42,12 @@ public class PayPalAgentOrderPaymentTest {
             doReturn(Type.TINK).when(debtor).getAccountIdentifierType();
 
             String currency = "SEK";
-            Amount amount = new Amount(currency, randomAmount());
+            ExactCurrencyAmount amount = ExactCurrencyAmount.of(randomAmount(), currency);
 
             listOfMockedPayments.add(
                     new Payment.Builder()
                             .withDebtor(debtor)
-                            .withAmount(amount)
+                            .withExactCurrencyAmount(amount)
                             .withCurrency(currency)
                             .withType(PaymentType.INTERNATIONAL)
                             .build());

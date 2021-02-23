@@ -6,7 +6,7 @@ import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
@@ -52,7 +52,7 @@ public class BankIdDemoAgentTest {
         remittanceInformation.setType(RemittanceInformationType.UNSTRUCTURED);
         remittanceInformation.setValue("Message");
 
-        Amount amount = Amount.inSEK(1);
+        ExactCurrencyAmount amount = ExactCurrencyAmount.inSEK(1);
         LocalDate executionDate = LocalDate.now().plusDays(1);
         String currency = "SEK";
 
@@ -60,7 +60,7 @@ public class BankIdDemoAgentTest {
                 new Payment.Builder()
                         .withCreditor(creditor)
                         .withDebtor(debtor)
-                        .withAmount(amount)
+                        .withExactCurrencyAmount(amount)
                         .withExecutionDate(executionDate)
                         .withCurrency(currency)
                         .withRemittanceInformation(remittanceInformation)

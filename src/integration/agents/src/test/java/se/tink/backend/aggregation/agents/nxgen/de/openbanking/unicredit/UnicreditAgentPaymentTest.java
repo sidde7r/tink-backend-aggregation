@@ -18,7 +18,7 @@ import se.tink.backend.aggregation.agents.framework.ArgumentManager.ArgumentMana
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.PsuIdArgumentEnum;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.UsernamePasswordArgumentEnum;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
@@ -84,7 +84,7 @@ public class UnicreditAgentPaymentTest {
             doReturn(AccountIdentifier.Type.IBAN).when(debtor).getAccountIdentifierType();
             doReturn(Iban.random(CountryCode.DE).toString()).when(debtor).getAccountNumber();
 
-            Amount amount = Amount.inSEK(new Random().nextInt(1000));
+            ExactCurrencyAmount amount = ExactCurrencyAmount.inSEK(new Random().nextInt(1000));
             LocalDate executionDate = LocalDate.now();
             String currency = "EUR";
 
@@ -92,7 +92,7 @@ public class UnicreditAgentPaymentTest {
                     new Payment.Builder()
                             .withCreditor(creditor)
                             .withDebtor(debtor)
-                            .withAmount(amount)
+                            .withExactCurrencyAmount(amount)
                             .withType(PaymentType.DOMESTIC)
                             .withExecutionDate(executionDate)
                             .withRemittanceInformation(remittanceInformation)

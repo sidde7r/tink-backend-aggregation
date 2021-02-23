@@ -20,7 +20,7 @@ public class DomesticTransactionEntity {
                 new Payment.Builder()
                         .withCreditor(creditorAccount.toTinkCreditor())
                         .withDebtor(debtorAccount.toTinkDebtor())
-                        .withAmount(amount.toAmount())
+                        .withExactCurrencyAmount(amount.toAmount())
                         .withCurrency(amount.getCurrency())
                         .withUniqueId(paymentId)
                         .withStatus(

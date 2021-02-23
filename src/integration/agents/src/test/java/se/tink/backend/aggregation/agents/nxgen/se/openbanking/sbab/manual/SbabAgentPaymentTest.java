@@ -22,7 +22,7 @@ import se.tink.backend.aggregation.agents.framework.ArgumentManager.SsnArgumentE
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
@@ -77,7 +77,7 @@ public class SbabAgentPaymentTest {
         RemittanceInformation remittanceInformation = new RemittanceInformation();
         remittanceInformation.setValue("ToSomeone111");
 
-        Amount amount = Amount.inSEK(1);
+        ExactCurrencyAmount amount = ExactCurrencyAmount.inSEK(1);
         LocalDate executionDate = LocalDate.now();
         String currency = "SEK";
 
@@ -85,7 +85,7 @@ public class SbabAgentPaymentTest {
                 new Builder()
                         .withCreditor(creditor)
                         .withDebtor(debtor)
-                        .withAmount(amount)
+                        .withExactCurrencyAmount(amount)
                         .withExecutionDate(executionDate)
                         .withCurrency(currency)
                         .withRemittanceInformation(remittanceInformation)
@@ -108,7 +108,7 @@ public class SbabAgentPaymentTest {
             doReturn(Iban.random(CountryCode.SE).getAccountNumber())
                     .when(debtor)
                     .getAccountNumber();
-            Amount amount = Amount.inSEK(1);
+            ExactCurrencyAmount amount = ExactCurrencyAmount.inSEK(1);
             LocalDate executionDate = LocalDate.now().plus(1, ChronoUnit.DAYS);
             String currency = "SEK";
 
@@ -116,7 +116,7 @@ public class SbabAgentPaymentTest {
                     new Payment.Builder()
                             .withCreditor(creditor)
                             .withDebtor(debtor)
-                            .withAmount(amount)
+                            .withExactCurrencyAmount(amount)
                             .withExecutionDate(executionDate)
                             .withCurrency(currency)
                             .build();
