@@ -50,7 +50,10 @@ class DanskeJwtSignerProvider implements Provider<JwtSigner> {
     @Override
     public JwtSigner get() {
         EidasIdentity eidasIdentity =
-                new EidasIdentity(agentContext.getClusterId(), agentContext.getAppId(), "");
+                new EidasIdentity(
+                        agentContext.getClusterId(),
+                        agentContext.getAppId(),
+                        DanskeJwtSignerProvider.class);
         EidasJwtSigner eidasFallbackJwtSigner =
                 new EidasJwtSigner(internalEidasProxyConfiguration, eidasIdentity);
 
