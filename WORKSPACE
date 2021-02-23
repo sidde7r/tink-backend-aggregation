@@ -145,7 +145,7 @@ go_repository(
 
 git_repository(
     name = "tink_backend",
-    commit = "d8181b87066d4854473090a409850ee1787b3dff",
+    commit = "ac251294dd10a0efcbe220e716ca3bf4d1f8a8c8",
     remote = "git@github.com:tink-ab/tink-backend.git",
     shallow_since = "1601479333 +0000",
 )
@@ -953,9 +953,9 @@ maven_install(
         "io.opencensus:opencensus-contrib-grpc-metrics:%s" % OPENCENSUS_VERSION,
         "net.sourceforge.lept4j:lept4j:1.10.0",
         "net.sourceforge.tess4j:tess4j:4.0.2",
-        "org.apache.curator:curator-client:4.0.0",
-        "org.apache.curator:curator-framework:4.0.1",
-        "org.apache.curator:curator-recipes:4.0.0",
+        "org.apache.curator:curator-client:4.3.0",
+        "org.apache.curator:curator-framework:4.3.0",
+        "org.apache.curator:curator-recipes:4.3.0",
         "org.apache.curator:curator-x-discovery:4.0.0",
         "org.apache.zookeeper:zookeeper:3.5.3-beta",
         "org.eclipse.jetty.toolchain.setuid:jetty-setuid-java:1.0.2",

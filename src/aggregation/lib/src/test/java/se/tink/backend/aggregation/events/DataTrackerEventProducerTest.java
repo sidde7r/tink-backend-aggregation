@@ -2,68 +2,56 @@ package se.tink.backend.aggregation.events;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
-import com.google.common.util.concurrent.ListenableFuture;
-import com.google.protobuf.Any;
-import com.google.protobuf.ByteString;
 import com.google.protobuf.Descriptors.FieldDescriptor;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
+import com.google.protobuf.Message;
+import java.util.*;
 import java.util.stream.Collectors;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.internal.util.collections.Sets;
-import se.tink.backend.eventproducerservice.grpc.BatchEventAck;
-import se.tink.backend.eventproducerservice.grpc.BatchEventAckAsync;
-import se.tink.backend.eventproducerservice.grpc.EventAck;
-import se.tink.backend.eventproducerservice.grpc.EventAckAsync;
-import se.tink.libraries.event_producer_service_client.grpc.EventProducerServiceClient;
+import se.tink.eventproducerservice.events.grpc.DataTrackerEventProto;
+import se.tink.libraries.events.api.EventSubmitter;
+import se.tink.libraries.events.api.SubmitEventException;
+import se.tink.libraries.events.guice.EventSubmitterProvider;
 import se.tink.libraries.pair.Pair;
 
 public final class DataTrackerEventProducerTest {
 
-    private static class FakeEventProducerServiceClient implements EventProducerServiceClient {
+    private static class FakeEventSubmitter implements EventSubmitter {
 
-        private Any postedData;
+        private List<Message> postedData;
 
-        @Override
-        public ListenableFuture<EventAck> postEventAsync(Any data) {
-            postedData = data;
-            return null;
+        public FakeEventSubmitter() {
+            postedData = new ArrayList<>();
         }
 
         @Override
-        public ListenableFuture<EventAckAsync> postEventFireAndForget(Any data) {
-            throw new UnsupportedOperationException();
+        public void submit(Message message) throws SubmitEventException {
+            postedData.add(message);
         }
 
         @Override
-        public ListenableFuture<BatchEventAck> postEventsBatchAsync(List<Any> data) {
-            throw new UnsupportedOperationException();
+        public void submit(List<Message> message) throws SubmitEventException {
+            postedData.addAll(message);
         }
 
-        @Override
-        public ListenableFuture<BatchEventAckAsync> postEventsBatchFireAndForget(List<Any> data) {
-            throw new UnsupportedOperationException();
-        }
-
-        Any getPostedData() {
-            return Optional.ofNullable(postedData).orElseThrow(IllegalStateException::new);
+        public List<Message> getMessages() {
+            return postedData;
         }
     }
 
     @Test
-    public void sendDataTrackerEventCallsPostEventAsync() {
+    public void sendDataTrackerEventCallsPostEventAsync() throws SubmitEventException {
         // given
-        final FakeEventProducerServiceClient producerClient = new FakeEventProducerServiceClient();
+        EventSubmitter eventSubmitter = new FakeEventSubmitter();
+        EventSubmitterProvider eventSubmitterProvider = mock(EventSubmitterProvider.class);
+        when(eventSubmitterProvider.get()).thenReturn(eventSubmitter);
 
         final DataTrackerEventProducer producer =
-                new DataTrackerEventProducer(producerClient, true);
+                new DataTrackerEventProducer(eventSubmitterProvider, true);
 
         final String providerName = "hoy";
         final String correlationId = "hoy";
@@ -77,34 +65,39 @@ public final class DataTrackerEventProducerTest {
                 Collections.singletonList(new Pair<>(fieldName, hasValue));
 
         // when
-        producer.sendDataTrackerEvent(providerName, correlationId, data, appId, clusterId, userId);
+        DataTrackerEventProto.DataTrackerEvent event =
+                producer.produceDataTrackerEvent(
+                        providerName, correlationId, data, appId, clusterId, userId);
+        eventSubmitterProvider.get().submit(event);
 
-        final Map<FieldDescriptor, Object> fields = producerClient.getPostedData().getAllFields();
+        final Map<FieldDescriptor, Object> fields = event.getAllFields();
         final Set<String> keys =
                 fields.keySet().stream().map(FieldDescriptor::getName).collect(Collectors.toSet());
-        final Collection<Object> values = fields.values();
 
         // then
-        Assert.assertEquals(2, fields.size());
+        Assert.assertEquals(7, fields.size());
+        Assert.assertEquals(1, ((FakeEventSubmitter) eventSubmitter).getMessages().size());
 
-        final String typeUrlValue =
+        final String providerNameValue =
                 (String)
                         fields.entrySet().stream()
-                                .filter(e -> Objects.equals(e.getKey().getName(), "type_url"))
+                                .filter(e -> Objects.equals(e.getKey().getName(), "provider_name"))
                                 .findFirst()
                                 .get()
                                 .getValue();
-        final byte[] valueValue =
-                ((ByteString)
-                                fields.entrySet().stream()
-                                        .filter(e -> Objects.equals(e.getKey().getName(), "value"))
-                                        .findFirst()
-                                        .get()
-                                        .getValue())
-                        .toByteArray();
 
-        assertThat(keys, is(Sets.newSet("type_url", "value")));
-        Assert.assertEquals("type.googleapis.com/proto.DataTrackerEvent", typeUrlValue);
-        Assert.assertTrue(new String(valueValue).contains("hoy"));
+        assertThat(
+                keys,
+                is(
+                        Sets.newSet(
+                                "cluster_id",
+                                "user_id",
+                                "field_data",
+                                "correlation_id",
+                                "provider_name",
+                                "app_id",
+                                "timestamp")));
+
+        Assert.assertEquals("hoy", providerNameValue);
     }
 }

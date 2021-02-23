@@ -2,10 +2,7 @@ package se.tink.backend.aggregation.workers.commands;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
@@ -27,6 +24,7 @@ import se.tink.backend.integration.agent_data_availability_tracker.serialization
 import se.tink.backend.integration.agent_data_availability_tracker.serialization.IdentityDataSerializer;
 import se.tink.backend.integration.agent_data_availability_tracker.serialization.SerializationUtils;
 import se.tink.backend.integration.agent_data_availability_tracker.serialization.TransactionTrackingSerializer;
+import se.tink.eventproducerservice.events.grpc.DataTrackerEventProto.DataTrackerEvent;
 import se.tink.libraries.account_data_cache.AccountData;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.metrics.core.MetricId;
@@ -82,10 +80,17 @@ public class SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand extends 
                     metrics.buildAction(new MetricId.MetricLabels().add("action", METRIC_ACTION));
             try {
                 if (!Strings.isNullOrEmpty(market)) {
-                    // Handles process for accounts and their transactions
+                    List<DataTrackerEvent> events = new ArrayList<>();
                     context.getCachedAccountsWithFeatures()
-                            .forEach(pair -> processForDataTracker(pair.first, pair.second));
-                    sendIdentityToAgentDataAvailabilityTracker();
+                            .forEach(
+                                    pair ->
+                                            events.addAll(
+                                                    processAccountForDataTracker(
+                                                            pair.first, pair.second)));
+                    Optional<DataTrackerEvent> identityDataEvent =
+                            produceIdentityDataEventForBigQuery();
+                    identityDataEvent.ifPresent(events::add);
+                    dataTrackerEventProducer.sendDataTrackerEvents(events);
                     action.completed();
                 } else {
                     action.cancelled();
@@ -100,7 +105,11 @@ public class SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand extends 
         return AgentWorkerCommandResult.CONTINUE;
     }
 
-    private void processForDataTracker(final Account account, final AccountFeatures features) {
+    private List<DataTrackerEvent> processAccountForDataTracker(
+            final Account account, final AccountFeatures features) {
+
+        List<DataTrackerEvent> events = new ArrayList<>();
+
         AccountTrackingSerializer serializer =
                 SerializationUtils.serializeAccount(account, features);
 
@@ -112,8 +121,8 @@ public class SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand extends 
         */
         agentDataAvailabilityTrackerClient.sendAccount(agentName, provider, market, serializer);
 
-        // Sending data to BigQuery by emitting events
-        sendAccountToBigQuery(account, features);
+        // Produce event data for BigQuery for Account
+        events.add(produceAccountEventForBigQuery(account, features));
 
         /*
            For an account we will pick the most recent MAX_TRANSACTIONS_TO_SEND_TO_BIGQUERY_PER_ACCOUNT
@@ -141,13 +150,18 @@ public class SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand extends 
                                 : transactionsOfAccount.subList(
                                         0, MAX_TRANSACTIONS_TO_SEND_TO_BIGQUERY_PER_ACCOUNT);
                 transactionsToProcess.forEach(
-                        transaction -> sendTransactionToBigQuery(transaction, account.getType()));
+                        transaction ->
+                                events.add(
+                                        produceTransactionEventForBigQuery(
+                                                transaction, account.getType())));
             }
         } catch (Exception e) {
             log.warn(
                     "Failed to send transaction data to BigQuery. Cause: {}",
                     ExceptionUtils.getStackTrace(e));
         }
+
+        return events;
     }
 
     private List<Transaction> getTransactionsForAccount(Account account) {
@@ -156,7 +170,8 @@ public class SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand extends 
                 .get(account);
     }
 
-    private void sendAccountToBigQuery(final Account account, final AccountFeatures features) {
+    private DataTrackerEvent produceAccountEventForBigQuery(
+            final Account account, final AccountFeatures features) {
         AccountTrackingSerializer serializer =
                 SerializationUtils.serializeAccount(account, features);
 
@@ -171,7 +186,7 @@ public class SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand extends 
                                                 entry.getName(),
                                                 !("null".equalsIgnoreCase(entry.getValue())))));
 
-        dataTrackerEventProducer.sendDataTrackerEvent(
+        return dataTrackerEventProducer.produceDataTrackerEvent(
                 context.getRequest().getCredentials().getProviderName(),
                 context.getCorrelationId(),
                 eventData,
@@ -180,7 +195,8 @@ public class SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand extends 
                 context.getRequest().getCredentials().getUserId());
     }
 
-    private void sendTransactionToBigQuery(Transaction transaction, AccountTypes accountType) {
+    private DataTrackerEvent produceTransactionEventForBigQuery(
+            Transaction transaction, AccountTypes accountType) {
         TransactionTrackingSerializer serializer =
                 new TransactionTrackingSerializer(transaction, accountType);
 
@@ -195,7 +211,7 @@ public class SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand extends 
                                                 entry.getName(),
                                                 !("null".equalsIgnoreCase(entry.getValue())))));
 
-        dataTrackerEventProducer.sendDataTrackerEvent(
+        return dataTrackerEventProducer.produceDataTrackerEvent(
                 context.getRequest().getCredentials().getProviderName(),
                 context.getCorrelationId(),
                 eventData,
@@ -204,18 +220,16 @@ public class SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand extends 
                 context.getRequest().getCredentials().getUserId());
     }
 
-    private void sendIdentityToAgentDataAvailabilityTracker() {
+    private Optional<DataTrackerEvent> produceIdentityDataEventForBigQuery() {
         if (Strings.isNullOrEmpty(market)) {
-            return;
+            return Optional.empty();
         }
 
         if (context.getCachedIdentityData() == null) {
             log.info(
                     "Identity data is null, skipping identity data request to AgentDataAvailabilityTracker");
-            return;
+            return Optional.empty();
         }
-
-        log.info("Sending Identity to AgentDataAvailabilityTracker");
 
         IdentityDataSerializer serializer =
                 SerializationUtils.serializeIdentityData(context.getAggregationIdentityData());
@@ -234,13 +248,14 @@ public class SendFetchedDataToDataAvailabilityTrackerAgentWorkerCommand extends 
                                                 entry.getName(),
                                                 !entry.getValue().equalsIgnoreCase("null"))));
 
-        dataTrackerEventProducer.sendDataTrackerEvent(
-                context.getRequest().getCredentials().getProviderName(),
-                context.getCorrelationId(),
-                eventData,
-                context.getAppId(),
-                context.getClusterId(),
-                context.getRequest().getCredentials().getUserId());
+        return Optional.of(
+                dataTrackerEventProducer.produceDataTrackerEvent(
+                        context.getRequest().getCredentials().getProviderName(),
+                        context.getCorrelationId(),
+                        eventData,
+                        context.getAppId(),
+                        context.getClusterId(),
+                        context.getRequest().getCredentials().getUserId()));
     }
 
     @Override
