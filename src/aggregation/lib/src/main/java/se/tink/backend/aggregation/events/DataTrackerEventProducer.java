@@ -27,7 +27,14 @@ public class DataTrackerEventProducer {
             EventSubmitterProvider eventSubmitterProvider,
             @Named("sendDataTrackingEvents") boolean sendDataTrackingEvents) {
         if (sendDataTrackingEvents) {
-            this.eventSubmitter = eventSubmitterProvider.get();
+            // Temporary try-catch code for AAP-1039
+            try {
+                this.eventSubmitter = eventSubmitterProvider.get();
+            } catch (Exception e) {
+                log.warn(
+                        "Could not create eventSubmitter. Cause {}",
+                        ExceptionUtils.getStackTrace(e));
+            }
         }
         this.enabled = sendDataTrackingEvents;
     }
