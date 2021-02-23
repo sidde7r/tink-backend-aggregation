@@ -8,7 +8,9 @@ public class TokenResponse {
 
     @JsonProperty private String expires;
     @JsonProperty private String refresh;
-    @JsonProperty private String token;
+
+    @JsonProperty("access_token")
+    private String token;
 
     @JsonProperty("expires_in")
     private Long expiresIn;

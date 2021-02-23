@@ -1,67 +1,26 @@
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.authenticator.rpc;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.http.form.AbstractForm;
 
-@JsonObject
-public class TokenRequest {
+public class TokenRequest extends AbstractForm {
 
-    @JsonProperty private String code;
-    @JsonProperty private String scope;
-
-    @JsonProperty("grant_type")
-    private String grantType;
-
-    @JsonProperty("redirect_uri")
-    private String redirectUri;
-
-    @JsonProperty("client_id")
-    private String clientId;
-
-    @JsonProperty("client_secret")
-    private String clientSecret;
-
-    private TokenRequest(
+    public TokenRequest(
             String code,
             String grantType,
             String redirectUri,
             String clientId,
             String clientSecret,
             String scope) {
-        this.code = code;
-        this.grantType = grantType;
-        this.redirectUri = redirectUri;
-        this.clientId = clientId;
-        this.clientSecret = clientSecret;
-        this.scope = scope;
+        put("code", code);
+        put("grant_type", grantType);
+        put("redirect_uri", redirectUri);
+        put("client_id", clientId);
+        put("client_secret", clientSecret);
+        put("scope", scope);
     }
 
     public static TokenRequestBuilder builder() {
         return new TokenRequestBuilder();
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public String getGrantType() {
-        return grantType;
-    }
-
-    public String getRedirectUri() {
-        return redirectUri;
-    }
-
-    public String getClientId() {
-        return clientId;
-    }
-
-    public String getClientSecret() {
-        return clientSecret;
-    }
-
-    public String getScope() {
-        return scope;
     }
 
     public static class TokenRequestBuilder {
