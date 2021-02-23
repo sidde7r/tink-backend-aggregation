@@ -6,7 +6,7 @@ import java.text.DecimalFormatSymbols;
 import java.util.Date;
 import java.util.Locale;
 import se.tink.backend.aggregation.agents.models.Transaction;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.rpc.Transfer;
@@ -102,7 +102,7 @@ public class UpcomingTransactionEntity {
 
     public Transfer toTransfer() {
         Transfer transfer = new Transfer();
-        transfer.setAmount(Amount.inSEK(this.amount));
+        transfer.setAmount(ExactCurrencyAmount.inSEK(this.amount));
         transfer.setDestinationMessage(this.paymentInfo.getReference());
         transfer.setSourceMessage(this.description);
         transfer.setType(TransferType.PAYMENT);

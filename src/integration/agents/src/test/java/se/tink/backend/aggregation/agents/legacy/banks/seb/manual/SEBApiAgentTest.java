@@ -22,7 +22,7 @@ import se.tink.backend.aggregation.utils.transfer.TransferMessageException;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.account.identifiers.account.TestAccount;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 import se.tink.libraries.enums.FeatureFlags;
 import se.tink.libraries.social.security.ssn.TestSSN;
@@ -320,7 +320,7 @@ public class SEBApiAgentTest extends AbstractAgentTest<SEBApiAgent> {
             String sourceMessageIdentifier,
             RemittanceInformation remittanceInformation) {
         Transfer transfer = new Transfer();
-        transfer.setAmount(Amount.inSEK(1.0));
+        transfer.setAmount(ExactCurrencyAmount.inSEK(1.0));
         transfer.setSourceMessage(
                 "Tink " + sourceMessageIdentifier + ": " + remittanceInformation.getValue());
         transfer.setSource(source);
@@ -358,7 +358,7 @@ public class SEBApiAgentTest extends AbstractAgentTest<SEBApiAgent> {
             RemittanceInformation remittanceInformation) {
         Transfer transfer = new Transfer();
 
-        transfer.setAmount(Amount.inSEK(1.0));
+        transfer.setAmount(ExactCurrencyAmount.inSEK(1.0));
         transfer.setSource(sourceAccount);
         transfer.setSourceMessage(sourceMessage);
         transfer.setDestination(destinationAccount);
@@ -375,7 +375,7 @@ public class SEBApiAgentTest extends AbstractAgentTest<SEBApiAgent> {
             RemittanceInformation remittanceInformation) {
         Transfer transfer = new Transfer();
 
-        transfer.setAmount(Amount.inSEK(0.9999999999999999));
+        transfer.setAmount(ExactCurrencyAmount.inSEK(0.9999999999999999));
         transfer.setSource(new SwedishIdentifier(sourceAccount));
         transfer.setSourceMessage(sourceMessage);
         transfer.setDestination(new SwedishIdentifier(destinationAccount));

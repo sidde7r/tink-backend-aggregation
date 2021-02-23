@@ -13,7 +13,7 @@ import se.tink.backend.aggregation.agents.framework.ArgumentManager.SsnArgumentE
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.ToAccountFromAccountArgumentEnum;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
 import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
@@ -55,7 +55,7 @@ public class SwedbankFallbackPaymentTest {
         transfer.setDestination(
                 AccountIdentifier.create(
                         Type.SE, toFromManager.get(ToAccountFromAccountArgumentEnum.TO_ACCOUNT)));
-        transfer.setAmount(Amount.inSEK(2d));
+        transfer.setAmount(ExactCurrencyAmount.inSEK(2d));
         transfer.setType(TransferType.BANK_TRANSFER);
         transfer.setDueDate(getDueDate());
 
@@ -78,7 +78,7 @@ public class SwedbankFallbackPaymentTest {
                 AccountIdentifier.create(
                         Type.SE_BG,
                         toFromManager.get(ToAccountFromAccountArgumentEnum.TO_ACCOUNT)));
-        transfer.setAmount(Amount.inSEK(1d));
+        transfer.setAmount(ExactCurrencyAmount.inSEK(1d));
         transfer.setType(TransferType.PAYMENT);
         transfer.setDueDate(getDueDate());
 

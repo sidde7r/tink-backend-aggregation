@@ -8,7 +8,7 @@ import java.util.Date;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.transfer.enums.TransferPayloadType;
 import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.rpc.Transfer;
@@ -40,7 +40,7 @@ public class EInvoicesEntity {
     @JsonIgnore
     public Transfer toTinkTransfer() {
         Transfer transfer = new Transfer();
-        transfer.setAmount(Amount.inSEK(actualAmountToPay));
+        transfer.setAmount(ExactCurrencyAmount.inSEK(actualAmountToPay));
         transfer.setType(TransferType.EINVOICE);
         transfer.setDestination(getDestination());
         transfer.setDueDate(dueDate);

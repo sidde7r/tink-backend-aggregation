@@ -29,7 +29,7 @@ import se.tink.backend.aggregation.agents.utils.mappers.CoreCredentialsMapper;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.account.rpc.Account;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.credentials.demo.DemoCredentials;
 import se.tink.libraries.credentials.rpc.Credentials;
 import se.tink.libraries.date.DateUtils;
@@ -263,7 +263,7 @@ public class DemoDataUtils {
         RemittanceInformation remittanceInformation = new RemittanceInformation();
         remittanceInformation.setValue(ocr);
         Transfer transfer = new Transfer();
-        transfer.setAmount(Amount.inSEK(amount));
+        transfer.setAmount(ExactCurrencyAmount.inSEK(amount));
         transfer.setRemittanceInformation(remittanceInformation);
         transfer.setSourceMessage(name);
         transfer.setType(transferType);

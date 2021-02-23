@@ -14,7 +14,7 @@ import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockr
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationReader;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.enums.MarketCode;
 import se.tink.libraries.transfer.enums.TransferType;
@@ -135,7 +135,7 @@ public class SwedbankSEAgentWireMockTest {
         transfer.setSource(AccountIdentifier.create(AccountIdentifier.Type.SE, "832791234567890"));
 
         transfer.setDestination(AccountIdentifier.create(AccountIdentifier.Type.SE_BG, "1202407"));
-        transfer.setAmount(Amount.inSEK(856d));
+        transfer.setAmount(ExactCurrencyAmount.inSEK(856d));
         transfer.setType(TransferType.PAYMENT);
         transfer.setDueDate(
                 Date.from(

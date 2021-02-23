@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.banks.lansforsakringar.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.Date;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.transfer.enums.TransferPayloadType;
 import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.rpc.Transfer;
@@ -76,7 +76,7 @@ public class EInvoice {
 
     public Transfer toTransfer() {
         Transfer transfer = new Transfer();
-        transfer.setAmount(Amount.inSEK(this.amount));
+        transfer.setAmount(ExactCurrencyAmount.inSEK(this.amount));
         transfer.setDestinationMessage(this.ocr);
         transfer.setSourceMessage(this.originator.getName());
         transfer.setType(TransferType.EINVOICE);

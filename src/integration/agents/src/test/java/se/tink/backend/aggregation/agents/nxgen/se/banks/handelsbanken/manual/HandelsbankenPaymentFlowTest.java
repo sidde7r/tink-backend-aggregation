@@ -1,8 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.manual;
 
 import java.util.Calendar;
-import java.util.Locale;
-import java.util.TimeZone;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
@@ -10,8 +8,7 @@ import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.amount.Amount;
-import se.tink.libraries.date.CountryDateHelper;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
 import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
@@ -59,10 +56,6 @@ public class HandelsbankenPaymentFlowTest {
     }
 
     private Transfer createTransfer() {
-        Locale locale = new Locale("sv", "SE");
-        TimeZone timezone = TimeZone.getTimeZone("CET");
-        CountryDateHelper dateHelper = new CountryDateHelper(locale, timezone);
-
         Transfer transfer = new Transfer();
         transfer.setSource(
                 AccountIdentifier.create(
@@ -73,7 +66,7 @@ public class HandelsbankenPaymentFlowTest {
                 AccountIdentifier.create(
                         AccountIdentifier.Type.SE_BG,
                         manager.get(HandelsbankenPaymentFlowTest.Arg.DEST_BG_ACCOUNT)));
-        transfer.setAmount(Amount.inSEK(1d));
+        transfer.setAmount(ExactCurrencyAmount.inSEK(1d));
         transfer.setType(TransferType.PAYMENT);
         Calendar c = Calendar.getInstance();
         c.add(Calendar.DAY_OF_MONTH, 1);

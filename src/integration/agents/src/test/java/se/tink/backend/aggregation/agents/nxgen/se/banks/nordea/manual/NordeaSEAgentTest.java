@@ -13,7 +13,7 @@ import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.ArgumentManagerEnum;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
 import se.tink.libraries.transfer.enums.TransferType;
@@ -83,7 +83,7 @@ public class NordeaSEAgentTest {
         transfer.setSource(AccountIdentifier.create(Type.SE, manager.get(Arg.FROMACCOUNT)));
         transfer.setDestination(
                 AccountIdentifier.create(AccountIdentifier.Type.SE, manager.get(Arg.TOACCOUNT)));
-        transfer.setAmount(Amount.inSEK(1d));
+        transfer.setAmount(ExactCurrencyAmount.inSEK(1d));
         transfer.setType(TransferType.BANK_TRANSFER);
         Calendar c = Calendar.getInstance();
         c.add(Calendar.DAY_OF_MONTH, 1);
@@ -107,7 +107,7 @@ public class NordeaSEAgentTest {
         transfer.setSource(AccountIdentifier.create(Type.SE, manager.get(Arg.FROMACCOUNT)));
         transfer.setDestination(
                 AccountIdentifier.create(AccountIdentifier.Type.SE, manager.get(Arg.TOACCOUNT)));
-        transfer.setAmount(Amount.inSEK(0.99d));
+        transfer.setAmount(ExactCurrencyAmount.inSEK(0.99d));
         transfer.setType(TransferType.BANK_TRANSFER);
         Calendar c = Calendar.getInstance();
         c.add(Calendar.DAY_OF_MONTH, 1);
@@ -128,7 +128,7 @@ public class NordeaSEAgentTest {
         transfer.setSource(AccountIdentifier.create(Type.SE, manager.get(Arg.FROMACCOUNT)));
         transfer.setDestination(
                 AccountIdentifier.create(Type.SE_NDA_SSN, manager.get(Arg.TOACCOUNTSSN)));
-        transfer.setAmount(Amount.inSEK(1d));
+        transfer.setAmount(ExactCurrencyAmount.inSEK(1d));
         transfer.setType(TransferType.BANK_TRANSFER);
         Calendar c = Calendar.getInstance();
         c.add(Calendar.DAY_OF_MONTH, 1);
@@ -149,7 +149,7 @@ public class NordeaSEAgentTest {
         transfer.setSource(
                 AccountIdentifier.create(AccountIdentifier.Type.SE, manager.get(Arg.FROMACCOUNT)));
         transfer.setDestination(AccountIdentifier.create(Type.SE_BG, manager.get(Arg.BGACCOUNT)));
-        transfer.setAmount(Amount.inSEK(2d));
+        transfer.setAmount(ExactCurrencyAmount.inSEK(2d));
         transfer.setType(TransferType.PAYMENT);
         Calendar c = Calendar.getInstance();
         c.add(Calendar.DAY_OF_MONTH, 1);
