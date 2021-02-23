@@ -3,19 +3,14 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ha
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.common.base.Strings;
-import java.text.ParseException;
-import java.time.DateTimeException;
-import java.util.Date;
-import java.util.Optional;
+import java.time.LocalDate;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.ExceptionMessages;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.libraries.amount.ExactCurrencyAmount;
-import se.tink.libraries.date.ThreadSafeDateFormat;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @JsonObject
@@ -25,7 +20,7 @@ public class TransactionsItemEntity {
     @JsonAlias("transactionAmount")
     private TransactionAmountEntity transactionAmountEntity;
 
-    private String ledgerDate;
+    private LocalDate ledgerDate;
 
     private String creditorName;
 
@@ -38,21 +33,13 @@ public class TransactionsItemEntity {
 
     private String debtorName;
 
-    private String valueDate;
+    private LocalDate valueDate;
 
     private String creditDebit;
 
-    private String transactionDate;
+    private LocalDate transactionDate;
 
     private String status;
-
-    public TransactionAmountEntity getTransactionAmountEntity() {
-        return transactionAmountEntity;
-    }
-
-    public String getLedgerDate() {
-        return ledgerDate;
-    }
 
     public String getCreditorName() {
         return creditorName;
@@ -71,43 +58,23 @@ public class TransactionsItemEntity {
     }
 
     public Boolean hasDate() {
-        return !Strings.isNullOrEmpty(transactionDate) || !Strings.isNullOrEmpty(valueDate);
+        return ledgerDate != null || transactionDate != null || valueDate != null;
     }
 
     public String getDebtorName() {
         return debtorName;
     }
 
-    public String getValueDate() {
+    public LocalDate getValueDate() {
         return valueDate;
     }
 
-    public String getCreditDebit() {
-        return creditDebit;
-    }
-
-    public String getTransactionDate() {
+    public LocalDate getTransactionDate() {
         return transactionDate;
     }
 
     public String getStatus() {
         return status;
-    }
-
-    private Date getDate() {
-        Optional<Date> date = getDateFromTransactionDate();
-        return date.orElseThrow(() -> new DateTimeException(ExceptionMessages.NOT_PARSE_DATE));
-    }
-
-    private Optional<Date> getDateFromTransactionDate() {
-        try {
-            if (!Strings.isNullOrEmpty(transactionDate)) {
-                return Optional.of(ThreadSafeDateFormat.FORMATTER_DAILY.parse(transactionDate));
-            }
-            return Optional.of(ThreadSafeDateFormat.FORMATTER_DAILY.parse(valueDate));
-        } catch (ParseException e) {
-            return Optional.empty();
-        }
     }
 
     protected ExactCurrencyAmount creditOrDebit() {
@@ -119,7 +86,7 @@ public class TransactionsItemEntity {
     public Transaction toTinkTransaction() {
 
         return Transaction.builder()
-                .setDate(getDate())
+                .setDate(ObjectUtils.firstNonNull(ledgerDate, transactionDate, valueDate))
                 .setAmount(creditOrDebit())
                 .setDescription(remittanceInformation)
                 .setPending(
