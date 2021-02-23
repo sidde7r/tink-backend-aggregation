@@ -10,7 +10,7 @@ import org.junit.Test;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageException;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 import se.tink.libraries.transfer.rpc.Transfer;
@@ -21,7 +21,7 @@ public class SebTransferRequestEntityTest {
     public void verifyMatchingTransfer() throws TransferMessageException {
 
         Transfer transfer = new Transfer();
-        transfer.setAmount(Amount.inSEK(100.01));
+        transfer.setAmount(ExactCurrencyAmount.inSEK(100.01));
         transfer.setSource(new SwedishIdentifier("56241111111"));
         transfer.setDestination(new SwedishIdentifier("56242222222"));
         RemittanceInformation remittanceInformation = new RemittanceInformation();

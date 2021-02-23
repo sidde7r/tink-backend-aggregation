@@ -11,7 +11,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsba
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.entities.HandelsbankenAmount;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.rpc.BaseResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.transfer.enums.TransferPayloadType;
 import se.tink.libraries.transfer.enums.TransferType;
@@ -67,7 +67,7 @@ public class PaymentDetails extends BaseResponse {
         Transfer transfer = new Transfer();
 
         transfer.setDueDate(DateUtils.flattenTime(dueDate));
-        transfer.setAmount(Amount.inSEK(amount.asDouble()));
+        transfer.setAmount(ExactCurrencyAmount.inSEK(amount.asDouble()));
         recipient.applyTo(transfer);
 
         if (account != null) {

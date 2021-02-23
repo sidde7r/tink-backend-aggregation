@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.ArgumentManagerEnum;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.SsnArgumentEnum;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
 import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
@@ -46,7 +46,7 @@ public class IcaBankenAgentPaymentTest {
 
     private Transfer createRealDomesticTransfer() {
         Transfer transfer = new Transfer();
-        transfer.setAmount(Amount.inSEK(1.0));
+        transfer.setAmount(ExactCurrencyAmount.inSEK(1.0));
         transfer.setSource(new SwedishIdentifier(creditorDebtorManager.get(Arg.DEBTOR_ACCOUNT)));
         transfer.setSourceMessage("Message");
         transfer.setDestination(

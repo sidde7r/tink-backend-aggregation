@@ -13,7 +13,7 @@ import se.tink.backend.aggregation.agents.framework.ArgumentManager.UsernameArgu
 import se.tink.backend.aggregation.agents.framework.context.AgentTestContext;
 import se.tink.backend.aggregation.agents.framework.legacy.AbstractAgentTest;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
@@ -74,7 +74,7 @@ public class SEBAgentTest extends AbstractAgentTest<SEBApiAgent> {
     static Transfer create1SEKTransfer() {
         Transfer transfer = new Transfer();
 
-        transfer.setAmount(Amount.inSEK(1.0));
+        transfer.setAmount(ExactCurrencyAmount.inSEK(1.0));
         RemittanceInformation remittanceInformation = new RemittanceInformation();
         remittanceInformation.setType(RemittanceInformationType.UNSTRUCTURED);
         remittanceInformation.setValue("Tink dest");

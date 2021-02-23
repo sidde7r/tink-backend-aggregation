@@ -16,7 +16,7 @@ import se.tink.backend.aggregation.agents.framework.legacy.AbstractAgentTest;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageException;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.account.identifiers.account.TestAccount;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
@@ -112,7 +112,7 @@ public class SBABAgentTest extends AbstractAgentTest<SBABAgent> {
     @Test
     public void testTransferInternalWithTwoDecimals() throws Exception {
         Transfer transfer = new Transfer();
-        transfer.setAmount(Amount.inSEK(1.34));
+        transfer.setAmount(ExactCurrencyAmount.inSEK(1.34));
         transfer.setRemittanceInformation(createAndGetRemittanceInformation(null, "Tink 2dec"));
         transfer.setSourceMessage("Tink 2dec");
         transfer.setType(TransferType.BANK_TRANSFER);
@@ -127,7 +127,7 @@ public class SBABAgentTest extends AbstractAgentTest<SBABAgent> {
     @Test
     public void testTransferInternalWithThreeDecimals() throws Exception {
         Transfer transfer = new Transfer();
-        transfer.setAmount(Amount.inSEK(1.567));
+        transfer.setAmount(ExactCurrencyAmount.inSEK(1.567));
         transfer.setRemittanceInformation(createAndGetRemittanceInformation(null, "Tink 3dec"));
         transfer.setSourceMessage("Tink 3dec");
         transfer.setType(TransferType.BANK_TRANSFER);
@@ -142,7 +142,7 @@ public class SBABAgentTest extends AbstractAgentTest<SBABAgent> {
     @Test
     public void testTransferExternalWithThreeDecimals() throws Exception {
         Transfer transfer = new Transfer();
-        transfer.setAmount(Amount.inSEK(1.567));
+        transfer.setAmount(ExactCurrencyAmount.inSEK(1.567));
         transfer.setRemittanceInformation(createAndGetRemittanceInformation(null, "Tink 3dec"));
         transfer.setSourceMessage("Tink 3dec");
         transfer.setType(TransferType.BANK_TRANSFER);
@@ -275,7 +275,7 @@ public class SBABAgentTest extends AbstractAgentTest<SBABAgent> {
     private Transfer create1SEKTransfer() {
         Transfer transfer = new Transfer();
 
-        transfer.setAmount(Amount.inSEK(1.0));
+        transfer.setAmount(ExactCurrencyAmount.inSEK(1.0));
         transfer.setRemittanceInformation(createAndGetRemittanceInformation(null, "Tink dest"));
         transfer.setSourceMessage("Tink source");
         transfer.setType(TransferType.BANK_TRANSFER);

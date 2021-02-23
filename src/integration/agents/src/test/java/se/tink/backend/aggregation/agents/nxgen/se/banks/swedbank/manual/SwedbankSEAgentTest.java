@@ -17,7 +17,6 @@ import se.tink.backend.aggregation.agents.framework.ArgumentManager.SsnArgumentE
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.ToAccountFromAccountArgumentEnum;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
-import se.tink.libraries.amount.Amount;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.payment.rpc.Creditor;
@@ -124,7 +123,7 @@ public class SwedbankSEAgentTest {
         RemittanceInformation remittanceInformation = new RemittanceInformation();
         remittanceInformation.setValue("Tink dest");
         Transfer transfer = new Transfer();
-        transfer.setAmount(Amount.inSEK(1.0));
+        transfer.setAmount(ExactCurrencyAmount.inSEK(1.0));
         transfer.setRemittanceInformation(remittanceInformation);
         transfer.setSourceMessage("Tink source");
         transfer.setType(TransferType.BANK_TRANSFER);

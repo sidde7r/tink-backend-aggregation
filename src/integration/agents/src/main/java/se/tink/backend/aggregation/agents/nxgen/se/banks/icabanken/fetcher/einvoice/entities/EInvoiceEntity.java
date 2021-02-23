@@ -11,7 +11,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor.IcaB
 import se.tink.backend.aggregation.annotations.JsonDouble;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
 import se.tink.libraries.transfer.enums.TransferPayloadType;
@@ -64,7 +64,7 @@ public class EInvoiceEntity {
                 !Strings.isNullOrEmpty(uniqueId), "Could not find Unique ID for invoice");
         transfer.addPayload(TransferPayloadType.PROVIDER_UNIQUE_ID, uniqueId);
 
-        transfer.setAmount(Amount.inSEK(getAmount()));
+        transfer.setAmount(ExactCurrencyAmount.inSEK(getAmount()));
         transfer.setDueDate(payDate);
         transfer.setDestination(destination);
         transfer.setType(TransferType.EINVOICE);

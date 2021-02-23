@@ -3,6 +3,7 @@ package se.tink.libraries.transfer.mocks;
 import java.util.Date;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
 import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
@@ -48,7 +49,7 @@ public class TransferMock {
         }
 
         public T withAmountInSEK(double value) {
-            transfer.setAmount(Amount.inSEK(value));
+            transfer.setAmount(ExactCurrencyAmount.inSEK(value));
             return (T) this;
         }
 
