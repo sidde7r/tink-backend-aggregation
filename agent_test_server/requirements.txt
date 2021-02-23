@@ -16,4 +16,4 @@ pycparser==2.19
 pyopenssl==18.0.0
 qrcode==6.1
 six==1.11.0
-werkzeug==0.15.3
+werkzeug==0.15.5
