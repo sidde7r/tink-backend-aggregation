@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.ibercaja;
 
+import java.util.HashSet;
+import java.util.Set;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesJsonFileParser;
@@ -14,7 +16,7 @@ public class IberCajaMockServerAgentTest {
     private static final String PASSWORD = "dummyPassword";
 
     @Test
-    public void testRefresh() throws Exception {
+    public void testRefreshWithoutTransactions() throws Exception {
 
         // Given
         final String wireMockServerFilePath =
@@ -26,24 +28,20 @@ public class IberCajaMockServerAgentTest {
                 new AgentContractEntitiesJsonFileParser()
                         .parseContractOnBasisOfFile(wireMockContractFilePath);
 
+        Set<RefreshableItem> refreshableItems =
+            new HashSet<>(RefreshableItem.REFRESHABLE_ITEMS_ALL);
+        refreshableItems.add(RefreshableItem.IDENTITY_DATA);
+        refreshableItems.remove(RefreshableItem.CHECKING_TRANSACTIONS);
+        refreshableItems.remove(RefreshableItem.SAVING_TRANSACTIONS);
+
+
         final AgentWireMockRefreshTest agentWireMockRefreshTest =
                 AgentWireMockRefreshTest.nxBuilder()
                         .withMarketCode(MarketCode.ES)
                         .withProviderName("es-ibercaja-password")
                         .withWireMockFilePath(wireMockServerFilePath)
                         .withoutConfigFile()
-                        .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
-                        .addRefreshableItems(RefreshableItem.CHECKING_ACCOUNTS)
-                        .addRefreshableItems(RefreshableItem.SAVING_ACCOUNTS)
-                        .addRefreshableItems(RefreshableItem.CREDITCARD_ACCOUNTS)
-                        .addRefreshableItems(RefreshableItem.CREDITCARD_TRANSACTIONS)
-                        .addRefreshableItems(RefreshableItem.LOAN_ACCOUNTS)
-                        .addRefreshableItems(RefreshableItem.LOAN_TRANSACTIONS)
-                        .addRefreshableItems(RefreshableItem.INVESTMENT_ACCOUNTS)
-                        .addRefreshableItems(RefreshableItem.INVESTMENT_TRANSACTIONS)
-                        .addRefreshableItems(RefreshableItem.EINVOICES)
-                        .addRefreshableItems(RefreshableItem.TRANSFER_DESTINATIONS)
-                        .addRefreshableItems(RefreshableItem.LIST_BENEFICIARIES)
+                        .withRefreshableItems(refreshableItems)
                         .addCredentialField(Key.USERNAME.getFieldKey(), USERNAME)
                         .addCredentialField(Key.PASSWORD.getFieldKey(), PASSWORD)
                         .build();
