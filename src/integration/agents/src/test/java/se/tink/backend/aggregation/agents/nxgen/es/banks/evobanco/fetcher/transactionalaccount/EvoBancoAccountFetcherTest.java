@@ -23,8 +23,6 @@ public class EvoBancoAccountFetcherTest {
     private static final String TEST_DATA_PATH =
             "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/es/banks/evobanco/resources";
     private static final String HOLDER_NAME = "SZYMON MYSIAK";
-    private static final String ACCOUNT_1_API_ID = "0000000001";
-    private static final String ACCOUNT_2_API_ID = "0000000002";
 
     private SessionStorage sessionStorage;
     private EvoBancoApiClient evoBancoApiClient;

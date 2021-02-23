@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation;
 
-import se.tink.backend.aggregation.agents.utils.log.LogTag;
+import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccountTypeMapper;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.backend.aggregation.nxgen.http.header.HeaderEnum;
 
 public class EuroInformationConstants {
@@ -30,33 +31,32 @@ public class EuroInformationConstants {
         }
     }
 
+    public static final TransactionalAccountTypeMapper ACCOUNT_TYPE_MAPPER =
+            TransactionalAccountTypeMapper.builder()
+                    .put(TransactionalAccountType.CHECKING, "01")
+                    .put(TransactionalAccountType.SAVINGS, "02")
+                    .build();
+
     public static class Tags {
+        private Tags() {}
+
         public static final String ACCOUNT_LIST = "accountList";
         public static final String WEB_ID = "webId";
         public static final String INVESTMENT_ACCOUNTS = "investmentAccounts";
-        public static final String INVESTMENT_ACCOUNT = "investmentAccountDetails";
         public static final String PFM_ENABLED = "pfm";
     }
 
     public static class Storage {
-        public static final String LOGIN_RESPONSE = "login_response";
-    }
+        private Storage() {}
 
-    public static class LoggingTags {
-        public static final LogTag creditcardTransactionsTag =
-                LogTag.from("euroinformation_creditcard_transactions");
-        public static final LogTag creditcardLogTag =
-                LogTag.from("euroinformation_creditcard_accounts");
-        public static final LogTag loanAccountLogTag = LogTag.from("euroinformation_loan_accounts");
-        public static final LogTag unknownAccountTypesTag =
-                LogTag.from("euroinformation_unknown_accounts");
-        public static final LogTag investmentLogTag =
-                LogTag.from("euroinformation_investment_data");
+        public static final String LOGIN_RESPONSE = "login_response";
     }
 
     // Some of these values are for Targo bank, so probably will be moved when using this provider
     // for other banks with same backend
     public static class RequestBodyValues {
+        private RequestBodyValues() {}
+
         public static final String USER = "_cm_user";
         public static final String PASSWORD = "_cm_pwd";
         public static final String APP_VERSION = "appversion";
@@ -87,6 +87,8 @@ public class EuroInformationConstants {
     }
 
     public static class Url {
+        private Url() {}
+
         public static final String LOGIN = "IDE.html";
         public static final String ACCOUNTS = "PRC2.html";
         public static final String INIT = "PFMINIT.html";

@@ -1,15 +1,22 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.fetcher.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import java.util.Arrays;
+import java.util.Optional;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import org.assertj.core.util.Strings;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.utils.EuroInformationUtils;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.EuroInformationConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.core.account.Account;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Holder;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Holder.Role;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.transactional.TransactionalBuildStep;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
+import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
@@ -69,7 +76,10 @@ public class AccountDetailsEntity {
     private String amountAvailable;
 
     private String appcpt;
+
+    @XmlElement(name = "isholder")
     private String isholder;
+
     private String checkingaccount;
     private String characteristics;
     private String simulation;
@@ -98,47 +108,14 @@ public class AccountDetailsEntity {
         return currency;
     }
 
-    public String getAccountNameAndNumber() {
-        return accountNameAndNumber;
-    }
-
     public String getAccountName() {
         return accountName;
     }
 
-    public String getCodprod() {
-        return codprod;
-    }
-
-    public String getCategoryCode() {
-        return categoryCode;
-    }
-
-    public String getCategoryName() {
-        return categoryName;
-    }
-
-    public String getAmountToParse() {
-        return amountToParse;
-    }
-
-    public String getTransactionsToCome() {
-        return transactionsToCome;
-    }
-
-    public String getWebId() {
-        return webId;
-    }
-
-    // Using it as we store this entity in `SessionStorage`, which  serializes to JSON
-    // because of that mapper searcher for field `accountBuilder` and throws `NullPointerException`
-    @JsonIgnore
-    public Account.Builder<? extends Account, ?> getAccountBuilder() {
-        ExactCurrencyAmount amount = EuroInformationUtils.parseAmount(amountToParse, currency);
-
-        return Account.builder(getTinkTypeByTypeNumber().getTinkType(), decideUniqueIdentifier())
-                .setAccountNumber(accountNumber)
-                .setExactBalance(amount);
+    public Holder isHolder(String clientName) {
+        return "1".equals(isholder)
+                ? Holder.of(clientName, Role.HOLDER)
+                : Holder.of(clientName, Role.OTHER);
     }
 
     @JsonIgnore
@@ -152,18 +129,37 @@ public class AccountDetailsEntity {
         return parseAccountNumberFromName();
     }
 
-    // Using it as we store this entity in `SessionStorage`, which  serializes to JSON
-    // because of that mapper searcher for field `accountBuilder` and throws `NullPointerException`
     @JsonIgnore
-    public AccountTypeEnum getTinkTypeByTypeNumber() {
-        return Arrays.stream(AccountTypeEnum.values())
-                .filter(v -> v.getType().equalsIgnoreCase(accountType))
-                .findFirst()
-                .orElse(AccountTypeEnum.UNKNOWN);
+    private String parseAccountNumberFromName() {
+        return accountNameAndNumber.split(accountName)[0].toLowerCase();
     }
 
     @JsonIgnore
-    public String parseAccountNumberFromName() {
-        return accountNameAndNumber.split(accountName)[0].toLowerCase();
+    public Optional<TransactionalAccount> toTinkAccount(Holder holder) {
+        return EuroInformationConstants.ACCOUNT_TYPE_MAPPER
+                .translate(accountType)
+                .flatMap(
+                        accType ->
+                                (holder == null)
+                                        ? buildAccountWithoutHolder(accType).build()
+                                        : buildAccountWithoutHolder(accType)
+                                                .addHolders(holder)
+                                                .build());
+    }
+
+    private TransactionalBuildStep buildAccountWithoutHolder(TransactionalAccountType accType) {
+        return TransactionalAccount.nxBuilder()
+                .withType(accType)
+                .withInferredAccountFlags()
+                .withBalance(BalanceModule.of(ExactCurrencyAmount.of(amountToParse, currency)))
+                .withId(
+                        IdModule.builder()
+                                .withUniqueIdentifier(decideUniqueIdentifier())
+                                .withAccountNumber(accountNumber)
+                                .withAccountName(accountName)
+                                .addIdentifier(
+                                        AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban))
+                                .build())
+                .putInTemporaryStorage(EuroInformationConstants.Tags.WEB_ID, webId);
     }
 }
