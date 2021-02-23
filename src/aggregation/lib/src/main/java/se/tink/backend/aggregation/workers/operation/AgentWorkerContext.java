@@ -79,6 +79,8 @@ public class AgentWorkerContext extends AgentContext implements Managed {
 
     private static class SupplementalInformationMetrics {
         private static final String CLUSTER_LABEL = "client_cluster";
+        private static final String INITIATOR = "initiator";
+
         public static final MetricId duration =
                 MetricId.newId("aggregation_supplemental_information_seconds");
         public static final MetricId attempts =
@@ -97,8 +99,10 @@ public class AgentWorkerContext extends AgentContext implements Managed {
                 Arrays.asList(
                         0, 10, 20, 30, 40, 50, 60, 80, 100, 120, 240, 270, 300, 360, 420, 480, 600);
 
-        public static void inc(MetricRegistry registry, MetricId metricId, String clusterId) {
-            MetricId metricIdWithLabel = metricId.label(CLUSTER_LABEL, clusterId);
+        public static void inc(
+                MetricRegistry registry, MetricId metricId, String clusterId, String initiator) {
+            MetricId metricIdWithLabel =
+                    metricId.label(CLUSTER_LABEL, clusterId).label(INITIATOR, initiator);
             registry.meter(metricIdWithLabel).inc();
         }
 
@@ -294,13 +298,16 @@ public class AgentWorkerContext extends AgentContext implements Managed {
 
     @Override
     public Optional<String> waitForSupplementalInformation(
-            String mfaId, long waitFor, TimeUnit unit) {
+            String mfaId, long waitFor, TimeUnit unit, String initiator) {
         DistributedBarrier lock =
                 new DistributedBarrier(
                         coordinationClient,
                         BarrierName.build(BarrierName.Prefix.SUPPLEMENTAL_INFORMATION, mfaId));
         SupplementalInformationMetrics.inc(
-                getMetricRegistry(), SupplementalInformationMetrics.attempts, getClusterId());
+                getMetricRegistry(),
+                SupplementalInformationMetrics.attempts,
+                getClusterId(),
+                initiator);
         Stopwatch stopwatch = Stopwatch.createStarted();
         try {
             // Reset barrier.
@@ -323,7 +330,8 @@ public class AgentWorkerContext extends AgentContext implements Managed {
                     SupplementalInformationMetrics.inc(
                             getMetricRegistry(),
                             SupplementalInformationMetrics.cancelled,
-                            getClusterId());
+                            getClusterId(),
+                            initiator);
                     logger.info(
                             "Supplemental information request was cancelled by client (returned null)");
                     return Optional.empty();
@@ -337,14 +345,16 @@ public class AgentWorkerContext extends AgentContext implements Managed {
                     SupplementalInformationMetrics.inc(
                             getMetricRegistry(),
                             SupplementalInformationMetrics.finished_with_empty,
-                            getClusterId());
+                            getClusterId(),
+                            initiator);
                 } else {
                     logger.info(
                             "Supplemental information response (non-null &  non-empty) has been received");
                     SupplementalInformationMetrics.inc(
                             getMetricRegistry(),
                             SupplementalInformationMetrics.finished,
-                            getClusterId());
+                            getClusterId(),
+                            initiator);
                 }
 
                 return Optional.of(result);
@@ -353,7 +363,8 @@ public class AgentWorkerContext extends AgentContext implements Managed {
                 SupplementalInformationMetrics.inc(
                         getMetricRegistry(),
                         SupplementalInformationMetrics.timedOut,
-                        getClusterId());
+                        getClusterId(),
+                        initiator);
                 // Did not get lock, release anyways and return.
                 lock.removeBarrier();
             }
@@ -361,7 +372,10 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         } catch (Exception e) {
             logger.error("Caught exception while waiting for supplemental information", e);
             SupplementalInformationMetrics.inc(
-                    getMetricRegistry(), SupplementalInformationMetrics.error, getClusterId());
+                    getMetricRegistry(),
+                    SupplementalInformationMetrics.error,
+                    getClusterId(),
+                    initiator);
         } finally {
             // Always clean up the supplemental information
             Credentials credentials = request.getCredentials();

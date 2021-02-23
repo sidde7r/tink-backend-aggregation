@@ -8,5 +8,6 @@ public interface SupplementalRequester {
 
     void requestSupplementalInformation(String mfaId, Credentials credentials);
 
-    Optional<String> waitForSupplementalInformation(String mfaId, long waitFor, TimeUnit unit);
+    Optional<String> waitForSupplementalInformation(
+            String mfaId, long waitFor, TimeUnit unit, String initiator);
 }

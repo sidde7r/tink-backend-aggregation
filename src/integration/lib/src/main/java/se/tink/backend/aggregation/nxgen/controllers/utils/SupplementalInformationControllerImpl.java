@@ -33,6 +33,7 @@ public class SupplementalInformationControllerImpl implements SupplementalInform
     private final SupplementalRequester supplementalRequester;
     private final Credentials credentials;
     private final String state;
+    private final String initiator;
 
     /**
      * Do not construct your own SupplementalInfomationController. Use the instance available to
@@ -41,10 +42,14 @@ public class SupplementalInformationControllerImpl implements SupplementalInform
      * controlling is outside of the agent and you do not need to have an instance.
      */
     public SupplementalInformationControllerImpl(
-            SupplementalRequester supplementalRequester, Credentials credentials, String state) {
+            SupplementalRequester supplementalRequester,
+            Credentials credentials,
+            String state,
+            String initiator) {
         this.supplementalRequester = supplementalRequester;
         this.credentials = credentials;
         this.state = state;
+        this.initiator = initiator;
     }
 
     @Override
@@ -52,7 +57,8 @@ public class SupplementalInformationControllerImpl implements SupplementalInform
             String mfaId, long waitFor, TimeUnit unit) {
 
         Optional<String> result =
-                supplementalRequester.waitForSupplementalInformation(mfaId, waitFor, unit);
+                supplementalRequester.waitForSupplementalInformation(
+                        mfaId, waitFor, unit, initiator);
 
         if (!result.isPresent() || Strings.isNullOrEmpty(result.get())) {
             return Optional.empty();
@@ -69,7 +75,7 @@ public class SupplementalInformationControllerImpl implements SupplementalInform
 
         Optional<String> results =
                 supplementalRequester.waitForSupplementalInformation(
-                        mfaId, TIMEOUT_MINUTES_EMBEDDED_FIELDS, TimeUnit.MINUTES);
+                        mfaId, TIMEOUT_MINUTES_EMBEDDED_FIELDS, TimeUnit.MINUTES, initiator);
 
         String supplementalInformation =
                 Optional.ofNullable(Strings.emptyToNull(results.orElse(null)))
@@ -142,7 +148,7 @@ public class SupplementalInformationControllerImpl implements SupplementalInform
         String mfaId = openMobileBankIdAsync(autoStartToken);
 
         supplementalRequester.waitForSupplementalInformation(
-                mfaId, TIMEOUT_MINUTES_MOBILE_BANKID, TimeUnit.MINUTES);
+                mfaId, TIMEOUT_MINUTES_MOBILE_BANKID, TimeUnit.MINUTES, initiator);
     }
 
     @Override

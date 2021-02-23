@@ -97,7 +97,7 @@ public class AgentWorkerContextTest {
         request.setCredentials(credentials);
         AgentWorkerContext context = buildAgentWorkerContext(request);
 
-        context.waitForSupplementalInformation("testKey", 2, TimeUnit.SECONDS);
+        context.waitForSupplementalInformation("testKey", 2, TimeUnit.SECONDS, "test");
     }
 
     @Test

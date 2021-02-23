@@ -92,7 +92,7 @@ public class AgentTestContext extends AgentContext {
 
     @Override
     public Optional<String> waitForSupplementalInformation(
-            String mfaId, long waitFor, TimeUnit unit) {
+            String mfaId, long waitFor, TimeUnit unit, String initiator) {
         return Optional.ofNullable(
                 supplementalClient
                         .request(SUPPLEMENTAL_TEST_API)

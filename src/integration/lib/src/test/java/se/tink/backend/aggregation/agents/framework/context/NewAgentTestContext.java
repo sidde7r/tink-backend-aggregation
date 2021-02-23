@@ -155,8 +155,9 @@ public final class NewAgentTestContext extends AgentContext {
 
     @Override
     public Optional<String> waitForSupplementalInformation(
-            String mfaId, long waitFor, TimeUnit unit) {
-        return supplementalRequester.waitForSupplementalInformation(mfaId, waitFor, unit);
+            String mfaId, long waitFor, TimeUnit unit, String initiator) {
+        return supplementalRequester.waitForSupplementalInformation(
+                mfaId, waitFor, unit, initiator);
     }
 
     @Override

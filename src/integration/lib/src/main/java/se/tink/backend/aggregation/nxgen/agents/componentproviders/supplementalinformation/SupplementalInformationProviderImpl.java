@@ -29,7 +29,8 @@ public final class SupplementalInformationProviderImpl implements SupplementalIn
                 new SupplementalInformationControllerImpl(
                         supplementalRequester,
                         credentialsRequest.getCredentials(),
-                        credentialsRequest.getState());
+                        credentialsRequest.getState(),
+                        credentialsRequest.getProvider().getClassName());
         this.supplementalInformationHelper =
                 new SupplementalInformationHelperImpl(
                         credentialsRequest.getProvider(), supplementalInformationController);

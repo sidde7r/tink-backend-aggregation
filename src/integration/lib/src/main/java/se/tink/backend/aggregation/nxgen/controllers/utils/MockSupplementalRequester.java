@@ -21,7 +21,7 @@ public final class MockSupplementalRequester implements SupplementalRequester {
 
     @Override
     public Optional<String> waitForSupplementalInformation(
-            String mfaId, long waitFor, TimeUnit unit) {
+            String mfaId, long waitFor, TimeUnit unit, String initiator) {
 
         /*
            TODO: Fix this hack. Probably we need to make SupplementInformationRequester payload

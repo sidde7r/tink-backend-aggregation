@@ -152,7 +152,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                         provider);
 
         this.supplementalInformationController =
-                new SupplementalInformationControllerImpl(context, credential, null);
+                new SupplementalInformationControllerImpl(context, credential, null, "test");
     }
 
     private boolean loadCredentials() {

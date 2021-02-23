@@ -299,7 +299,8 @@ public class RequestUserOptInAccountsAgentWorkerCommand extends AgentWorkerComma
     private Map<String, String> askSupplementalInformation(Field... fields)
             throws SupplementalInfoException {
         SupplementalInformationController supplementalInformationController =
-                new SupplementalInformationControllerImpl(context, request.getCredentials(), null);
+                new SupplementalInformationControllerImpl(
+                        context, request.getCredentials(), null, "opt-in");
 
         return supplementalInformationController.askSupplementalInformationSync(fields);
     }
