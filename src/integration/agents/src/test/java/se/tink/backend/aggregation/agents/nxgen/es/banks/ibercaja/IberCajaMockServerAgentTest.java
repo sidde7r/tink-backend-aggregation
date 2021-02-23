@@ -29,11 +29,10 @@ public class IberCajaMockServerAgentTest {
                         .parseContractOnBasisOfFile(wireMockContractFilePath);
 
         Set<RefreshableItem> refreshableItems =
-            new HashSet<>(RefreshableItem.REFRESHABLE_ITEMS_ALL);
+                new HashSet<>(RefreshableItem.REFRESHABLE_ITEMS_ALL);
         refreshableItems.add(RefreshableItem.IDENTITY_DATA);
         refreshableItems.remove(RefreshableItem.CHECKING_TRANSACTIONS);
         refreshableItems.remove(RefreshableItem.SAVING_TRANSACTIONS);
-
 
         final AgentWireMockRefreshTest agentWireMockRefreshTest =
                 AgentWireMockRefreshTest.nxBuilder()
