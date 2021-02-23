@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.events;
 
-import com.google.protobuf.Any;
+import com.google.protobuf.Message;
 import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -41,8 +41,9 @@ public class DataTrackerEventProducer {
 
     public void sendDataTrackerEvents(List<DataTrackerEvent> events) {
         try {
-            if (enabled) {
-                eventSubmitter.submit(events.stream().map(Any::pack).collect(Collectors.toList()));
+            if (enabled && events.size() > 0) {
+                eventSubmitter.submit(
+                        events.stream().map(Message.class::cast).collect(Collectors.toList()));
             }
         } catch (Exception e) {
             log.warn(
