@@ -141,7 +141,7 @@ public class GetNemIdTokenStepTest {
     public void shouldReturnFailedResultWhenErrorOccursWhileFetchingNemIdParameters() {
         // given
         when(apiClient.getNemIdParameters(randomValueGenerator.getUUID().toString()))
-                .thenThrow(new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR));
+                .thenThrow(new ResponseStatusException(HttpStatus.BAD_REQUEST));
 
         // when
         AgentFailedAuthenticationResult result =

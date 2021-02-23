@@ -10,6 +10,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.ObjectMapperFactory;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.result.error.LastAttemptError;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.LunarTestUtils;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.persistance.LunarAuthData;
@@ -22,6 +23,7 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AgentBan
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AgentError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AuthorizationError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.InvalidCredentialsError;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.error.ServerError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.SessionExpiredError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.ThirdPartyAppNoClientError;
 
@@ -102,6 +104,30 @@ public class LunarAuthExceptionHandlerTest {
                         LunarTestUtils.getExpectedErrorDetails(
                                 AgentError.ACCOUNT_BLOCKED.getCode(),
                                 LoginError.INVALIDATED_CREDENTIALS))
+            },
+            new Object[] {
+                new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR),
+                new ServerError(
+                        LunarTestUtils.getExpectedErrorDetails(
+                                AgentError.HTTP_RESPONSE_ERROR.getCode(),
+                                BankServiceError.BANK_SIDE_FAILURE))
+            },
+            new Object[] {
+                new ResponseStatusException(HttpStatus.NOT_IMPLEMENTED), new ServerError()
+            },
+            new Object[] {
+                new ResponseStatusException(HttpStatus.BAD_GATEWAY),
+                new ServerError(
+                        LunarTestUtils.getExpectedErrorDetails(
+                                AgentError.HTTP_RESPONSE_ERROR.getCode(),
+                                BankServiceError.NO_BANK_SERVICE))
+            },
+            new Object[] {
+                new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE),
+                new ServerError(
+                        LunarTestUtils.getExpectedErrorDetails(
+                                AgentError.HTTP_RESPONSE_ERROR.getCode(),
+                                BankServiceError.NO_BANK_SERVICE))
             },
         };
     }

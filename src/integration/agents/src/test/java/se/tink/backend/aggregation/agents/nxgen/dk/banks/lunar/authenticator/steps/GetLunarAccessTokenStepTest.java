@@ -139,8 +139,7 @@ public class GetLunarAccessTokenStepTest {
         when(apiClient.postNemIdToken(NEM_ID_TOKEN, CHALLENGE, DEVICE_ID))
                 .thenThrow(
                         new ResponseStatusException(
-                                HttpStatus.INTERNAL_SERVER_ERROR,
-                                "{\"reasonCode\": \"USER_NOT_FOUND\"}"));
+                                HttpStatus.NOT_FOUND, "{\"reasonCode\": \"USER_NOT_FOUND\"}"));
 
         // when
         AgentFailedAuthenticationResult result =

@@ -5,8 +5,8 @@ import com.google.common.collect.ImmutableMap;
 import java.util.Map;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.result.error.LastAttemptError;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.persistance.LunarAuthDataAccessor;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.exception.ErrorResponse;
@@ -16,6 +16,7 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AccountB
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AgentBankApiError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AgentError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.InvalidCredentialsError;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.error.ServerError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.SessionExpiredError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.ThirdPartyAppNoClientError;
 import se.tink.backend.aggregation.agentsplatform.framework.error.Error;
@@ -58,8 +59,8 @@ public class LunarAuthExceptionHandler {
 
     public static AgentBankApiError toKnownErrorFromResponseOrDefault(
             ResponseStatusException e, AgentBankApiError defaultError) {
-        if (StringUtils.isBlank(e.getReason())) {
-            return defaultError;
+        if (isBankSideFailure(e)) {
+            return getServerError(e.getStatus().value());
         }
 
         ErrorResponse errorResponse = deserializeBodyToErrorResponse(e.getReason());
@@ -67,6 +68,30 @@ public class LunarAuthExceptionHandler {
             return KNOWN_ERRORS.get(errorResponse.getReasonCode());
         }
         return defaultError;
+    }
+
+    private static boolean isBankSideFailure(ResponseStatusException e) {
+        return e.getStatus().is5xxServerError();
+    }
+
+    private static AgentBankApiError getServerError(int status) {
+        return new ServerError(toErrorDetailsFromStatus(status));
+    }
+
+    private static Error toErrorDetailsFromStatus(int status) {
+        switch (status) {
+            case 500:
+                return getErrorWithChangedUserMessage(
+                        AgentError.HTTP_RESPONSE_ERROR.getCode(),
+                        BankServiceError.BANK_SIDE_FAILURE);
+            case 502:
+            case 503:
+            case 504:
+                return getErrorWithChangedUserMessage(
+                        AgentError.HTTP_RESPONSE_ERROR.getCode(), BankServiceError.NO_BANK_SERVICE);
+            default:
+                return new ServerError().getDetails();
+        }
     }
 
     private static ErrorResponse deserializeBodyToErrorResponse(String response) {
