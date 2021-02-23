@@ -254,8 +254,9 @@ public class AmexApiClientTest {
         setUpHttpClientMockForApiTransactions(url, expectedResponseMap);
 
         // when
+        final Optional<LocalDate> now = Optional.ofNullable(LocalDate.now());
         final List<TransactionsResponseDto> actualResponse =
-                amexApiClient.fetchTransactions(hmacToken, LocalDate.now(), LocalDate.now());
+                amexApiClient.fetchTransactions(hmacToken, now, now.get());
 
         // then
         assertThat(actualResponse.stream().findFirst().get())

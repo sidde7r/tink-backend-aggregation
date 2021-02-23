@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import com.google.common.base.Preconditions;
 import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmericanExpressConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmericanExpressUtils;
@@ -61,7 +63,9 @@ public class AmexCreditCardTransactionFetcher
                 response =
                         amexApiClient.fetchTransactions(
                                 hmacToken,
-                                now.minusDays(AmericanExpressConstants.DAYS_TO_FETCH_PENDING),
+                                Optional.of(
+                                        now.minusDays(
+                                                AmericanExpressConstants.DAYS_TO_FETCH_PENDING)),
                                 now);
 
                 return mapTransactionsToAccountAndReturnNewResponse(
@@ -74,7 +78,8 @@ public class AmexCreditCardTransactionFetcher
                     return mapTransactionsToAccountAndReturnNewResponse(
                             account, getStoredTransactions(key), getNextKey(statementMap, endDate));
                 } else {
-                    response = amexApiClient.fetchTransactions(hmacToken, null, endDate);
+                    response =
+                            amexApiClient.fetchTransactions(hmacToken, Optional.empty(), endDate);
                     return mapTransactionsToAccountAndReturnNewResponse(
                             account, response, getNextKey(statementMap, endDate));
                 }
@@ -105,11 +110,8 @@ public class AmexCreditCardTransactionFetcher
     }
 
     private static Integer getKeysByValue(Map<Integer, LocalDate> statementMap, LocalDate value) {
-        Optional<Map<Integer, LocalDate>> map = Optional.ofNullable(statementMap);
-        if (!map.isPresent()) {
-            throw new IllegalStateException("Statement map is empty.");
-        }
-        return map.get().entrySet().stream()
+        Map<Integer, LocalDate> map = Preconditions.checkNotNull(statementMap);
+        return map.entrySet().stream()
                 .filter(entry -> entry.getValue().equals(value))
                 .map(Map.Entry::getKey)
                 .findFirst()

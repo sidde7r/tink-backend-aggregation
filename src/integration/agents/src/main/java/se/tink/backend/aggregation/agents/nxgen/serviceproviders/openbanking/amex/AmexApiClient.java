@@ -2,8 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.am
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.LinkedHashMap;
@@ -147,14 +145,8 @@ public class AmexApiClient {
     }
 
     public StatementPeriodsDto fetchStatementPeriods(HmacToken hmacToken) {
-        final String response =
-                sendRequestAndGetResponse(Urls.ENDPOINT_STATEMENT_PERIODS, hmacToken, String.class);
-        objectMapper.registerModule(new JavaTimeModule());
-        try {
-            return objectMapper.readValue(response, StatementPeriodsDto.class);
-        } catch (IOException e) {
-            throw new IllegalStateException("Unable to parse json string to map", e);
-        }
+        return sendRequestAndGetResponse(
+                Urls.ENDPOINT_STATEMENT_PERIODS, hmacToken, StatementPeriodsDto.class);
     }
 
     @SuppressWarnings("unchecked")
@@ -172,7 +164,7 @@ public class AmexApiClient {
      * the function will fetch posted transactions based on the statement periods data.
      */
     public List<TransactionsResponseDto> fetchTransactions(
-            HmacToken hmacToken, LocalDate fromDate, LocalDate toDate) {
+            HmacToken hmacToken, Optional<LocalDate> fromDate, LocalDate toDate) {
 
         List<TransactionsResponseDto> transactionResponses =
                 fetchTransactionsWithGivenLimit(
@@ -189,7 +181,7 @@ public class AmexApiClient {
 
         /*
          *If we have more transaction than our limit (currently set to 1000)
-         * during the past 90 days the we will make a new call and fetch all transactions.
+         * then we will make a new call and fetch all transactions.
          */
         if (transactionCount > AmericanExpressConstants.QueryValues.TRANSACTION_TO_FETCH) {
             transactionResponses =
@@ -199,22 +191,25 @@ public class AmexApiClient {
         return transactionResponses;
     }
 
-    private URL buildTransactionsUrl(int limit, LocalDate fromDate, LocalDate toDate) {
-        if (fromDate == null) {
+    private URL buildTransactionsUrl(int limit, Optional<LocalDate> fromDate, LocalDate toDate) {
+        if (fromDate.isPresent()) {
             return Urls.ENDPOINT_TRANSACTIONS
                     .queryParam(
-                            AmericanExpressConstants.QueryParams.QUERY_PARAM_STATEMENT_END_DATE,
+                            AmericanExpressConstants.QueryParams.QUERY_PARAM_START_DATE,
+                            fromDate.get().format(DateTimeFormatter.ISO_LOCAL_DATE))
+                    .queryParam(
+                            AmericanExpressConstants.QueryParams.QUERY_PARAM_END_DATE,
                             toDate.format(DateTimeFormatter.ISO_LOCAL_DATE))
                     .queryParam(
                             AmericanExpressConstants.QueryParams.QUERY_PARAM_LIMIT,
-                            Integer.toString(limit));
+                            Integer.toString(limit))
+                    .queryParam(
+                            AmericanExpressConstants.QueryParams.STATUS,
+                            AmericanExpressConstants.QueryValues.PENDING);
         }
         return Urls.ENDPOINT_TRANSACTIONS
                 .queryParam(
-                        AmericanExpressConstants.QueryParams.QUERY_PARAM_START_DATE,
-                        fromDate.format(DateTimeFormatter.ISO_LOCAL_DATE))
-                .queryParam(
-                        AmericanExpressConstants.QueryParams.QUERY_PARAM_END_DATE,
+                        AmericanExpressConstants.QueryParams.QUERY_PARAM_STATEMENT_END_DATE,
                         toDate.format(DateTimeFormatter.ISO_LOCAL_DATE))
                 .queryParam(
                         AmericanExpressConstants.QueryParams.QUERY_PARAM_LIMIT,
@@ -225,26 +220,23 @@ public class AmexApiClient {
      * Will fetch posted and pending transactions in two separate Api-calls. The resulting lists will then be merged.
      */
     private List<TransactionsResponseDto> fetchTransactionsWithGivenLimit(
-            HmacToken hmacToken, int limit, LocalDate fromDate, LocalDate toDate) {
+            HmacToken hmacToken, int limit, Optional<LocalDate> fromDate, LocalDate toDate) {
 
-        URL url = buildTransactionsUrl(limit, fromDate, toDate);
-
+        URL url;
         List<LinkedHashMap<String, String>> transactions;
-        if (fromDate == null) {
-            // fetching posted transactions based on statement periods
-            transactions = finalizeAndSendRequest(url, hmacToken);
-        }
-        // fetching pending transactions for the last 30 days
-        else {
-            transactions = finalizeAndSendRequestWithPending(url, hmacToken);
-        }
 
-        // store the response to be used for account-specific mapping.
-        temporaryStorage.put(
-                AmericanExpressUtils.createAndGetStorageString(
-                        toDate.format(DateTimeFormatter.ISO_LOCAL_DATE)),
-                transactions);
+        url = buildTransactionsUrl(limit, fromDate, toDate);
 
+        // fetching posted transactions based on statement periods
+        transactions = finalizeAndSendRequest(url, hmacToken);
+
+        // only store transactions from statement periods and used for account-specific mapping.
+        if (!fromDate.isPresent()) {
+            temporaryStorage.put(
+                    AmericanExpressUtils.createAndGetStorageString(
+                            toDate.format(DateTimeFormatter.ISO_LOCAL_DATE)),
+                    transactions);
+        }
         /* this workaround is necessary since the response from Amex cannot be directly mapped to a
          TransactionResponseDto due to the response is not in a correct format.
         */
@@ -255,16 +247,6 @@ public class AmexApiClient {
     private List<LinkedHashMap<String, String>> finalizeAndSendRequest(
             URL url, HmacToken hmacToken) {
         return sendRequestAndGetResponse(url, hmacToken, List.class);
-    }
-
-    private List<LinkedHashMap<String, String>> finalizeAndSendRequestWithPending(
-            URL url, HmacToken hmacToken) {
-        return sendRequestAndGetResponse(
-                url.queryParam(
-                        AmericanExpressConstants.QueryParams.STATUS,
-                        AmericanExpressConstants.QueryValues.PENDING),
-                hmacToken,
-                List.class);
     }
 
     private <T> T sendRequestAndGetResponse(URL url, HmacToken hmacToken, Class<T> clazz) {

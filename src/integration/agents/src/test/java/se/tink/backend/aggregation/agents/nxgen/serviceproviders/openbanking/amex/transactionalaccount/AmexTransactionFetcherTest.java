@@ -124,7 +124,7 @@ public class AmexTransactionFetcherTest {
                 .hasMessage("No HmacAccountId found in the storage.");
 
         verify(amexApiClientMock, never())
-                .fetchTransactions(any(), eq(LocalDate.now()), eq(LocalDate.now()));
+                .fetchTransactions(any(), eq(Optional.of(LocalDate.now())), eq(LocalDate.now()));
     }
 
     private CreditCardAccount getCreditCardAccount() {
