@@ -17,7 +17,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.ObjectMapperFactory;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.result.error.NoUserInteractionResponseError;
-import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
+import se.tink.backend.aggregation.agents.exceptions.agent.AgentException;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SupplementalInfoError;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.LunarNemIdParametersFetcher;
@@ -36,9 +37,13 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentProceedNextStepAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.steps.AgentAuthenticationProcessStep;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AgentBankApiError;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AgentError;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AuthenticationError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AuthorizationError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.InvalidCredentialsError;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.error.ServerError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.ThirdPartyAppCancelledError;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.error.ThirdPartyAppNoClientError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.ThirdPartyAppTimedOutError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.ThirdPartyAppUnknownError;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.MockRandomValueGenerator;
@@ -136,7 +141,7 @@ public class GetNemIdTokenStepTest {
     public void shouldReturnFailedResultWhenErrorOccursWhileFetchingNemIdParameters() {
         // given
         when(apiClient.getNemIdParameters(randomValueGenerator.getUUID().toString()))
-                .thenThrow(new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR));
+                .thenThrow(new ResponseStatusException(HttpStatus.BAD_REQUEST));
 
         // when
         AgentFailedAuthenticationResult result =
@@ -168,21 +173,29 @@ public class GetNemIdTokenStepTest {
     @Test
     @Parameters(method = "loginWithNemIdErrors")
     public void shouldReturnFailedResultWhenExpectedExceptionDuringNemIdLoginOccurs(
-            AuthenticationException e, AgentBankApiError apiError) {
+            AgentException e, AgentBankApiError apiError) {
         // given
         when(apiClient.getNemIdParameters(randomValueGenerator.getUUID().toString()))
                 .thenReturn(nemIdParamsResponse);
         when(iFrameController.logInWithCredentials(any())).thenThrow(e);
+
+        AgentFailedAuthenticationResult expected =
+                new AgentFailedAuthenticationResult(
+                        apiError, LunarTestUtils.toPersistedData(new LunarAuthData()));
 
         // when
         AgentFailedAuthenticationResult result =
                 (AgentFailedAuthenticationResult) getNemIdTokenStep.execute(request);
 
         // then
-        LunarTestUtils.assertFailedResultEquals(
-                new AgentFailedAuthenticationResult(
-                        apiError, LunarTestUtils.toPersistedData(new LunarAuthData())),
-                result);
+        assertThat(result.getError().getClass()).isEqualTo(expected.getError().getClass());
+        assertThat(result.getError().getDetails().getErrorCode())
+                .isEqualTo(expected.getError().getDetails().getErrorCode());
+        assertThat(result.getError().getDetails().getErrorMessage())
+                .isEqualTo(e.getUserMessage().get());
+        assertThat(result.getAuthenticationPersistedData())
+                .isEqualToComparingFieldByFieldRecursively(
+                        expected.getAuthenticationPersistedData());
     }
 
     private Object[] loginWithNemIdErrors() {
@@ -193,22 +206,61 @@ public class GetNemIdTokenStepTest {
             new Object[] {
                 LoginError.INCORRECT_CREDENTIALS.exception(), new InvalidCredentialsError()
             },
+            new Object[] {
+                LoginError.NOT_CUSTOMER.exception(),
+                new ThirdPartyAppNoClientError(
+                        LunarTestUtils.getExpectedErrorDetails(
+                                AgentError.INVALID_CREDENTIALS.getCode(), LoginError.NOT_CUSTOMER))
+            },
             new Object[] {LoginError.DEFAULT_MESSAGE.exception(), new ThirdPartyAppUnknownError()},
-            new Object[] {LoginError.NOT_CUSTOMER.exception(), new ThirdPartyAppUnknownError()},
             new Object[] {NemIdError.REJECTED.exception(), new ThirdPartyAppCancelledError()},
+            new Object[] {
+                NemIdError.INTERRUPTED.exception(),
+                new AuthenticationError(
+                        LunarTestUtils.getExpectedErrorDetails(
+                                AgentError.THIRD_PARTY_APP_UNKNOWN_ERROR.getCode(),
+                                NemIdError.INTERRUPTED))
+            },
+            new Object[] {
+                NemIdError.NEMID_LOCKED.exception(),
+                new AuthenticationError(
+                        LunarTestUtils.getExpectedErrorDetails(
+                                AgentError.THIRD_PARTY_APP_UNKNOWN_ERROR.getCode(),
+                                NemIdError.NEMID_LOCKED))
+            },
+            new Object[] {
+                NemIdError.NEMID_BLOCKED.exception(),
+                new AuthenticationError(
+                        LunarTestUtils.getExpectedErrorDetails(
+                                AgentError.THIRD_PARTY_APP_UNKNOWN_ERROR.getCode(),
+                                NemIdError.NEMID_BLOCKED))
+            },
+            new Object[] {
+                NemIdError.INVALID_CODE_CARD_CODE.exception(), new InvalidCredentialsError()
+            },
+            new Object[] {NemIdError.USE_NEW_CODE_CARD.exception(), new InvalidCredentialsError()},
+            new Object[] {
+                NemIdError.INVALID_CODE_TOKEN_CODE.exception(), new InvalidCredentialsError()
+            },
             new Object[] {NemIdError.TIMEOUT.exception(), new ThirdPartyAppTimedOutError()},
             new Object[] {
-                NemIdError.CODE_TOKEN_NOT_SUPPORTED.exception(), new AuthorizationError()
+                NemIdError.CODE_TOKEN_NOT_SUPPORTED.exception(), new ThirdPartyAppUnknownError()
             },
-            new Object[] {NemIdError.INTERRUPTED.exception(), new ThirdPartyAppUnknownError()},
             new Object[] {
                 SupplementalInfoError.WAIT_TIMEOUT.exception(), new NoUserInteractionResponseError()
+            },
+            new Object[] {
+                BankServiceError.BANK_SIDE_FAILURE.exception(),
+                new ServerError(
+                        LunarTestUtils.getExpectedErrorDetails(
+                                AgentError.HTTP_RESPONSE_ERROR.getCode(),
+                                BankServiceError.BANK_SIDE_FAILURE))
             },
         };
     }
 
     @Test
-    public void shouldThrowExceptionWhenNotCatchedErrorDuringNemIdLoginOccurs() {
+    public void shouldThrowExceptionWhenNotCaughtErrorDuringNemIdLoginOccurs() {
         // given
         when(apiClient.getNemIdParameters(randomValueGenerator.getUUID().toString()))
                 .thenReturn(nemIdParamsResponse);

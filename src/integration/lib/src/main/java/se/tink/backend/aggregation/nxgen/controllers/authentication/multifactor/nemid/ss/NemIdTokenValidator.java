@@ -38,7 +38,7 @@ public class NemIdTokenValidator {
 
     private final NemIdTokenParser nemIdTokenParser;
 
-    public void verifyTokenIsValid(String tokenBase64) {
+    void verifyTokenIsValid(String tokenBase64) {
         NemIdTokenStatus tokenStatus = nemIdTokenParser.extractNemIdTokenStatus(tokenBase64);
         if (isLunarToken(tokenStatus)) {
             return;

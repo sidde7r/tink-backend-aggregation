@@ -6,6 +6,7 @@ import java.util.Base64;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.LunarNemIdParametersFetcher;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.NemIdIframeAttributes;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.client.AuthenticationApiClient;
@@ -76,6 +77,10 @@ public class GetNemIdTokenStep
         } catch (AuthenticationException e) {
             return new AgentFailedAuthenticationResult(
                     AuthenticationExceptionHandler.toError(e), authDataAccessor.clearData());
+        } catch (BankServiceException e) {
+            return new AgentFailedAuthenticationResult(
+                    AuthenticationExceptionHandler.toErrorFromBankServiceException(e),
+                    authDataAccessor.clearData());
         }
 
         return new AgentProceedNextStepAuthenticationResult(

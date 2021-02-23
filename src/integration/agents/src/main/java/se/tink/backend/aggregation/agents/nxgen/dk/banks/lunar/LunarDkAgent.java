@@ -31,7 +31,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
-import se.tink.backend.aggregation.nxgen.http.filter.filters.BankServiceInternalErrorFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.TimeoutRetryFilter;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS})
@@ -96,7 +95,6 @@ public final class LunarDkAgent extends AgentPlatformAgent
                 new TimeoutRetryFilter(
                         LunarConstants.HttpClient.MAX_RETRIES,
                         LunarConstants.HttpClient.RETRY_SLEEP_MILLISECONDS));
-        client.addFilter(new BankServiceInternalErrorFilter());
     }
 
     @Override

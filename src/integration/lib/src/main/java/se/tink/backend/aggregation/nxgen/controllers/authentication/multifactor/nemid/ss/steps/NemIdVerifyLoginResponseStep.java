@@ -41,7 +41,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 @RequiredArgsConstructor(onConstructor = @__({@Inject}))
 public class NemIdVerifyLoginResponseStep {
 
-    public static final List<By> ELEMENTS_TO_SEARCH_FOR_IN_IFRAME =
+    static final List<By> ELEMENTS_TO_SEARCH_FOR_IN_IFRAME =
             ImmutableList.of(
                     NEMID_CODE_APP_METHOD,
                     NEMID_CODE_CARD_METHOD,

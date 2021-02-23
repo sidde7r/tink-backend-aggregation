@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: VERSION\n"
-"POT-Creation-Date: 2021-02-17 14:38+0000\n"
-"PO-Revision-Date: 2021-02-17 14:38+0000\n"
+"POT-Creation-Date: 2021-02-22 14:11+0000\n"
+"PO-Revision-Date: 2021-02-22 14:11+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE TEAM <EMAIL@ADDRESS>\n"
 "Language: da\n"
@@ -10,6 +10,55 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Third party app already in progress."
+msgstr "Tredjeparts-app allerede i gang."
+
+msgid "Third party app timeout."
+msgstr "Tredjeparts-app timeout."
+
+msgid "Third party app unknown problem."
+msgstr "Tredjeparts-app ukendt problem."
+
+msgid ""
+"Your device could not be registered. This could be due to restrictions in "
+"the number of devices your bank allows you to register."
+msgstr ""
+"Din enhed kan ikke registreres. Dette kan være på grund af restriktioner i "
+"antallet af enheder, som din bank tillader dig at registrere."
+
+msgid "ID Token validation failed"
+msgstr "Validering af ID-token mislykkedes"
+
+msgid "Authorization error. No access to a specific resource"
+msgstr "Autorisationsfejl. Ingen adgang til en bestemt ressource"
+
+msgid "Bank API HTTP status error. Unexpected status code."
+msgstr "Bank API HTTP status fejl. Uventet status kode."
+
+msgid "Account blocked error."
+msgstr "Fejl med blokeret konto."
+
+msgid "Incorrect card reader response."
+msgstr "Forkert kortlæser respons."
+
+msgid "Incorrect OTP."
+msgstr "Ukorrekt OTP."
+
+msgid "Invalid credentials."
+msgstr "Ugyldige legitimationsoplysninger."
+
+msgid "Third party app canceled."
+msgstr "Tredjeparts-app annuleret."
+
+msgid "Third party app no client."
+msgstr "Tredjeparts-app ingen klient."
+
+msgid "Invalid scope."
+msgstr "Ugyldigt omfang."
+
+msgid "Session expired."
+msgstr "Session er udløbet."
 
 msgid "Input the code from your code card"
 msgstr "Indtast koden fra dit kodekort"
@@ -177,6 +226,9 @@ msgstr "Noget gik galt i under login processen."
 
 msgid "There aren't any Authentication methods available."
 msgstr "Der er ikke nogen godkendelsesmetoder tilgængelige."
+
+msgid "A supplemental information was not provided within the given time"
+msgstr "Supplerende information blev ikke leveret inden for den angivne tid"
 
 msgid "Activation code is incorrect. Please try again."
 msgstr "Aktiveringskoden er ukorrekt. Forsøg venligst igen."

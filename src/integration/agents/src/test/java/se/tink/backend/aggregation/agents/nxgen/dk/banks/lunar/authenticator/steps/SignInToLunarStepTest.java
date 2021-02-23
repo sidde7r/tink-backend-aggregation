@@ -96,7 +96,7 @@ public class SignInToLunarStepTest {
             boolean isAutoAuth, AgentBankApiError error) {
         // given
         when(apiClient.signIn(LUNAR_PASSWORD, ACCESS_TOKEN, DEVICE_ID))
-                .thenThrow(new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR));
+                .thenThrow(new ResponseStatusException(HttpStatus.NOT_FOUND));
 
         // and
         setAutoAuth(isAutoAuth);
