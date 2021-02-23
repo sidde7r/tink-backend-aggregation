@@ -39,6 +39,18 @@ steps:
         always-pull: true
     retry: {"automatic": [{"exit_status": -1, "limit": 2}, {"exit_status": 255, "limit": 2}]}
 
+  - command: .buildkite/check-commits-metadata.sh
+    plugins:
+      docker-compose#v3.0.3:
+        run: "app"
+        config: "docker/docker-compose.bazel.yml"
+    branches: '!master'
+    name: ':git: Check commit metadata'
+    timeout_in_minutes: 10
+    agents:
+      queue: default
+    retry: {"automatic": [{"exit_status": -1, "limit": 2}, {"exit_status": 255, "limit": 2}]}
+
   - command: .buildkite/check-bazel-style.sh
     plugins:
       docker#v2.2.0:
