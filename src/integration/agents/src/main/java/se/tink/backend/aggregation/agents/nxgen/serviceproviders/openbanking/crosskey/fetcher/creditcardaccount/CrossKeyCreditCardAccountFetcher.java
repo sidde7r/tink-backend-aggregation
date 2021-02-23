@@ -8,7 +8,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cro
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants.IdentificationType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.entities.account.AccountDetailsEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.entities.account.AccountEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.entities.common.AmountEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.entities.accountbalances.AccountBalanceEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.entities.accountbalances.AccountBalancesDataEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.rpc.CrosskeyAccountBalancesResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
@@ -38,33 +39,33 @@ public class CrossKeyCreditCardAccountFetcher implements AccountFetcher<CreditCa
 
         final Optional<AccountDetailsEntity> accountDetails =
                 accountEntity.getAccountDetails(IdentificationType.CREDIT_CARD);
-        final AmountEntity amount =
-                crosskeyAccountBalancesResponse.getData().getInterimAvailableBalance().getAmount();
+        final AccountBalancesDataEntity balances = crosskeyAccountBalancesResponse.getData();
 
-        return getCreditCardAccount(accountEntity, accountDetails, amount);
+        return getCreditCardAccount(accountEntity, accountDetails, balances);
     }
 
     private CreditCardAccount getCreditCardAccount(
             AccountEntity accountEntity,
             Optional<AccountDetailsEntity> accountDetails,
-            AmountEntity amount) {
+            AccountBalancesDataEntity balances) {
 
         final String maskedCardNumber =
                 accountDetails
                         .map(AccountDetailsEntity::getIdentification)
                         .orElse(accountEntity.getAccountId());
 
+        AccountBalanceEntity balanceEntity =
+                balances.getInterimAvailableBalance()
+                        .orElseThrow(() -> new IllegalArgumentException("Balance not found"));
         return CreditCardAccount.nxBuilder()
                 .withCardDetails(
                         CreditCardModule.builder()
                                 .withCardNumber(maskedCardNumber)
-                                .withBalance(
-                                        ExactCurrencyAmount.of(
-                                                BigDecimal.valueOf(amount.getAmount()),
-                                                amount.getCurrency()))
+                                .withBalance(balanceEntity.getExactAmount())
                                 .withAvailableCredit(
                                         ExactCurrencyAmount.of(
-                                                BigDecimal.ZERO, amount.getCurrency()))
+                                                BigDecimal.ZERO,
+                                                balanceEntity.getAmount().getCurrency()))
                                 .withCardAlias(accountEntity.getDescription())
                                 .build())
                 .withoutFlags()
