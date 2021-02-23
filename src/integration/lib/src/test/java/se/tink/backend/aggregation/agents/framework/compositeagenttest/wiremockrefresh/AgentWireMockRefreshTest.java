@@ -68,7 +68,8 @@ public final class AgentWireMockRefreshTest {
             boolean dumpContentForContractFile,
             boolean requestFlagManual,
             boolean requestFlagCreate,
-            boolean requestFlagUpdate) {
+            boolean requestFlagUpdate,
+            boolean wireMockServerLogsEnabled) {
 
         ImmutableSet<RequestResponseParser> parsers =
                 wireMockFilePaths.stream()
@@ -78,7 +79,7 @@ public final class AgentWireMockRefreshTest {
                                                 new ResourceFileReader().read(wireMockFilePath)))
                         .collect(ImmutableSet.toImmutableSet());
 
-        server = new WireMockTestServer(parsers);
+        server = new WireMockTestServer(parsers, wireMockServerLogsEnabled);
 
         final Set<Module> modules =
                 ImmutableSet.of(
@@ -420,7 +421,8 @@ public final class AgentWireMockRefreshTest {
                     dumpContentForContractFile,
                     requestManual,
                     requestCreate,
-                    requestUpdate);
+                    requestUpdate,
+                    true);
         }
     }
 
@@ -633,6 +635,12 @@ public final class AgentWireMockRefreshTest {
         }
 
         @Override
+        public BuildStep enableWireMockServerLogs() {
+            this.wireMockServerLogsEnabled = true;
+            return this;
+        }
+
+        @Override
         public AgentWireMockRefreshTest build() {
             return new AgentWireMockRefreshTest(
                     marketCode,
@@ -651,7 +659,8 @@ public final class AgentWireMockRefreshTest {
                     dumpContentForContractFile,
                     requestFlagManual,
                     requestFlagCreate,
-                    requestFlagUpdate);
+                    requestFlagUpdate,
+                    wireMockServerLogsEnabled);
         }
     }
 
@@ -747,6 +756,9 @@ public final class AgentWireMockRefreshTest {
 
         /** Enable printing of http debug trace */
         BuildStep enableHttpDebugTrace();
+
+        /** Enable printing of wire mock server logs */
+        BuildStep enableWireMockServerLogs();
 
         /**
          * Enable printing of processed data from .aap file (response body mapped to tink model)
