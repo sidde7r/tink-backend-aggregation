@@ -18,6 +18,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deu
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.fetcher.transactionalaccount.rpc.account.FetchBalancesResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.fetcher.transactionalaccount.rpc.transactions.TransactionsKeyPaginatorBaseResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Party;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
@@ -83,8 +84,9 @@ public class DeutscheBankTransactionalAccountFetcherTest {
         assertThat(account.getType().name()).isEqualTo(type.name());
         assertThat(account.getName()).isEqualTo("NAME");
         assertThat(account.getExactBalance()).isEqualTo(ExactCurrencyAmount.inEUR(12.12));
-        assertThat(account.getHolders()).hasSize(1);
-        assertThat(account.getHolders().get(0).getName()).isEqualTo("Name Surname");
+        assertThat(account.getParties()).hasSize(1);
+        assertThat(account.getParties().get(0).getName()).isEqualTo("Name Surname");
+        assertThat(account.getParties().get(0).getRole()).isEqualTo(Party.Role.HOLDER);
     }
 
     @Test

@@ -11,7 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.SabadellApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.transactionalaccounts.rpc.AccountsResponse;
-import se.tink.backend.aggregation.nxgen.core.account.entity.Holder.Role;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Party.Role;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.serialization.utils.SerializationUtils;
@@ -72,8 +72,8 @@ public class SabadellAccountFetcherTest {
                 .isEqualByComparingTo(new BigDecimal("13591.73"));
         assertThat(account.getIdModule().getUniqueId()).isEqualTo("ES0820952954871624915582");
         assertThat(account.getIdModule().getAccountName()).isEqualTo("CUENTA RELACIÓN");
-        assertThat(account.getHolders().get(0).getName()).isEqualTo("JOHN DOE");
-        assertThat(account.getHolders().get(0).getRole()).isEqualTo(Role.HOLDER);
+        assertThat(account.getParties().get(0).getName()).isEqualTo("JOHN DOE");
+        assertThat(account.getParties().get(0).getRole()).isEqualTo(Role.HOLDER);
     }
 
     private void assertSecondAccountValid(TransactionalAccount account) {
@@ -84,7 +84,7 @@ public class SabadellAccountFetcherTest {
                 .isEqualByComparingTo(new BigDecimal("79.32"));
         assertThat(account.getIdModule().getUniqueId()).isEqualTo("ES3831906561918657847255");
         assertThat(account.getIdModule().getAccountName()).isEqualTo("CUENTA EXPANSIÓN");
-        assertThat(account.getHolders().get(0).getName()).isEqualTo("JOHN DOE I JANE DOE");
-        assertThat(account.getHolders().get(0).getRole()).isEqualTo(Role.AUTHORIZED_USER);
+        assertThat(account.getParties().get(0).getName()).isEqualTo("JOHN DOE I JANE DOE");
+        assertThat(account.getParties().get(0).getRole()).isEqualTo(Role.AUTHORIZED_USER);
     }
 }

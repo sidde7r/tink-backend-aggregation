@@ -56,7 +56,7 @@
     "userModifiedType" : false,
     "identifiers" : "[\"iban://ES6921001516061538226938\"]",
     "closed" : false,
-    "holderName" : "JUAN ANTONIO **MisterY** SALAFRANCA",
+    "holderName" : null,
     "accountHolder" : {
       "accountId" : null,
       "type" : "PERSONAL",

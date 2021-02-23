@@ -65,7 +65,7 @@ public class AccountTransactionsFetcherTest {
                                                         Type.IBAN, "ES0201821048600000000000"))
                                         .build())
                         .setApiIdentifier("ES0XXXXXXXXXXXXXXXXXXXXXXXXXXX")
-                        .addParties(Arrays.asList(new Party("OWNER", Party.Role.HOLDER)))
+                        .addParties(Arrays.asList(new Party("OWNER", Role.HOLDER)))
                         .build();
     }
 
@@ -127,8 +127,8 @@ public class AccountTransactionsFetcherTest {
         when(accountEntity.getParties(any()))
                 .thenReturn(
                         Arrays.asList(
-                                new Party("OWNER", Party.Role.HOLDER),
-                                new Party("AUTH", Party.Role.AUTHORIZED_USER)));
+                                new Party("OWNER", Role.HOLDER),
+                                new Party("AUTH", Role.AUTHORIZED_USER)));
 
         List<Party> parties = accountEntity.getParties(any());
 
@@ -147,7 +147,7 @@ public class AccountTransactionsFetcherTest {
                 accountEntity
                         .toTinkTransactionalAccount(any())
                         .get()
-                        .getHolders()
+                        .getParties()
                         .get(0)
                         .getName());
         Assert.assertEquals(
@@ -155,7 +155,7 @@ public class AccountTransactionsFetcherTest {
                 accountEntity
                         .toTinkTransactionalAccount(any())
                         .get()
-                        .getHolders()
+                        .getParties()
                         .get(0)
                         .getRole());
     }

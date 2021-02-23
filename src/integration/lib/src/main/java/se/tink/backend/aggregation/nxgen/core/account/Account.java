@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.nxgen.core.account;
 
-import static se.tink.backend.aggregation.nxgen.core.account.entity.Holder.Role.HOLDER;
+import static se.tink.backend.aggregation.nxgen.core.account.entity.Party.Role.HOLDER;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.common.base.Objects;
@@ -25,11 +25,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.AccountHolder;
 import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.agents.rpc.HolderIdentity;
+import se.tink.backend.agents.rpc.HolderRole;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
-import se.tink.backend.aggregation.nxgen.core.account.entity.Holder;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Party;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
@@ -66,7 +68,7 @@ public abstract class Account {
     protected Map<String, String> payload;
     protected AccountCapabilities capabilities;
     protected AccountSourceInfo sourceInfo;
-    protected final List<Holder> holders;
+    protected final List<Party> parties;
     protected AccountHolderType holderType;
     protected List<Balance> balances;
 
@@ -92,7 +94,7 @@ public abstract class Account {
         this.uniqueIdentifier = builder.getIdModule().getUniqueId();
         this.idModule = builder.getIdModule();
         this.apiIdentifier = builder.getApiIdentifier();
-        this.holders = builder.getHolders();
+        this.parties = builder.getParties();
         this.holderType = builder.getHolderType();
         this.temporaryStorage = builder.getTransientStorage();
         this.accountFlags = ImmutableSet.copyOf(builder.getAccountFlags());
@@ -110,12 +112,12 @@ public abstract class Account {
         this.identifiers = ImmutableSet.copyOf(builder.getIdentifiers());
         this.uniqueIdentifier = sanitizeUniqueIdentifier(builder.getUniqueIdentifier());
         this.apiIdentifier = builder.getBankIdentifier();
-        this.holders =
+        this.parties =
                 Optional.ofNullable(builder.getHolderName())
                         .filter(holderName -> !Strings.isNullOrEmpty(holderName.toString()))
                         .map(
                                 holderName ->
-                                        ImmutableList.of(Holder.of(holderName.toString(), HOLDER)))
+                                        ImmutableList.of(new Party(holderName.toString(), HOLDER)))
                         .orElse(ImmutableList.of());
         this.temporaryStorage = builder.getTransientStorage();
         this.accountFlags = ImmutableSet.copyOf(builder.getAccountFlags());
@@ -157,11 +159,11 @@ public abstract class Account {
             this.name = builder.getAlias();
         }
 
-        this.holders =
+        this.parties =
                 Optional.ofNullable(builder.getHolderNames()).orElse(Collections.emptyList())
                         .stream()
                         .filter(holderName -> !Strings.isNullOrEmpty(holderName))
-                        .map(holderName -> Holder.of(holderName, HOLDER))
+                        .map(holderName -> new Party(holderName, HOLDER))
                         .collect(Collectors.toList());
     }
 
@@ -287,14 +289,14 @@ public abstract class Account {
         account.setCapabilities(this.capabilities);
         account.setSourceInfo(this.sourceInfo);
 
-        if (holders.size() > 0 || java.util.Objects.nonNull(holderType)) {
+        if (parties.size() > 0 || java.util.Objects.nonNull(holderType)) {
             AccountHolder accountHolder = new AccountHolder();
             accountHolder.setType(
                     Optional.ofNullable(holderType)
                             .orElse(inferHolderType(provider.getAuthenticationUserType()))
                             .toSystemType());
             accountHolder.setIdentities(
-                    holders.stream().map(Holder::toSystemHolder).collect(Collectors.toList()));
+                    parties.stream().map(this::toSystemHolder).collect(Collectors.toList()));
             account.setAccountHolder(accountHolder);
         }
 
@@ -305,6 +307,26 @@ public abstract class Account {
                                 .collect(Collectors.toList())
                         : ImmutableList.of());
         return account;
+    }
+
+    public HolderIdentity toSystemHolder(Party party) {
+        HolderIdentity systemHolder = new HolderIdentity();
+        systemHolder.setName(party.getName());
+        systemHolder.setRole(toSystemRole(party.getRole()));
+        return systemHolder;
+    }
+
+    private HolderRole toSystemRole(Party.Role partyRole) {
+        switch (partyRole) {
+            case HOLDER:
+                return HolderRole.HOLDER;
+            case AUTHORIZED_USER:
+                return HolderRole.AUTHORIZED_USER;
+            case OTHER:
+                return HolderRole.OTHER;
+            default:
+                return null;
+        }
     }
 
     private AccountHolderType inferHolderType(
@@ -318,18 +340,18 @@ public abstract class Account {
     }
 
     private Optional<String> getFirstHolder() {
-        return holders.stream()
-                .filter(holder -> HOLDER.equals(holder.getRole()))
+        return parties.stream()
+                .filter(party -> HOLDER.equals(party.getRole()))
                 .findFirst()
-                .map(Holder::getName);
+                .map(Party::getName);
     }
 
     public HolderName getHolderName() {
         return getFirstHolder().map(HolderName::new).orElse(null);
     }
 
-    public List<Holder> getHolders() {
-        return holders;
+    public List<Party> getParties() {
+        return parties;
     }
 
     public AccountHolderType getHolderType() {

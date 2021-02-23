@@ -13,7 +13,7 @@ import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.rpc.GlobalPositionResponse;
-import se.tink.backend.aggregation.nxgen.core.account.entity.Holder.Role;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Party.Role;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
@@ -81,8 +81,8 @@ public class EvoBancoAccountFetcherTest {
         assertThat(account.getIdModule().getAccountNumber()).isEqualTo("IBAN1");
         assertThat(account.getIdModule().getAccountName()).isEqualTo("Depósito");
         assertThat(account.getIdModule().getProductName()).isEqualTo("I");
-        assertThat(account.getHolders().get(0).getName()).isEqualTo("SZYMON MYSIAK");
-        assertThat(account.getHolders().get(0).getRole()).isEqualTo(Role.HOLDER);
+        assertThat(account.getParties().get(0).getName()).isEqualTo("SZYMON MYSIAK");
+        assertThat(account.getParties().get(0).getRole()).isEqualTo(Role.HOLDER);
     }
 
     private void assertCheckingAccountValid(TransactionalAccount account) {
@@ -95,7 +95,7 @@ public class EvoBancoAccountFetcherTest {
         assertThat(account.getIdModule().getAccountNumber()).isEqualTo("IBAN2");
         assertThat(account.getIdModule().getAccountName()).isEqualTo("Cuenta Inteligente");
         assertThat(account.getIdModule().getProductName()).isEqualTo("I");
-        assertThat(account.getHolders().get(0).getName()).isEqualTo("SZYMON MYSIAK");
-        assertThat(account.getHolders().get(0).getRole()).isEqualTo(Role.HOLDER);
+        assertThat(account.getParties().get(0).getName()).isEqualTo("SZYMON MYSIAK");
+        assertThat(account.getParties().get(0).getRole()).isEqualTo(Role.HOLDER);
     }
 }

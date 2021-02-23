@@ -71,7 +71,7 @@ public class EvoBancoCreditCardFetcherTest {
                 .isEqualByComparingTo(new BigDecimal("58.05"));
         assertThat(account.getExactAvailableCredit().getExactValue())
                 .isEqualByComparingTo(new BigDecimal("56.79"));
-        assertThat(account.getHolders().get(0).getName()).isEqualTo("SZYMON MYSIAK");
+        assertThat(account.getParties().get(0).getName()).isEqualTo("SZYMON MYSIAK");
         assertThat(account.getFromTemporaryStorage(EvoBancoConstants.Storage.CARD_STATE))
                 .isEqualTo("PODER CLI.");
         assertThat(account.getAccountNumber()).isEqualTo("9999 **** **** 6999");
@@ -85,7 +85,7 @@ public class EvoBancoCreditCardFetcherTest {
                 .isEqualByComparingTo(new BigDecimal("546.56"));
         assertThat(account.getExactAvailableCredit().getExactValue())
                 .isEqualByComparingTo(new BigDecimal("500.00"));
-        assertThat(account.getHolders().get(0).getName()).isEqualTo("SZYMON MYSIAK");
+        assertThat(account.getParties().get(0).getName()).isEqualTo("SZYMON MYSIAK");
         assertThat(account.getFromTemporaryStorage(EvoBancoConstants.Storage.CARD_STATE))
                 .isEqualTo("E.EST.RENO");
         assertThat(account.getAccountNumber()).isEqualTo("6367 **** **** 4455");

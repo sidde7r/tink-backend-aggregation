@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.nxgen.core.account.transactional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static se.tink.backend.aggregation.nxgen.core.account.entity.Party.*;
 
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -12,8 +13,6 @@ import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.nxgen.core.account.AccountBuilder;
 import se.tink.backend.aggregation.nxgen.core.account.AccountHolderType;
 import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapper;
-import se.tink.backend.aggregation.nxgen.core.account.entity.Holder;
-import se.tink.backend.aggregation.nxgen.core.account.entity.Holder.Role;
 import se.tink.backend.aggregation.nxgen.core.account.entity.Party;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
@@ -256,7 +255,7 @@ public class TransactionalAccountBuilderTest {
                                         .setProductName("UltraSavings ZeroFX")
                                         .build())
                         .addHolderName("Jürgen Flughaubtkopf")
-                        .addParties(new Party("Millie-Jo Morales", Party.Role.AUTHORIZED_USER))
+                        .addParties(new Party("Millie-Jo Morales", Role.AUTHORIZED_USER))
                         .setHolderType(AccountHolderType.PERSONAL)
                         .setApiIdentifier("2a3ffe-38320c")
                         .putInTemporaryStorage("box", box)
@@ -293,11 +292,11 @@ public class TransactionalAccountBuilderTest {
         assertThat(storage.get().x).isEqualTo("TestString");
         assertThat(storage.get().y).isEqualTo(15);
         assertThat(account.getHolderName().toString()).isEqualTo("Jürgen Flughaubtkopf");
-        assertThat(account.getHolders()).hasSize(2);
-        assertThat(account.getHolders().get(0).getName()).isEqualTo("Jürgen Flughaubtkopf");
-        assertThat(account.getHolders().get(0).getRole()).isEqualTo(Role.HOLDER);
-        assertThat(account.getHolders().get(1).getName()).isEqualTo("Millie-Jo Morales");
-        assertThat(account.getHolders().get(1).getRole()).isEqualTo(Holder.Role.AUTHORIZED_USER);
+        assertThat(account.getParties()).hasSize(2);
+        assertThat(account.getParties().get(0).getName()).isEqualTo("Jürgen Flughaubtkopf");
+        assertThat(account.getParties().get(0).getRole()).isEqualTo(Role.HOLDER);
+        assertThat(account.getParties().get(1).getName()).isEqualTo("Millie-Jo Morales");
+        assertThat(account.getParties().get(1).getRole()).isEqualTo(Role.AUTHORIZED_USER);
         assertThat(account.getHolderType()).isEqualTo(AccountHolderType.PERSONAL);
 
         assertThat(account.getApiIdentifier()).isEqualTo("2a3ffe-38320c");

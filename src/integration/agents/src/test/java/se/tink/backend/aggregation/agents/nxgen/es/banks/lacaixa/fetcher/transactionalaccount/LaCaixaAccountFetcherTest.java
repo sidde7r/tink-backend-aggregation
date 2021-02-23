@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transa
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static se.tink.backend.aggregation.nxgen.core.account.entity.Party.Role.*;
 
 import java.math.BigDecimal;
 import java.nio.file.Paths;
@@ -12,7 +13,6 @@ import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transactionalaccount.rpc.ListAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transactionalaccount.rpc.ListHoldersResponse;
-import se.tink.backend.aggregation.nxgen.core.account.entity.Holder.Role;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.serialization.utils.SerializationUtils;
@@ -89,10 +89,10 @@ public class LaCaixaAccountFetcherTest {
         assertThat(account.getExactBalance().getExactValue())
                 .isEqualByComparingTo(new BigDecimal("48.65"));
         assertThat(account.getIdModule().getAccountName()).isEqualTo("Chunga");
-        assertThat(account.getHolders().get(0).getName()).isEqualTo("JOHN DOE LOE");
-        assertThat(account.getHolders().get(0).getRole()).isEqualTo(Role.HOLDER);
-        assertThat(account.getHolders().get(1).getName()).isEqualTo("JOHNNY DONNY LONNY");
-        assertThat(account.getHolders().get(1).getRole()).isEqualTo(Role.AUTHORIZED_USER);
+        assertThat(account.getParties().get(0).getName()).isEqualTo("JOHN DOE LOE");
+        assertThat(account.getParties().get(0).getRole()).isEqualTo(HOLDER);
+        assertThat(account.getParties().get(1).getName()).isEqualTo("JOHNNY DONNY LONNY");
+        assertThat(account.getParties().get(1).getRole()).isEqualTo(AUTHORIZED_USER);
     }
 
     private void assertSecondAccountValid(TransactionalAccount account) {
@@ -101,7 +101,7 @@ public class LaCaixaAccountFetcherTest {
         assertThat(account.getExactBalance().getExactValue())
                 .isEqualByComparingTo(new BigDecimal("250.00"));
         assertThat(account.getIdModule().getAccountName()).isEqualTo("imagin");
-        assertThat(account.getHolders().get(0).getName()).isEqualTo("ALICE DOE NOE");
-        assertThat(account.getHolders().get(0).getRole()).isEqualTo(Role.HOLDER);
+        assertThat(account.getParties().get(0).getName()).isEqualTo("ALICE DOE NOE");
+        assertThat(account.getParties().get(0).getRole()).isEqualTo(HOLDER);
     }
 }

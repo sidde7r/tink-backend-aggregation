@@ -12,7 +12,6 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.Sparebank1Am
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.Sparebank1Constants.Tags;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.account.rpc.AccountDetailsResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.core.account.entity.Holder;
 import se.tink.backend.aggregation.nxgen.core.account.entity.Party;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
@@ -35,7 +34,7 @@ public class AccountEntity {
     private String balanceAmountFraction;
     private String currencyCode;
     private String accountType;
-    private Holder owner;
+    private String owner;
     private String accountNumber;
 
     @JsonIgnore
