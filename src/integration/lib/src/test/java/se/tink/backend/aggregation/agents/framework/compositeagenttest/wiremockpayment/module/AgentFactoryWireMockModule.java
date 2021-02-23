@@ -12,7 +12,6 @@ import se.tink.backend.aggregation.agents.agentfactory.AgentModuleFactory;
 import se.tink.backend.aggregation.agents.agentfactory.iface.AgentFactory;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.base.CompositeAgentTestCommand;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.base.provider.AgentProvider;
-import se.tink.backend.aggregation.agents.framework.compositeagenttest.command.HttpDebugTraceCommand;
 import se.tink.backend.aggregation.agents.framework.wiremock.configuration.WireMockConfiguration;
 import se.tink.backend.aggregation.agents.framework.wiremock.configuration.provider.socket.FakeBankSocket;
 import se.tink.backend.aggregation.agents.framework.wiremock.module.AgentWireMockModuleFactory;
@@ -25,19 +24,16 @@ public final class AgentFactoryWireMockModule extends AbstractModule {
     private final Map<String, String> callbackData;
     private final Module agentModule;
     private final List<Class<? extends CompositeAgentTestCommand>> commandSequence;
-    private final boolean httpDebugTrace;
 
     public AgentFactoryWireMockModule(
             FakeBankSocket fakeBankSocket,
             Map<String, String> callbackData,
             Module agentModule,
-            List<Class<? extends CompositeAgentTestCommand>> commandSequence,
-            boolean httpDebugTrace) {
+            List<Class<? extends CompositeAgentTestCommand>> commandSequence) {
         this.fakeBankSocket = fakeBankSocket;
         this.callbackData = callbackData;
         this.agentModule = agentModule;
         this.commandSequence = commandSequence;
-        this.httpDebugTrace = httpDebugTrace;
     }
 
     @Override
@@ -64,10 +60,6 @@ public final class AgentFactoryWireMockModule extends AbstractModule {
         Multibinder<CompositeAgentTestCommand> commandBinder =
                 Multibinder.newSetBinder(binder(), CompositeAgentTestCommand.class);
         commandSequence.forEach(commandClass -> bindCommand(commandBinder, commandClass));
-
-        if (httpDebugTrace) {
-            bindCommand(commandBinder, HttpDebugTraceCommand.class);
-        }
     }
 
     private void bindCommand(

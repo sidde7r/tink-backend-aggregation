@@ -168,10 +168,10 @@ public class WireMockTestServer {
             if (registeredPairs.containsKey(request)
                     && !registeredPairs.get(request).equals(response)) {
                 throw new RuntimeException(
-                        "There is a conflict for the request with URL = "
-                                + request.getPath()
-                                + " the same request has been already registered with a different response, "
-                                + "please remove the conflict");
+                        request.getPath()
+                                + " - following request was already registered with a different response.\n"
+                                + "If you need to have duplicate - make sure that response headers and bodies match (check number of empty lines at the end of response!).\n"
+                                + "Otherwise - remove one of the conflicting pairs");
             }
 
             registeredPairs.put(request, response);
