@@ -49,21 +49,12 @@ public class SupplementalInformationControllerImpl implements SupplementalInform
 
     @Override
     public Optional<Map<String, String>> waitForSupplementalInformation(
-            String mfaId, long waitFor, TimeUnit unit, boolean allowEmptyString) {
+            String mfaId, long waitFor, TimeUnit unit) {
 
         Optional<String> result =
                 supplementalRequester.waitForSupplementalInformation(mfaId, waitFor, unit);
 
-        if (!result.isPresent()) {
-            return Optional.empty();
-        }
-
-        // REMOVE THIS ONES NEMID/TINKLINK/NORDEA IS FIXED TO NOT SEND EMPTY STRING
-        if (allowEmptyString && "".equals(result.get())) {
-            return Optional.of(new HashMap<>());
-        }
-
-        if (Strings.isNullOrEmpty(result.get())) {
+        if (!result.isPresent() || Strings.isNullOrEmpty(result.get())) {
             return Optional.empty();
         }
 
