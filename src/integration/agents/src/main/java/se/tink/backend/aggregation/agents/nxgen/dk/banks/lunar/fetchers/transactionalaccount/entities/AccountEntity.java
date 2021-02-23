@@ -8,7 +8,7 @@ import java.util.Optional;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.core.account.entity.Holder;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Party;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -42,7 +42,7 @@ public class AccountEntity extends BaseResponseEntity {
     private String state;
 
     @JsonIgnore
-    public Optional<TransactionalAccount> toTransactionalAccount(List<Holder> accountHolders) {
+    public Optional<TransactionalAccount> toTransactionalAccount(List<Party> accountHolders) {
         if (!ACTIVE_STATE.equalsIgnoreCase(state)) {
             // Wiski delete this log after getting more data
             log.info("Lunar account state is different than active. State: {}", state);
@@ -55,7 +55,7 @@ public class AccountEntity extends BaseResponseEntity {
                 .withId(buildIdModule())
                 .setApiIdentifier(originGroupId)
                 .setBankIdentifier(originGroupId)
-                .addHolders(accountHolders)
+                .addParties(accountHolders)
                 .build();
     }
 
