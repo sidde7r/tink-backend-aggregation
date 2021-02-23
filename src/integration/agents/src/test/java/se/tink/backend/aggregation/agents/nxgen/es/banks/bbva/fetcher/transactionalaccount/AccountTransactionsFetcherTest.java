@@ -104,7 +104,7 @@ public class AccountTransactionsFetcherTest {
 
         AccountTransactionsResponse response = apiClient.fetchAccountTransactions(any(), any());
 
-        Assert.assertEquals(response.getAccountTransactions().size(), 1);
+        Assert.assertEquals(1, response.getAccountTransactions().size());
     }
 
     @Test
@@ -132,10 +132,10 @@ public class AccountTransactionsFetcherTest {
 
         List<Holder> holders = accountEntity.getHolders(any());
 
-        Assert.assertEquals(holders.get(0).getName(), "OWNER");
-        Assert.assertEquals(holders.get(0).getRole(), Role.HOLDER);
-        Assert.assertEquals(holders.get(1).getName(), "AUTH");
-        Assert.assertEquals(holders.get(1).getRole(), Role.AUTHORIZED_USER);
+        Assert.assertEquals("OWNER", holders.get(0).getName());
+        Assert.assertEquals(Role.HOLDER, holders.get(0).getRole());
+        Assert.assertEquals("AUTH", holders.get(1).getName());
+        Assert.assertEquals(Role.AUTHORIZED_USER, holders.get(1).getRole());
     }
 
     @Test
@@ -143,11 +143,21 @@ public class AccountTransactionsFetcherTest {
         when(accountEntity.toTinkTransactionalAccount(any())).thenReturn(transactionalAccount);
 
         Assert.assertEquals(
-                accountEntity.toTinkTransactionalAccount(any()).get().getHolders().get(0).getName(),
-                "OWNER");
+                "OWNER",
+                accountEntity
+                        .toTinkTransactionalAccount(any())
+                        .get()
+                        .getHolders()
+                        .get(0)
+                        .getName());
         Assert.assertEquals(
-                accountEntity.toTinkTransactionalAccount(any()).get().getHolders().get(0).getRole(),
-                Role.HOLDER);
+                Role.HOLDER,
+                accountEntity
+                        .toTinkTransactionalAccount(any())
+                        .get()
+                        .getHolders()
+                        .get(0)
+                        .getRole());
     }
 
     @Test
@@ -155,7 +165,7 @@ public class AccountTransactionsFetcherTest {
         final ProductEntity product = loadSampleData("product.json", ProductEntity.class);
         when(accountEntity.getAccountProductId()).thenReturn(product.getId());
 
-        Assert.assertEquals(accountEntity.getAccountProductId(), "0CA0000079");
+        Assert.assertEquals("0CA0000079", accountEntity.getAccountProductId());
     }
 
     @Test
@@ -163,7 +173,7 @@ public class AccountTransactionsFetcherTest {
         final ProductEntity product = loadSampleData("product_null.json", ProductEntity.class);
         when(accountEntity.getAccountProductId()).thenReturn(product.getId());
 
-        Assert.assertEquals(accountEntity.getAccountProductId(), null);
+        Assert.assertEquals(null, accountEntity.getAccountProductId());
     }
 
     @Test
@@ -171,14 +181,14 @@ public class AccountTransactionsFetcherTest {
         when(accountEntity.getAccountNumber()).thenReturn("ES02 0182 1048 6000 0000 0000");
 
         Assert.assertEquals(
-                accountEntity.getAccountNumber(), transactionalAccount.get().getAccountNumber());
+                transactionalAccount.get().getAccountNumber(), accountEntity.getAccountNumber());
     }
 
     @Test
     public void shouldGetEmptyIban() {
         when(accountEntity.getAccountNumber()).thenReturn(null);
 
-        Assert.assertEquals(accountEntity.getAccountNumber(), null);
+        Assert.assertEquals(null, accountEntity.getAccountNumber());
     }
 
     @Test
@@ -190,7 +200,7 @@ public class AccountTransactionsFetcherTest {
 
         AccountTransactionsResponse response = apiClient.fetchAccountTransactions(any(), any());
 
-        Assert.assertEquals(response.getPagination().getNumPages(), 2);
+        Assert.assertEquals(2, response.getPagination().getNumPages());
         Assert.assertTrue(response.getPagination().getNextPage(), true);
     }
 
@@ -212,8 +222,8 @@ public class AccountTransactionsFetcherTest {
         }
 
         assert newResponse != null;
-        Assert.assertEquals(newResponse.getPagination().getNumPages(), 2);
-        Assert.assertEquals(newResponse.getAccountTransactions().size(), 1);
+        Assert.assertEquals(2, newResponse.getPagination().getNumPages());
+        Assert.assertEquals(1, newResponse.getAccountTransactions().size());
         Assert.assertTrue(Strings.isNullOrEmpty(newResponse.getPagination().getNextPage()));
     }
 
@@ -243,11 +253,11 @@ public class AccountTransactionsFetcherTest {
         BbvaErrorResponse error =
                 httpResponseException.getResponse().getBody(BbvaErrorResponse.class);
         Assert.assertEquals(throwable, httpResponseException);
-        Assert.assertEquals(error.getHttpStatus(), 500);
-        Assert.assertEquals(error.getErrorCode(), "451");
+        Assert.assertEquals(500, error.getHttpStatus());
+        Assert.assertEquals("451", error.getErrorCode());
         Assert.assertEquals(
-                error.getErrorMessage(),
-                "Error al recuperar la información de perfilado del servicio");
+                "Error al recuperar la información de perfilado del servicio",
+                error.getErrorMessage());
     }
 
     private HttpResponse mockResponse(int status, String path) throws IOException {
