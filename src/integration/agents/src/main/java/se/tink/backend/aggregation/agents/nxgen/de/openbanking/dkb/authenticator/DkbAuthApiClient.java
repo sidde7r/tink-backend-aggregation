@@ -38,9 +38,9 @@ public class DkbAuthApiClient {
         return executeHttpRequest(request, Wso2Token.class, NOT_SUPPORTED);
     }
 
-    AuthResult authenticate1stFactor(String username, String password) throws LoginException {
+    AuthResult authenticate1stFactor(String username, String password) {
         HttpRequest request = requestsFactory.generateAuth1stFactorRequest(username, password);
-        return executeHttpRequest(request, AuthResult.class, INCORRECT_CREDENTIALS);
+        return executeHttpRequest(request, AuthResult.class);
     }
 
     AuthResult select2ndFactorAuthMethod(String methodId) throws LoginException {

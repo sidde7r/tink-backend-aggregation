@@ -8,6 +8,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.authenticator.DkbAuthenticatorTest.createCredentials;
 import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.authenticator.DkbAuthenticatorTest.createDkbAuthenticator;
 import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.authenticator.DkbAuthenticatorTest.createDkbStorage;
@@ -24,6 +25,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
+import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbStorage;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentDetailsResponse;
@@ -194,6 +196,32 @@ public class DkbAutoAuthenticatorTest {
         verify(mockCredentials).getField(Field.Key.PASSWORD);
         verify(mockCredentials).setSessionExpiryDate(DATE_2030_01_01);
         verifyNoMoreInteractionsOnAnyMock();
+    }
+
+    @Test
+    public void shouldThrowIncorrectCredentialsAfterReceiving400For1stFactor() {
+        // given
+        given(mockStorage.getConsentId()).willReturn(Optional.of(TEST_CONSENT_ID));
+        given(mockStorage.getWso2OAuthToken()).willReturn(VALID_TOKEN);
+        HttpResponse testHttpResponse = getTestHttpResponse();
+        given(mockAuthApiClient.getConsentDetails(TEST_CONSENT_ID))
+                .willThrow(new HttpResponseException(null, testHttpResponse))
+                .willReturn(consentWithStatus("valid"));
+
+        HttpResponse response = mock(HttpResponse.class);
+        HttpResponseException httpResponseException = new HttpResponseException(null, response);
+        when(response.getStatus()).thenReturn(400);
+        when(response.hasBody()).thenReturn(false);
+        given(mockAuthApiClient.authenticate1stFactor(TEST_USERNAME, TEST_PASSWORD))
+                .willThrow(httpResponseException);
+
+        // when
+        Throwable throwable = catchThrowable(() -> authenticator.autoAuthenticate());
+
+        // then
+        assertThat(throwable)
+                .isExactlyInstanceOf(LoginException.class)
+                .hasMessage("Cause: LoginError.INCORRECT_CREDENTIALS");
     }
 
     @Test

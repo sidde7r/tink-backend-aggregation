@@ -20,6 +20,7 @@ import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentDetai
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.authenticator.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
 @Slf4j
@@ -135,9 +136,17 @@ public class DkbAuthenticator implements AutoAuthenticator, MultiFactorAuthentic
         storage.setAccessToken(result.toOAuth2Token());
     }
 
-    private AuthResult authenticate1stFactor(String username, String password)
-            throws LoginException {
-        return authApiClient.authenticate1stFactor(username, password);
+    private AuthResult authenticate1stFactor(String username, String password) {
+        try {
+            return authApiClient.authenticate1stFactor(username, password);
+        } catch (HttpResponseException httpResponseException) {
+            HttpResponse httpResponse = httpResponseException.getResponse();
+            if (httpResponse.getStatus() == 400 && !httpResponse.hasBody()) {
+                throw LoginError.INCORRECT_CREDENTIALS.exception();
+            } else {
+                throw httpResponseException;
+            }
+        }
     }
 
     private AuthResult authenticate2ndFactor(AuthResult previousResult)
