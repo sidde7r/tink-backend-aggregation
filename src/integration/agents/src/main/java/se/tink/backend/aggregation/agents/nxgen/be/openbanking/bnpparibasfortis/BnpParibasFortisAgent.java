@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis;
 
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
+
 import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
@@ -29,8 +31,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.iface.Filter;
 
-import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
-
 @AgentDependencyModules(modules = QSealcSignerModuleRSASHA256.class)
 @AgentCapabilities({CHECKING_ACCOUNTS})
 public final class BnpParibasFortisAgent extends NextGenerationAgent
@@ -40,7 +40,8 @@ public final class BnpParibasFortisAgent extends NextGenerationAgent
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
     @Inject
-    public BnpParibasFortisAgent(AgentComponentProvider agentComponentProvider, QsealcSigner qsealcSigner) {
+    public BnpParibasFortisAgent(
+            AgentComponentProvider agentComponentProvider, QsealcSigner qsealcSigner) {
         super(agentComponentProvider);
         client.addFilter(constructSigningFilter(qsealcSigner));
         apiClient = new BnpParibasFortisApiClient(client, sessionStorage, getAgentConfiguration());
@@ -54,7 +55,10 @@ public final class BnpParibasFortisAgent extends NextGenerationAgent
     }
 
     private Filter constructSigningFilter(QsealcSigner qsealcSigner) {
-        return new BnpParibasFortisSigningFilter(getAgentConfiguration().getProviderSpecificConfiguration().getKeyId(), new ActualLocalDateTimeSource(), qsealcSigner);
+        return new BnpParibasFortisSigningFilter(
+                getAgentConfiguration().getProviderSpecificConfiguration().getKeyId(),
+                new ActualLocalDateTimeSource(),
+                qsealcSigner);
     }
 
     private AgentConfiguration<BnpParibasFortisConfiguration> getAgentConfiguration() {

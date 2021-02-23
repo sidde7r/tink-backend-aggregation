@@ -15,5 +15,4 @@ public class BnpParibasFortisConfiguration implements ClientConfiguration {
     @Secret @ClientIdConfiguration private String clientId;
     @Secret private String keyId;
     @SensitiveSecret @ClientSecretsConfiguration private String clientSecret;
-
 }

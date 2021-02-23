@@ -13,13 +13,15 @@ public abstract class BnpParibasFortisConstants {
 
     public static class Urls {
         public static final String BASE_URL = "https://regulatory.api.bnpparibasfortis.be";
-        public static final String AUTH_URL = "https://services.bnpparibasfortis.be/SEPLJ04/sps/oauth/oauth20/authorize";
+        public static final String PSD2_URL = "/psd2/v2";
+        public static final String AUTH_URL =
+                "https://services.bnpparibasfortis.be/SEPLJ04/sps/oauth/oauth20/authorize";
     }
 
     public static class Endpoints {
         public static final String OAUTH = "/authorize";
         public static final String TOKEN = "/token";
-        public static final String ACCOUNTS = "/v1/accounts";
+        public static final String ACCOUNTS = "/accounts";
     }
 
     public static class StorageKeys {
@@ -44,10 +46,12 @@ public abstract class BnpParibasFortisConstants {
         public static final String REQUEST_ID = "X-Request-ID";
         public static final String SIGNATURE = "Signature";
         public static final String DIGEST = "Digest";
+        public static final String USER_AGENT = "User-Agent";
     }
 
     public static class HeaderValues {
         public static final String APPLICATION_HAL_JSON = "application/hal+json";
+        public static final String TINK = "Tink";
     }
 
     public static class FormValues {

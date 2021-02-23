@@ -1,11 +1,9 @@
 package se.tink.backend.aggregation.agents;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-
 import org.junit.Assert;
 import org.junit.Test;
 import se.tink.backend.aggregation.comparor.Comparor;

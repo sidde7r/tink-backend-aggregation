@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.BnpParibasFortisConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.fetcher.transactionalaccount.entity.balance.Balance;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
@@ -22,6 +23,7 @@ public class Account {
 
     private String bicFi;
     private String cashAccountType;
+    private String product;
     private String currency;
     private String name;
     private String psuStatus;
@@ -38,9 +40,11 @@ public class Account {
                         IdModule.builder()
                                 .withUniqueIdentifier(iban)
                                 .withAccountNumber(iban)
-                                .withAccountName(name)
+                                .withAccountName(product)
                                 .addIdentifier(new IbanIdentifier(iban))
                                 .build())
+                .putInTemporaryStorage(StorageKeys.ACCOUNT_LINKS, links)
+                .addHolderName(name)
                 .setApiIdentifier(resourceId)
                 .build();
     }

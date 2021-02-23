@@ -1,39 +1,16 @@
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.authenticator.rpc;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.PropertyNamingStrategy;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.http.form.AbstractForm;
 
-@JsonObject
-//@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class TokenRequest extends AbstractForm {
 
-//    private String code;
-//    private String grantType;
-//    private String redirectUri;
-//    private String clientId;
-//    private String clientSecret;
-//    private String scope;
-
-//    private TokenRequest(
-//            String code,
-//            String grantType,
-//            String redirectUri,
-//            String clientId,
-//            String clientSecret,
-//            String scope) {
-//        this.code = code;
-//        this.grantType = grantType;
-//        this.redirectUri = redirectUri;
-//        this.clientId = clientId;
-//        this.clientSecret = clientSecret;
-//        this.scope = scope;
-//    }
-
-
-    public TokenRequest(String code, String grantType, String redirectUri, String clientId, String clientSecret, String scope) {
+    public TokenRequest(
+            String code,
+            String grantType,
+            String redirectUri,
+            String clientId,
+            String clientSecret,
+            String scope) {
         put("code", code);
         put("grant_type", grantType);
         put("redirect_uri", redirectUri);
@@ -45,30 +22,6 @@ public class TokenRequest extends AbstractForm {
     public static TokenRequestBuilder builder() {
         return new TokenRequestBuilder();
     }
-
-//    public String getCode() {
-//        return code;
-//    }
-//
-//    public String getGrantType() {
-//        return grantType;
-//    }
-//
-//    public String getRedirectUri() {
-//        return redirectUri;
-//    }
-//
-//    public String getClientId() {
-//        return clientId;
-//    }
-//
-//    public String getClientSecret() {
-//        return clientSecret;
-//    }
-//
-//    public String getScope() {
-//        return scope;
-//    }
 
     public static class TokenRequestBuilder {
         private String code;

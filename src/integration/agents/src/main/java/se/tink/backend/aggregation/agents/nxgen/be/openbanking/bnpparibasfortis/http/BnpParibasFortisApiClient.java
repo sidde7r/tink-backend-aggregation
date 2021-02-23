@@ -1,7 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.http;
 
+import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.BnpParibasFortisConstants.Endpoints;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.BnpParibasFortisConstants.FormValues;
+import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.BnpParibasFortisConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.BnpParibasFortisConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.BnpParibasFortisConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.BnpParibasFortisConstants.QueryValues;
@@ -24,8 +26,6 @@ import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestB
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
-import javax.ws.rs.core.MediaType;
-
 public final class BnpParibasFortisApiClient {
 
     private final TinkHttpClient client;
@@ -43,16 +43,12 @@ public final class BnpParibasFortisApiClient {
         this.redirectUrl = agentConfiguration.getRedirectUrl();
     }
 
-    private RequestBuilder createRequest(String url) {
-        return client.request(url)
-                .accept(MediaType.APPLICATION_JSON)
-                .type(MediaType.APPLICATION_JSON);
-    }
-
     private RequestBuilder createAuthenticatedRequest(String url) {
 
-        return createRequest(url)
+        return client.request(url)
+                .type(MediaType.APPLICATION_JSON)
                 .addBearerToken(getTokenFromSession())
+                .header(HeaderKeys.USER_AGENT, HeaderValues.TINK)
                 .accept(HeaderValues.APPLICATION_HAL_JSON);
     }
 
@@ -81,7 +77,7 @@ public final class BnpParibasFortisApiClient {
         final String tokenUrl = Urls.BASE_URL + Endpoints.TOKEN;
 
         final TokenResponse response =
-                createRequest(tokenUrl)
+                client.request(tokenUrl)
                         .body(
                                 TokenRequest.builder()
                                         .clientId(clientId)
@@ -90,9 +86,9 @@ public final class BnpParibasFortisApiClient {
                                         .grantType(FormValues.GRANT_TYPE)
                                         .redirectUri(redirectUrl)
                                         .scope(FormValues.SCOPE)
-                                        .build(),
+                                        .build()
+                                        .getBodyValue(),
                                 MediaType.APPLICATION_FORM_URLENCODED)
-                        .accept(MediaType.APPLICATION_JSON)
                         .post(TokenResponse.class);
 
         return OAuth2Token.create(
@@ -106,7 +102,7 @@ public final class BnpParibasFortisApiClient {
         final String tokenUrl = Urls.BASE_URL + Endpoints.TOKEN;
 
         final TokenResponse response =
-                createRequest(tokenUrl)
+                client.request(tokenUrl)
                         .body(
                                 RefreshTokenRequest.builder()
                                         .clientId(configuration.getClientId())
@@ -117,7 +113,6 @@ public final class BnpParibasFortisApiClient {
                                         .scope(FormValues.SCOPE)
                                         .build(),
                                 MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON)
                         .post(TokenResponse.class);
 
         return OAuth2Token.create(
@@ -128,21 +123,21 @@ public final class BnpParibasFortisApiClient {
     }
 
     public GetAccountsResponse getAccounts() {
-        final String baseUrl = Urls.BASE_URL;
+        final String baseUrl = Urls.BASE_URL + Urls.PSD2_URL;
         final String accountsUrl = baseUrl + Endpoints.ACCOUNTS;
 
         return createAuthenticatedRequest(accountsUrl).get(GetAccountsResponse.class);
     }
 
     public GetBalancesResponse getBalanceForAccount(Account account) {
-        final String baseUrl = Urls.BASE_URL;
+        final String baseUrl = Urls.BASE_URL + Urls.PSD2_URL;
         final String balancesUrl = baseUrl + account.getLinks().getBalances().getHref();
 
         return createAuthenticatedRequest(balancesUrl).get(GetBalancesResponse.class);
     }
 
     public GetTransactionsResponse getTransactionsForAccount(TransactionalAccount account) {
-        final String baseUrl = Urls.BASE_URL;
+        final String baseUrl = Urls.BASE_URL + Urls.PSD2_URL;
         final String transactionsUrl =
                 account.getFromTemporaryStorage(StorageKeys.ACCOUNT_LINKS, Links.class)
                         .map(links -> baseUrl + links.getTransactions().getHref())
