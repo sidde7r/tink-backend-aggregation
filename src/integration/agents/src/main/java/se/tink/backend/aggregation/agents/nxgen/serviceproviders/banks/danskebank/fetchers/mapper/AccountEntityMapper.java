@@ -1,9 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.mapper;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankPredicates;
@@ -21,36 +24,50 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.backend.aggregation.source_info.AccountSourceInfo;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.account.enums.AccountFlag;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
+@Slf4j
 @RequiredArgsConstructor
 public class AccountEntityMapper {
 
     private final String marketCode;
 
     public List<TransactionalAccount> toTinkCheckingAccounts(
-            List<String> knownCheckingAccountProducts, List<AccountEntity> accounts) {
+            List<String> knownCheckingAccountProducts,
+            List<AccountEntity> accounts,
+            Map<String, AccountDetailsResponse> accountDetails) {
         return accounts.stream()
                 .filter(DanskeBankPredicates.CREDIT_CARDS.negate())
                 .filter(
                         DanskeBankPredicates.knownCheckingAccountProducts(
                                 knownCheckingAccountProducts))
-                .map(this::toCheckingAccount)
+                .map(
+                        account ->
+                                toCheckingAccount(
+                                        account, accountDetails.get(account.getAccountNoExt())))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toList());
     }
 
     public List<TransactionalAccount> toTinkSavingsAccounts(
-            DanskeBankConfiguration configuration, List<AccountEntity> accounts) {
+            DanskeBankConfiguration configuration,
+            List<AccountEntity> accounts,
+            Map<String, AccountDetailsResponse> accountDetails) {
         return accounts.stream()
                 .filter(DanskeBankPredicates.CREDIT_CARDS.negate())
                 .filter(
                         DanskeBankPredicates.knownSavingsAccountProducts(
                                 configuration.getSavingsAccountTypes()))
-                .map(account -> toSavingsAccount(configuration, account))
+                .map(
+                        account ->
+                                toSavingsAccount(
+                                        configuration,
+                                        account,
+                                        accountDetails.get(account.getAccountNoExt())))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toList());
@@ -152,7 +169,8 @@ public class AccountEntityMapper {
         return accountEntity.getAccountNoInt();
     }
 
-    public Optional<TransactionalAccount> toUnknownAccount(AccountEntity accountEntity) {
+    public Optional<TransactionalAccount> toUnknownAccount(
+            AccountEntity accountEntity, AccountDetailsResponse accountDetailsResponse) {
         return TransactionalAccount.nxBuilder()
                 .withType(TransactionalAccountType.CHECKING)
                 .withoutFlags()
@@ -164,7 +182,7 @@ public class AccountEntityMapper {
                                                 accountEntity.getCurrency()))
                                 .setAvailableCredit(calculateAvailableCredit(accountEntity))
                                 .build())
-                .withId(buildIdModule(accountEntity))
+                .withId(buildIdModule(accountEntity, accountDetailsResponse))
                 .setBankIdentifier(accountEntity.getAccountNoInt())
                 .setApiIdentifier(accountEntity.getAccountNoInt())
                 .canExecuteExternalTransfer(AccountCapabilities.Answer.UNKNOWN)
@@ -175,7 +193,8 @@ public class AccountEntityMapper {
                 .build();
     }
 
-    public Optional<TransactionalAccount> toCheckingAccount(AccountEntity accountEntity) {
+    public Optional<TransactionalAccount> toCheckingAccount(
+            AccountEntity accountEntity, AccountDetailsResponse accountDetailsResponse) {
         return TransactionalAccount.nxBuilder()
                 .withType(TransactionalAccountType.CHECKING)
                 .withPaymentAccountFlag()
@@ -187,7 +206,7 @@ public class AccountEntityMapper {
                                                 accountEntity.getCurrency()))
                                 .setAvailableCredit(calculateAvailableCredit(accountEntity))
                                 .build())
-                .withId(buildIdModule(accountEntity))
+                .withId(buildIdModule(accountEntity, accountDetailsResponse))
                 .setBankIdentifier(accountEntity.getAccountNoInt())
                 .setApiIdentifier(accountEntity.getAccountNoInt())
                 .canExecuteExternalTransfer(AccountCapabilities.Answer.YES)
@@ -199,16 +218,27 @@ public class AccountEntityMapper {
                 .build();
     }
 
-    private IdModule buildIdModule(AccountEntity accountEntity) {
+    private IdModule buildIdModule(
+            AccountEntity accountEntity, AccountDetailsResponse accountDetailsResponse) {
         return IdModule.builder()
                 .withUniqueIdentifier(getUniqueIdentifier(accountEntity))
                 .withAccountNumber(accountEntity.getAccountNoExt())
                 .withAccountName(accountEntity.getAccountName())
-                .addIdentifier(
-                        AccountIdentifier.create(
-                                getAccountIdentifierType(marketCode),
-                                accountEntity.getAccountNoExt()))
+                .addIdentifiers(getIdentifiers(accountEntity, accountDetailsResponse))
                 .build();
+    }
+
+    private List<AccountIdentifier> getIdentifiers(
+            AccountEntity accountEntity, AccountDetailsResponse accountDetailsResponse) {
+        String iban = accountDetailsResponse.getIban();
+        List<AccountIdentifier> identifiers = new ArrayList<>();
+        identifiers.add(
+                AccountIdentifier.create(
+                        getAccountIdentifierType(marketCode), accountEntity.getAccountNoExt()));
+        if (iban != null) {
+            identifiers.add(AccountIdentifier.create(Type.IBAN, iban));
+        }
+        return identifiers;
     }
 
     protected AccountIdentifier.Type getAccountIdentifierType(String marketCode) {
@@ -217,7 +247,9 @@ public class AccountEntityMapper {
     }
 
     public Optional<TransactionalAccount> toSavingsAccount(
-            DanskeBankConfiguration configuration, AccountEntity accountEntity) {
+            DanskeBankConfiguration configuration,
+            AccountEntity accountEntity,
+            AccountDetailsResponse accountDetailsResponse) {
         return TransactionalAccount.nxBuilder()
                 .withType(TransactionalAccountType.SAVINGS)
                 .withPaymentAccountFlag()
@@ -225,7 +257,7 @@ public class AccountEntityMapper {
                         BalanceModule.of(
                                 ExactCurrencyAmount.of(
                                         accountEntity.getBalance(), accountEntity.getCurrency())))
-                .withId(buildIdModule(accountEntity))
+                .withId(buildIdModule(accountEntity, accountDetailsResponse))
                 .setBankIdentifier(accountEntity.getAccountNoInt())
                 .setApiIdentifier(accountEntity.getAccountNoInt())
                 .canExecuteExternalTransfer(
