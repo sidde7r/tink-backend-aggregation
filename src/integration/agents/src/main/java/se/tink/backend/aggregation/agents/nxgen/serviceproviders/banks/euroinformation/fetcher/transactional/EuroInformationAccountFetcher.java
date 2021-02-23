@@ -1,25 +1,27 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.fetcher.transactional;
 
 import java.util.Collection;
+import java.util.Optional;
 import java.util.stream.Collectors;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import se.tink.backend.agents.rpc.AccountTypes;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.EuroInformationApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.EuroInformationConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.EuroInformationConstants.Storage;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.authentication.rpc.LoginResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.fetcher.entities.AccountDetailsEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.fetcher.rpc.AccountSummaryResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Holder;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import se.tink.libraries.account.AccountIdentifier;
 
+@Slf4j
 public class EuroInformationAccountFetcher implements AccountFetcher<TransactionalAccount> {
-    private static final Logger LOGGER =
-            LoggerFactory.getLogger(EuroInformationAccountFetcher.class);
+
     private final EuroInformationApiClient apiClient;
     private final SessionStorage sessionStorage;
 
-    private EuroInformationAccountFetcher(
+    EuroInformationAccountFetcher(
             EuroInformationApiClient apiClient, SessionStorage sessionStorage) {
         this.apiClient = apiClient;
         this.sessionStorage = sessionStorage;
@@ -37,28 +39,23 @@ public class EuroInformationAccountFetcher implements AccountFetcher<Transaction
                         .get(
                                 EuroInformationConstants.Tags.ACCOUNT_LIST,
                                 AccountSummaryResponse.class)
-                        .orElseGet(() -> this.apiClient.requestAccounts());
+                        .orElseGet(this.apiClient::requestAccounts);
+
         return details.getAccountDetailsList().stream()
-                .filter(
-                        a -> {
-                            AccountTypes tinkType = a.getTinkTypeByTypeNumber().getTinkType();
-                            return (AccountTypes.CHECKING == tinkType)
-                                    || (AccountTypes.SAVINGS == tinkType);
-                        })
                 .map(
-                        a -> {
-                            TransactionalAccount.Builder<TransactionalAccount, ?> accountBuilder =
-                                    (TransactionalAccount.Builder) a.getAccountBuilder();
-                            return accountBuilder
-                                    .addIdentifier(
-                                            AccountIdentifier.create(
-                                                    AccountIdentifier.Type.IBAN, a.getIban()))
-                                    .setName(a.getAccountName())
-                                    .setAccountNumber(a.getAccountNumber().toLowerCase())
-                                    .putInTemporaryStorage(
-                                            EuroInformationConstants.Tags.WEB_ID, a.getWebId())
-                                    .build();
-                        })
+                        accountDetailsEntity ->
+                                accountDetailsEntity.toTinkAccount(
+                                        getHolderForAccount(accountDetailsEntity)))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .collect(Collectors.toList());
+    }
+
+    private Holder getHolderForAccount(AccountDetailsEntity accountDetailsEntity) {
+        return this.sessionStorage
+                .get(Storage.LOGIN_RESPONSE, LoginResponse.class)
+                .map(LoginResponse::getClientName)
+                .map(accountDetailsEntity::isHolder)
+                .orElse(null);
     }
 }

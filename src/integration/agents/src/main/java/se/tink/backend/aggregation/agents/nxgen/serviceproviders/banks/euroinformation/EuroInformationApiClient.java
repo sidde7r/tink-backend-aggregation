@@ -1,15 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation;
 
-import java.lang.invoke.MethodHandles;
-import java.util.Collections;
-import java.util.Optional;
 import javax.ws.rs.core.MediaType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.authentication.rpc.LoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.authentication.rpc.LoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.authentication.rpc.LogoutResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.fetcher.entities.AccountTypeEnum;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.fetcher.investment.rpc.InvestmentAccountOverviewRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.fetcher.investment.rpc.InvestmentAccountOverviewResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.fetcher.investment.rpc.InvestmentAccountsListRequest;
@@ -25,11 +20,9 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 
+@Slf4j
 public class EuroInformationApiClient {
-    private static final Logger logger =
-            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     protected final TinkHttpClient client;
     protected final SessionStorage sessionStorage;
     protected final EuroInformationConfiguration config;
@@ -90,18 +83,9 @@ public class EuroInformationApiClient {
         AccountSummaryResponse details =
                 buildRequestHeaders(EuroInformationConstants.Url.ACCOUNTS)
                         .post(AccountSummaryResponse.class, new AccountSummaryRequest());
+
         this.sessionStorage.put(EuroInformationConstants.Tags.ACCOUNT_LIST, details);
 
-        // Print unknown account types
-        Optional.ofNullable(details.getAccountDetailsList()).orElseGet(Collections::emptyList)
-                .stream()
-                .filter(a -> a.getTinkTypeByTypeNumber() == AccountTypeEnum.UNKNOWN)
-                .forEach(
-                        acc ->
-                                logger.info(
-                                        "tag={} {}",
-                                        EuroInformationConstants.LoggingTags.unknownAccountTypesTag,
-                                        SerializationUtils.serializeToString(acc)));
         return details;
     }
 

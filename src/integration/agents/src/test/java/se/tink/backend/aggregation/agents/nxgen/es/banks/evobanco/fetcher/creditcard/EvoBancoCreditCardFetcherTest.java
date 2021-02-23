@@ -19,8 +19,6 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 public class EvoBancoCreditCardFetcherTest {
     private static final String TEST_DATA_PATH =
             "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/es/banks/evobanco/resources";
-    private static final String ACCOUNT_NUMBER_1 = "9999 **** **** 6999";
-    private static final String ACCOUNT_NUMBER_2 = "6367 **** **** 4455";
 
     private EvoBancoApiClient evoBancoApiClient;
     private EvoBancoCreditCardFetcher accountFetcher;
