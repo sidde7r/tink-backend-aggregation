@@ -41,7 +41,7 @@ public class DataTrackerEventProducer {
 
     public void sendDataTrackerEvents(List<DataTrackerEvent> events) {
         try {
-            if (enabled) {
+            if (enabled && events.size() > 0) {
                 eventSubmitter.submit(events.stream().map(Any::pack).collect(Collectors.toList()));
             }
         } catch (Exception e) {
