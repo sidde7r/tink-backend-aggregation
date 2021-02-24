@@ -190,7 +190,7 @@ public class WireMockTestServer {
                 throw new RuntimeException(
                         request.getPath()
                                 + " - following request was already registered with a different response.\n"
-                                + "If you need to have duplicate - make sure that response headers and bodies match (check number of empty lines at the end of response!).\n"
+                                + "If you want to have duplicate - make sure that response headers and bodies match (check number of empty lines at the end of response!).\n"
                                 + "Otherwise - remove one of the conflicting pairs");
             }
 
