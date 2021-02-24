@@ -1,7 +1,6 @@
 REQUEST 0
 GET https://www.bancsabadell.mobi/bsmobil/api/cards?filter=CTA_CARD_ALL
 Content-Type: application/json
-Accept-Language: es
 Accept: application/vnd.idk.bsmobil-v1933+json
 
 RESPONSE 0 SET STATE1
@@ -13,7 +12,6 @@ Content-Type: application/vnd.idk.bsmobil-v1933+json;charset=UTF-8
 REQUEST 1
 POST https://www.bancsabadell.mobi/bsmobil/api/session
 Content-Type: application/json
-Accept-Language: es
 Accept: application/vnd.idk.bsmobil-v1933+json
 
 {"deviceInfo":"en-US GEO() IOS 13.3.1 iPhone9,3 NATIVE_APP 20.1.0 STANDARD","lastRequestDate":"","brand":"SAB","geolocationData":"","newDevice":false,"requestId":"SDK","userName":"dummyUsername","loginType":1,"compilationType":"release","password":"dummyPassword","contract":"","devicePrint":"","lastKnownBrand":0,"csid":"00000000-0000-4000-0000-000000000000","trusteer":""}
@@ -27,7 +25,6 @@ Content-Type: application/vnd.idk.bsmobil-v1933+json;charset=UTF-8
 REQUEST 2
 GET https://www.bancsabadell.mobi/bsmobil/api/accounts/position?noError=true&type=CTA_VISTA
 Content-Type: application/json
-Accept-Language: es
 Accept: application/vnd.idk.bsmobil-v1933+json
 
 RESPONSE 2
@@ -39,7 +36,6 @@ Content-Type: application/vnd.iFdk.bsmobil-v1933+json;charset=UTF-8
 REQUEST 4
 GET https://www.bancsabadell.mobi/bsmobil/api/loans?page=1&itemsPerPage=20&order=desc
 Content-Type: application/json
-Accept-Language: es
 Accept: application/vnd.idk.bsmobil-v1933+json
 
 RESPONSE 4
@@ -51,7 +47,6 @@ Content-Type: application/vnd.idk.bsmobil-v1933+json;charset=UTF-8
 REQUEST 5
 GET https://www.bancsabadell.mobi/bsmobil/api/savings
 Content-Type: application/json
-Accept-Language: es
 Accept: application/vnd.idk.bsmobil-v1933+json
 
 RESPONSE 5
@@ -63,7 +58,6 @@ Content-Type: application/vnd.idk.bsmobil-v1933+json;charset=UTF-8
 REQUEST 6
 GET https://www.bancsabadell.mobi/bsmobil/api/deposits
 Content-Type: application/json
-Accept-Language: es
 Accept: application/vnd.idk.bsmobil-v1933+json
 
 RESPONSE 6
@@ -75,7 +69,6 @@ Content-Type: application/vnd.idk.bsmobil-v1933+json;charset=UTF-8
 REQUEST 7
 GET https://www.bancsabadell.mobi/bsmobil/api/pensionplans?noError=true&page=1&itemsPerPage=5&order=0
 Content-Type: application/json
-Accept-Language: es
 Accept: application/vnd.idk.bsmobil-v1933+json
 
 RESPONSE 7
@@ -87,7 +80,6 @@ Content-Type: application/vnd.idk.bsmobil-v1933+json;charset=UTF-8
 REQUEST 8 MATCH STATE1
 GET https://www.bancsabadell.mobi/bsmobil/api/cards?filter=CTA_CARD_ALL
 Content-Type: application/json
-Accept-Language: es
 Accept: application/vnd.idk.bsmobil-v1933+json
 
 RESPONSE 8 SET STATE2
@@ -99,7 +91,6 @@ Content-Type: application/vnd.idk.bsmobil-v1933+json;charset=UTF-8
 REQUEST 9
 GET https://www.bancsabadell.mobi/bsmobil/api/servicingfunds/contracts
 Content-Type: application/json
-Accept-Language: es
 Accept: application/vnd.idk.bsmobil-v1933+json
 
 RESPONSE 9
@@ -111,7 +102,6 @@ Content-Type: application/vnd.idk.bsmobil-v1933+json;charset=UTF-8
 REQUEST 10
 GET https://www.bancsabadell.mobi/bsmobil/api/products?noError=true
 Content-Type: application/json
-Accept-Language: es
 Accept: application/vnd.idk.bsmobil-v1933+json
 
 RESPONSE 10
@@ -123,7 +113,6 @@ Content-Type: application/vnd.idk.bsmobil-v1933+json;charset=UTF-8
 REQUEST 11
 POST https://www.bancsabadell.mobi/bsmobil/api/accounts/movements/grouped
 Content-Type: application/json
-Accept-Language: es
 Accept: application/vnd.idk.bsmobil-v1933+json
 
 {"moreRequest":false,"account":{"alias":"","description":"CUENTA RELACIÓN","availability":"TOTAL","owner":"**MisterM**","product":"DV00001","bic":"BSAB ESBB","number":"0081-1146-73-1111111111111","iban":"ES9820958631145727874921","amount":{"value":"2.198,02","currency":"EUR"},"numOwners":1,"isOwner":true,"isSBPManaged":false,"isIberSecurities":false,"joint":"I","mobileWarning":"A"},"dateFrom":"","dateTo":""}
@@ -137,7 +126,6 @@ Content-Type: application/vnd.idk.bsmobil-v1933+json;charset=UTF-8
 REQUEST 12
 POST https://www.bancsabadell.mobi/bsmobil/api/accounts/movements/grouped
 Content-Type: application/json
-Accept-Language: es
 Accept: application/vnd.idk.bsmobil-v1933+json
 
 {"moreRequest":false,"account":{"alias":"","description":"CUENTA EXPANSIÓN","availability":"CONSULTA","owner":"JUAN ANTONIO **MisterY** SALAFRANCA","product":"DV00083","bic":"BSAB ESBB","number":"0081-1146-71-0006036811","iban":"ES6921001516061538226938","amount":{"value":"10.236,72","currency":"EUR"},"numOwners":1,"isOwner":false,"isSBPManaged":false,"isIberSecurities":false,"joint":"I","mobileWarning":"A"},"dateFrom":"","dateTo":""}
@@ -151,7 +139,6 @@ Content-Type: application/vnd.idk.bsmobil-v1933+json;charset=UTF-8
 REQUEST 13 MATCH STATE2
 POST https://www.bancsabadell.mobi/bsmobil/api/cards?filter=CTA_CARD_ALL
 Content-Type: application/json
-Accept-Language: es
 Accept: application/vnd.idk.bsmobil-v1933+json
 
 {"dateFrom":"","dateTo":"","card":{"bsprotect":"N","description":"VISA CLASSIC BSAB","isMarsans":"false","name":"**MisterM**","productType":"TA","reference":"4","type":"OPERAC.","shortDescription":"VISA CLASSIC BSAB","number":"4106________4010","realNumber":"4106263174904010","numcard":"TA 60121","isOwner":true,"activatedLE":"","codret":"","contractCCC":"00811146730001064010","operativeCode":"0","cvv2":"","dni":"","entity":"","mail":"","mailChecked":"","phoneNumber":"","phoneNumberChecked":"","alias":"","expirationDate":"31-10-2021","balance":{"value":"0,00","currency":"EUR"},"availableBalance":{"value":"3.000,00","currency":"EUR"},"dms":"","indAlert":"","selectableIndex":"","canActivate":false,"cardType":{"background":"7","type":"visa","subtype":"credit","textColor":"#ffffff","iconColor":"#ffffff","logo":"visa1"},"status":"active","availableOperations":[],"isInternational":true,"isInternet":true,"isSticker":true,"stickerCard":false,"nfcCard":{"isNfc":true,"isActive":false,"expirationDate":"01-10-21"},"stickerPan":"","deteriorationLock":false,"isPrepaidAnonymous":false,"digitalCard":[{"application":"","deviceId":"","deviceType":""}]},"paginator":{"page":1,"itemsPerPage":100,"order":"desc","totalItems":0}}
