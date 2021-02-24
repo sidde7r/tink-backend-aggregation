@@ -1,0 +1,197 @@
+
+REQUEST 1
+GET https://ewm.ibercajadirecto.com/api/valores/cuentasvalores
+Content-Type: application/json
+Accept: application/json
+
+RESPONSE 1
+200
+Content-Type: text/html; charset=utf-8
+
+<!DOCTYPE html>
+<html>
+<body>
+    <div class="login-container">
+
+        <div class="content-container">
+
+            <div class="content">
+
+                <section class="left">
+
+                    <h1>Acceso Clientes</h1>
+
+                    <span id="okMessage" class="subtitle">Introduce los datos solicitados</span>
+
+                    <form id="login" action="" method="post">
+
+                        <input type="hidden" id="ReturnUrl" name="ReturnUrl"
+                            value="/soporte/plataforma/identidad/api/v1/connect/authorize/callback?client_id=bancamovil-app.hybrid&amp;redirect_uri=https%3A%2F%2Fewm.ibercajadirecto.com%2Fsignin-oidc&amp;response_mode=form_post&amp;response_type=code%20id_token%20token&amp;scope=openid%20iberfabric.soporte.plataforma.identidad.api.self%20ibercaja.sgv.apigateway%20iberfabric.omnicanalidad.canales.sgv.apigateway&amp;state=OpenIdConnect.AuthenticationProperties%3DsR8dY_IkwhFhLB8M-GWzA8M2DlKMBqdEZ0Lb-XWKxwF-pSr6KeO4Zv4gI5G9IiitB9NRilUBTogAio9eJeuGyjG1oPhpoqiCG-ekD9-1CscBNIld1HSWnuJLn6ydwrEo3hT-SRGLaoEiA8swctGCfloVNdvkZWqYtcHXLXWooVOYaX8bkkJBzAdrykzrmKaiH6lN5bvwVREyEOVFsI7DI0GD4K4b8_GEvVK_cIIUZvZUAsbptISe1JVxZdBLu763TrK4mOpI7pjizIxMMk1zPg&amp;nonce=637491536430840557.MjdkMDA1YTYtMGI3ZS00ODAwLWFjMDUtNGRkYzE4ZDFkNzA0ZTcxNDc2YzMtNGU1OC00NmRlLWIzZTMtY2VhNDI0MTBhZDIw&amp;x-client-SKU=ID_NET461&amp;x-client-ver=5.3.0.0" />
+
+                        <input type="hidden"
+                            value="0rPhUCDeapWNxPvde5Qy7rhMgzGgatbuYpO0z/k&#x2B;jPNXqITZWcpRenkAUU5M0sIe;VUnmv&#x2B;ABUUxh3k2B7d73O8I72CtPxmzOIs4D7lMMFKLVjExpZMNeUo5hwrjTkCXtbLrhtpfAiYte2bZbl3R&#x2B;i/Gf96vv&#x2B;oLEijJHlX5pOh&#x2B;3rsBoTA10vGQnB5j/dN7UvVR3iCnbwXK7/gyKpkCsXh6Q17421tbA7ZLggjH7CcqYjJMkZhElPUog0EbXolCnezvFTsG64G&#x2B;2EbPpg7Fcirf5zaO8Sbqq0bg/x8u1KyY=;Nk4ZggzdLYJl4O/5aQP4/Rups6FE3/dfODynhuHeSxOpjG0gVjU4JWdkwdHsMP32;ViV2D0RSU6dPTCGGzxD1qBbyW0m6jyfeluEdVjp8PMl/tqXTNnY&#x2B;VI0qAtezDOFKQrgvkbjOpuCgn4uMQQIAxA==;jNAmMIjb7L&#x2B;515M/d49BkNNzPVHmsd4d4TESk9M&#x2B;CdGHPV&#x2B;Z1SFhUqfrIF9T4oSq;"
+                            id="Data" name="Data" />
+
+                        <input type="hidden" value="" id="CidusKey" name="CidusKey" />
+
+                        <div class="form-group input">
+
+                            <label class="label" for="Username">C&#xF3;digo de identificaci&#xF3;n</label>
+
+                            <input class="form-control input-uppercase" autofocus autocomplete="off" type="text"
+                                data-val="true" data-val-required="El C&#xF3;digo de identificaci&#xF3;n es obligatorio"
+                                id="Username" name="Username" value="">
+
+                        </div>
+
+                        <div class="form-group custom-password">
+
+                            <label class="label" for="Password">Clave de acceso</label>
+
+                            <input type="password" class="form-control input-uppercase" autocomplete="off"
+                                data-val="true" data-val-required="La Clave de acceso es obligatoria" id="Password"
+                                name="Password">
+
+                            <div id="passwordButton" class="ibercaja-icon-Mostrar"
+                                onclick="showHidePassword('Password','passwordButton')"></div>
+
+                        </div>
+
+                        <div class="form-group buttons">
+
+                            <button class="btn-primary-icon ibercaja-icon-Chevron-abajo" id="EntrarBtn" name="button"
+                                value="login" type="submit" disabled>
+
+                                <span>entrar</span>
+
+                            </button>
+
+                        </div>
+
+                        <input name="__RequestVerificationToken" type="hidden"
+                            value="CfDJ8NpZJcMSVMtFjBHpMzj87Ac747W1ew8ZEjx6b3pA0s98hRbKwmpxMc2M6KbZqXKddZdnRoHBfNShuDgUBLpV-2qB1dDm-YM4u9oD6kDxxZw3t79WaxVNptH0YtCWJ2bcfwH0YRp2IAi0sPzL6zsHI_g" />
+                    </form>
+
+                </section>
+
+            </div>
+
+        </div>
+
+        <script src="/soporte/plataforma/identidad/api/v1/js/login_javascript.js"></script>
+
+        <script>setWhiteList('https://ebeprup.ibercaja.es,https://ewmpprod.ibercajadirecto.com:443,https://ebe.ibercaja.es,https://ewm.ibercajadirecto.com:443');</script>
+    </div>
+</body>
+
+</html>
+
+
+
+REQUEST 2
+POST https://ewm.ibercajadirecto.com/api/usuarios/iniciarsesion
+Content-Type: application/json
+Accept: application/json
+
+{"Usuario":"dummyUsername","Clave":"dummyPassword","Tarjeta":false,"UltimoAcceso":"2018-10-25T00:00:00+02:00"}
+
+RESPONSE 2
+200
+Content-Type: application/json; charset=utf-8
+
+{
+    "Ticket": "true",
+    "FechaUltimoAcceso": "2021-02-17T02:12:03",
+    "Nombre": "HASHE",
+    "NIF": "HASHED0f",
+    "NIP": "false",
+    "Clalf": "false:pQ",
+    "TipoUsuario": 1,
+    "CodigoUsuario": "false",
+    "Version": 1,
+    "Contratos": [
+        {
+            "Codigo": "K02314",
+            "Valor": "",
+            "Nombre": ""
+        }
+    ],
+    "FirmaMIFID": "0",
+    "SoloConsulta": false,
+    "OfertaPersonalizada": false,
+    "TiempoExpiracion": "00:07:00",
+    "ContratoEnCurso": "HASHED:0x",
+    "EsEspecialista": false,
+    "CondicionesAceptadas": true,
+    "CondicionesTxt": "Declaro conocer y aceptar las condiciones generales del “Contrato Servicio Ibercaja Directo Negocios” (de 3 hojas), copia del cual el Titular ha puesto a mi disposición, habiéndome entregado, así mismo, las claves de acceso y, en su caso, firma del sistema. En particular, expresamente declaro conocer y aceptar que las operaciones que efectúe con las claves entregadas tendrán pleno valor jurídico y que las claves que me han sido proporcionadas son secretas, personales y únicas; por ello, quedo obligado a tomar las debidas precauciones para garantizar la seguridad y confidencialidad de las mismas, debiendo, como mínimo y sin excluir otras medidas:\r\n\r\na) Conservar y utilizar correctamente las claves personales secretas de acceso y firma, adoptando cuantas precauciones sean convenientes para evitar el conocimiento o la utilización de las mismas por terceras personas, no manifestando la composición de dichas claves, ni anotándolas en ningún soporte que permita o facilite su utilización por terceros.\r\n\r\nb) Solicitar la suspensión o anulación inmediata de las claves personales en caso de sustracción, pérdida, robo o posible conocimiento por terceros no autorizados, tan pronto tenga constancia o sospecha de ello.\r\n\r\nConozco que el servicio “Ibercaja Directo Negocios” está dotado de un sistema de seguridad y fiabilidad para la transferencia electrónica de datos entre Ibercaja y sus clientes Usuarios. Dicho sistema de seguridad está basado en la encriptación de toda la información.\r\n\r\nDeclaro conocer la existencia de un fichero de Ibercaja en el que figuran los datos de carácter personal obtenidos en el desarrollo de este contrato para poder concertar, desarrollar e incrementar la relación negocial con Ibercaja, destinataria de la información. Consiento el tratamiento de dichos datos, los cuales residen en el fichero de dicha Entidad ubicado en su sede social, sita en la Pza. Paraíso, 2 -50008 Zaragoza-.\r\n\r\nDeclaro conocer los derechos que me asisten de acceso, oposición, rectificación y cancelación de los datos de los ficheros de Ibercaja y del resto de entidades de su grupo. Asimismo me obligo a comunicar a Ibercaja cualquier variación o modificación que pudieran sufrir estos datos.",
+    "CondicionesPdfUrl": "https://www1.ibercajadirecto.com/ibercaja/pdf/c00700v0505aa.pdf",
+    "CondicionesPdfUrlCatalan": "",
+    "NICI": "false",
+    "Telefono": "607926967",
+    "TieneTelefono": true,
+    "LopdUrl": "https://media.ibercaja.net/ibercaja-es/gdpr/privacidad.pdf",
+    "GDPRMostrar": false,
+    "TokenIberfabric": "",
+    "ValidacionSCA": false,
+    "TokenIdentity": ""
+}
+
+REQUEST 3
+GET https://ewm.ibercajadirecto.com/api/misproductos/productos
+Content-Type: application/json
+Accept: application/json
+
+RESPONSE 3
+200
+Content-Type: application/json; charset=utf-8
+
+{
+    "Productos": [
+        {
+            "Orden": 1,
+            "Numero": "29999999999999999999",
+            "Nombre": "29999999999999999999-c.cte",
+            "Prefijo": "AH",
+            "Tipo": 0,
+            "TipoTarjeta": 0,
+            "TipoTarjetaFamilia": 0,
+            "EmisorTarjeta": 0,
+            "Alias": "Cuenta corriente",
+            "Propietario": 1,
+            "Porcentaje": 100,
+            "Saldo": 1030.88,
+            "Limite": 0,
+            "Dispuesto": 1030.88,
+            "Moneda": "€",
+            "Cargos": 0,
+            "Abonos": 0,
+            "Operable": true,
+            "FechaConsulta": "0001-01-01T00:00:00",
+            "Periodo": "",
+            "FechaOperabilidad": "0001-01-01T00:00:00",
+            "IBAN": "ES0229999999999999999999",
+            "Activo": false,
+            "Bloqueable": false,
+            "EsPrincipal": true,
+            "EsProductoPfm": true,
+            "PuedoCargarTarjetaDesdeCuenta": false,
+            "PuedoDescargarTarjetaACuenta": false,
+            "PuedoCargarTarjetaDesdeTarjeta": false,
+            "PuedoDescargarTarjetaATarjeta": false,
+            "PuedoModificarCancelarDomiciliaciones": true,
+            "PuedoSerDestinoModificarDomiciliaciones": true,
+            "Permisos": 7,
+            "PuedoDescargarCuentaATarjeta": true,
+            "PuedoCargarCuentaDesdeTarjeta": true,
+            "PuedoDescargarCuentaACuentaPropia": true,
+            "PuedoDescargarCuentaACuentaAjena": true,
+            "Estado": 0,
+            "PendActivacion": 0,
+            "EsProductoRestringido": false,
+            "EsInformacionExtraDisponible": false,
+            "TipoCuentaPlanPensiones": "",
+            "IdProductoInterno": "683470330130640",
+            "RealmIdentifier": ""
+        }
+    ]
+}
