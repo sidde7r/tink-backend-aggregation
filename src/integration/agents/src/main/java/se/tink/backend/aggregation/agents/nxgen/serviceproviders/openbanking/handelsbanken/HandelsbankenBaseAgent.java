@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken;
 
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.common.collect.ImmutableSet;
 import java.time.LocalDate;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
@@ -37,6 +38,7 @@ public abstract class HandelsbankenBaseAgent extends NextGenerationAgent
     public HandelsbankenBaseAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
+        client.registerJacksonModule(new JavaTimeModule());
         client.addFilter(new TimeoutFilter());
         client.addFilter(new HandelsbankenRejectedFilter());
         apiClient = constructApiClient();
