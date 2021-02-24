@@ -36,7 +36,7 @@ import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestB
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
-public final class SdcApiClient {
+public class SdcApiClient {
 
     private final TinkHttpClient client;
     private final SdcUrlProvider urlProvider;
