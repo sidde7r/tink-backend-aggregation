@@ -4928,13 +4928,10 @@ agentsServiceConfiguration:
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
     bnpparibasfortis:
       tink:
-        apiBaseUrl: https://sandbox.api.bnpparibasfortis.com
-        authBaseUrl: https://sandbox.auth.bnpparibasfortis.com
-        clientId: bdea6b61-cd25-44d8-962b-8b3608ff220b
-        clientSecret: c07b6e41fa1f778cb5354f831db9ac072e66cf6a603b5475c5b8bbc738527d1a70053e62b5660aebf6ffd986c54589cb
-        openbankStetVersion: 1.4.0.47.develop
-        organisationId: 34ecb03c-8abd-47da-bbfd-3c52bc8f7e14
-        redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+        clientId: dummyClientId
+        clientSecret: dummyClientSecret
+        keyId: https://cdn.tink.se/eidas/tink-qsealc.pem
+        redirectUrl: https://api.tink.se/api/v1/credentials/third-party/callback
     boursorama:
       tink:
         baseUrl: https://api-dsp2-sandbox.boursorama.com

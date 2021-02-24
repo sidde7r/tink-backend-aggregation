@@ -9,13 +9,19 @@ public abstract class BnpParibasFortisConstants {
             TypeMapper.<AccountTypes>builder()
                     .put(AccountTypes.CHECKING, "CACC")
                     .put(AccountTypes.SAVINGS, "SVGS")
-                    .put(AccountTypes.OTHER, "OTHR")
                     .build();
 
     public static class Urls {
+        public static final String BASE_PATH = "https://regulatory.api.bnpparibasfortis.be";
+        public static final String PSD2_BASE_PATH = "/psd2/v2";
+        public static final String AUTH_BASE_PATH =
+                "https://services.bnpparibasfortis.be/SEPLJ04/sps/oauth/oauth20/authorize";
+    }
+
+    public static class Endpoints {
         public static final String OAUTH = "/authorize";
         public static final String TOKEN = "/token";
-        public static final String ACCOUNTS = "/v1/accounts";
+        public static final String ACCOUNTS = "/accounts";
     }
 
     public static class StorageKeys {
@@ -33,20 +39,24 @@ public abstract class BnpParibasFortisConstants {
 
     public static class QueryValues {
         public static final String RESPONSE_TYPE = "code";
-        public static final String SCOPE = "aisp;pisp";
+        public static final String SCOPE = "aisp";
     }
 
     public static class HeaderKeys {
-        public static final String ORGANIZATION_ID = "X-Openbank-Organization";
-        public static final String OPENBANK_STET_VERSION = "X-Openbank-Stet-Version";
         public static final String REQUEST_ID = "X-Request-ID";
         public static final String SIGNATURE = "Signature";
+        public static final String DIGEST = "Digest";
+        public static final String USER_AGENT = "User-Agent";
+    }
+
+    public static class HeaderValues {
         public static final String APPLICATION_HAL_JSON = "application/hal+json";
+        public static final String TINK = "Tink";
     }
 
     public static class FormValues {
         public static final String GRANT_TYPE = "authorization_code";
-        public static final String SCOPE = "aisp;pisp";
+        public static final String SCOPE = "aisp";
     }
 
     public static class Accounts {
@@ -55,11 +65,6 @@ public abstract class BnpParibasFortisConstants {
 
     public static class Transactions {
         public static final String PENDING_STATUS = "PDNG";
-    }
-
-    public static class ErrorMessages {
-        public static final String AMOUNT_EXTRACT_ERROR =
-                "Amount cannot be extracted from the response";
     }
 
     public static class IdTags {

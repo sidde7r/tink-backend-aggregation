@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.configuration;
 
+import lombok.Getter;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.annotations.Secret;
 import se.tink.backend.aggregation.annotations.SensitiveSecret;
@@ -8,36 +9,10 @@ import se.tink.backend.aggregation.configuration.agents.ClientIdConfiguration;
 import se.tink.backend.aggregation.configuration.agents.ClientSecretsConfiguration;
 
 @JsonObject
+@Getter
 public class BnpParibasFortisConfiguration implements ClientConfiguration {
 
     @Secret @ClientIdConfiguration private String clientId;
+    @Secret private String keyId;
     @SensitiveSecret @ClientSecretsConfiguration private String clientSecret;
-    @Secret private String authBaseUrl;
-    @Secret private String apiBaseUrl;
-    @Secret private String organisationId;
-    @Secret private String openbankStetVersion;
-
-    public String getClientId() {
-        return clientId;
-    }
-
-    public String getClientSecret() {
-        return clientSecret;
-    }
-
-    public String getAuthBaseUrl() {
-        return authBaseUrl;
-    }
-
-    public String getApiBaseUrl() {
-        return apiBaseUrl;
-    }
-
-    public String getOrganisationId() {
-        return organisationId;
-    }
-
-    public String getOpenbankStetVersion() {
-        return openbankStetVersion;
-    }
 }

@@ -91,8 +91,9 @@ public class CbiGlobeAuthenticator extends StatelessProgressiveAuthenticator {
 
     private boolean isAutoAuthenticationPossible() {
         try {
+            fetchToken();
+
             return !userState.isManualAuthenticationInProgress()
-                    && fetchToken()
                     && consentManager.verifyIfConsentIsAccepted();
         } catch (SessionException | LoginException e) {
             return false;
@@ -110,9 +111,9 @@ public class CbiGlobeAuthenticator extends StatelessProgressiveAuthenticator {
         return new URL(CbiGlobeUtils.encodeBlankSpaces(url));
     }
 
-    private boolean fetchToken() {
+    private void fetchToken() {
         try {
-            if (!apiClient.isTokenValid()) {
+            if (isTokenInStorageExpired()) {
                 getTokenAndPutIntoStorage();
             }
         } catch (IllegalStateException e) {
@@ -123,8 +124,10 @@ public class CbiGlobeAuthenticator extends StatelessProgressiveAuthenticator {
                 throw e;
             }
         }
+    }
 
-        return true;
+    private boolean isTokenInStorageExpired() {
+        return !apiClient.isTokenValid();
     }
 
     private void getTokenAndPutIntoStorage() {
