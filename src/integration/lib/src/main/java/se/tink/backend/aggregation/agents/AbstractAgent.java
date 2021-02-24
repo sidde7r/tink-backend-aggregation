@@ -41,7 +41,10 @@ public abstract class AbstractAgent extends SuperAbstractAgent {
         this.financialDataCacher = context;
         this.supplementalInformationController =
                 new SupplementalInformationControllerImpl(
-                        context, request.getCredentials(), request.getState());
+                        context,
+                        request.getCredentials(),
+                        request.getState(),
+                        request.getProvider().getClassName());
         this.clientFactory =
                 new JerseyClientFactory(
                         context.getLogMasker(), LogMaskerImpl.shouldLog(request.getProvider()));

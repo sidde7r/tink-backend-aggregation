@@ -33,6 +33,7 @@ public class SupplementalInformationControllerImpl implements SupplementalInform
     private final SupplementalRequester supplementalRequester;
     private final Credentials credentials;
     private final String state;
+    private final String initiator;
 
     /**
      * Do not construct your own SupplementalInfomationController. Use the instance available to
@@ -41,29 +42,25 @@ public class SupplementalInformationControllerImpl implements SupplementalInform
      * controlling is outside of the agent and you do not need to have an instance.
      */
     public SupplementalInformationControllerImpl(
-            SupplementalRequester supplementalRequester, Credentials credentials, String state) {
+            SupplementalRequester supplementalRequester,
+            Credentials credentials,
+            String state,
+            String initiator) {
         this.supplementalRequester = supplementalRequester;
         this.credentials = credentials;
         this.state = state;
+        this.initiator = initiator;
     }
 
     @Override
     public Optional<Map<String, String>> waitForSupplementalInformation(
-            String mfaId, long waitFor, TimeUnit unit, boolean allowEmptyString) {
+            String mfaId, long waitFor, TimeUnit unit) {
 
         Optional<String> result =
-                supplementalRequester.waitForSupplementalInformation(mfaId, waitFor, unit);
+                supplementalRequester.waitForSupplementalInformation(
+                        mfaId, waitFor, unit, initiator);
 
-        if (!result.isPresent()) {
-            return Optional.empty();
-        }
-
-        // REMOVE THIS ONES NEMID/TINKLINK/NORDEA IS FIXED TO NOT SEND EMPTY STRING
-        if (allowEmptyString && "".equals(result.get())) {
-            return Optional.of(new HashMap<>());
-        }
-
-        if (Strings.isNullOrEmpty(result.get())) {
+        if (!result.isPresent() || Strings.isNullOrEmpty(result.get())) {
             return Optional.empty();
         }
 
@@ -78,7 +75,7 @@ public class SupplementalInformationControllerImpl implements SupplementalInform
 
         Optional<String> results =
                 supplementalRequester.waitForSupplementalInformation(
-                        mfaId, TIMEOUT_MINUTES_EMBEDDED_FIELDS, TimeUnit.MINUTES);
+                        mfaId, TIMEOUT_MINUTES_EMBEDDED_FIELDS, TimeUnit.MINUTES, initiator);
 
         String supplementalInformation =
                 Optional.ofNullable(Strings.emptyToNull(results.orElse(null)))
@@ -97,12 +94,8 @@ public class SupplementalInformationControllerImpl implements SupplementalInform
 
     @Override
     public String askSupplementalInformationAsync(Field... fields) {
-        if (fields == null) {
-            throw new IllegalStateException("Requires non-null fields");
-        }
-        if (fields.length == 0) {
-            logger.error("Asking for Supplemental Information with no fields");
-            // This should throw, will implement this once we've seen impact isn't too big
+        if (fields == null || fields.length == 0) {
+            throw new IllegalStateException("Requires non-null, non-empty, list of fields");
         }
 
         credentials.setSupplementalInformation(SerializationUtils.serializeToString(fields));
@@ -155,7 +148,7 @@ public class SupplementalInformationControllerImpl implements SupplementalInform
         String mfaId = openMobileBankIdAsync(autoStartToken);
 
         supplementalRequester.waitForSupplementalInformation(
-                mfaId, TIMEOUT_MINUTES_MOBILE_BANKID, TimeUnit.MINUTES);
+                mfaId, TIMEOUT_MINUTES_MOBILE_BANKID, TimeUnit.MINUTES, initiator);
     }
 
     @Override

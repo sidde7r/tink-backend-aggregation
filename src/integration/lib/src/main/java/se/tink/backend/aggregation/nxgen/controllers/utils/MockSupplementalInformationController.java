@@ -24,7 +24,7 @@ public final class MockSupplementalInformationController
 
     @Override
     public Optional<Map<String, String>> waitForSupplementalInformation(
-            String mfaId, final long waitFor, final TimeUnit unit, boolean ignoreThisFlag) {
+            String mfaId, final long waitFor, final TimeUnit unit) {
         if (mfaId.startsWith("tpcb")) {
             return Optional.of(callbackData);
         }

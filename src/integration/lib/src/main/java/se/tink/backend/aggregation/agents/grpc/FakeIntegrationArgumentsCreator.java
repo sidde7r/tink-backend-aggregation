@@ -110,7 +110,7 @@ public class FakeIntegrationArgumentsCreator {
 
                     @Override
                     public Optional<String> waitForSupplementalInformation(
-                            String mfaId, long waitFor, TimeUnit unit) {
+                            String mfaId, long waitFor, TimeUnit unit, String initiator) {
                         return Optional.empty();
                     }
 

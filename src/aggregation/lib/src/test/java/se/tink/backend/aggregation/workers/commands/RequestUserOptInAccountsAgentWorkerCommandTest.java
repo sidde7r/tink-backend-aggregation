@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.workers.commands;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 
 import java.util.List;
@@ -70,7 +71,10 @@ public class RequestUserOptInAccountsAgentWorkerCommandTest {
                 .thenReturn(getAccountsInContext(AccountTypes.INVESTMENT, false, true));
         Mockito.when(
                         context.waitForSupplementalInformation(
-                                eq(credentials.getId()), anyLong(), any(TimeUnit.class)))
+                                eq(credentials.getId()),
+                                anyLong(),
+                                any(TimeUnit.class),
+                                anyString()))
                 .thenReturn(Optional.of("{}"));
 
         // when
@@ -95,7 +99,10 @@ public class RequestUserOptInAccountsAgentWorkerCommandTest {
                 .thenReturn(getAccountsInContext(AccountTypes.CHECKING, false, false));
         Mockito.when(
                         context.waitForSupplementalInformation(
-                                eq(credentials.getId()), anyLong(), any(TimeUnit.class)))
+                                eq(credentials.getId()),
+                                anyLong(),
+                                any(TimeUnit.class),
+                                anyString()))
                 .thenReturn(Optional.of("{}"));
 
         // when
@@ -116,7 +123,10 @@ public class RequestUserOptInAccountsAgentWorkerCommandTest {
                 .thenReturn(getAccountsInContext(AccountTypes.CHECKING, true, false));
         Mockito.when(
                         context.waitForSupplementalInformation(
-                                eq(credentials.getId()), anyLong(), any(TimeUnit.class)))
+                                eq(credentials.getId()),
+                                anyLong(),
+                                any(TimeUnit.class),
+                                anyString()))
                 .thenReturn(Optional.of("{}"));
 
         // when
@@ -142,7 +152,10 @@ public class RequestUserOptInAccountsAgentWorkerCommandTest {
                 .thenReturn(getAccountsInContext(AccountTypes.CHECKING, false, false));
         Mockito.when(
                         context.waitForSupplementalInformation(
-                                eq(credentials.getId()), anyLong(), any(TimeUnit.class)))
+                                eq(credentials.getId()),
+                                anyLong(),
+                                any(TimeUnit.class),
+                                anyString()))
                 .thenReturn(Optional.empty());
         Mockito.when(context.getRequest()).thenReturn(mockedRequest);
 
