@@ -192,7 +192,8 @@ public class BpceGroupApiClient implements FrAispApiClient {
         final HttpResponse httpResponse =
                 sendRequestAndGetResponse(requestBuilder, HttpMethod.GET, HttpResponse.class);
 
-        if (HttpStatus.SC_NO_CONTENT == httpResponse.getStatus()) {
+        if (HttpStatus.SC_NO_CONTENT == httpResponse.getStatus()
+                || HttpStatus.SC_FORBIDDEN == httpResponse.getStatus()) {
             return Optional.empty();
         }
 
