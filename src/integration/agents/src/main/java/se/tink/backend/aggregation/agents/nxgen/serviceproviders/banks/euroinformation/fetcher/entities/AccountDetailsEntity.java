@@ -8,6 +8,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import org.assertj.core.util.Strings;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.EuroInformationConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.utils.EuroInformationUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.entity.Holder;
 import se.tink.backend.aggregation.nxgen.core.account.entity.Holder.Role;
@@ -17,7 +18,6 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.transactional.T
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 @XmlRootElement(name = "compte")
@@ -151,7 +151,8 @@ public class AccountDetailsEntity {
         return TransactionalAccount.nxBuilder()
                 .withType(accType)
                 .withInferredAccountFlags()
-                .withBalance(BalanceModule.of(ExactCurrencyAmount.of(amountToParse, currency)))
+                .withBalance(
+                        BalanceModule.of(EuroInformationUtils.parseAmount(amountToParse, currency)))
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(decideUniqueIdentifier())

@@ -79,7 +79,7 @@ public class EuroInformationAccountFetcherTest {
         assertThat(account.getType()).isEqualTo(TransactionalAccountType.CHECKING.toAccountType());
         assertThat(account.getExactBalance().getCurrencyCode()).isEqualTo("EUR");
         assertThat(account.getExactBalance().getExactValue())
-                .isEqualByComparingTo(new BigDecimal("10000.00"));
+                .isEqualByComparingTo(new BigDecimal("1.11"));
         assertThat(account.getIdModule().getUniqueId()).isEqualTo("IBAN1");
         assertThat(account.getIdModule().getAccountNumber()).isEqualTo("TEST_ACCOUNT_NUMBER_1");
         assertThat(account.getIdModule().getAccountName()).isEqualTo("TEST_NAME_1");
@@ -141,7 +141,7 @@ public class EuroInformationAccountFetcherTest {
                     + "            <refctr_inn_val>TEST</refctr_inn_val>\n"
                     + "            <category_code>TEST</category_code>\n"
                     + "            <category_name>TEST</category_name>\n"
-                    + "            <solde>10000</solde>\n"
+                    + "            <solde>1.11EUR</solde>\n"
                     + "            <agreed_overdraft>TEST_AO</agreed_overdraft>\n"
                     + "            <appcpt>1</appcpt>\n"
                     + "            <isholder>1</isholder>\n"
@@ -165,7 +165,7 @@ public class EuroInformationAccountFetcherTest {
                     + "            <refctr_inn_val>TEST</refctr_inn_val>\n"
                     + "            <category_code>TEST</category_code>\n"
                     + "            <category_name>TEST</category_name>\n"
-                    + "            <solde>50000</solde>\n"
+                    + "            <solde>50000.00EUR</solde>\n"
                     + "            <agreed_overdraft>TEST</agreed_overdraft>\n"
                     + "            <appcpt>5</appcpt>\n"
                     + "            <isholder>0</isholder>\n"
