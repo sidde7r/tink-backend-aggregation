@@ -90,8 +90,9 @@ import se.tink.libraries.identitydata.NameElement;
             PisCapability.PIS_SE_PG
         },
         markets = {"SE"})
-@AgentPisCapability(capabilities = PisCapability.PIS_SEPA, markets = "FR")
-@AgentPisCapability(capabilities = PisCapability.PIS_SEPA, markets = "PT")
+@AgentPisCapability(
+        capabilities = PisCapability.PIS_SEPA,
+        markets = {"DE", "FR", "PT"})
 @AgentPisCapability(capabilities = PisCapability.PIS_UK_FASTER_PAYMENT, markets = "GB")
 public final class RedirectAuthenticationDemoAgent extends NextGenerationDemoAgent
         implements RefreshTransferDestinationExecutor {
