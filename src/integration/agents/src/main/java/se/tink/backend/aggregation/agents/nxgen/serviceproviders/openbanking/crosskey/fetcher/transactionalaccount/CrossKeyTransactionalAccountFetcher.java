@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.transactionalaccount;
 
-import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -9,7 +8,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cro
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.entities.account.AccountDetailsEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.entities.account.AccountEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.entities.common.AmountEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.entities.accountbalances.AccountBalanceEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.entities.accountbalances.AccountBalancesDataEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.rpc.CrosskeyAccountBalancesResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
@@ -32,6 +32,7 @@ public class CrossKeyTransactionalAccountFetcher implements AccountFetcher<Trans
         return apiClient.fetchAccounts().getData().getAccounts().stream()
                 .filter(AccountEntity::isCheckingAccount)
                 .map(this::toCheckingAccount)
+                .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toList());
     }
@@ -40,30 +41,36 @@ public class CrossKeyTransactionalAccountFetcher implements AccountFetcher<Trans
         final CrosskeyAccountBalancesResponse crosskeyAccountBalancesResponse =
                 apiClient.fetchAccountBalances(accountEntity.getAccountId());
 
-        final Optional<AccountDetailsEntity> accountDetails =
-                accountEntity.getAccountDetails(IdentificationType.IBAN);
-        final AmountEntity amount =
-                crosskeyAccountBalancesResponse.getData().getInterimAvailableBalance().getAmount();
+        final AccountBalancesDataEntity balances = crosskeyAccountBalancesResponse.getData();
 
-        return getCheckingAccount(accountEntity, accountDetails, amount);
+        return getCheckingAccount(accountEntity, balances);
     }
 
     private Optional<TransactionalAccount> getCheckingAccount(
-            AccountEntity accountEntity,
-            Optional<AccountDetailsEntity> accountDetails,
-            AmountEntity amount) {
+            AccountEntity accountEntity, AccountBalancesDataEntity balances) {
 
         final String accountNumber =
-                accountDetails
+                accountEntity
+                        .getAccountDetails(IdentificationType.IBAN)
                         .map(AccountDetailsEntity::getIdentification)
                         .orElse(accountEntity.getAccountId());
 
-        final String accountName = accountDetails.map(AccountDetailsEntity::getName).orElse("");
+        final String accountName =
+                accountEntity
+                        .getAccountDetails(IdentificationType.IBAN)
+                        .map(AccountDetailsEntity::getName)
+                        .orElse("");
+
+        Optional<ExactCurrencyAmount> balance = getBalance(balances);
+
+        if (!balance.isPresent()) {
+            return Optional.empty();
+        }
 
         return TransactionalAccount.nxBuilder()
                 .withType(TransactionalAccountType.CHECKING)
                 .withPaymentAccountFlag()
-                .withBalance(BalanceModule.of(getBalance(amount)))
+                .withBalance(BalanceModule.of(balance.get()))
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(accountNumber)
@@ -79,8 +86,11 @@ public class CrossKeyTransactionalAccountFetcher implements AccountFetcher<Trans
                 .build();
     }
 
-    private ExactCurrencyAmount getBalance(AmountEntity amount) {
-        return new ExactCurrencyAmount(
-                BigDecimal.valueOf(amount.getAmount()), amount.getCurrency());
+    private Optional<ExactCurrencyAmount> getBalance(AccountBalancesDataEntity balances) {
+        Optional<AccountBalanceEntity> interimBookedBalance = balances.getInterimBookedBalance();
+        if (interimBookedBalance.isPresent()) {
+            return interimBookedBalance.map(AccountBalanceEntity::getExactAmount);
+        }
+        return balances.getInterimAvailableBalance().map(AccountBalanceEntity::getExactAmount);
     }
 }

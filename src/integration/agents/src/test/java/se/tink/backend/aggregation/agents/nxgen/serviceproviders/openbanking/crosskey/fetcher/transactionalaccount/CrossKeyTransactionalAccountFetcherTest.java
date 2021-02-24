@@ -52,6 +52,6 @@ public class CrossKeyTransactionalAccountFetcherTest {
         assertEquals(AccountTypes.CHECKING, transactionalAccount.getType());
         assertEquals("AccountId1", transactionalAccount.getApiIdentifier());
         assertEquals("EUR", transactionalAccount.getExactBalance().getCurrencyCode());
-        assertEquals(50.0, transactionalAccount.getExactBalance().getDoubleValue(), 0.001);
+        assertEquals(100.0, transactionalAccount.getExactBalance().getDoubleValue(), 0.001);
     }
 }
