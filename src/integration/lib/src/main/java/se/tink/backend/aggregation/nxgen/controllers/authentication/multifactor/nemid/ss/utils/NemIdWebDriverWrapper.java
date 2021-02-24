@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.NoSuchFrameException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
@@ -34,8 +35,13 @@ public class NemIdWebDriverWrapper {
         return tryFindElement(IFRAME)
                 .map(
                         element -> {
-                            driver.switchTo().frame(element);
-                            return true;
+                            try {
+                                driver.switchTo().frame(element);
+                                return true;
+                            } catch (NoSuchFrameException e) {
+                                log.warn("[NemId] Couldn't switch to iFrame");
+                                return false;
+                            }
                         })
                 .orElse(false);
     }
