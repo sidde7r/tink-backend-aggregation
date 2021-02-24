@@ -140,6 +140,14 @@ public class DemoAccountDefinitionGenerator {
         return generateIban(deterministicKey, CountryCode.FR, "0", "01005", "20041", 12);
     }
 
+    private static String generateAccountNumbersDE(String deterministicKey) {
+        return generateIban(deterministicKey, CountryCode.DE, "0", "37040044", "37040044", 12);
+    }
+
+    private static String generateAccountNumbersES(String deterministicKey) {
+        return generateIban(deterministicKey, CountryCode.ES, "0", "0418", "2100", 12);
+    }
+
     private static String getAccountNumber(String userDeterministicKey, int expectedLength) {
         if (userDeterministicKey.length() < expectedLength) {
             return Strings.padStart(userDeterministicKey, expectedLength, '0');
@@ -426,6 +434,10 @@ public class DemoAccountDefinitionGenerator {
             return generateAccountNumbersIT(deterministicKey);
         } else if (providerName.matches(MarketRegex.FR_PROVIDERS_REGEX)) {
             return generateAccountNumbersFR(deterministicKey);
+        } else if (providerName.matches(MarketRegex.DE_PROVIDERS_REGEX)) {
+            return generateAccountNumbersDE(deterministicKey);
+        } else if (providerName.matches(MarketRegex.ES_PROVIDERS_REGEX)) {
+            return generateAccountNumbersES(deterministicKey);
         } else {
             return generateAccountNumbers(deterministicKey);
         }
@@ -433,6 +445,8 @@ public class DemoAccountDefinitionGenerator {
 
     private static boolean shouldSetIbanAsIdentifier(String providerName) {
         return providerName.matches(MarketRegex.IT_PROVIDERS_REGEX)
-                || providerName.matches(MarketRegex.FR_PROVIDERS_REGEX);
+                || providerName.matches(MarketRegex.FR_PROVIDERS_REGEX)
+                || providerName.matches(MarketRegex.DE_PROVIDERS_REGEX)
+                || providerName.matches((MarketRegex.ES_PROVIDERS_REGEX));
     }
 }

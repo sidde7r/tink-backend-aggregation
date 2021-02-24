@@ -45,5 +45,7 @@ public class DemoConstants {
         public static final String UK_PROVIDERS_REGEX = "^(?:uk|gb)-.*";
         static final String IT_PROVIDERS_REGEX = "^it-.*";
         static final String FR_PROVIDERS_REGEX = "^fr-.*";
+        static final String DE_PROVIDERS_REGEX = "^de-.*";
+        static final String ES_PROVIDERS_REGEX = "^es-.*";
     }
 }
