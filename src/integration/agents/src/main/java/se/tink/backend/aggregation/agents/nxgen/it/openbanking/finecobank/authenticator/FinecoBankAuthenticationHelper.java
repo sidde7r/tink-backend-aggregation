@@ -4,6 +4,7 @@ import static se.tink.libraries.date.ThreadSafeDateFormat.FORMATTER_DAILY;
 
 import java.text.ParseException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import org.apache.commons.collections4.CollectionUtils;
 import se.tink.backend.agents.rpc.Credentials;
@@ -57,6 +58,7 @@ public final class FinecoBankAuthenticationHelper {
 
     public boolean getApprovedConsent() {
         ConsentStatusResponse consentStatusResponse = finecoBankApiClient.getConsentStatus();
+        persistentStorage.put(StorageKeys.TIMESTAMP, LocalDateTime.now());
         return StatusValues.VALID.equalsIgnoreCase(consentStatusResponse.getConsentStatus());
     }
 

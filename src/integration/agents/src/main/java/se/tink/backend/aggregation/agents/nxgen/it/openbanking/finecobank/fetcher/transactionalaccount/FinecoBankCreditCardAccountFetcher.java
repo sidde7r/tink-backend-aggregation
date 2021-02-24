@@ -2,8 +2,10 @@ package se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.fetch
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.Year;
+import java.time.temporal.ChronoUnit;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -128,12 +130,27 @@ public class FinecoBankCreditCardAccountFetcher
     }
 
     private boolean hasReachedTransactionsRequestsLimit(String apiIdentifier) {
+        if (isConsentMaximum20MinutesOld()) {
+            return false;
+        }
+
         int requestsCount =
                 transactionsRequestsCounterPerApiIdentifier.getOrDefault(apiIdentifier, 0);
         if (isManual) {
             return requestsCount == MAX_MONTHS_ALLOWED_TO_FETCH;
         }
         return requestsCount == MAX_MONTHS_BG_REFRESH;
+    }
+
+    // Fineco supports fetching transactions further back than 90 days if consent was given within
+    // 20 minutes
+    private boolean isConsentMaximum20MinutesOld() {
+        final LocalDateTime consentCreated =
+                persistentStorage.get(StorageKeys.TIMESTAMP, LocalDateTime.class).orElse(null);
+        if (consentCreated == null) {
+            return false;
+        }
+        return ChronoUnit.MINUTES.between(consentCreated, LocalDateTime.now()) < 20;
     }
 
     private LocalDate prepareFromDate(Year year, Month month) {
