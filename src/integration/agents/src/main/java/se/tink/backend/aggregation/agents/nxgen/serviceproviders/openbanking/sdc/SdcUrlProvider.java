@@ -21,7 +21,7 @@ public class SdcUrlProvider {
     private URL balancesUrl;
     private URL transactionsUrl;
 
-    SdcUrlProvider() {
+    public SdcUrlProvider() {
         this(BASE_AUTH_URL, BASE_API_URL);
     }
 

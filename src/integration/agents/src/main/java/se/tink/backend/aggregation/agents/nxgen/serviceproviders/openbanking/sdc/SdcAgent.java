@@ -29,7 +29,7 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS})
-public final class SdcAgent extends NextGenerationAgent
+public class SdcAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
     private final SdcApiClient apiClient;
@@ -43,19 +43,21 @@ public final class SdcAgent extends NextGenerationAgent
 
         client.setEidasProxy(agentsServiceConfiguration.getEidasProxy());
 
-        apiClient =
-                new SdcApiClient(
-                        client,
-                        new SdcUrlProvider(),
-                        persistentStorage,
-                        getAgentConfiguration().getProviderSpecificConfiguration(),
-                        getAgentConfiguration().getRedirectUrl());
-
+        apiClient = constructApiClient();
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
 
     protected AgentConfiguration<SdcConfiguration> getAgentConfiguration() {
         return getAgentConfigurationController().getAgentConfiguration(SdcConfiguration.class);
+    }
+
+    protected SdcApiClient constructApiClient() {
+        return new SdcApiClient(
+                client,
+                new SdcUrlProvider(),
+                persistentStorage,
+                getAgentConfiguration().getProviderSpecificConfiguration(),
+                getAgentConfiguration().getRedirectUrl());
     }
 
     @Override
