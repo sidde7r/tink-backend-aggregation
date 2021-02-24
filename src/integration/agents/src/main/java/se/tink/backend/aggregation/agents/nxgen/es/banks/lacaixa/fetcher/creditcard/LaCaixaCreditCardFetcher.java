@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.creditcard.entities.GenericCardEntity;
@@ -54,17 +55,16 @@ public class LaCaixaCreditCardFetcher
                     .map(card -> mapCreditCardAccount(card, contracts.get(card.getContract())))
                     .collect(Collectors.toList());
         } catch (HttpResponseException hre) {
-
             HttpResponse response = hre.getResponse();
-
             if (response.getStatus() == HttpStatus.SC_CONFLICT) {
                 LaCaixaErrorResponse errorResponse = response.getBody(LaCaixaErrorResponse.class);
-
+                LOG.warn("Unable to fetch credit cards");
                 if (errorResponse.isUserHasNoOwnCards()) {
                     return Collections.emptyList();
+                } else if (errorResponse.isCurrentlyUnavailable()) {
+                    throw BankServiceError.BANK_SIDE_FAILURE.exception();
                 }
             }
-
             throw hre;
         }
     }

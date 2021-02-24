@@ -19,7 +19,7 @@ public class LaCaixaRetryFilter extends AbstractRetryFilter {
     protected boolean shouldRetry(HttpResponse response) {
         if (response.getStatus() == HttpStatus.SC_CONFLICT) {
             LaCaixaErrorResponse errorResponse = response.getBody(LaCaixaErrorResponse.class);
-            return errorResponse.isTemporaryProblem();
+            return errorResponse.isTemporaryProblem() || errorResponse.isCurrentlyUnavailable();
         }
         return false;
     }
