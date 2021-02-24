@@ -36,6 +36,7 @@ java_library(
         "@aggregation//:com_fasterxml_jackson_core_jackson_core",
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
         "@aggregation//:com_fasterxml_jackson_datatype_jackson_datatype_jsr310",
+        "@aggregation//:com_google_guava_guava",
         "@aggregation//:com_kjetland_mbknor_jackson_jsonschema_2_12",
     ],
 )
