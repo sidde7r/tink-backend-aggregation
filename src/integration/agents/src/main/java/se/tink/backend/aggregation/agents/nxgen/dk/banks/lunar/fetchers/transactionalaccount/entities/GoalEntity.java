@@ -12,7 +12,7 @@ import org.apache.commons.collections4.ListUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.core.account.entity.Holder;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Party;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -37,7 +37,7 @@ public class GoalEntity extends BaseResponseEntity {
     }
 
     @JsonIgnore
-    public Optional<TransactionalAccount> toTransactionalAccount(List<Holder> accountHolders) {
+    public Optional<TransactionalAccount> toTransactionalAccount(List<Party> accountHolders) {
         if (BooleanUtils.isTrue(cashedOut)) {
             log.info("Lunar goal was cashed out");
         }
@@ -48,7 +48,7 @@ public class GoalEntity extends BaseResponseEntity {
                 .withId(buildIdModule())
                 .setApiIdentifier(id)
                 .setBankIdentifier(id)
-                .addHolders(accountHolders)
+                .addParties(accountHolders)
                 .build();
     }
 

@@ -48,7 +48,7 @@ public class BankiaTransactionalAccountFetcherTest {
         // then
         assertThat(result).isNotEmpty();
         TransactionalAccount account = result.iterator().next();
-        assertThat(account.getHolders()).isNotEmpty();
+        assertThat(account.getParties()).isNotEmpty();
         assertThat(account.hashCode()).isEqualTo(FAKE_IBAN.toLowerCase().hashCode());
     }
 }

@@ -7,7 +7,7 @@ import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabi
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.account.AccountHolderType;
 import se.tink.backend.aggregation.nxgen.core.account.Balance;
-import se.tink.backend.aggregation.nxgen.core.account.entity.Holder;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Party;
 import se.tink.backend.aggregation.source_info.AccountSourceInfo;
 import se.tink.libraries.account.enums.AccountFlag;
 
@@ -24,9 +24,8 @@ public interface BuildStep<A extends Account, B extends BuildStep<A, B>> {
     B setApiIdentifier(@Nonnull String identifier);
 
     /**
-     * Adds a name as a holder of the account. For shared accounts this method can be invoked
-     * several times to add multiple holders. If the role of each holder can be specified use {@link
-     * BuildStep#addHolders(Holder...)}
+     * Adds holderName as a party of type HOLDER to the account. For shared accounts this method can
+     * be invoked several times to add multiple holders.
      *
      * @param holderName Name of the account holder.
      * @return The next step of the builder.
@@ -34,22 +33,19 @@ public interface BuildStep<A extends Account, B extends BuildStep<A, B>> {
     B addHolderName(@Nullable String holderName);
 
     /**
-     * Adds multiple holders to the account. If this method is invoked several times all holders
+     * Add multiple parties to the account. If this method is invoked several times all parties
      * specified in all calls will be added.
-     *
-     * @param holders list of holder entities to be added to the account
-     * @return The next step of the builder.
      */
-    B addHolders(@Nonnull List<Holder> holders);
+    B addParties(@Nonnull List<Party> parties);
 
     /**
-     * Adds multiple holders to the account. If this method is invoked several times all holders
+     * Adds multiple parties to the account. If this method is invoked several times all parties
      * specified in all calls will be added.
      *
-     * @param holders array of holder entities to be added to the account
+     * @param parties array of party entities to be added to the account
      * @return The next step of the builder.
      */
-    B addHolders(@Nonnull Holder... holders);
+    B addParties(@Nonnull Party... parties);
 
     /**
      * Set the type the account holder. {@link AccountHolderType}

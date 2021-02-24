@@ -7,9 +7,8 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoConsta
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoConstants.Storage;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
-import se.tink.backend.aggregation.nxgen.core.account.entity.Holder;
-import se.tink.backend.aggregation.nxgen.core.account.entity.Holder.Role;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Party;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -90,7 +89,7 @@ public class AgreementsListEntity {
                                                                         iban))
                                                         .setProductName(accountType)
                                                         .build())
-                                        .addHolders(Holder.of(holderName, Role.HOLDER))
+                                        .addParties(new Party(holderName, Party.Role.HOLDER))
                                         .setApiIdentifier(agreement)
                                         .build());
     }

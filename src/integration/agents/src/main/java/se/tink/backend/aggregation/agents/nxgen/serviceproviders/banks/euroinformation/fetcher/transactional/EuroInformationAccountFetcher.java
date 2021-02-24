@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinfor
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.fetcher.entities.AccountDetailsEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.fetcher.rpc.AccountSummaryResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
-import se.tink.backend.aggregation.nxgen.core.account.entity.Holder;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Party;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
@@ -49,7 +49,7 @@ public class EuroInformationAccountFetcher implements AccountFetcher<Transaction
                 .collect(Collectors.toList());
     }
 
-    private Holder getHolderForAccount(AccountDetailsEntity accountDetailsEntity) {
+    private Party getHolderForAccount(AccountDetailsEntity accountDetailsEntity) {
         return this.sessionStorage
                 .get(Storage.LOGIN_RESPONSE, LoginResponse.class)
                 .map(LoginResponse::getClientName)

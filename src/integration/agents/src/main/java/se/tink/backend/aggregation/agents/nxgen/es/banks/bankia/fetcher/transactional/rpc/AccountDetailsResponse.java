@@ -9,8 +9,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.core.account.entity.Holder;
-import se.tink.backend.aggregation.nxgen.core.account.entity.Holder.Role;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Party;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Party.Role;
 
 @JsonObject
 @Slf4j
@@ -18,8 +18,8 @@ public class AccountDetailsResponse {
     @JsonProperty("intervinientes")
     private List<Detail> details;
 
-    public List<Holder> getHolders() {
-        return details.stream().map(Detail::getHolderName).collect(Collectors.toList());
+    public List<Party> getParties() {
+        return details.stream().map(Detail::getParty).collect(Collectors.toList());
     }
 
     @JsonObject
@@ -33,12 +33,12 @@ public class AccountDetailsResponse {
         @JsonProperty("descripcionTipoRelacion")
         private String holderTitle;
 
-        public Holder getHolderName() {
+        public Party getParty() {
             return Match(holderCode)
                     .option(
-                            Case($("020"), Holder.of(fullName, Role.HOLDER)),
-                            Case($("025"), Holder.of(fullName, Role.AUTHORIZED_USER)),
-                            Case($("027"), Holder.of(fullName, Role.AUTHORIZED_USER)),
+                            Case($("020"), new Party(fullName, Role.HOLDER)),
+                            Case($("025"), new Party(fullName, Role.AUTHORIZED_USER)),
+                            Case($("027"), new Party(fullName, Role.AUTHORIZED_USER)),
                             Case(
                                     $(),
                                     () -> {
@@ -46,7 +46,7 @@ public class AccountDetailsResponse {
                                                 "The error code `{}` and holder title `{}` is unmapped}",
                                                 holderCode,
                                                 holderTitle);
-                                        return Holder.of(fullName, Role.OTHER);
+                                        return new Party(fullName, Role.OTHER);
                                     }))
                     .get();
         }

@@ -27,7 +27,7 @@
             "type" : "PERSONAL",
             "identities" : [ {
                 "name" : "Firstname Lastname, Firstname2 Lastname",
-                "role" : null
+                "role": "HOLDER"
             } ]
         },
         "flags" : "[]",
@@ -61,7 +61,7 @@
             "type" : "PERSONAL",
             "identities" : [ {
                 "name" : "Firstname Lastname",
-                "role" : null
+                "role": "HOLDER"
             } ]
         },
         "flags" : "[]",
@@ -127,7 +127,7 @@
             "type" : "PERSONAL",
             "identities" : [ {
                 "name" : "Firstname Lastname, Firstname2 Lastname",
-                "role" : null
+                "role": "HOLDER"
             } ]
         },
         "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",

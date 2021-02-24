@@ -44,7 +44,7 @@
         "identities": [
           {
             "name": "Owner  Name",
-            "role": null
+            "role": "HOLDER"
           }
         ]
       },

@@ -11,7 +11,6 @@ import org.junit.Test;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.client.FetcherClient;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.fetcher.transactionalaccount.rpc.AccountsResponse;
-import se.tink.backend.aggregation.nxgen.core.account.entity.Holder;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.account.identifiers.NorwegianIdentifier;
@@ -85,8 +84,8 @@ public class TransactionalAccountFetcherTest {
             String expectedAccountName) {
         assertThat(account.getType()).isEqualTo(expectedType);
         assertThat(account.getApiIdentifier()).isEqualTo(expectedApiIdentifier);
-        assertThat(account.getHolders()).hasSize(1);
-        assertThat(account.getHolders().get(0)).isEqualTo(Holder.of("First Second Surname"));
+        assertThat(account.getParties()).hasSize(1);
+        assertThat(account.getParties().get(0).getName()).isEqualTo("First Second Surname");
 
         assertThat(account.isUniqueIdentifierEqual(expectedIban)).isTrue();
 

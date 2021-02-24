@@ -10,8 +10,7 @@ import org.assertj.core.util.Strings;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.EuroInformationConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.utils.EuroInformationUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.core.account.entity.Holder;
-import se.tink.backend.aggregation.nxgen.core.account.entity.Holder.Role;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Party;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.transactional.TransactionalBuildStep;
@@ -112,10 +111,10 @@ public class AccountDetailsEntity {
         return accountName;
     }
 
-    public Holder isHolder(String clientName) {
+    public Party isHolder(String clientName) {
         return "1".equals(isholder)
-                ? Holder.of(clientName, Role.HOLDER)
-                : Holder.of(clientName, Role.OTHER);
+                ? new Party(clientName, Party.Role.HOLDER)
+                : new Party(clientName, Party.Role.OTHER);
     }
 
     @JsonIgnore
@@ -135,15 +134,15 @@ public class AccountDetailsEntity {
     }
 
     @JsonIgnore
-    public Optional<TransactionalAccount> toTinkAccount(Holder holder) {
+    public Optional<TransactionalAccount> toTinkAccount(Party party) {
         return EuroInformationConstants.ACCOUNT_TYPE_MAPPER
                 .translate(accountType)
                 .flatMap(
                         accType ->
-                                (holder == null)
+                                (party == null)
                                         ? buildAccountWithoutHolder(accType).build()
                                         : buildAccountWithoutHolder(accType)
-                                                .addHolders(holder)
+                                                .addParties(party)
                                                 .build());
     }
 

@@ -29,7 +29,7 @@
         "identities": [
           {
             "name": "FirstName LastName",
-            "role": null
+            "role": "HOLDER"
           }
         ]
       },

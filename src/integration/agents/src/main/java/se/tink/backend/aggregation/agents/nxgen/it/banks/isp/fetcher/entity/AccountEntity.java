@@ -8,7 +8,7 @@ import java.util.Optional;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.core.account.entity.Holder;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Party;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
@@ -84,10 +84,10 @@ public class AccountEntity {
                                         .build())
                         .withId(getIdModule())
                         .setApiIdentifier(id)
-                        .addHolders(
+                        .addParties(
                                 accountHolders.stream()
-                                        .map(a -> Holder.of(a.getFullName()))
-                                        .toArray(Holder[]::new))
+                                        .map(a -> new Party(a.getFullName(), Party.Role.HOLDER))
+                                        .toArray(Party[]::new))
                         .build());
     }
 
@@ -111,10 +111,10 @@ public class AccountEntity {
                                 .build())
                 .withId(getIdModule())
                 .setApiIdentifier(id)
-                .addHolders(
+                .addParties(
                         accountHolders.stream()
-                                .map(a -> Holder.of(a.getFullName()))
-                                .toArray(Holder[]::new))
+                                .map(a -> new Party(a.getFullName(), Party.Role.HOLDER))
+                                .toArray(Party[]::new))
                 .build();
     }
 

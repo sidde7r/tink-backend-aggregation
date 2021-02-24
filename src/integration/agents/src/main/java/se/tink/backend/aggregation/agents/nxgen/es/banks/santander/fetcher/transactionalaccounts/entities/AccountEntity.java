@@ -16,8 +16,8 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.entit
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.rpc.LoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.utils.SantanderEsXmlUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.core.account.entity.Holder;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Party;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -140,7 +140,7 @@ public class AccountEntity {
                                 .withAccountName(generalInfo.getAlias())
                                 .addIdentifier(ibanIdentifier)
                                 .build())
-                .addHolders(getHolders(holderName, customerData))
+                .addParties(getParties(holderName, customerData))
                 .setBankIdentifier(iban)
                 .putInTemporaryStorage(
                         SantanderEsConstants.Storage.USER_DATA_XML,
@@ -155,13 +155,13 @@ public class AccountEntity {
     }
 
     @JsonIgnore
-    private List<Holder> getHolders(HolderName holderName, CustomerData customerData) {
+    private List<Party> getParties(HolderName holderName, CustomerData customerData) {
         if (!isPersonTypeHolder(customerData)) {
             // Other person types does not provide holder name
             return Collections.emptyList();
         }
 
-        return Collections.singletonList(Holder.of(holderName.toString(), Holder.Role.HOLDER));
+        return Collections.singletonList(new Party(holderName.toString(), Party.Role.HOLDER));
     }
 
     @JsonIgnore

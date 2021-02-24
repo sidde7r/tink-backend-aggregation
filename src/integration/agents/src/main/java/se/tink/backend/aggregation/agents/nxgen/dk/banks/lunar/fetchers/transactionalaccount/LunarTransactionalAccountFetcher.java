@@ -13,7 +13,7 @@ import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.transact
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.transactionalaccount.entities.BaseResponseEntity;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.transactionalaccount.entities.CardEntity;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
-import se.tink.backend.aggregation.nxgen.core.account.entity.Holder;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Party;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
@@ -22,7 +22,7 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 public class LunarTransactionalAccountFetcher implements AccountFetcher<TransactionalAccount> {
 
     private final FetcherApiClient apiClient;
-    private List<Holder> accountsHolders = new ArrayList<>();
+    private List<Party> accountParties = new ArrayList<>();
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
@@ -45,14 +45,14 @@ public class LunarTransactionalAccountFetcher implements AccountFetcher<Transact
     private Optional<TransactionalAccount> toTransactionalAccountWithHoldersNames(
             AccountEntity account) {
         // Delete unnecessary logs after getting more data
-        List<Holder> holdersOfAnAccount = new ArrayList<>();
+        List<Party> holdersOfAnAccount = new ArrayList<>();
         try {
             holdersOfAnAccount =
                     apiClient.fetchCardsByAccount(account.getId()).getCards().stream()
                             .filter(CardEntity::isHolderNameNotBlank)
                             .map(CardEntity::getCardholderName)
                             .distinct()
-                            .map(Holder::of)
+                            .map(holderName -> new Party(holderName, Party.Role.HOLDER))
                             .collect(Collectors.toList());
             if (holdersOfAnAccount.isEmpty()) {
                 log.info("Couldn't find holders for Lunar account!");
@@ -63,7 +63,7 @@ public class LunarTransactionalAccountFetcher implements AccountFetcher<Transact
         } catch (HttpResponseException e) {
             log.info("Failed to fetch cards for Lunar account!", e);
         }
-        accountsHolders.addAll(holdersOfAnAccount);
+        accountParties.addAll(holdersOfAnAccount);
         logMembersIfAccountIsShared(account);
         return account.toTransactionalAccount(holdersOfAnAccount);
     }
@@ -82,7 +82,7 @@ public class LunarTransactionalAccountFetcher implements AccountFetcher<Transact
     private Collection<TransactionalAccount> fetchSavingsAccounts() {
         return apiClient.fetchSavingGoals().getGoals().stream()
                 .filter(BaseResponseEntity::notDeleted)
-                .map(goal -> goal.toTransactionalAccount(accountsHolders))
+                .map(goal -> goal.toTransactionalAccount(accountParties))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toList());

@@ -16,7 +16,7 @@ import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.client.F
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.transactionalaccount.rpc.CardsResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.transactionalaccount.rpc.GoalsResponse;
-import se.tink.backend.aggregation.nxgen.core.account.entity.Holder;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Party;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -72,7 +72,7 @@ public class LunarTransactionalAccountFetcherTest {
         // given & when
         List<TransactionalAccount> expected =
                 ListUtils.union(
-                        getExpectedCheckingAccounts(), getExpectedSavingsAccounts(getAllHolders()));
+                        getExpectedCheckingAccounts(), getExpectedSavingsAccounts(getAllParties()));
         List<TransactionalAccount> result =
                 (List<TransactionalAccount>) accountFetcher.fetchAccounts();
 
@@ -127,7 +127,7 @@ public class LunarTransactionalAccountFetcherTest {
                         "2505-14683417965",
                         "Account",
                         "833293fc-282c-4b99-8b86-2035218abeac",
-                        Collections.singletonList(Holder.of("Account Holder"))),
+                        Collections.singletonList(new Party("Account Holder", Party.Role.HOLDER))),
                 getExpectedCheckingAccount(
                         BigDecimal.valueOf(123.12),
                         BigDecimal.valueOf(113.12),
@@ -137,32 +137,32 @@ public class LunarTransactionalAccountFetcherTest {
                         "Account With Null Deleted",
                         "ced8297b-1b58-401c-9002-60a70194f625",
                         Arrays.asList(
-                                Holder.of("Second account first holder"),
-                                Holder.of("Second account second holder"))));
+                                new Party("Second account first holder", Party.Role.HOLDER),
+                                new Party("Second account second holder", Party.Role.HOLDER))));
     }
 
-    private List<TransactionalAccount> getExpectedSavingsAccounts(List<Holder> holders) {
+    private List<TransactionalAccount> getExpectedSavingsAccounts(List<Party> parties) {
         return Arrays.asList(
                 getExpectedSavingsAccount(
                         BigDecimal.valueOf(1),
                         "For a rainy day",
                         "ada079e2-472d-4d9c-856d-526a9e964b8f",
-                        holders),
+                        parties),
                 getExpectedSavingsAccount(
                         BigDecimal.valueOf(2),
                         "Deleted null Goal",
                         "fab472fa-a646-4b54-91fa-6a6e3653e3f0",
-                        holders),
+                        parties),
                 getExpectedSavingsAccount(
                         BigDecimal.valueOf(0.01),
                         "Visible null field",
                         "df999b47-2ad9-4b12-adec-8525b687140b",
-                        holders),
+                        parties),
                 getExpectedSavingsAccount(
                         BigDecimal.valueOf(99.99),
                         "",
                         "9f7416ac-e860-4df1-bc71-fd27b5209b25",
-                        holders));
+                        parties));
     }
 
     private TransactionalAccount getExpectedCheckingAccount(
@@ -173,7 +173,7 @@ public class LunarTransactionalAccountFetcherTest {
             String accountNumber,
             String name,
             String id,
-            List<Holder> holders) {
+            List<Party> parties) {
         return TransactionalAccount.nxBuilder()
                 .withType(TransactionalAccountType.CHECKING)
                 .withoutFlags()
@@ -193,13 +193,13 @@ public class LunarTransactionalAccountFetcherTest {
                                 .build())
                 .setApiIdentifier(id)
                 .setBankIdentifier(id)
-                .addHolders(holders)
+                .addParties(parties)
                 .build()
                 .orElseThrow(IllegalStateException::new);
     }
 
     private TransactionalAccount getExpectedSavingsAccount(
-            BigDecimal balance, String name, String id, List<Holder> holders) {
+            BigDecimal balance, String name, String id, List<Party> parties) {
         return TransactionalAccount.nxBuilder()
                 .withType(TransactionalAccountType.SAVINGS)
                 .withoutFlags()
@@ -217,15 +217,15 @@ public class LunarTransactionalAccountFetcherTest {
                                 .build())
                 .setApiIdentifier(id)
                 .setBankIdentifier(id)
-                .addHolders(holders)
+                .addParties(parties)
                 .build()
                 .orElseThrow(IllegalStateException::new);
     }
 
-    private List<Holder> getAllHolders() {
+    private List<Party> getAllParties() {
         return Arrays.asList(
-                Holder.of("Account Holder"),
-                Holder.of("Second account first holder"),
-                Holder.of("Second account second holder"));
+                new Party("Account Holder", Party.Role.HOLDER),
+                new Party("Second account first holder", Party.Role.HOLDER),
+                new Party("Second account second holder", Party.Role.HOLDER));
     }
 }

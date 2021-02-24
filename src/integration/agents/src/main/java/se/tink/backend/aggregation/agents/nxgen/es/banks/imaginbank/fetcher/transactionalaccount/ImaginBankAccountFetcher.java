@@ -13,7 +13,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.fetcher.tran
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.fetcher.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.fetcher.transactionalaccount.rpc.ListHoldersResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
-import se.tink.backend.aggregation.nxgen.core.account.entity.Holder;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Party;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
@@ -37,10 +37,10 @@ public class ImaginBankAccountFetcher implements AccountFetcher<TransactionalAcc
         }
     }
 
-    private List<Holder> fetchHoldersForAccount(AccountEntity accountEntity) {
+    private List<Party> fetchPartiesForAccount(AccountEntity accountEntity) {
         ListHoldersResponse listHoldersResponse =
                 apiClient.fetchHolderList(accountEntity.getIdentifiers().getAccountReference());
-        return HolderEntity.toTinkHolders(listHoldersResponse);
+        return HolderEntity.toParties(listHoldersResponse);
     }
 
     public List<TransactionalAccount> getTinkAccounts(AccountsResponse response) {
@@ -48,7 +48,7 @@ public class ImaginBankAccountFetcher implements AccountFetcher<TransactionalAcc
             log.warn("More accounts available. Check if response contains key to the next page.");
         }
         return response.getAccounts().stream()
-                .map(account -> account.toTinkAccount(fetchHoldersForAccount(account)))
+                .map(account -> account.toTinkAccount(fetchPartiesForAccount(account)))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toList());

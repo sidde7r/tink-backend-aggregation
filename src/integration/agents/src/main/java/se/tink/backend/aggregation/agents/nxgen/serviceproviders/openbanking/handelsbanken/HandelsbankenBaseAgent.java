@@ -46,6 +46,7 @@ public abstract class HandelsbankenBaseAgent extends NextGenerationAgent
 
     public HandelsbankenBaseAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
+        client.registerJacksonModule(new JavaTimeModule());
         client.addFilter(new TimeoutFilter());
         client.addFilter(new HandelsbankenRejectedFilter());
         apiClient = constructApiClient();

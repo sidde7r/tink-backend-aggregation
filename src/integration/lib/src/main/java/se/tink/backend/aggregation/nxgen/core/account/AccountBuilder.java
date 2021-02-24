@@ -11,7 +11,7 @@ import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
-import se.tink.backend.aggregation.nxgen.core.account.entity.Holder;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Party;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.builder.BuildStep;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.builder.WithIdStep;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
@@ -24,7 +24,7 @@ public abstract class AccountBuilder<A extends Account, B extends BuildStep<A, B
 
     private IdModule idModule;
     private String apiIdentifier;
-    private final List<Holder> holders = new ArrayList<>();
+    private final List<Party> parties = new ArrayList<>();
     protected final List<AccountFlag> accountFlags = new ArrayList<>();
     private final TemporaryStorage temporaryStorage = new TemporaryStorage();
     protected Map<String, String> payload = new HashMap<>();
@@ -52,24 +52,25 @@ public abstract class AccountBuilder<A extends Account, B extends BuildStep<A, B
     @Override
     public B addHolderName(@Nullable String holderName) {
         if (!Strings.isNullOrEmpty(holderName)) {
-            holders.add(Holder.of(holderName));
+            parties.add(new Party(holderName, Party.Role.HOLDER));
         }
-
         return buildStep();
     }
 
     @Override
-    public B addHolders(@Nonnull List<Holder> holders) {
-        Preconditions.checkNotNull(holders, "holders List must not be null.");
-
-        this.holders.addAll(holders);
+    public B addParties(@Nonnull Party... parties) {
+        Preconditions.checkNotNull(parties, "parties array must not be null.");
+        addParties(Arrays.asList(parties));
         return buildStep();
     }
 
     @Override
-    public B addHolders(@Nonnull Holder... holders) {
-        Preconditions.checkNotNull(holders, "holders Array must not be null.");
-        return this.addHolders(Arrays.asList(holders));
+    public B addParties(@Nonnull List<Party> parties) {
+        Preconditions.checkNotNull(parties, "parties list must not be null.");
+        // When removed writes to account information service should parties be used as term
+        // not only in the agents but also in aggregation-service request to aggregation controller
+        this.parties.addAll(parties);
+        return buildStep();
     }
 
     @Override
@@ -150,8 +151,8 @@ public abstract class AccountBuilder<A extends Account, B extends BuildStep<A, B
         return apiIdentifier;
     }
 
-    List<Holder> getHolders() {
-        return ImmutableList.copyOf(holders);
+    List<Party> getParties() {
+        return ImmutableList.copyOf(parties);
     }
 
     AccountHolderType getHolderType() {

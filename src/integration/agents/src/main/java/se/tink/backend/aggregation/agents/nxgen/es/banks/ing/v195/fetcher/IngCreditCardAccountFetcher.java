@@ -11,7 +11,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.entity
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.entity.IngProduct;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
-import se.tink.backend.aggregation.nxgen.core.account.entity.Holder;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Party;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.creditcard.CreditCardModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.libraries.account.AccountIdentifier;
@@ -44,14 +44,14 @@ public class IngCreditCardAccountFetcher implements AccountFetcher<CreditCardAcc
         CreditCardModule cardDetails = getCreditCardModule(product, currency);
         IdModule id = getId(product);
         String apiIdentifier = product.getUuid();
-        Holder holder = IngHolder.toHolder(product.getHolder());
+        Party party = IngHolder.toParty(product.getHolder());
 
         return CreditCardAccount.nxBuilder()
                 .withCardDetails(cardDetails)
                 .withoutFlags()
                 .withId(id)
                 .setApiIdentifier(apiIdentifier)
-                .addHolders(holder)
+                .addParties(party)
                 .build();
     }
 

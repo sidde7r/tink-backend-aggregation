@@ -27,7 +27,7 @@
             "type" : "PERSONAL",
             "identities" : [ {
                 "name" : "Collector 3-mån sparkonto",
-                "role" : null
+                "role": "HOLDER"
             } ]
         },
         "flags" : "[]",
@@ -61,7 +61,7 @@
             "type" : "PERSONAL",
             "identities" : [ {
                 "name" : "Collector sparkonto",
-                "role" : null
+                "role": "HOLDER"
             } ]
         },
         "flags" : "[]",

@@ -89,7 +89,7 @@ public class AccountEntityMapperTest {
         assertThat(result.getIdModule().getProductName()).isEqualTo("Home Loan");
         assertThat(result.getInterestRate()).isEqualTo(0.0110);
         assertThat(result.getHolderName().toString()).isEqualTo("ACCOUNT OWNER");
-        assertThat(result.getHolders().size()).isEqualTo(1);
+        assertThat(result.getParties().size()).isEqualTo(1);
     }
 
     @Test
@@ -113,7 +113,7 @@ public class AccountEntityMapperTest {
         assertThat(result.getIdModule().getProductName()).isNull();
         assertThat(result.getInterestRate()).isEqualTo(0.0);
         assertThat(result.getHolderName()).isNull();
-        assertThat(result.getHolders().size()).isEqualTo(0);
+        assertThat(result.getParties().size()).isEqualTo(0);
     }
 
     private DanskeBankConfiguration danskeBankConfiguration() {

@@ -15,7 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinfor
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.EuroInformationConstants.Tags;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.authentication.rpc.LoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.fetcher.rpc.AccountSummaryResponse;
-import se.tink.backend.aggregation.nxgen.core.account.entity.Holder.Role;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Party;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
@@ -87,8 +87,8 @@ public class EuroInformationAccountFetcherTest {
 
     private void assertCheckingAccountValidWithHolderRoleHolder(TransactionalAccount account) {
         assertCheckingAccountValid(account);
-        assertThat(account.getHolders().get(0).getName()).isEqualTo("John Doe");
-        assertThat(account.getHolders().get(0).getRole()).isEqualTo(Role.HOLDER);
+        assertThat(account.getParties().get(0).getName()).isEqualTo("John Doe");
+        assertThat(account.getParties().get(0).getRole()).isEqualTo(Party.Role.HOLDER);
     }
 
     private void assertSavingAccountValidWithHolderRoleOther(TransactionalAccount account) {
@@ -100,13 +100,13 @@ public class EuroInformationAccountFetcherTest {
         assertThat(account.getIdModule().getUniqueId()).isEqualTo("IBAN2");
         assertThat(account.getIdModule().getAccountNumber()).isEqualTo("TEST_ACCOUNT_NUMBER_2");
         assertThat(account.getIdModule().getAccountName()).isEqualTo("TEST_NAME_2");
-        assertThat(account.getHolders().get(0).getName()).isEqualTo("John Doe");
-        assertThat(account.getHolders().get(0).getRole()).isEqualTo(Role.OTHER);
+        assertThat(account.getParties().get(0).getName()).isEqualTo("John Doe");
+        assertThat(account.getParties().get(0).getRole()).isEqualTo(Party.Role.OTHER);
     }
 
     private void assertCheckingAccountValidWithoutHolder(TransactionalAccount account) {
         assertCheckingAccountValid(account);
-        assertThat(account.getHolders().isEmpty()).isTrue();
+        assertThat(account.getParties().isEmpty()).isTrue();
     }
 
     private String ACCOUNTS_RESPONSE_WITH_HOLDER =

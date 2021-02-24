@@ -1,11 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter;
 
+import static se.tink.backend.aggregation.nxgen.core.account.entity.Party.*;
+
 import com.google.common.collect.Sets;
 import java.util.Set;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.fetcher.transactionalaccount.entities.BankinterHolder;
 import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapper;
-import se.tink.backend.aggregation.nxgen.core.account.entity.Holder.Role;
 import se.tink.libraries.account.enums.AccountFlag;
 
 public final class BankinterConstants {

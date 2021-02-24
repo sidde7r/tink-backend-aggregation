@@ -1,11 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.entity;
 
+import static se.tink.backend.aggregation.nxgen.core.account.entity.Party.Role.AUTHORIZED_USER;
+import static se.tink.backend.aggregation.nxgen.core.account.entity.Party.Role.HOLDER;
+import static se.tink.backend.aggregation.nxgen.core.account.entity.Party.Role.OTHER;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.core.account.entity.Holder;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Party;
 
 @JsonObject
 public final class IngHolder {
@@ -57,23 +61,23 @@ public final class IngHolder {
         return interventionDegree.getCode();
     }
 
-    public static List<Holder> getHolders(IngProduct product) {
-        return product.getHolders().stream().map(IngHolder::toHolder).collect(Collectors.toList());
+    public static List<Party> getParties(IngProduct product) {
+        return product.getHolders().stream().map(IngHolder::toParty).collect(Collectors.toList());
     }
 
-    public static Holder toHolder(IngHolder ingHolder) {
-        return Holder.of(ingHolder.getAnyName(), toHolderRole(ingHolder.getAnyTypeCode()));
+    public static Party toParty(IngHolder ingHolder) {
+        return new Party(ingHolder.getAnyName(), toPartyRole(ingHolder.getAnyTypeCode()));
     }
 
-    public static Holder.Role toHolderRole(String typeCode) {
+    public static Party.Role toPartyRole(String typeCode) {
         switch (typeCode) {
             case IngConstants.HolderTypes.OWNER:
             case IngConstants.HolderTypes.CO_OWNER:
-                return Holder.Role.HOLDER;
+                return HOLDER;
             case IngConstants.HolderTypes.AUTHORIZED_USER:
-                return Holder.Role.AUTHORIZED_USER;
+                return AUTHORIZED_USER;
             default:
-                return Holder.Role.OTHER;
+                return OTHER;
         }
     }
 }

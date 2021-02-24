@@ -29,7 +29,7 @@
         "identities": [
           {
             "name": "Full Name Even With Middle Names",
-            "role": null
+            "role": "HOLDER"
           }
         ]
       },

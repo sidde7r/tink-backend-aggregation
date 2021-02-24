@@ -27,7 +27,7 @@
       "type" : "PERSONAL",
       "identities" : [ {
         "name" : "firstName",
-        "role" : null
+        "role": "HOLDER"
       } ]
     },
     "flags" : "[]",
@@ -61,7 +61,7 @@
       "type" : "PERSONAL",
       "identities" : [ {
         "name" : "firstName",
-        "role" : null
+        "role": "HOLDER"
       } ]
     },
     "flags" : "[]",
@@ -95,7 +95,7 @@
       "type" : "PERSONAL",
       "identities" : [ {
         "name" : "firstName",
-        "role" : null
+        "role": "HOLDER"
       } ]
     },
     "flags" : "[]",
@@ -129,7 +129,7 @@
       "type" : "PERSONAL",
       "identities" : [ {
         "name" : "firstName",
-        "role" : null
+        "role": "HOLDER"
       } ]
     },
     "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
@@ -163,7 +163,7 @@
       "type" : "PERSONAL",
       "identities" : [ {
         "name" : "firstName",
-        "role" : null
+        "role": "HOLDER"
       } ]
     },
     "flags" : "[]",
@@ -197,7 +197,7 @@
       "type" : "PERSONAL",
       "identities" : [ {
         "name" : "firstName",
-        "role" : null
+        "role": "HOLDER"
       } ]
     },
     "flags" : "[]",
@@ -231,7 +231,7 @@
       "type" : "PERSONAL",
       "identities" : [ {
         "name" : "firstName",
-        "role" : null
+        "role": "HOLDER"
       } ]
     },
     "flags" : "[]",

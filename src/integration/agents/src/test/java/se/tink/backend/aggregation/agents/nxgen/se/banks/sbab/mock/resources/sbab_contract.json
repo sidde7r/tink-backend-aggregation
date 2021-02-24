@@ -29,7 +29,7 @@
         "identities": [
           {
             "name": "FIRST_NAME LAST_NAME",
-            "role": null
+            "role": "HOLDER"
           }
         ]
       },
@@ -118,7 +118,7 @@
         "identities": [
           {
             "name": "FIRSTNAME LASTNAME",
-            "role": null
+            "role": "HOLDER"
           }
         ]
       },
@@ -155,7 +155,7 @@
         "identities": [
           {
             "name": "FIRST_NAME LAST_NAME",
-            "role": null
+            "role": "HOLDER"
           }
         ]
       },
