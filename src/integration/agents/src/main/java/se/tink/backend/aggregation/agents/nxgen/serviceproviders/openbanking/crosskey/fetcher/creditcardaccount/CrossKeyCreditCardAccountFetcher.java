@@ -30,54 +30,56 @@ public class CrossKeyCreditCardAccountFetcher implements AccountFetcher<CreditCa
         return apiClient.fetchAccounts().getData().getAccounts().stream()
                 .filter(AccountEntity::isCreditCardAccount)
                 .map(this::toCreditCardAccount)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .collect(Collectors.toList());
     }
 
-    private CreditCardAccount toCreditCardAccount(AccountEntity accountEntity) {
+    private Optional<CreditCardAccount> toCreditCardAccount(AccountEntity accountEntity) {
         final CrosskeyAccountBalancesResponse crosskeyAccountBalancesResponse =
                 apiClient.fetchAccountBalances(accountEntity.getAccountId());
 
-        final Optional<AccountDetailsEntity> accountDetails =
-                accountEntity.getAccountDetails(IdentificationType.CREDIT_CARD);
         final AccountBalancesDataEntity balances = crosskeyAccountBalancesResponse.getData();
-
-        return getCreditCardAccount(accountEntity, accountDetails, balances);
+        return getCreditCardAccount(accountEntity, balances);
     }
 
-    private CreditCardAccount getCreditCardAccount(
-            AccountEntity accountEntity,
-            Optional<AccountDetailsEntity> accountDetails,
-            AccountBalancesDataEntity balances) {
+    private Optional<CreditCardAccount> getCreditCardAccount(
+            AccountEntity accountEntity, AccountBalancesDataEntity balances) {
 
         final String maskedCardNumber =
-                accountDetails
+                accountEntity
+                        .getAccountDetails(IdentificationType.CREDIT_CARD)
                         .map(AccountDetailsEntity::getIdentification)
                         .orElse(accountEntity.getAccountId());
 
-        AccountBalanceEntity balanceEntity =
-                balances.getInterimAvailableBalance()
-                        .orElseThrow(() -> new IllegalArgumentException("Balance not found"));
-        return CreditCardAccount.nxBuilder()
-                .withCardDetails(
-                        CreditCardModule.builder()
-                                .withCardNumber(maskedCardNumber)
-                                .withBalance(balanceEntity.getExactAmount())
-                                .withAvailableCredit(
-                                        ExactCurrencyAmount.of(
-                                                BigDecimal.ZERO,
-                                                balanceEntity.getAmount().getCurrency()))
-                                .withCardAlias(accountEntity.getDescription())
-                                .build())
-                .withoutFlags()
-                .withId(
-                        IdModule.builder()
-                                .withUniqueIdentifier(maskedCardNumber)
-                                .withAccountNumber(maskedCardNumber)
-                                .withAccountName(accountEntity.getDescription())
-                                .addIdentifier(new PaymentCardNumberIdentifier(maskedCardNumber))
-                                .setProductName(accountEntity.getDescription())
-                                .build())
-                .setApiIdentifier(accountEntity.getAccountId())
-                .build();
+        Optional<AccountBalanceEntity> maybeBalanceEntity = balances.getInterimAvailableBalance();
+        if (!maybeBalanceEntity.isPresent()) {
+            return Optional.empty();
+        }
+        AccountBalanceEntity balanceEntity = maybeBalanceEntity.get();
+        return Optional.of(
+                CreditCardAccount.nxBuilder()
+                        .withCardDetails(
+                                CreditCardModule.builder()
+                                        .withCardNumber(maskedCardNumber)
+                                        .withBalance(balanceEntity.getExactAmount())
+                                        .withAvailableCredit(
+                                                ExactCurrencyAmount.of(
+                                                        BigDecimal.ZERO,
+                                                        balanceEntity.getAmount().getCurrency()))
+                                        .withCardAlias(accountEntity.getDescription())
+                                        .build())
+                        .withoutFlags()
+                        .withId(
+                                IdModule.builder()
+                                        .withUniqueIdentifier(maskedCardNumber)
+                                        .withAccountNumber(maskedCardNumber)
+                                        .withAccountName(accountEntity.getDescription())
+                                        .addIdentifier(
+                                                new PaymentCardNumberIdentifier(maskedCardNumber))
+                                        .setProductName(accountEntity.getDescription())
+                                        .build())
+                        .setApiIdentifier(accountEntity.getAccountId())
+                        .build());
     }
 }

@@ -32,6 +32,7 @@ public class CrossKeyTransactionalAccountFetcher implements AccountFetcher<Trans
         return apiClient.fetchAccounts().getData().getAccounts().stream()
                 .filter(AccountEntity::isCheckingAccount)
                 .map(this::toCheckingAccount)
+                .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toList());
     }
@@ -40,29 +41,36 @@ public class CrossKeyTransactionalAccountFetcher implements AccountFetcher<Trans
         final CrosskeyAccountBalancesResponse crosskeyAccountBalancesResponse =
                 apiClient.fetchAccountBalances(accountEntity.getAccountId());
 
-        final Optional<AccountDetailsEntity> accountDetails =
-                accountEntity.getAccountDetails(IdentificationType.IBAN);
         final AccountBalancesDataEntity balances = crosskeyAccountBalancesResponse.getData();
 
-        return getCheckingAccount(accountEntity, accountDetails, balances);
+        return getCheckingAccount(accountEntity, balances);
     }
 
     private Optional<TransactionalAccount> getCheckingAccount(
-            AccountEntity accountEntity,
-            Optional<AccountDetailsEntity> accountDetails,
-            AccountBalancesDataEntity balances) {
+            AccountEntity accountEntity, AccountBalancesDataEntity balances) {
 
         final String accountNumber =
-                accountDetails
+                accountEntity
+                        .getAccountDetails(IdentificationType.IBAN)
                         .map(AccountDetailsEntity::getIdentification)
                         .orElse(accountEntity.getAccountId());
 
-        final String accountName = accountDetails.map(AccountDetailsEntity::getName).orElse("");
+        final String accountName =
+                accountEntity
+                        .getAccountDetails(IdentificationType.IBAN)
+                        .map(AccountDetailsEntity::getName)
+                        .orElse("");
+
+        Optional<ExactCurrencyAmount> balance = getBalance(balances);
+
+        if (!balance.isPresent()) {
+            return Optional.empty();
+        }
 
         return TransactionalAccount.nxBuilder()
                 .withType(TransactionalAccountType.CHECKING)
                 .withPaymentAccountFlag()
-                .withBalance(BalanceModule.of(getBalance(balances)))
+                .withBalance(BalanceModule.of(balance.get()))
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(accountNumber)
@@ -78,16 +86,11 @@ public class CrossKeyTransactionalAccountFetcher implements AccountFetcher<Trans
                 .build();
     }
 
-    private ExactCurrencyAmount getBalance(AccountBalancesDataEntity balances) {
-        AccountBalanceEntity entity =
-                balances.getInterimBookedBalance()
-                        .orElseGet(
-                                () ->
-                                        balances.getInterimAvailableBalance()
-                                                .orElseThrow(
-                                                        () ->
-                                                                new IllegalArgumentException(
-                                                                        "Balance not found")));
-        return entity.getExactAmount();
+    private Optional<ExactCurrencyAmount> getBalance(AccountBalancesDataEntity balances) {
+        Optional<AccountBalanceEntity> interimBookedBalance = balances.getInterimBookedBalance();
+        if (interimBookedBalance.isPresent()) {
+            return interimBookedBalance.map(AccountBalanceEntity::getExactAmount);
+        }
+        return balances.getInterimAvailableBalance().map(AccountBalanceEntity::getExactAmount);
     }
 }

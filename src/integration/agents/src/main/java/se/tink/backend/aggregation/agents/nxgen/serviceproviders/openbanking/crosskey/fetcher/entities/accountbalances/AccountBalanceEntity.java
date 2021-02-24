@@ -11,6 +11,7 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 @JsonNaming(PropertyNamingStrategy.UpperCamelCaseStrategy.class)
 public class AccountBalanceEntity {
 
+    private static final String CREDIT_INDICATOR = "Credit";
     private String accountId;
     private AmountEntity amount;
     private String creditDebitIndicator;
@@ -31,7 +32,7 @@ public class AccountBalanceEntity {
     }
 
     private boolean isCredit() {
-        return "Credit".equals(creditDebitIndicator);
+        return CREDIT_INDICATOR.equals(creditDebitIndicator);
     }
 
     public ExactCurrencyAmount getExactAmount() {
