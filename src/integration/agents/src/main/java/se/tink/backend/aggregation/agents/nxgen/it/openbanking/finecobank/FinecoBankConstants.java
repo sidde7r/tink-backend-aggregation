@@ -78,6 +78,7 @@ public final class FinecoBankConstants {
         public static final String TRANSACTIONS_CONSENTS = "transactionAccounts";
         public static final String BALANCES_CONSENTS = "balanceAccounts";
         public static final String STATE = "STATE";
+        public static final String TIMESTAMP = "TIMESTAMP";
     }
 
     public static class QueryKeys {

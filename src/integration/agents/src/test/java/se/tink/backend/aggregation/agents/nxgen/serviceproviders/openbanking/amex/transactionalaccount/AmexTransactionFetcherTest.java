@@ -9,6 +9,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmexTestFixtures.ACCOUNT_NUMBER_1;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmexTestFixtures.STATEMENT_MAP;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmexTestFixtures.createHmacAccountIds;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmexTestFixtures.createHmacToken;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmexTestFixtures.createTransactionsResponse;
@@ -24,11 +25,13 @@ import java.util.Optional;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmericanExpressConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmexApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.dto.TransactionsResponseDto;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.transactionalaccount.converter.AmexTransactionalAccountConverter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.transactionalaccount.storage.HmacAccountIdStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.transactionalaccount.storage.HmacAccountIds;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.creditcard.CreditCardModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
@@ -38,6 +41,7 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
+import se.tink.libraries.date.ThreadSafeDateFormat;
 
 public class AmexTransactionFetcherTest {
 
@@ -56,13 +60,15 @@ public class AmexTransactionFetcherTest {
         amexTransactionalAccountConverterMock = mock(AmexTransactionalAccountConverter.class);
         TemporaryStorage temporaryStorage = mock(TemporaryStorage.class);
         ObjectMapper objectMapper = mock(ObjectMapper.class);
+        LocalDateTimeSource localDateTimeSource = mock(LocalDateTimeSource.class);
 
         amexTransactionFetcher =
                 new AmexCreditCardTransactionFetcher(
                         amexApiClientMock,
                         hmacAccountIdStorageMock,
                         temporaryStorage,
-                        objectMapper);
+                        objectMapper,
+                        localDateTimeSource);
     }
 
     @Ignore
@@ -88,7 +94,7 @@ public class AmexTransactionFetcherTest {
         final List<AggregationTransaction> response =
                 new ArrayList<>(
                         amexTransactionFetcher
-                                .getTransactionsFor(account, null, null)
+                                .getTransactionsFor(account, null)
                                 .getTinkTransactions());
 
         // then
@@ -109,14 +115,16 @@ public class AmexTransactionFetcherTest {
                 catchThrowable(
                         () ->
                                 amexTransactionFetcher.getTransactionsFor(
-                                        account, new Date(), new Date()));
+                                        account,
+                                        ThreadSafeDateFormat.FORMATTER_DAILY.format(new Date())));
 
         // then
         assertThat(thrown)
                 .isExactlyInstanceOf(IllegalArgumentException.class)
                 .hasMessage("No HmacAccountId found in the storage.");
 
-        verify(amexApiClientMock, never()).fetchTransactions(any(), eq(new Date()), eq(new Date()));
+        verify(amexApiClientMock, never())
+                .fetchTransactions(any(), eq(Optional.of(LocalDate.now())), eq(LocalDate.now()));
     }
 
     private CreditCardAccount getCreditCardAccount() {
@@ -137,6 +145,8 @@ public class AmexTransactionFetcherTest {
                                 .addIdentifier(
                                         new IbanIdentifier(ACCOUNT_NUMBER_1.replace("-", "")))
                                 .build())
+                .putInTemporaryStorage(
+                        AmericanExpressConstants.StorageKey.STATEMENTS, STATEMENT_MAP)
                 .build();
     }
 

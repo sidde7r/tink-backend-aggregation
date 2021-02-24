@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.am
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CREDIT_CARDS;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.inject.Inject;
 import java.time.Clock;
 import lombok.Getter;
@@ -25,7 +26,6 @@ import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentProgressiveGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.hmac.HmacMultiTokenFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.hmac.HmacMultiTokenStorage;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2based.AccessCodeStorage;
@@ -38,7 +38,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.StatelessProgressiveAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.core.authentication.HmacToken;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.BankServiceInternalErrorFilter;
@@ -51,7 +51,6 @@ public final class AmericanExpressAgent extends SubsequentProgressiveGenerationA
     private final AmexApiClient amexApiClient;
     private final CreditCardRefreshController creditCardRefreshController;
     private final ObjectMapper objectMapper;
-    private final LocalDateTimeSource localDateTimeSource;
     private final TemporaryStorage temporaryStorage;
 
     @VisibleForTesting @Getter private final HmacMultiTokenStorage hmacMultiTokenStorage;
@@ -65,7 +64,6 @@ public final class AmericanExpressAgent extends SubsequentProgressiveGenerationA
         final String redirectUrl = agentConfiguration.getRedirectUrl();
         final MacSignatureCreator macSignatureCreator = new MacSignatureCreator();
         final Clock clock = Clock.systemDefaultZone();
-        this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
         final AmexMacGenerator amexMacGenerator =
                 new AmexMacGenerator(amexConfiguration, macSignatureCreator, clock);
 
@@ -86,7 +84,8 @@ public final class AmericanExpressAgent extends SubsequentProgressiveGenerationA
                         temporaryStorage,
                         hmacMultiTokenStorage);
 
-        this.creditCardRefreshController = constructCreditCardController();
+        this.creditCardRefreshController = constructCreditCardController(componentProvider);
+        client.registerJacksonModule(new JavaTimeModule());
         client.addFilter(new AmexInvalidTokenFilter(hmacMultiTokenStorage));
         client.addFilter(
                 new AmexRetryFilter(
@@ -141,12 +140,17 @@ public final class AmericanExpressAgent extends SubsequentProgressiveGenerationA
         return getAgentConfigurationController().getAgentConfiguration(AmexConfiguration.class);
     }
 
-    private CreditCardRefreshController constructCreditCardController() {
+    private CreditCardRefreshController constructCreditCardController(
+            AgentComponentProvider agentComponentProvider) {
         final HmacAccountIdStorage hmacAccountIdStorage = new HmacAccountIdStorage(sessionStorage);
 
         AmexCreditCardTransactionFetcher cardTransactionFetcher =
                 new AmexCreditCardTransactionFetcher(
-                        amexApiClient, hmacAccountIdStorage, temporaryStorage, this.objectMapper);
+                        amexApiClient,
+                        hmacAccountIdStorage,
+                        temporaryStorage,
+                        this.objectMapper,
+                        agentComponentProvider.getLocalDateTimeSource());
 
         return new CreditCardRefreshController(
                 metricRefreshController,
@@ -155,10 +159,7 @@ public final class AmericanExpressAgent extends SubsequentProgressiveGenerationA
                         amexApiClient, hmacMultiTokenStorage, hmacAccountIdStorage),
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        new TransactionDatePaginationController.Builder<>(cardTransactionFetcher)
-                                .setConsecutiveEmptyPagesLimit(0)
-                                .setLocalDateTimeSource(localDateTimeSource)
-                                .build()));
+                        new TransactionKeyPaginationController<>(cardTransactionFetcher)));
     }
 
     @Override

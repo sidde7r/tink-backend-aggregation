@@ -9,6 +9,8 @@ public class AmericanExpressConstants {
         throw new IllegalStateException("Utility class");
     }
 
+    public static final int DAYS_TO_FETCH_PENDING = 30;
+
     public static class ErrorMessages {
         private ErrorMessages() {}
 
@@ -45,6 +47,7 @@ public class AmericanExpressConstants {
 
         public static final String QUERY_PARAM_START_DATE = "start_date";
         public static final String QUERY_PARAM_END_DATE = "end_date";
+        public static final String QUERY_PARAM_STATEMENT_END_DATE = "statement_end_date";
         public static final String QUERY_PARAM_LIMIT = "limit";
         public static final String REDIRECT_URI = "redirect_uri";
         public static final String CLIENT_ID = "client_id";
@@ -65,6 +68,10 @@ public class AmericanExpressConstants {
         public static final String POSTED = "posted";
     }
 
+    public static class StorageKey {
+        public static final String STATEMENTS = "STATEMENTS";
+    }
+
     public static class Urls {
         private Urls() {}
 
@@ -78,6 +85,8 @@ public class AmericanExpressConstants {
                 SERVER_URL.concat("/apiplatform/v2/oauth/token_revocation/mac");
         public static final URL BASE_PATH = SERVER_URL.concat("/servicing/v1");
         public static final URL ENDPOINT_ACCOUNTS = BASE_PATH.concat("/member/accounts");
+        public static final URL ENDPOINT_STATEMENT_PERIODS =
+                BASE_PATH.concat("/financials/statement_periods");
         public static final URL ENDPOINT_BALANCES = BASE_PATH.concat("/financials/balances");
         public static final URL ENDPOINT_TRANSACTIONS =
                 BASE_PATH.concat("/financials/transactions");

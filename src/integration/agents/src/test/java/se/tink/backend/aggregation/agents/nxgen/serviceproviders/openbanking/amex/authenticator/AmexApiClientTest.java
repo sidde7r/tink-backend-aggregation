@@ -28,6 +28,7 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbank
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -253,8 +254,9 @@ public class AmexApiClientTest {
         setUpHttpClientMockForApiTransactions(url, expectedResponseMap);
 
         // when
+        final Optional<LocalDate> now = Optional.ofNullable(LocalDate.now());
         final List<TransactionsResponseDto> actualResponse =
-                amexApiClient.fetchTransactions(hmacToken, new Date(), new Date());
+                amexApiClient.fetchTransactions(hmacToken, now, now.get());
 
         // then
         assertThat(actualResponse.stream().findFirst().get())
