@@ -15,6 +15,9 @@ public class IberCajaMockServerAgentTest {
     private static final String USERNAME = "dummyUsername";
     private static final String PASSWORD = "dummyPassword";
 
+    /*
+    Transactions excluded because pagination is using dynamic dates, while .aap has static content
+     */
     @Test
     public void testRefreshWithoutTransactions() throws Exception {
 
