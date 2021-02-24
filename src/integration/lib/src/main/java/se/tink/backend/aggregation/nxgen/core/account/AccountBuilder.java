@@ -50,7 +50,6 @@ public abstract class AccountBuilder<A extends Account, B extends BuildStep<A, B
     }
 
     @Override
-    @Deprecated
     public B addHolderName(@Nullable String holderName) {
         if (!Strings.isNullOrEmpty(holderName)) {
             parties.add(new Party(holderName, Party.Role.HOLDER));

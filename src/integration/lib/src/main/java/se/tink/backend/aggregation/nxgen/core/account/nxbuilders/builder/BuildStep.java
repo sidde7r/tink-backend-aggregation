@@ -29,9 +29,7 @@ public interface BuildStep<A extends Account, B extends BuildStep<A, B>> {
      *
      * @param holderName Name of the account holder.
      * @return The next step of the builder.
-     * @deprecated Use add parties where the role is always explicitly specified and not null
      */
-    @Deprecated
     B addHolderName(@Nullable String holderName);
 
     /**
