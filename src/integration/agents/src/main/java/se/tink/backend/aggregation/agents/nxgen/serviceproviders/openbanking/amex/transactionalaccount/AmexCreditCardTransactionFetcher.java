@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.am
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.google.common.base.Preconditions;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -11,8 +12,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import com.google.common.base.Preconditions;
 import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmericanExpressConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmericanExpressUtils;
@@ -110,8 +109,9 @@ public class AmexCreditCardTransactionFetcher
     }
 
     private static Integer getKeysByValue(Map<Integer, LocalDate> statementMap, LocalDate value) {
-        Map<Integer, LocalDate> map = Preconditions.checkNotNull(statementMap);
-        return map.entrySet().stream()
+        Preconditions.checkNotNull(statementMap);
+
+        return statementMap.entrySet().stream()
                 .filter(entry -> entry.getValue().equals(value))
                 .map(Map.Entry::getKey)
                 .findFirst()
