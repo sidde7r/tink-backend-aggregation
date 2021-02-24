@@ -7,21 +7,28 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 
 import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
+import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModulesForDecoupledMode;
+import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModulesForProductionMode;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.danskebank.mapper.DanskeNoIdentifierMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.danskebank.DanskeBankV31EUBaseAgent;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.danskebank.DanskebankAisConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.danskebank.DanskebankV31Constant.Url.V31;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.danskebank.configuration.DanskebankAisConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.danskebank.mapper.DanskeCreditCardAccountMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.danskebank.mapper.DanskeTransactionalAccountMapper;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.danskebank.signer.DanskeOpenBankingModule;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.module.UkOpenBankingLocalKeySignerModuleForDecoupledMode;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.creditcards.CreditCardAccountMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.transactionalaccounts.TransactionalAccountBalanceMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.transactionalaccounts.TransactionalAccountMapper;
-import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.signer.iface.JwtSigner;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.libraries.enums.MarketCode;
 import se.tink.libraries.mapper.PrioritizedValueExtractor;
 
+@AgentDependencyModulesForProductionMode(modules = DanskeOpenBankingModule.class)
+@AgentDependencyModulesForDecoupledMode(
+        modules = UkOpenBankingLocalKeySignerModuleForDecoupledMode.class)
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, CREDIT_CARDS, IDENTITY_DATA})
 public final class DanskebankV31Agent extends DanskeBankV31EUBaseAgent {
 
@@ -36,11 +43,10 @@ public final class DanskebankV31Agent extends DanskeBankV31EUBaseAgent {
     }
 
     @Inject
-    public DanskebankV31Agent(
-            AgentComponentProvider componentProvider, AgentsServiceConfiguration configuration) {
+    public DanskebankV31Agent(AgentComponentProvider componentProvider, JwtSigner jwtSigner) {
         super(
                 componentProvider,
-                configuration,
+                jwtSigner,
                 aisConfig,
                 getCreditCardAccountMapperWithDanskeIdentifierMapper(),
                 getTransactionalAccountMapperWithDanskeIdentifierMapper());

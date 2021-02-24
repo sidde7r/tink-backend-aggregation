@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.danskebank.authenticator.DanskebankAuthenticationController;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.danskebank.configuration.DanskebankEUConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.danskebank.mapper.DanskeCreditCardBalanceMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.UkOpenBankingBaseAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.authenticator.OpenIdAisAuthenticator;
@@ -25,6 +26,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.transactionalaccounts.TransactionalAccountMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticationController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticationValidator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.signer.iface.JwtSigner;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -47,19 +49,19 @@ public abstract class DanskeBankV31EUBaseAgent extends NextGenerationAgent
 
     public DanskeBankV31EUBaseAgent(
             AgentComponentProvider componentProvider,
-            AgentsServiceConfiguration configuration,
+            JwtSigner jwtSigner,
             UkOpenBankingAisConfig aisConfig,
             CreditCardAccountMapper creditCardAccountMapper) {
         super(componentProvider);
         ukOpenBankingBaseAgent =
                 new UkOpenBankingBaseAgentImpl(
-                        componentProvider, configuration, aisConfig, creditCardAccountMapper);
+                        componentProvider, jwtSigner, aisConfig, creditCardAccountMapper);
         this.aisConfig = aisConfig;
     }
 
     public DanskeBankV31EUBaseAgent(
             AgentComponentProvider componentProvider,
-            AgentsServiceConfiguration configuration,
+            JwtSigner jwtSigner,
             UkOpenBankingAisConfig aisConfig,
             CreditCardAccountMapper creditCardAccountMapper,
             TransactionalAccountMapper transactionalAccountMapper) {
@@ -67,7 +69,7 @@ public abstract class DanskeBankV31EUBaseAgent extends NextGenerationAgent
         ukOpenBankingBaseAgent =
                 new UkOpenBankingBaseAgentImpl(
                         componentProvider,
-                        configuration,
+                        jwtSigner,
                         aisConfig,
                         creditCardAccountMapper,
                         transactionalAccountMapper);
@@ -158,33 +160,21 @@ public abstract class DanskeBankV31EUBaseAgent extends NextGenerationAgent
 
         UkOpenBankingBaseAgentImpl(
                 AgentComponentProvider componentProvider,
-                AgentsServiceConfiguration configuration,
+                JwtSigner jwtSigner,
                 UkOpenBankingAisConfig agentConfig,
                 CreditCardAccountMapper creditCardAccountMapper) {
-            super(
-                    componentProvider,
-                    createEidasJwtSigner(
-                            configuration,
-                            componentProvider.getContext(),
-                            UkOpenBankingBaseAgentImpl.class),
-                    agentConfig);
+            super(componentProvider, jwtSigner, agentConfig);
             this.creditCardAccountMapper = creditCardAccountMapper;
             this.transactionalAccountMapper = defaultTransactionalAccountMapper();
         }
 
         UkOpenBankingBaseAgentImpl(
                 AgentComponentProvider componentProvider,
-                AgentsServiceConfiguration configuration,
+                JwtSigner jwtSigner,
                 UkOpenBankingAisConfig agentConfig,
                 CreditCardAccountMapper creditCardAccountMapper,
                 TransactionalAccountMapper transactionalAccountMapper) {
-            super(
-                    componentProvider,
-                    createEidasJwtSigner(
-                            configuration,
-                            componentProvider.getContext(),
-                            UkOpenBankingBaseAgentImpl.class),
-                    agentConfig);
+            super(componentProvider, jwtSigner, agentConfig);
             this.creditCardAccountMapper = creditCardAccountMapper;
             this.transactionalAccountMapper = transactionalAccountMapper;
         }

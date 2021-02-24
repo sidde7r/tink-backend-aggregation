@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Before;
 import org.junit.Test;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.danskebank.configuration.DanskebankAisConfiguration;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.enums.MarketCode;
 

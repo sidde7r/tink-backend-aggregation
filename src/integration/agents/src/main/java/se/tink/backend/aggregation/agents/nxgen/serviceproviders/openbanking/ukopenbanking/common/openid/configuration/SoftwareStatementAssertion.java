@@ -35,6 +35,7 @@ public class SoftwareStatementAssertion {
     public static SoftwareStatementAssertion fromJson(String json) {
         JsonNode jsonNode = new ObjectMapper().readTree(json);
         String softwareId = jsonNode.get(OpenIdConstants.Params.SOFTWARE_ID).asText();
-        return new SoftwareStatementAssertion(softwareId, new URL(""));
+        String url = jsonNode.get(OpenIdConstants.Params.SOFTWARE_JWKS_ENDPOINT).asText();
+        return new SoftwareStatementAssertion(softwareId, new URL(url));
     }
 }
