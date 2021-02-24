@@ -68,7 +68,8 @@ public final class AgentWireMockRefreshTest {
             boolean dumpContentForContractFile,
             boolean requestFlagManual,
             boolean requestFlagCreate,
-            boolean requestFlagUpdate) {
+            boolean requestFlagUpdate,
+            boolean wireMockServerLogsEnabled) {
 
         ImmutableSet<RequestResponseParser> parsers =
                 wireMockFilePaths.stream()
@@ -78,7 +79,7 @@ public final class AgentWireMockRefreshTest {
                                                 new ResourceFileReader().read(wireMockFilePath)))
                         .collect(ImmutableSet.toImmutableSet());
 
-        server = new WireMockTestServer(parsers);
+        server = new WireMockTestServer(parsers, wireMockServerLogsEnabled);
 
         final Set<Module> modules =
                 ImmutableSet.of(
@@ -90,7 +91,8 @@ public final class AgentWireMockRefreshTest {
                                 credentialPayload,
                                 callbackData,
                                 persistentStorageData,
-                                cache),
+                                cache,
+                                httpDebugTrace),
                         new RefreshRequestModule(
                                 refreshableItems,
                                 requestFlagManual,
@@ -100,8 +102,7 @@ public final class AgentWireMockRefreshTest {
                                 MutableFakeBankSocket.of("localhost:" + server.getHttpsPort()),
                                 callbackData,
                                 agentTestModule,
-                                commandSequence,
-                                httpDebugTrace));
+                                commandSequence));
 
         Injector injector = Guice.createInjector(modules);
         compositeAgentTest = injector.getInstance(CompositeAgentTest.class);
@@ -114,13 +115,11 @@ public final class AgentWireMockRefreshTest {
      * @throws Exception May throw any exception that the agent throws.
      */
     public void executeRefresh() throws Exception {
-        try {
-            compositeAgentTest.execute();
-        } catch (Exception e) {
-            if (server.hadEncounteredAnError()) {
-                throw new RuntimeException(server.createErrorLogForFailedRequest());
-            }
-            throw e;
+
+        compositeAgentTest.executeCommands();
+        if (server.hadEncounteredAnError()) {
+
+            throw new RuntimeException(server.createErrorLogForFailedRequest());
         }
         if (dumpContentForContractFile) {
             ContractProducer contractProducer = new ContractProducer();
@@ -422,7 +421,8 @@ public final class AgentWireMockRefreshTest {
                     dumpContentForContractFile,
                     requestManual,
                     requestCreate,
-                    requestUpdate);
+                    requestUpdate,
+                    true);
         }
     }
 
@@ -452,7 +452,8 @@ public final class AgentWireMockRefreshTest {
         private TestModule agentTestModule;
         private Set<RefreshableItem> refreshableItems;
         private List<Class<? extends CompositeAgentTestCommand>> commandSequence;
-        private boolean httpDebugTrace;
+        private boolean httpDebugTraceEnabled;
+        private boolean wireMockServerLogsEnabled;
         private boolean dumpContentForContractFile;
         private boolean requestFlagManual;
         private boolean requestFlagCreate;
@@ -465,7 +466,8 @@ public final class AgentWireMockRefreshTest {
             this.persistentStorageData = new HashMap<>();
             this.cache = new HashMap<>();
             this.refreshableItems = new HashSet<>();
-            this.httpDebugTrace = false;
+            this.httpDebugTraceEnabled = false;
+            this.wireMockServerLogsEnabled = false;
             this.dumpContentForContractFile = false;
             this.requestFlagManual = true;
             this.requestFlagCreate = false;
@@ -622,13 +624,19 @@ public final class AgentWireMockRefreshTest {
 
         @Override
         public BuildStep enableHttpDebugTrace() {
-            this.httpDebugTrace = true;
+            this.httpDebugTraceEnabled = true;
             return this;
         }
 
         @Override
         public BuildStep enableDataDumpForContractFile() {
             this.dumpContentForContractFile = true;
+            return this;
+        }
+
+        @Override
+        public BuildStep enableWireMockServerLogs() {
+            this.wireMockServerLogsEnabled = true;
             return this;
         }
 
@@ -647,11 +655,12 @@ public final class AgentWireMockRefreshTest {
                     agentTestModule,
                     refreshableItems,
                     of(LoginCommand.class, RefreshCommand.class),
-                    httpDebugTrace,
+                    httpDebugTraceEnabled,
                     dumpContentForContractFile,
                     requestFlagManual,
                     requestFlagCreate,
-                    requestFlagUpdate);
+                    requestFlagUpdate,
+                    wireMockServerLogsEnabled);
         }
     }
 
@@ -747,6 +756,9 @@ public final class AgentWireMockRefreshTest {
 
         /** Enable printing of http debug trace */
         BuildStep enableHttpDebugTrace();
+
+        /** Enable printing of wire mock server logs */
+        BuildStep enableWireMockServerLogs();
 
         /**
          * Enable printing of processed data from .aap file (response body mapped to tink model)

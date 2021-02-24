@@ -6,6 +6,7 @@ import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.MappingBuilder;
 import com.github.tomakehurst.wiremock.client.ResponseDefinitionBuilder;
 import com.github.tomakehurst.wiremock.client.WireMock;
+import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import com.github.tomakehurst.wiremock.matching.RequestPattern;
 import com.github.tomakehurst.wiremock.matching.UrlPathPattern;
 import com.github.tomakehurst.wiremock.verification.LoggedRequest;
@@ -30,7 +31,26 @@ public class WireMockTestServer {
 
     private final WireMockServer wireMockServer;
 
+    public WireMockTestServer(
+            ImmutableSet<RequestResponseParser> parsers, boolean wireMockServerLogsEnabled) {
+
+        WireMockConfiguration config = wireMockConfig().dynamicPort().dynamicHttpsPort();
+
+        if (!wireMockServerLogsEnabled) {
+            config.notifier(null);
+        }
+
+        wireMockServer = new WireMockServer(config);
+        wireMockServer.start();
+        Map<HTTPRequest, HTTPResponse> registeredPairs = new HashMap<>();
+        parsers.forEach(
+                parser ->
+                        registerRequestResponsePairs(
+                                parser.parseRequestResponsePairs(), registeredPairs));
+    }
+
     public WireMockTestServer(ImmutableSet<RequestResponseParser> parsers) {
+
         wireMockServer = new WireMockServer(wireMockConfig().dynamicPort().dynamicHttpsPort());
         wireMockServer.start();
         Map<HTTPRequest, HTTPResponse> registeredPairs = new HashMap<>();
@@ -168,10 +188,10 @@ public class WireMockTestServer {
             if (registeredPairs.containsKey(request)
                     && !registeredPairs.get(request).equals(response)) {
                 throw new RuntimeException(
-                        "There is a conflict for the request with URL = "
-                                + request.getPath()
-                                + " the same request has been already registered with a different response, "
-                                + "please remove the conflict");
+                        request.getPath()
+                                + " - following request was already registered with a different response.\n"
+                                + "If you want to have duplicate - make sure that response headers and bodies match (check number of empty lines at the end of response!).\n"
+                                + "Otherwise - remove one of the conflicting pairs");
             }
 
             registeredPairs.put(request, response);

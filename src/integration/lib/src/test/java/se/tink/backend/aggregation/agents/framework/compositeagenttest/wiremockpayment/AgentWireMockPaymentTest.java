@@ -70,7 +70,8 @@ public final class AgentWireMockPaymentTest {
                                 null,
                                 callbackData,
                                 persistentStorageData,
-                                cache),
+                                cache,
+                                httpDebugTrace),
                         new RefreshRequestModule(
                                 RefreshableItem.REFRESHABLE_ITEMS_ALL, true, false, false),
                         new PaymentRequestModule(payment),
@@ -80,8 +81,7 @@ public final class AgentWireMockPaymentTest {
                                 MutableFakeBankSocket.of("localhost:" + server.getHttpsPort()),
                                 callbackData,
                                 agentModule,
-                                commandSequence,
-                                httpDebugTrace));
+                                commandSequence));
 
         Injector injector = Guice.createInjector(modules);
         compositeAgentTest = injector.getInstance(CompositeAgentTest.class);
@@ -94,7 +94,7 @@ public final class AgentWireMockPaymentTest {
      */
     public void executePayment() throws Exception {
         try {
-            compositeAgentTest.execute();
+            compositeAgentTest.executeCommands();
         } catch (Exception e) {
             if (server.hadEncounteredAnError()) {
                 throw new RuntimeException(server.createErrorLogForFailedRequest());

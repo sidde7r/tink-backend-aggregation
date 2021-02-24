@@ -6,6 +6,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.Scopes;
 import com.google.inject.Singleton;
+import com.google.inject.name.Names;
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
@@ -48,6 +49,7 @@ public final class AgentWiremockTestContextModule extends AbstractModule {
     private final Map<String, String> callbackData;
     private final Map<String, String> persistentStorageData;
     private final Map<String, String> cache;
+    private final boolean httpDebugTraceEnabled;
 
     public AgentWiremockTestContextModule(
             MarketCode marketCode,
@@ -57,7 +59,8 @@ public final class AgentWiremockTestContextModule extends AbstractModule {
             String credentialPayload,
             Map<String, String> callbackData,
             Map<String, String> persistentStorageData,
-            Map<String, String> cache) {
+            Map<String, String> cache,
+            boolean httpDebugTraceEnabled) {
         this.marketCode = marketCode;
         this.providerName = providerName;
         this.configuration = configuration;
@@ -66,11 +69,15 @@ public final class AgentWiremockTestContextModule extends AbstractModule {
         this.callbackData = callbackData;
         this.persistentStorageData = persistentStorageData;
         this.cache = cache;
+        this.httpDebugTraceEnabled = httpDebugTraceEnabled;
     }
 
     @Override
     protected void configure() {
         bind(AgentContext.class).to(NewAgentTestContext.class).in(Scopes.SINGLETON);
+        bind(Boolean.class)
+                .annotatedWith(Names.named("httpDebugTraceEnabled"))
+                .toInstance(httpDebugTraceEnabled);
         bind(AgentsServiceConfiguration.class).toInstance(configuration);
         bind(TppSecretsServiceConfiguration.class)
                 .toInstance(configuration.getTppSecretsServiceConfiguration());

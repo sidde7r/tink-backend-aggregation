@@ -1139,12 +1139,10 @@ x-Authorization: Bearer eyJ0dHlwIjoiYWNjZXNzX3Rva2VuIiwidmVyIjoiMy4xLjIiLCJ0eXAi
 x-app-language: en_NO
 Accept: application/json
 x-platform-version: 12.4.0
-Accept-Language: en-NO
 Accept-Encoding: br, gzip, deflate
 x-app-segment: household
 x-platform-type: iOS
 Content-Type: application/json
-User-Agent: com.nordea.mobilebank.no/3.13.2.1092 (Apple iPhone9,3; iOS 12.4.0)
 x-Device-Id: 00000000-0000-4000-0000-000000000000
 x-app-version: 3.13.2.1092
 Connection: keep-alive
@@ -1310,69 +1308,25 @@ REQUEST 23
 GET https://private.nordea.no/api/dbf/ca/cards-v4/cards/2218836201
 Authorization: Bearer eyJ0dHlwIjoiYWNjZXNzX3Rva2VuIiwidmVyIjoiMy4xLjIiLCJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Im5hc2YtYWNjZXNzLXRva2VuIn0.eyJzdWIiOiJuXC9hIiwiY291bnRyeSI6Ik5PIiwiaXNzIjoibmFzZi1hY2Nlc3MtdG9rZW4iLCJjbGllbnRfaWQiOiJOREhNTk8iLCJzaWQiOiIxMjU2MWQ4Ny00OTU5LTQ1ZDEtYjAwYi00MzdhZWIyOWNhMTYiLCJzc24iOiIyOTA4ODQyNjU2NiIsInVpZCI6IjI5MDg4NDI2NTY2IiwiY3Jpc3MiOiJCYW5rSUQgLSBOb3JkZWEgLSBCYW5rIENBIDMiLCJzY29wZSI6WyJuZGYiLCJhZ3JlZW1lbnQiLCJvcGVuaWQiLCJvZmZsaW5lX2FjY2VzcyJdLCJzZ20iOiJob3VzZWhvbGQiLCJleHAiOjE1OTM3NzI3MjgsImlhdCI6MTU5Mzc3MjU0OCwianRpIjoiZWRhMWUwOGNmODkyNGQ2NTg0YjQ1NmM2Y2FjODA5NGUiLCJncmFudHMiOnsiYWdyZWVtZW50IjoyOTA4ODQyNjU2Nn0sImMiOiJOTyIsImNoIjoiTkRITSIsImFpc3MiOiJkb21lc3RpY19wbiIsImFkbCI6e30sImFsIjoyLCJhbSI6ImJhbmtpZG1fbm8iLCJudHQiOiJleHQiLCJhdWQiOlsibmFzZiIsImRiZiIsIm9zbCJdLCJuYmYiOjE1OTM3NzI1MzgsImFpZCI6MjkwODg0MjY1NjYsImNpZCI6IjI5MDg4NDI2NTY2In0.LlX546p8R9VxK8XE26hhBs2Y9iR2Cb2AXbrXgwh4U3fvu9knNSWv44ZkCYjSxjBaegmNW1vmEPBDdKHegckUhGblhpC3Yy6G7VCHg3GZsAtrNMqQ3uCBdUxJBINSj9zaYP8yFIoX6jR7cvSe850xptmpRUgQAUrfv7o-H7wd7WiM4Qq-4UEpmAA-_B5BL0QCmZtiTPFgyrW1NxDnebRT7R1JggZRTmQlbALrsgJXCcB5-VVu7ais87iJ-OI8a8mrgGkzujW628e924Bpx6-iYxRH_WYuvkjDitFDlcNZiaiKfSTFmaXTjR909r9Tr99H01K7xSRhPf8I9nZ9ThsNzA
 x-Authorization: Bearer eyJ0dHlwIjoiYWNjZXNzX3Rva2VuIiwidmVyIjoiMy4xLjIiLCJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Im5hc2YtYWNjZXNzLXRva2VuIn0.eyJzdWIiOiJuXC9hIiwiY291bnRyeSI6Ik5PIiwiaXNzIjoibmFzZi1hY2Nlc3MtdG9rZW4iLCJjbGllbnRfaWQiOiJOREhNTk8iLCJzaWQiOiIxMjU2MWQ4Ny00OTU5LTQ1ZDEtYjAwYi00MzdhZWIyOWNhMTYiLCJzc24iOiIyOTA4ODQyNjU2NiIsInVpZCI6IjI5MDg4NDI2NTY2IiwiY3Jpc3MiOiJCYW5rSUQgLSBOb3JkZWEgLSBCYW5rIENBIDMiLCJzY29wZSI6WyJuZGYiLCJhZ3JlZW1lbnQiLCJvcGVuaWQiLCJvZmZsaW5lX2FjY2VzcyJdLCJzZ20iOiJob3VzZWhvbGQiLCJleHAiOjE1OTM3NzI3MjgsImlhdCI6MTU5Mzc3MjU0OCwianRpIjoiZWRhMWUwOGNmODkyNGQ2NTg0YjQ1NmM2Y2FjODA5NGUiLCJncmFudHMiOnsiYWdyZWVtZW50IjoyOTA4ODQyNjU2Nn0sImMiOiJOTyIsImNoIjoiTkRITSIsImFpc3MiOiJkb21lc3RpY19wbiIsImFkbCI6e30sImFsIjoyLCJhbSI6ImJhbmtpZG1fbm8iLCJudHQiOiJleHQiLCJhdWQiOlsibmFzZiIsImRiZiIsIm9zbCJdLCJuYmYiOjE1OTM3NzI1MzgsImFpZCI6MjkwODg0MjY1NjYsImNpZCI6IjI5MDg4NDI2NTY2In0.LlX546p8R9VxK8XE26hhBs2Y9iR2Cb2AXbrXgwh4U3fvu9knNSWv44ZkCYjSxjBaegmNW1vmEPBDdKHegckUhGblhpC3Yy6G7VCHg3GZsAtrNMqQ3uCBdUxJBINSj9zaYP8yFIoX6jR7cvSe850xptmpRUgQAUrfv7o-H7wd7WiM4Qq-4UEpmAA-_B5BL0QCmZtiTPFgyrW1NxDnebRT7R1JggZRTmQlbALrsgJXCcB5-VVu7ais87iJ-OI8a8mrgGkzujW628e924Bpx6-iYxRH_WYuvkjDitFDlcNZiaiKfSTFmaXTjR909r9Tr99H01K7xSRhPf8I9nZ9ThsNzA
-x-app-language: en_NO
-x-platform-version: 12.4.0
-x-app-segment: household
-x-platform-type: iOS
 x-Device-Id: 00000000-0000-4000-0000-000000000000
-x-app-version: 3.13.2.1092
 Connection: keep-alive
-x-device-model: iPhone9,3
-x-app-country: NO
 
 RESPONSE 23
 200
-X-Backside-Transport: OK OK,OK OK
-nnCoection: close
-Transfer-Encoding: chunked
-Date: Fri, 03 Jul 2020 10:36:00 GMT
-X-Application-Context: application:nd,npay,external,ocs,pn,kyc,aot,obi,lin,chat,nora,bop,l5,cards,loan,portal,osia:6046
-X-Content-Type-Options: nosniff,nosniff
-X-XSS-Protection: 1; mode=block
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Pragma: no-cache
-Expires: 0
-X-Frame-Options: DENY
 Content-Type: application/json
-X-Global-Transaction-ID: 2760e24c5f1e99de5887eb79
-strict-transport-security: max-age=31536000; includeSubDomains
 
 {"card_id":"2218836201","card_category":"credit","card_status":"active","card_expiration":{"date":"2023-02-28","formatted":"02/23"},"cardholder_name":"FIRST SECOND SURNAME","cardholder_type":"parallel","principal_cardholder_name":null,"product_code":"NO0051","card_loyalty_group":null,"country_code":"NO","currency":"NOK","nickname":null,"pan_id":null,"atm_account_number":null,"credit":{"masked_credit_card_number":"5269 **** **** 3239","credit_limit":10000,"credit_booked_balance":127.05,"credit_available_balance":1765.06,"prev_min_instalment_amount":null,"instalment_min_percent":null,"instalment_free_months":[],"interest":null,"invoice":null},"debit":null,"parallel_cards":null,"usage_limits":{"internet":true,"internet_non3d":null,"contactless":null,"daily_limits":null,"weekly_limits":null,"monthly_credit_spending_limit":null,"permanent_region":["norway","nordic","baltic","europe","americas","asia","africa","oceania"],"temporary_region":null},"permissions":{"transactions":true,"transfer_from_credit":true,"view_pin":true,"allowed_to_enroll_mobile_payments":true},"notifications":null,"metadata":{"geographical_zones":["norway","europe","nordic","baltic","americas","asia","oceania","africa"],"limits":{"atm_payment":0,"atm_payment_step":0,"atm_withdrawal":7500,"atm_withdrawal_step":500,"pos_payment":100000,"pos_payment_step":500,"online_payment":100000,"online_payment_step":500}}}
 
 
-
 REQUEST 24
 GET https://private.nordea.no/api/dbf/ca/cards-v4/cards/2218836201/transactions?page=1&page_size=100
-Content-Type: application/json
+Content-Type: application/x-www-form-urlencoded
 Accept: application/json
-x-Authorization: Bearer eyJ0dHlwIjoiYWNjZXNzX3Rva2VuIiwidmVyIjoiMy4xLjIiLCJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Im5hc2YtYWNjZXNzLXRva2VuIn0.eyJzdWIiOiJuXC9hIiwiY291bnRyeSI6Ik5PIiwiaXNzIjoibmFzZi1hY2Nlc3MtdG9rZW4iLCJjbGllbnRfaWQiOiJOREhNTk8iLCJzaWQiOiI5NzhmNDE1NC02Y2Q0LTRhMDAtOTBkZS03OTQ2YTA3OTIyMmMiLCJzc24iOiIyOTA4ODQyNjU2NiIsInVpZCI6IjI5MDg4NDI2NTY2IiwiY3Jpc3MiOiJCYW5rSUQgLSBOb3JkZWEgLSBCYW5rIENBIDMiLCJzY29wZSI6WyJuZGYiLCJhZ3JlZW1lbnQiLCJvcGVuaWQiLCJvZmZsaW5lX2FjY2VzcyJdLCJzZ20iOiJob3VzZWhvbGQiLCJleHAiOjE1OTU4NDEwMjgsImlhdCI6MTU5NTg0MDg0OCwianRpIjoiMGE2MWNhZDQyNGU5NGI3MWJiZGNhYjRiMjY0ZGFmZjciLCJncmFudHMiOnsiYWdyZWVtZW50IjoyOTA4ODQyNjU2Nn0sImMiOiJOTyIsImNoIjoiTkRITSIsImFpc3MiOiJkb21lc3RpY19wbiIsImFkbCI6e30sImFsIjoyLCJhbSI6ImJhbmtpZG1fbm8iLCJudHQiOiJleHQiLCJhdWQiOlsibmFzZiIsImRiZiIsIm9zbCJdLCJuYmYiOjE1OTU4NDA4MzgsImFpZCI6MjkwODg0MjY1NjYsImNpZCI6IjI5MDg4NDI2NTY2In0.RM3Vy4t2lkXnYXUp-cuVKgTRcGs3cay57MxxNbr7whKxa3_dqu_YRdK_YFUfkKKrg07mNhuiN11l-KTu3t3IpLRoggfJz6cD5sNSyknMc0woNIQqrbJ71PLfiwrAENUpK6KaaaxVO8IOpc_KDWvX_zQ_7cGNSrisr8RBgUbjm_aO4of7ZjP2iUfTY29Ag-0s-qFVjZwDz0OmchUlsxmUOXJIbbiwdV3C14wR0W8Q3yG3MyBt7-DU4--OzTuK5iRlobceM-1BX0WovLIDaoaQ9S7dOMT9JDw-dTKxwOCeyw6EjTgzRIwGM6vPYK2FqWUmkWHnNiKt_gJihef_zx88dQ
-x-app-language: en_NO
-Authorization: Bearer eyJ0dHlwIjoiYWNjZXNzX3Rva2VuIiwidmVyIjoiMy4xLjIiLCJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Im5hc2YtYWNjZXNzLXRva2VuIn0.eyJzdWIiOiJuXC9hIiwiY291bnRyeSI6Ik5PIiwiaXNzIjoibmFzZi1hY2Nlc3MtdG9rZW4iLCJjbGllbnRfaWQiOiJOREhNTk8iLCJzaWQiOiI5NzhmNDE1NC02Y2Q0LTRhMDAtOTBkZS03OTQ2YTA3OTIyMmMiLCJzc24iOiIyOTA4ODQyNjU2NiIsInVpZCI6IjI5MDg4NDI2NTY2IiwiY3Jpc3MiOiJCYW5rSUQgLSBOb3JkZWEgLSBCYW5rIENBIDMiLCJzY29wZSI6WyJuZGYiLCJhZ3JlZW1lbnQiLCJvcGVuaWQiLCJvZmZsaW5lX2FjY2VzcyJdLCJzZ20iOiJob3VzZWhvbGQiLCJleHAiOjE1OTU4NDEwMjgsImlhdCI6MTU5NTg0MDg0OCwianRpIjoiMGE2MWNhZDQyNGU5NGI3MWJiZGNhYjRiMjY0ZGFmZjciLCJncmFudHMiOnsiYWdyZWVtZW50IjoyOTA4ODQyNjU2Nn0sImMiOiJOTyIsImNoIjoiTkRITSIsImFpc3MiOiJkb21lc3RpY19wbiIsImFkbCI6e30sImFsIjoyLCJhbSI6ImJhbmtpZG1fbm8iLCJudHQiOiJleHQiLCJhdWQiOlsibmFzZiIsImRiZiIsIm9zbCJdLCJuYmYiOjE1OTU4NDA4MzgsImFpZCI6MjkwODg0MjY1NjYsImNpZCI6IjI5MDg4NDI2NTY2In0.RM3Vy4t2lkXnYXUp-cuVKgTRcGs3cay57MxxNbr7whKxa3_dqu_YRdK_YFUfkKKrg07mNhuiN11l-KTu3t3IpLRoggfJz6cD5sNSyknMc0woNIQqrbJ71PLfiwrAENUpK6KaaaxVO8IOpc_KDWvX_zQ_7cGNSrisr8RBgUbjm_aO4of7ZjP2iUfTY29Ag-0s-qFVjZwDz0OmchUlsxmUOXJIbbiwdV3C14wR0W8Q3yG3MyBt7-DU4--OzTuK5iRlobceM-1BX0WovLIDaoaQ9S7dOMT9JDw-dTKxwOCeyw6EjTgzRIwGM6vPYK2FqWUmkWHnNiKt_gJihef_zx88dQ
-x-platform-version: 12.4.0
-Accept-Language: en-NO
-x-app-segment: household
-x-platform-type: iOS
-User-Agent: com.nordea.mobilebank.no/3.13.2.1092 (Apple iPhone9,3; iOS 12.4.0)
-x-Device-Id: 00000000-0000-4000-0000-000000000000
-x-app-version: 3.13.2.1092
-x-device-model: iPhone9,3
-x-app-country: NO
+x-Authorization: Bearer eyJ0dHlwIjoiYWNjZXNzX3Rva2VuIiwidmVyIjoiMy4xLjIiLCJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Im5hc2YtYWNjZXNzLXRva2VuIn0.eyJzdWIiOiJuXC9hIiwiY291bnRyeSI6Ik5PIiwiaXNzIjoibmFzZi1hY2Nlc3MtdG9rZW4iLCJjbGllbnRfaWQiOiJOREhNTk8iLCJzaWQiOiIxMjU2MWQ4Ny00OTU5LTQ1ZDEtYjAwYi00MzdhZWIyOWNhMTYiLCJzc24iOiIyOTA4ODQyNjU2NiIsInVpZCI6IjI5MDg4NDI2NTY2IiwiY3Jpc3MiOiJCYW5rSUQgLSBOb3JkZWEgLSBCYW5rIENBIDMiLCJzY29wZSI6WyJuZGYiLCJhZ3JlZW1lbnQiLCJvcGVuaWQiLCJvZmZsaW5lX2FjY2VzcyJdLCJzZ20iOiJob3VzZWhvbGQiLCJleHAiOjE1OTM3NzI3MjgsImlhdCI6MTU5Mzc3MjU0OCwianRpIjoiZWRhMWUwOGNmODkyNGQ2NTg0YjQ1NmM2Y2FjODA5NGUiLCJncmFudHMiOnsiYWdyZWVtZW50IjoyOTA4ODQyNjU2Nn0sImMiOiJOTyIsImNoIjoiTkRITSIsImFpc3MiOiJkb21lc3RpY19wbiIsImFkbCI6e30sImFsIjoyLCJhbSI6ImJhbmtpZG1fbm8iLCJudHQiOiJleHQiLCJhdWQiOlsibmFzZiIsImRiZiIsIm9zbCJdLCJuYmYiOjE1OTM3NzI1MzgsImFpZCI6MjkwODg0MjY1NjYsImNpZCI6IjI5MDg4NDI2NTY2In0.LlX546p8R9VxK8XE26hhBs2Y9iR2Cb2AXbrXgwh4U3fvu9knNSWv44ZkCYjSxjBaegmNW1vmEPBDdKHegckUhGblhpC3Yy6G7VCHg3GZsAtrNMqQ3uCBdUxJBINSj9zaYP8yFIoX6jR7cvSe850xptmpRUgQAUrfv7o-H7wd7WiM4Qq-4UEpmAA-_B5BL0QCmZtiTPFgyrW1NxDnebRT7R1JggZRTmQlbALrsgJXCcB5-VVu7ais87iJ-OI8a8mrgGkzujW628e924Bpx6-iYxRH_WYuvkjDitFDlcNZiaiKfSTFmaXTjR909r9Tr99H01K7xSRhPf8I9nZ9ThsNzA
+Authorization: Bearer eyJ0dHlwIjoiYWNjZXNzX3Rva2VuIiwidmVyIjoiMy4xLjIiLCJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Im5hc2YtYWNjZXNzLXRva2VuIn0.eyJzdWIiOiJuXC9hIiwiY291bnRyeSI6Ik5PIiwiaXNzIjoibmFzZi1hY2Nlc3MtdG9rZW4iLCJjbGllbnRfaWQiOiJOREhNTk8iLCJzaWQiOiIxMjU2MWQ4Ny00OTU5LTQ1ZDEtYjAwYi00MzdhZWIyOWNhMTYiLCJzc24iOiIyOTA4ODQyNjU2NiIsInVpZCI6IjI5MDg4NDI2NTY2IiwiY3Jpc3MiOiJCYW5rSUQgLSBOb3JkZWEgLSBCYW5rIENBIDMiLCJzY29wZSI6WyJuZGYiLCJhZ3JlZW1lbnQiLCJvcGVuaWQiLCJvZmZsaW5lX2FjY2VzcyJdLCJzZ20iOiJob3VzZWhvbGQiLCJleHAiOjE1OTM3NzI3MjgsImlhdCI6MTU5Mzc3MjU0OCwianRpIjoiZWRhMWUwOGNmODkyNGQ2NTg0YjQ1NmM2Y2FjODA5NGUiLCJncmFudHMiOnsiYWdyZWVtZW50IjoyOTA4ODQyNjU2Nn0sImMiOiJOTyIsImNoIjoiTkRITSIsImFpc3MiOiJkb21lc3RpY19wbiIsImFkbCI6e30sImFsIjoyLCJhbSI6ImJhbmtpZG1fbm8iLCJudHQiOiJleHQiLCJhdWQiOlsibmFzZiIsImRiZiIsIm9zbCJdLCJuYmYiOjE1OTM3NzI1MzgsImFpZCI6MjkwODg0MjY1NjYsImNpZCI6IjI5MDg4NDI2NTY2In0.LlX546p8R9VxK8XE26hhBs2Y9iR2Cb2AXbrXgwh4U3fvu9knNSWv44ZkCYjSxjBaegmNW1vmEPBDdKHegckUhGblhpC3Yy6G7VCHg3GZsAtrNMqQ3uCBdUxJBINSj9zaYP8yFIoX6jR7cvSe850xptmpRUgQAUrfv7o-H7wd7WiM4Qq-4UEpmAA-_B5BL0QCmZtiTPFgyrW1NxDnebRT7R1JggZRTmQlbALrsgJXCcB5-VVu7ais87iJ-OI8a8mrgGkzujW628e924Bpx6-iYxRH_WYuvkjDitFDlcNZiaiKfSTFmaXTjR909r9Tr99H01K7xSRhPf8I9nZ9ThsNzA
 
 RESPONSE 24
 200
-X-Backside-Transport: OK OK,OK OK
-nnCoection: close
-Transfer-Encoding: chunked
-Date: Fri, 03 Jul 2020 10:36:00 GMT
-X-Application-Context: application:nd,npay,external,ocs,pn,kyc,aot,obi,lin,chat,nora,bop,l5,cards,loan,portal,osia:6046
-X-Content-Type-Options: nosniff,nosniff
-X-XSS-Protection: 1; mode=block
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Pragma: no-cache
-Expires: 0
-X-Frame-Options: DENY
-X-Global-Transaction-ID: 2760e24c5f1e99deae366a03
-strict-transport-security: max-age=31536000; includeSubDomains
 
 {"size":15,"page":1,"page_size":30,"transactions":[{"transaction_id":"003802","transaction_date":"2020-07-23","transaction_type":null,"amount":-4000,"currency":"NOK","exchange_rate":null,"original_amount":null,"original_currency":null,"title":"Revolut**0873*","booked":false,"booking_date":null,"merchant_city":null,"merchant_country":null,"mcc":null,"ecological_footprint":null,"invoiced_date":null,"invoice_status":null},{"transaction_id":"2019901320011576","transaction_date":"2020-07-15","transaction_type":null,"amount":-597.05,"currency":"NOK","exchange_rate":1.00,"original_amount":-597.05,"original_currency":"NOK","title":"CRV*ST1 46101 ASKIM      London       GB","booked":true,"booking_date":"2020-07-17","merchant_city":"London","merchant_country":"GB","mcc":null,"ecological_footprint":null,"invoiced_date":null,"invoice_status":null},{"transaction_id":"2018301320009896","transaction_date":"2020-06-29","transaction_type":null,"amount":-173.5,"currency":"NOK","exchange_rate":1.0,"original_amount":-173.5,"original_currency":"NOK","title":"EUROSPAR RUGTVE          Stathelle    NO","booked":true,"booking_date":"2020-07-01","merchant_city":"Stathelle","merchant_country":"NO","mcc":null,"ecological_footprint":null,"invoiced_date":null,"invoice_status":null},{"transaction_id":"2018301320009895","transaction_date":"2020-06-29","transaction_type":null,"amount":-31.2,"currency":"NOK","exchange_rate":1.0,"original_amount":-31.2,"original_currency":"NOK","title":"BOLT EU  R 2006290905    Tallinn      EE","booked":true,"booking_date":"2020-07-01","merchant_city":"Tallinn","merchant_country":"EE","mcc":null,"ecological_footprint":null,"invoiced_date":null,"invoice_status":null},{"transaction_id":"2018301320009894","transaction_date":"2020-06-29","transaction_type":null,"amount":-20,"currency":"NOK","exchange_rate":1,"original_amount":-20,"original_currency":"NOK","title":"NARVESEN 103 ASKIM JBS   ASKIM        NO","booked":true,"booking_date":"2020-07-01","merchant_city":"ASKIM","merchant_country":"NO","mcc":null,"ecological_footprint":null,"invoiced_date":null,"invoice_status":null},{"transaction_id":"2018101320021659","transaction_date":"2020-06-26","transaction_type":null,"amount":-399.97,"currency":"NOK","exchange_rate":1.00,"original_amount":-399.97,"original_currency":"NOK","title":"YX 7 ELEVEN 7589 HOEVI   HOVIK        NO","booked":true,"booking_date":"2020-06-29","merchant_city":"HOVIK","merchant_country":"NO","mcc":null,"ecological_footprint":null,"invoiced_date":null,"invoice_status":null},{"transaction_id":"2013901320019865","transaction_date":"2020-05-14","transaction_type":null,"amount":-990.51,"currency":"NOK","exchange_rate":1.00,"original_amount":-990.51,"original_currency":"NOK","title":"CRV*SITEGROUND HOSTING   london       GB","booked":true,"booking_date":"2020-05-18","merchant_city":"london","merchant_country":"GB","mcc":null,"ecological_footprint":null,"invoiced_date":null,"invoice_status":null},{"transaction_id":"2013901320019864","transaction_date":"2020-05-14","transaction_type":null,"amount":-553,"currency":"NOK","exchange_rate":1,"original_amount":-553,"original_currency":"NOK","title":"CRV*Lekekassen no        london       GB","booked":true,"booking_date":"2020-05-18","merchant_city":"london","merchant_country":"GB","mcc":null,"ecological_footprint":null,"invoiced_date":null,"invoice_status":null},{"transaction_id":"2013901320019863","transaction_date":"2020-05-14","transaction_type":null,"amount":-153.73,"currency":"NOK","exchange_rate":1.00,"original_amount":-153.73,"original_currency":"NOK","title":"CRV*SITEGROUND HOSTING   london       GB","booked":true,"booking_date":"2020-05-18","merchant_city":"london","merchant_country":"GB","mcc":null,"ecological_footprint":null,"invoiced_date":null,"invoice_status":null},{"transaction_id":"2013201320021563","transaction_date":"2020-05-08","transaction_type":null,"amount":-153.04,"currency":"NOK","exchange_rate":1.00,"original_amount":-153.04,"original_currency":"NOK","title":"CRV*Audible              london       GB","booked":true,"booking_date":"2020-05-11","merchant_city":"london","merchant_country":"GB","mcc":null,"ecological_footprint":null,"invoiced_date":null,"invoice_status":null},{"transaction_id":"2012501320027044","transaction_date":"2020-04-29","transaction_type":null,"amount":-342,"currency":"NOK","exchange_rate":1,"original_amount":-342,"original_currency":"NOK","title":"CRV*NETS   *pizzabaker   London       GB","booked":true,"booking_date":"2020-05-04","merchant_city":"London","merchant_country":"GB","mcc":null,"ecological_footprint":null,"invoiced_date":null,"invoice_status":null},{"transaction_id":"2012501320027043","transaction_date":"2020-04-29","transaction_type":null,"amount":-289.9,"currency":"NOK","exchange_rate":1.0,"original_amount":-289.9,"original_currency":"NOK","title":"CRV*VINMONOPOLET ASKIM   london       GB","booked":true,"booking_date":"2020-05-04","merchant_city":"london","merchant_country":"GB","mcc":null,"ecological_footprint":null,"invoiced_date":null,"invoice_status":null},{"transaction_id":"2012501320027042","transaction_date":"2020-04-29","transaction_type":null,"amount":-238,"currency":"NOK","exchange_rate":1,"original_amount":-238,"original_currency":"NOK","title":"STEEN CATERING           Askim        NO","booked":true,"booking_date":"2020-05-04","merchant_city":"Askim","merchant_country":"NO","mcc":null,"ecological_footprint":null,"invoiced_date":null,"invoice_status":null},{"transaction_id":"2012501320027041","transaction_date":"2020-04-29","transaction_type":null,"amount":-39.9,"currency":"NOK","exchange_rate":1.0,"original_amount":-39.9,"original_currency":"NOK","title":"CRV*KIWI 287 VAMMAV      London       GB","booked":true,"booking_date":"2020-05-04","merchant_city":"London","merchant_country":"GB","mcc":null,"ecological_footprint":null,"invoiced_date":null,"invoice_status":null},{"transaction_id":"2012501320027040","transaction_date":"2020-04-29","transaction_type":null,"amount":-39.9,"currency":"NOK","exchange_rate":1.0,"original_amount":-39.9,"original_currency":"NOK","title":"CL  OHLSON 2900          ASKIM        NO","booked":true,"booking_date":"2020-05-04","merchant_city":"ASKIM","merchant_country":"NO","mcc":null,"ecological_footprint":null,"invoiced_date":null,"invoice_status":null}],"billing_period":null}
 
@@ -1380,32 +1334,11 @@ REQUEST 25
 GET https://private.nordea.no/api/dbf/ca/loans-v1/loans
 Authorization: Bearer eyJ0dHlwIjoiYWNjZXNzX3Rva2VuIiwidmVyIjoiMy4xLjIiLCJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Im5hc2YtYWNjZXNzLXRva2VuIn0.eyJzdWIiOiJuXC9hIiwiY291bnRyeSI6Ik5PIiwiaXNzIjoibmFzZi1hY2Nlc3MtdG9rZW4iLCJjbGllbnRfaWQiOiJOREhNTk8iLCJzaWQiOiIxMjU2MWQ4Ny00OTU5LTQ1ZDEtYjAwYi00MzdhZWIyOWNhMTYiLCJzc24iOiIyOTA4ODQyNjU2NiIsInVpZCI6IjI5MDg4NDI2NTY2IiwiY3Jpc3MiOiJCYW5rSUQgLSBOb3JkZWEgLSBCYW5rIENBIDMiLCJzY29wZSI6WyJuZGYiLCJhZ3JlZW1lbnQiLCJvcGVuaWQiLCJvZmZsaW5lX2FjY2VzcyJdLCJzZ20iOiJob3VzZWhvbGQiLCJleHAiOjE1OTM3NzI3MjgsImlhdCI6MTU5Mzc3MjU0OCwianRpIjoiZWRhMWUwOGNmODkyNGQ2NTg0YjQ1NmM2Y2FjODA5NGUiLCJncmFudHMiOnsiYWdyZWVtZW50IjoyOTA4ODQyNjU2Nn0sImMiOiJOTyIsImNoIjoiTkRITSIsImFpc3MiOiJkb21lc3RpY19wbiIsImFkbCI6e30sImFsIjoyLCJhbSI6ImJhbmtpZG1fbm8iLCJudHQiOiJleHQiLCJhdWQiOlsibmFzZiIsImRiZiIsIm9zbCJdLCJuYmYiOjE1OTM3NzI1MzgsImFpZCI6MjkwODg0MjY1NjYsImNpZCI6IjI5MDg4NDI2NTY2In0.LlX546p8R9VxK8XE26hhBs2Y9iR2Cb2AXbrXgwh4U3fvu9knNSWv44ZkCYjSxjBaegmNW1vmEPBDdKHegckUhGblhpC3Yy6G7VCHg3GZsAtrNMqQ3uCBdUxJBINSj9zaYP8yFIoX6jR7cvSe850xptmpRUgQAUrfv7o-H7wd7WiM4Qq-4UEpmAA-_B5BL0QCmZtiTPFgyrW1NxDnebRT7R1JggZRTmQlbALrsgJXCcB5-VVu7ais87iJ-OI8a8mrgGkzujW628e924Bpx6-iYxRH_WYuvkjDitFDlcNZiaiKfSTFmaXTjR909r9Tr99H01K7xSRhPf8I9nZ9ThsNzA
 x-Authorization: Bearer eyJ0dHlwIjoiYWNjZXNzX3Rva2VuIiwidmVyIjoiMy4xLjIiLCJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Im5hc2YtYWNjZXNzLXRva2VuIn0.eyJzdWIiOiJuXC9hIiwiY291bnRyeSI6Ik5PIiwiaXNzIjoibmFzZi1hY2Nlc3MtdG9rZW4iLCJjbGllbnRfaWQiOiJOREhNTk8iLCJzaWQiOiIxMjU2MWQ4Ny00OTU5LTQ1ZDEtYjAwYi00MzdhZWIyOWNhMTYiLCJzc24iOiIyOTA4ODQyNjU2NiIsInVpZCI6IjI5MDg4NDI2NTY2IiwiY3Jpc3MiOiJCYW5rSUQgLSBOb3JkZWEgLSBCYW5rIENBIDMiLCJzY29wZSI6WyJuZGYiLCJhZ3JlZW1lbnQiLCJvcGVuaWQiLCJvZmZsaW5lX2FjY2VzcyJdLCJzZ20iOiJob3VzZWhvbGQiLCJleHAiOjE1OTM3NzI3MjgsImlhdCI6MTU5Mzc3MjU0OCwianRpIjoiZWRhMWUwOGNmODkyNGQ2NTg0YjQ1NmM2Y2FjODA5NGUiLCJncmFudHMiOnsiYWdyZWVtZW50IjoyOTA4ODQyNjU2Nn0sImMiOiJOTyIsImNoIjoiTkRITSIsImFpc3MiOiJkb21lc3RpY19wbiIsImFkbCI6e30sImFsIjoyLCJhbSI6ImJhbmtpZG1fbm8iLCJudHQiOiJleHQiLCJhdWQiOlsibmFzZiIsImRiZiIsIm9zbCJdLCJuYmYiOjE1OTM3NzI1MzgsImFpZCI6MjkwODg0MjY1NjYsImNpZCI6IjI5MDg4NDI2NTY2In0.LlX546p8R9VxK8XE26hhBs2Y9iR2Cb2AXbrXgwh4U3fvu9knNSWv44ZkCYjSxjBaegmNW1vmEPBDdKHegckUhGblhpC3Yy6G7VCHg3GZsAtrNMqQ3uCBdUxJBINSj9zaYP8yFIoX6jR7cvSe850xptmpRUgQAUrfv7o-H7wd7WiM4Qq-4UEpmAA-_B5BL0QCmZtiTPFgyrW1NxDnebRT7R1JggZRTmQlbALrsgJXCcB5-VVu7ais87iJ-OI8a8mrgGkzujW628e924Bpx6-iYxRH_WYuvkjDitFDlcNZiaiKfSTFmaXTjR909r9Tr99H01K7xSRhPf8I9nZ9ThsNzA
-x-app-language: en_NO
-x-platform-version: 12.4.0
-x-app-segment: household
-x-platform-type: iOS
-x-Device-Id: 00000000-0000-4000-0000-000000000000
-x-app-version: 3.13.2.1092
 Connection: keep-alive
-x-device-model: iPhone9,3
-x-app-country: NO
 
 RESPONSE 25
 200
-X-Backside-Transport: OK OK,OK OK
-nnCoection: close
-Transfer-Encoding: chunked
-Date: Fri, 03 Jul 2020 10:36:01 GMT
-X-Application-Context: application:nd,npay,external,ocs,pn,kyc,aot,obi,lin,chat:6010
-X-Content-Type-Options: nosniff,nosniff
-X-XSS-Protection: 1; mode=block
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Pragma: no-cache
-Expires: 0
-X-Frame-Options: DENY
 Content-Type: application/json
-X-Global-Transaction-ID: eaf52b955eff0a1094e311b1
-strict-transport-security: max-age=31536000; includeSubDomains
 
 {"loans": [{"amount": {"balance": -2660372.0, "granted": 2820000.0, "paid": 159628.0 }, "currency": "NOK", "group": "mortgage", "interest": {}, "loan_formatted_id": "6320.82.12345", "loan_id": "632082123456", "metadata": {"patch_metadata": [{"allowed_operations": ["replace"], "path": "/repayment_schedule/debit_account_number"}, {"allowed_operations": ["replace"], "path": "/repayment_schedule/repayment_day_of_month"} ] }, "nickname": "LÃ¥n", "owners": [], "product_code": "ART21", "repayment_status": "paid"} ] }
 
@@ -1414,32 +1347,12 @@ REQUEST 26
 GET https://private.nordea.no/api/dbf/ca/loans-v1/loans/632082123456
 Authorization: Bearer eyJ0dHlwIjoiYWNjZXNzX3Rva2VuIiwidmVyIjoiMy4xLjIiLCJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Im5hc2YtYWNjZXNzLXRva2VuIn0.eyJzdWIiOiJuXC9hIiwiY291bnRyeSI6Ik5PIiwiaXNzIjoibmFzZi1hY2Nlc3MtdG9rZW4iLCJjbGllbnRfaWQiOiJOREhNTk8iLCJzaWQiOiIxMjU2MWQ4Ny00OTU5LTQ1ZDEtYjAwYi00MzdhZWIyOWNhMTYiLCJzc24iOiIyOTA4ODQyNjU2NiIsInVpZCI6IjI5MDg4NDI2NTY2IiwiY3Jpc3MiOiJCYW5rSUQgLSBOb3JkZWEgLSBCYW5rIENBIDMiLCJzY29wZSI6WyJuZGYiLCJhZ3JlZW1lbnQiLCJvcGVuaWQiLCJvZmZsaW5lX2FjY2VzcyJdLCJzZ20iOiJob3VzZWhvbGQiLCJleHAiOjE1OTM3NzI3MjgsImlhdCI6MTU5Mzc3MjU0OCwianRpIjoiZWRhMWUwOGNmODkyNGQ2NTg0YjQ1NmM2Y2FjODA5NGUiLCJncmFudHMiOnsiYWdyZWVtZW50IjoyOTA4ODQyNjU2Nn0sImMiOiJOTyIsImNoIjoiTkRITSIsImFpc3MiOiJkb21lc3RpY19wbiIsImFkbCI6e30sImFsIjoyLCJhbSI6ImJhbmtpZG1fbm8iLCJudHQiOiJleHQiLCJhdWQiOlsibmFzZiIsImRiZiIsIm9zbCJdLCJuYmYiOjE1OTM3NzI1MzgsImFpZCI6MjkwODg0MjY1NjYsImNpZCI6IjI5MDg4NDI2NTY2In0.LlX546p8R9VxK8XE26hhBs2Y9iR2Cb2AXbrXgwh4U3fvu9knNSWv44ZkCYjSxjBaegmNW1vmEPBDdKHegckUhGblhpC3Yy6G7VCHg3GZsAtrNMqQ3uCBdUxJBINSj9zaYP8yFIoX6jR7cvSe850xptmpRUgQAUrfv7o-H7wd7WiM4Qq-4UEpmAA-_B5BL0QCmZtiTPFgyrW1NxDnebRT7R1JggZRTmQlbALrsgJXCcB5-VVu7ais87iJ-OI8a8mrgGkzujW628e924Bpx6-iYxRH_WYuvkjDitFDlcNZiaiKfSTFmaXTjR909r9Tr99H01K7xSRhPf8I9nZ9ThsNzA
 x-Authorization: Bearer eyJ0dHlwIjoiYWNjZXNzX3Rva2VuIiwidmVyIjoiMy4xLjIiLCJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Im5hc2YtYWNjZXNzLXRva2VuIn0.eyJzdWIiOiJuXC9hIiwiY291bnRyeSI6Ik5PIiwiaXNzIjoibmFzZi1hY2Nlc3MtdG9rZW4iLCJjbGllbnRfaWQiOiJOREhNTk8iLCJzaWQiOiIxMjU2MWQ4Ny00OTU5LTQ1ZDEtYjAwYi00MzdhZWIyOWNhMTYiLCJzc24iOiIyOTA4ODQyNjU2NiIsInVpZCI6IjI5MDg4NDI2NTY2IiwiY3Jpc3MiOiJCYW5rSUQgLSBOb3JkZWEgLSBCYW5rIENBIDMiLCJzY29wZSI6WyJuZGYiLCJhZ3JlZW1lbnQiLCJvcGVuaWQiLCJvZmZsaW5lX2FjY2VzcyJdLCJzZ20iOiJob3VzZWhvbGQiLCJleHAiOjE1OTM3NzI3MjgsImlhdCI6MTU5Mzc3MjU0OCwianRpIjoiZWRhMWUwOGNmODkyNGQ2NTg0YjQ1NmM2Y2FjODA5NGUiLCJncmFudHMiOnsiYWdyZWVtZW50IjoyOTA4ODQyNjU2Nn0sImMiOiJOTyIsImNoIjoiTkRITSIsImFpc3MiOiJkb21lc3RpY19wbiIsImFkbCI6e30sImFsIjoyLCJhbSI6ImJhbmtpZG1fbm8iLCJudHQiOiJleHQiLCJhdWQiOlsibmFzZiIsImRiZiIsIm9zbCJdLCJuYmYiOjE1OTM3NzI1MzgsImFpZCI6MjkwODg0MjY1NjYsImNpZCI6IjI5MDg4NDI2NTY2In0.LlX546p8R9VxK8XE26hhBs2Y9iR2Cb2AXbrXgwh4U3fvu9knNSWv44ZkCYjSxjBaegmNW1vmEPBDdKHegckUhGblhpC3Yy6G7VCHg3GZsAtrNMqQ3uCBdUxJBINSj9zaYP8yFIoX6jR7cvSe850xptmpRUgQAUrfv7o-H7wd7WiM4Qq-4UEpmAA-_B5BL0QCmZtiTPFgyrW1NxDnebRT7R1JggZRTmQlbALrsgJXCcB5-VVu7ais87iJ-OI8a8mrgGkzujW628e924Bpx6-iYxRH_WYuvkjDitFDlcNZiaiKfSTFmaXTjR909r9Tr99H01K7xSRhPf8I9nZ9ThsNzA
-x-app-language: en_NO
-x-platform-version: 12.4.0
-x-app-segment: household
-x-platform-type: iOS
 x-Device-Id: 00000000-0000-4000-0000-000000000000
-x-app-version: 3.13.2.1092
 Connection: keep-alive
-x-device-model: iPhone9,3
-x-app-country: NO
 
 RESPONSE 26
 200
-X-Backside-Transport: OK OK,OK OK
-nnCoection: close
-Transfer-Encoding: chunked
-Date: Fri, 03 Jul 2020 10:36:01 GMT
-X-Application-Context: application:nd,npay,external,ocs,pn,kyc,aot,obi,lin,chat:6010
-X-Content-Type-Options: nosniff,nosniff
-X-XSS-Protection: 1; mode=block
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Pragma: no-cache
-Expires: 0
-X-Frame-Options: DENY
 Content-Type: application/json
-X-Global-Transaction-ID: eaf52b955eff0a1094e311b1
-strict-transport-security: max-age=31536000; includeSubDomains
 
 {"amount": {"balance": -2654170.0, "granted": 2820000.0, "paid": 165830.0 }, "currency": "NOK", "following_payment": {"date": "2020-09-01", "fees": 65.0, "instalment": 6211.0, "interest": 4070.0, "total": 10346.0 }, "group": "mortgage", "interest": {"base_rate": 1.84, "rate": 1.91, "reference_rate_type": "float"}, "loan_formatted_id": "6320.82.123456", "loan_id": "632082123456", "metadata": {"patch_metadata": [{"allowed_operations": ["replace"], "path": "/repayment_schedule/debit_account_number"}, {"allowed_operations": ["replace"], "path": "/repayment_schedule/repayment_day_of_month"} ] }, "nickname": "Lån", "owners": [{"name": "WWES QASD ASDFG"}, {"name": "FFEE ZXCV ASDFG"}, {"name": "JOHN ASFVZ ZXCV"}, {"name": "RUTH ZXCV"} ], "product_code": "ART21", "repayment_schedule": {"debit_account_number": "6011.14.73857", "final_payment_date": "2048-01-01", "following_instalment": "2020-09-01", "following_interest_payment": "2020-09-01", "instalment_free_months": [], "method_of_payment": "annuity", "number_of_instalments": 329, "period_between_instalments": 1, "terms_per_year": 12 }, "repayment_status": "paid"}
 
@@ -1448,32 +1361,12 @@ REQUEST 27
 GET https://private.nordea.no/api/dbf/ca/savings-v1/savings/custodies
 Authorization: Bearer eyJ0dHlwIjoiYWNjZXNzX3Rva2VuIiwidmVyIjoiMy4xLjIiLCJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Im5hc2YtYWNjZXNzLXRva2VuIn0.eyJzdWIiOiJuXC9hIiwiY291bnRyeSI6Ik5PIiwiaXNzIjoibmFzZi1hY2Nlc3MtdG9rZW4iLCJjbGllbnRfaWQiOiJOREhNTk8iLCJzaWQiOiIxMjU2MWQ4Ny00OTU5LTQ1ZDEtYjAwYi00MzdhZWIyOWNhMTYiLCJzc24iOiIyOTA4ODQyNjU2NiIsInVpZCI6IjI5MDg4NDI2NTY2IiwiY3Jpc3MiOiJCYW5rSUQgLSBOb3JkZWEgLSBCYW5rIENBIDMiLCJzY29wZSI6WyJuZGYiLCJhZ3JlZW1lbnQiLCJvcGVuaWQiLCJvZmZsaW5lX2FjY2VzcyJdLCJzZ20iOiJob3VzZWhvbGQiLCJleHAiOjE1OTM3NzI3MjgsImlhdCI6MTU5Mzc3MjU0OCwianRpIjoiZWRhMWUwOGNmODkyNGQ2NTg0YjQ1NmM2Y2FjODA5NGUiLCJncmFudHMiOnsiYWdyZWVtZW50IjoyOTA4ODQyNjU2Nn0sImMiOiJOTyIsImNoIjoiTkRITSIsImFpc3MiOiJkb21lc3RpY19wbiIsImFkbCI6e30sImFsIjoyLCJhbSI6ImJhbmtpZG1fbm8iLCJudHQiOiJleHQiLCJhdWQiOlsibmFzZiIsImRiZiIsIm9zbCJdLCJuYmYiOjE1OTM3NzI1MzgsImFpZCI6MjkwODg0MjY1NjYsImNpZCI6IjI5MDg4NDI2NTY2In0.LlX546p8R9VxK8XE26hhBs2Y9iR2Cb2AXbrXgwh4U3fvu9knNSWv44ZkCYjSxjBaegmNW1vmEPBDdKHegckUhGblhpC3Yy6G7VCHg3GZsAtrNMqQ3uCBdUxJBINSj9zaYP8yFIoX6jR7cvSe850xptmpRUgQAUrfv7o-H7wd7WiM4Qq-4UEpmAA-_B5BL0QCmZtiTPFgyrW1NxDnebRT7R1JggZRTmQlbALrsgJXCcB5-VVu7ais87iJ-OI8a8mrgGkzujW628e924Bpx6-iYxRH_WYuvkjDitFDlcNZiaiKfSTFmaXTjR909r9Tr99H01K7xSRhPf8I9nZ9ThsNzA
 x-Authorization: Bearer eyJ0dHlwIjoiYWNjZXNzX3Rva2VuIiwidmVyIjoiMy4xLjIiLCJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Im5hc2YtYWNjZXNzLXRva2VuIn0.eyJzdWIiOiJuXC9hIiwiY291bnRyeSI6Ik5PIiwiaXNzIjoibmFzZi1hY2Nlc3MtdG9rZW4iLCJjbGllbnRfaWQiOiJOREhNTk8iLCJzaWQiOiIxMjU2MWQ4Ny00OTU5LTQ1ZDEtYjAwYi00MzdhZWIyOWNhMTYiLCJzc24iOiIyOTA4ODQyNjU2NiIsInVpZCI6IjI5MDg4NDI2NTY2IiwiY3Jpc3MiOiJCYW5rSUQgLSBOb3JkZWEgLSBCYW5rIENBIDMiLCJzY29wZSI6WyJuZGYiLCJhZ3JlZW1lbnQiLCJvcGVuaWQiLCJvZmZsaW5lX2FjY2VzcyJdLCJzZ20iOiJob3VzZWhvbGQiLCJleHAiOjE1OTM3NzI3MjgsImlhdCI6MTU5Mzc3MjU0OCwianRpIjoiZWRhMWUwOGNmODkyNGQ2NTg0YjQ1NmM2Y2FjODA5NGUiLCJncmFudHMiOnsiYWdyZWVtZW50IjoyOTA4ODQyNjU2Nn0sImMiOiJOTyIsImNoIjoiTkRITSIsImFpc3MiOiJkb21lc3RpY19wbiIsImFkbCI6e30sImFsIjoyLCJhbSI6ImJhbmtpZG1fbm8iLCJudHQiOiJleHQiLCJhdWQiOlsibmFzZiIsImRiZiIsIm9zbCJdLCJuYmYiOjE1OTM3NzI1MzgsImFpZCI6MjkwODg0MjY1NjYsImNpZCI6IjI5MDg4NDI2NTY2In0.LlX546p8R9VxK8XE26hhBs2Y9iR2Cb2AXbrXgwh4U3fvu9knNSWv44ZkCYjSxjBaegmNW1vmEPBDdKHegckUhGblhpC3Yy6G7VCHg3GZsAtrNMqQ3uCBdUxJBINSj9zaYP8yFIoX6jR7cvSe850xptmpRUgQAUrfv7o-H7wd7WiM4Qq-4UEpmAA-_B5BL0QCmZtiTPFgyrW1NxDnebRT7R1JggZRTmQlbALrsgJXCcB5-VVu7ais87iJ-OI8a8mrgGkzujW628e924Bpx6-iYxRH_WYuvkjDitFDlcNZiaiKfSTFmaXTjR909r9Tr99H01K7xSRhPf8I9nZ9ThsNzA
-x-app-language: en_NO
-x-platform-version: 12.4.0
-x-app-segment: household
-x-platform-type: iOS
-x-Device-Id: 00000000-0000-4000-0000-000000000000
-x-app-version: 3.13.2.1092
 Connection: keep-alive
-x-device-model: iPhone9,3
-x-app-country: NO
 
 RESPONSE 27
 200
-X-Backside-Transport: OK OK,OK OK
-nnCoection: close
-Transfer-Encoding: chunked
-Date: Fri, 03 Jul 2020 10:36:01 GMT
-X-Application-Context: application:nd,npay,external,ocs,pn,kyc,aot,obi,lin,chat:6010
-X-Content-Type-Options: nosniff,nosniff
-X-XSS-Protection: 1; mode=block
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Pragma: no-cache
-Expires: 0
-X-Frame-Options: DENY
 Content-Type: application/json
 X-Global-Transaction-ID: eaf52b955eff0a1094e311b1
-strict-transport-security: max-age=31536000; includeSubDomains
 
 {"read_only_access":false,"accounts":[],"totals":{"todays_change_valid":true,"todays_change":0.0,"todays_change_pct":0.0},"legacy_errors":[]}
 
