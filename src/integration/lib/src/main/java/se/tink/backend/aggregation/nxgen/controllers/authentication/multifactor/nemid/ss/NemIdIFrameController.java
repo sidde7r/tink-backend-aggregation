@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.steps.NemIdLoginPageStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.steps.NemIdPerform2FAStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.steps.NemIdVerifyLoginResponseStep;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.steps.choosemethod.NemIdChoose2FAMethodStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.utils.NemIdWebDriverWrapper;
 
 @Slf4j
@@ -28,6 +29,7 @@ public class NemIdIFrameController {
     private final NemIdInitializeIframeStep initializeIframeStep;
     private final NemIdLoginPageStep loginPageStep;
     private final NemIdVerifyLoginResponseStep verifyLoginResponseStep;
+    private final NemIdChoose2FAMethodStep choose2FAMethodStep;
     private final NemIdPerform2FAStep perform2FAStep;
 
     public String logInWithCredentials(Credentials credentials) {
@@ -43,10 +45,13 @@ public class NemIdIFrameController {
             initializeIframeStep.initializeNemIdIframe(credentials);
             loginPageStep.login(credentials);
 
-            NemId2FAMethod available2FAMethod =
-                    verifyLoginResponseStep.checkLoginResultAndGetAvailable2FAMethod(credentials);
+            NemId2FAMethodScreen default2FAScreen =
+                    verifyLoginResponseStep.checkLoginResultAndGetDefault2FAScreen(credentials);
+            NemId2FAMethod userSelected2FAMethod =
+                    choose2FAMethodStep.choose2FAMethod(credentials, default2FAScreen);
+
             String tokenBase64 =
-                    perform2FAStep.authenticateToGetNemIdToken(available2FAMethod, credentials);
+                    perform2FAStep.authenticateToGetNemIdToken(userSelected2FAMethod, credentials);
 
             tokenValidator.verifyTokenIsValid(tokenBase64);
             return tokenBase64;

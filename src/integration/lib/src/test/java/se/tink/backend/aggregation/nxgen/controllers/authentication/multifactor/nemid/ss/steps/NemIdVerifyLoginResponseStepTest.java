@@ -6,9 +6,9 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NEMID_CODE_APP_METHOD;
-import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NEMID_CODE_CARD_METHOD;
-import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NEMID_CODE_TOKEN_METHOD;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NEMID_CODE_APP_SCREEN;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NEMID_CODE_CARD_SCREEN;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NEMID_CODE_TOKEN_SCREEN;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NEMID_WIDE_INFO_HEADING;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NOT_EMPTY_ERROR_MESSAGE;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NOT_EMPTY_NEMID_TOKEN;
@@ -37,7 +37,7 @@ import org.openqa.selenium.WebElement;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.agent.AgentException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.NemId2FAMethod;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.NemId2FAMethodScreen;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.NemIdCredentialsStatusUpdater;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.NemIdTokenValidator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.utils.ElementsSearchQuery;
@@ -74,19 +74,19 @@ public class NemIdVerifyLoginResponseStepTest {
     }
 
     @Test
-    @Parameters(method = "all2FAWebElementsWithExpected2FAMethod")
-    public void should_return_correct_2FA_method(
-            By elementThatWillBeFound, NemId2FAMethod expectedMethod) {
+    @Parameters(method = "all2FAWebElementsWithExpected2FAScreen")
+    public void should_return_correct_2FA_screen(
+            By elementThatWillBeFound, NemId2FAMethodScreen expectedScreen) {
         // given
         when(driverWrapper.searchForFirstElement(any()))
                 .thenReturn(ElementsSearchResult.of(elementThatWillBeFound, webElementMock()));
 
         // when
-        NemId2FAMethod nemId2FAMethod =
-                verifyLoginResponseStep.checkLoginResultAndGetAvailable2FAMethod(credentials);
+        NemId2FAMethodScreen nemId2FAMethodScreen =
+                verifyLoginResponseStep.checkLoginResultAndGetDefault2FAScreen(credentials);
 
         // then
-        assertThat(nemId2FAMethod).isEqualTo(expectedMethod);
+        assertThat(nemId2FAMethodScreen).isEqualTo(expectedScreen);
 
         mocksToVerifyInOrder
                 .verify(driverWrapper)
@@ -103,11 +103,11 @@ public class NemIdVerifyLoginResponseStepTest {
     }
 
     @SuppressWarnings("unused")
-    private Object[] all2FAWebElementsWithExpected2FAMethod() {
+    private Object[] all2FAWebElementsWithExpected2FAScreen() {
         return new Object[] {
-            asArray(NEMID_CODE_APP_METHOD, NemId2FAMethod.CODE_APP),
-            asArray(NEMID_CODE_CARD_METHOD, NemId2FAMethod.CODE_CARD),
-            asArray(NEMID_CODE_TOKEN_METHOD, NemId2FAMethod.CODE_TOKEN)
+            asArray(NEMID_CODE_APP_SCREEN, NemId2FAMethodScreen.CODE_APP_SCREEN),
+            asArray(NEMID_CODE_CARD_SCREEN, NemId2FAMethodScreen.CODE_CARD_SCREEN),
+            asArray(NEMID_CODE_TOKEN_SCREEN, NemId2FAMethodScreen.CODE_TOKEN_SCREEN)
         };
     }
 
@@ -124,7 +124,7 @@ public class NemIdVerifyLoginResponseStepTest {
         Throwable throwable =
                 catchThrowable(
                         () ->
-                                verifyLoginResponseStep.checkLoginResultAndGetAvailable2FAMethod(
+                                verifyLoginResponseStep.checkLoginResultAndGetDefault2FAScreen(
                                         credentials));
 
         // then
@@ -221,7 +221,7 @@ public class NemIdVerifyLoginResponseStepTest {
         Throwable throwable =
                 catchThrowable(
                         () ->
-                                verifyLoginResponseStep.checkLoginResultAndGetAvailable2FAMethod(
+                                verifyLoginResponseStep.checkLoginResultAndGetDefault2FAScreen(
                                         credentials));
 
         // then
@@ -304,7 +304,7 @@ public class NemIdVerifyLoginResponseStepTest {
         Throwable throwable =
                 catchThrowable(
                         () ->
-                                verifyLoginResponseStep.checkLoginResultAndGetAvailable2FAMethod(
+                                verifyLoginResponseStep.checkLoginResultAndGetDefault2FAScreen(
                                         credentials));
 
         // then
@@ -331,7 +331,7 @@ public class NemIdVerifyLoginResponseStepTest {
         Throwable throwable =
                 catchThrowable(
                         () ->
-                                verifyLoginResponseStep.checkLoginResultAndGetAvailable2FAMethod(
+                                verifyLoginResponseStep.checkLoginResultAndGetDefault2FAScreen(
                                         credentials));
 
         // then

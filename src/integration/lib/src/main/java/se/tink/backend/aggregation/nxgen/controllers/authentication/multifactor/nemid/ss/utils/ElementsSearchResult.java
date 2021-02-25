@@ -31,7 +31,11 @@ public class ElementsSearchResult {
     }
 
     public boolean notEmpty() {
-        return selector != EMPTY_BY;
+        return !isEmpty();
+    }
+
+    public boolean isEmpty() {
+        return selector == EMPTY_BY;
     }
 
     public String getElementTextTrimmed() {

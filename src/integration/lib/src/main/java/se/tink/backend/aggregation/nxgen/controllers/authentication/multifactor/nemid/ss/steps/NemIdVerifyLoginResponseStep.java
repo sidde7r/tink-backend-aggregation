@@ -4,9 +4,6 @@ import static se.tink.backend.aggregation.nxgen.controllers.authentication.multi
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.Errors.INCORRECT_CREDENTIALS_ERROR_PATTERNS;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.Errors.NEM_ID_REVOKED_PATTERNS;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.Errors.USE_NEW_CODE_CARD_PATTERNS;
-import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NEMID_CODE_APP_METHOD;
-import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NEMID_CODE_CARD_METHOD;
-import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NEMID_CODE_TOKEN_METHOD;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NEMID_WIDE_INFO_HEADING;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NOT_EMPTY_ERROR_MESSAGE;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NOT_EMPTY_NEMID_TOKEN;
@@ -14,10 +11,9 @@ import static se.tink.backend.aggregation.nxgen.controllers.authentication.multi
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.metrics.NemIdMetricLabel.WAITING_FOR_CREDENTIALS_VALIDATION_ELEMENTS_METRIC;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import com.google.inject.Inject;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +23,7 @@ import org.openqa.selenium.WebElement;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.NemId2FAMethod;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.NemId2FAMethodScreen;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.NemIdCredentialsStatusUpdater;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.NemIdTokenValidator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.metrics.NemIdMetrics;
@@ -41,38 +37,31 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 @RequiredArgsConstructor(onConstructor = @__({@Inject}))
 public class NemIdVerifyLoginResponseStep {
 
-    static final List<By> ELEMENTS_TO_SEARCH_FOR_IN_IFRAME =
-            ImmutableList.of(
-                    NEMID_CODE_APP_METHOD,
-                    NEMID_CODE_CARD_METHOD,
-                    NEMID_CODE_TOKEN_METHOD,
-                    NOT_EMPTY_ERROR_MESSAGE,
-                    NEMID_WIDE_INFO_HEADING);
-
-    private static final Map<By, NemId2FAMethod> ELEMENT_SELECTORS_FOR_2FA_METHODS =
-            ImmutableMap.of(
-                    NEMID_CODE_APP_METHOD, NemId2FAMethod.CODE_APP,
-                    NEMID_CODE_CARD_METHOD, NemId2FAMethod.CODE_CARD,
-                    NEMID_CODE_TOKEN_METHOD, NemId2FAMethod.CODE_TOKEN);
+    public static final List<By> ELEMENTS_TO_SEARCH_FOR_IN_IFRAME =
+            ImmutableList.<By>builder()
+                    .addAll(NemId2FAMethodScreen.getSelectorsForAllScreens())
+                    .add(NOT_EMPTY_ERROR_MESSAGE)
+                    .add(NEMID_WIDE_INFO_HEADING)
+                    .build();
 
     private final NemIdWebDriverWrapper driverWrapper;
     private final NemIdMetrics metrics;
     private final NemIdCredentialsStatusUpdater statusUpdater;
     private final NemIdTokenValidator nemIdTokenValidator;
 
-    public NemId2FAMethod checkLoginResultAndGetAvailable2FAMethod(Credentials credentials) {
-        NemId2FAMethod nemId2FAMethod =
+    public NemId2FAMethodScreen checkLoginResultAndGetDefault2FAScreen(Credentials credentials) {
+        NemId2FAMethodScreen nemId2FAMethodScreen =
                 metrics.executeWithTimer(
-                        this::verifyCorrectLoginResponseAndGet2FAMethod,
+                        this::verifyCorrectLoginResponseAndGetDefault2FAScreen,
                         WAITING_FOR_CREDENTIALS_VALIDATION_ELEMENTS_METRIC);
 
         log.info("{} Provided credentials are valid", NEM_ID_PREFIX);
         statusUpdater.updateStatusPayload(credentials, UserMessage.VALID_CREDS);
 
-        return nemId2FAMethod;
+        return nemId2FAMethodScreen;
     }
 
-    private NemId2FAMethod verifyCorrectLoginResponseAndGet2FAMethod() {
+    private NemId2FAMethodScreen verifyCorrectLoginResponseAndGetDefault2FAScreen() {
         ElementsSearchResult validationElementsSearchResult =
                 driverWrapper.searchForFirstElement(
                         ElementsSearchQuery.builder()
@@ -84,9 +73,11 @@ public class NemIdVerifyLoginResponseStep {
         By elementSelector = validationElementsSearchResult.getSelector();
         WebElement element = validationElementsSearchResult.getWebElement();
 
-        if (ELEMENT_SELECTORS_FOR_2FA_METHODS.containsKey(elementSelector)) {
+        Optional<NemId2FAMethodScreen> maybe2FAScreen =
+                NemId2FAMethodScreen.getScreenBySelector(elementSelector);
+        if (maybe2FAScreen.isPresent()) {
             // some 2FA method is ready to use
-            return ELEMENT_SELECTORS_FOR_2FA_METHODS.get(elementSelector);
+            return maybe2FAScreen.get();
         }
         if (elementSelector == NOT_EMPTY_NEMID_TOKEN) {
             /*

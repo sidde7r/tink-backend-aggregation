@@ -11,6 +11,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.util.NemIdTestHelper.nemIdMetricsMock;
 
+import java.util.ArrayList;
+import java.util.List;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 import org.junit.Before;
@@ -22,6 +24,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.steps.NemIdLoginPageStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.steps.NemIdPerform2FAStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.steps.NemIdVerifyLoginResponseStep;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.steps.choosemethod.NemIdChoose2FAMethodStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.utils.NemIdWebDriverWrapper;
 
 @RunWith(JUnitParamsRunner.class)
@@ -33,6 +36,7 @@ public class NemIdIFrameControllerTest {
     private NemIdInitializeIframeStep initializeIframeStep;
     private NemIdLoginPageStep loginPageStep;
     private NemIdVerifyLoginResponseStep verifyLoginResponseStep;
+    private NemIdChoose2FAMethodStep choose2FAMethodStep;
     private NemIdPerform2FAStep perform2FAStep;
 
     private NemIdIFrameController nemIdIFrameController;
@@ -47,6 +51,7 @@ public class NemIdIFrameControllerTest {
         tokenValidator = mock(NemIdTokenValidator.class);
         loginPageStep = mock(NemIdLoginPageStep.class);
         verifyLoginResponseStep = mock(NemIdVerifyLoginResponseStep.class);
+        choose2FAMethodStep = mock(NemIdChoose2FAMethodStep.class);
         perform2FAStep = mock(NemIdPerform2FAStep.class);
 
         nemIdIFrameController =
@@ -57,6 +62,7 @@ public class NemIdIFrameControllerTest {
                         initializeIframeStep,
                         loginPageStep,
                         verifyLoginResponseStep,
+                        choose2FAMethodStep,
                         perform2FAStep);
 
         credentials = mock(Credentials.class);
@@ -67,17 +73,18 @@ public class NemIdIFrameControllerTest {
                         tokenValidator,
                         loginPageStep,
                         verifyLoginResponseStep,
+                        choose2FAMethodStep,
                         perform2FAStep);
     }
 
     @Test
-    @Parameters(method = "all2FAMethods")
+    @Parameters(method = "all2FAMethodScreensAndChosenMethods")
     public void should_execute_all_steps_in_correct_order_and_close_web_driver(
-            NemId2FAMethod nemId2FAMethod) {
+            NemId2FAMethodScreen defaultMethodScreen, NemId2FAMethod methodChosenByUser) {
         // given
-        when(verifyLoginResponseStep.checkLoginResultAndGetAvailable2FAMethod(any()))
-                .thenReturn(nemId2FAMethod);
-
+        when(verifyLoginResponseStep.checkLoginResultAndGetDefault2FAScreen(any()))
+                .thenReturn(defaultMethodScreen);
+        when(choose2FAMethodStep.choose2FAMethod(any(), any())).thenReturn(methodChosenByUser);
         when(perform2FAStep.authenticateToGetNemIdToken(any(), any())).thenReturn("SAMPLE TOKEN");
 
         mockThatTokenIsValid();
@@ -90,10 +97,13 @@ public class NemIdIFrameControllerTest {
         mocksToVerifyInOrder.verify(loginPageStep).login(credentials);
         mocksToVerifyInOrder
                 .verify(verifyLoginResponseStep)
-                .checkLoginResultAndGetAvailable2FAMethod(credentials);
+                .checkLoginResultAndGetDefault2FAScreen(credentials);
+        mocksToVerifyInOrder
+                .verify(choose2FAMethodStep)
+                .choose2FAMethod(credentials, defaultMethodScreen);
         mocksToVerifyInOrder
                 .verify(perform2FAStep)
-                .authenticateToGetNemIdToken(nemId2FAMethod, credentials);
+                .authenticateToGetNemIdToken(methodChosenByUser, credentials);
         mocksToVerifyInOrder.verify(tokenValidator).verifyTokenIsValid("SAMPLE TOKEN");
 
         mocksToVerifyInOrder.verify(driverWrapper).quitDriver();
@@ -101,17 +111,26 @@ public class NemIdIFrameControllerTest {
     }
 
     @SuppressWarnings("unused")
-    private Object[] all2FAMethods() {
-        return NemId2FAMethod.values();
+    private Object[] all2FAMethodScreensAndChosenMethods() {
+        List<Object[]> paramsList = new ArrayList<>();
+
+        for (NemId2FAMethodScreen methodScreen : NemId2FAMethodScreen.values()) {
+            for (NemId2FAMethod chosenMethod : NemId2FAMethod.values()) {
+                paramsList.add(new Object[] {methodScreen, chosenMethod});
+            }
+        }
+
+        return paramsList.toArray(new Object[0]);
     }
 
     @Test
-    @Parameters(method = "all2FAMethods")
-    public void should_throw_token_validation_error(NemId2FAMethod nemId2FAMethod) {
+    @Parameters(method = "all2FAMethodScreensAndChosenMethods")
+    public void should_throw_token_validation_error(
+            NemId2FAMethodScreen defaultMethodScreen, NemId2FAMethod methodChosenByUser) {
         // given
-        when(verifyLoginResponseStep.checkLoginResultAndGetAvailable2FAMethod(any()))
-                .thenReturn(nemId2FAMethod);
-
+        when(verifyLoginResponseStep.checkLoginResultAndGetDefault2FAScreen(any()))
+                .thenReturn(defaultMethodScreen);
+        when(choose2FAMethodStep.choose2FAMethod(any(), any())).thenReturn(methodChosenByUser);
         when(perform2FAStep.authenticateToGetNemIdToken(any(), any()))
                 .thenReturn("SAMPLE INVALID TOKEN 12345");
 
@@ -129,10 +148,13 @@ public class NemIdIFrameControllerTest {
         mocksToVerifyInOrder.verify(loginPageStep).login(credentials);
         mocksToVerifyInOrder
                 .verify(verifyLoginResponseStep)
-                .checkLoginResultAndGetAvailable2FAMethod(credentials);
+                .checkLoginResultAndGetDefault2FAScreen(credentials);
+        mocksToVerifyInOrder
+                .verify(choose2FAMethodStep)
+                .choose2FAMethod(credentials, defaultMethodScreen);
         mocksToVerifyInOrder
                 .verify(perform2FAStep)
-                .authenticateToGetNemIdToken(nemId2FAMethod, credentials);
+                .authenticateToGetNemIdToken(methodChosenByUser, credentials);
         mocksToVerifyInOrder
                 .verify(tokenValidator)
                 .verifyTokenIsValid("SAMPLE INVALID TOKEN 12345");

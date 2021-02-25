@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor
 
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.IFRAME;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -131,6 +132,44 @@ public class NemIdWebDriverWrapper {
             }
         }
         return ElementsSearchResult.empty();
+    }
+
+    public MultipleElementsSearchResult searchForAllElements(ElementsSearchQuery query) {
+
+        List<ElementsSearchResult> elementsSearchResults = new ArrayList<>();
+
+        for (int i = 0; i < query.getTimeoutInSeconds(); i++) {
+
+            switchToParentWindow();
+            elementsSearchResults.addAll(searchForAllElements(query.getElementsInParentWindow()));
+
+            boolean hasSwitchedToAnIframe = trySwitchToNemIdIframe();
+            if (hasSwitchedToAnIframe) {
+                elementsSearchResults.addAll(searchForAllElements(query.getElementsInAnIframe()));
+            }
+
+            // if at least one element was found we assume that the page was refreshed and all other
+            // elements should've also been found - otherwise they don't exists
+            if (!elementsSearchResults.isEmpty()) {
+                return MultipleElementsSearchResult.of(elementsSearchResults);
+            }
+
+            sleepFor(1_000);
+        }
+
+        return MultipleElementsSearchResult.empty();
+    }
+
+    private List<ElementsSearchResult> searchForAllElements(List<By> elementSelectors) {
+        List<ElementsSearchResult> searchResults = new ArrayList<>();
+
+        for (By by : elementSelectors) {
+            Optional<WebElement> maybeElementFound = tryFindElement(by);
+            maybeElementFound.ifPresent(
+                    element -> searchResults.add(ElementsSearchResult.of(by, element)));
+        }
+
+        return searchResults;
     }
 
     public Optional<WebElement> tryFindElement(By by) {

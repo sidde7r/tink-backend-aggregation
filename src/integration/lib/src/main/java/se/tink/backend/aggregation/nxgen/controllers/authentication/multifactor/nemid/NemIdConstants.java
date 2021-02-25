@@ -100,33 +100,55 @@ public class NemIdConstants {
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class HtmlElements {
+        // Parent window
         public static final By IFRAME = By.tagName("iframe");
         public static final By NOT_EMPTY_NEMID_TOKEN =
                 By.xpath("//div[@id='tink_nemIdToken' and text()!='']");
 
+        // Common iframe elements
         public static final By SUBMIT_BUTTON = By.cssSelector("button.button--submit");
         public static final By NOT_EMPTY_ERROR_MESSAGE =
                 By.xpath("//p[@class='error' and text()!='']");
         public static final By NEMID_WIDE_INFO_HEADING = By.xpath("//h1[@class='wide-header'][0]");
 
+        // Login screen
         public static final By USERNAME_INPUT = By.cssSelector("input[type=text]");
         public static final By PASSWORD_INPUT = By.cssSelector("input[type=password]");
 
-        public static final By NEMID_CODE_APP_METHOD = By.className("otp__icon-phone-pulse");
+        // 2FA method screens
+        public static final By NEMID_CODE_APP_SCREEN = By.className("otp__icon-phone-pulse");
+        public static final By NEMID_CODE_CARD_SCREEN = By.className("otp__card-number");
+        public static final By NEMID_CODE_TOKEN_SCREEN = By.className("otp__token");
+        public static final By NEMID_LINK_TO_SELECT_DIFFERENT_2FA_METHOD =
+                By.xpath("//*[@class='frame__row']//a");
+        public static final By NEMID_SELECT_METHOD_POPUP =
+                By.xpath("//button[contains(@class, 'otp__iconTextButton')]");
+        public static final By NEMID_CLOSE_SELECT_METHOD_POPUP =
+                NEMID_LINK_TO_SELECT_DIFFERENT_2FA_METHOD;
+
+        // Code app screen
         public static final By NEMID_TIMEOUT_ICON = By.className("otp__icon-noresponse");
 
-        public static final By NEMID_CODE_CARD_METHOD = By.className("otp__card-number");
-        public static final By NEMID_CODE_CARD_NUMBER = NEMID_CODE_CARD_METHOD;
+        // Code card screen
+        public static final By NEMID_CODE_CARD_NUMBER = NEMID_CODE_CARD_SCREEN;
         public static final By NEMID_CODE_CARD_CODE_NUMBER =
                 By.xpath("//div[@class='otp__frame__row']/div[@class='otp__frame__cell'][1]");
         public static final By NEMID_CODE_CARD_CODE_INPUT =
                 By.xpath(
                         "//div[@class='otp__frame__row']/div[@class='otp__frame__cell'][2]//input");
 
-        public static final By NEMID_CODE_TOKEN_METHOD = By.className("otp__token");
+        // Code token screen
         public static final By NEMID_CODE_TOKEN_SERIAL_NUMBER =
                 By.xpath("//*[@class='frame__row']//div[1]//span");
         public static final By NEMID_CODE_TOKEN_INPUT = By.xpath("//*[@class='input otp-input']");
+
+        // Select 2FA methods popup
+        public static final By NEMID_SELECT_CODE_APP_BUTTON =
+                By.xpath("//button[./*[@class='icon-element otp__icon-phone']]");
+        public static final By NEMID_SELECT_CODE_CARD_BUTTON =
+                By.xpath("//button[./*[@class='icon-element otp__icon-keycard']]");
+        public static final By NEMID_SELECT_CODE_TOKEN_BUTTON =
+                By.xpath("//button[./*[@class='icon-element otp__icon-token']]");
     }
 
     // source:
