@@ -132,27 +132,27 @@ public class DemoAccountDefinitionGenerator {
                 .toString();
     }
 
-    private static String generateAccountNumbersIT(String deterministicKey) {
+    protected static String generateAccountNumbersIT(String deterministicKey) {
         return generateIban(deterministicKey, CountryCode.IT, "X", "11101", "05428", 12);
     }
 
-    private static String generateAccountNumbersFR(String deterministicKey) {
+    protected static String generateAccountNumbersFR(String deterministicKey) {
         return generateIban(deterministicKey, CountryCode.FR, "0", "01005", "20041", 12);
     }
 
-    private static String generateAccountNumbersDE(String deterministicKey) {
-        return generateIban(deterministicKey, CountryCode.DE, "0", "37040044", "37040044", 12);
+    protected static String generateAccountNumbersDE(String deterministicKey) {
+        return generateIban(deterministicKey, CountryCode.DE, "0", "", "37040044", 10);
     }
 
-    private static String generateAccountNumbersES(String deterministicKey) {
-        return generateIban(deterministicKey, CountryCode.ES, "0", "0418", "2100", 12);
+    protected static String generateAccountNumbersES(String deterministicKey) {
+        return generateIban(deterministicKey, CountryCode.ES, "00", "0418", "2100", 10);
     }
 
     private static String getAccountNumber(String userDeterministicKey, int expectedLength) {
         if (userDeterministicKey.length() < expectedLength) {
             return Strings.padStart(userDeterministicKey, expectedLength, '0');
         } else {
-            return userDeterministicKey.substring(expectedLength);
+            return userDeterministicKey.substring(0, expectedLength);
         }
     }
 
