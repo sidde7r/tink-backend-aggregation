@@ -248,6 +248,7 @@ java_library(
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/it/openbanking/fideuram",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/it/openbanking/findomestic",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/it/openbanking/finecobank",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/it/openbanking/hellobank",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/it/openbanking/hype",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/it/openbanking/iccrea",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/it/openbanking/illimity",
