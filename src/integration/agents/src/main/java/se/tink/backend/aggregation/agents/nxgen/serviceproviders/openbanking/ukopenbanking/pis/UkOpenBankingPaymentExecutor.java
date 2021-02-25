@@ -2,13 +2,16 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 
 import com.google.common.util.concurrent.Uninterruptibles;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
@@ -46,6 +49,11 @@ public class UkOpenBankingPaymentExecutor implements PaymentExecutor, FetchableP
     private final UkOpenBankingPaymentRequestValidator paymentRequestValidator;
     private final ProviderSessionCacheController providerSessionCacheController;
     private final UkOpenBankingCredentialsUpdater credentialsUpdater;
+    private static final List<Integer> RETRYABLE_STATUSES =
+            Arrays.asList(
+                    HttpStatus.SC_INTERNAL_SERVER_ERROR,
+                    HttpStatus.SC_SERVICE_UNAVAILABLE,
+                    HttpStatus.SC_BAD_GATEWAY);
 
     @Override
     public PaymentResponse create(PaymentRequest paymentRequest) throws PaymentException {
@@ -153,7 +161,12 @@ public class UkOpenBankingPaymentExecutor implements PaymentExecutor, FetchableP
             try {
                 return paymentResponseSupplier.get();
             } catch (HttpResponseException e) {
-                Uninterruptibles.sleepUninterruptibly(2000 * i, TimeUnit.MILLISECONDS);
+                log.warn(e.getMessage(), e);
+                if (RETRYABLE_STATUSES.contains(e.getResponse().getStatus())) {
+                    Uninterruptibles.sleepUninterruptibly(2000 * i, TimeUnit.MILLISECONDS);
+                    continue;
+                }
+                return paymentResponseSupplier.get();
             }
         }
         return paymentResponseSupplier.get();
