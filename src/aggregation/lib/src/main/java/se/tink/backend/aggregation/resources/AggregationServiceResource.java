@@ -326,15 +326,17 @@ public class AggregationServiceResource implements AggregationService {
 
         List<ProviderConfiguration> filteredProviders =
                 allProviders.stream()
+                        // Trying to get rid of possible sandbox providers if they exist when
+                        // the financialInstitutionId is not null or empty.
                         .filter(
                                 prv ->
-                                        Objects.equals(
-                                                        financialInstitutionId,
-                                                        prv.getFinancialInstitutionId())
-                                                || Objects.equals(providerId, prv.getName()))
+                                        (Objects.equals(
+                                                                financialInstitutionId,
+                                                                prv.getFinancialInstitutionId())
+                                                        && !StringUtils.containsIgnoreCase(
+                                                                prv.getName(), "sandbox")
+                                                || Objects.equals(providerId, prv.getName())))
                         .filter(prv -> prv.getAccessType() == AccessType.OPEN_BANKING)
-                        // Trying to get rid of possible sandbox providers if they exist.
-                        .filter(prv -> !StringUtils.containsIgnoreCase(prv.getName(), "sandbox"))
                         .collect(Collectors.toList());
 
         Preconditions.checkState(
