@@ -1,4 +1,3 @@
-
 REQUEST 1
 GET https://ewm.ibercajadirecto.com/api/valores/cuentasvalores
 Content-Type: application/json

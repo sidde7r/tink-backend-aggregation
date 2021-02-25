@@ -5,7 +5,6 @@ REQUEST 1
 GET https://loapp.caixabank.es/xmlapps/rest/smartContent/consultaFoto
 Content-Type: application/json
 Accept: application/json
-X-Aggregator: Tink Testing
 
 RESPONSE 1
 410
@@ -18,7 +17,6 @@ REQUEST 2
 POST https://loapp.caixabank.es/xmlapps/rest/login/inicio
 Content-Type: application/json
 Accept: application/json
-X-Aggregator: Tink Testing
 
 {"idioma":"es","origen":"51402","canal":"O","idInstalacion":"cIAPPLPh9,3bMj2Zyth3YZ53zKOpn6Cf9OSA9Lf"}
 
@@ -33,7 +31,6 @@ REQUEST 3
 POST https://loapp.caixabank.es/xmlapps/rest/login/login
 Content-Type: application/json
 Accept: application/json
-X-Aggregator: Tink Testing
 
 {"usuario":"dummyUsername","pin":"b5b8167feb6e3b09"}
 
@@ -48,7 +45,6 @@ REQUEST 4
 POST https://loapp.caixabank.es/xmlapps/rest/login/loginDatosUsuario
 Content-Type: application/json
 Accept: application/json
-X-Aggregator: Tink Testing
 
 {"datosUsuario":["linkNombreEmp","linkDNI","linkDatnac","linkNomper","linkPriape","linkSegape"]}
 
@@ -63,7 +59,6 @@ REQUEST 5
 GET https://loapp.caixabank.es/xmlapps/rest/dashboardApp/cuentaPrincipal
 Content-Type: application/json
 Accept: application/json
-X-Aggregator: Tink Testing
 
 RESPONSE 5
 200
@@ -77,7 +72,6 @@ REQUEST 6
 GET https://loapp.caixabank.es/xmlapps/rest/cuentas/listaTitulares
 Content-Type: application/json
 Accept: application/json
-X-Aggregator: Tink Testing
 
 RESPONSE 6
 200
@@ -91,7 +85,6 @@ REQUEST 7
 POST https://loapp.caixabank.es/xmlapps/rest/tarjetas/listadoTarjetasGenerica
 Content-Type: application/json
 Accept: application/json
-X-Aggregator: Tink Testing
 
 {"filtro_opcion":"02","filtro_tipoproducto":"T","filtro_estado":"A","filtro_liquidacion":"S","inicio":true,"numelementos":0}
 
@@ -101,11 +94,11 @@ Connection: Keep-Alive
 Content-Type: application/json; charset=utf-8
 
 {"listaTarjetasGenerica": {"tarjetaGenerica": [{"numeroTarjeta": "4766642366402019", "bin": "476664", "affinity": "TP", "descripcion": "VISA DEBIT", "indTarjetaEmpresa": "P", "fechaAlta": "170210", "deposito": {"iban": "ES5804874233163224687413", "codigoPais": "ES", "dcIban": "58", "numeroCuenta": "3224687413", "entidad": "0487", "oficina": "4233", "dc": "16", "longitudModalidad": 0, "longitudCuenta": 0 }, "estado": "SITTAOF0020", "descripcionEstado": "Activa", "tipoTarjeta": "D", "identificadorImagen": "17875", "indpre": "N", "tipoTAP": "N", "tipoTMOV": "N", "tandem": "S", "hceable": "S", "idColectivo": "000", "contrato": "9613.08-2366402-92", "marca": "4", "servicioKeep": "O", "seguroSaldoPendiente": "N", "nomTitular": "Dummy Name", "cyberWallet": "N", "tipoTarMovil": "N", "datosLiquidacion": {"saldoPrepago": "0.0", "saldoDisponible": "0.0", "saldoDispuesto": "0.0", "gastoMesDebito": "28.2", "datosUltimoMovimiento": {"lastMov": "20200301", "impLastMov": "22.4", "monedaLastMov": "978"} }, "refValIdtarjeta": "MHOcIejR7HAwc5wh6NHscAAAAXDmR1rO0NO6iKb260U", "refValNumtarjeta": "MHOcIeh7Xfkwc5wh6Htd~QAAAXDmR1rOnLfxf42eSSU", "refValIdCuenta": "MHOcIeisyfAwc5wh6KzJ8AAAAXDmR1rO8cReidJ7bqA", "refValIdContrato": "MHOcIei0b2owc5wh6LRvagAAAXDmR1rOXs6GiuL3f5s", "refValIdSolicitudTarjeta": "MHOcIejbeegwc5wh6Nt56AAAAXDmR1rOydMeo3xB73U", "indTitularidad": "T", "numPersonaBeneficiario": "0", "limiteTarjeta": "0.0", "bine9Cifras": "476664", "contrato2": "2366402", "plastico": "1", "indFraccionable": "S", "importePrevisionPago": 0.0, "importeSaldoRetenido": 0.0 }, {"numeroTarjeta": "4766644523967025", "bin": "476664", "affinity": "TJ", "descripcion": "VISA DEBIT", "indTarjetaEmpresa": "P", "fechaAlta": "170216", "deposito": {"iban": "ES0700759329691643618378", "codigoPais": "ES", "dcIban": "81", "numeroCuenta": "1643618378", "entidad": "0487", "oficina": "9329", "dc": "69", "longitudModalidad": 0, "longitudCuenta": 0 }, "estado": "SITTAOF0020", "descripcionEstado": "Activa", "tipoTarjeta": "D", "identificadorImagen": "0", "indpre": "N", "tipoTAP": "N", "tipoTMOV": "N", "tandem": "S", "hceable": "S", "idColectivo": "000", "contrato": "1111.11-1111111-11", "marca": "4", "servicioKeep": "O", "seguroSaldoPendiente": "N", "nomTitular": "Dummy Name", "cyberWallet": "N", "tipoTarMovil": "N", "datosLiquidacion": {"saldoPrepago": "0.0", "saldoDisponible": "0.0", "saldoDispuesto": "0.0", "gastoMesDebito": "0.0", "datosUltimoMovimiento": {"impLastMov": "0.0", "monedaLastMov": "0"} }, "refValIdtarjeta": "MHOcIehKrZswc5wh6EqtmwAAAXDmR1rOsk7_coNCuYU", "refValNumtarjeta": "MHOcIeh3VXYwc5wh6HdVdgAAAXDmR1rOWAY~iJ9a9kA", "refValIdCuenta": "MHOcIegUWUQwc5wh6BRZRAAAAXDmR1rOT38r_NTBz3M", "refValIdContrato": "MHOcIej_2U8wc5wh6P_ZTwAAAXDmR1rOEygJcqJCkUk", "refValIdSolicitudTarjeta": "MHOcIegy8bQwc5wh6DLxtAAAAXDmR1rOR3idGGVA8RU", "indTitularidad": "B", "numPersonaBeneficiario": "27380836", "limiteTarjeta": "0.0", "bine9Cifras": "476664", "contrato2": "4523967", "plastico": "2", "indFraccionable": "N", "importePrevisionPago": 0.0, "importeSaldoRetenido": 0.0 } ], "masDatos": false }, "listaContratosTarjetas": null, "numTarjsRetornadas": "2", "claveContinuacionTcrindco": "", "claveContinuacionNumtar": "", "fechaHora": "02/03/2020 09:05:32"}
+
 REQUEST 8
 GET https://loapp.caixabank.es/xmlapps/rest/posGlobal/listaPrestamos?inicio=true
 Content-Type: application/json
 Accept: application/json
-X-Aggregator: Tink Testing
 
 RESPONSE 8
 409
@@ -118,7 +111,6 @@ REQUEST 9
 GET https://loapp.caixabank.es/xmlapps/rest/posGlobal/posicionGlobalProductosAplicacion?contratosSaldoCero=N&tipoPosGlobal=P
 Content-Type: application/json
 Accept: application/json
-X-Aggregator: Tink Testing
 
 RESPONSE 9
 200
@@ -131,7 +123,6 @@ REQUEST 10
 GET https://loapp.caixabank.es/xmlapps/rest/valores/posicionValores/lista
 Content-Type: application/json
 Accept: application/json
-X-Aggregator: Tink Testing
 
 RESPONSE 10
 409
@@ -144,7 +135,6 @@ REQUEST 11
 POST https://loapp.caixabank.es/xmlapps/rest/fondos/posicionGlobalLista
 Content-Type: application/json
 Accept: application/json
-X-Aggregator: Tink Testing
 
 {"masDatos":"false","verFondosSaldoCero":"true"}
 
@@ -159,7 +149,6 @@ REQUEST 12 MATCH STATE1
 GET https://loapp.caixabank.es/xmlapps/rest/cuentas/extracto?inicio=true&numeroCuenta=MHOcIegTz4owc5wh6BPPigAAAXDmR1jqQ7C_vYoPlhU
 Content-Type: application/json
 Accept: application/json
-X-Aggregator: Tink Testing
 
 RESPONSE 12 SET STATE2
 200
@@ -172,7 +161,6 @@ REQUEST 13 MATCH STATE2
 GET https://loapp.caixabank.es/xmlapps/rest/cuentas/extracto?inicio=false&numeroCuenta=MHOcIegTz4owc5wh6BPPigAAAXDmR1jqQ7C_vYoPlhU
 Content-Type: application/json
 Accept: application/json
-X-Aggregator: Tink Testing
 
 RESPONSE 13 SET STATE3
 200
@@ -185,7 +173,6 @@ REQUEST 14 MATCH STATE3
 GET https://loapp.caixabank.es/xmlapps/rest/cuentas/extracto?inicio=false&numeroCuenta=MHOcIegTz4owc5wh6BPPigAAAXDmR1jqQ7C_vYoPlhU
 Content-Type: application/json
 Accept: application/json
-X-Aggregator: Tink Testing
 
 RESPONSE 14 SET STATE4
 200
@@ -198,7 +185,6 @@ REQUEST 15 MATCH STATE4
 GET https://loapp.caixabank.es/xmlapps/rest/cuentas/extracto?inicio=false&numeroCuenta=MHOcIegTz4owc5wh6BPPigAAAXDmR1jqQ7C_vYoPlhU
 Content-Type: application/json
 Accept: application/json
-X-Aggregator: Tink Testing
 
 RESPONSE 15
 200
@@ -211,7 +197,6 @@ REQUEST 16
 GET https://loapp.caixabank.es/xmlapps/rest/login/enrolmentDispositivo/autorizacion/inicio
 Content-Type: application/json
 Accept: application/json
-X-Aggregator: Tink Testing
 
 RESPONSE 16
 200
@@ -224,7 +209,6 @@ REQUEST 17
 POST https://loapp.caixabank.es/xmlapps/rest/autorizacion/pushAutDiferido
 Content-Type: application/json
 Accept: application/json
-X-Aggregator: Tink Testing
 
 RESPONSE 17
 409
@@ -237,7 +221,6 @@ REQUEST 18
 GET https://loapp.caixabank.es/xmlapps/rest/autorizacion/verificaFirmaOperacion
 Content-Type: application/json
 Accept: application/json
-X-Aggregator: Tink Testing
 
 RESPONSE 18 SET STATE_POLLING_SCA
 200
@@ -250,7 +233,6 @@ REQUEST 19 MATCH STATE_POLLING_SCA
 GET https://loapp.caixabank.es/xmlapps/rest/autorizacion/verificaFirmaOperacion
 Content-Type: application/json
 Accept: application/json
-X-Aggregator: Tink Testing
 
 RESPONSE 19
 200
@@ -263,7 +245,6 @@ REQUEST 20
 POST https://loapp.caixabank.es/xmlapps/rest/login/enrolmentDispositivo/autorizacion/resultado
 Content-Type: application/json
 Accept: application/json
-X-Aggregator: Tink Testing
 
 {"codigo":[""],"adaptadoOTPSMS":true}
 
