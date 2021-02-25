@@ -1,11 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
+import lombok.SneakyThrows;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
@@ -27,11 +26,8 @@ import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.fetcher.rp
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.fetcher.rpc.GetCreditCardsResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.fetcher.rpc.GetTransactionsResponse;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
-import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
-import se.tink.backend.aggregation.eidassigner.QsealcAlg;
+import se.tink.backend.aggregation.configuration.agents.utils.CertificateUtils;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
-import se.tink.backend.aggregation.eidassigner.QsealcSignerImpl;
-import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
@@ -46,53 +42,42 @@ public class OpBankApiClient {
 
     private final TinkHttpClient client;
     private final PersistentStorage persistentStorage;
-    private OpBankConfiguration configuration;
-    private String redirectUrl;
-    private EidasProxyConfiguration eidasProxyConfiguration;
-    private EidasIdentity eidasIdentity;
+    private final OpBankConfiguration configuration;
+    private final String redirectUrl;
+    private final QsealcSigner qsealcSigner;
+    private final String financialId;
 
-    private static final ObjectMapper MAPPER = new ObjectMapper();
-
-    public OpBankApiClient(TinkHttpClient client, PersistentStorage persistentStorage) {
+    @SneakyThrows
+    public OpBankApiClient(
+            TinkHttpClient client,
+            PersistentStorage persistentStorage,
+            AgentConfiguration<OpBankConfiguration> agentConfiguration,
+            QsealcSigner qsealcSigner) {
         this.client = client;
         this.client.addFilter(new ServiceUnavailableBankServiceErrorFilter());
         this.client.addFilter(
                 new BadGatewayRetryFilter(Filters.NUMBER_OF_RETRIES, Filters.MS_TO_WAIT));
         this.persistentStorage = persistentStorage;
-    }
-
-    protected void setConfiguration(
-            AgentConfiguration<OpBankConfiguration> agentConfiguration,
-            EidasProxyConfiguration eidasProxyConfiguration,
-            EidasIdentity eidasIdentity) {
+        this.qsealcSigner = qsealcSigner;
         this.configuration = agentConfiguration.getProviderSpecificConfiguration();
         this.redirectUrl = agentConfiguration.getRedirectUrl();
-        this.eidasProxyConfiguration = eidasProxyConfiguration;
-        client.setEidasProxy(eidasProxyConfiguration);
-        this.eidasIdentity = eidasIdentity;
+        this.financialId =
+                CertificateUtils.getOrganizationIdentifier(agentConfiguration.getQsealc());
     }
 
     public TokenResponse fetchNewToken() {
-        HttpResponse response;
-
         try {
-            response =
-                    client.request(Urls.OAUTH_TOKEN)
-                            .accept(MediaType.APPLICATION_OCTET_STREAM_TYPE)
-                            .body(
-                                    new TokenForm()
-                                            .setClientId(configuration.getClientId())
-                                            .setClientSecret(configuration.getClientSecret()),
-                                    MediaType.APPLICATION_FORM_URLENCODED_TYPE)
-                            .post(HttpResponse.class);
+            return client.request(Urls.OAUTH_TOKEN)
+                    .accept(MediaType.APPLICATION_OCTET_STREAM_TYPE)
+                    .body(
+                            new TokenForm()
+                                    .setClientId(configuration.getClientId())
+                                    .setClientSecret(configuration.getClientSecret()),
+                            MediaType.APPLICATION_FORM_URLENCODED_TYPE)
+                    .post(HttpResponse.class)
+                    .getBody(TokenResponse.class);
         } catch (HttpResponseException e) {
             throw mapServiceException(e);
-        }
-
-        try {
-            return MAPPER.readValue(response.getBodyInputStream(), TokenResponse.class);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         }
     }
 
@@ -120,44 +105,30 @@ public class OpBankApiClient {
                         .accept(MediaType.APPLICATION_JSON_TYPE)
                         .body(AuthorizationRequest.expiresInDays(90))
                         .header(HeaderKeys.X_API_KEY, configuration.getApiKey())
-                        .header(HeaderKeys.X_FAPI_FINANCIAL_ID, HeaderValues.TINK)
+                        .header(HeaderKeys.X_FAPI_FINANCIAL_ID, financialId)
                         .header(HeaderKeys.AUTHORIZATION, "Bearer " + bearerToken)
                         .post(HttpResponse.class);
 
-        try {
-            return MAPPER.readValue(response.getBodyInputStream(), AuthorizationResponse.class);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        return response.getBody(AuthorizationResponse.class);
     }
 
     public String fetchSignature(String jwt) {
-        QsealcSigner signer =
-                QsealcSignerImpl.build(
-                        eidasProxyConfiguration.toInternalConfig(),
-                        QsealcAlg.EIDAS_RSA_SHA256,
-                        eidasIdentity);
-        byte[] signatureBytes = signer.getSignature(jwt.getBytes(StandardCharsets.UTF_8));
+        byte[] signatureBytes = qsealcSigner.getSignature(jwt.getBytes(StandardCharsets.UTF_8));
         return Base64.getUrlEncoder().encodeToString(signatureBytes);
     }
 
     public ExchangeTokenResponse exchangeToken(String code) {
-        HttpResponse response =
-                client.request(Urls.OAUTH_TOKEN)
-                        .type(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .body(
-                                new ExchangeTokenForm()
-                                        .setClientId(configuration.getClientId())
-                                        .setClientSecret(configuration.getClientSecret())
-                                        .setCode(code)
-                                        .setRedirectUri(redirectUrl))
-                        .post(HttpResponse.class);
-        try {
-            return MAPPER.readValue(response.getBodyInputStream(), ExchangeTokenResponse.class);
-        } catch (IOException e) {
-            throw new IllegalStateException(e);
-        }
+        return client.request(Urls.OAUTH_TOKEN)
+                .type(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
+                .accept(MediaType.APPLICATION_JSON)
+                .body(
+                        new ExchangeTokenForm()
+                                .setClientId(configuration.getClientId())
+                                .setClientSecret(configuration.getClientSecret())
+                                .setCode(code)
+                                .setRedirectUri(redirectUrl))
+                .post(HttpResponse.class)
+                .getBody(ExchangeTokenResponse.class);
     }
 
     public GetAccountsResponse getAccounts() {
@@ -180,8 +151,8 @@ public class OpBankApiClient {
         return client.request(url)
                 .accept(MediaType.APPLICATION_JSON_TYPE)
                 .header(HeaderKeys.X_API_KEY, configuration.getApiKey())
-                .header(HeaderKeys.X_FAPI_FINANCIAL_ID, HeaderValues.TINK)
-                .header(HeaderKeys.X_CUSTOMER_USER_AGENT, HeaderValues.TINK)
+                .header(HeaderKeys.X_FAPI_FINANCIAL_ID, financialId)
+                .header(HeaderKeys.X_CUSTOMER_USER_AGENT, financialId)
                 .header(HeaderKeys.X_FAPI_CUSTOMER_IP_ADDRESS, HeaderValues.CUSTOMER_IP_ADRESS)
                 .header(HeaderKeys.X_FAPI_INTERACTION_ID, UUID.randomUUID().toString())
                 .addBearerToken(
@@ -195,7 +166,7 @@ public class OpBankApiClient {
 
     private BankServiceException mapServiceException(HttpResponseException exception) {
         if (exception.getResponse().getStatus() == 503) {
-            return BankServiceError.BANK_SIDE_FAILURE.exception();
+            return BankServiceError.BANK_SIDE_FAILURE.exception(exception);
         } else {
             throw exception;
         }

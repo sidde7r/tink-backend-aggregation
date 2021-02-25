@@ -70,6 +70,11 @@ public final class OpBankConstants {
         public static final int MAX_AGE = 86400;
     }
 
+    public static class JWTHeaderValues {
+        public static final String ALG = "RS256";
+        public static final String TYPE = "JWT";
+    }
+
     public static class AuthorizationKeys {
         public static final String REQUEST = "request";
         public static final String RESPONSE_TYPE = "response_type";

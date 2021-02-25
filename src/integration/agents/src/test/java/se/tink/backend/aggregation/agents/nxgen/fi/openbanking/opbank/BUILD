@@ -21,7 +21,7 @@ junit_test(
 junit_test(
     name = "opbank_fetchers",
     srcs = glob(
-        ["**/*.java"],
+        ["fetcher/**/*.java"],
         exclude = ["agent/*.java"],
     ),
     visibility = ["//visibility:public"],
