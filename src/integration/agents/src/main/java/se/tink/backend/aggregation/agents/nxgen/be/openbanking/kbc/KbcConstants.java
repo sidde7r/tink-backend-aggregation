@@ -42,7 +42,7 @@ public final class KbcConstants {
 
     public static class Urls {
         public static final String BASE_AUTH_URL = "https://idp.kbc.com";
-        public static final String BASE_URL = "https://openapi.kbc-group.com";
+        public static final String BASE_URL = "https://psd2.api.kbc.be";
         public static final String AIS_PRODUCT = "/psd2";
         private static final String BASE_AUTH = "/ASK/oauth";
         public static final String AUTH = BASE_AUTH + "/authorize/1";

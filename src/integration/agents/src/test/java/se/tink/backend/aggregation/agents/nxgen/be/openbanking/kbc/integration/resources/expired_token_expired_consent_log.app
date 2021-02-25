@@ -14,7 +14,7 @@ Server: KBCGroupNV
 {"access_token":"accessToken","expires_in":"900","token_type":"Bearer","refresh_token":"DUMMY_REFRESH_TOKEN","scope":"AIS"}
 
 REQUEST 2
-GET https://openapi.kbc-group.com/psd2/v2/accounts?withBalance=true
+GET https://psd2.api.kbc.be/psd2/v2/accounts?withBalance=true
 Authorization: Bearer accessToken
 Consent-ID: dummy_consent_id
 PSU-IP-Address: 0.0.0.0

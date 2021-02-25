@@ -1,5 +1,5 @@
 REQUEST 1
-POST https://openapi.kbc-group.com/psd2/v2/consents
+POST https://psd2.api.kbc.be/psd2/v2/consents
 
 RESPONSE 1
 401
