@@ -1,0 +1,139 @@
+REQUEST 1
+POST https://api.cajamar.es/amea-web/abh/v19.39.0/updatePushToken
+Content-Type: application/json
+Accept: */*
+
+{"token":null}
+
+RESPONSE 1
+400
+Content-Type: application/json;charset=UTF-8
+
+{"code" : "SYS203", "message" : "Ups, hemos tenido un problema. Vuelve a intentarlo o contacta con nosotros."}
+
+REQUEST 2
+POST https://api.cajamar.es/amea-web/abh/enrollment
+Content-Type: application/json
+Accept: */*
+
+{"hasScreenLock":true,"jailbreak":false,"screenHeight":667,"screenWidth":375,"appName":"WEFFERENT","deviceName":"iPhone 8","deviceId":"1101031615543534457519899","osName":"IOS","language":"eng","osVersion":"14.4.1","appVersion":"1.67.28","pushToken":"D3812F47DB01F91A8AB0A3C4F89CC534E83239312D3D6D28AE4D04DE3CD64BF6","user":"dummyUsername","password":"dummyPassword"}
+
+RESPONSE 2
+200
+Content-Type: application/json;charset=UTF-8
+
+{"optk":"16172906593286423102","refreshToken":"dummyRefreshToken","accessToken":"dummyAccessToken","language":"eng","branch":"3058","numDevices":3,"maxDevices":500,"maxDevicesAlertFlag":false}
+
+REQUEST 3
+POST https://api.cajamar.es/amea-web/abh/login
+Content-Type: application/json
+Accept: */*
+
+{"osVersion":"14.4.1","appVersion":"1.67.28","language":"eng","deviceName":"iPhone 8","screenWidth":375,"screenHeight":667,"jailbreak":false,"hasScreenLock":true,"password":"dummyPassword"}
+
+RESPONSE 3
+200
+Content-Type: application/json;charset=UTF-8
+
+{"optk":"1","branch":"3058","bugurooId":"Cajamar-bcc","campaign":[],"entity":"CAJAMAR CAJA RURAL","hmacCodePerson":"codePerson","hmacCodeSesion":"codeSession","language":"eng","lastAccessDate":"2021-04-01T17:19:00.000+0200","maiaId":"4b3822d7a03141dc5afa34059be294b379c19400","maxIdleTime":600,"name":"Grzegorz Brzeczyszczykiewicz","notices":[],"passMustBeChanged":false,"personNumber":"123","remoteSessionClosed":false,"style":"0","verisecEnabled":false}
+
+REQUEST 4
+POST https://api.cajamar.es/amea-web/abh/v19.39.0/position
+Content-Type: application/json
+Accept: */*
+
+RESPONSE 4
+200
+Content-Type: application/json;charset=UTF-8
+
+{"accounts":[{"id":"1","alias":"Cuenta de Gregory","date":"2021-04-01","currency":"EUR","accountingBalance":1224064.81,"iban":"ES20 3058 0010 0000 2000 0000","availableBalance":1224064.81,"type":3}],"cards":[{"id":"2","productCode":"05007","description":"VISA DEBITO DIABLITO","currency":"EUR","status":"OPERATIVA","expiry":"11-2024","account":"1","pan":"4150********3115","type":"DT","available":true,"brand":"1"}],"currency":"EUR","globalBalance":1224064.81,"whatIhave":1224064.81,"whatIowe":0.00,"globalTransactions":[],"otherProducts":[],"financialMarketAccounts":[],"inoperativeCards":[],"financings":[],"savingInvestment":[]}
+
+REQUEST 5
+POST https://api.cajamar.es/amea-web/abh/v19.39.0/account/1
+Content-Type: application/json
+Accept: */*
+
+RESPONSE 5
+200
+Content-Type: application/json;charset=UTF-8
+
+{"alias":"Cuenta de Gregory","iban":"ES2030580010000020000000","bic":"CCRIES2AXXX","openingDate":"2012-05-13","lastOperationDate":"2021-04-01","language":"CASTELLANO","type":"-","settlement":"TRIMESTRAL","averageBalance":1224064.18,"currentBalance":1224064.81,"availableBalance":1224064.81,"dailyLimit":24000.00,"availableToday":24000.00,"withholdings":[],"holders":[{"name":"ALEJANDRO ROBERTO","association":"FIRST HOLDER"},{"name":"GRZEGORZ BRZECZYSZCZYKIEWICZ","association":"AUTHORISED"}]}
+
+REQUEST 6
+POST https://api.cajamar.es/amea-web/abh/v19.39.0/card/2
+Content-Type: application/json
+Accept: */*
+
+RESPONSE 6
+200
+Content-Type: application/json;charset=UTF-8
+
+{"card":"4150********2158","cardType":"Débito","expiryDate":"2024-11-30","debitAccount":"ES20 3058 0010 0000 2000 0000","relatedMainCard":"-","accumulatedOperations":99,"accumulatedAmount":4803.11,"discountForUse":"15,00 euros with more than 48 purchases.","accountHolder":"ALEJANDRO ROBERTO","currency":"EUR","operationCardLimits":[{"scope":"Transactions in ATMs","level":true,"limits":"Diario red propia: 600,00 eur\\nDiario red ajena: 600,00 eur\\n*Cada 4 días:2.400,00 eur"},{"scope":"Transactions in stores","level":true,"limits":"Diario: 3.000,00 eur.\\n*Cada 1 días: 3.000,00 eur (compartido con internet)"},{"scope":"Online Purchases","level":true,"limits":"Diario: 3.000,00 eur\\n*Cada 1 días: 24.000,00 eur (compartido en comercios)"},{"scope":"Transactions outside Europe","level":true,"limits":"Según los límites de operaciones en cajeros y operaciones en comercios."},{"scope":"Contactless","level":true},{"scope":"Look","level":false}]}
+
+REQUEST 7
+POST https://api.cajamar.es/amea-web/abh/v19.39.0/account/1/transactions?pageNumber=1
+Content-Type: application/json
+Accept: */*
+
+RESPONSE 7
+200
+Content-Type: application/json;charset=UTF-8
+
+{"accountTransactionsPagination":{"dataList":[{"description":"OP.TARJ.COMPRA COMERCIO\n4150********2158 T506 BELROS CC MORALEJA G    126362268 ","date":"2021-04-01","currency":"EUR","amount":-3.20,"balance":24064.81,"documentId":"16172907416532523325"},{"description":"OP.TARJ.COMPRA COMERCIO\n415007******2158 FARMACIA LOURDES ALVARO C    186008777 ","date":"2021-04-01","currency":"EUR","amount":-23.71,"balance":24068.01,"documentId":"16172907416524608950"},{"description":"OP.TARJ.COMPRA COMERCIO\n415007******2158 CENTRO EXCELENCIA PEDI       034808246 ","date":"2021-04-01","currency":"EUR","amount":-80.00,"balance":24091.72,"documentId":"16172907416524305605"},{"description":"RECIBO\n202103310488402796 FUNDACION TERTIO MILLENIO                  ","date":"2021-04-01","currency":"EUR","amount":-130.00,"balance":24171.72,"documentId":"16172907416511431731"},{"description":"RECIBO\n202103310488402785 FUNDACION TERTIO MILLENIO                  ","date":"2021-04-01","currency":"EUR","amount":-130.00,"balance":24301.72,"documentId":"16172907416505935678"},{"description":"RECIBO\n202103310488402791 FUNDACION TERTIO MILLENIO                  ","date":"2021-04-01","currency":"EUR","amount":-85.00,"balance":24431.72,"documentId":"16172907416493406502"},{"description":"RECIBO\n202103310488402805 FUNDACION TERTIO MILLENIO                  ","date":"2021-04-01","currency":"EUR","amount":-170.00,"balance":24516.72,"documentId":"16172907416499018989"},{"description":"OP.TARJ.COMPRA COMERCIO\n415007******2158 FARMACIA LA VEGA 2H          337582878 ","date":"2021-03-30","currency":"EUR","amount":-51.47,"balance":24686.72,"documentId":"16172907416489403177"},{"description":"NOMINA\nNOMINAS                                 MERCEDES BENZ ESPANA, S.A.             ","date":"2021-03-30","currency":"EUR","amount":1788.58,"balance":24738.19,"documentId":"16172907416471704922"},{"description":"OP.TARJ.COMPRA COMERCIO\n415007******2158 CARREFOUR MOSCA - 0000100010001        ","date":"2021-03-28","currency":"EUR","amount":-119.14,"balance":22949.61,"documentId":"16172907416467258278"},{"description":"OP.TARJ.COMPRA COMERCIO\n415007******2158 ALCOBENDAS-3                 049161540 ","date":"2021-03-24","currency":"EUR","amount":-3.58,"balance":23068.75,"documentId":"16172907416466509871"},{"description":"OP.TARJ.COMPRA COMERCIO\n415007******2158 IKEA SAN SEBAST              043784305 ","date":"2021-03-23","currency":"EUR","amount":-29.50,"balance":23072.33,"documentId":"16172907416452497982"},{"description":"TRANSFERENCIA A S/FAVOR AEAT            APL:SOLICITUD DEDUCCION MATERNIDAD 21MOD:140INF:RODRIGO             02-2021         EXP:2021DEV14050340046N           AEAT\nIMPUESTOS                               A.E.A.T. DEVOLUCIONES TRIBUTARIAS      ","date":"2021-03-23","currency":"EUR","amount":100.00,"balance":23101.83,"documentId":"16172907416445251143"},{"description":"OP.TARJ.COMPRA COMERCIO\n415007******2158 ALCOBENDAS-3                 049161540 ","date":"2021-03-22","currency":"EUR","amount":-53.67,"balance":23001.83,"documentId":"16172907416434604700"},{"description":"OP.TARJ.COMPRA COMERCIO\n415007******2158 EPH MORGREEN SL              351014659 ","date":"2021-03-18","currency":"EUR","amount":-2.95,"balance":23055.50,"documentId":"16172907416438890420"},{"description":"OP.TARJ.COMPRA COMERCIO\n415007******2158 FARMACIA LOURDES ALVARO C    186008777 ","date":"2021-03-18","currency":"EUR","amount":-28.02,"balance":23058.45,"documentId":"16172907416422325085"}],"pagination":{"pageNumber":1,"numPages":2,"pageSize":16,"total":20}}}
+
+REQUEST 8
+POST https://api.cajamar.es/amea-web/abh/v19.39.0/account/1/transactions?pageNumber=2
+Content-Type: application/json
+Accept: */*
+
+RESPONSE 8
+200
+Content-Type: application/json;charset=UTF-8
+
+{"accountTransactionsPagination":{"dataList":[{"description":"OP.TARJ.COMPRA COMERCIO\n415007******2158 PARAFARMACIA LA CUPULA       327149985 ","date":"2021-01-02","currency":"EUR","amount":-36.85,"balance":29668.14,"documentId":"16172907415818922804"},{"description":"OP.TARJ.COMPRA COMERCIO\n415007******2158 ADIDAS PLAZA NORTE 2         348588492 ","date":"2021-01-02","currency":"EUR","amount":-39.95,"balance":29704.99,"documentId":"16172907415802594815"},{"description":"S/ORD.TRANSFERENCIA\nSEPA 100299490664                       Erichelle Niegos                       ","date":"2021-01-02","currency":"EUR","amount":-1005.00,"balance":29744.94,"documentId":"16172907415796937302"},{"description":"S/ORD.TRANSFERENCIA\nSEPA 100299490664                       Erichelle Niegos                       ","date":"2021-01-02","currency":"EUR","amount":-1005.00,"balance":29744.94,"documentId":"16172907415796937302"}],"pagination":{"pageNumber":2,"numPages":2,"pageSize":16,"total":20}}}
+
+REQUEST 9
+POST https://api.cajamar.es/amea-web/abh/v19.39.0/card/2/transactions?pageNumber=1
+Content-Type: application/json
+Accept: */*
+
+RESPONSE 9
+200
+Content-Type: application/json;charset=UTF-8
+
+{"pan":"415007******2158","cardTransactionsPagination":{"dataList":[{"fee":0.00,"establishment":"T506 BELROS CC MORALEJA GALCOBENDAS ","date":"2021-04-01T15:21:00.000+0200","amount":-3.20,"currency":"EUR","transaction":"VENTA T.P.V.","transactionType":"D","outstandingTransaction":false,"postpone":false,"sequence":"710401152151666"},{"fee":0.00,"establishment":"FARMACIA LOURDES ALVARO CALCOBENDAS ","date":"2021-04-01T15:19:00.000+0200","amount":-23.71,"currency":"EUR","transaction":"VENTA T.P.V.","transactionType":"D","outstandingTransaction":false,"postpone":false,"sequence":"710401151900778"},{"fee":0.00,"establishment":"CENTRO EXCELENCIA PEDI MADRID ","date":"2021-04-01T15:12:00.000+0200","amount":-80.00,"currency":"EUR","transaction":"VENTA T.P.V.","transactionType":"D","outstandingTransaction":false,"postpone":false,"sequence":"710401151215096"},{"fee":0.00,"establishment":"FARMACIA LA VEGA 2HALCOBENDAS ","date":"2021-03-30T17:14:00.000+0200","amount":-51.47,"currency":"EUR","transaction":"VENTA T.P.V.","transactionType":"D","outstandingTransaction":false,"postpone":false,"sequence":"710330171500486"},{"fee":0.00,"establishment":"CARREFOUR MOSCAS.SEBASTIAN R","date":"2021-03-25T09:54:00.000+0100","amount":-119.14,"currency":"EUR","transaction":"VENTA T.P.V.","transactionType":"D","outstandingTransaction":false,"postpone":false,"sequence":"710327134043886"},{"fee":0.00,"establishment":"ALCOBENDAS-3 ALCOBENDAS ","date":"2021-03-24T16:24:00.000+0100","amount":-3.58,"currency":"EUR","transaction":"VENTA T.P.V.","transactionType":"D","outstandingTransaction":false,"postpone":false,"sequence":"710324162352472"},{"fee":0.00,"establishment":"IKEA SAN SEBASTSAN SEBASTIAN","date":"2021-03-23T10:21:00.000+0100","amount":-29.50,"currency":"EUR","transaction":"VENTA T.P.V.","transactionType":"D","outstandingTransaction":false,"postpone":false,"sequence":"710323102144542"},{"fee":0.00,"establishment":"ALCOBENDAS-3 ALCOBENDAS ","date":"2021-03-22T09:47:00.000+0100","amount":-53.67,"currency":"EUR","transaction":"VENTA T.P.V.","transactionType":"D","outstandingTransaction":false,"postpone":false,"sequence":"710322094737328"},{"fee":0.00,"establishment":"EPH MORGREEN SLALCOBENDAS ","date":"2021-03-18T10:31:00.000+0100","amount":-2.95,"currency":"EUR","transaction":"VENTA T.P.V.","transactionType":"D","outstandingTransaction":false,"postpone":false,"sequence":"710318103135186"},{"fee":0.00,"establishment":"FARMACIA LOURDES ALVARO CALCOBENDAS ","date":"2021-03-18T09:55:00.000+0100","amount":-28.02,"currency":"EUR","transaction":"VENTA T.P.V.","transactionType":"D","outstandingTransaction":false,"postpone":false,"sequence":"710318095552650"},{"fee":0.00,"establishment":"DIDECO ALCOBENDASALCOBENDAS ","date":"2021-03-17T16:27:00.000+0100","amount":-30.56,"currency":"EUR","transaction":"VENTA T.P.V.","transactionType":"D","outstandingTransaction":false,"postpone":false,"sequence":"710317162758808"},{"fee":0.00,"establishment":"ALCOBENDAS-3 ALCOBENDAS ","date":"2021-03-16T09:22:00.000+0100","amount":-17.64,"currency":"EUR","transaction":"VENTA T.P.V.","transactionType":"D","outstandingTransaction":false,"postpone":false,"sequence":"710316092154560"},{"fee":0.00,"establishment":"ALCOBENDAS-3 ALCOBENDAS ","date":"2021-03-15T10:21:00.000+0100","amount":-58.75,"currency":"EUR","transaction":"VENTA T.P.V.","transactionType":"D","outstandingTransaction":false,"postpone":false,"sequence":"710315102153002"},{"fee":0.00,"establishment":"SUPERCOR EXPRESS DEHESA VS S REYES","date":"2021-03-14T19:10:00.000+0100","amount":-11.52,"currency":"EUR","transaction":"VENTA T.P.V.","transactionType":"D","outstandingTransaction":false,"postpone":false,"sequence":"710314191016438"},{"fee":0.00,"establishment":"EL BOSQUE ENCANTANDO SAN MARTIN DE","date":"2021-03-13T13:42:00.000+0100","amount":-41.00,"currency":"EUR","transaction":"VENTA T.P.V.","transactionType":"D","outstandingTransaction":false,"postpone":false,"sequence":"710313134211984"},{"fee":0.00,"establishment":"E.S.PANTANO DE SAN JUANPELAYOS DE LA","date":"2021-03-13T12:58:00.000+0100","amount":-68.68,"currency":"EUR","transaction":"VENTA T.P.V.","transactionType":"D","outstandingTransaction":false,"postpone":false,"sequence":"710313125803834"}],"pagination":{"pageNumber":1,"numPages":2,"pageSize":16,"total":20}}}
+
+REQUEST 10
+POST https://api.cajamar.es/amea-web/abh/v19.39.0/card/2/transactions?pageNumber=2
+Content-Type: application/json
+Accept: */*
+
+RESPONSE 10
+200
+Content-Type: application/json;charset=UTF-8
+
+{"pan":"415007******2158","cardTransactionsPagination":{"dataList":[{"fee":0.00,"establishment":"EPH MORGREEN SLALCOBENDAS ","date":"2021-03-12T10:41:00.000+0100","amount":-9.18,"currency":"EUR","transaction":"VENTA T.P.V.","transactionType":"D","outstandingTransaction":false,"postpone":false,"sequence":"710312104112396"},{"fee":0.00,"establishment":"PRIMOR MORALEJA GREENALCOBENDAS ","date":"2021-03-12T10:29:00.000+0100","amount":-19.95,"currency":"EUR","transaction":"VENTA T.P.V.","transactionType":"D","outstandingTransaction":false,"postpone":false,"sequence":"710312102951282"},{"fee":0.00,"establishment":"ALCOBENDAS-3 ALCOBENDAS ","date":"2021-03-10T09:29:00.000+0100","amount":-18.46,"currency":"EUR","transaction":"VENTA T.P.V.","transactionType":"D","outstandingTransaction":false,"postpone":false,"sequence":"710310092849732"},{"fee":0.00,"establishment":"ACCIONA SERIVICIOS CONCESALCOBENDAS ","date":"2021-03-09T10:04:00.000+0100","amount":-1.60,"currency":"EUR","transaction":"VENTA T.P.V.","transactionType":"D","outstandingTransaction":false,"postpone":false,"sequence":"710309100401762"}],"pagination":{"pageNumber":2,"numPages":2,"pageSize":16,"total":20}}}
+
+REQUEST 11
+POST https://api.cajamar.es/amea-web/abh/v19.39.0/updatePushToken
+Content-Type: application/json
+Accept: */*
+
+{"token":"D3812F47DB01F91A8AB0A3C4F89CC534E83239312D3D6D28AE4D04DE3CD64BF6"}
+
+RESPONSE 11
+200
+Content-Type: application/json;charset=UTF-8
+
+{}
+
+REQUEST 12
+POST https://api.cajamar.es/amea-web/abh/logout
+Content-Type: application/json
+Accept: */*
+
+RESPONSE 12
+200
+Content-Type: application/json;charset=UTF-8
+
+{}

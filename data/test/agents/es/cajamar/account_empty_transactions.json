@@ -1,0 +1,11 @@
+{
+    "accountTransactionsPagination": {
+        "dataList": [],
+        "pagination": {
+            "pageNumber": 1,
+            "numPages": 1,
+            "pageSize": 16,
+            "total": 0
+        }
+    }
+}

@@ -1,0 +1,9 @@
+{
+    "refreshToken": "refresh_token",
+    "accessToken": "access_token",
+    "language": "eng",
+    "branch": "3058",
+    "numDevices": 3,
+    "maxDevices": 500,
+    "maxDevicesAlertFlag": false
+}

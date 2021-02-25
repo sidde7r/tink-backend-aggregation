@@ -1,0 +1,28 @@
+{
+    "accountTransactionsPagination": {
+        "dataList": [
+            {
+                "description": "MADRID",
+                "date": "2021-04-07",
+                "currency": "EUR",
+                "amount": -47.43,
+                "balance": 3133.86,
+                "documentId": "1"
+            },
+            {
+                "description": "DE LA VEGA COPADO",
+                "date": "2021-04-06",
+                "currency": "EUR",
+                "amount": -50.45,
+                "balance": 3181.29,
+                "documentId": "2"
+            }
+            ],
+        "pagination": {
+            "pageNumber": 1,
+            "numPages": 1,
+            "pageSize": 16,
+            "total": 2
+        }
+    }
+}

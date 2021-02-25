@@ -1,0 +1,22 @@
+{
+    "alias": "Cuenta de Jefa",
+    "iban": "ES2030000000000000000000",
+    "bic": "CCRXXXXXXXX",
+    "openingDate": "2001-05-13",
+    "lastOperationDate": "2021-04-07",
+    "language": "SPAIN",
+    "type": "-",
+    "settlement": "TRIMESTRAL",
+    "averageBalance": 7242.18,
+    "currentBalance": 3133.86,
+    "availableBalance": 3133.86,
+    "dailyLimit": 4000.00,
+    "availableToday": 4000.00,
+    "withholdings": [],
+    "holders": [
+        {
+            "name": "ADRIAN DE LA PACO",
+            "association": "FIRST HOLDER"
+        }
+    ]
+}

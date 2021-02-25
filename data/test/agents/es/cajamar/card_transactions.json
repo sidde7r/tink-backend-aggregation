@@ -1,0 +1,37 @@
+{
+    "pan": "4150********2158",
+    "cardTransactionsPagination": {
+        "dataList": [
+            {
+                "fee": 0.00,
+                "establishment": "MADRID ",
+                "date": "2021-04-06T13:25:00.000+0200",
+                "amount": -50.45,
+                "currency": "EUR",
+                "transaction": "VENTA T.P.V.",
+                "transactionType": "D",
+                "outstandingTransaction": false,
+                "postpone": false,
+                "sequence": "1"
+            },
+            {
+                "fee": 0.00,
+                "establishment": "SEBASTIAN",
+                "date": "2021-04-06T10:52:00.000+0200",
+                "amount": -20.45,
+                "currency": "EUR",
+                "transaction": "VENTA T.P.V.",
+                "transactionType": "D",
+                "outstandingTransaction": false,
+                "postpone": false,
+                "sequence": "2"
+            }
+            ],
+        "pagination": {
+            "pageNumber": 1,
+            "numPages": 1,
+            "pageSize": 16,
+            "total": 2
+        }
+    }
+}
