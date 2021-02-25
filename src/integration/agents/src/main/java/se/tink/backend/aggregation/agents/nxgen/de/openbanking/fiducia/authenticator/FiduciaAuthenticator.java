@@ -165,14 +165,17 @@ public class FiduciaAuthenticator implements MultiFactorAuthenticator, AutoAuthe
         if (!startcode.isPresent() && isUnsupportedMethod(scaResponse.getChosenScaMethod())) {
             throwNoSupportedMethodFound();
         }
-
         startcode.ifPresent(x -> fields.add(GermanFields.Startcode.build(catalog, x)));
+
+        ChallengeData challengeData = scaResponse.getChallengeData();
         fields.add(
                 GermanFields.Tan.build(
                         catalog,
                         Optional.ofNullable(scaResponse.getChosenScaMethod())
                                 .map(ScaMethod::getName)
-                                .orElse(null)));
+                                .orElse(null),
+                        challengeData != null ? challengeData.getOtpMaxLength() : null,
+                        challengeData != null ? challengeData.getOtpFormat() : null));
 
         String otpCode =
                 supplementalInformationHelper

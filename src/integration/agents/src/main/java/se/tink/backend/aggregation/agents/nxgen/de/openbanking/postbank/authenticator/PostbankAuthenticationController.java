@@ -195,10 +195,18 @@ public class PostbankAuthenticationController implements TypedAuthenticator {
 
     private String collectOtp(AuthorisationResponse authResponse) {
         String scaMethodName = authResponse.getChosenScaMethod().getName();
+        ChallengeData challengeData = authResponse.getChallengeData();
         List<Field> fields = new LinkedList<>();
         extractStartcode(authResponse)
                 .ifPresent(x -> fields.add(GermanFields.Startcode.build(catalog, x)));
-        fields.add(GermanFields.Tan.build(catalog, scaMethodName));
+
+        fields.add(
+                GermanFields.Tan.build(
+                        catalog,
+                        scaMethodName,
+                        challengeData != null ? challengeData.getOtpMaxLength() : null,
+                        challengeData != null ? challengeData.getOtpFormat() : null));
+
         return supplementalInformationController
                 .askSupplementalInformationSync(fields.toArray(new Field[0]))
                 .get(GermanFields.Tan.getFieldKey());

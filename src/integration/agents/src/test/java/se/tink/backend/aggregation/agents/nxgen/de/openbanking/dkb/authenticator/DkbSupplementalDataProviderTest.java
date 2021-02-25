@@ -74,7 +74,11 @@ public class DkbSupplementalDataProviderTest {
         challengeData = Collections.emptyList();
 
         // when
-        List<Field> result = tested.getSupplementalFields(TEST_SCA_METHOD_NAME, challengeData);
+        List<Field> result =
+                tested.getSupplementalFields(
+                        TEST_SCA_METHOD_NAME,
+                        challengeData,
+                        new ConsentAuthorization.ChallengeData());
 
         // then
         assertThat(result).hasSize(1);
@@ -88,7 +92,11 @@ public class DkbSupplementalDataProviderTest {
         challengeData = Arrays.asList(PUSH_TAN_CHALLENGE, TEST_CHALLENGE);
 
         // when
-        List<Field> result = tested.getSupplementalFields(TEST_SCA_METHOD_NAME, challengeData);
+        List<Field> result =
+                tested.getSupplementalFields(
+                        TEST_SCA_METHOD_NAME,
+                        challengeData,
+                        new ConsentAuthorization.ChallengeData());
 
         // then
         assertThat(result).hasSize(1);
@@ -101,7 +109,11 @@ public class DkbSupplementalDataProviderTest {
         challengeData = Arrays.asList(CHALLENGE_WITH_START_CODE, TEST_CHALLENGE);
 
         // when
-        List<Field> result = tested.getSupplementalFields(TEST_SCA_METHOD_NAME, challengeData);
+        List<Field> result =
+                tested.getSupplementalFields(
+                        TEST_SCA_METHOD_NAME,
+                        challengeData,
+                        new ConsentAuthorization.ChallengeData());
 
         // then
         assertThat(result).hasSize(2);

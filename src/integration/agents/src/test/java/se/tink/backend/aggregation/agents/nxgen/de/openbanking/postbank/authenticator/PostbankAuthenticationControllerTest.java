@@ -272,7 +272,7 @@ public class PostbankAuthenticationControllerTest {
     private void mockProvidingOtpCode() {
         Map<String, String> supplementalInformation = new HashMap<>();
         supplementalInformation.put(GermanFields.Tan.getFieldKey(), OTP_CODE);
-        Field tan = GermanFields.Tan.build(catalog, "");
+        Field tan = GermanFields.Tan.build(catalog, "", null, null);
         when(mockSuppController.askSupplementalInformationSync(argThat(new FieldMatcher(tan))))
                 .thenReturn(supplementalInformation);
     }

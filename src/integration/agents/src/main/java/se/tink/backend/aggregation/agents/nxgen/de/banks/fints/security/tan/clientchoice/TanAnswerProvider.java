@@ -22,7 +22,7 @@ public class TanAnswerProvider {
         try {
             supplementalInformation =
                     supplementalInformationHelper.askSupplementalInformation(
-                            GermanFields.Tan.build(catalog, tanMedium));
+                            GermanFields.Tan.build(catalog, tanMedium, null, null));
         } catch (SupplementalInfoException e) {
             throw new ClientAnswerException("Could not get TAN Answer", e);
         }

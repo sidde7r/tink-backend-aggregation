@@ -251,7 +251,8 @@ public class DkbAuthenticator implements AutoAuthenticator, MultiFactorAuthentic
         String code =
                 supplementalDataProvider.getTanCode(
                         consentAuth.getChosenScaMethod().getName(),
-                        consentAuth.getChallengeData().getData());
+                        consentAuth.getChallengeData().getData(),
+                        consentAuth.getChallengeData());
         authApiClient.consentAuthorization2ndFactor(consentId, authorisationId, code);
     }
 }

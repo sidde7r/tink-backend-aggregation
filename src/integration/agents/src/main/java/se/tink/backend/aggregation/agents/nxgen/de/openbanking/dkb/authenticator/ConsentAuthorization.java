@@ -67,5 +67,7 @@ public class ConsentAuthorization {
         private List<String> data = new ArrayList<>();
         private String image;
         private String imageLink;
+        private Integer otpMaxLength;
+        private String otpFormat;
     }
 }
