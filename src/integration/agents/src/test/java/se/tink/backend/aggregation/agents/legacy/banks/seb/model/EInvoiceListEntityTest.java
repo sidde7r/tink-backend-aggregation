@@ -79,8 +79,8 @@ public class EInvoiceListEntityTest {
 
         @Test
         public void hasAmount() {
-            assertThat(deserialized.getCurrentAmount().getCurrency()).isEqualTo("SEK");
-            assertThat(deserialized.getCurrentAmount().getValue()).isEqualTo(100.00d);
+            assertThat(deserialized.getCurrentAmount().getCurrencyCode()).isEqualTo("SEK");
+            assertThat(deserialized.getCurrentAmount().getDoubleValue()).isEqualTo(100.00d);
         }
 
         @Test

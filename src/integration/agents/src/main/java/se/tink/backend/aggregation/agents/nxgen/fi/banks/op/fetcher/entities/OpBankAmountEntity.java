@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.fi.banks.op.fetcher.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class OpBankAmountEntity {
@@ -10,8 +10,8 @@ public class OpBankAmountEntity {
     private String currencyCode;
 
     @JsonIgnore
-    public Amount getTinkAmount() {
-        return new Amount(currencyCode, amount);
+    public ExactCurrencyAmount getTinkAmount() {
+        return ExactCurrencyAmount.of(amount, currencyCode);
     }
 
     public double getAmount() {

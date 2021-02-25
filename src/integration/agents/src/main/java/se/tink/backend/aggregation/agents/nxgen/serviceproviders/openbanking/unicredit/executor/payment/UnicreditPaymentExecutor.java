@@ -55,8 +55,12 @@ public class UnicreditPaymentExecutor implements PaymentExecutor, FetchablePayme
 
         AmountEntity amount =
                 new AmountEntity(
-                        paymentRequest.getPayment().getAmount().getValue().toString(),
-                        paymentRequest.getPayment().getAmount().getCurrency());
+                        String.valueOf(
+                                paymentRequest
+                                        .getPayment()
+                                        .getExactCurrencyAmount()
+                                        .getDoubleValue()),
+                        paymentRequest.getPayment().getExactCurrencyAmount().getCurrencyCode());
 
         AccountEntity debtor = new AccountEntity(payment.getDebtor().getAccountNumber());
         AccountEntity creditor = new AccountEntity(payment.getCreditor().getAccountNumber());

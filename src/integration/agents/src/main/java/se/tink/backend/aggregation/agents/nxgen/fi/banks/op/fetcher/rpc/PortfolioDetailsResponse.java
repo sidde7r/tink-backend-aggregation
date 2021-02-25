@@ -13,7 +13,6 @@ import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.fetcher.entities.OpB
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.rpc.OpBankResponseEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
-import se.tink.libraries.amount.Amount;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
@@ -63,11 +62,6 @@ public class PortfolioDetailsResponse extends OpBankResponseEntity {
     @JsonIgnore
     private Portfolio.Type getPortfolioType() {
         return isPensionPortfolio ? Portfolio.Type.PENSION : Portfolio.Type.DEPOT;
-    }
-
-    @JsonIgnore
-    public Amount getMarketValue() {
-        return distributionLine.getMarketValue().getTinkAmount();
     }
 
     @JsonIgnore

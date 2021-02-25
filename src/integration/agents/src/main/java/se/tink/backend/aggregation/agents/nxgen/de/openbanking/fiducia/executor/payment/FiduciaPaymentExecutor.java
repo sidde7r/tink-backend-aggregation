@@ -46,7 +46,6 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.signing.SigningStepConstants;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
-import se.tink.libraries.amount.Amount;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.date.CountryDateHelper;
 import se.tink.libraries.payment.enums.PaymentStatus;
@@ -83,8 +82,8 @@ public class FiduciaPaymentExecutor implements PaymentExecutor, FetchablePayment
         Payment payment = paymentRequest.getPayment();
         Creditor creditor = payment.getCreditor();
         Debtor debtor = payment.getDebtor();
-        Amount amount = payment.getAmount();
-        ExactCurrencyAmount amount1 = payment.getExactCurrencyAmount();
+
+        ExactCurrencyAmount amount = payment.getExactCurrencyAmount();
 
         // Backwards compatibility patch: some agents would break if the dueDate was null, so we
         // defaulted it. This behaviour is no longer true for agents that properly implement the
@@ -100,7 +99,7 @@ public class FiduciaPaymentExecutor implements PaymentExecutor, FetchablePayment
                 new GrpHdr(
                         payment.getExecutionDate()
                                 .format(DateTimeFormatter.ofPattern(FormValues.DATE_FORMAT)),
-                        amount.getValue().toString(),
+                        String.valueOf(amount.getDoubleValue()),
                         new InitgPty(new Id(new OrgId(other)), FormValues.PAYMENT_INITIATOR),
                         FormValues.NUMBER_OF_TRANSACTIONS,
                         FormValues.MESSAGE_ID);
@@ -110,7 +109,10 @@ public class FiduciaPaymentExecutor implements PaymentExecutor, FetchablePayment
                         new Cdtr(creditor.getName()),
                         new CdtrAcct(new IbanId(creditor.getAccountNumber())),
                         new PmtId(FormValues.PAYMENT_ID),
-                        new Amt(new InstdAmt(amount.getCurrency(), amount.getValue().toString())),
+                        new Amt(
+                                new InstdAmt(
+                                        amount.getCurrencyCode(),
+                                        String.valueOf(amount.getDoubleValue()))),
                         new RmtInf(FormValues.RMT_INF));
 
         PmtInf paymentInfo =
@@ -122,7 +124,7 @@ public class FiduciaPaymentExecutor implements PaymentExecutor, FetchablePayment
                                 .format(DateTimeFormatter.ofPattern(FormValues.DATE_FORMAT)),
                         FormValues.CHRG_BR,
                         FormValues.PAYMENT_INFORMATION_ID,
-                        amount.getValue().toString(),
+                        String.valueOf(amount.getDoubleValue()),
                         new Dbtr(psuId),
                         FormValues.NUMBER_OF_TRANSACTIONS,
                         FormValues.PAYMENT_METHOD);
@@ -147,7 +149,7 @@ public class FiduciaPaymentExecutor implements PaymentExecutor, FetchablePayment
                 apiClient.createPayment(
                         body, psuId, digest, qsealcDerBase64, signature, reqId, date);
 
-        return createPaymentResponse.toTinkPayment(creditor, debtor, amount1);
+        return createPaymentResponse.toTinkPayment(creditor, debtor, amount);
     }
 
     @Override

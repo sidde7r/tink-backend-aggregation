@@ -36,7 +36,7 @@ public class StarlingAgentTest {
                 AccountIdentifier.create(AccountIdentifier.Type.SORT_CODE, TRANSFER_SOURCE));
         transfer.setDestination(
                 AccountIdentifier.create(AccountIdentifier.Type.SORT_CODE, TRANSFER_DEST));
-        transfer.setAmount(ExactCurrencyAmount.of(1050, "GBP"));
+        transfer.setAmount(ExactCurrencyAmount.of("10.50", "GBP"));
         transfer.setSourceMessage("Message!");
 
         new AgentIntegrationTest.Builder("uk", "uk-starling-oauth2")

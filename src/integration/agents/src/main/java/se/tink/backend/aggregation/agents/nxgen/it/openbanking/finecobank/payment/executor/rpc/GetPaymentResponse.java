@@ -22,7 +22,7 @@ public class GetPaymentResponse {
     public PaymentResponse toTinkPaymentResponse(PaymentRequest paymentRequest) {
         Payment responsePayment =
                 new Payment.Builder()
-                        .withAmount(instructedAmount.toTinkAmount())
+                        .withExactCurrencyAmount(instructedAmount.toTinkAmount())
                         .withCreditor(creditorAccount.toTinkCreditor())
                         .withDebtor(debtorAccount.toTinkDebtor())
                         .withStatus(

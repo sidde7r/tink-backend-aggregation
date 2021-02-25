@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.executor
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class InstdAmt {
     @XmlAttribute(name = "Ccy")
@@ -17,7 +17,7 @@ public class InstdAmt {
         this.content = content;
     }
 
-    public Amount toAmount() {
-        return new Amount(ccy, Double.parseDouble(content));
+    public ExactCurrencyAmount toAmount() {
+        return ExactCurrencyAmount.of(Double.parseDouble(content), ccy);
     }
 }

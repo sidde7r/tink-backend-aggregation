@@ -37,7 +37,7 @@ public class CreatePaymentResponse {
                                         .getTinkPaymentStatus())
                         .withType(dnbPaymentType.getTinkPaymentType())
                         .withCurrency(amount.getCurrency())
-                        .withAmount(amount.toTinkAmount())
+                        .withExactCurrencyAmount(amount.toTinkAmount())
                         .withCreditor(creditor.toTinkCreditor())
                         .withDebtor(debtor.toTinkDebtor());
 

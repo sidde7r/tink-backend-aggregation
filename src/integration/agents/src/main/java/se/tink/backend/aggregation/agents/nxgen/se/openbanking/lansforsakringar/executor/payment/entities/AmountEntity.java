@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.executor.payment.entities;
 
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.libraries.amount.Amount;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
@@ -11,9 +10,9 @@ public class AmountEntity {
 
     public AmountEntity() {}
 
-    public AmountEntity(Amount amount) {
-        this.amount = amount.getValue();
-        this.currency = amount.getCurrency();
+    public AmountEntity(ExactCurrencyAmount amount) {
+        this.amount = amount.getDoubleValue();
+        this.currency = amount.getCurrencyCode();
     }
 
     public ExactCurrencyAmount toAmount() {

@@ -9,7 +9,6 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Predicate;
 import com.google.common.base.Strings;
 import java.lang.invoke.MethodHandles;
-import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.Date;
 import org.slf4j.Logger;
@@ -22,7 +21,7 @@ import se.tink.libraries.account.identifiers.BankGiroIdentifier;
 import se.tink.libraries.account.identifiers.NonValidIdentifier;
 import se.tink.libraries.account.identifiers.PlusGiroIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 import se.tink.libraries.strings.StringUtils;
@@ -215,13 +214,13 @@ public class EInvoiceListEntity implements MatchableTransferRequestEntity {
     private Object modifiedDueDate;
 
     @JsonIgnore
-    public Amount getCurrentAmount() {
-        return Amount.inSEK(amount);
+    public ExactCurrencyAmount getCurrentAmount() {
+        return ExactCurrencyAmount.inSEK(amount);
     }
 
     @JsonIgnore
-    public Amount getOriginalAmount() {
-        return Amount.inSEK(originalAmount);
+    public ExactCurrencyAmount getOriginalAmount() {
+        return ExactCurrencyAmount.inSEK(originalAmount);
     }
 
     @JsonIgnore
@@ -290,19 +289,6 @@ public class EInvoiceListEntity implements MatchableTransferRequestEntity {
     }
 
     @JsonIgnore
-    public void setCurrentAmount(Amount amount) {
-        Preconditions.checkArgument(
-                amount.getCurrency().equals(currencyCode), "Amount not same currency as eInvoice");
-        this.amount = roundCurrentAmountToTwoDecimalDouble(amount);
-    }
-
-    private double roundCurrentAmountToTwoDecimalDouble(Amount amount) {
-        return new BigDecimal(amount.getValue())
-                .setScale(2, BigDecimal.ROUND_HALF_UP)
-                .doubleValue();
-    }
-
-    @JsonIgnore
     public void setCurrentDueDate(Date dueDate) {
         this.dueDate = ThreadSafeDateFormat.FORMATTER_DAILY.format(dueDate);
     }
@@ -363,7 +349,7 @@ public class EInvoiceListEntity implements MatchableTransferRequestEntity {
                 && SEBAgentUtils.trimmedDashAgnosticEquals(
                         this.sourceAccount, transferListEntity.SourceAccountNumber)
                 && Objects.equal(currentDueDate, transferEntityDate)
-                && Math.abs(getCurrentAmount().getValue() - transferListEntity.Amount) < 0.01;
+                && Math.abs(getCurrentAmount().getDoubleValue() - transferListEntity.Amount) < 0.01;
     }
 
     /**

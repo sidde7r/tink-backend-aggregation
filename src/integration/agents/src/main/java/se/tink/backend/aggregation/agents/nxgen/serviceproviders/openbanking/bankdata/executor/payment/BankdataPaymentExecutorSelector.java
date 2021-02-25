@@ -68,8 +68,12 @@ public class BankdataPaymentExecutorSelector implements PaymentExecutor, Fetchab
             throws PaymentException {
         AmountEntity amountEntity =
                 new AmountEntity(
-                        paymentRequest.getPayment().getAmount().getCurrency(),
-                        paymentRequest.getPayment().getAmount().getValue().toString());
+                        paymentRequest.getPayment().getExactCurrencyAmount().getCurrencyCode(),
+                        String.valueOf(
+                                paymentRequest
+                                        .getPayment()
+                                        .getExactCurrencyAmount()
+                                        .getDoubleValue()));
 
         DebtorEntity debtorEntity = DebtorEntity.of(paymentRequest, type);
         CreditorEntity creditorEntity = CreditorEntity.of(paymentRequest, type);

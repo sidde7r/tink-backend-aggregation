@@ -88,7 +88,7 @@ public class SbabPaymentExecutor implements PaymentExecutor, FetchablePaymentExe
 
         TransferData transferData =
                 new TransferData.Builder()
-                        .withAmount(payment.getAmount().doubleValue())
+                        .withAmount(payment.getExactCurrencyAmount().getDoubleValue())
                         .withCounterPartAccount(payment.getCreditor().getAccountNumber())
                         .withCurrency(payment.getCurrency())
                         .withTransferDate(getExecutionDate(payment))
