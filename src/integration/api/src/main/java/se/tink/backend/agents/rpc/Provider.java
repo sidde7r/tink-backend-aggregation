@@ -11,6 +11,7 @@ import com.google.common.collect.Lists;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.apache.commons.collections4.CollectionUtils;
 import se.tink.backend.aggregation.client.provider_configuration.rpc.ProviderConfiguration;
 import se.tink.libraries.provider.ProviderDto.ProviderTypes;
 import se.tink.libraries.serialization.utils.SerializationUtils;
@@ -31,6 +32,7 @@ public class Provider implements Cloneable {
         DECOUPLED
     }
 
+    @Deprecated
     public enum AuthenticationUserType {
         PERSONAL,
         BUSINESS,
@@ -65,7 +67,8 @@ public class Provider implements Cloneable {
     private ProviderStatuses status;
     private ProviderTypes type;
     private String financialInstitutionId;
-    private AuthenticationUserType authenticationUserType;
+    @Deprecated private AuthenticationUserType authenticationUserType;
+    private List<FinancialService> financialServices;
 
     public Provider() {
         setFields(Lists.newArrayList());
@@ -185,12 +188,22 @@ public class Provider implements Cloneable {
         this.financialInstitutionId = financialInstitutionId;
     }
 
+    @Deprecated
     public AuthenticationUserType getAuthenticationUserType() {
         return authenticationUserType;
     }
 
+    @Deprecated
     public void setAuthenticationUserType(AuthenticationUserType authenticationUserType) {
         this.authenticationUserType = authenticationUserType;
+    }
+
+    public List<FinancialService> getFinancialServices() {
+        return financialServices;
+    }
+
+    public void setFinancialServices(List<FinancialService> financialServices) {
+        this.financialServices = financialServices;
     }
 
     @JsonIgnore
@@ -235,7 +248,10 @@ public class Provider implements Cloneable {
         provider.setAuthenticationUserType(
                 Provider.AuthenticationUserType.valueOf(
                         providerConfiguration.getAuthenticationUserType().name()));
-
+        provider.setFinancialServices(
+                CollectionUtils.emptyIfNull(providerConfiguration.getFinancialServices()).stream()
+                        .map(FinancialService::of)
+                        .collect(Collectors.toList()));
         return provider;
     }
 

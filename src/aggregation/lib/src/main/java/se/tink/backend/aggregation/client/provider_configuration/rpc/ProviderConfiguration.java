@@ -42,6 +42,7 @@ public class ProviderConfiguration {
         NON_COMPLIANT
     }
 
+    @Deprecated
     public enum AuthenticationUserType {
         PERSONAL,
         BUSINESS,
@@ -55,7 +56,7 @@ public class ProviderConfiguration {
     private static class FieldsList extends ArrayList<Field> {}
 
     private AccessType accessType;
-    private AuthenticationUserType authenticationUserType;
+    @Deprecated private AuthenticationUserType authenticationUserType;
     private AuthenticationFlow authenticationFlow;
     private String capabilitiesSerialized;
     private String className;
@@ -92,6 +93,8 @@ public class ProviderConfiguration {
 
     @Nullable private ComplianceStatus complianceStatus;
 
+    private List<FinancialService> financialServices;
+
     public AccessType getAccessType() {
         return accessType;
     }
@@ -100,6 +103,7 @@ public class ProviderConfiguration {
         return authenticationFlow;
     }
 
+    @Deprecated
     public AuthenticationUserType getAuthenticationUserType() {
         return authenticationUserType;
     }
@@ -226,6 +230,7 @@ public class ProviderConfiguration {
         this.accessType = accessType;
     }
 
+    @Deprecated
     public void setAuthenticationUserType(AuthenticationUserType authenticationUserType) {
         this.authenticationUserType = authenticationUserType;
     }
@@ -356,5 +361,13 @@ public class ProviderConfiguration {
 
     public void setComplianceStatus(@Nullable ComplianceStatus complianceStatus) {
         this.complianceStatus = complianceStatus;
+    }
+
+    public List<FinancialService> getFinancialServices() {
+        return financialServices;
+    }
+
+    public void setFinancialServices(List<FinancialService> financialServices) {
+        this.financialServices = financialServices;
     }
 }
