@@ -6,7 +6,6 @@ import static org.mockito.Mockito.when;
 
 import java.nio.file.Paths;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import junitparams.JUnitParamsRunner;
@@ -37,6 +36,7 @@ public class LunarTransactionFetcherTest {
     private static final String ORIGIN_GROUP_ID = "833293fc-282c-4b99-8b86-2035218abeac";
     private static final String GOAL_ID = "59aec9ca-51df-47b8-aaeb-2121b47b99b0";
     private static final String CURRENCY = "DKK";
+    private static final String LAST_TRANSACTION = String.valueOf(1591343356482L);
 
     private LunarTransactionFetcher transactionFetcher;
     private FetcherApiClient apiClient;
@@ -51,14 +51,15 @@ public class LunarTransactionFetcherTest {
     @Parameters(method = "checkingAccountParams")
     public void shouldGetTransactionsForCheckingAccount(
             TransactionsResponse transactionsResponse,
-            TransactionKeyPaginatorResponse<String> expected) {
+            TransactionKeyPaginatorResponse<String> expected,
+            String key) {
         // given
-        when(apiClient.fetchTransactions(ORIGIN_GROUP_ID)).thenReturn(transactionsResponse);
+        when(apiClient.fetchTransactions(ORIGIN_GROUP_ID, key)).thenReturn(transactionsResponse);
 
         // when
         TransactionKeyPaginatorResponse<String> result =
                 transactionFetcher.getTransactionsFor(
-                        getTestAccount(TransactionalAccountType.CHECKING, ORIGIN_GROUP_ID), null);
+                        getTestAccount(TransactionalAccountType.CHECKING, ORIGIN_GROUP_ID), key);
 
         // then
         assertThat(result).isEqualToComparingFieldByFieldRecursively(expected);
@@ -70,10 +71,18 @@ public class LunarTransactionFetcherTest {
                 SerializationUtils.deserializeFromString(
                         Paths.get(TEST_DATA_PATH, "transactions_response.json").toFile(),
                         TransactionsResponse.class),
-                getExpectedTransactionsForCheckingAccountResponse()
+                getExpectedTransactionsForCheckingAccountResponse(),
+                null
             },
             new Object[] {
-                new TransactionsResponse(), TransactionKeyPaginatorResponseImpl.createEmpty()
+                SerializationUtils.deserializeFromString(
+                        Paths.get(TEST_DATA_PATH, "empty_transactions_response.json").toFile(),
+                        TransactionsResponse.class),
+                TransactionKeyPaginatorResponseImpl.createEmpty(),
+                LAST_TRANSACTION
+            },
+            new Object[] {
+                new TransactionsResponse(), TransactionKeyPaginatorResponseImpl.createEmpty(), null
             },
         };
     }
@@ -139,18 +148,29 @@ public class LunarTransactionFetcherTest {
                                 .setAmount(ExactCurrencyAmount.of(1234.12, CURRENCY))
                                 .setDate(new Date(1591343356482L))
                                 .setDescription("Transfer")
+                                .build(),
+                        Transaction.builder()
+                                .setAmount(ExactCurrencyAmount.of(12345.12, CURRENCY))
+                                .setDate(new Date(1591343356490L))
+                                .setDescription("Transaction before last")
                                 .build());
-        return new TransactionKeyPaginatorResponseImpl<>(expectedTransactions, null);
+        return new TransactionKeyPaginatorResponseImpl<>(
+                expectedTransactions, LunarTransactionFetcherTest.LAST_TRANSACTION);
     }
 
     private TransactionKeyPaginatorResponse<String>
             getExpectedTransactionsForSavingsAccountResponse() {
         List<Transaction> expectedTransactions =
-                Collections.singletonList(
+                Arrays.asList(
                         Transaction.builder()
                                 .setAmount(ExactCurrencyAmount.of(1.01, CURRENCY))
                                 .setDate(new Date(1613551491501L))
                                 .setDescription("You added funds")
+                                .build(),
+                        Transaction.builder()
+                                .setAmount(ExactCurrencyAmount.of(-11.12, CURRENCY))
+                                .setDate(new Date(1597273484708L))
+                                .setDescription("Du havde ikke penge nok på dit kort.")
                                 .build());
         return new TransactionKeyPaginatorResponseImpl<>(expectedTransactions, null);
     }
