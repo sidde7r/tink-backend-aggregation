@@ -294,7 +294,7 @@ public class AggregationServiceResource implements AggregationService {
 
     @Override
     public SecretsNamesValidationResponse validateSecretsNames(
-            SecretsNamesValidationRequest request, ClientInfo clientInfo) {
+            SecretsNamesValidationRequest request) {
         Preconditions.checkNotNull(request, "SecretsNamesValidationRequest cannot be null.");
 
         String financialInstitutionId = request.getFinancialInstitutionId();

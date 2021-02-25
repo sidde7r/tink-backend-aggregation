@@ -182,8 +182,7 @@ public interface AggregationService {
     @TeamOwnership(Team.INTEGRATION)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    SecretsNamesValidationResponse validateSecretsNames(
-            SecretsNamesValidationRequest request, @ClientContext ClientInfo clientInfo);
+    SecretsNamesValidationResponse validateSecretsNames(SecretsNamesValidationRequest request);
 
     @POST
     @Path("beneficiary")
