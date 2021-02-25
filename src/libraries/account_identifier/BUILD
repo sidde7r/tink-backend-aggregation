@@ -7,6 +7,7 @@ java_library(
     deps = [
         "@aggregation//:commons_validator_commons_validator",
         "//third_party:org_slf4j_slf4j_api",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/exceptions",
         "//src/libraries/uuid",
         "//src/libraries/giro_validation",
         "//src/libraries/strings",
