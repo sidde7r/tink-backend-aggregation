@@ -13,10 +13,5 @@ build --javacopt=-g
 build --action_env=PATH
 build --action_env=LD_LIBRARY_PATH
 
-# Required by rules_docker and rules_k8s https://github.com/bazelbuild/rules_docker/issues/842
-build --host_force_python=PY2
-test --host_force_python=PY2
-run --host_force_python=PY2
-
 # If you would like to add more configuration, you can create user.bazelrc and add it there
 try-import user.bazelrc
