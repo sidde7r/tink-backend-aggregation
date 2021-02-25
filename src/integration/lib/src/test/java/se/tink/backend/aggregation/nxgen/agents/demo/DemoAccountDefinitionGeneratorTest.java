@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.nxgen.agents.demo;
 
 import com.google.common.collect.Lists;
 import java.net.URI;
+import org.iban4j.CountryCode;
 import org.junit.Assert;
 import org.junit.Test;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoSavingsAccount;
@@ -125,5 +126,87 @@ public class DemoAccountDefinitionGeneratorTest {
         Assert.assertEquals("1101-784896153537", savingsAccount2.getAccountId());
         Assert.assertEquals("Savings Account Tink 1", savingsAccount2.getAccountName());
         Assert.assertTrue(savingsAccount2.getIdentifiers().contains(expectedIdentifier2));
+    }
+
+    @Test
+    public void shouldGenerateCorrectIbanForItaly() {
+        // given
+        String deterministicKey = "0123456789";
+        String accountNumber = "00" + deterministicKey;
+        String bankCode = "05428";
+        String branchCode = "11101";
+        String checkChars = "X";
+        String ibanPattern =
+                CountryCode.IT + "\\d{2}" + checkChars + bankCode + branchCode + accountNumber;
+
+        // when
+        String iban = DemoAccountDefinitionGenerator.generateAccountNumbersIT(deterministicKey);
+
+        // then
+        Assert.assertTrue(iban.matches(ibanPattern));
+    }
+
+    @Test
+    public void shouldGenerateCorrectIbanForFrance() {
+        // given
+        String deterministicKey = "0123456789";
+        String accountNumber = "00" + deterministicKey;
+        String bankCode = "20041";
+        String branchCode = "01005";
+        String checkChars = "0";
+        String ibanPattern =
+                CountryCode.FR + "\\d{2}" + bankCode + branchCode + accountNumber + checkChars;
+
+        // when
+        String iban = DemoAccountDefinitionGenerator.generateAccountNumbersFR(deterministicKey);
+
+        // then
+        Assert.assertTrue(iban.matches(ibanPattern));
+    }
+
+    @Test
+    public void shouldGenerateCorrectIbanForGermany() {
+        // given
+        String deterministicKey = "0123456789";
+        String bankCode = "37040044";
+        String ibanPattern = CountryCode.DE + "\\d{2}" + bankCode + deterministicKey;
+
+        // when
+        String iban = DemoAccountDefinitionGenerator.generateAccountNumbersDE(deterministicKey);
+
+        // then
+        Assert.assertTrue(iban.matches(ibanPattern));
+    }
+
+    @Test
+    public void shouldGenerateCorrectIbanForGermanyIfLongerKey() {
+        // given
+        String deterministicKey = "0123456789111";
+        String accountNumber = "0123456789";
+        String bankCode = "37040044";
+        String ibanPattern = CountryCode.DE + "\\d{2}" + bankCode + accountNumber;
+
+        // when
+        String iban = DemoAccountDefinitionGenerator.generateAccountNumbersDE(deterministicKey);
+
+        // then
+        Assert.assertTrue(iban.matches(ibanPattern));
+    }
+
+    @Test
+    public void shouldGenerateCorrectIbanForSpain() {
+        // given
+        String deterministicKey = "0123456789";
+        String bankCode = "2100";
+        String branchCode = "0418";
+        String checkChars = "00";
+        String ibanPattern =
+                CountryCode.ES + "\\d{2}" + bankCode + branchCode + checkChars + deterministicKey;
+
+        // when
+        String iban = DemoAccountDefinitionGenerator.generateAccountNumbersES(deterministicKey);
+
+        // then
+        Assert.assertTrue(iban.matches(ibanPattern));
     }
 }

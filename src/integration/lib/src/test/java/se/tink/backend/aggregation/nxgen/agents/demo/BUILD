@@ -10,6 +10,7 @@ junit_test(
         "//src/integration/lib",
         "//src/libraries/account_identifier",
         "//third_party:org_assertj_assertj_core",
+        "//third_party:org_iban4j_iban4j",
         "@aggregation//:commons_validator_commons_validator",
     ],
 )
