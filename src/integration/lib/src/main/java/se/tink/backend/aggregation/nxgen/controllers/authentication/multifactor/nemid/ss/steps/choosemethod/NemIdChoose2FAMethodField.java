@@ -37,6 +37,7 @@ public class NemIdChoose2FAMethodField {
             Catalog catalog, NemId2FAMethod nemId2FAMethod) {
         String optionText = catalog.getString(nemId2FAMethod.getUserFriendlyName());
         String optionKey = nemId2FAMethod.getSupplementalInfoKey();
-        return new SelectOption(optionText, optionKey);
+        String iconUrl = nemId2FAMethod.getSupplementalInfoIconUrl();
+        return new SelectOption(optionText, optionKey, iconUrl);
     }
 }
