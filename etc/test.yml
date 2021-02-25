@@ -6928,6 +6928,11 @@ agentsServiceConfiguration:
         psuIpAdress: 82.117.210.2
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
         tppId: SE-FINA-44059
+    hellobank:
+      tink:
+        clientId: dummyClientId
+        clientSecret: dummyClientSecret
+        redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
     icabanken:
       tink:
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
