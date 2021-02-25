@@ -18,8 +18,8 @@ import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.authen
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.configuration.FinecoBankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.fetcher.card.FinecoBankCreditCardAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.fetcher.transactionalaccount.FinecoBankTransactionalAccountFetcher;
-import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.payment.FinecoBankPaymentController;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.payment.FinecoBankPaymentExecutor;
+import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.payment.FinecoPaymentFetcher;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -63,9 +63,9 @@ public final class FinecoBankAgent extends NextGenerationAgent
                 new FinecoBankApiClient(
                         client,
                         persistentStorage,
-                        this.agentConfiguration,
-                        request.isManual(),
-                        userIp);
+                        new FinecoHeaderValues(
+                                agentConfiguration.getRedirectUrl(),
+                                request.isManual() ? userIp : null));
 
         this.client.setEidasProxy(agentsServiceConfiguration.getEidasProxy());
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
@@ -135,15 +135,16 @@ public final class FinecoBankAgent extends NextGenerationAgent
 
     @Override
     public Optional<PaymentController> constructPaymentController() {
-        FinecoBankPaymentExecutor executor =
-                new FinecoBankPaymentExecutor(apiClient, sessionStorage);
-        return Optional.of(
-                new FinecoBankPaymentController(
-                        executor,
-                        executor,
-                        supplementalInformationHelper,
+        FinecoBankPaymentExecutor paymentExecutor =
+                new FinecoBankPaymentExecutor(
+                        apiClient,
                         sessionStorage,
-                        strongAuthenticationState));
+                        strongAuthenticationState,
+                        supplementalInformationController);
+
+        FinecoPaymentFetcher paymentFetcher = new FinecoPaymentFetcher(apiClient);
+
+        return Optional.of(new PaymentController(paymentExecutor, paymentFetcher));
     }
 
     @Override

@@ -121,19 +121,6 @@ public final class FinecoBankConstants {
         public static final String PAYMENT_ID = "paymentId";
     }
 
-    public static class FinecoBankSignSteps {
-        public static final String SAMPLE_STEP = "SAMPLE_STEP";
-    }
-
-    public static class HeaderValues {
-        public static final String X_REQUEST_ID_PAYMENT_INITIATION =
-                "4e0c57ba-e655-4ebd-9574-9aeeee104e7f";
-        public static final String X_REQUEST_ID_GET_PAYMENT =
-                "07bc32b0-d3a0-4261-9df3-acf7e21ca149";
-        public static final String X_REQUEST_ID_GET_PAYMENT_STATUS =
-                "d5997372-c072-47ce-89c9-e41f5562d582";
-    }
-
     public static class FormValues {
         public static final Boolean FALSE = false;
         public static final Boolean TRUE = true;
