@@ -83,7 +83,7 @@ public class Xs2aDevelopersApiClient {
         return createRequest(url).addBearerToken(authToken);
     }
 
-    private RequestBuilder createFetchingRequest(URL url) {
+    protected RequestBuilder createFetchingRequest(URL url) {
 
         RequestBuilder requestBuilder =
                 createRequestInSession(url)
@@ -104,34 +104,43 @@ public class Xs2aDevelopersApiClient {
     }
 
     public ConsentResponse createConsent(ConsentRequest consentRequest) {
+        return buildCreateConsentRequest(consentRequest).post(ConsentResponse.class);
+    }
+
+    protected RequestBuilder buildCreateConsentRequest(ConsentRequest consentRequest) {
         return createRequest(new URL(configuration.getBaseUrl() + ApiServices.CONSENT))
                 .header(HeaderKeys.TPP_REDIRECT_URI, configuration.getRedirectUrl())
                 .header(HeaderKeys.PSU_IP_ADDRESS, userIp)
                 .header(HeaderKeys.X_REQUEST_ID, randomValueGenerator.getUUID())
-                .body(consentRequest)
-                .post(ConsentResponse.class);
+                .body(consentRequest);
     }
 
     public ConsentDetailsResponse getConsentDetails() {
+        return buildConsentDetailsRequest().get(ConsentDetailsResponse.class);
+    }
+
+    protected RequestBuilder buildConsentDetailsRequest() {
         String consentId =
                 Optional.ofNullable(persistentStorage.get(StorageKeys.CONSENT_ID))
                         .orElseThrow(SessionError.SESSION_EXPIRED::exception);
         return createRequest(
                         new URL(configuration.getBaseUrl() + ApiServices.CONSENT_DETAILS)
                                 .parameter(IdTags.CONSENT_ID, consentId))
-                .header(HeaderKeys.X_REQUEST_ID, randomValueGenerator.getUUID())
-                .get(ConsentDetailsResponse.class);
+                .header(HeaderKeys.X_REQUEST_ID, randomValueGenerator.getUUID());
     }
 
     public ConsentStatusResponse getConsentStatus() {
+        return buildConsentStatusRequest().get(ConsentStatusResponse.class);
+    }
+
+    protected RequestBuilder buildConsentStatusRequest() {
         String consentId =
                 Optional.ofNullable(persistentStorage.get(StorageKeys.CONSENT_ID))
                         .orElseThrow(SessionError.SESSION_EXPIRED::exception);
         return createRequest(
                         new URL(configuration.getBaseUrl() + ApiServices.CONSENT_STATUS)
                                 .parameter(IdTags.CONSENT_ID, consentId))
-                .header(HeaderKeys.X_REQUEST_ID, randomValueGenerator.getUUID())
-                .get(ConsentStatusResponse.class);
+                .header(HeaderKeys.X_REQUEST_ID, randomValueGenerator.getUUID());
     }
 
     public URL buildAuthorizeUrl(String state, String scope, String href) {
@@ -150,9 +159,7 @@ public class Xs2aDevelopersApiClient {
 
     public TokenResponse getToken(TokenForm tokenForm) {
         try {
-            return createRequest(new URL(configuration.getBaseUrl() + ApiServices.TOKEN))
-                    .body(tokenForm, MediaType.APPLICATION_FORM_URLENCODED)
-                    .post(TokenResponse.class);
+            return buildTokenRequest(tokenForm).post(TokenResponse.class);
         } catch (HttpResponseException hre) {
             log.error("Error caught while getting/refreshing access token", hre);
             if (hre.getResponse().getStatus() == 500) {
@@ -161,6 +168,11 @@ public class Xs2aDevelopersApiClient {
                 throw hre;
             }
         }
+    }
+
+    protected RequestBuilder buildTokenRequest(TokenForm tokenForm) {
+        return createRequest(new URL(configuration.getBaseUrl() + ApiServices.TOKEN))
+                .body(tokenForm, MediaType.APPLICATION_FORM_URLENCODED);
     }
 
     public GetAccountsResponse getAccounts() {
