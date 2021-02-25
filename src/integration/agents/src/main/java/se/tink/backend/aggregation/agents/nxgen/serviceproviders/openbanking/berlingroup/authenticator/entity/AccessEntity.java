@@ -32,10 +32,12 @@ public class AccessEntity {
         private String allPsd2;
 
         public AccessEntity.Builder withAccounts(List<String> accounts) {
-            this.accounts =
-                    accounts.stream()
-                            .map(iban -> new IbanEntity(iban))
-                            .collect(Collectors.toList());
+            this.accounts = accounts.stream().map(IbanEntity::new).collect(Collectors.toList());
+            return this;
+        }
+
+        public AccessEntity.Builder withAccountsList(List<IbanEntity> accounts) {
+            this.accounts = accounts;
             return this;
         }
 
