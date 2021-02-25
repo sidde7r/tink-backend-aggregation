@@ -46,6 +46,7 @@ public class KbcFetchConsentExternalApiCall
                 new AccessEntity.Builder()
                         .withBalances(ibanList)
                         .withTransactions(ibanList)
+                        .withAccountsList(null)
                         .build();
         final ConsentBaseRequest consentsRequest = new ConsentBaseRequest();
         consentsRequest.setAccess(accessEntity);

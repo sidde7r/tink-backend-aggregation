@@ -19,7 +19,7 @@ public class KbcFetchConsentExternalApiCallTest extends WireMockIntegrationTest 
         // given
         LocalDate expectedValidUntilDate = LocalDate.now().plusYears(1).minusMonths(1);
         final String expectedRequestBody =
-                "{\"access\":{\"accounts\":[],\"transactions\":[{\"iban\":\"BE68539007547034\"}],\"balances\":[{\"iban\":\"BE68539007547034\"}]},\"recurringIndicator\":true,\"validUntil\":\""
+                "{\"access\":{\"transactions\":[{\"iban\":\"BE68539007547034\"}],\"balances\":[{\"iban\":\"BE68539007547034\"}]},\"recurringIndicator\":true,\"validUntil\":\""
                         + expectedValidUntilDate
                         + "\",\"frequencyPerDay\":4,\"combinedServiceIndicator\":false}";
         WireMock.stubFor(

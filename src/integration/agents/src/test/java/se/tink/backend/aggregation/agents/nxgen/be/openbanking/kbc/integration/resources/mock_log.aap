@@ -6,7 +6,7 @@ TPP-Redirect-Uri: https://api.tink.se/api/v1/credentials/third-party/callback
 PSU-IP-Address: 0.0.0.0
 X-Aggregator: Tink Testing
 
-{"access":{"accounts":[],"transactions":[{"iban":"BE39000000076000"}],"balances":[{"iban":"BE39000000076000"}]},"recurringIndicator":true,"frequencyPerDay":4,"combinedServiceIndicator":false}
+{"access":{"transactions":[{"iban":"BE39000000076000"}],"balances":[{"iban":"BE39000000076000"}]},"recurringIndicator":true,"frequencyPerDay":4,"combinedServiceIndicator":false}
 
 RESPONSE 1
 201
