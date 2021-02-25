@@ -50,7 +50,6 @@ public class FinecoBankTransactionalAccountFetcher
     @Override
     public PaginatorResponse getTransactionsFor(
             TransactionalAccount account, Date fromDate, Date toDate) {
-
         if (isEmptyTransactionAccountConsent(account)) {
             throw new IllegalStateException(ErrorMessages.INVALID_CONSENT_TRANSACTIONS);
         }
