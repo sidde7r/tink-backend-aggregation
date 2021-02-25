@@ -200,6 +200,71 @@
             "type": "account",
             "updated": 1591343356542,
             "year": 2020
+        },
+        {
+            "amount": 12345.12,
+            "appReference": {
+                "created": 1591343356490,
+                "deleted": true,
+                "id": "6179c4e1-f08d-4d7b-8077-b4dcc2f6c3ac-appReference",
+                "updated": 1591343356490
+            },
+            "attachments": [],
+            "canAddNote": true,
+            "canAttach": true,
+            "canHide": true,
+            "canReact": true,
+            "categoryId": "other",
+            "color": "#292F36",
+            "conversion": {
+                "created": 1591343356490,
+                "deleted": true,
+                "id": "6179c4e1-f08d-4d7b-8077-b4dcc2f6c3ac-conversion",
+                "updated": 1591343356542
+            },
+            "created": 1591343356490,
+            "currency": "DKK",
+            "deleted": null,
+            "details": [
+                {
+                    "label": "From",
+                    "sort": 1,
+                    "type": "from",
+                    "value": "From Testoviron"
+                },
+                {
+                    "label": "Message",
+                    "sort": 2,
+                    "type": "message",
+                    "value": "Test message"
+                }
+            ],
+            "displayDate": "2020-06-05T07:49:490Z",
+            "groupId": "unknown-transfer",
+            "groupSpend": {
+                "id": "unknown-transfer",
+                "updated": 0
+            },
+            "iconUrl": "https://s3-eu-west-1.amazonaws.com/lunarway-prod-cdn/transaction-default-icons/Person.png",
+            "id": "6179c4e1-f08d-4d7b-8077-b4dcc2f6c3ac",
+            "location": {
+                "created": 1591343356490,
+                "deleted": true,
+                "id": "6179c4e1-f08d-4d7b-8077-b4dcc2f6c3ac-location",
+                "updated": 1591343356490
+            },
+            "month": 6,
+            "reactions": null,
+            "sort": 1591343356490,
+            "status": "financial",
+            "subtitle": "Test message",
+            "title": "Transaction before last",
+            "transactionOrigin": "dklb",
+            "transactionOriginGroupId": "833293fc-282c-4b99-8b86-2035218abeac",
+            "transactionOriginType": "account",
+            "type": "account",
+            "updated": 1591343356490,
+            "year": 2020
         }
     ]
 }

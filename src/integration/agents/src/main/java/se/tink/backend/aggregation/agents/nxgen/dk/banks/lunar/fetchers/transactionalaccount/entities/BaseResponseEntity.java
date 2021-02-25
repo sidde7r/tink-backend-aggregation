@@ -6,9 +6,10 @@ import org.apache.commons.lang3.BooleanUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
+@Getter
 public abstract class BaseResponseEntity {
     private Boolean deleted;
-    @Getter protected String id;
+    protected String id;
     protected long sort;
 
     @JsonIgnore

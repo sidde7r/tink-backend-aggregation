@@ -85,10 +85,11 @@ public class LunarConstants {
     public static class QueryParams {
         public static final String ORIGIN_GROUP_ID = "originGroupId";
         public static final String PAGE_SIZE = "pageSize";
+        public static final String BEFORE_QUERY = "before";
     }
 
     public static class QueryParamsValues {
-        public static final String MAX_PAGE_SIZE = "500";
+        public static final String PAGE_SIZE = "200";
     }
 
     public static class PathParams {

@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.transactionalaccount;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -25,11 +26,14 @@ public class LunarTransactionFetcher
     @Override
     public TransactionKeyPaginatorResponse<String> getTransactionsFor(
             TransactionalAccount account, String key) {
-        // For now it is hard to say what is pagination key, because we don't have enough data
         if (AccountTypes.SAVINGS == account.getType()) {
             return new TransactionKeyPaginatorResponseImpl<>(getGoalTransactions(account), null);
         }
-        return new TransactionKeyPaginatorResponseImpl<>(getTransactions(account), null);
+        List<TransactionEntity> lunarTransactions = getLunarTransactions(account, key);
+        String nextKey = getNextKey(lunarTransactions);
+
+        return new TransactionKeyPaginatorResponseImpl<>(
+                toTinkTransactions(lunarTransactions), nextKey);
     }
 
     private List<Transaction> getGoalTransactions(TransactionalAccount account) {
@@ -40,20 +44,34 @@ public class LunarTransactionFetcher
                 .collect(Collectors.toList());
     }
 
-    private List<Transaction> getTransactions(TransactionalAccount account) {
-        // Delete logs when user with 500 or more transactions is found
-        List<Transaction> transactions =
-                apiClient.fetchTransactions(account.getApiIdentifier()).getTransactions().stream()
-                        .filter(BaseResponseEntity::notDeleted)
-                        .map(TransactionEntity::toTinkTransaction)
-                        .collect(Collectors.toList());
+    private List<TransactionEntity> getLunarTransactions(
+            TransactionalAccount account, String timestampKey) {
+        // Delete logs when pagination key is found and confirmed
+        List<TransactionEntity> transactions =
+                apiClient
+                        .fetchTransactions(account.getApiIdentifier(), timestampKey)
+                        .getTransactions();
 
-        if (transactions.size() >= 500) {
+        if (transactions.size() >= 200) {
             log.info(
-                    "There is 500 or more transactions in response! Transactions size: {}",
+                    "There is 200 or more transactions in response! Transactions size: {}",
                     transactions.size());
         }
 
         return transactions;
+    }
+
+    private String getNextKey(List<TransactionEntity> lunarTransactions) {
+        return lunarTransactions.stream()
+                .min(Comparator.comparing(BaseResponseEntity::getSort))
+                .map(transaction -> String.valueOf(transaction.getSort()))
+                .orElse(null);
+    }
+
+    private List<Transaction> toTinkTransactions(List<TransactionEntity> lunarTransactions) {
+        return lunarTransactions.stream()
+                .filter(BaseResponseEntity::notDeleted)
+                .map(TransactionEntity::toTinkTransaction)
+                .collect(Collectors.toList());
     }
 }

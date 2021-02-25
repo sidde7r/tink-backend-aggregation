@@ -45,11 +45,12 @@ public class FetcherApiClient {
         return getDefaultRequestBuilder(Url.GOALS).get(GoalsResponse.class);
     }
 
-    public TransactionsResponse fetchTransactions(String originGroupId) {
+    public TransactionsResponse fetchTransactions(String originGroupId, String timestampKey) {
         return getDefaultRequestBuilder(
                         Url.TRANSACTIONS
                                 .queryParam(QueryParams.ORIGIN_GROUP_ID, originGroupId)
-                                .queryParam(QueryParams.PAGE_SIZE, QueryParamsValues.MAX_PAGE_SIZE))
+                                .queryParam(QueryParams.PAGE_SIZE, QueryParamsValues.PAGE_SIZE)
+                                .queryParam(QueryParams.BEFORE_QUERY, timestampKey))
                 .get(TransactionsResponse.class);
     }
 
