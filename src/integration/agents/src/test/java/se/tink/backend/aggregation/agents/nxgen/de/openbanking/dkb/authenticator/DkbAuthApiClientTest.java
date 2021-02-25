@@ -110,34 +110,6 @@ public class DkbAuthApiClientTest {
     }
 
     @Test
-    public void authenticate1stFactorShouldCallRequestFactoryAndExecuteRequestAndThrowException() {
-        // given
-        String givenUsername = "username";
-        String givenPassword = "password";
-        HttpRequest givenHttpRequest = dummyHttpRequest("auth1stFactorUrl");
-        when(requestFactoryMock.generateAuth1stFactorRequest(givenUsername, givenPassword))
-                .thenReturn(givenHttpRequest);
-
-        HttpResponse givenSuccessfulHttpResponse =
-                dummyHttpResponse(BAD_REQUEST_STATUS, AuthResult.class, new AuthResult());
-        when(clientMock.request(HttpResponse.class, givenHttpRequest))
-                .thenReturn(givenSuccessfulHttpResponse);
-
-        // when
-        Throwable throwable =
-                catchThrowable(() -> tested.authenticate1stFactor(givenUsername, givenPassword));
-
-        // then
-        verify(requestFactoryMock).generateAuth1stFactorRequest(givenUsername, givenPassword);
-        verify(clientMock).request(HttpResponse.class, givenHttpRequest);
-
-        // and
-        assertThat(throwable)
-                .isExactlyInstanceOf(LoginException.class)
-                .hasMessage("Cause: LoginError.INCORRECT_CREDENTIALS");
-    }
-
-    @Test
     public void select2ndFactorAuthMethodShouldCallRequestFactoryAndExecuteRequest()
             throws LoginException {
         // given

@@ -47,7 +47,6 @@ public final class DkbAgent extends NextGenerationAgent
 
         dependencyRegistry = initializeAgentDependencies(new DkbModuleDependenciesRegistration());
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
-        this.client.setResponseStatusHandler(new DkbResponseStatusHandler());
     }
 
     private AgentConfiguration<DkbConfiguration> getAgentConfiguration() {
