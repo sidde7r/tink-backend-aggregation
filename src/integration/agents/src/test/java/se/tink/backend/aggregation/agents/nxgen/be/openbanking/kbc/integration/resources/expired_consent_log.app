@@ -1,5 +1,5 @@
 REQUEST 1
-GET https://openapi.kbc-group.com/psd2/v2/accounts?withBalance=true
+GET https://psd2.api.kbc.be/psd2/v2/accounts?withBalance=true
 Authorization: Bearer accessToken
 Consent-ID: dummy_consent_id
 PSU-IP-Address: 0.0.0.0
