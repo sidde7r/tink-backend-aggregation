@@ -28,7 +28,7 @@ public class AccountEntity {
                 this.bban = accountNumber;
                 break;
             default:
-                throw new IllegalStateException("Unknowm account type: " + accountType.toString());
+                throw new IllegalStateException("Unknown account type: " + accountType.toString());
         }
     }
 

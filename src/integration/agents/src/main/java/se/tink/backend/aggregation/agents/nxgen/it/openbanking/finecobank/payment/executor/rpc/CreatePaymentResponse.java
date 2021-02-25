@@ -31,7 +31,8 @@ public class CreatePaymentResponse {
 
         Payment payment =
                 new Payment.Builder()
-                        .withAmount(paymentRequest.getPayment().getAmount())
+                        .withExactCurrencyAmount(
+                                paymentRequest.getPayment().getExactCurrencyAmount())
                         .withCreditor(paymentRequest.getPayment().getCreditor())
                         .withDebtor(paymentRequest.getPayment().getDebtor())
                         .withCurrency(paymentRequest.getPayment().getCurrency())

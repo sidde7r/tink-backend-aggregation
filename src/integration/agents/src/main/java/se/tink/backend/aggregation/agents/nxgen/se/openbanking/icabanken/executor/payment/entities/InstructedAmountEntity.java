@@ -14,8 +14,8 @@ public class InstructedAmountEntity {
     @JsonIgnore
     public static InstructedAmountEntity of(PaymentRequest paymentRequest) {
         return new InstructedAmountEntity(
-                paymentRequest.getPayment().getAmount().getCurrency(),
-                paymentRequest.getPayment().getAmount().getValue());
+                paymentRequest.getPayment().getExactCurrencyAmount().getCurrencyCode(),
+                paymentRequest.getPayment().getExactCurrencyAmount().getDoubleValue());
     }
 
     public String getCurrency() {

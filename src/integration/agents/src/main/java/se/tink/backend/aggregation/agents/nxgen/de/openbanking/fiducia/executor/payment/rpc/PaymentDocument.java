@@ -6,7 +6,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.executor.
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.executor.payment.entities.PmtInf;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Creditor;
@@ -26,7 +26,7 @@ public class PaymentDocument {
 
     public PaymentResponse toTinkPayment(String paymentId, PaymentStatus status) {
         PmtInf paymentInfo = cstmrCdtTrfInitn.getPmtInf();
-        Amount amount = paymentInfo.getCdtTrfTxInf().getAmt().getInstdAmt().toAmount();
+        ExactCurrencyAmount amount = paymentInfo.getCdtTrfTxInf().getAmt().getInstdAmt().toAmount();
 
         Payment.Builder buildingPaymentResponse =
                 new Payment.Builder()
@@ -42,8 +42,8 @@ public class PaymentDocument {
                                 new Debtor(
                                         new IbanIdentifier(
                                                 paymentInfo.getDbtrAcct().getId().getIban())))
-                        .withAmount(amount)
-                        .withCurrency(amount.getCurrency())
+                        .withExactCurrencyAmount(amount)
+                        .withCurrency(amount.getCurrencyCode())
                         .withUniqueId(paymentId)
                         .withStatus(status)
                         .withType(PaymentType.SEPA);

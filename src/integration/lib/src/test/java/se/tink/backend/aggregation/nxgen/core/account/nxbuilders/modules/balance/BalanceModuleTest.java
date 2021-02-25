@@ -79,7 +79,7 @@ public class BalanceModuleTest {
         assertThat(balance.getExactBalance().getDoubleValue()).isEqualTo(25_506.32);
         assertThat(balance.getAvailableCredit().get().getValue()).isEqualTo(9473.27);
         assertThat(balance.getExactBalance().getCurrencyCode()).isEqualTo("DKK");
-        assertThat(balance.getAvailableCredit().get().getCurrency()).isEqualTo("DKK");
+        assertThat(balance.getExactAvailableCredit().get().getCurrencyCode()).isEqualTo("DKK");
         assertThat(balance.getInterestRate().get()).isEqualTo(0.0265);
         assertThat(balance.getExactCreditLimit()).isNull();
         assertThat(balance.getExactAvailableBalance()).isNull();

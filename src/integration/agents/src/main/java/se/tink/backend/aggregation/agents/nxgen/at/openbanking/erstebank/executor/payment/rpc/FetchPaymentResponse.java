@@ -26,7 +26,7 @@ public class FetchPaymentResponse {
                         .withDebtor(paymentFromRequest.getDebtor())
                         .withExactCurrencyAmount(paymentFromRequest.getExactCurrencyAmount())
                         .withExecutionDate(paymentFromRequest.getExecutionDate())
-                        .withCurrency(paymentFromRequest.getAmount().getCurrency())
+                        .withCurrency(paymentFromRequest.getExactCurrencyAmount().getCurrencyCode())
                         .withUniqueId(paymentId)
                         .withStatus(
                                 ErstebankConstants.PAYMENT_STATUS_MAPPER

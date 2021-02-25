@@ -40,7 +40,7 @@ public class EInvoice extends BaseResponse {
     public Transfer toTinkTransfer() {
         Transfer transfer = new Transfer();
         transfer.setDueDate(DateUtils.flattenTime(dueDate));
-        transfer.setAmount(amount.asAmount());
+        transfer.setAmount(amount.toExactCurrencyAmount());
         transfer.setDestination(recipient.accountIdentifier());
 
         RemittanceInformation remittanceInformation = new RemittanceInformation();

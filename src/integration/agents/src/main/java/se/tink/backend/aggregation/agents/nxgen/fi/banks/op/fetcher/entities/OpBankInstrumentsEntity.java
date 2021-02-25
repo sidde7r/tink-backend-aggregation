@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.OpBankConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class OpBankInstrumentsEntity {
@@ -20,7 +20,7 @@ public class OpBankInstrumentsEntity {
 
     @JsonIgnore
     public Instrument toTinkInstrument(Instrument.Type instrumentType) {
-        Amount marketValue = holdings.getMarketValue().getPriceEur().getTinkAmount();
+        ExactCurrencyAmount marketValue = holdings.getMarketValue().getPriceEur().getTinkAmount();
 
         Instrument instrument = new Instrument();
         instrument.setUniqueIdentifier(instrumentId);
@@ -29,8 +29,8 @@ public class OpBankInstrumentsEntity {
         instrument.setName(name);
         instrument.setType(instrumentType);
         instrument.setMarketPlace(market);
-        instrument.setMarketValue(marketValue.getValue());
-        instrument.setCurrency(marketValue.getCurrency());
+        instrument.setMarketValue(marketValue.getDoubleValue());
+        instrument.setCurrency(marketValue.getCurrencyCode());
 
         instrument.setQuantity(holdings.getOwnedPcs());
         if (OpBankConstants.Fetcher.INSTRUMENT_TYPE_BOND.equalsIgnoreCase(type)

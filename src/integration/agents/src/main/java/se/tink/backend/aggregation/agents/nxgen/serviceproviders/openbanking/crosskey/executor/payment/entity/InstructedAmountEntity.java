@@ -23,8 +23,10 @@ public class InstructedAmountEntity {
 
     @JsonIgnore
     public static InstructedAmountEntity of(PaymentRequest paymentRequest) {
-        String amount = paymentRequest.getPayment().getAmount().getValue().toString();
-        String currency = paymentRequest.getPayment().getAmount().getCurrency();
+        String amount =
+                String.valueOf(
+                        paymentRequest.getPayment().getExactCurrencyAmount().getDoubleValue());
+        String currency = paymentRequest.getPayment().getExactCurrencyAmount().getCurrencyCode();
         return new InstructedAmountEntity(amount, currency);
     }
 

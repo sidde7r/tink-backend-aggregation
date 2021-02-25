@@ -54,7 +54,7 @@ public class ErstebankPaymentExecutor implements PaymentExecutor, FetchablePayme
 
         final InstructedAmountRequest instructedAmount =
                 InstructedAmountRequest.builder()
-                        .amount(payment.getAmount().doubleValue())
+                        .amount(payment.getExactCurrencyAmount().getDoubleValue())
                         .currency(payment.getCurrency())
                         .build();
 

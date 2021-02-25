@@ -53,8 +53,8 @@ public class SantanderPaymentExecutorSelector implements FetchablePaymentExecuto
 
         AmountEntity amount =
                 new AmountEntity(
-                        payment.getAmount().getCurrency(),
-                        payment.getAmount().getValue().toString());
+                        payment.getExactCurrencyAmount().getCurrencyCode(),
+                        String.valueOf(payment.getExactCurrencyAmount().getDoubleValue()));
 
         DebtorEntity debtor =
                 new DebtorEntity(payment.getDebtor().getAccountNumber(), payment.getCurrency());

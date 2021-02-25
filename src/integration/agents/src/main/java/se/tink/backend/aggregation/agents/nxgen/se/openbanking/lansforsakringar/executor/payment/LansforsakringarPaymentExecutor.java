@@ -81,7 +81,7 @@ public class LansforsakringarPaymentExecutor implements PaymentExecutor, Fetchab
                 new CreditorAddressEntity(FormValues.CITY, FormValues.COUNTRY, FormValues.STREET);
         final AccountEntity debtor =
                 new AccountEntity(payment.getDebtor().getAccountNumber(), payment.getCurrency());
-        final AmountEntity amount = new AmountEntity(payment.getAmount());
+        final AmountEntity amount = new AmountEntity(payment.getExactCurrencyAmount());
         final CrossBorderPaymentRequest crossBorderPaymentRequest =
                 new CrossBorderPaymentRequest(
                         creditor,
@@ -113,7 +113,7 @@ public class LansforsakringarPaymentExecutor implements PaymentExecutor, Fetchab
                 new AccountEntity(payment.getCreditor().getAccountNumber(), currency);
         final AccountEntity debtor =
                 new AccountEntity(payment.getDebtor().getAccountNumber(), currency);
-        final AmountEntity amount = new AmountEntity(payment.getAmount());
+        final AmountEntity amount = new AmountEntity(payment.getExactCurrencyAmount());
         final DomesticPaymentRequest domesticPaymentRequest =
                 new DomesticPaymentRequest(creditor, debtor, amount);
 

@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class AmountEntity {
@@ -22,12 +22,12 @@ public class AmountEntity {
     @JsonIgnore
     public static AmountEntity of(PaymentRequest paymentRequest) {
         return new AmountEntity(
-                paymentRequest.getPayment().getAmount().getCurrency(),
-                paymentRequest.getPayment().getAmount().getValue());
+                paymentRequest.getPayment().getExactCurrencyAmount().getCurrencyCode(),
+                paymentRequest.getPayment().getExactCurrencyAmount().getDoubleValue());
     }
 
     @JsonIgnore
-    public Amount toTinkAmount() {
-        return Amount.valueOf(currency, (long) (amount * 100), 2);
+    public ExactCurrencyAmount toTinkAmount() {
+        return ExactCurrencyAmount.of(amount, currency);
     }
 }

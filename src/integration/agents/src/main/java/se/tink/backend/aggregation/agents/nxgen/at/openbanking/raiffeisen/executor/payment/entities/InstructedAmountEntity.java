@@ -11,8 +11,14 @@ public class InstructedAmountEntity {
 
     public static InstructedAmountEntity of(PaymentRequest paymentRequest) {
         return new Builder()
-                .withAmount(paymentRequest.getPayment().getAmount().getValue().toString())
-                .withCurrency(paymentRequest.getPayment().getAmount().getCurrency())
+                .withAmount(
+                        String.valueOf(
+                                paymentRequest
+                                        .getPayment()
+                                        .getExactCurrencyAmount()
+                                        .getDoubleValue()))
+                .withCurrency(
+                        paymentRequest.getPayment().getExactCurrencyAmount().getCurrencyCode())
                 .build();
     }
 
