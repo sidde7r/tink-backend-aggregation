@@ -42,6 +42,9 @@ developmentConfiguration:
       keyId: 1
     base64encodedkey: 'QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUE='
 
+  aggregationControllerClientConfiguration:
+    socket: http://localhost:9098
+
 database:
   driverClass: com.mysql.jdbc.Driver
   username: tink
@@ -123,8 +126,6 @@ provisionClientsConfig:
       aggregatorIdentifier: "Local provisioning"
 
 providerConfigurationServiceConfiguration:
-  host: https://provider-configuration-api.provider-configuration.svc.cluster.local
-  pinnedCertificates:
-    - CERTSHA256:A0A8FBAC442F4A58AC56CB1D0C185F93EE119A1B026BA3F046B0CA99EC165390
-  port: 9048
+  host: http://localhost
+  port: 9047
   enabled: true
