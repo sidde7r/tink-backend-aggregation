@@ -15,8 +15,9 @@ public class BankdataIdentitydataFetcher implements IdentityDataFetcher {
 
     @Override
     public IdentityData fetchIdentityData() {
+        // Identity data can only be fetched during manual authentication
         if (!persistentStorage.containsKey(StorageKeys.IDENTITY_DATA)) {
-            return null;
+            return IdentityData.builder().setFullName(null).setDateOfBirth(null).build();
         }
 
         return persistentStorage
