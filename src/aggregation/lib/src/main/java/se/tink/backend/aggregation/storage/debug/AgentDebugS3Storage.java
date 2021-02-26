@@ -26,7 +26,7 @@ public class AgentDebugS3Storage implements AgentDebugStorageHandler {
     @Override
     public String store(String content, File file) throws IOException {
         try {
-            String fileName = file.getName();
+            String fileName = file.getPath();
             return putObject(content, fileName);
         } catch (AmazonServiceException e) {
             throw new IOException(e.getMessage());
