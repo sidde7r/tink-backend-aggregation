@@ -165,11 +165,6 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     }
 
     @Override
-    public void clear() {
-        accountDataCache.clear();
-    }
-
-    @Override
     public Catalog getCatalog() {
         return catalog;
     }

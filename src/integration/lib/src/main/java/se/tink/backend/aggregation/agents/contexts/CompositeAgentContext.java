@@ -13,7 +13,4 @@ public interface CompositeAgentContext
                 AgentConfigurationControllerContext,
                 LogOutputStreamable,
                 EidasContext,
-                TestContext {
-
-    void clear();
-}
+                TestContext {}

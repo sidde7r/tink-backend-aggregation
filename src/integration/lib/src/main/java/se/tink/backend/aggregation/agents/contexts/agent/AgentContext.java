@@ -63,9 +63,6 @@ public abstract class AgentContext implements CompositeAgentContext {
     }
 
     @Override
-    public void clear() {}
-
-    @Override
     public boolean isTestContext() {
         return isTestContext;
     }

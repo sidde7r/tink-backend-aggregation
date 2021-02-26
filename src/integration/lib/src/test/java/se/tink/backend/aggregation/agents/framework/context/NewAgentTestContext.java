@@ -111,13 +111,6 @@ public final class NewAgentTestContext extends AgentContext {
         this.credential = credential;
     }
 
-    @Override
-    public void clear() {
-        super.clear();
-        accountDataCache.clear();
-        transfers.clear();
-    }
-
     public List<Account> getUpdatedAccounts() {
         return Lists.newArrayList(accountDataCache.getProcessedAccounts());
     }
