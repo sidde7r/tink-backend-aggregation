@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-02-25 00:57+0100\n"
+"POT-Creation-Date: 2021-02-26 15:18+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1660,4 +1660,12 @@ msgid "Code token"
 msgstr ""
 
 msgid "Select how you want to confirm the NemID authentication"
+msgstr ""
+
+#, java-format
+msgid "Please enter a maximum of {0} digits"
+msgstr ""
+
+#, java-format
+msgid "Please enter a maximum of {0} characters"
 msgstr ""
