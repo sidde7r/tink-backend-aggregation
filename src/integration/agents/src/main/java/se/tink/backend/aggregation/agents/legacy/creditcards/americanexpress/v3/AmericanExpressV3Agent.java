@@ -35,6 +35,7 @@ import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPa
 import se.tink.backend.aggregation.constants.CommonHeaders;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
 import se.tink.libraries.credentials.service.CredentialsRequest;
+import se.tink.libraries.i18n.Catalog;
 
 @AgentCapabilities(generateFromImplementedExecutors = true)
 public final class AmericanExpressV3Agent extends AbstractAgent
@@ -45,6 +46,7 @@ public final class AmericanExpressV3Agent extends AbstractAgent
     private final Credentials credentials;
     private final Set<String> mainCardNumbers = Sets.newHashSet();
     private final Map<String, SubCard> subCardsByCardNumber = Maps.newHashMap();
+    private final Map<String, Integer> transactionCountByEnabledAccount = Maps.newHashMap();
     private boolean hasRefreshed = false;
 
     public AmericanExpressV3Agent(
@@ -233,7 +235,7 @@ public final class AmericanExpressV3Agent extends AbstractAgent
                 break;
             }
 
-            statusUpdater.updateStatus(CredentialsStatus.UPDATING, account, transactions);
+            updateStatus(CredentialsStatus.UPDATING, account, transactions);
         }
     }
 
@@ -329,5 +331,58 @@ public final class AmericanExpressV3Agent extends AbstractAgent
     @Override
     public void logout() throws Exception {
         // TODO Implement.
+    }
+
+    private void updateStatus(
+            CredentialsStatus status, Account account, List<Transaction> transactions) {
+        if (account.isExcluded()) {
+            if (transactionCountByEnabledAccount.containsKey(account.getBankId())) {
+                transactionCountByEnabledAccount.remove(account.getBankId());
+            }
+        } else {
+            transactionCountByEnabledAccount.put(account.getBankId(), transactions.size());
+        }
+
+        statusUpdater.updateStatus(status, createStatusPayload());
+    }
+
+    private String createStatusPayload() {
+        Catalog catalog = context.getCatalog();
+
+        int numberOfAccounts = transactionCountByEnabledAccount.size();
+        int numberOfTransactions = 0;
+
+        for (Integer accountTransactions : transactionCountByEnabledAccount.values()) {
+            numberOfTransactions += accountTransactions;
+        }
+
+        return Catalog.format(
+                catalog.getString("Updating {0}..."),
+                formatCredentialsStatusPayloadSuffix(
+                        numberOfAccounts, numberOfTransactions, catalog));
+    }
+
+    private String formatCredentialsStatusPayloadSuffix(
+            long numberOfAccounts, long numberOfTransactions, Catalog catalog) {
+        StringBuilder builder = new StringBuilder();
+
+        builder.append(
+                Catalog.format(
+                        catalog.getPluralString("{0} account", "{0} accounts", numberOfAccounts),
+                        numberOfAccounts));
+
+        if (numberOfTransactions > 0) {
+            builder.append(" ");
+            builder.append(catalog.getString("and"));
+            builder.append(" ");
+
+            builder.append(
+                    Catalog.format(
+                            catalog.getPluralString(
+                                    "{0} transaction", "{0} transactions", numberOfTransactions),
+                            numberOfTransactions));
+        }
+
+        return builder.toString();
     }
 }
