@@ -17,12 +17,11 @@ public class AccountTypeMapper {
 
     private static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
             TypeMapper.<AccountTypes>builder()
-                    .put(AccountTypes.CHECKING, "CurrentAccount")
-                    .put(AccountTypes.CREDIT_CARD, "CreditCard")
+                    .put(AccountTypes.CHECKING, "CurrentAccount", "EMoney")
+                    .put(AccountTypes.CREDIT_CARD, "CreditCard", "ChargeCard", "PrePaidCard")
                     .put(AccountTypes.SAVINGS, "Savings")
                     .put(AccountTypes.LOAN, "Loan")
                     .put(AccountTypes.MORTGAGE, "Mortgage")
-                    .ignoreKeys("ChargeCard", "EMoney", "PrePaidCard")
                     .build();
 
     private static final TypeMapper<AccountOwnershipType> ACCOUNT_OWNERSHIP_MAPPER =

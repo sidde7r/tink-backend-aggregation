@@ -92,9 +92,64 @@ public class AccountTypeMapperTest {
     }
 
     @Test
-    public void shouldRecognizeAccountType() {
+    public void shouldRecognizeAccountTypeLoan() {
         when(accountEntity.getRawAccountSubType()).thenReturn("Loan");
 
         assertThat(accountTypeMapper.getAccountType(accountEntity)).isEqualTo(AccountTypes.LOAN);
+    }
+
+    @Test
+    public void shouldRecognizeAccountTypeMortgage() {
+        when(accountEntity.getRawAccountSubType()).thenReturn("Mortgage");
+
+        assertThat(accountTypeMapper.getAccountType(accountEntity))
+                .isEqualTo(AccountTypes.MORTGAGE);
+    }
+
+    @Test
+    public void shouldRecognizeAccountTypeCurrent() {
+        when(accountEntity.getRawAccountSubType()).thenReturn("CurrentAccount");
+
+        assertThat(accountTypeMapper.getAccountType(accountEntity))
+                .isEqualTo(AccountTypes.CHECKING);
+    }
+
+    @Test
+    public void shouldRecognizeAccountTypeEMoney() {
+        when(accountEntity.getRawAccountSubType()).thenReturn("EMoney");
+
+        assertThat(accountTypeMapper.getAccountType(accountEntity))
+                .isEqualTo(AccountTypes.CHECKING);
+    }
+
+    @Test
+    public void shouldRecognizeAccountTypePrePaid() {
+        when(accountEntity.getRawAccountSubType()).thenReturn("PrePaidCard");
+
+        assertThat(accountTypeMapper.getAccountType(accountEntity))
+                .isEqualTo(AccountTypes.CREDIT_CARD);
+    }
+
+    @Test
+    public void shouldRecognizeAccountTypeChargeCard() {
+        when(accountEntity.getRawAccountSubType()).thenReturn("ChargeCard");
+
+        assertThat(accountTypeMapper.getAccountType(accountEntity))
+                .isEqualTo(AccountTypes.CREDIT_CARD);
+    }
+
+    @Test
+    public void shouldRecognizeAccountTypeCreditCard() {
+        when(accountEntity.getRawAccountSubType()).thenReturn("CreditCard");
+
+        assertThat(accountTypeMapper.getAccountType(accountEntity))
+                .isEqualTo(AccountTypes.CREDIT_CARD);
+    }
+
+    @Test
+    public void shouldRecognizeAccountTypeSavings() {
+        when(accountEntity.getRawAccountSubType()).thenReturn("Savings");
+
+        assertThat(accountTypeMapper.getAccountType(accountEntity)).isEqualTo(AccountTypes.SAVINGS);
     }
 }
