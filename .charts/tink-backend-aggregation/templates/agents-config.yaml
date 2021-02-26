@@ -84,6 +84,9 @@ data:
         {{- if .Values.debugLogFrequencyPercent }}
           debugLogFrequencyPercent: {{ .Values.debugLogFrequencyPercent }}
         {{- end }}
+        {{- if .Values.longTermStorageDisputeBasePrefix }}
+              longTermStorageDisputeBasePrefix: {{ .Values.longTermStorageDisputeBasePrefix }}
+        {{- end }}
         {{- if eq "local" .Values.Cluster }}
         collectorSubscriptionKey: ASK_JOHANNES
         {{- end }}
