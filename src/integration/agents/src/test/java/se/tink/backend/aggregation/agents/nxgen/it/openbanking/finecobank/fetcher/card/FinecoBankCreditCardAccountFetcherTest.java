@@ -9,15 +9,14 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import java.io.File;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.Year;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import junitparams.JUnitParamsRunner;
@@ -26,7 +25,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankApiClient;
-import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.StorageKeys;
+import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoStorage;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.authenticator.entities.AccountConsent;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.fetcher.card.rpc.CardAccountsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
@@ -34,7 +33,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
-import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.amount.ExactCurrencyAmount;
@@ -45,28 +43,46 @@ public class FinecoBankCreditCardAccountFetcherTest {
 
     private static final String ONLY_CREDIT_CARD_ACCOUNTS_FILE_PATH =
             "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/it/openbanking/finecobank/resources/onlyCreditCardAccounts.json";
+    private static final String TEST_CONSENT_ID = "test_consent_id";
 
-    private FinecoBankApiClient finecoBankApiClient;
-    private PersistentStorage persistentStorage;
+    private FinecoBankApiClient mockApiClient;
+    private FinecoStorage mockStorage;
     private FinecoBankCreditCardAccountFetcher commonTestFetcher;
     private CardAccountsResponse onlyCreditCardAccountsResponse;
 
     @Before
     public void setup() {
-        finecoBankApiClient = mock(FinecoBankApiClient.class);
-        persistentStorage = mock(PersistentStorage.class);
+        mockApiClient = mock(FinecoBankApiClient.class);
+        mockStorage = mock(FinecoStorage.class);
+        when(mockStorage.getConsentId()).thenReturn(TEST_CONSENT_ID);
         commonTestFetcher =
-                new FinecoBankCreditCardAccountFetcher(
-                        finecoBankApiClient, persistentStorage, true);
+                new FinecoBankCreditCardAccountFetcher(mockApiClient, mockStorage, true);
         onlyCreditCardAccountsResponse =
                 SerializationUtils.deserializeFromString(
                         new File(ONLY_CREDIT_CARD_ACCOUNTS_FILE_PATH), CardAccountsResponse.class);
     }
 
+    private Object[] emptyCreditCardBalances() {
+        return new Object[] {
+            Collections.emptyList(),
+            Collections.singletonList(new AccountConsent("1111", null)),
+            Arrays.asList(new AccountConsent("1111", null), new AccountConsent("2222", null)),
+        };
+    }
+
+    private Object[] notEmptyCreditCardBalances() {
+        return new Object[] {
+            Collections.singletonList(new AccountConsent(null, "1111")),
+            Arrays.asList(new AccountConsent(null, "1111"), new AccountConsent(null, "2222")),
+            Arrays.asList(new AccountConsent("1111", null), new AccountConsent(null, "2222")),
+        };
+    }
+
     @Test
-    public void shouldReturnEmptyListIfNoBalanceConsent() {
+    @Parameters(method = "emptyCreditCardBalances")
+    public void shouldReturnEmptyListIfNoBalanceConsent(List<AccountConsent> balancesItems) {
         // given
-        when(finecoBankApiClient.isEmptyCreditCardAccountBalanceConsent()).thenReturn(true);
+        when(mockStorage.getBalancesConsents()).thenReturn(balancesItems);
 
         // when
         Collection<CreditCardAccount> creditCardAccounts = commonTestFetcher.fetchAccounts();
@@ -76,10 +92,11 @@ public class FinecoBankCreditCardAccountFetcherTest {
     }
 
     @Test
-    public void shouldReturnProperlyMappedCreditCards() {
+    @Parameters(method = "notEmptyCreditCardBalances")
+    public void shouldReturnProperlyMappedCreditCards(List<AccountConsent> balancesItems) {
         // given
-        when(finecoBankApiClient.isEmptyCreditCardAccountBalanceConsent()).thenReturn(false);
-        when(finecoBankApiClient.fetchCreditCardAccounts())
+        when(mockStorage.getBalancesConsents()).thenReturn(balancesItems);
+        when(mockApiClient.fetchCreditCardAccounts(TEST_CONSENT_ID))
                 .thenReturn(onlyCreditCardAccountsResponse);
 
         // when
@@ -104,8 +121,6 @@ public class FinecoBankCreditCardAccountFetcherTest {
                                 AccountIdentifier.create(
                                         Type.PAYMENT_CARD_NUMBER, "1234 **** **** 1000")));
         assertThat(card1.getApiIdentifier()).isEqualTo("2218836100");
-        assertThat(card1.getFromTemporaryStorage("bankIdentifier")).isEqualTo("2218836100");
-        assertThat(card1.getFromTemporaryStorage(StorageKeys.CARD_ID)).isEqualTo("2218836100");
 
         CreditCardAccount card2 = getCardByCardNumber(creditCardAccounts, "1234 **** **** 1001");
         assertThat(card2.getCardModule().getCardNumber()).isEqualTo("1234 **** **** 1001");
@@ -122,8 +137,6 @@ public class FinecoBankCreditCardAccountFetcherTest {
                                 AccountIdentifier.create(
                                         Type.PAYMENT_CARD_NUMBER, "1234 **** **** 1001")));
         assertThat(card2.getApiIdentifier()).isEqualTo("2218836101");
-        assertThat(card2.getFromTemporaryStorage("bankIdentifier")).isEqualTo("2218836101");
-        assertThat(card2.getFromTemporaryStorage(StorageKeys.CARD_ID)).isEqualTo("2218836101");
     }
 
     @Test
@@ -149,8 +162,7 @@ public class FinecoBankCreditCardAccountFetcherTest {
     public void shouldFetchTransactionsOnly3TimesForSameAccountApiIdentifierInManualRefresh() {
         // given
         FinecoBankCreditCardAccountFetcher fetcher =
-                new FinecoBankCreditCardAccountFetcher(
-                        finecoBankApiClient, persistentStorage, true);
+                new FinecoBankCreditCardAccountFetcher(mockApiClient, mockStorage, true);
 
         CreditCardAccount account1 = createCreditCardAccount("accountNumber1", "apiIdentifier1");
         CreditCardAccount account2 = createCreditCardAccount("accountNumber2", "apiIdentifier2");
@@ -167,11 +179,13 @@ public class FinecoBankCreditCardAccountFetcherTest {
         PaginatorResponse account2ApiResponse2 = mock(PaginatorResponse.class);
         PaginatorResponse account2ApiResponse3 = mock(PaginatorResponse.class);
 
-        when(finecoBankApiClient.getCreditTransactions(eq(account1), any()))
+        when(mockApiClient.getCreditTransactions(
+                        eq(TEST_CONSENT_ID), eq(account1), any(LocalDate.class)))
                 .thenReturn(account1ApiResponse1)
                 .thenReturn(account1ApiResponse2)
                 .thenReturn(account1ApiResponse3);
-        when(finecoBankApiClient.getCreditTransactions(eq(account2), any()))
+        when(mockApiClient.getCreditTransactions(
+                        eq(TEST_CONSENT_ID), eq(account2), any(LocalDate.class)))
                 .thenReturn(account2ApiResponse1)
                 .thenReturn(account2ApiResponse2)
                 .thenReturn(account2ApiResponse3);
@@ -199,15 +213,21 @@ public class FinecoBankCreditCardAccountFetcherTest {
                 fetcher.getTransactionsFor(account3, Year.of(2020), Month.JANUARY);
 
         // then
-        verify(finecoBankApiClient).getCreditTransactions(account1, LocalDate.of(2000, 1, 1));
-        verify(finecoBankApiClient).getCreditTransactions(account1, LocalDate.of(2001, 12, 1));
-        verify(finecoBankApiClient).getCreditTransactions(account1, LocalDate.of(2002, 1, 1));
+        verify(mockApiClient)
+                .getCreditTransactions(TEST_CONSENT_ID, account1, LocalDate.of(2000, 1, 1));
+        verify(mockApiClient)
+                .getCreditTransactions(TEST_CONSENT_ID, account1, LocalDate.of(2001, 12, 1));
+        verify(mockApiClient)
+                .getCreditTransactions(TEST_CONSENT_ID, account1, LocalDate.of(2002, 1, 1));
 
-        verify(finecoBankApiClient).getCreditTransactions(account2, LocalDate.of(2004, 1, 1));
-        verify(finecoBankApiClient).getCreditTransactions(account2, LocalDate.of(2005, 12, 1));
-        verify(finecoBankApiClient).getCreditTransactions(account2, LocalDate.of(2006, 3, 1));
+        verify(mockApiClient)
+                .getCreditTransactions(TEST_CONSENT_ID, account2, LocalDate.of(2004, 1, 1));
+        verify(mockApiClient)
+                .getCreditTransactions(TEST_CONSENT_ID, account2, LocalDate.of(2005, 12, 1));
+        verify(mockApiClient)
+                .getCreditTransactions(TEST_CONSENT_ID, account2, LocalDate.of(2006, 3, 1));
 
-        verifyNoMoreInteractions(finecoBankApiClient);
+        verifyNoMoreInteractions(mockApiClient);
 
         assertThat(account1Response1).isEqualTo(account1ApiResponse1);
         assertThat(account1Response2).isEqualTo(account1ApiResponse2);
@@ -226,8 +246,7 @@ public class FinecoBankCreditCardAccountFetcherTest {
     public void shouldFetchTransactionsOnly1TimeForSameAccountApiIdentifierInAutoRefresh() {
         // given
         FinecoBankCreditCardAccountFetcher fetcher =
-                new FinecoBankCreditCardAccountFetcher(
-                        finecoBankApiClient, persistentStorage, false);
+                new FinecoBankCreditCardAccountFetcher(mockApiClient, mockStorage, false);
 
         CreditCardAccount account1 = createCreditCardAccount("accountNumber", "apiIdentifier1");
         CreditCardAccount account2 = createCreditCardAccount("accountNumber", "apiIdentifier2");
@@ -238,9 +257,11 @@ public class FinecoBankCreditCardAccountFetcherTest {
         PaginatorResponse account1ApiResponse1 = mock(PaginatorResponse.class);
         PaginatorResponse account2ApiResponse1 = mock(PaginatorResponse.class);
 
-        when(finecoBankApiClient.getCreditTransactions(eq(account1), any()))
+        when(mockApiClient.getCreditTransactions(
+                        eq(TEST_CONSENT_ID), eq(account1), any(LocalDate.class)))
                 .thenReturn(account1ApiResponse1);
-        when(finecoBankApiClient.getCreditTransactions(eq(account2), any()))
+        when(mockApiClient.getCreditTransactions(
+                        eq(TEST_CONSENT_ID), eq(account2), any(LocalDate.class)))
                 .thenReturn(account2ApiResponse1);
 
         // when
@@ -256,9 +277,11 @@ public class FinecoBankCreditCardAccountFetcherTest {
                 fetcher.getTransactionsFor(account3, Year.of(2004), Month.FEBRUARY);
 
         // then
-        verify(finecoBankApiClient).getCreditTransactions(account1, LocalDate.of(2001, 1, 1));
-        verify(finecoBankApiClient).getCreditTransactions(account2, LocalDate.of(2003, 12, 1));
-        verifyNoMoreInteractions(finecoBankApiClient);
+        verify(mockApiClient)
+                .getCreditTransactions(TEST_CONSENT_ID, account1, LocalDate.of(2001, 1, 1));
+        verify(mockApiClient)
+                .getCreditTransactions(TEST_CONSENT_ID, account2, LocalDate.of(2003, 12, 1));
+        verifyNoMoreInteractions(mockApiClient);
 
         assertThat(account1Response1).isEqualTo(account1ApiResponse1);
         assertThat(account1Response2).isEqualTo(PaginatorResponseImpl.createEmpty(false));
@@ -276,7 +299,7 @@ public class FinecoBankCreditCardAccountFetcherTest {
         mockTransactionsConsentExistsForAccountNumbers("irrelevant");
 
         HttpResponseException responseException = httpResponseExceptionWithStatus(responseCode);
-        when(finecoBankApiClient.getCreditTransactions(any(), any())).thenThrow(responseException);
+        when(mockApiClient.getCreditTransactions(any(), any(), any())).thenThrow(responseException);
 
         // when
         PaginatorResponse paginatorResponse =
@@ -294,7 +317,7 @@ public class FinecoBankCreditCardAccountFetcherTest {
         mockTransactionsConsentExistsForAccountNumbers("irrelevant123");
 
         HttpResponseException responseException = httpResponseExceptionWithStatus(responseCode);
-        when(finecoBankApiClient.getCreditTransactions(any(), any())).thenThrow(responseException);
+        when(mockApiClient.getCreditTransactions(any(), any(), any())).thenThrow(responseException);
 
         // when
         Throwable t =
@@ -321,8 +344,7 @@ public class FinecoBankCreditCardAccountFetcherTest {
                         .map(this::sampleTransactionsConsentForAccountNumber)
                         .collect(Collectors.toList());
 
-        when(persistentStorage.get(eq(StorageKeys.TRANSACTIONS_CONSENTS), any(TypeReference.class)))
-                .thenReturn(Optional.of(transactionsConsents));
+        when(mockStorage.getTransactionsConsents()).thenReturn(transactionsConsents);
     }
 
     private CreditCardAccount createCreditCardAccount(String accountNumber, String apiIdentifier) {

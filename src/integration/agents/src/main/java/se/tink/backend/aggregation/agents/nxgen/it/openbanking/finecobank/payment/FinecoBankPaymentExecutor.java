@@ -4,6 +4,7 @@ import java.util.Collections;
 import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.ErrorMessages;
+import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoStorage;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.payment.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.payment.entities.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.payment.enums.FinecoBankPaymentProduct;
@@ -25,7 +26,6 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
@@ -35,7 +35,7 @@ public class FinecoBankPaymentExecutor implements PaymentExecutor {
 
     static final String PAYMENT_POST_SIGN_STATE = "payment_post_sign_state";
     private final FinecoBankApiClient apiClient;
-    private final SessionStorage sessionStorage;
+    private final FinecoStorage storage;
     private final StrongAuthenticationState strongAuthenticationState;
     private final SupplementalInformationController supplementalInformationController;
 
@@ -65,7 +65,7 @@ public class FinecoBankPaymentExecutor implements PaymentExecutor {
                         FinecoBankPaymentProduct.fromTinkPayment(paymentRequest.getPayment()),
                         strongAuthenticationState.getState(),
                         requestBody);
-        sessionStorage.put(
+        storage.storePaymentAuthorizationUrl(
                 createPaymentResponse.getPaymentId(), createPaymentResponse.getScaRedirectLink());
         return createPaymentResponse.toTinkPaymentResponse(paymentRequest);
     }
@@ -78,7 +78,7 @@ public class FinecoBankPaymentExecutor implements PaymentExecutor {
             case AuthenticationStepConstants.STEP_INIT:
                 URL authorizeUrl =
                         new URL(
-                                sessionStorage.get(
+                                storage.getPaymentAuthorizationUrl(
                                         paymentMultiStepRequest.getPayment().getUniqueId()));
                 supplementalInformationController.openThirdPartyAppSync(
                         ThirdPartyAppAuthenticationPayload.of(authorizeUrl));
@@ -117,6 +117,5 @@ public class FinecoBankPaymentExecutor implements PaymentExecutor {
     public PaymentResponse cancel(PaymentRequest paymentRequest) {
         throw new IllegalStateException(
                 "cancel is not implemented for " + this.getClass().getName());
-        // TODO this should be possible according to api
     }
 }

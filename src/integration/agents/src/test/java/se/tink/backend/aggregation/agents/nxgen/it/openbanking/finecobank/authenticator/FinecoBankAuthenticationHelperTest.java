@@ -21,20 +21,21 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.ThirdPartyAppException;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.ErrorMessages;
-import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.StorageKeys;
+import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoStorage;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.authenticator.entities.AccessItem;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.authenticator.entities.AccountConsent;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.authenticator.rpc.ConsentAuthorizationsResponse;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.ConstantLocalDateTimeSource;
-import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 @RunWith(JUnitParamsRunner.class)
 public class FinecoBankAuthenticationHelperTest {
     private static final String TEST_DATE = "2020-12-12";
+    private static final String TEST_CONSENT_ID = "test_consent_id";
+
     private final Credentials mockCredentials = mock(Credentials.class);
 
     private FinecoBankApiClient mockApiClient;
-    private PersistentStorage mockPersistentStorage;
+    private FinecoStorage mockStorage;
 
     private FinecoBankAuthenticationHelper authenticationHelper;
 
@@ -50,11 +51,12 @@ public class FinecoBankAuthenticationHelperTest {
     @Before
     public void setup() {
         mockApiClient = mock(FinecoBankApiClient.class);
-        mockPersistentStorage = mock(PersistentStorage.class);
+        mockStorage = mock(FinecoStorage.class);
+        when(mockStorage.getConsentId()).thenReturn(TEST_CONSENT_ID);
         authenticationHelper =
                 new FinecoBankAuthenticationHelper(
                         mockApiClient,
-                        mockPersistentStorage,
+                        mockStorage,
                         mockCredentials,
                         new ConstantLocalDateTimeSource());
     }
@@ -66,7 +68,8 @@ public class FinecoBankAuthenticationHelperTest {
         ConsentAuthorizationsResponse consentAuthorizationsResponse =
                 new ConsentAuthorizationsResponse();
         consentAuthorizationsResponse.setAccess(accessItem);
-        when(mockApiClient.getConsentAuthorizations()).thenReturn(consentAuthorizationsResponse);
+        when(mockApiClient.getConsentAuthorizations(TEST_CONSENT_ID))
+                .thenReturn(consentAuthorizationsResponse);
 
         // when
         Throwable thrown = catchThrowable(authenticationHelper::storeConsents);
@@ -84,7 +87,8 @@ public class FinecoBankAuthenticationHelperTest {
                 new ConsentAuthorizationsResponse();
         consentAuthorizationsResponse.setAccess(
                 new AccessItem(Collections.singletonList(new AccountConsent("111", null)), null));
-        when(mockApiClient.getConsentAuthorizations()).thenReturn(consentAuthorizationsResponse);
+        when(mockApiClient.getConsentAuthorizations(TEST_CONSENT_ID))
+                .thenReturn(consentAuthorizationsResponse);
 
         // when
         Throwable thrown = catchThrowable(authenticationHelper::storeConsents);
@@ -104,16 +108,16 @@ public class FinecoBankAuthenticationHelperTest {
         List<AccountConsent> consent = Collections.singletonList(new AccountConsent("111", null));
         consentAuthorizationsResponse.setAccess(new AccessItem(consent, consent));
         consentAuthorizationsResponse.setValidUntil(TEST_DATE);
-        when(mockApiClient.getConsentAuthorizations()).thenReturn(consentAuthorizationsResponse);
+        when(mockApiClient.getConsentAuthorizations(TEST_CONSENT_ID))
+                .thenReturn(consentAuthorizationsResponse);
 
         // when
         authenticationHelper.storeConsents();
 
         // then
-        verify(mockPersistentStorage).put(StorageKeys.BALANCES_CONSENTS, consent);
-        verify(mockPersistentStorage).put(StorageKeys.TRANSACTIONS_CONSENTS, consent);
-        verify(mockPersistentStorage)
-                .put(StorageKeys.TIMESTAMP, LocalDateTime.of(1992, 4, 10, 0, 0));
+        verify(mockStorage).storeBalancesConsents(consent);
+        verify(mockStorage).storeTransactionsConsents(consent);
+        verify(mockStorage).storeConsentCreationTime(LocalDateTime.of(1992, 4, 10, 0, 0));
         verify(mockCredentials).setSessionExpiryDate(eq(FORMATTER_DAILY.parse(TEST_DATE)));
     }
 
@@ -124,7 +128,8 @@ public class FinecoBankAuthenticationHelperTest {
                 new ConsentAuthorizationsResponse();
         List<AccountConsent> consent = Collections.singletonList(new AccountConsent("111", null));
         consentAuthorizationsResponse.setAccess(new AccessItem(consent, consent));
-        when(mockApiClient.getConsentAuthorizations()).thenReturn(consentAuthorizationsResponse);
+        when(mockApiClient.getConsentAuthorizations(TEST_CONSENT_ID))
+                .thenReturn(consentAuthorizationsResponse);
 
         // when
         Throwable thrown = catchThrowable(authenticationHelper::storeConsents);

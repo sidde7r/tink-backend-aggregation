@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.math.BigDecimal;
 import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.Formats;
-import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.StorageKeys;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.creditcard.CreditCardModule;
@@ -83,8 +82,6 @@ public class CardAccountsItem {
                                                 Type.PAYMENT_CARD_NUMBER, maskedPan))
                                 .build())
                 .setApiIdentifier(resourceId)
-                .setBankIdentifier(resourceId)
-                .putInTemporaryStorage(StorageKeys.CARD_ID, resourceId)
                 .build();
     }
 

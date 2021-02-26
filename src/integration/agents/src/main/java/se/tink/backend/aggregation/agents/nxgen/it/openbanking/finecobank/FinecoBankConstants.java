@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank;
 
 import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
 import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapper;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
@@ -70,19 +69,7 @@ public final class FinecoBankConstants {
                 "/payments/{paymentProduct}/{paymentId}/status";
     }
 
-    public static class StorageKeys {
-        public static final String OAUTH_TOKEN = PersistentStorageKeys.OAUTH_2_TOKEN;
-        public static final String CONSENT_ID = "consentId";
-        public static final String ACCOUNT_ID = "accountId";
-        public static final String CARD_ID = "cardId";
-        public static final String TRANSACTIONS_CONSENTS = "transactionAccounts";
-        public static final String BALANCES_CONSENTS = "balanceAccounts";
-        public static final String STATE = "STATE";
-        public static final String TIMESTAMP = "TIMESTAMP";
-    }
-
     public static class QueryKeys {
-
         public static final String WITH_BALANCE = "withBalance";
         public static final String BOOKING_STATUS = "bookingStatus";
         public static final String DATE_FROM = "dateFrom";
@@ -117,6 +104,7 @@ public final class FinecoBankConstants {
 
     public static class ParameterKeys {
         public static final String ACCOUNT_ID = "account-id";
+        public static final String CONSENT_ID = "consentId";
         public static final String PAYMENT_PRODUCT = "paymentProduct";
         public static final String PAYMENT_ID = "paymentId";
     }
@@ -129,9 +117,5 @@ public final class FinecoBankConstants {
         public static final int FREQUENCY_PER_DAY = 4;
         public static final String MISSING_DESCRIPTION = "<Missing Description>";
         public static final int MAX_POLLS_COUNTER = 50;
-    }
-
-    public static class StatusValues {
-        public static final String VALID = "valid";
     }
 }

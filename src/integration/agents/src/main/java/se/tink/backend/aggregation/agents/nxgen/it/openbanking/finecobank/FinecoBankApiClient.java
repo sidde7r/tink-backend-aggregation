@@ -1,13 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.google.common.base.Strings;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Collections;
 import java.util.Date;
-import java.util.List;
 import javax.ws.rs.core.MediaType;
 import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.Formats;
@@ -15,9 +11,7 @@ import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.Fineco
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.ParameterKeys;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.QueryValues;
-import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.Urls;
-import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.authenticator.entities.AccountConsent;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.authenticator.rpc.ConsentAuthorizationsResponse;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.authenticator.rpc.ConsentStatusResponse;
@@ -38,13 +32,11 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 @RequiredArgsConstructor
 public class FinecoBankApiClient {
 
     private final TinkHttpClient client;
-    private final PersistentStorage persistentStorage;
     private final FinecoHeaderValues headerValues;
     private final RandomValueGenerator randomValueGenerator;
 
@@ -65,37 +57,34 @@ public class FinecoBankApiClient {
                 .post(ConsentResponse.class);
     }
 
-    public ConsentStatusResponse getConsentStatus() {
-        return createRequest(
-                        Urls.CONSENT_STATUS.parameter(
-                                StorageKeys.CONSENT_ID,
-                                persistentStorage.get(StorageKeys.CONSENT_ID)))
+    public ConsentStatusResponse getConsentStatus(String consentId) {
+        return createRequest(Urls.CONSENT_STATUS.parameter(ParameterKeys.CONSENT_ID, consentId))
                 .get(ConsentStatusResponse.class);
     }
 
-    public CardAccountsResponse fetchCreditCardAccounts() {
+    public CardAccountsResponse fetchCreditCardAccounts(String consentId) {
         return createRequest(Urls.CARD_ACCOUNTS)
-                .header(HeaderKeys.CONSENT_ID, persistentStorage.get(StorageKeys.CONSENT_ID))
+                .header(HeaderKeys.CONSENT_ID, consentId)
                 .queryParam(QueryKeys.WITH_BALANCE, String.valueOf(true))
                 .get(CardAccountsResponse.class);
     }
 
-    public AccountsResponse fetchAccounts() {
+    public AccountsResponse fetchAccounts(String consentId) {
         return createRequest(Urls.ACCOUNTS)
-                .header(HeaderKeys.CONSENT_ID, persistentStorage.get(StorageKeys.CONSENT_ID))
+                .header(HeaderKeys.CONSENT_ID, consentId)
                 .queryParam(QueryKeys.WITH_BALANCE, String.valueOf(true))
                 .get(AccountsResponse.class);
     }
 
     public PaginatorResponse getTransactions(
-            TransactionalAccount account, Date fromDate, Date toDate) {
+            String consentId, TransactionalAccount account, Date fromDate, Date toDate) {
         SimpleDateFormat paginationDateFormatter =
                 new SimpleDateFormat(Formats.DEFAULT_DATE_FORMAT);
 
         return createRequest(
                         Urls.TRANSACTIONS.parameter(
                                 ParameterKeys.ACCOUNT_ID, account.getApiIdentifier()))
-                .header(HeaderKeys.CONSENT_ID, persistentStorage.get(StorageKeys.CONSENT_ID))
+                .header(HeaderKeys.CONSENT_ID, consentId)
                 .queryParam(QueryKeys.WITH_BALANCE, String.valueOf(true))
                 .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BOOKED)
                 .queryParam(QueryKeys.DATE_FROM, paginationDateFormatter.format(fromDate))
@@ -103,46 +92,25 @@ public class FinecoBankApiClient {
                 .get(TransactionsResponse.class);
     }
 
-    public PaginatorResponse getCreditTransactions(CreditCardAccount account, LocalDate fromDate) {
+    public PaginatorResponse getCreditTransactions(
+            String consentId, CreditCardAccount account, LocalDate fromDate) {
         DateTimeFormatter paginationDateFormatter =
                 DateTimeFormatter.ofPattern(Formats.DEFAULT_DATE_FORMAT);
 
         return createRequest(
                         Urls.CARD_TRANSACTIONS.parameter(
                                 ParameterKeys.ACCOUNT_ID, account.getApiIdentifier()))
-                .header(HeaderKeys.CONSENT_ID, persistentStorage.get(StorageKeys.CONSENT_ID))
+                .header(HeaderKeys.CONSENT_ID, consentId)
                 .queryParam(QueryKeys.WITH_BALANCE, String.valueOf(true))
                 .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BOOKED)
                 .queryParam(QueryKeys.DATE_FROM, paginationDateFormatter.format(fromDate))
                 .get(CardTransactionsResponse.class);
     }
 
-    public ConsentAuthorizationsResponse getConsentAuthorizations() {
+    public ConsentAuthorizationsResponse getConsentAuthorizations(String consentId) {
         return createRequest(
-                        Urls.CONSENT_AUTHORIZATIONS.parameter(
-                                StorageKeys.CONSENT_ID,
-                                persistentStorage.get(StorageKeys.CONSENT_ID)))
+                        Urls.CONSENT_AUTHORIZATIONS.parameter(ParameterKeys.CONSENT_ID, consentId))
                 .get(ConsentAuthorizationsResponse.class);
-    }
-
-    public boolean isEmptyTransactionalAccountBalanceConsent() {
-        List<AccountConsent> balancesItems = getBalancesConsentsFromStorage();
-
-        return balancesItems.stream()
-                .allMatch(balancesItem -> Strings.isNullOrEmpty(balancesItem.getIban()));
-    }
-
-    public boolean isEmptyCreditCardAccountBalanceConsent() {
-        List<AccountConsent> balancesItems = getBalancesConsentsFromStorage();
-
-        return balancesItems.stream()
-                .allMatch(balancesItem -> Strings.isNullOrEmpty(balancesItem.getMaskedPan()));
-    }
-
-    private List<AccountConsent> getBalancesConsentsFromStorage() {
-        return persistentStorage
-                .get(StorageKeys.BALANCES_CONSENTS, new TypeReference<List<AccountConsent>>() {})
-                .orElse(Collections.emptyList());
     }
 
     public CreatePaymentResponse createPayment(

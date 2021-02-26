@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.fetcher.card;
 
-import com.fasterxml.jackson.core.type.TypeReference;
+import com.google.common.base.Strings;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
@@ -9,16 +9,15 @@ import java.time.temporal.ChronoUnit;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.ErrorMessages;
-import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.StorageKeys;
-import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.authenticator.entities.AccountConsent;
+import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoStorage;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.fetcher.card.entity.CardAccountsItem;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
@@ -26,7 +25,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionMonthPaginator;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
-import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -36,18 +34,16 @@ public class FinecoBankCreditCardAccountFetcher
     private static final int MAX_MONTHS_ALLOWED_TO_FETCH = 3;
     private static final int MAX_MONTHS_BG_REFRESH = 1;
 
-    private final FinecoBankApiClient finecoBankApiClient;
-    private final PersistentStorage persistentStorage;
+    private final FinecoBankApiClient apiClient;
+    private final FinecoStorage storage;
     private final boolean isManual;
 
     private final Map<String, Integer> transactionsRequestsCounterPerApiIdentifier;
 
     public FinecoBankCreditCardAccountFetcher(
-            FinecoBankApiClient finecoBankApiClient,
-            PersistentStorage persistentStorage,
-            boolean isManual) {
-        this.finecoBankApiClient = finecoBankApiClient;
-        this.persistentStorage = persistentStorage;
+            FinecoBankApiClient apiClient, FinecoStorage storage, boolean isManual) {
+        this.apiClient = apiClient;
+        this.storage = storage;
         this.isManual = isManual;
 
         this.transactionsRequestsCounterPerApiIdentifier = new HashMap<>();
@@ -55,13 +51,18 @@ public class FinecoBankCreditCardAccountFetcher
 
     @Override
     public Collection<CreditCardAccount> fetchAccounts() {
-        if (finecoBankApiClient.isEmptyCreditCardAccountBalanceConsent()) {
+        if (isEmptyCreditCardAccountBalanceConsent()) {
             return Collections.emptyList();
         }
 
-        return this.finecoBankApiClient.fetchCreditCardAccounts().getCardAccounts().stream()
+        return apiClient.fetchCreditCardAccounts(storage.getConsentId()).getCardAccounts().stream()
                 .map(CardAccountsItem::toCreditCardAccount)
                 .collect(Collectors.toList());
+    }
+
+    private boolean isEmptyCreditCardAccountBalanceConsent() {
+        return storage.getBalancesConsents().stream()
+                .allMatch(balancesItem -> Strings.isNullOrEmpty(balancesItem.getMaskedPan()));
     }
 
     /**
@@ -89,7 +90,8 @@ public class FinecoBankCreditCardAccountFetcher
 
         try {
             LocalDate fromDateAdjusted = prepareFromDate(year, month);
-            return finecoBankApiClient.getCreditTransactions(account, fromDateAdjusted);
+            return apiClient.getCreditTransactions(
+                    storage.getConsentId(), account, fromDateAdjusted);
 
         } catch (HttpResponseException e) {
 
@@ -111,7 +113,7 @@ public class FinecoBankCreditCardAccountFetcher
 
     private boolean transactionsConsentForCreditCardAccountExists(
             CreditCardAccount creditCardAccount) {
-        return getTransactionsConsentsFromStorage().stream()
+        return storage.getTransactionsConsents().stream()
                 .anyMatch(
                         transactionsConsent -> {
                             String maskedPan = transactionsConsent.getMaskedPan();
@@ -119,14 +121,6 @@ public class FinecoBankCreditCardAccountFetcher
 
                             return Objects.equals(maskedPan, creditCardAccountNumber);
                         });
-    }
-
-    private List<AccountConsent> getTransactionsConsentsFromStorage() {
-        return persistentStorage
-                .get(
-                        StorageKeys.TRANSACTIONS_CONSENTS,
-                        new TypeReference<List<AccountConsent>>() {})
-                .orElse(Collections.emptyList());
     }
 
     private boolean hasReachedTransactionsRequestsLimit(String apiIdentifier) {
@@ -145,12 +139,9 @@ public class FinecoBankCreditCardAccountFetcher
     // Fineco supports fetching transactions further back than 90 days if consent was given within
     // 20 minutes
     private boolean isConsentMaximum20MinutesOld() {
-        final LocalDateTime consentCreated =
-                persistentStorage.get(StorageKeys.TIMESTAMP, LocalDateTime.class).orElse(null);
-        if (consentCreated == null) {
-            return false;
-        }
-        return ChronoUnit.MINUTES.between(consentCreated, LocalDateTime.now()) < 20;
+        Optional<LocalDateTime> consentCreated = storage.getConsentCreationTime();
+        return consentCreated.isPresent()
+                && ChronoUnit.MINUTES.between(consentCreated.get(), LocalDateTime.now()) < 20;
     }
 
     private LocalDate prepareFromDate(Year year, Month month) {

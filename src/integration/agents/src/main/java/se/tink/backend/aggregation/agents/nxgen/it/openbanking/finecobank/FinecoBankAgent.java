@@ -41,16 +41,18 @@ public final class FinecoBankAgent extends NextGenerationAgent
                 RefreshSavingsAccountsExecutor,
                 RefreshCreditCardAccountsExecutor {
 
+    private final LocalDateTimeSource localDateTimeSource;
+    private final FinecoStorage finecoStorage;
+
     private final FinecoBankApiClient apiClient;
     private final TransactionalAccountRefreshController accountRefreshController;
     private final CreditCardRefreshController cardRefreshController;
-
-    private final LocalDateTimeSource localDateTimeSource;
 
     @Inject
     public FinecoBankAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
         this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
+        this.finecoStorage = new FinecoStorage(persistentStorage);
 
         this.apiClient = constructApiClient(componentProvider);
         this.accountRefreshController = constructAccountRefreshController();
@@ -68,9 +70,8 @@ public final class FinecoBankAgent extends NextGenerationAgent
         FinecoBankAuthenticator finecoBankAuthenticator =
                 new FinecoBankAuthenticator(
                         supplementalInformationHelper,
-                        persistentStorage,
                         new FinecoBankAuthenticationHelper(
-                                apiClient, persistentStorage, credentials, localDateTimeSource),
+                                apiClient, finecoStorage, credentials, localDateTimeSource),
                         strongAuthenticationState);
 
         return new AutoAuthenticationController(
@@ -90,15 +91,12 @@ public final class FinecoBankAgent extends NextGenerationAgent
                         request.isManual() ? userIp : null);
 
         return new FinecoBankApiClient(
-                client,
-                persistentStorage,
-                headerValues,
-                componentProvider.getRandomValueGenerator());
+                client, headerValues, componentProvider.getRandomValueGenerator());
     }
 
     private TransactionalAccountRefreshController constructAccountRefreshController() {
         final FinecoBankTransactionalAccountFetcher accountFetcher =
-                new FinecoBankTransactionalAccountFetcher(apiClient, persistentStorage);
+                new FinecoBankTransactionalAccountFetcher(apiClient, finecoStorage);
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController,
@@ -114,7 +112,7 @@ public final class FinecoBankAgent extends NextGenerationAgent
     private CreditCardRefreshController constructCardRefreshController() {
         final FinecoBankCreditCardAccountFetcher accountFetcher =
                 new FinecoBankCreditCardAccountFetcher(
-                        apiClient, persistentStorage, request.isManual());
+                        apiClient, finecoStorage, request.isManual());
 
         return new CreditCardRefreshController(
                 metricRefreshController,
@@ -151,7 +149,7 @@ public final class FinecoBankAgent extends NextGenerationAgent
         FinecoBankPaymentExecutor paymentExecutor =
                 new FinecoBankPaymentExecutor(
                         apiClient,
-                        sessionStorage,
+                        finecoStorage,
                         strongAuthenticationState,
                         supplementalInformationController);
 
