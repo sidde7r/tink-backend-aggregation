@@ -26,6 +26,7 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.request.HttpMethod;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 @RequiredArgsConstructor
@@ -185,18 +186,18 @@ public class BpceGroupApiClient implements FrAispApiClient {
 
     @Override
     public Optional<TrustedBeneficiariesResponseDto> getTrustedBeneficiaries(String path) {
-        final RequestBuilder requestBuilder =
-                addHeadersToRequest(
-                        httpClient.request(createUrlWithBasePath(path)), HttpMethod.GET);
+        final RequestBuilder requestBuilder = httpClient.request(createUrlWithBasePath(path));
 
-        final HttpResponse httpResponse =
-                sendRequestAndGetResponse(requestBuilder, HttpMethod.GET, HttpResponse.class);
-
-        if (HttpStatus.SC_NO_CONTENT == httpResponse.getStatus()
-                || HttpStatus.SC_FORBIDDEN == httpResponse.getStatus()) {
-            return Optional.empty();
+        try {
+            return Optional.of(
+                    sendRequestAndGetResponse(
+                            requestBuilder, HttpMethod.GET, TrustedBeneficiariesResponseDto.class));
+        } catch (HttpResponseException e) {
+            if (e.getResponse().getStatus() == HttpStatus.SC_NO_CONTENT
+                    || e.getResponse().getStatus() == HttpStatus.SC_FORBIDDEN) {
+                return Optional.empty();
+            }
+            throw e;
         }
-
-        return Optional.of(httpResponse.getBody(TrustedBeneficiariesResponseDto.class));
     }
 }
