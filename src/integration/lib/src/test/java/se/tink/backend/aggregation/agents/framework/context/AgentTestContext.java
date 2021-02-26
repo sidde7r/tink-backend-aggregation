@@ -67,13 +67,6 @@ public class AgentTestContext extends AgentContext {
         setAggregatorInfo(AggregatorInfo.getAggregatorForTesting());
     }
 
-    @Override
-    public void clear() {
-        super.clear();
-        accountDataCache.clear();
-        transfers.clear();
-    }
-
     public AccountDataCache getAccountDataCache() {
         return accountDataCache;
     }

@@ -1,8 +1,6 @@
 package se.tink.backend.aggregation.agents.contexts.agent;
 
-import com.google.common.collect.Maps;
 import java.io.ByteArrayOutputStream;
-import java.util.Map;
 import se.tink.backend.aggregation.agents.contexts.CompositeAgentContext;
 import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
@@ -15,7 +13,6 @@ import src.libraries.interaction_counter.local.LocalInteractionCounter;
 public abstract class AgentContext implements CompositeAgentContext {
     protected ByteArrayOutputStream logOutputStream = new ByteArrayOutputStream();
     protected boolean isTestContext = false;
-    private Map<String, Integer> transactionCountByEnabledAccount = Maps.newHashMap();
     private boolean isWaitingOnConnectorTransactions = false;
     private AggregatorInfo aggregatorInfo;
     private String clusterId;
@@ -66,11 +63,6 @@ public abstract class AgentContext implements CompositeAgentContext {
     }
 
     @Override
-    public void clear() {
-        transactionCountByEnabledAccount.clear();
-    }
-
-    @Override
     public boolean isTestContext() {
         return isTestContext;
     }
@@ -88,11 +80,6 @@ public abstract class AgentContext implements CompositeAgentContext {
     @Override
     public void setWaitingOnConnectorTransactions(boolean waitingOnConnectorTransactions) {
         isWaitingOnConnectorTransactions = waitingOnConnectorTransactions;
-    }
-
-    @Override
-    public Map<String, Integer> getTransactionCountByEnabledAccount() {
-        return transactionCountByEnabledAccount;
     }
 
     @Override
