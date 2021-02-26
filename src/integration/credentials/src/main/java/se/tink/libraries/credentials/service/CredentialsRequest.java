@@ -30,7 +30,12 @@ public abstract class CredentialsRequest {
     private List<Account> accounts;
     private String appUriId;
     private String callbackUri;
+
+    // To be @Deprecated when UserPresence.originatingUserIp is confirmed present everywhere
+    // @deprecated use the originatingUserIp inside UserPresence object instead
     private String originatingUserIp;
+
+    private UserAvailability userAvailability;
 
     @JsonProperty("forceAuthenticate")
     private boolean forceAuthenticate;
@@ -220,5 +225,13 @@ public abstract class CredentialsRequest {
 
     public void setForceAuthenticate(boolean forceAuthenticate) {
         this.forceAuthenticate = forceAuthenticate;
+    }
+
+    public UserAvailability getUserAvailability() {
+        return userAvailability;
+    }
+
+    public void setUserAvailability(UserAvailability userAvailability) {
+        this.userAvailability = userAvailability;
     }
 }
