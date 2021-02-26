@@ -18,6 +18,7 @@ public class AccountEntity {
     private String iban;
     private String currency;
     private String name;
+    private String product;
 
     @JsonProperty("_links")
     private AccountsLinksEntity links;
@@ -35,9 +36,10 @@ public class AccountEntity {
                         IdModule.builder()
                                 .withUniqueIdentifier(iban)
                                 .withAccountNumber(iban)
-                                .withAccountName(name)
+                                .withAccountName(product)
                                 .addIdentifier(AccountIdentifier.create(Type.IBAN, iban))
                                 .build())
+                .addHolderName(name)
                 .setApiIdentifier(resourceId)
                 .setBankIdentifier(iban)
                 .build();
