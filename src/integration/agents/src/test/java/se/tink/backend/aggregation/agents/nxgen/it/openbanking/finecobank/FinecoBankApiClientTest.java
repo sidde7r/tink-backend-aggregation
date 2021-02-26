@@ -16,8 +16,7 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentMatchers;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.authenticator.entities.AccountConsent;
-import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.configuration.FinecoBankConfiguration;
-import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.MockRandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 @RunWith(JUnitParamsRunner.class)
@@ -114,7 +113,6 @@ public class FinecoBankApiClientTest {
     private FinecoBankApiClient prepareApiClientWithMockedStorage(
             List<AccountConsent> balancesItems) {
         PersistentStorage persistentStorage = mock(PersistentStorage.class);
-        FinecoBankConfiguration configuration = mock(FinecoBankConfiguration.class);
         when(persistentStorage.get(
                         ArgumentMatchers.eq(StorageKeys.BALANCES_CONSENTS),
                         ArgumentMatchers.<TypeReference<List<AccountConsent>>>any()))
@@ -123,11 +121,7 @@ public class FinecoBankApiClientTest {
         return new FinecoBankApiClient(
                 null,
                 persistentStorage,
-                new AgentConfiguration.Builder()
-                        .setProviderSpecificConfiguration(configuration)
-                        .setRedirectUrl("REDIRECT_URL")
-                        .build(),
-                true,
-                "127.0.0.1");
+                new FinecoHeaderValues("REDIRECT_URL", "127.0.0.1"),
+                new MockRandomValueGenerator());
     }
 }

@@ -4,6 +4,7 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CREDIT_CARDS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
 
+import com.google.inject.Inject;
 import java.time.ZoneId;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
@@ -12,7 +13,6 @@ import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
-import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.authenticator.FinecoBankAuthenticationHelper;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.authenticator.FinecoBankAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.configuration.FinecoBankConfiguration;
@@ -20,9 +20,10 @@ import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.fetche
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.fetcher.transactionalaccount.FinecoBankTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.payment.FinecoBankPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.payment.FinecoPaymentFetcher;
-import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
@@ -33,7 +34,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionMonthPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, CREDIT_CARDS})
 public final class FinecoBankAgent extends NextGenerationAgent
@@ -42,83 +42,61 @@ public final class FinecoBankAgent extends NextGenerationAgent
                 RefreshCreditCardAccountsExecutor {
 
     private final FinecoBankApiClient apiClient;
-    private final AgentConfiguration<FinecoBankConfiguration> agentConfiguration;
-    private final TransactionalAccountRefreshController transactionalAccountRefreshController;
-    private final CreditCardRefreshController creditCardRefreshController;
-    private AutoAuthenticationController authenticationController;
+    private final TransactionalAccountRefreshController accountRefreshController;
+    private final CreditCardRefreshController cardRefreshController;
 
-    public FinecoBankAgent(
-            CredentialsRequest request,
-            AgentContext context,
-            AgentsServiceConfiguration agentsServiceConfiguration) {
-        super(request, context, agentsServiceConfiguration.getSignatureKeyPair());
+    private final LocalDateTimeSource localDateTimeSource;
 
-        this.agentConfiguration =
-                getAgentConfigurationController()
-                        .getAgentConfiguration(FinecoBankConfiguration.class);
+    @Inject
+    public FinecoBankAgent(AgentComponentProvider componentProvider) {
+        super(componentProvider);
+        this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
 
-        super.setConfiguration(agentsServiceConfiguration);
+        this.apiClient = constructApiClient(componentProvider);
+        this.accountRefreshController = constructAccountRefreshController();
+        this.cardRefreshController = constructCardRefreshController();
+    }
 
-        this.apiClient =
-                new FinecoBankApiClient(
-                        client,
-                        persistentStorage,
-                        new FinecoHeaderValues(
-                                agentConfiguration.getRedirectUrl(),
-                                request.isManual() ? userIp : null));
-
-        this.client.setEidasProxy(agentsServiceConfiguration.getEidasProxy());
-        this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
-        this.creditCardRefreshController = getCreditCardRefreshController();
+    @Override
+    public void setConfiguration(AgentsServiceConfiguration configuration) {
+        super.setConfiguration(configuration);
+        client.setEidasProxy(configuration.getEidasProxy());
     }
 
     @Override
     protected Authenticator constructAuthenticator() {
-        return getAuthenticationController();
+        FinecoBankAuthenticator finecoBankAuthenticator =
+                new FinecoBankAuthenticator(
+                        supplementalInformationHelper,
+                        persistentStorage,
+                        new FinecoBankAuthenticationHelper(
+                                apiClient, persistentStorage, credentials, localDateTimeSource),
+                        strongAuthenticationState);
+
+        return new AutoAuthenticationController(
+                request,
+                systemUpdater,
+                new ThirdPartyAppAuthenticationController<>(
+                        finecoBankAuthenticator, supplementalInformationHelper),
+                finecoBankAuthenticator);
     }
 
-    private AutoAuthenticationController getAuthenticationController() {
-        if (authenticationController == null) {
-            final FinecoBankAuthenticator finecoBankAuthenticator =
-                    new FinecoBankAuthenticator(
-                            supplementalInformationHelper,
-                            persistentStorage,
-                            new FinecoBankAuthenticationHelper(
-                                    apiClient, persistentStorage, credentials),
-                            strongAuthenticationState);
+    private FinecoBankApiClient constructApiClient(AgentComponentProvider componentProvider) {
+        FinecoHeaderValues headerValues =
+                new FinecoHeaderValues(
+                        getAgentConfigurationController()
+                                .getAgentConfiguration(FinecoBankConfiguration.class)
+                                .getRedirectUrl(),
+                        request.isManual() ? userIp : null);
 
-            authenticationController =
-                    new AutoAuthenticationController(
-                            request,
-                            systemUpdater,
-                            new ThirdPartyAppAuthenticationController<>(
-                                    finecoBankAuthenticator, supplementalInformationHelper),
-                            finecoBankAuthenticator);
-        }
-        return authenticationController;
+        return new FinecoBankApiClient(
+                client,
+                persistentStorage,
+                headerValues,
+                componentProvider.getRandomValueGenerator());
     }
 
-    @Override
-    public FetchAccountsResponse fetchCheckingAccounts() {
-        return transactionalAccountRefreshController.fetchCheckingAccounts();
-    }
-
-    @Override
-    public FetchTransactionsResponse fetchCheckingTransactions() {
-        return transactionalAccountRefreshController.fetchCheckingTransactions();
-    }
-
-    @Override
-    public FetchAccountsResponse fetchSavingsAccounts() {
-        return transactionalAccountRefreshController.fetchSavingsAccounts();
-    }
-
-    @Override
-    public FetchTransactionsResponse fetchSavingsTransactions() {
-        return transactionalAccountRefreshController.fetchSavingsTransactions();
-    }
-
-    private TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
+    private TransactionalAccountRefreshController constructAccountRefreshController() {
         final FinecoBankTransactionalAccountFetcher accountFetcher =
                 new FinecoBankTransactionalAccountFetcher(apiClient, persistentStorage);
 
@@ -131,6 +109,41 @@ public final class FinecoBankAgent extends NextGenerationAgent
                         new TransactionDatePaginationController.Builder<>(accountFetcher)
                                 .setConsecutiveEmptyPagesLimit(1)
                                 .build()));
+    }
+
+    private CreditCardRefreshController constructCardRefreshController() {
+        final FinecoBankCreditCardAccountFetcher accountFetcher =
+                new FinecoBankCreditCardAccountFetcher(
+                        apiClient, persistentStorage, request.isManual());
+
+        return new CreditCardRefreshController(
+                metricRefreshController,
+                updateController,
+                accountFetcher,
+                new TransactionFetcherController<>(
+                        transactionPaginationHelper,
+                        new TransactionMonthPaginationController<>(
+                                accountFetcher, ZoneId.of("GMT"))));
+    }
+
+    @Override
+    public FetchAccountsResponse fetchCheckingAccounts() {
+        return accountRefreshController.fetchCheckingAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCheckingTransactions() {
+        return accountRefreshController.fetchCheckingTransactions();
+    }
+
+    @Override
+    public FetchAccountsResponse fetchSavingsAccounts() {
+        return accountRefreshController.fetchSavingsAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchSavingsTransactions() {
+        return accountRefreshController.fetchSavingsTransactions();
     }
 
     @Override
@@ -154,26 +167,11 @@ public final class FinecoBankAgent extends NextGenerationAgent
 
     @Override
     public FetchAccountsResponse fetchCreditCardAccounts() {
-        return creditCardRefreshController.fetchCreditCardAccounts();
+        return cardRefreshController.fetchCreditCardAccounts();
     }
 
     @Override
     public FetchTransactionsResponse fetchCreditCardTransactions() {
-        return creditCardRefreshController.fetchCreditCardTransactions();
-    }
-
-    private CreditCardRefreshController getCreditCardRefreshController() {
-        final FinecoBankCreditCardAccountFetcher accountFetcher =
-                new FinecoBankCreditCardAccountFetcher(
-                        apiClient, persistentStorage, request.isManual());
-
-        return new CreditCardRefreshController(
-                metricRefreshController,
-                updateController,
-                accountFetcher,
-                new TransactionFetcherController<>(
-                        transactionPaginationHelper,
-                        new TransactionMonthPaginationController<>(
-                                accountFetcher, ZoneId.of("GMT"))));
+        return cardRefreshController.fetchCreditCardTransactions();
     }
 }

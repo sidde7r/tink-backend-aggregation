@@ -2,11 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.authe
 
 import com.google.common.base.Strings;
 import com.google.common.util.concurrent.Uninterruptibles;
-import java.security.SecureRandom;
-import java.util.Base64;
-import java.util.Base64.Encoder;
 import java.util.Optional;
-import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
@@ -31,12 +27,10 @@ import se.tink.libraries.i18n.LocalizableKey;
 public final class FinecoBankAuthenticator
         implements AutoAuthenticator, ThirdPartyAppAuthenticator<String> {
 
-    private static final Random random = new SecureRandom();
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final PersistentStorage persistentStorage;
     private final FinecoBankAuthenticationHelper finecoAuthenticator;
     private final StrongAuthenticationState strongAuthenticationState;
-    private static final Encoder encoder = Base64.getUrlEncoder();
 
     public FinecoBankAuthenticator(
             SupplementalInformationHelper supplementalInformationHelper,
