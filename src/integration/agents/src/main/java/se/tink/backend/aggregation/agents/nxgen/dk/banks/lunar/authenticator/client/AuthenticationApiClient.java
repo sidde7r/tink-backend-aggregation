@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.client;
 
-import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.LunarConstants.HeaderValues;
 import static se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.LunarConstants.Headers;
 import static se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.LunarConstants.Uri;
@@ -20,8 +19,7 @@ import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.ent
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.rpc.AccessTokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.rpc.AccessTokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.rpc.NemIdParamsResponse;
-import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.rpc.SignInRequest;
-import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.rpc.TokenResponse;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -72,15 +70,12 @@ public class AuthenticationApiClient {
         throw new IllegalArgumentException("Couldn't serialize access token request");
     }
 
-    public TokenResponse signIn(String lunarPassword, String token, String deviceId) {
-        SignInRequest signInRequest = new SignInRequest(lunarPassword);
-
+    public AccountsResponse fetchAccounts(String token, String deviceId) {
         BodyBuilder requestBuilder =
-                getDefaultBodyBuilder(HttpMethod.POST, Uri.SIGN_IN, deviceId)
+                getDefaultBodyBuilder(HttpMethod.GET, Uri.ACCOUNTS_VIEW, deviceId)
                         .header(Headers.AUTHORIZATION, token)
-                        .header(Headers.CONTENT_TYPE, APPLICATION_JSON);
-
-        return send(requestBuilder.body(signInRequest), TokenResponse.class, new TokenResponse());
+                        .contentType(MediaType.APPLICATION_JSON);
+        return send(requestBuilder.build(), AccountsResponse.class, null);
     }
 
     private <T, R> T send(

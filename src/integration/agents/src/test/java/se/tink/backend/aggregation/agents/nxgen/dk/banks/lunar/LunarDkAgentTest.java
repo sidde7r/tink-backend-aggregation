@@ -9,19 +9,8 @@ import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 
 public class LunarDkAgentTest {
 
-    private enum Arg implements ArgumentManager.ArgumentManagerEnum {
-        USERNAME,
-        PASSWORD,
-        ACCESS_PIN;
-
-        @Override
-        public boolean isOptional() {
-            return false;
-        }
-    }
-
-    private final ArgumentManager<LunarDkAgentTest.Arg> manager =
-            new ArgumentManager<>(LunarDkAgentTest.Arg.values());
+    private final ArgumentManager<ArgumentManager.UsernamePasswordArgumentEnum> manager =
+            new ArgumentManager<>(ArgumentManager.UsernamePasswordArgumentEnum.values());
 
     @Before
     public void before() {
@@ -36,9 +25,12 @@ public class LunarDkAgentTest {
     @Test
     public void testLoginAndRefresh() throws Exception {
         new AgentIntegrationTest.Builder("dk", "dk-lunar-nemid")
-                .addCredentialField(Field.Key.USERNAME, manager.get(Arg.USERNAME))
-                .addCredentialField(Field.Key.PASSWORD, manager.get(Arg.PASSWORD))
-                .addCredentialField(Field.Key.ACCESS_PIN, manager.get(Arg.ACCESS_PIN))
+                .addCredentialField(
+                        Field.Key.USERNAME,
+                        manager.get(ArgumentManager.UsernamePasswordArgumentEnum.USERNAME))
+                .addCredentialField(
+                        Field.Key.PASSWORD,
+                        manager.get(ArgumentManager.UsernamePasswordArgumentEnum.PASSWORD))
                 .expectLoggedIn(false)
                 .loadCredentialsBefore(true)
                 .saveCredentialsAfter(true)

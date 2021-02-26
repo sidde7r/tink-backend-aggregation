@@ -121,7 +121,7 @@ public final class LunarDkAgent extends AgentPlatformAgent
         return new TransactionalAccountRefreshController(
                 metricRefreshController,
                 updateController,
-                new LunarTransactionalAccountFetcher(apiClient),
+                new LunarTransactionalAccountFetcher(apiClient, accessorFactory, persistentStorage),
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
                         new TransactionKeyPaginationController<>(

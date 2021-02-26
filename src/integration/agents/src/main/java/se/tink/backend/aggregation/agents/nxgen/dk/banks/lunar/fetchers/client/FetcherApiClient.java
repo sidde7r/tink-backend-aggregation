@@ -13,7 +13,6 @@ import se.tink.backend.aggregation.agents.agentplatform.authentication.storage.P
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.LunarConstants;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.persistance.LunarAuthData;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.persistance.LunarDataAccessorFactory;
-import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.transactionalaccount.rpc.CardsResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.transactionalaccount.rpc.GoalDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.transactionalaccount.rpc.GoalsResponse;
@@ -34,12 +33,6 @@ public class FetcherApiClient {
     private final RandomValueGenerator randomValueGenerator;
     private final String languageCode;
     private LunarAuthData authData;
-
-    public AccountsResponse fetchAccounts() {
-        return getDefaultRequestBuilder(Url.ACCOUNTS_VIEW)
-                .type(MediaType.APPLICATION_JSON_TYPE)
-                .get(AccountsResponse.class);
-    }
 
     public GoalsResponse fetchSavingGoals() {
         return getDefaultRequestBuilder(Url.GOALS).get(GoalsResponse.class);

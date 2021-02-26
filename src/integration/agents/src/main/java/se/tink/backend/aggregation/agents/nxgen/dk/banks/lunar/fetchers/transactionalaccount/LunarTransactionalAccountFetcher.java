@@ -5,24 +5,39 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.BooleanUtils;
+import se.tink.backend.aggregation.agents.agentplatform.authentication.storage.PersistentStorageService;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.persistance.LunarAuthDataAccessor;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.persistance.LunarDataAccessorFactory;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.client.FetcherApiClient;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.transactionalaccount.entities.BaseResponseEntity;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.transactionalaccount.entities.CardEntity;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.entity.Party;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 @Slf4j
-@RequiredArgsConstructor
 public class LunarTransactionalAccountFetcher implements AccountFetcher<TransactionalAccount> {
 
     private final FetcherApiClient apiClient;
-    private List<Party> accountParties = new ArrayList<>();
+    private final LunarDataAccessorFactory accessorFactory;
+    private final PersistentStorage persistentStorage;
+    private final List<Party> accountParties;
+
+    public LunarTransactionalAccountFetcher(
+            FetcherApiClient apiClient,
+            LunarDataAccessorFactory accessorFactory,
+            PersistentStorage persistentStorage) {
+        this.apiClient = apiClient;
+        this.accessorFactory = accessorFactory;
+        this.persistentStorage = persistentStorage;
+        this.accountParties = new ArrayList<>();
+    }
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
@@ -33,13 +48,21 @@ public class LunarTransactionalAccountFetcher implements AccountFetcher<Transact
     }
 
     private Collection<TransactionalAccount> fetchCheckingAccounts() {
-        return apiClient.fetchAccounts().getAccounts().stream()
+        return getAccountsResponseFromStorage().getAccounts().stream()
                 .filter(AccountEntity::isLunarAccount)
                 .filter(BaseResponseEntity::notDeleted)
                 .map(this::toTransactionalAccountWithHoldersNames)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toList());
+    }
+
+    private AccountsResponse getAccountsResponseFromStorage() {
+        AccountsResponse accountsResponse = getLunarPersistedData().get().getAccountsResponse();
+        if (accountsResponse == null) {
+            throw new IllegalStateException("There is no Lunar accountsResponse in storage!");
+        }
+        return accountsResponse;
     }
 
     private Optional<TransactionalAccount> toTransactionalAccountWithHoldersNames(
@@ -86,5 +109,10 @@ public class LunarTransactionalAccountFetcher implements AccountFetcher<Transact
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toList());
+    }
+
+    private LunarAuthDataAccessor getLunarPersistedData() {
+        return accessorFactory.createAuthDataAccessor(
+                new PersistentStorageService(persistentStorage).readFromAgentPersistentStorage());
     }
 }

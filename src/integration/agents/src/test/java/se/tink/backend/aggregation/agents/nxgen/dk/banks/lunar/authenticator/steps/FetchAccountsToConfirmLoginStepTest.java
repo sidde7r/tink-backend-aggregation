@@ -6,6 +6,7 @@ import static org.mockito.Mockito.when;
 
 import agents_platform_framework.org.springframework.http.HttpStatus;
 import agents_platform_framework.org.springframework.web.server.ResponseStatusException;
+import java.nio.file.Paths;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 import org.junit.Before;
@@ -19,24 +20,27 @@ import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.per
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.persistance.LunarDataAccessorFactory;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.persistance.LunarProcessState;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.persistance.LunarProcessStateAccessor;
-import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.rpc.TokenResponse;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.request.AgentProceedNextStepAuthenticationRequest;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentFailedAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentSucceededAuthenticationResult;
-import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AccessTokenFetchingFailureError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AgentBankApiError;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AuthorizationError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.SessionExpiredError;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @RunWith(JUnitParamsRunner.class)
-public class SignInToLunarStepTest {
+public class FetchAccountsToConfirmLoginStepTest {
+
+    private static final String TEST_DATA_PATH =
+            "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/dk/banks/lunar/resources";
 
     private static final String DEVICE_ID = "some test id";
-    private static final String LUNAR_PASSWORD = "1234";
     private static final String ACCESS_TOKEN = "test_token";
     private static final String CHALLENGE = "1234567890123";
 
-    private SignInToLunarStep signInToLunarStep;
+    private FetchAccountsToConfirmLoginStep fetchAccountsToConfirmLoginStep;
     private AuthenticationApiClient apiClient;
     private AgentProceedNextStepAuthenticationRequest request;
     private LunarProcessStateAccessor stateAccessor;
@@ -47,13 +51,13 @@ public class SignInToLunarStepTest {
         LunarDataAccessorFactory dataAccessorFactory =
                 new LunarDataAccessorFactory(new ObjectMapperFactory().getInstance());
         apiClient = mock(AuthenticationApiClient.class);
-        signInToLunarStep = new SignInToLunarStep(dataAccessorFactory, apiClient);
+        fetchAccountsToConfirmLoginStep =
+                new FetchAccountsToConfirmLoginStep(dataAccessorFactory, apiClient);
 
         processState = new LunarProcessState();
         processState.setChallenge(CHALLENGE);
 
         LunarAuthData initialData = new LunarAuthData();
-        initialData.setLunarPassword(LUNAR_PASSWORD);
         initialData.setAccessToken(ACCESS_TOKEN);
         initialData.setDeviceId(DEVICE_ID);
 
@@ -67,21 +71,22 @@ public class SignInToLunarStepTest {
     }
 
     @Test
-    @Parameters({ACCESS_TOKEN, "new token"})
-    public void shouldSignInToLunarAndReturnSucceededResult(String token) {
+    public void shouldFetchAccountsToConfirmLoginAndReturnSucceededResult() {
         // given
-        TokenResponse tokenResponse = new TokenResponse();
-        tokenResponse.setToken(token);
-        when(apiClient.signIn(LUNAR_PASSWORD, ACCESS_TOKEN, DEVICE_ID)).thenReturn(tokenResponse);
+        AccountsResponse accountsResponse =
+                SerializationUtils.deserializeFromString(
+                        Paths.get(TEST_DATA_PATH, "accounts_response.json").toFile(),
+                        AccountsResponse.class);
+        when(apiClient.fetchAccounts(ACCESS_TOKEN, DEVICE_ID)).thenReturn(accountsResponse);
 
         // and
         LunarAuthData expectedData = new LunarAuthData();
-        expectedData.setLunarPassword(LUNAR_PASSWORD);
-        expectedData.setAccessToken(token);
+        expectedData.setAccessToken(ACCESS_TOKEN);
         expectedData.setDeviceId(DEVICE_ID);
+        expectedData.setAccountsResponse(accountsResponse);
 
         // when
-        AgentAuthenticationResult result = signInToLunarStep.execute(request);
+        AgentAuthenticationResult result = fetchAccountsToConfirmLoginStep.execute(request);
 
         // then
         assertThat(result)
@@ -91,11 +96,11 @@ public class SignInToLunarStepTest {
     }
 
     @Test
-    @Parameters(method = "failedSignInRequestParams")
-    public void shouldReturnFailedResultWhenSignInRequestFailed(
+    @Parameters(method = "failedFetchingParams")
+    public void shouldReturnFailedResultWhenFetchingOfAccountsFailed(
             boolean isAutoAuth, AgentBankApiError error) {
         // given
-        when(apiClient.signIn(LUNAR_PASSWORD, ACCESS_TOKEN, DEVICE_ID))
+        when(apiClient.fetchAccounts(ACCESS_TOKEN, DEVICE_ID))
                 .thenThrow(new ResponseStatusException(HttpStatus.NOT_FOUND));
 
         // and
@@ -108,16 +113,16 @@ public class SignInToLunarStepTest {
 
         // when
         AgentFailedAuthenticationResult result =
-                (AgentFailedAuthenticationResult) signInToLunarStep.execute(request);
+                (AgentFailedAuthenticationResult) fetchAccountsToConfirmLoginStep.execute(request);
 
         // then
         LunarTestUtils.assertFailedResultEquals(expected, result);
     }
 
-    private Object[] failedSignInRequestParams() {
+    private Object[] failedFetchingParams() {
         return new Object[] {
             new Object[] {true, new SessionExpiredError()},
-            new Object[] {false, new AccessTokenFetchingFailureError()},
+            new Object[] {false, new AuthorizationError()},
         };
     }
 
@@ -127,13 +132,11 @@ public class SignInToLunarStepTest {
     }
 
     @Test
-    @Parameters(method = "emptyTokenParams")
+    @Parameters(method = "nullAccountsResponseParams")
     public void shouldReturnFailedResultWhenTokenIsEmpty(
-            String token, boolean isAutoAuth, AgentBankApiError error) {
+            boolean isAutoAuth, AgentBankApiError error) {
         // given
-        TokenResponse tokenResponse = new TokenResponse();
-        tokenResponse.setToken(token);
-        when(apiClient.signIn(LUNAR_PASSWORD, ACCESS_TOKEN, DEVICE_ID)).thenReturn(tokenResponse);
+        when(apiClient.fetchAccounts(ACCESS_TOKEN, DEVICE_ID)).thenReturn(null);
 
         // and
         setAutoAuth(isAutoAuth);
@@ -145,18 +148,16 @@ public class SignInToLunarStepTest {
 
         // when
         AgentFailedAuthenticationResult result =
-                (AgentFailedAuthenticationResult) signInToLunarStep.execute(request);
+                (AgentFailedAuthenticationResult) fetchAccountsToConfirmLoginStep.execute(request);
 
         // then
         LunarTestUtils.assertFailedResultEquals(expected, result);
     }
 
-    private Object[] emptyTokenParams() {
+    private Object[] nullAccountsResponseParams() {
         return new Object[] {
-            new Object[] {null, true, new SessionExpiredError()},
-            new Object[] {null, false, new AccessTokenFetchingFailureError()},
-            new Object[] {"", true, new SessionExpiredError()},
-            new Object[] {"", false, new AccessTokenFetchingFailureError()},
+            new Object[] {true, new SessionExpiredError()},
+            new Object[] {false, new AuthorizationError()},
         };
     }
 }

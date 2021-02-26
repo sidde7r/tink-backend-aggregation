@@ -17,7 +17,6 @@ import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.per
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.persistance.LunarAuthDataAccessor;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.persistance.LunarDataAccessorFactory;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentFailedAuthenticationResult;
-import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AccessTokenFetchingFailureError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AccountBlockedError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AgentBankApiError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AgentError;
@@ -133,8 +132,8 @@ public class LunarAuthExceptionHandlerTest {
     }
 
     @Test
-    @Parameters(method = "signInFailedAuthResultParams")
-    public void shouldGetProperSignInFailedAuthResult(
+    @Parameters(method = "fetchAccountsFailedAuthResultParams")
+    public void shouldGetProperFetchAccountsFailedAuthResult(
             boolean isAutoAuth, AgentBankApiError expectedError) {
         // given
         LunarDataAccessorFactory dataAccessorFactory =
@@ -145,7 +144,7 @@ public class LunarAuthExceptionHandlerTest {
 
         // & when
         AgentFailedAuthenticationResult result =
-                LunarAuthExceptionHandler.getSignInFailedAuthResult(
+                LunarAuthExceptionHandler.getFetchAccountsFailedResult(
                         authDataAccessor,
                         new ResponseStatusException(HttpStatus.BAD_REQUEST),
                         isAutoAuth);
@@ -157,10 +156,10 @@ public class LunarAuthExceptionHandlerTest {
                 result);
     }
 
-    private Object[] signInFailedAuthResultParams() {
+    private Object[] fetchAccountsFailedAuthResultParams() {
         return new Object[] {
             new Object[] {true, new SessionExpiredError()},
-            new Object[] {false, new AccessTokenFetchingFailureError()},
+            new Object[] {false, new AuthorizationError()},
         };
     }
 }

@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.transactionalaccount;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -12,6 +13,11 @@ import java.util.List;
 import org.apache.commons.collections4.ListUtils;
 import org.junit.Before;
 import org.junit.Test;
+import se.tink.backend.aggregation.agents.agentplatform.authentication.ObjectMapperFactory;
+import se.tink.backend.aggregation.agents.agentplatform.authentication.storage.PersistentStorageService;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.persistance.LunarAuthData;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.persistance.LunarAuthDataAccessor;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.persistance.LunarDataAccessorFactory;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.client.FetcherApiClient;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.transactionalaccount.rpc.CardsResponse;
@@ -21,6 +27,7 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.account.identifiers.BbanIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.account.identifiers.TinkIdentifier;
@@ -39,17 +46,22 @@ public class LunarTransactionalAccountFetcherTest {
 
     private LunarTransactionalAccountFetcher accountFetcher;
     private FetcherApiClient apiClient;
+    private LunarDataAccessorFactory accessorFactory;
+    private PersistentStorage persistentStorage;
+    private AccountsResponse accountsResponse;
 
     @Before
     public void setup() {
+        accessorFactory = new LunarDataAccessorFactory(new ObjectMapperFactory().getInstance());
+        persistentStorage = new PersistentStorage();
         apiClient = mock(FetcherApiClient.class);
-        accountFetcher = new LunarTransactionalAccountFetcher(apiClient);
+        accountFetcher =
+                new LunarTransactionalAccountFetcher(apiClient, accessorFactory, persistentStorage);
 
-        when(apiClient.fetchAccounts())
-                .thenReturn(
-                        SerializationUtils.deserializeFromString(
-                                Paths.get(TEST_DATA_PATH, "accounts_response.json").toFile(),
-                                AccountsResponse.class));
+        accountsResponse =
+                SerializationUtils.deserializeFromString(
+                        Paths.get(TEST_DATA_PATH, "accounts_response.json").toFile(),
+                        AccountsResponse.class);
         when(apiClient.fetchSavingGoals())
                 .thenReturn(
                         SerializationUtils.deserializeFromString(
@@ -69,7 +81,10 @@ public class LunarTransactionalAccountFetcherTest {
 
     @Test
     public void shouldFetchAllAccountsAndFilterNotSuitableOnes() {
-        // given & when
+        // given
+        storeTestData(accountsResponse);
+
+        // when
         List<TransactionalAccount> expected =
                 ListUtils.union(
                         getExpectedCheckingAccounts(), getExpectedSavingsAccounts(getAllParties()));
@@ -83,9 +98,18 @@ public class LunarTransactionalAccountFetcherTest {
         }
     }
 
+    private void storeTestData(AccountsResponse accountsResponse) {
+        LunarAuthData authData = new LunarAuthData();
+        authData.setAccountsResponse(accountsResponse);
+        getTestDataAccessor().storeData(authData);
+    }
+
     @Test
     public void shouldReturnOnlyCheckingAccountsWhenUserHasNoGoals() {
         // given
+        storeTestData(accountsResponse);
+
+        // and
         when(apiClient.fetchSavingGoals()).thenReturn(new GoalsResponse());
 
         // when
@@ -103,7 +127,7 @@ public class LunarTransactionalAccountFetcherTest {
     @Test
     public void shouldReturnOnlySavingsAccountsWhenUserHasNoCheckingAccounts() {
         // given
-        when(apiClient.fetchAccounts()).thenReturn(new AccountsResponse());
+        storeTestData(new AccountsResponse());
 
         // when
         List<TransactionalAccount> expected = getExpectedSavingsAccounts(Collections.emptyList());
@@ -115,6 +139,17 @@ public class LunarTransactionalAccountFetcherTest {
         for (int i = 0; i < result.size(); i++) {
             assertThat(result.get(i)).isEqualToComparingFieldByFieldRecursively(expected.get(i));
         }
+    }
+
+    @Test
+    public void shouldThrowExceptionWhenStorageDoesNotContainAccountsResponse() {
+        // given & when
+        Throwable result = catchThrowable(() -> accountFetcher.fetchAccounts());
+
+        // then
+        assertThat(result)
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("There is no Lunar accountsResponse in storage!");
     }
 
     private List<TransactionalAccount> getExpectedCheckingAccounts() {
@@ -227,5 +262,10 @@ public class LunarTransactionalAccountFetcherTest {
                 new Party("Account Holder", Party.Role.HOLDER),
                 new Party("Second account first holder", Party.Role.HOLDER),
                 new Party("Second account second holder", Party.Role.HOLDER));
+    }
+
+    private LunarAuthDataAccessor getTestDataAccessor() {
+        return accessorFactory.createAuthDataAccessor(
+                new PersistentStorageService(persistentStorage).readFromAgentPersistentStorage());
     }
 }
