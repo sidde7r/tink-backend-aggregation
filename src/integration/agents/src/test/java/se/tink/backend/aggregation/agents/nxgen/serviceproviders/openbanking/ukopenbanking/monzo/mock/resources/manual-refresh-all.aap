@@ -1,146 +1,236 @@
 
 REQUEST 1
 GET https://api.monzo.com/open-banking/.well-known/openid-configuration
-X-Aggregator: Tink Testing
 x-fapi-financial-id: 001580000103U9RAAU
 
 RESPONSE 1
 200
-Date: Wed, 04 Nov 2020 13:30:50 GMT
 Content-Type: application/json
-Transfer-Encoding: chunked
-Connection: keep-alive
-Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
-X-Content-Type-Options: nosniff
-Server: cloudflare
 
-{"issuer":"https://api.monzo.com/open-banking/","registration_endpoint":"https://openbanking.monzo.com/oauth2/register","authorization_endpoint":"https://verify.monzo.com/open-banking/authorize","token_endpoint":"https://openbanking.monzo.com/oauth2/token","token_endpoint_auth_methods_supported":["tls_client_auth"],"jwks_uri":"https://keystore.openbanking.org.uk/001580000103U9RAAU/KM71NjuERWSOVWbve6UWqg.jwks","scopes_supported":["payments","openid","accounts"],"claims_supported":["openbanking_intent_id","sub","acr"],"response_types_supported":["code id_token"],"subject_types_supported":["public"],"grant_types_supported":["authorization_code","client_credentials","refresh_token"],"id_token_signing_alg_values_supported":["PS256"],"id_token_encryption_alg_values_supported":["PS256"],"response_modes_supported":["fragment"],"request_object_signing_alg_values_supported":["PS256"],"request_parameter_supported":true,"claims_parameter_supported":true}
-
-
+{
+    "issuer": "https://api.monzo.com/open-banking/",
+    "registration_endpoint": "https://openbanking.monzo.com/oauth2/register",
+    "authorization_endpoint": "https://verify.monzo.com/open-banking/authorize",
+    "token_endpoint": "https://openbanking.monzo.com/oauth2/token",
+    "token_endpoint_auth_methods_supported": [
+        "tls_client_auth"
+    ],
+    "jwks_uri": "https://keystore.openbanking.org.uk/001580000103U9RAAU/KM71NjuERWSOVWbve6UWqg.jwks",
+    "scopes_supported": [
+        "payments",
+        "openid",
+        "accounts"
+    ],
+    "claims_supported": [
+        "openbanking_intent_id",
+        "sub",
+        "acr"
+    ],
+    "response_types_supported": [
+        "code id_token"
+    ],
+    "subject_types_supported": [
+        "public"
+    ],
+    "grant_types_supported": [
+        "authorization_code",
+        "client_credentials",
+        "refresh_token"
+    ],
+    "id_token_signing_alg_values_supported": [
+        "PS256"
+    ],
+    "id_token_encryption_alg_values_supported": [
+        "PS256"
+    ],
+    "response_modes_supported": [
+        "fragment"
+    ],
+    "request_object_signing_alg_values_supported": [
+        "PS256"
+    ],
+    "request_parameter_supported": true,
+    "claims_parameter_supported": true
+}
 
 REQUEST 2
 POST https://openbanking.monzo.com/oauth2/token
 Content-Type: application/x-www-form-urlencoded
 Accept: application/json
-X-Aggregator: Tink Testing
-x-fapi-financial-id: 001580000103U9RAAU
 
-grant_type=client_credentials&scope=accounts&redirect_uri=https%3A%2F%2F127.0.0.1%3A7357%2Fapi%2Fv1%2Fthirdparty%2Fcallback&client_id=dummyClientId
+grant_type=client_credentials
+    &scope=accounts
+    &redirect_uri=https%3A%2F%2F127.0.0.1%3A7357%2Fapi%2Fv1%2Fthirdparty%2Fcallback
+    &client_id=dummyClientId
 
 RESPONSE 2
 200
-Cache-Control: no-cache
-Content-Length: 316
 Content-Type: application/json; charset=UTF-8
-Date: Wed, 04 Nov 2020 13:30:50 GMT
-x-fapi-financial-id: 001580000103U9RAAU
 
-{"access_token":"DUMMY_ACCESS_TOKEN","token_type":"client_credentials","expires_in":3600,"scope":""}
-
-
+{
+    "access_token": "DUMMY_ACCESS_TOKEN",
+    "token_type": "client_credentials",
+    "expires_in": 3600,
+    "scope": ""
+}
 
 REQUEST 3
 POST https://openbanking.monzo.com/open-banking/v3.1/aisp/account-access-consents
 Authorization: Client_credentials DUMMY_ACCESS_TOKEN
 Accept: application/json
 Content-Type: application/json
-X-Aggregator: Tink Testing
 x-fapi-financial-id: 001580000103U9RAAU
 x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
 
-{"Data":{"Permissions":["ReadAccountsDetail","ReadTransactionsCredits","ReadDirectDebits","ReadTransactionsDebits","ReadBeneficiariesDetail","ReadPartyPSU","ReadBalances","ReadStandingOrdersDetail","ReadTransactionsDetail"]},"Risk":{}}
+{
+    "Data": {
+        "Permissions": [
+            "ReadAccountsDetail",
+            "ReadTransactionsCredits",
+            "ReadDirectDebits",
+            "ReadTransactionsDebits",
+            "ReadBeneficiariesDetail",
+            "ReadPartyPSU",
+            "ReadBalances",
+            "ReadStandingOrdersDetail",
+            "ReadTransactionsDetail"
+        ]
+    },
+    "Risk": {}
+}
 
 RESPONSE 3
 201
-Content-Length: 595
 Content-Type: application/json; charset=UTF-8
-Date: Wed, 04 Nov 2020 13:30:50 GMT
-x-fapi-financial-id: 001580000103U9RAAU
 x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
 
-{"Data":{"Permissions":["ReadAccountsDetail","ReadTransactionsCredits","ReadDirectDebits","ReadTransactionsDebits","ReadBeneficiariesDetail","ReadPartyPSU","ReadBalances","ReadStandingOrdersDetail","ReadTransactionsDetail"],"ConsentId":"obaispaccountinformationconsent_0000A0r7sz6QixlrvKIkb4","CreationDateTime":"2020-11-04T13:30:50.767Z","Status":"AwaitingAuthorisation","StatusUpdateDateTime":"2020-11-04T13:30:50.767Z"},"Risk":{},"Links":{"Self":"https://openbanking.monzo.com/open-banking/v3.1/aisp/account-access-consents/obaispaccountinformationconsent_0000A0r7sz6QixlrvKIkb4"},"Meta":{}}
-
-
+{
+    "Data": {
+        "Permissions": [
+            "ReadAccountsDetail",
+            "ReadTransactionsCredits",
+            "ReadDirectDebits",
+            "ReadTransactionsDebits",
+            "ReadBeneficiariesDetail",
+            "ReadPartyPSU",
+            "ReadBalances",
+            "ReadStandingOrdersDetail",
+            "ReadTransactionsDetail"
+        ],
+        "ConsentId": "obaispaccountinformationconsent_0000A0r7sz6QixlrvKIkb4",
+        "CreationDateTime": "2020-11-04T13:30:50.767Z",
+        "Status": "AwaitingAuthorisation",
+        "StatusUpdateDateTime": "2020-11-04T13:30:50.767Z"
+    },
+    "Risk": {},
+    "Links": {
+        "Self": "https://openbanking.monzo.com/open-banking/v3.1/aisp/account-access-consents/obaispaccountinformationconsent_0000A0r7sz6QixlrvKIkb4"
+    },
+    "Meta": {}
+}
 
 REQUEST 4
 GET https://keystore.openbanking.org.uk/001580000103U9RAAU/KM71NjuERWSOVWbve6UWqg.jwks
-X-Aggregator: Tink Testing
-x-fapi-financial-id: 001580000103U9RAAU
 
 RESPONSE 4
 200
 Content-Type: application/jwk+json
-Content-Length: 13853
 Connection: keep-alive
-Last-Modified: Thu, 17 Sep 2020 12:58:00 GMT
-Accept-Ranges: bytes
-Server: AmazonS3
-Date: Wed, 04 Nov 2020 13:31:01 GMT
-Via: 1.1 4d362c0e30ca2cfa3855b041727beaa2.cloudfront.net (CloudFront)
 
 {"keys": []}
-
-
 
 REQUEST 5
 POST https://openbanking.monzo.com/oauth2/token
 Content-Type: application/x-www-form-urlencoded
 Accept: application/json
-X-Aggregator: Tink Testing
-x-fapi-financial-id: 001580000103U9RAAU
 
-grant_type=authorization_code&redirect_uri=https%3A%2F%2F127.0.0.1%3A7357%2Fapi%2Fv1%2Fthirdparty%2Fcallback&client_id=dummyClientId&code=DUMMY_ACCESS_TOKEN2
+grant_type=authorization_code
+    &redirect_uri=https%3A%2F%2F127.0.0.1%3A7357%2Fapi%2Fv1%2Fthirdparty%2Fcallback
+    &client_id=dummyClientId
+    &code=DUMMY_ACCESS_TOKEN2
 
 RESPONSE 5
 200
-Cache-Control: no-cache
-Content-Length: 1614
 Content-Type: application/json; charset=UTF-8
-Date: Wed, 04 Nov 2020 13:31:00 GMT
-Pragma: no-cache
-x-fapi-financial-id: 001580000103U9RAAU
 
-{"access_token":"DUMMY_ACCESS_TOKEN2","token_type":"Bearer","expires_in":3600,"refresh_token":"REFRESH_TOKEN","scope":"openid accounts","id_token":"DUMMY_ACCESS_TOKEN2"}
-
-
+{
+    "access_token": "DUMMY_ACCESS_TOKEN2",
+    "token_type": "Bearer",
+    "expires_in": 3600,
+    "refresh_token": "REFRESH_TOKEN",
+    "scope": "openid accounts",
+    "id_token": "DUMMY_ACCESS_TOKEN2"
+}
 
 REQUEST 6
 GET https://openbanking.monzo.com/open-banking/v3.1/aisp/accounts
 Authorization: Bearer DUMMY_ACCESS_TOKEN2
 Accept: application/json
-X-Aggregator: Tink Testing
-x-fapi-financial-id: 001580000103U9RAAU
 x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
 
 RESPONSE 6
 200
-Content-Length: 458
 Content-Type: application/json; charset=UTF-8
-Date: Wed, 04 Nov 2020 13:31:00 GMT
-x-fapi-financial-id: 001580000103U9RAAU
 x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
 
-{"Data":{"Account":[{"AccountId":"acc_00009x3PRejaI4rXF0Dbvd","Status":"Enabled","StatusUpdateDateTime":"2020-07-13T20:15:43.668Z","Currency":"GBP","AccountType":"Personal","AccountSubType":"CurrentAccount","Description":"Personal Account","Account":[{"SchemeName":"UK.OBIE.SortCodeAccountNumber","Identification":"04000484427126","Name":"John Tinker"}]}]},"Links":{"Self":"https://openbanking.monzo.com/open-banking/v3.1/aisp/accounts"},"Meta":{}}
-
-
+{
+    "Data": {
+        "Account": [
+            {
+                "AccountId": "acc_00009x3PRejaI4rXF0Dbvd",
+                "Status": "Enabled",
+                "StatusUpdateDateTime": "2020-07-13T20:15:43.668Z",
+                "Currency": "GBP",
+                "AccountType": "Personal",
+                "AccountSubType": "CurrentAccount",
+                "Description": "Personal Account",
+                "Account": [
+                    {
+                        "SchemeName": "UK.OBIE.SortCodeAccountNumber",
+                        "Identification": "04000484427126",
+                        "Name": "John Tinker"
+                    }
+                ]
+            }
+        ]
+    },
+    "Links": {
+        "Self": "https://openbanking.monzo.com/open-banking/v3.1/aisp/accounts"
+    },
+    "Meta": {}
+}
 
 REQUEST 7
 GET https://openbanking.monzo.com/open-banking/v3.1/aisp/accounts/acc_00009x3PRejaI4rXF0Dbvd/balances
 Authorization: Bearer DUMMY_ACCESS_TOKEN2
 Accept: application/json
-X-Aggregator: Tink Testing
-x-fapi-financial-id: 001580000103U9RAAU
 x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
 
 RESPONSE 7
 200
-Content-Length: 336
 Content-Type: application/json; charset=UTF-8
-Date: Wed, 04 Nov 2020 13:31:00 GMT
-x-fapi-financial-id: 001580000103U9RAAU
 x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
 
-{"Data":{"Balance":[{"AccountId":"acc_00009x3PRejaI4rXF0Dbvd","CreditDebitIndicator":"Credit","Type":"InterimAvailable","DateTime":"2020-11-04T13:28:23.009Z","Amount":{"Amount":"50.6400","Currency":"GBP"}}]},"Links":{"Self":"https://openbanking.monzo.com/open-banking/v3.1/aisp/accounts/acc_00009x3PRejaI4rXF0Dbvd/balances"},"Meta":{}}
+{
+    "Data": {
+        "Balance": [
+            {
+                "AccountId": "acc_00009x3PRejaI4rXF0Dbvd",
+                "CreditDebitIndicator": "Credit",
+                "Type": "InterimAvailable",
+                "DateTime": "2020-11-04T13:28:23.009Z",
+                "Amount": {
+                    "Amount": "50.6400",
+                    "Currency": "GBP"
+                }
+            }
+        ]
+    },
+    "Links": {
+        "Self": "https://openbanking.monzo.com/open-banking/v3.1/aisp/accounts/acc_00009x3PRejaI4rXF0Dbvd/balances"
+    },
+    "Meta": {}
+}
 
 
 
@@ -148,34 +238,36 @@ REQUEST 8
 GET https://openbanking.monzo.com/open-banking/v3.1/aisp/accounts/acc_00009x3PRejaI4rXF0Dbvd/transactions?fromBookingDateTime=1990-05-10T00:00:00Z
 Authorization: Bearer DUMMY_ACCESS_TOKEN2
 Accept: application/json
-X-Aggregator: Tink Testing
-x-fapi-financial-id: 001580000103U9RAAU
 x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
 
 RESPONSE 8
 200
 Content-Type: application/json; charset=UTF-8
-Date: Wed, 04 Nov 2020 13:31:02 GMT
-x-fapi-financial-id: 001580000103U9RAAU
 x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
-Transfer-Encoding: chunked
 
 {"Data":{"Transaction":[{"AccountId":"acc_00009x3PRejaI4rXF0Dbvd","TransactionId":"tx_00009yi2isqmm5qyNHUQHy","TransactionReference":"400000000710577650","CreditDebitIndicator":"Credit","Status":"Booked","TransactionMutability":"Mutable","BookingDateTime":"2020-09-01T08:36:23.353Z","TransactionInformation":"SAVING POTS","Amount":{"Amount":"265.0000","Currency":"GBP"},"ProprietaryBankTransactionCode":{"Code":"payport_faster_payments","Issuer":"Monzo"},"DebtorAccount":{"SchemeName":"UK.OBIE.SortCodeAccountNumber","Identification":"40476470719927","Name":"Frisby C"},"SupplementaryData":{"Declined":false,"RawTransactionDescription":"SAVING POTS"}},{"AccountId":"acc_00009x3PRejaI4rXF0Dbvd","TransactionId":"tx_00009yi2nHeqU0mw0fozAX","CreditDebitIndicator":"Debit","Status":"Booked","TransactionMutability":"Immutable","BookingDateTime":"2020-09-01T08:37:10.977Z","TransactionInformation":"Xmas / Birthdays ","Amount":{"Amount":"100.0000","Currency":"GBP"},"ProprietaryBankTransactionCode":{"Code":"uk_retail_pot","Issuer":"Monzo"},"SupplementaryData":{"Declined":false,"RawTransactionDescription":"pot_00009xAv3NWRBqFTQQCwM5"}},{"AccountId":"acc_00009x3PRejaI4rXF0Dbvd","TransactionId":"tx_00009yi2nIJc2S7kVk4ncg","CreditDebitIndicator":"Debit","Status":"Booked","BookingDateTime":"2020-09-01T08:37:10.978Z","TransactionInformation":"Season Ticket ","Amount":{"Amount":"100.0000","Currency":"GBP"},"ProprietaryBankTransactionCode":{"Code":"uk_retail_pot","Issuer":"Monzo"},"SupplementaryData":{"Declined":false,"RawTransactionDescription":"pot_00009xAuqJutHgWMThQ20v"}},{"AccountId":"acc_00009x3PRejaI4rXF0Dbvd","TransactionId":"tx_00009yi2nIHUAMe0YIGNHe","CreditDebitIndicator":"Debit","Status":"Booked","BookingDateTime":"2020-09-01T08:37:10.984Z","TransactionInformation":"Straya Fund","Amount":{"Amount":"5.0000","Currency":"GBP"},"ProprietaryBankTransactionCode":{"Code":"uk_retail_pot","Issuer":"Monzo"},"SupplementaryData":{"Declined":false,"RawTransactionDescription":"pot_00009xAv7KeNoEv3LjdtnF"}},{"AccountId":"acc_00009x3PRejaI4rXF0Dbvd","TransactionId":"tx_00009yi2nIwxg9oycvfUvq","CreditDebitIndicator":"Debit","Status":"Booked","BookingDateTime":"2020-09-01T08:37:10.988Z","TransactionInformation":"Wedding","Amount":{"Amount":"5.0000","Currency":"GBP"},"ProprietaryBankTransactionCode":{"Code":"uk_retail_pot","Issuer":"Monzo"},"SupplementaryData":{"Declined":false,"RawTransactionDescription":"pot_00009xAvAJ1oISzLBg1Cr3"}},{"AccountId":"acc_00009x3PRejaI4rXF0Dbvd","TransactionId":"tx_00009yi2nJoUT7VvFJlRWz","CreditDebitIndicator":"Debit","Status":"Booked","BookingDateTime":"2020-09-01T08:37:10.991Z","TransactionInformation":"Car Insurance Simon ","Amount":{"Amount":"50.0000","Currency":"GBP"},"ProprietaryBankTransactionCode":{"Code":"uk_retail_pot","Issuer":"Monzo"},"SupplementaryData":{"Declined":false,"RawTransactionDescription":"pot_00009xAuuE6GqqeqH09PSz"}},{"AccountId":"acc_00009x3PRejaI4rXF0Dbvd","TransactionId":"tx_00009yi2nJKiFqbyQfenVh","CreditDebitIndicator":"Debit","Status":"Booked","BookingDateTime":"2020-09-01T08:37:11.168Z","TransactionInformation":"Mat Leave","Amount":{"Amount":"5.0000","Currency":"GBP"},"ProprietaryBankTransactionCode":{"Code":"uk_retail_pot","Issuer":"Monzo"},"SupplementaryData":{"Declined":false,"RawTransactionDescription":"pot_00009xAvCu7jLcJ2j1mzXV"}},{"AccountId":"acc_00009x3PRejaI4rXF0Dbvd","TransactionId":"tx_00009yvJtcCrDlibBfhCiI","CreditDebitIndicator":"Credit","Status":"Booked","BookingDateTime":"2020-09-07T18:20:03.65Z","TransactionInformation":"Xmas / Birthdays ","Amount":{"Amount":"99.0000","Currency":"GBP"},"ProprietaryBankTransactionCode":{"Code":"uk_retail_pot","Issuer":"Monzo"},"SupplementaryData":{"Declined":false,"RawTransactionDescription":"pot_00009xAv3NWRBqFTQQCwM5"}},{"AccountId":"acc_00009x3PRejaI4rXF0Dbvd","TransactionId":"tx_00009yvJzPjCWnyHMeZeYz","CreditDebitIndicator":"Debit","Status":"Booked","BookingDateTime":"2020-09-07T18:21:06.574Z","TransactionInformation":"Mixtiles","Amount":{"Amount":"99.0000","Currency":"GBP"},"ProprietaryBankTransactionCode":{"Code":"mastercard","Issuer":"Monzo"},"MerchantDetails":{"MerchantCategoryCode":"5691"},"SupplementaryData":{"Declined":false,"RawTransactionDescription":"MIXTILES               +13479603605  NLD"}},{"AccountId":"acc_00009x3PRejaI4rXF0Dbvd","TransactionId":"tx_00009z0gEsxBJur2z7OCFV","CreditDebitIndicator":"Credit","Status":"Booked","BookingDateTime":"2020-09-10T08:23:58.343Z","TransactionInformation":"SAVING POTS","Amount":{"Amount":"90.0000","Currency":"GBP"},"ProprietaryBankTransactionCode":{"Code":"payport_faster_payments","Issuer":"Monzo"},"DebtorAccount":{"SchemeName":"UK.OBIE.SortCodeAccountNumber","Identification":"40476470719927","Name":"Frisby C"},"SupplementaryData":{"Declined":false,"RawTransactionDescription":"SAVING POTS"}},{"AccountId":"acc_00009x3PRejaI4rXF0Dbvd","TransactionId":"tx_00009z0x0mERDG1VRhq0bR","CreditDebitIndicator":"Debit","Status":"Booked","BookingDateTime":"2020-09-10T11:31:54.388Z","TransactionInformation":"Lidl Gb Shirebrook","Amount":{"Amount":"39.7800","Currency":"GBP"},"ProprietaryBankTransactionCode":{"Code":"mastercard","Issuer":"Monzo"},"MerchantDetails":{"MerchantCategoryCode":"5411"},"SupplementaryData":{"Declined":false,"RawTransactionDescription":"LIDL GB SHIREBROOK     SHIREBROOK    GBR"}},{"AccountId":"acc_00009x3PRejaI4rXF0Dbvd","TransactionId":"tx_00009z0zEFflGR3drH5mBF","CreditDebitIndicator":"Debit","Status":"Booked","BookingDateTime":"2020-09-10T11:56:45.151Z","TransactionInformation":"Co-op","Amount":{"Amount":"7.5000","Currency":"GBP"},"ProprietaryBankTransactionCode":{"Code":"mastercard","Issuer":"Monzo"},"MerchantDetails":{"MerchantCategoryCode":"5411"},"SupplementaryData":{"Declined":false,"RawTransactionDescription":"CO-OP GROUP FOOD RETAI MANSFIELD     GBR"}},{"AccountId":"acc_00009x3PRejaI4rXF0Dbvd","TransactionId":"tx_00009z1O1QBvLGknZT7Ap8","CreditDebitIndicator":"Debit","Status":"Booked","BookingDateTime":"2020-09-10T16:34:33.606Z","TransactionInformation":"Brinsley Fish Bar","Amount":{"Amount":"2.3000","Currency":"GBP"},"ProprietaryBankTransactionCode":{"Code":"mastercard","Issuer":"Monzo"},"MerchantDetails":{"MerchantCategoryCode":"5814"},"SupplementaryData":{"Declined":false,"RawTransactionDescription":"Brinsley fish bar      Nottingham    GBR"}},{"AccountId":"acc_00009x3PRejaI4rXF0Dbvd","TransactionId":"tx_00009z5F147XHKwV2btrPA","CreditDebitIndicator":"Debit","Status":"Booked","BookingDateTime":"2020-09-12T13:12:29.774Z","TransactionInformation":"Morrisons Petrol Station","Amount":{"Amount":"10.0300","Currency":"GBP"},"ProprietaryBankTransactionCode":{"Code":"mastercard","Issuer":"Monzo"},"MerchantDetails":{"MerchantCategoryCode":"5541"},"SupplementaryData":{"Declined":false,"RawTransactionDescription":"W M MORRISON PETROL    MANSFIELD     GBR"}},{"AccountId":"acc_00009x3PRejaI4rXF0Dbvd","TransactionId":"tx_00009z5NjvBY963hgvIjkf","CreditDebitIndicator":"Debit","Status":"Booked","BookingDateTime":"2020-09-12T14:50:14.578Z","TransactionInformation":"John Fretwell Sporting","Amount":{"Amount":"2.2000","Currency":"GBP"},"ProprietaryBankTransactionCode":{"Code":"mastercard","Issuer":"Monzo"},"MerchantDetails":{"MerchantCategoryCode":"7997"},"SupplementaryData":{"Declined":false,"RawTransactionDescription":"JOHN FRETWELL SPORTING NOTTS GREAT B GBR"}},{"AccountId":"acc_00009x3PRejaI4rXF0Dbvd","TransactionId":"tx_00009z5RthID3KMjxwhrfN","CreditDebitIndicator":"Debit","Status":"Booked","BookingDateTime":"2020-09-12T15:36:49.783Z","TransactionInformation":"John Fretwell Sporting","Amount":{"Amount":"7.8500","Currency":"GBP"},"ProprietaryBankTransactionCode":{"Code":"mastercard","Issuer":"Monzo"},"MerchantDetails":{"MerchantCategoryCode":"7997"},"SupplementaryData":{"Declined":false,"RawTransactionDescription":"JOHN FRETWELL SPORTING NOTTS GREAT B GBR"}},{"AccountId":"acc_00009x3PRejaI4rXF0Dbvd","TransactionId":"tx_00009z9rSva3CJq4g1Y09J","CreditDebitIndicator":"Debit","Status":"Booked","BookingDateTime":"2020-09-14T18:42:10.059Z","TransactionInformation":"Morrisons","Amount":{"Amount":"3.0000","Currency":"GBP"},"ProprietaryBankTransactionCode":{"Code":"mastercard","Issuer":"Monzo"},"MerchantDetails":{"MerchantCategoryCode":"5411"},"SupplementaryData":{"Declined":false,"RawTransactionDescription":"WM MORRISONS PLC       MANSFIELD     GBR"}},{"AccountId":"acc_00009x3PRejaI4rXF0Dbvd","TransactionId":"tx_00009zSuJ9UsaogaharOl7","CreditDebitIndicator":"Debit","Status":"Booked","BookingDateTime":"2020-09-23T23:13:31.791Z","TransactionInformation":"Sent from Monzo","Amount":{"Amount":"10.0000","Currency":"GBP"},"ProprietaryBankTransactionCode":{"Code":"payport_faster_payments","Issuer":"Monzo"},"CreditorAccount":{"SchemeName":"UK.OBIE.SortCodeAccountNumber","Identification":"40476470719927","Name":"John Tinker"},"SupplementaryData":{"Declined":false,"RawTransactionDescription":"Sent from Monzo"}},{"AccountId":"acc_00009x3PRejaI4rXF0Dbvd","TransactionId":"tx_00009znFTCLSqH6SNcPtlB","CreditDebitIndicator":"Credit","Status":"Booked","BookingDateTime":"2020-10-03T18:44:52.661Z","TransactionInformation":"SAVING POTS","Amount":{"Amount":"210.0000","Currency":"GBP"},"ProprietaryBankTransactionCode":{"Code":"payport_faster_payments","Issuer":"Monzo"},"DebtorAccount":{"SchemeName":"UK.OBIE.SortCodeAccountNumber","Identification":"40476470719927","Name":"Frisby C"},"SupplementaryData":{"Declined":false,"RawTransactionDescription":"SAVING POTS"}},{"AccountId":"acc_00009x3PRejaI4rXF0Dbvd","TransactionId":"tx_00009znFX3ZDQB5x7WyMTZ","CreditDebitIndicator":"Debit","Status":"Booked","BookingDateTime":"2020-10-03T18:45:34.496Z","TransactionInformation":"Season Ticket ","Amount":{"Amount":"50.0000","Currency":"GBP"},"ProprietaryBankTransactionCode":{"Code":"uk_retail_pot","Issuer":"Monzo"},"SupplementaryData":{"Declined":false,"RawTransactionDescription":"pot_00009xAuqJutHgWMThQ20v"}},{"AccountId":"acc_00009x3PRejaI4rXF0Dbvd","TransactionId":"tx_00009znFX4HAml2KodlXNp","CreditDebitIndicator":"Debit","Status":"Booked","BookingDateTime":"2020-10-03T18:45:34.497Z","TransactionInformation":"Straya Fund","Amount":{"Amount":"70.0000","Currency":"GBP"},"ProprietaryBankTransactionCode":{"Code":"uk_retail_pot","Issuer":"Monzo"},"SupplementaryData":{"Declined":false,"RawTransactionDescription":"pot_00009xAv7KeNoEv3LjdtnF"}},{"AccountId":"acc_00009x3PRejaI4rXF0Dbvd","TransactionId":"tx_00009znFX48JJhPcAUJqHB","CreditDebitIndicator":"Debit","Status":"Booked","BookingDateTime":"2020-10-03T18:45:34.51Z","TransactionInformation":"Car Insurance Simon ","Amount":{"Amount":"70.0000","Currency":"GBP"},"ProprietaryBankTransactionCode":{"Code":"uk_retail_pot","Issuer":"Monzo"},"SupplementaryData":{"Declined":false,"RawTransactionDescription":"pot_00009xAuuE6GqqeqH09PSz"}},{"AccountId":"acc_00009x3PRejaI4rXF0Dbvd","TransactionId":"tx_00009zqoXx4Z8GRDWh9Ddp","CreditDebitIndicator":"Debit","Status":"Booked","BookingDateTime":"2020-10-05T12:02:02.749Z","TransactionInformation":"Annual Bills ","Amount":{"Amount":"10.0000","Currency":"GBP"},"ProprietaryBankTransactionCode":{"Code":"uk_retail_pot","Issuer":"Monzo"},"SupplementaryData":{"Declined":false,"RawTransactionDescription":"pot_00009zqoXvBa9CR8Pu8YzK"}},{"AccountId":"acc_00009x3PRejaI4rXF0Dbvd","TransactionId":"tx_0000A040ZVghe0jCqRiuaP","CreditDebitIndicator":"Credit","Status":"Booked","BookingDateTime":"2020-10-11T20:48:02.077Z","TransactionInformation":"Annual Bills ","Amount":{"Amount":"10.0000","Currency":"GBP"},"ProprietaryBankTransactionCode":{"Code":"uk_retail_pot","Issuer":"Monzo"},"SupplementaryData":{"Declined":false,"RawTransactionDescription":"pot_00009zqoXvBa9CR8Pu8YzK"}},{"AccountId":"acc_00009x3PRejaI4rXF0Dbvd","TransactionId":"tx_0000A040a5yKjwEwJ2EpUX","CreditDebitIndicator":"Credit","Status":"Booked","BookingDateTime":"2020-10-11T20:48:08.444Z","TransactionInformation":"Mat Leave","Amount":{"Amount":"5.0000","Currency":"GBP"},"ProprietaryBankTransactionCode":{"Code":"uk_retail_pot","Issuer":"Monzo"},"SupplementaryData":{"Declined":false,"RawTransactionDescription":"pot_00009xAvCu7jLcJ2j1mzXV"}},{"AccountId":"acc_00009x3PRejaI4rXF0Dbvd","TransactionId":"tx_0000A040aUTLeH2PivWkOg","CreditDebitIndicator":"Credit","Status":"Booked","BookingDateTime":"2020-10-11T20:48:12.721Z","TransactionInformation":"Wedding","Amount":{"Amount":"5.0000","Currency":"GBP"},"ProprietaryBankTransactionCode":{"Code":"uk_retail_pot","Issuer":"Monzo"},"SupplementaryData":{"Declined":false,"RawTransactionDescription":"pot_00009xAvAJ1oISzLBg1Cr3"}},{"AccountId":"acc_00009x3PRejaI4rXF0Dbvd","TransactionId":"tx_0000A040jydyqDR12JUlIh","CreditDebitIndicator":"Credit","Status":"Booked","BookingDateTime":"2020-10-11T20:49:55.591Z","TransactionInformation":"Straya Fund","Amount":{"Amount":"40.0000","Currency":"GBP"},"ProprietaryBankTransactionCode":{"Code":"uk_retail_pot","Issuer":"Monzo"},"SupplementaryData":{"Declined":false,"RawTransactionDescription":"pot_00009xAv7KeNoEv3LjdtnF"}},{"AccountId":"acc_00009x3PRejaI4rXF0Dbvd","TransactionId":"tx_0000A040o6nkSAnUL3IAef","CreditDebitIndicator":"Debit","Status":"Booked","BookingDateTime":"2020-10-11T20:50:40.394Z","TransactionInformation":"Sent from Monzo","Amount":{"Amount":"56.0000","Currency":"GBP"},"ProprietaryBankTransactionCode":{"Code":"payport_faster_payments","Issuer":"Monzo"},"CreditorAccount":{"SchemeName":"UK.OBIE.SortCodeAccountNumber","Identification":"40476470719927","Name":"John Tinker"},"SupplementaryData":{"Declined":false,"RawTransactionDescription":"Sent from Monzo"}},{"AccountId":"acc_00009x3PRejaI4rXF0Dbvd","TransactionId":"tx_0000A0DWXzkFrnvUGFyu0H","CreditDebitIndicator":"Credit","Status":"Booked","BookingDateTime":"2020-10-16T10:58:43.41Z","TransactionInformation":"Straya Fund","Amount":{"Amount":"35.0000","Currency":"GBP"},"ProprietaryBankTransactionCode":{"Code":"uk_retail_pot","Issuer":"Monzo"},"SupplementaryData":{"Declined":false,"RawTransactionDescription":"pot_00009xAv7KeNoEv3LjdtnF"}},{"AccountId":"acc_00009x3PRejaI4rXF0Dbvd","TransactionId":"tx_0000A0IpKryuI4YWXRQfhq","CreditDebitIndicator":"Credit","Status":"Booked","BookingDateTime":"2020-10-19T00:22:48.218Z","TransactionInformation":"Xmas / Birthdays ","Amount":{"Amount":"1.0000","Currency":"GBP"},"ProprietaryBankTransactionCode":{"Code":"uk_retail_pot","Issuer":"Monzo"},"SupplementaryData":{"Declined":false,"RawTransactionDescription":"pot_00009xAv3NWRBqFTQQCwM5"}},{"AccountId":"acc_00009x3PRejaI4rXF0Dbvd","TransactionId":"tx_0000A0JiM9cPhDmjTqnjaz","CreditDebitIndicator":"Credit","Status":"Booked","BookingDateTime":"2020-10-19T10:39:18.687Z","TransactionInformation":"Season Ticket ","Amount":{"Amount":"150.0000","Currency":"GBP"},"ProprietaryBankTransactionCode":{"Code":"uk_retail_pot","Issuer":"Monzo"},"SupplementaryData":{"Declined":false,"RawTransactionDescription":"pot_00009xAuqJutHgWMThQ20v"}},{"AccountId":"acc_00009x3PRejaI4rXF0Dbvd","TransactionId":"tx_0000A0JiNq6pCeRWEZIBxh","CreditDebitIndicator":"Debit","Status":"Booked","BookingDateTime":"2020-10-19T10:39:36.918Z","TransactionInformation":"Sent from Monzo","Amount":{"Amount":"150.0000","Currency":"GBP"},"ProprietaryBankTransactionCode":{"Code":"payport_faster_payments","Issuer":"Monzo"},"CreditorAccount":{"SchemeName":"UK.OBIE.SortCodeAccountNumber","Identification":"40476470719927","Name":"John Tinker"},"SupplementaryData":{"Declined":false,"RawTransactionDescription":"Sent from Monzo"}},{"AccountId":"acc_00009x3PRejaI4rXF0Dbvd","TransactionId":"tx_0000A0KLSKCHAuHtULUHr7","CreditDebitIndicator":"Debit","Status":"Booked","BookingDateTime":"2020-10-19T17:57:25.391Z","TransactionInformation":"McDonald's","Amount":{"Amount":"16.2200","Currency":"GBP"},"ProprietaryBankTransactionCode":{"Code":"mastercard","Issuer":"Monzo"},"MerchantDetails":{"MerchantCategoryCode":"5812"},"SupplementaryData":{"Declined":false,"RawTransactionDescription":"MCDONALDS              RETFORD       GBR"}},{"AccountId":"acc_00009x3PRejaI4rXF0Dbvd","TransactionId":"tx_0000A0M1R0n0EkqWEwgNXO","CreditDebitIndicator":"Debit","Status":"Booked","BookingDateTime":"2020-10-20T13:22:30.442Z","TransactionInformation":"Teddykave","Amount":{"Amount":"14.9800","Currency":"GBP"},"ProprietaryBankTransactionCode":{"Code":"mastercard","Issuer":"Monzo"},"MerchantDetails":{"MerchantCategoryCode":"5999"},"SupplementaryData":{"Declined":false,"RawTransactionDescription":"SumUp  *Teddykave      Lincolnshire  GBR"}},{"AccountId":"acc_00009x3PRejaI4rXF0Dbvd","TransactionId":"tx_0000A0M6BwJr4fOCcrK2Gf","CreditDebitIndicator":"Debit","Status":"Booked","BookingDateTime":"2020-10-20T14:15:48.584Z","TransactionInformation":"Jump Warriors","Amount":{"Amount":"5.5000","Currency":"GBP"},"ProprietaryBankTransactionCode":{"Code":"mastercard","Issuer":"Monzo"},"MerchantDetails":{"MerchantCategoryCode":"5812"},"SupplementaryData":{"Declined":false,"RawTransactionDescription":"JUMP WARRIORS          SKEGNESS PE25 GBR"}},{"AccountId":"acc_00009x3PRejaI4rXF0Dbvd","TransactionId":"tx_0000A0NnmPRQlaGi5JcN18","CreditDebitIndicator":"Debit","Status":"Booked","BookingDateTime":"2020-10-21T09:58:55.684Z","TransactionInformation":"ATM","Amount":{"Amount":"10.0000","Currency":"GBP"},"ProprietaryBankTransactionCode":{"Code":"mastercard","Issuer":"Monzo"},"MerchantDetails":{"MerchantCategoryCode":"6011"},"SupplementaryData":{"Declined":false,"RawTransactionDescription":"SPAR TATES, 2-6        SKEGNESS      GBR"}},{"AccountId":"acc_00009x3PRejaI4rXF0Dbvd","TransactionId":"tx_0000A0QTH9CLh2vaW1XmqX","CreditDebitIndicator":"Credit","Status":"Booked","BookingDateTime":"2020-10-22T16:53:18.62Z","TransactionInformation":"Car Insurance Simon ","Amount":{"Amount":"120.0000","Currency":"GBP"},"ProprietaryBankTransactionCode":{"Code":"uk_retail_pot","Issuer":"Monzo"},"SupplementaryData":{"Declined":false,"RawTransactionDescription":"pot_00009xAuuE6GqqeqH09PSz"}},{"AccountId":"acc_00009x3PRejaI4rXF0Dbvd","TransactionId":"tx_0000A0QTJ4OAXs5gB8zPI9","CreditDebitIndicator":"Debit","Status":"Booked","BookingDateTime":"2020-10-22T16:53:39.472Z","TransactionInformation":"Sent from Monzo","Amount":{"Amount":"130.0000","Currency":"GBP"},"ProprietaryBankTransactionCode":{"Code":"payport_faster_payments","Issuer":"Monzo"},"CreditorAccount":{"SchemeName":"UK.OBIE.SortCodeAccountNumber","Identification":"40476470719927","Name":"John Tinker"},"SupplementaryData":{"Declined":false,"RawTransactionDescription":"Sent from Monzo"}},{"AccountId":"acc_00009x3PRejaI4rXF0Dbvd","TransactionId":"tx_0000A0gV9oXhOtRnNrGJKj","CreditDebitIndicator":"Credit","Status":"Booked","BookingDateTime":"2020-10-30T10:29:46.577Z","TransactionInformation":"SAVING POTS","Amount":{"Amount":"355.0000","Currency":"GBP"},"ProprietaryBankTransactionCode":{"Code":"payport_faster_payments","Issuer":"Monzo"},"DebtorAccount":{"SchemeName":"UK.OBIE.SortCodeAccountNumber","Identification":"40476470719927","Name":"Frisby C"},"SupplementaryData":{"Declined":false,"RawTransactionDescription":"SAVING POTS"}},{"AccountId":"acc_00009x3PRejaI4rXF0Dbvd","TransactionId":"tx_0000A0gVBQOGAXlyUQu8Tx","CreditDebitIndicator":"Debit","Status":"Booked","BookingDateTime":"2020-10-30T10:30:03.857Z","TransactionInformation":"Xmas / Birthdays ","Amount":{"Amount":"100.0000","Currency":"GBP"},"ProprietaryBankTransactionCode":{"Code":"uk_retail_pot","Issuer":"Monzo"},"SupplementaryData":{"Declined":false,"RawTransactionDescription":"pot_00009xAv3NWRBqFTQQCwM5"}},{"AccountId":"acc_00009x3PRejaI4rXF0Dbvd","TransactionId":"tx_0000A0gVCVIvNtXvrKAIi1","CreditDebitIndicator":"Debit","Status":"Booked","BookingDateTime":"2020-10-30T10:30:15.765Z","TransactionInformation":"Straya Fund","Amount":{"Amount":"175.0000","Currency":"GBP"},"ProprietaryBankTransactionCode":{"Code":"uk_retail_pot","Issuer":"Monzo"},"SupplementaryData":{"Declined":false,"RawTransactionDescription":"pot_00009xAv7KeNoEv3LjdtnF"}},{"AccountId":"acc_00009x3PRejaI4rXF0Dbvd","TransactionId":"tx_0000A0gVFeqgM3HBDE3wFF","CreditDebitIndicator":"Debit","Status":"Booked","BookingDateTime":"2020-10-30T10:30:49.933Z","TransactionInformation":"Last Man Standing Winner","Amount":{"Amount":"80.0000","Currency":"GBP"},"ProprietaryBankTransactionCode":{"Code":"uk_retail_pot","Issuer":"Monzo"},"SupplementaryData":{"Declined":false,"RawTransactionDescription":"pot_00009ymJYOZEzEjeNnPKuv"}},{"AccountId":"acc_00009x3PRejaI4rXF0Dbvd","TransactionId":"tx_0000A0jo5qwh0MkTf7PfIv","CreditDebitIndicator":"Credit","Status":"Booked","BookingDateTime":"2020-11-01T00:46:05.433Z","TransactionInformation":"SAVING POTS","Amount":{"Amount":"185.0000","Currency":"GBP"},"ProprietaryBankTransactionCode":{"Code":"payport_faster_payments","Issuer":"Monzo"},"DebtorAccount":{"SchemeName":"UK.OBIE.SortCodeAccountNumber","Identification":"40476470719927","Name":"Frisby C"},"SupplementaryData":{"Declined":false,"RawTransactionDescription":"SAVING POTS"}},{"AccountId":"acc_00009x3PRejaI4rXF0Dbvd","TransactionId":"tx_0000A0joB6YsNBeSgjruHR","CreditDebitIndicator":"Debit","Status":"Booked","BookingDateTime":"2020-11-01T00:47:02.364Z","TransactionInformation":"Last Man Standing Club","Amount":{"Amount":"185.0000","Currency":"GBP"},"ProprietaryBankTransactionCode":{"Code":"uk_retail_pot","Issuer":"Monzo"},"SupplementaryData":{"Declined":false,"RawTransactionDescription":"pot_0000A0joB5DZMulPNHnian"}},{"AccountId":"acc_00009x3PRejaI4rXF0Dbvd","TransactionId":"tx_0000A0lbjJ6bKasxG1z4Kn","CreditDebitIndicator":"Credit","Status":"Booked","BookingDateTime":"2020-11-01T21:36:58.661Z","TransactionInformation":"Xmas / Birthdays ","Amount":{"Amount":"50.0000","Currency":"GBP"},"ProprietaryBankTransactionCode":{"Code":"uk_retail_pot","Issuer":"Monzo"},"SupplementaryData":{"Declined":false,"RawTransactionDescription":"pot_00009xAv3NWRBqFTQQCwM5"}},{"AccountId":"acc_00009x3PRejaI4rXF0Dbvd","TransactionId":"tx_0000A0lbm2u41j0Qs7y9lh","CreditDebitIndicator":"Debit","Status":"Booked","BookingDateTime":"2020-11-01T21:37:28.339Z","TransactionInformation":"Sent from Monzo","Amount":{"Amount":"50.0000","Currency":"GBP"},"ProprietaryBankTransactionCode":{"Code":"payport_faster_payments","Issuer":"Monzo"},"CreditorAccount":{"SchemeName":"UK.OBIE.SortCodeAccountNumber","Identification":"40476470719927","Name":"John Tinker"},"SupplementaryData":{"Declined":false,"RawTransactionDescription":"Sent from Monzo"}},{"AccountId":"acc_00009x3PRejaI4rXF0Dbvd","TransactionId":"tx_0000A0mYnmHYgmgU2akcHy","CreditDebitIndicator":"Credit","Status":"Booked","BookingDateTime":"2020-11-02T08:38:52.952Z","TransactionInformation":"SAVING POTS","Amount":{"Amount":"5.0000","Currency":"GBP"},"ProprietaryBankTransactionCode":{"Code":"payport_faster_payments","Issuer":"Monzo"},"DebtorAccount":{"SchemeName":"UK.OBIE.SortCodeAccountNumber","Identification":"40476470719927","Name":"Frisby C"},"SupplementaryData":{"Declined":false,"RawTransactionDescription":"SAVING POTS"}},{"AccountId":"acc_00009x3PRejaI4rXF0Dbvd","TransactionId":"tx_0000A0mYq0LvLYGgMk4z6P","CreditDebitIndicator":"Debit","Status":"Booked","BookingDateTime":"2020-11-02T08:39:17.09Z","TransactionInformation":"Last Man Standing Club","Amount":{"Amount":"5.0000","Currency":"GBP"},"ProprietaryBankTransactionCode":{"Code":"uk_retail_pot","Issuer":"Monzo"},"SupplementaryData":{"Declined":false,"RawTransactionDescription":"pot_0000A0joB5DZMulPNHnian"}},{"AccountId":"acc_00009x3PRejaI4rXF0Dbvd","TransactionId":"tx_0000A0r5S8gAoM2s2LJ5KU","CreditDebitIndicator":"Credit","Status":"Booked","BookingDateTime":"2020-11-04T13:03:34.791Z","TransactionInformation":"Xmas / Birthdays ","Amount":{"Amount":"50.0000","Currency":"GBP"},"ProprietaryBankTransactionCode":{"Code":"uk_retail_pot","Issuer":"Monzo"},"SupplementaryData":{"Declined":false,"RawTransactionDescription":"pot_00009xAv3NWRBqFTQQCwM5"}},{"AccountId":"acc_00009x3PRejaI4rXF0Dbvd","TransactionId":"tx_0000A0r5YMJr0jXw4tpi89","CreditDebitIndicator":"Debit","Status":"Booked","BookingDateTime":"2020-11-04T13:04:42.359Z","TransactionInformation":"Sent from Monzo","Amount":{"Amount":"50.0000","Currency":"GBP"},"ProprietaryBankTransactionCode":{"Code":"payport_faster_payments","Issuer":"Monzo"},"CreditorAccount":{"SchemeName":"UK.OBIE.SortCodeAccountNumber","Identification":"40476470719927","Name":"John Tinker"},"SupplementaryData":{"Declined":false,"RawTransactionDescription":"Sent from Monzo"}},{"AccountId":"acc_00009x3PRejaI4rXF0Dbvd","TransactionId":"tx_0000A0r7fMYuhp7y2L6vqc","CreditDebitIndicator":"Credit","Status":"Booked","BookingDateTime":"2020-11-04T13:28:22.892Z","TransactionInformation":"SAVING POTS","Amount":{"Amount":"50.0000","Currency":"GBP"},"ProprietaryBankTransactionCode":{"Code":"payport_faster_payments","Issuer":"Monzo"},"DebtorAccount":{"SchemeName":"UK.OBIE.SortCodeAccountNumber","Identification":"40476470719927","Name":"Frisby C"},"SupplementaryData":{"Declined":false,"RawTransactionDescription":"SAVING POTS"}}]},"Links":{"Self":"https://openbanking.monzo.com/open-banking/v3.1/aisp/accounts/acc_00009x3PRejaI4rXF0Dbvd/transactions?fromBookingDateTime=2018-12-04T13:31:02.038Z"},"Meta":{}}
-
-
 
 REQUEST 9
 GET https://openbanking.monzo.com/open-banking/v3.1/aisp/party
 Authorization: Bearer DUMMY_ACCESS_TOKEN2
 Accept: application/json
-X-Aggregator: Tink Testing
-x-fapi-financial-id: 001580000103U9RAAU
 x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
 
 RESPONSE 9
 200
 Content-Type: application/json; charset=UTF-8
-Date: Wed, 04 Nov 2020 13:31:02 GMT
 x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
 
-{"Data":{"Party":{"PartyId":"user_00009x3OpXVihQdEO1EoRF","Name":"John Tinker","FullLegalName":"John The Tinker"}},"Links":{"Self":"https://openbanking.monzo.com/open-banking/v3.1/aisp/party"},"Meta":{}}
+{
+    "Data": {
+        "Party": {
+            "PartyId": "user_00009x3OpXVihQdEO1EoRF",
+            "Name": "John Tinker",
+            "FullLegalName": "John The Tinker"
+        }
+    },
+    "Links": {
+        "Self": "https://openbanking.monzo.com/open-banking/v3.1/aisp/party"
+    },
+    "Meta": {}
+}
