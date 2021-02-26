@@ -21,6 +21,30 @@
                     "href": "https://mobilbank-pm.sparebank1.no/ostlandet/nettbank-privat/finansiering/lan#/detaljer/1FE3yHx2IGbjXHjqjQ7CS2-plnlRNSDvaSBpq1r4rwI"
                 }
             }
+        },
+        {
+            "id": "G4oFKKJMPV2MxXLYkTKNgpeyAWEyEswntvSYa046jbw",
+            "name": "BOLIGKREDITT FLEXILÅN",
+            "formattedNumber": "4999 99 99999",
+            "disposableAmountInteger": "30451",
+            "disposableAmountFraction": "40",
+            "balanceAmountInteger": "-469548",
+            "balanceAmountFraction": "60",
+            "type": "FLEXI",
+            "calculatedInterestInteger": "",
+            "calculatedInterestFraction": "",
+            "detailsFetched": false,
+            "owned": false,
+            "prescored": false,
+            "balancePreferred": false,
+            "paymentFromEnabled": true,
+            "transferToEnabled": true,
+            "transferFromEnabled": true,
+            "_links": {
+                "lan-detaljer-html": {
+                    "href": "https://mobilbank-pm.sparebank1.no/nord-norge/nettbank-privat/finansiering/lan#/detaljer/G4oFKKJMPV2MxXLYkTKNgpeyAWEyEswntvSYa046jbw"
+                }
+            }
         }
     ],
     "errors": [],

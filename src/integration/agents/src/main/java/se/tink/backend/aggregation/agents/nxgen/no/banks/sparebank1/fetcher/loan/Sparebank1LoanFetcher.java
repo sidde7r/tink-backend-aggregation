@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.loan;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -20,13 +21,13 @@ public class Sparebank1LoanFetcher implements AccountFetcher<LoanAccount> {
     @Override
     public Collection<LoanAccount> fetchAccounts() {
         return apiClient.getAccounts(Urls.LOANS, LoanListResponse.class).getLoans().stream()
-                .peek(this::logIfNotBasicLoan)
+                .peek(this::logIfNotKnownLoan)
                 .map(this::convertToTinkLoan)
                 .collect(Collectors.toList());
     }
 
-    private void logIfNotBasicLoan(LoanEntity loanEntity) {
-        if (!loanEntity.getType().equals("LOAN")) {
+    private void logIfNotKnownLoan(LoanEntity loanEntity) {
+        if (!Arrays.asList("LOAN", "FLEXI").contains(loanEntity.getType().toUpperCase())) {
             log.info("Fetched not identified loan type: " + loanEntity.getType());
         }
     }

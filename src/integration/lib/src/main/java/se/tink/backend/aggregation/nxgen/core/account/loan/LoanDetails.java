@@ -81,7 +81,7 @@ public class LoanDetails {
                                 initialBalance.getCurrencyCode()));
             }
 
-            return initialBalance.getDoubleValue() - account.getExactBalance().getDoubleValue();
+            return initialBalance.subtract(account.getExactBalance()).getDoubleValue();
         }
 
         return null;

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.google.common.collect.ImmutableList;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.Getter;
@@ -23,7 +24,7 @@ public class LoanDetailsEntity {
     private String loanAmountFraction;
     private String balanceAmountInteger;
     private String balanceAmountFraction;
-    private int period;
+    private Integer period;
     private String type;
 
     @JsonDeserialize(using = LocalDateDeserializer.class)
@@ -44,35 +45,44 @@ public class LoanDetailsEntity {
     }
 
     @JsonIgnore
-    public Double getInterestRate() {
+    Double getInterestRate() {
         return AgentParsingUtils.parsePercentageFormInterest(
                 actualInterestRateInteger + "," + actualInterestRateFraction);
     }
 
-    public Double getBalance() {
+    Double getBalance() {
         return Sparebank1AmountUtils.constructDouble(balanceAmountInteger, balanceAmountFraction);
     }
 
-    public Double getInitialBalance() {
+    Double getInitialBalance() {
         return Sparebank1AmountUtils.constructDouble(loanAmountInteger, loanAmountFraction);
     }
 
-    public Double getAmortized() {
-        return getInitialBalance() - getBalance();
+    Double getAmortized() {
+        return BigDecimal.valueOf(getInitialBalance())
+                .subtract(BigDecimal.valueOf(getBalance()))
+                .doubleValue();
     }
 
-    public List<String> getAplicants() {
+    List<String> getApplicants() {
         return ImmutableList.of(ownerFirstName + " " + ownerLastName);
     }
 
-    public int getNumMonthsBounds() {
+    Integer getNumMonthsBounds() {
+        if (period == null) {
+            return null;
+        }
+
         if (type.equals("ANNUITY")) {
             return period * 12;
         }
         return period;
     }
 
-    public Double getMonthlyAmortization() {
+    Double getMonthlyAmortization() {
+        if (installment == null) {
+            return null;
+        }
         return Sparebank1AmountUtils.constructDouble(
                 installment.getAmountInteger(), installment.getAmountFraction());
     }
