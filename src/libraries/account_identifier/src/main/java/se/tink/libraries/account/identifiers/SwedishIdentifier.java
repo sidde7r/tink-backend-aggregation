@@ -1,11 +1,16 @@
 package se.tink.libraries.account.identifiers;
 
+import com.google.common.base.Strings;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.iban4j.CountryCode;
+import org.iban4j.Iban;
+import org.iban4j.Iban.Builder;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.se.ClearingNumber;
 import se.tink.libraries.account.identifiers.se.ClearingNumber.Bank;
+import se.tink.libraries.account.identifiers.se.IbanCodes;
 
 public class SwedishIdentifier extends AccountIdentifier {
 
@@ -87,5 +92,35 @@ public class SwedishIdentifier extends AccountIdentifier {
     @Override
     public boolean isValid() {
         return isValid;
+    }
+
+    /**
+     * toIbanIdentifer() reads the bankCode from IbanCodes which takes the Bank object as a key.
+     * Currently only works for SE since bankCode only contains banks in Sweden and that
+     * ACCOUNT_NUMBER_PADDING_LENGTH is hardcoded for SE.
+     *
+     * @return IbanIdentifer with the created Iban number.
+     */
+    public IbanIdentifier toIbanIdentifer() {
+        Integer bankCode = IbanCodes.getBankCode(bank);
+        String paddedAccountNumber = padAccountNumber();
+        Iban iban =
+                new Builder()
+                        .countryCode(CountryCode.SE)
+                        .bankCode(bankCode.toString())
+                        .accountNumber(paddedAccountNumber)
+                        .build();
+        return new IbanIdentifier(iban.toString());
+    }
+
+    /**
+     * @return the padded accountNumber of length ACCOUNT_NUMBER_PADDING_LENGTH (which is 17 for SE)
+     *     left padded with '0'.
+     */
+    private String padAccountNumber() {
+        return Strings.padStart(
+                clearingNumber + accountNumber,
+                IbanCodes.ACCOUNT_NUMBER_PADDING_LENGTH,
+                IbanCodes.PADDING_CHAR);
     }
 }
