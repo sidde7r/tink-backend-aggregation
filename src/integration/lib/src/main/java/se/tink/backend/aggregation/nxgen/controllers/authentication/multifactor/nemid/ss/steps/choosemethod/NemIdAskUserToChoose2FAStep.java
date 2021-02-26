@@ -4,11 +4,8 @@ import static se.tink.backend.aggregation.nxgen.controllers.authentication.multi
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.NemIdCodeAppConstants.UserMessage.CHOOSE_NEM_ID_METHOD;
 
 import com.google.inject.Inject;
-import java.util.Comparator;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.agents.rpc.Credentials;
@@ -21,7 +18,7 @@ import se.tink.libraries.i18n.Catalog;
 
 @Slf4j
 @RequiredArgsConstructor(onConstructor = @__({@Inject}))
-public class NemIdAskUserToChoose2FAStep {
+class NemIdAskUserToChoose2FAStep {
 
     private final NemIdMetrics metrics;
     private final NemIdCredentialsStatusUpdater statusUpdater;
@@ -37,9 +34,8 @@ public class NemIdAskUserToChoose2FAStep {
 
     private NemId2FAMethod askUserFor2FAMethod(
             Credentials credentials, Set<NemId2FAMethod> availableMethods) {
-        Field field =
-                NemIdChoose2FAMethodField.build(
-                        catalog, sortBySupplementalInfoOrder(availableMethods));
+
+        Field field = NemIdChoose2FAMethodField.build(catalog, availableMethods);
 
         statusUpdater.updateStatusPayload(credentials, CHOOSE_NEM_ID_METHOD);
         Map<String, String> supplementalInfoResponse =
@@ -49,18 +45,10 @@ public class NemIdAskUserToChoose2FAStep {
 
         return NemId2FAMethod.getMethodBySupplementalInfoKey(chosenMethodKey)
                 .orElseThrow(
-                        () -> {
-                            String errorMessage =
-                                    String.format(
-                                            "Cannot match any method for supplemental info response: \"%s\"",
-                                            chosenMethodKey);
-                            return new IllegalStateException(errorMessage);
-                        });
-    }
-
-    private static List<NemId2FAMethod> sortBySupplementalInfoOrder(Set<NemId2FAMethod> methods) {
-        return methods.stream()
-                .sorted(Comparator.comparing(NemId2FAMethod::getSupplementalInfoOrder))
-                .collect(Collectors.toList());
+                        () ->
+                                new IllegalStateException(
+                                        "Cannot match any method for supplemental info response: \""
+                                                + chosenMethodKey
+                                                + "\""));
     }
 }

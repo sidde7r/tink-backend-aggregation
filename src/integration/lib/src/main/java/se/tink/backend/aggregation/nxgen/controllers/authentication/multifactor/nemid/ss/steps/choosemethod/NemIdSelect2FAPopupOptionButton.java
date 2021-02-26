@@ -12,7 +12,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 
 @Getter
 @RequiredArgsConstructor
-public enum NemIdSelect2FAPopupOptionButton {
+enum NemIdSelect2FAPopupOptionButton {
     CODE_APP_BUTTON(
             NemId2FAMethodScreen.CODE_APP_SCREEN, HtmlElements.NEMID_SELECT_CODE_APP_BUTTON),
     CODE_CARD_BUTTON(

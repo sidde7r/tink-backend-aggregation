@@ -21,7 +21,7 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 import se.tink.libraries.i18n.Catalog;
 
 @RequiredArgsConstructor(onConstructor = @__({@Inject}))
-public class NemIdCodeTokenAskUserForCodeStep {
+class NemIdCodeTokenAskUserForCodeStep {
 
     private static final Pattern VALID_SERIAL_NUMBER_REGEX =
             Pattern.compile("^\\d{4} \\d{4} \\d{4} \\d{4}$");

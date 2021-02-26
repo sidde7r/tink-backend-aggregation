@@ -20,7 +20,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.exception.NemIdError;
 
 @RequiredArgsConstructor(onConstructor = @__({@Inject}))
-public class NemIdCodeTokenGetTokenStep {
+class NemIdCodeTokenGetTokenStep {
 
     private final NemIdWebDriverWrapper driverWrapper;
     private final NemIdMetrics metrics;

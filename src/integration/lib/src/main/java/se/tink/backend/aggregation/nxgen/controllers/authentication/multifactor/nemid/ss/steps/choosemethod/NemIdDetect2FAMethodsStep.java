@@ -17,12 +17,11 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.NemId2FAMethodScreen;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.utils.ElementsSearchQuery;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.utils.ElementsSearchResult;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.utils.MultipleElementsSearchResult;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.utils.NemIdWebDriverWrapper;
 
 @Slf4j
 @RequiredArgsConstructor(onConstructor = @__({@Inject}))
-public class NemIdDetect2FAMethodsStep {
+class NemIdDetect2FAMethodsStep {
 
     public static final List<By> ELEMENTS_TO_SEARCH_FOR_AFTER_CLICKING_CHANGE_METHOD_LINK =
             ImmutableList.<By>builder()
@@ -37,41 +36,30 @@ public class NemIdDetect2FAMethodsStep {
      * after detection process iframe may be left on a different screen than the default one
      */
     public NemIdDetect2FAMethodsResult detect2FAMethods(NemId2FAMethodScreen defaultScreen) {
-
         if (!linkToChange2FAMethodExists()) {
-            // It's a guess that if user has only 1 NemID method available there might not be any
-            // link to change it
-            log.info(
-                    "Cannot find link to change 2FA method. Check page source:\n{}",
-                    driverWrapper.getFullPageSourceLog());
-            return NemIdDetect2FAMethodsResult.canOnlyUseDefaultMethod(defaultScreen);
+            return handleNoLinkToChangeMethod(defaultScreen);
         }
 
-        /*
-        Depending on how many 2FA methods user have the change method link behaves differently:
-        - for 2 methods it toggles between the only 2 possible 2FA screens
-        - for 3 methods (or possibly more) it doesn't change screen but opens a popup instead - this popup allows
-          to choose and switch to the screen dedicated for one of the 2 remaining methods
-         */
         clickChange2FAMethodLink();
+        return detect2FAMethodsByTheEffectOfClickingLink(defaultScreen);
+    }
+
+    /*
+     * Depending on how many 2FA methods user has, the change method link behaves differently:
+     * - for 2 methods it toggles between the only 2 possible 2FA screens
+     * - for 3 methods (or possibly more) it doesn't change screen but opens a popup instead -
+     *   this popup allows to choose and switch to the screen dedicated for one of the 2 remaining
+     *   methods
+     */
+    private NemIdDetect2FAMethodsResult detect2FAMethodsByTheEffectOfClickingLink(
+            NemId2FAMethodScreen defaultScreen) {
         By elementFound = searchForScreenOrPopup();
 
         Optional<NemId2FAMethodScreen> maybeMethodScreen =
                 NemId2FAMethodScreen.getScreenBySelector(elementFound);
-
         if (maybeMethodScreen.isPresent()) {
-            NemId2FAMethodScreen currentScreen = maybeMethodScreen.get();
-
-            if (currentScreen == defaultScreen) {
-                // It's a guess that if user has only 1 NemID method available there might be a link
-                // but it doesn't change it
-                log.info(
-                        "Link to change 2FA method does not work. Check page source:\n{}",
-                        driverWrapper.getFullPageSourceLog());
-                return NemIdDetect2FAMethodsResult.canOnlyUseDefaultMethod(defaultScreen);
-            }
-            return NemIdDetect2FAMethodsResult.canToggleBetween2Methods(
-                    defaultScreen, currentScreen);
+            return handleSomeScreenIsVisibleAfterClickingLink(
+                    defaultScreen, maybeMethodScreen.get());
         }
 
         if (elementFound == NEMID_SELECT_METHOD_POPUP) {
@@ -80,6 +68,31 @@ public class NemIdDetect2FAMethodsStep {
         }
 
         throw LoginError.DEFAULT_MESSAGE.exception("Cannot find screen nor popup");
+    }
+
+    private NemIdDetect2FAMethodsResult handleNoLinkToChangeMethod(
+            NemId2FAMethodScreen defaultScreen) {
+        // It's a guess that if user has only 1 NemID method available there might not be any
+        // link to change it
+        log.info(
+                "Cannot find link to change 2FA method. Check page source:\n{}",
+                driverWrapper.getFullPageSourceLog());
+        return NemIdDetect2FAMethodsResult.canOnlyUseDefaultMethod(defaultScreen);
+    }
+
+    private NemIdDetect2FAMethodsResult handleSomeScreenIsVisibleAfterClickingLink(
+            NemId2FAMethodScreen defaultScreen, NemId2FAMethodScreen currentlyVisibleScreen) {
+        if (currentlyVisibleScreen == defaultScreen) {
+            // It's a guess that if user has only 1 NemID method available there might be a link
+            // but it doesn't change it
+            log.info(
+                    "Link to change 2FA method does not work. Check page source:\n{}",
+                    driverWrapper.getFullPageSourceLog());
+            return NemIdDetect2FAMethodsResult.canOnlyUseDefaultMethod(defaultScreen);
+        }
+
+        return NemIdDetect2FAMethodsResult.canToggleBetween2Methods(
+                defaultScreen, currentlyVisibleScreen);
     }
 
     private boolean linkToChange2FAMethodExists() {
@@ -101,13 +114,13 @@ public class NemIdDetect2FAMethodsStep {
     }
 
     private Set<NemId2FAMethod> detectVisible2FAMethodInSelectionPopup() {
-        MultipleElementsSearchResult searchResults =
+        List<ElementsSearchResult> searchResults =
                 driverWrapper.searchForAllElements(
                         ElementsSearchQuery.builder()
                                 .searchInAnIframe(
                                         NemIdSelect2FAPopupOptionButton.getSelectorsForAllButtons())
                                 .build());
-        return searchResults.getElementsSearchResults().stream()
+        return searchResults.stream()
                 .filter(searchResult -> searchResult.getWebElement().isDisplayed())
                 .map(
                         searchResult ->

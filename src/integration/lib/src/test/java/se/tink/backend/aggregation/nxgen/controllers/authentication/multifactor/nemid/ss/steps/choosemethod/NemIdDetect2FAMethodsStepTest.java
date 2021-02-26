@@ -39,7 +39,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.NemId2FAMethodScreen;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.utils.ElementsSearchQuery;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.utils.ElementsSearchResult;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.utils.MultipleElementsSearchResult;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.utils.NemIdWebDriverWrapper;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.util.NemIdTestHelper;
 
@@ -331,6 +330,6 @@ public class NemIdDetect2FAMethodsStepTest {
                                 .searchInAnIframe(
                                         NemIdSelect2FAPopupOptionButton.getSelectorsForAllButtons())
                                 .build()))
-                .thenReturn(MultipleElementsSearchResult.of(searchResults));
+                .thenReturn(searchResults);
     }
 }

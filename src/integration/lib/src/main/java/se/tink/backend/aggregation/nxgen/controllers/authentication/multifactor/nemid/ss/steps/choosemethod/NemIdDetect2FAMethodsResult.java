@@ -21,11 +21,10 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 @Getter
 @Builder
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class NemIdDetect2FAMethodsResult {
+class NemIdDetect2FAMethodsResult {
 
     private final ResultType resultType;
 
-    private final NemId2FAMethodScreen defaultScreen;
     private final NemId2FAMethodScreen currentScreen;
     private final Set<NemId2FAMethod> availableMethods;
 
@@ -35,7 +34,6 @@ public class NemIdDetect2FAMethodsResult {
         NemId2FAMethod defaultMethod = defaultScreen.getSupportedMethod();
         return NemIdDetect2FAMethodsResult.builder()
                 .resultType(CAN_ONLY_USE_DEFAULT_METHOD)
-                .defaultScreen(defaultScreen)
                 .currentScreen(defaultScreen)
                 .availableMethods(singleton(defaultMethod))
                 .build();
@@ -47,7 +45,6 @@ public class NemIdDetect2FAMethodsResult {
         NemId2FAMethod defaultMethod = defaultScreen.getSupportedMethod();
         return NemIdDetect2FAMethodsResult.builder()
                 .resultType(CAN_CHOOSE_METHOD_FROM_POPUP)
-                .defaultScreen(defaultScreen)
                 .currentScreen(defaultScreen)
                 .availableMethods(
                         ImmutableSet.<NemId2FAMethod>builder()
@@ -64,7 +61,6 @@ public class NemIdDetect2FAMethodsResult {
         NemId2FAMethod secondMethod = secondMethodScreen.getSupportedMethod();
         return NemIdDetect2FAMethodsResult.builder()
                 .resultType(CAN_TOGGLE_BETWEEN_2_METHODS)
-                .defaultScreen(defaultScreen)
                 .currentScreen(secondMethodScreen)
                 .availableMethods(ImmutableSet.of(defaultMethod, secondMethod))
                 .build();

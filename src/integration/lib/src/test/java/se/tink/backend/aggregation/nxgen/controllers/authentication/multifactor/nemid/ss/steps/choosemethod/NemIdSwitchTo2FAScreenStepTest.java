@@ -115,7 +115,7 @@ public class NemIdSwitchTo2FAScreenStepTest {
         mocksToVerifyInOrder
                 .verify(driverWrapper)
                 .clickButton(NEMID_LINK_TO_SELECT_DIFFERENT_2FA_METHOD);
-        verifyWaits10SecondsForScreenToLoad(detect2FAMethodsResult.getDefaultScreen());
+        verifyWaits10SecondsForScreenToLoad(screenForMethodChosenByUser);
         mocksToVerifyInOrder.verifyNoMoreInteractions();
     }
 
@@ -150,7 +150,7 @@ public class NemIdSwitchTo2FAScreenStepTest {
 
         // then
         mocksToVerifyInOrder.verify(driverWrapper).clickButton(NEMID_CLOSE_SELECT_METHOD_POPUP);
-        verifyWaits10SecondsForScreenToLoad(detect2FAMethodsResult.getDefaultScreen());
+        verifyWaits10SecondsForScreenToLoad(screenForMethodChosenByUser);
         mocksToVerifyInOrder.verifyNoMoreInteractions();
     }
 

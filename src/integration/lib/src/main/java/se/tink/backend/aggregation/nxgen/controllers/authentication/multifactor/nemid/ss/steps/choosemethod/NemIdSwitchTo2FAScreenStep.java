@@ -12,7 +12,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 
 @Slf4j
 @RequiredArgsConstructor(onConstructor = @__({@Inject}))
-public class NemIdSwitchTo2FAScreenStep {
+class NemIdSwitchTo2FAScreenStep {
 
     private final NemIdWebDriverWrapper driverWrapper;
 
@@ -26,35 +26,43 @@ public class NemIdSwitchTo2FAScreenStep {
     private void switchToTarget2FAScreen(
             NemIdDetect2FAMethodsResult detect2FAMethodsResult, NemId2FAMethodScreen targetScreen) {
 
-        NemId2FAMethodScreen defaultScreen = detect2FAMethodsResult.getDefaultScreen();
         NemId2FAMethodScreen currentScreen = detect2FAMethodsResult.getCurrentScreen();
-
         ResultType resultType = detect2FAMethodsResult.getResultType();
 
-        if (resultType == ResultType.CAN_ONLY_USE_DEFAULT_METHOD) {
+        switch (resultType) {
+            case CAN_ONLY_USE_DEFAULT_METHOD:
+                break;
+
+            case CAN_TOGGLE_BETWEEN_2_METHODS:
+                handleCanToggleBetweenMethods(currentScreen, targetScreen);
+                break;
+
+            case CAN_CHOOSE_METHOD_FROM_POPUP:
+                handleCanChooseMethodFromPopup(currentScreen, targetScreen);
+                break;
+
+            default:
+                throw new IllegalStateException(
+                        "Unknown detect 2FA methods result type: " + resultType);
+        }
+    }
+
+    private void handleCanToggleBetweenMethods(
+            NemId2FAMethodScreen currentScreen, NemId2FAMethodScreen targetScreen) {
+        if (targetScreen != currentScreen) {
+            toggleBetween2FAMethodScreens();
+        }
+    }
+
+    private void handleCanChooseMethodFromPopup(
+            NemId2FAMethodScreen currentScreen, NemId2FAMethodScreen targetScreen) {
+        if (targetScreen == currentScreen) {
+            closePopup();
             return;
         }
-
-        if (resultType == ResultType.CAN_TOGGLE_BETWEEN_2_METHODS) {
-            if (targetScreen != currentScreen) {
-                toggleBetween2FAMethodScreens();
-            }
-            return;
-        }
-
-        if (resultType == ResultType.CAN_CHOOSE_METHOD_FROM_POPUP) {
-            if (targetScreen == defaultScreen) {
-                closePopup();
-            } else {
-                NemIdSelect2FAPopupOptionButton optionButton =
-                        NemIdSelect2FAPopupOptionButton.getOptionButtonThatWillSwitchToScreen(
-                                targetScreen);
-                clickOptionButton(optionButton);
-            }
-            return;
-        }
-
-        throw new IllegalStateException("Unknown detect 2FA methods result type: " + resultType);
+        NemIdSelect2FAPopupOptionButton optionButton =
+                NemIdSelect2FAPopupOptionButton.getOptionButtonThatWillSwitchToScreen(targetScreen);
+        clickOptionButton(optionButton);
     }
 
     private void closePopup() {

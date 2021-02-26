@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.IFRAME;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -134,7 +135,7 @@ public class NemIdWebDriverWrapper {
         return ElementsSearchResult.empty();
     }
 
-    public MultipleElementsSearchResult searchForAllElements(ElementsSearchQuery query) {
+    public List<ElementsSearchResult> searchForAllElements(ElementsSearchQuery query) {
 
         List<ElementsSearchResult> elementsSearchResults = new ArrayList<>();
 
@@ -151,13 +152,13 @@ public class NemIdWebDriverWrapper {
             // if at least one element was found we assume that the page was refreshed and all other
             // elements should've also been found - otherwise they don't exists
             if (!elementsSearchResults.isEmpty()) {
-                return MultipleElementsSearchResult.of(elementsSearchResults);
+                return elementsSearchResults;
             }
 
             sleepFor(1_000);
         }
 
-        return MultipleElementsSearchResult.empty();
+        return Collections.emptyList();
     }
 
     private List<ElementsSearchResult> searchForAllElements(List<By> elementSelectors) {

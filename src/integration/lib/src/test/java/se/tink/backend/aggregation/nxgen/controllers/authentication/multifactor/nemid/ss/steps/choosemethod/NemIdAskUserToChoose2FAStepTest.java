@@ -10,11 +10,8 @@ import static org.mockito.Mockito.when;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.util.NemIdTestHelper.nemIdMetricsMock;
 
 import com.google.common.collect.ImmutableSet;
-import java.util.Comparator;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 import lombok.Builder;
@@ -66,8 +63,7 @@ public class NemIdAskUserToChoose2FAStepTest {
 
     @Test
     @Parameters(method = "askUserTestParams")
-    public void should_ask_user_to_choose_from_all_available_methods_sorted(
-            AskUserTestParams testParams) {
+    public void should_ask_user_to_choose_from_all_available_methods(AskUserTestParams testParams) {
         // given
         Set<NemId2FAMethod> availableMethods = testParams.getAvailableMethods();
         String chosenSupplementalFieldKey = testParams.getChosenSupplementalFieldKey();
@@ -95,10 +91,7 @@ public class NemIdAskUserToChoose2FAStepTest {
         assertThat(argumentCaptor.getAllValues().size()).isEqualTo(1);
 
         Field field = argumentCaptor.getAllValues().get(0);
-        assertThat(field)
-                .isEqualTo(
-                        NemIdChoose2FAMethodField.build(
-                                catalog, sortMethodsBySupplementalInfoOrder(availableMethods)));
+        assertThat(field).isEqualTo(NemIdChoose2FAMethodField.build(catalog, availableMethods));
 
         mocksToVerifyInOrder.verifyNoMoreInteractions();
     }
@@ -132,12 +125,6 @@ public class NemIdAskUserToChoose2FAStepTest {
     private void mockSupplementalInfoControllerResponse(Map<String, String> response) {
         when(supplementalInformationController.askSupplementalInformationSync(any()))
                 .thenReturn(response);
-    }
-
-    private List<NemId2FAMethod> sortMethodsBySupplementalInfoOrder(Set<NemId2FAMethod> methods) {
-        return methods.stream()
-                .sorted(Comparator.comparing(NemId2FAMethod::getSupplementalInfoOrder))
-                .collect(Collectors.toList());
     }
 
     @Data

@@ -37,7 +37,7 @@ public class NemIdChoose2FAMethodStep {
             Credentials credentials, NemIdDetect2FAMethodsResult detect2FAMethodsResult) {
 
         if (detect2FAMethodsResult.getResultType() == CAN_ONLY_USE_DEFAULT_METHOD) {
-            return detect2FAMethodsResult.getDefaultScreen().getSupportedMethod();
+            return detect2FAMethodsResult.getCurrentScreen().getSupportedMethod();
         }
 
         return askUserToChoose2FAMethodStep.askUserToChoose2FAMethod(

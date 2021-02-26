@@ -19,7 +19,7 @@ import se.tink.libraries.i18n.Catalog;
 
 @Slf4j
 @RequiredArgsConstructor(onConstructor = @__({@Inject}))
-public class NemIdCodeAppAskUserToApproveRequestStep {
+class NemIdCodeAppAskUserToApproveRequestStep {
 
     private final NemIdWebDriverWrapper driverWrapper;
     private final NemIdMetrics metrics;
