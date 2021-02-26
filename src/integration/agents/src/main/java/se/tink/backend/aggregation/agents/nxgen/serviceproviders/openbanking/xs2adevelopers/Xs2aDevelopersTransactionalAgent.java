@@ -35,8 +35,8 @@ public abstract class Xs2aDevelopersTransactionalAgent extends NextGenerationAge
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
     protected final Xs2aDevelopersProviderConfiguration configuration;
-    protected Xs2aDevelopersApiClient apiClient;
-    protected Xs2aDevelopersAuthenticator authenticator;
+    protected final Xs2aDevelopersApiClient apiClient;
+    protected final Xs2aDevelopersAuthenticator authenticator;
     protected final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
     protected Xs2aDevelopersTransactionalAgent(
