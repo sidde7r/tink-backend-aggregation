@@ -19,7 +19,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 
 @Slf4j
 @RequiredArgsConstructor(onConstructor = @__({@Inject}))
-public class NemIdCodeAppCollectTokenStep {
+class NemIdCodeAppCollectTokenStep {
 
     private final NemIdWebDriverWrapper driverWrapper;
     private final NemIdMetrics metrics;

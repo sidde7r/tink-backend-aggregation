@@ -5,6 +5,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import io.vavr.Tuple2;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -13,6 +15,7 @@ import org.junit.Ignore;
 import org.mockito.exceptions.base.MockitoException;
 import org.openqa.selenium.WebElement;
 import se.tink.backend.aggregation.agents.exceptions.agent.AgentException;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.NemId2FAMethodScreen;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.metrics.NemIdMetrics;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 import se.tink.libraries.metrics.types.histograms.Histogram;
@@ -79,5 +82,18 @@ public class NemIdTestHelper {
                 .filter(Objects::nonNull)
                 .flatMap(List::stream)
                 .collect(Collectors.toList());
+    }
+
+    public static List<Tuple2<NemId2FAMethodScreen, NemId2FAMethodScreen>>
+            allNemId2FAPairwiseDifferentScreens() {
+        List<Tuple2<NemId2FAMethodScreen, NemId2FAMethodScreen>> tuplesList = new ArrayList<>();
+        for (NemId2FAMethodScreen firstScreen : NemId2FAMethodScreen.values()) {
+            for (NemId2FAMethodScreen secondScreen : NemId2FAMethodScreen.values()) {
+                if (firstScreen != secondScreen) {
+                    tuplesList.add(new Tuple2<>(firstScreen, secondScreen));
+                }
+            }
+        }
+        return tuplesList;
     }
 }

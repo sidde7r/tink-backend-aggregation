@@ -22,7 +22,7 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 import se.tink.libraries.i18n.Catalog;
 
 @RequiredArgsConstructor(onConstructor = @__({@Inject}))
-public class NemIdCodeCardAskUserForCodeStep {
+class NemIdCodeCardAskUserForCodeStep {
 
     static final Integer EXPECTED_CODE_LENGTH = 6;
 

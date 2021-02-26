@@ -3,9 +3,12 @@ package se.tink.backend.agents.rpc;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
 
+@Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SelectOption {
+
     private final String text;
     private final String value;
     private final String iconUrl;
@@ -24,17 +27,5 @@ public class SelectOption {
         this.text = text;
         this.value = value;
         this.iconUrl = iconUrl;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public String getValue() {
-        return value;
-    }
-
-    public String getIconUrl() {
-        return iconUrl;
     }
 }
