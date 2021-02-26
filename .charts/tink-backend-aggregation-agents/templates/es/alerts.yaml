@@ -163,48 +163,6 @@ spec:
                         the last 60 minutes.
         tags: {{ .Values.tags }}
 
-    ############################################################
-    ### All login success rates - Authentication Errors - RE ###
-    ############################################################
-
-    - alert: AllLoginSuccessRatesBelow50WithAuthenticationErrorsAndAttemptLimitES_RE
-      expr: |
-          (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="ES"}))
-                          / (sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"})) < 0.5
-                and sum by (provider) (tink_agent_login_total{ {{ .Values.reAgents }}, provider_type!="test", market="ES"}) > 4
-      for: 5m
-      labels:
-        severity: urgent
-        priority: P1
-        who: integration-fluffy
-      annotations:
-        description: {{ .Values.kibanaLink }}
-             {{ .Values.grafanaLink }}
-        summary: Login success rate for RE agents and for all authentication types with authentication errors is below 50% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-             the last 60 minutes.
-        tags: {{ .Values.tags }}
-
-    ##############################################################
-    ### Split login success rates - Authentication Errors - RE ###
-    ##############################################################
-
-    - alert: SplitLoginSuccessRatesBelow50WithAuthenticationErrorsAndAttemptLimitES_RE
-      expr: |
-          (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", {{ .Values.authErrorsAuth }} , market="ES"}))
-                          / (sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"})) < 0.5
-                and sum by (provider, action) (tink_agent_login_total{ {{ .Values.allLoginActions }}, {{ .Values.reAgents }}, provider_type!="test", market="ES"}) > 4
-      for: 5m
-      labels:
-        severity: urgent
-        priority: P1
-        who: integration-fluffy
-      annotations:
-        description: {{ .Values.kibanaLink }}
-             {{ .Values.grafanaLink }}
-        summary: Login success rate for RE agents and for one of login type with authentication errors is below 50% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
-             the last 60 minutes.
-        tags: {{ .Values.tags }}
-
     ##################################################
     ### All login success rates - Bank Errors - RE ###
     ##################################################
@@ -883,6 +841,6 @@ spec:
       annotations:
         description: {{ .Values.kibanaLink }}
              {{ .Values.grafanaLink }}
-        summary: Refresh unavailable rate is below 5 0% because of all issues ( <{ $value }> ) for <{ $labels.className }>
+        summary: Refresh unavailable rate is below 50% because of all issues ( <{ $value }> ) for <{ $labels.className }>
                the last 60 minutes.
         tags: {{ .Values.tags }}
