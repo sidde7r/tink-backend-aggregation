@@ -109,7 +109,7 @@ public class NemIdConstants {
         public static final By SUBMIT_BUTTON = By.cssSelector("button.button--submit");
         public static final By NOT_EMPTY_ERROR_MESSAGE =
                 By.xpath("//p[@class='error' and text()!='']");
-        public static final By NEMID_WIDE_INFO_HEADING = By.xpath("//h1[@class='wide-header'][0]");
+        public static final By NEMID_WIDE_INFO_HEADING = By.xpath("//h1[@class='wide-heading'][1]");
 
         // Login screen
         public static final By USERNAME_INPUT = By.cssSelector("input[type=text]");
