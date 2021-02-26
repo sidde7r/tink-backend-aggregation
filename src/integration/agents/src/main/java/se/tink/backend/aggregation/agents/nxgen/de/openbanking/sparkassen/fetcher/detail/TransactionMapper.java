@@ -92,7 +92,12 @@ public class TransactionMapper {
                 || beneficiary.toLowerCase().contains("paypal")) {
             // PayPal gets special treatment for now here in agent code, which isn't ideal.
             // ITE-1413 explains it a bit
+
+            if (purpose.isEmpty()) {
+                return beneficiary;
+            }
             return purpose;
+
         } else {
             return beneficiary;
         }
