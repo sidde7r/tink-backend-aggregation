@@ -98,6 +98,8 @@ public class BankiaApiClient {
                         && !Strings.isNullOrEmpty(rsaKeyResponse.getResponseUrl())) {
                     throw BankServiceError.BANK_SIDE_FAILURE.exception(exception);
                 }
+            } else if (exception.getResponse().getStatus() == HttpStatus.SC_SERVICE_UNAVAILABLE) {
+                throw BankServiceError.BANK_SIDE_FAILURE.exception(exception);
             }
             throw exception;
         }
