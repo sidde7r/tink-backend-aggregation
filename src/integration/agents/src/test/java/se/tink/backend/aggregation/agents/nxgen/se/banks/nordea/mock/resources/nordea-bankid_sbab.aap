@@ -1,0 +1,870 @@
+
+REQUEST 1
+POST https://private.nordea.se/api/dbf/ca/token-service-v3/oauth/token
+Accept: application/json
+Content-Type: application/x-www-form-urlencoded
+
+client_id=NDHMSE&grant_type=refresh_token&refresh_token=**MASKEDL/**
+
+RESPONSE 1
+200
+Date: Wed, 24 Feb 2021 12:26:43 GMT
+Content-Type: application/json
+
+{
+    "access_token": "**MASKEDH5**", 
+    "expires_in": 180, 
+    "refresh_token": "**MASKEDEC**", 
+    "scope": "ndf agreement openid offline_access", 
+    "token_type": "**MASKEDcQ**", 
+    "uh": "**MASKEDJm**"
+}
+
+REQUEST 2
+GET https://private.nordea.se/api/dbf/ca/payments-v2/payments/?status=unconfirmed%2Cconfirmed%2Crejected%2Cinprogress
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 2
+200
+Content-Type: application/json
+Date: Wed, 24 Feb 2021 12:26:44 GMT
+
+{
+    "errors": [], 
+    "results": [
+        {
+            "amount": 800.0, 
+            "credit_notes": [], 
+            "currency": "SEK", 
+            "due": "2021-02-26", 
+            "from": "40060036695", 
+            "from_account_number_type": "LBAN-SE", 
+            "from_currency": "SEK", 
+            "id": "402259900518", 
+            "permissions": {
+                "copy": false, 
+                "delete": true, 
+                "modify": {
+                    "amount": true, 
+                    "due": true, 
+                    "from": true, 
+                    "message": true, 
+                    "recurring_count": true, 
+                    "recurring_interval": true, 
+                    "recurring_lastday": true, 
+                    "recurring_repeats": true, 
+                    "to": true, 
+                    "type": true
+                }
+            }, 
+            "recipient_name": "Aran\u00e4s AB", 
+            "reference": "", 
+            "status": "confirmed", 
+            "to": "50462902", 
+            "to_account_number_type": "BG", 
+            "type": "bankgiro"
+        }, 
+        {
+            "amount": 18.0, 
+            "credit_notes": [], 
+            "currency": "SEK", 
+            "due": "2021-03-01", 
+            "from": "40060036695", 
+            "from_account_number_type": "LBAN-SE", 
+            "from_currency": "SEK", 
+            "id": "190973887246", 
+            "permissions": {
+                "copy": false, 
+                "delete": true, 
+                "modify": {
+                    "amount": true, 
+                    "due": true, 
+                    "from": true, 
+                    "message": true, 
+                    "recurring_count": true, 
+                    "recurring_interval": true, 
+                    "recurring_lastday": true, 
+                    "recurring_repeats": true, 
+                    "to": true, 
+                    "type": true
+                }
+            }, 
+            "recipient_name": "Transportstyrelsen Tr\u00e4ngs", 
+            "reference": "", 
+            "status": "confirmed", 
+            "to": "2824647", 
+            "to_account_number_type": "BG", 
+            "type": "bankgiro"
+        }, 
+        {
+            "amount": 1885.0, 
+            "credit_notes": [], 
+            "currency": "SEK", 
+            "due": "2021-03-01", 
+            "from": "40060036695", 
+            "from_account_number_type": "LBAN-SE", 
+            "from_currency": "SEK", 
+            "id": "401364312042", 
+            "permissions": {
+                "copy": false, 
+                "delete": true, 
+                "modify": {
+                    "amount": true, 
+                    "due": true, 
+                    "from": true, 
+                    "message": true, 
+                    "recurring_count": true, 
+                    "recurring_interval": true, 
+                    "recurring_lastday": true, 
+                    "recurring_repeats": true, 
+                    "to": true, 
+                    "type": true
+                }
+            }, 
+            "recipient_name": "Transportstyrelsen Fordon", 
+            "reference": "", 
+            "status": "confirmed", 
+            "to": "50516822", 
+            "to_account_number_type": "BG", 
+            "type": "bankgiro"
+        }, 
+        {
+            "amount": 3557.0, 
+            "credit_notes": [], 
+            "currency": "SEK", 
+            "due": "2021-03-19", 
+            "from": "40060036695", 
+            "from_account_number_type": "LBAN-SE", 
+            "from_currency": "SEK", 
+            "id": "421544075830", 
+            "permissions": {
+                "copy": true, 
+                "delete": true, 
+                "modify": {
+                    "amount": true, 
+                    "due": true, 
+                    "from": true, 
+                    "message": true, 
+                    "recurring_count": true, 
+                    "recurring_interval": true, 
+                    "recurring_lastday": true, 
+                    "recurring_repeats": true, 
+                    "to": true, 
+                    "type": true
+                }
+            }, 
+            "recipient_name": "VOLKSWAGEN /IF SKADEF\u00d6RS\u00c4KRING AB", 
+            "reference": "", 
+            "status": "confirmed", 
+            "to": "41715004", 
+            "to_account_number_type": "PG", 
+            "type": "plusgiro"
+        }
+    ]
+}
+
+REQUEST 3
+GET https://private.nordea.se/api/dbf/ca/accounts-v3/accounts/
+Content-Type: application/json
+Accept: application/json
+
+RESPONSE 3 SET STATE4
+200
+Content-Type: application/json
+Date: Wed, 24 Feb 2021 12:26:45 GMT
+
+{
+    "result": [
+        {
+            "account_id": "NAID-SE-SEK-30682225916", 
+            "account_status": "open", 
+            "available_balance": 16000.32, 
+            "bic": "NDEASESS", 
+            "booked_balance": 16000.32, 
+            "category": "savings", 
+            "country_code": "SE", 
+            "credit_limit": 0.0, 
+            "currency": "SEK", 
+            "data_retrieved_from": "from_source_system", 
+            "display_account_number": "3068 22 25916", 
+            "iban": "SE4730000000030682225916", 
+            "nickname": "F\u00d6RM\u00c5NSKONTO", 
+            "permissions": {
+                "can_deposit_to_account": true, 
+                "can_pay_eligible": true, 
+                "can_pay_from_account": true, 
+                "can_pay_international_from_account": null, 
+                "can_pay_pgbg_from_account": false, 
+                "can_transfer_from_account": true, 
+                "can_transfer_to_account": true, 
+                "can_view": true, 
+                "can_view_transactions": true, 
+                "require_4eye_signing": null, 
+                "require_physically_present_all_eye_signing": null
+            }, 
+            "product_code": "SE1145", 
+            "product_name": "F\u00d6RM\u00c5NSKONTO", 
+            "product_type": "Sparkonton", 
+            "roles": [
+                {
+                    "current_user": true, 
+                    "name": "Joe,Doe",
+                    "role": "owner"
+                }
+            ], 
+            "source_system": "accounts_se_11digit", 
+            "transaction_list_search_criteria": {
+                "can_use_end_date": true, 
+                "can_use_free_text": true, 
+                "can_use_highest_amount": true, 
+                "can_use_lowest_amount": true, 
+                "can_use_start_date": true, 
+                "min_start_date": "2019-11-24", 
+                "sort_by_list": [
+                    "transaction_date_desc"
+                ]
+            }
+        }, 
+        {
+            "account_id": "NAID-SE-SEK-3300123456",
+            "account_status": "open", 
+            "available_balance": 615000.0, 
+            "bic": "NDEASESS", 
+            "booked_balance": 615000.0, 
+            "category": "savings", 
+            "country_code": "SE", 
+            "credit_limit": 0.0, 
+            "currency": "SEK", 
+            "data_retrieved_from": "from_source_system", 
+            "display_account_number": "3300123456",
+            "iban": "SE6230000000033300123456",
+            "nickname": "F\u00d6RM\u00c5NSKONTO", 
+            "permissions": {
+                "can_deposit_to_account": true, 
+                "can_pay_eligible": true, 
+                "can_pay_from_account": true, 
+                "can_pay_international_from_account": null, 
+                "can_pay_pgbg_from_account": false, 
+                "can_transfer_from_account": true, 
+                "can_transfer_to_account": true, 
+                "can_view": true, 
+                "can_view_transactions": true, 
+                "require_4eye_signing": null, 
+                "require_physically_present_all_eye_signing": null
+            }, 
+            "product_code": "SE1145", 
+            "product_name": "F\u00d6RM\u00c5NSKONTO", 
+            "product_type": "Sparkonton", 
+            "roles": [
+                {
+                    "current_user": false, 
+                    "name": "TILLY Joe,ANNE CHARLOTTE",
+                    "role": "owner"
+                }, 
+                {
+                    "current_user": false, 
+                    "name": null, 
+                    "role": "co_owner"
+                }
+            ], 
+            "source_system": "accounts_se_11digit", 
+            "transaction_list_search_criteria": {
+                "can_use_end_date": true, 
+                "can_use_free_text": true, 
+                "can_use_highest_amount": true, 
+                "can_use_lowest_amount": true, 
+                "can_use_start_date": true, 
+                "min_start_date": "2019-11-24", 
+                "sort_by_list": [
+                    "transaction_date_desc"
+                ]
+            }
+        }, 
+        {
+            "account_id": "NAID-SE-SEK-40060036695", 
+            "account_status": "open", 
+            "available_balance": 17111.94, 
+            "bic": "NDEASESS", 
+            "booked_balance": 17111.94, 
+            "category": "transaction", 
+            "country_code": "SE", 
+            "credit_limit": 0.0, 
+            "currency": "SEK", 
+            "data_retrieved_from": "from_source_system", 
+            "display_account_number": "4006 00 36695", 
+            "iban": "SE2230000000040060036695", 
+            "nickname": "PERSONKONTO", 
+            "permissions": {
+                "can_deposit_to_account": true, 
+                "can_pay_eligible": true, 
+                "can_pay_from_account": true, 
+                "can_pay_international_from_account": null, 
+                "can_pay_pgbg_from_account": true, 
+                "can_transfer_from_account": true, 
+                "can_transfer_to_account": true, 
+                "can_view": true, 
+                "can_view_transactions": true, 
+                "require_4eye_signing": null, 
+                "require_physically_present_all_eye_signing": null
+            }, 
+            "product_code": "SE4001", 
+            "product_name": "PERSONKONTO", 
+            "product_type": "Transaktionskonton", 
+            "roles": [
+                {
+                    "current_user": true, 
+                    "name": "Joe,Doe",
+                    "role": "owner"
+                }
+            ], 
+            "source_system": "accounts_se_11digit", 
+            "transaction_list_search_criteria": {
+                "can_use_end_date": true, 
+                "can_use_free_text": true, 
+                "can_use_highest_amount": true, 
+                "can_use_lowest_amount": true, 
+                "can_use_start_date": true, 
+                "min_start_date": "2019-11-24", 
+                "sort_by_list": [
+                    "transaction_date_desc"
+                ]
+            }
+        }, 
+        {
+            "account_id": "NAID-SE-SEK-47164779518", 
+            "account_status": "open", 
+            "available_balance": 0.0, 
+            "bic": "NDEASESS", 
+            "booked_balance": 0.0, 
+            "category": "savings", 
+            "country_code": "SE", 
+            "credit_limit": 0.0, 
+            "currency": "SEK", 
+            "data_retrieved_from": "from_source_system", 
+            "display_account_number": "4716 47 79518", 
+            "iban": "SE2030000000047164779518", 
+            "nickname": "ISK", 
+            "permissions": {
+                "can_deposit_to_account": true, 
+                "can_pay_eligible": true, 
+                "can_pay_from_account": false, 
+                "can_pay_international_from_account": null, 
+                "can_pay_pgbg_from_account": false, 
+                "can_transfer_from_account": true, 
+                "can_transfer_to_account": true, 
+                "can_view": true, 
+                "can_view_transactions": true, 
+                "require_4eye_signing": null, 
+                "require_physically_present_all_eye_signing": null
+            }, 
+            "product_code": "SE1102", 
+            "product_name": "ISK", 
+            "product_type": "Sparkonton", 
+            "roles": [
+                {
+                    "current_user": true, 
+                    "name": "Joe,Doe",
+                    "role": "owner"
+                }
+            ], 
+            "source_system": "accounts_se_11digit", 
+            "transaction_list_search_criteria": {
+                "can_use_end_date": true, 
+                "can_use_free_text": true, 
+                "can_use_highest_amount": true, 
+                "can_use_lowest_amount": true, 
+                "can_use_start_date": true, 
+                "min_start_date": "2019-11-24", 
+                "sort_by_list": [
+                    "transaction_date_desc"
+                ]
+            }
+        }
+    ], 
+    "sub_system_errors": []
+}
+
+REQUEST 4 MATCH STATE4
+GET https://private.nordea.se/api/dbf/ca/beneficiary-v1/beneficiaries
+Content-Type: application/json
+Accept: application/json
+
+RESPONSE 4 SET STATE5
+200
+Date: Wed, 24 Feb 2021 12:26:45 GMT
+Content-Type: application/json
+
+{
+    "beneficiaries": [
+        {
+            "account_number": "66020422349828", 
+            "account_number_type": "LBAN-SE", 
+            "bank_code": "SHB", 
+            "bank_name": "Handelsbanken", 
+            "beneficiary_id": "42de80df-623f-489b-9b55-ca0ae86afaa2", 
+            "name": "Anna Sturesson", 
+            "payment_type": "lban"
+        }, 
+        {
+            "account_number": "5203195184", 
+            "account_number_type": "NDA-SE", 
+            "bank_code": "NB", 
+            "bank_name": "Nordea", 
+            "beneficiary_id": "892e9eed-b853-420f-8e37-9e2f5879f63e", 
+            "name": "anne charlotte tilly karlsson", 
+            "payment_type": "lban"
+        }, 
+        {
+            "account_number": "14013506300", 
+            "account_number_type": "NDA-SE", 
+            "bank_code": "NB", 
+            "bank_name": "Nordea", 
+            "beneficiary_id": "3c38b34d-5a82-4fc8-8ddd-3fe61f3618e3", 
+            "name": "charlotte tilly karlsson", 
+            "payment_type": "lban"
+        }, 
+        {
+            "account_number": "5122122", 
+            "account_number_type": "BG", 
+            "beneficiary_id": "20bb3cf0-0dab-4ed9-bd09-298cc61b105a", 
+            "name": "Forsg\u00e5rdens Golf AB", 
+            "payment_type": "bankgiro"
+        }, 
+        {
+            "account_number": "53765483", 
+            "account_number_type": "BG", 
+            "beneficiary_id": "70233bf3-52b7-4cf2-b81c-6c76a241d6c9", 
+            "name": "GOLF PLAISIR RESEBYR\u00c5 AB", 
+            "payment_type": "bankgiro"
+        }, 
+        {
+            "account_number": "50010121811", 
+            "account_number_type": "LBAN-SE", 
+            "bank_code": "SEB", 
+            "bank_name": "SEB", 
+            "beneficiary_id": "83a6c185-131c-4e41-beb5-a641f46b362c", 
+            "name": "karin andersson", 
+            "payment_type": "lban"
+        }, 
+        {
+            "account_number": "5583505", 
+            "account_number_type": "BG", 
+            "beneficiary_id": "0b941c31-5b5f-46e7-9e88-a88cf5432d18", 
+            "name": "Kungsbacka kommun bostadsf\u00f6rmedling", 
+            "payment_type": "bankgiro"
+        }, 
+        {
+            "account_number": "40470046623", 
+            "account_number_type": "NDA-SE", 
+            "bank_code": "NB", 
+            "bank_name": "Nordea", 
+            "beneficiary_id": "9dadc09a-a720-4e76-95b9-1984a3bda548", 
+            "name": "Monica Johansson", 
+            "payment_type": "lban"
+        }, 
+        {
+            "account_number": "13850141861", 
+            "account_number_type": "LBAN-SE", 
+            "bank_code": "\u00d6GB", 
+            "bank_name": "Danske Bank Sverige", 
+            "beneficiary_id": "e795bb8b-23f9-44e4-8b9d-888cb5ec905e", 
+            "name": "Pernilla Tilly Meijer", 
+            "payment_type": "lban"
+        }, 
+        {
+            "account_number": "50501055", 
+            "account_number_type": "BG", 
+            "beneficiary_id": "493eed23-67df-4fc5-ba1c-ce22056175ff", 
+            "name": "SKATTEVERKET", 
+            "payment_type": "bankgiro"
+        }, 
+        {
+            "account_number": "2824647", 
+            "account_number_type": "BG", 
+            "beneficiary_id": "e70ba0c1-e495-46cc-9b3e-b33ec6efa4de", 
+            "name": "TR\u00c4NGSELSKATT TRANSPORTSTYRELSEN", 
+            "payment_type": "bankgiro"
+        }
+    ]
+}
+
+REQUEST 5 MATCH STATE5
+POST https://private.nordea.se/api/dbf/ca/payments-v2/payments/
+Accept: application/json
+Content-Type: application/json
+
+{
+    "amount": 150000.0, 
+    "bank_name": "SBAB", 
+    "currency": "SEK", 
+    "due": "2021-02-25", 
+    "from": "3300123456",
+    "from_account_number_type": null, 
+    "message": "SBAB-BANK", 
+    "own_message": null, 
+    "recipient_name": "Tink Name",
+    "reference": null, 
+    "speed": "normal", 
+    "to": "9252123456",
+    "to_account_number_type": "LBAN-SE", 
+    "type": "lban"
+}
+
+RESPONSE 5 SET STATE6
+200
+Content-Type: application/json
+Date: Wed, 24 Feb 2021 12:26:45 GMT
+
+{
+    "amount": 150000.0, 
+    "bank_id": "SBAB", 
+    "bank_name": "SBAB Bank AB", 
+    "credit_notes": [], 
+    "currency": "SEK", 
+    "due": "2021-02-25", 
+    "from": "3300123456",
+    "from_currency": "SEK", 
+    "id": "551371520422", 
+    "message": "SBAB-BANK", 
+    "own_message": "", 
+    "permissions": {
+        "copy": true, 
+        "delete": true, 
+        "modify": {
+            "amount": true, 
+            "due": true, 
+            "from": true, 
+            "message": true, 
+            "recurring_count": true, 
+            "recurring_interval": true, 
+            "recurring_lastday": true, 
+            "recurring_repeats": true, 
+            "to": true, 
+            "type": true
+        }
+    }, 
+    "recipient_name": "Tink Name",
+    "reference": "", 
+    "status": "unconfirmed", 
+    "status_message": "", 
+    "to": "9252123456",
+    "to_account_number_type": "LBAN-SE", 
+    "type": "lban"
+}
+
+REQUEST 6 MATCH STATE6
+POST https://private.nordea.se/api/dbf/ca/payments-v2/payments/confirm
+Accept: application/json
+Content-Type: application/json
+
+{
+    "payment_ids": [
+        "551371520422"
+    ], 
+    "signing_type": "nasa"
+}
+
+RESPONSE 6 SET STATE7
+200
+Content-Type: application/json
+Date: Wed, 24 Feb 2021 12:26:45 GMT
+
+{
+    "errors": [], 
+    "results": [
+        "51651eda-9d10-4c9a-9a4e-ae1ce50a575d"
+    ]
+}
+
+REQUEST 7 MATCH STATE7
+GET https://private.nordea.se/api/dbf/se/customerinfo-v3/customers/self/info
+Accept: application/json
+
+RESPONSE 7 SET STATE8
+200
+Date: Wed, 24 Feb 2021 12:26:45 GMT
+Content-Type: application/json
+
+{
+    "address": {
+        "city": "KUNGSBACKA", 
+        "country_code": "SE", 
+        "postal_code": "43444", 
+        "street_line": "FORSV\u00c4GEN 8 LGH 1202"
+    }, 
+    "birth_date": "1947-03-18", 
+    "branch_id": "2050003133", 
+    "customer_id": "**MASKEDpa**", 
+    "emails": [
+        {
+            "tags": [
+                "work"
+            ], 
+            "value": "ingvar@comentus.se"
+        }
+    ], 
+    "loyalty_group": "premium", 
+    "loyalty_group_in_raw": "I", 
+    "person_id": "**MASKEDpa**", 
+    "phone_numbers": [
+        {
+            "country_code": "46", 
+            "tags": [
+                "home"
+            ], 
+            "value": "30027248"
+        }, 
+        {
+            "country_code": "46", 
+            "tags": [
+                "mobile"
+            ], 
+            "value": "725417248"
+        }
+    ], 
+    "preferred_name": {
+        "family_name": "Joe",
+        "given_name": "Doe"
+    }, 
+    "segment": "household"
+}
+
+REQUEST 8 MATCH STATE8
+POST https://private.nordea.se/api/dbf/ca/bankidse-v1/bankidse/authentications/
+Accept: application/json
+Content-Type: application/json
+
+{
+    "client_id": "zrIIeWA0LqJHJJ0ZSZr1", 
+    "code_challenge": "4WWa1UBjo3n3f-4Qijdqan1a49DEN7-EcgOWO9AHjfw",
+    "code_challenge_method": "S256", 
+    "nonce": "AAAAAAAAAAAAAAAAAAAAAAAAAA",
+    "redirect_uri": "com.nordea.mobilebank.se://auth-callback", 
+    "response_type": "code", 
+    "scope": "openid ndf agreement offline_access", 
+    "signing_order_id": "51651eda-9d10-4c9a-9a4e-ae1ce50a575d", 
+    "state": "AAAAAAAAAAAAAAAAAAAAAAAAAA",
+    "user_id": null
+}
+
+RESPONSE 8 SET STATE9
+200
+Date: Wed, 24 Feb 2021 12:26:46 GMT
+Content-Type: application/json
+
+{
+    "auto_start_token": "68b92cb4-2497-4a6c-9891-035033c5c102", 
+    "session_id": "b07df29f-bb9b-486d-a4f9-32a15615b2a2", 
+    "status": "assignment_pending", 
+    "verify_after": 2000
+}
+
+REQUEST 9 MATCH STATE9
+GET https://private.nordea.se/api/dbf/ca/bankidse-v1/bankidse/authentications/b07df29f-bb9b-486d-a4f9-32a15615b2a2
+Accept: application/json
+
+RESPONSE 9 SET STATE10
+200
+Date: Wed, 24 Feb 2021 12:26:46 GMT
+Content-Type: application/json
+
+{
+    "session_id": "b07df29f-bb9b-486d-a4f9-32a15615b2a2", 
+    "status": "assignment_pending", 
+    "verify_after": 2000
+}
+
+REQUEST 10 MATCH STATE10
+GET https://private.nordea.se/api/dbf/ca/bankidse-v1/bankidse/authentications/b07df29f-bb9b-486d-a4f9-32a15615b2a2
+Accept: application/json
+
+RESPONSE 10 SET STATE11
+200
+Date: Wed, 24 Feb 2021 12:26:48 GMT
+Content-Type: application/json
+
+{
+    "session_id": "b07df29f-bb9b-486d-a4f9-32a15615b2a2", 
+    "status": "assignment_pending", 
+    "verify_after": 2000
+}
+
+REQUEST 11 MATCH STATE11
+GET https://private.nordea.se/api/dbf/ca/bankidse-v1/bankidse/authentications/b07df29f-bb9b-486d-a4f9-32a15615b2a2
+Accept: application/json
+
+RESPONSE 11 SET STATE12
+200
+Date: Wed, 24 Feb 2021 12:26:50 GMT
+Content-Type: application/json
+
+{
+    "session_id": "b07df29f-bb9b-486d-a4f9-32a15615b2a2", 
+    "status": "assignment_pending", 
+    "verify_after": 2000
+}
+
+REQUEST 12 MATCH STATE12
+GET https://private.nordea.se/api/dbf/ca/bankidse-v1/bankidse/authentications/b07df29f-bb9b-486d-a4f9-32a15615b2a2
+Accept: application/json
+
+RESPONSE 12 SET STATE13
+200
+Date: Wed, 24 Feb 2021 12:26:52 GMT
+Content-Type: application/json
+
+{
+    "session_id": "b07df29f-bb9b-486d-a4f9-32a15615b2a2", 
+    "status": "assignment_pending", 
+    "verify_after": 2000
+}
+
+REQUEST 13 MATCH STATE13
+GET https://private.nordea.se/api/dbf/ca/bankidse-v1/bankidse/authentications/b07df29f-bb9b-486d-a4f9-32a15615b2a2
+Accept: application/json
+
+RESPONSE 13 SET STATE14
+200
+Date: Wed, 24 Feb 2021 12:26:54 GMT
+Content-Type: application/json
+
+{
+    "session_id": "b07df29f-bb9b-486d-a4f9-32a15615b2a2", 
+    "status": "confirmation_pending", 
+    "verify_after": 2000
+}
+
+REQUEST 14 MATCH STATE14
+GET https://private.nordea.se/api/dbf/ca/bankidse-v1/bankidse/authentications/b07df29f-bb9b-486d-a4f9-32a15615b2a2
+Accept: application/json
+
+RESPONSE 14 SET STATE15
+200
+Date: Wed, 24 Feb 2021 12:26:57 GMT
+Content-Type: application/json
+
+{
+    "session_id": "b07df29f-bb9b-486d-a4f9-32a15615b2a2", 
+    "status": "confirmation_pending", 
+    "verify_after": 2000
+}
+
+REQUEST 15 MATCH STATE15
+GET https://private.nordea.se/api/dbf/ca/bankidse-v1/bankidse/authentications/b07df29f-bb9b-486d-a4f9-32a15615b2a2
+Accept: application/json
+
+RESPONSE 15 SET STATE16
+200
+Date: Wed, 24 Feb 2021 12:26:59 GMT
+Content-Type: application/json
+
+{
+    "session_id": "b07df29f-bb9b-486d-a4f9-32a15615b2a2", 
+    "status": "confirmation_pending", 
+    "verify_after": 2000
+}
+
+REQUEST 16 MATCH STATE16
+GET https://private.nordea.se/api/dbf/ca/bankidse-v1/bankidse/authentications/b07df29f-bb9b-486d-a4f9-32a15615b2a2
+Accept: application/json
+
+RESPONSE 16 SET STATE17
+200
+Date: Wed, 24 Feb 2021 12:27:01 GMT
+Content-Type: application/json
+
+{
+    "session_id": "b07df29f-bb9b-486d-a4f9-32a15615b2a2", 
+    "status": "confirmation_pending", 
+    "verify_after": 2000
+}
+
+REQUEST 17 MATCH STATE17
+GET https://private.nordea.se/api/dbf/ca/bankidse-v1/bankidse/authentications/b07df29f-bb9b-486d-a4f9-32a15615b2a2
+Accept: application/json
+
+RESPONSE 17 SET STATE18
+200
+Date: Wed, 24 Feb 2021 12:27:03 GMT
+Content-Type: application/json
+
+{
+    "session_id": "b07df29f-bb9b-486d-a4f9-32a15615b2a2", 
+    "status": "confirmation_pending", 
+    "verify_after": 2000
+}
+
+REQUEST 18 MATCH STATE18
+GET https://private.nordea.se/api/dbf/ca/bankidse-v1/bankidse/authentications/b07df29f-bb9b-486d-a4f9-32a15615b2a2
+Accept: application/json
+
+RESPONSE 18 SET STATE19
+200
+Date: Wed, 24 Feb 2021 12:27:05 GMT
+Content-Type: application/json
+
+{
+    "code": "eyJ6aXAiOiJERUYiLCJ0dHlwIjoiYXV0aGVudGljYXRpb25fdG9rZW4iLCJ2ZXIiOiIyLjAuMyIsImtpZCI6Im5hc2YtYXV0aGVudGljYXRpb24tdG9rZW4tZW5jcnlwdGlvbi1wcm9kIiwiY3R5IjoiSldUIiwiZW5jIjoiQTEyOEdDTSIsImFsZyI6ImRpciJ9..C1G-Fv3Co6XMaAuW.ZwZ2hlXrEAruyqFVpBIBumCerpeR713Tu9FBd2h1TtWX3oDxS02AAqnz6W-E72mipGxKpB47Gi9FcILEYxfmsTcV5MAtFfub0oiVCO8Chk_RuXvXa9TXt_rRc9VWbxlF_OCamT3qz1PShidekubyPHNlVmNKX8wiwTo-kEmAa9EXpEtuJYM_uBdc6zs0Ywk5uFwTp5zvzjA067WsO2PsBIoa4bq9RLSN49IZ_9H45tqx_jMwIb4CCWVBCXDlZjT4WaUMc-kjmNBw1l2JvS6764TcWT6jRPoqum_hKELXk-iBNA1nk8xYXz7XwMDICTCLCqamlbhOjn-XUU6ZBxBD1rv64R_dwG5_KRkgspQyYHHg1A2xgsrbG46DSBlrZZhqs7A2zb-BCmpUXYPzw2_rniGMYqc6NQ7_w3-MTSGcT2CoOX2KyAmVESnsmC3MUrkXeOTFPBEXahkIcx_BAdczPGqz2q9m_kAsMTgqjQYKyx47F_gDrqpZoDcAH3FpFbpNRuc0mj5hIuMXm_Va6xvaWOHdy08jxkFJAIZcytppy3NkD0FpTL1xP7P9CaFuaAaki4jj5FqRxfMh_bsgi_e44gTmQM8yrPtRgtPgwdUjeXHXsfPzZ2l2YEvs_E16bz8kVOvjofaizr6nLd7KvH7bVbiCgZ_OHcvC1HE6GxEpVcEYZyyGTWamKrAxmI2ya88ay5rNAZkh4IZT-JYabNHTTZXIkrvQnVMrQ8gXuvEBRO9CI1Xmw-8n0B7P8guMWNcpO791eESQoAtD5nc1pu5x-YbzrAzYfdz5-vQBQ2vxSZQMRPrD5GA8XEJkMRopBQSKiTMCTO1EXJt1Zk8A6Kl0M0M93LQVhZuk_xD0fgwyqE4GPxZh6EkIeVAkBc5s7iEFsKNVvZtNDMpSK1uFbQQD3FFWj7au0i_rXPvjyExf4NnZsMPzPDErPwXiJh9TSagw0-Wki13xESJskCq0T7wSbW3lZumsBwTMdodUqzaotzbLMsEfmPzpiv58TEh1hBzH2IIg8g_ALdswA-J0-llhKBtAKaXdViKsAn1HUGFJPsn0o1t_jHmFrswXZIvHrVAOH_6yIQNMaqHa7INMLdYY7RNNjrPwYtCNqVw0vKXB7f8lUCkNQzQoQ4KWnn-wEB3VhQ2aIxGb0qg1uP7jyLqG2iqP_PSPMbYDRxgWYjDwt-KDrKge7QEZGz_kx7oqj-yIck60pizjXD-7ADfROG1cKGxeWad0omvtGTQ8MOCrhqXxCs4NkGOeajWrx3t55mI1tHpMBTzDmIC2KegrUaGuC5-SrnAPnPmGoohhaX_SLo7r2MzJ02Y-cxzrVDm6q2zpH0B1MdDCaxZuwV8LfXD-taHHGkkOA9VoGRUUz3EYG681uxhaTPEVy8Yo9N147p4dfcNn2Bwwj8CuVlq-yejwNSe4e0w0_S0IsGJYhkELezv2KHVQtjwYrrpxWNxryyclJhFqir6W0S4yGcXCv3i3J8VtdulOGd0s8wS7eFY9HRRUd137XD7xoZTJYU-93Yluh0W9Zxs2dxExRV0h7fkPyeaRB2ctPRcIM6KqVCD1c9tGzFBvuF06yojH7OPQBTf-0QHyH3ICGsivOtqc1OOKTqwWwzr05Q.SOXeosNpFTY0uucqWiqh_A", 
+    "session_id": "b07df29f-bb9b-486d-a4f9-32a15615b2a2", 
+    "status": "completed", 
+    "user_id": "**MASKEDpa**", 
+    "verify_after": 2000
+}
+
+REQUEST 19 MATCH STATE19
+POST https://private.nordea.se/api/dbf/ca/payments-v2/payments/complete/51651eda-9d10-4c9a-9a4e-ae1ce50a575d
+Accept: application/json
+Content-Type: application/json
+
+{
+    "code": "eyJ6aXAiOiJERUYiLCJ0dHlwIjoiYXV0aGVudGljYXRpb25fdG9rZW4iLCJ2ZXIiOiIyLjAuMyIsImtpZCI6Im5hc2YtYXV0aGVudGljYXRpb24tdG9rZW4tZW5jcnlwdGlvbi1wcm9kIiwiY3R5IjoiSldUIiwiZW5jIjoiQTEyOEdDTSIsImFsZyI6ImRpciJ9..C1G-Fv3Co6XMaAuW.ZwZ2hlXrEAruyqFVpBIBumCerpeR713Tu9FBd2h1TtWX3oDxS02AAqnz6W-E72mipGxKpB47Gi9FcILEYxfmsTcV5MAtFfub0oiVCO8Chk_RuXvXa9TXt_rRc9VWbxlF_OCamT3qz1PShidekubyPHNlVmNKX8wiwTo-kEmAa9EXpEtuJYM_uBdc6zs0Ywk5uFwTp5zvzjA067WsO2PsBIoa4bq9RLSN49IZ_9H45tqx_jMwIb4CCWVBCXDlZjT4WaUMc-kjmNBw1l2JvS6764TcWT6jRPoqum_hKELXk-iBNA1nk8xYXz7XwMDICTCLCqamlbhOjn-XUU6ZBxBD1rv64R_dwG5_KRkgspQyYHHg1A2xgsrbG46DSBlrZZhqs7A2zb-BCmpUXYPzw2_rniGMYqc6NQ7_w3-MTSGcT2CoOX2KyAmVESnsmC3MUrkXeOTFPBEXahkIcx_BAdczPGqz2q9m_kAsMTgqjQYKyx47F_gDrqpZoDcAH3FpFbpNRuc0mj5hIuMXm_Va6xvaWOHdy08jxkFJAIZcytppy3NkD0FpTL1xP7P9CaFuaAaki4jj5FqRxfMh_bsgi_e44gTmQM8yrPtRgtPgwdUjeXHXsfPzZ2l2YEvs_E16bz8kVOvjofaizr6nLd7KvH7bVbiCgZ_OHcvC1HE6GxEpVcEYZyyGTWamKrAxmI2ya88ay5rNAZkh4IZT-JYabNHTTZXIkrvQnVMrQ8gXuvEBRO9CI1Xmw-8n0B7P8guMWNcpO791eESQoAtD5nc1pu5x-YbzrAzYfdz5-vQBQ2vxSZQMRPrD5GA8XEJkMRopBQSKiTMCTO1EXJt1Zk8A6Kl0M0M93LQVhZuk_xD0fgwyqE4GPxZh6EkIeVAkBc5s7iEFsKNVvZtNDMpSK1uFbQQD3FFWj7au0i_rXPvjyExf4NnZsMPzPDErPwXiJh9TSagw0-Wki13xESJskCq0T7wSbW3lZumsBwTMdodUqzaotzbLMsEfmPzpiv58TEh1hBzH2IIg8g_ALdswA-J0-llhKBtAKaXdViKsAn1HUGFJPsn0o1t_jHmFrswXZIvHrVAOH_6yIQNMaqHa7INMLdYY7RNNjrPwYtCNqVw0vKXB7f8lUCkNQzQoQ4KWnn-wEB3VhQ2aIxGb0qg1uP7jyLqG2iqP_PSPMbYDRxgWYjDwt-KDrKge7QEZGz_kx7oqj-yIck60pizjXD-7ADfROG1cKGxeWad0omvtGTQ8MOCrhqXxCs4NkGOeajWrx3t55mI1tHpMBTzDmIC2KegrUaGuC5-SrnAPnPmGoohhaX_SLo7r2MzJ02Y-cxzrVDm6q2zpH0B1MdDCaxZuwV8LfXD-taHHGkkOA9VoGRUUz3EYG681uxhaTPEVy8Yo9N147p4dfcNn2Bwwj8CuVlq-yejwNSe4e0w0_S0IsGJYhkELezv2KHVQtjwYrrpxWNxryyclJhFqir6W0S4yGcXCv3i3J8VtdulOGd0s8wS7eFY9HRRUd137XD7xoZTJYU-93Yluh0W9Zxs2dxExRV0h7fkPyeaRB2ctPRcIM6KqVCD1c9tGzFBvuF06yojH7OPQBTf-0QHyH3ICGsivOtqc1OOKTqwWwzr05Q.SOXeosNpFTY0uucqWiqh_A", 
+    "signing_type": "nasa"
+}
+
+RESPONSE 19 SET STATE20
+200
+Content-Type: application/json
+Date: Wed, 24 Feb 2021 12:27:06 GMT
+
+{
+    "errors": [], 
+    "results": [
+        {
+            "amount": 150000.0, 
+            "bank_id": "SBAB", 
+            "bank_name": "SBAB", 
+            "credit_notes": [], 
+            "currency": "SEK", 
+            "due": "2021-02-25", 
+            "from": "3300123456",
+            "from_currency": "SEK", 
+            "id": "551371520422", 
+            "message": "SBAB-BANK", 
+            "own_message": "", 
+            "permissions": {
+                "copy": true, 
+                "delete": true, 
+                "modify": {
+                    "amount": true, 
+                    "due": true, 
+                    "from": true, 
+                    "message": true, 
+                    "recurring_count": true, 
+                    "recurring_interval": true, 
+                    "recurring_lastday": true, 
+                    "recurring_repeats": true, 
+                    "to": true, 
+                    "type": true
+                }
+            }, 
+            "recipient_name": "Tink Name",
+            "reference": "", 
+            "status": "confirmed", 
+            "status_message": "", 
+            "to": "9252123456",
+            "to_account_number_type": "LBAN-SE", 
+            "type": "lban"
+        }
+    ]
+}

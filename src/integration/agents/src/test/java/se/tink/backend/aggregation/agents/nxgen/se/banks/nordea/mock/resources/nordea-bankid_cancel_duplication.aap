@@ -1,0 +1,196 @@
+
+REQUEST 1
+POST https://private.nordea.se/api/dbf/ca/token-service-v3/oauth/token
+Accept: application/json
+Content-Type: application/x-www-form-urlencoded
+
+client_id=NDHMSE&grant_type=refresh_token&refresh_token=**MASKEDHv**
+
+RESPONSE 1
+200
+Date: Sat, 27 Feb 2021 21:05:38 GMT
+Content-Type: application/json
+
+{
+    "access_token": "**MASKEDP1**", 
+    "expires_in": 180, 
+    "refresh_token": "**MASKEDI0**", 
+    "scope": "ndf agreement openid offline_access", 
+    "token_type": "**MASKEDcQ**", 
+    "uh": "**MASKEDiz**"
+}
+
+REQUEST 2
+GET https://private.nordea.se/api/dbf/ca/payments-v2/payments/?status=unconfirmed%2Cconfirmed%2Crejected%2Cinprogress
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 2
+200
+Content-Type: application/json
+Date: Sat, 27 Feb 2021 21:05:39 GMT
+
+{
+    "errors": [], 
+    "results": [
+        {
+            "amount": 150.0, 
+            "credit_notes": [], 
+            "currency": "SEK", 
+            "due": "2021-03-01", 
+            "from": "3300123456",
+            "from_account_number_type": "LBAN-SE", 
+            "from_currency": "SEK", 
+            "id": "571249926450", 
+            "permissions": {
+                "copy": true, 
+                "delete": true, 
+                "modify": {
+                    "amount": true, 
+                    "due": true, 
+                    "from": true, 
+                    "message": true, 
+                    "recurring_count": true, 
+                    "recurring_interval": true, 
+                    "recurring_lastday": true, 
+                    "recurring_repeats": true, 
+                    "to": true, 
+                    "type": true
+                }
+            }, 
+            "recipient_name": "Alfa-kassan", 
+            "reference": "", 
+            "status": "confirmed", 
+            "to": "53702395", 
+            "to_account_number_type": "BG", 
+            "type": "bankgiro"
+        }
+    ]
+}
+
+REQUEST 3
+GET https://private.nordea.se/api/dbf/ca/accounts-v3/accounts/
+Content-Type: application/json
+Accept: application/json
+
+RESPONSE 3 SET STATE4
+200
+Content-Type: application/json
+Date: Sat, 27 Feb 2021 21:05:39 GMT
+
+{
+    "result": [
+        {
+            "account_id": "NAID-SE-SEK-3300123456",
+            "account_status": "open", 
+            "available_balance": 3678.04, 
+            "bic": "NDEASESS", 
+            "booked_balance": 3678.04, 
+            "category": "transaction", 
+            "country_code": "SE", 
+            "credit_limit": 0.0, 
+            "currency": "SEK", 
+            "data_retrieved_from": "from_source_system", 
+            "display_account_number": "3300123456",
+            "iban": "SE803000000003300123456",
+            "nickname": "PERSONKONTO", 
+            "permissions": {
+                "can_deposit_to_account": true, 
+                "can_pay_eligible": true, 
+                "can_pay_from_account": true, 
+                "can_pay_international_from_account": null, 
+                "can_pay_pgbg_from_account": true, 
+                "can_transfer_from_account": true, 
+                "can_transfer_to_account": true, 
+                "can_view": true, 
+                "can_view_transactions": true, 
+                "require_4eye_signing": null, 
+                "require_physically_present_all_eye_signing": null
+            }, 
+            "product_code": "SE4001", 
+            "product_name": "PERSONKONTO", 
+            "product_type": "Transaktionskonton", 
+            "roles": [
+                {
+                    "current_user": true, 
+                    "name": "Joe,Doe",
+                    "role": "owner"
+                }
+            ], 
+            "source_system": "accounts_se_11digit", 
+            "transaction_list_search_criteria": {
+                "can_use_end_date": true, 
+                "can_use_free_text": true, 
+                "can_use_highest_amount": true, 
+                "can_use_lowest_amount": true, 
+                "can_use_start_date": true, 
+                "min_start_date": "2019-11-27", 
+                "sort_by_list": [
+                    "transaction_date_desc"
+                ]
+            }
+        }
+    ], 
+    "sub_system_errors": []
+}
+
+REQUEST 4 MATCH STATE4
+GET https://private.nordea.se/api/dbf/ca/beneficiary-v1/beneficiaries
+Content-Type: application/json
+Accept: application/json
+
+RESPONSE 4 SET STATE5
+200
+Date: Sat, 27 Feb 2021 21:05:39 GMT
+Content-Type: application/json
+
+{
+    "beneficiaries": [
+        {
+            "account_number": "48116008", 
+            "account_number_type": "PG", 
+            "beneficiary_id": "9db1b88e-3295-426c-9810-80e2b43f0682", 
+            "name": "Bostadsf\u00f6rmedlingen I Stockholm", 
+            "payment_type": "plusgiro"
+        }
+    ]
+}
+
+REQUEST 5 MATCH STATE5
+POST https://private.nordea.se/api/dbf/ca/payments-v2/payments/
+Accept: application/json
+Content-Type: application/json
+
+{
+    "amount": 4246.0,
+    "bank_name": null, 
+    "currency": "SEK", 
+    "due": "2020-06-22",
+    "from": "3300123456",
+    "from_account_number_type": null, 
+    "message": "610550873500157",
+    "own_message": null, 
+    "recipient_name": null,
+    "reference": null, 
+    "speed": "normal", 
+    "to": "3228756",
+    "to_account_number_type": "BG", 
+    "type": "bankgiro"
+}
+
+RESPONSE 5 SET STATE6
+400
+Content-Type: application/json
+Date: Sat, 27 Feb 2021 21:05:40 GMT
+
+{
+    "details": [
+        {
+            "more_info": "bad_request: Duplicate payment. Technical code. Please try again.", 
+            "reason": "BESE1028"
+        }
+    ], 
+    "error": "BESE1028", 
+    "error_description": "Duplicate payment. Technical code. Please try again.", 
+    "http_status": 400
+}

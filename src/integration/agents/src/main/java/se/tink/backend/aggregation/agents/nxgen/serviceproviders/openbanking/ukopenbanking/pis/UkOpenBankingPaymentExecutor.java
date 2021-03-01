@@ -1,14 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis;
 
-import com.google.common.util.concurrent.Uninterruptibles;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.TimeUnit;
-import java.util.function.Supplier;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpStatus;
@@ -34,7 +31,6 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.utils.ProviderSessionCacheController;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
-import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.Storage;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
 import se.tink.libraries.payment.enums.PaymentStatus;
@@ -61,7 +57,7 @@ public class UkOpenBankingPaymentExecutor implements PaymentExecutor, FetchableP
 
         authFilterInstantiator.instantiateAuthFilterWithClientToken();
 
-        return paymentResponseRetryer(() -> apiClient.createPaymentConsent(paymentRequest));
+        return apiClient.createPaymentConsent(paymentRequest);
     }
 
     @Override
@@ -69,13 +65,8 @@ public class UkOpenBankingPaymentExecutor implements PaymentExecutor, FetchableP
         authFilterInstantiator.instantiateAuthFilterWithClientToken();
 
         return getPaymentId(paymentRequest)
-                .map(id -> paymentResponseRetryer(() -> apiClient.getPayment(id)))
-                .orElseGet(
-                        () ->
-                                paymentResponseRetryer(
-                                        () ->
-                                                apiClient.getPaymentConsent(
-                                                        getConsentId(paymentRequest))));
+                .map(id -> apiClient.getPayment(id))
+                .orElseGet(() -> apiClient.getPaymentConsent(getConsentId(paymentRequest)));
     }
 
     @Override
@@ -119,13 +110,11 @@ public class UkOpenBankingPaymentExecutor implements PaymentExecutor, FetchableP
         String instructionIdentification = paymentMultiStepRequest.getPayment().getUniqueId();
 
         PaymentResponse paymentResponse =
-                paymentResponseRetryer(
-                        () ->
-                                apiClient.executePayment(
-                                        paymentMultiStepRequest,
-                                        getConsentId(paymentMultiStepRequest),
-                                        endToEndIdentification,
-                                        instructionIdentification));
+                apiClient.executePayment(
+                        paymentMultiStepRequest,
+                        getConsentId(paymentMultiStepRequest),
+                        endToEndIdentification,
+                        instructionIdentification);
 
         // Should be handled on a higher level than here, but don't want to pollute the
         // payment controller with TransferExecutionException usage. Ticket PAY2-188 will
@@ -147,29 +136,6 @@ public class UkOpenBankingPaymentExecutor implements PaymentExecutor, FetchableP
         Map<String, String> cache =
                 Collections.singletonMap(UkOpenBankingPaymentConstants.PAYMENT_ID_KEY, paymentId);
         providerSessionCacheController.setProviderSessionCacheInfo(cache);
-    }
-
-    /**
-     * For fixing the Barclays unstable issue; No-sleep retry had been tested but working not well;
-     * No-sleep retry will get continuous rejection; Jira had been raised on UKOB directory by other
-     * TPPs
-     */
-    @SuppressWarnings("UnstableApiUsage")
-    private PaymentResponse paymentResponseRetryer(
-            Supplier<PaymentResponse> paymentResponseSupplier) {
-        for (int i = 0; i < 3; i++) {
-            try {
-                return paymentResponseSupplier.get();
-            } catch (HttpResponseException e) {
-                log.warn(e.getMessage(), e);
-                if (RETRYABLE_STATUSES.contains(e.getResponse().getStatus())) {
-                    Uninterruptibles.sleepUninterruptibly(2000 * i, TimeUnit.MILLISECONDS);
-                    continue;
-                }
-                return paymentResponseSupplier.get();
-            }
-        }
-        return paymentResponseSupplier.get();
     }
 
     @Override
