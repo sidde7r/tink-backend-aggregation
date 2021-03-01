@@ -1530,6 +1530,7 @@ public final class SEBApiAgent extends AbstractAgent
 
         account.setAccountNumber(accountEntity.KONTO_NR);
         account.putIdentifier(new SwedishIdentifier(accountEntity.KONTO_NR));
+        account.putIdentifier(new SwedishIdentifier(accountEntity.KONTO_NR).toIbanIdentifer());
         account.setBankId(account.getAccountNumber());
 
         Preconditions.checkState(
