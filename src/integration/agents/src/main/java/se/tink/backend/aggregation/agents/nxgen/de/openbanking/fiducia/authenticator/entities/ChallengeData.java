@@ -6,6 +6,8 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 @Getter
 public class ChallengeData {
-
+    private String image;
+    private Integer otpMaxLength;
+    private String otpFormat;
     private String additionalInformation;
 }

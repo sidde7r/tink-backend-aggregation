@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: VERSION\n"
-"POT-Creation-Date: 2021-02-25 12:36+0000\n"
-"PO-Revision-Date: 2021-02-25 12:36+0000\n"
+"POT-Creation-Date: 2021-02-26 14:18+0000\n"
+"PO-Revision-Date: 2021-02-26 14:18+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE TEAM <EMAIL@ADDRESS>\n"
 "Language: de\n"
@@ -1933,3 +1933,11 @@ msgid ""
 msgstr ""
 "Sie haben Ihre Anmeldung in der N26-App noch nicht bestätigt. Bitte klicken "
 "Sie “Abschicken“."
+
+#, java-format
+msgid "Please enter a maximum of {0} digits"
+msgstr "Die TAN sollte aus maximal {0} Ziffern bestehen"
+
+#, java-format
+msgid "Please enter a maximum of {0} characters"
+msgstr "Die TAN sollte aus maximal {0} Zeichen bestehen"

@@ -27,24 +27,34 @@ public class DkbSupplementalDataProvider {
         this.catalog = catalog;
     }
 
-    String getTanCode(List<String> challengeData) throws SupplementalInfoException {
-        return getTanCode(null, challengeData);
+    String getTanCode(List<String> data) throws SupplementalInfoException {
+        return getTanCode(null, data, new ConsentAuthorization.ChallengeData());
     }
 
-    String getTanCode(String scaMethodName, List<String> challengeData)
+    String getTanCode(
+            String scaMethodName,
+            List<String> data,
+            ConsentAuthorization.ChallengeData challengeData)
             throws SupplementalInfoException {
-        List<Field> fields = getSupplementalFields(scaMethodName, challengeData);
+        List<Field> fields = getSupplementalFields(scaMethodName, data, challengeData);
         return supplementalInformationHelper
                 .askSupplementalInformation(fields.toArray(new Field[0]))
                 .get(fields.get(fields.size() - 1).getName());
     }
 
-    List<Field> getSupplementalFields(String scaMethodName, List<String> challengeData) {
+    List<Field> getSupplementalFields(
+            String scaMethodName,
+            List<String> data,
+            ConsentAuthorization.ChallengeData challengeData) {
         List<Field> fields = new LinkedList<>();
 
-        extractStartCode(challengeData)
-                .ifPresent(s -> fields.add(GermanFields.Startcode.build(catalog, s)));
-        fields.add(GermanFields.Tan.build(catalog, scaMethodName));
+        extractStartCode(data).ifPresent(s -> fields.add(GermanFields.Startcode.build(catalog, s)));
+        fields.add(
+                GermanFields.Tan.build(
+                        catalog,
+                        scaMethodName,
+                        challengeData != null ? challengeData.getOtpMaxLength() : null,
+                        challengeData != null ? challengeData.getOtpFormat() : null));
 
         return fields;
     }

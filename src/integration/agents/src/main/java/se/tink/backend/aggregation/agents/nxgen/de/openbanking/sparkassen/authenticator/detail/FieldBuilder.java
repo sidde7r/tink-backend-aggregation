@@ -32,7 +32,12 @@ public class FieldBuilder {
                     GermanFields.Startcode.build(
                             catalog, retrieveStartCode(challengeData.getAdditionalInformation())));
         }
-        fields.add(GermanFields.Tan.build(catalog, scaMethod.getName()));
+        fields.add(
+                GermanFields.Tan.build(
+                        catalog,
+                        scaMethod.getName(),
+                        challengeData != null ? challengeData.getOtpMaxLength() : null,
+                        challengeData != null ? challengeData.getOtpFormat() : null));
         return fields;
     }
 
