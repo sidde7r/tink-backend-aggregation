@@ -159,7 +159,7 @@
       "reference": "3",
       "type": "OPERAC.",
       "shortDescription": "VISA CLASSIC BS",
-      "number": "xxxxxx",
+      "number": "1111-1111-11-1234038406",
       "realNumber": "xxxxxxxxx",
       "numcard": "TA 70101",
       "isOwner": true,
@@ -177,11 +177,11 @@
       "alias": "",
       "expirationDate": "31-03-2023",
       "balance": {
-        "value": "5,00",
+        "value": "10,00",
         "currency": "EUR"
       },
       "availableBalance": {
-        "value": "1.295,00",
+        "value": "1.290,00",
         "currency": "EUR"
       },
       "dms": "",

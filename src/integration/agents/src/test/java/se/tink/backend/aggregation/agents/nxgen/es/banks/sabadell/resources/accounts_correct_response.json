@@ -31,7 +31,7 @@
         "currency": "EUR"
       },
       "availableBalance": {
-        "value": "1.295,00",
+        "value": "2.295,00",
         "currency": "EUR"
       },
       "dms": "",
@@ -77,14 +77,14 @@
     },
     {
       "bsprotect": "S",
-      "description": "VISA CLASSIC BS",
+      "description": "MASTER CLASSIC BS",
       "isMarsans": "false",
       "name": "**HASHED:sr**",
       "productType": "TA",
       "reference": "3",
       "type": "OPERAC.",
       "shortDescription": "VISA CLASSIC BS",
-      "number": "xxxxxx",
+      "number": "5506________9000",
       "realNumber": "xxxxxxxxxxx",
       "numcard": "TA xxxxxx",
       "isOwner": true,
@@ -102,11 +102,11 @@
       "alias": "",
       "expirationDate": "31-03-2023",
       "balance": {
-        "value": "5,00",
+        "value": "10,00",
         "currency": "EUR"
       },
       "availableBalance": {
-        "value": "1.295,00",
+        "value": "1.290,00",
         "currency": "EUR"
       },
       "dms": "",
