@@ -9,12 +9,7 @@ public enum AuthorizationError implements AgentError {
     NO_VALID_PROFILE(new LocalizableKey("You do not have a valid profile.")),
     ACCOUNT_BLOCKED(
             new LocalizableKey(
-                    "Could not login to your bank. The access could be blocked. Please activate it in your bank app or contact your bank.")),
-    DEVICE_LIMIT_REACHED(
-            new LocalizableKey(
-                    "You have reached the maximum number of mobile device registrations. Please check if you can unregister some devices using the bank's web portal, or contact the bank.")),
-    REACH_MAXIMUM_TRIES(
-            new LocalizableKey("You have reached maximum number of tries. Please try again later"));
+                    "Could not login to your bank. The access could be blocked. Please activate it in your bank app or contact your bank."));
 
     private final LocalizableKey userMessage;
 

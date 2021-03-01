@@ -230,14 +230,6 @@ public class DataStudioLoginEventPublisherService {
                                     AuthorizationError.ACCOUNT_BLOCKED,
                                     AgentLoginCompletedEventProto.AgentLoginCompletedEvent
                                             .LoginResult.AUTHORIZATION_ERROR_ACCOUNT_BLOCKED)
-                            .put(
-                                    AuthorizationError.DEVICE_LIMIT_REACHED,
-                                    AgentLoginCompletedEventProto.AgentLoginCompletedEvent
-                                            .LoginResult.AUTHORIZATION_ERROR_DEVICE_LIMIT_REACHED)
-                            .put(
-                                    AuthorizationError.REACH_MAXIMUM_TRIES,
-                                    AgentLoginCompletedEventProto.AgentLoginCompletedEvent
-                                            .LoginResult.AUTHORIZATION_ERROR_REACH_MAXIMUM_TRIES)
                             .build();
 
     private static final ImmutableMap<
