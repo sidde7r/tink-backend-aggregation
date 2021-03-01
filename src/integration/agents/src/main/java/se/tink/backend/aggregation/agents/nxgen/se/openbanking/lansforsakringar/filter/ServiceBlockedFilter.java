@@ -5,6 +5,7 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.agents.contexts.SystemUpdater;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.rpc.TppErrorResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.iface.Filter;
@@ -40,7 +41,7 @@ public class ServiceBlockedFilter extends Filter {
                 credentials.setType(CredentialsTypes.MOBILE_BANKID);
                 systemUpdater.updateCredentialsExcludingSensitiveInformation(credentials, false);
             }
-            throw BankServiceError.CONSENT_EXPIRED.exception();
+            throw SessionError.CONSENT_EXPIRED.exception();
         }
         return response;
     }

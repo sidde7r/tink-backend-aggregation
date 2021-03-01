@@ -7,6 +7,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.mockito.Mockito;
+import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.iface.Filter;
 import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
@@ -50,7 +51,7 @@ public class SibsHttpFiltersTest {
         when(response.getStatus()).thenReturn(httpCode);
         when(response.getBody(String.class)).thenReturn(CONSENT_INVALID_SIBS_MESSAGE);
 
-        thrown.expect(BankServiceException.class);
+        thrown.expect(SessionException.class);
         thrown.expectMessage(
                 "Http status: " + httpCode + " Error body: " + CONSENT_INVALID_SIBS_MESSAGE);
 

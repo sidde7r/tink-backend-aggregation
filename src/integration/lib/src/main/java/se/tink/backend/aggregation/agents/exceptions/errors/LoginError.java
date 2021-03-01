@@ -31,9 +31,6 @@ public enum LoginError implements AgentError {
     NO_ACCESS_TO_MOBILE_BANKING(
             new LocalizableKey(
                     "You do not have access to mobile banking. Please contact your bank.")),
-    PASSWORD_CHANGED(
-            new LocalizableKey(
-                    "Your password has changed. Please enter the latest password in all other devices.")),
     INVALIDATED_CREDENTIALS(
             new LocalizableKey(
                     "Your existing credentials have been invalidated, Please delete this credentials and create a new one.")),
