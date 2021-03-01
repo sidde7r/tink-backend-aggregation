@@ -1,63 +1,79 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar;
 
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
-import org.junit.Ignore;
 import org.junit.Test;
+import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.SsnArgumentEnum;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.ToAccountFromAccountArgumentEnum;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
+import se.tink.libraries.transfer.enums.RemittanceInformationType;
+import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
-@Ignore
 public class LansforsakringarAgentPaymentTest {
+
+    private final ArgumentManager<SsnArgumentEnum> manager =
+            new ArgumentManager<>(SsnArgumentEnum.values());
+    private final ArgumentManager<ToAccountFromAccountArgumentEnum> toFromManager =
+            new ArgumentManager<>(ToAccountFromAccountArgumentEnum.values());
 
     @Test
     public void testPayments() throws Exception {
+        manager.before();
+        toFromManager.before();
+
         AgentIntegrationTest.Builder builder =
                 new AgentIntegrationTest.Builder("SE", "se-lansforsakringar-ob")
+                        .addCredentialField(Field.Key.USERNAME, manager.get(SsnArgumentEnum.SSN))
                         .expectLoggedIn(false)
+                        .setFinancialInstitutionId("lansforsakringar")
+                        .setAppId("tink")
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);
 
-        builder.build().testGenericPayment(createListMockedDomesticPayment(4));
+        builder.build().testGenericPayment(createListMockedDomesticPayment());
     }
 
-    private List<Payment> createListMockedDomesticPayment(int numberOfMockedPayments) {
-        List<Payment> listOfMockedPayments = new ArrayList<>();
+    private List<Payment> createListMockedDomesticPayment() {
 
-        for (int i = 0; i < numberOfMockedPayments; ++i) {
-            Creditor creditor = mock(Creditor.class);
-            doReturn(Type.SE).when(creditor).getAccountIdentifierType();
-            doReturn("222222222222").when(creditor).getAccountNumber();
-            doReturn("Anna Andersson").when(creditor).getName();
+        List<Payment> list = new ArrayList<>();
 
-            Debtor debtor = mock(Debtor.class);
-            doReturn(AccountIdentifier.Type.SE).when(debtor).getAccountIdentifierType();
-            doReturn("11111111111").when(debtor).getAccountNumber();
+        LocalDate executionDate = LocalDate.now().plusDays(7);
+        String currency = "SEK";
+        RemittanceInformation remittanceInformation = new RemittanceInformation();
+        remittanceInformation.setType(RemittanceInformationType.OCR);
+        remittanceInformation.setValue("Remmitance");
 
-            ExactCurrencyAmount amount = ExactCurrencyAmount.inSEK(new Random().nextInt(50000));
-            LocalDate executionDate = LocalDate.now();
-            String currency = "SEK";
+        list.add(
+                new Payment.Builder()
+                        .withCreditor(
+                                new Creditor(
+                                        AccountIdentifier.create(
+                                                Type.SE_BG,
+                                                toFromManager.get(
+                                                        ToAccountFromAccountArgumentEnum
+                                                                .TO_ACCOUNT))))
+                        .withDebtor(
+                                new Debtor(
+                                        AccountIdentifier.create(
+                                                Type.SE,
+                                                toFromManager.get(
+                                                        ToAccountFromAccountArgumentEnum
+                                                                .FROM_ACCOUNT))))
+                        .withExactCurrencyAmount(ExactCurrencyAmount.inSEK(1.01))
+                        .withExecutionDate(executionDate)
+                        .withCurrency(currency)
+                        .withRemittanceInformation(remittanceInformation)
+                        .build());
 
-            listOfMockedPayments.add(
-                    new Payment.Builder()
-                            .withCreditor(creditor)
-                            .withDebtor(debtor)
-                            .withExactCurrencyAmount(amount)
-                            .withExecutionDate(executionDate)
-                            .withCurrency(currency)
-                            .build());
-        }
-
-        return listOfMockedPayments;
+        return list;
     }
 }

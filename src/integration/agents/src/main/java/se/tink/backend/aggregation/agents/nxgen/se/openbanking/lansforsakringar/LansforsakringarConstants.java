@@ -16,7 +16,10 @@ public abstract class LansforsakringarConstants {
     public static final int RETRY_SLEEP_MILLIS_SECONDS = 2000;
 
     public static final TypeMapper<PaymentStatus> PAYMENT_STATUS_MAPPER =
-            TypeMapper.<PaymentStatus>builder().put(PaymentStatus.PENDING, "PDNG", "ACTC").build();
+            TypeMapper.<PaymentStatus>builder()
+                    .put(PaymentStatus.PENDING, "PDNG", "RCVD")
+                    .put(PaymentStatus.SIGNED, "ACSC", "ACSP", "ACTC")
+                    .build();
 
     public static final GenericTypeMapper<PaymentType, Pair<Type, Type>> PAYMENT_TYPE_MAPPER =
             GenericTypeMapper.<PaymentType, Pair<Type, Type>>genericBuilder()
@@ -46,8 +49,9 @@ public abstract class LansforsakringarConstants {
         public static final String GET_TRANSACTIONS = BASE_API_URL + Endpoints.GET_TRANSACTIONS;
         public static final String CREATE_PAYMENT = BASE_API_URL + Endpoints.CREATE_PAYMENT;
         public static final String GET_PAYMENT = BASE_API_URL + Endpoints.GET_PAYMENT;
+        public static final String CREATE_SIGNING_BASKET =
+                BASE_API_URL + Endpoints.CREATE_SIGNING_BASKET;
         public static final String GET_PAYMENT_STATUS = BASE_API_URL + Endpoints.GET_PAYMENT_STATUS;
-        public static final String SIGN_PAYMENT = BASE_API_URL + Endpoints.SIGN_PAYMENT;
     }
 
     public static class Endpoints {
@@ -67,8 +71,9 @@ public abstract class LansforsakringarConstants {
                 "/openbanking/ais/v1/accounts/{accountId}/balances";
         public static final String GET_TRANSACTIONS =
                 "/openbanking/ais/v1/accounts/{accountId}/transactions";
-        public static final String CREATE_PAYMENT = "/openbanking/pis/v2/payments/{paymentType}";
+        public static final String CREATE_PAYMENT = "/openbanking/pis/v3/payments/{paymentType}";
         public static final String GET_PAYMENT = "/openbanking/pis/v3/payments/{paymentId}";
+        public static final String CREATE_SIGNING_BASKET = "/openbanking/pis/v3/signing-baskets";
         public static final String GET_PAYMENT_STATUS =
                 "/openbanking/pis/v3/payments/{paymentId}/status";
         public static final String SIGN_PAYMENT =
@@ -109,6 +114,7 @@ public abstract class LansforsakringarConstants {
         public static final String CONTENT_TYPE = "Content-Type";
         public static final String CACHE_CONTROL = "Cache-Control";
         public static final String TPP_NOK_REDIRECT_URI = "TPP-NOK-Redirect-URI";
+        public static final String BASKET_ID = "basketId";
     }
 
     public static class HeaderValues {
@@ -157,11 +163,16 @@ public abstract class LansforsakringarConstants {
 
     public class PaymentTypes {
         public static final String DOMESTIC_CREDIT_TRANSFERS = "domestic-credit-transfers";
+        public static final String DOMESTIC_GIROS = "domestic-giros";
         public static final String CROSS_BORDER_CREDIT_TRANSFERS = "cross-border-credit-transfers";
     }
 
     public class BodyValues {
         public static final String EMPTY_BODY = "{}";
+    }
+
+    public class SCAValues {
+        public static final String SCA_EXEMPTED = "EXEMPTED";
     }
 
     public class CallbackParam {
