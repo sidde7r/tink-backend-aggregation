@@ -9,6 +9,7 @@ import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.tuple.Pair;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmericanExpressUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmexApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.dto.AccountsResponseDto;
@@ -33,7 +34,8 @@ public class AmexCreditCardFetcher implements AccountFetcher<CreditCardAccount> 
 
     @Override
     public Collection<CreditCardAccount> fetchAccounts() {
-        final Map<HmacToken, AccountsResponseDto> accountsByToken = getAccounts();
+        final Map<HmacToken, Pair<AccountsResponseDto, StatementPeriodsDto>> accountsByToken =
+                getAccounts();
 
         if (accountsByToken.isEmpty()) {
             return Collections.emptyList();
@@ -42,8 +44,13 @@ public class AmexCreditCardFetcher implements AccountFetcher<CreditCardAccount> 
 
         List<CreditCardAccount> accounts =
                 accountsByToken.entrySet().stream()
-                        .filter(entry -> isAccountActive(entry.getValue()))
-                        .map(entry -> createTransactionalAccount(entry.getKey(), entry.getValue()))
+                        .filter(entry -> isAccountActive(entry.getValue().getKey()))
+                        .map(
+                                entry ->
+                                        createTransactionalAccount(
+                                                entry.getKey(),
+                                                entry.getValue().getLeft(),
+                                                entry.getValue().getRight()))
                         .collect(Collectors.toList());
 
         List<CreditCardAccount> subAccountList = fetchSubAccounts(accountsByToken);
@@ -54,9 +61,10 @@ public class AmexCreditCardFetcher implements AccountFetcher<CreditCardAccount> 
     }
 
     private List<CreditCardAccount> fetchSubAccounts(
-            Map<HmacToken, AccountsResponseDto> accountsByToken) {
+            Map<HmacToken, Pair<AccountsResponseDto, StatementPeriodsDto>> accountsByToken) {
 
         return accountsByToken.values().stream()
+                .map(Pair::getLeft)
                 .filter(AmexCreditCardFetcher::isAccountActive)
                 .filter(AccountsResponseDto::haveSupplementaryAccounts)
                 .map(AccountsResponseDto::toSubCreditCardAccount)
@@ -65,11 +73,13 @@ public class AmexCreditCardFetcher implements AccountFetcher<CreditCardAccount> 
     }
 
     private CreditCardAccount createTransactionalAccount(
-            HmacToken hmacToken, AccountsResponseDto accountsResponse) {
+            HmacToken hmacToken,
+            AccountsResponseDto accountsResponse,
+            StatementPeriodsDto statementPeriods) {
 
         final List<BalanceDto> balances = getBalances(hmacToken);
         final Map<Integer, String> statementMap =
-                getStatementPeriods(hmacToken).getStatementPeriods().stream()
+                statementPeriods.getStatementPeriods().stream()
                         .collect(
                                 Collectors.toMap(
                                         StatementDto::getIndex, StatementDto::getEndDateAsString));
@@ -81,15 +91,20 @@ public class AmexCreditCardFetcher implements AccountFetcher<CreditCardAccount> 
         return amexApiClient.fetchBalances(hmacToken);
     }
 
-    private StatementPeriodsDto getStatementPeriods(HmacToken hmacToken) {
-        return amexApiClient.fetchStatementPeriods(hmacToken);
-    }
-
-    private Map<HmacToken, AccountsResponseDto> getAccounts() {
+    private Map<HmacToken, Pair<AccountsResponseDto, StatementPeriodsDto>> getAccounts() {
         final HmacMultiToken hmacMultiToken = getHmacMultiToken();
 
         return hmacMultiToken.getTokens().stream()
-                .collect(Collectors.toMap(Function.identity(), amexApiClient::fetchAccounts));
+                .collect(
+                        Collectors.toMap(
+                                Function.identity(), this::fetchAccountsAndStatementPeriods));
+    }
+
+    private Pair<AccountsResponseDto, StatementPeriodsDto> fetchAccountsAndStatementPeriods(
+            HmacToken hmacToken) {
+        return Pair.of(
+                amexApiClient.fetchAccounts(hmacToken),
+                amexApiClient.fetchStatementPeriods(hmacToken));
     }
 
     private HmacMultiToken getHmacMultiToken() {
@@ -105,7 +120,8 @@ public class AmexCreditCardFetcher implements AccountFetcher<CreditCardAccount> 
 
     The function will then collect all hashmaps and merge them before returning.
      */
-    private void storeAccountIdWithToken(Map<HmacToken, AccountsResponseDto> accountsByToken) {
+    private void storeAccountIdWithToken(
+            Map<HmacToken, Pair<AccountsResponseDto, StatementPeriodsDto>> accountsByToken) {
         HmacAccountIds hmacAccountIds =
                 new HmacAccountIds(
                         accountsByToken.entrySet().stream()
@@ -119,16 +135,18 @@ public class AmexCreditCardFetcher implements AccountFetcher<CreditCardAccount> 
     }
 
     private Map<String, HmacToken> mapTokenToAccountAndSubAccount(
-            Map.Entry<HmacToken, AccountsResponseDto> entry) {
+            Map.Entry<HmacToken, Pair<AccountsResponseDto, StatementPeriodsDto>> entry) {
         Map<String, HmacToken> tokensByAccountId = new HashMap<>();
+
+        final AccountsResponseDto account = entry.getValue().getLeft();
+
         // Add mainAccount and HmacToken to map
-        tokensByAccountId.put(getAccountId(entry.getValue()), entry.getKey());
+        tokensByAccountId.put(getAccountId(account), entry.getKey());
 
         // add subAccount and HmacToken to map if non null.
-        if (entry.getValue().getSupplementaryAccounts() != null) {
+        if (account.getSupplementaryAccounts() != null) {
             tokensByAccountId.putAll(
-                    createHmacSubAccountsId(
-                            entry.getValue().getSupplementaryAccounts(), entry.getKey()));
+                    createHmacSubAccountsId(account.getSupplementaryAccounts(), entry.getKey()));
         }
 
         return tokensByAccountId;
