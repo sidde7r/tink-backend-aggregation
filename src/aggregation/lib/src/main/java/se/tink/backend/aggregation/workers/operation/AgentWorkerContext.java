@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.workers.operation;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Stopwatch;
 import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.sun.jersey.api.client.UniformInterfaceException;
 import io.dropwizard.lifecycle.Managed;
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
@@ -63,8 +65,16 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     private static final Logger logger =
             LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    public static final MetricId SUSPICIOUS_NUMBER_SERIES =
+    private static final MetricId SUSPICIOUS_NUMBER_SERIES =
             MetricId.newId("aggregation_account_suspicious_number_series");
+    private static final MetricId CREDENTIALS_STATUS_CHANGES_WITHOUT_ERRORS =
+            MetricId.newId("aggregation_credentials_status_changes_without_errors");
+
+    private static final Set<CredentialsStatus> ERROR_STATUSES =
+            ImmutableSet.of(
+                    CredentialsStatus.TEMPORARY_ERROR,
+                    CredentialsStatus.AUTHENTICATION_ERROR,
+                    CredentialsStatus.UNCHANGED);
 
     private Catalog catalog;
     protected CuratorFramework coordinationClient;
@@ -561,6 +571,16 @@ public class AgentWorkerContext extends AgentContext implements Managed {
 
         for (AgentEventListener eventListener : eventListeners) {
             eventListener.onUpdateCredentialsStatus();
+        }
+
+        if (ERROR_STATUSES.contains(credentials.getStatus())) {
+            String agent = request.getProvider().getClassName();
+            getMetricRegistry()
+                    .meter(
+                            CREDENTIALS_STATUS_CHANGES_WITHOUT_ERRORS
+                                    .label("agent", agent)
+                                    .label("status", credentials.getStatus().toString()))
+                    .inc();
         }
 
         Optional<String> refreshId = getRefreshId();
