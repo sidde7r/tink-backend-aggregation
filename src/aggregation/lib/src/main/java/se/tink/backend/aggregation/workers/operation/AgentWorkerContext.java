@@ -45,6 +45,7 @@ import se.tink.backend.aggregation.events.AccountInformationServiceEventsProduce
 import se.tink.backend.aggregation.locks.BarrierName;
 import se.tink.backend.aggregationcontroller.v1.rpc.credentialsservice.UpdateCredentialsSupplementalInformationRequest;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
+import se.tink.connectivity.errors.ConnectivityError;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account_data_cache.AccountData;
 import se.tink.libraries.account_data_cache.AccountDataCache;
@@ -635,6 +636,46 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         credentials.setStatusPayload(payload);
 
         updateCredentialsExcludingSensitiveInformation(credentials, true);
+    }
+
+    @Override
+    public void updateStatusWithError(
+            CredentialsStatus status, String statusPayload, ConnectivityError error) {
+
+        Credentials credentials = request.getCredentials();
+        credentials.setStatus(status);
+        credentials.setStatusPayload(statusPayload);
+
+        // Execute any event-listeners.
+
+        for (AgentEventListener eventListener : eventListeners) {
+            eventListener.onUpdateCredentialsStatus();
+        }
+
+        Optional<String> refreshId = getRefreshId();
+
+        // Clone the credentials here so that we can pass a copy with no
+        // secrets back to the system service.
+        Credentials credentialsCopy = credentials.clone();
+        credentialsCopy.clearSensitiveInformation(request.getProvider());
+
+        se.tink.libraries.credentials.rpc.Credentials coreCredentials =
+                CoreCredentialsMapper.fromAggregationCredentials(credentialsCopy);
+
+        se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateCredentialsStatusRequest
+                updateCredentialsStatusRequest =
+                        new se.tink.backend.aggregation.aggregationcontroller.v1.rpc
+                                .UpdateCredentialsStatusRequest();
+        updateCredentialsStatusRequest.setCredentials(coreCredentials);
+        updateCredentialsStatusRequest.setUserId(credentials.getUserId());
+        updateCredentialsStatusRequest.setUpdateContextTimestamp(true);
+        updateCredentialsStatusRequest.setUserDeviceId(request.getUserDeviceId());
+        updateCredentialsStatusRequest.setRequestType(request.getType());
+        updateCredentialsStatusRequest.setOperationId(request.getOperationId());
+        refreshId.ifPresent(updateCredentialsStatusRequest::setRefreshId);
+        updateCredentialsStatusRequest.setDetailedError(error);
+
+        controllerWrapper.updateCredentials(updateCredentialsStatusRequest);
     }
 
     @Override

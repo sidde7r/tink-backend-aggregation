@@ -29,6 +29,7 @@ import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.http.NextGenTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
+import se.tink.connectivity.errors.ConnectivityError;
 import se.tink.libraries.account_data_cache.AccountData;
 import se.tink.libraries.account_data_cache.AccountDataCache;
 import se.tink.libraries.i18n.Catalog;
@@ -217,6 +218,18 @@ public class AgentTestContext extends AgentContext {
     public void updateStatus(
             CredentialsStatus status, String statusPayload, boolean statusFromProvider) {
         log.info("Updating status: " + status.name() + " (" + statusPayload + ")");
+
+        credentials.setStatus(status);
+        credentials.setStatusPayload(statusPayload);
+    }
+
+    @Override
+    public void updateStatusWithError(
+            CredentialsStatus status, String statusPayload, ConnectivityError error) {
+        log.info(
+                "Updating status: {}, also having error: {}",
+                status.name(),
+                error.getType().name());
 
         credentials.setStatus(status);
         credentials.setStatusPayload(statusPayload);

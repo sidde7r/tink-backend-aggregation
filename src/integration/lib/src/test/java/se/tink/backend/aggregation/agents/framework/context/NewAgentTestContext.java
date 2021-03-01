@@ -46,6 +46,7 @@ import se.tink.backend.aggregation.fakelogmasker.FakeLogMasker;
 import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.nxgen.framework.validation.AisValidator;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
+import se.tink.connectivity.errors.ConnectivityError;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account_data_cache.AccountData;
 import se.tink.libraries.account_data_cache.AccountDataCache;
@@ -222,6 +223,18 @@ public final class NewAgentTestContext extends AgentContext {
                         + statusPayload
                         + ") - statusFromProvider: "
                         + statusFromProvider);
+
+        credential.setStatus(status);
+        credential.setStatusPayload(statusPayload);
+    }
+
+    @Override
+    public void updateStatusWithError(
+            CredentialsStatus status, String statusPayload, ConnectivityError error) {
+        log.info(
+                "Updating status: {}, also having error: {}",
+                status.name(),
+                error.getType().name());
 
         credential.setStatus(status);
         credential.setStatusPayload(statusPayload);
