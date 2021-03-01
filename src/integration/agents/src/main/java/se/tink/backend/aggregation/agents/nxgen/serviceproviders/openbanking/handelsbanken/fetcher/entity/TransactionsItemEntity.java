@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ha
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.time.LocalDate;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.ObjectUtils;
@@ -10,6 +11,7 @@ import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
+import se.tink.backend.aggregation.utils.json.deserializers.LocalDateDeserializer;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -20,6 +22,7 @@ public class TransactionsItemEntity {
     @JsonAlias("transactionAmount")
     private TransactionAmountEntity transactionAmountEntity;
 
+    @JsonDeserialize(using = LocalDateDeserializer.class)
     private LocalDate ledgerDate;
 
     private String creditorName;
@@ -33,10 +36,12 @@ public class TransactionsItemEntity {
 
     private String debtorName;
 
+    @JsonDeserialize(using = LocalDateDeserializer.class)
     private LocalDate valueDate;
 
     private String creditDebit;
 
+    @JsonDeserialize(using = LocalDateDeserializer.class)
     private LocalDate transactionDate;
 
     private String status;
@@ -65,10 +70,12 @@ public class TransactionsItemEntity {
         return debtorName;
     }
 
+    @JsonDeserialize(using = LocalDateDeserializer.class)
     public LocalDate getValueDate() {
         return valueDate;
     }
 
+    @JsonDeserialize(using = LocalDateDeserializer.class)
     public LocalDate getTransactionDate() {
         return transactionDate;
     }
