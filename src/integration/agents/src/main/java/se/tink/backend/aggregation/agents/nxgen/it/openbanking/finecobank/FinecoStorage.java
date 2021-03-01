@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -24,7 +23,7 @@ public class FinecoStorage {
         persistentStorage.put(CONSENT_ID, consentId);
     }
 
-    public void storeConsentCreationTime(LocalDateTime creationTime) {
+    public void storeConsentCreationTime(String creationTime) {
         persistentStorage.put(CONSENT_CREATION_TIMESTAMP, creationTime);
     }
 
@@ -44,8 +43,8 @@ public class FinecoStorage {
         return persistentStorage.get(CONSENT_ID);
     }
 
-    public Optional<LocalDateTime> getConsentCreationTime() {
-        return persistentStorage.get(CONSENT_CREATION_TIMESTAMP, LocalDateTime.class);
+    public Optional<String> getConsentCreationTime() {
+        return persistentStorage.get(CONSENT_CREATION_TIMESTAMP, String.class);
     }
 
     public List<AccountConsent> getBalancesConsents() {
