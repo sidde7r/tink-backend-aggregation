@@ -5,7 +5,7 @@ import se.tink.backend.aggregation.agents.utils.typeguesser.accountholder.Accoun
 import se.tink.backend.aggregation.nxgen.core.account.AccountHolderType;
 
 public class AccountFetcherUtils {
-    public static AccountHolderType getHolderTypeSupportedByProvider(Provider provider) {
+    public static AccountHolderType inferHolderTypeFromProvider(Provider provider) {
         String accountHolderTypeAsString = AccountHolderTypeUtil.inferHolderType(provider).name();
         return AccountHolderType.valueOf(accountHolderTypeAsString);
     }
