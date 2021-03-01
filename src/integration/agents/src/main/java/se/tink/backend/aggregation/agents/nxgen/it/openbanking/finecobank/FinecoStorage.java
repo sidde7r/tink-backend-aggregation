@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.authenticator.entities.AccountConsent;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @Slf4j
@@ -21,8 +22,12 @@ public class FinecoStorage {
     private static final String TRANSACTIONS_CONSENTS = "transactionAccounts";
     private static final String BALANCES_CONSENTS = "balanceAccounts";
     private static final String PAYMENT_AUTH_URL_PREFIX = "paymentAuthUrl_";
+    private static final String PAYMENT_AUTH_ID_PREFIX = "paymentAuthId_";
 
     private final PersistentStorage persistentStorage;
+    private final SessionStorage sessionStorage;
+
+    // Persistent
 
     public void storeConsentId(String consentId) {
         persistentStorage.put(CONSENT_ID, consentId);
@@ -38,10 +43,6 @@ public class FinecoStorage {
 
     public void storeTransactionsConsents(List<AccountConsent> transactionsConsents) {
         persistentStorage.put(TRANSACTIONS_CONSENTS, transactionsConsents);
-    }
-
-    public void storePaymentAuthorizationUrl(String paymentId, String authUrl) {
-        persistentStorage.put(PAYMENT_AUTH_URL_PREFIX + paymentId, authUrl);
     }
 
     public String getConsentId() {
@@ -77,7 +78,21 @@ public class FinecoStorage {
                 .orElse(Collections.emptyList());
     }
 
+    // Session
+
+    public void storePaymentAuthorizationUrl(String paymentId, String authUrl) {
+        sessionStorage.put(PAYMENT_AUTH_URL_PREFIX + paymentId, authUrl);
+    }
+
     public String getPaymentAuthorizationUrl(String paymentId) {
-        return persistentStorage.get(PAYMENT_AUTH_URL_PREFIX + paymentId);
+        return sessionStorage.get(PAYMENT_AUTH_URL_PREFIX + paymentId);
+    }
+
+    public void storePaymentAuthId(String paymentId, String authId) {
+        sessionStorage.put(PAYMENT_AUTH_ID_PREFIX + paymentId, authId);
+    }
+
+    public String getPaymentAuthId(String paymentId) {
+        return sessionStorage.get(PAYMENT_AUTH_ID_PREFIX + paymentId);
     }
 }

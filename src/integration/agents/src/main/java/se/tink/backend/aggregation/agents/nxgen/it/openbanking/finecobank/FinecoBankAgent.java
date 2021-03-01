@@ -15,6 +15,9 @@ import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.authenticator.FinecoBankAuthenticationHelper;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.authenticator.FinecoBankAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.client.FinecoBankApiClient;
+import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.client.FinecoHeaderValues;
+import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.client.FinecoUrlProvider;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.configuration.FinecoBankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.fetcher.card.FinecoBankCreditCardAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.fetcher.transactionalaccount.FinecoBankTransactionalAccountFetcher;
@@ -52,7 +55,7 @@ public final class FinecoBankAgent extends NextGenerationAgent
     public FinecoBankAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
         this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
-        this.finecoStorage = new FinecoStorage(persistentStorage);
+        this.finecoStorage = new FinecoStorage(persistentStorage, sessionStorage);
 
         this.apiClient = constructApiClient(componentProvider);
         this.accountRefreshController = constructAccountRefreshController();
@@ -91,7 +94,10 @@ public final class FinecoBankAgent extends NextGenerationAgent
                         request.isManual() ? userIp : null);
 
         return new FinecoBankApiClient(
-                client, headerValues, componentProvider.getRandomValueGenerator());
+                new FinecoUrlProvider(),
+                client,
+                headerValues,
+                componentProvider.getRandomValueGenerator());
     }
 
     private TransactionalAccountRefreshController constructAccountRefreshController() {

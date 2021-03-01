@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank;
+package se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.client;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

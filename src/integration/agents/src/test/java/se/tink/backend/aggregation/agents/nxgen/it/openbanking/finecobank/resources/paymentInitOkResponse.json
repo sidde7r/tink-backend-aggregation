@@ -1,0 +1,7 @@
+{
+    "transactionStatus": "RCVD",
+    "paymentId": "1827d19a-e0d5-4205-ac63-3919a6200505",
+    "_links": {
+        "scaRedirect": "https://scaRedirectlink.test.com"
+    }
+}

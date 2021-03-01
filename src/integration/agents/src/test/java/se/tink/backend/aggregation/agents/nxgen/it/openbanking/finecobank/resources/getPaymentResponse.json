@@ -1,0 +1,15 @@
+{
+    "debtorAccount": {
+        "iban": "IT31X0301503200000003517230"
+    },
+    "instructedAmount": {
+        "currency": "EUR",
+        "amount": "123.50"
+    },
+    "creditorAccount": {
+        "iban": "DE02100100109307118603"
+    },
+    "creditorName": "Walter Bianchi",
+    "remittanceInformationUnstructured": "causale pagamento",
+    "transactionStatus": "ACSC"
+}

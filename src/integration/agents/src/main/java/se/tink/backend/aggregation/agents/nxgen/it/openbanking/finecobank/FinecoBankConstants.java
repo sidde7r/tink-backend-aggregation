@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank;
 
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapper;
-import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.i18n.LocalizableKey;
 
 public final class FinecoBankConstants {
@@ -40,37 +39,6 @@ public final class FinecoBankConstants {
                 "State could not be retrieved from storage";
     }
 
-    public static class Urls {
-        public static final String BASE_URL = "https://api.finecobank.com/v1";
-        public static final URL CONSENTS = new URL(BASE_URL + Endpoints.CONSENTS);
-        public static final URL ACCOUNTS = new URL(BASE_URL + Endpoints.ACCOUNTS);
-        public static final URL TRANSACTIONS = new URL(BASE_URL + Endpoints.TRANSACTIONS);
-        public static final URL CONSENT_STATUS = new URL(BASE_URL + Endpoints.CONSENT_STATUS);
-        public static final URL CARD_ACCOUNTS = new URL(BASE_URL + Endpoints.CARD_ACCOUNTS);
-        public static final URL CARD_TRANSACTIONS = new URL(BASE_URL + Endpoints.CARD_TRANSACTIONS);
-        public static final URL CONSENT_AUTHORIZATIONS =
-                new URL(BASE_URL + Endpoints.CONSENT_AUTHORIZATIONS);
-        public static final URL PAYMENT_INITIATION =
-                new URL(BASE_URL + Endpoints.PAYMENT_INITIATION);
-        public static final URL GET_PAYMENT = new URL(BASE_URL + Endpoints.GET_PAYMENT);
-        public static final URL GET_PAYMENT_STATUS =
-                new URL(BASE_URL + Endpoints.GET_PAYMENT_STATUS);
-    }
-
-    public static class Endpoints {
-        public static final String CONSENTS = "/consents";
-        public static final String ACCOUNTS = "/accounts";
-        public static final String TRANSACTIONS = "/accounts/{account-id}/transactions";
-        public static final String CONSENT_STATUS = "/consents/{consentId}/status";
-        public static final String CARD_ACCOUNTS = "/card-accounts";
-        public static final String CARD_TRANSACTIONS = "/card-accounts/{account-id}/transactions";
-        public static final String CONSENT_AUTHORIZATIONS = "/consents/{consentId}";
-        public static final String PAYMENT_INITIATION = "/payments/{paymentProduct}";
-        public static final String GET_PAYMENT = "/payments/{paymentProduct}/{paymentId}";
-        public static final String GET_PAYMENT_STATUS =
-                "/payments/{paymentProduct}/{paymentId}/status";
-    }
-
     public static class QueryKeys {
         public static final String WITH_BALANCE = "withBalance";
         public static final String BOOKING_STATUS = "bookingStatus";
@@ -102,13 +70,6 @@ public final class FinecoBankConstants {
 
         public static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd";
         public static final String CURRENCY = "EUR";
-    }
-
-    public static class ParameterKeys {
-        public static final String ACCOUNT_ID = "account-id";
-        public static final String CONSENT_ID = "consentId";
-        public static final String PAYMENT_PRODUCT = "paymentProduct";
-        public static final String PAYMENT_ID = "paymentId";
     }
 
     public static class FormValues {
