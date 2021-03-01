@@ -219,9 +219,9 @@ public class Sparebank1ApiClient {
 
     public PortfolioEntitiesResponse fetchInvestments() {
         return client.request(Urls.PORTFOLIOS.parameter(Parameters.BANK_NAME, bankId))
-                .queryParam("holdings", "true")
-                .queryParam("periodicReports", "true")
-                .queryParam("askPortfolios", "true")
+                .queryParam(QueryParams.HOLDINGS, "true")
+                .queryParam(QueryParams.PERIODIC_REPORTS, "true")
+                .queryParam(QueryParams.ASK_PORTFOLIOS, "true")
                 .accept(MediaType.APPLICATION_JSON_TYPE)
                 .get(PortfolioEntitiesResponse.class);
     }

@@ -12,6 +12,7 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.portfol
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.portfolio.PortfolioModule.PortfolioType;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 @Getter
@@ -27,20 +28,10 @@ public class PortfolioEntity {
     private Boolean periodicReportsIncluded;
     private List<HoldingsEntity> holdings;
 
-    private Double getTotalMarketValue() {
-        return Sparebank1AmountUtils.constructDouble(
-                totalMarketValueInteger, totalMarketValueFraction);
-    }
-
-    private Double getTotalProfit() {
-        return Sparebank1AmountUtils.constructDouble(
-                totalRateOfInvestCurrencyInteger, totalRateOfInvestCurrencyFraction);
-    }
-
     public InvestmentAccount toInvestmentAccount() {
         return InvestmentAccount.nxBuilder()
                 .withPortfolios(buildPortfolioModule())
-                .withZeroCashBalance("NOK")
+                .withCashBalance(ExactCurrencyAmount.inNOK(0.0))
                 .withId(buildIdModule())
                 .build();
     }
@@ -67,5 +58,15 @@ public class PortfolioEntity {
 
     private List<InstrumentModule> buildInstruments() {
         return holdings.stream().map(HoldingsEntity::toTinkInstrument).collect(Collectors.toList());
+    }
+
+    private Double getTotalMarketValue() {
+        return Sparebank1AmountUtils.constructDouble(
+                totalMarketValueInteger, totalMarketValueFraction);
+    }
+
+    private Double getTotalProfit() {
+        return Sparebank1AmountUtils.constructDouble(
+                totalRateOfInvestCurrencyInteger, totalRateOfInvestCurrencyFraction);
     }
 }

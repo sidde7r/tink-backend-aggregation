@@ -22,23 +22,6 @@ public class HoldingsEntity {
     private String sharesInteger;
     private String sharesFraction;
 
-    private Double getMarketValue() {
-        return Sparebank1AmountUtils.constructDouble(marketValueInteger, marketValueFraction);
-    }
-
-    private Double getPrice() {
-        return Sparebank1AmountUtils.constructDouble(costPriceInteger, costPriceFraction);
-    }
-
-    private Double getProfit() {
-        return Sparebank1AmountUtils.constructDouble(
-                rateOfInvestCurrencyInteger, rateOfInvestCurrencyFraction);
-    }
-
-    private Double getQuantity() {
-        return Sparebank1AmountUtils.constructDouble(sharesInteger, sharesFraction);
-    }
-
     public InstrumentModule toTinkInstrument() {
         return InstrumentModule.builder()
                 .withType(InstrumentType.FUND)
@@ -58,5 +41,22 @@ public class HoldingsEntity {
                 .withName(productName)
                 .setIsin(isin)
                 .build();
+    }
+
+    private Double getMarketValue() {
+        return Sparebank1AmountUtils.constructDouble(marketValueInteger, marketValueFraction);
+    }
+
+    private Double getPrice() {
+        return Sparebank1AmountUtils.constructDouble(costPriceInteger, costPriceFraction);
+    }
+
+    private Double getProfit() {
+        return Sparebank1AmountUtils.constructDouble(
+                rateOfInvestCurrencyInteger, rateOfInvestCurrencyFraction);
+    }
+
+    private Double getQuantity() {
+        return Sparebank1AmountUtils.constructDouble(sharesInteger, sharesFraction);
     }
 }

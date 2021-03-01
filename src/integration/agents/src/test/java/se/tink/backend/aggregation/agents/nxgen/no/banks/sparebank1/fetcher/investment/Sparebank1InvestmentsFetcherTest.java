@@ -76,6 +76,7 @@ public class Sparebank1InvestmentsFetcherTest {
         assertThat(portfolio.getTotalValue()).isEqualTo(totalMarketValue);
         assertThat(portfolio.getTotalProfit()).isEqualTo(totalProfit);
         assertThat(portfolio.getInstruments()).hasSize(instrumentSize);
+        assertThat(portfolio.getCashValue()).isEqualTo(0.0);
     }
 
     private void assertInstrument(
