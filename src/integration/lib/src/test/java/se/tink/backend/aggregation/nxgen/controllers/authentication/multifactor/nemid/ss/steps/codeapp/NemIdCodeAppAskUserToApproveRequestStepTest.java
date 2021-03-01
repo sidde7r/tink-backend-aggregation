@@ -13,6 +13,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;
 import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.aggregation.agents.exceptions.errors.SupplementalInfoError;
 import se.tink.backend.aggregation.agents.utils.supplementalfields.DanishFields;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.NemIdCredentialsStatusUpdater;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.utils.NemIdWebDriverWrapper;
@@ -57,10 +58,28 @@ public class NemIdCodeAppAskUserToApproveRequestStepTest {
     }
 
     @Test
-    public void
-            should_click_code_app_method_button_then_update_status_payload_and_wait_for_user_response() {
+    public void should_click_send_code_app_request_button_and_wait_for_not_empty_user_response() {
         // given
         mockSupplementalInfoResponse(ImmutableMap.of());
+
+        // when
+        waitForCodeAppResponseStep.sendCodeAppRequestAndWaitForResponse(credentials);
+
+        // then
+        mocksToVerifyInOrder.verify(driverWrapper).clickButton(SUBMIT_BUTTON);
+        mocksToVerifyInOrder
+                .verify(statusUpdater)
+                .updateStatusPayload(credentials, UserMessage.OPEN_NEM_ID_APP_AND_CLICK_BUTTON);
+        mocksToVerifyInOrder
+                .verify(supplementalInformationController)
+                .askSupplementalInformationSync(DanishFields.NemIdInfo.build(catalog));
+        mocksToVerifyInOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void should_click_send_code_app_request_button_and_ignore_empty_user_response() {
+        // given
+        mockEmptySupplementalInfoResponse();
 
         // when
         waitForCodeAppResponseStep.sendCodeAppRequestAndWaitForResponse(credentials);
@@ -79,5 +98,10 @@ public class NemIdCodeAppAskUserToApproveRequestStepTest {
     private void mockSupplementalInfoResponse(Map<String, String> response) {
         when(supplementalInformationController.askSupplementalInformationSync(any()))
                 .thenReturn(response);
+    }
+
+    private void mockEmptySupplementalInfoResponse() {
+        when(supplementalInformationController.askSupplementalInformationSync(any()))
+                .thenThrow(SupplementalInfoError.NO_VALID_CODE.exception());
     }
 }
