@@ -4,16 +4,16 @@
     "accountExclusion" : "NONE",
     "exactAvailableCredit" : {
       "currencyCode" : "SEK",
-      "unscaledValue" : 0,
       "exactValue" : 0,
       "scale" : 0,
+      "unscaledValue" : 0,
       "doubleValue" : 0.0
     },
     "exactBalance" : {
       "currencyCode" : "SEK",
-      "unscaledValue" : -386498,
       "exactValue" : -3864.98,
       "scale" : 2,
+      "unscaledValue" : -386498,
       "doubleValue" : -3864.98
     },
     "currencyCode" : "SEK",
@@ -34,7 +34,7 @@
       "type" : "PERSONAL",
       "identities" : [ {
         "name" : "Holder Name Last Name",
-        "role" : null
+        "role" : "HOLDER"
       } ]
     },
     "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
