@@ -11,16 +11,18 @@ import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
-import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.aggregation.agents.contexts.SystemUpdater;
+import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
 import se.tink.backend.aggregation.workers.metrics.TimerCacheLoader;
 import se.tink.backend.aggregation.workers.operation.type.AgentWorkerOperationMetricType;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
+import se.tink.connectivity.errors.ConnectivityError;
+import se.tink.connectivity.errors.ConnectivityErrorType;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.metrics.core.MetricId;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 import se.tink.libraries.metrics.types.timers.Timer;
 import se.tink.libraries.metrics.types.timers.Timer.Context;
+import src.libraries.connectivity_errors.ErrorHelper;
 
 public class AgentWorkerOperation implements Runnable {
     public static class AgentWorkerOperationState {
@@ -50,7 +52,7 @@ public class AgentWorkerOperation implements Runnable {
     private String operationMetricName;
     private CredentialsRequest request;
     private AgentWorkerOperationState state;
-    private SystemUpdater systemUpdater;
+    private StatusUpdater statusUpdater;
 
     public AgentWorkerOperation(
             AgentWorkerOperationState state,
@@ -62,7 +64,7 @@ public class AgentWorkerOperation implements Runnable {
         this.request = request;
         this.commands = commands;
         this.context = context;
-        this.systemUpdater = context;
+        this.statusUpdater = context;
         this.state = state;
     }
 
@@ -102,8 +104,6 @@ public class AgentWorkerOperation implements Runnable {
     }
 
     private void executeAllCommands() {
-        Credentials credentials = request.getCredentials();
-
         logger.info(
                 String.format(
                         "Starting with command execution for operation '%s'", operationMetricName));
@@ -161,9 +161,9 @@ public class AgentWorkerOperation implements Runnable {
 
                 commandResult = AgentWorkerCommandResult.ABORT;
 
-                credentials.setStatus(CredentialsStatus.TEMPORARY_ERROR);
-                credentials.setStatusPayload(null);
-                systemUpdater.updateCredentialsExcludingSensitiveInformation(credentials, true);
+                ConnectivityError error =
+                        ErrorHelper.from(ConnectivityErrorType.ERROR_TINK_INTERNAL_ERROR);
+                statusUpdater.updateStatusWithError(CredentialsStatus.TEMPORARY_ERROR, null, error);
 
                 break;
             } finally {
@@ -189,7 +189,10 @@ public class AgentWorkerOperation implements Runnable {
             logger.info(
                     String.format(
                             "Rejected command execution for operation '%s'", operationMetricName));
-            handleCredentialStatusUpdateForRejectedCommand(credentials);
+            // At the time of writing this comment, it can only occur if we fail to acquire lock
+            ConnectivityError error =
+                    ErrorHelper.from(ConnectivityErrorType.ERROR_TINK_INTERNAL_ERROR);
+            statusUpdater.updateStatusWithError(CredentialsStatus.UNCHANGED, null, error);
         }
 
         // Finalize executed commands
@@ -221,12 +224,6 @@ public class AgentWorkerOperation implements Runnable {
         logger.info(
                 String.format(
                         "Done with command finalization for operation '%s'", operationMetricName));
-    }
-
-    private void handleCredentialStatusUpdateForRejectedCommand(Credentials credentials) {
-        credentials.setStatus(CredentialsStatus.UNCHANGED);
-        credentials.setStatusPayload(null);
-        systemUpdater.updateCredentialsExcludingSensitiveInformation(credentials, true);
     }
 
     private void stopCommandContexts(List<Context> contexts) {

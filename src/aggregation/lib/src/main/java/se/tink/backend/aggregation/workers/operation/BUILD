@@ -30,6 +30,7 @@ java_library(
         "//src/integration/transfer:rpc",
         "//src/libraries/account_data_cache",
         "//src/libraries/account_identifier",
+        "//src/libraries/connectivity_errors",
         "//src/libraries/giro_validation",
         "//src/libraries/i18n",
         "//third_party:com_google_code_findbugs_jsr305",
