@@ -18,15 +18,11 @@ public class GermanFields {
                         "Insert your girocard into the TAN-generator and press \"TAN\". Enter the startcode and press \"OK\".");
 
         public static Field build(Catalog catalog, String startcode) {
-            Field.Builder otpBuilder =
-                    Field.builder()
-                            .description(catalog.getString(DESCRIPTION))
-                            .helpText(catalog.getString(HELPTEXT))
-                            .immutable(true)
-                            .name(FIELD_KEY)
-                            .value(startcode);
-
-            return otpBuilder.build();
+            return CommonFields.Information.build(
+                    FIELD_KEY,
+                    catalog.getString(DESCRIPTION),
+                    startcode,
+                    catalog.getString(HELPTEXT));
         }
     }
 
@@ -89,19 +85,21 @@ public class GermanFields {
         private static void prepareOtpNumericFormat(
                 Catalog catalog, Integer otpMaxLength, Field.Builder otpBuilder) {
             if (otpMaxLength != null) {
-                otpBuilder.pattern("^[0-9]{1," + otpMaxLength + "}$");
+                otpBuilder
+                        .pattern("^[0-9]{1," + otpMaxLength + "}$")
+                        .patternError(catalog.getString(NUMERIC_OTP_PATTERN_ERROR, otpMaxLength));
             }
-            otpBuilder
-                    .numeric(true)
-                    .patternError(catalog.getString(NUMERIC_OTP_PATTERN_ERROR, otpMaxLength));
+            otpBuilder.numeric(true);
         }
 
         private static void prepareOtpCharactersFormat(
                 Catalog catalog, Integer otpMaxLength, Field.Builder otpBuilder) {
             if (otpMaxLength != null) {
-                otpBuilder.pattern("^[^\\s]{1," + otpMaxLength + "}$");
+                otpBuilder
+                        .pattern("^[^\\s]{1," + otpMaxLength + "}$")
+                        .patternError(
+                                catalog.getString(CHARACTERS_OTP_PATTERN_ERROR, otpMaxLength));
             }
-            otpBuilder.patternError(catalog.getString(CHARACTERS_OTP_PATTERN_ERROR, otpMaxLength));
         }
     }
 }
