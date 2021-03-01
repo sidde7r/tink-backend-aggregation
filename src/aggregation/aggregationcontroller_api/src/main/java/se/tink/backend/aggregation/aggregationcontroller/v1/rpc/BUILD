@@ -17,7 +17,10 @@ java_library(
         "//third_party:com_google_guava_guava",
         "//third_party:lombok_libs",
         "//third_party:org_slf4j_slf4j_api",
+        "@com_google_protobuf//:protobuf_java",
+        "@com_google_protobuf//:protobuf_java_util",
         "@tink_backend//src/aggregation-controller/api/src/main/java/se/tink/backend/aggregationcontroller/v1/rpc/accountholder",
         "@tink_backend//src/aggregation-controller/api/src/main/java/se/tink/backend/aggregationcontroller/v1/rpc/enums",
+        "@tink_backend//src/libraries/connectivity_errors/proto:java_proto",
     ],
 )
