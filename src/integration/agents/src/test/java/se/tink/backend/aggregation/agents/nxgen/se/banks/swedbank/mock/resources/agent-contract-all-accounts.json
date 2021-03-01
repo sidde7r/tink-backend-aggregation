@@ -1,3262 +1,421 @@
 {
-    "accounts" : [ {
-        "accountNumber" : "515 215 793-8",
-        "accountExclusion" : "NONE",
-        "exactBalance" : {
-            "currencyCode" : "SEK",
-            "exactValue" : -612496.0,
-            "doubleValue" : -612496.0,
-            "unscaledValue" : -6124960,
-            "scale" : 1
-        },
-        "currencyCode" : "SEK",
-        "bankId" : "880395152157938",
-        "excluded" : false,
-        "favored" : false,
-        "name" : "BOLÅN",
-        "ownership" : 1.0,
-        "type" : "LOAN",
-        "userModifiedExcluded" : false,
-        "userModifiedName" : false,
-        "userModifiedType" : false,
-        "identifiers" : "[]",
-        "closed" : false,
-        "flags" : "[]",
-        "balances" : [ ],
-        "availableCredit" : 0.0,
-        "balance" : -612496.0
-    }, {
-        "accountNumber" : "8811601008942231",
-        "accountExclusion" : "NONE",
-        "exactBalance" : {
-            "currencyCode" : "SEK",
-            "exactValue" : 548344.48,
-            "doubleValue" : 548344.48,
-            "unscaledValue" : 54834448,
-            "scale" : 2
-        },
-        "currencyCode" : "SEK",
-        "bankId" : "8811601008942231",
-        "excluded" : false,
-        "favored" : false,
-        "name" : "KAP-KL",
-        "ownership" : 1.0,
-        "type" : "INVESTMENT",
-        "userModifiedExcluded" : false,
-        "userModifiedName" : false,
-        "userModifiedType" : false,
-        "identifiers" : "[]",
-        "closed" : false,
-        "flags" : "[]",
-        "balances" : [ ],
-        "availableCredit" : 0.0,
-        "balance" : 548344.48
-    }, {
-        "accountNumber" : "5435 60** **** 0419",
-        "accountExclusion" : "NONE",
-        "exactAvailableCredit" : {
-            "currencyCode" : "SEK",
-            "exactValue" : 31382.67,
-            "doubleValue" : 31382.67,
-            "unscaledValue" : 3138267,
-            "scale" : 2
-        },
-        "exactBalance" : {
-            "currencyCode" : "SEK",
-            "exactValue" : -3617.33,
-            "doubleValue" : -3617.33,
-            "unscaledValue" : -361733,
-            "scale" : 2
-        },
-        "currencyCode" : "SEK",
-        "bankId" : "5435600419",
-        "excluded" : false,
-        "favored" : false,
-        "name" : "Betal- och kreditkort Mastercard",
-        "ownership" : 1.0,
-        "type" : "CREDIT_CARD",
-        "userModifiedExcluded" : false,
-        "userModifiedName" : false,
-        "userModifiedType" : false,
-        "identifiers" : "[]",
-        "closed" : false,
-        "holderName" : "Wiremock User",
-        "accountHolder" : {
-            "accountId" : null,
-            "type" : "PERSONAL",
-            "identities" : [ {
-                "name" : "Wiremock User",
-                "role": "HOLDER"
-            } ]
-        },
-        "flags" : "[]",
-        "balances" : [ ],
-        "availableCredit" : 31382.67,
-        "balance" : -3617.33
-    }, {
-        "accountNumber" : "515 215 792-0",
-        "accountExclusion" : "NONE",
-        "exactBalance" : {
-            "currencyCode" : "SEK",
-            "exactValue" : -612496.0,
-            "doubleValue" : -612496.0,
-            "unscaledValue" : -6124960,
-            "scale" : 1
-        },
-        "currencyCode" : "SEK",
-        "bankId" : "880395152157920",
-        "excluded" : false,
-        "favored" : false,
-        "name" : "BOLÅN",
-        "ownership" : 1.0,
-        "type" : "LOAN",
-        "userModifiedExcluded" : false,
-        "userModifiedName" : false,
-        "userModifiedType" : false,
-        "identifiers" : "[]",
-        "closed" : false,
-        "flags" : "[]",
-        "balances" : [ ],
-        "availableCredit" : 0.0,
-        "balance" : -612496.0
-    }, {
-        "accountNumber" : "515 215 795-3",
-        "accountExclusion" : "NONE",
-        "exactBalance" : {
-            "currencyCode" : "SEK",
-            "exactValue" : -607592.0,
-            "doubleValue" : -607592.0,
-            "unscaledValue" : -6075920,
-            "scale" : 1
-        },
-        "currencyCode" : "SEK",
-        "bankId" : "880395152157953",
-        "excluded" : false,
-        "favored" : false,
-        "name" : "BOLÅN",
-        "ownership" : 1.0,
-        "type" : "LOAN",
-        "userModifiedExcluded" : false,
-        "userModifiedName" : false,
-        "userModifiedType" : false,
-        "identifiers" : "[]",
-        "closed" : false,
-        "flags" : "[]",
-        "balances" : [ ],
-        "availableCredit" : 0.0,
-        "balance" : -607592.0
-    }, {
-        "accountNumber" : "8327-9,974 896 605-9",
-        "accountExclusion" : "NONE",
-        "exactBalance" : {
-            "currencyCode" : "SEK",
-            "exactValue" : 23265.92,
-            "doubleValue" : 23265.92,
-            "unscaledValue" : 2326592,
-            "scale" : 2
-        },
-        "currencyCode" : "SEK",
-        "availableBalance" : {
-            "currencyCode" : "SEK",
-            "exactValue" : 23265.92,
-            "doubleValue" : 23265.92,
-            "unscaledValue" : 2326592,
-            "scale" : 2
-        },
-        "creditLimit" : {
-            "currencyCode" : "SEK",
-            "exactValue" : 0.0,
-            "doubleValue" : 0.0,
-            "unscaledValue" : 0,
-            "scale" : 1
-        },
-        "bankId" : "832799748966059",
-        "excluded" : false,
-        "favored" : false,
-        "name" : "Privatkonto",
-        "ownership" : 1.0,
-        "type" : "CHECKING",
-        "userModifiedExcluded" : false,
-        "userModifiedName" : false,
-        "userModifiedType" : false,
-        "identifiers" : "[\"iban://SE4780000832799748966059\",\"se://832799748966059\"]",
-        "closed" : false,
-        "holderName" : "Wiremock User",
-        "accountHolder" : {
-            "accountId" : null,
-            "type" : "PERSONAL",
-            "identities" : [ {
-                "name" : "Wiremock User",
-                "role": "HOLDER"
-            } ]
-        },
-        "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
-        "balances" : [ ],
-        "availableCredit" : 0.0,
-        "balance" : 23265.92
-    }, {
-        "accountNumber" : "8327-9,904 316 110-9",
-        "accountExclusion" : "NONE",
-        "exactBalance" : {
-            "currencyCode" : "SEK",
-            "exactValue" : 0.0,
-            "doubleValue" : 0.0,
-            "unscaledValue" : 0,
-            "scale" : 1
-        },
-        "currencyCode" : "SEK",
-        "availableBalance" : {
-            "currencyCode" : "SEK",
-            "exactValue" : 0.0,
-            "doubleValue" : 0.0,
-            "unscaledValue" : 0,
-            "scale" : 1
-        },
-        "creditLimit" : {
-            "currencyCode" : "SEK",
-            "exactValue" : 0.0,
-            "doubleValue" : 0.0,
-            "unscaledValue" : 0,
-            "scale" : 1
-        },
-        "bankId" : "832799043161109",
-        "excluded" : false,
-        "favored" : false,
-        "name" : "Depåkonto 1",
-        "ownership" : 1.0,
-        "type" : "SAVINGS",
-        "userModifiedExcluded" : false,
-        "userModifiedName" : false,
-        "userModifiedType" : false,
-        "identifiers" : "[\"iban://SE1380000832799043161109\",\"se://832799043161109\"]",
-        "closed" : false,
-        "holderName" : "Wiremock User",
-        "accountHolder" : {
-            "accountId" : null,
-            "type" : "PERSONAL",
-            "identities" : [ {
-                "name" : "Wiremock User",
-                "role": "HOLDER"
-            } ]
-        },
-        "flags" : "[]",
-        "balances" : [ ],
-        "availableCredit" : 0.0,
-        "balance" : 0.0
-    }, {
-        "accountNumber" : "103 828 635-1",
-        "accountExclusion" : "NONE",
-        "exactBalance" : {
-            "currencyCode" : "SEK",
-            "exactValue" : 351936.87,
-            "doubleValue" : 351936.87,
-            "unscaledValue" : 35193687,
-            "scale" : 2
-        },
-        "currencyCode" : "SEK",
-        "bankId" : "1038286351",
-        "excluded" : false,
-        "favored" : false,
-        "name" : "Individuellt pensionssparande",
-        "ownership" : 1.0,
-        "type" : "INVESTMENT",
-        "userModifiedExcluded" : false,
-        "userModifiedName" : false,
-        "userModifiedType" : false,
-        "identifiers" : "[]",
-        "closed" : false,
-        "flags" : "[]",
-        "balances" : [ ],
-        "availableCredit" : 0.0,
-        "balance" : 351936.87
-    }, {
-        "accountNumber" : "8327-9,974 896 768-5",
-        "accountExclusion" : "NONE",
-        "exactBalance" : {
-            "currencyCode" : "SEK",
-            "exactValue" : 164840.53,
-            "doubleValue" : 164840.53,
-            "unscaledValue" : 16484053,
-            "scale" : 2
-        },
-        "currencyCode" : "SEK",
-        "availableBalance" : {
-            "currencyCode" : "SEK",
-            "exactValue" : 164840.53,
-            "doubleValue" : 164840.53,
-            "unscaledValue" : 16484053,
-            "scale" : 2
-        },
-        "creditLimit" : {
-            "currencyCode" : "SEK",
-            "exactValue" : 0.0,
-            "doubleValue" : 0.0,
-            "unscaledValue" : 0,
-            "scale" : 1
-        },
-        "bankId" : "832799748967685",
-        "excluded" : false,
-        "favored" : false,
-        "name" : "e-sparkonto",
-        "ownership" : 1.0,
-        "type" : "SAVINGS",
-        "userModifiedExcluded" : false,
-        "userModifiedName" : false,
-        "userModifiedType" : false,
-        "identifiers" : "[\"iban://SE8680000832799748967685\",\"se://832799748967685\"]",
-        "closed" : false,
-        "holderName" : "Wiremock User",
-        "accountHolder" : {
-            "accountId" : null,
-            "type" : "PERSONAL",
-            "identities" : [ {
-                "name" : "Wiremock User",
-                "role": "HOLDER"
-            } ]
-        },
-        "flags" : "[]",
-        "balances" : [ ],
-        "availableCredit" : 0.0,
-        "balance" : 164840.53
+  "accounts" : [ {
+    "accountNumber" : "123 123 000-2",
+    "accountExclusion" : "NONE",
+    "exactBalance" : {
+      "currencyCode" : "SEK",
+      "unscaledValue" : -1968400,
+      "scale" : 1,
+      "exactValue" : -196840.0,
+      "doubleValue" : -196840.0
+    },
+    "currencyCode" : "SEK",
+    "bankId" : "800101231230002",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "BOLÅN",
+    "ownership" : 1.0,
+    "type" : "LOAN",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[]",
+    "closed" : false,
+    "flags" : "[]",
+    "balances" : [ ],
+    "availableCredit" : 0.0,
+    "balance" : -196840.0
+  }, {
+    "accountNumber" : "8 123 456-9",
+    "accountExclusion" : "NONE",
+    "exactBalance" : {
+      "currencyCode" : "SEK",
+      "unscaledValue" : 103,
+      "scale" : 2,
+      "exactValue" : 1.03,
+      "doubleValue" : 1.03
+    },
+    "currencyCode" : "SEK",
+    "bankId" : "81234569",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "Fond",
+    "ownership" : 1.0,
+    "type" : "INVESTMENT",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[]",
+    "closed" : false,
+    "flags" : "[]",
+    "balances" : [ ],
+    "availableCredit" : 0.0,
+    "balance" : 1.03
+  }, {
+    "accountNumber" : "123 123 003-6",
+    "accountExclusion" : "NONE",
+    "exactBalance" : {
+      "currencyCode" : "SEK",
+      "unscaledValue" : -3500000,
+      "scale" : 1,
+      "exactValue" : -350000.0,
+      "doubleValue" : -350000.0
+    },
+    "currencyCode" : "SEK",
+    "bankId" : "800101231230036",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "BOLÅN",
+    "ownership" : 1.0,
+    "type" : "LOAN",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[]",
+    "closed" : false,
+    "flags" : "[]",
+    "balances" : [ ],
+    "availableCredit" : 0.0,
+    "balance" : -350000.0
+  }, {
+    "accountNumber" : "1234567890",
+    "accountExclusion" : "NONE",
+    "exactBalance" : {
+      "currencyCode" : "SEK",
+      "unscaledValue" : -5166661,
+      "scale" : 2,
+      "exactValue" : -51666.61,
+      "doubleValue" : -51666.61
+    },
+    "currencyCode" : "SEK",
+    "bankId" : "1234567890",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "Billån",
+    "ownership" : 1.0,
+    "type" : "LOAN",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[]",
+    "closed" : false,
+    "flags" : "[]",
+    "balances" : [ ],
+    "availableCredit" : 0.0,
+    "balance" : -51666.61
+  }, {
+    "accountNumber" : "8105-9,333 333 666-1",
+    "accountExclusion" : "NONE",
+    "exactBalance" : {
+      "currencyCode" : "SEK",
+      "unscaledValue" : 0,
+      "scale" : 1,
+      "exactValue" : 0.0,
+      "doubleValue" : 0.0
+    },
+    "currencyCode" : "SEK",
+    "availableBalance" : {
+      "currencyCode" : "SEK",
+      "unscaledValue" : 0,
+      "scale" : 1,
+      "exactValue" : 0.0,
+      "doubleValue" : 0.0
+    },
+    "creditLimit" : {
+      "currencyCode" : "SEK",
+      "unscaledValue" : 0,
+      "scale" : 1,
+      "exactValue" : 0.0,
+      "doubleValue" : 0.0
+    },
+    "bankId" : "810593333336661",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "Depåkonto 1",
+    "ownership" : 1.0,
+    "type" : "SAVINGS",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[\"se://810593333336661\",\"iban://SE4080000810593333336661\"]",
+    "closed" : false,
+    "holderName" : "Wiremock User",
+    "accountHolder" : {
+      "accountId" : null,
+      "type" : "PERSONAL",
+      "identities" : [ {
+        "name" : "Wiremock User",
+        "role" : "HOLDER"
+      } ]
+    },
+    "flags" : "[]",
+    "balances" : [ ],
+    "availableCredit" : 0.0,
+    "balance" : 0.0
+  }, {
+    "accountNumber" : "8000-2,111 111 111-6",
+    "accountExclusion" : "NONE",
+    "exactBalance" : {
+      "currencyCode" : "SEK",
+      "unscaledValue" : 33333,
+      "scale" : 2,
+      "exactValue" : 333.33,
+      "doubleValue" : 333.33
+    },
+    "currencyCode" : "SEK",
+    "availableBalance" : {
+      "currencyCode" : "SEK",
+      "unscaledValue" : 33333,
+      "scale" : 2,
+      "exactValue" : 333.33,
+      "doubleValue" : 333.33
+    },
+    "creditLimit" : {
+      "currencyCode" : "SEK",
+      "unscaledValue" : 0,
+      "scale" : 1,
+      "exactValue" : 0.0,
+      "doubleValue" : 0.0
+    },
+    "bankId" : "800021111111116",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "Privatkonto",
+    "ownership" : 1.0,
+    "type" : "CHECKING",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[\"iban://SE9280000800021111111116\",\"se://800021111111116\"]",
+    "closed" : false,
+    "holderName" : "Wiremock User",
+    "accountHolder" : {
+      "accountId" : null,
+      "type" : "PERSONAL",
+      "identities" : [ {
+        "name" : "Wiremock User",
+        "role" : "HOLDER"
+      } ]
+    },
+    "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
+    "balances" : [ ],
+    "availableCredit" : 0.0,
+    "balance" : 333.33
+  }, {
+    "accountNumber" : "5500 00** **** 0000",
+    "accountExclusion" : "NONE",
+    "exactAvailableCredit" : {
+      "currencyCode" : "SEK",
+      "unscaledValue" : 1999947,
+      "scale" : 2,
+      "exactValue" : 19999.47,
+      "doubleValue" : 19999.47
+    },
+    "exactBalance" : {
+      "currencyCode" : "SEK",
+      "unscaledValue" : -53,
+      "scale" : 2,
+      "exactValue" : -0.53,
+      "doubleValue" : -0.53
+    },
+    "currencyCode" : "SEK",
+    "bankId" : "5500000000",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "Betal- och kreditkort Mastercard",
+    "ownership" : 1.0,
+    "type" : "CREDIT_CARD",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[]",
+    "closed" : false,
+    "holderName" : "Wiremock User",
+    "accountHolder" : {
+      "accountId" : null,
+      "type" : "PERSONAL",
+      "identities" : [ {
+        "name" : "Wiremock User",
+        "role" : "HOLDER"
+      } ]
+    },
+    "flags" : "[]",
+    "balances" : [ ],
+    "availableCredit" : 19999.47,
+    "balance" : -0.53
+  }, {
+    "accountNumber" : "222 333 444-8",
+    "accountExclusion" : "NONE",
+    "exactBalance" : {
+      "currencyCode" : "SEK",
+      "unscaledValue" : -270740,
+      "scale" : 1,
+      "exactValue" : -27074.0,
+      "doubleValue" : -27074.0
+    },
+    "currencyCode" : "SEK",
+    "bankId" : "812322223334448",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "Nya Medlemslån LO",
+    "ownership" : 1.0,
+    "type" : "LOAN",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[]",
+    "closed" : false,
+    "flags" : "[]",
+    "balances" : [ ],
+    "availableCredit" : 0.0,
+    "balance" : -27074.0
+  }, {
+    "accountNumber" : "8104043333334444",
+    "accountExclusion" : "NONE",
+    "exactBalance" : {
+      "currencyCode" : "SEK",
+      "unscaledValue" : 66666666,
+      "scale" : 2,
+      "exactValue" : 666666.66,
+      "doubleValue" : 666666.66
+    },
+    "currencyCode" : "SEK",
+    "bankId" : "8104043333334444",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "ITP 1 pension fond",
+    "ownership" : 1.0,
+    "type" : "INVESTMENT",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[]",
+    "closed" : false,
+    "flags" : "[]",
+    "balances" : [ ],
+    "availableCredit" : 0.0,
+    "balance" : 666666.66
+  }, {
+    "accountNumber" : "8001-0,222 222 222-2",
+    "accountExclusion" : "NONE",
+    "exactBalance" : {
+      "currencyCode" : "SEK",
+      "unscaledValue" : 0,
+      "scale" : 1,
+      "exactValue" : 0.0,
+      "doubleValue" : 0.0
+    },
+    "currencyCode" : "SEK",
+    "availableBalance" : {
+      "currencyCode" : "SEK",
+      "unscaledValue" : 0,
+      "scale" : 1,
+      "exactValue" : 0.0,
+      "doubleValue" : 0.0
+    },
+    "creditLimit" : {
+      "currencyCode" : "SEK",
+      "unscaledValue" : 0,
+      "scale" : 1,
+      "exactValue" : 0.0,
+      "doubleValue" : 0.0
+    },
+    "bankId" : "800102222222222",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "e-sparkonto",
+    "ownership" : 1.0,
+    "type" : "SAVINGS",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[\"se://800102222222222\",\"iban://SE7280000800102222222222\"]",
+    "closed" : false,
+    "holderName" : "Wiremock User",
+    "accountHolder" : {
+      "accountId" : null,
+      "type" : "PERSONAL",
+      "identities" : [ {
+        "name" : "Wiremock User",
+        "role" : "HOLDER"
+      } ]
+    },
+    "flags" : "[]",
+    "balances" : [ ],
+    "availableCredit" : 0.0,
+    "balance" : 0.0
+  }, {
+    "accountNumber" : "333 333 333-8",
+    "accountExclusion" : "NONE",
+    "exactBalance" : {
+      "currencyCode" : "SEK",
+      "unscaledValue" : 6666666,
+      "scale" : 2,
+      "exactValue" : 66666.66,
+      "doubleValue" : 66666.66
+    },
+    "currencyCode" : "SEK",
+    "bankId" : "3333333338",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "Individuellt pensionssparande",
+    "ownership" : 1.0,
+    "type" : "INVESTMENT",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[]",
+    "closed" : false,
+    "flags" : "[]",
+    "balances" : [ ],
+    "availableCredit" : 0.0,
+    "balance" : 66666.66
+  }, {
+    "accountNumber" : "8105-9,333 333 555-6",
+    "accountExclusion" : "NONE",
+    "exactBalance" : {
+      "currencyCode" : "SEK",
+      "unscaledValue" : 59577737,
+      "scale" : 2,
+      "exactValue" : 595777.37,
+      "doubleValue" : 595777.37
+    },
+    "currencyCode" : "SEK",
+    "bankId" : "810593333335556",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "Investeringssparande",
+    "ownership" : 1.0,
+    "type" : "INVESTMENT",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[]",
+    "closed" : false,
+    "flags" : "[]",
+    "balances" : [ ],
+    "availableCredit" : 0.0,
+    "balance" : 595777.37
+  } ],
+  "transactions" : [ ],
+  "identityData" : {
+    "nameElements" : [ {
+      "type" : "FULLNAME",
+      "value" : "Wiremock User"
     } ],
-    "transactions" : [ {
-        "amount" : -8.89,
-        "date" : 1583492400000,
-        "description" : "RÄNTA",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "SUB_ACCOUNT" : "5435 60** **** 0419"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "CREDIT_CARD",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : 4000.0,
-        "date" : 1583233200000,
-        "description" : "INBETALNING BANKGIRO",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "SUB_ACCOUNT" : "5435 60** **** 0419"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "CREDIT_CARD",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -29.0,
-        "date" : 1582974000000,
-        "description" : "APPLE.COM/BILL",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "SUB_ACCOUNT" : "5435 60** **** 0419"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "CREDIT_CARD",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -5.0,
-        "date" : 1582801200000,
-        "description" : "BETALA P",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "SUB_ACCOUNT" : "5435 60** **** 0419"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "CREDIT_CARD",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -38.0,
-        "date" : 1580986800000,
-        "description" : "BETALA P",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "SUB_ACCOUNT" : "5435 60** **** 0419"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "CREDIT_CARD",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -23.77,
-        "date" : 1580554800000,
-        "description" : "APPLE.COM/BILL",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "SUB_ACCOUNT" : "5435 60** **** 0419"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "CREDIT_CARD",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : 9.0,
-        "date" : 1579863600000,
-        "description" : "INBETALNING BANKGIRO",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "SUB_ACCOUNT" : "5435 60** **** 0419"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "CREDIT_CARD",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -7490.0,
-        "date" : 1579863600000,
-        "description" : "Klarna *mediamarkt se",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "SUB_ACCOUNT" : "5435 60** **** 0419"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "CREDIT_CARD",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -13.67,
-        "date" : 1579345200000,
-        "description" : "BETALA P",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "SUB_ACCOUNT" : "5435 60** **** 0419"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "CREDIT_CARD",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -9.0,
-        "date" : 1579258800000,
-        "description" : "APPLE.COM/BILL",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "SUB_ACCOUNT" : "5435 60** **** 0419"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "CREDIT_CARD",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : 9.0,
-        "date" : 1577098800000,
-        "description" : "INBETALNING BANKGIRO",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "SUB_ACCOUNT" : "5435 60** **** 0419"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "CREDIT_CARD",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -9.0,
-        "date" : 1576580400000,
-        "description" : "APPLE.COM/BILL",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "SUB_ACCOUNT" : "5435 60** **** 0419"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "CREDIT_CARD",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : 1181.15,
-        "date" : 1574334000000,
-        "description" : "INBETALNING BANKGIRO",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "SUB_ACCOUNT" : "5435 60** **** 0419"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "CREDIT_CARD",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -9.0,
-        "date" : 1573988400000,
-        "description" : "APPLE.COM/BILL",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "SUB_ACCOUNT" : "5435 60** **** 0419"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "CREDIT_CARD",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -752.98,
-        "date" : 1572260400000,
-        "description" : "HIPAYWALLET.COM",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "SUB_ACCOUNT" : "5435 60** **** 0419"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "CREDIT_CARD",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : 1235.91,
-        "date" : 1571652000000,
-        "description" : "INBETALNING BANKGIRO",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "SUB_ACCOUNT" : "5435 60** **** 0419"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "CREDIT_CARD",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -9.0,
-        "date" : 1571306400000,
-        "description" : "ITUNES.COM/BILL",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "SUB_ACCOUNT" : "5435 60** **** 0419"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "CREDIT_CARD",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -404.87,
-        "date" : 1571306400000,
-        "description" : "AMZN Mktp DE*MO0QB7XH4",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "SUB_ACCOUNT" : "5435 60** **** 0419"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "CREDIT_CARD",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -14.3,
-        "date" : 1570874400000,
-        "description" : "BETALA P",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "SUB_ACCOUNT" : "5435 60** **** 0419"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "CREDIT_CARD",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -531.8,
-        "date" : 1570442400000,
-        "description" : "AMZN Mktp DE*MO76S7ZI4",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "SUB_ACCOUNT" : "5435 60** **** 0419"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "CREDIT_CARD",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -695.11,
-        "date" : 1569578400000,
-        "description" : "HIPAYWALLET.COM",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "SUB_ACCOUNT" : "5435 60** **** 0419"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "CREDIT_CARD",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : 2686.48,
-        "date" : 1569232800000,
-        "description" : "INBETALNING BANKGIRO",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "SUB_ACCOUNT" : "5435 60** **** 0419"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "CREDIT_CARD",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -9.0,
-        "date" : 1568714400000,
-        "description" : "ITUNES.COM/BILL",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "SUB_ACCOUNT" : "5435 60** **** 0419"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "CREDIT_CARD",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -282.43,
-        "date" : 1566640800000,
-        "description" : "AUSSIEBUM",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "SUB_ACCOUNT" : "5435 60** **** 0419"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "CREDIT_CARD",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : 1775.22,
-        "date" : 1566208800000,
-        "description" : "INBETALNING BANKGIRO",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "SUB_ACCOUNT" : "5435 60** **** 0419"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "CREDIT_CARD",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -689.84,
-        "date" : 1566208800000,
-        "description" : "AMZN Mktp DE*MH9GT3YM4",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "SUB_ACCOUNT" : "5435 60** **** 0419"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "CREDIT_CARD",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -215.69,
-        "date" : 1566208800000,
-        "description" : "AMZN Mktp DE*MH2F82YN4",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "SUB_ACCOUNT" : "5435 60** **** 0419"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "CREDIT_CARD",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -7.67,
-        "date" : 1566036000000,
-        "description" : "BETALA P",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "SUB_ACCOUNT" : "5435 60** **** 0419"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "CREDIT_CARD",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -9.0,
-        "date" : 1566036000000,
-        "description" : "ITUNES.COM/BILL",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "SUB_ACCOUNT" : "5435 60** **** 0419"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "CREDIT_CARD",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -1481.85,
-        "date" : 1565690400000,
-        "description" : "M.S.L.",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "SUB_ACCOUNT" : "5435 60** **** 0419"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "CREDIT_CARD",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -59.8,
-        "date" : 1564826400000,
-        "description" : "BETALA P",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "SUB_ACCOUNT" : "5435 60** **** 0419"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "CREDIT_CARD",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -383.03,
-        "date" : 1564048800000,
-        "description" : "AMZN Mktp DE*MH6D330U4",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "SUB_ACCOUNT" : "5435 60** **** 0419"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "CREDIT_CARD",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : 4017.11,
-        "date" : 1564048800000,
-        "description" : "INBETALNING BANKGIRO",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "SUB_ACCOUNT" : "5435 60** **** 0419"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "CREDIT_CARD",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -164.41,
-        "date" : 1563962400000,
-        "description" : "AMZN Mktp DE*MH7KA2EV4",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "SUB_ACCOUNT" : "5435 60** **** 0419"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "CREDIT_CARD",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -9.0,
-        "date" : 1563357600000,
-        "description" : "ITUNES.COM/BILL",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "SUB_ACCOUNT" : "5435 60** **** 0419"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "CREDIT_CARD",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -20.8,
-        "date" : 1563271200000,
-        "description" : "BETALA P",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "SUB_ACCOUNT" : "5435 60** **** 0419"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "CREDIT_CARD",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -4.83,
-        "date" : 1563271200000,
-        "description" : "BETALA P",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "SUB_ACCOUNT" : "5435 60** **** 0419"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "CREDIT_CARD",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -1133.35,
-        "date" : 1562580000000,
-        "description" : "M.S.L.",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "SUB_ACCOUNT" : "5435 60** **** 0419"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "CREDIT_CARD",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -1358.0,
-        "date" : 1562061600000,
-        "description" : "easyJetEXF22L7",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "SUB_ACCOUNT" : "5435 60** **** 0419"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "CREDIT_CARD",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -2354.98,
-        "date" : 1562061600000,
-        "description" : "HOTELSCOM160502884949",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "SUB_ACCOUNT" : "5435 60** **** 0419"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "CREDIT_CARD",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : 500.0,
-        "date" : 1582974000000,
-        "description" : "Egen överföring",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"0832799748966059\",\"ownReference\":\"0832799748966059\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : 500.0,
-        "date" : 1580382000000,
-        "description" : "Egen överföring",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"0832799748966059\",\"ownReference\":\"0832799748966059\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : 10000.0,
-        "date" : 1579086000000,
-        "description" : "Övf via internet 832799748966059",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"832799748966059\",\"ownReference\":\"832799748966059\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : 500.0,
-        "date" : 1577703600000,
-        "description" : "Egen överföring",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"0832799748966059\",\"ownReference\":\"0832799748966059\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : 500.0,
-        "date" : 1575111600000,
-        "description" : "Egen överföring",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"0832799748966059\",\"ownReference\":\"0832799748966059\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : 15000.0,
-        "date" : 1572778800000,
-        "description" : "Övf via internet 832799748966059",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"832799748966059\",\"ownReference\":\"832799748966059\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : 500.0,
-        "date" : 1572433200000,
-        "description" : "Egen överföring",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"0832799748966059\",\"ownReference\":\"0832799748966059\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : 500.0,
-        "date" : 1569837600000,
-        "description" : "Egen överföring",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"0832799748966059\",\"ownReference\":\"0832799748966059\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : 500.0,
-        "date" : 1567159200000,
-        "description" : "Egen överföring",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"0832799748966059\",\"ownReference\":\"0832799748966059\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : 15000.0,
-        "date" : 1566986400000,
-        "description" : "Övf via internet 832799748966059",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"832799748966059\",\"ownReference\":\"832799748966059\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : 500.0,
-        "date" : 1564480800000,
-        "description" : "Egen överföring",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"0832799748966059\",\"ownReference\":\"0832799748966059\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : 10000.0,
-        "date" : 1564135200000,
-        "description" : "Övf via internet 832799748966059",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"832799748966059\",\"ownReference\":\"832799748966059\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : 10000.0,
-        "date" : 1562666400000,
-        "description" : "Övf via internet 832799748966059",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"832799748966059\",\"ownReference\":\"832799748966059\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : 500.0,
-        "date" : 1561888800000,
-        "description" : "Egen överföring",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"0832799748966059\",\"ownReference\":\"0832799748966059\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : 3000.0,
-        "date" : 1560420000000,
-        "description" : "Övf via internet 832799748966059",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"832799748966059\",\"ownReference\":\"832799748966059\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : 10000.0,
-        "date" : 1560333600000,
-        "description" : "Övf via internet 832799748966059",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"832799748966059\",\"ownReference\":\"832799748966059\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : 10000.0,
-        "date" : 1559642400000,
-        "description" : "Övf via internet 832799748966059",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"832799748966059\",\"ownReference\":\"832799748966059\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : 500.0,
-        "date" : 1559210400000,
-        "description" : "Egen överföring",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"0832799748966059\",\"ownReference\":\"0832799748966059\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : 500.0,
-        "date" : 1556618400000,
-        "description" : "Egen överföring",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"0832799748966059\",\"ownReference\":\"0832799748966059\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : 500.0,
-        "date" : 1553943600000,
-        "description" : "Egen överföring",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"0832799748966059\",\"ownReference\":\"0832799748966059\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -5000.0,
-        "date" : 1552388400000,
-        "description" : "persienner",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"persienner\",\"ownReference\":\"persienner\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : 500.0,
-        "date" : 1551351600000,
-        "description" : "Egen överföring",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"0832799748966059\",\"ownReference\":\"0832799748966059\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -20000.0,
-        "date" : 1550746800000,
-        "description" : "Övf via internet 832799748966059",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"832799748966059\",\"ownReference\":\"832799748966059\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -61000.0,
-        "date" : 1550746800000,
-        "description" : "Slutbetalninglgh",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"\",\"ownReference\":\"\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : 20000.0,
-        "date" : 1550401200000,
-        "description" : "Övf via internet 832799748966059",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"832799748966059\",\"ownReference\":\"832799748966059\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -220000.0,
-        "date" : 1549364400000,
-        "description" : "nya lägenhet",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"nya lägenhet\",\"ownReference\":\"nya lägenhet\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : 500.0,
-        "date" : 1548846000000,
-        "description" : "Egen överföring",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"0832799748966059\",\"ownReference\":\"0832799748966059\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : 10000.0,
-        "date" : 1547550000000,
-        "description" : "Övf via internet 832799748966059",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"832799748966059\",\"ownReference\":\"832799748966059\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : 12000.0,
-        "date" : 1546513200000,
-        "description" : "Övf via internet 832799748966059",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"832799748966059\",\"ownReference\":\"832799748966059\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : 500.0,
-        "date" : 1546167600000,
-        "description" : "Egen överföring",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"0832799748966059\",\"ownReference\":\"0832799748966059\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : 500.0,
-        "date" : 1543575600000,
-        "description" : "Egen överföring",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"0832799748966059\",\"ownReference\":\"0832799748966059\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : 500.0,
-        "date" : 1540897200000,
-        "description" : "Egen överföring",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"0832799748966059\",\"ownReference\":\"0832799748966059\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : 500.0,
-        "date" : 1538301600000,
-        "description" : "Egen överföring",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"0832799748966059\",\"ownReference\":\"0832799748966059\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : 15000.0,
-        "date" : 1538215200000,
-        "description" : "Övf via internet 832799748966059",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"832799748966059\",\"ownReference\":\"832799748966059\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : 15000.0,
-        "date" : 1537437600000,
-        "description" : "Övf via internet 832799748966059",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"832799748966059\",\"ownReference\":\"832799748966059\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : 500.0,
-        "date" : 1535623200000,
-        "description" : "Egen överföring",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"0832799748966059\",\"ownReference\":\"0832799748966059\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : 500.0,
-        "date" : 1532944800000,
-        "description" : "Egen överföring",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"0832799748966059\",\"ownReference\":\"0832799748966059\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -50000.0,
-        "date" : 1531735200000,
-        "description" : "bostad",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"bostad\",\"ownReference\":\"bostad\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : 29000.0,
-        "date" : 1531389600000,
-        "description" : "Övf via internet 832799748966059",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"832799748966059\",\"ownReference\":\"832799748966059\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : 500.0,
-        "date" : 1530352800000,
-        "description" : "Egen överföring",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"0832799748966059\",\"ownReference\":\"0832799748966059\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : 20000.0,
-        "date" : 1528797600000,
-        "description" : "Övf via internet 832799748966059",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"832799748966059\",\"ownReference\":\"832799748966059\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : 5000.0,
-        "date" : 1528365600000,
-        "description" : "Övf via internet 832799748966059",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"832799748966059\",\"ownReference\":\"832799748966059\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : 500.0,
-        "date" : 1527674400000,
-        "description" : "Egen överföring",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"0832799748966059\",\"ownReference\":\"0832799748966059\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : 5000.0,
-        "date" : 1526464800000,
-        "description" : "Övf via internet 832799748966059",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"832799748966059\",\"ownReference\":\"832799748966059\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : 500.0,
-        "date" : 1525082400000,
-        "description" : "Egen överföring",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"0832799748966059\",\"ownReference\":\"0832799748966059\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : 500.0,
-        "date" : 1522404000000,
-        "description" : "Egen överföring",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"0832799748966059\",\"ownReference\":\"0832799748966059\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : 12000.0,
-        "date" : 1521284400000,
-        "description" : "Övf via internet 832799748966059",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"832799748966059\",\"ownReference\":\"832799748966059\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : 500.0,
-        "date" : 1519815600000,
-        "description" : "Egen överföring",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"0832799748966059\",\"ownReference\":\"0832799748966059\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -37.5,
-        "date" : 1366106400000,
-        "description" : "Övf via internet 832799748967685",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"832799748967685\",\"ownReference\":\"832799748967685\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -20000.0,
-        "date" : 1366106400000,
-        "description" : "Övf via internet 832799748967685",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"832799748967685\",\"ownReference\":\"832799748967685\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : 20000.0,
-        "date" : 1346234400000,
-        "description" : "SWEDBANK",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"SWEDBANK\",\"ownReference\":\"SWEDBANK\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : 0.03,
-        "date" : 1262257200000,
-        "description" : "Sparränta",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"0000000000000000\",\"ownReference\":\"0000000000000000\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : 1.0,
-        "date" : 1230721200000,
-        "description" : "Sparränta",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"0000000000000000\",\"ownReference\":\"0000000000000000\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : 36.47,
-        "date" : 1199098800000,
-        "description" : "Sparränta",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"0000000000000000\",\"ownReference\":\"0000000000000000\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -22330.0,
-        "date" : 1187344800000,
-        "description" : "Emissionslikvid",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"91805258973\",\"ownReference\":\"91805258973\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : 22330.0,
-        "date" : 1184839200000,
-        "description" : "Egen överföring",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"0832799748967685\",\"ownReference\":\"0832799748967685\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -500.0,
-        "date" : 1585562400000,
-        "description" : "e-sparkonto",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : { },
-        "pending" : true,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -179.92,
-        "date" : 1583492400000,
-        "description" : "COOP HÖGDALEN",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"COOP HÖGDALEN\",\"ownReference\":\"COOP HÖGDALEN\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -95.0,
-        "date" : 1583492400000,
-        "description" : "TASTE",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"TASTE\",\"ownReference\":\"TASTE\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -29.0,
-        "date" : 1583406000000,
-        "description" : "HOGDALENS MATBUT",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"HOGDALENS MATBUT\",\"ownReference\":\"HOGDALENS MATBUT\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -157.85,
-        "date" : 1583406000000,
-        "description" : "MATDAX HÖGDALEN",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"MATDAX HÖGDALEN\",\"ownReference\":\"MATDAX HÖGDALEN\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -81.1,
-        "date" : 1583233200000,
-        "description" : "COOP HÖGDALEN",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"COOP HÖGDALEN\",\"ownReference\":\"COOP HÖGDALEN\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -105.0,
-        "date" : 1583233200000,
-        "description" : "RESTAURANG RAZMO",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"RESTAURANG RAZMO\",\"ownReference\":\"RESTAURANG RAZMO\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -30.0,
-        "date" : 1583146800000,
-        "description" : "APCOA PARKING",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"APCOA PARKING\",\"ownReference\":\"APCOA PARKING\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -195.0,
-        "date" : 1583146800000,
-        "description" : "B BEIRUT",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"B BEIRUT\",\"ownReference\":\"B BEIRUT\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -95.0,
-        "date" : 1583146800000,
-        "description" : "B BEIRUT",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"B BEIRUT\",\"ownReference\":\"B BEIRUT\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -189.5,
-        "date" : 1583146800000,
-        "description" : "RUSTA BARKARBY 2",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"RUSTA BARKARBY 2\",\"ownReference\":\"RUSTA BARKARBY 2\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -4000.0,
-        "date" : 1583146800000,
-        "description" : "FÖRENINGSSPARBAN",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"FÖRENINGSSPARBAN\",\"ownReference\":\"FÖRENINGSSPARBAN\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : 1.0,
-        "date" : 1583146800000,
-        "description" : "Swish mottagen +46735841126",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"+46735841126\",\"ownReference\":\"+46735841126\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -64.91,
-        "date" : 1583146800000,
-        "description" : "COOP H@GDALEN",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"COOP H@GDALEN\",\"ownReference\":\"COOP H@GDALEN\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -609.0,
-        "date" : 1583146800000,
-        "description" : "CIRCLE K BANDHAG",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"CIRCLE K BANDHAG\",\"ownReference\":\"CIRCLE K BANDHAG\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : 5.37,
-        "date" : 1583060400000,
-        "description" : "Swish retur EASYPARK AB",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"EASYPARK AB\",\"ownReference\":\"EASYPARK AB\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -114.9,
-        "date" : 1583060400000,
-        "description" : "MATDAX HÖGDALEN",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"MATDAX HÖGDALEN\",\"ownReference\":\"MATDAX HÖGDALEN\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -14.35,
-        "date" : 1583060400000,
-        "description" : "CIRCLE K BANDHAG",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"CIRCLE K BANDHAG\",\"ownReference\":\"CIRCLE K BANDHAG\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : 5.37,
-        "date" : 1583060400000,
-        "description" : "Swish retur EASYPARK AB",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"EASYPARK AB\",\"ownReference\":\"EASYPARK AB\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -5.37,
-        "date" : 1583060400000,
-        "description" : "Swish Easypark AB",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"Easypark AB\",\"ownReference\":\"Easypark AB\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -5.37,
-        "date" : 1583060400000,
-        "description" : "Swish Easypark AB",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"Easypark AB\",\"ownReference\":\"Easypark AB\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -350.0,
-        "date" : 1582974000000,
-        "description" : "Swish skickad +46735841126",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"+46735841126\",\"ownReference\":\"+46735841126\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -500.0,
-        "date" : 1582974000000,
-        "description" : "Överföring 0832799748967685",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"0832799748967685\",\"ownReference\":\"0832799748967685\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -65.3,
-        "date" : 1582887600000,
-        "description" : "LIDL 275 / STHLM",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"LIDL 275 / STHLM\",\"ownReference\":\"LIDL 275 / STHLM\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -282.6,
-        "date" : 1582887600000,
-        "description" : "RUSTA KUNGENS KU",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"RUSTA KUNGENS KU\",\"ownReference\":\"RUSTA KUNGENS KU\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -2796.0,
-        "date" : 1582887600000,
-        "description" : "TOYOTA KRED",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"TOYOTA KRED\",\"ownReference\":\"TOYOTA KRED\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -643.0,
-        "date" : 1582887600000,
-        "description" : "FOLKSAM",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"FOLKSAM\",\"ownReference\":\"FOLKSAM\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -299.0,
-        "date" : 1582887600000,
-        "description" : "HI3G",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"HI3G\",\"ownReference\":\"HI3G\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -110.0,
-        "date" : 1582887600000,
-        "description" : "LÄRARNAS A K",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"LÄRARNAS A K\",\"ownReference\":\"LÄRARNAS A K\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -456.0,
-        "date" : 1582887600000,
-        "description" : "Pong Mall",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"Pong Mall\",\"ownReference\":\"Pong Mall\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -399.7,
-        "date" : 1582887600000,
-        "description" : "CLAS OHLSON",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"CLAS OHLSON\",\"ownReference\":\"CLAS OHLSON\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -89.0,
-        "date" : 1582887600000,
-        "description" : "ENSKEDEPARKENS B",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"ENSKEDEPARKENS B\",\"ownReference\":\"ENSKEDEPARKENS B\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -329.0,
-        "date" : 1582801200000,
-        "description" : "bil",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"bil\",\"ownReference\":\"bil\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -1998.0,
-        "date" : 1582801200000,
-        "description" : "Överföring lån 0000005152157938",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"0000005152157938\",\"ownReference\":\"0000005152157938\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -1998.0,
-        "date" : 1582801200000,
-        "description" : "Överföring lån 0000005152157920",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"0000005152157920\",\"ownReference\":\"0000005152157920\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -1982.0,
-        "date" : 1582801200000,
-        "description" : "Överföring lån 0000005152157953",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"0000005152157953\",\"ownReference\":\"0000005152157953\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -207.91,
-        "date" : 1582714800000,
-        "description" : "MATDAX HÖGDALEN",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"MATDAX HÖGDALEN\",\"ownReference\":\"MATDAX HÖGDALEN\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -149.91,
-        "date" : 1582714800000,
-        "description" : "CLAS OHLSON",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"CLAS OHLSON\",\"ownReference\":\"CLAS OHLSON\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -3521.0,
-        "date" : 1582714800000,
-        "description" : "hyra",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"hyra\",\"ownReference\":\"hyra\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -39.0,
-        "date" : 1582714800000,
-        "description" : "PRIS NYCKELKUND",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"PRIS NYCKELKUND\",\"ownReference\":\"PRIS NYCKELKUND\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : 30608.0,
-        "date" : 1582714800000,
-        "description" : "LÖN",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"LÖN\",\"ownReference\":\"LÖN\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -200.9,
-        "date" : 1582628400000,
-        "description" : "CLAS OHLSON",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"CLAS OHLSON\",\"ownReference\":\"CLAS OHLSON\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -300.0,
-        "date" : 1582542000000,
-        "description" : "KEBABKHAN KURDIS",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"KEBABKHAN KURDIS\",\"ownReference\":\"KEBABKHAN KURDIS\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -78.4,
-        "date" : 1582542000000,
-        "description" : "COOP HÖGDALEN",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"COOP HÖGDALEN\",\"ownReference\":\"COOP HÖGDALEN\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -231.02,
-        "date" : 1582542000000,
-        "description" : "LIDL 295 / ENSKE",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"LIDL 295 / ENSKE\",\"ownReference\":\"LIDL 295 / ENSKE\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -358.08,
-        "date" : 1582542000000,
-        "description" : "ST1 $RSTA",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"ST1 $RSTA\",\"ownReference\":\"ST1 $RSTA\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -116.0,
-        "date" : 1582455600000,
-        "description" : "ENSKEDEPARKENS B",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"ENSKEDEPARKENS B\",\"ownReference\":\"ENSKEDEPARKENS B\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -95.0,
-        "date" : 1582369200000,
-        "description" : "TASTE",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"TASTE\",\"ownReference\":\"TASTE\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -941.5,
-        "date" : 1582369200000,
-        "description" : "APOTEK HJARTAT S",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"APOTEK HJARTAT S\",\"ownReference\":\"APOTEK HJARTAT S\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -3096.0,
-        "date" : 1583492400000,
-        "description" : "SKYDDAT BELOPP",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : { },
-        "pending" : true,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -95.0,
-        "date" : 1583492400000,
-        "description" : "SKYDDAT BELOPP",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : { },
-        "pending" : true,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -95.0,
-        "date" : 1582282800000,
-        "description" : "TASTE",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"TASTE\",\"ownReference\":\"TASTE\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -176.56,
-        "date" : 1582282800000,
-        "description" : "MATDAX HÖGDALEN",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"MATDAX HÖGDALEN\",\"ownReference\":\"MATDAX HÖGDALEN\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -61.09,
-        "date" : 1582196400000,
-        "description" : "COOP HÖGDALEN",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"COOP HÖGDALEN\",\"ownReference\":\"COOP HÖGDALEN\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -138.59,
-        "date" : 1582110000000,
-        "description" : "COOP HÖGDALEN",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"COOP HÖGDALEN\",\"ownReference\":\"COOP HÖGDALEN\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -149.0,
-        "date" : 1581937200000,
-        "description" : "B BEIRUT",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"B BEIRUT\",\"ownReference\":\"B BEIRUT\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -65.0,
-        "date" : 1581937200000,
-        "description" : "HOGDALENS MATBUT",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"HOGDALENS MATBUT\",\"ownReference\":\"HOGDALENS MATBUT\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : 1.0,
-        "date" : 1581850800000,
-        "description" : "Swish retur EASYPARK AB",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"EASYPARK AB\",\"ownReference\":\"EASYPARK AB\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -1.0,
-        "date" : 1581850800000,
-        "description" : "Swish Easypark AB",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"Easypark AB\",\"ownReference\":\"Easypark AB\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -146.8,
-        "date" : 1581850800000,
-        "description" : "MATDAX HÖGDALEN",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"MATDAX HÖGDALEN\",\"ownReference\":\"MATDAX HÖGDALEN\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : 11.2,
-        "date" : 1581850800000,
-        "description" : "Swish retur EASYPARK AB",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"EASYPARK AB\",\"ownReference\":\"EASYPARK AB\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : 1.0,
-        "date" : 1581850800000,
-        "description" : "Swish retur EASYPARK AB",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"EASYPARK AB\",\"ownReference\":\"EASYPARK AB\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -1.0,
-        "date" : 1581850800000,
-        "description" : "Swish Easypark AB",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"Easypark AB\",\"ownReference\":\"Easypark AB\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -11.2,
-        "date" : 1581850800000,
-        "description" : "Swish Easypark AB",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"Easypark AB\",\"ownReference\":\"Easypark AB\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -86.0,
-        "date" : 1581764400000,
-        "description" : "HOGDALENS MATBUT",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"HOGDALENS MATBUT\",\"ownReference\":\"HOGDALENS MATBUT\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -95.0,
-        "date" : 1581678000000,
-        "description" : "TASTE",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"TASTE\",\"ownReference\":\"TASTE\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -930.0,
-        "date" : 1581591600000,
-        "description" : "PRESSBYRÅN",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"PRESSBYRÅN\",\"ownReference\":\"PRESSBYRÅN\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -500.0,
-        "date" : 1581505200000,
-        "description" : "TABBOULI KUNGSHO",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"TABBOULI KUNGSHO\",\"ownReference\":\"TABBOULI KUNGSHO\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -60.0,
-        "date" : 1581505200000,
-        "description" : "Swish skickad +46730382391",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"+46730382391\",\"ownReference\":\"+46730382391\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -60.0,
-        "date" : 1581505200000,
-        "description" : "Swish skickad +46707758918",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"+46707758918\",\"ownReference\":\"+46707758918\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -129.7,
-        "date" : 1581418800000,
-        "description" : "COOP HOGDALEN",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"COOP HOGDALEN\",\"ownReference\":\"COOP HOGDALEN\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -95.0,
-        "date" : 1581418800000,
-        "description" : "FORMAGGIO PIZZER",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"FORMAGGIO PIZZER\",\"ownReference\":\"FORMAGGIO PIZZER\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -350.0,
-        "date" : 1581332400000,
-        "description" : "MEM&ZIN AB",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"MEM&ZIN AB\",\"ownReference\":\"MEM&ZIN AB\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -187.0,
-        "date" : 1581332400000,
-        "description" : "HOGDALENS MATBUT",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"HOGDALENS MATBUT\",\"ownReference\":\"HOGDALENS MATBUT\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -109.3,
-        "date" : 1581332400000,
-        "description" : "LIDL 295 / ENSKE",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"LIDL 295 / ENSKE\",\"ownReference\":\"LIDL 295 / ENSKE\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -3000.0,
-        "date" : 1581246000000,
-        "description" : "Swish skickad +46739247978",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"+46739247978\",\"ownReference\":\"+46739247978\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -95.0,
-        "date" : 1581159600000,
-        "description" : "TASTE",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"TASTE\",\"ownReference\":\"TASTE\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -95.0,
-        "date" : 1581073200000,
-        "description" : "TASTE",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"TASTE\",\"ownReference\":\"TASTE\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -105.0,
-        "date" : 1580986800000,
-        "description" : "RESTAURANG RAZMO",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"RESTAURANG RAZMO\",\"ownReference\":\"RESTAURANG RAZMO\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -95.0,
-        "date" : 1580814000000,
-        "description" : "TASTE",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"TASTE\",\"ownReference\":\"TASTE\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -326.7,
-        "date" : 1580727600000,
-        "description" : "LIDL 295 / ENSKE",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"LIDL 295 / ENSKE\",\"ownReference\":\"LIDL 295 / ENSKE\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -115.0,
-        "date" : 1580727600000,
-        "description" : "THAI HOUSE WOK",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"THAI HOUSE WOK\",\"ownReference\":\"THAI HOUSE WOK\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -277.8,
-        "date" : 1580727600000,
-        "description" : "APOTEK HJARTAT M",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"APOTEK HJARTAT M\",\"ownReference\":\"APOTEK HJARTAT M\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -128.91,
-        "date" : 1580554800000,
-        "description" : "COOP HOGDALEN",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"COOP HOGDALEN\",\"ownReference\":\"COOP HOGDALEN\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -74.0,
-        "date" : 1580468400000,
-        "description" : "HOGDALENS MATBUT",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"HOGDALENS MATBUT\",\"ownReference\":\"HOGDALENS MATBUT\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -655.0,
-        "date" : 1580468400000,
-        "description" : "FOLKSAM",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"FOLKSAM\",\"ownReference\":\"FOLKSAM\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -95.0,
-        "date" : 1580468400000,
-        "description" : "TASTE",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"TASTE\",\"ownReference\":\"TASTE\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -126.9,
-        "date" : 1580468400000,
-        "description" : "MATDAX HÖGDALEN",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"MATDAX HÖGDALEN\",\"ownReference\":\"MATDAX HÖGDALEN\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -199.0,
-        "date" : 1580468400000,
-        "description" : "PHONEHERO",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"PHONEHERO\",\"ownReference\":\"PHONEHERO\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -55.0,
-        "date" : 1580382000000,
-        "description" : "7-ELEVEN",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"7-ELEVEN\",\"ownReference\":\"7-ELEVEN\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -499.0,
-        "date" : 1580382000000,
-        "description" : "3BUTIKEN SKRAPA",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"3BUTIKEN SKRAPA\",\"ownReference\":\"3BUTIKEN SKRAPA\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -2793.0,
-        "date" : 1580382000000,
-        "description" : "TOYOTA KRED",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"TOYOTA KRED\",\"ownReference\":\"TOYOTA KRED\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -500.0,
-        "date" : 1580382000000,
-        "description" : "Överföring 0832799748967685",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"0832799748967685\",\"ownReference\":\"0832799748967685\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -700.0,
-        "date" : 1580295600000,
-        "description" : "Swish skickad +46709991817",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"+46709991817\",\"ownReference\":\"+46709991817\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -95.0,
-        "date" : 1580295600000,
-        "description" : "TASTE",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"TASTE\",\"ownReference\":\"TASTE\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -3521.0,
-        "date" : 1580295600000,
-        "description" : "hyra",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"hyra\",\"ownReference\":\"hyra\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -299.0,
-        "date" : 1580209200000,
-        "description" : "HI3G",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"HI3G\",\"ownReference\":\"HI3G\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -110.0,
-        "date" : 1580209200000,
-        "description" : "LÄRARNAS A K",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"LÄRARNAS A K\",\"ownReference\":\"LÄRARNAS A K\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -95.0,
-        "date" : 1580209200000,
-        "description" : "TASTE",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : {
-            "DETAILS" : "{\"transactionReference\":\"TASTE\",\"ownReference\":\"TASTE\"}"
-        },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    } ],
-    "identityData" : {
-        "nameElements" : [ {
-            "type" : "FULLNAME",
-            "value" : "Wiremock User"
-        } ],
-        "dateOfBirth" : {
-            "year" : 1990,
-            "month" : "JANUARY",
-            "era" : "CE",
-            "monthValue" : 1,
-            "dayOfMonth" : 1,
-            "dayOfWeek" : "MONDAY",
-            "leapYear" : false,
-            "dayOfYear" : 1,
-            "chronology" : {
-                "calendarType" : "iso8601",
-                "id" : "ISO"
-            }
-        }
+    "dateOfBirth" : {
+      "year" : 1990,
+      "month" : "JANUARY",
+      "monthValue" : 1,
+      "dayOfMonth" : 1,
+      "era" : "CE",
+      "dayOfWeek" : "MONDAY",
+      "leapYear" : false,
+      "dayOfYear" : 1,
+      "chronology" : {
+        "id" : "ISO",
+        "calendarType" : "iso8601"
+      }
     }
+  }
 }
