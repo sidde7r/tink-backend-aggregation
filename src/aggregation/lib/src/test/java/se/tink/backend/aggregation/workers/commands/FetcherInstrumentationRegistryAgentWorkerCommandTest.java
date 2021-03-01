@@ -35,7 +35,7 @@ public class FetcherInstrumentationRegistryAgentWorkerCommandTest {
     public void setUp() {
         metricCollector = new MetricCollector();
         metricRegistry = new MetricRegistry(metricCollector);
-        provider = createProvider(Provider.AuthenticationUserType.PERSONAL);
+        provider = createProvider();
         context = mock(AgentWorkerCommandContext.class, Answers.RETURNS_DEEP_STUBS);
         agent = mock(NextGenerationAgent.class);
 
@@ -100,11 +100,10 @@ public class FetcherInstrumentationRegistryAgentWorkerCommandTest {
         public void close() {}
     }
 
-    private static Provider createProvider(Provider.AuthenticationUserType holderType) {
+    private static Provider createProvider() {
         Provider p = new Provider();
         p.setName("provider");
         p.setMarket("GB");
-        p.setAuthenticationUserType(holderType);
         return p;
     }
 }

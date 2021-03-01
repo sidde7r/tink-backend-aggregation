@@ -13,6 +13,7 @@ import se.tink.backend.agents.rpc.AccountHolderType;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.agent.Agent;
+import se.tink.backend.aggregation.agents.utils.typeguesser.accountholder.AccountHolderTypeUtil;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.instrumentation.FetcherInstrumentationRegistry;
 import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
@@ -64,7 +65,7 @@ public class FetcherInstrumentationAgentWorkerCommand extends AgentWorkerCommand
 
     private void trackFilteredAccounts(
             FetcherInstrumentationRegistry instrumentation, Set<RefreshableItem> requestedItems) {
-        AccountHolderType requestedHolderType = convert(provider.getAuthenticationUserType());
+        AccountHolderType requestedHolderType = AccountHolderTypeUtil.inferHolderType(provider);
 
         // From all HolderAccountType:s, filter out those that are not asked for
         Set<AccountHolderType> nonRequestedAccountHolderTypes =
@@ -132,23 +133,6 @@ public class FetcherInstrumentationAgentWorkerCommand extends AgentWorkerCommand
                 .label("holder_type", holderType.name())
                 .label("account_type", type.name())
                 .label("filtered_away", numberAccounts(num));
-    }
-
-    private static AccountHolderType convert(Provider.AuthenticationUserType type) {
-        if (type == null) {
-            // Assume PERSONAL as default
-            return AccountHolderType.PERSONAL;
-        }
-
-        switch (type) {
-            default:
-            case PERSONAL:
-                return AccountHolderType.PERSONAL;
-            case BUSINESS:
-                return AccountHolderType.BUSINESS;
-            case CORPORATE:
-                return AccountHolderType.CORPORATE;
-        }
     }
 
     private static Set<AccountTypes> convertItemToAccountTypes(RefreshableItem item) {

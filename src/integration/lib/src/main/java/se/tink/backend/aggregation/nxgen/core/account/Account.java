@@ -28,6 +28,7 @@ import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.agents.rpc.HolderIdentity;
 import se.tink.backend.agents.rpc.HolderRole;
 import se.tink.backend.agents.rpc.Provider;
+import se.tink.backend.aggregation.agents.utils.typeguesser.accountholder.AccountHolderTypeUtil;
 import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
@@ -293,7 +294,7 @@ public abstract class Account {
             AccountHolder accountHolder = new AccountHolder();
             accountHolder.setType(
                     Optional.ofNullable(holderType)
-                            .orElse(inferHolderType(provider.getAuthenticationUserType()))
+                            .orElse(inferHolderType(provider))
                             .toSystemType());
             accountHolder.setIdentities(
                     parties.stream().map(this::toSystemHolder).collect(Collectors.toList()));
@@ -329,14 +330,9 @@ public abstract class Account {
         }
     }
 
-    private AccountHolderType inferHolderType(
-            Provider.AuthenticationUserType authenticationUserType) {
-
-        if (authenticationUserType == Provider.AuthenticationUserType.BUSINESS) {
-            return AccountHolderType.BUSINESS;
-        } else if (authenticationUserType == Provider.AuthenticationUserType.CORPORATE) {
-            return AccountHolderType.CORPORATE;
-        } else return AccountHolderType.PERSONAL;
+    private AccountHolderType inferHolderType(Provider provider) {
+        String accountHolderTypeAsString = AccountHolderTypeUtil.inferHolderType(provider).name();
+        return AccountHolderType.valueOf(accountHolderTypeAsString);
     }
 
     private Optional<String> getFirstHolder() {
