@@ -124,6 +124,7 @@ public class BankAccountsEntity {
                                 .withAccountNumber(number)
                                 .withAccountName(getDisplayName())
                                 .addIdentifier(new SwedishIdentifier(number))
+                                .addIdentifier(new SwedishIdentifier(number).toIbanIdentifer())
                                 .build())
                 .addHolderName(holder.getHolderName())
                 .setApiIdentifier(encryptedNumber)
