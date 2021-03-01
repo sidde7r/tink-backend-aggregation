@@ -644,6 +644,42 @@ public class AmericanExpressAgentIntegrationTest extends IntegrationTestBase {
                                                 HttpHeaders.CONTENT_TYPE,
                                                 MediaType.APPLICATION_JSON)
                                         .withBody(createAccessTokenRevokedErrorResponse())));
+
+        wireMockRule.stubFor(
+                get(urlPathEqualTo(Urls.ENDPOINT_STATEMENT_PERIODS.toUri().getPath()))
+                        .withHeader(
+                                HttpHeaders.AUTHORIZATION,
+                                matching(createAuthHeaderMatchingPattern(accessToken1)))
+                        .withHeader(
+                                AmericanExpressConstants.Headers.X_AMEX_API_KEY, equalTo(CLIENT_ID))
+                        .withHeader(
+                                AmericanExpressConstants.Headers.X_AMEX_REQUEST_ID,
+                                matching(getAmexRequestIdMatchingRegex()))
+                        .willReturn(
+                                aResponse()
+                                        .withStatus(200)
+                                        .withHeader(
+                                                HttpHeaders.CONTENT_TYPE,
+                                                MediaType.APPLICATION_JSON)
+                                        .withBody(createStatementPeriodsResponseJsonString())));
+
+        wireMockRule.stubFor(
+                get(urlPathEqualTo(Urls.ENDPOINT_STATEMENT_PERIODS.toUri().getPath()))
+                        .withHeader(
+                                HttpHeaders.AUTHORIZATION,
+                                matching(createAuthHeaderMatchingPattern(accessToken2)))
+                        .withHeader(
+                                AmericanExpressConstants.Headers.X_AMEX_API_KEY, equalTo(CLIENT_ID))
+                        .withHeader(
+                                AmericanExpressConstants.Headers.X_AMEX_REQUEST_ID,
+                                matching(getAmexRequestIdMatchingRegex()))
+                        .willReturn(
+                                aResponse()
+                                        .withStatus(401)
+                                        .withHeader(
+                                                HttpHeaders.CONTENT_TYPE,
+                                                MediaType.APPLICATION_JSON)
+                                        .withBody(createAccessTokenRevokedErrorResponse())));
     }
 
     private static void assertSupplementInformationRequesterContentIsValid(
