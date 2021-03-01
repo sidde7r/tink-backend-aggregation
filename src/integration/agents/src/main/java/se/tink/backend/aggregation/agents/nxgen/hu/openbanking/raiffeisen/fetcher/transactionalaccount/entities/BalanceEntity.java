@@ -2,12 +2,12 @@ package se.tink.backend.aggregation.agents.nxgen.hu.openbanking.raiffeisen.fetch
 
 import se.tink.backend.aggregation.agents.nxgen.hu.openbanking.raiffeisen.RaiffeisenConstants.BalanceTypes;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class BalanceEntity {
 
-    public static Amount Default = new Amount();
+    public static ExactCurrencyAmount Default = ExactCurrencyAmount.zero("HUF");
     private BalanceAmountEntity balanceAmount;
     private String balanceType;
     private String referenceDate;
@@ -16,7 +16,7 @@ public class BalanceEntity {
         return balanceType.equalsIgnoreCase(BalanceTypes.INTERIM_BOOKED);
     }
 
-    public Amount toAmount() {
+    public ExactCurrencyAmount toAmount() {
         return balanceAmount.toAmount();
     }
 }

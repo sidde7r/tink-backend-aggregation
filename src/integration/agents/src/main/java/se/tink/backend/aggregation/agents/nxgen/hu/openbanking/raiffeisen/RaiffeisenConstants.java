@@ -1,12 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.hu.openbanking.raiffeisen;
 
-import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public final class RaiffeisenConstants {
-    public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
-            TypeMapper.<AccountTypes>builder().put(AccountTypes.CHECKING, "CurrentAccount").build();
+
+    public static final TypeMapper<TransactionalAccountType> ACCOUNT_TYPE_MAPPER =
+            TypeMapper.<TransactionalAccountType>builder()
+                    .put(TransactionalAccountType.CHECKING, "CurrentAccount")
+                    .build();
 
     private RaiffeisenConstants() {
         throw new AssertionError();

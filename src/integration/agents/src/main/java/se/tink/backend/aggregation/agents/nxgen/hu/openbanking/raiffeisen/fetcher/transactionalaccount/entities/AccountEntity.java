@@ -7,12 +7,13 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
-import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.CheckingAccount;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.amount.Amount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
+import se.tink.libraries.account.identifiers.IbanIdentifier;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class AccountEntity {
@@ -32,23 +33,27 @@ public class AccountEntity {
     public Boolean isCheckingAccount() {
         return ACCOUNT_TYPE_MAPPER
                 .translate(cashAccountType)
-                .orElse(AccountTypes.OTHER)
-                .equals(AccountTypes.CHECKING);
+                .orElse(TransactionalAccountType.OTHER)
+                .equals(TransactionalAccountType.CHECKING);
     }
 
-    public TransactionalAccount toTinkAccount() {
-        return CheckingAccount.builder()
-                .setUniqueIdentifier(iban)
-                .setAccountNumber(iban)
-                .setBalance(getAvailableBalance())
-                .setAlias(name)
-                .addAccountIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban))
-                .setApiIdentifier(resourceId)
-                .setProductName(product)
+    public Optional<TransactionalAccount> toTinkAccount() {
+        return TransactionalAccount.nxBuilder()
+                .withType(getAccountType())
+                .withPaymentAccountFlag()
+                .withBalance(BalanceModule.of(getAvailableBalance()))
+                .withId(
+                        IdModule.builder()
+                                .withUniqueIdentifier(iban)
+                                .withAccountNumber(iban)
+                                .withAccountName(name)
+                                .addIdentifier(new IbanIdentifier(iban))
+                                .build())
+                .setBankIdentifier(resourceId)
                 .build();
     }
 
-    private Amount getAvailableBalance() {
+    private ExactCurrencyAmount getAvailableBalance() {
         return Optional.ofNullable(balances)
                 .map(Collection::stream)
                 .orElse(Stream.empty())
@@ -56,5 +61,9 @@ public class AccountEntity {
                 .findFirst()
                 .map(BalanceEntity::toAmount)
                 .orElse(BalanceEntity.Default);
+    }
+
+    private TransactionalAccountType getAccountType() {
+        return ACCOUNT_TYPE_MAPPER.translate(cashAccountType).orElse(null);
     }
 }
