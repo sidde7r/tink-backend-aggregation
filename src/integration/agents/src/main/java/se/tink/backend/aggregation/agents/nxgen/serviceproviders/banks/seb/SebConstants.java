@@ -154,6 +154,7 @@ public class SebConstants {
         public static final String IPS = "27";
         public static final String PLACERINGSKONTO = "35";
         public static final String ISK_KAPITALKONTO = "54";
+
         // To handle subtypes of OTHER, account capabilities mapping tries "<code>:<name>" first
         public static final String OTHER_NOTARIATKONTO = "2:NOTARIATKONTO";
     }
@@ -196,6 +197,7 @@ public class SebConstants {
             ImmutableList.<AccountTypes>builder()
                     .add(AccountTypes.SAVINGS)
                     .add(AccountTypes.CHECKING)
+                    .add(AccountTypes.INVESTMENT)
                     .build();
 
     public static final class AccountCapabilities {
