@@ -52,12 +52,13 @@ public class TransactionDto {
                 .setDate(getChargeDate())
                 .setAmount(convertTransactionEntityToExactCurrencyAmount())
                 .setDescription(description.replaceAll("\\s{2,}", " ")) // to remove whitespaces
-                .setPending(checkIfPending())
+                .setPending(isPending())
                 .build();
     }
 
-    private boolean checkIfPending() {
-        return postDate == null && referenceNumber == null;
+    /** From documentation: Pending transactions will not have values for post_date */
+    private boolean isPending() {
+        return postDate == null;
     }
 
     private ExactCurrencyAmount convertTransactionEntityToExactCurrencyAmount() {
