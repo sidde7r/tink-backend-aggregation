@@ -596,7 +596,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
 
     @Override
     public void updateStatus(CredentialsStatus status) {
-        updateStatus(status, null);
+        updateStatus(status, null, true);
     }
 
     @Override
