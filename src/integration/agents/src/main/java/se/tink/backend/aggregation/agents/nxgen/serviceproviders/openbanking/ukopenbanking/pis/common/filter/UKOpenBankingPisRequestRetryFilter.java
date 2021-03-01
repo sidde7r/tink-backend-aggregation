@@ -29,7 +29,7 @@ public class UKOpenBankingPisRequestRetryFilter extends AbstractRetryFilter {
         if (retry) {
             log.info("[UKOB] Received HTTP {} response. Retrying...", response.getStatus());
         } else if (response.getStatus() >= HttpStatus.SC_BAD_REQUEST) {
-            log.info(
+            log.warn(
                     "[UKOB] Received HttpStatus:{}, response body:{}",
                     response.getStatus(),
                     response.getBody(String.class));
