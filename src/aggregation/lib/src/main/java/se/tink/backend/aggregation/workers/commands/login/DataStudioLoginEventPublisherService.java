@@ -83,10 +83,6 @@ public class DataStudioLoginEventPublisherService {
                                     LoginError.NO_ACCESS_TO_MOBILE_BANKING,
                                     AgentLoginCompletedEventProto.AgentLoginCompletedEvent
                                             .LoginResult.LOGIN_ERROR_NO_ACCESS_TO_MOBILE_BANKING)
-                            .put(
-                                    LoginError.PASSWORD_CHANGED,
-                                    AgentLoginCompletedEventProto.AgentLoginCompletedEvent
-                                            .LoginResult.LOGIN_ERROR_PASSWORD_CHANGED)
                             .build();
 
     private static final ImmutableMap<
