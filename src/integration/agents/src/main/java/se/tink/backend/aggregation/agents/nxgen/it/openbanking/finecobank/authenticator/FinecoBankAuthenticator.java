@@ -4,10 +4,11 @@ import com.google.common.util.concurrent.Uninterruptibles;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.java.Log;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
-import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
+import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.FormValues;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.authenticator.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticator;
@@ -21,6 +22,7 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 import se.tink.libraries.i18n.LocalizableKey;
 
 @RequiredArgsConstructor
+@Log
 public final class FinecoBankAuthenticator
         implements AutoAuthenticator, ThirdPartyAppAuthenticator<String> {
 
@@ -48,7 +50,7 @@ public final class FinecoBankAuthenticator
                         strongAuthenticationState.getSupplementalKey(),
                         ThirdPartyAppConstants.WAIT_FOR_MINUTES,
                         TimeUnit.MINUTES)
-                .orElseThrow(() -> new AuthorizationException(AuthorizationError.UNAUTHORIZED));
+                .orElseThrow(ThirdPartyAppError.TIMED_OUT::exception);
 
         for (int i = 0;
                 i < FormValues.MAX_POLLS_COUNTER && !finecoAuthenticator.isStoredConsentValid();

@@ -4,6 +4,7 @@ import static se.tink.libraries.date.ThreadSafeDateFormat.FORMATTER_DAILY;
 
 import java.text.ParseException;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import se.tink.backend.agents.rpc.Credentials;
@@ -15,6 +16,7 @@ import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.Fineco
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoStorage;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.authenticator.entities.AccessEntity;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.authenticator.entities.AccessItem;
+import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.authenticator.entities.AccountConsent;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.authenticator.rpc.ConsentAuthorizationsResponse;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.authenticator.rpc.PostConsentBodyRequest;
@@ -59,22 +61,26 @@ public final class FinecoBankAuthenticationHelper {
                 finecoBankApiClient.getConsentAuthorizations(storage.getConsentId());
         AccessItem accessItem = consentAuthorizations.getAccess();
 
-        if (CollectionUtils.isEmpty(accessItem.getBalancesConsents())) {
-            throw new ThirdPartyAppException(
-                    ThirdPartyAppError.AUTHENTICATION_ERROR,
-                    ErrorMessages.INVALID_CONSENT_BALANCES);
-        }
-
-        if (CollectionUtils.isEmpty(accessItem.getTransactionsConsents())) {
-            throw new ThirdPartyAppException(
-                    ThirdPartyAppError.AUTHENTICATION_ERROR,
-                    ErrorMessages.INVALID_CONSENT_TRANSACTIONS);
-        }
+        checkIfBalancesAndTransactionsConsentsAreNotEmptyAndHaveTheSameAccountsOrThrowException(
+                accessItem);
 
         storage.storeBalancesConsents(accessItem.getBalancesConsents());
         storage.storeTransactionsConsents(accessItem.getTransactionsConsents());
         storage.storeConsentCreationTime(localDateTimeSource.now().toString());
         storeSessionExpiryDateInCredentials(consentAuthorizations);
+    }
+
+    private void
+            checkIfBalancesAndTransactionsConsentsAreNotEmptyAndHaveTheSameAccountsOrThrowException(
+                    AccessItem accessItem) {
+        List<AccountConsent> balancesConsents = accessItem.getBalancesConsents();
+        List<AccountConsent> transactionsConsents = accessItem.getTransactionsConsents();
+        if (CollectionUtils.isEmpty(balancesConsents)
+                || CollectionUtils.isEmpty(transactionsConsents)
+                || !CollectionUtils.isEqualCollection(balancesConsents, transactionsConsents)) {
+            throw ThirdPartyAppError.AUTHENTICATION_ERROR.exception(
+                    ErrorMessages.BALANCES_AND_TRANSACTIONS_CONSENTS_DO_NOT_MATCH);
+        }
     }
 
     private void storeSessionExpiryDateInCredentials(

@@ -1,8 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.authenticator.entities;
 
+import com.google.common.base.Objects;
+import lombok.Getter;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
+@Getter
 public class AccountConsent {
 
     private String iban;
@@ -19,15 +22,20 @@ public class AccountConsent {
         this.maskedPan = maskedPan;
     }
 
-    public String getIban() {
-        return iban;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof AccountConsent)) {
+            return false;
+        }
+        AccountConsent that = (AccountConsent) o;
+        return Objects.equal(iban, that.iban);
     }
 
-    public String getCurrency() {
-        return currency;
-    }
-
-    public String getMaskedPan() {
-        return maskedPan;
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(iban);
     }
 }
