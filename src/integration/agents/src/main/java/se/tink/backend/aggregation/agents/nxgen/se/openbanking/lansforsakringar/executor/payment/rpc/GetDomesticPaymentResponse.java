@@ -6,9 +6,9 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 
 @JsonObject
 public class GetDomesticPaymentResponse {
-    private DomesticTransactionEntity domesticTransaction;
+    private DomesticTransactionEntity domesticPayment;
 
     public PaymentResponse toTinkPayment(String paymentId) {
-        return domesticTransaction.toTinkPayment(paymentId);
+        return domesticPayment.toTinkPayment(paymentId);
     }
 }
