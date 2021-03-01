@@ -182,6 +182,7 @@ public class AccountEntity implements GeneralAccountEntity {
         // It seems that LF returns accountNumber as clearingNumber+accountNumber for LF's own
         // accounts
         account.putIdentifier(new SwedishIdentifier(accountNumber));
+        account.putIdentifier(new SwedishIdentifier(accountNumber).toIbanIdentifer());
 
         if (type.equalsIgnoreCase("PENSION")) {
             Preconditions.checkState(
