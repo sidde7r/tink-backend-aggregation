@@ -58,7 +58,7 @@ public class RedirectOAuth2Authenticator implements OAuth2Authenticator {
         if (!CODE.equals(code)) {
             // Ensure the code we got back from the fake-bank is the one
             // we sent.
-            throw BankServiceError.CONSENT_REVOKED.exception("No code present.");
+            throw SessionError.CONSENT_REVOKED.exception("No code present.");
         }
 
         if (providerName.matches(DEMO_PROVIDER_FAILURE_CASE_REGEX)) {

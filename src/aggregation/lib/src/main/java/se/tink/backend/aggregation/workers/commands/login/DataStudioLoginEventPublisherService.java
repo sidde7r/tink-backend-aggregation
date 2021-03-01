@@ -262,22 +262,6 @@ public class DataStudioLoginEventPublisherService {
                                     AgentLoginCompletedEventProto.AgentLoginCompletedEvent
                                             .LoginResult.BANK_SERVICE_ERROR_ACCESS_EXCEEDED)
                             .put(
-                                    BankServiceError.CONSENT_EXPIRED,
-                                    AgentLoginCompletedEventProto.AgentLoginCompletedEvent
-                                            .LoginResult.SESSION_ERROR_CONSENT_EXPIRED)
-                            .put(
-                                    BankServiceError.CONSENT_INVALID,
-                                    AgentLoginCompletedEventProto.AgentLoginCompletedEvent
-                                            .LoginResult.SESSION_ERROR_CONSENT_INVALID)
-                            .put(
-                                    BankServiceError.CONSENT_REVOKED_BY_USER,
-                                    AgentLoginCompletedEventProto.AgentLoginCompletedEvent
-                                            .LoginResult.SESSION_ERROR_CONSENT_REVOKED_BY_USER)
-                            .put(
-                                    BankServiceError.CONSENT_REVOKED,
-                                    AgentLoginCompletedEventProto.AgentLoginCompletedEvent
-                                            .LoginResult.SESSION_ERROR_CONSENT_REVOKED)
-                            .put(
                                     BankServiceError.MULTIPLE_LOGIN,
                                     AgentLoginCompletedEventProto.AgentLoginCompletedEvent
                                             .LoginResult.BANK_SERVICE_ERROR_MULTIPLE_LOGIN)

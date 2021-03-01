@@ -2,13 +2,13 @@ package se.tink.backend.aggregation.workers.commands;
 
 import static se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError.ACCESS_EXCEEDED;
 import static se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError.BANK_SIDE_FAILURE;
-import static se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError.CONSENT_EXPIRED;
-import static se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError.CONSENT_INVALID;
-import static se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError.CONSENT_REVOKED;
-import static se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError.CONSENT_REVOKED_BY_USER;
 import static se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError.MULTIPLE_LOGIN;
 import static se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError.NO_BANK_SERVICE;
 import static se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError.SESSION_TERMINATED;
+import static se.tink.backend.aggregation.agents.exceptions.errors.SessionError.CONSENT_EXPIRED;
+import static se.tink.backend.aggregation.agents.exceptions.errors.SessionError.CONSENT_INVALID;
+import static se.tink.backend.aggregation.agents.exceptions.errors.SessionError.CONSENT_REVOKED;
+import static se.tink.backend.aggregation.agents.exceptions.errors.SessionError.CONSENT_REVOKED_BY_USER;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
@@ -27,8 +27,10 @@ import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.agent.Agent;
+import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.compliance.customer_restrictions.CustomerDataFetchingRestrictions;
 import se.tink.backend.aggregation.events.RefreshEvent;
 import se.tink.backend.aggregation.events.RefreshEventProducer;
@@ -66,13 +68,18 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
                     ImmutableMap.<BankServiceError, AdditionalInfo>builder()
                             .put(ACCESS_EXCEEDED, AdditionalInfo.ACCESS_EXCEEDED)
                             .put(BANK_SIDE_FAILURE, AdditionalInfo.BANK_SIDE_FAILURE)
+                            .put(MULTIPLE_LOGIN, AdditionalInfo.MULTIPLE_LOGIN)
+                            .put(NO_BANK_SERVICE, AdditionalInfo.NO_BANK_SERVICE)
+                            .put(SESSION_TERMINATED, AdditionalInfo.SESSION_TERMINATED)
+                            .build();
+
+    private static final ImmutableMap<SessionError, AdditionalInfo>
+            ADDITIONAL_INFO_SESSION_ERROR_MAPPER =
+                    ImmutableMap.<SessionError, AdditionalInfo>builder()
                             .put(CONSENT_EXPIRED, AdditionalInfo.CONSENT_EXPIRED)
                             .put(CONSENT_INVALID, AdditionalInfo.CONSENT_INVALID)
                             .put(CONSENT_REVOKED_BY_USER, AdditionalInfo.CONSENT_REVOKED)
                             .put(CONSENT_REVOKED, AdditionalInfo.CONSENT_REVOKED)
-                            .put(MULTIPLE_LOGIN, AdditionalInfo.MULTIPLE_LOGIN)
-                            .put(NO_BANK_SERVICE, AdditionalInfo.NO_BANK_SERVICE)
-                            .put(SESSION_TERMINATED, AdditionalInfo.SESSION_TERMINATED)
                             .build();
 
     public RefreshItemAgentWorkerCommand(
@@ -121,6 +128,9 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
                 markRefreshAsSuccessful(action, agent, fullSuccessfulRefresh);
             } catch (BankServiceException e) {
                 handleFailedRefreshDueToBankError(action, e);
+                return AgentWorkerCommandResult.ABORT;
+            } catch (SessionException e) {
+                handleFailedRefreshDueToSessionError(action, e);
                 return AgentWorkerCommandResult.ABORT;
             } catch (RuntimeException e) {
                 log.warn(
@@ -193,6 +203,18 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
         RefreshEvent refreshEvent = getRefreshEvent(errorInfo);
         refreshEventProducer.sendEventForRefreshWithErrorInBankSide(refreshEvent);
         log.warn("BankServiceException is received and credentials status set TEMPORARY_ERROR.", e);
+    }
+
+    private void handleFailedRefreshDueToSessionError(MetricAction action, SessionException e) {
+        // The way frontend works now the message will not be displayed to the user.
+        context.updateStatus(
+                CredentialsStatus.TEMPORARY_ERROR,
+                context.getCatalog().getString(e.getUserMessage()));
+        action.unavailable();
+        AdditionalInfo errorInfo = ADDITIONAL_INFO_SESSION_ERROR_MAPPER.get(e.getError());
+        RefreshEvent refreshEvent = getRefreshEvent(errorInfo);
+        refreshEventProducer.sendEventForRefreshWithErrorInBankSide(refreshEvent);
+        log.warn("SessionException is received and credentials status set TEMPORARY_ERROR.", e);
     }
 
     private void handleFailedRefreshDueToTinkException(
