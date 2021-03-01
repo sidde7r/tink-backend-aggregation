@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants;
-import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.StorageKeys;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -40,7 +39,6 @@ public class AccountEntity {
                                 .build())
                 .setApiIdentifier(resourceId)
                 .setBankIdentifier(iban)
-                .putInTemporaryStorage(StorageKeys.ACCOUNT_ID, resourceId)
                 .addAccountFlags(AccountFlag.PSD2_PAYMENT_ACCOUNT)
                 .build();
     }

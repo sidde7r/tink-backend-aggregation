@@ -15,8 +15,8 @@ public class FinecoBankAgentTest {
                         .setFinancialInstitutionId("finecobank")
                         .setAppId("tink")
                         .expectLoggedIn(false)
-                        .loadCredentialsBefore(true)
-                        .saveCredentialsAfter(true);
+                        .loadCredentialsBefore(false)
+                        .saveCredentialsAfter(false);
     }
 
     @Test

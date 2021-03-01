@@ -28,6 +28,7 @@ java_library(
         "//src/libraries/date",
         "//src/libraries/i18n",
         "//third_party:com_google_http_client_google_http_client",
+        "//third_party:com_google_inject_guice",
         "//third_party:com_sun_jersey_jersey_core",
         "//third_party:lombok_libs",
         "//third_party:org_apache_commons_commons_collections4",
@@ -35,5 +36,6 @@ java_library(
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
         "@aggregation//:com_fasterxml_jackson_core_jackson_core",
         "@aggregation//:com_google_guava_guava",
+        "@tink_backend//src/libraries/payments_common/src/java/se/tink/libraries/payments/common/model:payments_common_model",
     ],
 )
