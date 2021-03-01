@@ -1,0 +1,55 @@
+{
+    "id": "OkWXNy6GdAr3WJmoh4X7OoNMLY4keGzjoc89dYX2w3o",
+    "name": "BOLIGKREDITT FLEXILÅN",
+    "formattedNumber": "4999 99 99999",
+    "disposableAmountInteger": "30451",
+    "disposableAmountFraction": "40",
+    "balanceAmountInteger": "-469548",
+    "balanceAmountFraction": "60",
+    "accountType": "USER",
+    "type": "FLEXI",
+    "loanAmountInteger": "-500000",
+    "loanAmountFraction": "00",
+    "interestRateInteger": "0",
+    "interestRateFraction": "00",
+    "actualInterestRateInteger": "2",
+    "actualInterestRateFraction": "83",
+    "periodExpensesInteger": "",
+    "periodExpensesFraction": "",
+    "creditLineInteger": "-500000",
+    "netCalculatedCreditLineInterestInteger": "",
+    "termAmountInteger": "",
+    "termAmountFraction": "",
+    "netCalculatedCreditLineInterestFraction": "",
+    "calculatedInterestInteger": "-878",
+    "calculatedInterestFraction": "21",
+    "ownerFirstName": "ownerName",
+    "ownerLastName": "ownerLastName",
+    "detailsFetched": true,
+    "owned": false,
+    "prescored": false,
+    "balancePreferred": false,
+    "paymentFromEnabled": true,
+    "transferToEnabled": true,
+    "transferFromEnabled": true,
+    "_links": {
+        "loan": {
+            "href": "https://mobilbank-pm.sparebank1.no/nord-norge/nettbank-privat/finansiering/rest/v2/loans/WpyuFUJIRXKKS9Hy4UjDhXhOxVm2NWoid2nPUe6RCUI",
+            "method": "GET"
+        },
+        "lan-endre-redusere-kredittramme": {
+            "href": "https://mobilbank-pm.sparebank1.no/nord-norge/nettbank-privat/finansiering/rest/selfservice/WpyuFUJIRXKKS9Hy4UjDhXhOxVm2NWoid2nPUe6RCUI/creditLine",
+            "method": "PUT",
+            "mediaTypes": [
+                "application/json; charset=utf-8"
+            ]
+        },
+        "lan-detaljer-html": {
+            "href": "https://mobilbank-pm.sparebank1.no/nord-norge/nettbank-privat/finansiering/lan#/detaljer/OkWXNy6GdAr3WJmoh4X7OoNMLY4keGzjoc89dYX2w3o"
+        },
+        "transactions": {
+            "href": "https://mobilbank-pm.sparebank1.no/nord-norge/nettbank-privat/finansiering/rest/transactions/WpyuFUJIRXKKS9Hy4UjDhXhOxVm2NWoid2nPUe6RCUI",
+            "method": "GET"
+        }
+    }
+}

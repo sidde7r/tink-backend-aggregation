@@ -8,6 +8,7 @@ import static se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.TestH
 import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Iterator;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.Sparebank1ApiClient;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.loan.entities.LoanDetailsEntity;
@@ -41,6 +42,11 @@ public class Sparebank1LoanFetcherTest {
                 .thenReturn(
                         SerializationUtils.deserializeFromString(
                                 Paths.get(RESOURCE_PATH, "loan_details_response.json").toFile(),
+                                LoanDetailsEntity.class))
+                .thenReturn(
+                        SerializationUtils.deserializeFromString(
+                                Paths.get(RESOURCE_PATH, "flexi_loan_details_response.json")
+                                        .toFile(),
                                 LoanDetailsEntity.class));
 
         // when
@@ -48,7 +54,14 @@ public class Sparebank1LoanFetcherTest {
 
         // then
         assertThat(loans).isNotEmpty();
-        LoanAccount loanAccount = loans.iterator().next();
+        Iterator<LoanAccount> iterator = loans.iterator();
+        LoanAccount loanAccount = iterator.next();
+        validateLoanAccountWithTypeLoan(loanAccount);
+        LoanAccount flexiAccount = iterator.next();
+        validateLoanAccountWithTypeFlexi(flexiAccount);
+    }
+
+    private void validateLoanAccountWithTypeLoan(LoanAccount loanAccount) {
         assertThat(loanAccount).isNotNull();
         assertThat(loanAccount.getDetails().getApplicants()).isNotEmpty();
         assertThat(loanAccount.getDetails().getApplicants().get(0))
@@ -65,5 +78,23 @@ public class Sparebank1LoanFetcherTest {
         assertThat(loanAccount.getInterestRate()).isEqualTo(0.0136);
         assertThat(loanAccount.getExactBalance()).isEqualTo(ExactCurrencyAmount.inNOK(-2234684.51));
         assertThat(loanAccount.getIdModule().getUniqueId()).isEqualTo("12345678910");
+    }
+
+    private void validateLoanAccountWithTypeFlexi(LoanAccount loanAccount) {
+        assertThat(loanAccount).isNotNull();
+        assertThat(loanAccount.getDetails().getApplicants()).isNotEmpty();
+        assertThat(loanAccount.getDetails().getApplicants().get(0))
+                .isEqualTo("ownerName ownerLastName");
+        assertThat(loanAccount.getDetails().getLoanNumber()).isEqualTo("49999999999");
+        assertThat(loanAccount.getDetails().getInitialDate()).isNull();
+        assertThat(loanAccount.getDetails().getNumMonthsBound()).isNull();
+        assertThat(loanAccount.getDetails().getInitialBalance())
+                .isEqualTo(ExactCurrencyAmount.inNOK(-500000.00));
+        assertThat(loanAccount.getDetails().getExactAmortized())
+                .isEqualTo(ExactCurrencyAmount.inNOK(-30451.40));
+        assertThat(loanAccount.getDetails().getExactMonthlyAmortization()).isNull();
+        assertThat(loanAccount.getInterestRate()).isEqualTo(0.0283);
+        assertThat(loanAccount.getExactBalance()).isEqualTo(ExactCurrencyAmount.inNOK(-469548.6));
+        assertThat(loanAccount.getIdModule().getUniqueId()).isEqualTo("49999999999");
     }
 }

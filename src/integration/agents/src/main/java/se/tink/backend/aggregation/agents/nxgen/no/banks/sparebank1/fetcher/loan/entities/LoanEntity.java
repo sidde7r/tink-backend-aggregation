@@ -44,14 +44,16 @@ public class LoanEntity {
                 .withType(getLoanType())
                 .withBalance(ExactCurrencyAmount.inNOK(loanDetails.getBalance()))
                 .withInterestRate(loanDetails.getInterestRate())
-                .setApplicants(loanDetails.getAplicants())
+                .setApplicants(loanDetails.getApplicants())
                 .setInitialBalance(ExactCurrencyAmount.inNOK(loanDetails.getInitialBalance()))
                 .setAmortized(ExactCurrencyAmount.inNOK(loanDetails.getAmortized()))
                 .setLoanNumber((StringUtils.removeNonAlphaNumeric(formattedNumber)))
                 .setInitialDate(loanDetails.getInitialDate())
                 .setNumMonthsBound(loanDetails.getNumMonthsBounds())
                 .setMonthlyAmortization(
-                        ExactCurrencyAmount.inNOK(loanDetails.getMonthlyAmortization()))
+                        loanDetails.getMonthlyAmortization() != null
+                                ? ExactCurrencyAmount.inNOK(loanDetails.getMonthlyAmortization())
+                                : null)
                 .build();
     }
 
