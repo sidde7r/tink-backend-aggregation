@@ -117,7 +117,8 @@ public class FinecoBankAuthenticationHelperTest {
         // then
         verify(mockStorage).storeBalancesConsents(consent);
         verify(mockStorage).storeTransactionsConsents(consent);
-        verify(mockStorage).storeConsentCreationTime(LocalDateTime.of(1992, 4, 10, 0, 0));
+        verify(mockStorage)
+                .storeConsentCreationTime(LocalDateTime.of(1992, 4, 10, 0, 0).toString());
         verify(mockCredentials).setSessionExpiryDate(eq(FORMATTER_DAILY.parse(TEST_DATE)));
     }
 

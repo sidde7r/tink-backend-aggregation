@@ -73,7 +73,7 @@ public final class FinecoBankAuthenticationHelper {
 
         storage.storeBalancesConsents(accessItem.getBalancesConsents());
         storage.storeTransactionsConsents(accessItem.getTransactionsConsents());
-        storage.storeConsentCreationTime(localDateTimeSource.now());
+        storage.storeConsentCreationTime(localDateTimeSource.now().toString());
         storeSessionExpiryDateInCredentials(consentAuthorizations);
     }
 

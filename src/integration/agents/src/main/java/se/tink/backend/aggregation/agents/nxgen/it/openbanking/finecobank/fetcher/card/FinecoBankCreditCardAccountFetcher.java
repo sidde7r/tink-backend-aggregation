@@ -139,9 +139,11 @@ public class FinecoBankCreditCardAccountFetcher
     // Fineco supports fetching transactions further back than 90 days if consent was given within
     // 20 minutes
     private boolean isConsentMaximum20MinutesOld() {
-        Optional<LocalDateTime> consentCreated = storage.getConsentCreationTime();
+        Optional<String> consentCreated = storage.getConsentCreationTime();
         return consentCreated.isPresent()
-                && ChronoUnit.MINUTES.between(consentCreated.get(), LocalDateTime.now()) < 20;
+                && ChronoUnit.MINUTES.between(
+                                LocalDateTime.parse(consentCreated.get()), LocalDateTime.now())
+                        < 20;
     }
 
     private LocalDate prepareFromDate(Year year, Month month) {
