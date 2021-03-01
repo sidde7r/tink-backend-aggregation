@@ -10,8 +10,11 @@ import com.google.common.base.CaseFormat;
 import com.google.common.collect.Lists;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.client.provider_configuration.rpc.ProviderConfiguration;
 import se.tink.libraries.provider.ProviderDto.ProviderTypes;
 import se.tink.libraries.serialization.utils.SerializationUtils;
@@ -41,6 +44,8 @@ public class Provider implements Cloneable {
 
     @SuppressWarnings("serial")
     private static class FieldsList extends ArrayList<Field> {}
+
+    @JsonIgnore private static Logger logger = LoggerFactory.getLogger(Provider.class);
 
     private AccessType accessType;
     private AuthenticationFlow authenticationFlow;
@@ -250,7 +255,15 @@ public class Provider implements Cloneable {
                         providerConfiguration.getAuthenticationUserType().name()));
         provider.setFinancialServices(
                 CollectionUtils.emptyIfNull(providerConfiguration.getFinancialServices()).stream()
-                        .map(FinancialService::of)
+                        .map(
+                                service -> {
+                                    FinancialService mappedService = FinancialService.of(service);
+                                    if (mappedService == null) {
+                                        logger.warn("Could not map financialService: {}", service);
+                                    }
+                                    return mappedService;
+                                })
+                        .filter(Objects::nonNull)
                         .collect(Collectors.toList()));
         return provider;
     }

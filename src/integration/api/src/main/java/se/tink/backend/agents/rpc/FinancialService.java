@@ -25,6 +25,9 @@ public class FinancialService {
     public static FinancialService of(
             se.tink.backend.aggregation.client.provider_configuration.rpc.FinancialService
                     financialService) {
+        if (financialService == null || financialService.getSegment() == null) {
+            return null;
+        }
         return new FinancialService()
                 .setSegment(FinancialServiceSegment.valueOf(financialService.getSegment().name()))
                 .setShortName(financialService.getShortName());
