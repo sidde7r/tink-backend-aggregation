@@ -82,11 +82,8 @@ public class Sparebank1Constants {
     }
 
     public static final class Keys {
-        public static final String TRANSACTIONS_KEY = "transactions";
         public static final String MORE_TRANSACTIONS_KEY = "moreTransactions";
-        public static final String PORTFOLIO_HOLDINGS_KEY = "portfolioHoldings";
         public static final String SESSION_ID = "dsessionid";
-        public static final String TRANSACTIONS_LINK = "transactionsLink";
         public static final String DOB = "dob";
         public static final String NATIONAL_ID = "nationalId";
     }
