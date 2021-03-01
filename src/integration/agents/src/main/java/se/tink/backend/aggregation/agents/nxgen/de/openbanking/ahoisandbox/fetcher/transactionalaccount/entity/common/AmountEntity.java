@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.de.openbanking.ahoisandbox.fetc
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class AmountEntity {
@@ -11,7 +11,7 @@ public class AmountEntity {
     private String currency;
 
     @JsonIgnore
-    public Amount toTinkAmount() {
-        return new Amount(currency, value);
+    public ExactCurrencyAmount toTinkAmount() {
+        return ExactCurrencyAmount.of(value, currency);
     }
 }

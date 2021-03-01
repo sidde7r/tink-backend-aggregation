@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.ahoisandbox;
 
-import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public final class AhoiSandboxConstants {
@@ -12,8 +12,10 @@ public final class AhoiSandboxConstants {
         throw new AssertionError();
     }
 
-    public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
-            TypeMapper.<AccountTypes>builder().put(AccountTypes.CHECKING, "GIRO").build();
+    public static final TypeMapper<TransactionalAccountType> ACCOUNT_TYPE_MAPPER =
+            TypeMapper.<TransactionalAccountType>builder()
+                    .put(TransactionalAccountType.CHECKING, "GIRO")
+                    .build();
 
     public static class ErrorMessages {
         public static final String INVALID_CONFIGURATION =
