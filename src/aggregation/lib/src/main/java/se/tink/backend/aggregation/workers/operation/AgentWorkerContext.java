@@ -66,6 +66,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     private static final Logger logger =
             LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
+    private static final String AGENT = "agent";
     private static final MetricId SUSPICIOUS_NUMBER_SERIES =
             MetricId.newId("aggregation_account_suspicious_number_series");
     private static final MetricId CREDENTIALS_STATUS_CHANGES_WITHOUT_ERRORS =
@@ -534,7 +535,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
 
             String agent = request.getProvider().getClassName();
             getMetricRegistry()
-                    .meter(SUSPICIOUS_NUMBER_SERIES.label("agent", agent).label("label", label))
+                    .meter(SUSPICIOUS_NUMBER_SERIES.label(AGENT, agent).label("label", label))
                     .inc();
             logger.warn(
                     "Found suspicous number series ({}) from {}, credentialsId: {}.",
@@ -580,7 +581,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
             getMetricRegistry()
                     .meter(
                             CREDENTIALS_STATUS_CHANGES_WITHOUT_ERRORS
-                                    .label("agent", agent)
+                                    .label(AGENT, agent)
                                     .label("status", credentials.getStatus().toString()))
                     .inc();
         }
@@ -677,7 +678,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         getMetricRegistry()
                 .meter(
                         RESULTING_ERRORS
-                                .label("agent", request.getProvider().getClassName())
+                                .label(AGENT, request.getProvider().getClassName())
                                 .label("error", error.getType().name())
                                 .label("status", status.name()))
                 .inc();
