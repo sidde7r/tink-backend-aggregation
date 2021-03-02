@@ -82,7 +82,8 @@ public class LoginExecutor {
     private void updateCredentialsStatus(
             LoginResult loginResult, AgentWorkerCommandContext context) {
         loginResult.accept(
-                new CredentialsStatusLoginResultVisitor(statusUpdater, context.getCatalog()));
+                new CredentialsStatusLoginResultVisitor(
+                        context.getMetricRegistry(), statusUpdater, context.getCatalog()));
     }
 
     private void createLoginMetric(

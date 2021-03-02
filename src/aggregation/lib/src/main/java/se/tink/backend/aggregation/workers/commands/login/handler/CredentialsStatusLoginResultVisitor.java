@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.workers.commands.login.handler;
 
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
 import se.tink.backend.aggregation.agents.exceptions.agent.AgentException;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AuthenticationError;
@@ -19,11 +21,19 @@ import se.tink.backend.aggregation.workers.commands.login.handler.result.LoginUn
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
 import se.tink.connectivity.errors.ConnectivityError;
 import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.metrics.core.MetricId;
+import se.tink.libraries.metrics.registry.MetricRegistry;
 import src.libraries.connectivity_errors.ErrorHelper;
 
 @AllArgsConstructor
 public class CredentialsStatusLoginResultVisitor implements LoginResultVisitor {
 
+    private static final Logger LOGGER =
+            LoggerFactory.getLogger(CredentialsStatusLoginResultVisitor.class);
+    private static final MetricId EXCEPTION_TO_ERROR_MAPPING =
+            MetricId.newId("aggregation_exception_to_error_mapping");
+
+    private final MetricRegistry metricRegistry;
     private final StatusUpdater statusUpdater;
     private final Catalog catalog;
 
@@ -99,6 +109,18 @@ public class CredentialsStatusLoginResultVisitor implements LoginResultVisitor {
         if (exception instanceof AgentException) {
             statusPayload = catalog.getString(((AgentException) exception).getUserMessage());
         }
+
+        metricRegistry
+                .meter(
+                        EXCEPTION_TO_ERROR_MAPPING
+                                .label("exception", exception.getClass().getSimpleName())
+                                .label("error", error.getType().toString()))
+                .inc();
+        LOGGER.info(
+                "[Login Result debugging]: Mapping exception {} to {}",
+                exception.getClass().getSimpleName(),
+                error.getType().toString(),
+                exception);
 
         statusUpdater.updateStatusWithError(credentialsStatus, statusPayload, error);
     }
