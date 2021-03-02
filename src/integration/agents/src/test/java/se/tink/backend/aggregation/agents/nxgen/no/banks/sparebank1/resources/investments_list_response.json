@@ -1,0 +1,124 @@
+{
+    "portfolios": [{
+        "name": "portfolio1",
+        "id": "portfolio1id",
+        "tradable": true,
+        "allowsBuy": true,
+        "allowsSell": true,
+        "shared": false,
+        "totalMarketValueInteger": "499",
+        "totalMarketValueFraction": "94",
+        "totalCostPriceInteger": "500",
+        "totalCostPriceFraction": "00",
+        "totalRateOfInvestCurrencyInteger": "-0",
+        "totalRateOfInvestCurrencyFraction": "06",
+        "totalRateOfInvestPercentageInteger": "-0",
+        "totalRateOfInvestPercentageFraction": "01",
+        "vpsAccount": false,
+        "askPortfolio": false,
+        "status": "OPEN",
+        "holdings": [{
+            "productId": "intrument1id",
+            "productName": "intrument1",
+            "isin": "intrument1isin",
+            "marketValueInteger": "499",
+            "marketValueFraction": "94",
+            "costPriceInteger": "500",
+            "costPriceFraction": "00",
+            "rateOfInvestCurrencyInteger": "-0",
+            "rateOfInvestCurrencyFraction": "06",
+            "rateOfInvestPercentageInteger": "0",
+            "rateOfInvestPercentageFraction": "00",
+            "sharesInteger": "0",
+            "sharesFraction": "2005000000",
+            "periodicReportDTO": {},
+            "numberOfActiveOrders": 0
+        }],
+        "activeOrdersWithoutHolding": [],
+        "periodicReportsIncluded": true,
+        "allowsInvestmentPlan": true,
+        "owner": true,
+        "_links": {
+            "portfolioHoldings": {
+                "href": "https://mobilbank-pm.sparebank1.no/sr-bank/nettbank-privat/sparing/rest/fond/portefoeljer/2133316/beholdning",
+                "method": "GET"
+            },
+            "portfolioOrders": {
+                "href": "https://mobilbank-pm.sparebank1.no/sr-bank/nettbank-privat/sparing/rest/fond/portefoeljer/2133316/ordrer",
+                "method": "GET",
+                "mediaTypes": ["application/json; charset=utf-8"]
+            }
+        }
+    },{
+        "name": "portfolio2",
+        "id": "portfolio2id",
+        "tradable": true,
+        "allowsBuy": true,
+        "allowsSell": true,
+        "shared": false,
+        "totalMarketValueInteger": "1231",
+        "totalMarketValueFraction": "65",
+        "totalCostPriceInteger": "700",
+        "totalCostPriceFraction": "52",
+        "totalRateOfInvestCurrencyInteger": "600",
+        "totalRateOfInvestCurrencyFraction": "23",
+        "totalRateOfInvestPercentageInteger": "23",
+        "totalRateOfInvestPercentageFraction": "01",
+        "vpsAccount": false,
+        "askPortfolio": false,
+        "status": "OPEN",
+        "holdings": [{
+            "productId": "instrument2id",
+            "productName": "instrument2",
+            "isin": "intrument2isin",
+            "marketValueInteger": "823",
+            "marketValueFraction": "31",
+            "costPriceInteger": "1000",
+            "costPriceFraction": "00",
+            "rateOfInvestCurrencyInteger": "-300",
+            "rateOfInvestCurrencyFraction": "23",
+            "rateOfInvestPercentageInteger": "0",
+            "rateOfInvestPercentageFraction": "00",
+            "sharesInteger": "2",
+            "sharesFraction": "23",
+            "periodicReportDTO": {},
+            "numberOfActiveOrders": 0
+        },{
+            "productId": "instrument3id",
+            "productName": "instrument3",
+            "isin": "intrument3isin",
+            "marketValueInteger": "499",
+            "marketValueFraction": "94",
+            "costPriceInteger": "500",
+            "costPriceFraction": "00",
+            "rateOfInvestCurrencyInteger": "-0",
+            "rateOfInvestCurrencyFraction": "06",
+            "rateOfInvestPercentageInteger": "0",
+            "rateOfInvestPercentageFraction": "00",
+            "sharesInteger": "1",
+            "sharesFraction": "00",
+            "periodicReportDTO": {},
+            "numberOfActiveOrders": 0
+        }],
+        "activeOrdersWithoutHolding": [],
+        "periodicReportsIncluded": true,
+        "allowsInvestmentPlan": true,
+        "owner": true,
+        "_links": {
+            "portfolioHoldings": {
+                "href": "https://mobilbank-pm.sparebank1.no/sr-bank/nettbank-privat/sparing/rest/fond/portefoeljer/2133316/beholdning",
+                "method": "GET"
+            },
+            "portfolioOrders": {
+                "href": "https://mobilbank-pm.sparebank1.no/sr-bank/nettbank-privat/sparing/rest/fond/portefoeljer/2133316/ordrer",
+                "method": "GET",
+                "mediaTypes": ["application/json; charset=utf-8"]
+            }
+        }
+    }
+    ],
+    "hasNomineePortfolios": true,
+    "hasVPSPortfolios": false,
+    "hasASKPortfolio": false,
+    "_links": {}
+}

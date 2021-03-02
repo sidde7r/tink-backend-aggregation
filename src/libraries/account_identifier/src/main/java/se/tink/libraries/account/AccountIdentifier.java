@@ -41,7 +41,8 @@ public abstract class AccountIdentifier {
         PAYM_PHONE_NUMBER("paym-phone-number"),
         PT_BPI("pt-bpi"),
         BBAN("bban"),
-        COUNTRY_SPECIFIC("country_specific");
+        COUNTRY_SPECIFIC("country_specific"),
+        OTHER("other");
 
         private String scheme;
 
@@ -276,6 +277,8 @@ public abstract class AccountIdentifier {
                 return new PortugalBancoBpiIdentifier(id);
             case DE:
                 return new GermanIdentifier(id);
+            case OTHER:
+                return new OtherIdentifier(id);
         }
         return null;
     }

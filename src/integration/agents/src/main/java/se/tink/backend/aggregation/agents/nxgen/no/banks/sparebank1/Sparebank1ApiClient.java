@@ -26,6 +26,7 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.acco
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.account.rpc.AccountListResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.account.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.creditcards.rpc.CreditCardTransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.investment.rpc.PortfolioEntitiesResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.loan.entities.LoanDetailsEntity;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -214,5 +215,14 @@ public class Sparebank1ApiClient {
         return client.request(Urls.ACCOUNTS.parameter(Parameters.BANK_NAME, bankId))
                 .queryParam("type", "REGULAR_ACCOUNT")
                 .get(AccountApiIdentifiersResponse.class);
+    }
+
+    public PortfolioEntitiesResponse fetchInvestments() {
+        return client.request(Urls.PORTFOLIOS.parameter(Parameters.BANK_NAME, bankId))
+                .queryParam(QueryParams.HOLDINGS, "true")
+                .queryParam(QueryParams.PERIODIC_REPORTS, "true")
+                .queryParam(QueryParams.ASK_PORTFOLIOS, "true")
+                .accept(MediaType.APPLICATION_JSON_TYPE)
+                .get(PortfolioEntitiesResponse.class);
     }
 }

@@ -12,9 +12,9 @@ public class Sparebank1Constants {
                 new URL(BASE_LOGIN + "auth/pages/selectMarketAndAuthType.xhtml");
         static final URL POLL_BANKID = new URL(BASE_LOGIN + "auth/api/bim/poll");
         static final URL LOGIN_DONE = new URL(BASE_LOGIN + "auth/pages/loginDone.xhtml");
-        public static final URL ACCOUNT_DETAILS =
+        static final URL ACCOUNT_DETAILS =
                 new URL(BASE + "{bankName}/nettbank-privat/rest/konto/{accountId}/detaljer");
-        public static final URL ACCOUNTS_IDENTIFIERS =
+        static final URL ACCOUNTS_IDENTIFIERS =
                 new URL(BASE + "{bankName}/nettbank-privat/rest/accounts");
         public static final URL ACCOUNTS =
                 new URL(BASE + "{bankName}/nettbank-privat/rest/kontoer");
@@ -28,7 +28,7 @@ public class Sparebank1Constants {
                 new URL(
                         BASE
                                 + "{bankName}/nettbank-privat/kort/rest/cards/credit/{accountId}/transactions");
-        public static final URL PORTFOLIOS =
+        static final URL PORTFOLIOS =
                 new URL(BASE + "{bankName}/nettbank-privat/sparing/rest/fond/portefoeljer");
         static final URL INIT_LOGIN =
                 new URL(BASE + "personal/banking/mobilbank/login-app-dispatcher");
@@ -47,46 +47,43 @@ public class Sparebank1Constants {
     }
 
     public static class Parameters {
-        public static final String BANK_NAME = "bankName";
-        public static final String ACCOUNT_ID = "accountId";
-        public static final String CID = "cid";
-        public static final String CID_VALUE = "1";
+        static final String BANK_NAME = "bankName";
+        static final String ACCOUNT_ID = "accountId";
+        static final String CID = "cid";
+        static final String CID_VALUE = "1";
     }
 
     public static class QueryParams {
-        public static final String APP = "app";
-        public static final String MARKET = "market";
-        public static final String UNDERSCORE = "_";
-        public static final String FROM_DATE = "fromDate";
-        public static final String TO_DATE = "toDate";
-        public static final String ROW_LIMIT = "rowLimit";
-        public static final String PAGINATION_LIMIT_VAL = "25000";
+        static final String UNDERSCORE = "_";
+        static final String FROM_DATE = "fromDate";
+        static final String TO_DATE = "toDate";
+        static final String ROW_LIMIT = "rowLimit";
+        static final String PAGINATION_LIMIT_VAL = "25000";
+        static final String HOLDINGS = "holdings";
+        static final String PERIODIC_REPORTS = "periodicReports";
+        static final String ASK_PORTFOLIOS = "askPortfolios";
     }
 
     public static class Headers {
-        public static final String USER_AGENT =
+        static final String USER_AGENT =
                 "Mobilbank/4.5.2; mobileOS/iOS; iOSVersion/10.3.1; deviceManufacturer/Apple; deviceType/iPhone; deviceModel/iPhone-6s; requestType/rest";
-        public static final String ORIGIN = "Origin";
+        static final String ORIGIN = "Origin";
         public static final String REFERER = "Referer";
-        public static final String APPLICATION_JSON_CHARSET_UTF8 =
-                "application/json; charset=utf-8";
-        public static final String TEXT_HTML_APPLICATION_XHTML_XML =
+        static final String APPLICATION_JSON_CHARSET_UTF8 = "application/json; charset=utf-8";
+        static final String TEXT_HTML_APPLICATION_XHTML_XML =
                 "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8";
-        public static final String X_SB1_REST_VERSION = "X-SB1-Rest-Version";
-        public static final String X_SB1_REST_VERSION_VALUE = "1.0.0";
-        public static final String X_REQUESTED_WITH = "X-Requested-With";
-        public static final String XML_HTTP_REQUEST = "XMLHttpRequest";
-        public static final String CSRFT_TOKEN = "X-CSRFToken";
-        public static final String V_2_JSON = "application/vnd.sparebank1.v2+json;charset=utf-8";
-        public static final String V_3_JSON = "application/vnd.sparebank1.v3+json;charset=utf-8";
+        static final String X_SB1_REST_VERSION = "X-SB1-Rest-Version";
+        static final String X_SB1_REST_VERSION_VALUE = "1.0.0";
+        static final String X_REQUESTED_WITH = "X-Requested-With";
+        static final String XML_HTTP_REQUEST = "XMLHttpRequest";
+        static final String CSRFT_TOKEN = "X-CSRFToken";
+        static final String V_2_JSON = "application/vnd.sparebank1.v2+json;charset=utf-8";
+        static final String V_3_JSON = "application/vnd.sparebank1.v3+json;charset=utf-8";
     }
 
     public static final class Keys {
-        public static final String TRANSACTIONS_KEY = "transactions";
         public static final String MORE_TRANSACTIONS_KEY = "moreTransactions";
-        public static final String PORTFOLIO_HOLDINGS_KEY = "portfolioHoldings";
         public static final String SESSION_ID = "dsessionid";
-        public static final String TRANSACTIONS_LINK = "transactionsLink";
         public static final String DOB = "dob";
         public static final String NATIONAL_ID = "nationalId";
     }
