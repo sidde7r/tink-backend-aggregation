@@ -41,7 +41,7 @@ import se.tink.libraries.mapper.PrioritizedValueExtractor;
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, TRANSFERS, LIST_BENEFICIARIES})
 @AgentPisCapability(
         capabilities = PisCapability.PIS_SEPA,
-        markets = {"FR", "IT"})
+        markets = {"FR", "IT", "ES", "DE"})
 @AgentPisCapability(capabilities = PIS_UK_FASTER_PAYMENT, markets = "GB")
 public final class RevolutV31Agent extends UkOpenBankingBaseAgent {
 
