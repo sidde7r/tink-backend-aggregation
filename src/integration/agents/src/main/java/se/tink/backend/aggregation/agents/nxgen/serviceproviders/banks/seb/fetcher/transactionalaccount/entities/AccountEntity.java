@@ -146,6 +146,7 @@ public class AccountEntity {
                         .withAccountNumber(accountNumber)
                         .withAccountName(getAccountName())
                         .addIdentifier(new SwedishIdentifier(accountNumber))
+                        .addIdentifier(new SwedishIdentifier(accountNumber).toIbanIdentifer())
                         .build();
 
         return TransactionalAccount.nxBuilder()

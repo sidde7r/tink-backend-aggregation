@@ -5,9 +5,9 @@
     "exactBalance" : {
       "currencyCode" : "SEK",
       "doubleValue" : 5.0,
+      "exactValue" : 5.0,
       "scale" : 2,
-      "unscaledValue" : 500,
-      "exactValue" : 5.0
+      "unscaledValue" : 500
     },
     "currencyCode" : "SEK",
     "bankId" : "90200044000",
@@ -19,52 +19,28 @@
     "userModifiedExcluded" : false,
     "userModifiedName" : false,
     "userModifiedType" : false,
-    "identifiers" : "[\"se://90200044000\"]",
+    "identifiers" : "[\"se://90200044000\",\"iban://SE9490200000090200044000\"]",
     "closed" : false,
     "flags" : "[]",
+    "balances" : [ ],
     "availableCredit" : 0.0,
     "balance" : 5.0
-  }, {
-    "accountNumber" : "90000670000",
-    "accountExclusion" : "NONE",
-    "exactBalance" : {
-      "currencyCode" : "SEK",
-      "doubleValue" : 6098.39,
-      "scale" : 2,
-      "unscaledValue" : 609839,
-      "exactValue" : 6098.39
-    },
-    "currencyCode" : "SEK",
-    "bankId" : "90000670000",
-    "excluded" : false,
-    "favored" : false,
-    "name" : "Privatkonto",
-    "ownership" : 1.0,
-    "type" : "CHECKING",
-    "userModifiedExcluded" : false,
-    "userModifiedName" : false,
-    "userModifiedType" : false,
-    "identifiers" : "[]",
-    "closed" : false,
-    "flags" : "[]",
-    "availableCredit" : 0.0,
-    "balance" : 6098.39
   }, {
     "accountNumber" : "1111",
     "accountExclusion" : "NONE",
     "exactAvailableCredit" : {
       "currencyCode" : "SEK",
       "doubleValue" : 28335.45,
+      "exactValue" : 28335.45,
       "scale" : 2,
-      "unscaledValue" : 2833545,
-      "exactValue" : 28335.45
+      "unscaledValue" : 2833545
     },
     "exactBalance" : {
       "currencyCode" : "SEK",
       "doubleValue" : 0.0,
+      "exactValue" : 0,
       "scale" : 0,
-      "unscaledValue" : 0,
-      "exactValue" : 0
+      "unscaledValue" : 0
     },
     "currencyCode" : "SEK",
     "bankId" : "1111",
@@ -79,8 +55,35 @@
     "identifiers" : "[\"bban://000000\"]",
     "closed" : false,
     "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
+    "balances" : [ ],
     "availableCredit" : 28335.45,
     "balance" : 0.0
+  }, {
+    "accountNumber" : "90200670000",
+    "accountExclusion" : "NONE",
+    "exactBalance" : {
+      "currencyCode" : "SEK",
+      "doubleValue" : 6098.39,
+      "exactValue" : 6098.39,
+      "scale" : 2,
+      "unscaledValue" : 609839
+    },
+    "currencyCode" : "SEK",
+    "bankId" : "90200670000",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "Privatkonto",
+    "ownership" : 1.0,
+    "type" : "CHECKING",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[\"iban://SE5390200000090200670000\",\"se://90200670000\"]",
+    "closed" : false,
+    "flags" : "[]",
+    "balances" : [ ],
+    "availableCredit" : 0.0,
+    "balance" : 6098.39
   } ],
   "transactions" : [ {
     "amount" : 1.0,
@@ -92,7 +95,9 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
   }, {
     "amount" : -1.0,
     "date" : 1589191200000,
@@ -103,7 +108,9 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
   }, {
     "amount" : 5.0,
     "date" : 1588672800000,
@@ -114,7 +121,9 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
   }, {
     "amount" : -2380.08,
     "date" : 1588586400000,
@@ -125,7 +134,9 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
   }, {
     "amount" : 1864.0,
     "date" : 1586253600000,
@@ -136,7 +147,9 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
   }, {
     "amount" : -1740.0,
     "date" : 1584615600000,
@@ -147,7 +160,9 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
   }, {
     "amount" : 1.0,
     "date" : 1584442800000,
@@ -158,7 +173,9 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
   }, {
     "amount" : -1000.0,
     "date" : 1584183600000,
@@ -169,7 +186,9 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
   }, {
     "amount" : 3.0,
     "date" : 1584010800000,
@@ -180,7 +199,9 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
   }, {
     "amount" : -4250.0,
     "date" : 1583838000000,
@@ -191,7 +212,9 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
   }, {
     "amount" : 4108.08,
     "date" : 1583838000000,
@@ -202,7 +225,9 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
   }, {
     "amount" : 1.0,
     "date" : 1583838000000,
@@ -213,7 +238,9 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
   }, {
     "amount" : -1303.0,
     "date" : 1583319600000,
@@ -224,7 +251,9 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
   }, {
     "amount" : -15899.0,
     "date" : 1583146800000,
@@ -235,7 +264,9 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
   }, {
     "amount" : -5405.0,
     "date" : 1582801200000,
@@ -246,7 +277,9 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
   }, {
     "amount" : -7500.0,
     "date" : 1582628400000,
@@ -257,7 +290,9 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
   }, {
     "amount" : -56000.0,
     "date" : 1582023600000,
@@ -268,7 +303,9 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
   }, {
     "amount" : -1.0,
     "date" : 1581418800000,
@@ -279,7 +316,9 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
   }, {
     "amount" : -1.0,
     "date" : 1581418800000,
@@ -290,7 +329,9 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
   }, {
     "amount" : -1.0,
     "date" : 1581418800000,
@@ -301,7 +342,9 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
   }, {
     "amount" : -1.0,
     "date" : 1581332400000,
@@ -312,7 +355,9 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
   }, {
     "amount" : -29000.0,
     "date" : 1580986800000,
@@ -323,7 +368,9 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
   }, {
     "amount" : -6500.0,
     "date" : 1580554800000,
@@ -334,7 +381,9 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
   }, {
     "amount" : 125000.0,
     "date" : 1580122800000,
@@ -345,7 +394,9 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
   }, {
     "amount" : 1.0,
     "date" : 1579086000000,
@@ -356,7 +407,9 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
   }, {
     "amount" : 1.0,
     "date" : 1576839600000,
@@ -367,7 +420,9 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
   }, {
     "amount" : 1.0,
     "date" : 1576839600000,
@@ -378,7 +433,9 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
   }, {
     "amount" : -5.0,
     "date" : 1573210800000,
@@ -389,7 +446,9 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
   }, {
     "amount" : 5.0,
     "date" : 1573038000000,
@@ -400,7 +459,9 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
   }, {
     "amount" : -1.0,
     "date" : 1572951600000,
@@ -411,7 +472,9 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
   }, {
     "amount" : 1.0,
     "date" : 1594375200000,
@@ -422,7 +485,9 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
   }, {
     "amount" : -1.0,
     "date" : 1589191200000,
@@ -433,7 +498,9 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
   }, {
     "amount" : 5.0,
     "date" : 1588672800000,
@@ -444,7 +511,9 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
   }, {
     "amount" : -2380.08,
     "date" : 1588586400000,
@@ -455,7 +524,9 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
   }, {
     "amount" : 1864.0,
     "date" : 1586253600000,
@@ -466,7 +537,9 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
   }, {
     "amount" : -1740.0,
     "date" : 1584615600000,
@@ -477,7 +550,9 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
   }, {
     "amount" : 1.0,
     "date" : 1584442800000,
@@ -488,7 +563,9 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
   }, {
     "amount" : -1000.0,
     "date" : 1584183600000,
@@ -499,7 +576,9 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
   }, {
     "amount" : 3.0,
     "date" : 1584010800000,
@@ -510,7 +589,9 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
   }, {
     "amount" : -4250.0,
     "date" : 1583838000000,
@@ -521,7 +602,9 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
   }, {
     "amount" : 4108.08,
     "date" : 1583838000000,
@@ -532,7 +615,9 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
   }, {
     "amount" : 1.0,
     "date" : 1583838000000,
@@ -543,7 +628,9 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
   }, {
     "amount" : -1303.0,
     "date" : 1583319600000,
@@ -554,7 +641,9 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
   }, {
     "amount" : -15899.0,
     "date" : 1583146800000,
@@ -565,7 +654,9 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
   }, {
     "amount" : -5405.0,
     "date" : 1582801200000,
@@ -576,7 +667,9 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
   }, {
     "amount" : -7500.0,
     "date" : 1582628400000,
@@ -587,7 +680,9 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
   }, {
     "amount" : -56000.0,
     "date" : 1582023600000,
@@ -598,7 +693,9 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
   }, {
     "amount" : -1.0,
     "date" : 1581418800000,
@@ -609,7 +706,9 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
   }, {
     "amount" : -1.0,
     "date" : 1581418800000,
@@ -620,7 +719,9 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
   }, {
     "amount" : -1.0,
     "date" : 1581418800000,
@@ -631,7 +732,9 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
   }, {
     "amount" : -1.0,
     "date" : 1581332400000,
@@ -642,7 +745,9 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
   }, {
     "amount" : -29000.0,
     "date" : 1580986800000,
@@ -653,7 +758,9 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
   }, {
     "amount" : -6500.0,
     "date" : 1580554800000,
@@ -664,7 +771,9 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
   }, {
     "amount" : 125000.0,
     "date" : 1580122800000,
@@ -675,7 +784,9 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
   }, {
     "amount" : 1.0,
     "date" : 1579086000000,
@@ -686,7 +797,9 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
   }, {
     "amount" : 1.0,
     "date" : 1576839600000,
@@ -697,7 +810,9 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
   }, {
     "amount" : 1.0,
     "date" : 1576839600000,
@@ -708,7 +823,9 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
   }, {
     "amount" : -5.0,
     "date" : 1573210800000,
@@ -719,7 +836,9 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
   }, {
     "amount" : 5.0,
     "date" : 1573038000000,
@@ -730,7 +849,9 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
   }, {
     "amount" : -1.0,
     "date" : 1572951600000,
@@ -741,7 +862,789 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : -220.0,
+    "date" : 1594461600000,
+    "description" : "merchantName",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : -104.13,
+    "date" : 1594375200000,
+    "description" : "merchantName",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : -49.0,
+    "date" : 1594288800000,
+    "description" : "merchantName",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : -3995.0,
+    "date" : 1594202400000,
+    "description" : "merchantName",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : -129.0,
+    "date" : 1594116000000,
+    "description" : "merchantName",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : -110.0,
+    "date" : 1594116000000,
+    "description" : "merchantName",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : -109.0,
+    "date" : 1594116000000,
+    "description" : "merchantName",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : -175.0,
+    "date" : 1593943200000,
+    "description" : "merchantName",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : -49.0,
+    "date" : 1593943200000,
+    "description" : "merchantName",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : -521.6,
+    "date" : 1593856800000,
+    "description" : "merchantName",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : -274.0,
+    "date" : 1593856800000,
+    "description" : "merchantName",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : -138.4,
+    "date" : 1593770400000,
+    "description" : "merchantName",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : -85.0,
+    "date" : 1593770400000,
+    "description" : "merchantName",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : -11849.0,
+    "date" : 1593684000000,
+    "description" : "merchantName",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : -115.24,
+    "date" : 1593684000000,
+    "description" : "merchantName",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : -90.0,
+    "date" : 1593684000000,
+    "description" : "merchantName",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : -184.51,
+    "date" : 1593597600000,
+    "description" : "merchantName",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : -45.98,
+    "date" : 1593424800000,
+    "description" : "merchantName",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : -29.0,
+    "date" : 1592992800000,
+    "description" : "merchantName",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : -948.0,
+    "date" : 1592733600000,
+    "description" : "merchantName",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : -597.0,
+    "date" : 1592733600000,
+    "description" : "merchantName",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : -525.0,
+    "date" : 1592733600000,
+    "description" : "merchantName",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : -149.0,
+    "date" : 1592733600000,
+    "description" : "merchantName",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : -139.0,
+    "date" : 1592733600000,
+    "description" : "merchantName",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : -129.81,
+    "date" : 1592733600000,
+    "description" : "merchantName",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : -120.0,
+    "date" : 1592733600000,
+    "description" : "merchantName",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : -111.0,
+    "date" : 1592733600000,
+    "description" : "merchantName",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : -65.43,
+    "date" : 1592733600000,
+    "description" : "merchantName",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : -37.0,
+    "date" : 1592733600000,
+    "description" : "merchantName",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : -37.0,
+    "date" : 1592733600000,
+    "description" : "merchantName",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : -220.0,
+    "date" : 1594461600000,
+    "description" : "merchantName",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : -104.13,
+    "date" : 1594375200000,
+    "description" : "merchantName",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : -49.0,
+    "date" : 1594288800000,
+    "description" : "merchantName",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : -3995.0,
+    "date" : 1594202400000,
+    "description" : "merchantName",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : -129.0,
+    "date" : 1594116000000,
+    "description" : "merchantName",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : -110.0,
+    "date" : 1594116000000,
+    "description" : "merchantName",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : -109.0,
+    "date" : 1594116000000,
+    "description" : "merchantName",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : -175.0,
+    "date" : 1593943200000,
+    "description" : "merchantName",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : -49.0,
+    "date" : 1593943200000,
+    "description" : "merchantName",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : -521.6,
+    "date" : 1593856800000,
+    "description" : "merchantName",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : -274.0,
+    "date" : 1593856800000,
+    "description" : "merchantName",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : -138.4,
+    "date" : 1593770400000,
+    "description" : "merchantName",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : -85.0,
+    "date" : 1593770400000,
+    "description" : "merchantName",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : -11849.0,
+    "date" : 1593684000000,
+    "description" : "merchantName",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : -115.24,
+    "date" : 1593684000000,
+    "description" : "merchantName",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : -90.0,
+    "date" : 1593684000000,
+    "description" : "merchantName",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : -184.51,
+    "date" : 1593597600000,
+    "description" : "merchantName",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : -45.98,
+    "date" : 1593424800000,
+    "description" : "merchantName",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : -29.0,
+    "date" : 1592992800000,
+    "description" : "merchantName",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : -948.0,
+    "date" : 1592733600000,
+    "description" : "merchantName",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : -597.0,
+    "date" : 1592733600000,
+    "description" : "merchantName",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : -525.0,
+    "date" : 1592733600000,
+    "description" : "merchantName",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : -149.0,
+    "date" : 1592733600000,
+    "description" : "merchantName",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : -139.0,
+    "date" : 1592733600000,
+    "description" : "merchantName",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : -129.81,
+    "date" : 1592733600000,
+    "description" : "merchantName",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : -120.0,
+    "date" : 1592733600000,
+    "description" : "merchantName",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : -111.0,
+    "date" : 1592733600000,
+    "description" : "merchantName",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : -65.43,
+    "date" : 1592733600000,
+    "description" : "merchantName",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : -37.0,
+    "date" : 1592733600000,
+    "description" : "merchantName",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
+  }, {
+    "amount" : -37.0,
+    "date" : 1592733600000,
+    "description" : "merchantName",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
   }, {
     "amount" : -70.0,
     "date" : 1594720800000,
@@ -752,7 +1655,9 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
   }, {
     "amount" : -529.87,
     "date" : 1594720800000,
@@ -763,7 +1668,9 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
   }, {
     "amount" : -475.0,
     "date" : 1594548000000,
@@ -774,7 +1681,9 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
   }, {
     "amount" : -778.0,
     "date" : 1594634400000,
@@ -785,7 +1694,9 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
   }, {
     "amount" : -1.0,
     "date" : 1594375200000,
@@ -796,7 +1707,9 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
   }, {
     "amount" : -3.0,
     "date" : 1594375200000,
@@ -807,7 +1720,9 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
   }, {
     "amount" : -120.0,
     "date" : 1594288800000,
@@ -818,7 +1733,9 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
   }, {
     "amount" : -400.0,
     "date" : 1594029600000,
@@ -829,7 +1746,9 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
   }, {
     "amount" : 7303.0,
     "date" : 1593770400000,
@@ -840,7 +1759,9 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
   }, {
     "amount" : -2174.0,
     "date" : 1593770400000,
@@ -851,7 +1772,9 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
   }, {
     "amount" : -4687.96,
     "date" : 1593770400000,
@@ -862,7 +1785,9 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
   }, {
     "amount" : -191.51,
     "date" : 1593770400000,
@@ -873,7 +1798,9 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
   }, {
     "amount" : -1.0,
     "date" : 1593770400000,
@@ -884,7 +1811,9 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
   }, {
     "amount" : -457.0,
     "date" : 1593684000000,
@@ -895,7 +1824,9 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
   }, {
     "amount" : -100.0,
     "date" : 1593511200000,
@@ -906,7 +1837,9 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
   }, {
     "amount" : -3814.0,
     "date" : 1593511200000,
@@ -917,7 +1850,9 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
   }, {
     "amount" : -235.0,
     "date" : 1593511200000,
@@ -928,7 +1863,9 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
   }, {
     "amount" : -151.0,
     "date" : 1593511200000,
@@ -939,7 +1876,9 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
   }, {
     "amount" : -1119.58,
     "date" : 1593511200000,
@@ -950,7 +1889,9 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
   }, {
     "amount" : -350.0,
     "date" : 1593424800000,
@@ -961,7 +1902,9 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
   }, {
     "amount" : -112.0,
     "date" : 1593424800000,
@@ -972,7 +1915,9 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
   }, {
     "amount" : -12312.0,
     "date" : 1593165600000,
@@ -983,7 +1928,9 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
   }, {
     "amount" : 4200.0,
     "date" : 1593165600000,
@@ -994,7 +1941,9 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
   }, {
     "amount" : -4500.0,
     "date" : 1593165600000,
@@ -1005,7 +1954,9 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
   }, {
     "amount" : -109.0,
     "date" : 1593165600000,
@@ -1016,7 +1967,9 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
   }, {
     "amount" : 26867.0,
     "date" : 1592992800000,
@@ -1027,7 +1980,9 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
   }, {
     "amount" : -160.95,
     "date" : 1592474400000,
@@ -1038,7 +1993,9 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
   }, {
     "amount" : 150.0,
     "date" : 1592128800000,
@@ -1049,7 +2006,9 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
   }, {
     "amount" : -4250.0,
     "date" : 1591956000000,
@@ -1060,7 +2019,9 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
   }, {
     "amount" : 2000.0,
     "date" : 1591956000000,
@@ -1071,7 +2032,9 @@
     "pending" : false,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
   }, {
     "amount" : -70.0,
     "date" : 1594720800000,
@@ -1082,7 +2045,9 @@
     "pending" : true,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
   }, {
     "amount" : -529.87,
     "date" : 1594720800000,
@@ -1093,7 +2058,9 @@
     "pending" : true,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
   }, {
     "amount" : -475.0,
     "date" : 1594548000000,
@@ -1104,7 +2071,9 @@
     "pending" : true,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
   }, {
     "amount" : -778.0,
     "date" : 1594634400000,
@@ -1115,666 +2084,8 @@
     "pending" : true,
     "timestamp" : 0,
     "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : -220.0,
-    "date" : 1594461600000,
-    "description" : "merchantName",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : -104.13,
-    "date" : 1594375200000,
-    "description" : "merchantName",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : -49.0,
-    "date" : 1594288800000,
-    "description" : "merchantName",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : -3995.0,
-    "date" : 1594202400000,
-    "description" : "merchantName",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : -129.0,
-    "date" : 1594116000000,
-    "description" : "merchantName",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : -110.0,
-    "date" : 1594116000000,
-    "description" : "merchantName",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : -109.0,
-    "date" : 1594116000000,
-    "description" : "merchantName",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : -175.0,
-    "date" : 1593943200000,
-    "description" : "merchantName",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : -49.0,
-    "date" : 1593943200000,
-    "description" : "merchantName",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : -521.6,
-    "date" : 1593856800000,
-    "description" : "merchantName",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : -274.0,
-    "date" : 1593856800000,
-    "description" : "merchantName",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : -138.4,
-    "date" : 1593770400000,
-    "description" : "merchantName",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : -85.0,
-    "date" : 1593770400000,
-    "description" : "merchantName",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : -11849.0,
-    "date" : 1593684000000,
-    "description" : "merchantName",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : -115.24,
-    "date" : 1593684000000,
-    "description" : "merchantName",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : -90.0,
-    "date" : 1593684000000,
-    "description" : "merchantName",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : -184.51,
-    "date" : 1593597600000,
-    "description" : "merchantName",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : -45.98,
-    "date" : 1593424800000,
-    "description" : "merchantName",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : -29.0,
-    "date" : 1592992800000,
-    "description" : "merchantName",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : -948.0,
-    "date" : 1592733600000,
-    "description" : "merchantName",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : -597.0,
-    "date" : 1592733600000,
-    "description" : "merchantName",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : -525.0,
-    "date" : 1592733600000,
-    "description" : "merchantName",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : -149.0,
-    "date" : 1592733600000,
-    "description" : "merchantName",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : -139.0,
-    "date" : 1592733600000,
-    "description" : "merchantName",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : -129.81,
-    "date" : 1592733600000,
-    "description" : "merchantName",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : -120.0,
-    "date" : 1592733600000,
-    "description" : "merchantName",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : -111.0,
-    "date" : 1592733600000,
-    "description" : "merchantName",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : -65.43,
-    "date" : 1592733600000,
-    "description" : "merchantName",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : -37.0,
-    "date" : 1592733600000,
-    "description" : "merchantName",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : -37.0,
-    "date" : 1592733600000,
-    "description" : "merchantName",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : -220.0,
-    "date" : 1594461600000,
-    "description" : "merchantName",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : -104.13,
-    "date" : 1594375200000,
-    "description" : "merchantName",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : -49.0,
-    "date" : 1594288800000,
-    "description" : "merchantName",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : -3995.0,
-    "date" : 1594202400000,
-    "description" : "merchantName",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : -129.0,
-    "date" : 1594116000000,
-    "description" : "merchantName",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : -110.0,
-    "date" : 1594116000000,
-    "description" : "merchantName",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : -109.0,
-    "date" : 1594116000000,
-    "description" : "merchantName",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : -175.0,
-    "date" : 1593943200000,
-    "description" : "merchantName",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : -49.0,
-    "date" : 1593943200000,
-    "description" : "merchantName",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : -521.6,
-    "date" : 1593856800000,
-    "description" : "merchantName",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : -274.0,
-    "date" : 1593856800000,
-    "description" : "merchantName",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : -138.4,
-    "date" : 1593770400000,
-    "description" : "merchantName",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : -85.0,
-    "date" : 1593770400000,
-    "description" : "merchantName",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : -11849.0,
-    "date" : 1593684000000,
-    "description" : "merchantName",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : -115.24,
-    "date" : 1593684000000,
-    "description" : "merchantName",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : -90.0,
-    "date" : 1593684000000,
-    "description" : "merchantName",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : -184.51,
-    "date" : 1593597600000,
-    "description" : "merchantName",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : -45.98,
-    "date" : 1593424800000,
-    "description" : "merchantName",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : -29.0,
-    "date" : 1592992800000,
-    "description" : "merchantName",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : -948.0,
-    "date" : 1592733600000,
-    "description" : "merchantName",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : -597.0,
-    "date" : 1592733600000,
-    "description" : "merchantName",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : -525.0,
-    "date" : 1592733600000,
-    "description" : "merchantName",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : -149.0,
-    "date" : 1592733600000,
-    "description" : "merchantName",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : -139.0,
-    "date" : 1592733600000,
-    "description" : "merchantName",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : -129.81,
-    "date" : 1592733600000,
-    "description" : "merchantName",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : -120.0,
-    "date" : 1592733600000,
-    "description" : "merchantName",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : -111.0,
-    "date" : 1592733600000,
-    "description" : "merchantName",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : -65.43,
-    "date" : 1592733600000,
-    "description" : "merchantName",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : -37.0,
-    "date" : 1592733600000,
-    "description" : "merchantName",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
-  }, {
-    "amount" : -37.0,
-    "date" : 1592733600000,
-    "description" : "merchantName",
-    "internalPayload" : { },
-    "originalAmount" : 0.0,
-    "payload" : { },
-    "pending" : false,
-    "timestamp" : 0,
-    "type" : "DEFAULT",
-    "upcoming" : false
+    "upcoming" : false,
+    "externalSystemIds" : { },
+    "transactionDates" : [ ]
   } ]
 }
