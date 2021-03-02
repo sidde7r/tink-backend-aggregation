@@ -16,16 +16,16 @@ import se.tink.backend.aggregation.workers.commands.login.handler.result.LoginBa
 import se.tink.backend.aggregation.workers.commands.login.handler.result.LoginResultVisitor;
 import se.tink.backend.aggregation.workers.commands.login.handler.result.LoginSuccessResult;
 import se.tink.backend.aggregation.workers.commands.login.handler.result.LoginUnknownErrorResult;
-import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
 import se.tink.connectivity.errors.ConnectivityError;
+import se.tink.libraries.i18n.Catalog;
 import src.libraries.connectivity_errors.ErrorHelper;
 
 @AllArgsConstructor
 public class CredentialsStatusLoginResultVisitor implements LoginResultVisitor {
 
     private final StatusUpdater statusUpdater;
-    private final AgentWorkerCommandContext context;
+    private final Catalog catalog;
 
     @Override
     public void visit(LoginSuccessResult successResult) {
@@ -97,7 +97,7 @@ public class CredentialsStatusLoginResultVisitor implements LoginResultVisitor {
         String statusPayload = null;
 
         if (exception instanceof AgentException) {
-            statusPayload = context.getCatalog().getString(((AgentException) exception).getUserMessage());
+            statusPayload = catalog.getString(((AgentException) exception).getUserMessage());
         }
 
         statusUpdater.updateStatusWithError(credentialsStatus, statusPayload, error);

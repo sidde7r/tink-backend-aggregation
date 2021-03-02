@@ -32,7 +32,7 @@ public class LoginExecutor {
     }
 
     public LoginExecutor(
-            MetricsFactory metricsFactory,
+            final MetricsFactory metricsFactory,
             final StatusUpdater statusUpdater,
             final AgentPlatformAuthenticationExecutor agentPlatformAuthenticationExecutor) {
         this.metricsFactory = metricsFactory;
@@ -81,7 +81,8 @@ public class LoginExecutor {
 
     private void updateCredentialsStatus(
             LoginResult loginResult, AgentWorkerCommandContext context) {
-        loginResult.accept(new CredentialsStatusLoginResultVisitor(statusUpdater, context));
+        loginResult.accept(
+                new CredentialsStatusLoginResultVisitor(statusUpdater, context.getCatalog()));
     }
 
     private void createLoginMetric(
