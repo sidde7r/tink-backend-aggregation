@@ -174,7 +174,6 @@ import se.tink.backend.aggregation.source_info.AccountSourceInfo;
 import se.tink.backend.aggregation.utils.transfer.StringNormalizerSwedish;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageLengthConfig;
-import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountFlag;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
@@ -1700,7 +1699,7 @@ public final class SEBApiAgent extends AbstractAgent
         }
 
         if (response.d == null || response.d.VODB == null) {
-            statusUpdater.updateStatus(CredentialsStatus.TEMPORARY_ERROR);
+            return loans;
         } else {
             // PCBW2581 is null if there are no mortgages
             if (response.d.VODB.PCBW2581 != null) {
