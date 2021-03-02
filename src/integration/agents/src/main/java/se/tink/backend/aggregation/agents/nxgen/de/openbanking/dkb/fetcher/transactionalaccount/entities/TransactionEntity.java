@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.fetcher.tran
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Date;
+import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
@@ -18,7 +19,7 @@ public class TransactionEntity {
         return Transaction.builder()
                 .setAmount(transactionAmount.toAmount())
                 .setDate(bookingDate)
-                .setDescription(setDescription(transactionAmount))
+                .setDescription(getDescription(transactionAmount))
                 .setPending(false)
                 .build();
     }
@@ -28,18 +29,18 @@ public class TransactionEntity {
         return Transaction.builder()
                 .setAmount(transactionAmount.toAmount())
                 .setDate(bookingDate)
-                .setDescription(setDescription(transactionAmount))
+                .setDescription(getDescription(transactionAmount))
                 .setPending(true)
                 .build();
     }
 
-    private String setDescription(AmountEntity transactionAmount) {
+    private String getDescription(AmountEntity transactionAmount) {
 
         if (transactionAmount.toAmount().getExactValue().intValue() > 0) {
             return debtorName;
         } else if ((creditorName.toLowerCase().contains("paypal")
                         || creditorName.toLowerCase().contains("klarna"))
-                && !remittanceInformationUnstructured.isEmpty()) {
+                && StringUtils.isNotEmpty(remittanceInformationUnstructured)) {
             return remittanceInformationUnstructured;
         }
         return creditorName;
