@@ -12,6 +12,7 @@ import org.assertj.core.util.VisibleForTesting;
 import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class TransactionEntity {
@@ -70,7 +71,7 @@ public class TransactionEntity {
 
         return Transaction.builder()
                 .setPending(isPending)
-                .setDescription(toTinkDescription())
+                .setDescription(getDescription(transactionAmount.toAmount()))
                 .setAmount(transactionAmount.toAmount())
                 .setDate(date)
                 // IMPORTANT! Do not change the transaction payload without consulting the
@@ -103,17 +104,22 @@ public class TransactionEntity {
                 .orElse("");
     }
 
-    public String toTinkDescription() {
+    public String getDescription(ExactCurrencyAmount transactionAmount) {
 
-        return Stream.of(getRemittanceInformationUnstructured(), creditorName, debtorName)
-                .filter(StringUtils::isNotBlank)
-                .findFirst()
-                .orElse(
-                        Stream.of(creditorAccount, debtorAccount)
-                                .filter(Objects::nonNull)
-                                .findFirst()
-                                .map(TransactionAccountEntity::getIban)
-                                .orElse(""));
+        if (transactionAmount.getExactValue().intValue() > 0) {
+            if (StringUtils.isNotEmpty(debtorName)) {
+                return debtorName;
+            }
+        } else if (StringUtils.isNotEmpty(creditorName)) {
+            if ((creditorName.toLowerCase().contains("paypal")
+                            || creditorName.toLowerCase().contains("klarna"))
+                    && StringUtils.isNotEmpty(remittanceInformationUnstructured)) {
+                return remittanceInformationUnstructured;
+            } else {
+                return creditorName;
+            }
+        }
+        return remittanceInformationUnstructured;
     }
 
     @VisibleForTesting
