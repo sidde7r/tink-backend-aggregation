@@ -14,12 +14,16 @@ public class OpBankCreditCardAccountFetcherTestFixtures {
                         + "  {\n"
                         + "    \"cardId\": \"testCardId1\",\n"
                         + "    \"cardNumber\": \"1234 56** **** 7890\",\n"
-                        + "    \"productName\": \"testProductName1\"\n"
+                        + "    \"productName\": \"testProductName1\",\n"
+                        + "    \"statementBalance\": \"1001.56\",\n"
+                        + "    \"authorizedOutstandingAmount\": \"1400.00\"\n"
                         + "  },\n"
                         + "  {\n"
                         + "    \"cardId\": \"testCardId2\",\n"
                         + "    \"cardNumber\": \"0987 65** **** 4321\",\n"
-                        + "    \"productName\": \"testProductName2\"\n"
+                        + "    \"productName\": \"testProductName2\",\n"
+                        + "    \"statementBalance\": \"1002.56\",\n"
+                        + "    \"authorizedOutstandingAmount\": \"1500.00\"\n"
                         + "  }\n"
                         + "]",
                 GetCreditCardsResponse.class);
