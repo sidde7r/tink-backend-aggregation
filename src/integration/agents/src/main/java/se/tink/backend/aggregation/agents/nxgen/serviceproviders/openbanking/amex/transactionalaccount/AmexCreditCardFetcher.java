@@ -14,7 +14,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ame
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmexApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.dto.AccountsResponseDto;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.dto.BalanceDto;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.dto.StatementDto;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.dto.StatementPeriodsDto;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.dto.SupplementaryAccountsItem;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.transactionalaccount.storage.HmacAccountIdStorage;
@@ -64,10 +63,9 @@ public class AmexCreditCardFetcher implements AccountFetcher<CreditCardAccount> 
             Map<HmacToken, Pair<AccountsResponseDto, StatementPeriodsDto>> accountsByToken) {
 
         return accountsByToken.values().stream()
-                .map(Pair::getLeft)
-                .filter(AmexCreditCardFetcher::isAccountActive)
-                .filter(AccountsResponseDto::haveSupplementaryAccounts)
-                .map(AccountsResponseDto::toSubCreditCardAccount)
+                .filter(pair -> isAccountActive(pair.getLeft()))
+                .filter(pair -> pair.getLeft().haveSupplementaryAccounts())
+                .map(pair -> pair.getLeft().toSubCreditCardAccount(pair.getRight()))
                 .findFirst()
                 .orElse(Collections.emptyList());
     }
@@ -78,13 +76,8 @@ public class AmexCreditCardFetcher implements AccountFetcher<CreditCardAccount> 
             StatementPeriodsDto statementPeriods) {
 
         final List<BalanceDto> balances = getBalances(hmacToken);
-        final Map<Integer, String> statementMap =
-                statementPeriods.getStatementPeriods().stream()
-                        .collect(
-                                Collectors.toMap(
-                                        StatementDto::getIndex, StatementDto::getEndDateAsString));
 
-        return accountsResponse.toCreditCardAccount(balances, statementMap);
+        return accountsResponse.toCreditCardAccount(balances, statementPeriods);
     }
 
     private List<BalanceDto> getBalances(HmacToken hmacToken) {
