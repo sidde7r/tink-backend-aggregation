@@ -10,7 +10,6 @@ import com.google.common.base.CaseFormat;
 import com.google.common.collect.Lists;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
@@ -255,15 +254,7 @@ public class Provider implements Cloneable {
                         providerConfiguration.getAuthenticationUserType().name()));
         provider.setFinancialServices(
                 CollectionUtils.emptyIfNull(providerConfiguration.getFinancialServices()).stream()
-                        .map(
-                                service -> {
-                                    FinancialService mappedService = FinancialService.of(service);
-                                    if (mappedService == null) {
-                                        logger.warn("Could not map financialService: {}", service);
-                                    }
-                                    return mappedService;
-                                })
-                        .filter(Objects::nonNull)
+                        .map(FinancialService::of)
                         .collect(Collectors.toList()));
         return provider;
     }
