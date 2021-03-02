@@ -9,6 +9,7 @@ import java.util.stream.Stream;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.ErrorMessages;
@@ -87,7 +88,7 @@ public class TransactionMapper {
 
         String purpose = transactionDetails.getRemittanceInformation().getUnstructured();
 
-        if (!purpose.isEmpty()
+        if (StringUtils.isNotEmpty(purpose)
                 && (beneficiary == null
                         || beneficiary.isEmpty()
                         || beneficiary.toLowerCase().contains("paypal")
