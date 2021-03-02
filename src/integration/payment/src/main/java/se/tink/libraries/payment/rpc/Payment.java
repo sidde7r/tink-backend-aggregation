@@ -17,6 +17,9 @@ import se.tink.libraries.pair.Pair;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payments.common.model.PaymentScheme;
+import se.tink.libraries.transfer.rpc.ExecutionRule;
+import se.tink.libraries.transfer.rpc.Frequency;
+import se.tink.libraries.transfer.rpc.PaymentServiceType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 public class Payment {
@@ -60,6 +63,11 @@ public class Payment {
     @Deprecated private Reference reference;
 
     private final RemittanceInformation remittanceInformation;
+    private PaymentServiceType paymentServiceType;
+    private Frequency frequency;
+    private LocalDate startDate;
+    private LocalDate endDate;
+    private ExecutionRule executionRule;
 
     private Payment(Builder builder) {
         this.creditor = builder.creditor;
@@ -75,6 +83,11 @@ public class Payment {
         this.id = UUID.randomUUID();
         this.remittanceInformation = builder.remittanceInformation;
         this.paymentScheme = builder.paymentScheme;
+        this.paymentServiceType = builder.paymentServiceType;
+        this.frequency = builder.frequency;
+        this.startDate = builder.startDate;
+        this.endDate = builder.endDate;
+        this.executionRule = builder.executionRule;
     }
 
     /*
@@ -164,6 +177,10 @@ public class Payment {
         return uniqueId;
     }
 
+    public void setUniqueId(String uniqueId) {
+        this.uniqueId = uniqueId;
+    }
+
     public PaymentType getType() {
         return type;
     }
@@ -180,6 +197,26 @@ public class Payment {
 
     public RemittanceInformation getRemittanceInformation() {
         return remittanceInformation;
+    }
+
+    public PaymentServiceType getPaymentServiceType() {
+        return paymentServiceType;
+    }
+
+    public Frequency getFrequency() {
+        return frequency;
+    }
+
+    public LocalDate getStartDate() {
+        return startDate;
+    }
+
+    public LocalDate getEndDate() {
+        return endDate;
+    }
+
+    public ExecutionRule getExecutionRule() {
+        return executionRule;
     }
 
     public Pair<AccountIdentifier.Type, AccountIdentifier.Type> getCreditorAndDebtorAccountType() {
@@ -243,6 +280,37 @@ public class Payment {
 
         private RemittanceInformation remittanceInformation;
         private PaymentScheme paymentScheme;
+
+        private PaymentServiceType paymentServiceType;
+        private Frequency frequency;
+        private LocalDate startDate;
+        private LocalDate endDate;
+        private ExecutionRule executionRule;
+
+        public Builder withPaymentServiceType(PaymentServiceType paymentServiceType) {
+            this.paymentServiceType = paymentServiceType;
+            return this;
+        }
+
+        public Builder withFrequency(Frequency frequency) {
+            this.frequency = frequency;
+            return this;
+        }
+
+        public Builder withStartDate(LocalDate startDate) {
+            this.startDate = startDate;
+            return this;
+        }
+
+        public Builder withEndDate(LocalDate endDate) {
+            this.endDate = endDate;
+            return this;
+        }
+
+        public Builder withExecutionRule(ExecutionRule executionRule) {
+            this.executionRule = executionRule;
+            return this;
+        }
 
         public Builder withCreditor(Creditor creditor) {
             this.creditor = creditor;

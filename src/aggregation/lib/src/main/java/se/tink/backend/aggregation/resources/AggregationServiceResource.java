@@ -245,7 +245,13 @@ public class AggregationServiceResource implements AggregationService {
     @Override
     public void recurringPayment(RecurringPaymentRequest request, ClientInfo clientInfo) {
         trackUserPresentFlagPresence("recurring_payment", request);
-        logger.info("Recurring Payment Request received from main.");
+        logger.info("Recurring Payment Request received from main");
+        try {
+            agentWorker.execute(
+                    agentWorkerCommandFactory.createOperationExecutePayment(request, clientInfo));
+        } catch (Exception e) {
+            logger.error("Error while calling createOperationRecurringPayment", e);
+        }
     }
 
     @Override

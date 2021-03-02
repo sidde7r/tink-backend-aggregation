@@ -35,6 +35,7 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRes
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.storage.Storage;
+import se.tink.backend.aggregation.rpc.RecurringPaymentRequest;
 import se.tink.backend.aggregation.rpc.TransferRequest;
 import se.tink.backend.aggregation.workers.commands.metrics.MetricsCommand;
 import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
@@ -48,6 +49,7 @@ import se.tink.libraries.signableoperation.enums.InternalStatus;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.signableoperation.rpc.SignableOperation;
 import se.tink.libraries.transfer.enums.TransferType;
+import se.tink.libraries.transfer.rpc.RecurringPayment;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.uuid.UUIDUtils;
@@ -75,28 +77,10 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
 
         Transfer transfer = transferRequest.getTransfer();
         SignableOperation signableOperation = transferRequest.getSignableOperation();
-
-        // TODO: This (hack) is here to handle direct integration flow, will remove it after the
-        // observing that we are receiving RI throw all flows, Jira Ticket:
-        // https://tinkab.atlassian.net/browse/PAY1-506
-        if (transfer.getRemittanceInformation() != null) {
-            log.info(
-                    "[transferId: {}] Remittance information: {}, Destination message: {}",
-                    UUIDUtils.toTinkUUID(transfer.getId()),
-                    transfer.getRemittanceInformation().toString(),
-                    transfer.getDestinationMessage());
-        } else {
-            log.info(
-                    "[transferId: {}] RemittanceInformation is null, will create it from destinationMessage",
-                    UUIDUtils.toTinkUUID(transfer.getId()));
-            RemittanceInformation remittanceInformation = new RemittanceInformation();
-            remittanceInformation.setValue(transfer.getDestinationMessage());
-            remittanceInformation.setType(null);
-            transfer.setRemittanceInformation(remittanceInformation);
-        }
-
         signableOperation.setStatus(SignableOperationStatuses.EXECUTING);
         context.updateSignableOperation(signableOperation);
+
+        handleRemittanceInformation(transfer);
 
         if (!(agent instanceof TransferExecutor) && !(agent instanceof TransferExecutorNxgen)) {
             log.error("Agent does not support executing transfers");
@@ -114,33 +98,39 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
                     UUIDUtils.toTinkUUID(transfer.getId()),
                     getTransferExecuteLogInfo(transfer));
 
-            if (agent instanceof TransferExecutor) {
-                TransferExecutor transferExecutor = (TransferExecutor) agent;
-                transferExecutor.execute(transfer);
-            } else if (agent instanceof TypedPaymentControllerable) {
-                TypedPaymentControllerable paymentControllerable =
-                        (TypedPaymentControllerable) agent;
-                handlePayment(
-                        paymentControllerable
-                                .getPaymentController(
-                                        PaymentRequest.of(
-                                                        transfer,
-                                                        transferRequest.getProvider().getMarket())
-                                                .getPayment())
-                                .get(),
-                        transfer,
-                        transferRequest.getProvider().getMarket());
-            } else if (agent instanceof PaymentControllerable) {
-                PaymentControllerable paymentControllerable = (PaymentControllerable) agent;
-
-                if (paymentControllerable.getPaymentController().isPresent()) {
+            if (transferRequest instanceof RecurringPaymentRequest) {
+                handleRecurringPayment(agent, (RecurringPaymentRequest) transferRequest);
+            } else {
+                if (agent instanceof TransferExecutor) {
+                    TransferExecutor transferExecutor = (TransferExecutor) agent;
+                    transferExecutor.execute(transfer);
+                } else if (agent instanceof TypedPaymentControllerable) {
+                    TypedPaymentControllerable paymentControllerable =
+                            (TypedPaymentControllerable) agent;
                     handlePayment(
-                            paymentControllerable.getPaymentController().get(),
+                            paymentControllerable
+                                    .getPaymentController(
+                                            PaymentRequest.of(
+                                                            transfer,
+                                                            transferRequest
+                                                                    .getProvider()
+                                                                    .getMarket())
+                                                    .getPayment())
+                                    .get(),
                             transfer,
                             transferRequest.getProvider().getMarket());
-                } else {
-                    TransferExecutorNxgen transferExecutorNxgen = (TransferExecutorNxgen) agent;
-                    operationStatusMessage = transferExecutorNxgen.execute(transfer);
+                } else if (agent instanceof PaymentControllerable) {
+                    PaymentControllerable paymentControllerable = (PaymentControllerable) agent;
+
+                    if (paymentControllerable.getPaymentController().isPresent()) {
+                        handlePayment(
+                                paymentControllerable.getPaymentController().get(),
+                                transfer,
+                                transferRequest.getProvider().getMarket());
+                    } else {
+                        TransferExecutorNxgen transferExecutorNxgen = (TransferExecutorNxgen) agent;
+                        operationStatusMessage = transferExecutorNxgen.execute(transfer);
+                    }
                 }
             }
 
@@ -439,6 +429,90 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
             return AgentWorkerCommandResult.ABORT;
         } finally {
             resetCredentialsStatus();
+        }
+    }
+
+    private void handleRecurringPayment(
+            Agent agent, RecurringPaymentRequest recurringPaymentRequestRequest)
+            throws PaymentException {
+        if (agent instanceof PaymentControllerable) {
+            PaymentControllerable paymentControllerable = (PaymentControllerable) agent;
+
+            if (paymentControllerable.getPaymentController().isPresent()) {
+
+                PaymentController paymentController =
+                        paymentControllerable.getPaymentController().get();
+                RecurringPayment recurringPayment =
+                        recurringPaymentRequestRequest.getRecurringPayment();
+
+                PaymentResponse createPaymentResponse =
+                        paymentController.create(
+                                PaymentRequest.ofRecurringPayment(recurringPayment));
+
+                log.info(
+                        "Credentials contain - status: {} before first signing",
+                        credentials.getStatus());
+
+                PaymentMultiStepResponse signPaymentMultiStepResponse =
+                        paymentController.sign(PaymentMultiStepRequest.of(createPaymentResponse));
+
+                log.info(
+                        "Credentials contain - status: {} after first signing",
+                        credentials.getStatus());
+                log.info(
+                        "Payment step is - {} after first signing",
+                        signPaymentMultiStepResponse.getStep());
+
+                Map<String, String> map;
+                List<Field> fields;
+                String nextStep = signPaymentMultiStepResponse.getStep();
+                Payment payment = signPaymentMultiStepResponse.getPayment();
+                Storage storage = signPaymentMultiStepResponse.getStorage();
+
+                while (!AuthenticationStepConstants.STEP_FINALIZE.equals(nextStep)) {
+                    fields = signPaymentMultiStepResponse.getFields();
+                    map = Collections.emptyMap();
+
+                    signPaymentMultiStepResponse =
+                            paymentController.sign(
+                                    new PaymentMultiStepRequest(
+                                            payment,
+                                            storage,
+                                            nextStep,
+                                            fields,
+                                            new ArrayList<>(map.values())));
+                    nextStep = signPaymentMultiStepResponse.getStep();
+                    payment = signPaymentMultiStepResponse.getPayment();
+                    storage = signPaymentMultiStepResponse.getStorage();
+
+                    log.info("Next step - {}", signPaymentMultiStepResponse.getStep());
+                    log.info("Credentials contain - status: {}", credentials.getStatus());
+                }
+
+            } else {
+                log.error("Payment not supported by Agent=" + agent.getAgentClass());
+            }
+        }
+    }
+
+    private void handleRemittanceInformation(Transfer transfer) {
+        // TODO: This (hack) is here to handle direct integration flow, will remove it after the
+        // observing that we are receiving RI throw all flows, Jira Ticket:
+        // https://tinkab.atlassian.net/browse/PAY1-506
+        if (transfer.getRemittanceInformation() != null) {
+            log.info(
+                    "[transferId: {}] Remittance information: {}, Destination message: {}",
+                    UUIDUtils.toTinkUUID(transfer.getId()),
+                    transfer.getRemittanceInformation().toString(),
+                    transfer.getDestinationMessage());
+        } else {
+            log.info(
+                    "[transferId: {}] RemittanceInformation is null, will create it from destinationMessage",
+                    UUIDUtils.toTinkUUID(transfer.getId()));
+            RemittanceInformation remittanceInformation = new RemittanceInformation();
+            remittanceInformation.setValue(transfer.getDestinationMessage());
+            remittanceInformation.setType(null);
+            transfer.setRemittanceInformation(remittanceInformation);
         }
     }
 
