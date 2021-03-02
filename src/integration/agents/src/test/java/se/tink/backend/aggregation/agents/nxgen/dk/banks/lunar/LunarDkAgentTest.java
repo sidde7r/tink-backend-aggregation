@@ -6,6 +6,7 @@ import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.libraries.credentials.service.RefreshableItem;
 
 public class LunarDkAgentTest {
 
@@ -31,6 +32,8 @@ public class LunarDkAgentTest {
                 .addCredentialField(
                         Field.Key.PASSWORD,
                         manager.get(ArgumentManager.UsernamePasswordArgumentEnum.PASSWORD))
+                .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
+                .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
                 .expectLoggedIn(false)
                 .loadCredentialsBefore(true)
                 .saveCredentialsAfter(true)

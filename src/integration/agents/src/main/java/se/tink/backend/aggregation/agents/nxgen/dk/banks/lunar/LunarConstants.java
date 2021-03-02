@@ -30,6 +30,7 @@ public class LunarConstants {
                 toLunarUrl("card-management/cards-by-account/{accountId}");
         public static final URL MEMBERS =
                 toLunarUrl("account-management/accounts/{accountId}/members");
+        public static final URL USER_SETTINGS = toLunarUrl("usersettings/settings");
 
         private static URL toLunarUrl(String endpoint) {
             return URL.of(LUNAR_BASE_URL + endpoint);

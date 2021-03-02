@@ -1,0 +1,38 @@
+{
+    "accountId": "ced8297b-1b58-401c-9002-60a70194f625",
+    "members": [
+        {
+            "accountId": "ced8297b-1b58-401c-9002-60a70194f625",
+            "avatarUrl": "https://api.prod.lunarway.com/user/user/ec163a23-02fd-4bc3-9671-912142a08832/avatar/1",
+            "canRemove": false,
+            "id": "ced8297b-1b58-401c-9002-60a70194f625-ec163a23-02fd-4bc3-9671-912142a08832",
+            "name": "Dig",
+            "shortName": "Dig",
+            "sort": 0,
+            "subtitle": "Ejer",
+            "userId": "ec163a23-02fd-4bc3-9671-912142a08832"
+        },
+        {
+            "accountId": "ced8297b-1b58-401c-9002-60a70194f625",
+            "avatarUrl": "https://api.prod.lunarway.com/user/user/3f790e54-ff0d-4a54-bd37-d61df66721e4/avatar/1",
+            "canRemove": true,
+            "id": "ced8297b-1b58-401c-9002-60a70194f625-3f790e54-ff0d-4a54-bd37-d61df66721e4",
+            "name": "Second holder",
+            "shortName": "Second",
+            "sort": 1,
+            "subtitle": "",
+            "userId": "3f790e54-ff0d-4a54-bd37-d61df66721e4"
+        },
+        {
+            "accountId": "ced8297b-1b58-401c-9002-60a70194f625",
+            "avatarUrl": "https://api.prod.lunarway.com/user/user/f26dc87e-e91c-402f-847d-019eeaf8cfc6/avatar/1",
+            "canRemove": true,
+            "id": "ced8297b-1b58-401c-9002-60a70194f625-f26dc87e-e91c-402f-847d-019eeaf8cfc6",
+            "name": "Third holder",
+            "shortName": "Third",
+            "sort": 2,
+            "subtitle": "",
+            "userId": "f26dc87e-e91c-402f-847d-019eeaf8cfc6"
+        }
+    ]
+}

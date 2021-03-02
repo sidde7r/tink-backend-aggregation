@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.exceptions.agent.AgentException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
+import se.tink.backend.aggregation.agents.exceptions.nemid.NemIdException;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AgentBankApiError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AgentError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AuthenticationError;
@@ -22,7 +23,6 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.error.ThirdPar
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.ThirdPartyAppTimedOutError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.ThirdPartyAppUnknownError;
 import se.tink.backend.aggregation.agentsplatform.framework.error.Error;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.exception.NemIdException;
 
 @Slf4j
 public class AuthenticationExceptionHandler {

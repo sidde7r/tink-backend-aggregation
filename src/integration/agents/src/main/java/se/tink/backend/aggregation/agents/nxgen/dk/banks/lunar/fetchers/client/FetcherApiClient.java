@@ -18,6 +18,7 @@ import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.transact
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.transactionalaccount.rpc.GoalsResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.transactionalaccount.rpc.MembersResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.transactionalaccount.rpc.TransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.transactionalaccount.rpc.UserSettingsResponse;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
@@ -61,6 +62,10 @@ public class FetcherApiClient {
     public MembersResponse fetchMembers(String accountId) {
         return getDefaultRequestBuilder(Url.MEMBERS.parameter(PathParams.ACCOUNT_ID, accountId))
                 .get(MembersResponse.class);
+    }
+
+    public UserSettingsResponse getUserSettings() {
+        return getDefaultRequestBuilder(Url.USER_SETTINGS).get(UserSettingsResponse.class);
     }
 
     private RequestBuilder getDefaultRequestBuilder(URL url) {

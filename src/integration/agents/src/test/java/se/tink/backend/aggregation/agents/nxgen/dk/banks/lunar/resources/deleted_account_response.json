@@ -1,0 +1,78 @@
+{
+    "accounts": [
+        {
+            "BIC": "TEST_BIC_4",
+            "IBAN": "DK9009870987654321",
+            "accountNumber": "09870987654321",
+            "balanceAmount": 15,
+            "balanceAvailableAmount": 15,
+            "balanceUsableAmount": 15,
+            "bankName": "Lunar",
+            "bban": "09870987654321",
+            "bbanType": "DK",
+            "canCustomize": true,
+            "canDelete": false,
+            "canShare": false,
+            "canTopUp": true,
+            "canTransferFrom": true,
+            "canTransferInstant": true,
+            "canTransferTo": true,
+            "canTransferWithFutureDate": true,
+            "capabilities": [
+                {
+                    "id": "canTransferTo"
+                },
+                {
+                    "id": "canTransferWithFutureDate"
+                },
+                {
+                    "id": "canCustomize"
+                },
+                {
+                    "id": "canTransferFrom"
+                },
+                {
+                    "id": "canTransferInstant"
+                },
+                {
+                    "id": "canTopup"
+                },
+                {
+                    "id": "canTransferToInvest"
+                },
+                {
+                    "id": "canCreateDirectDebitMandate"
+                },
+                {
+                    "id": "canApprovePayMyBill"
+                },
+                {
+                    "id": "canCreateAutomaticTransfer"
+                },
+                {
+                    "id": "canOrderNemKonto"
+                }
+            ],
+            "color": "#FD4274",
+            "created": 1590256662878,
+            "currency": "DKK",
+            "deleted": true,
+            "displayAccountNumber": "0987-0987654321",
+            "displayAccountNumberFormat": "BBAN_DK",
+            "displayName": "DeletedAccount",
+            "easyAccountStatus": "none",
+            "iconBackgroundId": "red",
+            "iconBackgroundUrl": "https://s3-eu-west-1.amazonaws.com/lunarway-prod-cdn/accounts-view/backgrounds/red.png",
+            "iconId": "user",
+            "iconUrl": "https://s3-eu-west-1.amazonaws.com/lunarway-prod-cdn/accounts-view/icons/user.png",
+            "id": "86a286e95-877e-4908-8e69-d3b310257f9f",
+            "isPrimaryAccount": false,
+            "isShared": false,
+            "origin": "lunar",
+            "originGroupId": "6a286e95-877e-4908-8e69-d3b310257f9f",
+            "sort": 1590256662878,
+            "state": "active",
+            "updated": 1604063669270
+        }
+    ]
+}
