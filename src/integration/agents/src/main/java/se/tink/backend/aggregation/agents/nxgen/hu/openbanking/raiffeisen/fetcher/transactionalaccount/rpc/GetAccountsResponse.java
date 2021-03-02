@@ -18,6 +18,8 @@ public class GetAccountsResponse {
         return Optional.ofNullable(accounts).orElse(Collections.emptyList()).stream()
                 .filter(AccountEntity::isCheckingAccount)
                 .map(AccountEntity::toTinkAccount)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .collect(Collectors.toList());
     }
 }
