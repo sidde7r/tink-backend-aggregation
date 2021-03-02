@@ -14,10 +14,13 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.concurrent.ExecutionException;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InOrder;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerOperation.AgentWorkerOperationState;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
+import se.tink.connectivity.errors.ConnectivityError;
+import se.tink.connectivity.errors.ConnectivityErrorType;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.metrics.core.MetricBuckets;
 import se.tink.libraries.metrics.core.MetricId;
@@ -78,30 +81,46 @@ public final class AgentWorkerOperationTest {
     public void whenRunWithCommandFailingUponExecutionCredentialsStatusBecomesTemporaryError()
             throws Exception {
         // given
+        AgentWorkerContext context = mock(AgentWorkerContext.class);
         CredentialsRequest credentialsRequest = mock(CredentialsRequest.class);
-        Credentials credentials = new Credentials();
-        credentials.setStatus(CredentialsStatus.UPDATING);
         AgentWorkerCommand command = mock(AgentWorkerCommand.class);
-        when(credentialsRequest.getCredentials()).thenReturn(credentials);
-        when(command.execute()).thenThrow(new IllegalStateException("sample exception"));
         AgentWorkerOperationState state = mock(AgentWorkerOperationState.class);
         LoadingCache<MetricId.MetricLabels, Timer> loadingCache = mock(LoadingCache.class);
-        doReturn(loadingCache).when(state).getCommandExecutionsTimers();
         Timer timer = new Timer(new MetricBuckets(Collections.emptyList()));
+
+        Credentials credentials = new Credentials();
+        credentials.setStatus(CredentialsStatus.UPDATING);
+
+        when(credentialsRequest.getCredentials()).thenReturn(credentials);
+        when(command.execute()).thenThrow(new IllegalStateException("sample exception"));
+        doReturn(loadingCache).when(state).getCommandExecutionsTimers();
         when(loadingCache.get(any())).thenReturn(timer);
+
         AgentWorkerOperation operation =
                 new AgentWorkerOperation(
                         state,
                         "myOperationMetricName",
                         credentialsRequest,
                         Collections.singletonList(command),
-                        mock(AgentWorkerContext.class));
+                        context);
 
         // when
         operation.run();
 
         // then
-        assertThat(credentials.getStatus()).isEqualTo(CredentialsStatus.TEMPORARY_ERROR);
+        ArgumentCaptor<CredentialsStatus> statusCaptor =
+                ArgumentCaptor.forClass(CredentialsStatus.class);
+        ArgumentCaptor<ConnectivityError> errorCaptor =
+                ArgumentCaptor.forClass(ConnectivityError.class);
+
+        verify(context).updateStatusWithError(statusCaptor.capture(), any(), errorCaptor.capture());
+
+        CredentialsStatus actualStatus = statusCaptor.getValue();
+        ConnectivityError connectivityError = errorCaptor.getValue();
+
+        assertThat(actualStatus).isEqualTo(CredentialsStatus.TEMPORARY_ERROR);
+        assertThat(connectivityError.getType())
+                .isEqualTo(ConnectivityErrorType.ERROR_TINK_INTERNAL_ERROR);
     }
 
     @Test

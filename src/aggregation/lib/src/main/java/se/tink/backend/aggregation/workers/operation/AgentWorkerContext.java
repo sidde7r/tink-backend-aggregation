@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.workers.operation;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Stopwatch;
 import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.sun.jersey.api.client.UniformInterfaceException;
 import io.dropwizard.lifecycle.Managed;
@@ -13,6 +14,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Random;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
@@ -45,6 +48,7 @@ import se.tink.backend.aggregation.events.AccountInformationServiceEventsProduce
 import se.tink.backend.aggregation.locks.BarrierName;
 import se.tink.backend.aggregationcontroller.v1.rpc.credentialsservice.UpdateCredentialsSupplementalInformationRequest;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
+import se.tink.connectivity.errors.ConnectivityError;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account_data_cache.AccountData;
 import se.tink.libraries.account_data_cache.AccountDataCache;
@@ -62,8 +66,16 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     private static final Logger logger =
             LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    public static final MetricId SUSPICIOUS_NUMBER_SERIES =
+    private static final MetricId SUSPICIOUS_NUMBER_SERIES =
             MetricId.newId("aggregation_account_suspicious_number_series");
+    private static final MetricId CREDENTIALS_STATUS_CHANGES_WITHOUT_ERRORS =
+            MetricId.newId("aggregation_credentials_status_changes_without_errors");
+
+    private static final Set<CredentialsStatus> ERROR_STATUSES =
+            ImmutableSet.of(
+                    CredentialsStatus.TEMPORARY_ERROR,
+                    CredentialsStatus.AUTHENTICATION_ERROR,
+                    CredentialsStatus.UNCHANGED);
 
     private Catalog catalog;
     protected CuratorFramework coordinationClient;
@@ -562,6 +574,16 @@ public class AgentWorkerContext extends AgentContext implements Managed {
             eventListener.onUpdateCredentialsStatus();
         }
 
+        if (ERROR_STATUSES.contains(credentials.getStatus())) {
+            String agent = request.getProvider().getClassName();
+            getMetricRegistry()
+                    .meter(
+                            CREDENTIALS_STATUS_CHANGES_WITHOUT_ERRORS
+                                    .label("agent", agent)
+                                    .label("status", credentials.getStatus().toString()))
+                    .inc();
+        }
+
         Optional<String> refreshId = getRefreshId();
 
         // Clone the credentials here so that we can pass a copy with no
@@ -596,7 +618,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
 
     @Override
     public void updateStatus(CredentialsStatus status) {
-        updateStatus(status, null);
+        updateStatus(status, null, true);
     }
 
     @Override
@@ -635,6 +657,56 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         credentials.setStatusPayload(payload);
 
         updateCredentialsExcludingSensitiveInformation(credentials, true);
+    }
+
+    // To be removed as soon as setting statuses with new errors path is rolled out
+    private static final Random RANDOM = new Random();
+    private static final double ROLLOUT_GRANULAR_ERROR_RATIO = 0.0;
+
+    @Override
+    public void updateStatusWithError(
+            CredentialsStatus status, String statusPayload, ConnectivityError error) {
+
+        if (RANDOM.nextDouble() > ROLLOUT_GRANULAR_ERROR_RATIO) {
+            // rolling out this new feature slowly, by using the old path
+            updateStatus(status, statusPayload, true);
+            return;
+        }
+
+        Credentials credentials = request.getCredentials();
+        credentials.setStatus(status);
+        credentials.setStatusPayload(statusPayload);
+
+        // Execute any event-listeners.
+
+        for (AgentEventListener eventListener : eventListeners) {
+            eventListener.onUpdateCredentialsStatus();
+        }
+
+        Optional<String> refreshId = getRefreshId();
+
+        // Clone the credentials here so that we can pass a copy with no
+        // secrets back to the system service.
+        Credentials credentialsCopy = credentials.clone();
+        credentialsCopy.clearSensitiveInformation(request.getProvider());
+
+        se.tink.libraries.credentials.rpc.Credentials coreCredentials =
+                CoreCredentialsMapper.fromAggregationCredentials(credentialsCopy);
+
+        se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateCredentialsStatusRequest
+                updateCredentialsStatusRequest =
+                        new se.tink.backend.aggregation.aggregationcontroller.v1.rpc
+                                .UpdateCredentialsStatusRequest();
+        updateCredentialsStatusRequest.setCredentials(coreCredentials);
+        updateCredentialsStatusRequest.setUserId(credentials.getUserId());
+        updateCredentialsStatusRequest.setUpdateContextTimestamp(true);
+        updateCredentialsStatusRequest.setUserDeviceId(request.getUserDeviceId());
+        updateCredentialsStatusRequest.setRequestType(request.getType());
+        updateCredentialsStatusRequest.setOperationId(request.getOperationId());
+        refreshId.ifPresent(updateCredentialsStatusRequest::setRefreshId);
+        updateCredentialsStatusRequest.setDetailedError(error);
+
+        controllerWrapper.updateCredentials(updateCredentialsStatusRequest);
     }
 
     @Override

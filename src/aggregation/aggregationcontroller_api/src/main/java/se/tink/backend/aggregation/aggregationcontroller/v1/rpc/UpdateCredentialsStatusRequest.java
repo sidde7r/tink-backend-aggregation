@@ -1,8 +1,13 @@
 package se.tink.backend.aggregation.aggregationcontroller.v1.rpc;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonSetter;
 import com.google.common.base.MoreObjects;
+import com.google.protobuf.InvalidProtocolBufferException;
+import com.google.protobuf.util.JsonFormat;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsRequestType;
+import se.tink.connectivity.errors.ConnectivityError;
 import se.tink.libraries.credentials.rpc.Credentials;
 import se.tink.libraries.jersey.utils.SafelyLoggable;
 
@@ -16,6 +21,7 @@ public class UpdateCredentialsStatusRequest implements SafelyLoggable {
     private String refreshId;
     private CredentialsRequestType requestType;
     private String operationId;
+    private ConnectivityError detailedError;
 
     public boolean isManual() {
         return isManual;
@@ -79,6 +85,34 @@ public class UpdateCredentialsStatusRequest implements SafelyLoggable {
 
     public String getOperationId() {
         return operationId;
+    }
+
+    public ConnectivityError getDetailedError() {
+        return detailedError;
+    }
+
+    public void setDetailedError(ConnectivityError detailedError) {
+        this.detailedError = detailedError;
+    }
+
+    @JsonGetter("detailedError")
+    public Object getDetailedErrorAsJsonString() throws InvalidProtocolBufferException {
+        if (detailedError == null) {
+            return null;
+        }
+        return JsonFormat.printer().omittingInsignificantWhitespace().print(detailedError);
+    }
+
+    @JsonSetter("detailedError")
+    public void setDetailedErrorFromJsonString(String json) throws InvalidProtocolBufferException {
+        if (json == null) {
+            detailedError = null;
+            return;
+        }
+
+        ConnectivityError.Builder builder = ConnectivityError.newBuilder();
+        JsonFormat.parser().ignoringUnknownFields().merge(json, builder);
+        detailedError = builder.build();
     }
 
     @Override

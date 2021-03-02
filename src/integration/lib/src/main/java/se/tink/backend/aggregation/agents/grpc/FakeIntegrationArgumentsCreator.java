@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsRequestType;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
+import se.tink.connectivity.errors.ConnectivityError;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.identitydata.IdentityData;
@@ -96,6 +97,14 @@ public class FakeIntegrationArgumentsCreator {
                             CredentialsStatus status,
                             String statusPayload,
                             boolean statusFromProvider) {}
+
+                    @Override
+                    public void updateStatusWithError(
+                            CredentialsStatus status,
+                            String statusPayload,
+                            ConnectivityError error) {
+                        // NOOP
+                    }
 
                     @Override
                     public Catalog getCatalog() {
