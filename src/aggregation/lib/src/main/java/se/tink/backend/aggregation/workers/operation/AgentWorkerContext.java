@@ -663,7 +663,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
 
     // To be removed as soon as setting statuses with new errors path is rolled out
     private static final Random RANDOM = new Random();
-    private static final double ROLLOUT_GRANULAR_ERROR_RATIO = 0.05;
+    private static final double ROLLOUT_GRANULAR_ERROR_RATIO = 0.25;
 
     @Override
     public void updateStatusWithError(
