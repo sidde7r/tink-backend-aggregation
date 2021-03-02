@@ -11,7 +11,6 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator.
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator.rpc.KeepAliveResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator.rpc.LinkingLoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator.rpc.LinkingLoginResponse1;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator.rpc.LinkingLoginResponse2;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator.rpc.LoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator.rpc.LoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.creditcard.rpc.CardTransactionsResponse;
@@ -47,7 +46,7 @@ public class EvoBancoApiClient {
         return response.getBody(LinkingLoginResponse1.class);
     }
 
-    public LinkingLoginResponse2 link2(LinkingLoginRequest linkingLoginRequest) {
+    public HttpResponse link2(LinkingLoginRequest linkingLoginRequest) {
         HttpResponse response =
                 createRequest(EvoBancoConstants.Urls.LINKING_LOGIN)
                         .headers(getEEHeaders())
@@ -55,9 +54,7 @@ public class EvoBancoApiClient {
 
         setNextCodSecIpHeader(response);
 
-        LinkingLoginResponse2 linkingLoginResponse2 = response.getBody(LinkingLoginResponse2.class);
-
-        return linkingLoginResponse2;
+        return response;
     }
 
     public LoginResponse login(LoginRequest loginRequest) {
