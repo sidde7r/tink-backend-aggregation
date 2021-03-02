@@ -11,7 +11,7 @@ import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.exceptions.nemid.NemIdError;
 import se.tink.connectivity.errors.ConnectivityErrorType;
 
-public class ExceptionMappings {
+class LegacyExceptionToConnectivityErrorMapper {
     static final ImmutableMap<LoginError, ConnectivityErrorType> LOGIN_ERROR_MAPPER =
             ImmutableMap.<LoginError, ConnectivityErrorType>builder()
                     .put(LoginError.NOT_CUSTOMER, ConnectivityErrorType.ERROR_USER_NOT_A_CUSTOMER)
