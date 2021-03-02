@@ -1,12 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator;
 
 import java.util.UUID;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpStatus;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
+import se.tink.backend.aggregation.agents.exceptions.errors.SupplementalInfoError;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoConstants.ErrorMessages;
@@ -18,10 +20,12 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator.
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator.rpc.LoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.entities.ErrorEntity;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.smsotp.SmsOtpAuthenticatorPassword;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
+@Slf4j
 public class EvoBancoMultifactorAuthenticator implements SmsOtpAuthenticatorPassword<String> {
     private final EvoBancoApiClient bankClient;
     private final PersistentStorage persistentStorage;
@@ -103,12 +107,18 @@ public class EvoBancoMultifactorAuthenticator implements SmsOtpAuthenticatorPass
                 getEeILinkingAndLoginEntity(signatureDataEntity);
 
         try {
-            LinkingLoginResponse2 linkingLoginResponse2 =
+            HttpResponse httpResponse =
                     bankClient.link2(new LinkingLoginRequest(eeILinkingAndLoginEntity));
+
+            checkIfSecondFactorAuthenticationSucceded(httpResponse);
 
             sessionStorage.put(
                     EvoBancoConstants.Storage.INTERNAL_ID_PE,
-                    linkingLoginResponse2.getEeOLinkingAndLogin().getAnswer().getInternalIdPe());
+                    httpResponse
+                            .getBody(LinkingLoginResponse2.class)
+                            .getEeOLinkingAndLogin()
+                            .getAnswer()
+                            .getInternalIdPe());
 
             // Workaround needed due to the fact that EvoBanco's backend expects a check of the
             // global
@@ -118,13 +128,24 @@ public class EvoBancoMultifactorAuthenticator implements SmsOtpAuthenticatorPass
             bankClient.globalPositionFirstTime().handleReturnCode();
         } catch (HttpResponseException e) {
             int statusCode = e.getResponse().getStatus();
-
             if (statusCode == HttpStatus.SC_BAD_REQUEST) {
                 e.getResponse().getBody(LinkingLoginResponse2.class).handleReturnCode();
             }
-
             throw e;
         }
+    }
+
+    private void checkIfSecondFactorAuthenticationSucceded(HttpResponse httpResponse) {
+        httpResponse
+                .getBody(LinkingLoginResponse2.class)
+                .getErrors()
+                .ifPresent(
+                        errorsEntity -> {
+                            log.warn(
+                                    "Issue with second factor authentication {}",
+                                    errorsEntity.toString());
+                            throw SupplementalInfoError.NO_VALID_CODE.exception();
+                        });
     }
 
     private EeILinkingAndLoginEntity getEeILinkingAndLoginEntity(
