@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.at.banks.raiffeisen.fetcher.transactionalaccount;
 
+import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Optional;
@@ -11,11 +12,12 @@ import se.tink.backend.aggregation.agents.nxgen.at.banks.raiffeisen.RaiffeisenWe
 import se.tink.backend.aggregation.agents.nxgen.at.banks.raiffeisen.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.raiffeisen.fetcher.transactionalaccount.rpc.AccountResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.CheckingAccount;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.SavingsAccount;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.amount.Amount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
+import se.tink.libraries.account.identifiers.IbanIdentifier;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class RaiffeisenTransactionalAccountFetcher implements AccountFetcher<TransactionalAccount> {
 
@@ -59,35 +61,43 @@ public class RaiffeisenTransactionalAccountFetcher implements AccountFetcher<Tra
                 logger.warn("Unrecognized account type found: \"{}\".", ae.getAccountTypeCode());
                 continue;
             }
-            final Amount balance =
-                    new Amount(ae.getBalance().getCurrency(), ae.getBalance().getAmount());
+            final ExactCurrencyAmount balance =
+                    new ExactCurrencyAmount(
+                            new BigDecimal(ae.getBalance().getAmount()),
+                            ae.getBalance().getCurrency());
             TransactionalAccount ta = null;
-            if (at.get().name().equals(AccountTypes.CHECKING.toString())) {
+            if (at.get().name().equals(TransactionalAccountType.CHECKING.toString())) {
                 ta =
-                        CheckingAccount.builder()
-                                .setUniqueIdentifier(ae.getIban())
-                                .setAccountNumber(ae.getIban())
-                                .setBalance(balance)
-                                .setAlias(ae.getIban())
-                                .addAccountIdentifier(
-                                        AccountIdentifier.create(
-                                                AccountIdentifier.Type.IBAN, ae.getIban()))
+                        TransactionalAccount.nxBuilder()
+                                .withType(TransactionalAccountType.CHECKING)
+                                .withPaymentAccountFlag()
+                                .withBalance(BalanceModule.of(balance))
+                                .withId(
+                                        IdModule.builder()
+                                                .withUniqueIdentifier(ae.getIban())
+                                                .withAccountNumber(ae.getIban())
+                                                .withAccountName(ae.getIban())
+                                                .addIdentifier(new IbanIdentifier(ae.getIban()))
+                                                .build())
                                 .addHolderName(ae.getUsername())
-                                .setProductName(ae.getIban())
-                                .build();
+                                .build()
+                                .get();
             } else {
                 ta =
-                        SavingsAccount.builder()
-                                .setUniqueIdentifier(ae.getIban())
-                                .setAccountNumber(ae.getIban())
-                                .setBalance(balance)
-                                .setAlias(ae.getIban())
-                                .addAccountIdentifier(
-                                        AccountIdentifier.create(
-                                                AccountIdentifier.Type.IBAN, ae.getIban()))
+                        TransactionalAccount.nxBuilder()
+                                .withType(TransactionalAccountType.SAVINGS)
+                                .withPaymentAccountFlag()
+                                .withBalance(BalanceModule.of(balance))
+                                .withId(
+                                        IdModule.builder()
+                                                .withUniqueIdentifier(ae.getIban())
+                                                .withAccountNumber(ae.getIban())
+                                                .withAccountName(ae.getIban())
+                                                .addIdentifier(new IbanIdentifier(ae.getIban()))
+                                                .build())
                                 .addHolderName(ae.getUsername())
-                                .setProductName(ae.getIban())
-                                .build();
+                                .build()
+                                .get();
             }
             res.add(ta);
         }
