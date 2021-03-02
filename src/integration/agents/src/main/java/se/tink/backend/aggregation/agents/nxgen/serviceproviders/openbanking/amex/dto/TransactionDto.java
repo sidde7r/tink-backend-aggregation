@@ -5,11 +5,17 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import lombok.Data;
+import se.tink.backend.aggregation.agents.models.TransactionDateType;
+import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction.Builder;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
+import se.tink.backend.aggregation.nxgen.core.transaction.TransactionDate;
 import se.tink.backend.aggregation.utils.json.deserializers.LocalDateDeserializer;
 import se.tink.libraries.amount.ExactCurrencyAmount;
+import se.tink.libraries.chrono.AvailableDateInformation;
 
 @JsonObject
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
@@ -48,17 +54,55 @@ public class TransactionDto {
     private ExtendedDetailsDto extendedDetails;
 
     public Transaction toTinkTransaction() {
-        return Transaction.builder()
-                .setDate(getChargeDate())
-                .setAmount(convertTransactionEntityToExactCurrencyAmount())
-                .setDescription(description.replaceAll("\\s{2,}", " ")) // to remove whitespaces
-                .setPending(isPending())
-                .build();
+        Builder builder =
+                Transaction.builder()
+                        .setAmount(convertTransactionEntityToExactCurrencyAmount())
+                        .setDescription(
+                                description.replaceAll("\\s{2,}", " ")) // to remove whitespaces
+                        .setPending(isPending())
+                        .setDate(chargeDate)
+                        .addTransactionDates(getTransactionDates())
+                        .setProprietaryFinancialInstitutionType(type)
+                        .setTransactionReference(referenceNumber)
+                        .addExternalSystemIds(
+                                TransactionExternalSystemIdType.PROVIDER_GIVEN_TRANSACTION_ID,
+                                identifier);
+
+        if (extendedDetails != null && extendedDetails.getMerchant() != null) {
+            builder.setMerchantName(extendedDetails.getMerchant().getName());
+        }
+
+        return (Transaction) builder.build();
     }
 
     /** From documentation: Pending transactions will not have values for post_date */
     private boolean isPending() {
         return postDate == null;
+    }
+
+    private ArrayList<TransactionDate> getTransactionDates() {
+        ArrayList<TransactionDate> transactionDates = new ArrayList<>();
+
+        AvailableDateInformation valueDateInformation = new AvailableDateInformation();
+        valueDateInformation.setDate(chargeDate);
+
+        transactionDates.add(
+                TransactionDate.builder()
+                        .type(TransactionDateType.VALUE_DATE)
+                        .value(valueDateInformation)
+                        .build());
+
+        if (postDate != null) {
+            AvailableDateInformation bookingDateInformation = new AvailableDateInformation();
+            bookingDateInformation.setDate(postDate);
+            transactionDates.add(
+                    TransactionDate.builder()
+                            .type(TransactionDateType.BOOKING_DATE)
+                            .value(bookingDateInformation)
+                            .build());
+        }
+
+        return transactionDates;
     }
 
     private ExactCurrencyAmount convertTransactionEntityToExactCurrencyAmount() {
