@@ -87,15 +87,17 @@ public class TransactionMapper {
 
         String purpose = transactionDetails.getRemittanceInformation().getUnstructured();
 
-        if (beneficiary == null
-                || beneficiary.isEmpty()
-                || beneficiary.toLowerCase().contains("paypal")) {
+        if (!purpose.isEmpty()
+                && (beneficiary == null
+                        || beneficiary.isEmpty()
+                        || beneficiary.toLowerCase().contains("paypal")
+                        || beneficiary.toLowerCase().contains("klarna"))) {
             // PayPal gets special treatment for now here in agent code, which isn't ideal.
             // ITE-1413 explains it a bit
+            // ITE-1970 adds on top of the existing changes here
             return purpose;
-        } else {
-            return beneficiary;
         }
+        return beneficiary;
     }
 
     private static LocalDate getDate(EntryEntity entryEntity) {
