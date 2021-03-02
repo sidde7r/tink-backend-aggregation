@@ -40,17 +40,20 @@ public class UpdateCredentialsStatusRequestTest {
 
     @Test
     public void ensureRequestObjectWithErrorSerializesAndDeserializes() throws IOException {
+        // given
         updateRequest.setDetailedError(
                 ConnectivityError.newBuilder()
                         .setType(ConnectivityErrorType.ERROR_AUTH_DYNAMIC_FLOW_CANCELLED)
                         .setDetails(
                                 ConnectivityErrorDetails.newBuilder().setRetryable(true).build())
                         .build());
-        String json = mapper.writeValueAsString(updateRequest);
 
+        // when
+        String json = mapper.writeValueAsString(updateRequest);
         UpdateCredentialsStatusRequest result =
                 mapper.readValue(json, UpdateCredentialsStatusRequest.class);
 
+        // then
         Assert.assertEquals(
                 ConnectivityErrorType.ERROR_AUTH_DYNAMIC_FLOW_CANCELLED,
                 result.getDetailedError().getType());
@@ -59,25 +62,31 @@ public class UpdateCredentialsStatusRequestTest {
 
     @Test
     public void ensureRequestObjectWithNullErrorSerializesAndDeserializes() throws IOException {
+        // given
         String json = mapper.writeValueAsString(updateRequest);
 
+        // when
         UpdateCredentialsStatusRequest result =
                 mapper.readValue(json, UpdateCredentialsStatusRequest.class);
 
+        // then
         Assert.assertNull(result.getDetailedError());
     }
 
     @Test
     public void ensureRequestObjectWithUnknownErrorSerializesAndDeserializes() throws IOException {
+        // given
         updateRequest.setDetailedError(
                 ConnectivityError.newBuilder()
                         .setType(ConnectivityErrorType.ERROR_UNKNOWN)
                         .build());
-        String json = mapper.writeValueAsString(updateRequest);
 
+        // when
+        String json = mapper.writeValueAsString(updateRequest);
         UpdateCredentialsStatusRequest result =
                 mapper.readValue(json, UpdateCredentialsStatusRequest.class);
 
+        // then
         Assert.assertEquals(
                 ConnectivityErrorType.ERROR_UNKNOWN, result.getDetailedError().getType());
     }
