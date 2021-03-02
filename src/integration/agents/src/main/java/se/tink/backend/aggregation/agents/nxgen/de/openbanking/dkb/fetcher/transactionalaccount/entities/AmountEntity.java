@@ -8,8 +8,8 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 @JsonObject
 public class AmountEntity {
 
-    private BigDecimal amount;
-    private String currency;
+    protected BigDecimal amount;
+    protected String currency;
 
     @JsonIgnore
     public ExactCurrencyAmount toAmount() {
