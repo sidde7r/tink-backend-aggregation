@@ -1,5 +1,5 @@
 java_library(
-    name = "exception",
+    name = "nemid",
     srcs = glob(["*.java"]),
     visibility = ["//visibility:public"],
     deps = [

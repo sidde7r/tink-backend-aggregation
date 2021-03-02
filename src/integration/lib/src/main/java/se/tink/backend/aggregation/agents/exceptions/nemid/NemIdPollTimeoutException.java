@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.exception;
+package se.tink.backend.aggregation.agents.exceptions.nemid;
 
 public class NemIdPollTimeoutException extends NemIdException {
 
