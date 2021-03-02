@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapper;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.libraries.i18n.LocalizableKey;
 
 public final class FinecoBankConstants {
 
@@ -21,10 +22,11 @@ public final class FinecoBankConstants {
         public static final String INVALID_CONFIGURATION =
                 "Invalid Configuration: %s cannot be empty or null";
         public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
-        public static final String INVALID_CONSENT_BALANCES =
-                "Could not fetch the balances, because the consent is invalid. Please try again with a full consent.";
         public static final String INVALID_CONSENT_TRANSACTIONS =
                 "Could not fetch transactions, because the consent is invalid. Please try again with a full consent.";
+        public static final LocalizableKey BOTH_BALANCES_AND_TRANSACTIONS_CONSENTS_NEEDED =
+                new LocalizableKey(
+                        "You need to give both balance and transaction consent for all chosen accounts.");
         public static final int ACCESS_EXCEEDED_ERROR_CODE = 429;
         public static final int BAD_REQUEST_ERROR_CODE = 400;
         public static final String PERIOD_INVALID_ERROR = "PERIOD_INVALID";

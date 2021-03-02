@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-02-26 15:18+0100\n"
+"POT-Creation-Date: 2021-03-02 11:28+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1668,4 +1668,9 @@ msgstr ""
 
 #, java-format
 msgid "Please enter a maximum of {0} characters"
+msgstr ""
+
+msgid ""
+"You need to give both balance and transaction consent for all chosen "
+"accounts."
 msgstr ""

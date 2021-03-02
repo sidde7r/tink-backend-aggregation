@@ -48,6 +48,17 @@ public class FinecoBankAuthenticationHelperTest {
         };
     }
 
+    private Object[] balancesAndTransactionsConsentsDoNotMatch() {
+        return new Object[] {
+            new AccessItem(
+                    Collections.singletonList(new AccountConsent("123", null)),
+                    Collections.singletonList(new AccountConsent("111", null))),
+            new AccessItem(
+                    Collections.singletonList(new AccountConsent("343", null)),
+                    Collections.singletonList(new AccountConsent("233", null))),
+        };
+    }
+
     @Before
     public void setup() {
         mockApiClient = mock(FinecoBankApiClient.class);
@@ -59,6 +70,24 @@ public class FinecoBankAuthenticationHelperTest {
                         mockStorage,
                         mockCredentials,
                         new ConstantLocalDateTimeSource());
+    }
+
+    @Test
+    @Parameters(method = "balancesAndTransactionsConsentsDoNotMatch")
+    public void storeConsentsShouldThrowExceptionIfBalancesAndAccountsConsentsDoNotMatch(
+            AccessItem accessItem) {
+        // given
+        ConsentAuthorizationsResponse consentAuthorizationsResponse =
+                new ConsentAuthorizationsResponse();
+        consentAuthorizationsResponse.setAccess(accessItem);
+        when(mockApiClient.getConsentAuthorizations(TEST_CONSENT_ID))
+                .thenReturn(consentAuthorizationsResponse);
+
+        // when
+        Throwable thrown = catchThrowable(authenticationHelper::storeConsents);
+
+        // then
+        assertBalancesAndTransactionsConsentsException(thrown);
     }
 
     @Test
@@ -75,9 +104,7 @@ public class FinecoBankAuthenticationHelperTest {
         Throwable thrown = catchThrowable(authenticationHelper::storeConsents);
 
         // then
-        Assertions.assertThat(thrown)
-                .isInstanceOf(ThirdPartyAppException.class)
-                .hasMessage(ErrorMessages.INVALID_CONSENT_BALANCES);
+        assertBalancesAndTransactionsConsentsException(thrown);
     }
 
     @Test
@@ -94,9 +121,17 @@ public class FinecoBankAuthenticationHelperTest {
         Throwable thrown = catchThrowable(authenticationHelper::storeConsents);
 
         // then
+        assertBalancesAndTransactionsConsentsException(thrown);
+    }
+
+    private void assertBalancesAndTransactionsConsentsException(Throwable thrown) {
         Assertions.assertThat(thrown)
                 .isInstanceOf(ThirdPartyAppException.class)
-                .hasMessage(ErrorMessages.INVALID_CONSENT_TRANSACTIONS);
+                .hasMessage("Cause: ThirdPartyAppError.AUTHENTICATION_ERROR");
+        ThirdPartyAppException tpae = (ThirdPartyAppException) thrown;
+        String userMessage = tpae.getUserMessage().get();
+        Assertions.assertThat(userMessage)
+                .isEqualTo(ErrorMessages.BOTH_BALANCES_AND_TRANSACTIONS_CONSENTS_NEEDED.get());
     }
 
     @Test
@@ -105,8 +140,12 @@ public class FinecoBankAuthenticationHelperTest {
         // given
         ConsentAuthorizationsResponse consentAuthorizationsResponse =
                 new ConsentAuthorizationsResponse();
-        List<AccountConsent> consent = Collections.singletonList(new AccountConsent("111", null));
-        consentAuthorizationsResponse.setAccess(new AccessItem(consent, consent));
+        List<AccountConsent> balancesConsent =
+                Collections.singletonList(new AccountConsent("111", null));
+        List<AccountConsent> transactionsConsent =
+                Collections.singletonList(new AccountConsent("111", null));
+        consentAuthorizationsResponse.setAccess(
+                new AccessItem(balancesConsent, transactionsConsent));
         consentAuthorizationsResponse.setValidUntil(TEST_DATE);
         when(mockApiClient.getConsentAuthorizations(TEST_CONSENT_ID))
                 .thenReturn(consentAuthorizationsResponse);
@@ -115,8 +154,8 @@ public class FinecoBankAuthenticationHelperTest {
         authenticationHelper.storeConsents();
 
         // then
-        verify(mockStorage).storeBalancesConsents(consent);
-        verify(mockStorage).storeTransactionsConsents(consent);
+        verify(mockStorage).storeBalancesConsents(balancesConsent);
+        verify(mockStorage).storeTransactionsConsents(transactionsConsent);
         verify(mockStorage)
                 .storeConsentCreationTime(LocalDateTime.of(1992, 4, 10, 0, 0).toString());
         verify(mockCredentials).setSessionExpiryDate(eq(FORMATTER_DAILY.parse(TEST_DATE)));
