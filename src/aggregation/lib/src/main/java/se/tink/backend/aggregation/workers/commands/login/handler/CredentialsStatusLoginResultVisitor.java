@@ -18,6 +18,8 @@ import se.tink.backend.aggregation.workers.commands.login.handler.result.LoginSu
 import se.tink.backend.aggregation.workers.commands.login.handler.result.LoginUnknownErrorResult;
 import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
+import se.tink.connectivity.errors.ConnectivityError;
+import src.libraries.connectivity_errors.ErrorHelper;
 
 @AllArgsConstructor
 public class CredentialsStatusLoginResultVisitor implements LoginResultVisitor {
@@ -90,13 +92,14 @@ public class CredentialsStatusLoginResultVisitor implements LoginResultVisitor {
 
     private void updateStatus(
             final CredentialsStatus credentialsStatus, final Exception exception) {
+
+        ConnectivityError error = ErrorHelper.from(exception);
+        String statusPayload = null;
+
         if (exception instanceof AgentException) {
-            statusUpdater.updateStatus(
-                    credentialsStatus,
-                    context.getCatalog()
-                            .getString((((AgentException) exception).getUserMessage())));
-        } else {
-            statusUpdater.updateStatus(credentialsStatus);
+            statusPayload = context.getCatalog().getString(((AgentException) exception).getUserMessage());
         }
+
+        statusUpdater.updateStatusWithError(credentialsStatus, statusPayload, error);
     }
 }
