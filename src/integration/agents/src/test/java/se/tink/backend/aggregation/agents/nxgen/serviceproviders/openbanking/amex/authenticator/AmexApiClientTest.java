@@ -39,6 +39,7 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmericanExpressConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmericanExpressConstants.QueryParams;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmexApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmexGrantType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.configuration.AmexConfiguration;
@@ -314,25 +315,20 @@ public class AmexApiClientTest {
         when(httpClientMock.request(
                         new URL(urlString)
                                 .queryParam(
-                                        "start_date",
+                                        QueryParams.EXTENDED_DETAILS,
+                                        AmericanExpressConstants.QueryValues.MERCHANT)
+                                .queryParam(
+                                        AmericanExpressConstants.QueryParams.QUERY_PARAM_LIMIT,
+                                        "1000")
+                                .queryParam(
+                                        AmericanExpressConstants.QueryParams.QUERY_PARAM_START_DATE,
                                         ThreadSafeDateFormat.FORMATTER_DAILY.format(new Date()))
                                 .queryParam(
-                                        "end_date",
-                                        ThreadSafeDateFormat.FORMATTER_DAILY.format(new Date()))
-                                .queryParam("limit", "1000")
-                                .queryParam("status", "posted")))
-                .thenReturn(requestBuilderMock);
-
-        when(httpClientMock.request(
-                        new URL(urlString)
-                                .queryParam(
-                                        "start_date",
+                                        AmericanExpressConstants.QueryParams.QUERY_PARAM_END_DATE,
                                         ThreadSafeDateFormat.FORMATTER_DAILY.format(new Date()))
                                 .queryParam(
-                                        "end_date",
-                                        ThreadSafeDateFormat.FORMATTER_DAILY.format(new Date()))
-                                .queryParam("limit", "1000")
-                                .queryParam("status", "pending")))
+                                        AmericanExpressConstants.QueryParams.STATUS,
+                                        AmericanExpressConstants.QueryValues.PENDING)))
                 .thenReturn(requestBuilderMock);
     }
 }

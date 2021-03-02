@@ -54,6 +54,7 @@ public class AmericanExpressConstants {
         public static final String SCOPE_LIST = "scope_list";
         public static final String STATE = "state";
         public static final String STATUS = "status";
+        public static final String EXTENDED_DETAILS = "extended_details";
     }
 
     public static class QueryValues {
@@ -65,7 +66,7 @@ public class AmericanExpressConstants {
         public static final String SCOPE_LIST_FOR_GET_TOKEN =
                 SCOPE_LIST_FOR_AUTHORIZE.replace(',', ' ');
         public static final String PENDING = "pending";
-        public static final String POSTED = "posted";
+        public static final String MERCHANT = "merchant";
     }
 
     public static class StorageKey {
