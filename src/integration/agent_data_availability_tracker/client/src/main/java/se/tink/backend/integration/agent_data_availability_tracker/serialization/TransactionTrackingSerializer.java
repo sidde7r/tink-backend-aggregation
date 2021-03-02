@@ -4,10 +4,13 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.models.TransactionDate;
 import se.tink.backend.aggregation.agents.models.TransactionDateType;
+import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType;
 import se.tink.backend.integration.agent_data_availability_tracker.common.serialization.TrackingList;
 import se.tink.backend.integration.agent_data_availability_tracker.common.serialization.TrackingMapSerializer;
 import se.tink.libraries.chrono.AvailableDateInformation;
@@ -20,6 +23,19 @@ public class TransactionTrackingSerializer extends TrackingMapSerializer {
     public TransactionTrackingSerializer(Transaction transaction, AccountTypes accountType) {
         super(String.format(TRANSACTION_ENTITY_NAME + "<%s>", accountType.toString()));
         this.transaction = transaction;
+    }
+
+    private void addFieldForTrackingListBuilder(
+            TrackingList.Builder listBuilder,
+            Transaction transaction,
+            String key,
+            Function<Transaction, String> valueExtractor,
+            Predicate<Transaction> condition) {
+        if (condition.test(transaction)) {
+            listBuilder.putRedacted(key, valueExtractor.apply(transaction));
+        } else {
+            listBuilder.putNull(key);
+        }
     }
 
     @Override
@@ -36,11 +52,38 @@ public class TransactionTrackingSerializer extends TrackingMapSerializer {
                 .putRedacted("merchantCategoryCode", transaction.getMerchantCategoryCode())
                 .putRedacted("transactionReference", transaction.getTransactionReference());
 
-        if (!Objects.isNull(transaction.getDate())) {
-            listBuilder.putRedacted("date", transaction.getDate());
-        } else {
-            listBuilder.putNull("date");
-        }
+        addFieldForTrackingListBuilder(
+                listBuilder,
+                transaction,
+                "date",
+                transactionObject -> transactionObject.getDate().toString(),
+                transactionObject -> !Objects.isNull(transactionObject.getDate()));
+
+        addFieldForTrackingListBuilder(
+                listBuilder,
+                transaction,
+                "mutability",
+                transactionObject -> transactionObject.getMutability().toString(),
+                transactionObject -> !Objects.isNull(transactionObject.getMutability()));
+
+        addFieldForTrackingListBuilder(
+                listBuilder,
+                transaction,
+                "transactionId",
+                transactionObject -> transactionObject.getMutability().toString(),
+                transactionObject ->
+                        !Objects.isNull(transactionObject.getExternalSystemIds())
+                                && transactionObject
+                                        .getExternalSystemIds()
+                                        .containsKey(
+                                                TransactionExternalSystemIdType
+                                                        .PROVIDER_GIVEN_TRANSACTION_ID)
+                                && !Objects.isNull(
+                                        transactionObject
+                                                .getExternalSystemIds()
+                                                .get(
+                                                        TransactionExternalSystemIdType
+                                                                .PROVIDER_GIVEN_TRANSACTION_ID)));
 
         if (!Objects.isNull(transaction.getTransactionAmount())
                 && transaction.getTransactionAmount().getDoubleValue() != 0) {
