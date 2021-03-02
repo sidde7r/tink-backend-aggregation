@@ -47,6 +47,7 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.DataFetchingRestrictions;
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.metrics.core.MetricId;
+import src.libraries.connectivity_errors.ConnectivityErrorFactory;
 
 public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements MetricsCommand {
     private static final Logger log = LoggerFactory.getLogger(RefreshItemAgentWorkerCommand.class);
@@ -195,9 +196,10 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
 
     private void handleFailedRefreshDueToBankError(MetricAction action, BankServiceException e) {
         // The way frontend works now the message will not be displayed to the user.
-        context.updateStatus(
+        context.updateStatusWithError(
                 CredentialsStatus.TEMPORARY_ERROR,
-                context.getCatalog().getString(e.getUserMessage()));
+                context.getCatalog().getString(e.getUserMessage()),
+                ConnectivityErrorFactory.from(e));
         action.unavailable();
         AdditionalInfo errorInfo = ADDITIONAL_INFO_ERROR_MAPPER.get(e.getError());
         RefreshEvent refreshEvent = getRefreshEvent(errorInfo);
@@ -207,9 +209,10 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
 
     private void handleFailedRefreshDueToSessionError(MetricAction action, SessionException e) {
         // The way frontend works now the message will not be displayed to the user.
-        context.updateStatus(
+        context.updateStatusWithError(
                 CredentialsStatus.TEMPORARY_ERROR,
-                context.getCatalog().getString(e.getUserMessage()));
+                context.getCatalog().getString(e.getUserMessage()),
+                ConnectivityErrorFactory.from(e));
         action.unavailable();
         AdditionalInfo errorInfo = ADDITIONAL_INFO_SESSION_ERROR_MAPPER.get(e.getError());
         RefreshEvent refreshEvent = getRefreshEvent(errorInfo);
