@@ -37,10 +37,7 @@ public class TescoAgentTest {
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
-                        .setClusterId("oxford-preprod")
-                        // Go to data/secret/preprod/ss/, check the file name of a bank json file,
-                        // put the file name into setAppId() below
-                        .setAppId("check the comment above")
+                        .setAppId("tink")
                         .setFinancialInstitutionId("tesco");
 
         builder.build().testGenericPaymentUKOB(createMockedDomesticPayment());
