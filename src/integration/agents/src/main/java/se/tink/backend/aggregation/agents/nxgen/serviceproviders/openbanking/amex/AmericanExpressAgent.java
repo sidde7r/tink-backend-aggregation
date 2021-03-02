@@ -150,7 +150,8 @@ public final class AmericanExpressAgent extends SubsequentProgressiveGenerationA
                         hmacAccountIdStorage,
                         temporaryStorage,
                         this.objectMapper,
-                        agentComponentProvider.getLocalDateTimeSource());
+                        agentComponentProvider.getLocalDateTimeSource(),
+                        agentComponentProvider.getCredentialsRequest().getProvider().getMarket());
 
         return new CreditCardRefreshController(
                 metricRefreshController,

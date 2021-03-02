@@ -13,10 +13,13 @@ public class TransactionResponseFormatted implements TransactionKeyPaginatorResp
 
     private List<TransactionDto> transactions;
     private final LocalDate nextEndDate;
+    private final String providerMarket;
 
-    public TransactionResponseFormatted(List<TransactionDto> transactions, LocalDate nextEndDate) {
+    public TransactionResponseFormatted(
+            List<TransactionDto> transactions, LocalDate nextEndDate, String providerMarket) {
         this.transactions = transactions;
         this.nextEndDate = nextEndDate;
+        this.providerMarket = providerMarket;
     }
 
     @Override
@@ -30,7 +33,7 @@ public class TransactionResponseFormatted implements TransactionKeyPaginatorResp
     @Override
     public Collection<? extends Transaction> getTinkTransactions() {
         return transactions.stream()
-                .map(TransactionDto::toTinkTransaction)
+                .map(transactionDto -> transactionDto.toTinkTransaction(providerMarket))
                 .collect(Collectors.toList());
     }
 

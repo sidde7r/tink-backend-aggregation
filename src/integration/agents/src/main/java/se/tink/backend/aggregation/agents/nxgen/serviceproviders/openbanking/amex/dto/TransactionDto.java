@@ -53,7 +53,7 @@ public class TransactionDto {
 
     private ExtendedDetailsDto extendedDetails;
 
-    public Transaction toTinkTransaction() {
+    public Transaction toTinkTransaction(String providerMarket) {
         Builder builder =
                 Transaction.builder()
                         .setAmount(convertTransactionEntityToExactCurrencyAmount())
@@ -64,6 +64,7 @@ public class TransactionDto {
                         .addTransactionDates(getTransactionDates())
                         .setProprietaryFinancialInstitutionType(type)
                         .setTransactionReference(referenceNumber)
+                        .setProviderMarket(providerMarket)
                         .addExternalSystemIds(
                                 TransactionExternalSystemIdType.PROVIDER_GIVEN_TRANSACTION_ID,
                                 identifier);
