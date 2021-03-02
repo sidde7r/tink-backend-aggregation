@@ -12,14 +12,14 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
-public class InvalidConsentErrorFiler extends Filter {
+public class InvalidConsentErrorFilter extends Filter {
 
     private static final String MESSAGE_PATTERN =
             "The consentId has been expired for path `%s` with HTTP status `%s` and ErrorCodes `%s`";
 
     private final PersistentStorage persistentStorage;
 
-    public InvalidConsentErrorFiler(PersistentStorage persistentStorage) {
+    public InvalidConsentErrorFilter(PersistentStorage persistentStorage) {
         this.persistentStorage = persistentStorage;
     }
 

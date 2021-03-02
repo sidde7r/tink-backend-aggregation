@@ -11,6 +11,10 @@ public interface OpenIdConsentValidator {
         if (Validator.STATUS.predicate().negate().test(response)) {
             return false;
         }
+        if (Validator.EMPTY_BODY.predicate().negate().test(response)) {
+            return false;
+        }
+
         return Validator.ERROR_CODE
                 .predicate()
                 .and(Validator.ERROR_MESSAGE.predicate())
@@ -18,6 +22,7 @@ public interface OpenIdConsentValidator {
     }
 
     enum Validator {
+        EMPTY_BODY(HttpResponse::hasBody),
         STATUS(
                 response -> {
                     int status = response.getStatus();
