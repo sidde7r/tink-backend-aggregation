@@ -24,7 +24,7 @@ public final class FinecoBankConstants {
         public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
         public static final String INVALID_CONSENT_TRANSACTIONS =
                 "Could not fetch transactions, because the consent is invalid. Please try again with a full consent.";
-        public static final LocalizableKey BALANCES_AND_TRANSACTIONS_CONSENTS_DO_NOT_MATCH =
+        public static final LocalizableKey BOTH_BALANCES_AND_TRANSACTIONS_CONSENTS_NEEDED =
                 new LocalizableKey(
                         "You need to give both balance and transaction consent for all chosen accounts.");
         public static final int ACCESS_EXCEEDED_ERROR_CODE = 429;

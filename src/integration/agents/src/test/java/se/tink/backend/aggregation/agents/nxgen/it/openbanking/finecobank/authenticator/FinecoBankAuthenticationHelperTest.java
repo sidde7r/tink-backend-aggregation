@@ -131,7 +131,7 @@ public class FinecoBankAuthenticationHelperTest {
         ThirdPartyAppException tpae = (ThirdPartyAppException) thrown;
         String userMessage = tpae.getUserMessage().get();
         Assertions.assertThat(userMessage)
-                .isEqualTo(ErrorMessages.BALANCES_AND_TRANSACTIONS_CONSENTS_DO_NOT_MATCH.get());
+                .isEqualTo(ErrorMessages.BOTH_BALANCES_AND_TRANSACTIONS_CONSENTS_NEEDED.get());
     }
 
     @Test

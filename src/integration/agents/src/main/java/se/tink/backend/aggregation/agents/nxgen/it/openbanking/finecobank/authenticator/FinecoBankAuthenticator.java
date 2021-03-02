@@ -4,7 +4,6 @@ import com.google.common.util.concurrent.Uninterruptibles;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.java.Log;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
@@ -22,7 +21,6 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 import se.tink.libraries.i18n.LocalizableKey;
 
 @RequiredArgsConstructor
-@Log
 public final class FinecoBankAuthenticator
         implements AutoAuthenticator, ThirdPartyAppAuthenticator<String> {
 

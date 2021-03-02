@@ -79,7 +79,7 @@ public final class FinecoBankAuthenticationHelper {
                 || CollectionUtils.isEmpty(transactionsConsents)
                 || !CollectionUtils.isEqualCollection(balancesConsents, transactionsConsents)) {
             throw ThirdPartyAppError.AUTHENTICATION_ERROR.exception(
-                    ErrorMessages.BALANCES_AND_TRANSACTIONS_CONSENTS_DO_NOT_MATCH);
+                    ErrorMessages.BOTH_BALANCES_AND_TRANSACTIONS_CONSENTS_NEEDED);
         }
     }
 
