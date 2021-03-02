@@ -51,18 +51,4 @@ public class TransactionalAccountTest {
                 .isEqualTo(ExactCurrencyAmount.of(12, "DKK"));
         assertThat(transactionalAccount.getType()).isEqualTo(AccountTypes.OTHER);
     }
-
-    @Test
-    public void savingAccountBuilderRandomSettingOrder() {
-        SavingsAccount savingsAccount =
-                SavingsAccount.builder(ACCOUNT_NUMBER)
-                        // setting additional data before general one
-                        .setInterestRate(1d)
-                        .setAccountNumber(ACCOUNT_NUMBER)
-                        .setExactBalance(ExactCurrencyAmount.of(1, "DKK"))
-                        // setting additional data after general one
-                        .setInterestRate(2d)
-                        .build();
-        assertThat(savingsAccount.getInterestRate()).isEqualTo(2d);
-    }
 }
