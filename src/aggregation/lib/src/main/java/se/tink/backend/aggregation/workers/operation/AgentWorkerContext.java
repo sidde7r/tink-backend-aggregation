@@ -70,6 +70,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
             MetricId.newId("aggregation_account_suspicious_number_series");
     private static final MetricId CREDENTIALS_STATUS_CHANGES_WITHOUT_ERRORS =
             MetricId.newId("aggregation_credentials_status_changes_without_errors");
+    private static final MetricId RESULTING_ERRORS = MetricId.newId("aggregation_resulting_errors");
 
     private static final Set<CredentialsStatus> ERROR_STATUSES =
             ImmutableSet.of(
@@ -672,6 +673,14 @@ public class AgentWorkerContext extends AgentContext implements Managed {
             updateStatus(status, statusPayload, true);
             return;
         }
+
+        getMetricRegistry()
+                .meter(
+                        RESULTING_ERRORS
+                                .label("agent", request.getProvider().getClassName())
+                                .label("error", error.getType().name())
+                                .label("status", status.name()))
+                .inc();
 
         Credentials credentials = request.getCredentials();
         credentials.setStatus(status);
