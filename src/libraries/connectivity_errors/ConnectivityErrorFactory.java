@@ -24,6 +24,10 @@ import se.tink.connectivity.errors.ConnectivityErrorType;
 public class ConnectivityErrorFactory {
     private static final Logger log = LoggerFactory.getLogger(ConnectivityErrorFactory.class);
 
+    public static ConnectivityError tinkInternalError() {
+        return from(ConnectivityErrorType.ERROR_TINK_INTERNAL_ERROR);
+    }
+
     public static ConnectivityError from(ConnectivityErrorType type) {
         return ConnectivityError.newBuilder().setType(type).build();
     }
