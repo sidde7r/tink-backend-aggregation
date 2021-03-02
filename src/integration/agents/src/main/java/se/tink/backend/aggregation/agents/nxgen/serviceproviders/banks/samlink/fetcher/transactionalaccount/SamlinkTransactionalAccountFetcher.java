@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.fetcher.transactionalaccount;
 
 import java.util.Collection;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.SamlinkApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.fetcher.transactionalaccount.entities.AccountEntity;
@@ -27,6 +28,7 @@ public class SamlinkTransactionalAccountFetcher
 
         return apiClient.getAccounts().stream()
                 .map(AccountEntity::toTransactionalAccount)
+                .map(Optional::get)
                 .collect(Collectors.toList());
     }
 
