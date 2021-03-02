@@ -1,9 +1,13 @@
 package se.tink.backend.aggregation.workers.commands.login;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
@@ -32,9 +36,12 @@ import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.metrics.MetricActionIface;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
+import se.tink.connectivity.errors.ConnectivityError;
+import se.tink.connectivity.errors.ConnectivityErrorType;
 import se.tink.eventproducerservice.events.grpc.AgentLoginCompletedEventProto;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.metrics.registry.MetricRegistry;
 import src.libraries.interaction_counter.InteractionCounter;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -80,6 +87,8 @@ public class LoginExecutorTest {
         Mockito.when(agentWorkerCommandContext.getCatalog()).thenReturn(catalog);
         Mockito.when(agentWorkerCommandContext.getSupplementalInteractionCounter())
                 .thenReturn(interactionCounter);
+        Mockito.when(agentWorkerCommandContext.getMetricRegistry())
+                .thenReturn(new MetricRegistry());
 
         Mockito.when(metricsFactory.createLoginMetric(credentialsRequest, interactionCounter))
                 .thenReturn(loginMetricAction);
@@ -139,8 +148,10 @@ public class LoginExecutorTest {
                         AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult
                                 .LOGIN_ERROR_INCORRECT_CREDENTIALS);
         Mockito.verify(statusUpdater)
-                .updateStatus(
-                        CredentialsStatus.AUTHENTICATION_ERROR, DUMMY_LOCALIZED_ERROR_MESSAGE);
+                .updateStatusWithError(
+                        eq(CredentialsStatus.AUTHENTICATION_ERROR),
+                        eq(DUMMY_LOCALIZED_ERROR_MESSAGE),
+                        any(ConnectivityError.class));
     }
 
     @Test
@@ -173,8 +184,10 @@ public class LoginExecutorTest {
                         AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult
                                 .AUTHORIZATION_ERROR_UNKNOWN);
         Mockito.verify(statusUpdater)
-                .updateStatus(
-                        CredentialsStatus.AUTHENTICATION_ERROR, DUMMY_LOCALIZED_ERROR_MESSAGE);
+                .updateStatusWithError(
+                        eq(CredentialsStatus.AUTHENTICATION_ERROR),
+                        eq(DUMMY_LOCALIZED_ERROR_MESSAGE),
+                        any(ConnectivityError.class));
     }
 
     @Test
@@ -207,7 +220,10 @@ public class LoginExecutorTest {
                         AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult
                                 .BANK_SERVICE_ERROR_UNKNOWN);
         Mockito.verify(statusUpdater)
-                .updateStatus(CredentialsStatus.TEMPORARY_ERROR, DUMMY_LOCALIZED_ERROR_MESSAGE);
+                .updateStatusWithError(
+                        eq(CredentialsStatus.TEMPORARY_ERROR),
+                        eq(DUMMY_LOCALIZED_ERROR_MESSAGE),
+                        any(ConnectivityError.class));
     }
 
     @Test
@@ -228,7 +244,11 @@ public class LoginExecutorTest {
         Assertions.assertThat(result).isEqualTo(AgentWorkerCommandResult.ABORT);
         Mockito.verify(loginMetricAction).failed();
         Mockito.verify(dataStudioLoginEventPublisherService).publishLoginErrorUnknown();
-        Mockito.verify(statusUpdater).updateStatus(CredentialsStatus.TEMPORARY_ERROR);
+        Mockito.verify(statusUpdater)
+                .updateStatusWithError(
+                        eq(CredentialsStatus.TEMPORARY_ERROR),
+                        eq(null),
+                        any(ConnectivityError.class));
     }
     // </editor-fold>
 
@@ -277,8 +297,10 @@ public class LoginExecutorTest {
         Mockito.verify(dataStudioLoginEventPublisherService)
                 .publishLoginAuthenticationErrorEvent(authenticationException);
         Mockito.verify(statusUpdater)
-                .updateStatus(
-                        CredentialsStatus.AUTHENTICATION_ERROR, DUMMY_LOCALIZED_ERROR_MESSAGE);
+                .updateStatusWithError(
+                        eq(CredentialsStatus.AUTHENTICATION_ERROR),
+                        eq(DUMMY_LOCALIZED_ERROR_MESSAGE),
+                        any(ConnectivityError.class));
     }
 
     @Test
@@ -308,8 +330,10 @@ public class LoginExecutorTest {
         Mockito.verify(dataStudioLoginEventPublisherService)
                 .publishLoginAuthorizationErrorEvent(authorizationException);
         Mockito.verify(statusUpdater)
-                .updateStatus(
-                        CredentialsStatus.AUTHENTICATION_ERROR, DUMMY_LOCALIZED_ERROR_MESSAGE);
+                .updateStatusWithError(
+                        eq(CredentialsStatus.AUTHENTICATION_ERROR),
+                        eq(DUMMY_LOCALIZED_ERROR_MESSAGE),
+                        any(ConnectivityError.class));
     }
 
     @Test
@@ -336,7 +360,10 @@ public class LoginExecutorTest {
         Mockito.verify(dataStudioLoginEventPublisherService)
                 .publishLoginBankServiceErrorEvent(bankServiceException);
         Mockito.verify(statusUpdater)
-                .updateStatus(CredentialsStatus.TEMPORARY_ERROR, DUMMY_LOCALIZED_ERROR_MESSAGE);
+                .updateStatusWithError(
+                        eq(CredentialsStatus.TEMPORARY_ERROR),
+                        eq(DUMMY_LOCALIZED_ERROR_MESSAGE),
+                        any(ConnectivityError.class));
     }
 
     @Test
@@ -363,8 +390,10 @@ public class LoginExecutorTest {
         Mockito.verify(dataStudioLoginEventPublisherService)
                 .publishLoginBankIdErrorEvent(bankIdException);
         Mockito.verify(statusUpdater)
-                .updateStatus(
-                        CredentialsStatus.AUTHENTICATION_ERROR, DUMMY_LOCALIZED_ERROR_MESSAGE);
+                .updateStatusWithError(
+                        eq(CredentialsStatus.AUTHENTICATION_ERROR),
+                        eq(DUMMY_LOCALIZED_ERROR_MESSAGE),
+                        any(ConnectivityError.class));
     }
 
     @Test
@@ -383,10 +412,15 @@ public class LoginExecutorTest {
                         supplementalInformationController,
                         dataStudioLoginEventPublisherService);
         // then
+        ArgumentCaptor<ConnectivityError> captor = ArgumentCaptor.forClass(ConnectivityError.class);
         Assertions.assertThat(result).isEqualTo(AgentWorkerCommandResult.ABORT);
         Mockito.verify(loginMetricAction).failed();
         Mockito.verify(dataStudioLoginEventPublisherService).publishLoginErrorUnknown();
-        Mockito.verify(statusUpdater).updateStatus(CredentialsStatus.TEMPORARY_ERROR);
+        Mockito.verify(statusUpdater)
+                .updateStatusWithError(
+                        eq(CredentialsStatus.TEMPORARY_ERROR), eq(null), captor.capture());
+        Assertions.assertThat(captor.getValue().getType())
+                .isEqualTo(ConnectivityErrorType.ERROR_TINK_INTERNAL_ERROR);
     }
 
     // </editor-fold>
@@ -435,8 +469,10 @@ public class LoginExecutorTest {
         Mockito.verify(dataStudioLoginEventPublisherService)
                 .publishLoginAuthenticationErrorEvent(authenticationException);
         Mockito.verify(statusUpdater)
-                .updateStatus(
-                        CredentialsStatus.AUTHENTICATION_ERROR, DUMMY_LOCALIZED_ERROR_MESSAGE);
+                .updateStatusWithError(
+                        eq(CredentialsStatus.AUTHENTICATION_ERROR),
+                        eq(DUMMY_LOCALIZED_ERROR_MESSAGE),
+                        any(ConnectivityError.class));
     }
 
     @Test
@@ -462,8 +498,10 @@ public class LoginExecutorTest {
         Mockito.verify(dataStudioLoginEventPublisherService)
                 .publishLoginAuthorizationErrorEvent(authorizationException);
         Mockito.verify(statusUpdater)
-                .updateStatus(
-                        CredentialsStatus.AUTHENTICATION_ERROR, DUMMY_LOCALIZED_ERROR_MESSAGE);
+                .updateStatusWithError(
+                        eq(CredentialsStatus.AUTHENTICATION_ERROR),
+                        eq(DUMMY_LOCALIZED_ERROR_MESSAGE),
+                        any(ConnectivityError.class));
     }
 
     @Test
@@ -486,7 +524,10 @@ public class LoginExecutorTest {
         Mockito.verify(dataStudioLoginEventPublisherService)
                 .publishLoginBankServiceErrorEvent(bankServiceException);
         Mockito.verify(statusUpdater)
-                .updateStatus(CredentialsStatus.TEMPORARY_ERROR, DUMMY_LOCALIZED_ERROR_MESSAGE);
+                .updateStatusWithError(
+                        eq(CredentialsStatus.TEMPORARY_ERROR),
+                        eq(DUMMY_LOCALIZED_ERROR_MESSAGE),
+                        any(ConnectivityError.class));
     }
 
     @Test
@@ -509,8 +550,10 @@ public class LoginExecutorTest {
         Mockito.verify(dataStudioLoginEventPublisherService)
                 .publishLoginBankIdErrorEvent(bankIdException);
         Mockito.verify(statusUpdater)
-                .updateStatus(
-                        CredentialsStatus.AUTHENTICATION_ERROR, DUMMY_LOCALIZED_ERROR_MESSAGE);
+                .updateStatusWithError(
+                        eq(CredentialsStatus.AUTHENTICATION_ERROR),
+                        eq(DUMMY_LOCALIZED_ERROR_MESSAGE),
+                        any(ConnectivityError.class));
     }
 
     @Test
@@ -528,7 +571,11 @@ public class LoginExecutorTest {
         Assertions.assertThat(result).isEqualTo(AgentWorkerCommandResult.ABORT);
         Mockito.verify(loginMetricAction).failed();
         Mockito.verify(dataStudioLoginEventPublisherService).publishLoginErrorUnknown();
-        Mockito.verify(statusUpdater).updateStatus(CredentialsStatus.TEMPORARY_ERROR);
+        Mockito.verify(statusUpdater)
+                .updateStatusWithError(
+                        eq(CredentialsStatus.TEMPORARY_ERROR),
+                        eq(null),
+                        any(ConnectivityError.class));
     }
 
     // </editor-fold>

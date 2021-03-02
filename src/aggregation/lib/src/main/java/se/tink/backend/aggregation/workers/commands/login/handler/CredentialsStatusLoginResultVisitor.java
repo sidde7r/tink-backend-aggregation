@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.workers.commands.login.handler;
 
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
 import se.tink.backend.aggregation.agents.exceptions.agent.AgentException;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AuthenticationError;
@@ -16,14 +18,24 @@ import se.tink.backend.aggregation.workers.commands.login.handler.result.LoginBa
 import se.tink.backend.aggregation.workers.commands.login.handler.result.LoginResultVisitor;
 import se.tink.backend.aggregation.workers.commands.login.handler.result.LoginSuccessResult;
 import se.tink.backend.aggregation.workers.commands.login.handler.result.LoginUnknownErrorResult;
-import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
+import se.tink.connectivity.errors.ConnectivityError;
+import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.metrics.core.MetricId;
+import se.tink.libraries.metrics.registry.MetricRegistry;
+import src.libraries.connectivity_errors.ErrorHelper;
 
 @AllArgsConstructor
 public class CredentialsStatusLoginResultVisitor implements LoginResultVisitor {
 
+    private static final Logger LOGGER =
+            LoggerFactory.getLogger(CredentialsStatusLoginResultVisitor.class);
+    private static final MetricId EXCEPTION_TO_ERROR_MAPPING =
+            MetricId.newId("aggregation_exception_to_error_mapping");
+
+    private final MetricRegistry metricRegistry;
     private final StatusUpdater statusUpdater;
-    private final AgentWorkerCommandContext context;
+    private final Catalog catalog;
 
     @Override
     public void visit(LoginSuccessResult successResult) {
@@ -90,13 +102,26 @@ public class CredentialsStatusLoginResultVisitor implements LoginResultVisitor {
 
     private void updateStatus(
             final CredentialsStatus credentialsStatus, final Exception exception) {
+
+        ConnectivityError error = ErrorHelper.from(exception);
+        String statusPayload = null;
+
         if (exception instanceof AgentException) {
-            statusUpdater.updateStatus(
-                    credentialsStatus,
-                    context.getCatalog()
-                            .getString((((AgentException) exception).getUserMessage())));
-        } else {
-            statusUpdater.updateStatus(credentialsStatus);
+            statusPayload = catalog.getString(((AgentException) exception).getUserMessage());
         }
+
+        metricRegistry
+                .meter(
+                        EXCEPTION_TO_ERROR_MAPPING
+                                .label("exception", exception.getClass().getSimpleName())
+                                .label("error", error.getType().toString()))
+                .inc();
+        LOGGER.info(
+                "[Login Result debugging]: Mapping exception {} to {}",
+                exception.getClass().getSimpleName(),
+                error.getType().toString(),
+                exception);
+
+        statusUpdater.updateStatusWithError(credentialsStatus, statusPayload, error);
     }
 }

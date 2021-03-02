@@ -76,6 +76,7 @@ junit_test(
         "@com_tink_api_grpc//event_producer_service/events:events_java_proto",
         "@com_tink_api_grpc//event_producer_service/events:events_proto",
         "@tink_backend//src/aggregation-controller/api/src/main/java/se/tink/backend/aggregationcontroller/v1/rpc/enums",
+        "@tink_backend//src/libraries/connectivity_errors/proto:java_proto",
         "@tink_backend//src/libraries/event_producer_service_client",
         "@tink_backend//src/libraries/event_producer_service_client/proto:java_proto",
         "@tink_backend//src/libraries/metrics/core/src/main/java/se/tink/libraries/metrics/collection",

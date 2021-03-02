@@ -66,10 +66,12 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     private static final Logger logger =
             LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
+    private static final String AGENT = "agent";
     private static final MetricId SUSPICIOUS_NUMBER_SERIES =
             MetricId.newId("aggregation_account_suspicious_number_series");
     private static final MetricId CREDENTIALS_STATUS_CHANGES_WITHOUT_ERRORS =
             MetricId.newId("aggregation_credentials_status_changes_without_errors");
+    private static final MetricId RESULTING_ERRORS = MetricId.newId("aggregation_resulting_errors");
 
     private static final Set<CredentialsStatus> ERROR_STATUSES =
             ImmutableSet.of(
@@ -533,7 +535,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
 
             String agent = request.getProvider().getClassName();
             getMetricRegistry()
-                    .meter(SUSPICIOUS_NUMBER_SERIES.label("agent", agent).label("label", label))
+                    .meter(SUSPICIOUS_NUMBER_SERIES.label(AGENT, agent).label("label", label))
                     .inc();
             logger.warn(
                     "Found suspicous number series ({}) from {}, credentialsId: {}.",
@@ -579,7 +581,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
             getMetricRegistry()
                     .meter(
                             CREDENTIALS_STATUS_CHANGES_WITHOUT_ERRORS
-                                    .label("agent", agent)
+                                    .label(AGENT, agent)
                                     .label("status", credentials.getStatus().toString()))
                     .inc();
         }
@@ -661,7 +663,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
 
     // To be removed as soon as setting statuses with new errors path is rolled out
     private static final Random RANDOM = new Random();
-    private static final double ROLLOUT_GRANULAR_ERROR_RATIO = 0.0;
+    private static final double ROLLOUT_GRANULAR_ERROR_RATIO = 0.05;
 
     @Override
     public void updateStatusWithError(
@@ -672,6 +674,14 @@ public class AgentWorkerContext extends AgentContext implements Managed {
             updateStatus(status, statusPayload, true);
             return;
         }
+
+        getMetricRegistry()
+                .meter(
+                        RESULTING_ERRORS
+                                .label(AGENT, request.getProvider().getClassName())
+                                .label("error", error.getType().name())
+                                .label("status", status.name()))
+                .inc();
 
         Credentials credentials = request.getCredentials();
         credentials.setStatus(status);

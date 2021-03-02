@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.exception;
+package se.tink.backend.aggregation.agents.exceptions.nemid;
 
 import se.tink.backend.aggregation.agents.exceptions.agent.AgentError;
 import se.tink.libraries.i18n.LocalizableKey;

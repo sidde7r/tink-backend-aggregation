@@ -18,10 +18,10 @@ import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SupplementalInfoError;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
+import se.tink.backend.aggregation.agents.exceptions.nemid.NemIdError;
+import se.tink.backend.aggregation.agents.exceptions.nemid.NemIdException;
 import se.tink.backend.aggregation.events.IntegrationParameters;
 import se.tink.backend.aggregation.events.LoginAgentEventProducer;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.exception.NemIdError;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.exception.NemIdException;
 import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
 import se.tink.eventproducerservice.events.grpc.AgentLoginCompletedEventProto;
 
