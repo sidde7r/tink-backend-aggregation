@@ -7,6 +7,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.io.File;
+import java.io.IOException;
+import org.apache.commons.io.FileUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -65,10 +67,9 @@ public class EdenredApiClientTest {
     }
 
     @Test
-    public void shouldSetupPin() {
+    public void shouldSetupPin() throws IOException {
         mockPostRequest(
-                SerializationUtils.deserializeFromString(
-                        new File(RESOURCE_PATH + "setup-pin.json"), SetPinResponse.class));
+                FileUtils.readFileToString(new File(RESOURCE_PATH + "setup-pin.json"), "UTF-8"));
         when(edenredStorage.getToken()).thenReturn("a-token");
 
         SetPinResponse response = edenredApiClient.setupPin("tinker", "1234");

@@ -52,5 +52,13 @@ public class EdenredConstants {
         public static final String TRANSACTIONS = "TRANSACTIONS";
     }
 
+    public static class Errors {
+        public static final String REJECTED_REQUEST = "Edenred Rejected Request";
+    }
+
+    public static class Cards {
+        public static final String ACTIVE = "ACTIVE";
+    }
+
     public static final String NO_PERMISSION = "10412";
 }

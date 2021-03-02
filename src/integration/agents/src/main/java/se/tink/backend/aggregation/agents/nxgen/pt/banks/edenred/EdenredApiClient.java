@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.refresh.AccountRefreshException;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.edenred.EdenredConstants.Errors;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.edenred.EdenredConstants.Headers;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.edenred.EdenredConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.edenred.authenticator.rpc.AuthenticationPinRequest;
@@ -21,6 +22,7 @@ import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientExcept
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @RequiredArgsConstructor
 public class EdenredApiClient {
@@ -61,7 +63,8 @@ public class EdenredApiClient {
                         .build();
 
         try {
-            return requestProtected(Urls.SET_PIN).body(setPinRequest).post(SetPinResponse.class);
+            return map200Status(
+                    requestProtected(Urls.SET_PIN).body(setPinRequest).post(String.class));
         } catch (HttpResponseException exception) {
             throw mapResponseException(exception);
         } catch (HttpClientException exception) {
@@ -119,6 +122,13 @@ public class EdenredApiClient {
 
     private RequestBuilder requestProtected(URL url) {
         return request(url).header(Headers.AUTHORIZATION, edenredStorage.getToken());
+    }
+
+    private SetPinResponse map200Status(String response) {
+        if (response.contains(Errors.REJECTED_REQUEST)) {
+            throw LoginError.DEFAULT_MESSAGE.exception(Errors.REJECTED_REQUEST);
+        }
+        return SerializationUtils.deserializeFromString(response, SetPinResponse.class);
     }
 
     private RuntimeException mapAuthenticationException(HttpResponseException exception) {

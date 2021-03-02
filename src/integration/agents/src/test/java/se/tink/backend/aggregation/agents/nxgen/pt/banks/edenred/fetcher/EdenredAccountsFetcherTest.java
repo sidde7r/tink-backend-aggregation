@@ -53,6 +53,23 @@ public class EdenredAccountsFetcherTest {
         verify(edenredStorage).storeTransactions(eq(123L), any());
     }
 
+    @Test
+    public void shouldHandleCanceledCard() {
+        CardListResponse response = new CardListResponse();
+        response.setData(
+                Collections.singletonList(
+                        CardEntity.builder()
+                                .id(123L)
+                                .number("1234567890")
+                                .status("CANCELED")
+                                .product(ProductEntity.builder().name("Test Card").build())
+                                .build()));
+        when(edenredApiClient.getCards()).thenReturn(response);
+
+        Collection<TransactionalAccount> transactionalAccounts = fetcher.fetchAccounts();
+        assertThat(transactionalAccounts).isEmpty();
+    }
+
     private CardListResponse mockCardsResponse() {
         CardListResponse response = new CardListResponse();
         response.setData(
@@ -60,6 +77,7 @@ public class EdenredAccountsFetcherTest {
                         CardEntity.builder()
                                 .id(123L)
                                 .number("1234567890")
+                                .status("ACTIVE")
                                 .product(ProductEntity.builder().name("Test Card").build())
                                 .build()));
 
