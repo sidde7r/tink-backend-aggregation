@@ -16,7 +16,10 @@ public class AccountListFIResponse extends AccountListResponse {
 
     @Override
     public Stream<TransactionalAccount> toTinkAccounts(HandelsbankenApiClient client) {
-        return accounts.stream().map(HandelsbankenFIAccount::toTinkAccount);
+        return accounts.stream()
+                .map(HandelsbankenFIAccount::toTinkAccount)
+                .filter(Optional::isPresent)
+                .map(Optional::get);
     }
 
     @Override
