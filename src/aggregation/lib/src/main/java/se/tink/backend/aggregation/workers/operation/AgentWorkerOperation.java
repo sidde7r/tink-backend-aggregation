@@ -22,7 +22,7 @@ import se.tink.libraries.metrics.core.MetricId;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 import se.tink.libraries.metrics.types.timers.Timer;
 import se.tink.libraries.metrics.types.timers.Timer.Context;
-import src.libraries.connectivity_errors.ErrorHelper;
+import src.libraries.connectivity_errors.ConnectivityErrorFactory;
 
 public class AgentWorkerOperation implements Runnable {
     public static class AgentWorkerOperationState {
@@ -162,7 +162,8 @@ public class AgentWorkerOperation implements Runnable {
                 commandResult = AgentWorkerCommandResult.ABORT;
 
                 ConnectivityError error =
-                        ErrorHelper.from(ConnectivityErrorType.ERROR_TINK_INTERNAL_ERROR);
+                        ConnectivityErrorFactory.from(
+                                ConnectivityErrorType.ERROR_TINK_INTERNAL_ERROR);
                 statusUpdater.updateStatusWithError(CredentialsStatus.TEMPORARY_ERROR, null, error);
 
                 break;
@@ -191,7 +192,7 @@ public class AgentWorkerOperation implements Runnable {
                             "Rejected command execution for operation '%s'", operationMetricName));
             // At the time of writing this comment, it can only occur if we fail to acquire lock
             ConnectivityError error =
-                    ErrorHelper.from(ConnectivityErrorType.ERROR_TINK_INTERNAL_ERROR);
+                    ConnectivityErrorFactory.from(ConnectivityErrorType.ERROR_TINK_INTERNAL_ERROR);
             statusUpdater.updateStatusWithError(CredentialsStatus.UNCHANGED, null, error);
         }
 

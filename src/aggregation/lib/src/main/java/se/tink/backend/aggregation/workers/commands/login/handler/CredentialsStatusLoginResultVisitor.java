@@ -23,7 +23,7 @@ import se.tink.connectivity.errors.ConnectivityError;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.metrics.core.MetricId;
 import se.tink.libraries.metrics.registry.MetricRegistry;
-import src.libraries.connectivity_errors.ErrorHelper;
+import src.libraries.connectivity_errors.ConnectivityErrorFactory;
 
 @AllArgsConstructor
 public class CredentialsStatusLoginResultVisitor implements LoginResultVisitor {
@@ -103,7 +103,7 @@ public class CredentialsStatusLoginResultVisitor implements LoginResultVisitor {
     private void updateStatus(
             final CredentialsStatus credentialsStatus, final Exception exception) {
 
-        ConnectivityError error = ErrorHelper.from(exception);
+        ConnectivityError error = ConnectivityErrorFactory.from(exception);
         String statusPayload = null;
 
         if (exception instanceof AgentException) {

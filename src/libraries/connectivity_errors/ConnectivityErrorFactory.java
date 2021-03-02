@@ -21,8 +21,8 @@ import se.tink.backend.aggregation.agents.exceptions.nemid.NemIdException;
 import se.tink.connectivity.errors.ConnectivityError;
 import se.tink.connectivity.errors.ConnectivityErrorType;
 
-public class ErrorHelper {
-    private static final Logger log = LoggerFactory.getLogger(ErrorHelper.class);
+public class ConnectivityErrorFactory {
+    private static final Logger log = LoggerFactory.getLogger(ConnectivityErrorFactory.class);
 
     public static ConnectivityError from(ConnectivityErrorType type) {
         return ConnectivityError.newBuilder().setType(type).build();
