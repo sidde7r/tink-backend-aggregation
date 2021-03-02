@@ -61,6 +61,7 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.pair.Pair;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -80,18 +81,21 @@ public final class RedsysApiClient {
     private ConsentStatus cachedConsentStatus = ConsentStatus.UNKNOWN;
     private String psuIpAddress = null;
     private final EidasIdentity eidasIdentity;
+    private final CredentialsRequest request;
 
     public RedsysApiClient(
             TinkHttpClient client,
             SessionStorage sessionStorage,
             PersistentStorage persistentStorage,
             AspspConfiguration aspspConfiguration,
-            EidasIdentity eidasIdentity) {
+            EidasIdentity eidasIdentity,
+            CredentialsRequest request) {
         this.client = client;
         this.sessionStorage = sessionStorage;
         this.persistentStorage = persistentStorage;
         this.aspspConfiguration = aspspConfiguration;
         this.eidasIdentity = eidasIdentity;
+        this.request = request;
 
         client.addFilter(
                 new ErrorFilter(
@@ -307,17 +311,17 @@ public final class RedsysApiClient {
         allHeaders.put(HeaderKeys.SIGNATURE, signature);
         allHeaders.put(HeaderKeys.TPP_SIGNATURE_CERTIFICATE, clientSigningCertificate);
 
-        RequestBuilder request =
+        RequestBuilder builder =
                 client.request(url)
                         .addBearerToken(token)
                         .headers(allHeaders)
                         .accept(MediaType.APPLICATION_JSON);
 
         if (payload != null) {
-            request = request.body(serializedPayload, MediaType.APPLICATION_JSON);
+            builder = builder.body(serializedPayload, MediaType.APPLICATION_JSON);
         }
 
-        return request;
+        return builder;
     }
 
     public ListAccountsResponse fetchAccounts(String consentId) {
@@ -339,12 +343,16 @@ public final class RedsysApiClient {
     }
 
     private LocalDate transactionsFromDate(String accountId) {
-        if (hasDoneInitialFetch(accountId)) {
+        if (hasDoneInitialFetch(accountId) || isAutoRefresh()) {
             return LocalDate.now().minusDays(RedsysConstants.DEFAULT_REFRESH_DAYS);
         } else {
             // This might trigger SCA
             return aspspConfiguration.oldestTransactionDate();
         }
+    }
+
+    private boolean isAutoRefresh() {
+        return !request.isManual();
     }
 
     private boolean hasDoneInitialFetch(String accountId) {
@@ -358,8 +366,8 @@ public final class RedsysApiClient {
     }
 
     private BaseTransactionsResponse<? extends TransactionEntity> fetchTransactions(
-            RequestBuilder request) {
-        final HttpResponse response = request.get(HttpResponse.class);
+            RequestBuilder builder) {
+        final HttpResponse response = builder.get(HttpResponse.class);
         final BaseTransactionsResponse<? extends TransactionEntity> transactionsResponse =
                 response.getBody(aspspConfiguration.getTransactionsResponseClass());
         // Add Request ID from response header
@@ -376,13 +384,13 @@ public final class RedsysApiClient {
         final Map<String, Object> headers = Maps.newHashMap();
         headers.put(HeaderKeys.CONSENT_ID, consentId);
 
-        final RequestBuilder request =
+        final RequestBuilder builder =
                 createSignedRequest(makeApiUrl(Urls.TRANSACTIONS, accountId), null, headers)
                         .queryParam(QueryKeys.DATE_FROM, formatter.format(fromDate))
                         .queryParam(QueryKeys.DATE_TO, formatter.format(toDate))
                         .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BookingStatus.BOOKED);
         final BaseTransactionsResponse<? extends TransactionEntity> response =
-                fetchTransactions(request);
+                fetchTransactions(builder);
         markFetchedAccount(accountId);
         return response;
     }
@@ -392,10 +400,10 @@ public final class RedsysApiClient {
         final Map<String, Object> headers = Maps.newHashMap();
         headers.put(HeaderKeys.CONSENT_ID, consentId);
 
-        final RequestBuilder request =
+        final RequestBuilder builder =
                 createSignedRequest(makeApiUrl(Urls.TRANSACTIONS, accountId), null, headers)
                         .queryParam(QueryKeys.BOOKING_STATUS, BookingStatus.PENDING);
-        return fetchTransactions(request);
+        return fetchTransactions(builder);
     }
 
     public BaseTransactionsResponse<? extends TransactionEntity> fetchTransactions(
@@ -411,9 +419,9 @@ public final class RedsysApiClient {
         headers.put(HeaderKeys.CONSENT_ID, consentId);
         headers.put(HeaderKeys.REQUEST_ID, key.getRequestId());
 
-        final RequestBuilder request =
+        final RequestBuilder builder =
                 createSignedRequest(makeApiUrl(key.getPath()), null, headers);
-        return fetchTransactions(request);
+        return fetchTransactions(builder);
     }
 
     public void setPsuIpAddress(String psuIpAddress) {
