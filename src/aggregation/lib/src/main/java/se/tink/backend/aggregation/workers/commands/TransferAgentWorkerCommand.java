@@ -97,6 +97,7 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
                     "[transferId: {}] {}",
                     UUIDUtils.toTinkUUID(transfer.getId()),
                     getTransferExecuteLogInfo(transfer));
+            String market = transferRequest.getProvider().getMarket();
 
             if (transferRequest instanceof RecurringPaymentRequest) {
                 handleRecurringPayment(agent, (RecurringPaymentRequest) transferRequest);
@@ -110,15 +111,10 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
                     handlePayment(
                             paymentControllerable
                                     .getPaymentController(
-                                            PaymentRequest.of(
-                                                            transfer,
-                                                            transferRequest
-                                                                    .getProvider()
-                                                                    .getMarket())
-                                                    .getPayment())
+                                            PaymentRequest.of(transfer, market).getPayment())
                                     .get(),
                             transfer,
-                            transferRequest.getProvider().getMarket());
+                            market);
                 } else if (agent instanceof PaymentControllerable) {
                     PaymentControllerable paymentControllerable = (PaymentControllerable) agent;
 
@@ -126,7 +122,7 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
                         handlePayment(
                                 paymentControllerable.getPaymentController().get(),
                                 transfer,
-                                transferRequest.getProvider().getMarket());
+                                market);
                     } else {
                         TransferExecutorNxgen transferExecutorNxgen = (TransferExecutorNxgen) agent;
                         operationStatusMessage = transferExecutorNxgen.execute(transfer);
@@ -438,7 +434,9 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
         if (agent instanceof PaymentControllerable) {
             PaymentControllerable paymentControllerable = (PaymentControllerable) agent;
 
-            if (paymentControllerable.getPaymentController().isPresent()) {
+            if (!paymentControllerable.getPaymentController().isPresent()) {
+                log.error("Payment not supported by Agent=" + agent.getAgentClass());
+            } else {
 
                 PaymentController paymentController =
                         paymentControllerable.getPaymentController().get();
@@ -449,49 +447,48 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
                         paymentController.create(
                                 PaymentRequest.ofRecurringPayment(recurringPayment));
 
-                log.info(
-                        "Credentials contain - status: {} before first signing",
-                        credentials.getStatus());
-
-                PaymentMultiStepResponse signPaymentMultiStepResponse =
-                        paymentController.sign(PaymentMultiStepRequest.of(createPaymentResponse));
-
-                log.info(
-                        "Credentials contain - status: {} after first signing",
-                        credentials.getStatus());
-                log.info(
-                        "Payment step is - {} after first signing",
-                        signPaymentMultiStepResponse.getStep());
-
-                Map<String, String> map;
-                List<Field> fields;
-                String nextStep = signPaymentMultiStepResponse.getStep();
-                Payment payment = signPaymentMultiStepResponse.getPayment();
-                Storage storage = signPaymentMultiStepResponse.getStorage();
-
-                while (!AuthenticationStepConstants.STEP_FINALIZE.equals(nextStep)) {
-                    fields = signPaymentMultiStepResponse.getFields();
-                    map = Collections.emptyMap();
-
-                    signPaymentMultiStepResponse =
-                            paymentController.sign(
-                                    new PaymentMultiStepRequest(
-                                            payment,
-                                            storage,
-                                            nextStep,
-                                            fields,
-                                            new ArrayList<>(map.values())));
-                    nextStep = signPaymentMultiStepResponse.getStep();
-                    payment = signPaymentMultiStepResponse.getPayment();
-                    storage = signPaymentMultiStepResponse.getStorage();
-
-                    log.info("Next step - {}", signPaymentMultiStepResponse.getStep());
-                    log.info("Credentials contain - status: {}", credentials.getStatus());
-                }
-
-            } else {
-                log.error("Payment not supported by Agent=" + agent.getAgentClass());
+                handleRecurringPaymentSigning(paymentController, createPaymentResponse);
             }
+        }
+    }
+
+    private void handleRecurringPaymentSigning(
+            PaymentController paymentController, PaymentResponse createPaymentResponse)
+            throws PaymentException {
+        PaymentMultiStepResponse signPaymentMultiStepResponse =
+                paymentController.sign(PaymentMultiStepRequest.of(createPaymentResponse));
+
+        log.info(
+                "Payment step is - {} after first signing={}, Credentials contain - status: {}",
+                signPaymentMultiStepResponse.getStep(),
+                credentials.getStatus());
+
+        Map<String, String> map;
+        List<Field> fields;
+        String nextStep = signPaymentMultiStepResponse.getStep();
+        Payment payment = signPaymentMultiStepResponse.getPayment();
+        Storage storage = signPaymentMultiStepResponse.getStorage();
+
+        while (!AuthenticationStepConstants.STEP_FINALIZE.equals(nextStep)) {
+            fields = signPaymentMultiStepResponse.getFields();
+            map = Collections.emptyMap();
+
+            signPaymentMultiStepResponse =
+                    paymentController.sign(
+                            new PaymentMultiStepRequest(
+                                    payment,
+                                    storage,
+                                    nextStep,
+                                    fields,
+                                    new ArrayList<>(map.values())));
+            nextStep = signPaymentMultiStepResponse.getStep();
+            payment = signPaymentMultiStepResponse.getPayment();
+            storage = signPaymentMultiStepResponse.getStorage();
+
+            log.info(
+                    "Next step - {}, Credentials status: {}",
+                    signPaymentMultiStepResponse.getStep(),
+                    credentials.getStatus());
         }
     }
 

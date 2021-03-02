@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cb
 import com.google.api.client.repackaged.com.google.common.base.Preconditions;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +22,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.enums.CbiGlobePaymentStatus;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.rpc.CreatePaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.rpc.CreateRecurringPaymentRequest;
 import se.tink.backend.aggregation.agents.utils.remittanceinformation.RemittanceInformationValidator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepConstants;
@@ -45,8 +47,10 @@ import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.pair.Pair;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.enums.PaymentType;
+import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.payments.common.model.PaymentScheme;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
+import se.tink.libraries.transfer.rpc.PaymentServiceType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
@@ -86,28 +90,69 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
                     StorageKeys.PAYMENT_PRODUCT,
                     CbiGlobeConstants.PaymentProduct.INSTANT_SEPA_CREDIT_TRANSFERS);
         }
+
+        CreatePaymentResponse createPaymentResponse =
+                PaymentServiceType.PERIODIC.equals(
+                                paymentRequest.getPayment().getPaymentServiceType())
+                        ? getCreateRecurringPaymentResponse(paymentRequest)
+                        : getCreatePaymentResponse(paymentRequest);
+
+        sessionStorage.put(
+                StorageKeys.LINK,
+                createPaymentResponse.getLinks().getUpdatePsuAuthenticationRedirect().getHref());
+        return createPaymentResponse.toTinkPaymentResponse(paymentRequest.getPayment());
+    }
+
+    private CreatePaymentResponse getCreatePaymentResponse(PaymentRequest paymentRequest) {
+        Payment payment = paymentRequest.getPayment();
         AccountEntity creditorEntity = AccountEntity.creditorOf(paymentRequest);
         AccountEntity debtorEntity = AccountEntity.debtorOf(paymentRequest);
         InstructedAmountEntity instructedAmountEntity = InstructedAmountEntity.of(paymentRequest);
-        RemittanceInformation remittanceInformation =
-                paymentRequest.getPayment().getRemittanceInformation();
+        RemittanceInformation remittanceInformation = payment.getRemittanceInformation();
         RemittanceInformationValidator.validateSupportedRemittanceInformationTypesOrThrow(
                 remittanceInformation, null, RemittanceInformationType.UNSTRUCTURED);
+
         CreatePaymentRequest createPaymentRequest =
-                new CreatePaymentRequest.Builder()
-                        .withDebtorAccount(debtorEntity)
-                        .withInstructedAmount(instructedAmountEntity)
-                        .withCreditorAccount(creditorEntity)
-                        .withCreditorName(paymentRequest.getPayment().getCreditor().getName())
-                        .withRemittanceInformationUnstructured(remittanceInformation.getValue())
-                        .withTransactionType(FormValues.TRANSACTION_TYPE)
+                CreatePaymentRequest.builder()
+                        .debtorAccount(debtorEntity)
+                        .instructedAmount(instructedAmountEntity)
+                        .creditorAccount(creditorEntity)
+                        .creditorName(payment.getCreditor().getName())
+                        .remittanceInformationUnstructured(remittanceInformation.getValue())
+                        .transactionType(FormValues.TRANSACTION_TYPE)
                         .build();
 
-        CreatePaymentResponse payment = apiClient.createPayment(createPaymentRequest);
-        sessionStorage.put(
-                StorageKeys.LINK,
-                payment.getLinks().getUpdatePsuAuthenticationRedirect().getHref());
-        return payment.toTinkPaymentResponse(getPaymentType(paymentRequest));
+        return apiClient.createPayment(createPaymentRequest);
+    }
+
+    private CreatePaymentResponse getCreateRecurringPaymentResponse(PaymentRequest paymentRequest) {
+        Payment payment = paymentRequest.getPayment();
+        AccountEntity creditorEntity = AccountEntity.creditorOf(paymentRequest);
+        AccountEntity debtorEntity = AccountEntity.debtorOf(paymentRequest);
+        InstructedAmountEntity instructedAmountEntity = InstructedAmountEntity.of(paymentRequest);
+        RemittanceInformation remittanceInformation = payment.getRemittanceInformation();
+        RemittanceInformationValidator.validateSupportedRemittanceInformationTypesOrThrow(
+                remittanceInformation, null, RemittanceInformationType.UNSTRUCTURED);
+
+        CreateRecurringPaymentRequest.CreateRecurringPaymentRequestBuilder createPaymentRequest =
+                CreateRecurringPaymentRequest.builder()
+                        .debtorAccount(debtorEntity)
+                        .instructedAmount(instructedAmountEntity)
+                        .creditorAccount(creditorEntity)
+                        .creditorName(payment.getCreditor().getName())
+                        .remittanceInformationUnstructured(remittanceInformation.getValue())
+                        .transactionType(FormValues.TRANSACTION_TYPE)
+                        .frequency(payment.getFrequency().toString())
+                        .startDate(payment.getStartDate().toString());
+        // optional attributes
+        if (Optional.ofNullable(payment.getEndDate()).isPresent()) {
+            createPaymentRequest.endDate(payment.getEndDate().toString());
+        }
+        if (Optional.ofNullable(payment.getExecutionRule()).isPresent()) {
+            createPaymentRequest.executionRule(payment.getExecutionRule().toString());
+        }
+
+        return apiClient.createRecurringPayment(createPaymentRequest.build());
     }
 
     private void fetchToken() {
@@ -129,11 +174,15 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
     public PaymentResponse fetch(PaymentRequest paymentRequest) {
         return apiClient
                 .getPayment(paymentRequest.getPayment().getUniqueId())
-                .toTinkPaymentResponse(paymentRequest.getPayment().getType());
+                .toTinkPaymentResponse(paymentRequest.getPayment());
     }
 
     private CreatePaymentResponse fetchPaymentStatus(String paymentId) {
         return apiClient.getPaymentStatus(paymentId);
+    }
+
+    private CreatePaymentResponse fetchRecurringPaymentStatus(String paymentId) {
+        return apiClient.getRecurringPaymentStatus(paymentId);
     }
 
     @Override
@@ -153,7 +202,12 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
         }
 
         CreatePaymentResponse createPaymentResponse =
-                fetchPaymentStatus(paymentMultiStepRequest.getPayment().getUniqueId());
+                PaymentServiceType.PERIODIC.equals(
+                                paymentMultiStepRequest.getPayment().getPaymentServiceType())
+                        ? fetchRecurringPaymentStatus(
+                                paymentMultiStepRequest.getPayment().getUniqueId())
+                        : fetchPaymentStatus(paymentMultiStepRequest.getPayment().getUniqueId());
+
         CbiGlobePaymentStatus cbiGlobePaymentStatus =
                 CbiGlobePaymentStatus.fromString(createPaymentResponse.getTransactionStatus());
         String scaStatus = createPaymentResponse.getScaStatus();
@@ -228,8 +282,7 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
         } else
             return new PaymentMultiStepResponse(
                     createPaymentResponse.toTinkPaymentResponse(
-                            paymentMultiStepRequest.getPayment().getUniqueId(),
-                            paymentMultiStepRequest.getPayment().getType()),
+                            paymentMultiStepRequest.getPayment()),
                     CbiGlobeConstants.PaymentStep.IN_PROGRESS,
                     new ArrayList<>());
     }
@@ -261,9 +314,7 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
                             .getHref());
         }
         return new PaymentMultiStepResponse(
-                createPaymentResponse.toTinkPaymentResponse(
-                        paymentMultiStepRequest.getPayment().getUniqueId(),
-                        paymentMultiStepRequest.getPayment().getType()),
+                createPaymentResponse.toTinkPaymentResponse(paymentMultiStepRequest.getPayment()),
                 CbiGlobeConstants.PaymentStep.IN_PROGRESS,
                 new ArrayList<>());
     }
@@ -281,7 +332,7 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
             }
             return new PaymentMultiStepResponse(
                     createPaymentResponse.toTinkPaymentResponse(
-                            paymentMultiStepRequest.getPayment().getType()),
+                            paymentMultiStepRequest.getPayment()),
                     AuthenticationStepConstants.STEP_FINALIZE,
                     new ArrayList<>());
         } else {
@@ -318,9 +369,7 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
                 redirectURL); // redirectURL should be set to null to avoid multiple redirect to
 
         return new PaymentMultiStepResponse(
-                createPaymentResponse.toTinkPaymentResponse(
-                        paymentMultiStepRequest.getPayment().getUniqueId(),
-                        paymentMultiStepRequest.getPayment().getType()),
+                createPaymentResponse.toTinkPaymentResponse(paymentMultiStepRequest.getPayment()),
                 CbiGlobeConstants.PaymentStep.IN_PROGRESS,
                 new ArrayList<>());
     }

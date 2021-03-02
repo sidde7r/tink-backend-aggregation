@@ -31,9 +31,12 @@ public final class CbiGlobeConstants {
         public static final URL TRANSACTIONS = new URL(BASE_URL + ApiServices.TRANSACTIONS);
         public static final URL CONSENTS_STATUS = new URL(BASE_URL + ApiServices.CONSENTS_STATUS);
         public static final URL PAYMENT = new URL(BASE_URL + ApiServices.PAYMENT);
+        public static final URL PERIODIC_PAYMENT = new URL(BASE_URL + ApiServices.PERIODIC_PAYMENT);
         public static final URL FETCH_PAYMENT = new URL(BASE_URL + ApiServices.FETCH_PAYMENT);
         public static final URL FETCH_PAYMENT_STATUS =
                 new URL(BASE_URL + ApiServices.FETCH_PAYMENT_STATUS);
+        public static final URL FETCH_PERIODIC_PAYMENT_STATUS =
+                new URL(BASE_URL + ApiServices.FETCH_PERIODIC_PAYMENT_STATUS);
         public static final URL CARD_ACCOUNTS = new URL(BASE_URL + ApiServices.CARD_ACCOUNTS);
         public static final URL CARD_BALANCES = new URL(BASE_URL + ApiServices.CARD_BALANCES);
         public static final URL CARD_TRANSACTIONS =
@@ -55,10 +58,14 @@ public final class CbiGlobeConstants {
                 "/platform/enabler/psd2orchestrator/ais/2.3.2/consents/{consentId}";
         private static final String PAYMENT =
                 "/platform/enabler/psd2orchestrator/pis/2.3.2/payments/{payment-product}";
+        private static final String PERIODIC_PAYMENT =
+                "/platform/enabler/psd2orchestrator/pis/2.3.2/periodic-payments/{payment-product}";
         private static final String FETCH_PAYMENT =
                 "/platform/enabler/psd2orchestrator/pis/2.3.2/payments/{payment-product}/{payment-id}";
         private static final String FETCH_PAYMENT_STATUS =
                 "/platform/enabler/psd2orchestrator/pis/2.3.2/payments/{payment-product}/{payment-id}/status";
+        private static final String FETCH_PERIODIC_PAYMENT_STATUS =
+                "/platform/enabler/psd2orchestrator/pis/2.3.2/periodic-payments/{payment-product}/{payment-id}/status";
         public static final String CARD_ACCOUNTS =
                 "/platform/enabler/psd2orchestrator/ais/2.3.2/card-accounts";
         public static final String CARD_BALANCES =
