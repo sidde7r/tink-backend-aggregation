@@ -1,9 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.bnppf.entities;
 
-import se.tink.backend.agents.rpc.AccountTypes;
+import java.util.Optional;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.CheckingAccount;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
+import se.tink.libraries.account.identifiers.IbanIdentifier;
 
 @JsonObject
 public class PfmAccount {
@@ -31,10 +34,18 @@ public class PfmAccount {
         return pfmOptInFlag;
     }
 
-    public TransactionalAccount toTransactionalAccount() {
-        return CheckingAccount.builder(AccountTypes.CHECKING, externalAccId, balance.toTinkAmount())
-                .setAccountNumber(maskIban(iban))
-                .setName(accType)
+    public Optional<TransactionalAccount> toTransactionalAccount() {
+        return TransactionalAccount.nxBuilder()
+                .withType(TransactionalAccountType.CHECKING)
+                .withPaymentAccountFlag()
+                .withBalance(BalanceModule.of(balance.toTinkAmount()))
+                .withId(
+                        IdModule.builder()
+                                .withUniqueIdentifier(iban)
+                                .withAccountNumber(iban)
+                                .withAccountName(accType)
+                                .addIdentifier(new IbanIdentifier(maskIban(iban)))
+                                .build())
                 .setBankIdentifier(externalAccId)
                 .build();
     }
