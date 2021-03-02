@@ -21,6 +21,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.UkOpenBankingV31Ais;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.signer.iface.JwtSigner;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.configuration.UkOpenBankingPisConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.tesco.pis.signature.TescoSignatureCreator;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 
 @AgentDependencyModulesForProductionMode(
@@ -50,8 +51,10 @@ public final class TescoV31Agent extends UkOpenBankingBaseAgent {
                 aisConfig,
                 new UkOpenBankingPisConfiguration(
                         TescoConstants.PIS_API_URL, TescoConstants.WELL_KNOWN_URL),
-                createPisRequestFilterUsingPs256Base64Signature(
-                        jwtSigner, componentProvider.getRandomValueGenerator()));
+                createPisRequestFilter(
+                        new TescoSignatureCreator(jwtSigner),
+                        jwtSigner,
+                        componentProvider.getRandomValueGenerator()));
     }
 
     @Override
