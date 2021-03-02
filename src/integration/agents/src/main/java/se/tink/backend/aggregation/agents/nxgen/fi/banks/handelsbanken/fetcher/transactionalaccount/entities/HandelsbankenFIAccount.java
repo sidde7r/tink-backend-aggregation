@@ -9,7 +9,6 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdMo
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.identifiers.FinnishIdentifier;
-import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class HandelsbankenFIAccount extends HandelsbankenAccount {
 
@@ -23,8 +22,7 @@ public class HandelsbankenFIAccount extends HandelsbankenAccount {
         return TransactionalAccount.nxBuilder()
                 .withType(TransactionalAccountType.CHECKING)
                 .withPaymentAccountFlag()
-                .withBalance(
-                        BalanceModule.of(ExactCurrencyAmount.inEUR(chooseAmountField().asDouble())))
+                .withBalance(BalanceModule.of(chooseAmountField().toExactCurrencyAmount()))
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(unformattedNumber)
