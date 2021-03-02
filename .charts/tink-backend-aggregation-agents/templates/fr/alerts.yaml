@@ -85,3 +85,42 @@ spec:
         summary: Agent <{ $labels.className }> has failed over 20%
           of its login attempts the past 60 minutes.
         tags: {{ .Values.tags }}
+
+    ### Long term login failures, especially useful for low popular agents
+    - alert: LongTermAuthenticationErrorOver90%FR
+      expr: |
+        # Login failure the last 6 hours
+        sum(sum_over_time(tink_agent_login_total{action="login",outcome=~"failed|unavailable", market="FR"}[6h])) BY (className,provider)
+        # All login attempts the last 6 hours
+          / sum(sum_over_time(tink_agent_login_total{action="login", market="FR"}[6h])) BY (className,provider) > 0.90
+      for: 1h
+      labels:
+        severity: urgent
+        priority: P1
+        who: integration-minions
+      annotations:
+        description: {{ .Values.kibanaLink }}
+          {{ .Values.grafanaLink }}
+        summary: Login success rate is below 10% ( <{ $value }> ) the last 6 hours.
+        tags: {{ .Values.tags }}
+
+    - alert: LongTermAuthenticationCancelledOver90%FR
+      expr: |
+        # Login cancelled the last 6 hours
+        sum(sum_over_time(tink_agent_login_total{action="login",outcome="cancelled", market="FR"}[6h])) BY (className,provider)
+        # All login attempts the last 6 hours
+          / sum(sum_over_time(tink_agent_login_total{action="login", market="FR"}[6h])) BY (className,provider) > 10
+        # Login cancelled the last 6 hours
+        and (sum(sum_over_time(tink_agent_login_total{action="login",outcome="cancelled", market="FR"}[6h])) BY (className,provider)
+        # All login attempts the last 6 hours
+          / sum(sum_over_time(tink_agent_login_total{action="login", market="FR"}[6h])) BY (className,provider) > 0.90)
+      for: 1h
+      labels:
+        severity: urgent
+        priority: P1
+        who: integration-minions
+      annotations:
+        description: {{ .Values.kibanaLink }}
+          {{ .Values.grafanaLink }}
+        summary: Login success rate is below 10% ( <{ $value }> ) the last 6 hours.
+        tags: {{ .Values.tags }}
