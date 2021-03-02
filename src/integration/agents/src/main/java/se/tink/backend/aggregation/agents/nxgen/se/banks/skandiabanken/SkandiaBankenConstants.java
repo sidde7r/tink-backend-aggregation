@@ -201,8 +201,8 @@ public class SkandiaBankenConstants {
     }
 
     public static class TimeoutRetryConfig {
-        public static final int NUM_TIMEOUT_RETRIES = 3;
-        public static final int TIMEOUT_RETRY_SLEEP_MILLISECONDS = 1000;
+        public static final int NUM_TIMEOUT_RETRIES = 5;
+        public static final int TIMEOUT_RETRY_SLEEP_MILLISECONDS = 2000;
     }
 
     public static class AccountType {
