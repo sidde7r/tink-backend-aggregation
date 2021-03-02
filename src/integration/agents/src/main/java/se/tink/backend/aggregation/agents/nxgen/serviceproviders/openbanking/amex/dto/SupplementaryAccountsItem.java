@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.dto;
 
 import java.math.BigDecimal;
+import java.util.Map;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmericanExpressConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmericanExpressUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
@@ -36,7 +38,8 @@ public class SupplementaryAccountsItem {
         return status;
     }
 
-    public CreditCardAccount toCreditCardAccount(ExactCurrencyAmount balance) {
+    public CreditCardAccount toCreditCardAccount(
+            ExactCurrencyAmount balance, Map<Integer, String> statementMap) {
         final String iban =
                 AmericanExpressUtils.formatAccountId(identifiers.getDisplayAccountNumber());
 
@@ -61,6 +64,7 @@ public class SupplementaryAccountsItem {
                                 .addIdentifier(new IbanIdentifier(iban.replace("-", "")))
                                 .build())
                 .addHolderName(holder.getProfile().getEmbossedName())
+                .putInTemporaryStorage(AmericanExpressConstants.StorageKey.STATEMENTS, statementMap)
                 .build();
     }
 }

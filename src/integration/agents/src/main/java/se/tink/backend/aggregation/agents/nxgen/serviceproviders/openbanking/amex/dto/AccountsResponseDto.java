@@ -29,7 +29,7 @@ public class AccountsResponseDto {
     private List<SupplementaryAccountsItem> supplementaryAccounts;
 
     public CreditCardAccount toCreditCardAccount(
-            List<BalanceDto> balances, Map<Integer, String> statementMap) {
+            List<BalanceDto> balances, StatementPeriodsDto statementPeriods) {
         final String iban =
                 identifiers
                         .getDisplayAccountNumber()
@@ -59,14 +59,20 @@ public class AccountsResponseDto {
                                 .addIdentifier(new IbanIdentifier(iban.replace("-", "")))
                                 .build())
                 .addHolderName(holder.getProfile().getEmbossedName())
-                .putInTemporaryStorage(AmericanExpressConstants.StorageKey.STATEMENTS, statementMap)
+                .putInTemporaryStorage(
+                        AmericanExpressConstants.StorageKey.STATEMENTS,
+                        getStatementMap(statementPeriods))
                 .build();
     }
 
-    public List<CreditCardAccount> toSubCreditCardAccount() {
+    public List<CreditCardAccount> toSubCreditCardAccount(StatementPeriodsDto statementPeriods) {
         return supplementaryAccounts.stream()
                 .filter(Objects::nonNull)
-                .map(t -> t.toCreditCardAccount(AmericanExpressUtils.createEmptyAmount()))
+                .map(
+                        t ->
+                                t.toCreditCardAccount(
+                                        AmericanExpressUtils.createEmptyAmount(),
+                                        getStatementMap(statementPeriods)))
                 .collect(Collectors.toList());
     }
 
@@ -83,6 +89,12 @@ public class AccountsResponseDto {
                         balanceDto.getStatementBalanceAmount(),
                         balanceDto.getIsoAlphaCurrencyCode())
                 .negate();
+    }
+
+    private Map<Integer, String> getStatementMap(StatementPeriodsDto statementPeriods) {
+        return statementPeriods.getStatementPeriods().stream()
+                .collect(
+                        Collectors.toMap(StatementDto::getIndex, StatementDto::getEndDateAsString));
     }
 
     public boolean haveSupplementaryAccounts() {
