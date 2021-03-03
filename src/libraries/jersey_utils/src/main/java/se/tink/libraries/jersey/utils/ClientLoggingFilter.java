@@ -1,5 +1,6 @@
 package se.tink.libraries.jersey.utils;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
@@ -8,13 +9,24 @@ import com.sun.jersey.api.client.ClientRequest;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.filter.ClientFilter;
 import java.io.ByteArrayInputStream;
+import java.util.stream.Collectors;
+import javax.ws.rs.core.MultivaluedMap;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.libraries.jersey.utils.masker.ClientSensitiveDataMasker;
+import se.tink.libraries.jersey.utils.masker.WhitelistHeaderMasker;
 
 @Slf4j
 public class ClientLoggingFilter extends ClientFilter {
 
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+
+    private static final ImmutableSet<String> WHITELISTED_HEADER_KEYS = ImmutableSet.of();
+
+    private final WhitelistHeaderMasker whitelistHeaderMasker;
+
+    public ClientLoggingFilter() {
+        this.whitelistHeaderMasker = new WhitelistHeaderMasker(WHITELISTED_HEADER_KEYS);
+    }
 
     @Override
     public ClientResponse handle(ClientRequest request) {
@@ -55,9 +67,9 @@ public class ClientLoggingFilter extends ClientFilter {
         return sb.append("status: ")
                 .append(response.getStatus())
                 .append("\n")
-                //                .append("headers:\n")
-                //                .append(formatHeaders(response.getHeaders()))
-                //                .append("\n")
+                .append("headers:\n")
+                .append(formatHeaders(response.getHeaders()))
+                .append("\n")
                 .append("body:\n")
                 .append(prettify(body));
     }
@@ -69,9 +81,9 @@ public class ClientLoggingFilter extends ClientFilter {
                         .append(" ")
                         .append(request.getURI())
                         .append("\n")
-                        //                        .append("headers:\n")
-                        //                        .append(formatHeaders(request.getHeaders()))
-                        //                        .append("\n")
+                        .append("headers:\n")
+                        .append(formatHeaders(request.getHeaders()))
+                        .append("\n")
                         .append("body:\n");
 
         Object entity = request.getEntity();
@@ -97,5 +109,25 @@ public class ClientLoggingFilter extends ClientFilter {
         } catch (JsonParseException e) {
             return uglyString;
         }
+    }
+
+    private String formatHeaders(MultivaluedMap<String, ?> headers) {
+
+        if (headers == null || headers.isEmpty()) {
+            return null;
+        }
+
+        return "\t"
+                + headers.entrySet().stream()
+                        .map(
+                                e ->
+                                        String.format(
+                                                "%s: %s",
+                                                e.getKey(),
+                                                String.join(
+                                                        ", ",
+                                                        whitelistHeaderMasker.mask(
+                                                                e.getKey(), e.getValue()))))
+                        .collect(Collectors.joining("\n\t"));
     }
 }
