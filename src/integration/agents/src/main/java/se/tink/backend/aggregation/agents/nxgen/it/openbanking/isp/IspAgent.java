@@ -18,7 +18,12 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, TRANSFERS})
-@AgentPisCapability(capabilities = {PisCapability.PIS_SEPA, PisCapability.PIS_SEPA_ICT})
+@AgentPisCapability(
+        capabilities = {
+            PisCapability.PIS_SEPA,
+            PisCapability.PIS_SEPA_ICT,
+            PisCapability.PIS_SEPA_RECURRING_PAYMENTS
+        })
 public final class IspAgent extends CbiGlobeAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
