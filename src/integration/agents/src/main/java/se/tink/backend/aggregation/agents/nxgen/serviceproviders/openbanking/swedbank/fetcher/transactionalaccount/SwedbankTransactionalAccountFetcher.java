@@ -10,6 +10,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.SwedbankConstants.EndUserMessage;
@@ -95,11 +96,25 @@ public class SwedbankTransactionalAccountFetcher implements AccountFetcher<Trans
             if (fetchAccountResponse == null) {
                 fetchAccountResponse = apiClient.fetchAccounts();
             }
+            // Handle the case where the user has single engagement at Swedbank and selects
+            // Savingsbank provider by mistake
+            if (isCrossLogin()) {
+                throw LoginError.NOT_CUSTOMER.exception(
+                        SwedbankConstants.EndUserMessage.WRONG_BANK_SAVINGSBANK.getKey());
+            }
             return fetchAccountResponse;
         } catch (HttpResponseException e) {
             handleFetchAccountError(e);
             throw e;
         }
+    }
+
+    private boolean isCrossLogin() {
+        return !apiClient.isSwedbank()
+                && !fetchAccountResponse.getAccountList().isEmpty()
+                && SwedbankConstants.BANK_IDS
+                        .get(0)
+                        .equals(fetchAccountResponse.getAccountList().get(0).getBankId().trim());
     }
 
     private Optional<ConsentResponse> getDetailedConsent(

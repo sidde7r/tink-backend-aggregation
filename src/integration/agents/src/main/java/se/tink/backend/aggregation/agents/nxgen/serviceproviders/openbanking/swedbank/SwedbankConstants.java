@@ -303,6 +303,7 @@ public final class SwedbankConstants {
                             "e-sparkonto")
                     .build();
 
+    // First one is Swedbank, the rest are Sparbanken bank IDs
     public static final List<String> BANK_IDS =
             ImmutableList.of(
                     "08999", "08191", "08024", "08234", "08050", "08060", "08336", "08129", "08331",

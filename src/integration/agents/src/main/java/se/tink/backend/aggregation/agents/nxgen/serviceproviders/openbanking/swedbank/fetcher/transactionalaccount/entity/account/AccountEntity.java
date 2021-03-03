@@ -36,7 +36,7 @@ public class AccountEntity {
     }
 
     public String getBankId() {
-        return bankId;
+        return Optional.ofNullable(bankId).orElse("");
     }
 
     public String getBban() {

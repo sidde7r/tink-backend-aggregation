@@ -198,12 +198,11 @@ public final class SwedbankApiClient implements SwedbankOpenBankingPaymentApiCli
     }
 
     public AuthenticationResponse authenticateDecoupled(String ssn) {
-
+        // If the provider is swedbank-ob, then default bankId to 08999 to prevent savingsbank
+        // customer to login with single engagement
+        String bankId = isSwedbank() ? SwedbankConstants.BANK_IDS.get(0) : "";
         final AuthorizeRequest authorizeRequest =
-                new AuthorizeRequest(
-                        configuration.getClientId(),
-                        getRedirectUrl(),
-                        credentialsRequest.getProvider().getPayload());
+                new AuthorizeRequest(configuration.getClientId(), getRedirectUrl(), bankId);
 
         return createRequest(SwedbankConstants.Urls.AUTHORIZATION_DECOUPLED)
                 .header(HeaderKeys.PSU_ID, ssn)
@@ -366,6 +365,11 @@ public final class SwedbankApiClient implements SwedbankOpenBankingPaymentApiCli
                 .header(HeaderKeys.TPP_REDIRECT_URI, getRedirectUrl())
                 .header(HeaderKeys.TPP_NOK_REDIRECT_URI, getRedirectUrl())
                 .post(StatementResponse.class);
+    }
+
+    public boolean isSwedbank() {
+        return SwedbankConstants.SWEDBANK_OB_PROVIDER_NAME.equals(
+                credentialsRequest.getCredentials().getProviderName());
     }
 
     @Override
