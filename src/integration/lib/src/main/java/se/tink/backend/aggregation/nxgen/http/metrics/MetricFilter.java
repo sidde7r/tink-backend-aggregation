@@ -33,7 +33,8 @@ public class MetricFilter extends Filter {
                 .label("provider_type", provider.getMetricTypeName())
                 .label("market", provider.getMarket())
                 .label("status", Integer.toString(response.getStatus()))
-                .label("access_type", provider.getAccessType().toString());
+                .label("access_type", provider.getAccessType().toString())
+                .label("provider_display_name", provider.getDisplayName());
     }
 
     @Override
