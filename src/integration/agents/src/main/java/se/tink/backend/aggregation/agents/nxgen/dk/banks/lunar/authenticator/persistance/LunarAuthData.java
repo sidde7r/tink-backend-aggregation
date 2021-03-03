@@ -19,6 +19,6 @@ public class LunarAuthData {
     private AccountsResponse accountsResponse;
 
     public boolean hasCredentials() {
-        return ObjectUtils.allNotNull(getUserId(), getDeviceId(), getAccessToken());
+        return ObjectUtils.allNotNull(userId, deviceId, accessToken);
     }
 }
