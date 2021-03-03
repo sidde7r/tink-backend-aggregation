@@ -54,6 +54,7 @@ public class DemobankConstants {
         public static final String DATE_TO = "to";
         public static final String REDIRECT_URI = "redirect_uri";
         public static final String SCOPE = "scope";
+        public static final String PAYMENT_ID = "payment_id";
 
         public static final String ACCOUNT_ID = "accountId";
         public static final String TICKET_ID = "ticketId";
@@ -92,4 +93,7 @@ public class DemobankConstants {
         public static final String OXFORD_PROD_CALLBACK =
                 "https://api.tink.com/api/v1/credentials/third-party/callback";
     }
+
+    public static final String PAYMENT_CLIENT_TOKEN =
+            "sXVn6Lt9P3AYaK4YwuErsu4qn2AUW3AnSE4rMzcZdLFCM2vHn8JpbUfBUJc3e7VaB4ApgJLvYB2fd7GjwkBxauXbSaRx2w5WXeh3jKgeLFefhvQHeSewMLsDXAAU63Ax3B47EMPa2UiCWE6VmJkXKC4Uv6pfYsLTGqSnw3pR4kkec8d5Y5eJ5NWrCXXZ5gFjhbuBkeZpFvnsBTnHJYbK3XWAZ8jR9Qhbqb2vQkthGZm49U5eHQ5K7emuT9szTEv2";
 }

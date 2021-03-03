@@ -6,6 +6,7 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
 
 import com.google.inject.Inject;
+import java.util.Optional;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.agents.rpc.Provider.AccessType;
@@ -17,6 +18,7 @@ import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
+import se.tink.backend.aggregation.agents.TypedPaymentControllerable;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.ClusterIds;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.ClusterSpecificCallbacks;
@@ -32,6 +34,11 @@ import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.fetche
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.fetcher.transactionalaccount.DemobankIdentityDataFetcher;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.fetcher.transactionalaccount.DemobankTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.filters.AuthenticationErrorFilter;
+import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.DemobankPaymentExecutor;
+import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.apiclient.DemobankPaymentApiClient;
+import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.apiclient.DemobankPaymentRequestFilter;
+import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.authenticator.DemobankPaymentAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.storage.DemobankStorage;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -40,6 +47,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.NemIdCodeAppAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.identitydata.IdentityDataFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
@@ -47,13 +55,15 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.BankServiceInternalErrorFilter;
+import se.tink.libraries.payment.rpc.Payment;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, CREDIT_CARDS, IDENTITY_DATA})
 public final class DemobankAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor,
                 RefreshCreditCardAccountsExecutor,
-                RefreshIdentityDataExecutor {
+                RefreshIdentityDataExecutor,
+                TypedPaymentControllerable {
     protected final DemobankApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final CreditCardRefreshController creditCardRefreshController;
@@ -251,5 +261,21 @@ public final class DemobankAgent extends NextGenerationAgent
     public FetchIdentityDataResponse fetchIdentityData() {
         final IdentityDataFetcher fetcher = new DemobankIdentityDataFetcher(apiClient);
         return new FetchIdentityDataResponse(fetcher.fetchIdentityData());
+    }
+
+    @Override
+    public Optional<PaymentController> getPaymentController(Payment payment) {
+        final DemobankStorage storage = new DemobankStorage();
+        final DemobankPaymentRequestFilter requestFilter =
+                new DemobankPaymentRequestFilter(storage);
+        final DemobankPaymentApiClient paymentApiClient =
+                new DemobankPaymentApiClient(requestFilter, client, callbackUri);
+        final DemobankPaymentAuthenticator authenticator =
+                new DemobankPaymentAuthenticator(
+                        supplementalInformationHelper, strongAuthenticationState, callbackUri);
+        final DemobankPaymentExecutor paymentExecutor =
+                new DemobankPaymentExecutor(paymentApiClient, authenticator, storage);
+
+        return Optional.of(new PaymentController(paymentExecutor, paymentExecutor));
     }
 }
