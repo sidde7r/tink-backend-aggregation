@@ -75,7 +75,7 @@ spec:
       severity: ping
       who: '#sfsa-reporting'
     annotations:
-      summary: 'Agent <{$labels.agent}> has experienced more than 10 unexpected failures for the <{$labels.provider}> provider.'
+      summary: 'Agent <{$labels.agent}> has experienced more than 10 unexpected failures for the <{$labels.provider}> provider within the last minute.'
       description: 'The provider <{$labels.provider}> has exceeded the allowed failure rate for an open banking provider. Please report this to the SFSA.'
   {{- end }}
 {{ end }}
