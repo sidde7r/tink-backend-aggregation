@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.nxgen.core.account.entity;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.google.common.base.Objects;
 import java.util.Optional;
+import org.apache.commons.lang.WordUtils;
 
 public class HolderName {
 
@@ -10,7 +11,8 @@ public class HolderName {
 
     @JsonCreator
     public HolderName(String value) {
-        this.value = value;
+        char[] delimiters = " -'".toCharArray();
+        this.value = WordUtils.capitalizeFully(value, delimiters);
     }
 
     public static String toString(HolderName holderName) {
