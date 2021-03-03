@@ -9,16 +9,13 @@ import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConf
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.enums.MarketCode;
 
-public class AmexObMockServerAgentTest {
+public class AmericanExpressAgentWireMockTest {
 
-    private static final String CONFIGURATION_PATH =
-            "data/agents/openbanking/amex/configuration.yml";
-
-    private static final String WIREMOCK_SERVER_FILEPATH =
-            "data/agents/openbanking/amex/amex_OB_wireMock.aap";
-
-    private static final String CONTRACT_FILE_PATH =
-            "data/agents/openbanking/amex/agent-contract.json";
+    private static final String BASE_PATH =
+            "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/amex/mock/resources/";
+    private static final String CONFIGURATION_PATH = BASE_PATH + "configuration.yml";
+    private static final String WIREMOCK_SERVER_FILEPATH = BASE_PATH + "amex_mock_log.aap";
+    private static final String CONTRACT_FILE_PATH = BASE_PATH + "agent-contract.json";
 
     @Test
     public void testRefresh() throws Exception {

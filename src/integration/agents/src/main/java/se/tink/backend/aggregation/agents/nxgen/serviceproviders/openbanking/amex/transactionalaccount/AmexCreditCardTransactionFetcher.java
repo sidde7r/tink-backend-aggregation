@@ -40,6 +40,7 @@ public class AmexCreditCardTransactionFetcher
     private final TemporaryStorage temporaryStorage;
     private final ObjectMapper objectMapper;
     private final LocalDateTimeSource localDateTimeSource;
+    private final String providerMarket;
 
     @Override
     public TransactionKeyPaginatorResponse<String> getTransactionsFor(
@@ -134,7 +135,7 @@ public class AmexCreditCardTransactionFetcher
                                                 .contains(account.getAccountNumber()))
                         .collect(Collectors.toList());
 
-        return new TransactionResponseFormatted(transactions, endDate);
+        return new TransactionResponseFormatted(transactions, endDate, providerMarket);
     }
 
     /* Get the stored transactions from sessionStorage or return an empty list.

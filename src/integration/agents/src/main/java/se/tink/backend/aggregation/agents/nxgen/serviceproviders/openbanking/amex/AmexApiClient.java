@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmericanExpressConstants.QueryParams;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmericanExpressConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.configuration.AmexConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.dto.AccountsResponseDto;
@@ -192,8 +193,18 @@ public class AmexApiClient {
     }
 
     private URL buildTransactionsUrl(int limit, Optional<LocalDate> fromDate, LocalDate toDate) {
+        URL urlWithBaseQueryParams =
+                Urls.ENDPOINT_TRANSACTIONS
+                        .queryParam(
+                                QueryParams.EXTENDED_DETAILS,
+                                AmericanExpressConstants.QueryValues.MERCHANT)
+                        .queryParam(
+                                AmericanExpressConstants.QueryParams.QUERY_PARAM_LIMIT,
+                                Integer.toString(limit));
+
+        // Pending transactions
         if (fromDate.isPresent()) {
-            return Urls.ENDPOINT_TRANSACTIONS
+            return urlWithBaseQueryParams
                     .queryParam(
                             AmericanExpressConstants.QueryParams.QUERY_PARAM_START_DATE,
                             fromDate.get().format(DateTimeFormatter.ISO_LOCAL_DATE))
@@ -201,19 +212,15 @@ public class AmexApiClient {
                             AmericanExpressConstants.QueryParams.QUERY_PARAM_END_DATE,
                             toDate.format(DateTimeFormatter.ISO_LOCAL_DATE))
                     .queryParam(
-                            AmericanExpressConstants.QueryParams.QUERY_PARAM_LIMIT,
-                            Integer.toString(limit))
-                    .queryParam(
                             AmericanExpressConstants.QueryParams.STATUS,
                             AmericanExpressConstants.QueryValues.PENDING);
         }
-        return Urls.ENDPOINT_TRANSACTIONS
-                .queryParam(
-                        AmericanExpressConstants.QueryParams.QUERY_PARAM_STATEMENT_END_DATE,
-                        toDate.format(DateTimeFormatter.ISO_LOCAL_DATE))
-                .queryParam(
-                        AmericanExpressConstants.QueryParams.QUERY_PARAM_LIMIT,
-                        Integer.toString(limit));
+
+        // Posted transactions, from documentation "if status is not specified, this API returns
+        // posted transactions by default."
+        return urlWithBaseQueryParams.queryParam(
+                AmericanExpressConstants.QueryParams.QUERY_PARAM_STATEMENT_END_DATE,
+                toDate.format(DateTimeFormatter.ISO_LOCAL_DATE));
     }
 
     /*
@@ -227,7 +234,6 @@ public class AmexApiClient {
 
         url = buildTransactionsUrl(limit, fromDate, toDate);
 
-        // fetching posted transactions based on statement periods
         transactions = finalizeAndSendRequest(url, hmacToken);
 
         // only store transactions from statement periods and used for account-specific mapping.

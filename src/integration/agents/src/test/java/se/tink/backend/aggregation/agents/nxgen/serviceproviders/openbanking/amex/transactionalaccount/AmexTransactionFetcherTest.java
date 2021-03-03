@@ -68,7 +68,8 @@ public class AmexTransactionFetcherTest {
                         hmacAccountIdStorageMock,
                         temporaryStorage,
                         objectMapper,
-                        localDateTimeSource);
+                        localDateTimeSource,
+                        "");
     }
 
     @Ignore

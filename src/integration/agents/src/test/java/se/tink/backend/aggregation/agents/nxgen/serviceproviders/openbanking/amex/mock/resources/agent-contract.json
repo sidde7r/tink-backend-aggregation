@@ -1,0 +1,1931 @@
+{
+  "accounts" : [ {
+    "accountNumber" : "XXX-61001",
+    "accountExclusion" : "NONE",
+    "exactAvailableCredit" : {
+      "currencyCode" : "SEK",
+      "exactValue" : 0,
+      "scale" : 0,
+      "unscaledValue" : 0,
+      "doubleValue" : 0.0
+    },
+    "exactBalance" : {
+      "currencyCode" : "SEK",
+      "exactValue" : -3864.98,
+      "scale" : 2,
+      "unscaledValue" : -386498,
+      "doubleValue" : -3864.98
+    },
+    "currencyCode" : "SEK",
+    "bankId" : "XXX61001",
+    "excluded" : false,
+    "favored" : false,
+    "name" : "SAS Amex Premium - 61001",
+    "ownership" : 1.0,
+    "type" : "CREDIT_CARD",
+    "userModifiedExcluded" : false,
+    "userModifiedName" : false,
+    "userModifiedType" : false,
+    "identifiers" : "[]",
+    "closed" : false,
+    "holderName" : "Holder Name Last Name",
+    "accountHolder" : {
+      "accountId" : null,
+      "type" : "PERSONAL",
+      "identities" : [ {
+        "name" : "Holder Name Last Name",
+        "role" : "HOLDER"
+      } ]
+    },
+    "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
+    "balances" : [ ],
+    "availableCredit" : 0.0,
+    "balance" : -3864.98
+  } ],
+  "transactions" : [ {
+    "amount" : -176.87,
+    "date" : 1612868400000,
+    "description" : "WILLYS STOCKHOLM FRIDHEMSPLAN",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : true,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "P0080030720210209100153"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-02-09",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBIT",
+    "merchantName" : "NIGEL'S BAGEL EMPORIUM",
+    "transactionReference" : "P0080030720210209100153",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -75.0,
+    "date" : 1612695600000,
+    "description" : "IZ *SYSTRARNA ANDERSSON STOCKHOLM",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "AT210390045000010043503---0005---20210207"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-02-07",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-02-08",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBIT",
+    "merchantName" : "NIGEL'S BAGEL EMPORIUM",
+    "transactionReference" : "AT210390045000010043503",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -77.0,
+    "date" : 1612609200000,
+    "description" : "112 FABRIQUE FRIDHEMSPL STOCKHOLM",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "AT210380037000010056667---0005---20210206"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-02-06",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-02-07",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBIT",
+    "merchantName" : "NIGEL'S BAGEL EMPORIUM",
+    "transactionReference" : "AT210380037000010056667",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -175.0,
+    "date" : 1612609200000,
+    "description" : "AHLENS AB STOCKHOLM",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "AT210380037000010053954---0005---20210206"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-02-06",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-02-07",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBIT",
+    "merchantName" : "NIGEL'S BAGEL EMPORIUM",
+    "transactionReference" : "AT210380037000010053954",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -213.09,
+    "date" : 1612609200000,
+    "description" : "ICA SUPERMARKET FRIDHEM STOCKHOLM",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "AT210380037000010054667---0005---20210206"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-02-06",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-02-07",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBIT",
+    "merchantName" : "NIGEL'S BAGEL EMPORIUM",
+    "transactionReference" : "AT210380037000010054667",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -299.0,
+    "date" : 1612609200000,
+    "description" : "IZ *PLAGG STOCKHOLM STOCKHOLM",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "AT210380037000010061009---0005---20210206"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-02-06",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-02-07",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBIT",
+    "merchantName" : "NIGEL'S BAGEL EMPORIUM",
+    "transactionReference" : "AT210380037000010061009",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -159.0,
+    "date" : 1612609200000,
+    "description" : "MELLQVIST CAFFE STOCKHOLM",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "AT210380037000010050765---0005---20210206"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-02-06",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-02-07",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBIT",
+    "merchantName" : "NIGEL'S BAGEL EMPORIUM",
+    "transactionReference" : "AT210380037000010050765",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -237.1,
+    "date" : 1612522800000,
+    "description" : "HEMKÖP STOCKHOLM MATPR STOCKHOLM",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "AT210370040000010054412---0005---20210205"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-02-05",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-02-06",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBIT",
+    "merchantName" : "NIGEL'S BAGEL EMPORIUM",
+    "transactionReference" : "AT210370040000010054412",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -125.0,
+    "date" : 1612436400000,
+    "description" : "HAWAII POKÉ STOCKHOLM A HANINGE",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "AT210360039000010053093---0005---20210204"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-02-04",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-02-05",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBIT",
+    "merchantName" : "NIGEL'S BAGEL EMPORIUM",
+    "transactionReference" : "AT210360039000010053093",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -143.44,
+    "date" : 1612436400000,
+    "description" : "MAXI ICA STORMARKNAD LI STOCKHOLM",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "AT210360039000010047013---0005---20210204"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-02-04",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-02-05",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBIT",
+    "merchantName" : "NIGEL'S BAGEL EMPORIUM",
+    "transactionReference" : "AT210360039000010047013",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -64.72,
+    "date" : 1612350000000,
+    "description" : "ICA SUPERMARKET FRIDHEM STOCKHOLM",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "AT210350045000010049845---0005---20210203"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-02-03",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-02-04",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBIT",
+    "merchantName" : "NIGEL'S BAGEL EMPORIUM",
+    "transactionReference" : "AT210350045000010049845",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -195.0,
+    "date" : 1612350000000,
+    "description" : "UD SVEAVÄGEN R STOCKHOLM",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "AT210350045000010045750---0005---20210203"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-02-03",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-02-04",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBIT",
+    "merchantName" : "NIGEL'S BAGEL EMPORIUM",
+    "transactionReference" : "AT210350045000010045750",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -59.0,
+    "date" : 1612263600000,
+    "description" : "GRANIT ST.ERIKSGATAN STOCKHOLM",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "AT210340043000010047819---0005---20210202"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-02-02",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-02-03",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBIT",
+    "merchantName" : "NIGEL'S BAGEL EMPORIUM",
+    "transactionReference" : "AT210340043000010047819",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -64.0,
+    "date" : 1612263600000,
+    "description" : "KLARNA*APOTEA.SE STOCKHOLM",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "AT210340043000010046656---0005---20210202"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-02-02",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-02-03",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBIT",
+    "merchantName" : "NIGEL'S BAGEL EMPORIUM",
+    "transactionReference" : "AT210340043000010046656",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -206.25,
+    "date" : 1612263600000,
+    "description" : "KLARNA*KRONANSAPOTEK.SE STOCKHOLM",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "AT210340043000010046488---0005---20210202"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-02-02",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-02-03",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBIT",
+    "merchantName" : "NIGEL'S BAGEL EMPORIUM",
+    "transactionReference" : "AT210340043000010046488",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -258.0,
+    "date" : 1612263600000,
+    "description" : "SYSTEMBOLAGET VASAGATA STOCKHOLM",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "AT210340043000010047558---0005---20210202"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-02-02",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-02-03",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBIT",
+    "merchantName" : "NIGEL'S BAGEL EMPORIUM",
+    "transactionReference" : "AT210340043000010047558",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -100.0,
+    "date" : 1612263600000,
+    "description" : "PERIODENS DEL AV ÅRSAVGIFT FÖR KONTOT",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "10000000010802999865770---0927---20210202"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-02-02",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-02-02",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBIT",
+    "merchantName" : "NIGEL'S BAGEL EMPORIUM",
+    "transactionReference" : "10000000010802999865770",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -27.95,
+    "date" : 1612177200000,
+    "description" : "COOP DAGSLIVS STOCKHOLM",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "AT210330056000010049628---0005---20210201"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-02-01",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-02-02",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBIT",
+    "merchantName" : "NIGEL'S BAGEL EMPORIUM",
+    "transactionReference" : "AT210330056000010049628",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -294.0,
+    "date" : 1612177200000,
+    "description" : "SYSTEMBOLAGET AB STOCKHOLM",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "AT210330056000010047037---0005---20210201"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-02-01",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-02-02",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBIT",
+    "merchantName" : "NIGEL'S BAGEL EMPORIUM",
+    "transactionReference" : "AT210330056000010047037",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -47.8,
+    "date" : 1612004400000,
+    "description" : "COOP DAGSLIVS STOCKHOLM",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "AT210310026000010057444---0005---20210130"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-01-30",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-01-31",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBIT",
+    "merchantName" : "NIGEL'S BAGEL EMPORIUM",
+    "transactionReference" : "AT210310026000010057444",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -63.6,
+    "date" : 1612004400000,
+    "description" : "ICA SUPERMARKET FRIDHEM STOCKHOLM",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "AT210310026000010058146---0005---20210130"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-01-30",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-01-31",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBIT",
+    "merchantName" : "NIGEL'S BAGEL EMPORIUM",
+    "transactionReference" : "AT210310026000010058146",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -35.0,
+    "date" : 1612004400000,
+    "description" : "NON SOLO BAR RORSTRAND STOCKHOLM",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "AT210310026000010061799---0005---20210130"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-01-30",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-01-31",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBIT",
+    "merchantName" : "NIGEL'S BAGEL EMPORIUM",
+    "transactionReference" : "AT210310026000010061799",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -99.0,
+    "date" : 1612004400000,
+    "description" : "SPOTIFYSE STOCKHOLM",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "AT210310026000010054739---0005---20210130"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-01-30",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-01-31",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBIT",
+    "merchantName" : "NIGEL'S BAGEL EMPORIUM",
+    "transactionReference" : "AT210310026000010054739",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -148.0,
+    "date" : 1611918000000,
+    "description" : "AFOUND.COM*AFOUND*SNOEO STOCKHOLM",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "AT210290043000010049771---0005---20210129"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-01-29",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-01-29",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBIT",
+    "merchantName" : "NIGEL'S BAGEL EMPORIUM",
+    "transactionReference" : "AT210290043000010049771",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -169.27,
+    "date" : 1611918000000,
+    "description" : "COOP DAGSLIVS STOCKHOLM",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "AT210300074000010006083---0005---20210129"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-01-29",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-01-30",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBIT",
+    "merchantName" : "NIGEL'S BAGEL EMPORIUM",
+    "transactionReference" : "AT210300074000010006083",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -109.0,
+    "date" : 1611918000000,
+    "description" : "SEN STREET KITCHEN K8 STOCKHOLM",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "AT210300029000010056220---0005---20210129"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-01-29",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-01-30",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBIT",
+    "merchantName" : "NIGEL'S BAGEL EMPORIUM",
+    "transactionReference" : "AT210300029000010056220",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -49.0,
+    "date" : 1611831600000,
+    "description" : "ICA SUPERMARKET FRIDHEM STOCKHOLM",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "AT210290043000010047920---0005---20210128"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-01-28",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-01-29",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBIT",
+    "merchantName" : "NIGEL'S BAGEL EMPORIUM",
+    "transactionReference" : "AT210290043000010047920",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : 6218.0,
+    "date" : 1611745200000,
+    "description" : "BETALNING MOTTAGEN, TACK",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "AT210270073000010020818---0020---20210127"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-01-27",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-01-27",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "CREDIT",
+    "merchantName" : "NIGEL'S BAGEL EMPORIUM",
+    "transactionReference" : "AT210270073000010020818",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -318.1,
+    "date" : 1611658800000,
+    "description" : "AMAZONRETAIL*MV21078J4 WWW.AMAZON.SE",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "AT210270046000010047673---0005---20210126"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-01-26",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-01-27",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBIT",
+    "merchantName" : "NIGEL'S BAGEL EMPORIUM",
+    "transactionReference" : "AT210270046000010047673",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -132.67,
+    "date" : 1611658800000,
+    "description" : "HEMKÖP STOCKHOLM MATPR STOCKHOLM",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "AT210270046000010048309---0005---20210126"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-01-26",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-01-27",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBIT",
+    "merchantName" : "NIGEL'S BAGEL EMPORIUM",
+    "transactionReference" : "AT210270046000010048309",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -35.0,
+    "date" : 1611658800000,
+    "description" : "ICA SUPERMARKET FRIDHEM STOCKHOLM",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "AT210270046000010046788---0005---20210126"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-01-26",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-01-27",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBIT",
+    "merchantName" : "NIGEL'S BAGEL EMPORIUM",
+    "transactionReference" : "AT210270046000010046788",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -258.0,
+    "date" : 1611658800000,
+    "description" : "SYSTEMBOLAGET RÅLAMBSV STOCKHOLM",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "AT210270046000010048109---0005---20210126"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-01-26",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-01-27",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBIT",
+    "merchantName" : "NIGEL'S BAGEL EMPORIUM",
+    "transactionReference" : "AT210270046000010048109",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -228.88,
+    "date" : 1611486000000,
+    "description" : "COOP DAGSLIVS STOCKHOLM",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "AT210250043000010049481---0005---20210124"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-01-24",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-01-25",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBIT",
+    "merchantName" : "NIGEL'S BAGEL EMPORIUM",
+    "transactionReference" : "AT210250043000010049481",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -122.0,
+    "date" : 1611486000000,
+    "description" : "IZ *IL CAFFE HUMLEBORGE STOCKHOLM",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "AT210250043000010045707---0005---20210124"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-01-24",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-01-25",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBIT",
+    "merchantName" : "NIGEL'S BAGEL EMPORIUM",
+    "transactionReference" : "AT210250043000010045707",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -63.0,
+    "date" : 1611399600000,
+    "description" : "NK KONFEKTYR.BRA.D STOCKHOLM",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "AT210240034000010057896---0005---20210123"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-01-23",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-01-24",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBIT",
+    "merchantName" : "NIGEL'S BAGEL EMPORIUM",
+    "transactionReference" : "AT210240034000010057896",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -119.0,
+    "date" : 1611313200000,
+    "description" : "KLARNA*KRONANSAPOTEK.SE STOCKHOLM",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "AT210230037000010056702---0005---20210122"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-01-22",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-01-23",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBIT",
+    "merchantName" : "NIGEL'S BAGEL EMPORIUM",
+    "transactionReference" : "AT210230037000010056702",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -198.63,
+    "date" : 1611313200000,
+    "description" : "MAXI ICA STORMARKNAD LI STOCKHOLM",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "AT210230037000010052462---0005---20210122"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-01-22",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-01-23",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBIT",
+    "merchantName" : "NIGEL'S BAGEL EMPORIUM",
+    "transactionReference" : "AT210230037000010052462",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -190.0,
+    "date" : 1611313200000,
+    "description" : "SYSTEMBOLAGET LINDHAGE STOCKHOLM",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "AT210230037000010054043---0005---20210122"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-01-22",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-01-23",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBIT",
+    "merchantName" : "NIGEL'S BAGEL EMPORIUM",
+    "transactionReference" : "AT210230037000010054043",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -575.0,
+    "date" : 1611226800000,
+    "description" : "UD SVEAVÄGEN R STOCKHOLM",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "AT210220057000010050897---0005---20210121"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-01-21",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-01-22",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBIT",
+    "merchantName" : "NIGEL'S BAGEL EMPORIUM",
+    "transactionReference" : "AT210220057000010050897",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -488.0,
+    "date" : 1611140400000,
+    "description" : "CREATIVE HEADZ STOCKHOLM",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "AT210210046000010044896---0005---20210120"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-01-20",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-01-21",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBIT",
+    "merchantName" : "NIGEL'S BAGEL EMPORIUM",
+    "transactionReference" : "AT210210046000010044896",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -99.0,
+    "date" : 1611140400000,
+    "description" : "H & M HENNES & MAURITZ STOCKHOLM",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "AT210200042000010048392---0005---20210120"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-01-20",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-01-20",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBIT",
+    "merchantName" : "NIGEL'S BAGEL EMPORIUM",
+    "transactionReference" : "AT210200042000010048392",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -167.0,
+    "date" : 1611140400000,
+    "description" : "NORDIC LIGHT HO STOCKHOLM",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "AT210210046000010044300---0005---20210120"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-01-20",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-01-21",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBIT",
+    "merchantName" : "NIGEL'S BAGEL EMPORIUM",
+    "transactionReference" : "AT210210046000010044300",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -81.0,
+    "date" : 1610881200000,
+    "description" : "ESPRESSO H 327 117 34 STOCKH",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "AT210180047000010044965---0005---20210117"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-01-17",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-01-18",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBIT",
+    "merchantName" : "NIGEL'S BAGEL EMPORIUM",
+    "transactionReference" : "AT210180047000010044965",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -146.8,
+    "date" : 1610881200000,
+    "description" : "HEMKÖP STOCKHOLM MATPR STOCKHOLM",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "AT210180047000010042191---0005---20210117"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-01-17",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-01-18",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBIT",
+    "merchantName" : "NIGEL'S BAGEL EMPORIUM",
+    "transactionReference" : "AT210180047000010042191",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -357.99,
+    "date" : 1610881200000,
+    "description" : "WILLYS FRIDHEMSPLAN ST STOCKHOLM",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "AT210180047000010043198---0005---20210117"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-01-17",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-01-18",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBIT",
+    "merchantName" : "NIGEL'S BAGEL EMPORIUM",
+    "transactionReference" : "AT210180047000010043198",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -70.0,
+    "date" : 1610794800000,
+    "description" : "IZ *SYSTRARNA ANDERSSON STOCKHOLM",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "AT210170030000010050671---0005---20210116"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-01-16",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-01-17",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBIT",
+    "merchantName" : "NIGEL'S BAGEL EMPORIUM",
+    "transactionReference" : "AT210170030000010050671",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -122.0,
+    "date" : 1610794800000,
+    "description" : "POMPADOUR STOCKHOLM",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "AT210170030000010052099---0005---20210116"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-01-16",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-01-17",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBIT",
+    "merchantName" : "NIGEL'S BAGEL EMPORIUM",
+    "transactionReference" : "AT210170030000010052099",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -384.0,
+    "date" : 1610362800000,
+    "description" : "KLARNA*APOTEA.SE STOCKHOLM",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "AT210120048000010042661---0005---20210111"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-01-11",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-01-12",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBIT",
+    "merchantName" : "NIGEL'S BAGEL EMPORIUM",
+    "transactionReference" : "AT210120048000010042661",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -20.8,
+    "date" : 1610362800000,
+    "description" : "WILLYS FRIDHEMSPLAN ST STOCKHOLM",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "AT210120048000010042334---0005---20210111"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-01-11",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-01-12",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBIT",
+    "merchantName" : "NIGEL'S BAGEL EMPORIUM",
+    "transactionReference" : "AT210120048000010042334",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -35.0,
+    "date" : 1610276400000,
+    "description" : "MAXI ICA STORMARKNAD LI STOCKHOLM",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "AT210110047000010041416---0005---20210110"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-01-10",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-01-11",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBIT",
+    "merchantName" : "NIGEL'S BAGEL EMPORIUM",
+    "transactionReference" : "AT210110047000010041416",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -81.9,
+    "date" : 1610190000000,
+    "description" : "KLIPPET DAGLIVS STOCKHOLM",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "AT210100032000010051599---0005---20210109"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-01-09",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-01-10",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBIT",
+    "merchantName" : "NIGEL'S BAGEL EMPORIUM",
+    "transactionReference" : "AT210100032000010051599",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -193.93,
+    "date" : 1610190000000,
+    "description" : "WINJAS GROSSHAN STOCKHOLM",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "AT210100032000010047828---0005---20210109"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-01-09",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-01-10",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBIT",
+    "merchantName" : "NIGEL'S BAGEL EMPORIUM",
+    "transactionReference" : "AT210100032000010047828",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -47.8,
+    "date" : 1610103600000,
+    "description" : "WILLYS FRIDHEMSPLAN ST STOCKHOLM",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "AT210090040000010050997---0005---20210108"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-01-08",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-01-09",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBIT",
+    "merchantName" : "NIGEL'S BAGEL EMPORIUM",
+    "transactionReference" : "AT210090040000010050997",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -119.0,
+    "date" : 1610017200000,
+    "description" : "KAFERANG STOCKHOLM",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "AT210080043000010048257---0005---20210107"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-01-07",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-01-08",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBIT",
+    "merchantName" : "NIGEL'S BAGEL EMPORIUM",
+    "transactionReference" : "AT210080043000010048257",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -21.9,
+    "date" : 1610017200000,
+    "description" : "LIDL 269 / FRIDHEMSPLAN STOCKHOLM",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "AT210080043000010043144---0005---20210107"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-01-07",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-01-08",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBIT",
+    "merchantName" : "NIGEL'S BAGEL EMPORIUM",
+    "transactionReference" : "AT210080043000010043144",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -54.9,
+    "date" : 1609930800000,
+    "description" : "HEMKÖP CITY STOCKHOLM STOCKHOLM",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "AT210070040000010047247---0005---20210106"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-01-06",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-01-07",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBIT",
+    "merchantName" : "NIGEL'S BAGEL EMPORIUM",
+    "transactionReference" : "AT210070040000010047247",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -137.2,
+    "date" : 1609844400000,
+    "description" : "KLARNA*APOHEM.SE STOCKHOLM",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "AT210060045000010047326---0005---20210105"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-01-05",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-01-06",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBIT",
+    "merchantName" : "NIGEL'S BAGEL EMPORIUM",
+    "transactionReference" : "AT210060045000010047326",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -921.0,
+    "date" : 1609844400000,
+    "description" : "SYSTEMBOLAGET AB STOCKHOLM",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "AT210060045000010045395---0005---20210105"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-01-05",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-01-06",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBIT",
+    "merchantName" : "NIGEL'S BAGEL EMPORIUM",
+    "transactionReference" : "AT210060045000010045395",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -76.3,
+    "date" : 1609758000000,
+    "description" : "WILLYS FRIDHEMSPLAN ST STOCKHOLM",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "AT210050040000010048162---0005---20210104"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-01-04",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-01-05",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBIT",
+    "merchantName" : "NIGEL'S BAGEL EMPORIUM",
+    "transactionReference" : "AT210050040000010048162",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -161.19,
+    "date" : 1609671600000,
+    "description" : "WILLYS FRIDHEMSPLAN ST STOCKHOLM",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "AT210040049000010041057---0005---20210103"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-01-03",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-01-04",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBIT",
+    "merchantName" : "NIGEL'S BAGEL EMPORIUM",
+    "transactionReference" : "AT210040049000010041057",
+    "providerMarket" : "SE"
+  }, {
+    "amount" : -5.0,
+    "date" : 1609585200000,
+    "description" : "HEMKÖP STOCKHOLM MATPR STOCKHOLM",
+    "internalPayload" : { },
+    "originalAmount" : 0.0,
+    "payload" : { },
+    "pending" : false,
+    "timestamp" : 0,
+    "type" : "DEFAULT",
+    "upcoming" : false,
+    "externalSystemIds" : {
+      "PROVIDER_GIVEN_TRANSACTION_ID" : "AT210030031000010042618---0005---20210102"
+    },
+    "transactionDates" : [ {
+      "type" : "VALUE_DATE",
+      "value" : {
+        "date" : "2021-01-02",
+        "instant" : null
+      }
+    }, {
+      "type" : "BOOKING_DATE",
+      "value" : {
+        "date" : "2021-01-03",
+        "instant" : null
+      }
+    } ],
+    "proprietaryFinancialInstitutionType" : "DEBIT",
+    "merchantName" : "NIGEL'S BAGEL EMPORIUM",
+    "transactionReference" : "AT210030031000010042618",
+    "providerMarket" : "SE"
+  } ]
+}
