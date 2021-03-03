@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.in
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.google.common.base.Strings;
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -12,7 +13,6 @@ import org.assertj.core.util.VisibleForTesting;
 import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class TransactionEntity {
@@ -71,7 +71,7 @@ public class TransactionEntity {
 
         return Transaction.builder()
                 .setPending(isPending)
-                .setDescription(getDescription(transactionAmount.toAmount()))
+                .setDescription(getDescription())
                 .setAmount(transactionAmount.toAmount())
                 .setDate(date)
                 // IMPORTANT! Do not change the transaction payload without consulting the
@@ -104,9 +104,9 @@ public class TransactionEntity {
                 .orElse("");
     }
 
-    public String getDescription(ExactCurrencyAmount transactionAmount) {
+    public String getDescription() {
 
-        if (transactionAmount.getExactValue().intValue() > 0) {
+        if (transactionAmount.toAmount().getExactValue().compareTo(BigDecimal.ZERO) > 0) {
             if (StringUtils.isNotEmpty(debtorName)) {
                 return debtorName;
             }

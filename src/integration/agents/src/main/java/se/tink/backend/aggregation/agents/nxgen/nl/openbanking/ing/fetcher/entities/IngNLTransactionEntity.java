@@ -5,7 +5,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ing
 public class IngNLTransactionEntity extends TransactionEntity {
 
     @Override
-    public String getRemittanceInformationUnstructured() {
-        return super.getRemittanceInformationUnstructured();
+    public String getDescription() {
+        return getRemittanceInformationUnstructured();
     }
 }
