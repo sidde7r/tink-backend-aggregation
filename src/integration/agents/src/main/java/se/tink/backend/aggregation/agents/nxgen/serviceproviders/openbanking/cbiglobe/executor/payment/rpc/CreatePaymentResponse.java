@@ -33,7 +33,9 @@ public class CreatePaymentResponse {
         tinkPayment.setStatus(
                 CbiGlobePaymentStatus.mapToTinkPaymentStatus(
                         CbiGlobePaymentStatus.fromString(transactionStatus)));
-        tinkPayment.setUniqueId(paymentId); // bank Unique payment Id
+        if (tinkPayment.getUniqueId() == null) {
+            tinkPayment.setUniqueId(paymentId); // bank Unique payment Id
+        }
         return new PaymentResponse(tinkPayment);
     }
 }
