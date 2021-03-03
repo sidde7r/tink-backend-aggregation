@@ -28,6 +28,7 @@ public class SamlinkTransactionalAccountFetcher
 
         return apiClient.getAccounts().stream()
                 .map(AccountEntity::toTransactionalAccount)
+                .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toList());
     }
