@@ -59,7 +59,7 @@ public class AccountTransactionsFetcherTest {
                                                 "ES0201821048600000000000"
                                                         .toUpperCase(Locale.ENGLISH))
                                         .withAccountNumber("ES02 0182 1048 6000 0000 0000")
-                                        .withAccountName("CUENTAS PERSONALES")
+                                        .withAccountName("Cuentas Personales")
                                         .addIdentifier(
                                                 AccountIdentifier.create(
                                                         Type.IBAN, "ES0201821048600000000000"))
@@ -132,9 +132,9 @@ public class AccountTransactionsFetcherTest {
 
         List<Party> parties = accountEntity.getParties(any());
 
-        Assert.assertEquals("OWNER", parties.get(0).getName());
+        Assert.assertEquals("Owner", parties.get(0).getName());
         Assert.assertEquals(Role.HOLDER, parties.get(0).getRole());
-        Assert.assertEquals("AUTH", parties.get(1).getName());
+        Assert.assertEquals("Auth", parties.get(1).getName());
         Assert.assertEquals(Role.AUTHORIZED_USER, parties.get(1).getRole());
     }
 
@@ -143,7 +143,7 @@ public class AccountTransactionsFetcherTest {
         when(accountEntity.toTinkTransactionalAccount(any())).thenReturn(transactionalAccount);
 
         Assert.assertEquals(
-                "OWNER",
+                "Owner",
                 accountEntity
                         .toTinkTransactionalAccount(any())
                         .get()

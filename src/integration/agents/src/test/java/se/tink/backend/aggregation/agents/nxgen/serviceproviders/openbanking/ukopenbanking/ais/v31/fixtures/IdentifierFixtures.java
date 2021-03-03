@@ -6,7 +6,7 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 public class IdentifierFixtures {
 
     private static final String PAN_IDENTIFIER =
-            "{ \"Identification\": \"************5004\", \"Name\": \"MR MYSZO-JELEN\", \"SchemeName\": \"UK.OBIE.PAN\" }";
+            "{ \"Identification\": \"************5004\", \"Name\": \"Mr Myszo-Jelen\", \"SchemeName\": \"UK.OBIE.PAN\" }";
     private static final String SORT_CODE_IDENTIFIER =
             "{\"SchemeName\":\"UK.OBIE.SortCodeAccountNumber\",\"Identification\":\"07111111111111\",\"Name\":\"Myszon Jelen\"}";
     private static final String IBAN_IDENTIFIER =

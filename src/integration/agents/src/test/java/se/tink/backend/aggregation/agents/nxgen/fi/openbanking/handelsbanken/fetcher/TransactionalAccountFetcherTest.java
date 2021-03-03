@@ -57,7 +57,7 @@ public class TransactionalAccountFetcherTest {
         assertThat(account).isCheckingAccount();
         assertThat(account).hasAccountNumber("FI1234123412341234");
         assertThat(account).hasBalance(new ExactCurrencyAmount(BigDecimal.valueOf(6964.34), "EUR"));
-        assertThat(account).hasHolder("DUMMY USER");
+        assertThat(account).hasHolder("Dummy User");
     }
 
     @Test

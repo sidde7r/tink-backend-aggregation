@@ -67,12 +67,12 @@
     "userModifiedType" : false,
     "identifiers" : "[\"no://60111473857\",\"iban://NDEANOKK/NO9386011117947\"]",
     "closed" : false,
-    "holderName" : "ASDF ASDF ASDF",
+    "holderName" : "Asdf Asdf Asdf",
     "accountHolder" : {
       "accountId" : null,
       "type" : "PERSONAL",
       "identities" : [ {
-        "name" : "ASDF ASDF ASDF",
+        "name" : "Asdf Asdf Asdf",
         "role": "HOLDER"
       } ]
     },

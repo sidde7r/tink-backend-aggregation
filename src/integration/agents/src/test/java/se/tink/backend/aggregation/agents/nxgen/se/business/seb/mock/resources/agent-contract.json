@@ -5,24 +5,24 @@
         "exactAvailableCredit" : {
             "currencyCode" : "SEK",
             "doubleValue" : 132989.18,
+            "exactValue" : 132989.18,
             "scale" : 2,
-            "unscaledValue" : 13298918,
-            "exactValue" : 132989.18
+            "unscaledValue" : 13298918
         },
         "exactBalance" : {
             "currencyCode" : "SEK",
             "doubleValue" : -66867.82,
+            "exactValue" : -66867.82,
             "scale" : 2,
-            "unscaledValue" : -6686782,
-            "exactValue" : -66867.82
+            "unscaledValue" : -6686782
         },
         "currencyCode" : "SEK",
         "creditLimit" : {
             "currencyCode" : "SEK",
             "doubleValue" : 100000.0,
+            "exactValue" : 100000.0,
             "scale" : 2,
-            "unscaledValue" : 10000000,
-            "exactValue" : 100000.0
+            "unscaledValue" : 10000000
         },
         "bankId" : "50002222222",
         "excluded" : false,
@@ -35,12 +35,12 @@
         "userModifiedType" : false,
         "identifiers" : "[\"iban://SE4750000000050002222222\",\"se://50002222222\"]",
         "closed" : false,
-        "holderName" : "Redovisning i Hovås AB",
+        "holderName" : "Redovisning I Hovås Ab",
         "accountHolder" : {
             "accountId" : null,
             "type" : "BUSINESS",
             "identities" : [ {
-                "name" : "Redovisning i Hovås AB",
+                "name" : "Redovisning I Hovås Ab",
                 "role" : "HOLDER"
             } ]
         },

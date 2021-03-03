@@ -25,8 +25,8 @@ public class AccountsMapperTest {
     private static final BigDecimal GIVEN_AMOUNT = ONE;
     private static final String GIVEN_ACCOUNT_ID = "account id";
     private static final String GIVEN_ACCOUNT_NAME = "account name";
-    private static final String GIVEN_HOLDER_NAME = "holder name";
-    private static final String GIVEN_HOLDER_SURNAME = "holder surname";
+    private static final String GIVEN_HOLDER_NAME = "Holder Name";
+    private static final String GIVEN_HOLDER_SURNAME = "Holder Surname";
 
     private AccountsMapper tested = new AccountsMapper();
 

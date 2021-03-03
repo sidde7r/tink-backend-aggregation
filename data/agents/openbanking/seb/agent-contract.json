@@ -22,13 +22,13 @@
       "userModifiedType": false,
       "identifiers": "[]",
       "closed": false,
-      "holderName": "FirstName LastName",
+      "holderName": "Firstname Lastname",
       "accountHolder": {
         "accountId": null,
         "type": "PERSONAL",
         "identities": [
           {
-            "name": "FirstName LastName",
+            "name": "Firstname Lastname",
             "role": "HOLDER"
           }
         ]

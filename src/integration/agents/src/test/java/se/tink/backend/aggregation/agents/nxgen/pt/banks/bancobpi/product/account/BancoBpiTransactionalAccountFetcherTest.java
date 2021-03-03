@@ -32,7 +32,7 @@ public class BancoBpiTransactionalAccountFetcherTest {
                 Mockito.mock(TransactionalAccountBaseInfo.class);
         Mockito.when(accountBaseInfo.getInternalAccountId()).thenReturn("internalAccountId");
         Mockito.when(accountBaseInfo.getCurrency()).thenReturn("EUR");
-        Mockito.when(accountBaseInfo.getAccountName()).thenReturn("accountName");
+        Mockito.when(accountBaseInfo.getAccountName()).thenReturn("Accountname");
         Mockito.when(accountBaseInfo.getIban()).thenReturn("PT50000000000000000000");
         accountsInfo.getAccountInfo().add(accountBaseInfo);
         Mockito.when(entityManager.getAccountsContext()).thenReturn(accountsInfo);

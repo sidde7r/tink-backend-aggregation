@@ -21,12 +21,12 @@
     "userModifiedType" : false,
     "identifiers" : "[\"iban://ES9820958631145727874921\"]",
     "closed" : false,
-    "holderName" : "**MisterM**",
+    "holderName" : "**misterm**",
     "accountHolder" : {
       "accountId" : null,
       "type" : "PERSONAL",
       "identities" : [ {
-        "name" : "**MisterM**",
+        "name" : "**misterm**",
         "role" : "HOLDER"
       } ]
     },
@@ -61,7 +61,7 @@
       "accountId" : null,
       "type" : "PERSONAL",
       "identities" : [ {
-        "name" : "JUAN ANTONIO **MisterY** SALAFRANCA",
+        "name" : "Juan Antonio **mistery** Salafranca",
         "role" : "AUTHORIZED_USER"
       } ]
     },

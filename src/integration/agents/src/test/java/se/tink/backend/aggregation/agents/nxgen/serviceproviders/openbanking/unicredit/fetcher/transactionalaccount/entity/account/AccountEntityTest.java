@@ -39,7 +39,7 @@ public class AccountEntityTest {
                 .isEqualTo(new ExactCurrencyAmount(new BigDecimal("123.45"), "EUR"));
         assertThat(result.get().getAccountFlags()).contains(AccountFlag.PSD2_PAYMENT_ACCOUNT);
         assertThat(result.get().getHolderName().toString())
-                .isEqualTo("test-owner-name-from-details");
+                .isEqualTo("Test-Owner-Name-From-Details");
     }
 
     @Test
@@ -63,7 +63,7 @@ public class AccountEntityTest {
                 .isEqualTo(new ExactCurrencyAmount(new BigDecimal("123.45"), "EUR"));
         assertThat(result.get().getAccountFlags()).contains(AccountFlag.PSD2_PAYMENT_ACCOUNT);
         assertThat(result.get().getHolderName().toString())
-                .isEqualTo("test-owner-name-from-details");
+                .isEqualTo("Test-Owner-Name-From-Details");
     }
 
     private Properties accountEntityProps() {
