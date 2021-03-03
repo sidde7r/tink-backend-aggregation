@@ -11,9 +11,12 @@ import org.junit.Test;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.bankaustria.BankAustriaTestData;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.bankaustria.entities.RtaMessage;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.CheckingAccount;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
+import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class OtmlResponseConverterTest {
@@ -55,11 +58,20 @@ public class OtmlResponseConverterTest {
     @Test
     public void fillAccountInformation() {
         TransactionalAccount account =
-                CheckingAccount.builder(AccountTypes.CHECKING, "IBAN", ExactCurrencyAmount.inEUR(0))
-                        .setAccountNumber("IBAN")
-                        .setName("")
-                        .setBankIdentifier("accountKey")
-                        .build();
+                TransactionalAccount.nxBuilder()
+                        .withType(TransactionalAccountType.CHECKING)
+                        .withPaymentAccountFlag()
+                        .withBalance(BalanceModule.of(ExactCurrencyAmount.inEUR(0)))
+                        .withId(
+                                IdModule.builder()
+                                        .withUniqueIdentifier("IBAN")
+                                        .withAccountNumber("IBAN")
+                                        .withAccountName("")
+                                        .addIdentifier(new IbanIdentifier("IBAN"))
+                                        .build())
+                        .setBankIdentifier("accountIdentifier")
+                        .build()
+                        .get();
 
         TransactionalAccount accountsFromMovement =
                 otmlResponseConverter.fillAccountInformation(

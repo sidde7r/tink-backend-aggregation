@@ -27,15 +27,16 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.bankaustria.BankAustriaConstants;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.bankaustria.entities.RtaMessage;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.CheckingAccount;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.SavingsAccount;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
+import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class OtmlResponseConverter {
@@ -127,21 +128,38 @@ public class OtmlResponseConverter {
                         getNode(
                                 accountNode,
                                 BankAustriaConstants.XPathExpression.XPATH_SETTINGS_ACCOUNT_TYPE));
+
         switch (accountType.toUpperCase()) {
             case BankAustriaConstants.BankAustriaAccountTypes.CURRENT:
-                return CheckingAccount.builder(
-                                AccountTypes.CHECKING, accountNumber, ExactCurrencyAmount.inEUR(0))
-                        .setAccountNumber(accountNumber)
-                        .setName(accountNickName)
+                return TransactionalAccount.nxBuilder()
+                        .withType(TransactionalAccountType.CHECKING)
+                        .withPaymentAccountFlag()
+                        .withBalance(BalanceModule.of(ExactCurrencyAmount.inEUR(0)))
+                        .withId(
+                                IdModule.builder()
+                                        .withUniqueIdentifier(accountNumber)
+                                        .withAccountNumber(accountNumber)
+                                        .withAccountName(accountNickName)
+                                        .addIdentifier(new IbanIdentifier(accountNumber))
+                                        .build())
                         .setBankIdentifier(accountKey)
-                        .build();
+                        .build()
+                        .get();
             case BankAustriaConstants.BankAustriaAccountTypes.SAVING:
-                return SavingsAccount.builder(
-                                AccountTypes.SAVINGS, accountNumber, ExactCurrencyAmount.inEUR(0))
-                        .setAccountNumber(accountNumber)
-                        .setName(accountNickName)
+                return TransactionalAccount.nxBuilder()
+                        .withType(TransactionalAccountType.SAVINGS)
+                        .withPaymentAccountFlag()
+                        .withBalance(BalanceModule.of(ExactCurrencyAmount.inEUR(0)))
+                        .withId(
+                                IdModule.builder()
+                                        .withUniqueIdentifier(accountNumber)
+                                        .withAccountNumber(accountNumber)
+                                        .withAccountName(accountNickName)
+                                        .addIdentifier(new IbanIdentifier(accountNumber))
+                                        .build())
                         .setBankIdentifier(accountKey)
-                        .build();
+                        .build()
+                        .get();
             case BankAustriaConstants.BankAustriaAccountTypes.CARDS:
                 return null;
             default:
@@ -208,23 +226,39 @@ public class OtmlResponseConverter {
         switch (account.getType()) {
             case CHECKING:
                 filledAccount =
-                        CheckingAccount.builder(iban)
-                                .setHolderName(holderName)
-                                .setExactBalance(amount)
+                        TransactionalAccount.nxBuilder()
+                                .withType(TransactionalAccountType.CHECKING)
+                                .withPaymentAccountFlag()
+                                .withBalance(BalanceModule.of(amount))
+                                .withId(
+                                        IdModule.builder()
+                                                .withUniqueIdentifier(iban)
+                                                .withAccountNumber(iban)
+                                                .withAccountName(account.getName())
+                                                .addIdentifier(new IbanIdentifier(iban))
+                                                .build())
                                 .setBankIdentifier(account.getApiIdentifier())
-                                .setAccountNumber(iban)
-                                .setName(account.getName())
-                                .build();
+                                .addHolderName(holderName.toString())
+                                .build()
+                                .get();
                 break;
             case SAVINGS:
                 filledAccount =
-                        SavingsAccount.builder(iban)
-                                .setAccountNumber(iban)
-                                .setHolderName(holderName)
-                                .setExactBalance(amount)
-                                .setName(account.getName())
+                        TransactionalAccount.nxBuilder()
+                                .withType(TransactionalAccountType.SAVINGS)
+                                .withPaymentAccountFlag()
+                                .withBalance(BalanceModule.of(amount))
+                                .withId(
+                                        IdModule.builder()
+                                                .withUniqueIdentifier(iban)
+                                                .withAccountNumber(iban)
+                                                .withAccountName(account.getName())
+                                                .addIdentifier(new IbanIdentifier(iban))
+                                                .build())
                                 .setBankIdentifier(account.getApiIdentifier())
-                                .build();
+                                .addHolderName(holderName.toString())
+                                .build()
+                                .get();
                 break;
 
             default:
@@ -324,8 +358,7 @@ public class OtmlResponseConverter {
             throw new IllegalStateException(String.format("Unable to parse %s", movementDate), e);
         }
 
-        ExactCurrencyAmount amount =
-                ExactCurrencyAmount.of(Double.valueOf(amountValue), amountCurrency);
+        ExactCurrencyAmount amount = ExactCurrencyAmount.of(amountValue, amountCurrency);
 
         return Transaction.builder()
                 .setAmount(amount)
