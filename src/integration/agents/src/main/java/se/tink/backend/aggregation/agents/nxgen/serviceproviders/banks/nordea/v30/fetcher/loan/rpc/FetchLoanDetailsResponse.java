@@ -2,9 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonSetter;
-import com.fasterxml.jackson.annotation.Nulls;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.google.common.base.Strings;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -33,42 +32,26 @@ import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
+@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class FetchLoanDetailsResponse {
 
-    @JsonProperty("loan_id")
     private String loanId;
-
-    @JsonProperty("loan_formatted_id")
     private String loanFormattedId;
-
-    @JsonProperty("product_code")
     private String productCode;
-
-    @JsonProperty private String currency;
-    @JsonProperty private String group;
-
-    @JsonProperty("repayment_status")
+    private String currency;
+    private String group;
     private String repaymentStatus;
-
-    @JsonProperty private String nickname;
+    private String nickname;
 
     @JsonFormat(pattern = "yyyy-MM-dd")
-    @JsonProperty("first_draw_down_date")
     private Date firstDrawDownDate;
 
-    @JsonProperty private InterestEntity interest;
-    @JsonProperty private AmountEntity amount;
-    @JsonProperty private CreditEntity credit;
-
-    @JsonProperty("following_payment")
+    private InterestEntity interest;
+    private AmountEntity amount;
+    private CreditEntity credit;
     private FollowingPaymentEntity followingPayment;
-
-    @JsonProperty private List<OwnersEntity> owners;
-
-    @JsonProperty("sub_agreements")
+    private List<OwnersEntity> owners;
     private List<SubAgreementsItem> subAgreements;
-
-    @JsonProperty("repayment_schedule")
     private RepaymentSchedule repaymentSchedule;
 
     @JsonIgnore
@@ -94,7 +77,7 @@ public class FetchLoanDetailsResponse {
 
     @JsonIgnore
     private Optional<LoanModule> getLoanModule() {
-        Optional<InterestEntity> interestEntity = getInterest();
+        Optional<InterestEntity> interestEntity = getInterestForLoanModule();
         if (!interestEntity.isPresent()) {
             return Optional.empty();
         }
@@ -110,9 +93,9 @@ public class FetchLoanDetailsResponse {
                         .setCoApplicant(getApplicants().size() > 1)
                         .setInitialDate(convertDateToLocalDate(firstDrawDownDate))
                         .setLoanNumber(loanId);
-        if (!Objects.isNull(getInterest().get().getDiscountedRateEndDate())) {
+        if (!Objects.isNull(interestEntity.get().getDiscountedRateEndDate())) {
             builder.setNextDayOfTermsChange(
-                    convertDateToLocalDate(getInterest().get().getDiscountedRateEndDate()));
+                    convertDateToLocalDate(interestEntity.get().getDiscountedRateEndDate()));
         }
         return Optional.of(builder.build());
     }
@@ -123,7 +106,7 @@ public class FetchLoanDetailsResponse {
     }
 
     @JsonIgnore
-    private Optional<InterestEntity> getInterest() {
+    private Optional<InterestEntity> getInterestForLoanModule() {
         if (!Objects.isNull(interest) && !Objects.isNull(interest.getRate())) {
             return Optional.of(interest);
         } else {
@@ -167,7 +150,7 @@ public class FetchLoanDetailsResponse {
 
     @JsonIgnore
     private Optional<BigDecimal> getInterestRate() {
-        Optional<InterestEntity> interest = getInterest();
+        Optional<InterestEntity> interest = getInterestForLoanModule();
         if (!interest.isPresent()) {
             return Optional.empty();
         }
@@ -195,19 +178,10 @@ public class FetchLoanDetailsResponse {
         return new ExactCurrencyAmount(amount.getBalance(), NordeaBaseConstants.CURRENCY).negate();
     }
 
-    @JsonSetter(nulls = Nulls.AS_EMPTY)
-    public void setOwners(List<OwnersEntity> owners) {
-        this.owners = owners;
-    }
-
-    public List<OwnersEntity> getOwners() {
-        return owners;
-    }
-
     @JsonIgnore
     private String getHolderName() {
-        if (getOwners().size() > 0) {
-            return getOwners().get(0).getName();
+        if (owners.size() > 0) {
+            return owners.get(0).getName();
         }
         return null;
     }
@@ -238,7 +212,7 @@ public class FetchLoanDetailsResponse {
 
     @JsonIgnore
     public List<String> getApplicants() {
-        return getOwners().stream().map(Object::toString).collect(Collectors.toList());
+        return owners.stream().map(Object::toString).collect(Collectors.toList());
     }
 
     @JsonIgnore
