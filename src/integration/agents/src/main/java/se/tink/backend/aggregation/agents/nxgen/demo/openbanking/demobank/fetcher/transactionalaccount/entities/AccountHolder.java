@@ -5,6 +5,15 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class AccountHolder {
     private String name;
+    private String role;
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
 
     public String getName() {
         return name;

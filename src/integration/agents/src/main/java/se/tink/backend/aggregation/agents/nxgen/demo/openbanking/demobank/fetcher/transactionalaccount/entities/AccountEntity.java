@@ -70,13 +70,18 @@ public class AccountEntity {
                                 .build())
                 .setHolderType(getAccountHolderType())
                 .addParties(
-                        accountHolders.stream()
-                                .map(AccountHolder::getName)
-                                .map(name -> new Party(name, Party.Role.HOLDER))
-                                .collect(Collectors.toList()))
+                        accountHolders.stream().map(this::toTinkParty).collect(Collectors.toList()))
                 .setApiIdentifier(getId())
                 .build()
                 .get();
+    }
+
+    private Party toTinkParty(AccountHolder accountHolder) {
+        return new Party(
+                accountHolder.getName(),
+                DemobankConstants.PARTY_ROLE_TYPE_MAPPER
+                        .translate(accountHolder.getRole())
+                        .orElse(Party.Role.UNKNOWN));
     }
 
     @JsonIgnore
