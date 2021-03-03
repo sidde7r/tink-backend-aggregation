@@ -4,6 +4,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import org.junit.Test;
 
 public class SerializationUtilsTest {
@@ -66,5 +69,31 @@ public class SerializationUtilsTest {
         public TargetClass() {
             this.selfReference = this;
         }
+    }
+
+    @Test
+    public void shouldSerializeAndDeserializeJavaTimeCorrectly() {
+        // given
+        LocalDate localDate = LocalDate.of(1999, 10, 20);
+        LocalTime localTime = LocalTime.of(10, 50, 45, 123456);
+        LocalDateTime localDateTime = LocalDateTime.of(localDate, localTime);
+
+        // when
+        String serializedLocalDate = SerializationUtils.serializeToString(localDate);
+        String serializedLocalTime = SerializationUtils.serializeToString(localTime);
+        String serializedLocalDateTime = SerializationUtils.serializeToString(localDateTime);
+
+        LocalDate deserializedLocalDate =
+                SerializationUtils.deserializeFromString(serializedLocalDate, LocalDate.class);
+        LocalTime deserializedLocalTime =
+                SerializationUtils.deserializeFromString(serializedLocalTime, LocalTime.class);
+        LocalDateTime deserializedLocalDateTime =
+                SerializationUtils.deserializeFromString(
+                        serializedLocalDateTime, LocalDateTime.class);
+
+        // then
+        assertThat(deserializedLocalDate).isEqualTo(localDate);
+        assertThat(deserializedLocalTime).isEqualTo(localTime);
+        assertThat(deserializedLocalDateTime).isEqualTo(localDateTime);
     }
 }
