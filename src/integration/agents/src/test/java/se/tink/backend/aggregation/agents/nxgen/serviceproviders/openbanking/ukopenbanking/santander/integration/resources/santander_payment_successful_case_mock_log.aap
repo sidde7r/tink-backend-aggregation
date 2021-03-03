@@ -115,6 +115,30 @@ X-Content-Type-Options: nosniff
 {"token_type":"Bearer","access_token":"DUMMY_ACCESS_TOKEN","expires_in":600,"consented_on":1604330684,"scope":"openid payments","refresh_token":"DUMMY_REFRESH_TOKEN"}
 
 REQUEST 6
+GET https://openbanking-ma.santander.co.uk/sanuk/external/open-banking/v3.1/pisp/domestic-payment-consents/ca638bcb-bb90-48d9-a9a8-0b4403c18647/funds-confirmation
+Authorization: Bearer DUMMY_ACCESS_TOKEN
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+Accept: application/json
+x-fapi-financial-id: 0015800000jfFGuAAM
+x-idempotency-key : 0000000000000000
+X-Aggregator: Tink Testing
+
+RESPONSE 6
+200
+Content-Type: application/json;charset=UTF-8
+Transfer-Encoding: chunked
+Connection: keep-alive
+Server: Apache
+X-Content-Type-Options: nosniff
+X-Download-Options: noopen,noopen
+Referrer-Header: no-referrer,no-referrer
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, must-revalidate,no-cache;no-store
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+{"Data":{"FundsAvailableResult":{"FundsAvailableDateTime":"2021-03-03T15:17:40Z","FundsAvailable":true}},"Links":{"Self":"https://openbanking-ma.santander.co.uk/sanuk/external/open-banking/v3.1/pisp/domestic-payment-consents/189a281e-f7d9-4dc7-bd0c-b47a2d5a8a50/funds-confirmation"},"Meta":{}}
+
+REQUEST 7
 POST https://openbanking-ma.santander.co.uk/sanuk/external/open-banking/v3.1/pisp/domestic-payments
 Accept: application/json
 Content-Type: application/json
@@ -128,7 +152,7 @@ x-fapi-financial-id: 0015800000jfFGuAAM
 
 {"Risk":{"PaymentContextCode":"Other"},"Data":{"ConsentId":"ca638bcb-bb90-48d9-a9a8-0b4403c18647","Initiation":{"RemittanceInformation":{"Reference":"UK Demo"},"EndToEndIdentification":"b900555d03124056b54930e1c53c9ca","InstructionIdentification":"b900555d03124056b54930e1c53c9cac","CreditorAccount":{"SchemeName":"UK.OBIE.SortCodeAccountNumber","Identification":"77788812345678","Name":"Dummy creditor name"},"InstructedAmount":{"Amount":"1.00","Currency":"GBP"}}}}
 
-RESPONSE 6
+RESPONSE 7
 201
 Content-Type: application/json;charset=UTF-8
 Transfer-Encoding: chunked
@@ -143,7 +167,7 @@ x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
 
 {"Data":{"DomesticPaymentId":"8a2cc798-ec7f-48c4-aae6-d1d1c2941f72","ConsentId":"ca638bcb-bb90-48d9-a9a8-0b4403c18647","CreationDateTime":"2020-11-02T15:24:45Z","Status":"Pending","StatusUpdateDateTime":"2020-11-02T15:24:45Z","Initiation":{"InstructionIdentification":"b900555d03124056b54930e1c53c9cac","EndToEndIdentification":"b900555d03124056b54930e1c53c9cac","InstructedAmount":{"Amount":"1.00","Currency":"GBP"},"CreditorAccount":{"SchemeName":"UK.OBIE.SortCodeAccountNumber","Identification":"77788812345678","Name":"Dummy creditor name"},"RemittanceInformation":{"Reference":"UK Demo"}}},"Links":{"Self":"https://openbanking-ma.santander.co.uk/sanuk/external/open-banking/v3.1/pisp/domestic-payments/8a2cc798-ec7f-48c4-aae6-d1d1c2941f72"},"Meta":{}}
 
-REQUEST 7
+REQUEST 8
 GET https://openbanking-ma.santander.co.uk/sanuk/external/open-banking/v3.1/pisp/domestic-payments/8a2cc798-ec7f-48c4-aae6-d1d1c2941f72
 Authorization: Bearer DUMMY_TPP_ACCESS_TOKEN
 x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
@@ -152,7 +176,7 @@ x-fapi-financial-id: 0015800000jfFGuAAM
 x-idempotency-key : 0000000000000000
 X-Aggregator: Tink Testing
 
-RESPONSE 7
+RESPONSE 8
 200
 Content-Type: application/json;charset=UTF-8
 x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000

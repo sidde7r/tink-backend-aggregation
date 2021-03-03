@@ -264,6 +264,29 @@ Strict-Transport-Security: ***
 {"access_token":"HATFzcuGm7VRw0SU9PER9zmZquY","token_type":"Bearer","expires_in":299,"scope":"openid payments","id_token":"eyJraWQiOiJleHRlcm5hbF8yIiwidHlwIjoiSldUIiwiYWxnIjoi***MASKED***YifQ.eyJhdF9oYXNoIjoiMGx3angzcHZNbnMyNFJaVGdZNEtIUSIsImFjciI6InVybjpvcGVuYmFua2luZzpwc2QyOnNjYSIsImF1ZCI6Im***MASKED***IsInN1YiI6IjJhMzlkOGJlLTYxZmQtNDMyNy04NDlkLWM5YTg1NmRhMGVlMSIsIm9wZW5iYW5raW5nX2ludGVudF9pZCI6IjJhMzlkOGJlLTYxZmQtNDMyNy04NDlkLWM5YTg1NmRhMGVlMSIsImF1dGhfdGltZSI6MTYwMzgyNjkzNSwiaXNzIjoiaHR0cHM6XC9cL2FwaS5vYi5oc2JjLmNvLnVrIiwiZXhwIjoxNjAzODI3MjQxLCJpYXQiOjE2MDM4MjY5NDEsIm5vbmNlIjoiYzFmNDdkYmIzYzM4MjI4MCJ9.JAmAdaWprhkb-9RHn99gLTN5Ps8t0xm7DOts71t-knFLxPMpnX20uicsKpk5agw1Zg2F-x2YIw7wkEc6zUscZMQv9H6NHQIUorBWZHbZB3uKui9c0IYTRexyLgKAmcokv0qRmP98nKCZ_qq3Jh4JoSPJU89gQBtoKCf4Z-bs0TFMggoayNe1feZM1zbcFAmq_z6lIyR-Ww_0VW1lB9YpRwQkSvsAmXKpRDD2nHJYWTACI3D83o8FhVkaKu2eBYboCcEu7JwxtOEbWB3vNXIFEP2Vh2M5TBVCFPP9nCSHgH_QfhHy-6LU4f99QOBh8F3o5AEdthyeMJ4FHbmE8RSZFA"}
 
 REQUEST 6
+GET https://api.ob.hsbc.co.uk/obie/open-banking/v3.1/pisp/domestic-payment-consents/2a39d8be-61fd-4327-849d-c9a856da0ee1/funds-confirmation
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+Accept: application/json
+x-fapi-financial-id: 00158000016i44JAAQ
+x-idempotency-key : 0000000000000000
+X-Aggregator: Tink Testing
+
+RESPONSE 6
+200
+Content-Type: application/json;charset=UTF-8
+Transfer-Encoding: chunked
+Connection: keep-alive
+Server: Apache
+X-Content-Type-Options: nosniff
+X-Download-Options: noopen,noopen
+Referrer-Header: no-referrer,no-referrer
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, must-revalidate,no-cache;no-store
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+{"Data":{"FundsAvailableResult":{"FundsAvailableDateTime":"2021-03-03T15:17:40Z","FundsAvailable":true}},"Links":{"Self":"https://openbanking-ma.santander.co.uk/sanuk/external/open-banking/v3.1/pisp/domestic-payment-consents/189a281e-f7d9-4dc7-bd0c-b47a2d5a8a50/funds-confirmation"},"Meta":{}}
+
+REQUEST 7
 POST https://api.ob.hsbc.co.uk/obie/open-banking/v3.1/pisp/domestic-payments
 Accept: application/json
 Content-Type: application/json
@@ -299,7 +322,7 @@ x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
   }
 }
 
-RESPONSE 6
+RESPONSE 7
 201
 Server: nginx
 Date: Tue, 27 Oct 2020 19:29:03 GMT

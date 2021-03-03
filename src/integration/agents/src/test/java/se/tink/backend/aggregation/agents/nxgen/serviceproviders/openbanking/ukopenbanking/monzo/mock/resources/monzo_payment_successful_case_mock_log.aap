@@ -99,6 +99,29 @@ X-Fapi-Interaction-Id: 00000000-0000-4000-0000-000000000000
 {"access_token":"DUMMY_ACCESS_TOKEN2","token_type":"Bearer","expires_in":3600,"refresh_token":"REFRESH_TOKEN","scope":"openid payments accounts","id_token":"DUMMY_ACCESS_TOKEN2"}
 
 REQUEST 6
+GET https://openbanking.monzo.com/open-banking/v3.1/pisp/domestic-payment-consents/obpispdomesticpaymentconsent_0000A1olrLAZAZb0T3CN85/funds-confirmation
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+Accept: application/json
+x-fapi-financial-id: 001580000103U9RAAU
+x-idempotency-key : 0000000000000000
+X-Aggregator: Tink Testing
+
+RESPONSE 6
+200
+Content-Type: application/json;charset=UTF-8
+Transfer-Encoding: chunked
+Connection: keep-alive
+Server: Apache
+X-Content-Type-Options: nosniff
+X-Download-Options: noopen,noopen
+Referrer-Header: no-referrer,no-referrer
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, must-revalidate,no-cache;no-store
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+{"Data":{"FundsAvailableResult":{"FundsAvailableDateTime":"2021-03-03T15:17:40Z","FundsAvailable":true}},"Links":{"Self":"https://openbanking-ma.santander.co.uk/sanuk/external/open-banking/v3.1/pisp/domestic-payment-consents/189a281e-f7d9-4dc7-bd0c-b47a2d5a8a50/funds-confirmation"},"Meta":{}}
+
+REQUEST 7
 POST https://openbanking.monzo.com/open-banking/v3.1/pisp/domestic-payments
 Accept: application/json
 Content-Type: application/json
@@ -111,7 +134,7 @@ x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
 
 {"Risk":{"PaymentContextCode":"Other"},"Data":{"ConsentId":"obpispdomesticpaymentconsent_0000A1olrLAZAZb0T3CN85","Initiation":{"RemittanceInformation":{"Unstructured":"UK Demo","Reference":"UK Demo"},"EndToEndIdentification":"ba609c915c584e47a05b53c4de13bef","InstructionIdentification":"ba609c915c584e47a05b53c4de13bef4","CreditorAccount":{"SchemeName":"UK.OBIE.SortCodeAccountNumber","Identification":"12345678901234","Name":"Dummy creditor name"},"InstructedAmount":{"Amount":"10.00","Currency":"GBP"}}}}
 
-RESPONSE 6
+RESPONSE 7
 201
 Content-Length: 773
 Content-Type: application/json; charset=UTF-8
@@ -122,7 +145,7 @@ X-Jws-Signature: RkFLRV9TSUdOQVRVUkUK
 
 {"Data":{"Initiation":{"InstructionIdentification":"ba609c915c584e47a05b53c4de13bef4","EndToEndIdentification":"ba609c915c584e47a05b53c4de13bef","InstructedAmount":{"Amount":"10.00","Currency":"GBP"},"CreditorAccount":{"SchemeName":"UK.OBIE.SortCodeAccountNumber","Identification":"12345678901234","Name":"Dummy creditor name"},"RemittanceInformation":{"Unstructured":"UK Demo","Reference":"UK Demo"}},"ConsentId":"obpispdomesticpaymentconsent_0000A1olrLAZAZb0T3CN85","DomesticPaymentId":"obdompayment_0000A1olsLdmu1xI9fLoMT","CreationDateTime":"2020-12-03T08:06:53.951Z","Status":"Pending","StatusUpdateDateTime":"2020-12-03T08:06:53.951Z","ExpectedExecutionDateTime":"2020-12-03T08:06:53.951Z","ExpectedSettlementDateTime":"2020-12-03T08:06:53.951Z"}}
 
-REQUEST 7
+REQUEST 8
 GET https://openbanking.monzo.com/open-banking/v3.1/pisp/domestic-payments/obdompayment_0000A1olsLdmu1xI9fLoMT
 Authorization: Bearer DUMMY_ACCESS_TOKEN
 x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
@@ -131,7 +154,7 @@ x-fapi-financial-id: 001580000103U9RAAU
 x-idempotency-key : 0000000000000000
 X-Aggregator: Tink Testing
 
-RESPONSE 7
+RESPONSE 8
 200
 Content-Type: application/json;charset=UTF-8
 x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000

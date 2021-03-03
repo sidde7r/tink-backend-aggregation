@@ -15,8 +15,10 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbank
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentTestFixtures.createDomesticPaymentConsentResponse;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentTestFixtures.createDomesticPaymentRequestForNotExecutedPayment;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentTestFixtures.createDomesticPaymentResponse;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentTestFixtures.createFundsConfirmationResponse;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domestic.DomesticPaymentApiClient.PAYMENT;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domestic.DomesticPaymentApiClient.PAYMENT_CONSENT;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domestic.DomesticPaymentApiClient.PAYMENT_CONSENT_FUND_CONFIRMATION;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domestic.DomesticPaymentApiClient.PAYMENT_CONSENT_STATUS;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domestic.DomesticPaymentApiClient.PAYMENT_STATUS;
 
@@ -25,6 +27,7 @@ import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.UkOpenBankingRequestBuilder;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domestic.converter.DomesticPaymentConverter;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domestic.dto.DomesticPaymentConsentFundsConfirmationResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domestic.dto.DomesticPaymentConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domestic.dto.DomesticPaymentConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domestic.dto.DomesticPaymentRequest;
@@ -131,13 +134,23 @@ public class DomesticPaymentApiClientTest {
         final PaymentRequest paymentRequestMock =
                 createDomesticPaymentRequestForNotExecutedPayment(this.clockMock);
         final DomesticPaymentResponse response = createDomesticPaymentResponse();
-
+        final DomesticPaymentConsentFundsConfirmationResponse fundsConfirmationResponse =
+                createFundsConfirmationResponse();
         final RequestBuilder requestBuilderMock = mock(RequestBuilder.class);
+        when(requestBuilderMock.get(DomesticPaymentConsentFundsConfirmationResponse.class))
+                .thenReturn(fundsConfirmationResponse);
         when(requestBuilderMock.post(
                         eq(DomesticPaymentResponse.class), any(DomesticPaymentRequest.class)))
                 .thenReturn(response);
 
         final URL url = new URL(API_BASE_URL + PAYMENT);
+        URL fundsConfirm =
+                new URL(
+                        API_BASE_URL
+                                + PAYMENT_CONSENT_FUND_CONFIRMATION.replace(
+                                        "{consentId}", CONSENT_ID));
+        when(ukOpenBankingRequestBuilder.createPisRequest(eq(fundsConfirm)))
+                .thenReturn(requestBuilderMock);
         when(ukOpenBankingRequestBuilder.createPisRequestWithJwsHeader(eq(url)))
                 .thenReturn(requestBuilderMock);
 

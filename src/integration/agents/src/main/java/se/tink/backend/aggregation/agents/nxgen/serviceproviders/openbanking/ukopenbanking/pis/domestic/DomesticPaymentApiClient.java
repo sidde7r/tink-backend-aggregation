@@ -3,10 +3,14 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentConstants.CONSENT_ID_KEY;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingPaymentConstants.PAYMENT_ID_KEY;
 
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.UkOpenBankingPaymentApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.UkOpenBankingRequestBuilder;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domestic.converter.DomesticPaymentConverter;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domestic.dto.DomesticPaymentConsentFundsConfirmationResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domestic.dto.DomesticPaymentConsentFundsConfirmationResponseData;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domestic.dto.DomesticPaymentConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domestic.dto.DomesticPaymentConsentRequestData;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domestic.dto.DomesticPaymentConsentResponse;
@@ -14,17 +18,21 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domestic.dto.DomesticPaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domestic.dto.DomesticPaymentRequestData;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domestic.dto.DomesticPaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domestic.dto.FundsAvailableResult;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.payment.rpc.Payment;
 
 @RequiredArgsConstructor
+@Slf4j
 public class DomesticPaymentApiClient implements UkOpenBankingPaymentApiClient {
 
     static final String PAYMENT_CONSENT = "/domestic-payment-consents";
     static final String PAYMENT_STATUS = "/domestic-payments/{paymentId}";
     static final String PAYMENT_CONSENT_STATUS = "/domestic-payment-consents/{consentId}";
+    static final String PAYMENT_CONSENT_FUND_CONFIRMATION =
+            "/domestic-payment-consents/{consentId}/funds-confirmation";
     static final String PAYMENT = "/domestic-payments";
 
     private final UkOpenBankingRequestBuilder requestBuilder;
@@ -81,13 +89,34 @@ public class DomesticPaymentApiClient implements UkOpenBankingPaymentApiClient {
                         consentId,
                         endToEndIdentification,
                         instructionIdentification);
-
+        confirmFundsOrWarn(consentId);
         final DomesticPaymentResponse response =
                 requestBuilder
                         .createPisRequestWithJwsHeader(createUrl(PAYMENT))
                         .post(DomesticPaymentResponse.class, request);
 
         return domesticPaymentConverter.convertResponseDtoToPaymentResponse(response);
+    }
+
+    private void confirmFundsOrWarn(String consentId) {
+        DomesticPaymentConsentFundsConfirmationResponse response =
+                requestBuilder
+                        .createPisRequest(
+                                createUrl(PAYMENT_CONSENT_FUND_CONFIRMATION)
+                                        .parameter(CONSENT_ID_KEY, consentId))
+                        .get(DomesticPaymentConsentFundsConfirmationResponse.class);
+        boolean areFundsAvailable =
+                Optional.ofNullable(response.getData())
+                        .map(
+                                DomesticPaymentConsentFundsConfirmationResponseData
+                                        ::getFundsAvailableResult)
+                        .map(FundsAvailableResult::areFundsAvailable)
+                        .orElseGet(
+                                () -> {
+                                    log.warn("[UKOB] Problems During FundsConfirmation");
+                                    return false;
+                                });
+        log.info("[UKOB] FundsConfirmation Result {}", areFundsAvailable);
     }
 
     private void validateDomesticPaymentConsentResponse(DomesticPaymentConsentResponse response) {

@@ -114,6 +114,29 @@ x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
 {"Data":{"DomesticPaymentId":"b803b8c2c86f45ecbc8757f0a193f35e","ConsentId":"b803b8c2c86f45ecbc8757f0a193f35e","CreationDateTime":"2020-03-04T14:35:17Z","Status":"AcceptedSettlementInProcess","StatusUpdateDateTime":"2020-03-04T14:35:13Z","Initiation":{"InstructionIdentification":"b900555d03124056b54930e1c53c9cac","EndToEndIdentification":"b900555d03124056b54930e1c53c9ca","InstructedAmount":{"Amount":"1.00","Currency":"GBP"},"CreditorAccount":{"SchemeName":"UK.OBIE.SortCodeAccountNumber","Identification":"04000469431111","Name":"Dummy name"},"RemittanceInformation":{"Unstructured":"UK Demo"}}},"Links":{"Self":"https://api.rbs.co.uk/open-banking/v3.1/pisp/domestic-payments"},"Meta":{}}
 
 REQUEST 6
+GET https://api.rbs.co.uk/open-banking/v3.1/pisp/domestic-payment-consents/b803b8c2c86f45ecbc8757f0a193f35e/funds-confirmation
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+Accept: application/json
+x-fapi-financial-id: 0015800000jfwB4AAI
+x-idempotency-key : 0000000000000000
+X-Aggregator: Tink Testing
+
+RESPONSE 6
+200
+Content-Type: application/json;charset=UTF-8
+Transfer-Encoding: chunked
+Connection: keep-alive
+Server: Apache
+X-Content-Type-Options: nosniff
+X-Download-Options: noopen,noopen
+Referrer-Header: no-referrer,no-referrer
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, must-revalidate,no-cache;no-store
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+{"Data":{"FundsAvailableResult":{"FundsAvailableDateTime":"2021-03-03T15:17:40Z","FundsAvailable":true}},"Links":{"Self":"https://openbanking-ma.santander.co.uk/sanuk/external/open-banking/v3.1/pisp/domestic-payment-consents/189a281e-f7d9-4dc7-bd0c-b47a2d5a8a50/funds-confirmation"},"Meta":{}}
+
+REQUEST 7
 GET https://api.rbs.co.uk/open-banking/v3.1/pisp/domestic-payments/b803b8c2c86f45ecbc8757f0a193f35e
 Authorization: Bearer DUMMY_TPP_ACCESS_TOKEN
 x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
@@ -122,7 +145,7 @@ x-fapi-financial-id: 0015800000jfwB4AAI
 x-idempotency-key : 0000000000000000
 X-Aggregator: Tink Testing
 
-RESPONSE 6
+RESPONSE 7
 200
 Content-Type: application/json;charset=UTF-8
 x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000

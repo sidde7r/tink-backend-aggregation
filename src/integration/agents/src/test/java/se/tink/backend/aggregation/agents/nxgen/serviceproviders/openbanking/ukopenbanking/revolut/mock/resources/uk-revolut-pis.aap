@@ -237,6 +237,29 @@ Referrer-Policy: ***
 {"access_token":"DUMMY_ACCESS_TOKEN","token_type":"Bearer","expires_in":7775999,"id_token":"DUMMY_ACCESS_TOKEN"}
 
 REQUEST 6
+GET https://oba.revolut.com/domestic-payment-consents/1d955df7-f304-41de-a9bb-a330702f3551/funds-confirmation
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+Accept: application/json
+x-fapi-financial-id: 001580000103UAvAAM
+x-idempotency-key : 0000000000000000
+X-Aggregator: Tink Testing
+
+RESPONSE 6
+200
+Content-Type: application/json;charset=UTF-8
+Transfer-Encoding: chunked
+Connection: keep-alive
+Server: Apache
+X-Content-Type-Options: nosniff
+X-Download-Options: noopen,noopen
+Referrer-Header: no-referrer,no-referrer
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, must-revalidate,no-cache;no-store
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+{"Data":{"FundsAvailableResult":{"FundsAvailableDateTime":"2021-03-03T15:17:40Z","FundsAvailable":true}},"Links":{"Self":"https://openbanking-ma.santander.co.uk/sanuk/external/open-banking/v3.1/pisp/domestic-payment-consents/189a281e-f7d9-4dc7-bd0c-b47a2d5a8a50/funds-confirmation"},"Meta":{}}
+
+REQUEST 7
 POST https://oba.revolut.com/domestic-payments
 Authorization: Bearer DUMMY_ACCESS_TOKEN
 Accept: application/json
@@ -248,7 +271,7 @@ x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
 
 {"Risk":{"PaymentContextCode":"Other"},"Data":{"ConsentId":"1d955df7-f304-41de-a9bb-a330702f3551","Initiation":{"RemittanceInformation":{"Unstructured":"Donation"},"EndToEndIdentification":"0a44fcefbd524c5383707c3bbb77809","InstructionIdentification":"0a44fcefbd524c5383707c3bbb77809a","CreditorAccount":{"SchemeName":"UK.OBIE.SortCodeAccountNumber","Identification":"30654138867868","Name":"Amnesty"},"InstructedAmount":{"Amount":"1.00","Currency":"GBP"}}}}
 
-RESPONSE 6
+RESPONSE 7
 201
 Server: nginx
 Date: Mon, 16 Nov 2020 08:15:33 GMT
@@ -267,13 +290,13 @@ Alt-Svc: ***
 
 {"Data":{"DomesticPaymentId":"2cf7553c-3c77-46e8-889b-f9b2c75505c5","Status":"AcceptedSettlementInProcess","StatusUpdateDateTime":"2020-11-16T08:15:33.349108Z","CreationDateTime":"2020-11-16T08:15:33.349108Z","ConsentId":"1d955df7-f304-41de-a9bb-a330702f3551","Initiation":{"CreditorAccount":{"Name":"Amnesty","SchemeName":"UK.OBIE.SortCodeAccountNumber","Identification":"30654138867868"},"InstructedAmount":{"Amount":"1.00","Currency":"GBP"},"RemittanceInformation":{"Reference":"Donation","Unstructured":"Donation"},"EndToEndIdentification":"0a44fcefbd524c5383707c3bbb77809","InstructionIdentification":"0a44fcefbd524c5383707c3bbb77809a"}},"Links":{"Self":"https://oba.revolut.com/domestic-payments/2cf7553c-3c77-46e8-889b-f9b2c75505c5"},"Meta":{"TotalPages":1}}
 
-REQUEST 7
+REQUEST 8
 GET https://oba.revolut.com/domestic-payments/2cf7553c-3c77-46e8-889b-f9b2c75505c5
 Authorization: Bearer DUMMY_TPP_ACCESS_TOKEN
 Accept: application/json
 x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
 
-RESPONSE 7
+RESPONSE 8
 200
 Content-Type: application/json;charset=UTF-8
 x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000

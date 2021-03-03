@@ -149,6 +149,30 @@ Connection: keep-alive
 {"token_type":"Bearer","access_token":"DUMMY_ACCESS_TOKEN","expires_in":7776000,"consented_on":1607360184,"scope":"openid payments","id_token":"DUMMY_TOKEN_ID"}
 
 REQUEST 6
+GET https://secure-api.lloydsbank.com/prod01/lbg/lyds/open-banking/v3.1/pisp/domestic-payment-consents/b8c7cd82-4147-4b30-8c30-5478140809a9/funds-confirmation
+Authorization: Bearer DUMMY_ACCESS_TOKEN
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+Accept: application/json
+x-fapi-financial-id: 0015800000jf9GgAAI
+x-idempotency-key : 0000000000000000
+X-Aggregator: Tink Testing
+
+RESPONSE 6
+200
+Content-Type: application/json;charset=UTF-8
+Transfer-Encoding: chunked
+Connection: keep-alive
+Server: Apache
+X-Content-Type-Options: nosniff
+X-Download-Options: noopen,noopen
+Referrer-Header: no-referrer,no-referrer
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, must-revalidate,no-cache;no-store
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+{"Data":{"FundsAvailableResult":{"FundsAvailableDateTime":"2021-03-03T15:17:40Z","FundsAvailable":true}},"Links":{"Self":"https://openbanking-ma.santander.co.uk/sanuk/external/open-banking/v3.1/pisp/domestic-payment-consents/189a281e-f7d9-4dc7-bd0c-b47a2d5a8a50/funds-confirmation"},"Meta":{}}
+
+REQUEST 7
 POST https://secure-api.lloydsbank.com/prod01/lbg/lyds/open-banking/v3.1/pisp/domestic-payments
 Accept: application/json
 Content-Type: application/json
@@ -161,7 +185,7 @@ x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
 
 {"Risk":{"PaymentContextCode":"Other"},"Data":{"ConsentId":"b8c7cd82-4147-4b30-8c30-5478140809a9","Initiation":{"RemittanceInformation":{"Unstructured":"DUMMY_REMITTANCE","Reference":"DUMMY_REMITTANCE"},"EndToEndIdentification":"0b57b778df264b21bb3cfab3a20841d","InstructionIdentification":"0b57b778df264b21bb3cfab3a20841d2","CreditorAccount":{"SchemeName":"UK.OBIE.SortCodeAccountNumber","Identification":"12345678912345","Name":"Creditor Name"},"InstructedAmount":{"Amount":"1.00","Currency":"GBP"}}}}
 
-RESPONSE 6
+RESPONSE 7
 201
 X-Backside-Transport: ***
 Content-Type: application/json;charset=utf-8
