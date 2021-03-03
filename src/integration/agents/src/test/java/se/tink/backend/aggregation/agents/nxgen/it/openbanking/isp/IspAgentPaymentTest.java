@@ -59,7 +59,7 @@ public class IspAgentPaymentTest {
         Payment.Builder recurringPayment = createRealDomesticPayment();
         recurringPayment.withPaymentServiceType(PaymentServiceType.PERIODIC);
         recurringPayment.withFrequency(Frequency.MONTHLY);
-        recurringPayment.withStartDate(LocalDate.now());
+        recurringPayment.withStartDate(LocalDate.now().plusDays(2));
         recurringPayment.withEndDate(LocalDate.now().plusMonths(3));
         recurringPayment.withExecutionRule(ExecutionRule.PRECEEDING);
 
