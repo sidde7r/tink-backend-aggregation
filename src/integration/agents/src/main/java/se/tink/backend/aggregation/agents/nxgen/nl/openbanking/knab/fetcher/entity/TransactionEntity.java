@@ -60,10 +60,10 @@ public class TransactionEntity {
 
     private String getDescription() {
         return Stream.of(
-                        creditorName,
-                        debtorName,
                         remittanceInformationUnstructured,
-                        proprietaryBankTransactionCode)
+                        proprietaryBankTransactionCode,
+                        creditorName,
+                        debtorName)
                 .filter(Objects::nonNull)
                 .findFirst()
                 .orElse(getCounterPartyAccount());
