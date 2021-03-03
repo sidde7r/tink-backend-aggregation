@@ -19,7 +19,7 @@ public class ErrorResponse {
 
     private String message;
 
-    private List<ErrorEntity> errors;
+    private List<ErrorEntity> errors = Collections.emptyList();
 
     @JsonIgnore
     public boolean hasErrorCode(String errorCode) {
@@ -27,7 +27,7 @@ public class ErrorResponse {
             return false;
         }
         return errors.stream()
-                .anyMatch(errorEntity -> errorEntity.getErrorCode().equals(errorCode));
+                .anyMatch(errorEntity -> errorCode.equals(errorEntity.getErrorCode()));
     }
 
     @JsonIgnore

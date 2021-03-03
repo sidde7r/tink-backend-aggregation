@@ -150,7 +150,7 @@ public class OpenIdAuthenticationController
                                     log.error(
                                             "The consentId is an unspecified. Expiring the session.");
                                     cleanAuthenticationPersistentStorage();
-                                    throw SessionError.SESSION_EXPIRED.exception();
+                                    throw SessionError.CONSENT_EXPIRED.exception();
                                 });
             }
         }
