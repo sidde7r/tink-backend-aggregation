@@ -14,7 +14,10 @@ import se.tink.backend.aggregation.agents.nxgen.se.creditcards.coop.CoopConstant
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.PlusGiroIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
@@ -119,17 +122,20 @@ public class AccountEntity {
 
         List<AccountIdentifier> identifiers = getAccountIdentifier(accountDetailsMap);
 
-        TransactionalAccount account =
-                TransactionalAccount.builder(AccountTypes.OTHER, getUniqueId(credentialsId))
-                        .setName(accountName)
-                        .setAccountNumber(accountNumber)
-                        .setExactBalance(ExactCurrencyAmount.of(totalBalance, "SEK"))
-                        .setHolderName(holdername)
-                        .setBankIdentifier(String.valueOf(this.accountType))
-                        .addIdentifiers(identifiers)
-                        .build();
-
-        return Optional.of(account);
+        return TransactionalAccount.nxBuilder()
+                .withType(TransactionalAccountType.OTHER)
+                .withPaymentAccountFlag()
+                .withBalance(BalanceModule.of(ExactCurrencyAmount.inSEK(totalBalance)))
+                .withId(
+                        IdModule.builder()
+                                .withUniqueIdentifier(getUniqueId(credentialsId))
+                                .withAccountNumber(accountNumber)
+                                .withAccountName(accountName)
+                                .addIdentifiers(identifiers)
+                                .build())
+                .setApiIdentifier(String.valueOf(this.accountType))
+                .addHolderName(holdername == null ? "" : holdername.toString())
+                .build();
     }
 
     @JsonIgnore
