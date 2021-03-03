@@ -182,7 +182,7 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
         return intentId;
     }
 
-    private String saveIntentId(String intentId) {
+    public String saveIntentId(String intentId) {
         return persistentStorage.put(
                 UkOpenBankingV31Constants.PersistentStorageKeys.AIS_ACCOUNT_CONSENT_ID, intentId);
     }

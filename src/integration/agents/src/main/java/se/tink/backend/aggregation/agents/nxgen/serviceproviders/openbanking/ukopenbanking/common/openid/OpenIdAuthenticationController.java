@@ -22,6 +22,7 @@ import se.tink.backend.aggregation.agents.exceptions.entity.ErrorEntity;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdConstants.PersistentStorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.entities.ClientMode;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.authenticator.AutoAuthenticator;
@@ -133,16 +134,34 @@ public class OpenIdAuthenticationController
             if (!oAuth2Token.canRefresh()) {
                 log.info(
                         "Access token has expired and refreshing impossible. Expiring the session.");
+                cleanAuthenticationPersistentStorage();
                 throw SessionError.SESSION_EXPIRED.exception();
             } else {
                 OAuth2Token refreshedToken = refreshAccessToken(oAuth2Token);
                 saveAccessToken(refreshedToken);
                 oAuth2Token = refreshedToken;
+                persistentStorage
+                        .get(
+                                OpenIdConstants.PersistentStorageKeys.AIS_ACCOUNT_CONSENT_ID,
+                                String.class)
+                        .filter(OpenIdAuthenticatorConstants.UNSPECIFIED_CONSENT_ID::equals)
+                        .ifPresent(
+                                s -> {
+                                    log.error(
+                                            "The consentId is an unspecified. Expiring the session.");
+                                    cleanAuthenticationPersistentStorage();
+                                    throw SessionError.SESSION_EXPIRED.exception();
+                                });
             }
         }
 
         // as AutoAuthenticate will only happen in case of Ais so need to instantiate Ais filter
         apiClient.instantiateAisAuthFilter(oAuth2Token);
+    }
+
+    private void cleanAuthenticationPersistentStorage() {
+        persistentStorage.remove(PersistentStorageKeys.AIS_ACCOUNT_CONSENT_ID);
+        persistentStorage.remove(PersistentStorageKeys.AIS_ACCESS_TOKEN);
     }
 
     private OAuth2Token refreshAccessToken(OAuth2Token oAuth2Token) throws SessionException {

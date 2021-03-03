@@ -8,6 +8,8 @@ import java.util.stream.Stream;
 
 public abstract class OpenIdAuthenticatorConstants {
 
+    public static final String UNSPECIFIED_CONSENT_ID = "UNSPECIFIED_CONSENT_ID";
+
     /** According to examples the max age is 24h */
     public static final long MAX_AGE = TimeUnit.DAYS.toSeconds(90);
 
