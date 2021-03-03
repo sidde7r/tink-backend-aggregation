@@ -19,6 +19,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
         "//src/libraries/account_identifier",
         "//src/libraries/pair",
+        "//src/libraries/serialization",
         "//src/libraries/uuid",
         "//third_party:com_google_http_client_google_http_client",
         "//third_party:com_google_inject_guice",

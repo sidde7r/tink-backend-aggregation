@@ -7,6 +7,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.edenred.EdenredApiClient;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.edenred.EdenredConstants;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.edenred.EdenredConstants.Cards;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.edenred.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.edenred.entities.CardEntity;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.edenred.entities.TransactionsEntity;
@@ -38,28 +39,18 @@ public class EdenredAccountsFetcher implements AccountFetcher<TransactionalAccou
             return Collections.emptyList();
         }
         return cards.stream()
+                .filter(this::isActive)
                 .map(this::mapAccount)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toList());
     }
 
-    private AccountEntity fetchAccountWithBalance(Long id) {
-        TransactionsEntity data = edenredApiClient.getTransactions(id).getData();
-        edenredStorage.storeTransactions(id, data);
-        return data.getAccount();
+    private boolean isActive(CardEntity cardEntity) {
+        return Cards.ACTIVE.equals(cardEntity.getStatus());
     }
 
     private Optional<TransactionalAccount> mapAccount(CardEntity cardEntity) {
-        AccountEntity accountEntity = fetchAccountWithBalance(cardEntity.getId());
-
-        ExactCurrencyAmount amount =
-                ExactCurrencyAmount.of(
-                        accountEntity.getAvailableBalance(), EdenredConstants.CURRENCY);
-
-        BalanceModule balanceModule =
-                BalanceModule.builder().withBalance(amount).setAvailableBalance(amount).build();
-
         String id = cardEntity.getNumber();
         IdModule idModule =
                 IdModule.builder()
@@ -72,9 +63,23 @@ public class EdenredAccountsFetcher implements AccountFetcher<TransactionalAccou
         return TransactionalAccount.nxBuilder()
                 .withType(TransactionalAccountType.CHECKING)
                 .withoutFlags()
-                .withBalance(balanceModule)
+                .withBalance(buildBalanceModule(cardEntity))
                 .withId(idModule)
                 .setApiIdentifier(String.valueOf(cardEntity.getId()))
                 .build();
+    }
+
+    private BalanceModule buildBalanceModule(CardEntity cardEntity) {
+        AccountEntity accountEntity = fetchAccountWithBalance(cardEntity.getId());
+        ExactCurrencyAmount amount =
+                ExactCurrencyAmount.of(
+                        accountEntity.getAvailableBalance(), EdenredConstants.CURRENCY);
+        return BalanceModule.builder().withBalance(amount).setAvailableBalance(amount).build();
+    }
+
+    private AccountEntity fetchAccountWithBalance(Long id) {
+        TransactionsEntity data = edenredApiClient.getTransactions(id).getData();
+        edenredStorage.storeTransactions(id, data);
+        return data.getAccount();
     }
 }
