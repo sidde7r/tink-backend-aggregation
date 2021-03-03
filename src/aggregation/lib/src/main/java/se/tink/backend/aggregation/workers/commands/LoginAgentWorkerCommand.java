@@ -41,6 +41,7 @@ import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
 import se.tink.backend.aggregation.workers.operation.type.AgentWorkerOperationMetricType;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsRequestType;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
+import se.tink.connectivity.errors.ConnectivityError;
 import se.tink.eventproducerservice.events.grpc.AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.metrics.core.MetricId;
@@ -48,6 +49,7 @@ import se.tink.libraries.metrics.registry.MetricRegistry;
 import se.tink.libraries.metrics.types.histograms.Histogram;
 import se.tink.libraries.metrics.types.timers.Timer.Context;
 import se.tink.libraries.user.rpc.User;
+import src.libraries.connectivity_errors.ConnectivityErrorFactory;
 
 public class LoginAgentWorkerCommand extends AgentWorkerCommand implements MetricsCommand {
     private static final Logger logger =
@@ -282,7 +284,8 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
         } catch (BankServiceException e) {
             logger.info("Bank service exception: {}", e.getMessage(), e);
             action.unavailable();
-            statusUpdater.updateStatus(CredentialsStatus.TEMPORARY_ERROR);
+            ConnectivityError error = ConnectivityErrorFactory.from(e);
+            statusUpdater.updateStatusWithError(CredentialsStatus.TEMPORARY_ERROR, null, error);
             // couldn't determine isLoggedIn or not, return ABORT
             emitLoginResultEvent(
                     LoginResult.CANNOT_DETERMINE_IF_ALREADY_LOGGED_IN_DUE_TO_BANK_SERVICE_ERROR);
@@ -324,7 +327,8 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
                                 String.format(LOCK_FORMAT_BANKID_REFRESH, user.getId()));
 
                 if (!lock.acquire(2, TimeUnit.MINUTES)) {
-                    statusUpdater.updateStatus(CredentialsStatus.UNCHANGED);
+                    ConnectivityError error = ConnectivityErrorFactory.tinkInternalError();
+                    statusUpdater.updateStatusWithError(CredentialsStatus.UNCHANGED, null, error);
                     logger.warn("Login failed due not able to acquire lock");
                     action.failed();
                     return false;

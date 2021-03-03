@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -661,19 +660,9 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         updateCredentialsExcludingSensitiveInformation(credentials, true);
     }
 
-    // To be removed as soon as setting statuses with new errors path is rolled out
-    private static final Random RANDOM = new Random();
-    private static final double ROLLOUT_GRANULAR_ERROR_RATIO = 0.25;
-
     @Override
     public void updateStatusWithError(
             CredentialsStatus status, String statusPayload, ConnectivityError error) {
-
-        if (RANDOM.nextDouble() > ROLLOUT_GRANULAR_ERROR_RATIO) {
-            // rolling out this new feature slowly, by using the old path
-            updateStatus(status, statusPayload, true);
-            return;
-        }
 
         getMetricRegistry()
                 .meter(

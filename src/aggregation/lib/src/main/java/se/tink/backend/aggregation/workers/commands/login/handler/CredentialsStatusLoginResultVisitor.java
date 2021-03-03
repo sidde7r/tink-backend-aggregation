@@ -105,20 +105,25 @@ public class CredentialsStatusLoginResultVisitor implements LoginResultVisitor {
 
         ConnectivityError error = ConnectivityErrorFactory.from(exception);
         String statusPayload = null;
+        String exceptionError = "N/A";
 
         if (exception instanceof AgentException) {
-            statusPayload = catalog.getString(((AgentException) exception).getUserMessage());
+            AgentException agentException = (AgentException) exception;
+            statusPayload = catalog.getString(agentException.getUserMessage());
+            exceptionError = agentException.getError().name();
         }
 
         metricRegistry
                 .meter(
                         EXCEPTION_TO_ERROR_MAPPING
                                 .label("exception", exception.getClass().getSimpleName())
+                                .label("exception_error", exceptionError)
                                 .label("error", error.getType().toString()))
                 .inc();
         LOGGER.info(
-                "[Login Result debugging]: Mapping exception {} to {}",
+                "[Login Result debugging]: Mapping exception {} (with error {}) to {}",
                 exception.getClass().getSimpleName(),
+                exceptionError,
                 error.getType().toString(),
                 exception);
 
