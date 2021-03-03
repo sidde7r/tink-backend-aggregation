@@ -14,8 +14,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.AgentParsingUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.NordeaBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.fetcher.loan.entities.AmountEntity;
@@ -36,7 +34,6 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class FetchLoanDetailsResponse {
-    private final Logger LOG = LoggerFactory.getLogger(FetchLoanDetailsResponse.class);
 
     @JsonProperty("loan_id")
     private String loanId;
@@ -104,7 +101,7 @@ public class FetchLoanDetailsResponse {
 
         LoanModuleBuildStep builder =
                 LoanModule.builder()
-                        .withType(getLoanType())
+                        .withType(getTinkLoanType())
                         .withBalance(getBalance())
                         .withInterestRate(getInterestRate().orElse(BigDecimal.ZERO).doubleValue())
                         .setAmortized(getPaid())
@@ -118,6 +115,11 @@ public class FetchLoanDetailsResponse {
                     convertDateToLocalDate(getInterest().get().getDiscountedRateEndDate()));
         }
         return Optional.of(builder.build());
+    }
+
+    @JsonIgnore
+    private LoanDetails.Type getTinkLoanType() {
+        return NordeaBaseConstants.LOAN_TYPE_MAPPER.translate(group).orElse(LoanDetails.Type.OTHER);
     }
 
     @JsonIgnore
@@ -247,20 +249,6 @@ public class FetchLoanDetailsResponse {
                                 new ExactCurrencyAmount(
                                         BigDecimal.valueOf(payment.getInstalment()),
                                         NordeaBaseConstants.CURRENCY));
-    }
-
-    // TODO: Map all the different Nordea loan type accounts
-    @JsonIgnore
-    private LoanDetails.Type getLoanType() {
-        switch (group.toUpperCase()) {
-            case "MORTGAGE":
-                return LoanDetails.Type.MORTGAGE;
-            default:
-                LOG.info(
-                        "Logging not mortgage loan accounts "
-                                + NordeaBaseConstants.LogTags.LOAN_ACCOUNT);
-                return LoanDetails.Type.OTHER;
-        }
     }
 
     // This method used for setting uniqueId is taken from the legacy Nordea agent.

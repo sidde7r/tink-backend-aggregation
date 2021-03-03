@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
+import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.InstrumentModule.InstrumentType;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.portfolio.PortfolioModule.PortfolioType;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -58,6 +59,13 @@ public class NordeaBaseConstants {
                     .put(AccountTypes.SAVINGS, "savings")
                     .put(AccountTypes.CREDIT_CARD, "credit", "combined")
                     .put(AccountTypes.LOAN, "mortgage")
+                    .build();
+
+    public static final TypeMapper<LoanDetails.Type> LOAN_TYPE_MAPPER =
+            TypeMapper.<LoanDetails.Type>builder()
+                    .put(LoanDetails.Type.MORTGAGE, "mortgage")
+                    .put(LoanDetails.Type.CREDIT, "credit_loan")
+                    .put(LoanDetails.Type.OTHER, "other")
                     .build();
 
     public static final ImmutableMap<String, Object> NORDEA_BUSINESS_HEADERS =
@@ -349,7 +357,6 @@ public class NordeaBaseConstants {
     public static class LogTags {
         public static final LogTag CREDIT_TRANSACTIONS_ERROR =
                 LogTag.from("NORDEA_SE_TRANSACTIONS_ERROR");
-        public static final LogTag LOAN_ACCOUNT = LogTag.from("NORDEA_SE_LOAN_ACCOUNT");
     }
 
     public class AuthMethod {
