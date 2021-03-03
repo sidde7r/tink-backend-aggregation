@@ -30,7 +30,6 @@ import se.tink.backend.aggregation.nxgen.core.account.TestAccountBuilder;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.CheckingAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
 import se.tink.libraries.metrics.core.MetricId;
@@ -55,7 +54,7 @@ public class RefreshControllersTest {
 
     private final List<TransactionalAccount> accounts =
             ImmutableList.<TransactionalAccount>builder()
-                    .add(TestAccountBuilder.from(CheckingAccount.class).build())
+                    .add(TestAccountBuilder.from(TransactionalAccount.class).build())
                     .build();
     private final List<CreditCardAccount> creditCards =
             ImmutableList.<CreditCardAccount>builder()
