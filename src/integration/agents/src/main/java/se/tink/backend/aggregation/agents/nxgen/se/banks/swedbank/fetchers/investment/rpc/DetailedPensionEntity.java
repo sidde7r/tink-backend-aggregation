@@ -59,11 +59,11 @@ public class DetailedPensionEntity {
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(accountNumber)
-                                .withAccountNumber(accountNumber)
+                                .withAccountNumber(fullyFormattedNumber)
                                 .withAccountName(name)
                                 .addIdentifier(
                                         AccountIdentifier.create(
-                                                AccountIdentifier.Type.TINK, accountNumber))
+                                                AccountIdentifier.Type.SE, fullyFormattedNumber))
                                 .build())
                 .build();
     }
