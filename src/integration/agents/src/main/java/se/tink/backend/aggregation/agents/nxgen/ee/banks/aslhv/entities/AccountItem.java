@@ -12,7 +12,12 @@ import se.tink.backend.aggregation.agents.nxgen.ee.banks.aslhv.AsLhvConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Party;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
+import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
@@ -78,6 +83,11 @@ public class AccountItem {
         return at -> iban == null || number == null || portfolioId == null;
     }
 
+    private Predicate<TransactionalAccountType> isInvalidTransactionalAccount() {
+        // portfolioId is required to fetch transactions.
+        return at -> iban == null || number == null || portfolioId == null;
+    }
+
     @JsonIgnore
     private String getAccountName() {
         if (name == null) {
@@ -116,26 +126,35 @@ public class AccountItem {
                         });
     }
 
-    @JsonIgnore
-    public Optional<TransactionalAccount> buildTransactionalAccount(
+    public Optional<TransactionalAccount> toTinkAccount(
             final int baseCurrencyId, final String currency, final String currentUser) {
+
         return Optional.of(getType())
-                .flatMap(AsLhvConstants.ACCOUNT_TYPE_MAPPER::translate)
-                .filter(TransactionalAccount.ALLOWED_ACCOUNT_TYPES::contains)
-                .filter(isInvalidAccount())
+                .flatMap(AsLhvConstants.TRANSACTIONAL_ACCOUNT_TYPE_MAPPER::translate)
+                .filter(isInvalidTransactionalAccount())
                 .map(
-                        accountType -> {
+                        accountTypes -> {
                             final ExactCurrencyAmount accountBalance =
                                     ExactCurrencyAmount.of(getBalance(baseCurrencyId), currency);
 
-                            return TransactionalAccount.builder(accountType, iban)
-                                    .addIdentifier(new IbanIdentifier(iban))
-                                    .setExactBalance(accountBalance)
-                                    .setName(getAccountName())
-                                    .setHolderName(new HolderName(currentUser))
-                                    .setBankIdentifier(portfolioId)
-                                    .setAccountNumber(number)
-                                    .build();
+                            return TransactionalAccount.nxBuilder()
+                                    .withType(accountTypes)
+                                    .withInferredAccountFlags()
+                                    .withBalance(BalanceModule.of(accountBalance))
+                                    .withId(
+                                            IdModule.builder()
+                                                    .withUniqueIdentifier(iban)
+                                                    .withAccountNumber(number)
+                                                    .withAccountName(getAccountName())
+                                                    .addIdentifier(
+                                                            AccountIdentifier.create(
+                                                                    AccountIdentifier.Type.IBAN,
+                                                                    iban))
+                                                    .build())
+                                    .addParties(new Party(currentUser, Party.Role.HOLDER))
+                                    .setApiIdentifier(portfolioId)
+                                    .build()
+                                    .get();
                         });
     }
 }

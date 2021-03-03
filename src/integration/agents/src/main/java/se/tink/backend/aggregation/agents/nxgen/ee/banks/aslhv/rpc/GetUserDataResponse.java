@@ -30,10 +30,7 @@ public class GetUserDataResponse extends BaseResponse {
     public Collection<TransactionalAccount> getTransactionalAccounts(
             final String currentUser, final String currency, final int baseCurrencyId) {
         return accounts.stream()
-                .map(
-                        account ->
-                                account.buildTransactionalAccount(
-                                        baseCurrencyId, currency, currentUser))
+                .map(account -> account.toTinkAccount(baseCurrencyId, currency, currentUser))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toSet());
