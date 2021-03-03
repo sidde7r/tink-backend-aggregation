@@ -140,7 +140,7 @@ class LegacyExceptionToConnectivityErrorMapper {
                             ConnectivityErrorType.ERROR_PROVIDER_UNAVAILABLE)
                     .put(
                             BankServiceError.BANK_SIDE_FAILURE,
-                            ConnectivityErrorType.ERROR_AUTH_THIRD_PARTY_UNAVAILABLE)
+                            ConnectivityErrorType.ERROR_PROVIDER_UNAVAILABLE)
                     .put(
                             BankServiceError.ACCESS_EXCEEDED,
                             ConnectivityErrorType.ERROR_TINK_INTERNAL_ERROR)
