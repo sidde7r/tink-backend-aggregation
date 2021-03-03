@@ -5,6 +5,8 @@ import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
+import se.tink.libraries.transfer.rpc.PaymentServiceType;
+import se.tink.libraries.transfer.rpc.RecurringPayment;
 import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.uuid.UUIDUtils;
 
@@ -57,6 +59,34 @@ public class PaymentRequest {
         }
 
         return new PaymentRequest(paymentInRequestBuilder.build(), transfer.getOriginatingUserIp());
+    }
+
+    public static PaymentRequest ofRecurringPayment(final RecurringPayment recurringPayment) {
+        Creditor creditorInRequest =
+                new Creditor(
+                        recurringPayment.getDestination(),
+                        recurringPayment.getDestination().getName().orElse(null));
+
+        Payment.Builder paymentInRequestBuilder =
+                new Payment.Builder()
+                        .withCreditor(creditorInRequest)
+                        .withAmount(recurringPayment.getAmount())
+                        .withCurrency(recurringPayment.getAmount().getCurrency())
+                        .withExecutionDate(
+                                DateUtils.toJavaTimeLocalDate(recurringPayment.getDueDate()))
+                        .withUniqueId(UUIDUtils.toTinkUUID(recurringPayment.getId()))
+                        .withRemittanceInformation(recurringPayment.getRemittanceInformation())
+                        .withPaymentScheme(recurringPayment.getPaymentScheme())
+                        .withPaymentServiceType(PaymentServiceType.PERIODIC)
+                        .withFrequency(recurringPayment.getFrequency())
+                        .withExecutionRule(recurringPayment.getExecutionRule())
+                        .withStartDate(recurringPayment.getStartDate());
+
+        if (recurringPayment.getSource() != null) {
+            paymentInRequestBuilder.withDebtor(new Debtor(recurringPayment.getSource()));
+        }
+        return new PaymentRequest(
+                paymentInRequestBuilder.build(), recurringPayment.getOriginatingUserIp());
     }
 
     public Payment getPayment() {
