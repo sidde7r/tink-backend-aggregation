@@ -70,12 +70,12 @@ spec:
 
   - alert: UnacceptableAmountOfUnexpectedFailedOpenBankingRequests
     expr: |
-      sum(increase(tink_http_client_seconds_count{access_type="OPEN_BANKING", status=~"5..|408", provider_type!="test"}[1m])) by (agent, provider) > 10
+      sum(increase(tink_http_client_seconds_count{access_type="OPEN_BANKING", status=~"5..|408", provider_type!="test"}[1m])) by (agent, market, provider) > 10
     labels:
       severity: ping
       who: '#sfsa-reporting'
     annotations:
       summary: 'Agent <{$labels.agent}> has experienced more than 10 unexpected failures for the <{$labels.provider}> provider within the last minute.'
-      description: 'The provider <{$labels.provider}> has exceeded the allowed failure rate for an open banking provider. Please report this to the SFSA.'
+      description: 'The provider <{$labels.provider}> in the <{$labels.market}> market has exceeded the allowed failure rate for an open banking provider. Please report this to the SFSA.'
   {{- end }}
 {{ end }}
