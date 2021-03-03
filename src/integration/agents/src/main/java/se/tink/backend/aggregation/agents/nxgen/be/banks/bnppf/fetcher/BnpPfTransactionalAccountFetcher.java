@@ -30,6 +30,8 @@ public class BnpPfTransactionalAccountFetcher
                 .stream()
                 .filter(PfmAccount::getPfmOptInFlag)
                 .map(PfmAccount::toTransactionalAccount)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .collect(Collectors.toList());
     }
 
