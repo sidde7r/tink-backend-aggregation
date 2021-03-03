@@ -1,5 +1,7 @@
 package src.libraries.connectivity_errors;
 
+import com.sun.jersey.api.client.ClientHandlerException;
+import com.sun.jersey.api.client.UniformInterfaceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
@@ -18,6 +20,9 @@ import se.tink.backend.aggregation.agents.exceptions.errors.SupplementalInfoErro
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.exceptions.nemid.NemIdError;
 import se.tink.backend.aggregation.agents.exceptions.nemid.NemIdException;
+import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
+import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.connectivity.errors.ConnectivityError;
 import se.tink.connectivity.errors.ConnectivityErrorType;
 
@@ -37,6 +42,7 @@ public class ConnectivityErrorFactory {
         // This should probably be ConnectivityErrorType.TINK_INTERNAL_SERVER_ERROR
         ConnectivityErrorType type = ConnectivityErrorType.ERROR_UNKNOWN;
 
+        /* Inherited from AgentException */
         if (exception instanceof BankIdException) {
             BankIdError error = ((BankIdException) exception).getError();
             type = LegacyExceptionToConnectivityErrorMapper.BANKID_ERROR_MAPPER.get(error);
@@ -65,8 +71,29 @@ public class ConnectivityErrorFactory {
             type = LegacyExceptionToConnectivityErrorMapper.AUTHORIZATION_ERROR_MAPPER.get(error);
         }
 
-        if (exception instanceof IllegalStateException
-                || exception instanceof NullPointerException) {
+        /* Http Client Exceptions */
+        if (exception instanceof HttpClientException
+                || exception instanceof HttpResponseException
+                || exception instanceof ClientHandlerException
+                || exception instanceof UniformInterfaceException) {
+            log.warn(
+                    "Unhandled Http Client exceptions ({}) in agent. This should be fixed.",
+                    exception.getClass().getSimpleName(),
+                    exception);
+            type = ConnectivityErrorType.ERROR_TINK_INTERNAL_ERROR;
+        }
+
+        /* Java lang exceptions */
+        if (exception instanceof NullPointerException
+                || exception instanceof IndexOutOfBoundsException
+                || exception instanceof NumberFormatException
+                || exception instanceof NotImplementedException) {
+            log.error(
+                    "Bug in agent code that throws {}. This should be fixed.",
+                    exception.getClass().getSimpleName(),
+                    exception);
+            type = ConnectivityErrorType.ERROR_TINK_INTERNAL_ERROR;
+        } else if (exception instanceof IllegalStateException) {
             type = ConnectivityErrorType.ERROR_TINK_INTERNAL_ERROR;
         }
 
