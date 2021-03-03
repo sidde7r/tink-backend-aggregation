@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank;
 import java.time.temporal.ChronoUnit;
 import se.tink.backend.aggregation.nxgen.core.account.AccountHolderType;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Party;
 
 public class DemobankConstants {
     public static final TypeMapper<AccountHolderType> HOLDER_TYPE_TYPE_MAPPER =
@@ -10,6 +11,14 @@ public class DemobankConstants {
                     .put(AccountHolderType.PERSONAL, "PERSONAL")
                     .put(AccountHolderType.BUSINESS, "BUSINESS")
                     .put(AccountHolderType.CORPORATE, "CORPORATE")
+                    .build();
+
+    public static final TypeMapper<Party.Role> PARTY_ROLE_TYPE_MAPPER =
+            TypeMapper.<Party.Role>builder()
+                    .put(Party.Role.HOLDER, "HOLDER")
+                    .put(Party.Role.AUTHORIZED_USER, "AUTHORIZED_USER")
+                    .put(Party.Role.OTHER, "OTHER")
+                    .put(Party.Role.UNKNOWN, "UNKNOWN")
                     .build();
 
     public static final ChronoUnit DEFAULT_OB_TOKEN_LIFETIME_UNIT = ChronoUnit.DAYS;
