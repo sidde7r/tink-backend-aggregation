@@ -7,6 +7,6 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 @Getter
-public class FetchLoanResponse {
+public class LoanResponse {
     private List<LoansEntity> loans;
 }

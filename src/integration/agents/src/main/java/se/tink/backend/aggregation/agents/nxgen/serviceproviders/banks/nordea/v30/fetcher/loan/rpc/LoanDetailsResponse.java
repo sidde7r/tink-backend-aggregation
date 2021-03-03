@@ -33,7 +33,7 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
-public class FetchLoanDetailsResponse {
+public class LoanDetailsResponse {
 
     private String loanId;
     private String loanFormattedId;
