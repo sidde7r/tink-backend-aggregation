@@ -1,14 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.fetcher.loan.rpc;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.google.common.base.Strings;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -28,6 +26,7 @@ import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.loan.LoanModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.loan.builder.LoanModuleBuildStep;
+import se.tink.backend.aggregation.utils.json.deserializers.LocalDateDeserializer;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
@@ -43,8 +42,8 @@ public class LoanDetailsResponse {
     private String repaymentStatus;
     private String nickname;
 
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    private Date firstDrawDownDate;
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    private LocalDate firstDrawDownDate;
 
     private InterestEntity interest;
     private AmountEntity amount;
@@ -90,12 +89,11 @@ public class LoanDetailsResponse {
                         .setAmortized(amount.getTinkAmortized())
                         .setInitialBalance(getInitialBalance())
                         .setApplicants(getApplicants())
-                        .setInitialDate(convertDateToLocalDate(firstDrawDownDate))
                         .setCoApplicant(owners.size() > 1)
+                        .setInitialDate(firstDrawDownDate)
                         .setLoanNumber(loanId);
         if (!Objects.isNull(interestEntity.get().getDiscountedRateEndDate())) {
-            builder.setNextDayOfTermsChange(
-                    convertDateToLocalDate(interestEntity.get().getDiscountedRateEndDate()));
+            builder.setNextDayOfTermsChange(interestEntity.get().getDiscountedRateEndDate());
         }
         return Optional.of(builder.build());
     }
@@ -127,7 +125,7 @@ public class LoanDetailsResponse {
 
         if (allRatesMatchWhenBaseRateMissingAreIgnored(interests)) {
             return interests.stream()
-                    .filter(interest -> interest.getBaseRate() != null)
+                    .filter(interestEntity -> interestEntity.getBaseRate() != null)
                     .findFirst();
         }
         return Optional.empty();
@@ -137,7 +135,7 @@ public class LoanDetailsResponse {
     // the remaining ones have the same rate.
     private boolean allRatesMatchWhenBaseRateMissingAreIgnored(List<InterestEntity> interests) {
         return interests.stream()
-                        .filter(interest -> interest.getBaseRate() != null)
+                        .filter(interestEntity -> interestEntity.getBaseRate() != null)
                         .map(InterestEntity::getRate)
                         .distinct()
                         .count()
@@ -150,27 +148,17 @@ public class LoanDetailsResponse {
 
     @JsonIgnore
     private Optional<BigDecimal> getInterestRate() {
-        Optional<InterestEntity> interest = getInterestForLoanModule();
-        if (!interest.isPresent()) {
+        Optional<InterestEntity> interestEntity = getInterestForLoanModule();
+        if (!interestEntity.isPresent()) {
             return Optional.empty();
         }
 
-        if (!Objects.isNull(interest.get().getRate())) {
+        if (!Objects.isNull(interestEntity.get().getRate())) {
             return Optional.of(
-                    AgentParsingUtils.parsePercentageFormInterest(interest.get().getRate()));
+                    AgentParsingUtils.parsePercentageFormInterest(interestEntity.get().getRate()));
         } else {
             throw new IllegalStateException("No interest rate found.");
         }
-    }
-
-    @JsonIgnore
-    private boolean isSubAgreementsInterestRatesSame() {
-        return subAgreements.stream()
-                        .map(SubAgreementsItem::getInterest)
-                        .map(InterestEntity::getRate)
-                        .distinct()
-                        .count()
-                == 1;
     }
 
     @JsonIgnore
@@ -186,13 +174,6 @@ public class LoanDetailsResponse {
         return Strings.isNullOrEmpty(nickname) ? loanFormattedId : nickname;
     }
 
-    private LocalDate convertDateToLocalDate(Date dateToConvert) {
-        if (Objects.isNull(dateToConvert)) {
-            return null;
-        }
-        return dateToConvert.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-    }
-
     @JsonIgnore
     private ExactCurrencyAmount getInitialBalance() {
         BigDecimal initialBalance =
@@ -203,16 +184,6 @@ public class LoanDetailsResponse {
     @JsonIgnore
     public List<String> getApplicants() {
         return owners.stream().map(Object::toString).collect(Collectors.toList());
-    }
-
-    @JsonIgnore
-    private Optional<ExactCurrencyAmount> getInstalmentValue() {
-        return Optional.ofNullable(followingPayment)
-                .map(
-                        payment ->
-                                new ExactCurrencyAmount(
-                                        BigDecimal.valueOf(payment.getInstalment()),
-                                        NordeaBaseConstants.CURRENCY));
     }
 
     // This method used for setting uniqueId is taken from the legacy Nordea agent.
