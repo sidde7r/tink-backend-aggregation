@@ -26,7 +26,7 @@ public class FeedEntity extends BaseResponseEntity {
     public Transaction toTinkTransaction() {
         return Transaction.builder()
                 .setAmount(ExactCurrencyAmount.of(transfer.getAmount(), transfer.getCurrency()))
-                .setDate(new Date(sort))
+                .setDate(new Date(timestamp))
                 .setDescription(transfer.getText())
                 .build();
     }

@@ -88,7 +88,7 @@ public class LunarConstants {
     }
 
     public static class QueryParamsValues {
-        public static final String PAGE_SIZE = "200";
+        public static final int PAGE_SIZE = 200;
     }
 
     public static class PathParams {

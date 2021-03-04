@@ -43,7 +43,9 @@ public class FetcherApiClient {
         return getDefaultRequestBuilder(
                         Url.TRANSACTIONS
                                 .queryParam(QueryParams.ORIGIN_GROUP_ID, originGroupId)
-                                .queryParam(QueryParams.PAGE_SIZE, QueryParamsValues.PAGE_SIZE)
+                                .queryParam(
+                                        QueryParams.PAGE_SIZE,
+                                        String.valueOf(QueryParamsValues.PAGE_SIZE))
                                 .queryParam(QueryParams.BEFORE_QUERY, timestampKey))
                 .get(TransactionsResponse.class);
     }

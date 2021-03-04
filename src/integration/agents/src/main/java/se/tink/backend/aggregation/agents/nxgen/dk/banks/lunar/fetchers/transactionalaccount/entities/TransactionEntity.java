@@ -3,11 +3,13 @@ package se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.transac
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.math.BigDecimal;
 import java.util.Date;
+import lombok.Setter;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
+@Setter
 public class TransactionEntity extends BaseResponseEntity {
     private BigDecimal amount;
     private String currency;
@@ -17,7 +19,7 @@ public class TransactionEntity extends BaseResponseEntity {
     public Transaction toTinkTransaction() {
         return Transaction.builder()
                 .setAmount(ExactCurrencyAmount.of(amount, currency))
-                .setDate(new Date(sort))
+                .setDate(new Date(timestamp))
                 .setDescription(title)
                 .build();
     }
