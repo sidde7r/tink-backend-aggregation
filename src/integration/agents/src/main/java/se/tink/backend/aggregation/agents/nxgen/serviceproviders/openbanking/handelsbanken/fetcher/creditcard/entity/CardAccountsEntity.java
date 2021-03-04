@@ -32,6 +32,7 @@ public class CardAccountsEntity {
                 .withCardDetails(getCardDetails())
                 .withoutFlags()
                 .withId(getIdModule())
+                .addHolderName(getHolderName())
                 .setApiIdentifier(accountId)
                 .build();
     }
@@ -82,5 +83,9 @@ public class CardAccountsEntity {
         return ExactCurrencyAmount.of(
                 availableBalance.getBalanceAmount().getAmount(),
                 availableBalance.getBalanceAmount().getCurrency());
+    }
+
+    public String getHolderName() {
+        return cards.stream().map(CardsEntity::getName).findFirst().orElse(null);
     }
 }
