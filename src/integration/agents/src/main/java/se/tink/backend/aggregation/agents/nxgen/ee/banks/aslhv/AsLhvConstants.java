@@ -1,19 +1,23 @@
 package se.tink.backend.aggregation.agents.nxgen.ee.banks.aslhv;
 
 import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccountTypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
 public class AsLhvConstants {
 
     public static final ThreadSafeDateFormat DATE_FORMAT = ThreadSafeDateFormat.FORMATTER_DAILY;
 
-    public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
-            TypeMapper.<AccountTypes>builder()
-                    .put(AccountTypes.CHECKING, "11001")
-                    .put(AccountTypes.SAVINGS, "11002")
-                    .put(AccountTypes.CREDIT_CARD, "11009")
+    public static final TransactionalAccountTypeMapper TRANSACTIONAL_ACCOUNT_TYPE_MAPPER =
+            TransactionalAccountTypeMapper.builder()
+                    .put(TransactionalAccountType.CHECKING, "11001")
+                    .put(TransactionalAccountType.SAVINGS, "11002")
                     .build();
+
+    public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
+            TypeMapper.<AccountTypes>builder().put(AccountTypes.CREDIT_CARD, "11009").build();
 
     public static class Storage {
         public static final String CURRENT_USER = "currentUser";
