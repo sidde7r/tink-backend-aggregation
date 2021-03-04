@@ -19,7 +19,7 @@ public class TransactionEntity extends BaseResponseEntity {
     public Transaction toTinkTransaction() {
         return Transaction.builder()
                 .setAmount(ExactCurrencyAmount.of(amount, currency))
-                .setDate(new Date(sort))
+                .setDate(new Date(timestamp))
                 .setDescription(title)
                 .build();
     }

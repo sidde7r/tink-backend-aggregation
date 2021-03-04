@@ -54,14 +54,14 @@ public class LunarTransactionFetcher
     }
 
     private String getNextKey(List<TransactionEntity> lunarTransactions) {
-        if (lunarTransactions.size() < Integer.parseInt(QueryParamsValues.PAGE_SIZE)) {
+        if (lunarTransactions.size() < QueryParamsValues.PAGE_SIZE) {
             return null;
         }
         String sort =
                 lunarTransactions.stream()
-                        .filter(transaction -> transaction.getSort() > 0)
-                        .min(Comparator.comparing(BaseResponseEntity::getSort))
-                        .map(transaction -> String.valueOf(transaction.getSort()))
+                        .filter(transaction -> transaction.getTimestamp() > 0)
+                        .min(Comparator.comparing(BaseResponseEntity::getTimestamp))
+                        .map(transaction -> String.valueOf(transaction.getTimestamp()))
                         .orElse(null);
         log.info("[Lunar] Next key for transactions: {}", sort);
         return sort;

@@ -126,7 +126,7 @@ public class LunarTransactionFetcherTest {
     @Test
     @Parameters(method = "paginationKeyParams")
     public void shouldGetPaginatorResponseWithKey(
-            TransactionsResponse transactionsResponse, int transactionsNumber) {
+            TransactionsResponse transactionsResponse, String expectedKey) {
         // given
         when(apiClient.fetchTransactions(ORIGIN_GROUP_ID, String.valueOf(LAST_TRANSACTION_SORT)))
                 .thenReturn(transactionsResponse);
@@ -138,21 +138,19 @@ public class LunarTransactionFetcherTest {
                         String.valueOf(LAST_TRANSACTION_SORT));
 
         // then
-        assertThat(result)
-                .isEqualToComparingFieldByFieldRecursively(
-                        getExpectedPaginatorResponseWithKey(transactionsNumber));
+        assertThat(result.nextKey()).isEqualTo(expectedKey);
     }
 
     private Object[] paginationKeyParams() {
         return new Object[] {
             new Object[] {
-                getTransactionsResponseOfNumber(Integer.parseInt(QueryParamsValues.PAGE_SIZE)),
-                Integer.parseInt(QueryParamsValues.PAGE_SIZE)
+                getTransactionsResponseOfNumber(QueryParamsValues.PAGE_SIZE), LAST_TRANSACTION_SORT
             },
             new Object[] {
-                getTransactionsResponseOfNumber(Integer.parseInt(QueryParamsValues.PAGE_SIZE) + 1),
-                Integer.parseInt(QueryParamsValues.PAGE_SIZE) + 1
+                getTransactionsResponseOfNumber(QueryParamsValues.PAGE_SIZE + 1),
+                LAST_TRANSACTION_SORT
             },
+            new Object[] {getTransactionsResponseOfNumber(QueryParamsValues.PAGE_SIZE - 1), null}
         };
     }
 
@@ -160,43 +158,18 @@ public class LunarTransactionFetcherTest {
         List<TransactionEntity> transactions = new ArrayList<>();
         for (int i = 0; i < transactionsNumber - 1; i++) {
             TransactionEntity transactionEntity = new TransactionEntity();
-            transactionEntity.setAmount(BigDecimal.valueOf(-100));
-            transactionEntity.setCurrency(CURRENCY);
-            transactionEntity.setTitle("Deposit");
-            transactionEntity.setSort(FIRST_TRANSACTION_SORT);
+            transactionEntity.setTimestamp(FIRST_TRANSACTION_SORT);
+            transactionEntity.setAmount(BigDecimal.valueOf(1));
             transactions.add(transactionEntity);
         }
         TransactionEntity lastTransactionEntity = new TransactionEntity();
+        lastTransactionEntity.setTimestamp(LAST_TRANSACTION_SORT);
         lastTransactionEntity.setAmount(BigDecimal.valueOf(1));
-        lastTransactionEntity.setCurrency(CURRENCY);
-        lastTransactionEntity.setTitle("Last");
-        lastTransactionEntity.setSort(LAST_TRANSACTION_SORT);
         transactions.add(lastTransactionEntity);
 
         TransactionsResponse response = new TransactionsResponse();
         response.setTransactions(transactions);
         return response;
-    }
-
-    private TransactionKeyPaginatorResponse<String> getExpectedPaginatorResponseWithKey(
-            int transactionsNumber) {
-        List<Transaction> expectedTransactions = new ArrayList<>();
-        for (int i = 0; i < transactionsNumber - 1; i++) {
-            expectedTransactions.add(
-                    Transaction.builder()
-                            .setAmount(ExactCurrencyAmount.of(-100, CURRENCY))
-                            .setDate(new Date(FIRST_TRANSACTION_SORT))
-                            .setDescription("Deposit")
-                            .build());
-        }
-        expectedTransactions.add(
-                Transaction.builder()
-                        .setAmount(ExactCurrencyAmount.of(1, CURRENCY))
-                        .setDate(new Date(LAST_TRANSACTION_SORT))
-                        .setDescription("Last")
-                        .build());
-        return new TransactionKeyPaginatorResponseImpl<>(
-                expectedTransactions, String.valueOf(LAST_TRANSACTION_SORT));
     }
 
     private TransactionalAccount getTestAccount(TransactionalAccountType accountType, String id) {
