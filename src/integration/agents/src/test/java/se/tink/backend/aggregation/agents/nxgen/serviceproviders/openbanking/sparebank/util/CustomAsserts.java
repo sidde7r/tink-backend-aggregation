@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sp
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.util.Optional;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
@@ -21,7 +20,6 @@ public class CustomAsserts {
             String iban,
             String bban,
             String apiIdentifier,
-            String holderName,
             String transactionLink) {
         assertThat(account.getType()).isEqualTo(accountType);
         assertThat(account.getExactBalance()).isEqualTo(balance);
@@ -31,7 +29,5 @@ public class CustomAsserts {
         assertThat(account.getIdentifiers())
                 .containsOnly(new IbanIdentifier(iban), new NorwegianIdentifier(bban));
         assertThat(account.getApiIdentifier()).isEqualTo(apiIdentifier);
-        assertThat(Optional.ofNullable(account.getHolderName()).map(h -> h.toString()).orElse(null))
-                .isEqualTo(holderName);
     }
 }
