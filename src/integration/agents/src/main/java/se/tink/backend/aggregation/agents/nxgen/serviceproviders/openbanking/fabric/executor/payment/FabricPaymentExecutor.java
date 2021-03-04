@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fa
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
@@ -12,6 +13,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fab
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.executor.payment.entities.InstructedAmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.executor.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.executor.payment.rpc.CreatePaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.executor.payment.rpc.CreateRecurringPaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.executor.payment.rpc.PaymentAuthorizationStatus;
 import se.tink.backend.aggregation.agents.utils.remittanceinformation.RemittanceInformationValidator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
@@ -28,8 +30,9 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import se.tink.libraries.payment.enums.PaymentType;
+import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
+import se.tink.libraries.transfer.rpc.PaymentServiceType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 public class FabricPaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
@@ -58,7 +61,7 @@ public class FabricPaymentExecutor implements PaymentExecutor, FetchablePaymentE
     public PaymentResponse fetch(PaymentRequest paymentRequest) {
         return apiClient
                 .getPayment(paymentRequest.getPayment().getUniqueId())
-                .toTinkPaymentResponse(paymentRequest.getPayment().getType());
+                .toTinkPaymentResponse(paymentRequest.getPayment());
     }
 
     @Override
@@ -70,7 +73,27 @@ public class FabricPaymentExecutor implements PaymentExecutor, FetchablePaymentE
     public PaymentResponse create(PaymentRequest paymentRequest) throws PaymentException {
         sessionStorage.put(FabricConstants.QueryKeys.STATE, strongAuthenticationState.getState());
 
+        sessionStorage.updatePaymentServiceIfNeeded(paymentRequest.getPayment());
         sessionStorage.updatePaymentProductIfNeeded(paymentRequest.getPayment());
+
+        CreatePaymentRequest createPaymentRequest;
+        if (PaymentServiceType.PERIODIC.equals(
+                paymentRequest.getPayment().getPaymentServiceType())) {
+            createPaymentRequest = getCreateRecurringPaymentRequest(paymentRequest);
+        } else {
+            createPaymentRequest = getCreatePaymentRequest(paymentRequest);
+        }
+
+        CreatePaymentResponse payment = apiClient.createPayment(createPaymentRequest);
+
+        sessionStorage.put(
+                FabricConstants.StorageKeys.LINK, payment.getLinks().getScaRedirect().getHref());
+        sessionStorage.put(FabricConstants.StorageKeys.PAYMENT_ID, payment.getPaymentId());
+
+        return payment.toTinkPaymentResponse(paymentRequest.getPayment());
+    }
+
+    private CreatePaymentRequest getCreatePaymentRequest(PaymentRequest paymentRequest) {
         AccountEntity creditorEntity = AccountEntity.creditorOf(paymentRequest);
         AccountEntity debtorEntity = AccountEntity.debtorOf(paymentRequest);
         InstructedAmountEntity instructedAmountEntity = InstructedAmountEntity.of(paymentRequest);
@@ -79,20 +102,48 @@ public class FabricPaymentExecutor implements PaymentExecutor, FetchablePaymentE
                 paymentRequest.getPayment().getRemittanceInformation();
         RemittanceInformationValidator.validateSupportedRemittanceInformationTypesOrThrow(
                 remittanceInformation, null, RemittanceInformationType.UNSTRUCTURED);
-        CreatePaymentRequest createPaymentRequest =
-                new CreatePaymentRequest.Builder()
-                        .withDebtorAccount(debtorEntity)
-                        .withInstructedAmount(instructedAmountEntity)
-                        .withCreditorAccount(creditorEntity)
-                        .withCreditorName(paymentRequest.getPayment().getCreditor().getName())
-                        .withRemittanceInformationUnstructured(remittanceInformation.getValue())
-                        .build();
-        CreatePaymentResponse payment = apiClient.createPayment(createPaymentRequest);
-        sessionStorage.put(
-                FabricConstants.StorageKeys.LINK, payment.getLinks().getScaRedirect().getHref());
-        sessionStorage.put(FabricConstants.StorageKeys.PAYMENT_ID, payment.getPaymentId());
 
-        return payment.toTinkPaymentResponse(PaymentType.SEPA);
+        CreatePaymentRequest.CreatePaymentRequestBuilder createPaymentRequest =
+                CreatePaymentRequest.builder()
+                        .debtorAccount(debtorEntity)
+                        .instructedAmount(instructedAmountEntity)
+                        .creditorAccount(creditorEntity)
+                        .creditorName(paymentRequest.getPayment().getCreditor().getName())
+                        .remittanceInformationUnstructured(remittanceInformation.getValue());
+        return createPaymentRequest.build();
+    }
+
+    private CreatePaymentRequest getCreateRecurringPaymentRequest(PaymentRequest paymentRequest) {
+        Payment payment = paymentRequest.getPayment();
+
+        AccountEntity creditorEntity = AccountEntity.creditorOf(paymentRequest);
+        AccountEntity debtorEntity = AccountEntity.debtorOf(paymentRequest);
+        InstructedAmountEntity instructedAmountEntity = InstructedAmountEntity.of(paymentRequest);
+
+        RemittanceInformation remittanceInformation =
+                paymentRequest.getPayment().getRemittanceInformation();
+        RemittanceInformationValidator.validateSupportedRemittanceInformationTypesOrThrow(
+                remittanceInformation, null, RemittanceInformationType.UNSTRUCTURED);
+
+        CreateRecurringPaymentRequest.CreateRecurringPaymentRequestBuilder
+                createRecurringPaymentRequest =
+                        CreateRecurringPaymentRequest.builder()
+                                .debtorAccount(debtorEntity)
+                                .instructedAmount(instructedAmountEntity)
+                                .creditorAccount(creditorEntity)
+                                .creditorName(paymentRequest.getPayment().getCreditor().getName())
+                                .remittanceInformationUnstructured(remittanceInformation.getValue())
+                                .frequency(payment.getFrequency().toString())
+                                .startDate(payment.getStartDate().toString());
+        // optional attributes
+        if (Optional.ofNullable(payment.getEndDate()).isPresent()) {
+            createRecurringPaymentRequest.endDate(payment.getEndDate().toString());
+        }
+        if (Optional.ofNullable(payment.getExecutionRule()).isPresent()) {
+            createRecurringPaymentRequest.executionRule(payment.getExecutionRule().toString());
+        }
+
+        return createRecurringPaymentRequest.build();
     }
 
     @Override

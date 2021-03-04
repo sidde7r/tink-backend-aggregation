@@ -2,14 +2,19 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fa
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.executor.payment.entities.LinksEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.executor.payment.enums.FabricPaymentStatus;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
-import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Payment;
 
 @JsonObject
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
 public class CreatePaymentResponse {
 
     private String transactionStatus;
@@ -24,41 +29,14 @@ public class CreatePaymentResponse {
     private String fundsAvailable;
 
     @JsonIgnore
-    public PaymentResponse toTinkPaymentResponse(PaymentType paymentType) {
-        return toTinkPaymentResponse(paymentId, paymentType);
-    }
-
-    @JsonIgnore
-    public PaymentResponse toTinkPaymentResponse(String paymentId, PaymentType paymentType) {
-        Payment tinkPayment =
-                new Payment.Builder()
-                        .withStatus(
-                                FabricPaymentStatus.mapToTinkPaymentStatus(
-                                        FabricPaymentStatus.fromString(transactionStatus)))
-                        .withUniqueId(paymentId)
-                        .withType(paymentType)
-                        .build();
+    public PaymentResponse toTinkPaymentResponse(Payment tinkPayment) {
+        tinkPayment.setStatus(
+                FabricPaymentStatus.mapToTinkPaymentStatus(
+                        FabricPaymentStatus.fromString(transactionStatus)));
+        if (tinkPayment.getUniqueId() == null) {
+            tinkPayment.setUniqueId(paymentId); // bank Unique payment Id
+        }
 
         return new PaymentResponse(tinkPayment);
-    }
-
-    public String getPaymentId() {
-        return paymentId;
-    }
-
-    public LinksEntity getLinks() {
-        return links;
-    }
-
-    public String getTransactionStatus() {
-        return transactionStatus;
-    }
-
-    public String getPsuMessage() {
-        return psuMessage;
-    }
-
-    public String getScaStatus() {
-        return scaStatus;
     }
 }

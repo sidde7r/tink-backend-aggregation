@@ -131,6 +131,10 @@ public class FabricApiClient {
         return createPaymentRequest(
                         new URL(Urls.INITIATE_A_PAYMENT_URL)
                                 .parameter(
+                                        FabricConstants.PathParameterKeys.PAYMENT_SERVICE,
+                                        sessionStorage.get(
+                                                FabricConstants.PathParameterKeys.PAYMENT_SERVICE))
+                                .parameter(
                                         FabricConstants.PathParameterKeys.PAYMENT_PRODUCT,
                                         sessionStorage.get(
                                                 FabricConstants.PathParameterKeys.PAYMENT_PRODUCT)))
@@ -148,6 +152,10 @@ public class FabricApiClient {
         return createPaymentRequest(
                         new URL(Urls.GET_PAYMENT_URL)
                                 .parameter(
+                                        FabricConstants.PathParameterKeys.PAYMENT_SERVICE,
+                                        sessionStorage.get(
+                                                FabricConstants.PathParameterKeys.PAYMENT_SERVICE))
+                                .parameter(
                                         FabricConstants.PathParameterKeys.PAYMENT_PRODUCT,
                                         sessionStorage.get(
                                                 FabricConstants.PathParameterKeys.PAYMENT_PRODUCT))
@@ -160,6 +168,10 @@ public class FabricApiClient {
         return createPaymentRequest(
                         new URL(Urls.GET_PAYMENT_STATUS_URL)
                                 .parameter(
+                                        FabricConstants.PathParameterKeys.PAYMENT_SERVICE,
+                                        sessionStorage.get(
+                                                FabricConstants.PathParameterKeys.PAYMENT_SERVICE))
+                                .parameter(
                                         FabricConstants.PathParameterKeys.PAYMENT_PRODUCT,
                                         sessionStorage.get(
                                                 FabricConstants.PathParameterKeys.PAYMENT_PRODUCT))
@@ -171,6 +183,11 @@ public class FabricApiClient {
         PaymentAuthorizationsResponse result =
                 createPaymentRequest(
                                 new URL(Urls.GET_PAYMENT_AUTHORIZATIONS_URL)
+                                        .parameter(
+                                                FabricConstants.PathParameterKeys.PAYMENT_SERVICE,
+                                                sessionStorage.get(
+                                                        FabricConstants.PathParameterKeys
+                                                                .PAYMENT_SERVICE))
                                         .parameter(
                                                 FabricConstants.PathParameterKeys.PAYMENT_PRODUCT,
                                                 sessionStorage.get(
@@ -190,6 +207,10 @@ public class FabricApiClient {
     public PaymentAuthorizationStatus getPaymentAuthorizationStatus(String paymentId) {
         return createPaymentRequest(
                         new URL(Urls.GET_PAYMENT_AUTHORIZATION_STATUS_URL)
+                                .parameter(
+                                        FabricConstants.PathParameterKeys.PAYMENT_SERVICE,
+                                        sessionStorage.get(
+                                                FabricConstants.PathParameterKeys.PAYMENT_SERVICE))
                                 .parameter(
                                         FabricConstants.PathParameterKeys.PAYMENT_PRODUCT,
                                         sessionStorage.get(

@@ -76,7 +76,7 @@ public class FabricPaymentController {
             case PDNG:
                 return new PaymentMultiStepResponse(
                         createPaymentResponse.toTinkPaymentResponse(
-                                paymentMultiStepRequest.getPayment().getType()),
+                                paymentMultiStepRequest.getPayment()),
                         AuthenticationStepConstants.STEP_FINALIZE,
                         new ArrayList<>());
             case RCVD:
@@ -104,7 +104,7 @@ public class FabricPaymentController {
         } else {
             return new PaymentMultiStepResponse(
                     createPaymentResponse.toTinkPaymentResponse(
-                            paymentMultiStepRequest.getPayment().getType()),
+                            paymentMultiStepRequest.getPayment()),
                     FabricConstants.PaymentStep.IN_PROGRESS,
                     new ArrayList<>());
         }

@@ -4,6 +4,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fab
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.payments.common.model.PaymentScheme;
+import se.tink.libraries.transfer.rpc.PaymentServiceType;
 
 public class FabricPaymentSessionStorage {
 
@@ -11,7 +12,7 @@ public class FabricPaymentSessionStorage {
 
     public FabricPaymentSessionStorage(SessionStorage session) {
         this.session = session;
-        updateDefaultPaymentProduct();
+        initDefaultSession();
     }
 
     public void updatePaymentProductIfNeeded(Payment payment) {
@@ -22,7 +23,22 @@ public class FabricPaymentSessionStorage {
         }
     }
 
-    private void updateDefaultPaymentProduct() {
+    public void updatePaymentServiceIfNeeded(Payment payment) {
+        if (PaymentServiceType.PERIODIC == payment.getPaymentServiceType()) {
+            session.put(
+                    FabricConstants.PathParameterKeys.PAYMENT_SERVICE,
+                    FabricConstants.PathParameterValues.PAYMENT_SERVICE_PERIODIC_PAYMENTS);
+        } else {
+            session.put(
+                    FabricConstants.PathParameterKeys.PAYMENT_SERVICE,
+                    FabricConstants.PathParameterValues.PAYMENT_SERVICE_PAYMENTS);
+        }
+    }
+
+    private void initDefaultSession() {
+        session.put(
+                FabricConstants.PathParameterKeys.PAYMENT_SERVICE,
+                FabricConstants.PathParameterValues.PAYMENT_SERVICE_PAYMENTS);
         session.put(
                 FabricConstants.PathParameterKeys.PAYMENT_PRODUCT,
                 FabricConstants.PathParameterValues.PAYMENT_PRODUCT_SEPA_CREDIT);
