@@ -40,6 +40,8 @@ public class FiduciaTransactionalAccountFetcherTest {
     private static final String CURRENCY = "EUR";
     private static final String OWNER_NAME = "dummyOwnerName";
     private static final String SECOND_PAGE_PATH = "SomeAwesomePath";
+    private static final String CREDITOR_NAME = "creditorName";
+    private static final String DEBTOR_NAME = "debtorName";
 
     private FiduciaApiClient apiClient;
 
@@ -131,7 +133,9 @@ public class FiduciaTransactionalAccountFetcherTest {
                                 new TransactionEntity(
                                         new Date(),
                                         "to own account",
-                                        new AmountEntity(CURRENCY, BigDecimal.valueOf(10.0))))));
+                                        new AmountEntity(CURRENCY, BigDecimal.valueOf(10.0)),
+                                        CREDITOR_NAME,
+                                        DEBTOR_NAME))));
     }
 
     private GetTransactionsResponse getTransactionsLastPage() {
@@ -142,7 +146,9 @@ public class FiduciaTransactionalAccountFetcherTest {
                                 new TransactionEntity(
                                         new Date(),
                                         "to own account",
-                                        new AmountEntity(CURRENCY, BigDecimal.valueOf(10.0))))));
+                                        new AmountEntity(CURRENCY, BigDecimal.valueOf(10.0)),
+                                        CREDITOR_NAME,
+                                        DEBTOR_NAME))));
     }
 
     private TransactionalAccount getTestAccount() {
