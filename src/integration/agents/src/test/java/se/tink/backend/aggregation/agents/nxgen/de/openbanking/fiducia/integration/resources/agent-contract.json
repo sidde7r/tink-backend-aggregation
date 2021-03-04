@@ -26,7 +26,7 @@
     {
       "amount": -10.0,
       "date": 1580382000000,
-      "description": "To own account IBAN: another_iban BIC: PBNKDEFFXXX",
+      "description": "Jan Unknown",
       "internalPayload": {},
       "originalAmount": 0.0,
       "payload": {},
@@ -38,7 +38,7 @@
     {
       "amount": 30.0,
       "date": 1583146800000,
-      "description": "To own account IBAN: another_iban BIC: PBNKDEFFXXX",
+      "description": "Jan Unknown",
       "internalPayload": {},
       "originalAmount": 0.0,
       "payload": {},
@@ -50,7 +50,7 @@
     {
       "amount": -1.0,
       "date": 1585562400000,
-      "description": "To own account IBAN: another_iban BIC: PBNKDEFFXXX",
+      "description": "Jan Unknown",
       "internalPayload": {},
       "originalAmount": 0.0,
       "payload": {},
@@ -62,7 +62,7 @@
     {
       "amount": -11234.0,
       "date": 1580382000000,
-      "description": "To own account IBAN: another_iban BIC: PBNKDEFFXXX",
+      "description": "Jan Unknown",
       "internalPayload": {},
       "originalAmount": 0.0,
       "payload": {},
