@@ -120,9 +120,13 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         }
 
         public static void observe(
-                MetricRegistry metricRegistry, MetricId histogram, long duration) {
-
-            metricRegistry.histogram(histogram, buckets).update(duration);
+                MetricRegistry metricRegistry,
+                MetricId histogram,
+                long duration,
+                String initiator) {
+            metricRegistry
+                    .histogram(histogram.label(INITIATOR, initiator), buckets)
+                    .update(duration);
         }
     }
 
@@ -392,7 +396,8 @@ public class AgentWorkerContext extends AgentContext implements Managed {
             SupplementalInformationMetrics.observe(
                     getMetricRegistry(),
                     SupplementalInformationMetrics.duration,
-                    stopwatch.elapsed(TimeUnit.MILLISECONDS) / 1000);
+                    stopwatch.elapsed(TimeUnit.MILLISECONDS) / 1000,
+                    initiator);
         }
         logger.info("Supplemental information (empty) will be returned");
         return Optional.empty();
