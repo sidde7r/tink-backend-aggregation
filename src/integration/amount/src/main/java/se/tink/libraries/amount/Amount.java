@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Strings;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.Objects;
 
 @Deprecated
@@ -20,10 +19,6 @@ public class Amount extends Number {
         this.value = 0D;
     }
 
-    public Amount(String currency, long unscaledValue, int scale) {
-        this(currency, toBigDecimal(unscaledValue, scale));
-    }
-
     public Amount(String currency, Number value) {
         this(currency, value != null ? value.doubleValue() : Double.NaN);
     }
@@ -31,19 +26,6 @@ public class Amount extends Number {
     public Amount(String currency, double value) {
         this.currency = currency != null ? currency.toUpperCase() : null;
         this.value = value;
-    }
-
-    public static Amount valueOf(String currency, long unscaledValue, int scale) {
-        Objects.requireNonNull(currency);
-        return new Amount(currency, unscaledValue, scale);
-    }
-
-    private static BigDecimal toBigDecimal(long unscaledValue, int scale) {
-        BigDecimal value = BigDecimal.valueOf(unscaledValue, scale);
-        if (scale != SCALE) {
-            value = value.setScale(SCALE, RoundingMode.HALF_EVEN);
-        }
-        return value;
     }
 
     public static Amount inSEK(Number value) {

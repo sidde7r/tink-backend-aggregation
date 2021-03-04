@@ -24,6 +24,10 @@ public class ExactCurrencyAmount implements Comparable<ExactCurrencyAmount> {
         return new ExactCurrencyAmount(new BigDecimal(i), currencyCode);
     }
 
+    public static ExactCurrencyAmount of(Number i, String currencyCode) {
+        return of(i.toString(), currencyCode);
+    }
+
     public static ExactCurrencyAmount of(double i, String currencyCode) {
         return new ExactCurrencyAmount(BigDecimal.valueOf(i), currencyCode);
     }

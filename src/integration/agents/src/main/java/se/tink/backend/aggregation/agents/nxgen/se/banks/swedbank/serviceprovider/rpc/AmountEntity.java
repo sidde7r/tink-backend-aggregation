@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovid
 import com.google.common.base.Strings;
 import se.tink.backend.aggregation.agents.AgentParsingUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.libraries.amount.Amount;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
@@ -19,19 +18,15 @@ public class AmountEntity {
         return amount;
     }
 
-    public Amount toTinkAmount(String defaultCurrency) {
+    public ExactCurrencyAmount toTinkAmount(String defaultCurrency) {
         if (Strings.isNullOrEmpty(currencyCode)) {
-            return new Amount(defaultCurrency, AgentParsingUtils.parseAmount(amount));
-        }
-
-        return new Amount(currencyCode, AgentParsingUtils.parseAmount(amount));
-    }
-
-    public ExactCurrencyAmount toTinkAmount() {
-        if (currencyCode == null || currencyCode.isEmpty()) {
-            return null;
+            ExactCurrencyAmount.of(AgentParsingUtils.parseAmount(amount), defaultCurrency);
         }
 
         return ExactCurrencyAmount.of(AgentParsingUtils.parseAmount(amount), currencyCode);
+    }
+
+    public ExactCurrencyAmount toTinkAmount() {
+        return toTinkAmount("");
     }
 }

@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ent
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class TransactionEntity {
@@ -50,7 +50,7 @@ public class TransactionEntity {
                 .setPending(Transactions.OPEN.equalsIgnoreCase(movementStatus))
                 .setDate(timeOfPurchase)
                 .setDescription(getDescription())
-                .setAmount(new Amount(billingCurrency, billingAmount))
+                .setAmount(ExactCurrencyAmount.of(billingAmount, billingCurrency))
                 .build();
     }
 

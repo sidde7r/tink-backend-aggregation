@@ -16,7 +16,6 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovide
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.AmountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
-import se.tink.libraries.amount.Amount;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
@@ -147,7 +146,7 @@ public class DetailedPortfolioEntity extends AbstractInvestmentAccountEntity {
         portfolio.setTotalValue(
                 Optional.ofNullable(this.marketValue)
                         .map(amountEntity -> amountEntity.toTinkAmount(defaultCurrency))
-                        .map(Amount::getValue)
+                        .map(ExactCurrencyAmount::getDoubleValue)
                         .orElse(null));
         portfolio.setRawType(this.type != null ? this.type : "");
         portfolio.setTotalProfit(
@@ -155,7 +154,7 @@ public class DetailedPortfolioEntity extends AbstractInvestmentAccountEntity {
                         .map(performanceEntity -> performanceEntity.getTinkAmount(defaultCurrency))
                         .filter(Optional::isPresent)
                         .map(Optional::get)
-                        .map(Amount::getValue)
+                        .map(ExactCurrencyAmount::getDoubleValue)
                         .orElse(null));
 
         portfolio.setCashValue(

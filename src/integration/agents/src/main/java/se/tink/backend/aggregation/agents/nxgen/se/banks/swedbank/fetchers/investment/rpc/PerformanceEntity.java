@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.AmountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class PerformanceEntity {
@@ -20,7 +20,7 @@ public class PerformanceEntity {
     }
 
     @JsonIgnore
-    public Optional<Amount> getTinkAmount(String defaultCurrency) {
+    public Optional<ExactCurrencyAmount> getTinkAmount(String defaultCurrency) {
         return Optional.ofNullable(amount)
                 .map(amountEntity -> amountEntity.toTinkAmount(defaultCurrency));
     }
