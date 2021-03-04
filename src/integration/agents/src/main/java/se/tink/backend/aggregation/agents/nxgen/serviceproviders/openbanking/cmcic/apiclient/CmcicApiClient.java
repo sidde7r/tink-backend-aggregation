@@ -352,14 +352,19 @@ public class CmcicApiClient implements FrAispApiClient {
         final String baseUrl = cmcicAgentConfig.getBaseUrl();
         final String basePath = cmcicAgentConfig.getBasePath();
 
-        final HttpResponse response =
-                createAispRequestInSession(baseUrl, basePath + BASE_API_PATH + path)
-                        .get(HttpResponse.class);
-
-        if (HttpStatus.SC_NO_CONTENT == response.getStatus()) {
-            return Optional.empty();
+        try {
+            final HttpResponse response =
+                    createAispRequestInSession(baseUrl, basePath + BASE_API_PATH + path)
+                            .get(HttpResponse.class);
+            if (HttpStatus.SC_NO_CONTENT == response.getStatus()) {
+                return Optional.empty();
+            }
+            return Optional.of(response.getBody(TrustedBeneficiariesResponseDto.class));
+        } catch (HttpResponseException e) {
+            if (e.getResponse().getStatus() == HttpStatus.SC_NOT_FOUND) {
+                return Optional.empty();
+            }
+            throw e;
         }
-
-        return Optional.of(response.getBody(TrustedBeneficiariesResponseDto.class));
     }
 }
