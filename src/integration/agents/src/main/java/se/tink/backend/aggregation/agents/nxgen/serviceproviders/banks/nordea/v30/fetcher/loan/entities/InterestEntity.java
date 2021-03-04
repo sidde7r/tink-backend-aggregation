@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import java.math.BigDecimal;
 import java.util.Date;
 import lombok.Getter;
+import se.tink.backend.aggregation.agents.AgentParsingUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
@@ -20,4 +21,8 @@ public class InterestEntity {
     private Date discountedRateEndDate;
 
     private BigDecimal baseRate;
+
+    public BigDecimal getTinkInterestRate() {
+        return AgentParsingUtils.parsePercentageFormInterest(rate);
+    }
 }

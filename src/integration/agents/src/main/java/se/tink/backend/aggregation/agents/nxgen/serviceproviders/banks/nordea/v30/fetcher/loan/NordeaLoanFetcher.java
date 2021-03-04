@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.fetcher.loan;
 
+import com.google.common.base.Strings;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -19,11 +20,19 @@ public class NordeaLoanFetcher implements AccountFetcher<LoanAccount> {
     @Override
     public Collection<LoanAccount> fetchAccounts() {
         return apiClient.fetchLoans().getLoans().stream()
-                .map(LoansEntity::getLoanId)
-                .map(apiClient::fetchLoanDetails)
-                .map(LoanDetailsResponse::toTinkLoanAccount)
+                .map(this::parseLoanAccount)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toList());
+    }
+
+    private Optional<LoanAccount> parseLoanAccount(LoansEntity loansEntity) {
+
+        if (Strings.isNullOrEmpty(loansEntity.getProductCode())) {
+            return loansEntity.toBasicTinkLoanAccount();
+        }
+
+        LoanDetailsResponse loanDetails = apiClient.fetchLoanDetails(loansEntity.getLoanId());
+        return loanDetails.toTinkLoanAccount();
     }
 }

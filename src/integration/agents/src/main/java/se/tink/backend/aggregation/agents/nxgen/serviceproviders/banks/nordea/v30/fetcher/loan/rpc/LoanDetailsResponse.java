@@ -85,13 +85,13 @@ public class LoanDetailsResponse {
         LoanModuleBuildStep builder =
                 LoanModule.builder()
                         .withType(getTinkLoanType())
-                        .withBalance(getBalance())
+                        .withBalance(amount.getTinkBalance())
                         .withInterestRate(getInterestRate().orElse(BigDecimal.ZERO).doubleValue())
-                        .setAmortized(getPaid())
+                        .setAmortized(amount.getTinkAmortized())
                         .setInitialBalance(getInitialBalance())
                         .setApplicants(getApplicants())
-                        .setCoApplicant(getApplicants().size() > 1)
                         .setInitialDate(convertDateToLocalDate(firstDrawDownDate))
+                        .setCoApplicant(owners.size() > 1)
                         .setLoanNumber(loanId);
         if (!Objects.isNull(interestEntity.get().getDiscountedRateEndDate())) {
             builder.setNextDayOfTermsChange(
@@ -174,11 +174,6 @@ public class LoanDetailsResponse {
     }
 
     @JsonIgnore
-    public ExactCurrencyAmount getBalance() {
-        return new ExactCurrencyAmount(amount.getBalance(), NordeaBaseConstants.CURRENCY).negate();
-    }
-
-    @JsonIgnore
     private String getHolderName() {
         if (owners.size() > 0) {
             return owners.get(0).getName();
@@ -203,11 +198,6 @@ public class LoanDetailsResponse {
         BigDecimal initialBalance =
                 Optional.ofNullable(credit).map(CreditEntity::getLimit).orElse(amount.getGranted());
         return new ExactCurrencyAmount(initialBalance, NordeaBaseConstants.CURRENCY).negate();
-    }
-
-    @JsonIgnore
-    private ExactCurrencyAmount getPaid() {
-        return new ExactCurrencyAmount(amount.getPaid(), NordeaBaseConstants.CURRENCY);
     }
 
     @JsonIgnore
