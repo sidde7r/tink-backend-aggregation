@@ -17,6 +17,16 @@ spec:
       description: <{ $labels.client }> is using a certificate that expires in <{ $value }> days.
       summary: A used certificate is expiring in <{ $value }> days.
 
+  -
+    alert: HighOptInSupplementalInformationPercentTimeout
+    annotations:
+      description: "The supplemental info requests for optIn flow time out in more than 60% of the cases in the last 10 minutes."
+    expr: (sum(increase(tink_aggregation_supplemental_information_requests_timed_out_total{initiator="opt-in"}[10m])) / sum(increase(tink_aggregation_supplemental_information_seconds_count{initiator="opt-in"}[10m]))) > 0.6
+    for: 10m
+    labels:
+      severity: ping
+      who: 'aggregation'
+
 ### Response time alerts ###
   - alert: HighResponseTimeAggregationService
     expr: histogram_quantile(0.95, sum(increase(tink_api_response_duration_seconds_bucket{app="aggregation-controller", path=~'/aggregation.*', path!~'/aggregation/update'}[5m])) by (method, path, le, instance)) > 0.5
