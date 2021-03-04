@@ -1,15 +1,16 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher.entities;
 
+import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.BankdataPaymentAccountCapabilities;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.CheckingAccount;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
-import se.tink.libraries.account.enums.AccountFlag;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
@@ -46,32 +47,44 @@ public class BankdataAccountEntity {
     private long accountNoAsLong;
     private long accountOwnerRefNo;
 
-    public TransactionalAccount toTinkAccount() {
-        AccountTypes tinkAccountType = getType();
-        return CheckingAccount.builder(
-                        tinkAccountType,
-                        constructUniqueIdentifier(),
-                        ExactCurrencyAmount.of(balance, currencyCode))
-                .setAccountNumber(accountNo)
-                .setName(name)
-                .setBankIdentifier(constructUniqueIdentifier())
+    public Optional<TransactionalAccount> toTinkAccount() {
+        AccountTypes type = getType();
+        if (isNotTransactionalAccount(type)) {
+            return Optional.empty();
+        }
+
+        TransactionalAccountType tinkAccountType = TransactionalAccountType.from(type).orElse(null);
+        return TransactionalAccount.nxBuilder()
+                .withType(tinkAccountType)
+                .withPaymentAccountFlag()
+                .withBalance(BalanceModule.of(ExactCurrencyAmount.of(getBalance(), currencyCode)))
+                .withId(
+                        IdModule.builder()
+                                .withUniqueIdentifier(constructUniqueIdentifier())
+                                .withAccountNumber(accountNo)
+                                .withAccountName(name)
+                                .addIdentifier(AccountIdentifier.create(Type.IBAN, iban))
+                                .build())
+                .addHolderName(accountOwner)
+                .setApiIdentifier(constructUniqueIdentifier())
                 .putInTemporaryStorage(REGISTRATION_NUMBER_TEMP_STORAGE_KEY, regNo)
                 .putInTemporaryStorage(ACCOUNT_NUMBER_TEMP_STORAGE_KEY, accountNo)
                 .canExecuteExternalTransfer(
                         BankdataPaymentAccountCapabilities.canExecuteExternalTransfer(
-                                name, tinkAccountType, this))
+                                name, type, this))
                 .canReceiveExternalTransfer(
                         BankdataPaymentAccountCapabilities.canReceiveExternalTransfer(
-                                name, tinkAccountType, this))
-                .canWithdrawCash(
-                        BankdataPaymentAccountCapabilities.canWithdrawCash(name, tinkAccountType))
-                .canPlaceFunds(
-                        BankdataPaymentAccountCapabilities.canPlaceFunds(
-                                name, tinkAccountType, this))
-                .addAccountFlag(AccountFlag.PSD2_PAYMENT_ACCOUNT)
-                .addIdentifier(AccountIdentifier.create(Type.IBAN, iban))
-                .setHolderName(new HolderName(getAccountOwner()))
+                                name, type, this))
+                .canWithdrawCash(BankdataPaymentAccountCapabilities.canWithdrawCash(name, type))
+                .canPlaceFunds(BankdataPaymentAccountCapabilities.canPlaceFunds(name, type, this))
                 .build();
+    }
+
+    private boolean isNotTransactionalAccount(AccountTypes type) {
+        Optional<TransactionalAccountType> transactionalAccountType =
+                TransactionalAccountType.from(type);
+        return transactionalAccountType.isPresent()
+                && transactionalAccountType.orElse(null) != TransactionalAccountType.OTHER;
     }
 
     public AccountTypes getType() {

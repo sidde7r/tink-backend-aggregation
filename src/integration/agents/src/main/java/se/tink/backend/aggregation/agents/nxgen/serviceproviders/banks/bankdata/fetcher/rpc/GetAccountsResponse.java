@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher.rpc;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import se.tink.backend.agents.rpc.AccountTypes;
@@ -18,6 +19,8 @@ public class GetAccountsResponse {
         return accounts.stream()
                 .filter(accountIsNotALoan())
                 .map(BankdataAccountEntity::toTinkAccount)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .collect(Collectors.toList());
     }
 
