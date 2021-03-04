@@ -18,11 +18,14 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.dto.DebtorAccount;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.dto.InstructedAmount;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.dto.RemittanceInformationDto;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domestic.dto.DomesticPaymentConsentFundsConfirmationResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domestic.dto.DomesticPaymentConsentFundsConfirmationResponseData;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domestic.dto.DomesticPaymentConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domestic.dto.DomesticPaymentConsentResponseData;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domestic.dto.DomesticPaymentInitiation;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domestic.dto.DomesticPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domestic.dto.DomesticPaymentResponseData;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domestic.dto.FundsAvailableResult;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domesticscheduled.dto.DomesticScheduledPaymentConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domesticscheduled.dto.DomesticScheduledPaymentConsentResponseData;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domesticscheduled.dto.DomesticScheduledPaymentInitiation;
@@ -226,6 +229,22 @@ public class UkOpenBankingPaymentTestFixtures {
         when(domesticPaymentResponseMock.getData()).thenReturn(responseDataMock);
 
         return domesticPaymentResponseMock;
+    }
+
+    public static DomesticPaymentConsentFundsConfirmationResponse
+            createFundsConfirmationResponse() {
+        DomesticPaymentConsentFundsConfirmationResponse
+                domesticPaymentConsentFundsConfirmationResponse =
+                        mock(DomesticPaymentConsentFundsConfirmationResponse.class);
+        DomesticPaymentConsentFundsConfirmationResponseData domesticPaymentConsentResponseData =
+                mock(DomesticPaymentConsentFundsConfirmationResponseData.class);
+        FundsAvailableResult fundsAvailableResult = mock(FundsAvailableResult.class);
+        when(domesticPaymentConsentFundsConfirmationResponse.getData())
+                .thenReturn(domesticPaymentConsentResponseData);
+        when(domesticPaymentConsentResponseData.getFundsAvailableResult())
+                .thenReturn(fundsAvailableResult);
+        when(fundsAvailableResult.isFundsAvailable()).thenReturn(true);
+        return domesticPaymentConsentFundsConfirmationResponse;
     }
 
     public static DomesticPaymentConsentResponse createDomesticPaymentConsentResponse() {
