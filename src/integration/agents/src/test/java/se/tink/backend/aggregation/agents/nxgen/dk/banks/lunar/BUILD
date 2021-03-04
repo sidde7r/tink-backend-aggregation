@@ -14,6 +14,7 @@ junit_test(
     deps = [
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/dk/banks/lunar",
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
+        "//src/integration/credentials/src/main/java/se/tink/libraries/credentials/service",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
     ],
 )
@@ -35,6 +36,7 @@ junit_test(
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/agents_platform/framework",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/dk/banks/lunar",
         "//src/integration/amount",
+        "//src/integration/identity_data",
         "//src/integration/lib",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/agentplatform",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions/agent",

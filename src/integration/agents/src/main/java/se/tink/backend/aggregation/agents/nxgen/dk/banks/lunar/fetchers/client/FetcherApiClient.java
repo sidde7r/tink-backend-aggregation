@@ -13,12 +13,12 @@ import se.tink.backend.aggregation.agents.agentplatform.authentication.storage.P
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.LunarConstants;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.persistance.LunarAuthData;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.persistance.LunarDataAccessorFactory;
-import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.transactionalaccount.rpc.CardsResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.transactionalaccount.rpc.GoalDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.transactionalaccount.rpc.GoalsResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.transactionalaccount.rpc.MembersResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.transactionalaccount.rpc.TransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.transactionalaccount.rpc.UserSettingsResponse;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
@@ -34,12 +34,6 @@ public class FetcherApiClient {
     private final RandomValueGenerator randomValueGenerator;
     private final String languageCode;
     private LunarAuthData authData;
-
-    public AccountsResponse fetchAccounts() {
-        return getDefaultRequestBuilder(Url.ACCOUNTS_VIEW)
-                .type(MediaType.APPLICATION_JSON_TYPE)
-                .get(AccountsResponse.class);
-    }
 
     public GoalsResponse fetchSavingGoals() {
         return getDefaultRequestBuilder(Url.GOALS).get(GoalsResponse.class);
@@ -68,6 +62,10 @@ public class FetcherApiClient {
     public MembersResponse fetchMembers(String accountId) {
         return getDefaultRequestBuilder(Url.MEMBERS.parameter(PathParams.ACCOUNT_ID, accountId))
                 .get(MembersResponse.class);
+    }
+
+    public UserSettingsResponse getUserSettings() {
+        return getDefaultRequestBuilder(Url.USER_SETTINGS).get(UserSettingsResponse.class);
     }
 
     private RequestBuilder getDefaultRequestBuilder(URL url) {

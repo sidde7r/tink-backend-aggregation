@@ -11,7 +11,6 @@ import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.exceptions.agent.AgentException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
-import se.tink.backend.aggregation.agents.exceptions.errors.SupplementalInfoError;
 import se.tink.backend.aggregation.agents.exceptions.nemid.NemIdException;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AgentBankApiError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AgentError;
@@ -122,10 +121,15 @@ public class AuthenticationExceptionHandler {
             @Override
             public AgentBankApiError toAgentBankApiError(AuthenticationException e) {
                 SupplementalInfoException supplementalInfoException = (SupplementalInfoException) e;
-                if (supplementalInfoException.getError() == SupplementalInfoError.WAIT_TIMEOUT) {
-                    return new NoUserInteractionResponseError();
+                switch (supplementalInfoException.getError()) {
+                    case WAIT_TIMEOUT:
+                    case NO_VALID_CODE:
+                        return new NoUserInteractionResponseError();
+                    default:
+                        return new AuthenticationError(
+                                getErrorWithOriginalUserMessage(
+                                        AgentError.GENERAL_AUTHORIZATION_ERROR.getCode(), e));
                 }
-                throw e;
             }
         }
     }

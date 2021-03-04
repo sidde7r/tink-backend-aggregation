@@ -10,6 +10,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
 import se.tink.backend.aggregation.agents.models.TransactionDateType;
+import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.EntryStatusCode;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.api.UkOpenBankingApiDefinitions.TransactionMutability;
@@ -107,14 +108,8 @@ public class TransactionEntity {
                         .setTransactionReference(transactionReference)
                         .setProviderMarket(PROVIDER_MARKET);
 
-        if (merchantDetails != null) {
-            builder.setMerchantName(merchantDetails.getMerchantName())
-                    .setMerchantCategoryCode(merchantDetails.getMerchantCategoryCode());
-        }
-        if (proprietaryBankTransactionCode != null) {
-            builder.setProprietaryFinancialInstitutionType(
-                    proprietaryBankTransactionCode.getCode());
-        }
+        addNonMandatoryFields(builder);
+
         return (Transaction) builder.build();
     }
 
@@ -131,6 +126,16 @@ public class TransactionEntity {
                         .setTransactionReference(transactionReference)
                         .setProviderMarket(PROVIDER_MARKET);
 
+        addNonMandatoryFields(builder);
+        return (CreditCardTransaction) builder.build();
+    }
+
+    private void addNonMandatoryFields(Builder builder) {
+        if (transactionId != null) {
+            builder.addExternalSystemIds(
+                    TransactionExternalSystemIdType.PROVIDER_GIVEN_TRANSACTION_ID, transactionId);
+        }
+
         if (merchantDetails != null) {
             builder.setMerchantName(merchantDetails.getMerchantName())
                     .setMerchantCategoryCode(merchantDetails.getMerchantCategoryCode());
@@ -139,7 +144,6 @@ public class TransactionEntity {
             builder.setProprietaryFinancialInstitutionType(
                     proprietaryBankTransactionCode.getCode());
         }
-        return (CreditCardTransaction) builder.build();
     }
 
     private ArrayList<TransactionDate> getTransactionDates() {

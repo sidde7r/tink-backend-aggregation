@@ -22,7 +22,6 @@ public class LunarAuthInitStepTest {
 
     private static final String USER_ID = "Tester";
     private static final String DEVICE_ID = "some test id";
-    private static final String LUNAR_PASSWORD = "1234";
     private static final String ACCESS_TOKEN = "test_token";
 
     private LunarAuthInitStep lunarAuthInitStep;
@@ -37,10 +36,9 @@ public class LunarAuthInitStepTest {
 
     @Test
     @Parameters(method = "requestParams")
-    public void shouldReturnManualAuthenticationStep(
-            String userId, String lunarPassword, String token, String deviceId) {
+    public void shouldReturnManualAuthenticationStep(String userId, String token, String deviceId) {
         // given
-        LunarAuthData initialData = getAuthData(userId, lunarPassword, token, deviceId);
+        LunarAuthData initialData = getAuthData(userId, token, deviceId);
 
         LunarAuthDataAccessor authDataAccessor =
                 LunarTestUtils.getAuthDataAccessor(dataAccessorFactory, initialData);
@@ -48,7 +46,7 @@ public class LunarAuthInitStepTest {
         request = LunarTestUtils.getStartAuthProcessRequest(authDataAccessor, initialData);
 
         // and
-        LunarAuthData expectedData = getAuthData(userId, lunarPassword, token, deviceId);
+        LunarAuthData expectedData = getAuthData(userId, token, deviceId);
 
         // when
         AgentAuthenticationResult result = lunarAuthInitStep.execute(request);
@@ -62,11 +60,9 @@ public class LunarAuthInitStepTest {
                                 LunarTestUtils.toPersistedData(expectedData)));
     }
 
-    private LunarAuthData getAuthData(
-            String userId, String lunarPassword, String token, String deviceId) {
+    private LunarAuthData getAuthData(String userId, String token, String deviceId) {
         LunarAuthData authData = new LunarAuthData();
         authData.setUserId(userId);
-        authData.setLunarPassword(lunarPassword);
         authData.setAccessToken(token);
         authData.setDeviceId(deviceId);
         return authData;
@@ -74,28 +70,20 @@ public class LunarAuthInitStepTest {
 
     private Object[] requestParams() {
         return new Object[] {
-            new Object[] {null, null, null, null},
-            new Object[] {USER_ID, LUNAR_PASSWORD, ACCESS_TOKEN, null},
-            new Object[] {USER_ID, LUNAR_PASSWORD, null, DEVICE_ID},
-            new Object[] {USER_ID, null, ACCESS_TOKEN, DEVICE_ID},
-            new Object[] {null, LUNAR_PASSWORD, ACCESS_TOKEN, DEVICE_ID},
-            new Object[] {null, null, ACCESS_TOKEN, DEVICE_ID},
-            new Object[] {USER_ID, LUNAR_PASSWORD, null, null},
-            new Object[] {USER_ID, null, null, DEVICE_ID},
-            new Object[] {null, LUNAR_PASSWORD, ACCESS_TOKEN, null},
-            new Object[] {USER_ID, null, ACCESS_TOKEN, null},
-            new Object[] {null, LUNAR_PASSWORD, null, DEVICE_ID},
-            new Object[] {USER_ID, null, null, null},
-            new Object[] {null, LUNAR_PASSWORD, null, null},
-            new Object[] {null, null, ACCESS_TOKEN, null},
-            new Object[] {null, null, null, DEVICE_ID},
+            new Object[] {null, null, null},
+            new Object[] {USER_ID, ACCESS_TOKEN, null},
+            new Object[] {USER_ID, null, DEVICE_ID},
+            new Object[] {null, ACCESS_TOKEN, DEVICE_ID},
+            new Object[] {null, null, DEVICE_ID},
+            new Object[] {USER_ID, null, null},
+            new Object[] {null, ACCESS_TOKEN, null},
         };
     }
 
     @Test
     public void shouldReturnAutoAuthenticationStepWhenUserHasCredentials() {
         // given
-        LunarAuthData initialData = getAuthData(USER_ID, LUNAR_PASSWORD, ACCESS_TOKEN, DEVICE_ID);
+        LunarAuthData initialData = getAuthData(USER_ID, ACCESS_TOKEN, DEVICE_ID);
 
         LunarAuthDataAccessor authDataAccessor =
                 LunarTestUtils.getAuthDataAccessor(dataAccessorFactory, initialData);
@@ -103,7 +91,7 @@ public class LunarAuthInitStepTest {
         request = LunarTestUtils.getStartAuthProcessRequest(authDataAccessor, initialData);
 
         // and
-        LunarAuthData expectedData = getAuthData(USER_ID, LUNAR_PASSWORD, ACCESS_TOKEN, DEVICE_ID);
+        LunarAuthData expectedData = getAuthData(USER_ID, ACCESS_TOKEN, DEVICE_ID);
 
         // when
         AgentAuthenticationResult result = lunarAuthInitStep.execute(request);

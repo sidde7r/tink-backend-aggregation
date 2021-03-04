@@ -19,7 +19,6 @@ import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication
 public class AutoAuthenticationStepTest {
 
     private static final String DEVICE_ID = "some test id";
-    private static final String LUNAR_PASSWORD = "1234";
     private static final String ACCESS_TOKEN = "test_token";
     private static final String USER_ID = "1234567890123";
 
@@ -62,7 +61,8 @@ public class AutoAuthenticationStepTest {
         assertThat(result)
                 .isEqualTo(
                         new AgentProceedNextStepAuthenticationResult(
-                                AgentAuthenticationProcessStep.identifier(SignInToLunarStep.class),
+                                AgentAuthenticationProcessStep.identifier(
+                                        FetchAccountsToConfirmLoginStep.class),
                                 LunarTestUtils.toProcessState(expectedState),
                                 LunarTestUtils.toPersistedData(expectedData)));
     }
@@ -70,7 +70,6 @@ public class AutoAuthenticationStepTest {
     private LunarAuthData getAuthData() {
         LunarAuthData authData = new LunarAuthData();
         authData.setUserId(USER_ID);
-        authData.setLunarPassword(LUNAR_PASSWORD);
         authData.setAccessToken(ACCESS_TOKEN);
         authData.setDeviceId(DEVICE_ID);
         return authData;

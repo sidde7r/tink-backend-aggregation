@@ -1,0 +1,27 @@
+{
+    "accountId": "ced8297b-1b58-401c-9002-60a70194f625",
+    "cards": [
+        {
+            "accountId": "ced8297b-1b58-401c-9002-60a70194f625",
+            "cardholderName": "Account Holder",
+            "id": "7042a06a-2d74-4ceb-82fc-885420519e74",
+            "maskedPan": "123456XXXXXX1234",
+            "name": "Lunar Test Card",
+            "panLast4": "1234",
+            "sort": 0,
+            "status": "active",
+            "type": "physical"
+        },
+        {
+            "accountId": "ced8297b-1b58-401c-9002-60a70194f625",
+            "cardholderName": "Second holder",
+            "id": "20b23dd8-ee88-469e-be86-d0db40960f75",
+            "maskedPan": "123456XXXXXX1234",
+            "name": "Lunar Test Card",
+            "panLast4": "1234",
+            "sort": 0,
+            "status": "active",
+            "type": "physical"
+        }
+    ]
+}

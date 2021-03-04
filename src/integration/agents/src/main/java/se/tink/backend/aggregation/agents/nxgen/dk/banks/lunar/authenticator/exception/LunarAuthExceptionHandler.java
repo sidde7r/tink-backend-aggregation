@@ -11,10 +11,10 @@ import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.persistance.LunarAuthDataAccessor;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.exception.ErrorResponse;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentFailedAuthenticationResult;
-import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AccessTokenFetchingFailureError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AccountBlockedError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AgentBankApiError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AgentError;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AuthorizationError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.InvalidCredentialsError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.ServerError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.SessionExpiredError;
@@ -98,19 +98,19 @@ public class LunarAuthExceptionHandler {
         return SerializationUtils.deserializeFromString(response, ErrorResponse.class);
     }
 
-    public static AgentFailedAuthenticationResult getSignInFailedAuthResult(
+    public static AgentFailedAuthenticationResult getFetchAccountsFailedResult(
             LunarAuthDataAccessor authDataAccessor, ResponseStatusException e, boolean isAutoAuth) {
         if (isAutoAuth) {
-            log.error("Failed to signIn to Lunar during autoAuth", e);
+            log.error("Failed to confirm login by fetching Lunar accounts during autoAuth!", e);
             return new AgentFailedAuthenticationResult(
                     LunarAuthExceptionHandler.toKnownErrorFromResponseOrDefault(
                             e, new SessionExpiredError()),
                     authDataAccessor.clearData());
         }
-        log.error("Failed to signIn to Lunar", e);
+        log.error("Failed to confirm login by fetching Lunar accounts!", e);
         return new AgentFailedAuthenticationResult(
                 LunarAuthExceptionHandler.toKnownErrorFromResponseOrDefault(
-                        e, new AccessTokenFetchingFailureError()),
+                        e, new AuthorizationError()),
                 authDataAccessor.clearData());
     }
 }

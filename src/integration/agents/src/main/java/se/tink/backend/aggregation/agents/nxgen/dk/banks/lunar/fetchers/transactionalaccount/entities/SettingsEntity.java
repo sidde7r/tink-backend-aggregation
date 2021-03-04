@@ -5,7 +5,6 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 @Getter
-public class MemberEntity {
-    private String name;
-    private String userId;
+public class SettingsEntity {
+    private String id;
 }

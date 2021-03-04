@@ -27,7 +27,7 @@ public class AutoAuthenticationStep
         processState.setAutoAuth(true);
 
         return new AgentProceedNextStepAuthenticationResult(
-                AgentAuthenticationProcessStep.identifier(SignInToLunarStep.class),
+                AgentAuthenticationProcessStep.identifier(FetchAccountsToConfirmLoginStep.class),
                 processStateAccessor.storeState(processState),
                 request.getAuthenticationPersistedData());
     }

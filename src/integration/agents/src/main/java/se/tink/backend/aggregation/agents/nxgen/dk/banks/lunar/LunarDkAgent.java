@@ -2,13 +2,16 @@ package se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar;
 
 import static se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.LunarConstants.HeaderValues;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.IDENTITY_DATA;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
 
 import com.google.inject.Inject;
 import java.time.Clock;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.agentplatform.AgentPlatformHttpClient;
@@ -21,6 +24,7 @@ import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.Nem
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.client.AuthenticationApiClient;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.persistance.LunarDataAccessorFactory;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.client.FetcherApiClient;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.transactionalaccount.LunarIdentityDataFetcher;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.transactionalaccount.LunarTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.transactionalaccount.LunarTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationProcess;
@@ -33,10 +37,11 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.TimeoutRetryFilter;
 
-@AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS})
+@AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, IDENTITY_DATA})
 public final class LunarDkAgent extends AgentPlatformAgent
         implements RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor,
+                RefreshIdentityDataExecutor,
                 AgentPlatformAuthenticator {
 
     private final FetcherApiClient apiClient;
@@ -44,6 +49,7 @@ public final class LunarDkAgent extends AgentPlatformAgent
     private final LunarAuthenticationConfig lunarAuthenticationConfig;
     private final RandomValueGenerator randomValueGenerator;
     private final LunarDataAccessorFactory accessorFactory;
+    private final LunarIdentityDataFetcher identityDataFetcher;
 
     @Inject
     public LunarDkAgent(AgentComponentProvider agentComponentProvider) {
@@ -64,6 +70,9 @@ public final class LunarDkAgent extends AgentPlatformAgent
         AuthenticationApiClient authenticationApiClient =
                 new AuthenticationApiClient(
                         new AgentPlatformHttpClient(client), randomValueGenerator, languageCode);
+
+        this.identityDataFetcher =
+                new LunarIdentityDataFetcher(apiClient, accessorFactory, getPersistentStorage());
 
         this.transactionalAccountRefreshController =
                 constructTransactionalAccountRefreshController();
@@ -121,7 +130,8 @@ public final class LunarDkAgent extends AgentPlatformAgent
         return new TransactionalAccountRefreshController(
                 metricRefreshController,
                 updateController,
-                new LunarTransactionalAccountFetcher(apiClient),
+                new LunarTransactionalAccountFetcher(
+                        apiClient, accessorFactory, persistentStorage, identityDataFetcher),
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
                         new TransactionKeyPaginationController<>(
@@ -141,5 +151,10 @@ public final class LunarDkAgent extends AgentPlatformAgent
     @Override
     public boolean isBackgroundRefreshPossible() {
         return true;
+    }
+
+    @Override
+    public FetchIdentityDataResponse fetchIdentityData() {
+        return new FetchIdentityDataResponse(identityDataFetcher.fetchIdentityData());
     }
 }

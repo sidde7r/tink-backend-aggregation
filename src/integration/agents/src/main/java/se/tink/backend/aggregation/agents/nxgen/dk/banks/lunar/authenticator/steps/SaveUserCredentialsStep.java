@@ -30,11 +30,9 @@ public class SaveUserCredentialsStep
 
         String userId = userData.getFieldValue(Field.Key.USERNAME.getFieldKey());
         String password = userData.getFieldValue(Field.Key.PASSWORD.getFieldKey());
-        String lunarPassword = userData.getFieldValue(Field.Key.ACCESS_PIN.getFieldKey());
 
         authData.setUserId(userId);
         authData.setNemIdPassword(password);
-        authData.setLunarPassword(lunarPassword);
 
         return new AgentProceedNextStepAuthenticationResult(
                 AgentAuthenticationProcessStep.identifier(GetNemIdTokenStep.class),

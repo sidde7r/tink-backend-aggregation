@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.client;
 
-import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -31,8 +30,7 @@ import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.ent
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.rpc.AccessTokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.rpc.AccessTokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.rpc.NemIdParamsResponse;
-import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.rpc.SignInRequest;
-import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.rpc.TokenResponse;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.MockRandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.libraries.serialization.utils.SerializationUtils;
@@ -46,7 +44,6 @@ public class AuthenticationApiClientTest {
     private static final String CHALLENGE = "1234567890123";
     private static final String DEVICE_ID = "some test id";
     private static final String TOKEN = "test token";
-    private static final String LUNAR_PASSWORD = "1111";
     private static final String UNFORMATTED_SIGNATURE =
             "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n<ds:SignatureValue>\nabcdefghij+abcdef/O002/</ds:SignatureValue>";
 
@@ -77,7 +74,7 @@ public class AuthenticationApiClientTest {
         NemIdParamsResponse result = authenticationApiClient.getNemIdParameters(DEVICE_ID);
 
         // then
-        assertThat(result).isEqualTo(expected);
+        assertThat(result).isEqualToComparingFieldByField(expected);
     }
 
     private Object[] getNemIdParametersTestParams() throws IOException {
@@ -134,7 +131,7 @@ public class AuthenticationApiClientTest {
                 authenticationApiClient.postNemIdToken(UNFORMATTED_SIGNATURE, CHALLENGE, DEVICE_ID);
 
         // then
-        assertThat(result).isEqualTo(expected);
+        assertThat(result).isEqualToComparingFieldByField(expected);
     }
 
     private String getAccessTokenRequestFormatted(AccessTokenRequest accessTokenRequest) {
@@ -163,40 +160,49 @@ public class AuthenticationApiClientTest {
     }
 
     @Test
-    @Parameters(method = "signInToLunarParams")
-    public void shouldSignInToLunar(String tokenResponseString, TokenResponse expected) {
+    public void shouldFetchAccounts() throws IOException {
         // given
         requestBuilder =
-                createTestBodyBuilder(HttpMethod.POST, Uri.SIGN_IN)
+                createTestBodyBuilder(HttpMethod.GET, Uri.ACCOUNTS_VIEW)
                         .header(Headers.AUTHORIZATION, TOKEN)
-                        .header(Headers.CONTENT_TYPE, APPLICATION_JSON);
+                        .contentType(MediaType.APPLICATION_JSON);
 
         // and
-        when(client.exchange(requestBuilder.body(new SignInRequest(LUNAR_PASSWORD)), String.class))
-                .thenReturn(ResponseEntity.ok(tokenResponseString));
+        when(client.exchange(requestBuilder.build(), String.class))
+                .thenReturn(
+                        ResponseEntity.ok(
+                                FileUtils.readFileToString(
+                                        Paths.get(TEST_DATA_PATH, "accounts_response.json")
+                                                .toFile(),
+                                        StandardCharsets.UTF_8)));
 
         // when
-        TokenResponse result = authenticationApiClient.signIn(LUNAR_PASSWORD, TOKEN, DEVICE_ID);
+        AccountsResponse result = authenticationApiClient.fetchAccounts(TOKEN, DEVICE_ID);
 
         // then
-        assertThat(result).isEqualTo(expected);
+        assertThat(result)
+                .isEqualToComparingFieldByFieldRecursively(
+                        SerializationUtils.deserializeFromString(
+                                Paths.get(TEST_DATA_PATH, "accounts_response.json").toFile(),
+                                AccountsResponse.class));
     }
 
-    private TokenResponse getExpectedTokenResponse() {
-        TokenResponse expected = new TokenResponse();
-        expected.setToken("test token");
-        return expected;
-    }
+    @Test
+    public void shouldReturnNullWhenFetchingAccountsFailed() {
+        // given
+        requestBuilder =
+                createTestBodyBuilder(HttpMethod.GET, Uri.ACCOUNTS_VIEW)
+                        .header(Headers.AUTHORIZATION, TOKEN)
+                        .contentType(MediaType.APPLICATION_JSON);
 
-    private Object[] signInToLunarParams() throws IOException {
-        return new Object[] {
-            new Object[] {
-                FileUtils.readFileToString(
-                        Paths.get(TEST_DATA_PATH, "token_response.json").toFile(),
-                        StandardCharsets.UTF_8),
-                getExpectedTokenResponse()
-            },
-            new Object[] {null, new TokenResponse()},
-        };
+        // and
+        when(client.exchange(requestBuilder.build(), String.class))
+                .thenReturn(ResponseEntity.ok().build());
+
+        // when
+        AccountsResponse result = authenticationApiClient.fetchAccounts(TOKEN, DEVICE_ID);
+
+        // then
+        assertThat(result).isNull();
     }
 }

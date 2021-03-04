@@ -63,7 +63,7 @@ public class GetLunarAccessTokenStep
         processState.setAutoAuth(false);
 
         return new AgentProceedNextStepAuthenticationResult(
-                AgentAuthenticationProcessStep.identifier(SignInToLunarStep.class),
+                AgentAuthenticationProcessStep.identifier(FetchAccountsToConfirmLoginStep.class),
                 processStateAccessor.storeState(processState),
                 authDataAccessor.storeData(authData));
     }

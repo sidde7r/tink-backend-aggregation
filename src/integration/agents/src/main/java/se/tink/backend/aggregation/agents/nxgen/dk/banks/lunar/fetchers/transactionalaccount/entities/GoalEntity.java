@@ -29,7 +29,6 @@ public class GoalEntity extends BaseResponseEntity {
 
     private BigDecimal balanceAmount;
     private String balanceCurrency;
-    private Boolean cashedOut;
     private List<FieldEntity> fields;
 
     public List<FieldEntity> getFields() {
@@ -38,9 +37,6 @@ public class GoalEntity extends BaseResponseEntity {
 
     @JsonIgnore
     public Optional<TransactionalAccount> toTransactionalAccount(List<Party> accountHolders) {
-        if (BooleanUtils.isTrue(cashedOut)) {
-            log.info("Lunar goal was cashed out");
-        }
         return TransactionalAccount.nxBuilder()
                 .withType(TransactionalAccountType.SAVINGS)
                 .withoutFlags()

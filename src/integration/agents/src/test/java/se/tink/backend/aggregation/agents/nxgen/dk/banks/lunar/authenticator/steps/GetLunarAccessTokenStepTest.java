@@ -100,7 +100,8 @@ public class GetLunarAccessTokenStepTest {
         assertThat(result)
                 .isEqualTo(
                         new AgentProceedNextStepAuthenticationResult(
-                                AgentAuthenticationProcessStep.identifier(SignInToLunarStep.class),
+                                AgentAuthenticationProcessStep.identifier(
+                                        FetchAccountsToConfirmLoginStep.class),
                                 LunarTestUtils.toProcessState(expectedState),
                                 LunarTestUtils.toPersistedData(expectedData)));
     }

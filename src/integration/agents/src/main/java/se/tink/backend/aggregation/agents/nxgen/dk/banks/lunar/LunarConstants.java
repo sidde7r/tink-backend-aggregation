@@ -15,7 +15,7 @@ public class LunarConstants {
         public static final URI NEM_ID_AUTHENTICATE =
                 toLunarUri("authentication/authenticate/nemid");
 
-        public static final URI SIGN_IN = toLunarUri("authentication/signin");
+        public static final URI ACCOUNTS_VIEW = toLunarUri("accounts-view/accounts");
 
         private static URI toLunarUri(String endpoint) {
             return URI.create(LUNAR_BASE_URL + endpoint);
@@ -23,7 +23,6 @@ public class LunarConstants {
     }
 
     public static class Url {
-        public static final URL ACCOUNTS_VIEW = toLunarUrl("accounts-view/accounts");
         public static final URL GOALS = toLunarUrl("goals/v2/goals");
         public static final URL TRANSACTIONS = toLunarUrl("transaction-view/transactions");
         public static final URL GOAL_DETAILS = toLunarUrl("goals/v2/goals/{goalId}/feed?from=0");
@@ -31,6 +30,7 @@ public class LunarConstants {
                 toLunarUrl("card-management/cards-by-account/{accountId}");
         public static final URL MEMBERS =
                 toLunarUrl("account-management/accounts/{accountId}/members");
+        public static final URL USER_SETTINGS = toLunarUrl("usersettings/settings");
 
         private static URL toLunarUrl(String endpoint) {
             return URL.of(LUNAR_BASE_URL + endpoint);
@@ -52,7 +52,6 @@ public class LunarConstants {
         public static final String APP_VERSION = "x-appversion";
         public static final String ACCEPT_ENCODING = "accept-encoding";
         public static final String AUTHORIZATION = "authorization";
-        public static final String CONTENT_TYPE = "content-type";
     }
 
     public static class HeaderValues {

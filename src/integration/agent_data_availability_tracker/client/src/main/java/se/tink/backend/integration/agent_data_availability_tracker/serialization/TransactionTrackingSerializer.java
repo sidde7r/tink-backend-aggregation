@@ -70,7 +70,10 @@ public class TransactionTrackingSerializer extends TrackingMapSerializer {
                 listBuilder,
                 transaction,
                 "transactionId",
-                transactionObject -> transactionObject.getMutability().toString(),
+                transactionObject ->
+                        transactionObject
+                                .getExternalSystemIds()
+                                .get(TransactionExternalSystemIdType.PROVIDER_GIVEN_TRANSACTION_ID),
                 transactionObject ->
                         !Objects.isNull(transactionObject.getExternalSystemIds())
                                 && transactionObject

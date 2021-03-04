@@ -179,32 +179,32 @@ public class GetNemIdTokenStepTest {
                 .thenReturn(nemIdParamsResponse);
         when(iFrameController.logInWithCredentials(any())).thenThrow(e);
 
-        AgentFailedAuthenticationResult expected =
-                new AgentFailedAuthenticationResult(
-                        apiError, LunarTestUtils.toPersistedData(new LunarAuthData()));
-
         // when
         AgentFailedAuthenticationResult result =
                 (AgentFailedAuthenticationResult) getNemIdTokenStep.execute(request);
 
         // then
-        assertThat(result.getError().getClass()).isEqualTo(expected.getError().getClass());
-        assertThat(result.getError().getDetails().getErrorCode())
-                .isEqualTo(expected.getError().getDetails().getErrorCode());
-        assertThat(result.getError().getDetails().getErrorMessage())
-                .isEqualTo(e.getUserMessage().get());
-        assertThat(result.getAuthenticationPersistedData())
-                .isEqualToComparingFieldByFieldRecursively(
-                        expected.getAuthenticationPersistedData());
+        LunarTestUtils.assertFailedResultEquals(
+                new AgentFailedAuthenticationResult(
+                        apiError, LunarTestUtils.toPersistedData(new LunarAuthData())),
+                result);
     }
 
     private Object[] loginWithNemIdErrors() {
         return new Object[] {
             new Object[] {
-                LoginError.CREDENTIALS_VERIFICATION_ERROR.exception(), new AuthorizationError()
+                LoginError.CREDENTIALS_VERIFICATION_ERROR.exception(),
+                new AuthorizationError(
+                        LunarTestUtils.getExpectedErrorDetails(
+                                AgentError.GENERAL_AUTHORIZATION_ERROR.getCode(),
+                                LoginError.CREDENTIALS_VERIFICATION_ERROR))
             },
             new Object[] {
-                LoginError.INCORRECT_CREDENTIALS.exception(), new InvalidCredentialsError()
+                LoginError.INCORRECT_CREDENTIALS.exception(),
+                new InvalidCredentialsError(
+                        LunarTestUtils.getExpectedErrorDetails(
+                                AgentError.INVALID_CREDENTIALS.getCode(),
+                                LoginError.INCORRECT_CREDENTIALS))
             },
             new Object[] {
                 LoginError.NOT_CUSTOMER.exception(),
@@ -212,8 +212,20 @@ public class GetNemIdTokenStepTest {
                         LunarTestUtils.getExpectedErrorDetails(
                                 AgentError.INVALID_CREDENTIALS.getCode(), LoginError.NOT_CUSTOMER))
             },
-            new Object[] {LoginError.DEFAULT_MESSAGE.exception(), new ThirdPartyAppUnknownError()},
-            new Object[] {NemIdError.REJECTED.exception(), new ThirdPartyAppCancelledError()},
+            new Object[] {
+                LoginError.DEFAULT_MESSAGE.exception(),
+                new ThirdPartyAppUnknownError(
+                        LunarTestUtils.getExpectedErrorDetails(
+                                AgentError.THIRD_PARTY_APP_UNKNOWN_ERROR.getCode(),
+                                LoginError.DEFAULT_MESSAGE))
+            },
+            new Object[] {
+                NemIdError.REJECTED.exception(),
+                new ThirdPartyAppCancelledError(
+                        LunarTestUtils.getExpectedErrorDetails(
+                                AgentError.THIRD_PARTY_APP_CANCELLED.getCode(),
+                                NemIdError.REJECTED))
+            },
             new Object[] {
                 NemIdError.INTERRUPTED.exception(),
                 new AuthenticationError(
@@ -236,18 +248,52 @@ public class GetNemIdTokenStepTest {
                                 NemIdError.NEMID_BLOCKED))
             },
             new Object[] {
-                NemIdError.INVALID_CODE_CARD_CODE.exception(), new InvalidCredentialsError()
+                NemIdError.INVALID_CODE_CARD_CODE.exception(),
+                new InvalidCredentialsError(
+                        LunarTestUtils.getExpectedErrorDetails(
+                                AgentError.INVALID_CREDENTIALS.getCode(),
+                                NemIdError.INVALID_CODE_CARD_CODE))
             },
-            new Object[] {NemIdError.USE_NEW_CODE_CARD.exception(), new InvalidCredentialsError()},
             new Object[] {
-                NemIdError.INVALID_CODE_TOKEN_CODE.exception(), new InvalidCredentialsError()
+                NemIdError.USE_NEW_CODE_CARD.exception(),
+                new InvalidCredentialsError(
+                        LunarTestUtils.getExpectedErrorDetails(
+                                AgentError.INVALID_CREDENTIALS.getCode(),
+                                NemIdError.USE_NEW_CODE_CARD))
             },
-            new Object[] {NemIdError.TIMEOUT.exception(), new ThirdPartyAppTimedOutError()},
             new Object[] {
-                NemIdError.CODE_TOKEN_NOT_SUPPORTED.exception(), new ThirdPartyAppUnknownError()
+                NemIdError.INVALID_CODE_TOKEN_CODE.exception(),
+                new InvalidCredentialsError(
+                        LunarTestUtils.getExpectedErrorDetails(
+                                AgentError.INVALID_CREDENTIALS.getCode(),
+                                NemIdError.INVALID_CODE_TOKEN_CODE))
+            },
+            new Object[] {
+                NemIdError.TIMEOUT.exception(),
+                new ThirdPartyAppTimedOutError(
+                        LunarTestUtils.getExpectedErrorDetails(
+                                AgentError.THIRD_PARTY_APP_TIMEOUT.getCode(), NemIdError.TIMEOUT))
+            },
+            new Object[] {
+                NemIdError.CODE_TOKEN_NOT_SUPPORTED.exception(),
+                new ThirdPartyAppUnknownError(
+                        LunarTestUtils.getExpectedErrorDetails(
+                                AgentError.THIRD_PARTY_APP_UNKNOWN_ERROR.getCode(),
+                                NemIdError.CODE_TOKEN_NOT_SUPPORTED))
             },
             new Object[] {
                 SupplementalInfoError.WAIT_TIMEOUT.exception(), new NoUserInteractionResponseError()
+            },
+            new Object[] {
+                SupplementalInfoError.NO_VALID_CODE.exception(),
+                new NoUserInteractionResponseError()
+            },
+            new Object[] {
+                SupplementalInfoError.UNKNOWN.exception(),
+                new AuthenticationError(
+                        LunarTestUtils.getExpectedErrorDetails(
+                                AgentError.GENERAL_AUTHORIZATION_ERROR.getCode(),
+                                SupplementalInfoError.UNKNOWN))
             },
             new Object[] {
                 BankServiceError.BANK_SIDE_FAILURE.exception(),
@@ -255,7 +301,7 @@ public class GetNemIdTokenStepTest {
                         LunarTestUtils.getExpectedErrorDetails(
                                 AgentError.HTTP_RESPONSE_ERROR.getCode(),
                                 BankServiceError.BANK_SIDE_FAILURE))
-            },
+            }
         };
     }
 
