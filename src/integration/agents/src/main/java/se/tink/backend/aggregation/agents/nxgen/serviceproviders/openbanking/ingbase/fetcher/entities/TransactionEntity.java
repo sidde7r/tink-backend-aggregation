@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.in
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.google.common.base.Strings;
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -70,7 +71,7 @@ public class TransactionEntity {
 
         return Transaction.builder()
                 .setPending(isPending)
-                .setDescription(toTinkDescription())
+                .setDescription(getDescription())
                 .setAmount(transactionAmount.toAmount())
                 .setDate(date)
                 // IMPORTANT! Do not change the transaction payload without consulting the
@@ -103,17 +104,22 @@ public class TransactionEntity {
                 .orElse("");
     }
 
-    public String toTinkDescription() {
+    public String getDescription() {
 
-        return Stream.of(getRemittanceInformationUnstructured(), creditorName, debtorName)
-                .filter(StringUtils::isNotBlank)
-                .findFirst()
-                .orElse(
-                        Stream.of(creditorAccount, debtorAccount)
-                                .filter(Objects::nonNull)
-                                .findFirst()
-                                .map(TransactionAccountEntity::getIban)
-                                .orElse(""));
+        if (transactionAmount.toAmount().getExactValue().compareTo(BigDecimal.ZERO) > 0) {
+            if (StringUtils.isNotEmpty(debtorName)) {
+                return debtorName;
+            }
+        } else if (StringUtils.isNotEmpty(creditorName)) {
+            if ((creditorName.toLowerCase().contains("paypal")
+                            || creditorName.toLowerCase().contains("klarna"))
+                    && StringUtils.isNotEmpty(remittanceInformationUnstructured)) {
+                return remittanceInformationUnstructured;
+            } else {
+                return creditorName;
+            }
+        }
+        return remittanceInformationUnstructured;
     }
 
     @VisibleForTesting

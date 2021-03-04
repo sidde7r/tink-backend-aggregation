@@ -1,8 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.fetcher.transactionalaccount.entity.transactions;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import java.math.BigDecimal;
 import java.util.Date;
-import java.util.stream.Stream;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.utils.berlingroup.AmountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -29,10 +29,19 @@ public abstract class TransactionDetailsBaseEntity {
     public abstract Transaction toTinkTransaction();
 
     public String getDescription() {
-        return Stream.of(remittanceInformationUnstructured, debtorName, creditorName)
-                .filter(StringUtils::isNotBlank)
-                .findFirst()
-                .map(description -> description.replace("\r\n", " "))
-                .orElse("");
+        if (transactionAmount.toTinkAmount().getExactValue().compareTo(BigDecimal.ZERO) > 0) {
+            if (StringUtils.isNotEmpty(debtorName)) {
+                return debtorName;
+            }
+        } else if (StringUtils.isNotEmpty(creditorName)) {
+            if ((creditorName.toLowerCase().contains("paypal")
+                            || creditorName.toLowerCase().contains("klarna"))
+                    && StringUtils.isNotEmpty(remittanceInformationUnstructured)) {
+                return remittanceInformationUnstructured;
+            } else {
+                return creditorName;
+            }
+        }
+        return remittanceInformationUnstructured;
     }
 }
