@@ -100,7 +100,6 @@ public class FabricConstants {
 
     public static class HeaderValues {
         public static final String TPP_REDIRECT_PREFERED = "true";
-        public static final String DUMMY_IP_ADDRESS = "0.0.0.0";
     }
 
     public static class Consent {

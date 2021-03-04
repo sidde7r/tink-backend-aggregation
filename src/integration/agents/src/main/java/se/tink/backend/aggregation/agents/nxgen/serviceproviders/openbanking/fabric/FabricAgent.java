@@ -55,12 +55,17 @@ public abstract class FabricAgent extends NextGenerationAgent
                         persistentStorage,
                         componentProvider.getRandomValueGenerator(),
                         sessionStorage,
+                        getUserIpInformation(),
                         getBaseUrl());
 
         clientName = request.getProvider().getPayload();
         transactionalAccountRefreshController =
                 getTransactionalAccountRefreshController(
                         componentProvider.getLocalDateTimeSource());
+    }
+
+    private FabricUserIpInformation getUserIpInformation() {
+        return new FabricUserIpInformation(request.isManual(), userIp);
     }
 
     @Override
