@@ -9,7 +9,6 @@ import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
-import se.tink.libraries.amount.Amount;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.rpc.Beneficiary;
 import se.tink.libraries.payment.rpc.CreateBeneficiary;
@@ -47,13 +46,7 @@ public class RedirectAuthenticationDemoAgentTest {
         transfer.setDestination(
                 AccountIdentifier.create(AccountIdentifier.Type.SORT_CODE, DESTINATION_IDENTIFIER));
 
-        // todo: Should fix this to use ExactCurrencyAmount instead of Amount
-        //        BigDecimal d = new BigDecimal(1);
-        //        ExactCurrencyAmount amount = new ExactCurrencyAmount(d, "GBP");
-        //        LocalDate executionDate = LocalDate.now();
-        //        String currency = "GBP";
-
-        transfer.setAmount(Amount.valueOf("GBP", 1050, 2));
+        transfer.setAmount(ExactCurrencyAmount.of(10.50, "GBP"));
         transfer.setSourceMessage("TRANSFER, test Tink!");
 
         new AgentIntegrationTest.Builder("uk", "uk-test-open-banking-redirect")

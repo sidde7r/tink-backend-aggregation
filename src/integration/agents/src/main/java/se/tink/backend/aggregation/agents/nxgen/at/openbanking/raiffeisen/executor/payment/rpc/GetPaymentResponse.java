@@ -5,7 +5,7 @@ import se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen.execut
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen.executor.payment.enums.RaiffeisenPaymentStatus;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Payment;
 
@@ -25,13 +25,6 @@ public class GetPaymentResponse {
     public GetPaymentResponse() {}
 
     public PaymentResponse toTinkPaymentResponse(PaymentType sepa) {
-        Amount amount =
-                Amount.valueOf(
-                        instructedAmount.getCurrency(),
-                        Double.valueOf(Double.parseDouble(instructedAmount.getAmount()) * 100)
-                                .longValue(),
-                        2);
-
         Payment.Builder buildingPaymentResponse =
                 new Payment.Builder()
                         .withCreditor(creditorAccount.toTinkCreditor())
@@ -39,7 +32,10 @@ public class GetPaymentResponse {
                         .withStatus(
                                 RaiffeisenPaymentStatus.mapToTinkPaymentStatus(
                                         RaiffeisenPaymentStatus.fromString(transactionStatus)))
-                        .withAmount(amount)
+                        .withExactCurrencyAmount(
+                                ExactCurrencyAmount.of(
+                                        instructedAmount.getAmount(),
+                                        instructedAmount.getCurrency()))
                         .withCurrency(instructedAmount.getCurrency())
                         .withUniqueId(uniqueID);
 

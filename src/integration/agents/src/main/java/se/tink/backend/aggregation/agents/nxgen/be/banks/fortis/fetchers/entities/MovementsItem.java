@@ -13,7 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.FortisConstants;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class MovementsItem {
     private static final Logger logger =
@@ -92,11 +92,11 @@ public class MovementsItem {
         return currency;
     }
 
-    private Amount getTinkAmount() {
+    private ExactCurrencyAmount getTinkAmount() {
         try {
-            return new Amount(
-                    currency,
-                    NumberFormat.getInstance(Locale.FRANCE).parse(amount.replace(".", "")));
+            return ExactCurrencyAmount.of(
+                    NumberFormat.getInstance(Locale.FRANCE).parse(amount.replace(".", "")),
+                    currency);
         } catch (ParseException e) {
             throw new IllegalStateException(
                     "Cannot parse amount in transaction: " + e.toString(), e);
