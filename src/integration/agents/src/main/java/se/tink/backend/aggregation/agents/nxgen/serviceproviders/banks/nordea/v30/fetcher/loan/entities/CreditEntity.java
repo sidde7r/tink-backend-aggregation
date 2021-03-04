@@ -1,24 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.fetcher.loan.entities;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import java.math.BigDecimal;
+import lombok.Getter;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
+@Getter
 public class CreditEntity {
-    @JsonProperty private BigDecimal limit;
-    @JsonProperty private BigDecimal available;
-    @JsonProperty private BigDecimal spent;
-
-    public BigDecimal getLimit() {
-        return limit;
-    }
-
-    public BigDecimal getAvailable() {
-        return available;
-    }
-
-    public BigDecimal getSpent() {
-        return spent;
-    }
+    private BigDecimal limit;
+    private BigDecimal available;
+    private BigDecimal spent;
 }

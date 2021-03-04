@@ -48,8 +48,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v3
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.fetcher.einvoice.rpc.FetchPaymentsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.fetcher.identitydata.rpc.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.fetcher.investment.rpc.FetchInvestmentResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.fetcher.loan.rpc.FetchLoanDetailsResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.fetcher.loan.rpc.FetchLoanResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.fetcher.loan.rpc.LoanDetailsResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.fetcher.loan.rpc.LoanResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.fetcher.transactionalaccount.rpc.FetchAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.fetcher.transactionalaccount.rpc.FetchAccountTransactionResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.fetcher.transfer.rpc.FetchBeneficiariesResponse;
@@ -253,20 +253,20 @@ public class NordeaBaseApiClient {
         return requestRefreshableGet(request, FetchInvestmentResponse.class);
     }
 
-    public FetchLoanResponse fetchLoans() {
+    public LoanResponse fetchLoans() {
         final RequestBuilder request =
                 httpClient.request(Urls.getUrl(nordeaConfiguration.getBaseUrl(), Urls.FETCH_LOANS));
 
-        return requestRefreshableGet(request, FetchLoanResponse.class);
+        return requestRefreshableGet(request, LoanResponse.class);
     }
 
-    public FetchLoanDetailsResponse fetchLoanDetails(String accountId) {
+    public LoanDetailsResponse fetchLoanDetails(String accountId) {
         final RequestBuilder request =
                 httpClient.request(
                         Urls.getUrl(nordeaConfiguration.getBaseUrl(), Urls.FETCH_LOAN_DETAILS)
                                 .parameter(IdTags.LOAN_ID, accountId));
 
-        return requestRefreshableGet(request, FetchLoanDetailsResponse.class);
+        return requestRefreshableGet(request, LoanDetailsResponse.class);
     }
 
     public FetchIdentityDataResponse fetchIdentityData() {

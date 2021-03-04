@@ -9,7 +9,7 @@ import java.util.Optional;
 import org.junit.Assert;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Provider;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.fetcher.loan.rpc.FetchLoanDetailsResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.fetcher.loan.rpc.LoanDetailsResponse;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.util.LoanInterpreter;
@@ -351,7 +351,7 @@ public class NordeaLoanFetcherTest {
     public void testLoanParsingWithSubLoans() {
         Optional<LoanAccount> loanAccountOptional =
                 SerializationUtils.deserializeFromString(
-                                LOAN_WITH_SUBLOAN_RESPONSE, FetchLoanDetailsResponse.class)
+                                LOAN_WITH_SUBLOAN_RESPONSE, LoanDetailsResponse.class)
                         .toTinkLoanAccount();
         Assert.assertTrue(loanAccountOptional.isPresent());
         LoanAccount loanAccount = loanAccountOptional.get();
@@ -370,7 +370,7 @@ public class NordeaLoanFetcherTest {
         loanAccountOptional =
                 SerializationUtils.deserializeFromString(
                                 LOAN_WITH_SUBLOAN_RESPONSE_MISSING_BASE_RATE,
-                                FetchLoanDetailsResponse.class)
+                                LoanDetailsResponse.class)
                         .toTinkLoanAccount();
         Assert.assertTrue(loanAccountOptional.isPresent());
         loanAccount = loanAccountOptional.get();
@@ -390,8 +390,7 @@ public class NordeaLoanFetcherTest {
 
         loanAccountOptional =
                 SerializationUtils.deserializeFromString(
-                                LOAN_RESPONSE_NO_BASE_RATES_IN_SUBLOAN,
-                                FetchLoanDetailsResponse.class)
+                                LOAN_RESPONSE_NO_BASE_RATES_IN_SUBLOAN, LoanDetailsResponse.class)
                         .toTinkLoanAccount();
         Assert.assertTrue(loanAccountOptional.isPresent());
         loanAccount = loanAccountOptional.get();
@@ -410,7 +409,7 @@ public class NordeaLoanFetcherTest {
 
         loanAccountOptional =
                 SerializationUtils.deserializeFromString(
-                                LOAN_RESPONSE_RATES_MISMATCH, FetchLoanDetailsResponse.class)
+                                LOAN_RESPONSE_RATES_MISMATCH, LoanDetailsResponse.class)
                         .toTinkLoanAccount();
         Assert.assertFalse(loanAccountOptional.isPresent());
     }
@@ -418,8 +417,7 @@ public class NordeaLoanFetcherTest {
     @Test
     public void testLoanParsing() {
         Optional<LoanAccount> loanAccountOptional =
-                SerializationUtils.deserializeFromString(
-                                LOAN_RESPONSE, FetchLoanDetailsResponse.class)
+                SerializationUtils.deserializeFromString(LOAN_RESPONSE, LoanDetailsResponse.class)
                         .toTinkLoanAccount();
         Assert.assertTrue(loanAccountOptional.isPresent());
         LoanAccount loanAccount = loanAccountOptional.get();
@@ -442,7 +440,7 @@ public class NordeaLoanFetcherTest {
     public void mapWithMissingFollowingPaymentTest() {
         Optional<LoanAccount> loanAccountOptional =
                 SerializationUtils.deserializeFromString(
-                                MISSING_FOLLOWING_PAYMENT_RESPONSE, FetchLoanDetailsResponse.class)
+                                MISSING_FOLLOWING_PAYMENT_RESPONSE, LoanDetailsResponse.class)
                         .toTinkLoanAccount();
 
         Assert.assertTrue(loanAccountOptional.isPresent());
