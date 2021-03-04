@@ -914,6 +914,11 @@ public final class LansforsakringarAgent extends AbstractAgent
                     case "001512":
                         throw BankIdError.TIMEOUT.exception();
                     case "12251006":
+                        log.warn(
+                                "Error code: {}, error message: {}, response content-type: {}",
+                                clientResponse.getHeaders().getFirst("Error-Code"),
+                                clientResponse.getHeaders().getFirst("Error-Message"),
+                                clientResponse.getHeaders().getFirst("Content-Type"));
                         throw BankIdError.UNKNOWN.exception();
                     case "00151":
                         throw BankServiceError.BANK_SIDE_FAILURE.exception();
