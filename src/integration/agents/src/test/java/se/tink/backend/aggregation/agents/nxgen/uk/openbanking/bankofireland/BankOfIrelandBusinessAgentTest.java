@@ -12,7 +12,7 @@ public class BankOfIrelandBusinessAgentTest {
                 .saveCredentialsAfter(true)
                 .expectLoggedIn(false)
                 .setAppId("tink")
-                .setFinancialInstitutionId("20db5a707c02460eb9a6eba771f80f45")
+                .setFinancialInstitutionId("60808d9d276b4e44b8a7b05a601262a1")
                 .build()
                 .testRefresh();
     }
