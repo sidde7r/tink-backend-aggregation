@@ -13,6 +13,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.AgentParsingUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.NordeaBaseConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.fetcher.loan.NordeaLoanParsingUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.fetcher.loan.entities.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.fetcher.loan.entities.CreditEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.fetcher.loan.entities.FollowingPaymentEntity;
@@ -64,7 +65,9 @@ public class LoanDetailsResponse {
                         .withLoanDetails(loanModule.get())
                         .withId(
                                 IdModule.builder()
-                                        .withUniqueIdentifier(maskAccountNumber())
+                                        .withUniqueIdentifier(
+                                                NordeaLoanParsingUtils.loanIdToUniqueIdentifier(
+                                                        loanId))
                                         .withAccountNumber(loanFormattedId)
                                         .withAccountName(getAccountName())
                                         .addIdentifier(new SwedishIdentifier(loanId))
@@ -184,11 +187,5 @@ public class LoanDetailsResponse {
     @JsonIgnore
     public List<String> getApplicants() {
         return owners.stream().map(Object::toString).collect(Collectors.toList());
-    }
-
-    // This method used for setting uniqueId is taken from the legacy Nordea agent.
-    @JsonIgnore
-    private String maskAccountNumber() {
-        return "************" + loanId.substring(loanId.length() - 4);
     }
 }

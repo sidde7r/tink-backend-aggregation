@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Optional;
 import lombok.Getter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.NordeaBaseConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v30.fetcher.loan.NordeaLoanParsingUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
@@ -37,7 +38,9 @@ public class LoansEntity {
                         .withLoanDetails(getLoanModule())
                         .withId(
                                 IdModule.builder()
-                                        .withUniqueIdentifier(maskAccountNumber())
+                                        .withUniqueIdentifier(
+                                                NordeaLoanParsingUtils.loanIdToUniqueIdentifier(
+                                                        loanId))
                                         .withAccountNumber(loanFormattedId)
                                         .withAccountName(getAccountName())
                                         .addIdentifier(new SwedishIdentifier(loanId))
@@ -65,11 +68,5 @@ public class LoansEntity {
     @JsonIgnore
     private String getAccountName() {
         return Strings.isNullOrEmpty(nickname) ? loanFormattedId : nickname;
-    }
-
-    // This method used for setting uniqueId is taken from the legacy Nordea agent.
-    @JsonIgnore
-    private String maskAccountNumber() {
-        return "************" + loanId.substring(loanId.length() - 4);
     }
 }
