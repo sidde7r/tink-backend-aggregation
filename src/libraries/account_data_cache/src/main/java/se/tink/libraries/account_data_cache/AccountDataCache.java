@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -48,6 +49,25 @@ public class AccountDataCache {
     public void setProcessedTinkAccountId(String bankAccountId, String tinkAccountId) {
         getAccountData(bankAccountId)
                 .ifPresent(accountData -> accountData.setProcessedTinkAccountId(tinkAccountId));
+    }
+
+    public void updateAccountBankId(String tinkAccountId, String newBankId) {
+        Optional<String> oldBankId =
+                accountDataByBankAccountId.entrySet().stream()
+                        .filter(
+                                entry ->
+                                        entry.getValue().getAccount().getId().equals(tinkAccountId))
+                        .map(Entry::getKey)
+                        .findFirst();
+        if (oldBankId.isPresent()) {
+            LOGGER.info("Updating bankId for cached account {}", tinkAccountId);
+            AccountData accountData = accountDataByBankAccountId.get(oldBankId.get());
+            accountData.getAccount().setBankId(newBankId);
+            accountDataByBankAccountId.put(newBankId, accountData);
+            accountDataByBankAccountId.remove(oldBankId.get());
+        } else {
+            LOGGER.info("Updating bankId for non-cached account {}", tinkAccountId);
+        }
     }
 
     public void cacheAccount(Account account) {

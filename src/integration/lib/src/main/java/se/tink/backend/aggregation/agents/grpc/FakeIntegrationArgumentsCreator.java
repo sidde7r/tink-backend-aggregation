@@ -132,6 +132,11 @@ public class FakeIntegrationArgumentsCreator {
                     }
 
                     @Override
+                    public Account updateAccountMetaData(String accountId, String newBankId) {
+                        return null;
+                    }
+
+                    @Override
                     public AccountHolder sendAccountHolderToUpdateService(
                             Account processedAccount) {
                         return null;
