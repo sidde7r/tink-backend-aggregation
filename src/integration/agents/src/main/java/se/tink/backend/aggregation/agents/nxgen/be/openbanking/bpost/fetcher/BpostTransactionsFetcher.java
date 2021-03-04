@@ -10,8 +10,10 @@ public class BpostTransactionsFetcher
         extends Xs2aDevelopersTransactionDateFromFetcher<TransactionalAccount> {
 
     public BpostTransactionsFetcher(
-            Xs2aDevelopersApiClient apiClient, LocalDateTimeSource localDateTimeSource) {
-        super(apiClient, localDateTimeSource);
+            Xs2aDevelopersApiClient apiClient,
+            LocalDateTimeSource localDateTimeSource,
+            boolean isManual) {
+        super(apiClient, localDateTimeSource, isManual);
     }
 
     @Override

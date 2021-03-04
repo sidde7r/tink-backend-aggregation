@@ -148,7 +148,9 @@ public final class N26Agent extends AgentPlatformAgent
                 new TransactionKeyWithInitDateFromFetcherController<>(
                         request,
                         new N26DevelopersTransactionDateFromFetcher<TransactionalAccount>(
-                                xs2aApiClient, componentProvider.getLocalDateTimeSource()));
+                                xs2aApiClient,
+                                componentProvider.getLocalDateTimeSource(),
+                                request.isManual()));
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController, updateController, accountFetcher, transactionFetcher);

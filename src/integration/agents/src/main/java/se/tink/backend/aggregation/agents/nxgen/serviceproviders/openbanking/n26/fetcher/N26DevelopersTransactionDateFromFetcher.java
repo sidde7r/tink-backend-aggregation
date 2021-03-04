@@ -22,6 +22,7 @@ public class N26DevelopersTransactionDateFromFetcher<A extends Account>
 
     private final Xs2aDevelopersForAgentPlatformApiClient apiClient;
     private final LocalDateTimeSource localDateTimeSource;
+    private final boolean isManual;
 
     @Override
     public LocalDate minimalFromDate() {
@@ -35,6 +36,15 @@ public class N26DevelopersTransactionDateFromFetcher<A extends Account>
 
     @Override
     public TransactionKeyPaginatorResponse<String> fetchTransactionsFor(
+            A account, LocalDate dateFrom) {
+        if (isManual) {
+            return fetchAllTransactionsWithFallback(account, dateFrom);
+        } else {
+            return fetchTransactionsForLast89Days(account);
+        }
+    }
+
+    private TransactionKeyPaginatorResponse<String> fetchAllTransactionsWithFallback(
             A account, LocalDate dateFrom) {
         try {
             return apiClient.getTransactions(

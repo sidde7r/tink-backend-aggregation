@@ -43,7 +43,9 @@ public final class BpostAgent extends Xs2aDevelopersTransactionalAgent {
                 new TransactionKeyWithInitDateFromFetcherController<>(
                         request,
                         new BpostTransactionsFetcher(
-                                apiClient, agentComponentProvider.getLocalDateTimeSource()));
+                                apiClient,
+                                agentComponentProvider.getLocalDateTimeSource(),
+                                request.isManual()));
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController, updateController, accountFetcher, transactionFetcher);

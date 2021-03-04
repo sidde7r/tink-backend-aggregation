@@ -95,7 +95,9 @@ public abstract class Xs2aDevelopersTransactionalAgent extends NextGenerationAge
                 new TransactionKeyWithInitDateFromFetcherController<>(
                         request,
                         new Xs2aDevelopersTransactionDateFromFetcher<TransactionalAccount>(
-                                apiClient, agentComponentProvider.getLocalDateTimeSource()));
+                                apiClient,
+                                agentComponentProvider.getLocalDateTimeSource(),
+                                request.isManual()));
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController, updateController, accountFetcher, transactionFetcher);
