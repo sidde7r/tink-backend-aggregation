@@ -1,10 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.transactionalaccount;
 
+import static se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.LunarConstants.QueryParamsValues;
+
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.client.FetcherApiClient;
@@ -17,19 +18,12 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
+@RequiredArgsConstructor
 @Slf4j
 public class LunarTransactionFetcher
         implements TransactionKeyPaginator<TransactionalAccount, String> {
 
-    private static final int MAX_NO_OF_REQUEST_FOR_TRANSACTIONS = 5;
-
     private final FetcherApiClient apiClient;
-    private final Map<TransactionalAccount, Integer> transactionsCounterForAccount =
-            new HashMap<>();
-
-    public LunarTransactionFetcher(FetcherApiClient apiClient) {
-        this.apiClient = apiClient;
-    }
 
     @Override
     public TransactionKeyPaginatorResponse<String> getTransactionsFor(
@@ -39,12 +33,6 @@ public class LunarTransactionFetcher
         }
         List<TransactionEntity> lunarTransactions = getLunarTransactions(account, key);
         String nextKey = getNextKey(lunarTransactions);
-
-        if (transactionsCounterForAccount.getOrDefault(account, 0)
-                == MAX_NO_OF_REQUEST_FOR_TRANSACTIONS) {
-            return new TransactionKeyPaginatorResponseImpl<>(
-                    toTinkTransactions(lunarTransactions), null);
-        }
 
         return new TransactionKeyPaginatorResponseImpl<>(
                 toTinkTransactions(lunarTransactions), nextKey);
@@ -60,24 +48,18 @@ public class LunarTransactionFetcher
 
     private List<TransactionEntity> getLunarTransactions(
             TransactionalAccount account, String timestampKey) {
-        // Delete logs when pagination key is found and confirmed
-        List<TransactionEntity> transactions =
-                apiClient
-                        .fetchTransactions(account.getApiIdentifier(), timestampKey)
-                        .getTransactions();
-
-        if (transactions.size() >= 200) {
-            log.info(
-                    "There is 200 or more transactions in response! Transactions size: {}",
-                    transactions.size());
-        }
-        incrementRequestsCounter(account);
-        return transactions;
+        return apiClient
+                .fetchTransactions(account.getApiIdentifier(), timestampKey)
+                .getTransactions();
     }
 
     private String getNextKey(List<TransactionEntity> lunarTransactions) {
+        if (lunarTransactions.size() < Integer.parseInt(QueryParamsValues.PAGE_SIZE)) {
+            return null;
+        }
         String sort =
                 lunarTransactions.stream()
+                        .filter(transaction -> transaction.getSort() > 0)
                         .min(Comparator.comparing(BaseResponseEntity::getSort))
                         .map(transaction -> String.valueOf(transaction.getSort()))
                         .orElse(null);
@@ -90,10 +72,5 @@ public class LunarTransactionFetcher
                 .filter(BaseResponseEntity::notDeleted)
                 .map(TransactionEntity::toTinkTransaction)
                 .collect(Collectors.toList());
-    }
-
-    private void incrementRequestsCounter(TransactionalAccount account) {
-        transactionsCounterForAccount.compute(
-                account, (key, counter) -> counter == null ? 1 : counter + 1);
     }
 }

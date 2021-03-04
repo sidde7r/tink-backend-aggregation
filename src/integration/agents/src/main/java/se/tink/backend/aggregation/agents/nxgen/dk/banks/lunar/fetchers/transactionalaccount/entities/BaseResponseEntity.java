@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.transac
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.lang3.BooleanUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
@@ -10,7 +11,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public abstract class BaseResponseEntity {
     private Boolean deleted;
     protected String id;
-    protected long sort;
+    @Setter protected long sort;
 
     @JsonIgnore
     public boolean notDeleted() {

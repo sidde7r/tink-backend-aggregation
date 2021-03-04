@@ -265,6 +265,70 @@
             "type": "account",
             "updated": 1591343356490,
             "year": 2020
+        },
+        {
+            "amount": -3000,
+            "appReference": {
+                "created": 1611973768091,
+                "deleted": true,
+                "id": "fb7bc6b5-7c94-42d3-9cac-005a19563eb4-appReference",
+                "updated": 1611973768091
+            },
+            "attachments": [],
+            "badgeUrl": "https://s3-eu-west-1.amazonaws.com/lunarway-prod-cdn/transaction-badges/badge_recurring.png",
+            "canHide": true,
+            "canReact": true,
+            "categoryId": "other",
+            "color": "#ffffff",
+            "conversion": {
+                "created": 1611973768091,
+                "deleted": true,
+                "id": "fb7bc6b5-7c94-42d3-9cac-005a19563eb4-conversion",
+                "updated": 1611973768091
+            },
+            "created": 1609494374053,
+            "currency": "DKK",
+            "deleted": true,
+            "details": [
+                {
+                    "label": "Til",
+                    "sort": 1,
+                    "type": "to",
+                    "value": "66951000100850"
+                },
+                {
+                    "label": "Hyppighed",
+                    "sort": 2,
+                    "type": "recurring",
+                    "value": "Første dag i måneden"
+                }
+            ],
+            "displayDate": "0001-01-01T00:00:01Z",
+            "editableType": "automaticTransfer",
+            "groupId": "ee16fa06-316a-475e-a2e8-31a36e48af46-friend",
+            "groupSpend": {
+                "id": "ee16fa06-316a-475e-a2e8-31a36e48af46-friend",
+                "updated": 0
+            },
+            "iconUrl": "https://s3-eu-west-1.amazonaws.com/public-read-production/transaction_icons/icons/1000/large.png",
+            "id": "fb7bc6b5-7c94-42d3-9cac-005a19563eb4",
+            "location": {
+                "created": 1611973768091,
+                "deleted": true,
+                "id": "fb7bc6b5-7c94-42d3-9cac-005a19563eb4-location",
+                "updated": 1611973768091
+            },
+            "month": 1,
+            "reactions": null,
+            "sort": -6795364577871,
+            "status": "future",
+            "title": "Lunar",
+            "transactionOrigin": "dklb",
+            "transactionOriginGroupId": "833293fc-282c-4b99-8b86-2035218abea",
+            "transactionOriginType": "account",
+            "type": "automaticTransfer",
+            "updated": 1611973768091,
+            "year": 1
         }
     ]
 }
