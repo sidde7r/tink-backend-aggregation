@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.authenticator.steps.validate_consent;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
@@ -12,16 +11,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.authenticator.steps.fetch_authorization_url.N26FetchAuthorizationUrlStep;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.n26.authenticator.steps.validate_consent.rpc.ValidateConsentCombinedResponse;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationPersistedData;
-import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.AgentAuthenticationProcessStepIdentifier;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.request.AgentProceedNextStepAuthenticationRequest;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentFailedAuthenticationResult;
-import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentProceedNextStepAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentSucceededAuthenticationResult;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.ServerError;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.error.SessionExpiredError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.http.ExternalApiCallResult;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -56,7 +53,7 @@ public class N26AutoAuthValidateConsentStepTest extends N26ValidateConsentStepBa
     }
 
     @Test
-    public void shouldGoToManualAuth() {
+    public void shouldEndUpWithSessionExpired() {
         AgentProceedNextStepAuthenticationRequest request =
                 mock(AgentProceedNextStepAuthenticationRequest.class);
         AgentAuthenticationPersistedData agentAuthenticationPersistedData = preparePersistedData();
@@ -71,16 +68,10 @@ public class N26AutoAuthValidateConsentStepTest extends N26ValidateConsentStepBa
         AgentAuthenticationResult authenticationResult = step.execute(request);
 
         // then
-        assertTrue(authenticationResult instanceof AgentProceedNextStepAuthenticationResult);
-        AgentProceedNextStepAuthenticationResult agentProceedNextStepAuthenticationResult =
-                (AgentProceedNextStepAuthenticationResult) authenticationResult;
-
-        assertEquals(
-                AgentAuthenticationProcessStepIdentifier.of(
-                        N26FetchAuthorizationUrlStep.class.getSimpleName()),
-                agentProceedNextStepAuthenticationResult
-                        .getAuthenticationProcessStepIdentifier()
-                        .get());
+        assertTrue(authenticationResult instanceof AgentFailedAuthenticationResult);
+        AgentFailedAuthenticationResult agentFailedAuthenticationResult =
+                (AgentFailedAuthenticationResult) authenticationResult;
+        assertTrue(agentFailedAuthenticationResult.getError() instanceof SessionExpiredError);
     }
 
     @Test
