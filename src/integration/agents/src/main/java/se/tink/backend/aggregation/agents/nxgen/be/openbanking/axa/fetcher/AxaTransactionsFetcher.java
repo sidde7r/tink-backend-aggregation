@@ -10,8 +10,10 @@ public class AxaTransactionsFetcher
         extends Xs2aDevelopersTransactionDateFromFetcher<TransactionalAccount> {
 
     public AxaTransactionsFetcher(
-            Xs2aDevelopersApiClient apiClient, LocalDateTimeSource localDateTimeSource) {
-        super(apiClient, localDateTimeSource);
+            Xs2aDevelopersApiClient apiClient,
+            LocalDateTimeSource localDateTimeSource,
+            boolean isManual) {
+        super(apiClient, localDateTimeSource, isManual);
     }
 
     @Override
