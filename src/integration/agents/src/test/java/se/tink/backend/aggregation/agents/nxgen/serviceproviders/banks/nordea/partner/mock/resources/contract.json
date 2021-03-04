@@ -29,13 +29,13 @@
             "userModifiedType": false,
             "identifiers": "[]",
             "closed": false,
-            "holderName": "SVEN SVENSSON",
+            "holderName": "Sven Svensson",
             "accountHolder": {
                 "accountId": null,
                 "type": "PERSONAL",
                 "identities": [
                     {
-                        "name": "SVEN SVENSSON",
+                        "name": "Sven Svensson",
                         "role": "HOLDER"
                     }
                 ]
@@ -67,13 +67,13 @@
             "userModifiedType": false,
             "identifiers": "[\"iban://SE3830000000030080012345\",\"se://30080012345\"]",
             "closed": false,
-            "holderName": "SVENSSON,SVEN",
+            "holderName": "Svensson,sven",
             "accountHolder": {
                 "accountId": null,
                 "type": "PERSONAL",
                 "identities": [
                     {
-                        "name": "SVENSSON,SVEN",
+                        "name": "Svensson,sven",
                         "role": "HOLDER"
                     }
                 ]
@@ -105,13 +105,13 @@
             "userModifiedType": false,
             "identifiers": "[\"se://33009901010000\",\"iban://SE6530000000009901010000\"]",
             "closed": false,
-            "holderName": "SVENSSON,SVEN",
+            "holderName": "Svensson,sven",
             "accountHolder": {
                 "accountId": null,
                 "type": "PERSONAL",
                 "identities": [
                     {
-                        "name": "SVENSSON,SVEN",
+                        "name": "Svensson,sven",
                         "role": "HOLDER"
                     }
                 ]
@@ -150,13 +150,13 @@
             "userModifiedType": false,
             "identifiers": "[]",
             "closed": false,
-            "holderName": "SVEN SVENSSON",
+            "holderName": "Sven Svensson",
             "accountHolder": {
                 "accountId": null,
                 "type": "PERSONAL",
                 "identities": [
                     {
-                        "name": "SVEN SVENSSON",
+                        "name": "Sven Svensson",
                         "role": "HOLDER"
                     }
                 ]

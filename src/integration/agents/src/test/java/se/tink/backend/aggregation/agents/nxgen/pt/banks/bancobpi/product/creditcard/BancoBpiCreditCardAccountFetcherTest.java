@@ -79,7 +79,7 @@ public class BancoBpiCreditCardAccountFetcherTest {
         BancoBpiProductData p = Mockito.mock(BancoBpiProductData.class);
         Mockito.when(p.getNumber()).thenReturn(appendCounter("1234"));
         Mockito.when(p.getName()).thenReturn(appendCounter("name"));
-        Mockito.when(p.getOwner()).thenReturn(appendCounter("owner"));
+        Mockito.when(p.getOwner()).thenReturn(appendCounter("Owner"));
         Mockito.when(p.getCurrencyCode()).thenReturn("EUR");
         Mockito.when(p.getBalance()).thenReturn(new BigDecimal(productCounter));
         Mockito.when(p.getInitialBalance()).thenReturn(new BigDecimal(productCounter * 2));

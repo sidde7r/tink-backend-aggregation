@@ -314,7 +314,7 @@ public class SoapHelperTest {
     private static final String SHORT_ACC_NR = "12312312312";
     private static final String LONG_ACC_NR = "12312312312312312312312";
     private static final String LONG_ACC_NR_B = "32132132132132132132132";
-    private static final String FAKE_NAME = "MLLE SURNAME NAME";
+    private static final String FAKE_NAME = "Mlle Surname Name";
 
     @Test
     public void testMoreAccounts() {

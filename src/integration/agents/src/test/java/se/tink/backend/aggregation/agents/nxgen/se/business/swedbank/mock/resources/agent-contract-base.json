@@ -35,12 +35,12 @@
         "userModifiedType" : false,
         "identifiers" : "[]",
         "closed" : false,
-        "holderName" : "My Company AB",
+        "holderName" : "My Company Ab",
         "accountHolder" : {
             "accountId" : null,
             "type" : "BUSINESS",
             "identities" : [ {
-                "name" : "My Company AB",
+                "name" : "My Company Ab",
                 "role": "HOLDER"
             } ]
         },
@@ -84,12 +84,12 @@
         "userModifiedType" : false,
         "identifiers" : "[\"se://111111111111111\"]",
         "closed" : false,
-        "holderName" : "My Company AB",
+        "holderName" : "My Company Ab",
         "accountHolder" : {
             "accountId" : null,
             "type" : "BUSINESS",
             "identities" : [ {
-                "name" : "My Company AB",
+                "name" : "My Company Ab",
                 "role": "HOLDER"
             } ]
         },

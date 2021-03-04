@@ -4,10 +4,10 @@
         "accountExclusion" : "NONE",
         "exactBalance" : {
             "currencyCode" : "sek",
+            "exactValue" : 0.0,
             "doubleValue" : 0.0,
             "scale" : 1,
-            "unscaledValue" : 0,
-            "exactValue" : 0.0
+            "unscaledValue" : 0
         },
         "currencyCode" : "sek",
         "bankId" : "532add7f12341234123489a872fae1af",
@@ -21,16 +21,17 @@
         "userModifiedType" : false,
         "identifiers" : "[]",
         "closed" : false,
-        "holderName" : "Collector 3-mån sparkonto",
+        "holderName" : "Collector 3-Mån Sparkonto",
         "accountHolder" : {
             "accountId" : null,
             "type" : "PERSONAL",
             "identities" : [ {
-                "name" : "Collector 3-mån sparkonto",
-                "role": "HOLDER"
+                "name" : "Collector 3-Mån Sparkonto",
+                "role" : "HOLDER"
             } ]
         },
         "flags" : "[]",
+        "balances" : [ ],
         "availableCredit" : 0.0,
         "balance" : 0.0
     }, {
@@ -38,10 +39,10 @@
         "accountExclusion" : "NONE",
         "exactBalance" : {
             "currencyCode" : "sek",
+            "exactValue" : 500.0,
             "doubleValue" : 500.0,
             "scale" : 2,
-            "unscaledValue" : 50000,
-            "exactValue" : 500.0
+            "unscaledValue" : 50000
         },
         "currencyCode" : "sek",
         "bankId" : "8a90ea6143214321432123f0b77ba92e",
@@ -55,16 +56,17 @@
         "userModifiedType" : false,
         "identifiers" : "[]",
         "closed" : false,
-        "holderName" : "Collector sparkonto",
+        "holderName" : "Collector Sparkonto",
         "accountHolder" : {
             "accountId" : null,
             "type" : "PERSONAL",
             "identities" : [ {
-                "name" : "Collector sparkonto",
-                "role": "HOLDER"
+                "name" : "Collector Sparkonto",
+                "role" : "HOLDER"
             } ]
         },
         "flags" : "[]",
+        "balances" : [ ],
         "availableCredit" : 0.0,
         "balance" : 500.0
     } ],
@@ -78,7 +80,9 @@
         "pending" : false,
         "timestamp" : 0,
         "type" : "DEFAULT",
-        "upcoming" : false
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
     } ],
     "identityData" : {
         "nameElements" : [ {
@@ -91,8 +95,6 @@
         "dateOfBirth" : {
             "year" : 1999,
             "month" : "JANUARY",
-            "monthValue" : 1,
-            "dayOfMonth" : 1,
             "dayOfWeek" : "FRIDAY",
             "leapYear" : false,
             "dayOfYear" : 1,
@@ -100,7 +102,9 @@
                 "id" : "ISO",
                 "calendarType" : "iso8601"
             },
-            "era" : "CE"
+            "era" : "CE",
+            "monthValue" : 1,
+            "dayOfMonth" : 1
         }
     }
 }

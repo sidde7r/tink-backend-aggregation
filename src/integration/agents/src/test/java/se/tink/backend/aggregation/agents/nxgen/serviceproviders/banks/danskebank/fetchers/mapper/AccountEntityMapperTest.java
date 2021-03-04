@@ -88,7 +88,7 @@ public class AccountEntityMapperTest {
         assertThat(result.getDetails().getLoanNumber()).isEqualTo(ACCOUNT_NO_EXT);
         assertThat(result.getIdModule().getProductName()).isEqualTo("Home Loan");
         assertThat(result.getInterestRate()).isEqualTo(0.0110);
-        assertThat(result.getHolderName().toString()).isEqualTo("ACCOUNT OWNER");
+        assertThat(result.getHolderName().toString()).isEqualTo("Account Owner");
         assertThat(result.getParties().size()).isEqualTo(1);
     }
 

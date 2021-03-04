@@ -31,17 +31,17 @@
             "transferDestinations": null,
             "details": null,
             "closed": false,
-            "holderName": "JOHN DOE LOE",
+            "holderName": "John Doe Loe",
             "accountHolder": {
                 "accountId": null,
                 "type": "PERSONAL",
                 "identities": [
                     {
-                        "name": "JOHN DOE LOE",
+                        "name": "John Doe Loe",
                         "role": "HOLDER"
                     },
                     {
-                        "name": "JOHNNY DONNY LONNY",
+                        "name": "Johnny Donny Lonny",
                         "role": "AUTHORIZED_USER"
                     }
                 ]

@@ -31,17 +31,17 @@
             "transferDestinations": null,
             "details": null,
             "closed": false,
-            "holderName": "JOHN TINKER",
+            "holderName": "John Tinker",
             "accountHolder": {
                 "accountId": null,
                 "type": "PERSONAL",
                 "identities": [
                     {
-                        "name": "JOHN TINKER",
+                        "name": "John Tinker",
                         "role": "HOLDER"
                     },
                     {
-                        "name": "ALICE TINKER",
+                        "name": "Alice Tinker",
                         "role": "HOLDER"
                     }
                 ]
@@ -83,17 +83,17 @@
             "transferDestinations": null,
             "details": null,
             "closed": false,
-            "holderName": "WILL TINKER",
+            "holderName": "Will Tinker",
             "accountHolder": {
                 "accountId": null,
                 "type": "PERSONAL",
                 "identities": [
                     {
-                        "name": "WILL TINKER",
+                        "name": "Will Tinker",
                         "role": "HOLDER"
                     },
                     {
-                        "name": "JOHN TINKER",
+                        "name": "John Tinker",
                         "role": "AUTHORIZED_USER"
                     }
                 ]
@@ -141,13 +141,13 @@
             "transferDestinations": null,
             "details": null,
             "closed": false,
-            "holderName": "WILL TINKER",
+            "holderName": "Will Tinker",
             "accountHolder": {
                 "accountId": null,
                 "type": "PERSONAL",
                 "identities": [
                     {
-                        "name": "WILL TINKER",
+                        "name": "Will Tinker",
                         "role": "HOLDER"
                     }
                 ]
@@ -189,13 +189,13 @@
             "transferDestinations": null,
             "details": null,
             "closed": false,
-            "holderName": "WILL TINKER",
+            "holderName": "Will Tinker",
             "accountHolder": {
                 "accountId": null,
                 "type": "PERSONAL",
                 "identities": [
                     {
-                        "name": "WILL TINKER",
+                        "name": "Will Tinker",
                         "role": "HOLDER"
                     }
                 ]
