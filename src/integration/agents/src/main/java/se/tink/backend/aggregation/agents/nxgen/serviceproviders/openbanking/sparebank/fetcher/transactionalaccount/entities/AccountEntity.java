@@ -46,7 +46,6 @@ public class AccountEntity {
                                 .build())
                 .setApiIdentifier(resourceId)
                 .setBankIdentifier(resourceId)
-                .addHolderName(Optional.ofNullable(name).orElse(""))
                 .build();
     }
 

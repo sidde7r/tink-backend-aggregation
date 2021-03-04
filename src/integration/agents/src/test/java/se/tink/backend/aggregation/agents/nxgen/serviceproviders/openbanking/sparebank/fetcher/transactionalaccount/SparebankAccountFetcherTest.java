@@ -53,7 +53,6 @@ public class SparebankAccountFetcherTest {
                 "NO0995360573002",
                 "95360573002",
                 "enc!!aI55HS7YpeXJhHqCXFPEGfF992bjRx2Gw==",
-                "Brukskonto",
                 "/v1/sandbox/accounts/asdf/transactions");
 
         CustomAsserts.assertTransactionalAccountsEqual(
@@ -66,7 +65,6 @@ public class SparebankAccountFetcherTest {
                 "NO8591351631959",
                 "91351631959",
                 "enc!!90hSjpSdpeftHiDSYiPaHVGoKHriD-6ARR4JlXcEebYbYa_WNwJvqevSrba4WtnD",
-                null,
                 "/v1/sandbox/accounts/zxcv/transactions");
     }
 
