@@ -69,8 +69,6 @@ public class FabricPaymentExecutor implements PaymentExecutor, FetchablePaymentE
     @Override
     public PaymentResponse create(PaymentRequest paymentRequest) throws PaymentException {
         sessionStorage.put(FabricConstants.QueryKeys.STATE, strongAuthenticationState.getState());
-        sessionStorage.put(
-                FabricConstants.HeaderKeys.PSU_IP_ADDRESS, paymentRequest.getOriginatingUserIp());
 
         sessionStorage.updatePaymentProductIfNeeded(paymentRequest.getPayment());
         AccountEntity creditorEntity = AccountEntity.creditorOf(paymentRequest);

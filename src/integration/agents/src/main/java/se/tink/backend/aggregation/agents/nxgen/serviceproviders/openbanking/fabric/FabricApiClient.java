@@ -1,9 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric;
 
 import java.util.Date;
-import java.util.Optional;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
+import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.FabricConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.FabricConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.FabricConstants.IdTags;
@@ -31,27 +31,16 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
+@RequiredArgsConstructor
 public class FabricApiClient {
 
     private final TinkHttpClient client;
     private final PersistentStorage persistentStorage;
     private final RandomValueGenerator randomValueGenerator;
     private final SessionStorage sessionStorage;
+    private final FabricUserIpInformation userIpInformation;
+    private final String baseUrl;
     private String redirectUrl;
-    private String baseUrl;
-
-    FabricApiClient(
-            TinkHttpClient client,
-            PersistentStorage persistentStorage,
-            RandomValueGenerator randomValueGenerator,
-            SessionStorage sessionStorage,
-            String baseUrl) {
-        this.client = client;
-        this.persistentStorage = persistentStorage;
-        this.randomValueGenerator = randomValueGenerator;
-        this.sessionStorage = sessionStorage;
-        this.baseUrl = baseUrl;
-    }
 
     protected void setConfiguration(AgentConfiguration<FabricConfiguration> agentConfiguration) {
         this.redirectUrl = agentConfiguration.getRedirectUrl();
@@ -67,6 +56,25 @@ public class FabricApiClient {
     private RequestBuilder createRequestInSession(URL url) {
         final String consentId = persistentStorage.get(StorageKeys.CONSENT_ID);
         return createRequest(url).header(HeaderKeys.CONSENT_ID, consentId);
+    }
+
+    private RequestBuilder createFetchingRequest(URL url) {
+        RequestBuilder requestBuilder = createRequestInSession(url);
+
+        return prepareRequestWithPsuIpAddress(requestBuilder);
+    }
+
+    private RequestBuilder createPaymentRequest(URL url) {
+        RequestBuilder requestBuilder =
+                client.request(url).header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString());
+
+        return prepareRequestWithPsuIpAddress(requestBuilder);
+    }
+
+    private RequestBuilder prepareRequestWithPsuIpAddress(RequestBuilder requestBuilder) {
+        return userIpInformation.isManualRequest()
+                ? requestBuilder.header(HeaderKeys.PSU_IP_ADDRESS, userIpInformation.getUserIp())
+                : requestBuilder;
     }
 
     public CreateConsentResponse getConsent(String state) {
@@ -110,7 +118,7 @@ public class FabricApiClient {
     }
 
     public TransactionResponse fetchTransactions(String resourceId, Date fromDate, Date toDate) {
-        return createRequestInSession(
+        return createFetchingRequest(
                         new URL(baseUrl + Urls.GET_TRANSACTIONS)
                                 .parameter(IdTags.ACCOUNT_ID, resourceId))
                 .queryParam(
@@ -120,7 +128,7 @@ public class FabricApiClient {
     }
 
     public CreatePaymentResponse createPayment(CreatePaymentRequest createPaymentRequest) {
-        return client.request(
+        return createPaymentRequest(
                         new URL(Urls.INITIATE_A_PAYMENT_URL)
                                 .parameter(
                                         FabricConstants.PathParameterKeys.PAYMENT_PRODUCT,
@@ -128,8 +136,6 @@ public class FabricApiClient {
                                                 FabricConstants.PathParameterKeys.PAYMENT_PRODUCT)))
                 .type(MediaType.APPLICATION_JSON)
                 .header(HeaderKeys.TPP_REDIRECT_PREFERED, HeaderValues.TPP_REDIRECT_PREFERED)
-                .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
-                .header(HeaderKeys.PSU_IP_ADDRESS, getPsuIpAddress())
                 .header(
                         HeaderKeys.TPP_REDIRECT_URI,
                         new URL(redirectUrl)
@@ -139,7 +145,7 @@ public class FabricApiClient {
     }
 
     public CreatePaymentResponse getPayment(String paymentId) {
-        return client.request(
+        return createPaymentRequest(
                         new URL(Urls.GET_PAYMENT_URL)
                                 .parameter(
                                         FabricConstants.PathParameterKeys.PAYMENT_PRODUCT,
@@ -147,27 +153,23 @@ public class FabricApiClient {
                                                 FabricConstants.PathParameterKeys.PAYMENT_PRODUCT))
                                 .parameter(FabricConstants.PathParameterKeys.PAYMENT_ID, paymentId))
                 .type(MediaType.APPLICATION_JSON)
-                .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
-                .header(HeaderKeys.PSU_IP_ADDRESS, getPsuIpAddress())
                 .get(CreatePaymentResponse.class);
     }
 
     public CreatePaymentResponse getPaymentStatus(String paymentId) {
-        return client.request(
+        return createPaymentRequest(
                         new URL(Urls.GET_PAYMENT_STATUS_URL)
                                 .parameter(
                                         FabricConstants.PathParameterKeys.PAYMENT_PRODUCT,
                                         sessionStorage.get(
                                                 FabricConstants.PathParameterKeys.PAYMENT_PRODUCT))
                                 .parameter(FabricConstants.PathParameterKeys.PAYMENT_ID, paymentId))
-                .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
-                .header(HeaderKeys.PSU_IP_ADDRESS, getPsuIpAddress())
                 .get(CreatePaymentResponse.class);
     }
 
     public PaymentAuthorizationsResponse getPaymentAuthorizations(String paymentId) {
         PaymentAuthorizationsResponse result =
-                client.request(
+                createPaymentRequest(
                                 new URL(Urls.GET_PAYMENT_AUTHORIZATIONS_URL)
                                         .parameter(
                                                 FabricConstants.PathParameterKeys.PAYMENT_PRODUCT,
@@ -177,8 +179,6 @@ public class FabricApiClient {
                                         .parameter(
                                                 FabricConstants.PathParameterKeys.PAYMENT_ID,
                                                 paymentId))
-                        .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
-                        .header(HeaderKeys.PSU_IP_ADDRESS, getPsuIpAddress())
                         .get(PaymentAuthorizationsResponse.class);
         if (!result.getAuthorisationIds().isEmpty()) {
             sessionStorage.put(
@@ -188,7 +188,7 @@ public class FabricApiClient {
     }
 
     public PaymentAuthorizationStatus getPaymentAuthorizationStatus(String paymentId) {
-        return client.request(
+        return createPaymentRequest(
                         new URL(Urls.GET_PAYMENT_AUTHORIZATION_STATUS_URL)
                                 .parameter(
                                         FabricConstants.PathParameterKeys.PAYMENT_PRODUCT,
@@ -198,13 +198,6 @@ public class FabricApiClient {
                                 .parameter(
                                         FabricConstants.PathParameterKeys.PAYMENT_AUTHORIZATION_ID,
                                         sessionStorage.get(StorageKeys.PAYMENT_AUTHORIZATION_ID)))
-                .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
-                .header(HeaderKeys.PSU_IP_ADDRESS, getPsuIpAddress())
                 .get(PaymentAuthorizationStatus.class);
-    }
-
-    private String getPsuIpAddress() {
-        return Optional.ofNullable(sessionStorage.get(HeaderKeys.PSU_IP_ADDRESS))
-                .orElse(HeaderValues.DUMMY_IP_ADDRESS);
     }
 }
