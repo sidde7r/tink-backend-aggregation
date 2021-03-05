@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.executor.payment;
 
+import static se.tink.backend.aggregation.agents.banks.lansforsakringar.LansforsakringarDateUtil.getCurrentOrNextBusinessDate;
 import static se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.SCAValues.SCA_EXEMPTED;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.constants.ThirdPartyAppConstants.WAIT_FOR_MINUTES;
 import static se.tink.libraries.transfer.enums.RemittanceInformationType.OCR;
@@ -85,9 +86,13 @@ public class LansforsakringarPaymentExecutor implements PaymentExecutor, Fetchab
         final AmountEntity amount = new AmountEntity(payment.getExactCurrencyAmount());
         final AccountEntity debtor =
                 new AccountEntity(payment.getDebtor().getAccountNumber(), amount.getCurrency());
-        final String executionDate =
+
+        String executionDate =
                 Optional.ofNullable(payment.getExecutionDate())
-                        .map(d -> d.format(DateTimeFormatter.ISO_DATE))
+                        .map(
+                                providedDate ->
+                                        getCurrentOrNextBusinessDate(providedDate)
+                                                .format(DateTimeFormatter.ISO_DATE))
                         .orElse(null);
 
         Type accountIdentifierType =

@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.banks.lansforsakringar;
 
 import java.time.Clock;
+import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.Locale;
@@ -22,5 +23,9 @@ public class LansforsakringarDateUtil {
 
     public static long getNextPossiblePaymentDateForBgPg(Date dateFromTransfer) {
         return dateHelper.getProvidedDateOrBestPossibleDate(dateFromTransfer, 10, 0).getTime();
+    }
+
+    public static LocalDate getCurrentOrNextBusinessDate(LocalDate localDate) {
+        return dateHelper.getCurrentOrNextBusinessDay(localDate);
     }
 }
