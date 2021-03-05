@@ -21,8 +21,8 @@ public class TransactionEntityTest {
             "{\"bookingDate\": \"2020-06-30\", \"debtorName\": \"Super Debtor Name\", \"remittanceInformationUnstructured\": \"RemittanceInformation 003\", \"transactionAmount\": {\"amount\": 999.0, \"currency\": \"EUR\"} }";
     private static final String OUTGOING_WITHOUT_DEBTOR_NAME =
             "{\"bookingDate\": \"2020-06-30\", \"remittanceInformationUnstructured\": \"RemittanceInformation 004\", \"transactionAmount\": {\"amount\": 999.0, \"currency\": \"EUR\"} }";
-    private static final String OUTGOING_WITH_BLANK_CREDITOR_NAME =
-            "{\"bookingDate\": \"2020-06-30\", \"creditorName\": \"   \", \"remittanceInformationUnstructured\": \"RemittanceInformation 005\", \"transactionAmount\": {\"amount\": -999.0, \"currency\": \"EUR\"} }";
+    private static final String OUTGOING_WITH_PAYPAL_CREDITOR_NAME =
+            "{\"bookingDate\": \"2020-06-30\", \"creditorName\": \"Paypal\", \"remittanceInformationUnstructured\": \"RemittanceInformation 005\", \"transactionAmount\": {\"amount\": -999.0, \"currency\": \"EUR\"} }";
     private static final String OUTGOING_WITH_BLANK_EVERYTHING =
             "{\"bookingDate\": \"2020-06-30\", \"creditorName\": \"\", \"remittanceInformationUnstructured\": \"\", \"transactionAmount\": {\"amount\": -999.0, \"currency\": \"EUR\"} }";
 
@@ -49,7 +49,7 @@ public class TransactionEntityTest {
             new Object[] {OUTGOING_WITHOUT_CREDITOR_NAME, "RemittanceInformation 002", -999.0},
             new Object[] {OUTGOING_WITH_DEBTOR_NAME, "Super Debtor Name", 999.0},
             new Object[] {OUTGOING_WITHOUT_DEBTOR_NAME, "RemittanceInformation 004", 999.0},
-            new Object[] {OUTGOING_WITH_BLANK_CREDITOR_NAME, "RemittanceInformation 005", -999.0},
+            new Object[] {OUTGOING_WITH_PAYPAL_CREDITOR_NAME, "RemittanceInformation 005", -999.0},
             new Object[] {OUTGOING_WITH_BLANK_EVERYTHING, "", -999.0}
         };
     }
