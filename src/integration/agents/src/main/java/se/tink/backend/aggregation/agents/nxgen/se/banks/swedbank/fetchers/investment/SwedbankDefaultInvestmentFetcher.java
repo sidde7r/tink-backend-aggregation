@@ -7,8 +7,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.aggregation.agents.contexts.SystemUpdater;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.SwedbankSEApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.investment.entities.PensionInsuranceEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.fetchers.investment.rpc.AbstractInvestmentAccountEntity;
@@ -25,7 +27,9 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovide
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.LinksEntity;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 
+@RequiredArgsConstructor
 public class SwedbankDefaultInvestmentFetcher implements AccountFetcher<InvestmentAccount> {
     private static final Logger log =
             LoggerFactory.getLogger(SwedbankDefaultInvestmentFetcher.class);
@@ -38,11 +42,8 @@ public class SwedbankDefaultInvestmentFetcher implements AccountFetcher<Investme
 
     private final SwedbankSEApiClient apiClient;
     private final String defaultCurrency;
-
-    public SwedbankDefaultInvestmentFetcher(SwedbankSEApiClient apiClient, String defaultCurrency) {
-        this.apiClient = apiClient;
-        this.defaultCurrency = defaultCurrency;
-    }
+    private final CredentialsRequest credentialsRequest;
+    private final SystemUpdater systemUpdater;
 
     @Override
     public Collection<InvestmentAccount> fetchAccounts() {
@@ -163,7 +164,10 @@ public class SwedbankDefaultInvestmentFetcher implements AccountFetcher<Investme
 
         return detailedPensionResponses.stream()
                 .map(DetailedPensionResponse::getDetailedPension)
-                .map(detailedPension -> detailedPension.toTinkInvestmentAccount(apiClient))
+                .map(
+                        detailedPension ->
+                                detailedPension.toTinkInvestmentAccount(
+                                        apiClient, credentialsRequest.getAccounts(), systemUpdater))
                 .collect(Collectors.toList());
     }
 

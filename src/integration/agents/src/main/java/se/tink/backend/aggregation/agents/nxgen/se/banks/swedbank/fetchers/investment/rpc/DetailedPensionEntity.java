@@ -8,8 +8,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.Getter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
+import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.aggregation.agents.contexts.SystemUpdater;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.SwedbankSEApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.AmountEntity;
@@ -20,13 +21,12 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrum
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.portfolio.PortfolioModule;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
+import se.tink.libraries.strings.StringUtils;
 
 @Getter
+@Slf4j
 @JsonObject
 public class DetailedPensionEntity {
-
-    @JsonIgnore
-    private static final Logger log = LoggerFactory.getLogger(DetailedPensionEntity.class);
 
     @JsonIgnore private static final String API_CLIENT_ERROR_MESSAGE = "No API client provided.";
 
@@ -52,13 +52,18 @@ public class DetailedPensionEntity {
     private List<DetailedHoldingEntity> holdings;
     private String id;
 
-    public InvestmentAccount toTinkInvestmentAccount(SwedbankSEApiClient apiClient) {
+    public InvestmentAccount toTinkInvestmentAccount(
+            SwedbankSEApiClient apiClient,
+            List<Account> requestedAccounts,
+            SystemUpdater systemUpdater) {
+        final String uniqueIdentifier =
+                migrateAndGetUniqueIdentifier(requestedAccounts, systemUpdater);
         return InvestmentAccount.nxBuilder()
                 .withPortfolios(toTinkPortfolioModule(apiClient))
                 .withCashBalance(ExactCurrencyAmount.inSEK(0.0))
                 .withId(
                         IdModule.builder()
-                                .withUniqueIdentifier(accountNumber)
+                                .withUniqueIdentifier(uniqueIdentifier)
                                 .withAccountNumber(fullyFormattedNumber)
                                 .withAccountName(name)
                                 .addIdentifier(
@@ -66,6 +71,44 @@ public class DetailedPensionEntity {
                                                 AccountIdentifier.Type.SE, fullyFormattedNumber))
                                 .build())
                 .build();
+    }
+
+    private String migrateAndGetUniqueIdentifier(
+            List<Account> accounts, SystemUpdater systemUpdater) {
+        final String oldUniqueIdentifier = StringUtils.removeNonAlphaNumeric(accountNumber);
+        final String newUniqueIdentifier = StringUtils.removeNonAlphaNumeric(fullyFormattedNumber);
+        final Optional<Account> accountWithOldId =
+                findAccountWithBankId(accounts, oldUniqueIdentifier);
+        final Optional<Account> accountWithNewId =
+                findAccountWithBankId(accounts, newUniqueIdentifier);
+
+        if (accountWithOldId.isPresent()) {
+            final String oldAccountId = accountWithOldId.get().getId();
+            if (accountWithNewId.isPresent()) {
+                // duplicate exists already! should be deleted manually
+                log.warn(
+                        "duplicate pension account: {}, {}",
+                        oldAccountId,
+                        accountWithNewId.get().getId());
+                // use old identifier
+                return accountNumber;
+            }
+            // has old ID only, migrate to new
+            log.warn("migrating pension account {} to new identifier", oldAccountId);
+            systemUpdater.updateAccountMetaData(oldAccountId, newUniqueIdentifier);
+        }
+
+        return fullyFormattedNumber;
+    }
+
+    private Optional<Account> findAccountWithBankId(
+            List<Account> requestedAccounts, String bankId) {
+        if (requestedAccounts == null || requestedAccounts.isEmpty()) {
+            return Optional.empty();
+        }
+        return requestedAccounts.stream()
+                .filter(account -> account.getBankId().equals(bankId))
+                .findFirst();
     }
 
     public PortfolioModule toTinkPortfolioModule(SwedbankSEApiClient apiClient) {
