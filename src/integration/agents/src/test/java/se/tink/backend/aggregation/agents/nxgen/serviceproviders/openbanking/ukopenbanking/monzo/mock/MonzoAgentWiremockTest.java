@@ -9,7 +9,6 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbank
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.monzo.mock.MonzoAgentWiremockTestFixtures.createFarFutureDomesticPayment;
 
 import java.time.LocalDateTime;
-import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
 import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesJsonFileParser;
@@ -31,8 +30,8 @@ public class MonzoAgentWiremockTest {
             "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/monzo/mock/resources/";
     static final String configFilePath = RESOURCES_PATH + "configuration.yml";
 
-    private static final String OAUTH_TOKEN =
-            "{\"expires_in\" : 999999999, \"issuedAt\": 1598516000, \"token_type\":\"bearer\",  \"access_token\":\"DUMMY_OAUTH2_TOKEN\", \"refreshToken\":\"DUMMY_REFRESH_TOKEN\"}";
+    private static final String EXPIRED_OAUTH2_TOKEN =
+            "{\"expires_in\" : 0, \"issuedAt\": 1598516000, \"token_type\":\"bearer\",  \"access_token\":\"EXPIRED_DUMMY_ACCESS_TOKEN\", \"refreshToken\":\"DUMMY_REFRESH_TOKEN\"}";
 
     @Test
     public void testPaymentSuccessfulPayment() throws Exception {
@@ -120,6 +119,7 @@ public class MonzoAgentWiremockTest {
                         .withProviderName(PROVIDER_NAME)
                         .withWireMockFilePath(wireMockServerFilePath)
                         .withConfigFile(AgentsServiceConfigurationReader.read(configFilePath))
+                        .testFullAuthentication()
                         .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
                         .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
                         .addCallbackData("code", "DUMMY_ACCESS_TOKEN2")
@@ -138,7 +138,6 @@ public class MonzoAgentWiremockTest {
      * * https://docs.monzo.com/#parties Endpoint /party expires 5 min after last SCA In case of
      * auto authentication data will be retrieved from persistent storage
      */
-    @Ignore
     @Test
     public void restoreIdentityData() throws Exception {
         // Given
@@ -159,10 +158,11 @@ public class MonzoAgentWiremockTest {
                         .withProviderName(PROVIDER_NAME)
                         .withWireMockFilePath(wireMockServerFilePath)
                         .withConfigFile(AgentsServiceConfigurationReader.read(configFilePath))
+                        .testAutoAuthentication()
                         .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
                         .addPersistentStorageData(
                                 UkOpenBankingV31Constants.PersistentStorageKeys.AIS_ACCESS_TOKEN,
-                                OAUTH_TOKEN)
+                                EXPIRED_OAUTH2_TOKEN)
                         .addPersistentStorageData(
                                 UkOpenBankingV31Constants.PersistentStorageKeys.LAST_SCA_TIME,
                                 LocalDateTime.now().minusMinutes(6).toString())

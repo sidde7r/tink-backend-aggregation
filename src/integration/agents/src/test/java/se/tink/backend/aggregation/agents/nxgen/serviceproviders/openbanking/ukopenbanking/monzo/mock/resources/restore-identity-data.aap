@@ -1,102 +1,96 @@
 
 REQUEST 1
 GET https://api.monzo.com/open-banking/.well-known/openid-configuration
-X-Aggregator: Tink Testing
 x-fapi-financial-id: 001580000103U9RAAU
 
 RESPONSE 1
 200
-Date: Wed, 04 Nov 2020 13:30:50 GMT
 Content-Type: application/json
-Transfer-Encoding: chunked
-Connection: keep-alive
-Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
-X-Content-Type-Options: nosniff
-Server: cloudflare
 
-{"issuer":"https://api.monzo.com/open-banking/","registration_endpoint":"https://openbanking.monzo.com/oauth2/register","authorization_endpoint":"https://verify.monzo.com/open-banking/authorize","token_endpoint":"https://openbanking.monzo.com/oauth2/token","token_endpoint_auth_methods_supported":["tls_client_auth"],"jwks_uri":"https://keystore.openbanking.org.uk/001580000103U9RAAU/KM71NjuERWSOVWbve6UWqg.jwks","scopes_supported":["payments","openid","accounts"],"claims_supported":["openbanking_intent_id","sub","acr"],"response_types_supported":["code id_token"],"subject_types_supported":["public"],"grant_types_supported":["authorization_code","client_credentials","refresh_token"],"id_token_signing_alg_values_supported":["PS256"],"id_token_encryption_alg_values_supported":["PS256"],"response_modes_supported":["fragment"],"request_object_signing_alg_values_supported":["PS256"],"request_parameter_supported":true,"claims_parameter_supported":true}
-
-
+{
+    "issuer": "https://api.monzo.com/open-banking/",
+    "registration_endpoint": "https://openbanking.monzo.com/oauth2/register",
+    "authorization_endpoint": "https://verify.monzo.com/open-banking/authorize",
+    "token_endpoint": "https://openbanking.monzo.com/oauth2/token",
+    "token_endpoint_auth_methods_supported": [
+        "tls_client_auth"
+    ],
+    "jwks_uri": "https://keystore.openbanking.org.uk/001580000103U9RAAU/KM71NjuERWSOVWbve6UWqg.jwks",
+    "scopes_supported": [
+        "payments",
+        "openid",
+        "accounts"
+    ],
+    "claims_supported": [
+        "openbanking_intent_id",
+        "sub",
+        "acr"
+    ],
+    "response_types_supported": [
+        "code id_token"
+    ],
+    "subject_types_supported": [
+        "public"
+    ],
+    "grant_types_supported": [
+        "authorization_code",
+        "client_credentials",
+        "refresh_token"
+    ],
+    "id_token_signing_alg_values_supported": [
+        "PS256"
+    ],
+    "id_token_encryption_alg_values_supported": [
+        "PS256"
+    ],
+    "response_modes_supported": [
+        "fragment"
+    ],
+    "request_object_signing_alg_values_supported": [
+        "PS256"
+    ],
+    "request_parameter_supported": true,
+    "claims_parameter_supported": true
+}
 
 REQUEST 2
 POST https://openbanking.monzo.com/oauth2/token
 Content-Type: application/x-www-form-urlencoded
 Accept: application/json
-X-Aggregator: Tink Testing
-x-fapi-financial-id: 001580000103U9RAAU
 
-grant_type=client_credentials&scope=accounts&redirect_uri=https%3A%2F%2F127.0.0.1%3A7357%2Fapi%2Fv1%2Fthirdparty%2Fcallback&client_id=dummyClientId
+grant_type=refresh_token
+    &scope=accounts
+    &redirect_uri=https%3A%2F%2F127.0.0.1%3A7357%2Fapi%2Fv1%2Fthirdparty%2Fcallback&client_id=dummyClientId
+    &refresh_token=DUMMY_REFRESH_TOKEN
 
 RESPONSE 2
 200
-Cache-Control: no-cache
-Content-Length: 316
 Content-Type: application/json; charset=UTF-8
-Date: Wed, 04 Nov 2020 13:30:50 GMT
-Pragma: no-cache
-x-fapi-financial-id: 001580000103U9RAAU
 
-{"access_token":"DUMMY_ACCESS_TOKEN","token_type":"client_credentials","expires_in":3600,"scope":""}
-
-
+{
+    "access_token": "DUMMY_ACCESS_TOKEN",
+    "token_type": "Bearer",
+    "expires_in": 3600,
+    "refresh_token": "DUMMY_REFRESH_TOKEN",
+    "scope": "openid accounts"
+}
 
 REQUEST 3
-POST https://openbanking.monzo.com/open-banking/v3.1/aisp/account-access-consents
-Authorization: Client_credentials DUMMY_ACCESS_TOKEN
+GET https://openbanking.monzo.com/open-banking/v3.1/aisp/party
+Authorization: Bearer DUMMY_ACCESS_TOKEN
 Accept: application/json
-Content-Type: application/json
-X-Aggregator: Tink Testing
-x-fapi-financial-id: 001580000103U9RAAU
 x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
-
-{"Data":{"Permissions":["ReadAccountsDetail","ReadTransactionsCredits","ReadDirectDebits","ReadTransactionsDebits","ReadBeneficiariesDetail","ReadPartyPSU","ReadBalances","ReadStandingOrdersDetail","ReadTransactionsDetail"]},"Risk":{}}
 
 RESPONSE 3
-201
-Content-Length: 595
-Content-Type: application/json; charset=UTF-8
-Date: Wed, 04 Nov 2020 13:30:50 GMT
-x-fapi-financial-id: 001580000103U9RAAU
-x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
-
-{"Data":{"Permissions":["ReadAccountsDetail","ReadTransactionsCredits","ReadDirectDebits","ReadTransactionsDebits","ReadBeneficiariesDetail","ReadPartyPSU","ReadBalances","ReadStandingOrdersDetail","ReadTransactionsDetail"],"ConsentId":"obaispaccountinformationconsent_0000A0r7sz6QixlrvKIkb4","CreationDateTime":"2020-11-04T13:30:50.767Z","Status":"AwaitingAuthorisation","StatusUpdateDateTime":"2020-11-04T13:30:50.767Z"},"Risk":{},"Links":{"Self":"https://openbanking.monzo.com/open-banking/v3.1/aisp/account-access-consents/obaispaccountinformationconsent_0000A0r7sz6QixlrvKIkb4"},"Meta":{}}
-
-
-
-REQUEST 4
-POST https://openbanking.monzo.com/oauth2/token
-Content-Type: application/x-www-form-urlencoded
-Accept: application/json
-X-Aggregator: Tink Testing
-x-fapi-financial-id: 001580000103U9RAAU
-
-grant_type=refresh_token&scope=accounts&redirect_uri=https%3A%2F%2F127.0.0.1%3A7357%2Fapi%2Fv1%2Fthirdparty%2Fcallback&client_id=dummyClientId&refresh_token=DUMMY_REFRESH_TOKEN
-
-RESPONSE 4
-200
-Cache-Control: no-cache
-Content-Length: 1614
-Content-Type: application/json; charset=UTF-8
-Date: Wed, 04 Nov 2020 13:31:00 GMT
-Pragma: no-cache
-x-fapi-financial-id: 001580000103U9RAAU
-
-{"access_token":"DUMMY_ACCESS_TOKEN2","token_type":"Bearer","expires_in":3600,"refresh_token":"REFRESH_TOKEN","scope":"openid accounts","id_token":"DUMMY_ACCESS_TOKEN2"}
-
-
-
-REQUEST 5
-GET https://openbanking.monzo.com/open-banking/v3.1/aisp/party
-Authorization: Bearer DUMMY_REFRESH_TOKEN
-Accept: application/json
-X-Aggregator: Tink Testing
-x-fapi-financial-id: 001580000103U9RAAU
-x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
-
-RESPONSE 5
 200
 Content-Type: application/json; charset=UTF-8
-Date: Wed, 04 Nov 2020 13:31:02 GMT
 x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
 
-{"code":"forbidden.sca_expired","message":"This consent's approval has exceeded the SCA expiry window, reading /party is not authorised","params":{"consent_id":"obaispaccountinformationconsent_0000A0FueVOLu8BPbqT9E1"},"retryable":{}}
+{
+    "code": "forbidden.sca_expired",
+    "message": "This consent's approval has exceeded the SCA expiry window, reading /party is not authorised",
+    "params": {
+        "consent_id": "obaispaccountinformationconsent_0000A0FueVOLu8BPbqT9E1"
+    },
+    "retryable": {}
+}

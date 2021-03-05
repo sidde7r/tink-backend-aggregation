@@ -26,11 +26,11 @@ public class ClearSensitivePayloadOnForceAuthenticateCommand extends AgentWorker
         try {
 
             if (context.getAgent() instanceof PersistentLogin
-                    && context.getRequest().isForceAuthenticate()) {
+                    && context.getRequest().shouldManualAuthBeForced()) {
 
                 log.info(
                         "Credentials contain - isForceAuthenticate: {}",
-                        context.getRequest().isForceAuthenticate());
+                        context.getRequest().shouldManualAuthBeForced());
                 log.info("Clearing session to force authentication towards the bank");
 
                 // Nuke Sensitive Storage

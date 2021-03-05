@@ -41,7 +41,7 @@ public class AutoAuthenticationProgressiveController implements ProgressiveAuthe
         this.requestIsUpdate = request.isUpdate();
         this.requestIsCreate = request.isCreate();
         this.requestIsManual = request.isManual();
-        this.requestIsForceAuthenticate = request.isForceAuthenticate();
+        this.requestIsForceAuthenticate = request.shouldManualAuthBeForced();
 
         this.systemUpdater = Preconditions.checkNotNull(systemUpdater);
         this.manualAuthenticator = Preconditions.checkNotNull(manualAuthenticator);

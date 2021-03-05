@@ -69,7 +69,8 @@ public final class AgentWireMockRefreshTest {
             boolean requestFlagManual,
             boolean requestFlagCreate,
             boolean requestFlagUpdate,
-            boolean wireMockServerLogsEnabled) {
+            boolean wireMockServerLogsEnabled,
+            boolean forceAutoAuthentication) {
 
         ImmutableSet<RequestResponseParser> parsers =
                 wireMockFilePaths.stream()
@@ -97,7 +98,8 @@ public final class AgentWireMockRefreshTest {
                                 refreshableItems,
                                 requestFlagManual,
                                 requestFlagCreate,
-                                requestFlagUpdate),
+                                requestFlagUpdate,
+                                forceAutoAuthentication),
                         new AgentFactoryWireMockModule(
                                 MutableFakeBankSocket.of("localhost:" + server.getHttpsPort()),
                                 callbackData,
@@ -422,7 +424,8 @@ public final class AgentWireMockRefreshTest {
                     requestManual,
                     requestCreate,
                     requestUpdate,
-                    true);
+                    true,
+                    false);
         }
     }
 
@@ -438,6 +441,7 @@ public final class AgentWireMockRefreshTest {
                     ConfigurationStep,
                     RefreshOrAuthOnlyStep,
                     RefreshableItemStep,
+                    FullOrAutoAuthenticationStep,
                     BuildStep {
         private MarketCode marketCode;
         private String providerName;
@@ -458,6 +462,7 @@ public final class AgentWireMockRefreshTest {
         private boolean requestFlagManual;
         private boolean requestFlagCreate;
         private boolean requestFlagUpdate;
+        private boolean forceAutoAuthentication;
 
         private NxBuilder() {
             this.configuration = new AgentsServiceConfiguration();
@@ -472,6 +477,7 @@ public final class AgentWireMockRefreshTest {
             this.requestFlagManual = true;
             this.requestFlagCreate = false;
             this.requestFlagUpdate = false;
+            this.forceAutoAuthentication = false;
         }
 
         @Override
@@ -499,13 +505,25 @@ public final class AgentWireMockRefreshTest {
         }
 
         @Override
-        public RefreshOrAuthOnlyStep withConfigFile(AgentsServiceConfiguration configuration) {
+        public FullOrAutoAuthenticationStep withConfigFile(
+                AgentsServiceConfiguration configuration) {
             this.configuration = configuration;
             return this;
         }
 
         @Override
-        public RefreshOrAuthOnlyStep withoutConfigFile() {
+        public FullOrAutoAuthenticationStep withoutConfigFile() {
+            return this;
+        }
+
+        @Override
+        public RefreshOrAuthOnlyStep testFullAuthentication() {
+            return this;
+        }
+
+        @Override
+        public RefreshOrAuthOnlyStep testAutoAuthentication() {
+            this.forceAutoAuthentication = true;
             return this;
         }
 
@@ -522,7 +540,7 @@ public final class AgentWireMockRefreshTest {
         }
 
         @Override
-        public BuildStep testAuthenticationOnly() {
+        public BuildStep testOnlyAuthentication() {
             this.refreshableItems = new HashSet<>();
             return this;
         }
@@ -660,7 +678,8 @@ public final class AgentWireMockRefreshTest {
                     requestFlagManual,
                     requestFlagCreate,
                     requestFlagUpdate,
-                    wireMockServerLogsEnabled);
+                    wireMockServerLogsEnabled,
+                    forceAutoAuthentication);
         }
     }
 
@@ -686,9 +705,24 @@ public final class AgentWireMockRefreshTest {
          * @param configuration
          * @return This builder.
          */
-        RefreshOrAuthOnlyStep withConfigFile(AgentsServiceConfiguration configuration);
+        FullOrAutoAuthenticationStep withConfigFile(AgentsServiceConfiguration configuration);
 
-        RefreshOrAuthOnlyStep withoutConfigFile();
+        FullOrAutoAuthenticationStep withoutConfigFile();
+    }
+
+    public interface FullOrAutoAuthenticationStep {
+
+        /**
+         * This is only declaration about the authentication flow of the executed test. It does not
+         * assure that full (manual) authentication flow will be executed
+         */
+        RefreshOrAuthOnlyStep testFullAuthentication();
+
+        /**
+         * This is only declaration about the authentication flow of the executed test. It does not
+         * assure that auto authentication flow will be executed
+         */
+        RefreshOrAuthOnlyStep testAutoAuthentication();
     }
 
     public interface RefreshOrAuthOnlyStep {
@@ -697,7 +731,7 @@ public final class AgentWireMockRefreshTest {
         RefreshableItemStep withRefreshableItems(Set<RefreshableItem> refreshableItems);
 
         /** Test will be executed without any refreshable items */
-        BuildStep testAuthenticationOnly();
+        BuildStep testOnlyAuthentication();
     }
 
     public interface RefreshableItemStep extends BuildStep {

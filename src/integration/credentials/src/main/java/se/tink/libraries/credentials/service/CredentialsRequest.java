@@ -219,7 +219,7 @@ public abstract class CredentialsRequest {
         this.originatingUserIp = originatingUserIp;
     }
 
-    public boolean isForceAuthenticate() {
+    public boolean shouldManualAuthBeForced() {
         return forceAuthenticate;
     }
 

@@ -43,6 +43,7 @@ public class IberCajaMockServerAgentTest {
                         .withProviderName("es-ibercaja-password")
                         .withWireMockFilePath(wireMockServerFilePath)
                         .withoutConfigFile()
+                        .testFullAuthentication()
                         .withRefreshableItems(refreshableItems)
                         .addCredentialField(Key.USERNAME.getFieldKey(), USERNAME)
                         .addCredentialField(Key.PASSWORD.getFieldKey(), PASSWORD)
