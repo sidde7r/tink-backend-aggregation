@@ -6,9 +6,9 @@
       "exactBalance": {
         "currencyCode": "SEK",
         "doubleValue": 9.85,
+        "exactValue": 9.85,
         "scale": 2,
-        "unscaledValue": 985,
-        "exactValue": 9.85
+        "unscaledValue": 985
       },
       "currencyCode": "SEK",
       "bankId": "98765432198",
@@ -22,18 +22,19 @@
       "userModifiedType": false,
       "identifiers": "[]",
       "closed": false,
-      "holderName": "FIRST_NAME LAST_NAME",
+      "holderName": "First_name Last_name",
       "accountHolder": {
         "accountId": null,
         "type": "PERSONAL",
         "identities": [
           {
-            "name": "FIRST_NAME LAST_NAME",
+            "name": "First_name Last_name",
             "role": "HOLDER"
           }
         ]
       },
       "flags": "[]",
+      "balances": [],
       "availableCredit": 0.0,
       "balance": 9.85
     },
@@ -43,9 +44,9 @@
       "exactBalance": {
         "currencyCode": "SEK",
         "doubleValue": -1000000.0,
+        "exactValue": -1000000.0,
         "scale": 1,
-        "unscaledValue": -10000000,
-        "exactValue": -1000000.0
+        "unscaledValue": -10000000
       },
       "currencyCode": "SEK",
       "bankId": "12345678",
@@ -60,6 +61,7 @@
       "identifiers": "[]",
       "closed": false,
       "flags": "[]",
+      "balances": [],
       "availableCredit": 0.0,
       "balance": -1000000.0
     },
@@ -69,9 +71,9 @@
       "exactBalance": {
         "currencyCode": "SEK",
         "doubleValue": -20824.0,
+        "exactValue": -20824.0,
         "scale": 1,
-        "unscaledValue": -208240,
-        "exactValue": -20824.0
+        "unscaledValue": -208240
       },
       "currencyCode": "SEK",
       "bankId": "45612378912",
@@ -86,6 +88,7 @@
       "identifiers": "[\"se://45612378912\"]",
       "closed": false,
       "flags": "[]",
+      "balances": [],
       "availableCredit": 0.0,
       "balance": -20824.0
     },
@@ -95,9 +98,9 @@
       "exactBalance": {
         "currencyCode": "SEK",
         "doubleValue": 94.99,
+        "exactValue": 94.99,
         "scale": 2,
-        "unscaledValue": 9499,
-        "exactValue": 94.99
+        "unscaledValue": 9499
       },
       "currencyCode": "SEK",
       "bankId": "1234567",
@@ -111,18 +114,23 @@
       "userModifiedType": false,
       "identifiers": "[]",
       "closed": false,
-      "holderName": "FIRSTNAME LASTNAME",
+      "holderName": "Firstname Lastname",
       "accountHolder": {
         "accountId": null,
         "type": "PERSONAL",
         "identities": [
           {
-            "name": "FIRSTNAME LASTNAME",
+            "name": "Firstname Lastname",
+            "role": "HOLDER"
+          },
+          {
+            "name": "Anothername Aftername",
             "role": "HOLDER"
           }
         ]
       },
       "flags": "[]",
+      "balances": [],
       "availableCredit": 0.0,
       "balance": 94.99
     },
@@ -132,9 +140,9 @@
       "exactBalance": {
         "currencyCode": "SEK",
         "doubleValue": 5179.32,
+        "exactValue": 5179.32,
         "scale": 2,
-        "unscaledValue": 517932,
-        "exactValue": 5179.32
+        "unscaledValue": 517932
       },
       "currencyCode": "SEK",
       "bankId": "56789123456",
@@ -148,18 +156,19 @@
       "userModifiedType": false,
       "identifiers": "[\"se://56789123456\"]",
       "closed": false,
-      "holderName": "FIRST_NAME LAST_NAME",
+      "holderName": "First_name Last_name",
       "accountHolder": {
         "accountId": null,
         "type": "PERSONAL",
         "identities": [
           {
-            "name": "FIRST_NAME LAST_NAME",
+            "name": "First_name Last_name",
             "role": "HOLDER"
           }
         ]
       },
       "flags": "[]",
+      "balances": [],
       "availableCredit": 0.0,
       "balance": 5179.32
     }
@@ -177,7 +186,9 @@
       "pending": false,
       "timestamp": 0,
       "type": "DEFAULT",
-      "upcoming": false
+      "upcoming": false,
+      "externalSystemIds": {},
+      "transactionDates": []
     },
     {
       "amount": -70.0,
@@ -191,7 +202,9 @@
       "pending": false,
       "timestamp": 0,
       "type": "WITHDRAWAL",
-      "upcoming": false
+      "upcoming": false,
+      "externalSystemIds": {},
+      "transactionDates": []
     },
     {
       "amount": 236.32,
@@ -205,7 +218,9 @@
       "pending": false,
       "timestamp": 0,
       "type": "DEFAULT",
-      "upcoming": false
+      "upcoming": false,
+      "externalSystemIds": {},
+      "transactionDates": []
     },
     {
       "amount": -1003000.0,
@@ -219,7 +234,9 @@
       "pending": false,
       "timestamp": 0,
       "type": "WITHDRAWAL",
-      "upcoming": false
+      "upcoming": false,
+      "externalSystemIds": {},
+      "transactionDates": []
     },
     {
       "amount": 200000.0,
@@ -233,7 +250,9 @@
       "pending": false,
       "timestamp": 0,
       "type": "DEFAULT",
-      "upcoming": false
+      "upcoming": false,
+      "externalSystemIds": {},
+      "transactionDates": []
     },
     {
       "amount": 100000.0,
@@ -247,7 +266,9 @@
       "pending": false,
       "timestamp": 0,
       "type": "DEFAULT",
-      "upcoming": false
+      "upcoming": false,
+      "externalSystemIds": {},
+      "transactionDates": []
     },
     {
       "amount": 204000.0,
@@ -261,7 +282,9 @@
       "pending": false,
       "timestamp": 0,
       "type": "DEFAULT",
-      "upcoming": false
+      "upcoming": false,
+      "externalSystemIds": {},
+      "transactionDates": []
     },
     {
       "amount": 250000.0,
@@ -275,7 +298,9 @@
       "pending": false,
       "timestamp": 0,
       "type": "DEFAULT",
-      "upcoming": false
+      "upcoming": false,
+      "externalSystemIds": {},
+      "transactionDates": []
     },
     {
       "amount": 250000.0,
@@ -289,7 +314,9 @@
       "pending": false,
       "timestamp": 0,
       "type": "DEFAULT",
-      "upcoming": false
+      "upcoming": false,
+      "externalSystemIds": {},
+      "transactionDates": []
     },
     {
       "amount": 1.0,
@@ -303,7 +330,9 @@
       "pending": false,
       "timestamp": 0,
       "type": "DEFAULT",
-      "upcoming": false
+      "upcoming": false,
+      "externalSystemIds": {},
+      "transactionDates": []
     },
     {
       "amount": 10.0,
@@ -317,7 +346,9 @@
       "pending": false,
       "timestamp": 0,
       "type": "DEFAULT",
-      "upcoming": false
+      "upcoming": false,
+      "externalSystemIds": {},
+      "transactionDates": []
     },
     {
       "amount": 1.0,
@@ -331,7 +362,9 @@
       "pending": false,
       "timestamp": 0,
       "type": "DEFAULT",
-      "upcoming": false
+      "upcoming": false,
+      "externalSystemIds": {},
+      "transactionDates": []
     },
     {
       "amount": 1.0,
@@ -345,7 +378,9 @@
       "pending": false,
       "timestamp": 0,
       "type": "DEFAULT",
-      "upcoming": false
+      "upcoming": false,
+      "externalSystemIds": {},
+      "transactionDates": []
     },
     {
       "amount": -4000.0,
@@ -359,7 +394,9 @@
       "pending": false,
       "timestamp": 0,
       "type": "WITHDRAWAL",
-      "upcoming": false
+      "upcoming": false,
+      "externalSystemIds": {},
+      "transactionDates": []
     },
     {
       "amount": 4000.0,
@@ -373,7 +410,9 @@
       "pending": false,
       "timestamp": 0,
       "type": "DEFAULT",
-      "upcoming": false
+      "upcoming": false,
+      "externalSystemIds": {},
+      "transactionDates": []
     },
     {
       "amount": 0.66,
@@ -387,7 +426,9 @@
       "pending": false,
       "timestamp": 0,
       "type": "DEFAULT",
-      "upcoming": false
+      "upcoming": false,
+      "externalSystemIds": {},
+      "transactionDates": []
     },
     {
       "amount": -1.0,
@@ -401,7 +442,9 @@
       "pending": false,
       "timestamp": 0,
       "type": "WITHDRAWAL",
-      "upcoming": false
+      "upcoming": false,
+      "externalSystemIds": {},
+      "transactionDates": []
     },
     {
       "amount": -1.0,
@@ -415,7 +458,9 @@
       "pending": false,
       "timestamp": 0,
       "type": "WITHDRAWAL",
-      "upcoming": false
+      "upcoming": false,
+      "externalSystemIds": {},
+      "transactionDates": []
     },
     {
       "amount": -1.0,
@@ -429,7 +474,9 @@
       "pending": false,
       "timestamp": 0,
       "type": "WITHDRAWAL",
-      "upcoming": false
+      "upcoming": false,
+      "externalSystemIds": {},
+      "transactionDates": []
     },
     {
       "amount": -1.0,
@@ -443,7 +490,9 @@
       "pending": false,
       "timestamp": 0,
       "type": "WITHDRAWAL",
-      "upcoming": false
+      "upcoming": false,
+      "externalSystemIds": {},
+      "transactionDates": []
     },
     {
       "amount": -1.0,
@@ -457,7 +506,9 @@
       "pending": false,
       "timestamp": 0,
       "type": "WITHDRAWAL",
-      "upcoming": false
+      "upcoming": false,
+      "externalSystemIds": {},
+      "transactionDates": []
     },
     {
       "amount": -1.0,
@@ -471,7 +522,9 @@
       "pending": false,
       "timestamp": 0,
       "type": "WITHDRAWAL",
-      "upcoming": false
+      "upcoming": false,
+      "externalSystemIds": {},
+      "transactionDates": []
     },
     {
       "amount": -1.0,
@@ -485,7 +538,9 @@
       "pending": false,
       "timestamp": 0,
       "type": "WITHDRAWAL",
-      "upcoming": false
+      "upcoming": false,
+      "externalSystemIds": {},
+      "transactionDates": []
     },
     {
       "amount": -1.0,
@@ -499,7 +554,9 @@
       "pending": false,
       "timestamp": 0,
       "type": "WITHDRAWAL",
-      "upcoming": false
+      "upcoming": false,
+      "externalSystemIds": {},
+      "transactionDates": []
     },
     {
       "amount": -1.0,
@@ -513,7 +570,9 @@
       "pending": false,
       "timestamp": 0,
       "type": "WITHDRAWAL",
-      "upcoming": false
+      "upcoming": false,
+      "externalSystemIds": {},
+      "transactionDates": []
     },
     {
       "amount": -1.0,
@@ -527,7 +586,9 @@
       "pending": false,
       "timestamp": 0,
       "type": "WITHDRAWAL",
-      "upcoming": false
+      "upcoming": false,
+      "externalSystemIds": {},
+      "transactionDates": []
     },
     {
       "amount": -1560.0,
@@ -541,7 +602,9 @@
       "pending": false,
       "timestamp": 0,
       "type": "WITHDRAWAL",
-      "upcoming": false
+      "upcoming": false,
+      "externalSystemIds": {},
+      "transactionDates": []
     },
     {
       "amount": 9.66,
@@ -555,7 +618,9 @@
       "pending": false,
       "timestamp": 0,
       "type": "DEFAULT",
-      "upcoming": false
+      "upcoming": false,
+      "externalSystemIds": {},
+      "transactionDates": []
     }
   ],
   "identityData": {
@@ -572,16 +637,16 @@
     "dateOfBirth": {
       "year": 1912,
       "month": "DECEMBER",
-      "monthValue": 12,
-      "dayOfMonth": 12,
+      "era": "CE",
       "dayOfWeek": "THURSDAY",
       "leapYear": true,
       "dayOfYear": 347,
       "chronology": {
-        "id": "ISO",
-        "calendarType": "iso8601"
+        "calendarType": "iso8601",
+        "id": "ISO"
       },
-      "era": "CE"
+      "monthValue": 12,
+      "dayOfMonth": 12
     }
   }
 }

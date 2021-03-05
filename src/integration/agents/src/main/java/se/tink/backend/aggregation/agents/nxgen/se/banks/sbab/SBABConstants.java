@@ -90,8 +90,11 @@ public class SBABConstants {
         public static final String NO_HOLDER_NAME = "No holder name found";
     }
 
-    public static class MandateTypes {
+    public static class HolderTypes {
+        private HolderTypes() {}
+
         public static final String OWNER = "OWNER";
+        public static final String CO_ACCOUNT_HOLDER = "CO_ACCOUNT_HOLDER";
     }
 
     public static final TransactionalAccountTypeMapper ACCOUNT_TYPE_MAPPER =

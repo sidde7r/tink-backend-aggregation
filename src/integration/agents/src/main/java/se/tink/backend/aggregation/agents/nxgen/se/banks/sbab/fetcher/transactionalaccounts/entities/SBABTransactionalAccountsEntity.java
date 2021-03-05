@@ -3,12 +3,12 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.fetcher.transacti
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.Getter;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.SBABConstants;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.SBABConstants.ErrorMessages;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.SBABConstants.MandateTypes;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.rpc.StandardResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Party;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -41,7 +41,7 @@ public class SBABTransactionalAccountsEntity extends StandardResponse {
                                 .withAccountName(name)
                                 .addIdentifier(new SwedishIdentifier(accountNumber))
                                 .build())
-                .addHolderName(getHolderName())
+                .addParties(getParties())
                 .build();
     }
 
@@ -49,11 +49,7 @@ public class SBABTransactionalAccountsEntity extends StandardResponse {
         return ExactCurrencyAmount.of(balance, SBABConstants.CURRENCY);
     }
 
-    private String getHolderName() {
-        return mandates.stream()
-                .filter(m -> MandateTypes.OWNER.equalsIgnoreCase(m.getMandateType()))
-                .findFirst()
-                .map(MandatesEntity::getDisplayName)
-                .orElseThrow(() -> new IllegalStateException(ErrorMessages.NO_HOLDER_NAME));
+    private List<Party> getParties() {
+        return mandates.stream().map(MandatesEntity::toParty).collect(Collectors.toList());
     }
 }
