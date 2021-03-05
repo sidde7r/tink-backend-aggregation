@@ -10,7 +10,6 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
@@ -91,7 +90,7 @@ public class AccountSummaryListEntity {
                 .map(
                         type ->
                                 TransactionalAccount.nxBuilder()
-                                        .withType(getTransactionalAccountType())
+                                        .withType(type)
                                         .withPaymentAccountFlag()
                                         .withBalance(
                                                 BalanceModule.of(
@@ -107,9 +106,5 @@ public class AccountSummaryListEntity {
                                         .setApiIdentifier(id)
                                         .build()
                                         .get());
-    }
-
-    private TransactionalAccountType getTransactionalAccountType() {
-        return TRANSACTIONAL_ACCOUNTS_TYPE_MAPPER.translate(accountType.toString()).orElse(null);
     }
 }
