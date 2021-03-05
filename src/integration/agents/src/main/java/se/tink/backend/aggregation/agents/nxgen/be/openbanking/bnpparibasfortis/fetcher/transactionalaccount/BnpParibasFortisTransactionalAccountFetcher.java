@@ -8,7 +8,6 @@ import org.apache.http.HttpStatus;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.BnpParibasFortisConstants;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.fetcher.transactionalaccount.entity.account.Account;
-import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.fetcher.transactionalaccount.rpc.GetTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.http.BnpParibasFortisApiClient;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
@@ -51,9 +50,7 @@ public class BnpParibasFortisTransactionalAccountFetcher
     public TransactionKeyPaginatorResponse<URL> getTransactionsFor(
             TransactionalAccount account, URL nextUrl) {
         try {
-            GetTransactionsResponse response = apiClient.getTransactionsForAccount(account);
-            response.setAccount(account);
-            return response;
+            return apiClient.getTransactionsForAccount(account);
         } catch (HttpResponseException exception) {
             if (exception.getResponse().getStatus() == HttpStatus.SC_NO_CONTENT) {
                 return new TransactionKeyPaginatorResponseImpl<>(Collections.emptyList(), null);
