@@ -4,6 +4,8 @@ import io.vavr.collection.List;
 import io.vavr.control.Option;
 import java.util.Date;
 import javax.ws.rs.core.MediaType;
+import org.apache.http.HttpStatus;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.OpenbankConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.authenticator.rpc.LoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.authenticator.rpc.LoginResponse;
@@ -17,6 +19,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.transa
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.transactionalaccount.rpc.AccountTransactionsResponse;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.date.ThreadSafeDateFormat;
@@ -102,6 +105,13 @@ public class OpenbankApiClient {
     }
 
     public IdentityResponse fetchIdentityData() {
-        return createRequestInSession(Urls.IDENTITY_URL).get(IdentityResponse.class);
+        try {
+            return createRequestInSession(Urls.IDENTITY_URL).get(IdentityResponse.class);
+        } catch (HttpResponseException exception) {
+            if (exception.getResponse().getStatus() == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
+                throw BankServiceError.BANK_SIDE_FAILURE.exception(exception);
+            }
+            throw exception;
+        }
     }
 }
