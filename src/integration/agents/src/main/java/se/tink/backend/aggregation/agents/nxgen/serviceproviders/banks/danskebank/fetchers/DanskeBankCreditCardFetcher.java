@@ -1,12 +1,19 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankPredicates;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.mapper.AccountEntityMapper;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.AccountDetailsRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.AccountDetailsResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.CardsListRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.ListAccountsRequest;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.ListAccountsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 
@@ -27,15 +34,27 @@ public class DanskeBankCreditCardFetcher implements AccountFetcher<CreditCardAcc
 
     @Override
     public Collection<CreditCardAccount> fetchAccounts() {
-        ListAccountsResponse listAccountsResponse =
-                this.apiClient.listAccounts(
-                        ListAccountsRequest.createFromLanguageCode(
-                                configuration.getLanguageCode()));
+        List<AccountEntity> cardAccounts =
+                apiClient
+                        .listAccounts(
+                                ListAccountsRequest.createFromLanguageCode(
+                                        configuration.getLanguageCode()))
+                        .getAccounts().stream()
+                        .filter(DanskeBankPredicates.CREDIT_CARDS)
+                        .collect(Collectors.toList());
+
+        Map<String, AccountDetailsResponse> accountDetails = new HashMap<>();
+        for (AccountEntity accountEntity : cardAccounts) {
+            accountDetails.put(
+                    accountEntity.getAccountNoExt(),
+                    apiClient.fetchAccountDetails(
+                            new AccountDetailsRequest(accountEntity.getAccountNoInt(), "EN")));
+        }
 
         reachCardEndpointsForDebugPurposes();
 
         return accountEntityMapper.toTinkCreditCardAccounts(
-                configuration, listAccountsResponse.getAccounts());
+                configuration, cardAccounts, accountDetails);
     }
 
     private void reachCardEndpointsForDebugPurposes() {

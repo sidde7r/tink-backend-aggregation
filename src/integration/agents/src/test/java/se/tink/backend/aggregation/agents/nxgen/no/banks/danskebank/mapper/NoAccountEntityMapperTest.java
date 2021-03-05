@@ -94,7 +94,8 @@ public class NoAccountEntityMapperTest {
     public void toCreditCardAccountWhenAccountNoLengthIsShorterThanMinLength() {
         // given & when
         CreditCardAccount result =
-                noAccountEntityMapper.toCreditCardAccount(configuration, accountEntity);
+                noAccountEntityMapper.toCreditCardAccount(
+                        configuration, accountEntity, accountDetailsResponse);
 
         // then
         assertThat(result.getAccountNumber()).isEqualTo(ACCOUNT_EXT_NO);
