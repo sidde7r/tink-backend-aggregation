@@ -43,8 +43,7 @@ public abstract class N26ValidateConsentBaseStep {
         Optional<AgentBankApiError> optionalBankError = callResult.getAgentBankApiError();
         if (optionalBankError.isPresent()) {
             log.error("Could not fetch consent");
-            return Optional.of(
-                    new AgentFailedAuthenticationResult(optionalBankError.get(), persistedData));
+            return Optional.of(new AgentFailedAuthenticationResult(optionalBankError.get(), null));
         }
 
         if (callResult.getResponse().isPresent()) {
@@ -63,6 +62,10 @@ public abstract class N26ValidateConsentBaseStep {
 
         N26ConsentPersistentData n26ConsentPersistentData =
                 getN26ConsentPersistentData(persistedData);
+
+        if (n26ConsentPersistentData.getConsentId() == null) {
+            return new ExternalApiCallResult<>(new SessionExpiredError());
+        }
 
         N26ValidateConsentParameters n26ValidateConsentParameters =
                 N26ValidateConsentParameters.builder()
