@@ -63,7 +63,7 @@ public class BunqConfiguration implements ClientConfiguration {
     @JsonSchemaDescription("The hex encoded private key of the generated RSA installation key pair")
     @JsonSchemaExamples("2746ba10ee57a195a75c07f6c9344e0537132f885ce7f3441732c4312944af50")
     @JsonSchemaInject(strings = {@JsonSchemaString(path = "pattern", value = "^[0-9a-fA-F]+$")})
-    @SensitiveSecret
+    @Secret
     private String psd2InstallationPrivateKey;
 
     @JsonProperty
