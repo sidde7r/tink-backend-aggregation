@@ -6,8 +6,6 @@ import java.time.LocalDate;
 import java.util.Objects;
 import java.util.UUID;
 import org.iban4j.IbanUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.amount.Amount;
@@ -23,7 +21,6 @@ import se.tink.libraries.transfer.rpc.PaymentServiceType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 public class Payment {
-    private static Logger log = LoggerFactory.getLogger(Payment.class);
     private static ImmutableList<String> sepaCountriesWithEur =
             ImmutableList.of(
                     "AT",
@@ -115,33 +112,6 @@ public class Payment {
 
     public Debtor getDebtor() {
         return debtor;
-    }
-
-    @Deprecated
-    public Amount getAmount() {
-        if (exactCurrencyAmount == null) {
-            log.warn("exactCurrencyAmount shouldn't be null");
-        }
-
-        if (amount == null) {
-            log.warn("amount shouldn't be null");
-        }
-
-        if (exactCurrencyAmount != null && amount != null) {
-            if (exactCurrencyAmount.getDoubleValue() == amount.doubleValue()
-                    && exactCurrencyAmount.getCurrencyCode().equals(amount.getCurrency())) {
-                log.info("Amount and ExactCurrencyAmount is the same!");
-            } else {
-                if (exactCurrencyAmount.getDoubleValue() != amount.doubleValue()) {
-                    log.warn("exactCurrencyAmount and amount values are not the same");
-                }
-
-                if (!exactCurrencyAmount.getCurrencyCode().equals(amount.getCurrency())) {
-                    log.warn("exactCurrencyAmount and amount currencies are not the same");
-                }
-            }
-        }
-        return amount;
     }
 
     public ExactCurrencyAmount getExactCurrencyAmount() {

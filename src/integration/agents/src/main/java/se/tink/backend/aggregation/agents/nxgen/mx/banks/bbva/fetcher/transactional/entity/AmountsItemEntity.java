@@ -1,14 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.fetcher.transactional.entity;
 
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class AmountsItemEntity {
     private double amount;
     private String currency;
 
-    public Amount getAmount() {
-        return new Amount(currency, amount);
+    public ExactCurrencyAmount getAmount() {
+        return ExactCurrencyAmount.of(amount, currency);
     }
 }

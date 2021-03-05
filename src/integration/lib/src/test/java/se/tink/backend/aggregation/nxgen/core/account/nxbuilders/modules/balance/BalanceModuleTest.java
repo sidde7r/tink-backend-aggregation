@@ -28,7 +28,7 @@ public class BalanceModuleTest {
 
         // Test successful build
         assertThat(balance.getExactBalance().getDoubleValue()).isEqualTo(257.90);
-        assertThat(balance.getAvailableCredit().isPresent()).isFalse();
+        assertThat(balance.getExactAvailableCredit().isPresent()).isFalse();
         assertThat(balance.getInterestRate().isPresent()).isFalse();
     }
 
@@ -75,9 +75,9 @@ public class BalanceModuleTest {
         bal.add(ExactCurrencyAmount.inDKK(20));
 
         assertThat(balance.getInterestRate().isPresent()).isTrue();
-        assertThat(balance.getAvailableCredit().isPresent()).isTrue();
+        assertThat(balance.getExactAvailableCredit().isPresent()).isTrue();
         assertThat(balance.getExactBalance().getDoubleValue()).isEqualTo(25_506.32);
-        assertThat(balance.getAvailableCredit().get().getValue()).isEqualTo(9473.27);
+        assertThat(balance.getExactAvailableCredit().get().getDoubleValue()).isEqualTo(9473.27);
         assertThat(balance.getExactBalance().getCurrencyCode()).isEqualTo("DKK");
         assertThat(balance.getExactAvailableCredit().get().getCurrencyCode()).isEqualTo("DKK");
         assertThat(balance.getInterestRate().get()).isEqualTo(0.0265);
@@ -102,11 +102,11 @@ public class BalanceModuleTest {
                         .build();
 
         assertThat(balance.getInterestRate().isPresent()).isTrue();
-        assertThat(balance.getAvailableCredit().isPresent()).isTrue();
+        assertThat(balance.getExactAvailableCredit().isPresent()).isTrue();
         assertThat(balance.getExactBalance().getDoubleValue()).isEqualTo(25506.32);
-        assertThat(balance.getAvailableCredit().get().getValue()).isEqualTo(9473.27);
+        assertThat(balance.getExactAvailableCredit().get().getDoubleValue()).isEqualTo(9473.27);
         assertThat(balance.getExactBalance().getCurrencyCode()).isEqualTo("DKK");
-        assertThat(balance.getAvailableCredit().get().getCurrency()).isEqualTo("DKK");
+        assertThat(balance.getExactAvailableCredit().get().getCurrencyCode()).isEqualTo("DKK");
         assertThat(balance.getInterestRate().get()).isEqualTo(0.0265);
         assertThat(balance.getExactAvailableBalance().getDoubleValue()).isEqualTo(25_006.32);
         assertThat(balance.getExactAvailableBalance().getCurrencyCode()).isEqualTo("DKK");

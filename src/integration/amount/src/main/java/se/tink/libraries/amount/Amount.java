@@ -2,7 +2,6 @@ package se.tink.libraries.amount;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.MoreObjects;
-import com.google.common.base.Strings;
 import java.math.BigDecimal;
 import java.util.Objects;
 
@@ -26,10 +25,6 @@ public class Amount extends Number {
     public Amount(String currency, double value) {
         this.currency = currency != null ? currency.toUpperCase() : null;
         this.value = value;
-    }
-
-    public static Amount inSEK(Number value) {
-        return new Amount("SEK", value);
     }
 
     public String getCurrency() {
@@ -71,11 +66,6 @@ public class Amount extends Number {
                 .add("currency", currency)
                 .add("value", value)
                 .toString();
-    }
-
-    @JsonIgnore
-    public boolean isEmpty() {
-        return Strings.isNullOrEmpty(currency) || !Double.isFinite(value);
     }
 
     @JsonIgnore

@@ -15,7 +15,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.strings.StringUtils;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
 import se.tink.libraries.transfer.enums.TransferType;
@@ -64,13 +64,14 @@ public class ConfirmedTransactionEntity extends AbstractExecutorTransactionEntit
     @JsonIgnore
     public Optional<UpcomingTransaction> toTinkUpcomingTransaction(
             AccountIdentifier sourceAccount) {
-        Amount amount = new Amount(currencyCode, StringUtils.parseAmountEU(this.amount));
-
-        if (amount.isEmpty()) {
+        double parsedAmount = StringUtils.parseAmountEU(this.amount);
+        if (Strings.isNullOrEmpty(currencyCode) || !Double.isFinite(parsedAmount)) {
             return Optional.empty();
         }
+        ExactCurrencyAmount exactCurrencyAmount =
+                ExactCurrencyAmount.of(parsedAmount, currencyCode);
         // negate amount when presented as upcoming transaction
-        amount = amount.negate();
+        exactCurrencyAmount = exactCurrencyAmount.negate();
 
         if (date == null) {
             return Optional.empty();
@@ -81,7 +82,7 @@ public class ConfirmedTransactionEntity extends AbstractExecutorTransactionEntit
 
         UpcomingTransaction.Builder upcomingTransactionBuilder =
                 UpcomingTransaction.builder()
-                        .setAmount(amount)
+                        .setAmount(exactCurrencyAmount)
                         .setDate(date)
                         .setDescription(getSourceMessage());
 
@@ -245,12 +246,13 @@ public class ConfirmedTransactionEntity extends AbstractExecutorTransactionEntit
 
         transfer.setDestination(destinationAccount.get());
 
-        Amount amount = new Amount(currencyCode, StringUtils.parseAmountEU(this.amount));
-        if (amount.isEmpty()) {
+        if (Strings.isNullOrEmpty(currencyCode)
+                || !Double.isFinite(Double.parseDouble(this.amount))) {
             return Optional.empty();
         }
 
-        transfer.setAmount(amount);
+        ExactCurrencyAmount exactCurrencyAmount = ExactCurrencyAmount.of(this.amount, currencyCode);
+        transfer.setAmount(exactCurrencyAmount);
         if (date == null) {
             return Optional.empty();
         }

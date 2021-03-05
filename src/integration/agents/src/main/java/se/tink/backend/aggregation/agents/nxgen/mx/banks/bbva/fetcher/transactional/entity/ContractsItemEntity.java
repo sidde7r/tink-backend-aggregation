@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.fetcher.transactional.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.AccountTypes;
@@ -8,9 +9,10 @@ import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.BbvaMxConstants;
 import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.BbvaMxUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.CheckingAccount;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.SavingsAccount;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.AccountIdentifier;
 
 @JsonObject
@@ -43,29 +45,41 @@ public class ContractsItemEntity {
         }
     }
 
-    private CheckingAccount toCheckingAccount(String holdername) {
-        return CheckingAccount.builder()
-                .setUniqueIdentifier(id)
-                .setAccountNumber(number)
-                .setBalance(detail.getCheckingBalance())
-                .setAlias(alias)
-                .addAccountIdentifier(AccountIdentifier.create(AccountIdentifier.Type.TINK, number))
-                .addHolderName(holdername)
-                .setProductName(subProductType.getName())
+    private Optional<TransactionalAccount> toCheckingAccount(String holdername) {
+        return TransactionalAccount.nxBuilder()
+                .withType(TransactionalAccountType.CHECKING)
+                .withPaymentAccountFlag()
+                .withBalance(BalanceModule.of(detail.getCheckingBalance()))
+                .withId(
+                        IdModule.builder()
+                                .withUniqueIdentifier(id)
+                                .withAccountNumber(number)
+                                .withAccountName(subProductType.getName())
+                                .addIdentifier(
+                                        AccountIdentifier.create(
+                                                AccountIdentifier.Type.TINK, number))
+                                .build())
                 .putInTemporaryStorage(BbvaMxConstants.STORAGE.ACCOUNT_ID, id)
+                .addHolderName(holdername)
                 .build();
     }
 
-    private SavingsAccount toSavingsAccount(String holdername) {
-        return SavingsAccount.builder()
-                .setUniqueIdentifier(id)
-                .setAccountNumber(number)
-                .setBalance(detail.getCheckingBalance())
-                .setAlias(alias)
-                .addAccountIdentifier(AccountIdentifier.create(AccountIdentifier.Type.TINK, number))
-                .addHolderName(holdername)
-                .setProductName(subProductType.getName())
+    private Optional<TransactionalAccount> toSavingsAccount(String holdername) {
+        return TransactionalAccount.nxBuilder()
+                .withType(TransactionalAccountType.SAVINGS)
+                .withPaymentAccountFlag()
+                .withBalance(BalanceModule.of(detail.getCheckingBalance()))
+                .withId(
+                        IdModule.builder()
+                                .withUniqueIdentifier(id)
+                                .withAccountNumber(number)
+                                .withAccountName(subProductType.getName())
+                                .addIdentifier(
+                                        AccountIdentifier.create(
+                                                AccountIdentifier.Type.TINK, number))
+                                .build())
                 .putInTemporaryStorage(BbvaMxConstants.STORAGE.ACCOUNT_ID, id)
+                .addHolderName(holdername)
                 .build();
     }
 
@@ -83,9 +97,13 @@ public class ContractsItemEntity {
                                                 String.format(
                                                         "Unknown type: %s", getAccountType())));
         if (accountType == AccountTypes.CHECKING) {
-            return toCheckingAccount(holdername);
+            return toCheckingAccount(holdername)
+                    .orElseThrow(
+                            () -> new IllegalStateException("Cannot create transactional account"));
         } else if (accountType == AccountTypes.SAVINGS) {
-            return toSavingsAccount(holdername);
+            return toSavingsAccount(holdername)
+                    .orElseThrow(
+                            () -> new IllegalStateException("Cannot create transactional account"));
         }
 
         throw new IllegalStateException(String.format("Unknown type: %s", getAccountType()));
