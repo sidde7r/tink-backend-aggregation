@@ -211,7 +211,7 @@ public abstract class IngBaseAgent extends NextGenerationAgent
                                         && !Objects.equals(
                                                 request.getType(),
                                                 CredentialsRequestType.TRANSFER)))
-                || request.isForceAuthenticate();
+                || request.shouldManualAuthBeForced();
     }
 
     private boolean forceAutoAuthentication() {

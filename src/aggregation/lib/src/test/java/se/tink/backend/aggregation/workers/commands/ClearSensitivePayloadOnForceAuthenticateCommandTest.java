@@ -33,7 +33,7 @@ public class ClearSensitivePayloadOnForceAuthenticateCommandTest {
             doExecuteShouldNukeSensitiveStorageAndContinueWhenAgentIsPersistedLoginTypeAndForceAuth()
                     throws Exception {
         // given
-        given(context.getRequest().isForceAuthenticate()).willReturn(true);
+        given(context.getRequest().shouldManualAuthBeForced()).willReturn(true);
 
         // when
         AgentWorkerCommandResult result = command.doExecute();
@@ -48,7 +48,7 @@ public class ClearSensitivePayloadOnForceAuthenticateCommandTest {
             throws Exception {
         // given
         given(context.getAgent()).willReturn(mock(Agent.class));
-        given(context.getRequest().isForceAuthenticate()).willReturn(true);
+        given(context.getRequest().shouldManualAuthBeForced()).willReturn(true);
 
         // when
         AgentWorkerCommandResult result = command.doExecute();
@@ -61,7 +61,7 @@ public class ClearSensitivePayloadOnForceAuthenticateCommandTest {
     @Test
     public void doExecuteShouldNotNukeSensitiveStorageWhenAuthIsNotForced() throws Exception {
         // given
-        given(context.getRequest().isForceAuthenticate()).willReturn(false);
+        given(context.getRequest().shouldManualAuthBeForced()).willReturn(false);
 
         // when
         AgentWorkerCommandResult result = command.doExecute();

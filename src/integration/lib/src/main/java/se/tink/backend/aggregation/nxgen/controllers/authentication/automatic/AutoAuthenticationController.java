@@ -65,7 +65,7 @@ public class AutoAuthenticationController implements TypedAuthenticator {
                 manual(credentials);
             } else {
                 Preconditions.checkState(
-                        !Objects.equals(request.getType(), CredentialsRequestType.CREATE));
+                        isNotCredentialsType(request, CredentialsRequestType.CREATE));
                 auto(credentials);
             }
         } finally {
@@ -75,29 +75,36 @@ public class AutoAuthenticationController implements TypedAuthenticator {
 
     private boolean shouldDoManualAuthentication(final CredentialsRequest request) {
         if (isDebugEnabled) {
-            log.debug("forceAutoAuthentication status: {}", forceAutoAuthentication());
+            log.debug("shouldAutoAuthBeForced status: {}", shouldAutoAuthBeForced());
             log.debug("manualAuthenticatorType: {}", manualAuthenticator.getType());
             log.debug("credentialsType: {}", request.getCredentials().getType());
             log.debug("request create status: {}", request.isCreate());
             log.debug("requestUpdate status: {}", request.isUpdate());
             log.debug("requestType: {}", request.getType());
             log.debug(
-                    "credentials.forceAutoAuthentication status: {}",
-                    request.isForceAuthenticate());
+                    "credentials.shouldManualAuthBeForced status: {}",
+                    request.shouldManualAuthBeForced());
         }
-        return !forceAutoAuthentication()
-                        && (Objects.equals(
-                                        manualAuthenticator.getType(),
-                                        request.getCredentials().getType())
-                                || (request.isUpdate()
-                                        && !Objects.equals(
-                                                request.getType(),
-                                                CredentialsRequestType.TRANSFER)))
-                || request.isForceAuthenticate();
+        return !shouldAutoAuthBeForced()
+                        && (doesCredentialsTypeMatchAuthenticator(request.getCredentials())
+                                || (request.isUpdate() && isNotTransferType(request)))
+                || request.shouldManualAuthBeForced();
+    }
+
+    private boolean isNotTransferType(CredentialsRequest request) {
+        return !Objects.equals(request.getType(), CredentialsRequestType.TRANSFER);
+    }
+
+    private boolean isNotCredentialsType(CredentialsRequest request, CredentialsRequestType type) {
+        return !Objects.equals(request.getType(), type);
+    }
+
+    private boolean doesCredentialsTypeMatchAuthenticator(Credentials credentials) {
+        return Objects.equals(manualAuthenticator.getType(), credentials.getType());
     }
 
     // TODO: Remove this when there is support for new MultiFactor credential types.
-    private boolean forceAutoAuthentication() {
+    private boolean shouldAutoAuthBeForced() {
         return Objects.equals(manualAuthenticator.getType(), CredentialsTypes.PASSWORD)
                 && !request.isUpdate()
                 && !request.isCreate();
@@ -109,7 +116,7 @@ public class AutoAuthenticationController implements TypedAuthenticator {
             throw SessionError.SESSION_EXPIRED.exception();
         }
 
-        if (!Objects.equals(manualAuthenticator.getType(), credentials.getType())) {
+        if (!doesCredentialsTypeMatchAuthenticator(credentials)) {
             credentials.setType(manualAuthenticator.getType());
         }
 
