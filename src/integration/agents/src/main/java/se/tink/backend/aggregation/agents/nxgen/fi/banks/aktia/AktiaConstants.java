@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia;
 
-import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.utils.deviceprofile.DeviceProfile;
 import se.tink.backend.aggregation.utils.deviceprofile.DeviceProfileConfiguration;
@@ -92,10 +92,10 @@ public class AktiaConstants {
         public static final String CHALLENGE_TYPE = "SMS_ONBOARDING";
     }
 
-    public static final TypeMapper<AccountTypes> TRANSACTIONAL_ACCOUNTS_TYPE_MAPPER =
-            TypeMapper.<AccountTypes>builder()
-                    .put(AccountTypes.CHECKING, "CURRENT_ACCOUNT")
-                    .put(AccountTypes.SAVINGS, "SAVINGS_ACCOUNT", "ASP_ACCOUNT")
+    public static final TypeMapper<TransactionalAccountType> TRANSACTIONAL_ACCOUNTS_TYPE_MAPPER =
+            TypeMapper.<TransactionalAccountType>builder()
+                    .put(TransactionalAccountType.CHECKING, "CURRENT_ACCOUNT")
+                    .put(TransactionalAccountType.SAVINGS, "SAVINGS_ACCOUNT", "ASP_ACCOUNT")
                     .build();
 
     public class InstanceStorage {

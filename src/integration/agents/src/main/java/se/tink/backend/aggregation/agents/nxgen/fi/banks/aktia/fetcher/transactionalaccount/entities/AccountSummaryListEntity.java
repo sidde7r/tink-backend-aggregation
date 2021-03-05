@@ -1,13 +1,16 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.fetcher.transactionalaccount.entities;
 
+import static se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.AktiaConstants.TRANSACTIONAL_ACCOUNTS_TYPE_MAPPER;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.AktiaConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
@@ -83,17 +86,30 @@ public class AccountSummaryListEntity {
         String aktiaAccountType = accountType.getCategoryCode();
 
         // Note: Aktia does not specify currency. All amounts are in EUR.
-        return AktiaConstants.TRANSACTIONAL_ACCOUNTS_TYPE_MAPPER
+        return TRANSACTIONAL_ACCOUNTS_TYPE_MAPPER
                 .translate(aktiaAccountType)
                 .map(
                         type ->
-                                TransactionalAccount.builder(type, iban.toLowerCase())
-                                        .setBankIdentifier(id)
-                                        .addIdentifier(new IbanIdentifier(iban))
-                                        .setAccountNumber(iban)
-                                        .setExactBalance(ExactCurrencyAmount.of(balance, "EUR"))
-                                        .setName(name)
-                                        .setHolderName(new HolderName(primaryOwnerName))
-                                        .build());
+                                TransactionalAccount.nxBuilder()
+                                        .withType(getTransactionalAccountType())
+                                        .withPaymentAccountFlag()
+                                        .withBalance(
+                                                BalanceModule.of(
+                                                        ExactCurrencyAmount.of(balance, "EUR")))
+                                        .withId(
+                                                IdModule.builder()
+                                                        .withUniqueIdentifier(id)
+                                                        .withAccountNumber(iban)
+                                                        .withAccountName(name)
+                                                        .addIdentifier(new IbanIdentifier(iban))
+                                                        .build())
+                                        .addHolderName(primaryOwnerName)
+                                        .setApiIdentifier(id)
+                                        .build()
+                                        .get());
+    }
+
+    private TransactionalAccountType getTransactionalAccountType() {
+        return TRANSACTIONAL_ACCOUNTS_TYPE_MAPPER.translate(accountType.toString()).orElse(null);
     }
 }
