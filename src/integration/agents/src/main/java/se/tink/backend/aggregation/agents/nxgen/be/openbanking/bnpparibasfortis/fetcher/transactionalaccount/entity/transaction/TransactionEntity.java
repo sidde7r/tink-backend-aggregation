@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.BnpParibasFortisConstants.Transactions;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
@@ -18,15 +17,14 @@ public class TransactionEntity {
     private String creditDebitIndicator;
     private String entryReference;
 
-    @JsonFormat(with = JsonFormat.Feature.ACCEPT_SINGLE_VALUE_AS_ARRAY)
-    private List<String> remittanceInformation;
+    private RemittanceInformationEntity remittanceInformation;
 
     private String status;
     private TransactionAmount transactionAmount;
 
     public Transaction toTinkModel() {
         return Transaction.builder()
-                .setDescription(String.join(", ", remittanceInformation))
+                .setDescription(remittanceInformation.toString())
                 .setAmount(getAmount())
                 .setDate(bookingDate)
                 .setPending(status.equalsIgnoreCase(Transactions.PENDING_STATUS))
