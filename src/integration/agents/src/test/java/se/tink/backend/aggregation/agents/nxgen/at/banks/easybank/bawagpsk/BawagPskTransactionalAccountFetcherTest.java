@@ -30,7 +30,7 @@ import se.tink.backend.aggregation.nxgen.http.LegacyTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public final class BawagPskTransactionalAccountFetcherTest {
 
@@ -154,14 +154,10 @@ public final class BawagPskTransactionalAccountFetcherTest {
         Assert.assertThat(
                 accounts.stream().map(Account::getExactBalance).collect(Collectors.toSet()),
                 hasItems(
-                        new Amount(
-                                "EUR",
-                                Double.parseDouble(
-                                        transferHelper.get(TransferArg.ACCOUNT1_BALANCE))),
-                        new Amount(
-                                "EUR",
-                                Double.parseDouble(
-                                        transferHelper.get(TransferArg.ACCOUNT2_BALANCE)))));
+                        ExactCurrencyAmount.of(
+                                transferHelper.get(TransferArg.ACCOUNT1_BALANCE), "EUR"),
+                        ExactCurrencyAmount.of(
+                                transferHelper.get(TransferArg.ACCOUNT2_BALANCE), "EUR")));
 
         // Account types
         Assert.assertThat(

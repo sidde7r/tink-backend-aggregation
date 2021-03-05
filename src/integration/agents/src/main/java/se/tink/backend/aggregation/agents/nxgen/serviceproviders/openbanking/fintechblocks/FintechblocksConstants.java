@@ -1,14 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fintechblocks;
 
-import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 
 public class FintechblocksConstants {
-    public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
-            TypeMapper.<AccountTypes>builder()
-                    .put(AccountTypes.CHECKING, "CurrentAccount")
-                    .put(AccountTypes.SAVINGS, "Savings")
+
+    public static final TypeMapper<TransactionalAccountType> ACCOUNT_TYPE_MAPPER =
+            TypeMapper.<TransactionalAccountType>builder()
+                    .put(TransactionalAccountType.CHECKING, "CurrentAccount")
+                    .put(TransactionalAccountType.SAVINGS, "Savings")
                     .build();
 
     private FintechblocksConstants() {
@@ -19,7 +20,6 @@ public class FintechblocksConstants {
         public static final String INVALID_CONFIGURATION =
                 "Invalid Configuration: %s cannot be empty or null";
         public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
-        public static final String INVALID_ACCOUNT_TYPE = "Invalid account type.";
         public static final String MISSING_REFRESH_TOKEN = "Refresh token is missing.";
     }
 

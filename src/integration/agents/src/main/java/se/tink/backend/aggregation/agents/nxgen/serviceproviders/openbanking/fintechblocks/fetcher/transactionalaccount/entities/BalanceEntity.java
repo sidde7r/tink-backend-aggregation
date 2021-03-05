@@ -3,12 +3,12 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fi
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fintechblocks.FintechblocksConstants.BalanceTypes;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class BalanceEntity {
 
-    public static final Amount DEFAULT = new Amount("HUF", 0);
+    public static final ExactCurrencyAmount DEFAULT = ExactCurrencyAmount.zero("HUF");
 
     @JsonProperty("AccountId")
     private String accountId;
@@ -25,7 +25,7 @@ public class BalanceEntity {
     @JsonProperty("Type")
     private String type;
 
-    public Amount getAmount() {
+    public ExactCurrencyAmount getAmount() {
         return amount.toAmount();
     }
 

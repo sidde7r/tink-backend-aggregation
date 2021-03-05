@@ -4,16 +4,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fintechblocks.FintechblocksConstants;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fintechblocks.FintechblocksConstants.ErrorMessages;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.CheckingAccount;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.SavingsAccount;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class AccountEntity {
@@ -41,47 +40,30 @@ public class AccountEntity {
 
     private List<BalanceEntity> balances;
 
-    public TransactionalAccount toTinkAccount(List<BalanceEntity> balances) {
+    public Optional<TransactionalAccount> toTinkAccount(List<BalanceEntity> balances) {
         this.balances = balances;
-        AccountTypes type =
-                FintechblocksConstants.ACCOUNT_TYPE_MAPPER
-                        .translate(accountSubType)
-                        .orElse(AccountTypes.OTHER);
-
-        switch (type) {
-            case CHECKING:
-                return toCheckingAccount();
-            case SAVINGS:
-                return toSavingsAccount();
-            case OTHER:
-            default:
-                throw new IllegalStateException(ErrorMessages.INVALID_ACCOUNT_TYPE);
-        }
+        Optional<TransactionalAccountType> type =
+                FintechblocksConstants.ACCOUNT_TYPE_MAPPER.translate(accountSubType);
+        return type.flatMap(this::transformAccount);
     }
 
-    private TransactionalAccount toSavingsAccount() {
-        return SavingsAccount.builder()
-                .setUniqueIdentifier(getIdentifier())
-                .setAccountNumber(getBban())
-                .setBalance(getAvailableBalance())
-                .setAlias(nickname)
-                .addAccountIdentifier(getAccountIdentifier())
+    private Optional<TransactionalAccount> transformAccount(TransactionalAccountType type) {
+        return TransactionalAccount.nxBuilder()
+                .withType(type)
+                .withPaymentAccountFlag()
+                .withBalance(BalanceModule.of(getAvailableBalance()))
+                .withId(
+                        IdModule.builder()
+                                .withUniqueIdentifier(getIdentifier())
+                                .withAccountNumber(getBban())
+                                .withAccountName(nickname)
+                                .addIdentifier(getAccountIdentifier())
+                                .build())
                 .setApiIdentifier(accountId)
                 .build();
     }
 
-    private TransactionalAccount toCheckingAccount() {
-        return CheckingAccount.builder()
-                .setUniqueIdentifier(getIdentifier())
-                .setAccountNumber(getBban())
-                .setBalance(getAvailableBalance())
-                .setAlias(nickname)
-                .addAccountIdentifier(getAccountIdentifier())
-                .setApiIdentifier(accountId)
-                .build();
-    }
-
-    private Amount getAvailableBalance() {
+    private ExactCurrencyAmount getAvailableBalance() {
         return Optional.ofNullable(balances).orElse(Collections.emptyList()).stream()
                 .filter(BalanceEntity::isAvailableBalance)
                 .map(BalanceEntity::getAmount)

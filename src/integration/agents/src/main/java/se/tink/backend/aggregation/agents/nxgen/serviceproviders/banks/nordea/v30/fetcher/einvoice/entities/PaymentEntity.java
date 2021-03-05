@@ -77,7 +77,7 @@ public class PaymentEntity {
     @JsonIgnore
     public Transfer toTinkTransfer() {
         Transfer transfer = new Transfer();
-        transfer.setAmount(new Amount(NordeaBaseConstants.CURRENCY, amount));
+        transfer.setAmount(ExactCurrencyAmount.of(amount, NordeaBaseConstants.CURRENCY));
         transfer.setType(getTinkType());
         transfer.setSource(getSource());
         transfer.setDestination(getDestination());

@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.fetcher.transacti
 import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.BbvaMxConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class DetailEntity {
@@ -11,7 +11,7 @@ public class DetailEntity {
     private List<SpecificAmountsItemEntity> specificAmounts;
     private List<IndicatorsItemEntity> indicators;
 
-    public Amount getCheckingBalance() {
+    public ExactCurrencyAmount getCheckingBalance() {
         return specificAmounts.stream()
                 .filter(x -> x.getId().equalsIgnoreCase(BbvaMxConstants.VALUES.CURRENT_BALANCE))
                 .map(x -> x.getAmounts().get(0).getAmount())
