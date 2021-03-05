@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import java.util.List;
 import java.util.Objects;
 import javax.ws.rs.core.MediaType;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
@@ -136,7 +137,9 @@ public class ErrorResponse {
     @JsonIgnore
     public boolean isBankServiceError() {
         return HttpStatus.SC_INTERNAL_SERVER_ERROR == httpStatus
-                && (isHysterixShortCircuited() || isUnexpectedError());
+                && (isHysterixShortCircuited()
+                        || isUnexpectedError()
+                        || isRequestToRoutedServicesFailed());
     }
 
     private boolean isUnexpectedError() {
@@ -147,6 +150,11 @@ public class ErrorResponse {
     private boolean isHysterixShortCircuited() {
         return errorDescription.toLowerCase().contains(ErrorCodes.HYSTRIX_CIRCUIT_SHORT_CIRCUITED)
                 && ErrorCodes.ERROR_CORE_UNKNOWN.equalsIgnoreCase(error);
+    }
+
+    private boolean isRequestToRoutedServicesFailed() {
+        return StringUtils.containsIgnoreCase(
+                errorDescription, ErrorCodes.REQUEST_TO_ROUTED_SERVICES_FAILED);
     }
 
     @JsonIgnore
