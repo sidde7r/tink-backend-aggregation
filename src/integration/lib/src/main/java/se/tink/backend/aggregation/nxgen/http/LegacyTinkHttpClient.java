@@ -412,7 +412,9 @@ public class LegacyTinkHttpClient extends LegacyFilterable<TinkHttpClient>
     }
 
     public void registerJacksonModule(Module module) {
-        OBJECT_MAPPER.registerModule(module);
+        synchronized (OBJECT_MAPPER) {
+            OBJECT_MAPPER.registerModule(module);
+        }
 
         final JacksonJaxbJsonProvider jacksonProvider = new JacksonJaxbJsonProvider();
         jacksonProvider.setMapper(OBJECT_MAPPER);
