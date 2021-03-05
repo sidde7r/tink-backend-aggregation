@@ -23,7 +23,7 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponen
 @AgentDependencyModulesForDecoupledMode(
         modules = UkOpenBankingLocalKeySignerModuleForDecoupledMode.class)
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, CREDIT_CARDS})
-public class BankOfIrelandBusinessAgent extends UkOpenBankingBaseAgent {
+public class BankOfIrelandAgent extends UkOpenBankingBaseAgent {
 
     private static final BankOfIrelandAisConfiguration aisConfig;
 
@@ -32,13 +32,12 @@ public class BankOfIrelandBusinessAgent extends UkOpenBankingBaseAgent {
                 new BankOfIrelandAisConfiguration(
                         UkOpenBankingAisConfiguration.builder()
                                 .withOrganisationId(BankOfIrelandConstants.ORGANISATION_ID)
-                                .withWellKnownURL(BankOfIrelandConstants.BUSINESS_WELL_KNOWN_URL)
+                                .withWellKnownURL(BankOfIrelandConstants.PERSONAL_WELL_KNOWN_URL)
                                 .withApiBaseURL(BankOfIrelandConstants.AIS_API_URL));
     }
 
     @Inject
-    public BankOfIrelandBusinessAgent(
-            AgentComponentProvider componentProvider, JwtSigner jwtSigner) {
+    public BankOfIrelandAgent(AgentComponentProvider componentProvider, JwtSigner jwtSigner) {
         super(componentProvider, jwtSigner, aisConfig);
     }
 

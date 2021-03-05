@@ -5,6 +5,8 @@ public final class BankOfIrelandConstants {
 
     public static final String AIS_API_URL =
             "https://api.obapi.bankofireland.com/1/api/open-banking/v3.0/aisp";
-    public static final String WELL_KNOWN_URL =
+    public static final String BUSINESS_WELL_KNOWN_URL =
             "https://auth.obapi.bankofireland.com/oauth/as/bol/.well-known/openid-configuration";
+    public static final String PERSONAL_WELL_KNOWN_URL =
+            "https://auth.obapi.bankofireland.com/oauth/as/b365/.well-known/openid-configuration";
 }
