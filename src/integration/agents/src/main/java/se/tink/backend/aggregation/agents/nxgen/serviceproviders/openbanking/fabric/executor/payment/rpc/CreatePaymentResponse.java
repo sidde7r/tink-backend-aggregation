@@ -33,7 +33,7 @@ public class CreatePaymentResponse {
         tinkPayment.setStatus(
                 FabricPaymentStatus.mapToTinkPaymentStatus(
                         FabricPaymentStatus.fromString(transactionStatus)));
-        if (tinkPayment.getUniqueId() == null) {
+        if (paymentId != null) {
             tinkPayment.setUniqueId(paymentId); // bank Unique payment Id
         }
 

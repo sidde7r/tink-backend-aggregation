@@ -39,7 +39,7 @@ public class FabricPaymentExecutor implements PaymentExecutor, FetchablePaymentE
 
     private final FabricApiClient apiClient;
     private final List<PaymentResponse> paymentResponses = new ArrayList<>();
-    private final FabricPaymentSessionStorage sessionStorage;
+    private final SessionStorage sessionStorage;
     private final StrongAuthenticationState strongAuthenticationState;
     private final FabricPaymentController fabricPaymentController;
     private static final Logger logger = LoggerFactory.getLogger(FabricPaymentExecutor.class);
@@ -50,7 +50,7 @@ public class FabricPaymentExecutor implements PaymentExecutor, FetchablePaymentE
             SessionStorage sessionStorage,
             StrongAuthenticationState strongAuthenticationState) {
         this.apiClient = apiClient;
-        this.sessionStorage = new FabricPaymentSessionStorage(sessionStorage);
+        this.sessionStorage = sessionStorage;
         this.strongAuthenticationState = strongAuthenticationState;
         this.fabricPaymentController =
                 new FabricPaymentController(
@@ -60,7 +60,7 @@ public class FabricPaymentExecutor implements PaymentExecutor, FetchablePaymentE
     @Override
     public PaymentResponse fetch(PaymentRequest paymentRequest) {
         return apiClient
-                .getPayment(paymentRequest.getPayment().getUniqueId())
+                .getPayment(paymentRequest.getPayment())
                 .toTinkPaymentResponse(paymentRequest.getPayment());
     }
 
@@ -73,9 +73,6 @@ public class FabricPaymentExecutor implements PaymentExecutor, FetchablePaymentE
     public PaymentResponse create(PaymentRequest paymentRequest) throws PaymentException {
         sessionStorage.put(FabricConstants.QueryKeys.STATE, strongAuthenticationState.getState());
 
-        sessionStorage.updatePaymentServiceIfNeeded(paymentRequest.getPayment());
-        sessionStorage.updatePaymentProductIfNeeded(paymentRequest.getPayment());
-
         CreatePaymentRequest createPaymentRequest;
         if (PaymentServiceType.PERIODIC.equals(
                 paymentRequest.getPayment().getPaymentServiceType())) {
@@ -84,11 +81,11 @@ public class FabricPaymentExecutor implements PaymentExecutor, FetchablePaymentE
             createPaymentRequest = getCreatePaymentRequest(paymentRequest);
         }
 
-        CreatePaymentResponse payment = apiClient.createPayment(createPaymentRequest);
+        CreatePaymentResponse payment =
+                apiClient.createPayment(createPaymentRequest, paymentRequest.getPayment());
 
         sessionStorage.put(
                 FabricConstants.StorageKeys.LINK, payment.getLinks().getScaRedirect().getHref());
-        sessionStorage.put(FabricConstants.StorageKeys.PAYMENT_ID, payment.getPaymentId());
 
         return payment.toTinkPaymentResponse(paymentRequest.getPayment());
     }
@@ -159,19 +156,21 @@ public class FabricPaymentExecutor implements PaymentExecutor, FetchablePaymentE
             logger.info("SupplementalInformation received and continue to getPaymentStatus");
             sessionStorage.put(FabricConstants.StorageKeys.LINK, null);
         }
-        String paymentId = sessionStorage.get(FabricConstants.StorageKeys.PAYMENT_ID);
 
         List<String> authorisationIdList =
-                apiClient.getPaymentAuthorizations(paymentId).getAuthorisationIds();
+                apiClient
+                        .getPaymentAuthorizations(paymentMultiStepRequest.getPayment())
+                        .getAuthorisationIds();
         if (authorisationIdList.isEmpty()) {
             logger.warn("Payment does not have authorisation resources");
         } else {
             PaymentAuthorizationStatus authorizationStatus =
-                    apiClient.getPaymentAuthorizationStatus(paymentId);
+                    apiClient.getPaymentAuthorizationStatus(paymentMultiStepRequest.getPayment());
             logger.info(String.format("scaStatus: %s", authorizationStatus.getScaStatus()));
         }
 
-        CreatePaymentResponse createPaymentResponse = apiClient.getPaymentStatus(paymentId);
+        CreatePaymentResponse createPaymentResponse =
+                apiClient.getPaymentStatus(paymentMultiStepRequest.getPayment());
         logger.info(
                 "Transaction Status: {} after SCA ", createPaymentResponse.getTransactionStatus());
         return fabricPaymentController.response(createPaymentResponse, paymentMultiStepRequest);
