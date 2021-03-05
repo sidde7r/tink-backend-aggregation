@@ -1,23 +1,34 @@
 package se.tink.backend.aggregation.agents.banks.sbab.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Strings;
 import java.lang.invoke.MethodHandles;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import lombok.Getter;
+import lombok.Setter;
+import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.agents.rpc.AccountHolder;
+import se.tink.backend.agents.rpc.AccountHolderType;
 import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.agents.rpc.HolderIdentity;
+import se.tink.backend.agents.rpc.HolderRole;
 import se.tink.backend.aggregation.agents.general.models.GeneralAccountEntity;
+import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountFlag;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.strings.StringUtils;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonObject
+@Getter
+@Setter
 public class AccountEntity implements GeneralAccountEntity {
     @JsonIgnore
     private static final Logger logger =
@@ -41,53 +52,8 @@ public class AccountEntity implements GeneralAccountEntity {
     @JsonProperty("disponibeltBelopp")
     private String availableBalance;
 
-    public String getProductName() {
-        return productName;
-    }
-
-    public void setProductName(String productName) {
-        this.productName = productName;
-    }
-
-    public String getProductType() {
-        return productType;
-    }
-
-    public void setProductType(String productType) {
-        this.productType = productType;
-    }
-
-    public String getAccountaName() {
-        return accountaName;
-    }
-
-    public void setAccountaName(String accountaName) {
-        this.accountaName = accountaName;
-    }
-
-    public String getAccountNumber() {
-        return accountNumber;
-    }
-
-    public void setAccountNumber(String accountNumber) {
-        this.accountNumber = accountNumber;
-    }
-
-    public String getBalance() {
-        return balance;
-    }
-
-    public void setBalance(String balance) {
-        this.balance = balance;
-    }
-
-    public String getAvailableBalance() {
-        return availableBalance;
-    }
-
-    public void setAvailableBalance(String availableBalance) {
-        this.availableBalance = availableBalance;
-    }
+    @JsonProperty("kontohavare")
+    private List<AccountHolderEntity> accountHolders;
 
     public Optional<Account> toTinkAccount() {
 
@@ -112,7 +78,30 @@ public class AccountEntity implements GeneralAccountEntity {
         String name = !Strings.isNullOrEmpty(accountaName) ? accountaName : accountNumber;
         account.setName(name == null ? "" : name.replace("\n", "").replace("\r", ""));
 
+        // Due to this agent being legacy we have to work with the rpc Account model directly. Using
+        // the same logic as we do in core Account model when we map to the rpc Account.
+        AccountHolder accountHolder = getTinkAccountHolder();
+        account.setAccountHolder(accountHolder);
+        account.setHolderName(getFirstHolder(accountHolder.getIdentities()).orElse(null));
+
         return Optional.of(account);
+    }
+
+    private AccountHolder getTinkAccountHolder() {
+        AccountHolder accountHolder = new AccountHolder();
+        accountHolder.setType(AccountHolderType.PERSONAL);
+        accountHolder.setIdentities(
+                CollectionUtils.emptyIfNull(accountHolders).stream()
+                        .map(AccountHolderEntity::toHolderIdentity)
+                        .collect(Collectors.toList()));
+        return accountHolder;
+    }
+
+    private Optional<String> getFirstHolder(List<HolderIdentity> holderIdentities) {
+        return holderIdentities.stream()
+                .filter(holderIdentity -> HolderRole.HOLDER.equals(holderIdentity.getRole()))
+                .findFirst()
+                .map(HolderIdentity::getName);
     }
 
     @Override
