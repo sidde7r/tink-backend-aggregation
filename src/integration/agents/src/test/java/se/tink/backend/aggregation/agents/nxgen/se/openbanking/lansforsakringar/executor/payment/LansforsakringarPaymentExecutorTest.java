@@ -1,10 +1,11 @@
-package se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar;
+package se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.executor.payment;
 
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.executor.payment.TestUtils.getAccountNumbersResponse;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -14,8 +15,8 @@ import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.authenticator.rpc.SignBasketResponse;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.executor.payment.LansforsakringarPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.executor.payment.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.executor.payment.entities.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.executor.payment.entities.BasketLinksEntity;
@@ -98,6 +99,9 @@ public class LansforsakringarPaymentExecutorTest {
         final DomesticPaymentResponse domesticPaymentResponse = new DomesticPaymentResponse();
         domesticPaymentResponse.setTransactionStatus("RCVD");
 
+        when(apiClient.getAccountNumbers())
+                .thenReturn(getAccountNumbersResponse("90255481251", ""));
+
         when(apiClient.createDomesticPayment(eq(domesticPaymentRequest)))
                 .thenReturn(domesticPaymentResponse);
 
@@ -155,6 +159,9 @@ public class LansforsakringarPaymentExecutorTest {
         final DomesticPaymentResponse domesticPaymentResponse = new DomesticPaymentResponse();
         domesticPaymentResponse.setTransactionStatus("RCVD");
 
+        when(apiClient.getAccountNumbers())
+                .thenReturn(getAccountNumbersResponse("90255481251", ""));
+
         when(apiClient.createDomesticGirosPayment(eq(domesticGirosPaymentRequest)))
                 .thenReturn(domesticPaymentResponse);
 
@@ -190,6 +197,9 @@ public class LansforsakringarPaymentExecutorTest {
                                 .withDebtor(debtor)
                                 .withExactCurrencyAmount(amount)
                                 .build());
+
+        when(apiClient.getAccountNumbers())
+                .thenReturn(getAccountNumbersResponse("90255481251", ""));
 
         // when
         Throwable thrown = catchThrowable(() -> paymentExecutor.create(paymentRequest));
