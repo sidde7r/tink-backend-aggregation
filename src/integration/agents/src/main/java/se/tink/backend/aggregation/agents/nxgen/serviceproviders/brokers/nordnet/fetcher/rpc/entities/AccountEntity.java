@@ -49,7 +49,7 @@ public class AccountEntity {
     private boolean jsonMemberDefault;
 
     @JsonProperty("alias")
-    private String alias;
+    private String alias; // Default alias is the user's name, they can change this
 
     @JsonIgnore
     public boolean isTransactionalAccount() {
@@ -85,7 +85,8 @@ public class AccountEntity {
     }
 
     @JsonIgnore
-    public Optional<TransactionalAccount> toTinkAccount(ExactCurrencyAmount balance) {
+    public Optional<TransactionalAccount> toTinkAccount(
+            ExactCurrencyAmount balance, String userFullName) {
 
         return TransactionalAccount.nxBuilder()
                 .withType(convertAccountType())
@@ -98,6 +99,7 @@ public class AccountEntity {
                                 .withAccountName(alias)
                                 .addIdentifier(new SwedishIdentifier(bankAccountNumber))
                                 .build())
+                .addHolderName(userFullName)
                 .setBankIdentifier(accountNumber)
                 .setApiIdentifier(accountNumber)
                 .build();
@@ -105,7 +107,7 @@ public class AccountEntity {
 
     @JsonIgnore
     public Optional<InvestmentAccount> toInvestmentAccount(
-            AccountInfoEntity accountInfoEntity, PortfolioModule portfolio) {
+            AccountInfoEntity accountInfoEntity, PortfolioModule portfolio, String userFullName) {
 
         return Optional.of(
                 InvestmentAccount.nxBuilder()
@@ -124,6 +126,7 @@ public class AccountEntity {
                                                         AccountIdentifier.Type.SE,
                                                         bankAccountNumber))
                                         .build())
+                        .addHolderName(userFullName)
                         .build());
     }
 

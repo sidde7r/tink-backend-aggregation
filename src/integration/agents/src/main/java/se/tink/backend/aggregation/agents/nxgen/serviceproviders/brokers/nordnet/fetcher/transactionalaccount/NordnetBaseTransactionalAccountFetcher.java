@@ -50,7 +50,9 @@ public class NordnetBaseTransactionalAccountFetcher
                         .orElseThrow(() -> new IllegalStateException("Could not fetch balance"))
                         .getAccountSum();
 
-        return account.toTinkAccount(balance);
+        String userFullName = apiClient.fetchIdentityData().getIdentityData().getFullName();
+
+        return account.toTinkAccount(balance, userFullName);
     }
 
     @Override

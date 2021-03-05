@@ -50,12 +50,13 @@ public class NordnetBaseInvestmentFetcher
     }
 
     private Optional<InvestmentAccount> toTinkInvestmentAccount(AccountEntity account) {
+        String userFullName = apiClient.fetchIdentityData().getIdentityData().getFullName();
 
         AccountInfoEntity accountInfoEntity = fetchAccountInfo(account.getAccountId());
         List<InstrumentModule> instruments = getInstruments(account.getAccountId());
         PortfolioModule portfolio = account.toPortfolioModule(accountInfoEntity, instruments);
 
-        return account.toInvestmentAccount(accountInfoEntity, portfolio);
+        return account.toInvestmentAccount(accountInfoEntity, portfolio, userFullName);
     }
 
     private List<InstrumentModule> getInstruments(String accountId) {
