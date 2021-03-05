@@ -47,6 +47,7 @@ public class CardsEntity {
                 .withCardDetails(getCardDetails())
                 .withoutFlags()
                 .withId(getIdModule())
+                .addHolderName(embossedName)
                 .setApiIdentifier(cardNumber)
                 .build();
     }
