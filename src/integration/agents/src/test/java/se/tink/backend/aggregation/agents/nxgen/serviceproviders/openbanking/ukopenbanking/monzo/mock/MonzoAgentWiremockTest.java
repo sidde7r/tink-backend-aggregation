@@ -9,7 +9,6 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbank
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.monzo.mock.MonzoAgentWiremockTestFixtures.createFarFutureDomesticPayment;
 
 import java.time.LocalDateTime;
-import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
 import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesJsonFileParser;
@@ -120,6 +119,7 @@ public class MonzoAgentWiremockTest {
                         .withProviderName(PROVIDER_NAME)
                         .withWireMockFilePath(wireMockServerFilePath)
                         .withConfigFile(AgentsServiceConfigurationReader.read(configFilePath))
+                        .testFullAuthentication()
                         .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
                         .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
                         .addCallbackData("code", "DUMMY_ACCESS_TOKEN2")
@@ -138,7 +138,6 @@ public class MonzoAgentWiremockTest {
      * * https://docs.monzo.com/#parties Endpoint /party expires 5 min after last SCA In case of
      * auto authentication data will be retrieved from persistent storage
      */
-//    @Ignore
     @Test
     public void restoreIdentityData() throws Exception {
         // Given
@@ -159,6 +158,7 @@ public class MonzoAgentWiremockTest {
                         .withProviderName(PROVIDER_NAME)
                         .withWireMockFilePath(wireMockServerFilePath)
                         .withConfigFile(AgentsServiceConfigurationReader.read(configFilePath))
+                        .testAutoAuthentication()
                         .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
                         .addPersistentStorageData(
                                 UkOpenBankingV31Constants.PersistentStorageKeys.AIS_ACCESS_TOKEN,

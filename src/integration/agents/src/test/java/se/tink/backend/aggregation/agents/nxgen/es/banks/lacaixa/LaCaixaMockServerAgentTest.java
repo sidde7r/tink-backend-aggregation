@@ -32,6 +32,7 @@ public class LaCaixaMockServerAgentTest {
                         .withProviderName("es-lacaixa-password")
                         .withWireMockFilePath(wireMockServerFilePath)
                         .withoutConfigFile()
+                        .testFullAuthentication()
                         .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
                         .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
                         .addCredentialField(Key.USERNAME.getFieldKey(), USERNAME)

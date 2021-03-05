@@ -56,6 +56,7 @@ public class StarlingAgentWireMockTest {
                         .withProviderName(PROVIDER_NAME)
                         .withWireMockFilePath(AUTO_REFRESH_TRAFFIC)
                         .withConfigFile(AgentsServiceConfigurationReader.read(CONFIGURATION_PATH))
+                        .testAutoAuthentication()
                         .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
                         .addRefreshableAccessToken(refreshableAccessToken)
                         .build();
@@ -79,6 +80,7 @@ public class StarlingAgentWireMockTest {
                         .withProviderName(PROVIDER_NAME)
                         .withWireMockFilePath(NO_BUSINESS_ACCOUNTS_TRAFFIC)
                         .withConfigFile(AgentsServiceConfigurationReader.read(CONFIGURATION_PATH))
+                        .testAutoAuthentication()
                         .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
                         .addRefreshableAccessToken(refreshableAccessToken)
                         .build();
@@ -102,7 +104,8 @@ public class StarlingAgentWireMockTest {
                         .withProviderName(PROVIDER_NAME)
                         .withWireMockFilePath(INVALID_GRANT_TRAFFIC)
                         .withConfigFile(AgentsServiceConfigurationReader.read(CONFIGURATION_PATH))
-                        .testAuthenticationOnly()
+                        .testAutoAuthentication()
+                        .testOnlyAuthentication()
                         .addRefreshableAccessToken(refreshableAccessTokenExpired)
                         .build();
 
