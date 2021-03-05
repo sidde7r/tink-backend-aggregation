@@ -7,27 +7,25 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.fetcher.transactionalaccount.entity.transaction.Links;
-import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.fetcher.transactionalaccount.entity.transaction.Transaction;
+import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.fetcher.transactionalaccount.entity.transaction.TransactionEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 @JsonObject
 public class GetTransactionsResponse implements TransactionKeyPaginatorResponse<URL> {
 
-    public TransactionalAccount account;
-
     @JsonProperty("_links")
     private Links links;
 
-    private List<Transaction> transactions;
+    private List<TransactionEntity> transactions;
 
     public Links getLinks() {
         return links;
     }
 
-    public List<Transaction> getTransactions() {
+    public List<TransactionEntity> getTransactions() {
         return transactions;
     }
 
@@ -37,23 +35,14 @@ public class GetTransactionsResponse implements TransactionKeyPaginatorResponse<
     }
 
     @Override
-    public Collection<? extends se.tink.backend.aggregation.nxgen.core.transaction.Transaction>
-            getTinkTransactions() {
+    public Collection<? extends Transaction> getTinkTransactions() {
         return Optional.ofNullable(transactions).orElse(Collections.emptyList()).stream()
-                .map(item -> item.toTinkModel(account))
+                .map(item -> item.toTinkModel())
                 .collect(Collectors.toList());
     }
 
     @Override
     public Optional<Boolean> canFetchMore() {
         return Optional.of(links.getNext() != null);
-    }
-
-    public TransactionalAccount getAccount() {
-        return account;
-    }
-
-    public void setAccount(TransactionalAccount account) {
-        this.account = account;
     }
 }
