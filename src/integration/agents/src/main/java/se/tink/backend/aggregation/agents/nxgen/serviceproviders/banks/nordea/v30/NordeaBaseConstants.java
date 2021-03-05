@@ -327,6 +327,8 @@ public class NordeaBaseConstants {
         public static final String WRONG_TO_ACCOUNT_LENGTH = "BESE1125";
         public static final String WRONG_TO_ACCOUNT_LENGHT_MESSAGE =
                 "Wrong To account length for the chosen bank";
+        public static final String REQUEST_TO_ROUTED_SERVICES_FAILED =
+                "Request to routed service(s) failed";
         public static final String REMOTE_SERVICE_ERROR = "unknown_execution_error_remote_service";
         public static final String REMOTE_SERVICE_ERROR_MESSAGE =
                 "An exception has occurred when invoking remote service.".toLowerCase();
