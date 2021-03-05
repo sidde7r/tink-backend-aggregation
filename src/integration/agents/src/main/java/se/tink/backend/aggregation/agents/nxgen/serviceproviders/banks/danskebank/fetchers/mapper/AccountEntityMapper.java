@@ -40,7 +40,6 @@ public class AccountEntityMapper {
             List<AccountEntity> accounts,
             Map<String, AccountDetailsResponse> accountDetails) {
         return accounts.stream()
-                .filter(DanskeBankPredicates.CREDIT_CARDS.negate())
                 .filter(
                         DanskeBankPredicates.knownCheckingAccountProducts(
                                 knownCheckingAccountProducts))
@@ -58,7 +57,6 @@ public class AccountEntityMapper {
             List<AccountEntity> accounts,
             Map<String, AccountDetailsResponse> accountDetails) {
         return accounts.stream()
-                .filter(DanskeBankPredicates.CREDIT_CARDS.negate())
                 .filter(
                         DanskeBankPredicates.knownSavingsAccountProducts(
                                 configuration.getSavingsAccountTypes()))
