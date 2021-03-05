@@ -21,10 +21,9 @@ import se.tink.libraries.enums.MarketCode;
 @Data
 @Slf4j
 public class AccountDetailsResponse extends AbstractResponse {
-
+    // Single owner name example in SE: "ssn - fName lName"
     private static final Pattern EXTRACT_ACCOUNT_OWNERS_PATTERN = Pattern.compile("- (.*)");
     private static final int SCALE = 8;
-
     private AccountInterestDetailsEntity accountInterestDetails;
     private List<String> accountOwners = Collections.emptyList();
     private BigDecimal feeAmount;

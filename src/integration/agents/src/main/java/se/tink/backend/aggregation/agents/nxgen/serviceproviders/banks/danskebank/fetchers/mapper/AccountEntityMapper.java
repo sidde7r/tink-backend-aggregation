@@ -217,6 +217,7 @@ public class AccountEntityMapper {
                 .canWithdrawCash(AccountCapabilities.Answer.YES)
                 .addAccountFlags(AccountFlag.PSD2_PAYMENT_ACCOUNT)
                 .sourceInfo(createAccountSourceInfo(accountEntity))
+                .addParties(getAccountParties(accountDetailsResponse.getAccountOwners(marketCode)))
                 .build();
     }
 
@@ -269,6 +270,7 @@ public class AccountEntityMapper {
                 .canPlaceFunds(configuration.canPlaceFunds(accountEntity.getAccountProduct()))
                 .canWithdrawCash(configuration.canWithdrawCash(accountEntity.getAccountProduct()))
                 .sourceInfo(createAccountSourceInfo(accountEntity))
+                .addParties(getAccountParties(accountDetailsResponse.getAccountOwners(marketCode)))
                 .build();
     }
 
