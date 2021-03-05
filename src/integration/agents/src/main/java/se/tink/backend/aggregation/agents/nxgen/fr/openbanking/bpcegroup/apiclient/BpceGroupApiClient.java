@@ -194,10 +194,17 @@ public class BpceGroupApiClient implements FrAispApiClient {
                             requestBuilder, HttpMethod.GET, TrustedBeneficiariesResponseDto.class));
         } catch (HttpResponseException e) {
             if (e.getResponse().getStatus() == HttpStatus.SC_NO_CONTENT
-                    || e.getResponse().getStatus() == HttpStatus.SC_FORBIDDEN) {
+                    || e.getResponse().getStatus() == HttpStatus.SC_FORBIDDEN
+                    || isNotImplemented(e.getResponse())) {
                 return Optional.empty();
             }
             throw e;
         }
+    }
+
+    private boolean isNotImplemented(HttpResponse response) {
+        BpceErrorResponse bpceErrorResponse = response.getBody(BpceErrorResponse.class);
+        return response.getStatus() == HttpStatus.SC_NOT_IMPLEMENTED
+                && bpceErrorResponse.isNotImplemented();
     }
 }
