@@ -13,4 +13,12 @@ public class RemittanceInformationUtils {
         result.setValue(value);
         return result;
     }
+
+    public static RemittanceInformation generateStructuredRemittanceInformationWithOCR(
+            String value) {
+        RemittanceInformation result = new RemittanceInformation();
+        result.setType(RemittanceInformationType.OCR);
+        result.setValue(value);
+        return result;
+    }
 }
