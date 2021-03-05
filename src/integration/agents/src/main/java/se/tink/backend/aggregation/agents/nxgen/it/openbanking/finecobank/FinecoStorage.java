@@ -20,8 +20,8 @@ public class FinecoStorage {
     private static final String CONSENT_CREATION_TIMESTAMP = "TIMESTAMP";
     private static final String TRANSACTIONS_CONSENTS = "transactionAccounts";
     private static final String BALANCES_CONSENTS = "balanceAccounts";
-    private static final String PAYMENT_AUTH_URL_PREFIX = "paymentAuthUrl_";
-    private static final String PAYMENT_AUTH_ID_PREFIX = "paymentAuthId_";
+    private static final String PAYMENT_AUTH_URL = "paymentAuthUrl";
+    private static final String PAYMENT_AUTH_ID = "paymentAuthId";
 
     private final PersistentStorage persistentStorage;
     private final SessionStorage sessionStorage;
@@ -81,18 +81,18 @@ public class FinecoStorage {
     // Session
 
     public void storePaymentAuthorizationUrl(String paymentId, String authUrl) {
-        sessionStorage.put(PAYMENT_AUTH_URL_PREFIX + paymentId, authUrl);
+        sessionStorage.put(PAYMENT_AUTH_URL, authUrl);
     }
 
     public String getPaymentAuthorizationUrl(String paymentId) {
-        return sessionStorage.get(PAYMENT_AUTH_URL_PREFIX + paymentId);
+        return sessionStorage.get(PAYMENT_AUTH_URL);
     }
 
     public void storePaymentAuthId(String paymentId, String authId) {
-        sessionStorage.put(PAYMENT_AUTH_ID_PREFIX + paymentId, authId);
+        sessionStorage.put(PAYMENT_AUTH_ID, authId);
     }
 
     public String getPaymentAuthId(String paymentId) {
-        return sessionStorage.get(PAYMENT_AUTH_ID_PREFIX + paymentId);
+        return sessionStorage.get(PAYMENT_AUTH_ID);
     }
 }

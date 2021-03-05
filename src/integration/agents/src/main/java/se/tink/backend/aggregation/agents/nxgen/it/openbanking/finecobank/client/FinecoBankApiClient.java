@@ -19,6 +19,7 @@ import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.fetche
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.fetcher.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.fetcher.transactionalaccount.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.payment.enums.FinecoBankPaymentProduct;
+import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.payment.enums.FinecoBankPaymentService;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.payment.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.payment.rpc.GetPaymentAuthStatusResponse;
@@ -124,36 +125,57 @@ public class FinecoBankApiClient {
 
     public CreatePaymentResponse createPayment(
             CreatePaymentRequest requestBody,
+            FinecoBankPaymentService paymentService,
             FinecoBankPaymentProduct paymentProduct,
             String state) {
-        return createRequest(urlProvider.getPaymentsUrl(paymentProduct.getValue()))
+        return createRequest(
+                        urlProvider.getPaymentsUrl(
+                                paymentService.getValue(), paymentProduct.getValue()))
                 .header(HeaderKeys.TPP_REDIRECT_URI, redirectUrlWithState(state))
                 .post(CreatePaymentResponse.class, requestBody);
     }
 
     public GetPaymentResponse getPayment(
-            FinecoBankPaymentProduct paymentProduct, String paymentId) {
-        return createRequest(urlProvider.getPaymentDetailsUrl(paymentProduct.getValue(), paymentId))
+            FinecoBankPaymentService paymentService,
+            FinecoBankPaymentProduct paymentProduct,
+            String paymentId) {
+        return createRequest(
+                        urlProvider.getPaymentDetailsUrl(
+                                paymentService.getValue(), paymentProduct.getValue(), paymentId))
                 .get(GetPaymentResponse.class);
     }
 
     public GetPaymentStatusResponse getPaymentStatus(
-            FinecoBankPaymentProduct paymentProduct, String paymentId) {
-        return createRequest(urlProvider.getPaymentStatusUrl(paymentProduct.getValue(), paymentId))
+            FinecoBankPaymentService paymentService,
+            FinecoBankPaymentProduct paymentProduct,
+            String paymentId) {
+        return createRequest(
+                        urlProvider.getPaymentStatusUrl(
+                                paymentService.getValue(), paymentProduct.getValue(), paymentId))
                 .get(GetPaymentStatusResponse.class);
     }
 
     public GetPaymentAuthsResponse getPaymentAuths(
-            FinecoBankPaymentProduct paymentProduct, String paymentId) {
-        return createRequest(urlProvider.getPaymentAuthsUrl(paymentProduct.getValue(), paymentId))
+            FinecoBankPaymentService paymentService,
+            FinecoBankPaymentProduct paymentProduct,
+            String paymentId) {
+        return createRequest(
+                        urlProvider.getPaymentAuthsUrl(
+                                paymentService.getValue(), paymentProduct.getValue(), paymentId))
                 .get(GetPaymentAuthsResponse.class);
     }
 
     public GetPaymentAuthStatusResponse getPaymentAuthStatus(
-            FinecoBankPaymentProduct paymentProduct, String paymentId, String authId) {
+            FinecoBankPaymentService paymentService,
+            FinecoBankPaymentProduct paymentProduct,
+            String paymentId,
+            String authId) {
         return createRequest(
                         urlProvider.getPaymentAuthStatusUrl(
-                                paymentProduct.getValue(), paymentId, authId))
+                                paymentService.getValue(),
+                                paymentProduct.getValue(),
+                                paymentId,
+                                authId))
                 .get(GetPaymentAuthStatusResponse.class);
     }
 

@@ -5,11 +5,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.client.FinecoBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.payment.enums.FinecoBankPaymentProduct;
+import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.payment.enums.FinecoBankPaymentService;
 import se.tink.backend.aggregation.nxgen.controllers.payment.FetchablePaymentExecutor;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentListRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentListResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
+import se.tink.libraries.payment.rpc.Payment;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -19,10 +21,12 @@ public class FinecoPaymentFetcher implements FetchablePaymentExecutor {
 
     @Override
     public PaymentResponse fetch(PaymentRequest paymentRequest) {
+        Payment payment = paymentRequest.getPayment();
         return apiClient
                 .getPayment(
-                        FinecoBankPaymentProduct.fromTinkPayment(paymentRequest.getPayment()),
-                        paymentRequest.getPayment().getUniqueId())
+                        FinecoBankPaymentService.fromTinkPayment(payment),
+                        FinecoBankPaymentProduct.fromTinkPayment(payment),
+                        payment.getUniqueId())
                 .toTinkPaymentResponse(paymentRequest);
     }
 

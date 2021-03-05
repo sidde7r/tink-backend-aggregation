@@ -7,6 +7,7 @@ public class FinecoUrlProvider {
     private static final String ACCOUNT_ID = "accountId";
     private static final String CONSENT_ID = "consentId";
     private static final String PAYMENT_PRODUCT = "paymentProduct";
+    private static final String PAYMENT_SERVICE = "paymentService";
     private static final String PAYMENT_ID = "paymentId";
     private static final String AUTH_ID = "authId";
 
@@ -18,13 +19,14 @@ public class FinecoUrlProvider {
     private static final String TRANSACTIONS = "/accounts/{accountId}/transactions";
     private static final String CARD_ACCOUNTS = "/card-accounts";
     private static final String CARD_TRANSACTIONS = "/card-accounts/{accountId}/transactions";
-    private static final String PAYMENTS = "/payments/{paymentProduct}";
-    private static final String PAYMENT_STATUS = "/payments/{paymentProduct}/{paymentId}/status";
-    private static final String PAYMENT_DETAILS = "/payments/{paymentProduct}/{paymentId}";
+    private static final String PAYMENTS = "/{paymentService}/{paymentProduct}";
+    private static final String PAYMENT_STATUS =
+            "/{paymentService}/{paymentProduct}/{paymentId}/status";
+    private static final String PAYMENT_DETAILS = "/{paymentService}/{paymentProduct}/{paymentId}";
     private static final String PAYMENT_AUTHS =
-            "/payments/{paymentProduct}/{paymentId}/authorisations";
+            "/{paymentService}/{paymentProduct}/{paymentId}/authorisations";
     private static final String PAYMENT_AUTH_STATUS =
-            "/payments/{paymentProduct}/{paymentId}/authorisations/{authId}";
+            "/{paymentService}/{paymentProduct}/{paymentId}/authorisations/{authId}";
 
     private URL consentsUrl;
     private URL consentStatusUrl;
@@ -89,30 +91,38 @@ public class FinecoUrlProvider {
         return cardTransactionsUrl.parameter(ACCOUNT_ID, accountId);
     }
 
-    public URL getPaymentsUrl(String paymentProduct) {
-        return paymentsUrl.parameter(PAYMENT_PRODUCT, paymentProduct);
+    public URL getPaymentsUrl(String paymentService, String paymentProduct) {
+        return paymentsUrl
+                .parameter(PAYMENT_SERVICE, paymentService)
+                .parameter(PAYMENT_PRODUCT, paymentProduct);
     }
 
-    public URL getPaymentStatusUrl(String paymentProduct, String paymentId) {
+    public URL getPaymentStatusUrl(String paymentService, String paymentProduct, String paymentId) {
         return paymentStatusUrl
+                .parameter(PAYMENT_SERVICE, paymentService)
                 .parameter(PAYMENT_PRODUCT, paymentProduct)
                 .parameter(PAYMENT_ID, paymentId);
     }
 
-    public URL getPaymentDetailsUrl(String paymentProduct, String paymentId) {
+    public URL getPaymentDetailsUrl(
+            String paymentService, String paymentProduct, String paymentId) {
         return paymentDetailsUrl
+                .parameter(PAYMENT_SERVICE, paymentService)
                 .parameter(PAYMENT_PRODUCT, paymentProduct)
                 .parameter(PAYMENT_ID, paymentId);
     }
 
-    public URL getPaymentAuthsUrl(String paymentProduct, String paymentId) {
+    public URL getPaymentAuthsUrl(String paymentService, String paymentProduct, String paymentId) {
         return paymentsAuthsUrl
+                .parameter(PAYMENT_SERVICE, paymentService)
                 .parameter(PAYMENT_PRODUCT, paymentProduct)
                 .parameter(PAYMENT_ID, paymentId);
     }
 
-    public URL getPaymentAuthStatusUrl(String paymentProduct, String paymentId, String authId) {
+    public URL getPaymentAuthStatusUrl(
+            String paymentService, String paymentProduct, String paymentId, String authId) {
         return paymentsAuthStatusUrl
+                .parameter(PAYMENT_SERVICE, paymentService)
                 .parameter(PAYMENT_PRODUCT, paymentProduct)
                 .parameter(PAYMENT_ID, paymentId)
                 .parameter(AUTH_ID, authId);

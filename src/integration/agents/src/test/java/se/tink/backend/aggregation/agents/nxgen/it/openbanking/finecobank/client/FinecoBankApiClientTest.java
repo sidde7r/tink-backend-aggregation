@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.client;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.equalToJson;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.verify;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
@@ -15,6 +16,7 @@ import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.github.tomakehurst.wiremock.matching.RequestPatternBuilder;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import junitparams.JUnitParamsRunner;
@@ -27,6 +29,7 @@ import org.junit.runner.RunWith;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.payment.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.payment.entities.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.payment.enums.FinecoBankPaymentProduct;
+import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.payment.enums.FinecoBankPaymentService;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.payment.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.payment.rpc.GetPaymentAuthStatusResponse;
@@ -84,22 +87,22 @@ public class FinecoBankApiClientTest {
     @Test
     @Parameters(method = "parametersForPaymentApiCall")
     public void shouldCreateProperPaymentInitRequest(
-            boolean isManual, FinecoBankPaymentProduct finecoBankPaymentProduct) {
+            boolean isManual, FinecoBankPaymentService service, FinecoBankPaymentProduct product) {
         // given
         when(mockHeaderValues.getUserIp()).thenReturn(isManual ? TEST_USER_IP : null);
-        String url = "/payments/" + finecoBankPaymentProduct.getValue();
+        String url = "/" + service.getValue() + "/" + product.getValue();
         WireMock.stubFor(
                 WireMock.post(urlEqualTo(url)).willReturn(fileAsResponse(FILE_PAYMENT_INIT_OK)));
         // when
         CreatePaymentResponse createPaymentResponse =
-                apiClient.createPayment(
-                        testCreatePaymentRequest(), finecoBankPaymentProduct, TEST_STATE);
+                apiClient.createPayment(testCreatePaymentRequest(), service, product, TEST_STATE);
 
         // then
         RequestPatternBuilder requestPatternBuilder =
                 commonRequestPattern(RequestMethod.POST, isManual, url);
         requestPatternBuilder.withHeader(
                 "TPP-Redirect-URI", equalTo(TEST_REDIRECT_URL + "?state=" + TEST_STATE));
+        requestPatternBuilder.withRequestBody(equalToJson(readJson(FILE_PAYMENT_INIT_REQ)));
         verify(1, requestPatternBuilder);
 
         assertThat(createPaymentResponse.getPaymentId())
@@ -112,15 +115,15 @@ public class FinecoBankApiClientTest {
     @Test
     @Parameters(method = "parametersForPaymentApiCall")
     public void shouldGetPaymentSuccessfully(
-            boolean isManual, FinecoBankPaymentProduct finecoBankPaymentProduct) {
+            boolean isManual, FinecoBankPaymentService service, FinecoBankPaymentProduct product) {
         // given
         when(mockHeaderValues.getUserIp()).thenReturn(isManual ? TEST_USER_IP : null);
-        String url = "/payments/" + finecoBankPaymentProduct.getValue() + "/" + TEST_PAYMENT_ID;
+        String url = "/" + service.getValue() + "/" + product.getValue() + "/" + TEST_PAYMENT_ID;
         WireMock.stubFor(
                 WireMock.get(urlEqualTo(url)).willReturn(fileAsResponse(FILE_GET_PAYMENT_RESP)));
         // when
         GetPaymentResponse getPaymentResponse =
-                apiClient.getPayment(finecoBankPaymentProduct, TEST_PAYMENT_ID);
+                apiClient.getPayment(service, product, TEST_PAYMENT_ID);
 
         // then
         verify(1, commonRequestPattern(RequestMethod.GET, isManual, url));
@@ -140,12 +143,14 @@ public class FinecoBankApiClientTest {
     @Test
     @Parameters(method = "parametersForPaymentApiCall")
     public void shouldGetPaymentStatusSuccessfully(
-            boolean isManual, FinecoBankPaymentProduct finecoBankPaymentProduct) {
+            boolean isManual, FinecoBankPaymentService service, FinecoBankPaymentProduct product) {
         // given
         when(mockHeaderValues.getUserIp()).thenReturn(isManual ? TEST_USER_IP : null);
         String url =
-                "/payments/"
-                        + finecoBankPaymentProduct.getValue()
+                "/"
+                        + service.getValue()
+                        + "/"
+                        + product.getValue()
                         + "/"
                         + TEST_PAYMENT_ID
                         + "/status";
@@ -154,7 +159,7 @@ public class FinecoBankApiClientTest {
                         .willReturn(fileAsResponse(FILE_GET_PAYMENT_STATUS_RESP)));
         // when
         GetPaymentStatusResponse paymentStatus =
-                apiClient.getPaymentStatus(finecoBankPaymentProduct, TEST_PAYMENT_ID);
+                apiClient.getPaymentStatus(service, product, TEST_PAYMENT_ID);
 
         // then
         verify(1, commonRequestPattern(RequestMethod.GET, isManual, url));
@@ -165,12 +170,14 @@ public class FinecoBankApiClientTest {
     @Test
     @Parameters(method = "parametersForPaymentApiCall")
     public void shouldGetPaymentAuthsSuccessfully(
-            boolean isManual, FinecoBankPaymentProduct finecoBankPaymentProduct) {
+            boolean isManual, FinecoBankPaymentService service, FinecoBankPaymentProduct product) {
         // given
         when(mockHeaderValues.getUserIp()).thenReturn(isManual ? TEST_USER_IP : null);
         String url =
-                "/payments/"
-                        + finecoBankPaymentProduct.getValue()
+                "/"
+                        + service.getValue()
+                        + "/"
+                        + product.getValue()
                         + "/"
                         + TEST_PAYMENT_ID
                         + "/authorisations";
@@ -179,7 +186,7 @@ public class FinecoBankApiClientTest {
                         .willReturn(fileAsResponse(FILE_GET_PAYMENT_AUTHS_RESP)));
         // when
         GetPaymentAuthsResponse paymentAuths =
-                apiClient.getPaymentAuths(finecoBankPaymentProduct, TEST_PAYMENT_ID);
+                apiClient.getPaymentAuths(service, product, TEST_PAYMENT_ID);
 
         // then
         verify(1, commonRequestPattern(RequestMethod.GET, isManual, url));
@@ -192,12 +199,14 @@ public class FinecoBankApiClientTest {
     @Test
     @Parameters(method = "parametersForPaymentApiCall")
     public void shouldGetPaymentAuthStatusSuccessfully(
-            boolean isManual, FinecoBankPaymentProduct finecoBankPaymentProduct) {
+            boolean isManual, FinecoBankPaymentService service, FinecoBankPaymentProduct product) {
         // given
         when(mockHeaderValues.getUserIp()).thenReturn(isManual ? TEST_USER_IP : null);
         String url =
-                "/payments/"
-                        + finecoBankPaymentProduct.getValue()
+                "/"
+                        + service.getValue()
+                        + "/"
+                        + product.getValue()
                         + "/"
                         + TEST_PAYMENT_ID
                         + "/authorisations/"
@@ -207,8 +216,7 @@ public class FinecoBankApiClientTest {
                         .willReturn(fileAsResponse(FILE_GET_PAYMENT_AUTH_STATUS_RESP)));
         // when
         GetPaymentAuthStatusResponse paymentAuthStatus =
-                apiClient.getPaymentAuthStatus(
-                        finecoBankPaymentProduct, TEST_PAYMENT_ID, TEST_AUTH_ID);
+                apiClient.getPaymentAuthStatus(service, product, TEST_PAYMENT_ID, TEST_AUTH_ID);
 
         // then
         verify(1, commonRequestPattern(RequestMethod.GET, isManual, url));
@@ -229,12 +237,14 @@ public class FinecoBankApiClientTest {
         return requestPatternBuilder;
     }
 
-    // Builds all combinations of manual/background refresh with any of known products
+    // Builds all combinations of manual/background refresh with any of known products, and services
     private Object[] parametersForPaymentApiCall() {
         List<Object[]> list = new ArrayList<>();
         for (boolean v : new boolean[] {true, false}) {
-            for (FinecoBankPaymentProduct product : FinecoBankPaymentProduct.values()) {
-                list.add(new Object[] {v, product});
+            for (FinecoBankPaymentService service : FinecoBankPaymentService.values()) {
+                for (FinecoBankPaymentProduct product : FinecoBankPaymentProduct.values()) {
+                    list.add(new Object[] {v, service, product});
+                }
             }
         }
         return list.toArray();
@@ -257,6 +267,7 @@ public class FinecoBankApiClientTest {
                 .remittanceInformationUnstructured("fineco")
                 .instructedAmount(new AmountEntity(ExactCurrencyAmount.inEUR(1.0)))
                 .creditorAccount(new AccountEntity("IT95N0300203280155761664887"))
+                .requestedExecutionDate(LocalDate.of(2020, 10, 11))
                 .creditorName("Creditor Name")
                 .build();
     }

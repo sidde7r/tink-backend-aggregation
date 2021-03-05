@@ -11,6 +11,9 @@ import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.payments.common.model.PaymentScheme;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
+import se.tink.libraries.transfer.rpc.ExecutionRule;
+import se.tink.libraries.transfer.rpc.Frequency;
+import se.tink.libraries.transfer.rpc.PaymentServiceType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 public class FinecoBankAgentPaymentTest {
@@ -30,17 +33,21 @@ public class FinecoBankAgentPaymentTest {
 
     @Test
     public void testPayments() throws Exception {
-        builder.build().testTinkLinkPayment(createRealDomesticPayment());
+        builder.build().testTinkLinkPayment(createRealDomesticPayment().build());
     }
 
-    private Payment createRealDomesticPayment() {
+    @Test
+    public void testRecurringPayments() throws Exception {
+        builder.build().testTinkLinkPayment(createRealDomesticRecurringPayment().build());
+    }
+
+    private Payment.Builder createRealDomesticPayment() {
         RemittanceInformation remittanceInformation = new RemittanceInformation();
-        remittanceInformation.setValue("fineco");
+        remittanceInformation.setValue("from fineco to");
         remittanceInformation.setType(RemittanceInformationType.UNSTRUCTURED);
 
-        AccountIdentifier creditorAccountIdentifier =
-                new IbanIdentifier("IT95N0300203280155761664887");
-        Creditor creditor = new Creditor(creditorAccountIdentifier, "Creditor Name");
+        AccountIdentifier creditorAccountIdentifier = new IbanIdentifier("Iban goes here");
+        Creditor creditor = new Creditor(creditorAccountIdentifier, "Creditor name goes here");
 
         ExactCurrencyAmount amount = ExactCurrencyAmount.inEUR(1);
         LocalDate executionDate = LocalDate.now();
@@ -53,6 +60,15 @@ public class FinecoBankAgentPaymentTest {
                 .withCurrency(currency)
                 .withRemittanceInformation(remittanceInformation)
                 .withPaymentScheme(PaymentScheme.SEPA_CREDIT_TRANSFER)
-                .build();
+                .withPaymentServiceType(PaymentServiceType.SINGLE);
+    }
+
+    private Payment.Builder createRealDomesticRecurringPayment() {
+        return createRealDomesticPayment()
+                .withPaymentServiceType(PaymentServiceType.PERIODIC)
+                .withFrequency(Frequency.MONTHLY)
+                .withStartDate(LocalDate.now().plusDays(3))
+                .withEndDate(LocalDate.now().plusMonths(3))
+                .withExecutionRule(ExecutionRule.FOLLOWING);
     }
 }
