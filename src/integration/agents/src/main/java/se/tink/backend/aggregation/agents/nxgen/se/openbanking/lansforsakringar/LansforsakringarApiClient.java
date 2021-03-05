@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar;
 
+import static se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.BodyValues.EMPTY_BODY;
 import static se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.Urls.BASE_API_URL;
+import static se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.Urls.GET_ACCOUNT_NUMBERS;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -32,6 +34,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.authenticator.rpc.SignBasketResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.authenticator.rpc.TokenForm;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.configuration.LansforsakringarConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.executor.payment.entities.AccountNumbersResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.executor.payment.rpc.CreateBasketResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.executor.payment.rpc.CrossBorderPaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.executor.payment.rpc.CrossBorderPaymentResponse;
@@ -138,7 +141,7 @@ public class LansforsakringarApiClient {
                         LansforsakringarConstants.HeaderValues.PSU_ID_TYPE)
                 .header(LansforsakringarConstants.HeaderKeys.TPP_REDIRECT_URI, getRedirectUrl())
                 .header(LansforsakringarConstants.HeaderKeys.TPP_EXPLICIT_AUTH_PREFERRED, false)
-                .post(ConsentResponse.class, LansforsakringarConstants.BodyValues.EMPTY_BODY);
+                .post(ConsentResponse.class, EMPTY_BODY);
     }
 
     public ConsentStatusResponse getConsentStatus() {
@@ -374,6 +377,12 @@ public class LansforsakringarApiClient {
         return createRequestInSession(new URL(BASE_API_URL + authorizationUrl))
                 .header(HeaderKeys.TPP_REDIRECT_URI, getRedirectUrl())
                 .header(HeaderKeys.BASKET_ID, basketId)
-                .post(SignBasketResponse.class, "{}");
+                .post(SignBasketResponse.class, EMPTY_BODY);
+    }
+
+    public AccountNumbersResponse getAccountNumbers() {
+        return createRequestInSession(new URL(GET_ACCOUNT_NUMBERS))
+                .header("Consent-ID", storageHelper.getConsentId())
+                .get(AccountNumbersResponse.class);
     }
 }

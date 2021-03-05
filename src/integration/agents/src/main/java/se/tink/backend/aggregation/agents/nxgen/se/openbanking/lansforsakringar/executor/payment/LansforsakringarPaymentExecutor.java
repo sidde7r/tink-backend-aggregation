@@ -20,6 +20,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.authenticator.rpc.SignBasketResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.executor.payment.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.executor.payment.entities.AccountIbanEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.executor.payment.entities.AccountNumbersResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.executor.payment.entities.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.executor.payment.entities.CreditorAddressEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.executor.payment.entities.GirosCreditorAccountEntity;
@@ -92,6 +93,8 @@ public class LansforsakringarPaymentExecutor implements PaymentExecutor, Fetchab
         Type accountIdentifierType =
                 paymentRequest.getPayment().getCreditor().getAccountIdentifierType();
 
+        validateDebtorAccount(debtor, accountIdentifierType);
+
         switch (accountIdentifierType) {
             case SE_BG:
             case SE_PG:
@@ -101,6 +104,12 @@ public class LansforsakringarPaymentExecutor implements PaymentExecutor, Fetchab
             default:
                 throw new IllegalStateException(ErrorMessages.UNSUPPORTED_PAYMENT_TYPE);
         }
+    }
+
+    private void validateDebtorAccount(AccountEntity debtor, Type accountIdentifierType)
+            throws DebtorValidationException {
+        AccountNumbersResponse accountNumbers = apiClient.getAccountNumbers();
+        accountNumbers.checkIfTransactionTypeIsAllowed(debtor.getBban(), accountIdentifierType);
     }
 
     private PaymentResponse createCrossBorderPayment(PaymentRequest paymentRequest) {
