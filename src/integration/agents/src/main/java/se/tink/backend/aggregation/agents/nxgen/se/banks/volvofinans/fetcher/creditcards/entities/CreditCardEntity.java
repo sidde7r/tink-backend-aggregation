@@ -2,8 +2,10 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.fetcher.cr
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.VolvoFinansConstants;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.fetcher.creditcards.rpc.CreditCardDataResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
+import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
@@ -42,15 +44,25 @@ public class CreditCardEntity {
     private boolean kanAndraKreditgrans;
     private boolean kanKonverteraTillVisa;
 
-    public CreditCardAccount toTinkAccount() {
+    public CreditCardAccount toTinkAccount(CreditCardDataResponse creditData) {
         return CreditCardAccount.builder(
                         accountNumber,
                         ExactCurrencyAmount.inSEK(balance),
                         ExactCurrencyAmount.inSEK(availableCredit))
                 .setAccountNumber(accountNumber)
                 .setName(name)
+                .setHolderName(getHolderName(creditData))
                 .putInTemporaryStorage(VolvoFinansConstants.UrlParameters.ACCOUNT_ID, accountId)
                 .build();
+    }
+
+    private HolderName getHolderName(CreditCardDataResponse creditData) {
+        return new HolderName(
+                creditData.stream()
+                        .filter(c -> c.getAccountId().equals(accountId))
+                        .findFirst()
+                        .get()
+                        .getCardName());
     }
 
     public String getAccountId() {
