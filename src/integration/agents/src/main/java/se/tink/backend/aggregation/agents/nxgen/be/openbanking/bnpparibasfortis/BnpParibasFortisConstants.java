@@ -70,4 +70,8 @@ public abstract class BnpParibasFortisConstants {
     public static class IdTags {
         public static final String PAYMENT_ID = "paymentId";
     }
+
+    public static class Errors {
+        public static final String NO_ELIGIBLE_ACCOUNTS = "No eligible accounts";
+    }
 }
