@@ -20,6 +20,7 @@ public class VolvoFinansConstants {
                 new URL(ENTRY_POINT + "/v1/kortkonton/{accountId}/transaktioner");
         public static final URL SAVINGS_ACCOUNTS_TRANSACTIONS =
                 new URL(ENTRY_POINT + "/v1/sparkonton/{accountId}/transaktioner");
+        public static final URL CREDIT_CARD_DATA = new URL(ENTRY_POINT + "/v1/kort");
     }
 
     public static final class UrlParameters {
