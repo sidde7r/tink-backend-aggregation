@@ -11,7 +11,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -139,11 +138,12 @@ public class FinecoBankCreditCardAccountFetcher
     // Fineco supports fetching transactions further back than 90 days if consent was given within
     // 20 minutes
     private boolean isConsentMaximum20MinutesOld() {
-        Optional<String> consentCreated = storage.getConsentCreationTime();
-        return consentCreated.isPresent()
-                && ChronoUnit.MINUTES.between(
-                                LocalDateTime.parse(consentCreated.get()), LocalDateTime.now())
-                        < 20;
+        return storage.getConsentCreationTime()
+                .map(
+                        consentCreationTime ->
+                                ChronoUnit.MINUTES.between(consentCreationTime, LocalDateTime.now())
+                                        < 20)
+                .orElse(false);
     }
 
     private LocalDate prepareFromDate(Year year, Month month) {

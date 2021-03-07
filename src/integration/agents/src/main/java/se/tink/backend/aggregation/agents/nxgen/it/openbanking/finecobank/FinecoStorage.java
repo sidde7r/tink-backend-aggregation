@@ -1,13 +1,18 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.authenticator.entities.AccountConsent;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
+@Slf4j
 @RequiredArgsConstructor
 public class FinecoStorage {
 
@@ -43,8 +48,21 @@ public class FinecoStorage {
         return persistentStorage.get(CONSENT_ID);
     }
 
-    public Optional<String> getConsentCreationTime() {
-        return persistentStorage.get(CONSENT_CREATION_TIMESTAMP, String.class);
+    public Optional<LocalDateTime> getConsentCreationTime() {
+        return persistentStorage
+                .get(CONSENT_CREATION_TIMESTAMP, String.class)
+                .map(this::deserializeConsentCreationTime);
+    }
+
+    private LocalDateTime deserializeConsentCreationTime(String consentCreationTime) {
+        try {
+            return LocalDateTime.parse(consentCreationTime);
+        } catch (DateTimeParseException e) {
+            log.warn("Could not parse consent creation time: " + consentCreationTime);
+            // ITE-2404 handle old consent creation dates that were serialized as json
+            return SerializationUtils.deserializeFromString(
+                    consentCreationTime, LocalDateTime.class);
+        }
     }
 
     public List<AccountConsent> getBalancesConsents() {
