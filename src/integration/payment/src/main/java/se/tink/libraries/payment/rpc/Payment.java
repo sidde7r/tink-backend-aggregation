@@ -64,6 +64,7 @@ public class Payment {
     private Frequency frequency;
     private LocalDate startDate;
     private LocalDate endDate;
+    private int dayOfExecution;
     private ExecutionRule executionRule;
 
     private Payment(Builder builder) {
@@ -84,6 +85,7 @@ public class Payment {
         this.frequency = builder.frequency;
         this.startDate = builder.startDate;
         this.endDate = builder.endDate;
+        this.dayOfExecution = builder.dayOfExecution;
         this.executionRule = builder.executionRule;
     }
 
@@ -189,6 +191,10 @@ public class Payment {
         return executionRule;
     }
 
+    public int getDayOfExecution() {
+        return dayOfExecution;
+    }
+
     public Pair<AccountIdentifier.Type, AccountIdentifier.Type> getCreditorAndDebtorAccountType() {
         if (Objects.isNull(debtor) || Objects.isNull(debtor.getAccountIdentifier())) {
             return new Pair<>(null, creditor.getAccountIdentifierType());
@@ -255,6 +261,7 @@ public class Payment {
         private Frequency frequency;
         private LocalDate startDate;
         private LocalDate endDate;
+        private int dayOfExecution;
         private ExecutionRule executionRule;
 
         public Builder withPaymentServiceType(PaymentServiceType paymentServiceType) {
@@ -274,6 +281,11 @@ public class Payment {
 
         public Builder withEndDate(LocalDate endDate) {
             this.endDate = endDate;
+            return this;
+        }
+
+        public Builder withDayOfExecution(int dayOfExecution) {
+            this.dayOfExecution = dayOfExecution;
             return this;
         }
 

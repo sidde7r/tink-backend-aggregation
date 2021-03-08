@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cb
 import com.google.api.client.repackaged.com.google.common.base.Preconditions;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -145,10 +144,10 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
                         .frequency(payment.getFrequency().toString())
                         .startDate(payment.getStartDate().toString());
         // optional attributes
-        if (Optional.ofNullable(payment.getEndDate()).isPresent()) {
+        if (payment.getEndDate() != null) {
             createPaymentRequest.endDate(payment.getEndDate().toString());
         }
-        if (Optional.ofNullable(payment.getExecutionRule()).isPresent()) {
+        if (payment.getExecutionRule() != null) {
             createPaymentRequest.executionRule(payment.getExecutionRule().toString());
         }
 

@@ -13,6 +13,10 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
+import se.tink.libraries.transfer.enums.RemittanceInformationType;
+import se.tink.libraries.transfer.rpc.ExecutionRule;
+import se.tink.libraries.transfer.rpc.Frequency;
+import se.tink.libraries.transfer.rpc.PaymentServiceType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 @Ignore
@@ -41,15 +45,37 @@ public class BancaSellaAgentPaymentTest {
         manager.before();
         creditorDebtorManager.before();
 
-        builder.build().testTinkLinkPayment(createRealDomesticPayment());
+        builder.build().testTinkLinkPayment(createRealDomesticPayment().build());
     }
 
-    private Payment createRealDomesticPayment() {
+    @Test
+    public void testRecurringPayments() throws Exception {
+        manager.before();
+        creditorDebtorManager.before();
+
+        builder.build().testTinkLinkPayment(createRealDomesticRecurringPayment().build());
+    }
+
+    private Payment.Builder createRealDomesticRecurringPayment() {
+        Payment.Builder recurringPayment = createRealDomesticPayment();
+        recurringPayment.withPaymentServiceType(PaymentServiceType.PERIODIC);
+        recurringPayment.withFrequency(Frequency.MONTHLY);
+        recurringPayment.withStartDate(LocalDate.now().plusDays(2));
+        recurringPayment.withEndDate(LocalDate.now().plusMonths(3));
+        recurringPayment.withExecutionRule(ExecutionRule.FOLLOWING);
+        recurringPayment.withDayOfExecution(10);
+
+        return recurringPayment;
+    }
+
+    private Payment.Builder createRealDomesticPayment() {
         RemittanceInformation remittanceInformation = new RemittanceInformation();
         remittanceInformation.setValue("BancaSella");
+        remittanceInformation.setType(RemittanceInformationType.UNSTRUCTURED);
         AccountIdentifier creditorAccountIdentifier =
                 new IbanIdentifier(
                         creditorDebtorManager.get(BancaSellaAgentPaymentTest.Arg.CREDITOR_ACCOUNT));
+        // while running test send PSU actual name else bank rejects payment.
         Creditor creditor = new Creditor(creditorAccountIdentifier, "Creditor Name");
 
         AccountIdentifier debtorAccountIdentifier =
@@ -67,8 +93,7 @@ public class BancaSellaAgentPaymentTest {
                 .withExactCurrencyAmount(amount)
                 .withExecutionDate(executionDate)
                 .withCurrency(currency)
-                .withRemittanceInformation(remittanceInformation)
-                .build();
+                .withRemittanceInformation(remittanceInformation);
     }
 
     private enum Arg implements ArgumentManager.ArgumentManagerEnum {

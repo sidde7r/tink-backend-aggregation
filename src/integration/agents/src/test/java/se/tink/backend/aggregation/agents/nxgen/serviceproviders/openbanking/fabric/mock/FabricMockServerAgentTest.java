@@ -89,7 +89,6 @@ public class FabricMockServerAgentTest {
                 .withExactCurrencyAmount(amount)
                 .withCurrency(currency)
                 .withRemittanceInformation(remittanceInformation)
-                .withUniqueId("paymentId")
                 .build();
     }
 }

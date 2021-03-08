@@ -53,18 +53,20 @@ public class FabricConstants {
         public static final String GET_CONSENT_DETAILS =
                 "/api/fabrick/psd2/v1/consents/{consentId}";
         public static final String API_PSD2_URL = "/api/fabrick/psd2";
+
         public static final String INITIATE_A_PAYMENT_URL =
-                BASE_URL + "/api/fabrick/psd2/v1/payments/{payment-product}";
+                BASE_URL + "/api/fabrick/psd2/v1/{payment-service}/{payment-product}";
         public static final String GET_PAYMENT_URL =
-                BASE_URL + "/api/fabrick/psd2/v1/payments/{payment-product}/{paymentId}";
+                BASE_URL + "/api/fabrick/psd2/v1/{payment-service}/{payment-product}/{paymentId}";
         public static final String GET_PAYMENT_STATUS_URL =
-                BASE_URL + "/api/fabrick/psd2/v1/payments/{payment-product}/{paymentId}/status";
+                BASE_URL
+                        + "/api/fabrick/psd2/v1/{payment-service}/{payment-product}/{paymentId}/status";
         public static final String GET_PAYMENT_AUTHORIZATIONS_URL =
                 BASE_URL
-                        + "/api/fabrick/psd2/v1/payments/{payment-product}/{paymentId}/authorisations";
+                        + "/api/fabrick/psd2/v1/{payment-service}/{payment-product}/{paymentId}/authorisations";
         public static final String GET_PAYMENT_AUTHORIZATION_STATUS_URL =
                 BASE_URL
-                        + "/api/fabrick/psd2/v1/payments/{payment-product}/{paymentId}/authorisations/{authorisationId}";
+                        + "/api/fabrick/psd2/v1/{payment-service}/{payment-product}/{paymentId}/authorisations/{authorisationId}";
     }
 
     public static class IdTags {
@@ -116,6 +118,7 @@ public class FabricConstants {
 
     public static class PathParameterKeys {
         public static final String PAYMENT_PRODUCT = "payment-product";
+        public static final String PAYMENT_SERVICE = "payment-service";
         public static final String PAYMENT_ID = "paymentId";
         public static final String PAYMENT_TYPE = "paymentType";
         public static final String PAYMENT_AUTHORIZATION_ID = "authorisationId";
@@ -124,7 +127,9 @@ public class FabricConstants {
     public static class PathParameterValues {
         public static final String PAYMENT_PRODUCT_SEPA_CREDIT = "sepa-credit-transfers";
         public static final String PAYMENT_PRODUCT_SEPA_INSTANT = "instant-sepa-credit-transfers";
-        public static final String PAYMENT_TYPE = "payments";
+
+        public static final String PAYMENT_SERVICE_PAYMENTS = "payments";
+        public static final String PAYMENT_SERVICE_PERIODIC_PAYMENTS = "periodic-payments";
     }
 
     public static class Timer {
