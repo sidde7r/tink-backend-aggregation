@@ -243,7 +243,7 @@ public class UkOpenBankingPaymentTestFixtures {
                 .thenReturn(domesticPaymentConsentResponseData);
         when(domesticPaymentConsentResponseData.getFundsAvailableResult())
                 .thenReturn(fundsAvailableResult);
-        when(fundsAvailableResult.isFundsAvailable()).thenReturn(true);
+        when(fundsAvailableResult.areFundsAvailable()).thenReturn(true);
         return domesticPaymentConsentFundsConfirmationResponse;
     }
 

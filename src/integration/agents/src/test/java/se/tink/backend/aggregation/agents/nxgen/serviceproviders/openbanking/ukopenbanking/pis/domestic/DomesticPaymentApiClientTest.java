@@ -129,7 +129,7 @@ public class DomesticPaymentApiClientTest {
     }
 
     @Test
-    public void shouldExecutePayment() {
+    public void shouldExecutePayment() throws Exception {
         // given
         final PaymentRequest paymentRequestMock =
                 createDomesticPaymentRequestForNotExecutedPayment(this.clockMock);
@@ -145,10 +145,8 @@ public class DomesticPaymentApiClientTest {
 
         final URL url = new URL(API_BASE_URL + PAYMENT);
         URL fundsConfirm =
-                new URL(
-                        API_BASE_URL
-                                + PAYMENT_CONSENT_FUND_CONFIRMATION.replace(
-                                        "{consentId}", CONSENT_ID));
+                new URL(API_BASE_URL + PAYMENT_CONSENT_FUND_CONFIRMATION)
+                        .parameter(CONSENT_ID_KEY, CONSENT_ID);
         when(ukOpenBankingRequestBuilder.createPisRequest(eq(fundsConfirm)))
                 .thenReturn(requestBuilderMock);
         when(ukOpenBankingRequestBuilder.createPisRequestWithJwsHeader(eq(url)))
