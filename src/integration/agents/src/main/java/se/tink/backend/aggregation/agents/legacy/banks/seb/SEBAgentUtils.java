@@ -1,20 +1,27 @@
 package se.tink.backend.aggregation.agents.banks.seb;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Ordering;
 import java.lang.invoke.MethodHandles;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.agents.rpc.AccountHolder;
+import se.tink.backend.agents.rpc.AccountHolderType;
 import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.agents.rpc.HolderIdentity;
+import se.tink.backend.agents.rpc.HolderRole;
 import se.tink.backend.aggregation.agents.banks.seb.model.SebCreditCard;
 import se.tink.backend.aggregation.agents.banks.seb.model.SebCreditCardAccount;
 import se.tink.backend.aggregation.agents.models.Transaction;
@@ -336,6 +343,40 @@ public class SEBAgentUtils {
             }
         }
         return null;
+    }
+
+    public static AccountHolder getTinkAccountHolder(
+            String firstApplicantName, String secondApplicantName) {
+        AccountHolder accountHolder = new AccountHolder();
+        accountHolder.setType(AccountHolderType.PERSONAL);
+
+        List<HolderIdentity> identities = new ArrayList<>();
+
+        if (!Strings.isNullOrEmpty(firstApplicantName)) {
+            identities.add(toHolderIdentity(firstApplicantName));
+        }
+
+        if (!Strings.isNullOrEmpty(secondApplicantName)) {
+            identities.add(toHolderIdentity(secondApplicantName));
+        }
+
+        accountHolder.setIdentities(identities);
+
+        return accountHolder;
+    }
+
+    private static HolderIdentity toHolderIdentity(String holderName) {
+        HolderIdentity systemHolder = new HolderIdentity();
+        systemHolder.setName(holderName);
+        systemHolder.setRole(HolderRole.HOLDER);
+        return systemHolder;
+    }
+
+    public static Optional<String> getFirstHolder(List<HolderIdentity> holderIdentities) {
+        return holderIdentities.stream()
+                .filter(holderIdentity -> HolderRole.HOLDER.equals(holderIdentity.getRole()))
+                .findFirst()
+                .map(HolderIdentity::getName);
     }
 
     static {

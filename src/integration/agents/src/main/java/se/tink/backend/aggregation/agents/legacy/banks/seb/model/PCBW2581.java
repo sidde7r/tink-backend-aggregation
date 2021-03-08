@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.agents.rpc.AccountHolder;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.AgentParsingUtils;
 import se.tink.backend.aggregation.agents.banks.seb.SEBAgentUtils;
@@ -117,6 +118,13 @@ public class PCBW2581 {
         account.setType(AccountTypes.LOAN);
         account.setCapabilities(SEBAgentUtils.getLoanAccountCapabilities());
         account.setSourceInfo(AccountSourceInfo.builder().bankProductName(getLoanName()).build());
+
+        // Due to this agent being legacy we have to work with the rpc Account model directly. Using
+        // the same logic as we do in core Account model when we map to the rpc Account.
+        AccountHolder accountHolder = SEBAgentUtils.getTinkAccountHolder(applicant1, applicant2);
+        account.setAccountHolder(accountHolder);
+        account.setHolderName(
+                SEBAgentUtils.getFirstHolder(accountHolder.getIdentities()).orElse(null));
 
         return account;
     }

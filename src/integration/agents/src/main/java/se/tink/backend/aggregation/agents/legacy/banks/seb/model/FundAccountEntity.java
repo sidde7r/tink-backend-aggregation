@@ -51,6 +51,9 @@ public class FundAccountEntity {
     @JsonProperty("FMS_ID")
     private String shortId;
 
+    @JsonProperty("KHAV")
+    private String owner;
+
     public String getAccountNumber() {
         return accountNumber;
     }
@@ -164,6 +167,7 @@ public class FundAccountEntity {
         account.setName(getAccountType());
         account.setType(AccountTypes.INVESTMENT);
         account.setCapabilities(SEBAgentUtils.getInvestmentAccountCapabilities());
+        account.setHolderName(owner);
         account.setSourceInfo(
                 AccountSourceInfo.builder()
                         .bankAccountType(getAccountType())

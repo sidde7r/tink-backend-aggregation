@@ -1531,6 +1531,7 @@ public final class SEBApiAgent extends AbstractAgent
         account.putIdentifier(new SwedishIdentifier(accountEntity.KONTO_NR));
         account.putIdentifier(new SwedishIdentifier(accountEntity.KONTO_NR).toIbanIdentifer());
         account.setBankId(account.getAccountNumber());
+        account.setHolderName(accountEntity.KHAV);
 
         Preconditions.checkState(
                 Preconditions.checkNotNull(account.getBankId())
@@ -1631,6 +1632,7 @@ public final class SEBApiAgent extends AbstractAgent
         account.setName(name);
         account.setBalance(accountEntity.SALDO_BELOPP != 0 ? -accountEntity.SALDO_BELOPP : 0);
         account.setAvailableCredit(accountEntity.LIMIT_BELOPP - accountEntity.SALDO_BELOPP);
+        account.setHolderName(accountEntity.KONTO_AGARE);
         account.setSourceInfo(
                 AccountSourceInfo.builder()
                         .bankProductName(name)

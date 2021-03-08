@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.banks.seb.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.base.Strings;
 import java.lang.invoke.MethodHandles;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -129,6 +130,7 @@ public class DepotEntity {
         account.setName(StringUtils.firstLetterUppercaseFormatting(getType().trim()));
         account.setType(AccountTypes.INVESTMENT);
         account.setCapabilities(SEBAgentUtils.getInvestmentAccountCapabilities());
+        account.setHolderName(!Strings.isNullOrEmpty(owner) ? owner.trim() : null);
         account.setSourceInfo(
                 AccountSourceInfo.builder()
                         .bankAccountType(getType())

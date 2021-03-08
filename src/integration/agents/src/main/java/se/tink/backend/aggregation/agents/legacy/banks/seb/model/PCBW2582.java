@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.banks.seb.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.agents.rpc.AccountHolder;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.AgentParsingUtils;
 import se.tink.backend.aggregation.agents.banks.seb.SEBAgentUtils;
@@ -31,6 +32,12 @@ public class PCBW2582 {
     @JsonProperty("DATRTEJUST")
     public String DATRTEJUST;
 
+    @JsonProperty("LANTAGARE1")
+    private String applicant1;
+
+    @JsonProperty("LANTAGARE2")
+    private String applicant2;
+
     public Account toAccount() {
         Account account = new Account();
 
@@ -41,6 +48,13 @@ public class PCBW2582 {
         account.setType(AccountTypes.LOAN);
         account.setCapabilities(SEBAgentUtils.getLoanAccountCapabilities());
         account.setSourceInfo(AccountSourceInfo.builder().bankProductName(KTOSLAG_TXT).build());
+
+        // Due to this agent being legacy we have to work with the rpc Account model directly. Using
+        // the same logic as we do in core Account model when we map to the rpc Account.
+        AccountHolder accountHolder = SEBAgentUtils.getTinkAccountHolder(applicant1, applicant2);
+        account.setAccountHolder(accountHolder);
+        account.setHolderName(
+                SEBAgentUtils.getFirstHolder(accountHolder.getIdentities()).orElse(null));
 
         return account;
     }
