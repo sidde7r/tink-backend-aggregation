@@ -12,7 +12,12 @@ import se.tink.backend.aggregation.client.provider_configuration.rpc.PisCapabili
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 
 @AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, TRANSFERS})
-@AgentPisCapability(capabilities = {PisCapability.PIS_SEPA, PisCapability.PIS_SEPA_ICT})
+@AgentPisCapability(
+        capabilities = {
+            PisCapability.PIS_SEPA,
+            PisCapability.PIS_SEPA_ICT,
+            PisCapability.PIS_SEPA_RECURRING_PAYMENTS
+        })
 public final class BancaSellaAgent extends FabricAgent {
 
     private static final String BASE_URL = "https://psdgw-sella.fabrick.com";
