@@ -1,9 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar;
 
-import static se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.BodyValues.EMPTY_BODY;
-import static se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.Urls.BASE_API_URL;
-import static se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.Urls.GET_ACCOUNT_NUMBERS;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +14,7 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.BodyValues;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.HeaderKeys;
@@ -141,7 +138,7 @@ public class LansforsakringarApiClient {
                         LansforsakringarConstants.HeaderValues.PSU_ID_TYPE)
                 .header(LansforsakringarConstants.HeaderKeys.TPP_REDIRECT_URI, getRedirectUrl())
                 .header(LansforsakringarConstants.HeaderKeys.TPP_EXPLICIT_AUTH_PREFERRED, false)
-                .post(ConsentResponse.class, EMPTY_BODY);
+                .post(ConsentResponse.class, BodyValues.EMPTY_BODY);
     }
 
     public ConsentStatusResponse getConsentStatus() {
@@ -374,14 +371,14 @@ public class LansforsakringarApiClient {
 
     public SignBasketResponse signBasket(String authorizationUrl, String basketId) {
 
-        return createRequestInSession(new URL(BASE_API_URL + authorizationUrl))
+        return createRequestInSession(new URL(Urls.BASE_API_URL + authorizationUrl))
                 .header(HeaderKeys.TPP_REDIRECT_URI, getRedirectUrl())
                 .header(HeaderKeys.BASKET_ID, basketId)
-                .post(SignBasketResponse.class, EMPTY_BODY);
+                .post(SignBasketResponse.class, BodyValues.EMPTY_BODY);
     }
 
     public AccountNumbersResponse getAccountNumbers() {
-        return createRequestInSession(new URL(GET_ACCOUNT_NUMBERS))
+        return createRequestInSession(new URL(Urls.GET_ACCOUNT_NUMBERS))
                 .header("Consent-ID", storageHelper.getConsentId())
                 .get(AccountNumbersResponse.class);
     }

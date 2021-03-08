@@ -5,7 +5,6 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.executor.payment.TestUtils.getAccountNumbersResponse;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -100,7 +99,7 @@ public class LansforsakringarPaymentExecutorTest {
         domesticPaymentResponse.setTransactionStatus("RCVD");
 
         when(apiClient.getAccountNumbers())
-                .thenReturn(getAccountNumbersResponse("90255481251", ""));
+                .thenReturn(AccountNumbersUtil.getAccountNumbersResponse("90255481251", ""));
 
         when(apiClient.createDomesticPayment(eq(domesticPaymentRequest)))
                 .thenReturn(domesticPaymentResponse);
@@ -160,7 +159,7 @@ public class LansforsakringarPaymentExecutorTest {
         domesticPaymentResponse.setTransactionStatus("RCVD");
 
         when(apiClient.getAccountNumbers())
-                .thenReturn(getAccountNumbersResponse("90255481251", ""));
+                .thenReturn(AccountNumbersUtil.getAccountNumbersResponse("90255481251", ""));
 
         when(apiClient.createDomesticGirosPayment(eq(domesticGirosPaymentRequest)))
                 .thenReturn(domesticPaymentResponse);
@@ -199,7 +198,7 @@ public class LansforsakringarPaymentExecutorTest {
                                 .build());
 
         when(apiClient.getAccountNumbers())
-                .thenReturn(getAccountNumbersResponse("90255481251", ""));
+                .thenReturn(AccountNumbersUtil.getAccountNumbersResponse("90255481251", ""));
 
         // when
         Throwable thrown = catchThrowable(() -> paymentExecutor.create(paymentRequest));

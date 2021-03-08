@@ -1,11 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.executor.payment;
 
-import static se.tink.backend.aggregation.agents.banks.lansforsakringar.LansforsakringarDateUtil.getCurrentOrNextBusinessDate;
-import static se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.SCAValues.SCA_EXEMPTED;
-import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.constants.ThirdPartyAppConstants.WAIT_FOR_MINUTES;
-import static se.tink.libraries.transfer.enums.RemittanceInformationType.OCR;
-import static se.tink.libraries.transfer.enums.RemittanceInformationType.UNSTRUCTURED;
-
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Locale;
@@ -22,6 +16,8 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.FormKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.FormValues;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.SCAValues;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarDateUtil;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.authenticator.rpc.SignBasketResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.executor.payment.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.executor.payment.entities.AccountIbanEntity;
@@ -36,6 +32,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.executor.payment.rpc.DomesticPaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.executor.payment.rpc.DomesticPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.executor.payment.rpc.GetPaymentStatusResponse;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.constants.ThirdPartyAppConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
@@ -61,6 +58,7 @@ import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Payment;
+import se.tink.libraries.transfer.enums.RemittanceInformationType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 public class LansforsakringarPaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
@@ -96,7 +94,8 @@ public class LansforsakringarPaymentExecutor implements PaymentExecutor, Fetchab
                 Optional.ofNullable(payment.getExecutionDate())
                         .map(
                                 providedDate ->
-                                        getCurrentOrNextBusinessDate(providedDate)
+                                        LansforsakringarDateUtil.getCurrentOrNextBusinessDate(
+                                                        providedDate)
                                                 .format(DateTimeFormatter.ISO_DATE))
                         .orElse(null);
 
@@ -214,11 +213,16 @@ public class LansforsakringarPaymentExecutor implements PaymentExecutor, Fetchab
                         amount,
                         executionDate,
                         Optional.ofNullable(payment.getRemittanceInformation())
-                                .filter(r -> r.getType().equals(UNSTRUCTURED))
+                                .filter(
+                                        r ->
+                                                r.getType()
+                                                        .equals(
+                                                                RemittanceInformationType
+                                                                        .UNSTRUCTURED))
                                 .map(RemittanceInformation::getValue)
                                 .orElse(null),
                         Optional.ofNullable(payment.getRemittanceInformation())
-                                .filter(r -> r.getType().equals(OCR))
+                                .filter(r -> r.getType().equals(RemittanceInformationType.OCR))
                                 .map(RemittanceInformation::getValue)
                                 .orElse(null));
 
@@ -262,7 +266,7 @@ public class LansforsakringarPaymentExecutor implements PaymentExecutor, Fetchab
             SignBasketResponse signBasketResponse =
                     signPayment(paymentMultiStepRequest.getPayment());
 
-            if (!signBasketResponse.getScaStatus().equals(SCA_EXEMPTED)) {
+            if (!signBasketResponse.getScaStatus().equals(SCAValues.SCA_EXEMPTED)) {
                 authenticatePIS(signBasketResponse);
             }
         } catch (HttpResponseException ex) {
@@ -321,7 +325,9 @@ public class LansforsakringarPaymentExecutor implements PaymentExecutor, Fetchab
                 ThirdPartyAppAuthenticationPayload.of(url));
 
         supplementalInformationHelper.waitForSupplementalInformation(
-                strongAuthenticationState.getSupplementalKey(), WAIT_FOR_MINUTES, TimeUnit.MINUTES);
+                strongAuthenticationState.getSupplementalKey(),
+                ThirdPartyAppConstants.WAIT_FOR_MINUTES,
+                TimeUnit.MINUTES);
     }
 
     @Override

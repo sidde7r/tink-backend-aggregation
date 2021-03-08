@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.executor.payment.TestUtils.getDomesticAccountNumbersResponse;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +32,9 @@ public class LansforsakringarTransferDestinationFetcherTest {
     public void testTransferDestinationFetcherWithMultipleAccounts() {
 
         when(apiClient.getAccountNumbers())
-                .thenReturn(getDomesticAccountNumbersResponse("12345", "1234", "4321"));
+                .thenReturn(
+                        AccountNumbersUtil.getDomesticAccountNumbersResponse(
+                                "12345", "1234", "4321"));
 
         List<Account> accounts = getAccounts();
         TransferDestinationsResponse transferDestinationsResponse =
