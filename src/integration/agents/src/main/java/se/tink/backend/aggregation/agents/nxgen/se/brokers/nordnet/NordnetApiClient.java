@@ -11,8 +11,11 @@ import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestB
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.libraries.identitydata.IdentityData;
 
 public class NordnetApiClient extends NordnetBaseApiClient {
+
+    private IdentityData cachedIdentityData;
 
     public NordnetApiClient(
             TinkHttpClient client,
@@ -24,12 +27,15 @@ public class NordnetApiClient extends NordnetBaseApiClient {
 
     @Override
     public FetchIdentityDataResponse fetchIdentityData() {
-        RequestBuilder requestBuilder =
-                createRequestInSession(new URL(NordnetBaseConstants.Urls.CUSTOMER_INFO))
-                        .type(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON);
+        if (cachedIdentityData == null) {
+            RequestBuilder requestBuilder =
+                    createRequestInSession(new URL(NordnetBaseConstants.Urls.CUSTOMER_INFO))
+                            .type(MediaType.APPLICATION_JSON)
+                            .accept(MediaType.APPLICATION_JSON);
 
-        return new FetchIdentityDataResponse(
-                get(requestBuilder, CustomerEntity.class).toTinkIdentity());
+            cachedIdentityData = get(requestBuilder, CustomerEntity.class).toTinkIdentity();
+        }
+
+        return new FetchIdentityDataResponse(cachedIdentityData);
     }
 }

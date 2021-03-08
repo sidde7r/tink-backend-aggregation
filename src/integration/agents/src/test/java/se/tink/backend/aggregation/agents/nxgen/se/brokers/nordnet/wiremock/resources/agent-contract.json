@@ -4,10 +4,10 @@
     "accountExclusion" : "NONE",
     "exactBalance" : {
       "currencyCode" : "SEK",
-      "doubleValue" : 20108.3095671207,
-      "exactValue" : 20108.3095671207,
       "scale" : 10,
-      "unscaledValue" : 201083095671207
+      "doubleValue" : 20108.3095671207,
+      "unscaledValue" : 201083095671207,
+      "exactValue" : 20108.3095671207
     },
     "currencyCode" : "SEK",
     "bankId" : "11111111",
@@ -21,7 +21,17 @@
     "userModifiedType" : false,
     "identifiers" : "[]",
     "closed" : false,
+    "holderName" : "Firstname Lastname",
+    "accountHolder" : {
+      "accountId" : null,
+      "type" : "PERSONAL",
+      "identities" : [ {
+        "name" : "Firstname Lastname",
+        "role" : "HOLDER"
+      } ]
+    },
     "flags" : "[]",
+    "balances" : [ ],
     "availableCredit" : 0.0,
     "balance" : 20108.3095671207
   }, {
@@ -29,10 +39,10 @@
     "accountExclusion" : "NONE",
     "exactBalance" : {
       "currencyCode" : "SEK",
-      "doubleValue" : 0.35,
-      "exactValue" : 0.35,
       "scale" : 2,
-      "unscaledValue" : 35
+      "doubleValue" : 0.35,
+      "unscaledValue" : 35,
+      "exactValue" : 0.35
     },
     "currencyCode" : "SEK",
     "bankId" : "44444444",
@@ -46,7 +56,17 @@
     "userModifiedType" : false,
     "identifiers" : "[\"se://44444444444\"]",
     "closed" : false,
+    "holderName" : "Firstname Lastname",
+    "accountHolder" : {
+      "accountId" : null,
+      "type" : "PERSONAL",
+      "identities" : [ {
+        "name" : "Firstname Lastname",
+        "role" : "HOLDER"
+      } ]
+    },
     "flags" : "[]",
+    "balances" : [ ],
     "availableCredit" : 0.0,
     "balance" : 0.35
   }, {
@@ -54,10 +74,10 @@
     "accountExclusion" : "NONE",
     "exactBalance" : {
       "currencyCode" : "SEK",
-      "doubleValue" : 175598.7,
-      "exactValue" : 175598.7,
       "scale" : 2,
-      "unscaledValue" : 17559870
+      "doubleValue" : 175598.7,
+      "unscaledValue" : 17559870,
+      "exactValue" : 175598.7
     },
     "currencyCode" : "SEK",
     "bankId" : "33333333",
@@ -71,7 +91,17 @@
     "userModifiedType" : false,
     "identifiers" : "[\"se://33333333333\"]",
     "closed" : false,
+    "holderName" : "Firstname Lastname",
+    "accountHolder" : {
+      "accountId" : null,
+      "type" : "PERSONAL",
+      "identities" : [ {
+        "name" : "Firstname Lastname",
+        "role" : "HOLDER"
+      } ]
+    },
     "flags" : "[]",
+    "balances" : [ ],
     "availableCredit" : 0.0,
     "balance" : 175598.7
   }, {
@@ -79,10 +109,10 @@
     "accountExclusion" : "NONE",
     "exactBalance" : {
       "currencyCode" : "SEK",
-      "doubleValue" : 0.0,
-      "exactValue" : 0.0,
       "scale" : 1,
-      "unscaledValue" : 0
+      "doubleValue" : 0.0,
+      "unscaledValue" : 0,
+      "exactValue" : 0.0
     },
     "currencyCode" : "SEK",
     "bankId" : "22222222",
@@ -96,7 +126,17 @@
     "userModifiedType" : false,
     "identifiers" : "[]",
     "closed" : false,
+    "holderName" : "Firstname Lastname",
+    "accountHolder" : {
+      "accountId" : null,
+      "type" : "PERSONAL",
+      "identities" : [ {
+        "name" : "Firstname Lastname",
+        "role" : "HOLDER"
+      } ]
+    },
     "flags" : "[]",
+    "balances" : [ ],
     "availableCredit" : 0.0,
     "balance" : 0.0
   }, {
@@ -104,10 +144,10 @@
     "accountExclusion" : "NONE",
     "exactBalance" : {
       "currencyCode" : "SEK",
-      "doubleValue" : 32701.1147,
-      "exactValue" : 32701.1147,
       "scale" : 12,
-      "unscaledValue" : 32701114699999997
+      "doubleValue" : 32701.1147,
+      "unscaledValue" : 32701114699999997,
+      "exactValue" : 32701.1147
     },
     "currencyCode" : "SEK",
     "bankId" : "55555555",
@@ -121,7 +161,17 @@
     "userModifiedType" : false,
     "identifiers" : "[]",
     "closed" : false,
+    "holderName" : "Firstname Lastname",
+    "accountHolder" : {
+      "accountId" : null,
+      "type" : "PERSONAL",
+      "identities" : [ {
+        "name" : "Firstname Lastname",
+        "role" : "HOLDER"
+      } ]
+    },
     "flags" : "[]",
+    "balances" : [ ],
     "availableCredit" : 0.0,
     "balance" : 32701.1147
   } ],
@@ -137,16 +187,16 @@
     "dateOfBirth" : {
       "year" : 1990,
       "month" : "JANUARY",
+      "monthValue" : 1,
+      "dayOfMonth" : 1,
+      "era" : "CE",
       "dayOfWeek" : "MONDAY",
       "leapYear" : false,
       "dayOfYear" : 1,
       "chronology" : {
-        "id" : "ISO",
-        "calendarType" : "iso8601"
-      },
-      "monthValue" : 1,
-      "dayOfMonth" : 1,
-      "era" : "CE"
+        "calendarType" : "iso8601",
+        "id" : "ISO"
+      }
     }
   }
 }
