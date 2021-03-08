@@ -21,8 +21,9 @@ public class DanskeBankFIConfiguration implements DanskeBankConfiguration {
     private static final String STEP_UP_TOKEN_KEY = "x-stepup-token";
     private static final String CLIENT_ID = "5ec4b8ad-a93d-43e1-831c-8e78ee6e661a";
     private static final String CLIENT_SECRET =
-            "OOyMUa8VuMvkyRQZrnmNnNhsGkzpOu1yhtZw4eb5yki9c9Sr8l";
-    private static final String APP_VERSION_HEADER = "MobileBank ios FI 17798";
+            "k49FSuV18VUl7YyMoE4yxtNfDSCJtmS6oTXraw1ucprL9HqJWc";
+    private static final String APP_VERSION_HEADER =
+            "MobileBank ios com danskebank.mobilebank3fi 28076";
 
     @Override
     public String getAppVersionHeader() {
