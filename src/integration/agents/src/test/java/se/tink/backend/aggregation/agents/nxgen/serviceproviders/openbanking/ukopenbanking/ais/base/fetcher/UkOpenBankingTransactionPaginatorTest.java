@@ -14,26 +14,38 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.stubbing.Answer;
-import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.fetcher.rpc.transaction.AccountTransactionsV31Response;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.libraries.account.identifiers.OtherIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class UkOpenBankingTransactionPaginatorTest {
 
     private static final TransactionalAccount TRANSACTIONAL_ACCOUNT =
-            TransactionalAccount.builder(
-                            AccountTypes.CHECKING, "UN123", ExactCurrencyAmount.inEUR(123.45))
-                    .setAccountNumber("AN123")
-                    .setBankIdentifier("BI123")
-                    .build();
+            TransactionalAccount.nxBuilder()
+                    .withType(TransactionalAccountType.CHECKING)
+                    .withPaymentAccountFlag()
+                    .withBalance(BalanceModule.of(ExactCurrencyAmount.inEUR(123.45)))
+                    .withId(
+                            IdModule.builder()
+                                    .withUniqueIdentifier("UN123")
+                                    .withAccountNumber("UN123")
+                                    .withAccountName("AN123")
+                                    .addIdentifier(new OtherIdentifier("ID123"))
+                                    .build())
+                    .setApiIdentifier("BI123")
+                    .build()
+                    .orElse(null);
 
     private UkOpenBankingTransactionPaginator<AccountTransactionsV31Response, TransactionalAccount>
             paginator;
@@ -76,11 +88,20 @@ public class UkOpenBankingTransactionPaginatorTest {
     @Test
     public void testRequestTimeProperlySaved() {
         TransactionalAccount account =
-                TransactionalAccount.builder(
-                                AccountTypes.CHECKING, "UN123", ExactCurrencyAmount.inEUR(123.45))
-                        .setAccountNumber("AN123")
-                        .setBankIdentifier("BI123")
-                        .build();
+                TransactionalAccount.nxBuilder()
+                        .withType(TransactionalAccountType.CHECKING)
+                        .withPaymentAccountFlag()
+                        .withBalance(BalanceModule.of(ExactCurrencyAmount.inEUR(123.45)))
+                        .withId(
+                                IdModule.builder()
+                                        .withUniqueIdentifier("UN123")
+                                        .withAccountNumber("UN123")
+                                        .withAccountName("AN123")
+                                        .addIdentifier(new OtherIdentifier("ID123"))
+                                        .build())
+                        .setApiIdentifier("BI123")
+                        .build()
+                        .orElse(null);
 
         paginator.getTransactionsFor(account, null);
 

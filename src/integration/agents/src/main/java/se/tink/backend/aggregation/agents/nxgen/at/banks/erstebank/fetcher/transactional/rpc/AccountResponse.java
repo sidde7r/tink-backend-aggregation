@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.fetcher.tran
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.fetcher.transactional.entity.ProductEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -18,6 +19,8 @@ public class AccountResponse {
         return productListEntity.stream()
                 .filter(productEntity -> productEntity.isValidTransactional())
                 .map(ProductEntity::toTransactionalAccount)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .collect(Collectors.toList());
     }
 

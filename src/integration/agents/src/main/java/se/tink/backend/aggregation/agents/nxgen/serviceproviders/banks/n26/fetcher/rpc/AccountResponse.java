@@ -1,8 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.fetcher.rpc;
 
-import se.tink.backend.agents.rpc.AccountTypes;
+import java.util.Optional;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
@@ -59,19 +62,24 @@ public class AccountResponse {
         return seized;
     }
 
-    public AccountTypes getType() {
-        return AccountTypes.CHECKING;
-    }
-
     public ExactCurrencyAmount getTinkBalance() {
         return ExactCurrencyAmount.of(availableBalance, currency);
     }
 
-    public TransactionalAccount toTransactionalAccount() {
-        return TransactionalAccount.builder(getType(), getIban(), getTinkBalance())
-                .setName(getBankName())
-                .setAccountNumber(getIban())
-                .addIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban))
+    public Optional<TransactionalAccount> toTransactionalAccount() {
+        return TransactionalAccount.nxBuilder()
+                .withType(TransactionalAccountType.CHECKING)
+                .withPaymentAccountFlag()
+                .withBalance(BalanceModule.of(getTinkBalance()))
+                .withId(
+                        IdModule.builder()
+                                .withUniqueIdentifier(getIban())
+                                .withAccountNumber(getIban())
+                                .withAccountName(getBankName())
+                                .addIdentifier(
+                                        AccountIdentifier.create(
+                                                AccountIdentifier.Type.IBAN, getIban()))
+                                .build())
                 .build();
     }
 }

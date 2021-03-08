@@ -1,14 +1,17 @@
 package se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.fetcher.transactional.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.ErsteBankConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
@@ -66,14 +69,14 @@ public class ProductEntity {
         return extraInfoEntity;
     }
 
-    private AccountTypes getAccountType() {
+    private TransactionalAccountType getAccountType() {
         String accountType = getType().toUpperCase();
         switch (accountType) {
             case ErsteBankConstants.ACCOUNTYPE.CHECKING:
-                return AccountTypes.CHECKING;
+                return TransactionalAccountType.CHECKING;
             case ErsteBankConstants.ACCOUNTYPE.BUILDING_SAVING:
             case ErsteBankConstants.ACCOUNTYPE.SAVING:
-                return AccountTypes.SAVINGS;
+                return TransactionalAccountType.SAVINGS;
             default:
                 logger.warn("{} {}", ErsteBankConstants.LOGTAG.UNKNOWN_ACCOUNT_TYPE, accountType);
                 throw new IllegalStateException("Unknown account type");
@@ -106,13 +109,21 @@ public class ProductEntity {
         }
     }
 
-    public TransactionalAccount toTransactionalAccount() {
-
-        return TransactionalAccount.builder(getAccountType(), getIban(), getTinkBalance())
-                .setAccountNumber(getIdentifier().trim())
-                .setName(getName())
-                .setHolderName(getHolderName())
-                .addIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN, getIban()))
+    public Optional<TransactionalAccount> toTransactionalAccount() {
+        return TransactionalAccount.nxBuilder()
+                .withType(getAccountType())
+                .withPaymentAccountFlag()
+                .withBalance(BalanceModule.of(getTinkBalance()))
+                .withId(
+                        IdModule.builder()
+                                .withUniqueIdentifier(getIban())
+                                .withAccountNumber(getIban())
+                                .withAccountName(getName())
+                                .addIdentifier(
+                                        AccountIdentifier.create(
+                                                AccountIdentifier.Type.IBAN, getIban()))
+                                .build())
+                .addHolderName(getHolderName().toString())
                 .putInTemporaryStorage(ErsteBankConstants.STORAGE.TRANSACTIONSURL, getId())
                 .build();
     }

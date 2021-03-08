@@ -18,7 +18,7 @@ public class AccountResponseTest {
         AccountResponse accountResponse = N26AccountFetcherTestData.fetchAccountsResponse();
 
         // when
-        TransactionalAccount result = accountResponse.toTransactionalAccount();
+        TransactionalAccount result = accountResponse.toTransactionalAccount().orElse(null);
 
         // then
         assertThat(result).isInstanceOf(TransactionalAccount.class);

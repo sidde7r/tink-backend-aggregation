@@ -5,8 +5,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.ing.IngAtApiClient;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.ing.IngAtConstants;
@@ -22,8 +20,6 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 
 public class IngAtTransactionalAccountFetcher implements AccountFetcher<TransactionalAccount> {
-    private static final Logger logger =
-            LoggerFactory.getLogger(IngAtTransactionalAccountFetcher.class);
     private IngAtApiClient apiClient;
     private IngAtSessionStorage sessionStorage;
 

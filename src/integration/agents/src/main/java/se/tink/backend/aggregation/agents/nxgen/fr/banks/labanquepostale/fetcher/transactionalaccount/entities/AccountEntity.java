@@ -5,11 +5,14 @@ import java.util.Optional;
 import org.assertj.core.util.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.labanquepostale.LaBanquePostaleConstants;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.labanquepostale.fetcher.transactionalaccount.LaBanquePostaleTransactionalAccountFetcher;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
+import se.tink.libraries.account.identifiers.OtherIdentifier;
 
 @JsonObject
 public class AccountEntity {
@@ -70,9 +73,10 @@ public class AccountEntity {
     @JsonProperty("carte")
     private MapEntity map;
 
-    public AccountTypes toTinkAccountType() {
+    public TransactionalAccountType toTinkAccountType() {
 
-        Optional<AccountTypes> type = LaBanquePostaleConstants.AccountType.translate(productRange);
+        Optional<TransactionalAccountType> type =
+                LaBanquePostaleConstants.AccountType.translate(productRange);
 
         return type.orElseGet(
                 () -> {
@@ -80,17 +84,26 @@ public class AccountEntity {
                             "{} Unknown account type: {}",
                             LaBanquePostaleConstants.Logging.UNKNOWN_ACCOUNT_TYPE,
                             productRange);
-                    return AccountTypes.OTHER;
+                    return TransactionalAccountType.OTHER;
                 });
     }
 
-    public TransactionalAccount toTinkAccount() {
-        TransactionalAccount.Builder builder =
-                TransactionalAccount.builder(toTinkAccountType(), number, balance);
-        builder.setAccountNumber(number);
-        builder.setName(
-                Strings.isNullOrEmpty(libelleCustomize) ? nature.getLabel() : libelleCustomize);
-        builder.setBankIdentifier(number);
-        return builder.build();
+    public Optional<TransactionalAccount> toTinkAccount() {
+        return TransactionalAccount.nxBuilder()
+                .withType(toTinkAccountType())
+                .withPaymentAccountFlag()
+                .withBalance(BalanceModule.of(balance))
+                .withId(
+                        IdModule.builder()
+                                .withUniqueIdentifier(number)
+                                .withAccountNumber(number)
+                                .withAccountName(
+                                        Strings.isNullOrEmpty(libelleCustomize)
+                                                ? nature.getLabel()
+                                                : libelleCustomize)
+                                .addIdentifier(new OtherIdentifier(number))
+                                .build())
+                .setApiIdentifier(number)
+                .build();
     }
 }
