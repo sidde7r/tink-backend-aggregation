@@ -186,6 +186,18 @@ Transfer-Encoding: chunked
 {
 	"result": [
 		{
+			"has_details": false,
+			"booked": false,
+			"amount": -1337.42,
+			"currency": "SEK",
+			"balance_after": 81836.06,
+			"title": "Very mysterious transaction",
+			"transaction_type": {
+				"transaction_code": "00000",
+				"transaction_code_text": ""
+			}
+		},
+		{
 			"transaction_id": "B001992-04-141992-04-14-12.26.44.509513",
 			"has_details": true,
 			"booked": true,
