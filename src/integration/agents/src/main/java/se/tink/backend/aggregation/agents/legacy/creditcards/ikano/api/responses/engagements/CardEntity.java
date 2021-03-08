@@ -35,6 +35,7 @@ public class CardEntity {
         } else {
             tinkAccount.setAccountNumber(agreementNumber);
         }
+        tinkAccount.setHolderName(customerName);
 
         return tinkAccount;
     }
