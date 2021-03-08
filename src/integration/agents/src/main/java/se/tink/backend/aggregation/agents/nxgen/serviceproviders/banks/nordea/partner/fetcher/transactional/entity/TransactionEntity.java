@@ -6,8 +6,11 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.google.common.base.Strings;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Objects;
+import java.util.Optional;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.models.TransactionExternalSystemIdType;
 import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -16,6 +19,7 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction.Builder;
 import se.tink.backend.aggregation.utils.json.deserializers.LocalDateDeserializer;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
+@Slf4j
 @JsonObject
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class TransactionEntity {
@@ -25,7 +29,7 @@ public class TransactionEntity {
 
     private boolean booked;
 
-    private double amount;
+    private BigDecimal amount;
 
     private String currency;
 
@@ -43,7 +47,7 @@ public class TransactionEntity {
 
     private String description;
 
-    private double balanceAfter;
+    private BigDecimal balanceAfter;
 
     private TransactionTypeEntity transactionType;
 
@@ -51,7 +55,18 @@ public class TransactionEntity {
 
     private ExchangeEntity exchange;
 
-    public Transaction toTinkTransaction() {
+    public Optional<Transaction> toTinkTransaction() {
+        // Sometimes pending transactions have no date
+        if (getDate() == null) {
+            log.warn("Ignoring transaction with no date.");
+            return Optional.empty();
+        }
+
+        if (Strings.isNullOrEmpty(currency) || amount == null) {
+            log.warn("Ignoring transaction with no currency or amount.");
+            return Optional.empty();
+        }
+
         Builder builder =
                 Transaction.builder()
                         .setAmount(ExactCurrencyAmount.of(amount, currency))
@@ -72,7 +87,7 @@ public class TransactionEntity {
                     TransactionPayloadTypes.AMOUNT_IN_LOCAL_CURRENCY, exchange.getOriginalAmount());
         }
 
-        return builder.build();
+        return Optional.of(builder.build());
     }
 
     @JsonIgnore

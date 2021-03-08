@@ -8,6 +8,7 @@ import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.Getter;
@@ -27,13 +28,18 @@ public class AccountTransactionsResponse {
     public Collection<Transaction> getTinkTransactions() {
         return Optional.ofNullable(result).orElse(Collections.emptyList()).stream()
                 .map(TransactionEntity::toTinkTransaction)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .collect(Collectors.toList());
     }
 
     public Optional<Boolean> canFetchMore(LocalDate dateLimit) {
         // don't fetch further back than dateLimit
         final Optional<LocalDate> oldestTransactionDate =
-                result.stream().map(TransactionEntity::getDate).min(LocalDate::compareTo);
+                result.stream()
+                        .map(TransactionEntity::getDate)
+                        .filter(Objects::nonNull)
+                        .min(LocalDate::compareTo);
         if (oldestTransactionDate.isPresent() && oldestTransactionDate.get().isBefore(dateLimit)) {
             return Optional.of(false);
         }
