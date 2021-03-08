@@ -228,36 +228,30 @@ public class ConfirmedTransactionEntity extends AbstractExecutorTransactionEntit
 
     @JsonIgnore
     private Optional<Transfer> getUpcomingTransfer(AccountIdentifier sourceAccount) {
-        Transfer transfer = new Transfer();
 
+        Optional<AccountIdentifier> destinationAccount = getDestinationAccount();
+
+        if (!destinationAccount.isPresent()
+                || !destinationAccount.get().isValid()
+                || Strings.isNullOrEmpty(currencyCode)
+                || date == null) {
+            return Optional.empty();
+        }
+
+        double parsedAmount = StringUtils.parseAmountEU(this.amount);
+        if (!Double.isFinite(parsedAmount)) {
+            return Optional.empty();
+        }
+        ExactCurrencyAmount exactCurrencyAmount =
+                ExactCurrencyAmount.of(parsedAmount, currencyCode);
+
+        Transfer transfer = new Transfer();
+        transfer.setDestination(destinationAccount.get());
         transfer.setSourceMessage(getSourceMessage());
         transfer.setSource(sourceAccount);
         transfer.setDestinationMessage(getDestinationMessage());
-
         transfer.setRemittanceInformation(getRemittanceInformation());
-        Optional<AccountIdentifier> destinationAccount = getDestinationAccount();
-        if (!destinationAccount.isPresent()) {
-            return Optional.empty();
-        }
-
-        if (!destinationAccount.get().isValid()) {
-            return Optional.empty();
-        }
-
-        transfer.setDestination(destinationAccount.get());
-
-        double parsedAmount = StringUtils.parseAmountEU(this.amount);
-        if (Strings.isNullOrEmpty(currencyCode) || !Double.isFinite(parsedAmount)) {
-            return Optional.empty();
-        }
-
-        ExactCurrencyAmount exactCurrencyAmount =
-                ExactCurrencyAmount.of(parsedAmount, currencyCode);
         transfer.setAmount(exactCurrencyAmount);
-        if (date == null) {
-            return Optional.empty();
-        }
-
         transfer.setDueDate(date);
         transfer.setType(getTransferType());
 
