@@ -15,12 +15,12 @@ import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModul
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.UkOpenBankingBaseAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountOwnershipType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAis;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.module.JwtSignerModule;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.module.UkOpenBankingLocalKeySignerModuleForDecoupledMode;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.module.UkOpenBankingModule;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.UkOpenBankingAisConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.UkOpenBankingV31Ais;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.signer.iface.JwtSigner;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.configuration.UkOpenBankingPisConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
@@ -33,9 +33,7 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponen
 @AgentPisCapability(capabilities = PIS_UK_FASTER_PAYMENT, markets = "GB")
 public final class BarclaysV31Agent extends UkOpenBankingBaseAgent {
 
-    private static final se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking
-                    .ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig
-            aisConfig;
+    private static final UkOpenBankingAisConfig aisConfig;
 
     static {
         aisConfig =
@@ -44,9 +42,7 @@ public final class BarclaysV31Agent extends UkOpenBankingBaseAgent {
                         .withOrganisationId(BarclaysConstants.ORGANISATION_ID)
                         .withApiBaseURL(BarclaysConstants.AIS_API_URL)
                         .withWellKnownURL(BarclaysConstants.PERSONAL_WELL_KNOWN_URL)
-                        .withPartyEndpoints(
-                                UkOpenBankingConstants.PartyEndpoint
-                                        .IDENTITY_DATA_ENDPOINT_ACCOUNT_ID_PARTIES)
+                        .withPartyEndpoints(UkOpenBankingConstants.PartyEndpoint.ACCOUNT_ID_PARTIES)
                         .build();
     }
 
@@ -64,8 +60,6 @@ public final class BarclaysV31Agent extends UkOpenBankingBaseAgent {
 
     @Override
     protected UkOpenBankingAis makeAis() {
-        UkOpenBankingV31Ais ukOpenBankingV31Ais =
-                new UkOpenBankingV31Ais(aisConfig, persistentStorage, localDateTimeSource);
-        return new BarclaysV31Ais(ukOpenBankingV31Ais, aisConfig);
+        return new BarclaysV31Ais(aisConfig, persistentStorage, localDateTimeSource, apiClient);
     }
 }

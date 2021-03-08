@@ -36,9 +36,9 @@ public class TideBusinessAgent extends UkOpenBankingBaseAgent {
                         .withWellKnownURL(TideConstants.WELL_KNOWN_URL)
                         .withApiBaseURL(TideConstants.AIS_API_URL)
                         .withPartyEndpoints(
-                                PartyEndpoint.IDENTITY_DATA_ENDPOINT_ACCOUNT_ID_PARTY,
-                                PartyEndpoint.IDENTITY_DATA_ENDPOINT_PARTY,
-                                PartyEndpoint.IDENTITY_DATA_ENDPOINT_ACCOUNT_ID_PARTIES)
+                                PartyEndpoint.ACCOUNT_ID_PARTY,
+                                PartyEndpoint.PARTY,
+                                PartyEndpoint.ACCOUNT_ID_PARTIES)
                         .build();
     }
 

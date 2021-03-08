@@ -15,7 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountBalanceEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountIdentifierEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.IdentityDataV31Entity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.PartyV31Entity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.AccountMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.identifier.DefaultIdentifierMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.transactionalaccounts.TransactionalAccountBalanceMapper;
@@ -41,7 +41,7 @@ public class RevolutTransactionalAccountMapper implements AccountMapper<Transact
     public Optional<TransactionalAccount> map(
             AccountEntity account,
             Collection<AccountBalanceEntity> balances,
-            Collection<IdentityDataV31Entity> parties) {
+            Collection<PartyV31Entity> parties) {
         List<AccountIdentifierEntity> accountIdentifiers =
                 account.getIdentifiers().stream().distinct().collect(Collectors.toList());
 
@@ -68,7 +68,7 @@ public class RevolutTransactionalAccountMapper implements AccountMapper<Transact
     private Optional<TransactionalAccount> buildTransactionalAccount(
             AccountEntity account,
             Collection<AccountBalanceEntity> balances,
-            Collection<IdentityDataV31Entity> parties,
+            Collection<PartyV31Entity> parties,
             List<AccountIdentifierEntity> accountIdentifiers,
             AccountIdentifierEntity primaryIdentifier,
             String accountNumber,
@@ -113,9 +113,9 @@ public class RevolutTransactionalAccountMapper implements AccountMapper<Transact
     }
 
     private Collection<String> collectHolders(
-            AccountIdentifierEntity primaryIdentifier, Collection<IdentityDataV31Entity> parties) {
+            AccountIdentifierEntity primaryIdentifier, Collection<PartyV31Entity> parties) {
         return Stream.ofAll(parties)
-                .map(IdentityDataV31Entity::getName)
+                .map(PartyV31Entity::getName)
                 .append(primaryIdentifier.getOwnerName())
                 .filter(Objects::nonNull)
                 .distinct()

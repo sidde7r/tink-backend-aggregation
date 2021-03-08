@@ -59,7 +59,7 @@ public final class HsbcV31Agent extends UkOpenBankingBaseAgent {
                         .withOrganisationId(HsbcConstants.ORGANISATION_ID)
                         .withApiBaseURL(HsbcConstants.PERSONAL_AIS_API_URL)
                         .withWellKnownURL(HsbcConstants.PERSONAL_WELL_KNOWN_URL)
-                        .withPartyEndpoints(PartyEndpoint.IDENTITY_DATA_ENDPOINT_ACCOUNT_ID_PARTY)
+                        .withPartyEndpoints(PartyEndpoint.ACCOUNT_ID_PARTY)
                         .build();
 
         pisConfig =

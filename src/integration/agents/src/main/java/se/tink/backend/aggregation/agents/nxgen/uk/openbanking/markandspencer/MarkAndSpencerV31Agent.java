@@ -40,7 +40,7 @@ public final class MarkAndSpencerV31Agent extends UkOpenBankingBaseAgent {
                         .withOrganisationId("0015800000jeukaAAA")
                         .withApiBaseURL(MarksAndSpencerConstants.AIS_API_URL)
                         .withWellKnownURL(MarksAndSpencerConstants.WELL_KNOWN_URL)
-                        .withPartyEndpoints(PartyEndpoint.IDENTITY_DATA_ENDPOINT_ACCOUNT_ID_PARTY)
+                        .withPartyEndpoints(PartyEndpoint.ACCOUNT_ID_PARTY)
                         .build();
     }
 

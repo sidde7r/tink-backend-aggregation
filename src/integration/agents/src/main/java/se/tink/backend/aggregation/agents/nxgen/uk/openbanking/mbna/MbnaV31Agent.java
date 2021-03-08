@@ -38,9 +38,9 @@ public class MbnaV31Agent extends UkOpenBankingBaseAgent {
                         .withApiBaseURL(V31.AIS_API_URL)
                         .withWellKnownURL(V31.WELL_KNOWN_URL)
                         .withPartyEndpoints(
-                                PartyEndpoint.IDENTITY_DATA_ENDPOINT_PARTY,
-                                PartyEndpoint.IDENTITY_DATA_ENDPOINT_ACCOUNT_ID_PARTY,
-                                PartyEndpoint.IDENTITY_DATA_ENDPOINT_ACCOUNT_ID_PARTIES)
+                                PartyEndpoint.PARTY,
+                                PartyEndpoint.ACCOUNT_ID_PARTY,
+                                PartyEndpoint.ACCOUNT_ID_PARTIES)
                         .build();
     }
 

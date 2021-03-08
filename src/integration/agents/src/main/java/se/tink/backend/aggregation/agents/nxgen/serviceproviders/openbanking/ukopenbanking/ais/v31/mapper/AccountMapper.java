@@ -5,7 +5,7 @@ import java.util.Optional;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountBalanceEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.IdentityDataV31Entity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.PartyV31Entity;
 
 public interface AccountMapper<T> {
 
@@ -14,5 +14,5 @@ public interface AccountMapper<T> {
     Optional<T> map(
             AccountEntity account,
             Collection<AccountBalanceEntity> balances,
-            Collection<IdentityDataV31Entity> parties);
+            Collection<PartyV31Entity> parties);
 }

@@ -5,12 +5,11 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 public interface UkOpenBankingConstants {
 
     enum PartyEndpoint {
-        IDENTITY_DATA_ENDPOINT_ACCOUNT_ID_PARTIES(
+        ACCOUNT_ID_PARTIES(
                 "/accounts/%s/parties", OpenIdAuthenticatorConstants.ConsentPermission.READ_PARTY),
-        IDENTITY_DATA_ENDPOINT_ACCOUNT_ID_PARTY(
+        ACCOUNT_ID_PARTY(
                 "/accounts/%s/party", OpenIdAuthenticatorConstants.ConsentPermission.READ_PARTY),
-        IDENTITY_DATA_ENDPOINT_PARTY(
-                "/party", OpenIdAuthenticatorConstants.ConsentPermission.READ_PARTY_PSU);
+        PARTY("/party", OpenIdAuthenticatorConstants.ConsentPermission.READ_PARTY_PSU);
 
         private final String value;
 

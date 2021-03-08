@@ -27,6 +27,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAis;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.tls.TlsConfigurationSetter;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.PartyMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.FinancialOrganisationIdFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.InvalidConsentErrorFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdAuthenticationController;
@@ -115,9 +116,9 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
     protected final RandomValueGenerator randomValueGenerator;
     protected final LocalDateTimeSource localDateTimeSource;
 
-    private FetcherInstrumentationRegistry fetcherInstrumentation;
+    private final FetcherInstrumentationRegistry fetcherInstrumentation;
 
-    private UkOpenBankingPisRequestFilter pisRequestFilter;
+    private final UkOpenBankingPisRequestFilter pisRequestFilter;
 
     public UkOpenBankingBaseAgent(
             AgentComponentProvider componentProvider,
@@ -322,8 +323,9 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
     @Override
     public FetchIdentityDataResponse fetchIdentityData() {
         return getAisSupport()
-                .makeIdentityDataFetcher(apiClient)
-                .fetchIdentityData()
+                .makePartyFetcher(apiClient)
+                .fetchParty()
+                .map(PartyMapper::toIdentityData)
                 .map(FetchIdentityDataResponse::new)
                 .orElse(
                         new FetchIdentityDataResponse(

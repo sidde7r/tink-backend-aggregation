@@ -23,7 +23,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountBalanceEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountOwnershipType;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.IdentityDataV31Entity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.PartyV31Entity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.fixtures.BalanceFixtures;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.fixtures.CreditCardFixtures;
@@ -38,7 +38,7 @@ public class AccountV31FetcherTest {
 
     private AccountV31Fetcher accountFetcher;
     private AccountMapper accountMapper;
-    private PartyDataV31Fetcher partyFetcher;
+    private PartyV31Fetcher partyFetcher;
     private UkOpenBankingApiClient apiClient;
     private FetcherInstrumentationRegistry instrumentation;
 
@@ -52,7 +52,7 @@ public class AccountV31FetcherTest {
                 .thenReturn(Optional.of(mockedAccount));
         when(accountMapper.supportsAccountType(any())).thenReturn(true);
 
-        partyFetcher = mock(PartyDataV31Fetcher.class);
+        partyFetcher = mock(PartyV31Fetcher.class);
         apiClient = mock(UkOpenBankingApiClient.class);
         instrumentation = new FetcherInstrumentationRegistry();
 
@@ -177,7 +177,7 @@ public class AccountV31FetcherTest {
         // given
         AccountEntity account = TransactionalAccountFixtures.savingsAccount();
         AccountBalanceEntity balance = BalanceFixtures.balanceCredit();
-        List<IdentityDataV31Entity> parties = PartyFixtures.parties();
+        List<PartyV31Entity> parties = PartyFixtures.parties();
 
         // when
         when(apiClient.fetchV31Accounts()).thenReturn(ImmutableList.of(account));

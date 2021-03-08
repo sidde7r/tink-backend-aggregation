@@ -58,7 +58,7 @@ public final class NationwideV31Agent extends UkOpenBankingBaseAgent {
                         .withOrganisationId(NationwideConstants.ORGANISATION_ID)
                         .withApiBaseURL(NationwideConstants.AIS_API_URL)
                         .withWellKnownURL(NationwideConstants.WELL_KNOWN_URL)
-                        .withPartyEndpoints(PartyEndpoint.IDENTITY_DATA_ENDPOINT_ACCOUNT_ID_PARTIES)
+                        .withPartyEndpoints(PartyEndpoint.ACCOUNT_ID_PARTIES)
                         .build();
     }
 

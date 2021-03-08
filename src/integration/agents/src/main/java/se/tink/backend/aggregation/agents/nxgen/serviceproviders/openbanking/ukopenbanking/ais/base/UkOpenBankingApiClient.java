@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.authenticator.rpc.AccountPermissionResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountBalanceEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.IdentityDataV31Entity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.PartyV31Entity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.TrustedBeneficiaryEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.fetcher.rpc.AccountBalanceV31Response;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.fetcher.rpc.AccountsV31Response;
@@ -79,24 +79,18 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
                 .orElse(Collections.emptyList());
     }
 
-    public Optional<IdentityDataV31Entity> fetchV31Party() {
+    public Optional<PartyV31Entity> fetchV31Party() {
         return executeV31FetchPartyRequest(
-                createAisRequest(
-                        aisConfig
-                                .getApiBaseURL()
-                                .concat(PartyEndpoint.IDENTITY_DATA_ENDPOINT_PARTY.getPath())));
+                createAisRequest(aisConfig.getApiBaseURL().concat(PartyEndpoint.PARTY.getPath())));
     }
 
-    public Optional<IdentityDataV31Entity> fetchV31Party(String accountId) {
-        String path =
-                String.format(
-                        PartyEndpoint.IDENTITY_DATA_ENDPOINT_ACCOUNT_ID_PARTY.getPath(), accountId);
+    public Optional<PartyV31Entity> fetchV31Party(String accountId) {
+        String path = String.format(PartyEndpoint.ACCOUNT_ID_PARTY.getPath(), accountId);
         return executeV31FetchPartyRequest(
                 createAisRequest(aisConfig.getApiBaseURL().concat(path)));
     }
 
-    private Optional<IdentityDataV31Entity> executeV31FetchPartyRequest(
-            RequestBuilder requestBuilder) {
+    private Optional<PartyV31Entity> executeV31FetchPartyRequest(RequestBuilder requestBuilder) {
         try {
             return requestBuilder.get(PartyV31Response.class).getData();
         } catch (HttpResponseException ex) {
@@ -113,12 +107,9 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
         }
     }
 
-    public List<IdentityDataV31Entity> fetchV31Parties(String accountId) {
+    public List<PartyV31Entity> fetchV31Parties(String accountId) {
         try {
-            String path =
-                    String.format(
-                            PartyEndpoint.IDENTITY_DATA_ENDPOINT_ACCOUNT_ID_PARTIES.getPath(),
-                            accountId);
+            String path = String.format(PartyEndpoint.ACCOUNT_ID_PARTIES.getPath(), accountId);
             return createAisRequest(aisConfig.getApiBaseURL().concat(path))
                     .get(PartiesV31Response.class)
                     .getData()

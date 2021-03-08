@@ -25,5 +25,5 @@ public interface UkOpenBankingAis {
     TransactionPaginator<CreditCardAccount> makeCreditCardTransactionPaginatorController(
             UkOpenBankingApiClient apiClient);
 
-    IdentityDataFetcher makeIdentityDataFetcher(UkOpenBankingApiClient apiClient);
+    PartyFetcher makePartyFetcher(UkOpenBankingApiClient apiClient);
 }

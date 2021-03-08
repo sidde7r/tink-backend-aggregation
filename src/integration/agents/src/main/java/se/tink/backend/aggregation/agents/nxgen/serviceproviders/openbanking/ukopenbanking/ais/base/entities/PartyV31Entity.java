@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 @JsonNaming(PropertyNamingStrategy.UpperCamelCaseStrategy.class)
-public class IdentityDataV31Entity {
+public class PartyV31Entity {
     private String partyId;
 
     private String partyNumber;

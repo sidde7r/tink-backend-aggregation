@@ -34,9 +34,7 @@ public class VirginMoneyBusinessAgent extends UkOpenBankingBaseAgent {
                         .withOrganisationId(VirginMoneyConstants.ORGANISATION_ID)
                         .withWellKnownURL(VirginMoneyConstants.WELL_KNOWN_URL)
                         .withApiBaseURL(VirginMoneyConstants.AIS_API_URL)
-                        .withPartyEndpoints(
-                                PartyEndpoint.IDENTITY_DATA_ENDPOINT_ACCOUNT_ID_PARTY,
-                                PartyEndpoint.IDENTITY_DATA_ENDPOINT_PARTY)
+                        .withPartyEndpoints(PartyEndpoint.ACCOUNT_ID_PARTY, PartyEndpoint.PARTY)
                         .build();
     }
 

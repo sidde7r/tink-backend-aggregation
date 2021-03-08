@@ -4,7 +4,6 @@ import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -16,7 +15,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountBalanceEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountOwnershipType;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.IdentityDataV31Entity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.PartyV31Entity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.PartyFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.AccountMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.AccountTypeMapper;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
@@ -28,7 +28,7 @@ import se.tink.backend.aggregation.nxgen.instrumentation.FetcherInstrumentationR
 public final class AccountV31Fetcher<T extends Account> implements AccountFetcher<T> {
 
     private final UkOpenBankingApiClient apiClient;
-    private final PartyDataFetcher accountPartyFetcher;
+    private final PartyFetcher partyFetcher;
     private final AccountTypeMapper accountTypeMapper;
     private final AccountMapper<T> accountMapper;
     private final FetcherInstrumentationRegistry instrumentation;
@@ -91,12 +91,9 @@ public final class AccountV31Fetcher<T extends Account> implements AccountFetche
         }
     }
 
-    private Single<List<IdentityDataV31Entity>> fetchParties(AccountEntity account) {
-        return Single.just(Collections.emptyList());
-        // Todo temporarily disabling identity fetching - since it triggers SCA, it breaks BG
-        // refresh. It will be reenabled after auth rework.
-        //        return Single.fromCallable(() -> accountPartyFetcher.fetchAccountParties(account))
-        //                .subscribeOn(Schedulers.io());
+    private Single<List<PartyV31Entity>> fetchParties(AccountEntity account) {
+        return Single.fromCallable(() -> partyFetcher.fetchAccountParties(account))
+                .subscribeOn(Schedulers.io());
     }
 
     private Single<List<AccountBalanceEntity>> fetchBalance(AccountEntity account) {

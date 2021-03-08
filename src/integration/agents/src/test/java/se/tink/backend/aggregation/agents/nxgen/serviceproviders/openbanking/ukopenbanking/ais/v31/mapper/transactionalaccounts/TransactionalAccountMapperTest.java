@@ -18,7 +18,7 @@ import org.mockito.Mockito;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountIdentifierEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.IdentityDataV31Entity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.PartyV31Entity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.fixtures.IdentifierFixtures;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.fixtures.PartyFixtures;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.fixtures.TransactionalAccountFixtures;
@@ -161,7 +161,7 @@ public class TransactionalAccountMapperTest {
         // given
         AccountEntity account = TransactionalAccountFixtures.currentAccount();
         AccountIdentifierEntity primaryId = IdentifierFixtures.ibanIdentifier();
-        List<IdentityDataV31Entity> parties = PartyFixtures.parties();
+        List<PartyV31Entity> parties = PartyFixtures.parties();
 
         // when
         when(identifierMapper.getCreditCardIdentifier(anyCollection())).thenReturn(primaryId);
@@ -170,7 +170,7 @@ public class TransactionalAccountMapperTest {
 
         // then
         List<String> allPosibleHolders =
-                parties.stream().map(IdentityDataV31Entity::getName).collect(Collectors.toList());
+                parties.stream().map(PartyV31Entity::getName).collect(Collectors.toList());
         allPosibleHolders.add(primaryId.getOwnerName());
 
         assertThat(mappingResult.getHolderName().toString()).isIn(allPosibleHolders);

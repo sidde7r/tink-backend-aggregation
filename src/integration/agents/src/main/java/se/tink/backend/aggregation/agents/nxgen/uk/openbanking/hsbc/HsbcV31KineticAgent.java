@@ -36,8 +36,7 @@ public final class HsbcV31KineticAgent extends UkOpenBankingBaseAgent {
                         .withApiBaseURL(HsbcConstants.KINETIC_AIS_API_URL)
                         .withWellKnownURL(HsbcConstants.KINETIC_WELL_KNOWN_URL)
                         .withPartyEndpoints(
-                                PartyEndpoint.IDENTITY_DATA_ENDPOINT_ACCOUNT_ID_PARTY,
-                                PartyEndpoint.IDENTITY_DATA_ENDPOINT_ACCOUNT_ID_PARTIES)
+                                PartyEndpoint.ACCOUNT_ID_PARTY, PartyEndpoint.ACCOUNT_ID_PARTIES)
                         .build();
     }
 

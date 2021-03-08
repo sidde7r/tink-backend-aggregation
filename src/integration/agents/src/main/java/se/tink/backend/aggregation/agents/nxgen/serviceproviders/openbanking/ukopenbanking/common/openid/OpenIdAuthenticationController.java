@@ -22,6 +22,7 @@ import se.tink.backend.aggregation.agents.exceptions.entity.ErrorEntity;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.ScaExpirationValidator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdConstants.PersistentStorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.entities.ClientMode;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
@@ -308,9 +309,7 @@ public class OpenIdAuthenticationController
     }
 
     private void saveStrongAuthenticationTime() {
-        persistentStorage.put(
-                OpenIdConstants.PersistentStorageKeys.LAST_SCA_TIME,
-                LocalDateTime.now().toString());
+        persistentStorage.put(ScaExpirationValidator.LAST_SCA_TIME, LocalDateTime.now().toString());
     }
 
     private void saveAccessToken(OAuth2Token oAuth2Token) {

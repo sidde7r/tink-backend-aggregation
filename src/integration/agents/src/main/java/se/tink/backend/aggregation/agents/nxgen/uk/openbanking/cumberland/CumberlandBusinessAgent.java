@@ -34,7 +34,7 @@ public class CumberlandBusinessAgent extends UkOpenBankingBaseAgent {
                         .withOrganisationId(CumberlandConstants.ORGANISATION_ID)
                         .withWellKnownURL(CumberlandConstants.WELL_KNOWN_URL)
                         .withApiBaseURL(CumberlandConstants.AIS_API_URL)
-                        .withPartyEndpoints(PartyEndpoint.IDENTITY_DATA_ENDPOINT_PARTY)
+                        .withPartyEndpoints(PartyEndpoint.PARTY)
                         .build();
     }
 
