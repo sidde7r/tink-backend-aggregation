@@ -247,7 +247,7 @@ public class ConfirmedTransactionEntity extends AbstractExecutorTransactionEntit
         transfer.setDestination(destinationAccount.get());
 
         if (Strings.isNullOrEmpty(currencyCode)
-                || !Double.isFinite(Double.parseDouble(this.amount))) {
+                || !Double.isFinite(StringUtils.parseAmountEU(this.amount))) {
             return Optional.empty();
         }
 
