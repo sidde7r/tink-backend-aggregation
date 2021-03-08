@@ -12,6 +12,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaConstants.ErrorCode;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.rpc.LoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.rpc.LaCaixaErrorResponse;
@@ -72,6 +73,19 @@ public class LaCaixaApiClientTest {
     }
 
     @Test
+    public void shouldThrowBankServiceExceptionWhenTemporaryError() {
+        // given
+        setupHttpClientMockForAuthenticationExceptionByErrorCode("1574");
+        // then
+        Throwable thrown = catchThrowable(() -> caixaApiClient.login(loginRequest));
+
+        // then
+        assertThat(thrown)
+                .isExactlyInstanceOf(BankServiceException.class)
+                .hasMessage("Cause: BankServiceError.NO_BANK_SERVICE");
+    }
+
+    @Test
     public void shouldThrowLoginExceptionForUnknownErrorCode() {
         // given
         setupHttpClientMockForAuthenticationExceptionByErrorCode(UNKNOWN_ERROR_CODE);
@@ -82,6 +96,22 @@ public class LaCaixaApiClientTest {
         assertThat(thrown)
                 .isExactlyInstanceOf(LoginException.class)
                 .hasMessage("Cause: LoginError.DEFAULT_MESSAGE");
+    }
+
+    @Test
+    public void shouldThrowBankServiceExceptionForInternalServerError() {
+        // given
+        final HttpResponse httpResponse = mock(HttpResponse.class);
+        when(httpResponse.getStatus()).thenReturn(500);
+        when(httpClientMock.request(new URL(SUBMIT_LOGIN)))
+                .thenThrow(new HttpResponseException(null, httpResponse));
+        // then
+        Throwable thrown = catchThrowable(() -> caixaApiClient.login(loginRequest));
+
+        // then
+        assertThat(thrown)
+                .isExactlyInstanceOf(BankServiceException.class)
+                .hasMessage("Cause: BankServiceError.BANK_SIDE_FAILURE");
     }
 
     private void setupHttpClientMockForAuthenticationExceptionByErrorCode(String errorCode) {
