@@ -78,7 +78,7 @@ public class UpdateCredentialsStatusRequestTest {
         // given
         updateRequest.setDetailedError(
                 ConnectivityError.newBuilder()
-                        .setType(ConnectivityErrorType.ERROR_UNKNOWN)
+                        .setType(ConnectivityErrorType.UNKNOWN_ERROR)
                         .build());
 
         // when
@@ -88,6 +88,6 @@ public class UpdateCredentialsStatusRequestTest {
 
         // then
         Assert.assertEquals(
-                ConnectivityErrorType.ERROR_UNKNOWN, result.getDetailedError().getType());
+                ConnectivityErrorType.UNKNOWN_ERROR, result.getDetailedError().getType());
     }
 }

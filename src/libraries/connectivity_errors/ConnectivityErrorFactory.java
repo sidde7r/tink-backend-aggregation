@@ -40,7 +40,7 @@ public class ConnectivityErrorFactory {
     public static ConnectivityError from(Exception exception) {
 
         // This should probably be ConnectivityErrorType.TINK_INTERNAL_SERVER_ERROR
-        ConnectivityErrorType type = ConnectivityErrorType.ERROR_UNKNOWN;
+        ConnectivityErrorType type = ConnectivityErrorType.UNKNOWN_ERROR;
 
         /* Inherited from AgentException */
         if (exception instanceof BankIdException) {
@@ -97,7 +97,7 @@ public class ConnectivityErrorFactory {
             type = ConnectivityErrorType.ERROR_TINK_INTERNAL_ERROR;
         }
 
-        if (type == ConnectivityErrorType.ERROR_UNKNOWN) {
+        if (type == ConnectivityErrorType.UNKNOWN_ERROR) {
             log.warn(
                     "[Login Result debugging]: Exception ({}) did not map to any Connectivity Error",
                     exception.getClass().getSimpleName(),
