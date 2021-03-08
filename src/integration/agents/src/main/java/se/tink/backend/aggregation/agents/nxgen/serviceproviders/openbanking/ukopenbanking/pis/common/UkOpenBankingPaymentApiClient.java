@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common;
 
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 
@@ -15,5 +16,6 @@ public interface UkOpenBankingPaymentApiClient {
             PaymentRequest paymentRequest,
             String consentId,
             String endToEndIdentification,
-            String instructionIdentification);
+            String instructionIdentification)
+            throws PaymentException;
 }

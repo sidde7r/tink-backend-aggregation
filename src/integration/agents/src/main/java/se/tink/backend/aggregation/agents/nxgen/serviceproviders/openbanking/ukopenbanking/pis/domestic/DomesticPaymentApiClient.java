@@ -6,6 +6,8 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbank
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import se.tink.backend.aggregation.agents.exceptions.payment.InsufficientFundsException;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.UkOpenBankingPaymentApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.UkOpenBankingRequestBuilder;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.domestic.converter.DomesticPaymentConverter;
@@ -82,14 +84,17 @@ public class DomesticPaymentApiClient implements UkOpenBankingPaymentApiClient {
             PaymentRequest paymentRequest,
             String consentId,
             String endToEndIdentification,
-            String instructionIdentification) {
+            String instructionIdentification)
+            throws PaymentException {
         final DomesticPaymentRequest request =
                 createDomesticPaymentRequest(
                         paymentRequest,
                         consentId,
                         endToEndIdentification,
                         instructionIdentification);
-        confirmFundsOrWarn(consentId);
+        if (!areFundsAvailable(consentId)) {
+            throw new InsufficientFundsException("Funds Availablity are not confirmed by the bank");
+        }
         final DomesticPaymentResponse response =
                 requestBuilder
                         .createPisRequestWithJwsHeader(createUrl(PAYMENT))
@@ -98,7 +103,7 @@ public class DomesticPaymentApiClient implements UkOpenBankingPaymentApiClient {
         return domesticPaymentConverter.convertResponseDtoToPaymentResponse(response);
     }
 
-    private void confirmFundsOrWarn(String consentId) {
+    private boolean areFundsAvailable(String consentId) {
         DomesticPaymentConsentFundsConfirmationResponse response =
                 requestBuilder
                         .createPisRequest(
@@ -117,6 +122,7 @@ public class DomesticPaymentApiClient implements UkOpenBankingPaymentApiClient {
                                     return false;
                                 });
         log.info("[UKOB] FundsConfirmation Result {}", areFundsAvailable);
+        return areFundsAvailable;
     }
 
     private void validateDomesticPaymentConsentResponse(DomesticPaymentConsentResponse response) {
