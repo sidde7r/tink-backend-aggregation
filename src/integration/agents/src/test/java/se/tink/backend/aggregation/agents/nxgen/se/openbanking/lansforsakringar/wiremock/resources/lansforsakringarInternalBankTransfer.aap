@@ -52,6 +52,34 @@ Content-Type: application/json;charset=utf-8
     "token_type": "Bearer"
 }
 
+REQUEST 2.5
+GET https://api.bank.lansforsakringar.se:443/openbanking/pis/v3/accountnumbers
+Accept: application/json
+Content-Type: application/json
+PSU-IP-Address: 127.0.0.1
+PSU-User-Agent: Desktop Mode
+TPP-NOK-Redirect-URI: https://127.0.0.1:7357/api/v1/thirdparty/callback
+
+RESPONSE 2.5
+200
+Date: Wed, 15 Jul 2020 12:51:09 GMT
+Date: Wed, 15 Jul 2020 12:51:09 GMT
+Content-Type: application/json;charset=utf-8
+Cache-Control: no-cache, no-store, private, proxy-revalidate
+
+{
+    "accounts": [
+        {
+            "bban": "90251234567",
+            "allowedTransactionTypes": [
+                "DOMESTIC_CREDIT_TRANSFERS",
+                "DOMESTIC_GIROS",
+                "CROSS_BORDER_CREDIT_TRANSFERS"
+            ]
+        }
+    ]
+}
+
 REQUEST 3
 POST https://api.bank.lansforsakringar.se:443/openbanking/pis/v3/payments/domestic-credit-transfers
 Accept: application/json
