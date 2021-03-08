@@ -20,6 +20,7 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerOperation.AgentWorkerOperationState;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
 import se.tink.connectivity.errors.ConnectivityError;
+import se.tink.connectivity.errors.ConnectivityErrorDetails;
 import se.tink.connectivity.errors.ConnectivityErrorType;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.metrics.core.MetricBuckets;
@@ -119,8 +120,10 @@ public final class AgentWorkerOperationTest {
         ConnectivityError connectivityError = errorCaptor.getValue();
 
         assertThat(actualStatus).isEqualTo(CredentialsStatus.TEMPORARY_ERROR);
-        assertThat(connectivityError.getType())
-                .isEqualTo(ConnectivityErrorType.ERROR_TINK_INTERNAL_ERROR);
+        assertThat(connectivityError.getType()).isEqualTo(ConnectivityErrorType.TINK_SIDE_ERROR);
+        assertThat(connectivityError.getDetails().getReason())
+                .isEqualTo(
+                        ConnectivityErrorDetails.TinkSideErrors.TINK_INTERNAL_SERVER_ERROR.name());
     }
 
     @Test

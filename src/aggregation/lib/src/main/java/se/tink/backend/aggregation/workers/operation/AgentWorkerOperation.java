@@ -16,6 +16,7 @@ import se.tink.backend.aggregation.workers.metrics.TimerCacheLoader;
 import se.tink.backend.aggregation.workers.operation.type.AgentWorkerOperationMetricType;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
 import se.tink.connectivity.errors.ConnectivityError;
+import se.tink.connectivity.errors.ConnectivityErrorDetails;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.metrics.core.MetricId;
 import se.tink.libraries.metrics.registry.MetricRegistry;
@@ -160,7 +161,9 @@ public class AgentWorkerOperation implements Runnable {
 
                 commandResult = AgentWorkerCommandResult.ABORT;
 
-                ConnectivityError error = ConnectivityErrorFactory.tinkInternalError();
+                ConnectivityError error =
+                        ConnectivityErrorFactory.tinkSideError(
+                                ConnectivityErrorDetails.TinkSideErrors.TINK_INTERNAL_SERVER_ERROR);
                 statusUpdater.updateStatusWithError(CredentialsStatus.TEMPORARY_ERROR, null, error);
 
                 break;
@@ -188,7 +191,9 @@ public class AgentWorkerOperation implements Runnable {
                     String.format(
                             "Rejected command execution for operation '%s'", operationMetricName));
             // At the time of writing this comment, it can only occur if we fail to acquire lock
-            ConnectivityError error = ConnectivityErrorFactory.tinkInternalError();
+            ConnectivityError error =
+                    ConnectivityErrorFactory.tinkSideError(
+                            ConnectivityErrorDetails.TinkSideErrors.TINK_INTERNAL_SERVER_ERROR);
             statusUpdater.updateStatusWithError(CredentialsStatus.UNCHANGED, null, error);
         }
 
