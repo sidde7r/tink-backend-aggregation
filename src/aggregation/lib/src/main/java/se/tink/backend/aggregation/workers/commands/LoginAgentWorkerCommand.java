@@ -285,7 +285,7 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
         } catch (BankServiceException e) {
             logger.info("Bank service exception: {}", e.getMessage(), e);
             action.unavailable();
-            ConnectivityError error = ConnectivityErrorFactory.from(e);
+            ConnectivityError error = ConnectivityErrorFactory.fromLegacy(e);
             statusUpdater.updateStatusWithError(CredentialsStatus.TEMPORARY_ERROR, null, error);
             // couldn't determine isLoggedIn or not, return ABORT
             emitLoginResultEvent(

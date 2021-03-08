@@ -199,7 +199,7 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
         context.updateStatusWithError(
                 CredentialsStatus.TEMPORARY_ERROR,
                 context.getCatalog().getString(e.getUserMessage()),
-                ConnectivityErrorFactory.from(e));
+                ConnectivityErrorFactory.fromLegacy(e));
         action.unavailable();
         AdditionalInfo errorInfo = ADDITIONAL_INFO_ERROR_MAPPER.get(e.getError());
         RefreshEvent refreshEvent = getRefreshEvent(errorInfo);
@@ -212,7 +212,7 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
         context.updateStatusWithError(
                 CredentialsStatus.TEMPORARY_ERROR,
                 context.getCatalog().getString(e.getUserMessage()),
-                ConnectivityErrorFactory.from(e));
+                ConnectivityErrorFactory.fromLegacy(e));
         action.unavailable();
         AdditionalInfo errorInfo = ADDITIONAL_INFO_SESSION_ERROR_MAPPER.get(e.getError());
         RefreshEvent refreshEvent = getRefreshEvent(errorInfo);

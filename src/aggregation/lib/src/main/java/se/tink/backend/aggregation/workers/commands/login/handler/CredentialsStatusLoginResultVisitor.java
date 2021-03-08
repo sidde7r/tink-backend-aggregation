@@ -103,7 +103,7 @@ public class CredentialsStatusLoginResultVisitor implements LoginResultVisitor {
     private void updateStatus(
             final CredentialsStatus credentialsStatus, final Exception exception) {
 
-        ConnectivityError error = ConnectivityErrorFactory.from(exception);
+        ConnectivityError error = ConnectivityErrorFactory.fromLegacy(exception);
         String statusPayload = null;
         String exceptionError = "N/A";
 
@@ -118,13 +118,15 @@ public class CredentialsStatusLoginResultVisitor implements LoginResultVisitor {
                         EXCEPTION_TO_ERROR_MAPPING
                                 .label("exception", exception.getClass().getSimpleName())
                                 .label("exception_error", exceptionError)
-                                .label("error", error.getType().toString()))
+                                .label("type", error.getType().toString())
+                                .label("reason", error.getDetails().getReason()))
                 .inc();
         LOGGER.info(
-                "[Login Result debugging]: Mapping exception {} (with error {}) to {}",
+                "[Login Result debugging]: Mapping exception {}: {} to {}: {}",
                 exception.getClass().getSimpleName(),
                 exceptionError,
                 error.getType().toString(),
+                error.getDetails().getReason(),
                 exception);
 
         statusUpdater.updateStatusWithError(credentialsStatus, statusPayload, error);

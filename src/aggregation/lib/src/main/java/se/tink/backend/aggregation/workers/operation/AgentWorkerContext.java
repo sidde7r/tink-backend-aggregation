@@ -673,7 +673,8 @@ public class AgentWorkerContext extends AgentContext implements Managed {
                 .meter(
                         RESULTING_ERRORS
                                 .label(AGENT, request.getProvider().getClassName())
-                                .label("error", error.getType().name())
+                                .label("type", error.getType().name())
+                                .label("reason", error.getDetails().getReason())
                                 .label("status", status.name()))
                 .inc();
 

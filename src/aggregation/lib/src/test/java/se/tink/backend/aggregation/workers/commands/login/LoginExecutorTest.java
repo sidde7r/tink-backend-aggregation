@@ -37,6 +37,7 @@ import se.tink.backend.aggregation.workers.metrics.MetricActionIface;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
 import se.tink.connectivity.errors.ConnectivityError;
+import se.tink.connectivity.errors.ConnectivityErrorDetails;
 import se.tink.connectivity.errors.ConnectivityErrorType;
 import se.tink.eventproducerservice.events.grpc.AgentLoginCompletedEventProto;
 import se.tink.libraries.credentials.service.CredentialsRequest;
@@ -420,7 +421,10 @@ public class LoginExecutorTest {
                 .updateStatusWithError(
                         eq(CredentialsStatus.TEMPORARY_ERROR), eq(null), captor.capture());
         Assertions.assertThat(captor.getValue().getType())
-                .isEqualTo(ConnectivityErrorType.ERROR_TINK_INTERNAL_ERROR);
+                .isEqualTo(ConnectivityErrorType.TINK_SIDE_ERROR);
+        Assertions.assertThat(captor.getValue().getDetails().getReason())
+                .isEqualTo(
+                        ConnectivityErrorDetails.TinkSideErrors.TINK_INTERNAL_SERVER_ERROR.name());
     }
 
     // </editor-fold>
