@@ -118,8 +118,6 @@ public class AggregationServiceResource implements AggregationService {
 
         createCredentialsOperation.run();
 
-        // TODO: Add commands appropriate for doing an inline refresh here in next iteration.
-
         return createCredentialsOperation.getRequest().getCredentials();
     }
 
@@ -275,8 +273,6 @@ public class AggregationServiceResource implements AggregationService {
                 agentWorkerCommandFactory.createOperationUpdate(request, clientInfo);
 
         updateCredentialsOperation.run();
-
-        // TODO: Add commands appropriate for doing an inline refresh here in next iteration.
 
         return updateCredentialsOperation.getRequest().getCredentials();
     }
