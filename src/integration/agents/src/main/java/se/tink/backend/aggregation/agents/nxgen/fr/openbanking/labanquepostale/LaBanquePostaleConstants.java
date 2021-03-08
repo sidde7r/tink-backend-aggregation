@@ -60,6 +60,7 @@ public final class LaBanquePostaleConstants {
         public static final String PAYMENT_NOT_FOUND = "Payment can not be found";
         public static final String MISSING_CONFIGURATION = "Bnp Paribas configuration missing";
         public static final String MISSING_TOKEN = "Cannot find token";
+        public static final String TIME_OUT = "TIME_OUT";
     }
 
     public static class QueryValues {
