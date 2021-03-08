@@ -60,9 +60,10 @@ public class BancaSellaAgentPaymentTest {
         Payment.Builder recurringPayment = createRealDomesticPayment();
         recurringPayment.withPaymentServiceType(PaymentServiceType.PERIODIC);
         recurringPayment.withFrequency(Frequency.MONTHLY);
-        recurringPayment.withStartDate(LocalDate.now().plusDays(1));
+        recurringPayment.withStartDate(LocalDate.now().plusDays(2));
         recurringPayment.withEndDate(LocalDate.now().plusMonths(3));
-        recurringPayment.withExecutionRule(ExecutionRule.PRECEEDING);
+        recurringPayment.withExecutionRule(ExecutionRule.FOLLOWING);
+        recurringPayment.withDayOfExecution(10);
 
         return recurringPayment;
     }
@@ -74,6 +75,7 @@ public class BancaSellaAgentPaymentTest {
         AccountIdentifier creditorAccountIdentifier =
                 new IbanIdentifier(
                         creditorDebtorManager.get(BancaSellaAgentPaymentTest.Arg.CREDITOR_ACCOUNT));
+        // while running test send PSU actual name else bank rejects payment.
         Creditor creditor = new Creditor(creditorAccountIdentifier, "Creditor Name");
 
         AccountIdentifier debtorAccountIdentifier =

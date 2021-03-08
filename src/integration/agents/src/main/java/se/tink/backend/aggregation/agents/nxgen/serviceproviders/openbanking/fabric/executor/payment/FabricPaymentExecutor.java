@@ -131,7 +131,8 @@ public class FabricPaymentExecutor implements PaymentExecutor, FetchablePaymentE
                                 .creditorName(paymentRequest.getPayment().getCreditor().getName())
                                 .remittanceInformationUnstructured(remittanceInformation.getValue())
                                 .frequency(payment.getFrequency().toString())
-                                .startDate(payment.getStartDate().toString());
+                                .startDate(payment.getStartDate().toString())
+                                .dayOfExecution(String.valueOf(payment.getDayOfExecution()));
         // optional attributes
         if (Optional.ofNullable(payment.getEndDate()).isPresent()) {
             createRecurringPaymentRequest.endDate(payment.getEndDate().toString());

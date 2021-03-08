@@ -16,4 +16,5 @@ public class CreateRecurringPaymentRequest extends CreatePaymentRequest {
     String endDate;
     String frequency;
     String executionRule;
+    String dayOfExecution;
 }
