@@ -2,7 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.payme
 
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankApiClient;
+import lombok.extern.slf4j.Slf4j;
+import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.client.FinecoBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.payment.enums.FinecoBankPaymentProduct;
 import se.tink.backend.aggregation.nxgen.controllers.payment.FetchablePaymentExecutor;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentListRequest;
@@ -11,6 +12,7 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 
 @RequiredArgsConstructor
+@Slf4j
 public class FinecoPaymentFetcher implements FetchablePaymentExecutor {
 
     private final FinecoBankApiClient apiClient;

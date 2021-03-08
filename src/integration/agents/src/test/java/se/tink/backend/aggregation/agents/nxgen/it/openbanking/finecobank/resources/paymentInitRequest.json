@@ -1,0 +1,11 @@
+{
+    "instructedAmount": {
+        "amount": 1.0,
+        "currency": "EUR"
+    },
+    "creditorAccount": {
+        "iban": "IT95N0300203280155761664887"
+    },
+    "creditorName": "Creditor Name",
+    "remittanceInformationUnstructured": "fineco"
+}
