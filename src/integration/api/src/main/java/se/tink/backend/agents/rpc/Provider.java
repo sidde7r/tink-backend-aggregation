@@ -9,11 +9,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.CaseFormat;
 import com.google.common.collect.Lists;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.agents.rpc.FinancialService.FinancialServiceSegment;
 import se.tink.backend.aggregation.client.provider_configuration.rpc.ProviderConfiguration;
 import se.tink.libraries.provider.ProviderDto.ProviderTypes;
 import se.tink.libraries.serialization.utils.SerializationUtils;
@@ -218,6 +221,23 @@ public class Provider implements Cloneable {
     @JsonIgnore
     public boolean isOpenBanking() {
         return accessType == AccessType.OPEN_BANKING;
+    }
+
+    @JsonIgnore
+    public boolean hasSupportForBusinessSegment() {
+        return hasSupportForSegmentType(FinancialServiceSegment.BUSINESS);
+    }
+
+    @JsonIgnore
+    public boolean hasSupportForPersonalSegment() {
+        return hasSupportForSegmentType(FinancialServiceSegment.PERSONAL);
+    }
+
+    @JsonIgnore
+    private boolean hasSupportForSegmentType(FinancialServiceSegment segment) {
+        return Optional.ofNullable(financialServices).orElse(Collections.emptyList()).stream()
+                .map(FinancialService::getSegment)
+                .anyMatch(s -> s == segment);
     }
 
     public static Provider of(ProviderConfiguration providerConfiguration) {

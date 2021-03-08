@@ -32,7 +32,7 @@ public class DemobankTransactionalAccountFetcher
                                         apiClient.fetchAccountHolders(accountEntity.getId())))
                 .filter(
                         a ->
-                                AccountFetcherUtils.getHolderTypeSupportedByProvider(provider)
+                                AccountFetcherUtils.inferHolderTypeFromProvider(provider)
                                         == a.getHolderType())
                 .collect(Collectors.toList());
     }
