@@ -168,7 +168,7 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
                     && credentials.getStatus() == CredentialsStatus.AUTHENTICATION_ERROR) {
 
                 statusUpdater.updateStatus(
-                        CredentialsStatus.AUTHENTICATION_ERROR,
+                        CredentialsStatus.UNCHANGED,
                         context.getCatalog()
                                 .getString(
                                         "Invalid credentials status. Update the credentials before retrying the operation."));
