@@ -5,12 +5,16 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
 
 import com.google.inject.Inject;
+import java.util.List;
 import java.util.Optional;
+import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.authenticator.LansforsakringarAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.configuration.LansforsakringarConfiguration;
@@ -19,6 +23,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.fetcher.creditcard.LansforsakringarCreditCardTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.fetcher.transactionalaccount.LansforsakringarTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.fetcher.transactionalaccount.LansforsakringarTransactionalAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.fetcher.transfersdestinations.LansforsakringarTransferDestinationFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.filter.LansforsakringarRetryFilter;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.filter.ServerFaultFilter;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.filter.ServiceBlockedFilter;
@@ -36,6 +41,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCa
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -44,13 +50,15 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 public final class LansforsakringarAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor,
-                RefreshCreditCardAccountsExecutor {
+                RefreshCreditCardAccountsExecutor,
+                RefreshTransferDestinationExecutor {
 
     private final LansforsakringarApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final CreditCardRefreshController creditCardRefreshController;
     private final LocalDateTimeSource localDateTimeSource;
     private final LansforsakringarStorageHelper storageHelper;
+    private final TransferDestinationRefreshController transferDestinationRefreshController;
 
     @Inject
     public LansforsakringarAgent(
@@ -70,6 +78,8 @@ public final class LansforsakringarAgent extends NextGenerationAgent
         setAgentConfiguration();
 
         this.client.setEidasProxy(agentsServiceConfiguration.getEidasProxy());
+
+        transferDestinationRefreshController = constructTransferDestinationController(apiClient);
     }
 
     private void configureHttpClient(TinkHttpClient client) {
@@ -145,6 +155,12 @@ public final class LansforsakringarAgent extends NextGenerationAgent
         return transactionalAccountRefreshController.fetchSavingsTransactions();
     }
 
+    private TransferDestinationRefreshController constructTransferDestinationController(
+            LansforsakringarApiClient apiClient) {
+        return new TransferDestinationRefreshController(
+                metricRefreshController, new LansforsakringarTransferDestinationFetcher(apiClient));
+    }
+
     private TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
         final LansforsakringarTransactionalAccountFetcher accountFetcher =
                 new LansforsakringarTransactionalAccountFetcher(apiClient);
@@ -190,5 +206,10 @@ public final class LansforsakringarAgent extends NextGenerationAgent
     @Override
     public FetchTransactionsResponse fetchCreditCardTransactions() {
         return creditCardRefreshController.fetchCreditCardTransactions();
+    }
+
+    @Override
+    public FetchTransferDestinationsResponse fetchTransferDestinations(List<Account> accounts) {
+        return transferDestinationRefreshController.fetchTransferDestinations(accounts);
     }
 }

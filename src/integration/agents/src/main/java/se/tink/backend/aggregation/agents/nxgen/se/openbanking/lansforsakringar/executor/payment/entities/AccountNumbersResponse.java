@@ -21,11 +21,15 @@ public class AccountNumbersResponse {
 
     private List<AccountInfoEntity> accounts;
 
+    public Optional<AccountInfoEntity> findAccountInfoEntity(String accountNumber) {
+        return accounts.stream().filter(a -> a.getBban().equals(accountNumber)).findFirst();
+    }
+
     public void checkIfTransactionTypeIsAllowed(String bban, Type accountIdentifierType)
             throws DebtorValidationException {
 
         AccountInfoEntity correctAccountIfPresent =
-                getCorrectAccountIfPresent(bban)
+                findAccountInfoEntity(bban)
                         .orElseThrow(
                                 () ->
                                         new DebtorValidationException(
@@ -50,9 +54,5 @@ public class AccountNumbersResponse {
             default:
                 throw new IllegalStateException(ErrorMessages.UNSUPPORTED_PAYMENT_TYPE);
         }
-    }
-
-    private Optional<AccountInfoEntity> getCorrectAccountIfPresent(String bban) {
-        return accounts.stream().filter(a -> bban.equals(a.getBban())).findAny();
     }
 }
