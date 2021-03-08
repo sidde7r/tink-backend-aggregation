@@ -24,11 +24,15 @@ public class TransactionEntity {
 
     public Transaction toTinkModel() {
         return Transaction.builder()
-                .setDescription(remittanceInformation.toString())
+                .setDescription(getDescription())
                 .setAmount(getAmount())
                 .setDate(bookingDate)
                 .setPending(status.equalsIgnoreCase(Transactions.PENDING_STATUS))
                 .build();
+    }
+
+    private String getDescription() {
+        return remittanceInformation != null ? remittanceInformation.toString() : "";
     }
 
     private ExactCurrencyAmount getAmount() {
