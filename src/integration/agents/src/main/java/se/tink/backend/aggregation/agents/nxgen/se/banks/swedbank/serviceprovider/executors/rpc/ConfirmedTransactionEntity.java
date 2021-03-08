@@ -246,12 +246,13 @@ public class ConfirmedTransactionEntity extends AbstractExecutorTransactionEntit
 
         transfer.setDestination(destinationAccount.get());
 
-        if (Strings.isNullOrEmpty(currencyCode)
-                || !Double.isFinite(StringUtils.parseAmountEU(this.amount))) {
+        double parsedAmount = StringUtils.parseAmountEU(this.amount);
+        if (Strings.isNullOrEmpty(currencyCode) || !Double.isFinite(parsedAmount)) {
             return Optional.empty();
         }
 
-        ExactCurrencyAmount exactCurrencyAmount = ExactCurrencyAmount.of(this.amount, currencyCode);
+        ExactCurrencyAmount exactCurrencyAmount =
+                ExactCurrencyAmount.of(parsedAmount, currencyCode);
         transfer.setAmount(exactCurrencyAmount);
         if (date == null) {
             return Optional.empty();
