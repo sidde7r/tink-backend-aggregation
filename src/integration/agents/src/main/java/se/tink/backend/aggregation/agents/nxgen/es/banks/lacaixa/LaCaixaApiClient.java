@@ -4,6 +4,7 @@ import javax.ws.rs.core.MediaType;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaConstants.Urls;
@@ -73,12 +74,19 @@ public class LaCaixaApiClient {
                     .post(StatusResponse.class, loginRequest);
         } catch (HttpResponseException e) {
             HttpResponse response = e.getResponse();
-            if (response.getStatus() == HttpStatus.SC_CONFLICT) {
+            if (response.getStatus() >= HttpStatus.SC_INTERNAL_SERVER_ERROR) {
+                throw BankServiceError.BANK_SIDE_FAILURE.exception();
+            }
+            if (response.getStatus() >= HttpStatus.SC_BAD_REQUEST
+                    && response.getStatus() < HttpStatus.SC_INTERNAL_SERVER_ERROR) {
                 LaCaixaErrorResponse errorResponse = response.getBody(LaCaixaErrorResponse.class);
                 if (errorResponse.isAccountBlocked()) {
                     throw AuthorizationError.ACCOUNT_BLOCKED.exception();
                 } else if (errorResponse.isIdentificationIncorrect()) {
                     throw LoginError.INCORRECT_CREDENTIALS.exception(e);
+                } else if (errorResponse.isTemporaryProblem()
+                        || errorResponse.isCurrentlyUnavailable()) {
+                    throw BankServiceError.NO_BANK_SERVICE.exception();
                 }
                 log.info(
                         "Unknown error code {} with message {}",
