@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking;
+package se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.utils;
 
 import java.time.Clock;
 import java.time.Instant;
@@ -9,7 +9,6 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.junit.Assert;
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.utils.SebDateUtil;
 
 public class SebDateUtilTest {
 

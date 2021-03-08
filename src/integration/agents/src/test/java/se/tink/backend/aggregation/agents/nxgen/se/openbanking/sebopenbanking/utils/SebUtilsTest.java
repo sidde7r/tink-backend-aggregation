@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking;
+package se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.utils;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -8,7 +8,6 @@ import se.tink.backend.aggregation.agents.exceptions.payment.CreditorValidationE
 import se.tink.backend.aggregation.agents.exceptions.payment.DebtorValidationException;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.executor.payment.entities.CreditorAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.executor.payment.entities.DebtorAccountEntity;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.utils.SebUtils;
 
 public class SebUtilsTest {
 

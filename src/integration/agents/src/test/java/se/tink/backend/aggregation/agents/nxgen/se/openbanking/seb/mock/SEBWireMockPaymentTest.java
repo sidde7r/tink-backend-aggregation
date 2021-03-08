@@ -2,9 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.mock;
 
 import java.time.LocalDate;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
+import se.tink.backend.aggregation.agents.exceptions.payment.DuplicatePaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.AgentWireMockPaymentTest;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.command.PaymentCommand;
@@ -69,8 +69,6 @@ public class SEBWireMockPaymentTest {
         }
     }
 
-    // TODO: Update the aap file for this test from a recent successful payment
-    @Ignore("This likely fails because of an outdated aap file")
     @Test
     public void testTransfer() throws Exception {
 
@@ -85,11 +83,33 @@ public class SEBWireMockPaymentTest {
                         .withConfigurationFile(configuration)
                         .withHttpDebugTrace()
                         .withPayment(createTransfer())
-                        .addCredentialField(Field.Key.USERNAME.getFieldKey(), "197710120000")
                         .buildWithLogin(PaymentCommand.class);
 
         agentWireMockPaymentTest.executePayment();
         Assert.assertTrue(true);
+    }
+
+    @Test
+    public void testCancelDueToDuplication() throws Exception {
+        final String wireMockFilePath =
+                "data/agents/openbanking/seb/wireMock-seb-ob-pis-cancel-duplication.aap";
+        final AgentsServiceConfiguration configuration =
+                AgentsServiceConfigurationReader.read(CONFIGURATION_PATH);
+
+        final AgentWireMockPaymentTest agentWireMockPaymentTest =
+                AgentWireMockPaymentTest.builder(MarketCode.SE, "se-seb-ob", wireMockFilePath)
+                        .withConfigurationFile(configuration)
+                        .withHttpDebugTrace()
+                        .withPayment(createMockedDomesticBGPayment())
+                        .buildWithLogin(PaymentCommand.class);
+        try {
+            agentWireMockPaymentTest.executePayment();
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof DuplicatePaymentException);
+            Assert.assertEquals(
+                    "The payment could not be made because an identical payment is already registered",
+                    e.getMessage());
+        }
     }
 
     private Payment createMockedDomesticPGPayment() {
@@ -127,17 +147,17 @@ public class SEBWireMockPaymentTest {
     private Payment createTransfer() {
         RemittanceInformation remittanceInformation = new RemittanceInformation();
         remittanceInformation.setType(RemittanceInformationType.UNSTRUCTURED);
-        remittanceInformation.setValue("Tinktest");
+        remittanceInformation.setValue("SBAB-BANK");
 
         return new Payment.Builder()
                 .withCreditor(
-                        new Creditor(AccountIdentifier.create(Type.SE, "56242222222"), "Tink"))
+                        new Creditor(AccountIdentifier.create(Type.SE, "56242222222"), "Joe Doe"))
                 .withDebtor(
                         new Debtor(AccountIdentifier.create(Type.IBAN, "SE4550000000058398257466")))
-                .withExactCurrencyAmount(ExactCurrencyAmount.inSEK(328.0))
+                .withExactCurrencyAmount(ExactCurrencyAmount.inSEK(1000.0))
                 .withCurrency("SEK")
                 .withRemittanceInformation(remittanceInformation)
-                .withExecutionDate(LocalDate.parse("2020-06-22"))
+                .withExecutionDate(LocalDate.parse("2021-03-02"))
                 .build();
     }
 }

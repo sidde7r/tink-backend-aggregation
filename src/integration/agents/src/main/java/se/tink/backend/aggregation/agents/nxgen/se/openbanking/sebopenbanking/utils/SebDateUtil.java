@@ -11,6 +11,8 @@ import se.tink.libraries.date.ThreadSafeDateFormat;
 
 public class SebDateUtil {
 
+    private SebDateUtil() {}
+
     private static final int EXTERNAL_CUTOFF_HOUR = 13;
     private static final int EXTERNAL_CUTOFF_MINUTE = 35;
     private static final int BGPG_CUTOFF_HOUR = 9;
