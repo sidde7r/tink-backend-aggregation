@@ -34,7 +34,7 @@ public class ClearSensitivePayloadOnForceAuthenticateCommand extends AgentWorker
                 log.info("Clearing session to force authentication towards the bank");
 
                 // Nuke Sensitive Storage
-                context.getRequest().getCredentials().setSensitivePayloadAsMap(null);
+                context.getRequest().getCredentials().setSensitivePayloadSerialized(null);
             }
         } catch (RuntimeException clearSensitivePayload) {
             log.warn("Could not clear sensitive payload", clearSensitivePayload);

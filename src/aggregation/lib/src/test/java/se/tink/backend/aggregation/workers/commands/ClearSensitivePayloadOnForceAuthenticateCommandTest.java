@@ -40,7 +40,7 @@ public class ClearSensitivePayloadOnForceAuthenticateCommandTest {
 
         // then
         assertThat(result).isEqualTo(AgentWorkerCommandResult.CONTINUE);
-        verify(context.getRequest().getCredentials()).setSensitivePayloadAsMap(null);
+        verify(context.getRequest().getCredentials()).setSensitivePayloadSerialized(null);
     }
 
     @Test

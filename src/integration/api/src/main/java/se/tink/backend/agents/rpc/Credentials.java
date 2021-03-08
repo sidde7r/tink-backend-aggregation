@@ -79,10 +79,10 @@ public class Credentials implements Cloneable {
     /**
      * Removes any information that is not to be stored in the main database.
      *
-     * @param provider
+     * @param provider Provider whose fields will be used in filtering
      */
     public void clearSensitiveInformation(Provider provider) {
-        setSensitivePayloadAsMap(null);
+        setSensitivePayloadSerialized(null);
         setFields(separateFields(provider, false));
     }
 
@@ -303,7 +303,6 @@ public class Credentials implements Cloneable {
         return fields;
     }
 
-    // @Deprecated
     public void setAdditionalInformation(String additionalInformation) {
         if (Strings.isNullOrEmpty(additionalInformation)) {
             return;
@@ -479,8 +478,10 @@ public class Credentials implements Cloneable {
 
     @JsonIgnore
     public <T> T getPersistentSession(Class<T> returnType) {
-        Optional<String> payload = getSensitivePayload(Field.Key.PERSISTENT_LOGIN_SESSION_NAME);
-        return payload.map(p -> SerializationUtils.deserializeFromString(p, returnType))
+        Optional<String> sensitivePayload =
+                getSensitivePayload(Field.Key.PERSISTENT_LOGIN_SESSION_NAME);
+        return sensitivePayload
+                .map(p -> SerializationUtils.deserializeFromString(p, returnType))
                 .orElse(null);
     }
 
@@ -500,8 +501,8 @@ public class Credentials implements Cloneable {
     }
 
     public void addSensitivePayload(Map<String, String> payload) {
-        for (String key : payload.keySet()) {
-            setSensitivePayload(key, payload.get(key));
+        for (Entry<String, String> entry : payload.entrySet()) {
+            setSensitivePayload(entry.getKey(), entry.getValue());
         }
     }
 
