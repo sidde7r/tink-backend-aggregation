@@ -29,7 +29,7 @@ public class BarclaysAgentWireMockTest {
     private static final String CONFIGURATION_PATH = "data/agents/uk/barclays/configuration.yml";
 
     @Test
-    public void test() throws Exception {
+    public void shouldRunFullAuthRefreshSuccessfully() throws Exception {
 
         // given
         final String wireMockFilePath = "data/agents/uk/barclays/mock_log.aap";
@@ -41,12 +41,16 @@ public class BarclaysAgentWireMockTest {
                 new HashSet<>(RefreshableItem.REFRESHABLE_ITEMS_ALL);
         refreshableItems.remove(RefreshableItem.TRANSFER_DESTINATIONS);
         final AgentWireMockRefreshTest agentWireMockRefreshTest =
-                AgentWireMockRefreshTest.builder(
-                                MarketCode.UK, "uk-barclays-oauth2", wireMockFilePath)
-                        .withConfigurationFile(configuration)
-                        .dumpContentForContractFile()
-                        .addCallbackData("code", "DUMMY_AUTH_CODE")
+                AgentWireMockRefreshTest.nxBuilder()
+                        .withMarketCode(MarketCode.UK)
+                        .withProviderName("uk-barclays-oauth2")
+                        .withWireMockFilePath(wireMockFilePath)
+                        .withConfigFile(configuration)
+                        .testFullAuthentication()
                         .addRefreshableItems(refreshableItems.toArray(new RefreshableItem[0]))
+                        .addCallbackData("code", "DUMMY_AUTH_CODE")
+                        .enableHttpDebugTrace()
+                        .enableDataDumpForContractFile()
                         .build();
 
         final AgentContractEntity expected =
