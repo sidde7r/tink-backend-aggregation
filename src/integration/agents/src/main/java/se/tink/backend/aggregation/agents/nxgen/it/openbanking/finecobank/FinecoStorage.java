@@ -11,7 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.authenticator.entities.AccountConsent;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -60,9 +59,10 @@ public class FinecoStorage {
             return LocalDateTime.parse(consentCreationTime);
         } catch (DateTimeParseException e) {
             log.warn("Could not parse consent creation time: " + consentCreationTime);
-            // ITE-2404 handle old consent creation dates that were serialized as json
-            return SerializationUtils.deserializeFromString(
-                    consentCreationTime, LocalDateTime.class);
+            // ITE-2404
+            // Cleanup old corrupted serialized data from storage that we cannot deserialize.
+            persistentStorage.remove(CONSENT_CREATION_TIMESTAMP);
+            return null;
         }
     }
 
