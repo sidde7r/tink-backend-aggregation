@@ -182,7 +182,8 @@ public class DkAccountEntityMapperTest {
     public void toCreditCardAccountWhenAccountNumberLengthIsShorterThanMinLength() {
         // given & when
         CreditCardAccount result =
-                dkAccountEntityMapper.toCreditCardAccount(configuration, accountEntity);
+                dkAccountEntityMapper.toCreditCardAccount(
+                        configuration, accountEntity, accountDetailsResponse);
 
         // then
         assertThat(result.getAccountNumber()).isEqualTo(ACCOUNT_NO_EXT);
@@ -197,7 +198,8 @@ public class DkAccountEntityMapperTest {
 
         // when
         CreditCardAccount result =
-                dkAccountEntityMapper.toCreditCardAccount(configuration, accountEntity);
+                dkAccountEntityMapper.toCreditCardAccount(
+                        configuration, accountEntity, accountDetailsResponse);
 
         // then
         assertThat(result.getAccountNumber()).isEqualTo(TEN_DIGIT_ACCOUNT_NO_EXT);

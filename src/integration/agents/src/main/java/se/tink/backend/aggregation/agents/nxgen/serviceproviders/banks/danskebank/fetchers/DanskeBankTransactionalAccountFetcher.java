@@ -49,10 +49,13 @@ public class DanskeBankTransactionalAccountFetcher implements AccountFetcher<Tra
                         ListAccountsRequest.createFromLanguageCode(
                                 configuration.getLanguageCode()));
 
-        List<AccountEntity> accountEntities = listAccounts.getAccounts();
+        List<AccountEntity> transactionalAccounts =
+                listAccounts.getAccounts().stream()
+                        .filter(DanskeBankPredicates.CREDIT_CARDS.negate())
+                        .collect(Collectors.toList());
 
         Map<String, AccountDetailsResponse> accountDetails = new HashMap<>();
-        for (AccountEntity accountEntity : accountEntities) {
+        for (AccountEntity accountEntity : transactionalAccounts) {
             accountDetails.put(accountEntity.getAccountNoExt(), fetchAccountDetails(accountEntity));
         }
 
@@ -63,11 +66,11 @@ public class DanskeBankTransactionalAccountFetcher implements AccountFetcher<Tra
                 .addAll(
                         accountEntityMapper.toTinkCheckingAccounts(
                                 configuration.getCheckingAccountTypes(),
-                                listAccounts.getAccounts(),
+                                transactionalAccounts,
                                 accountDetails))
                 .addAll(
                         accountEntityMapper.toTinkSavingsAccounts(
-                                configuration, listAccounts.getAccounts(), accountDetails))
+                                configuration, transactionalAccounts, accountDetails))
                 .build();
     }
 

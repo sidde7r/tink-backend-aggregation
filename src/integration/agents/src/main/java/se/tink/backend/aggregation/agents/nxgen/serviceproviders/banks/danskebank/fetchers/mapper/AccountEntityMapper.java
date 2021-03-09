@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeban
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.AccountEntity;
 import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
+import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.entity.Party;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
@@ -40,7 +41,6 @@ public class AccountEntityMapper {
             List<AccountEntity> accounts,
             Map<String, AccountDetailsResponse> accountDetails) {
         return accounts.stream()
-                .filter(DanskeBankPredicates.CREDIT_CARDS.negate())
                 .filter(
                         DanskeBankPredicates.knownCheckingAccountProducts(
                                 knownCheckingAccountProducts))
@@ -58,7 +58,6 @@ public class AccountEntityMapper {
             List<AccountEntity> accounts,
             Map<String, AccountDetailsResponse> accountDetails) {
         return accounts.stream()
-                .filter(DanskeBankPredicates.CREDIT_CARDS.negate())
                 .filter(
                         DanskeBankPredicates.knownSavingsAccountProducts(
                                 configuration.getSavingsAccountTypes()))
@@ -74,10 +73,16 @@ public class AccountEntityMapper {
     }
 
     public List<CreditCardAccount> toTinkCreditCardAccounts(
-            DanskeBankConfiguration configuration, List<AccountEntity> accounts) {
+            DanskeBankConfiguration configuration,
+            List<AccountEntity> accounts,
+            Map<String, AccountDetailsResponse> accountDetails) {
         return accounts.stream()
-                .filter(DanskeBankPredicates.CREDIT_CARDS)
-                .map(account -> toCreditCardAccount(configuration, account))
+                .map(
+                        account ->
+                                toCreditCardAccount(
+                                        configuration,
+                                        account,
+                                        accountDetails.get(account.getAccountNoExt())))
                 .collect(Collectors.toList());
     }
 
@@ -148,7 +153,16 @@ public class AccountEntityMapper {
     }
 
     public CreditCardAccount toCreditCardAccount(
-            DanskeBankConfiguration configuration, AccountEntity accountEntity) {
+            DanskeBankConfiguration configuration,
+            AccountEntity accountEntity,
+            AccountDetailsResponse accountDetailsResponse) {
+
+        HolderName holderName =
+                getAccountParties(accountDetailsResponse.getAccountOwners(marketCode)).stream()
+                        .map(party -> new HolderName(party.getName()))
+                        .findFirst()
+                        .orElse(null);
+
         return CreditCardAccount.builder(
                         getUniqueIdentifier(accountEntity),
                         ExactCurrencyAmount.of(
@@ -164,6 +178,7 @@ public class AccountEntityMapper {
                 .canPlaceFunds(configuration.canPlaceFunds(accountEntity.getAccountProduct()))
                 .canWithdrawCash(configuration.canWithdrawCash(accountEntity.getAccountProduct()))
                 .sourceInfo(createAccountSourceInfo(accountEntity))
+                .setHolderName(holderName)
                 .build();
     }
 
@@ -217,6 +232,7 @@ public class AccountEntityMapper {
                 .canWithdrawCash(AccountCapabilities.Answer.YES)
                 .addAccountFlags(AccountFlag.PSD2_PAYMENT_ACCOUNT)
                 .sourceInfo(createAccountSourceInfo(accountEntity))
+                .addParties(getAccountParties(accountDetailsResponse.getAccountOwners(marketCode)))
                 .build();
     }
 
@@ -269,6 +285,7 @@ public class AccountEntityMapper {
                 .canPlaceFunds(configuration.canPlaceFunds(accountEntity.getAccountProduct()))
                 .canWithdrawCash(configuration.canWithdrawCash(accountEntity.getAccountProduct()))
                 .sourceInfo(createAccountSourceInfo(accountEntity))
+                .addParties(getAccountParties(accountDetailsResponse.getAccountOwners(marketCode)))
                 .build();
     }
 
