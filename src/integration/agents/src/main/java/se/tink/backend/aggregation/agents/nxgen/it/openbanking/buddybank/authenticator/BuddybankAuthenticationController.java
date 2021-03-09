@@ -17,7 +17,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticato
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.libraries.i18n.Catalog;
-import se.tink.libraries.i18n.LocalizableKey;
 import se.tink.libraries.i18n.LocalizableParametrizedKey;
 
 public class BuddybankAuthenticationController implements Authenticator {
@@ -25,10 +24,7 @@ public class BuddybankAuthenticationController implements Authenticator {
     private final StrongAuthenticationState strongAuthenticationState;
     private final SupplementalInformationController supplementalInformationController;
     private final Catalog catalog;
-    private static final LocalizableKey DESCRIPTION = new LocalizableKey("description");
-    private static final String FIELD_KEY = "name";
-    private static final LocalizableKey VALUE = new LocalizableKey("Waiting for bank consent");
-    private static final LocalizableParametrizedKey HELP_TEXT =
+    private static final LocalizableParametrizedKey INSTRUCTIONS =
             new LocalizableParametrizedKey(
                     "Message from the bank: {0} Follow the instructions and continue by clicking update.");
 
@@ -55,12 +51,7 @@ public class BuddybankAuthenticationController implements Authenticator {
     }
 
     private void displayVerificationCode(String psuMessage) {
-        Field field =
-                CommonFields.Information.build(
-                        FIELD_KEY,
-                        catalog.getString(DESCRIPTION),
-                        catalog.getString(VALUE),
-                        catalog.getString(HELP_TEXT, psuMessage));
+        Field field = CommonFields.Instruction.build(catalog.getString(INSTRUCTIONS, psuMessage));
 
         supplementalInformationController.askSupplementalInformationAsync(field);
     }

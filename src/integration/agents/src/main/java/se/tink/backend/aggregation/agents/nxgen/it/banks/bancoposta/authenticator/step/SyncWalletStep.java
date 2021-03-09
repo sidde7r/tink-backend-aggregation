@@ -53,7 +53,6 @@ public class SyncWalletStep implements AuthenticationStep {
     private Field buildField() {
         return Field.builder()
                 .name(OTP_NAME)
-                .immutable(true)
                 .description(catalog.getString(DESCRIPTION))
                 .numeric(true)
                 .minLength(6)

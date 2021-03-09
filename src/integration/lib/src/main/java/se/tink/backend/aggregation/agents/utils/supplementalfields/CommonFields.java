@@ -79,6 +79,11 @@ public class CommonFields {
         }
     }
 
+    /**
+     * This common class is to be used for displaying a piece of information, some code, reference
+     * words, that user needs to proceed. Such piece of information is (usually) different for each
+     * login, execution.
+     */
     public static class Information {
         public static Field build(
                 String fieldKey, String description, String value, String helpText) {
@@ -89,6 +94,35 @@ public class CommonFields {
                     .value(value)
                     .helpText(helpText)
                     .build();
+        }
+    }
+
+    /**
+     * This common class is to be used for displaying instructions. These instructions are pretty
+     * much constant for each execution.
+     */
+    public static class Instruction {
+        private static final String FIELD_KEY = "instructionField";
+        // This layoutType allows tinklink to handle info-screens in a nicer way.
+        // ITE-2237 for some details
+        private static final String INFO_SCREEN_ADDITIONAL_INFO =
+                "{\"layoutType\":\"INSTRUCTIONS\"}";
+
+        public static Field build(String fieldKey, String value) {
+            return commonBuild(value).name(fieldKey).build();
+        }
+
+        public static Field build(String value) {
+            return commonBuild(value).build();
+        }
+
+        private static Field.Builder commonBuild(String value) {
+            return Field.builder()
+                    .description("")
+                    .additionalInfo(INFO_SCREEN_ADDITIONAL_INFO)
+                    .immutable(true)
+                    .name(FIELD_KEY)
+                    .value(value);
         }
     }
 
@@ -104,13 +138,8 @@ public class CommonFields {
             if (cardId != null) {
                 helpText += " (" + cardId + ")";
             }
-            return Field.builder()
-                    .immutable(true)
-                    .name(FIELD_KEY)
-                    .description(catalog.getString(DESCRIPTION))
-                    .value(codeIndex)
-                    .helpText(helpText)
-                    .build();
+            return Information.build(
+                    FIELD_KEY, catalog.getString(DESCRIPTION), codeIndex, helpText);
         }
     }
 
@@ -149,13 +178,11 @@ public class CommonFields {
                 new LocalizableKey("Enter the code generated with your code token");
 
         public static Field build(Catalog catalog, String codeTokenSerialNumber) {
-            return Field.builder()
-                    .immutable(true)
-                    .name(FIELD_KEY)
-                    .description(catalog.getString(DESCRIPTION))
-                    .value(codeTokenSerialNumber)
-                    .helpText(catalog.getString(HELPTEXT))
-                    .build();
+            return Information.build(
+                    FIELD_KEY,
+                    catalog.getString(DESCRIPTION),
+                    codeTokenSerialNumber,
+                    catalog.getString(HELPTEXT));
         }
     }
 

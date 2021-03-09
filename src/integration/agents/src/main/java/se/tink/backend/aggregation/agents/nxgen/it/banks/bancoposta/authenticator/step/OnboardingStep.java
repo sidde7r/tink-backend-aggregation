@@ -84,7 +84,6 @@ public class OnboardingStep implements AuthenticationStep {
     private Field buildOtpField() {
         return Field.builder()
                 .name(OTP_NAME)
-                .immutable(true)
                 .description(catalog.getString(DESCRIPTION))
                 .numeric(true)
                 .minLength(4)

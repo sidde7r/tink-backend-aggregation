@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.iccrea.authenticator;
 
 import com.google.common.base.Strings;
+import java.util.concurrent.TimeUnit;
 import lombok.AllArgsConstructor;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.agents.rpc.Field.Key;
@@ -26,11 +27,10 @@ public class AccountConsentDecoupledStep implements AuthenticationStep {
     private final Catalog catalog;
     private final ConsentProcessor consentProcessor;
 
-    private static final LocalizableKey DESCRIPTION =
-            new LocalizableKey("Please open the bank application and confirm the order.");
-    private static final String FIELD_NAME = "name";
-    private static final LocalizableKey VALUE =
-            new LocalizableKey("You will be asked for confirmation two times.");
+    private static final LocalizableKey INSTRUCTIONS =
+            new LocalizableKey(
+                    "Please open the bank application and confirm the order. You will be asked for confirmation two times.");
+    private static final long PROMPT_WAIT_FOR_MINUTES = 2;
 
     @Override
     public AuthenticationStepResponse execute(AuthenticationRequest request)
@@ -52,10 +52,9 @@ public class AccountConsentDecoupledStep implements AuthenticationStep {
     }
 
     private void displayPrompt() {
-        Field field =
-                CommonFields.Information.build(
-                        FIELD_NAME, catalog.getString(DESCRIPTION), catalog.getString(VALUE), "");
-
-        supplementalInformationController.askSupplementalInformationAsync(field);
+        Field field = CommonFields.Instruction.build(catalog.getString(INSTRUCTIONS));
+        String mfaId = supplementalInformationController.askSupplementalInformationAsync(field);
+        supplementalInformationController.waitForSupplementalInformation(
+                mfaId, PROMPT_WAIT_FOR_MINUTES, TimeUnit.MINUTES);
     }
 }

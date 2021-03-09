@@ -1,16 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.postbank;
 
-import se.tink.libraries.i18n.LocalizableKey;
+import se.tink.libraries.i18n.LocalizableParametrizedKey;
 
 public final class PostbankConstants {
 
     public static class InfoScreen {
-        public static final String FIELD_KEY = "deviceNameField";
-        public static final LocalizableKey DESCRIPTION =
-                new LocalizableKey("Waiting for confirmation");
-        public static final LocalizableKey HELP_TEXT =
-                new LocalizableKey(
-                        "Please open the BestSign app and confirm login. Then click the \"Submit\" button");
+        public static final LocalizableParametrizedKey INSTRUCTIONS =
+                new LocalizableParametrizedKey(
+                        "Please open the BestSign app on device \"{0}\" and confirm login. Then click the \"Submit\" button");
     }
 
     public static class PollStatus {

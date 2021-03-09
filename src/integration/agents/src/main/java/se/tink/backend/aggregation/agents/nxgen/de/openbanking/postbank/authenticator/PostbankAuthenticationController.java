@@ -144,11 +144,8 @@ public class PostbankAuthenticationController implements TypedAuthenticator {
 
     private void showInfo(String deviceName) {
         Field informationField =
-                CommonFields.Information.build(
-                        PostbankConstants.InfoScreen.FIELD_KEY,
-                        catalog.getString(PostbankConstants.InfoScreen.DESCRIPTION),
-                        deviceName,
-                        catalog.getString(PostbankConstants.InfoScreen.HELP_TEXT));
+                CommonFields.Instruction.build(
+                        catalog.getString(PostbankConstants.InfoScreen.INSTRUCTIONS, deviceName));
 
         try {
             supplementalInformationController.askSupplementalInformationSync(informationField);
