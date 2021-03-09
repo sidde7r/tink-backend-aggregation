@@ -366,6 +366,7 @@ public class CrosskeyBaseApiClient {
                 .header(HeaderKeys.X_API_KEY, clientSecret)
                 .queryParam(QueryKeys.REQUEST, oidcRequest)
                 .queryParam(QueryKeys.RESPONSE_TYPE, QueryValues.RESPONSE_TYPE)
+                .queryParam(QueryKeys.RESPONSE_MODE, QueryValues.QUERY)
                 .queryParam(QueryKeys.REDIRECT_URI, redirectUrl)
                 .queryParam(QueryKeys.CLIENT_ID, clientId)
                 .queryParam(QueryKeys.STATE, state)
