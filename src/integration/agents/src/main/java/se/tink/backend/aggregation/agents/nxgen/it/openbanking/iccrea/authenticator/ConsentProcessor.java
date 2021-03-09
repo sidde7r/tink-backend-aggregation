@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 @AllArgsConstructor
 public class ConsentProcessor {
     private ConsentManager consentManager;
+    private UserInteractions userInteractions;
 
     public void processConsent(
             String username, String password, ConsentScaResponse consentResponse) {
@@ -17,7 +18,7 @@ public class ConsentProcessor {
 
         consentManager.updatePsuCredentials(
                 username, password, updateConsentResponse.getPsuCredentials());
-
+        userInteractions.displayPromptAndWaitForAcceptance();
         consentManager.waitForAcceptance();
     }
 

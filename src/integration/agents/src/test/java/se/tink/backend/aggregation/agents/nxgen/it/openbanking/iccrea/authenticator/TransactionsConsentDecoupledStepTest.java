@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.iccrea.authenticator;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -25,6 +26,9 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
+import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.i18n.LocalizableKey;
 
 public class TransactionsConsentDecoupledStepTest {
     private TransactionsConsentDecoupledStep step;
@@ -36,7 +40,14 @@ public class TransactionsConsentDecoupledStepTest {
         this.consentManager = mock(ConsentManager.class);
         this.strongAuthenticationState = mock(StrongAuthenticationState.class);
         CbiUserState userState = mock(CbiUserState.class);
-        ConsentProcessor consentProcessor = new ConsentProcessor(consentManager);
+        SupplementalInformationController supplementalInformationController =
+                mock(SupplementalInformationController.class);
+        Catalog catalog = mock(Catalog.class);
+        when(catalog.getString(any(LocalizableKey.class))).thenReturn("");
+        ConsentProcessor consentProcessor =
+                new ConsentProcessor(
+                        consentManager,
+                        new UserInteractions(supplementalInformationController, catalog));
         this.step =
                 new TransactionsConsentDecoupledStep(
                         consentManager, strongAuthenticationState, userState, consentProcessor);

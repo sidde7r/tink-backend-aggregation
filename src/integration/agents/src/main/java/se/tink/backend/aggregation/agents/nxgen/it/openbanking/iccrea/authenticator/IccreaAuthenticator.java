@@ -13,8 +13,6 @@ import se.tink.libraries.i18n.Catalog;
 
 public class IccreaAuthenticator extends CbiGlobeAuthenticator {
 
-    private final SupplementalInformationController supplementalInformationController;
-    private final Catalog catalog;
     private final ConsentProcessor consentProcessor;
 
     public IccreaAuthenticator(
@@ -25,9 +23,10 @@ public class IccreaAuthenticator extends CbiGlobeAuthenticator {
             SupplementalInformationController supplementalInformationController,
             Catalog catalog) {
         super(apiClient, strongAuthenticationState, userState, configuration);
-        this.supplementalInformationController = supplementalInformationController;
-        this.catalog = catalog;
-        this.consentProcessor = new ConsentProcessor(consentManager);
+        this.consentProcessor =
+                new ConsentProcessor(
+                        consentManager,
+                        new UserInteractions(supplementalInformationController, catalog));
     }
 
     @Override
@@ -35,11 +34,7 @@ public class IccreaAuthenticator extends CbiGlobeAuthenticator {
         if (manualAuthenticationSteps.isEmpty()) {
             manualAuthenticationSteps.add(
                     new AccountConsentDecoupledStep(
-                            consentManager,
-                            strongAuthenticationState,
-                            supplementalInformationController,
-                            catalog,
-                            consentProcessor));
+                            consentManager, strongAuthenticationState, consentProcessor));
             manualAuthenticationSteps.add(new AccountFetchingStep(apiClient, userState));
             manualAuthenticationSteps.add(
                     new TransactionsConsentDecoupledStep(

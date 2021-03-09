@@ -46,13 +46,10 @@ public class CommerzbankPhotoTanAuthenticator implements TypedAuthenticator {
 
     private static final long SLEEP_TIME = 3_000L;
     private static final int RETRY_ATTEMPTS = 60;
+    private static final long PROMPT_WAIT_FOR_MINUTES = 2;
 
-    private static final LocalizableKey FIELD_DESCRIPTION = new LocalizableKey("TAN");
-    private static final String FIELD_NAME = "tanCode";
-    private static final LocalizableKey FIELD_HELPTEXT =
+    private static final LocalizableKey FIELD_INSTRUCTIONS =
             new LocalizableKey("Please open PhotoTAN application and confirm the order");
-    private static final LocalizableKey FIELD_VALUE =
-            new LocalizableKey("waiting for confirmation");
 
     private final PersistentStorage persistentStorage;
     private final CommerzbankApiClient apiClient;
@@ -130,14 +127,11 @@ public class CommerzbankPhotoTanAuthenticator implements TypedAuthenticator {
     }
 
     private void displayPrompt() {
-        Field field =
-                CommonFields.Information.build(
-                        FIELD_NAME,
-                        catalog.getString(FIELD_DESCRIPTION),
-                        catalog.getString(FIELD_VALUE),
-                        catalog.getString(FIELD_HELPTEXT));
+        Field field = CommonFields.Instruction.build(catalog.getString(FIELD_INSTRUCTIONS));
 
-        supplementalInformationController.askSupplementalInformationAsync(field);
+        String mfaId = supplementalInformationController.askSupplementalInformationAsync(field);
+        supplementalInformationController.waitForSupplementalInformation(
+                mfaId, PROMPT_WAIT_FOR_MINUTES, TimeUnit.MINUTES);
     }
 
     private void approveSca(String processContextId) throws LoginException {

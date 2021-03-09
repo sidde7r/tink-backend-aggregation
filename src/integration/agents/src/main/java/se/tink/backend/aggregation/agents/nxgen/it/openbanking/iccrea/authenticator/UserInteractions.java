@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.it.openbanking.ubi.authenticator;
+package se.tink.backend.aggregation.agents.nxgen.it.openbanking.iccrea.authenticator;
 
 import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
