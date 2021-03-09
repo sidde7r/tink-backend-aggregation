@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: VERSION\n"
-"POT-Creation-Date: 2021-02-26 14:18+0000\n"
-"PO-Revision-Date: 2021-02-26 14:18+0000\n"
+"POT-Creation-Date: 2021-03-09 10:30+0000\n"
+"PO-Revision-Date: 2021-03-09 10:30+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE TEAM <EMAIL@ADDRESS>\n"
 "Language: de\n"
@@ -1941,3 +1941,11 @@ msgstr "Die TAN sollte aus maximal {0} Ziffern bestehen"
 #, java-format
 msgid "Please enter a maximum of {0} characters"
 msgstr "Die TAN sollte aus maximal {0} Zeichen bestehen"
+
+#, java-format
+msgid ""
+"Please open the BestSign app on device \"{0}\" and confirm login. Then click "
+"the \"Submit\" button"
+msgstr ""
+"Bitte öffnen Sie die BestSign-App auf dem Gerät “{0}” und bestätigen Sie die "
+"Anmeldung. Klicken Sie dann auf die Schaltfläche „Senden”"
