@@ -5,12 +5,10 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbank
 import java.util.List;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
-import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
-import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.danskebank.authenticator.DanskebankAuthenticationController;
@@ -41,8 +39,7 @@ public abstract class DanskeBankV31EUBaseAgent extends NextGenerationAgent
         implements RefreshTransferDestinationExecutor,
                 RefreshCreditCardAccountsExecutor,
                 RefreshCheckingAccountsExecutor,
-                RefreshSavingsAccountsExecutor,
-                RefreshIdentityDataExecutor {
+                RefreshSavingsAccountsExecutor {
 
     private final UkOpenBankingAisConfig aisConfig;
     private final UkOpenBankingBaseAgentImpl ukOpenBankingBaseAgent;
@@ -106,11 +103,6 @@ public abstract class DanskeBankV31EUBaseAgent extends NextGenerationAgent
     @Override
     public FetchTransactionsResponse fetchCreditCardTransactions() {
         return ukOpenBankingBaseAgent.fetchCreditCardTransactions();
-    }
-
-    @Override
-    public FetchIdentityDataResponse fetchIdentityData() {
-        return ukOpenBankingBaseAgent.fetchIdentityData();
     }
 
     @Override
