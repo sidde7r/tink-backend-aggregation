@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.authenticator;
 
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
@@ -58,10 +59,16 @@ public class UnicreditAuthenticationController
     public ThirdPartyAppResponse<String> collect(String reference)
             throws SessionException, ThirdPartyAppException {
 
-        this.supplementalInformationHelper.waitForSupplementalInformation(
-                strongAuthenticationState.getSupplementalKey(),
-                ThirdPartyAppConstants.WAIT_FOR_MINUTES,
-                TimeUnit.MINUTES);
+        Optional<Map<String, String>> maybeSuppInfo =
+                this.supplementalInformationHelper.waitForSupplementalInformation(
+                        strongAuthenticationState.getSupplementalKey(),
+                        ThirdPartyAppConstants.WAIT_FOR_MINUTES,
+                        TimeUnit.MINUTES);
+
+        if (!maybeSuppInfo.isPresent()) {
+            authenticator.clearConsent();
+            return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.TIMED_OUT);
+        }
 
         Optional<ConsentDetailsResponse> maybeValidConsentDetails =
                 authenticator.getConsentDetailsWithValidStatus();
