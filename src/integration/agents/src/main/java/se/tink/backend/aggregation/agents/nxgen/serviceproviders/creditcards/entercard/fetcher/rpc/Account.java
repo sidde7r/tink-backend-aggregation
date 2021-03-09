@@ -44,6 +44,7 @@ public class Account {
                         .withInferredAccountFlags()
                         .withId(buildIdModule(card))
                         .setApiIdentifier(accountId)
+                        .addHolderName(user.name)
                         .build());
     }
 
