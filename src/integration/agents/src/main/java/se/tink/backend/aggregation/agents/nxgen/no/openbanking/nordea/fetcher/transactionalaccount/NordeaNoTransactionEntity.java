@@ -10,9 +10,16 @@ public class NordeaNoTransactionEntity extends TransactionEntity {
 
     @Override
     public String getDescription() {
-        return Stream.of(getCounterPartyName(), getTypeDescription(), getNarrative())
+        return Stream.of(getCounterPartyName(), getNarrative(), getTypeDescription())
                 .filter(StringUtils::isNotEmpty)
                 .findFirst()
                 .orElse("");
+    }
+
+    @Override
+    public String getNarrative() {
+        String narrative = super.getNarrative();
+        return StringUtils.trim(
+                StringUtils.substring(narrative, StringUtils.indexOf(narrative, ",") + 1));
     }
 }

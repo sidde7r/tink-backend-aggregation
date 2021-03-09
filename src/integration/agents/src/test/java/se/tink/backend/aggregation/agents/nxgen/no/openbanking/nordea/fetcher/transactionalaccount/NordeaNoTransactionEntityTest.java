@@ -15,13 +15,13 @@ public class NordeaNoTransactionEntityTest {
     @Parameters(method = "allPossibilities")
     public void shouldReturnExpectedDescription(
             String counterpartyName,
-            String typeDescription,
             String narrative,
+            String typeDescription,
             String expectedDescription) {
         // given
         NordeaNoTransactionEntity nordeaNoTransactionEntity =
                 SerializationUtils.deserializeFromString(
-                        buildJson(counterpartyName, typeDescription, narrative),
+                        buildJson(counterpartyName, narrative, typeDescription),
                         NordeaNoTransactionEntity.class);
 
         // when
@@ -60,10 +60,12 @@ public class NordeaNoTransactionEntityTest {
             new Object[] {null, "SECOND", null, "SECOND"},
             new Object[] {null, "SECOND", "", "SECOND"},
             new Object[] {null, "SECOND", "THIRD", "SECOND"},
+            new Object[] {null, "1111 1111,SECOND", "THIRD", "SECOND"},
+            new Object[] {null, "1111 1111, SECOND SECOND ", "THIRD", "SECOND SECOND"},
         };
     }
 
-    private String buildJson(String counterpartyName, String typeDescription, String narrative) {
+    private String buildJson(String counterpartyName, String narrative, String typeDescription) {
         return String.format(
                 "{\"counterparty_name\": %s, \"narrative\": %s, \"type_description\": %s}",
                 fieldToString(counterpartyName),
