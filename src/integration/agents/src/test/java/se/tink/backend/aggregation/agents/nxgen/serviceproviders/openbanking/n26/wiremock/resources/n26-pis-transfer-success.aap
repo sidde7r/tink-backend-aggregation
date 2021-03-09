@@ -1,0 +1,289 @@
+
+REQUEST 1
+GET https://xs2a.tech26.de/oauth2/authorize?client_id=PSDSE-FINA-44059&scope=DEDICATED_PISP&redirect_uri=https://127.0.0.1:7357/api/v1/thirdparty/callback&state=00000000-0000-4000-0000-000000000000&response_type=CODE
+
+RESPONSE 1
+302
+Date: Mon, 08 Mar 2021 15:25:10 GMT
+Date: Mon, 08 Mar 2021 15:25:10 GMT
+Location: https://app.n26.com/login?authType=XS2A&redirect=%2Fopen-banking%3FrequestId%3Dbb7208b6-a9c0-45c0-a394-36cc589e4a50%26state%3D9d7073ad-4599-44c9-9c7b-29d88f32feed%26authType%3DXS2A%26scope%3DDEDICATED_PISP&requestId=requestId&scope=DEDICATED_PISP&state=state
+
+REQUEST 2
+POST https://xs2a.tech26.de/oauth2/token?role=DEDICATED_PISP
+Content-Type: application/x-www-form-urlencoded
+
+code=DUMMY_AUTH_CODE&redirect_uri=https%253A%252F%252F127.0.0.1%253A7357%252Fapi%252Fv1%252Fthirdparty%252Fcallback&grant_type=authorization_code
+
+RESPONSE 2
+200
+Date: Mon, 08 Mar 2021 15:25:18 GMT
+Date: Mon, 08 Mar 2021 15:25:18 GMT
+Content-Type: application/json;charset=utf-8
+
+{
+    "access_token": "9c6b1853-7c40-4c18-b265-64e2c9d942af", 
+    "expires_in": 1199, 
+    "host_url": "https://xs2a.tech26.de", 
+    "token_type": "bearer"
+}
+
+
+REQUEST 3
+POST https://xs2a.tech26.de/v1/berlin-group/v1/payments/sepa-credit-transfers
+Accept: application/json
+Content-Type: application/json
+
+{
+    "creditorAccount": {
+        "iban": "FR1420041010050500013M02606"
+    }, 
+    "creditorName": "Recipient Name", 
+    "debtorAccount": {
+        "iban": "DE89370400440532013000"
+    }, 
+    "instructedAmount": {
+        "amount": 1.0, 
+        "currency": "EUR"
+    }, 
+    "remittanceInformationUnstructured": "Message"
+}
+
+RESPONSE 3 SET STATE4
+201
+Date: Mon, 08 Mar 2021 15:25:19 GMT
+Date: Mon, 08 Mar 2021 15:25:19 GMT
+Content-Type: application/json
+
+{
+    "_links": {
+        "scaStatus": {
+            "href": "/v1/berlin-group/v1/payments/sepa-credit-transfers/a7e2968a-89ac-453f-831a-44531e140510/authorisations/a5b6e227-5143-470f-9d72-75756dc210c5"
+        }, 
+        "self": {
+            "href": "/v1/berlin-group/v1/payments/sepa-credit-transfers/a7e2968a-89ac-453f-831a-44531e140510"
+        }, 
+        "status": {
+            "href": "/v1/berlin-group/v1/payments/sepa-credit-transfers/a7e2968a-89ac-453f-831a-44531e140510/status"
+        }
+    }, 
+    "paymentId": "a7e2968a-89ac-453f-831a-44531e140510", 
+    "transactionStatus": "RCVD"
+}
+
+15:25:19.646 [main] INFO  s.t.b.a.a.n.s.o.n.e.p.N26Xs2aPaymentExecutor - Start to Get Payment Status every 2 Seconds for a total of 270 times.
+
+REQUEST 4 MATCH STATE4
+GET https://xs2a.tech26.de/v1/berlin-group/v1/payments/sepa-credit-transfers/a7e2968a-89ac-453f-831a-44531e140510
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 4 SET STATE5
+200
+Date: Mon, 08 Mar 2021 15:25:19 GMT
+Date: Mon, 08 Mar 2021 15:25:20 GMT
+Content-Type: application/json
+
+{
+    "creditorAccount": {
+        "iban": "FR1420041010050500013M02606"
+    }, 
+    "creditorName": "Recipient Name", 
+    "debtorAccount": {
+        "iban": "DE89370400440532013000"
+    }, 
+    "instructedAmount": {
+        "amount": "1.0", 
+        "currency": "EUR"
+    }, 
+    "remittanceInformationUnstructured": "Message", 
+    "transactionStatus": "RCVD"
+}
+
+REQUEST 5 MATCH STATE5
+GET https://xs2a.tech26.de/v1/berlin-group/v1/payments/sepa-credit-transfers/a7e2968a-89ac-453f-831a-44531e140510
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 5 SET STATE6
+200
+Date: Mon, 08 Mar 2021 15:25:22 GMT
+Date: Mon, 08 Mar 2021 15:25:22 GMT
+Content-Type: application/json
+
+{
+    "creditorAccount": {
+        "iban": "FR1420041010050500013M02606"
+    }, 
+    "creditorName": "Recipient Name", 
+    "debtorAccount": {
+        "iban": "DE89370400440532013000"
+    }, 
+    "instructedAmount": {
+        "amount": "1.0", 
+        "currency": "EUR"
+    }, 
+    "remittanceInformationUnstructured": "Message", 
+    "transactionStatus": "RCVD"
+}
+
+REQUEST 6 MATCH STATE6
+GET https://xs2a.tech26.de/v1/berlin-group/v1/payments/sepa-credit-transfers/a7e2968a-89ac-453f-831a-44531e140510
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 6 SET STATE7
+200
+Date: Mon, 08 Mar 2021 15:25:25 GMT
+Date: Mon, 08 Mar 2021 15:25:25 GMT
+Content-Type: application/json
+
+{
+    "creditorAccount": {
+        "iban": "FR1420041010050500013M02606"
+    }, 
+    "creditorName": "Recipient Name", 
+    "debtorAccount": {
+        "iban": "DE89370400440532013000"
+    }, 
+    "instructedAmount": {
+        "amount": "1.0", 
+        "currency": "EUR"
+    }, 
+    "remittanceInformationUnstructured": "Message", 
+    "transactionStatus": "RCVD"
+}
+
+REQUEST 7 MATCH STATE7
+GET https://xs2a.tech26.de/v1/berlin-group/v1/payments/sepa-credit-transfers/a7e2968a-89ac-453f-831a-44531e140510
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 7 SET STATE8
+200
+Date: Mon, 08 Mar 2021 15:25:28 GMT
+Date: Mon, 08 Mar 2021 15:25:28 GMT
+Content-Type: application/json
+
+{
+    "creditorAccount": {
+        "iban": "FR1420041010050500013M02606"
+    }, 
+    "creditorName": "Recipient Name", 
+    "debtorAccount": {
+        "iban": "DE89370400440532013000"
+    }, 
+    "instructedAmount": {
+        "amount": "1.0", 
+        "currency": "EUR"
+    }, 
+    "remittanceInformationUnstructured": "Message", 
+    "transactionStatus": "RCVD"
+}
+
+REQUEST 8 MATCH STATE8
+GET https://xs2a.tech26.de/v1/berlin-group/v1/payments/sepa-credit-transfers/a7e2968a-89ac-453f-831a-44531e140510
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 8 SET STATE9
+200
+Date: Mon, 08 Mar 2021 15:25:30 GMT
+Date: Mon, 08 Mar 2021 15:25:30 GMT
+Content-Type: application/json
+
+{
+    "creditorAccount": {
+        "iban": "FR1420041010050500013M02606"
+    }, 
+    "creditorName": "Recipient Name", 
+    "debtorAccount": {
+        "iban": "DE89370400440532013000"
+    }, 
+    "instructedAmount": {
+        "amount": "1.0", 
+        "currency": "EUR"
+    }, 
+    "remittanceInformationUnstructured": "Message", 
+    "transactionStatus": "RCVD"
+}
+
+REQUEST 9 MATCH STATE9
+GET https://xs2a.tech26.de/v1/berlin-group/v1/payments/sepa-credit-transfers/a7e2968a-89ac-453f-831a-44531e140510
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 9 SET STATE10
+200
+Date: Mon, 08 Mar 2021 15:25:33 GMT
+Date: Mon, 08 Mar 2021 15:25:33 GMT
+Content-Type: application/json
+
+{
+    "creditorAccount": {
+        "iban": "FR1420041010050500013M02606"
+    }, 
+    "creditorName": "Recipient Name", 
+    "debtorAccount": {
+        "iban": "DE89370400440532013000"
+    }, 
+    "instructedAmount": {
+        "amount": "1.0", 
+        "currency": "EUR"
+    }, 
+    "remittanceInformationUnstructured": "Message", 
+    "transactionStatus": "RCVD"
+}
+
+REQUEST 10 MATCH STATE10
+GET https://xs2a.tech26.de/v1/berlin-group/v1/payments/sepa-credit-transfers/a7e2968a-89ac-453f-831a-44531e140510
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 10 SET STATE11
+200
+Date: Mon, 08 Mar 2021 15:25:36 GMT
+Date: Mon, 08 Mar 2021 15:25:36 GMT
+Content-Type: application/json
+
+{
+    "creditorAccount": {
+        "iban": "FR1420041010050500013M02606"
+    }, 
+    "creditorName": "Recipient Name", 
+    "debtorAccount": {
+        "iban": "DE89370400440532013000"
+    }, 
+    "instructedAmount": {
+        "amount": "1.0", 
+        "currency": "EUR"
+    }, 
+    "remittanceInformationUnstructured": "Message", 
+    "transactionStatus": "RCVD"
+}
+
+REQUEST 11 MATCH STATE11
+GET https://xs2a.tech26.de/v1/berlin-group/v1/payments/sepa-credit-transfers/a7e2968a-89ac-453f-831a-44531e140510
+Accept: application/json
+Content-Type: application/json
+
+RESPONSE 11 SET STATE12
+200
+Date: Mon, 08 Mar 2021 15:25:38 GMT
+Date: Mon, 08 Mar 2021 15:25:38 GMT
+Content-Type: application/json
+
+{
+    "creditorAccount": {
+        "iban": "FR1420041010050500013M02606"
+    }, 
+    "creditorName": "Recipient Name", 
+    "debtorAccount": {
+        "iban": "DE89370400440532013000"
+    }, 
+    "instructedAmount": {
+        "amount": "1.0", 
+        "currency": "EUR"
+    }, 
+    "remittanceInformationUnstructured": "Message", 
+    "transactionStatus": "ACCP"
+}
