@@ -4,6 +4,7 @@ import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbCon
 
 import com.google.common.base.Strings;
 import java.time.LocalDate;
+import java.util.Base64;
 import java.util.Collections;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +19,7 @@ import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbStorage;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentDetailsResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentResponse;
+import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.authenticator.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
@@ -25,6 +27,9 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
 @Slf4j
 public class DkbAuthenticator implements AutoAuthenticator, MultiFactorAuthenticator {
+
+    private static final String STATIC_SALT = "diH6uxoh5gie)b0she=n";
+    private static final Base64.Encoder ENCODER = Base64.getEncoder();
 
     private final DkbAuthApiClient authApiClient;
     private final DkbSupplementalDataProvider supplementalDataProvider;
@@ -55,10 +60,28 @@ public class DkbAuthenticator implements AutoAuthenticator, MultiFactorAuthentic
         if (Strings.isNullOrEmpty(username) || Strings.isNullOrEmpty(password)) {
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
+        logHashes(credentials);
 
         getWso2Token();
         authenticateUser(username, password);
         createConsentAndAuthorize();
+    }
+
+    private void logHashes(Credentials credentials) {
+        // There are a lot of invalid_credentials thrown.
+        // Users often finally manages to provide correct credentials in 2nd or 3rd attempt.
+        // We want to investigate if users have problems with providing username or password.
+        // To achieve that - this logging will be helpful. We will check the hashes from
+        // unsuccessful and successful authentications for the same credentialsId / userId and check
+        // whether username hash or credentials hash changed.
+        log.info(
+                "[DKB Auth] Hashes: {}, {}",
+                ENCODER.encodeToString(
+                                Hash.sha512(credentials.getField(Field.Key.USERNAME) + STATIC_SALT))
+                        .substring(0, 6),
+                ENCODER.encodeToString(
+                                Hash.sha512(credentials.getField(Field.Key.PASSWORD) + STATIC_SALT))
+                        .substring(0, 6));
     }
 
     @Override

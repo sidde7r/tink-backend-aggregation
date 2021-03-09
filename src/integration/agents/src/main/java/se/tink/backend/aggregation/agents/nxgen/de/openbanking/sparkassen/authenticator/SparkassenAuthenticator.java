@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authe
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -33,6 +34,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authen
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentDetailsResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.LinksEntity;
+import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.authenticator.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
@@ -43,6 +45,9 @@ import se.tink.libraries.i18n.Catalog;
 
 @Slf4j
 public class SparkassenAuthenticator implements MultiFactorAuthenticator, AutoAuthenticator {
+
+    private static final String STATIC_SALT = "AiQu/ai4eepie6vah3di";
+    private static final Base64.Encoder ENCODER = Base64.getEncoder();
 
     private static final String FINALISED = "finalised";
     private static final String FAILED = "failed";
@@ -106,6 +111,7 @@ public class SparkassenAuthenticator implements MultiFactorAuthenticator, AutoAu
     public void authenticate(Credentials credentials)
             throws AuthenticationException, AuthorizationException {
         validateInput(credentials);
+        logHashes(credentials);
 
         ConsentResponse consentResponse = initializeProcess();
 
@@ -138,6 +144,23 @@ public class SparkassenAuthenticator implements MultiFactorAuthenticator, AutoAu
         if (Strings.isNullOrEmpty(credentials.getField(key))) {
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
+    }
+
+    private void logHashes(Credentials credentials) {
+        // There are a lot of invalid_credentials thrown.
+        // Users often finally manages to provide correct credentials in 2nd or 3rd attempt.
+        // We want to investigate if users have problems with providing username or password.
+        // To achieve that - this logging will be helpful. We will check the hashes from
+        // unsuccessful and successful authentications for the same credentialsId / userId and check
+        // whether username hash or credentials hash changed.
+        log.info(
+                "[Sparkassen Auth] Hashes: {}, {}",
+                ENCODER.encodeToString(
+                                Hash.sha512(credentials.getField(Field.Key.USERNAME) + STATIC_SALT))
+                        .substring(0, 6),
+                ENCODER.encodeToString(
+                                Hash.sha512(credentials.getField(Field.Key.PASSWORD) + STATIC_SALT))
+                        .substring(0, 6));
     }
 
     private ConsentResponse initializeProcess() throws LoginException {
