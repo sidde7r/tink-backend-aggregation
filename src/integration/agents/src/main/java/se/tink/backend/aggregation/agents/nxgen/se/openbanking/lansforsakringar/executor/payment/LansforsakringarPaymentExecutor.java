@@ -1,25 +1,27 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.executor.payment;
 
-import static se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.SCAValues.SCA_EXEMPTED;
-import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.constants.ThirdPartyAppConstants.WAIT_FOR_MINUTES;
-import static se.tink.libraries.transfer.enums.RemittanceInformationType.OCR;
-import static se.tink.libraries.transfer.enums.RemittanceInformationType.UNSTRUCTURED;
-
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+import se.tink.backend.aggregation.agents.exceptions.payment.DebtorValidationException;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentCancelledException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentValidationException;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.FormKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.FormValues;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.SCAValues;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarDateUtil;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.authenticator.rpc.SignBasketResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.executor.payment.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.executor.payment.entities.AccountIbanEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.executor.payment.entities.AccountNumbersResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.executor.payment.entities.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.executor.payment.entities.CreditorAddressEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.executor.payment.entities.GirosCreditorAccountEntity;
@@ -30,6 +32,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.executor.payment.rpc.DomesticPaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.executor.payment.rpc.DomesticPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.executor.payment.rpc.GetPaymentStatusResponse;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.constants.ThirdPartyAppConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
@@ -45,6 +48,7 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.Storage;
 import se.tink.libraries.account.AccountIdentifier.Type;
@@ -54,6 +58,7 @@ import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Payment;
+import se.tink.libraries.transfer.enums.RemittanceInformationType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 public class LansforsakringarPaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
@@ -84,13 +89,20 @@ public class LansforsakringarPaymentExecutor implements PaymentExecutor, Fetchab
         final AmountEntity amount = new AmountEntity(payment.getExactCurrencyAmount());
         final AccountEntity debtor =
                 new AccountEntity(payment.getDebtor().getAccountNumber(), amount.getCurrency());
-        final String executionDate =
+
+        String executionDate =
                 Optional.ofNullable(payment.getExecutionDate())
-                        .map(d -> d.format(DateTimeFormatter.ISO_DATE))
+                        .map(
+                                providedDate ->
+                                        LansforsakringarDateUtil.getCurrentOrNextBusinessDate(
+                                                        providedDate)
+                                                .format(DateTimeFormatter.ISO_DATE))
                         .orElse(null);
 
         Type accountIdentifierType =
                 paymentRequest.getPayment().getCreditor().getAccountIdentifierType();
+
+        validateDebtorAccount(debtor, accountIdentifierType);
 
         switch (accountIdentifierType) {
             case SE_BG:
@@ -101,6 +113,12 @@ public class LansforsakringarPaymentExecutor implements PaymentExecutor, Fetchab
             default:
                 throw new IllegalStateException(ErrorMessages.UNSUPPORTED_PAYMENT_TYPE);
         }
+    }
+
+    private void validateDebtorAccount(AccountEntity debtor, Type accountIdentifierType)
+            throws DebtorValidationException {
+        AccountNumbersResponse accountNumbers = apiClient.getAccountNumbers();
+        accountNumbers.checkIfTransactionTypeIsAllowed(debtor.getBban(), accountIdentifierType);
     }
 
     private PaymentResponse createCrossBorderPayment(PaymentRequest paymentRequest) {
@@ -147,7 +165,8 @@ public class LansforsakringarPaymentExecutor implements PaymentExecutor, Fetchab
     }
 
     private PaymentResponse createDomesticPayment(
-            Payment payment, AccountEntity debtor, AmountEntity amount, String executionDate) {
+            Payment payment, AccountEntity debtor, AmountEntity amount, String executionDate)
+            throws PaymentException {
 
         AccountEntity creditor =
                 new AccountEntity(payment.getCreditor().getAccountNumber(), amount.getCurrency());
@@ -162,8 +181,14 @@ public class LansforsakringarPaymentExecutor implements PaymentExecutor, Fetchab
                                 .map(RemittanceInformation::getValue)
                                 .orElse(null));
 
-        final DomesticPaymentResponse domesticPaymentResponse =
-                apiClient.createDomesticPayment(domesticPaymentRequest);
+        DomesticPaymentResponse domesticPaymentResponse = new DomesticPaymentResponse();
+
+        try {
+            domesticPaymentResponse = apiClient.createDomesticPayment(domesticPaymentRequest);
+        } catch (HttpResponseException ex) {
+            HttpResponseExceptionHandler.checkForErrors(ex.getMessage());
+        }
+
         final PaymentStatus status =
                 LansforsakringarConstants.PAYMENT_STATUS_MAPPER
                         .translate(domesticPaymentResponse.getTransactionStatus())
@@ -173,7 +198,8 @@ public class LansforsakringarPaymentExecutor implements PaymentExecutor, Fetchab
     }
 
     private PaymentResponse createDomesticGirosPayment(
-            Payment payment, AccountEntity debtor, AmountEntity amount, String executionDate) {
+            Payment payment, AccountEntity debtor, AmountEntity amount, String executionDate)
+            throws PaymentException {
 
         GirosCreditorAccountEntity creditor =
                 new GirosCreditorAccountEntity(
@@ -187,16 +213,28 @@ public class LansforsakringarPaymentExecutor implements PaymentExecutor, Fetchab
                         amount,
                         executionDate,
                         Optional.ofNullable(payment.getRemittanceInformation())
-                                .filter(r -> r.getType().equals(UNSTRUCTURED))
+                                .filter(
+                                        r ->
+                                                r.getType()
+                                                        .equals(
+                                                                RemittanceInformationType
+                                                                        .UNSTRUCTURED))
                                 .map(RemittanceInformation::getValue)
                                 .orElse(null),
                         Optional.ofNullable(payment.getRemittanceInformation())
-                                .filter(r -> r.getType().equals(OCR))
+                                .filter(r -> r.getType().equals(RemittanceInformationType.OCR))
                                 .map(RemittanceInformation::getValue)
                                 .orElse(null));
 
-        final DomesticPaymentResponse domesticPaymentResponse =
-                apiClient.createDomesticGirosPayment(domesticGirosPaymentRequest);
+        DomesticPaymentResponse domesticPaymentResponse = new DomesticPaymentResponse();
+
+        try {
+            domesticPaymentResponse =
+                    apiClient.createDomesticGirosPayment(domesticGirosPaymentRequest);
+        } catch (HttpResponseException ex) {
+            HttpResponseExceptionHandler.checkForErrors(ex.getMessage());
+        }
+
         final PaymentStatus status =
                 LansforsakringarConstants.PAYMENT_STATUS_MAPPER
                         .translate(domesticPaymentResponse.getTransactionStatus())
@@ -224,22 +262,49 @@ public class LansforsakringarPaymentExecutor implements PaymentExecutor, Fetchab
     public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest)
             throws PaymentException {
 
-        SignBasketResponse signBasketResponse = signPayment(paymentMultiStepRequest.getPayment());
+        try {
+            SignBasketResponse signBasketResponse =
+                    signPayment(paymentMultiStepRequest.getPayment());
 
-        if (!signBasketResponse.getScaStatus().equals(SCA_EXEMPTED)) {
-            authenticatePIS(signBasketResponse);
+            if (!signBasketResponse.getScaStatus().equals(SCAValues.SCA_EXEMPTED)) {
+                authenticatePIS(signBasketResponse);
+            }
+        } catch (HttpResponseException ex) {
+            HttpResponseExceptionHandler.checkForErrors(ex.getMessage());
         }
 
-        PaymentResponse currentState =
-                fetch(
-                        new PaymentRequest(
-                                paymentMultiStepRequest.getPayment(),
-                                Storage.copyOf(paymentMultiStepRequest.getStorage())));
+        PaymentResponse currentState = fetchAndValidatePayment(paymentMultiStepRequest);
 
         return new PaymentMultiStepResponse(
                 currentState.getPayment(),
                 AuthenticationStepConstants.STEP_FINALIZE,
                 new ArrayList<>());
+    }
+
+    private PaymentResponse fetchAndValidatePayment(PaymentMultiStepRequest paymentMultiStepRequest)
+            throws PaymentException {
+
+        PaymentResponse paymentResponse =
+                fetch(
+                        new PaymentRequest(
+                                paymentMultiStepRequest.getPayment(),
+                                Storage.copyOf(paymentMultiStepRequest.getStorage())));
+
+        PaymentStatus paymentStatus = paymentResponse.getPayment().getStatus();
+
+        if (paymentStatus == PaymentStatus.PENDING || paymentStatus == PaymentStatus.CANCELLED) {
+            throw new PaymentCancelledException();
+        }
+
+        if (paymentStatus == PaymentStatus.REJECTED) {
+            throw new PaymentValidationException("Payment rejected by the bank.");
+        }
+
+        if (paymentStatus != PaymentStatus.SIGNED) {
+            throw new PaymentRejectedException("Unexpected payment status: " + paymentStatus);
+        }
+
+        return paymentResponse;
     }
 
     private SignBasketResponse signPayment(Payment payment) {
@@ -260,7 +325,9 @@ public class LansforsakringarPaymentExecutor implements PaymentExecutor, Fetchab
                 ThirdPartyAppAuthenticationPayload.of(url));
 
         supplementalInformationHelper.waitForSupplementalInformation(
-                strongAuthenticationState.getSupplementalKey(), WAIT_FOR_MINUTES, TimeUnit.MINUTES);
+                strongAuthenticationState.getSupplementalKey(),
+                ThirdPartyAppConstants.WAIT_FOR_MINUTES,
+                TimeUnit.MINUTES);
     }
 
     @Override

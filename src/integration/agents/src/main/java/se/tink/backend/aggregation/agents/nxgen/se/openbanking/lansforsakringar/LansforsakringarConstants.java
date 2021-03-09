@@ -19,6 +19,8 @@ public abstract class LansforsakringarConstants {
             TypeMapper.<PaymentStatus>builder()
                     .put(PaymentStatus.PENDING, "PDNG", "RCVD")
                     .put(PaymentStatus.SIGNED, "ACSC", "ACSP", "ACTC")
+                    .put(PaymentStatus.REJECTED, "RJCT")
+                    .put(PaymentStatus.CANCELLED, "CANC")
                     .build();
 
     public static final GenericTypeMapper<PaymentType, Pair<Type, Type>> PAYMENT_TYPE_MAPPER =
@@ -52,6 +54,8 @@ public abstract class LansforsakringarConstants {
         public static final String CREATE_SIGNING_BASKET =
                 BASE_API_URL + Endpoints.CREATE_SIGNING_BASKET;
         public static final String GET_PAYMENT_STATUS = BASE_API_URL + Endpoints.GET_PAYMENT_STATUS;
+        public static final String GET_ACCOUNT_NUMBERS =
+                BASE_API_URL + Endpoints.GET_ACCOUNT_NUMBERS;
     }
 
     public static class Endpoints {
@@ -78,6 +82,7 @@ public abstract class LansforsakringarConstants {
                 "/openbanking/pis/v3/payments/{paymentId}/status";
         public static final String SIGN_PAYMENT =
                 "/openbanking/pis/v3/payments/{paymentId}/authorisations";
+        public static final String GET_ACCOUNT_NUMBERS = "/openbanking/pis/v3/accountnumbers";
     }
 
     public static class StorageKeys {
@@ -151,6 +156,24 @@ public abstract class LansforsakringarConstants {
         public static final String SERVICE_BLOCKED = "Service_blocked";
         public static final String EXPIRED_AUTHORIZATION_CODE =
                 "Authorization code is invalid or expired.";
+        public static final String INVALID_INFO_STRUCTURED =
+                "Invalid remittance information structured";
+        public static final String INVALID_INFO_UNSTRUCTURED =
+                "Invalid remittance information unstructured";
+        public static final String REMITTANCE_INFO_NOT_SET_FOR_GIROS =
+                "Only one of remittance information unstructured or structured can be set";
+        public static final String INVALID_CREDITOR_ACCOUNT = "Invalid creditor account";
+        public static final String DEBTOR_ACCOUNT_NOT_FOUND = "Debtor account not found";
+        public static final String ILLEGAL_PAYMENT_TYPE_FOR_DEBTOR_ACCOUNT =
+                "Illegal payment type for debtor account";
+        public static final String INVALID_REQUESTED_EXECUTION_DATE =
+                "Invalid requested execution date";
+        public static final String REQUESTED_DATE_CAN_NOT_BE_IN_THE_PAST =
+                "Requested execution date can not be in the past";
+        public static final String NOT_ENOUGH_FUNDS =
+                "Not enough funds on account to make payments";
+        public static final String STRING_BEFORE_BANK_ERROR_MESSAGE = "\"text\":\"";
+        public static final String STRING_AFTER_BANK_ERROR_MESSAGE = "\"";
     }
 
     public class IdTags {
@@ -165,6 +188,10 @@ public abstract class LansforsakringarConstants {
         public static final String DOMESTIC_CREDIT_TRANSFERS = "domestic-credit-transfers";
         public static final String DOMESTIC_GIROS = "domestic-giros";
         public static final String CROSS_BORDER_CREDIT_TRANSFERS = "cross-border-credit-transfers";
+        public static final String DOMESTIC_CREDIT_TRANSFERS_RESPONSE = "DOMESTIC_CREDIT_TRANSFERS";
+        public static final String DOMESTIC_GIROS_RESPONSE = "DOMESTIC_GIROS";
+        public static final String CROSS_BORDER_CREDIT_TRANSFERS_RESPONSE =
+                "CROSS_BORDER_CREDIT_TRANSFERS";
     }
 
     public class BodyValues {

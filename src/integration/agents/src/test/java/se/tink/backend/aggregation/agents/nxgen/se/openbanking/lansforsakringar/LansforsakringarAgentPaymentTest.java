@@ -50,7 +50,7 @@ public class LansforsakringarAgentPaymentTest {
         String currency = "SEK";
         RemittanceInformation remittanceInformation = new RemittanceInformation();
         remittanceInformation.setType(RemittanceInformationType.OCR);
-        remittanceInformation.setValue("Remmitance");
+        remittanceInformation.setValue("33001227314");
 
         list.add(
                 new Payment.Builder()
@@ -68,7 +68,7 @@ public class LansforsakringarAgentPaymentTest {
                                                 toFromManager.get(
                                                         ToAccountFromAccountArgumentEnum
                                                                 .FROM_ACCOUNT))))
-                        .withExactCurrencyAmount(ExactCurrencyAmount.inSEK(1.01))
+                        .withExactCurrencyAmount(ExactCurrencyAmount.inSEK(0.01))
                         .withExecutionDate(executionDate)
                         .withCurrency(currency)
                         .withRemittanceInformation(remittanceInformation)
