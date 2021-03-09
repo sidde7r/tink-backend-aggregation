@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank;
 
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CREDIT_CARDS;
+import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.IDENTITY_DATA;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.INVESTMENTS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.LOANS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.PAYMENTS;
@@ -49,7 +50,8 @@ import se.tink.libraries.identitydata.countries.SeIdentityData;
     INVESTMENTS,
     LOANS,
     PAYMENTS,
-    TRANSFERS
+    TRANSFERS,
+    IDENTITY_DATA
 })
 @AgentPisCapability(
         capabilities = {
