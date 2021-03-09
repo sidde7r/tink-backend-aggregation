@@ -47,7 +47,6 @@ public class LunarTransactionalAccountFetcherTest {
     private static final String SECOND_HOLDER_NAME = "Second holder";
     private static final String THIRD_HOLDER_NAME = "Third holder";
 
-    private static final String FIRST_CHECKING_ACCOUNT_ID = "833293fc-282c-4b99-8b86-2035218abeac";
     private static final String SECOND_CHECKING_ACCOUNT_ID = "ced8297b-1b58-401c-9002-60a70194f625";
 
     private static final String CURRENCY = "DKK";
