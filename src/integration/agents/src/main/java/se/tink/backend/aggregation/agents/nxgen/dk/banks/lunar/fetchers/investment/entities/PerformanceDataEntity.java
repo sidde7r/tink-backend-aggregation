@@ -21,7 +21,7 @@ public class PerformanceDataEntity {
         // which could be rounded
         if (all == null
                 || all.getTotalProfitRateAsDecimal() == null
-                || all.getTotalProfitRateAsDecimal().equals(BigDecimal.ZERO)) {
+                || BigDecimal.ZERO.equals(all.getTotalProfitRateAsDecimal())) {
             return 0;
         }
         return countInitialValue(totalValue)

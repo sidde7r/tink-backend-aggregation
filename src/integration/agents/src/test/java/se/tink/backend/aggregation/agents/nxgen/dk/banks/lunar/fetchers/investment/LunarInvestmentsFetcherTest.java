@@ -4,12 +4,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
+import org.apache.commons.io.FileUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -72,7 +75,7 @@ public class LunarInvestmentsFetcherTest {
         assertThat(result.get(0)).isEqualToComparingFieldByFieldRecursively(expected.get(0));
     }
 
-    private Object[] investmentsParams() {
+    private Object[] investmentsParams() throws IOException {
         return new Object[] {
             new Object[] {
                 SerializationUtils.deserializeFromString(
@@ -147,7 +150,7 @@ public class LunarInvestmentsFetcherTest {
         assertThat(result).isEqualTo(Collections.emptyList());
     }
 
-    private Object[] investmentsResponseParams() {
+    private Object[] investmentsResponseParams() throws IOException {
         return new Object[] {
             new Object[] {new InvestmentsResponse()},
             new Object[] {null},
@@ -161,7 +164,8 @@ public class LunarInvestmentsFetcherTest {
 
     @Test
     @Parameters(method = "instrumentsParams")
-    public void shouldFetchInvestmentsWithoutInstruments(InstrumentsResponse instrumentsResponse) {
+    public void shouldFetchInvestmentsWithoutInstruments(InstrumentsResponse instrumentsResponse)
+            throws IOException {
         // given
         when(apiClient.fetchInvestments())
                 .thenReturn(
@@ -270,32 +274,18 @@ public class LunarInvestmentsFetcherTest {
             String accountNumber,
             Double cashBalance,
             Double totalOpenPositionsValue,
-            Double totalValue) {
+            Double totalValue)
+            throws IOException {
         String investmentsResponseString =
-                "{\n"
-                        + "    \"portfolio\": {\n"
-                        + "        \"accountId\": \"123456INET\",\n"
-                        + "        \"accountNumber\": "
-                        + accountNumber
-                        + ",\n"
-                        + "        \"cashAvailableForWithdrawal\": 25.93,\n"
-                        + "        \"cashBalance\": "
-                        + cashBalance
-                        + ",\n"
-                        + "        \"clientId\": \"12345678\",\n"
-                        + "        \"created\": 1615132050000,\n"
-                        + "        \"currency\": \"DKK\",\n"
-                        + "        \"id\": \"06a6f622-acc2-41f8-ac89-401ec3e056df_portfolio\",\n"
-                        + "        \"totalOpenPositionsValue\": "
-                        + totalOpenPositionsValue
-                        + ",\n"
-                        + "        \"totalValue\": "
-                        + totalValue
-                        + ",\n"
-                        + "        \"updated\": 1615132050000,\n"
-                        + "        \"userStatus\": \"active\"\n"
-                        + "    }\n"
-                        + "}";
+                String.format(
+                        FileUtils.readFileToString(
+                                Paths.get(TEST_DATA_PATH, "invest_portfolio_with_parameters")
+                                        .toFile(),
+                                StandardCharsets.UTF_8),
+                        accountNumber,
+                        cashBalance,
+                        totalOpenPositionsValue,
+                        totalValue);
         return SerializationUtils.deserializeFromString(
                 investmentsResponseString, InvestmentsResponse.class);
     }
