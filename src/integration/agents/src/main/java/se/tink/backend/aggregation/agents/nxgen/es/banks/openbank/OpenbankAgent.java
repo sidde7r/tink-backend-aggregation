@@ -16,6 +16,7 @@ import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.authenticator.OpenbankAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.creditcard.OpenbankCreditCardFetcher;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.identity.OpenbankIdentityDataFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.transactionalaccount.OpenbankTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.session.OpenbankSessionHandler;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
@@ -118,6 +119,7 @@ public final class OpenbankAgent extends NextGenerationAgent
 
     @Override
     public FetchIdentityDataResponse fetchIdentityData() {
-        return new FetchIdentityDataResponse(apiClient.fetchIdentityData().toTinkIdentity());
+        OpenbankIdentityDataFetcher fetcher = new OpenbankIdentityDataFetcher(apiClient);
+        return fetcher.response();
     }
 }
