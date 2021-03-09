@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs
 
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.transactionalaccount.entities.ErrorEntity.CONSENT_INVALID;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.transactionalaccount.entities.ErrorEntity.CONSENT_TIME_OUT_EXPIRED;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.transactionalaccount.entities.ErrorEntity.SERVICE_UNAVAILABLE;
 
 import java.time.LocalDate;
 import lombok.AllArgsConstructor;
@@ -50,7 +51,7 @@ public class Xs2aDevelopersTransactionDateFromFetcher<A extends Account>
             return apiClient.getTransactions(
                     account, dateFrom, localDateTimeSource.now().toLocalDate());
         } catch (HttpResponseException hre) {
-            if (isConsentTimeoutException(hre)) {
+            if (isConsentTimeoutException(hre) || is503ServiceUnavailable(hre)) {
                 return fetchTransactionsForLast89Days(account);
             } else {
                 throw hre;
@@ -70,5 +71,17 @@ public class Xs2aDevelopersTransactionDateFromFetcher<A extends Account>
         }
         return errorResponse.getTppMessages().stream()
                 .anyMatch(x -> CONSENT_INVALID.equals(x) || CONSENT_TIME_OUT_EXPIRED.equals(x));
+    }
+
+    // ITE-2400
+    // Fix for comdirect API issues, they seem to hit 503 whenever we ask for long periods of time
+    // Written in a roundabout fashion of catching exception by design!
+    // This will allow us to fetch whole history again immediatly after they fix their shit.
+    private boolean is503ServiceUnavailable(HttpResponseException ex) {
+        ErrorResponse errorResponse = ex.getResponse().getBody(ErrorResponse.class);
+        return ex.getResponse().getStatus() == 503
+                && errorResponse != null
+                && errorResponse.getTppMessages() != null
+                && errorResponse.getTppMessages().stream().anyMatch(SERVICE_UNAVAILABLE::equals);
     }
 }

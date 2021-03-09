@@ -23,6 +23,9 @@ public class ErrorEntity {
     public static final ErrorEntity PARAMETER_NOT_CONSISTENT =
             new ErrorEntity(ERROR, "PARAMETER_NOT_CONSISTENT", "requested page does not exist");
 
+    public static final ErrorEntity SERVICE_UNAVAILABLE =
+            new ErrorEntity(ERROR, "SERVICE_UNAVAILABLE", "The service is currently unavailable");
+
     private String category;
     private String code;
     @EqualsAndHashCode.Exclude private String text;
