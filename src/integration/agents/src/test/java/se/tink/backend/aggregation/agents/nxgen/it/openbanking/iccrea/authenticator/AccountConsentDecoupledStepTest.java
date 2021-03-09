@@ -46,14 +46,13 @@ public class AccountConsentDecoupledStepTest {
                 mock(SupplementalInformationController.class);
         Catalog catalog = mock(Catalog.class);
         when(catalog.getString(any(LocalizableKey.class))).thenReturn("");
-        ConsentProcessor consentProcessor = new ConsentProcessor(consentManager);
+        ConsentProcessor consentProcessor =
+                new ConsentProcessor(
+                        consentManager,
+                        new UserInteractions(supplementalInformationController, catalog));
         this.step =
                 new AccountConsentDecoupledStep(
-                        consentManager,
-                        strongAuthenticationState,
-                        supplementalInformationController,
-                        catalog,
-                        consentProcessor);
+                        consentManager, strongAuthenticationState, consentProcessor);
     }
 
     @Test
