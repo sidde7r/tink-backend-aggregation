@@ -6,6 +6,7 @@ import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.authenticator.rpc.bankid.AuthenticateResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.authenticator.rpc.bankid.InitBankIdRequest;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.fetcher.creditcards.rpc.CreditCardDataResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.fetcher.creditcards.rpc.CreditCardTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.fetcher.creditcards.rpc.CreditCardsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.fetcher.transactionalaccounts.rpc.AccountTransactionsResponse;
@@ -79,6 +80,12 @@ public class VolvoFinansApiClient {
 
     public CustomerResponse keepAlive() {
         return createRequest(VolvoFinansConstants.Urls.CUSTOMER).get(CustomerResponse.class);
+    }
+
+    /* CC Data */
+    public CreditCardDataResponse creditCardData() {
+        return createPostRequest(VolvoFinansConstants.Urls.CREDIT_CARD_DATA)
+                .get(CreditCardDataResponse.class);
     }
 
     /* Accounts */
