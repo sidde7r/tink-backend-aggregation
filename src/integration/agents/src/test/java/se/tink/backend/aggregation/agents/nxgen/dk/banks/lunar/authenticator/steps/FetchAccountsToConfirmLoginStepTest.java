@@ -20,6 +20,8 @@ import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.per
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.persistance.LunarDataAccessorFactory;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.persistance.LunarProcessState;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.persistance.LunarProcessStateAccessor;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.loan.rpc.CreditApplicationsResponse;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.loan.rpc.LoansResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.request.AgentProceedNextStepAuthenticationRequest;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.authentication.process.result.AgentAuthenticationResult;
@@ -68,6 +70,10 @@ public class FetchAccountsToConfirmLoginStepTest {
         request =
                 LunarTestUtils.getProceedNextStepAuthRequest(
                         stateAccessor, authDataAccessor, processState, initialData);
+
+        when(apiClient.fetchLoans(ACCESS_TOKEN, DEVICE_ID)).thenReturn(new LoansResponse());
+        when(apiClient.fetchCreditApplications(ACCESS_TOKEN, DEVICE_ID))
+                .thenReturn(new CreditApplicationsResponse());
     }
 
     @Test
