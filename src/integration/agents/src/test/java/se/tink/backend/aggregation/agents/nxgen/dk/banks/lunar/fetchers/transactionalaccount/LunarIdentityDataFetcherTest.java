@@ -27,7 +27,6 @@ import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.client.F
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.transactionalaccount.rpc.CardsResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.transactionalaccount.rpc.MembersResponse;
-import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.transactionalaccount.rpc.UserSettingsResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.identitydata.IdentityData;
@@ -41,6 +40,7 @@ public class LunarIdentityDataFetcherTest {
     private static final String HOLDER_NAME = "Account Holder";
     private static final String SECOND_HOLDER_NAME = "Second holder";
     private static final String THIRD_HOLDER_NAME = "Third holder";
+    private static final String LUNAR_USER_ID = "4b52ed08-7207-4709-97b1-cf09f8eba5c6";
 
     private static final String FIRST_CHECKING_ACCOUNT_ID = "833293fc-282c-4b99-8b86-2035218abeac";
     private static final String SECOND_CHECKING_ACCOUNT_ID = "ced8297b-1b58-401c-9002-60a70194f625";
@@ -62,7 +62,7 @@ public class LunarIdentityDataFetcherTest {
     @Test
     public void shouldGetAccountHolderForAccountWithoutCard() {
         // given
-        storeTestAccountsResponse("accounts_response_with_not_shared_account.json");
+        storeTestData("accounts_response_with_not_shared_account.json", LUNAR_USER_ID);
 
         // and
         when(apiClient.fetchCardsByAccount(FIRST_CHECKING_ACCOUNT_ID))
@@ -82,12 +82,12 @@ public class LunarIdentityDataFetcherTest {
             CardsResponse firstCardsResponse,
             CardsResponse secondCardsResponse,
             MembersResponse membersResponse,
-            UserSettingsResponse userSettingsResponse,
+            String userId,
             String expectedHolderName,
             Map<String, List<String>> expectedAccountsMembers) {
         // given
         // first account is not shared, and second is shared
-        storeTestAccountsResponse("accounts_response.json");
+        storeTestData("accounts_response.json", userId);
 
         // and
         when(apiClient.fetchCardsByAccount(FIRST_CHECKING_ACCOUNT_ID))
@@ -95,7 +95,6 @@ public class LunarIdentityDataFetcherTest {
         when(apiClient.fetchCardsByAccount(SECOND_CHECKING_ACCOUNT_ID))
                 .thenReturn(secondCardsResponse);
         when(apiClient.fetchMembers(SECOND_CHECKING_ACCOUNT_ID)).thenReturn(membersResponse);
-        when(apiClient.getUserSettings()).thenReturn(userSettingsResponse);
 
         // and
         IdentityData expectedIdentityData =
@@ -117,7 +116,6 @@ public class LunarIdentityDataFetcherTest {
         verify(apiClient).fetchCardsByAccount(FIRST_CHECKING_ACCOUNT_ID);
         verify(apiClient).fetchCardsByAccount(SECOND_CHECKING_ACCOUNT_ID);
         verify(apiClient).fetchMembers(SECOND_CHECKING_ACCOUNT_ID);
-        verify(apiClient).getUserSettings();
         verifyNoMoreInteractions(apiClient);
     }
 
@@ -127,7 +125,7 @@ public class LunarIdentityDataFetcherTest {
                 deserialize("cards_response_with_one_holder.json", CardsResponse.class),
                 deserialize("cards_response_with_holder_and_others_full.json", CardsResponse.class),
                 deserialize("members_response.json", MembersResponse.class),
-                deserialize("usersettings_response.json", UserSettingsResponse.class),
+                LUNAR_USER_ID,
                 HOLDER_NAME,
                 getAllAccountsMembers()
             },
@@ -136,7 +134,7 @@ public class LunarIdentityDataFetcherTest {
                 deserialize(
                         "cards_response_with_holder_and_other_not_full.json", CardsResponse.class),
                 deserialize("members_response.json", MembersResponse.class),
-                deserialize("usersettings_response.json", UserSettingsResponse.class),
+                LUNAR_USER_ID,
                 HOLDER_NAME,
                 getAllAccountsMembers()
             },
@@ -144,7 +142,7 @@ public class LunarIdentityDataFetcherTest {
                 deserialize("cards_response_with_one_holder.json", CardsResponse.class),
                 new CardsResponse(),
                 deserialize("members_response.json", MembersResponse.class),
-                deserialize("usersettings_response.json", UserSettingsResponse.class),
+                LUNAR_USER_ID,
                 HOLDER_NAME,
                 getAllAccountsMembers()
             },
@@ -152,7 +150,7 @@ public class LunarIdentityDataFetcherTest {
                 new CardsResponse(),
                 deserialize("cards_response_with_holder_and_others_full.json", CardsResponse.class),
                 deserialize("members_response.json", MembersResponse.class),
-                deserialize("usersettings_response.json", UserSettingsResponse.class),
+                LUNAR_USER_ID,
                 HOLDER_NAME,
                 getAllAccountsMembers()
             },
@@ -160,7 +158,7 @@ public class LunarIdentityDataFetcherTest {
                 new CardsResponse(),
                 deserialize("cards_response_with_one_holder.json", CardsResponse.class),
                 deserialize("members_response.json", MembersResponse.class),
-                deserialize("usersettings_response.json", UserSettingsResponse.class),
+                LUNAR_USER_ID,
                 HOLDER_NAME,
                 getAllAccountsMembers()
             },
@@ -169,7 +167,7 @@ public class LunarIdentityDataFetcherTest {
                 deserialize(
                         "cards_response_with_holder_and_other_not_full.json", CardsResponse.class),
                 deserialize("members_response.json", MembersResponse.class),
-                deserialize("usersettings_response.json", UserSettingsResponse.class),
+                LUNAR_USER_ID,
                 HOLDER_NAME,
                 getAllAccountsMembers()
             },
@@ -177,7 +175,7 @@ public class LunarIdentityDataFetcherTest {
                 new CardsResponse(),
                 new CardsResponse(),
                 deserialize("members_response.json", MembersResponse.class),
-                deserialize("usersettings_response.json", UserSettingsResponse.class),
+                LUNAR_USER_ID,
                 null,
                 getAllAccountsMembers()
             },
@@ -185,7 +183,7 @@ public class LunarIdentityDataFetcherTest {
                 deserialize("cards_response_with_one_holder.json", CardsResponse.class),
                 deserialize("cards_response_with_holder_and_others_full.json", CardsResponse.class),
                 deserialize("members_response_different_user_id.json", MembersResponse.class),
-                deserialize("usersettings_response.json", UserSettingsResponse.class),
+                LUNAR_USER_ID,
                 HOLDER_NAME,
                 getAllAccountsMembers()
             },
@@ -193,7 +191,7 @@ public class LunarIdentityDataFetcherTest {
                 deserialize("cards_response_with_one_holder.json", CardsResponse.class),
                 deserialize("cards_response_with_holder_and_others_full.json", CardsResponse.class),
                 deserialize("members_response_en_holder_name.json", MembersResponse.class),
-                deserialize("usersettings_response.json", UserSettingsResponse.class),
+                LUNAR_USER_ID,
                 HOLDER_NAME,
                 getAllAccountsMembers()
             },
@@ -201,7 +199,7 @@ public class LunarIdentityDataFetcherTest {
                 deserialize("cards_response_with_one_holder.json", CardsResponse.class),
                 deserialize("cards_response_with_holder_and_others_full.json", CardsResponse.class),
                 deserialize("members_response.json", MembersResponse.class),
-                new UserSettingsResponse(),
+                null,
                 HOLDER_NAME,
                 getAllAccountsMembers()
             },
@@ -209,7 +207,7 @@ public class LunarIdentityDataFetcherTest {
                 deserialize("cards_response_with_one_holder.json", CardsResponse.class),
                 new CardsResponse(),
                 deserialize("members_response_without_holder.json", MembersResponse.class),
-                deserialize("usersettings_response.json", UserSettingsResponse.class),
+                LUNAR_USER_ID,
                 HOLDER_NAME,
                 getAllAccountsMembers()
             },
@@ -217,7 +215,7 @@ public class LunarIdentityDataFetcherTest {
                 new CardsResponse(),
                 new CardsResponse(),
                 deserialize("members_response_without_holder.json", MembersResponse.class),
-                deserialize("usersettings_response.json", UserSettingsResponse.class),
+                LUNAR_USER_ID,
                 null,
                 getAllAccountsMembers()
             },
@@ -225,7 +223,7 @@ public class LunarIdentityDataFetcherTest {
                 deserialize("cards_response_with_one_holder.json", CardsResponse.class),
                 new CardsResponse(),
                 new MembersResponse(),
-                deserialize("usersettings_response.json", UserSettingsResponse.class),
+                LUNAR_USER_ID,
                 HOLDER_NAME,
                 getExpectedAccountsMembers(Collections.emptyList())
             },
@@ -235,7 +233,7 @@ public class LunarIdentityDataFetcherTest {
     @Test
     public void shouldFetchAccountsHoldersWhenSharedAccountThrowsErrorWhileFetchingCards() {
         // given
-        storeTestAccountsResponse("accounts_response.json");
+        storeTestData("accounts_response.json", LUNAR_USER_ID);
 
         // and
         when(apiClient.fetchCardsByAccount(FIRST_CHECKING_ACCOUNT_ID))
@@ -243,8 +241,6 @@ public class LunarIdentityDataFetcherTest {
                         deserialize("cards_response_with_one_holder.json", CardsResponse.class));
         when(apiClient.fetchMembers(SECOND_CHECKING_ACCOUNT_ID))
                 .thenReturn(deserialize("members_response_second.json", MembersResponse.class));
-        when(apiClient.getUserSettings())
-                .thenReturn(deserialize("usersettings_response.json", UserSettingsResponse.class));
 
         // and
         when(apiClient.fetchCardsByAccount(SECOND_CHECKING_ACCOUNT_ID))
@@ -260,10 +256,11 @@ public class LunarIdentityDataFetcherTest {
                         getExpectedAccountsMembers(Collections.singletonList(THIRD_HOLDER_NAME)));
     }
 
-    private void storeTestAccountsResponse(String fileName) {
+    private void storeTestData(String fileName, String userId) {
         AccountsResponse accountsResponse = deserialize(fileName, AccountsResponse.class);
         LunarAuthData authData = new LunarAuthData();
         authData.setAccountsResponse(accountsResponse);
+        authData.setLunarUserId(userId);
         getTestDataAccessor().storeData(authData);
     }
 
@@ -288,7 +285,7 @@ public class LunarIdentityDataFetcherTest {
     public void shouldFetchAccountsAndIdentityDataWhenIdentityDataFetchingIsFirst(
             CardsResponse cardsResponse, String expectedHolderName) {
         // given
-        storeTestAccountsResponse("accounts_response.json");
+        storeTestData("accounts_response.json", LUNAR_USER_ID);
 
         // and
         when(apiClient.fetchCardsByAccount(FIRST_CHECKING_ACCOUNT_ID)).thenReturn(cardsResponse);
@@ -296,8 +293,6 @@ public class LunarIdentityDataFetcherTest {
                 .thenReturn(new CardsResponse());
         when(apiClient.fetchMembers(SECOND_CHECKING_ACCOUNT_ID))
                 .thenReturn(deserialize("members_response.json", MembersResponse.class));
-        when(apiClient.getUserSettings())
-                .thenReturn(deserialize("usersettings_response.json", UserSettingsResponse.class));
 
         // and
         IdentityData expectedIdentityData =

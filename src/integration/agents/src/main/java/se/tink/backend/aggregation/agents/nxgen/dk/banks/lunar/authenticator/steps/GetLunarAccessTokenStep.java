@@ -60,6 +60,7 @@ public class GetLunarAccessTokenStep
                     new AccessTokenFetchingFailureError(), authDataAccessor.clearData());
         }
         authData.setAccessToken(accessTokenResponse.getAccessToken());
+        authData.setLunarUserId(accessTokenResponse.getGuid());
         processState.setAutoAuth(false);
 
         return new AgentProceedNextStepAuthenticationResult(

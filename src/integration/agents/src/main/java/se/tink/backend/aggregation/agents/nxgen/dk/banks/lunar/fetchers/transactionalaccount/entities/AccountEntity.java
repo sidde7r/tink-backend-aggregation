@@ -39,15 +39,9 @@ public class AccountEntity extends BaseResponseEntity {
     private String displayName;
     @Getter private Boolean isShared;
     private String originGroupId;
-    private String state;
 
     @JsonIgnore
     public Optional<TransactionalAccount> toTransactionalAccount(List<Party> accountHolders) {
-        if (!ACTIVE_STATE.equalsIgnoreCase(state)) {
-            // Wiski delete this log after getting more data
-            log.info("Lunar account state is different than active. State: {}", state);
-        }
-
         return TransactionalAccount.nxBuilder()
                 .withType(TransactionalAccountType.CHECKING)
                 .withoutFlags()

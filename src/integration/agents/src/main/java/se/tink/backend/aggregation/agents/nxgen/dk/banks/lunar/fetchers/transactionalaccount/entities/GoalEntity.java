@@ -3,7 +3,10 @@ package se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.transac
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -24,6 +27,7 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 @JsonObject
 public class GoalEntity extends BaseResponseEntity {
 
+    private static final Pattern TITLE_PATTERN = Pattern.compile("\"title\":\"(.+)\"");
     private static final String TITLE_IDENTIFIER = "title";
     private static final String TEXT_FIELD = "text";
 
@@ -69,22 +73,32 @@ public class GoalEntity extends BaseResponseEntity {
         List<String> titles =
                 fields.stream()
                         .filter(BaseResponseEntity::notDeleted)
-                        .filter(this::isTitleField)
-                        .map(FieldEntity::getValue)
+                        .filter(field -> BooleanUtils.isNotFalse(field.getVisible()))
+                        .map(this::getTitleOrNull)
+                        .filter(Objects::nonNull)
                         .collect(Collectors.toList());
-        if (titles.size() > 1) {
-            log.info("Lunar goal has more than one title! Titles: {}", titles);
-        } else if (titles.isEmpty()) {
+        if (titles.isEmpty()) {
             log.info("Lunar goal has no title!");
             return "";
         }
         return titles.get(0);
     }
 
-    private boolean isTitleField(FieldEntity field) {
+    private String getTitleOrNull(FieldEntity field) {
+        if (fieldIdentifierIsTitle(field)) {
+            return field.getValue();
+        } else if (StringUtils.isBlank(field.getFieldIdentifier())) {
+            Matcher matcher = TITLE_PATTERN.matcher(field.getValue());
+            if (matcher.find()) {
+                return matcher.group(1);
+            }
+        }
+        return null;
+    }
+
+    private boolean fieldIdentifierIsTitle(FieldEntity field) {
         return TITLE_IDENTIFIER.equalsIgnoreCase(field.getFieldIdentifier())
-                && TEXT_FIELD.equalsIgnoreCase(field.getType())
-                && BooleanUtils.isNotFalse(field.getVisible());
+                && TEXT_FIELD.equalsIgnoreCase(field.getType());
     }
 
     @EqualsAndHashCode(callSuper = true)

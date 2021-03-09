@@ -41,6 +41,7 @@ public class GetLunarAccessTokenStepTest {
     private static final String DEVICE_ID = "some test id";
     private static final String ACCESS_TOKEN = "this_is_test_access_token";
     private static final String CHALLENGE = "1234567890123";
+    private static final String GUID = "4b52ed08-7207-4709-97b1-cf09f8eba5c6";
     private static final String NEM_ID_TOKEN =
             "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n<ds:SignatureValue>\nabcdefghij+abcdef/O002/</ds:SignatureValue>";
 
@@ -86,6 +87,7 @@ public class GetLunarAccessTokenStepTest {
         LunarAuthData expectedData = new LunarAuthData();
         expectedData.setDeviceId(DEVICE_ID);
         expectedData.setAccessToken(ACCESS_TOKEN);
+        expectedData.setLunarUserId(GUID);
 
         // and
         LunarProcessState expectedState = new LunarProcessState();
