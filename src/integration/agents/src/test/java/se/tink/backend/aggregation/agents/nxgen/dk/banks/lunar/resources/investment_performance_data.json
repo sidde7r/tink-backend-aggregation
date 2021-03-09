@@ -1,0 +1,81 @@
+{
+    "performanceData": {
+        "all": {
+            "returnFraction": -0.5606,
+            "timeValueSeries": [
+                {
+                    "date": "2020-06-16T00:00:00Z",
+                    "value": 100
+                },
+                {
+                    "date": "2020-06-17T00:00:00Z",
+                    "value": 99.01
+                },
+                {
+                    "date": "2021-02-05T00:00:00Z",
+                    "value": 110.99
+                },
+                {
+                    "date": "2021-02-08T00:00:00Z",
+                    "value": 43.94
+                },
+                {
+                    "date": "2021-03-04T08:38:34Z",
+                    "value": 45
+                }
+            ]
+        },
+        "oneDay": {
+            "timeValueSeries": null
+        },
+        "oneMonth": {
+            "timeValueSeries": [
+                {
+                    "date": "2021-02-05T00:00:00Z",
+                    "value": 110.99
+                },
+                {
+                    "date": "2021-02-08T00:00:00Z",
+                    "value": 43.94
+                },
+                {
+                    "date": "2021-03-04T08:38:34Z",
+                    "value": 45
+                }
+            ]
+        },
+        "oneWeek": {
+            "timeValueSeries": [
+                {
+                    "date": "2021-03-04T08:38:34Z",
+                    "value": 45
+                }
+            ]
+        },
+        "oneYear": {
+            "returnFraction": -0.5606,
+            "timeValueSeries": [
+                {
+                    "date": "2020-06-16T00:00:00Z",
+                    "value": 100
+                },
+                {
+                    "date": "2020-06-17T00:00:00Z",
+                    "value": 99.01
+                },
+                {
+                    "date": "2021-02-05T00:00:00Z",
+                    "value": 110.99
+                },
+                {
+                    "date": "2021-02-08T00:00:00Z",
+                    "value": 43.94
+                },
+                {
+                    "date": "2021-03-04T08:38:34Z",
+                    "value": 45
+                }
+            ]
+        }
+    }
+}

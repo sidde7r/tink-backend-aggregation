@@ -31,6 +31,10 @@ public class LunarConstants {
         public static final URL MEMBERS =
                 toLunarUrl("account-management/accounts/{accountId}/members");
         public static final URL USER_SETTINGS = toLunarUrl("usersettings/settings");
+        public static final URL PORTFOLIO = toLunarUrl("invest/portfolio");
+        public static final URL INSTRUMENTS = toLunarUrl("invest/instruments");
+        public static final URL PORTFOLIO_PERFORMANCE_DATA =
+                toLunarUrl("invest/portfolio/performancedata");
 
         private static URL toLunarUrl(String endpoint) {
             return URL.of(LUNAR_BASE_URL + endpoint);

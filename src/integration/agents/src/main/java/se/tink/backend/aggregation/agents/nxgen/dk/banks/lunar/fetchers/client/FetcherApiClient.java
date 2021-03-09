@@ -13,6 +13,9 @@ import se.tink.backend.aggregation.agents.agentplatform.authentication.storage.P
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.LunarConstants;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.persistance.LunarAuthData;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.persistance.LunarDataAccessorFactory;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.investment.rpc.InstrumentsResponse;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.investment.rpc.InvestmentsResponse;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.investment.rpc.PortfolioPerformanceResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.transactionalaccount.rpc.CardsResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.transactionalaccount.rpc.GoalDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.transactionalaccount.rpc.GoalsResponse;
@@ -68,6 +71,19 @@ public class FetcherApiClient {
 
     public UserSettingsResponse getUserSettings() {
         return getDefaultRequestBuilder(Url.USER_SETTINGS).get(UserSettingsResponse.class);
+    }
+
+    public InvestmentsResponse fetchInvestments() {
+        return getDefaultRequestBuilder(Url.PORTFOLIO).get(InvestmentsResponse.class);
+    }
+
+    public PortfolioPerformanceResponse fetchPerformanceData() {
+        return getDefaultRequestBuilder(Url.PORTFOLIO_PERFORMANCE_DATA)
+                .get(PortfolioPerformanceResponse.class);
+    }
+
+    public InstrumentsResponse fetchInstruments() {
+        return getDefaultRequestBuilder(Url.INSTRUMENTS).get(InstrumentsResponse.class);
     }
 
     private RequestBuilder getDefaultRequestBuilder(URL url) {

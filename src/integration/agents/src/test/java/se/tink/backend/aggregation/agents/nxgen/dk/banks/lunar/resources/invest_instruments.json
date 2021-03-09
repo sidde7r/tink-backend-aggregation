@@ -1,0 +1,172 @@
+{
+    "instruments": [
+        {
+            "baseCurrency": "DKK",
+            "brandIconUrl": "https://api.prod.lunarway.com/storage/3bc4f4ad-2b1e-423d-b054-10a290538b9e/redirect",
+            "brandName": "iShares Of Some Test",
+            "created": 1604386369439,
+            "currency": "USD",
+            "currentPrice": 38.52,
+            "currentPriceInBaseCurrency": 238.03,
+            "currentPriceTimestamp": 1614789000173,
+            "dailyPercentageChange": 0.0172,
+            "dailyPercentageChangeAbsolute": 0.0172,
+            "deleted": false,
+            "description": "iShares Description",
+            "details": [
+                {
+                    "information": "The annual expense ratio are the expenses you have when investing in the ETF. It is a kind of administration and trading fee for each ETF.",
+                    "label": "Expense ratio",
+                    "value": "0.18"
+                },
+                {
+                    "information": "Share taxation means that the ETF in 2020 has a tax rate of 27% up to DKK 55,300, and that share income above DKK 55,300 is taxed at 42%.\n\nCapital income taxation means that the ETF is taxed according to your capital income - ie between 37% and 42%.\n\nBoth types of taxation go under \"lagerprincippet\". This means that you pay tax on your return every year - and not until you sell the ETF again. If your ETF has given losses for a year, you can deduct it in tax.",
+                    "label": "Taxation",
+                    "value": "Income gain taxation"
+                },
+                {
+                    "information": "\"Accumulating\" means that a dividend is automatically reinvested in the ETF.\n\n\"Distributing\" means that the dividend will be paid to you.",
+                    "label": "Dividend",
+                    "value": "Accumulating"
+                }
+            ],
+            "exchange": "adc_def",
+            "hasPosition": false,
+            "id": "8eaa0af1-0791-4071-916a-9b2e36af4872",
+            "isTradable": true,
+            "isWatched": false,
+            "latestClosePrice": 38.52,
+            "latestClosePriceInBaseCurrency": 238.03,
+            "marketData": [
+                37.87,
+                37.87,
+                38.52
+            ],
+            "popular": false,
+            "subTitle": "Some subtitle",
+            "subType": "def",
+            "tickerCode": "ABAB",
+            "title": "Some title",
+            "type": "stock",
+            "updated": 1614849943494
+        },
+        {
+            "baseCurrency": "DKK",
+            "brandIconUrl": "https://api.prod.lunarway.com/storage/48ebf81f-a98e-473f-bacb-4cb941cdfdb8/redirect",
+            "brandName": "BlaBla Test Brand",
+            "created": 1573658134354,
+            "currency": "SEK",
+            "currentPrice": 12.52,
+            "currentPriceInBaseCurrency": 9.16,
+            "currentPriceTimestamp": 1614788700109,
+            "dailyPercentageChange": -0.0087,
+            "dailyPercentageChangeAbsolute": 0.0087,
+            "deleted": false,
+            "details": null,
+            "exchange": "qwe",
+            "hasPosition": false,
+            "id": "d7d28cca-a289-4f14-bcf4-9b19f4ab4424",
+            "isTradable": true,
+            "isWatched": false,
+            "latestClosePrice": 12.52,
+            "latestClosePriceInBaseCurrency": 9.16,
+            "marketData": [
+                12.63,
+                12.63,
+                12.52,
+                12.52
+            ],
+            "popular": false,
+            "subTitle": "BBB",
+            "subType": "stock",
+            "tickerCode": "BBB",
+            "title": "Bla Bla International",
+            "type": "stock",
+            "updated": 1614849943494
+        },
+        {
+            "baseCurrency": "DKK",
+            "brandIconUrl": "https://api.prod.lunarway.com/storage/78a45a5c-4076-4338-ae67-8f2aaa8cf8d4/redirect",
+            "brandName": "Testing brand AB",
+            "created": 1573658134206,
+            "currency": "SEK",
+            "currentPrice": 1.216,
+            "currentPriceInBaseCurrency": 0.89,
+            "currentPriceTimestamp": 1614847611466,
+            "dailyPercentageChange": 0.0066,
+            "dailyPercentageChangeAbsolute": 0.0066,
+            "deleted": false,
+            "details": null,
+            "exchange": "rty",
+            "hasPosition": true,
+            "id": "bdd9b2ff-9638-47f8-bb02-83516f2b7c81",
+            "isTradable": true,
+            "isWatched": false,
+            "latestClosePrice": 1.208,
+            "latestClosePriceInBaseCurrency": 0.88,
+            "marketData": [
+                1.208,
+                1.208,
+                1.216
+            ],
+            "popular": false,
+            "position": {
+                "amount": 15,
+                "averagePriceInBaseCurrency": 0.90,
+                "created": 1614849943494,
+                "id": "bdd9b2ff-9638-47f8-bb02-83516f2b7c81_position",
+                "profitLossOnTradeInBaseCurrency": -0.78,
+                "profitLossOnTradePercentage": -0.0123,
+                "updated": 1614849943494
+            },
+            "subTitle": "ABCD",
+            "subType": "stock",
+            "tickerCode": "ABCD",
+            "title": "Testing title AB",
+            "type": "stock",
+            "updated": 1614849943494
+        },
+        {
+            "baseCurrency": "DKK",
+            "brandIconUrl": "https://api.prod.lunarway.com/storage/9beeaa86-5401-4d20-875f-7f3403a4a30f/redirect",
+            "brandName": "Another brand",
+            "created": 1573658134206,
+            "currency": "USD",
+            "currentPrice": 1.216,
+            "currentPriceInBaseCurrency": 0.89,
+            "currentPriceTimestamp": 1614847611466,
+            "dailyPercentageChange": 0.0066,
+            "dailyPercentageChangeAbsolute": 0.0066,
+            "deleted": null,
+            "details": null,
+            "exchange": "iop",
+            "hasPosition": true,
+            "id": "f5f9a5a3-e9eb-4904-8960-28c2fcd21c39",
+            "isTradable": true,
+            "isWatched": false,
+            "latestClosePrice": 1.208,
+            "latestClosePriceInBaseCurrency": 0.88,
+            "marketData": [
+                1.208,
+                1.208,
+                1.216
+            ],
+            "popular": false,
+            "position": {
+                "amount": 5,
+                "averagePriceInBaseCurrency": 0.90,
+                "created": 1614849943494,
+                "id": "f5f9a5a3-e9eb-4904-8960-28c2fcd21c39_position",
+                "profitLossOnTradeInBaseCurrency": -0.78,
+                "profitLossOnTradePercentage": -0.0123,
+                "updated": 1614849943494
+            },
+            "subTitle": "EFGH",
+            "subType": "other",
+            "tickerCode": "EFGH",
+            "title": "Another AB",
+            "type": "other",
+            "updated": 1614849943494
+        }
+    ]
+}
