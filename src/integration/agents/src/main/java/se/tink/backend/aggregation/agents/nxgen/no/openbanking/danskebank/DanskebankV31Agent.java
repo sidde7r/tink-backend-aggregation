@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.no.openbanking.danskebank;
 
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CREDIT_CARDS;
-import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.IDENTITY_DATA;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
 
 import com.google.inject.Inject;
@@ -29,7 +28,7 @@ import se.tink.libraries.mapper.PrioritizedValueExtractor;
 @AgentDependencyModulesForProductionMode(modules = DanskeOpenBankingModule.class)
 @AgentDependencyModulesForDecoupledMode(
         modules = UkOpenBankingLocalKeySignerModuleForDecoupledMode.class)
-@AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, CREDIT_CARDS, IDENTITY_DATA})
+@AgentCapabilities({CHECKING_ACCOUNTS, SAVINGS_ACCOUNTS, CREDIT_CARDS})
 public final class DanskebankV31Agent extends DanskeBankV31EUBaseAgent {
 
     private static final UkOpenBankingAisConfig aisConfig;
@@ -38,7 +37,6 @@ public final class DanskebankV31Agent extends DanskeBankV31EUBaseAgent {
         aisConfig =
                 new DanskebankAisConfiguration.Builder(V31.AIS_BASE, MarketCode.NO)
                         .withWellKnownURL(V31.getWellKnownUrl(MarketCode.NO))
-                        .partyEndpointEnabled(false)
                         .build();
     }
 
