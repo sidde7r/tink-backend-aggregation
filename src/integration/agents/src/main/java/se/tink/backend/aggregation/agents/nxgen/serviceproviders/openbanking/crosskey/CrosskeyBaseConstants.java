@@ -38,6 +38,7 @@ public abstract class CrosskeyBaseConstants {
         public static final String NONCE = "nonce";
         public static final String REQUEST = "request";
         public static final String REFRESH_TOKEN = "refresh_token";
+        public static final String RESPONSE_MODE = "response_mode";
     }
 
     public static class QueryValues {
@@ -45,6 +46,7 @@ public abstract class CrosskeyBaseConstants {
         public static final String RESPONSE_TYPE = "code id_token";
         public static final String REFRESH_TOKEN = "refresh_token";
         public static final String CLIENT_CREDENTIALS = "client_credentials";
+        public static final String QUERY = "query";
     }
 
     public static class HeaderKeys {
