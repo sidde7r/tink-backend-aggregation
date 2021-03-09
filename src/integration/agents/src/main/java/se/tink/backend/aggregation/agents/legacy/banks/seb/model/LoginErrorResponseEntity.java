@@ -1,7 +1,11 @@
 package se.tink.backend.aggregation.agents.banks.seb.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Getter;
+import se.tink.backend.aggregation.annotations.JsonObject;
 
+@JsonObject
+@Getter
 public class LoginErrorResponseEntity {
 
     @JsonProperty("info-header")
@@ -15,20 +19,4 @@ public class LoginErrorResponseEntity {
 
     @JsonProperty("support-id")
     private String supportId;
-
-    public String getInfoHeader() {
-        return infoHeader;
-    }
-
-    public String getInfoText() {
-        return infoText;
-    }
-
-    public String getInfoCode() {
-        return infoCode;
-    }
-
-    public String getSupportId() {
-        return supportId;
-    }
 }
