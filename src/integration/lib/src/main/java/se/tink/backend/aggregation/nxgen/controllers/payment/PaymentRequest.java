@@ -80,6 +80,8 @@ public class PaymentRequest {
                         .withPaymentServiceType(PaymentServiceType.PERIODIC)
                         .withFrequency(recurringPayment.getFrequency())
                         .withExecutionRule(recurringPayment.getExecutionRule())
+                        .withDayOfExecution(recurringPayment.getDayOfExecution())
+                        .withEndDate(recurringPayment.getEndDate())
                         .withStartDate(recurringPayment.getStartDate());
 
         if (recurringPayment.getSource() != null) {

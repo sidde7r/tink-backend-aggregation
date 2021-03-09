@@ -18,5 +18,7 @@ public class RecurringPayment extends Transfer {
 
     private Frequency frequency;
     private LocalDate startDate;
+    private LocalDate endDate;
     private ExecutionRule executionRule;
+    int dayOfExecution;
 }
