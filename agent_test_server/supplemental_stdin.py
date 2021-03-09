@@ -16,12 +16,12 @@ class SupplementalStdin(object):
 
             elif field.select_options:
                 print(desc)
-
+                print("----")
                 option_values_by_index = {}
                 option_index = 0
 
                 for option in field.select_options:
-                    print(f"({option_index}) {option.text}")
+                    print(f"({option_index}) (optionValue = {option.value}) optionText = {option.text}")
 
                     option_values_by_index[option_index] = option.value
                     option_index += 1
