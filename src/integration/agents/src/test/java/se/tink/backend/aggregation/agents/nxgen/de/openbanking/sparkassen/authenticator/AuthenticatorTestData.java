@@ -1,8 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator;
 
 import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.Map;
 import org.junit.Ignore;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
@@ -25,14 +23,8 @@ public class AuthenticatorTestData {
     static final String USERNAME = "username";
     static final String PASSWORD = "password";
 
-    static final Map<String, String> SUPPLEMENTAL_RESPONSE_OK = new HashMap<>();
     static final String TEST_OTP = "OTP_1";
     static final String TEST_SCA_METHOD_ID = "METHOD_1";
-
-    static {
-        SUPPLEMENTAL_RESPONSE_OK.put("tanField", TEST_OTP);
-        SUPPLEMENTAL_RESPONSE_OK.put("selectAuthMethodField", "1");
-    }
 
     static final String TEST_CONSENT_ID = "147852369";
     static final String TEST_AUTHORIZATION_ID = "1234567890";

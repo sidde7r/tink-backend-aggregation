@@ -46,9 +46,6 @@ public class PostbankAuthenticationController implements TypedAuthenticator {
 
     private static final Pattern STARTCODE_CHIP_PATTERN = Pattern.compile("Startcode:\\s(\\d+)");
 
-    private static final String CHIP_OTP = "CHIP_OTP";
-    private static final String SMS_OTP = "SMS_OTP";
-    private static final String PUSH_OTP = "PUSH_OTP";
     private final Catalog catalog;
     private final SupplementalInformationController supplementalInformationController;
     private final PostbankAuthenticator authenticator;
@@ -110,7 +107,8 @@ public class PostbankAuthenticationController implements TypedAuthenticator {
 
     private void authenticateUsingChosenScaMethod(
             String username, AuthorisationResponse initValues, ScaMethod chosenScaMethod) {
-        switch (chosenScaMethod.getAuthenticationType().toUpperCase()) {
+        switch (GermanFields.Tan.AuthenticationType.getIfPresentOrDefault(
+                chosenScaMethod.getAuthenticationType())) {
             case PUSH_OTP:
                 finishWithAcceptingPush(initValues, username);
                 break;
@@ -218,6 +216,7 @@ public class PostbankAuthenticationController implements TypedAuthenticator {
 
     private String collectOtp(AuthorisationResponse authResponse) {
         String scaMethodName = authResponse.getChosenScaMethod().getName();
+        String authenticationType = authResponse.getChosenScaMethod().getAuthenticationType();
         ChallengeData challengeData = authResponse.getChallengeData();
         List<Field> fields = new LinkedList<>();
         extractStartcode(authResponse)
@@ -226,13 +225,18 @@ public class PostbankAuthenticationController implements TypedAuthenticator {
         fields.add(
                 GermanFields.Tan.build(
                         catalog,
+                        GermanFields.Tan.AuthenticationType.getIfPresentOrDefault(
+                                authenticationType),
                         scaMethodName,
                         challengeData != null ? challengeData.getOtpMaxLength() : null,
                         challengeData != null ? challengeData.getOtpFormat() : null));
 
         return supplementalInformationController
                 .askSupplementalInformationSync(fields.toArray(new Field[0]))
-                .get(GermanFields.Tan.getFieldKey());
+                .get(
+                        GermanFields.Tan.AuthenticationType.getIfPresentOrDefault(
+                                        authenticationType)
+                                .getFieldName());
     }
 
     private Optional<String> extractStartcode(AuthorisationResponse authResponse) {

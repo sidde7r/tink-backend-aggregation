@@ -32,18 +32,18 @@ public class DkbSupplementalDataProvider {
     }
 
     String getTanCode(
-            String scaMethodName,
+            ConsentAuthorization.ScaMethod scaMethod,
             List<String> data,
             ConsentAuthorization.ChallengeData challengeData)
             throws SupplementalInfoException {
-        List<Field> fields = getSupplementalFields(scaMethodName, data, challengeData);
+        List<Field> fields = getSupplementalFields(scaMethod, data, challengeData);
         return supplementalInformationHelper
                 .askSupplementalInformation(fields.toArray(new Field[0]))
                 .get(fields.get(fields.size() - 1).getName());
     }
 
     List<Field> getSupplementalFields(
-            String scaMethodName,
+            ConsentAuthorization.ScaMethod scaMethod,
             List<String> data,
             ConsentAuthorization.ChallengeData challengeData) {
         List<Field> fields = new LinkedList<>();
@@ -52,11 +52,20 @@ public class DkbSupplementalDataProvider {
         fields.add(
                 GermanFields.Tan.build(
                         catalog,
-                        scaMethodName,
+                        getAuthenticationType(scaMethod),
+                        scaMethod != null ? scaMethod.getName() : null,
                         challengeData != null ? challengeData.getOtpMaxLength() : null,
                         challengeData != null ? challengeData.getOtpFormat() : null));
 
         return fields;
+    }
+
+    private GermanFields.Tan.AuthenticationType getAuthenticationType(
+            ConsentAuthorization.ScaMethod scaMethod) {
+        return scaMethod != null
+                ? GermanFields.Tan.AuthenticationType.getIfPresentOrDefault(
+                        scaMethod.getAuthenticationType())
+                : GermanFields.Tan.AuthenticationType.UNKNOWN_OTP;
     }
 
     private Optional<String> extractStartCode(List<String> challengeData) {

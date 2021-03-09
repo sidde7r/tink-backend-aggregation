@@ -86,7 +86,7 @@ public class PostbankAuthenticationControllerTest {
         when(mockAuthenticator.authoriseWithOtp(OTP_CODE, USERNAME, URL_AUTH_TRANSACTION))
                 .thenReturn(getAuthorisationResponse(AUTH_RESP_FINALISED));
 
-        mockProvidingOtpCode();
+        mockProvidingOtpCode(getAuthorisationResponse(AUTH_RESP_SINGLE));
 
         PostbankAuthenticationController postbankAuthenticationController =
                 new PostbankAuthenticationController(
@@ -112,7 +112,7 @@ public class PostbankAuthenticationControllerTest {
                 .thenReturn(getAuthorisationResponse(AUTH_RESP_FINALISED));
 
         mockScaMethodSelection(getAuthorisationResponse(AUTH_RESP), 1);
-        mockProvidingOtpCode();
+        mockProvidingOtpCode(getAuthorisationResponse(AUTH_RESP_SINGLE));
 
         PostbankAuthenticationController postbankAuthenticationController =
                 new PostbankAuthenticationController(
@@ -269,12 +269,21 @@ public class PostbankAuthenticationControllerTest {
                 catalog, mockSuppController, postbankAuthenticator);
     }
 
-    private void mockProvidingOtpCode() {
+    private void mockProvidingOtpCode(AuthorisationResponse authorisationResponse) {
         Map<String, String> supplementalInformation = new HashMap<>();
-        supplementalInformation.put(GermanFields.Tan.getFieldKey(), OTP_CODE);
-        Field tan = GermanFields.Tan.build(catalog, "", null, null);
+        supplementalInformation.put(
+                getAuthenticationType(authorisationResponse).getFieldName(), OTP_CODE);
+        Field tan =
+                GermanFields.Tan.build(
+                        catalog, getAuthenticationType(authorisationResponse), "", null, null);
         when(mockSuppController.askSupplementalInformationSync(argThat(new FieldMatcher(tan))))
                 .thenReturn(supplementalInformation);
+    }
+
+    private GermanFields.Tan.AuthenticationType getAuthenticationType(
+            AuthorisationResponse authorisationResponse) {
+        return GermanFields.Tan.AuthenticationType.getIfPresentOrDefault(
+                authorisationResponse.getChosenScaMethod().getAuthenticationType());
     }
 
     private void mockScaMethodSelection(

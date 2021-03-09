@@ -23,6 +23,8 @@ public class GermanFieldsTest {
 
     private static final String STARTCODE = "111999222";
     private static final String SCA_METHOD_NAME = "phoneName001";
+    private static final String SMS_TAN_FIELD_NAME = "smsTan";
+
     private Catalog catalog;
 
     @Before
@@ -65,11 +67,12 @@ public class GermanFieldsTest {
     }
 
     @Test
-    public void shouldReturnProperTanFieldWithoutScaMethodName() {
+    public void shouldReturnProperTanFieldWithoutDetails() {
         // given
-
+        GermanFields.Tan.AuthenticationType authenticationType =
+                GermanFields.Tan.AuthenticationType.getIfPresentOrDefault(null);
         // when
-        Field result = GermanFields.Tan.build(catalog, null, null, null);
+        Field result = GermanFields.Tan.build(catalog, authenticationType, null, null, null);
 
         // then
         assertThat(result.getName()).isEqualTo("tanField");
@@ -89,15 +92,18 @@ public class GermanFieldsTest {
     }
 
     @Test
-    public void shouldReturnProperTanFieldWithScaMethodName() {
+    public void shouldReturnProperTanFieldWithScaMethodNameAndKnownOTP() {
         // given
-
+        GermanFields.Tan.AuthenticationType authenticationType =
+                GermanFields.Tan.AuthenticationType.getIfPresentOrDefault("SMS_OTP");
         // when
-        Field result = GermanFields.Tan.build(catalog, SCA_METHOD_NAME, null, null);
+        Field result =
+                GermanFields.Tan.build(catalog, authenticationType, SCA_METHOD_NAME, null, null);
 
         // then
         verifyCommonOtpProperties(result);
 
+        assertThat(result.getName()).isEqualTo(SMS_TAN_FIELD_NAME);
         assertThat(result.getHint()).isNull();
         assertThat(result.isNumeric()).isFalse();
         assertThat(result.getMaxLength()).isNull();
@@ -114,13 +120,18 @@ public class GermanFieldsTest {
         // given
         final Integer otpLength = 5;
         String otpType = GermanFields.Tan.OTP_TYPE.INTEGER.name();
+        GermanFields.Tan.AuthenticationType authenticationType =
+                GermanFields.Tan.AuthenticationType.getIfPresentOrDefault("SMS_OTP");
 
         // when
-        Field result = GermanFields.Tan.build(catalog, SCA_METHOD_NAME, otpLength, otpType);
+        Field result =
+                GermanFields.Tan.build(
+                        catalog, authenticationType, SCA_METHOD_NAME, otpLength, otpType);
 
         // then
         verifyCommonOtpProperties(result);
 
+        assertThat(result.getName()).isEqualTo(SMS_TAN_FIELD_NAME);
         assertThat(result.getHint()).isEqualTo(StringUtils.repeat("_ ", otpLength));
         assertThat(result.isNumeric()).isTrue();
         assertThat(result.getMaxLength()).isEqualTo(otpLength);
@@ -139,13 +150,18 @@ public class GermanFieldsTest {
         // given
         final Integer otpLength = 5;
         final String otpType = GermanFields.Tan.OTP_TYPE.CHARACTERS.name();
+        GermanFields.Tan.AuthenticationType authenticationType =
+                GermanFields.Tan.AuthenticationType.getIfPresentOrDefault("SMS_OTP");
 
         // when
-        Field result = GermanFields.Tan.build(catalog, SCA_METHOD_NAME, otpLength, otpType);
+        Field result =
+                GermanFields.Tan.build(
+                        catalog, authenticationType, SCA_METHOD_NAME, otpLength, otpType);
 
         // then
         verifyCommonOtpProperties(result);
 
+        assertThat(result.getName()).isEqualTo(SMS_TAN_FIELD_NAME);
         assertThat(result.getHint()).isEqualTo(StringUtils.repeat("_ ", otpLength));
         assertThat(result.isNumeric()).isFalse();
         assertThat(result.getMaxLength()).isEqualTo(otpLength);
@@ -160,7 +176,6 @@ public class GermanFieldsTest {
     }
 
     private void verifyCommonOtpProperties(Field result) {
-        assertThat(result.getName()).isEqualTo("tanField");
         assertThat(result.getDescription()).isEqualTo("TAN");
         assertThat(result.getValue()).isNull();
         assertThat(result.getHelpText())

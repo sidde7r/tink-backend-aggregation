@@ -27,15 +27,15 @@ public class FiduciaAgentWireMockTest {
 
     @Test
     public void testOneScaMethod() throws Exception {
-        wiremockTest(BASE_PATH + "fiducia_mock_log.aap");
+        wiremockTest(BASE_PATH + "fiducia_mock_log.aap", "pushTan");
     }
 
     @Test
     public void testScaMethodSelection() throws Exception {
-        wiremockTest(BASE_PATH + "fiducia_with_sca_method_selection_mock_log.aap");
+        wiremockTest(BASE_PATH + "fiducia_with_sca_method_selection_mock_log.aap", "chipTan");
     }
 
-    private void wiremockTest(String wiremockFilePath) throws Exception {
+    private void wiremockTest(String wiremockFilePath, String chosenMethod) throws Exception {
 
         final AgentWireMockRefreshTest agentWireMockRefreshTest =
                 AgentWireMockRefreshTest.builder(
@@ -44,6 +44,7 @@ public class FiduciaAgentWireMockTest {
                         .addCredentialField("password", "dummy_password")
                         .withConfigurationFile(configuration)
                         .addCallbackData("tanField", "dummy_otp_code")
+                        .addCallbackData(chosenMethod, "dummy_otp_code")
                         .addCallbackData("selectAuthMethodField", "2")
                         .withAgentModule(new FiduciaWireMockTestModule())
                         .build();

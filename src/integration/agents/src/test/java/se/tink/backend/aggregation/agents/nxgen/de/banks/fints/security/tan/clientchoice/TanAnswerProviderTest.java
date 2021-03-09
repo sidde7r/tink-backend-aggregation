@@ -33,7 +33,8 @@ public class TanAnswerProviderTest {
 
     private Map<String, String> getSimulatedUserAnswer() {
         HashMap<String, String> answer = new HashMap<>();
-        answer.put(GermanFields.Tan.getFieldKey(), "User TAN answer");
+        answer.put(
+                GermanFields.Tan.AuthenticationType.UNKNOWN_OTP.getFieldName(), "User TAN answer");
         return answer;
     }
 }

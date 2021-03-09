@@ -22,11 +22,17 @@ public class TanAnswerProvider {
         try {
             supplementalInformation =
                     supplementalInformationHelper.askSupplementalInformation(
-                            GermanFields.Tan.build(catalog, tanMedium, null, null));
+                            GermanFields.Tan.build(
+                                    catalog,
+                                    GermanFields.Tan.AuthenticationType.UNKNOWN_OTP,
+                                    tanMedium,
+                                    null,
+                                    null));
         } catch (SupplementalInfoException e) {
             throw new ClientAnswerException("Could not get TAN Answer", e);
         }
 
-        return supplementalInformation.get(GermanFields.Tan.getFieldKey());
+        return supplementalInformation.get(
+                GermanFields.Tan.AuthenticationType.UNKNOWN_OTP.getFieldName());
     }
 }

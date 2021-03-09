@@ -1,5 +1,9 @@
 package se.tink.backend.aggregation.agents.utils.supplementalfields;
 
+import com.google.common.base.Enums;
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.libraries.i18n.Catalog;
@@ -33,7 +37,26 @@ public class GermanFields {
             CHARACTERS
         }
 
-        private static final String FIELD_KEY = "tanField";
+        @RequiredArgsConstructor
+        public enum AuthenticationType {
+            SMS_OTP("smsTan"),
+            CHIP_OTP("chipTan"),
+            PUSH_OTP("pushTan"),
+            PHOTO_OTP("photoTan"),
+            SMTP_OTP("smtpTan"),
+            UNKNOWN_OTP("tanField");
+
+            @Getter private final String fieldName;
+
+            private static AuthenticationType getOrDefault(String authenticaionType) {
+                if (StringUtils.isEmpty(authenticaionType)) {
+                    return UNKNOWN_OTP;
+                }
+                return Enums.getIfPresent(AuthenticationType.class, authenticaionType.toUpperCase())
+                        .or(UNKNOWN_OTP);
+            }
+        }
+
         private static final LocalizableKey DESCRIPTION = new LocalizableKey("TAN");
 
         private static final LocalizableParametrizedKey HELPTEXT_WITH_NAME_FORMAT =
@@ -47,12 +70,12 @@ public class GermanFields {
         private static final LocalizableParametrizedKey CHARACTERS_OTP_PATTERN_ERROR =
                 new LocalizableParametrizedKey("Please enter a maximum of {0} characters");
 
-        public static String getFieldKey() {
-            return FIELD_KEY;
-        }
-
         public static Field build(
-                Catalog catalog, String scaMethodName, Integer otpMaxLength, String otpFormat) {
+                Catalog catalog,
+                @NonNull AuthenticationType authenticationType,
+                String scaMethodName,
+                Integer otpMaxLength,
+                String otpFormat) {
             String helpText =
                     scaMethodName != null
                             ? catalog.getString(HELPTEXT_WITH_NAME_FORMAT, scaMethodName)
@@ -60,7 +83,7 @@ public class GermanFields {
 
             Field.Builder otpBuilder =
                     Field.builder()
-                            .name(FIELD_KEY)
+                            .name(authenticationType.getFieldName())
                             .description(catalog.getString(DESCRIPTION))
                             .helpText(helpText)
                             .minLength(1);
