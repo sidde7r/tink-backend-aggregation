@@ -3,9 +3,13 @@ package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.f
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.StorageKey;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Party;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -55,8 +59,15 @@ public class AccountsItem {
                                 .addIdentifier(new IbanIdentifier(iban))
                                 .build())
                 .setApiIdentifier(resourceId)
-                .addHolderName(ownerName)
+                .addParties(getParties())
                 .putInTemporaryStorage(StorageKey.RESOURCE_ID, getResourceId())
                 .build();
+    }
+
+    private List<Party> getParties() {
+        return RabobankConstants.SPLITTERS
+                .splitAsStream(ownerName.trim())
+                .map(name -> new Party(name, Party.Role.HOLDER))
+                .collect(Collectors.toList());
     }
 }

@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank;
 
 import com.google.common.collect.ImmutableList;
+import java.util.regex.Pattern;
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants;
 
@@ -12,6 +13,7 @@ public class RabobankConstants {
     public static final String TRANSACTION_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
     public static final String TRANSACTION_BOOKING_DATE_FORMAT = "yyyy-MM-dd";
     public static final String BASE_URL = "https://api.rabobank.nl/openapi";
+    public static final Pattern SPLITTERS = Pattern.compile(" E[NO] ", Pattern.CASE_INSENSITIVE);
 
     public static class ErrorCodes {
         public static final String PERIOD_INVALID = "PERIOD_INVALID";
