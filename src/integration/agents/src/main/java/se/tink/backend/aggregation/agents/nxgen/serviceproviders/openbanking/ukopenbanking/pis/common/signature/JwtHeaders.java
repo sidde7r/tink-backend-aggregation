@@ -15,9 +15,6 @@ public class JwtHeaders {
     public static final String TAN_KEY_HEADER = "http://openbanking.org.uk/tan";
     public static final String CRIT_KEY_HEADER = "crit";
     static final String B64_KEY_HEADER = "b64";
-    private static final String TINK_UK_OPEN_BANKING_ORG_ID = "00158000016i44IAAQ";
-    private static final String GENERAL_STANDARD_ISS = "1f1YEdOMw6AphlVC6k2JQR";
-    private static final String TESCO_SPECIAL_ISS = "uv8UDbYNKLtaWWZcGEcMoF";
     private static final String UKOB_TAN = "openbanking.org.uk";
     private static final String RFC_2253_DN =
             "CN=00158000016i44IAAQ, OID.2.5.4.97=PSDSE-FINA-44059, O=Tink AB, C=GB";
@@ -28,7 +25,7 @@ public class JwtHeaders {
         return new JwtHeaders();
     }
 
-    public JwtHeaders addB64() {
+    JwtHeaders addB64() {
         headers.put(B64_KEY_HEADER, false);
         return this;
     }
@@ -43,13 +40,8 @@ public class JwtHeaders {
         return this;
     }
 
-    JwtHeaders addIssWithTinkOrgId() {
-        addIss(String.format("%s/%s", TINK_UK_OPEN_BANKING_ORG_ID, GENERAL_STANDARD_ISS));
-        return this;
-    }
-
-    public JwtHeaders addTescoSpecialIss() {
-        addIss(String.format("%s/%s", TINK_UK_OPEN_BANKING_ORG_ID, TESCO_SPECIAL_ISS));
+    JwtHeaders addIssWithOrgId(String orgId, String softwareId) {
+        addIss(String.format("%s/%s", orgId, softwareId));
         return this;
     }
 

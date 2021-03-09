@@ -5,6 +5,7 @@ import com.google.common.collect.ImmutableMap;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.assertj.core.util.VisibleForTesting;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.configuration.SoftwareStatementAssertion;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.rpc.SigningAlgorithm;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.storage.UkOpenBankingPaymentStorage;
 
@@ -32,8 +33,9 @@ public class UkOpenBankingJwtSignatureHelper {
         }
     }
 
-    public void setSoftwareId(String softwareId) {
-        rs256SignatureCreator.setSoftwareId(softwareId);
+    public void setSoftwareStatement(SoftwareStatementAssertion softwareStatement) {
+        rs256SignatureCreator.setSoftwareId(softwareStatement.getSoftwareId());
+        ps256SignatureCreator.setSoftwareStatement(softwareStatement);
     }
 
     @SuppressWarnings("unchecked")

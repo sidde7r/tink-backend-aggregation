@@ -33,6 +33,7 @@ public class OpenIdConstants {
     public static class Params {
         public static final String CLIENT_ID = "client_id";
         public static final String SOFTWARE_ID = "software_id";
+        public static final String ORG_ID = "org_id";
         public static final String REDIRECT_URI = "redirect_uri";
         public static final String SCOPE = "scope";
         public static final String RESPONSE_TYPE = "response_type";

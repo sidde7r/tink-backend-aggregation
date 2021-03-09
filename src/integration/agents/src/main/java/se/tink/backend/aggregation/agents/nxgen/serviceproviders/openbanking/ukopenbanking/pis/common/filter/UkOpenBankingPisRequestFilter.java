@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.configuration.SoftwareStatementAssertion;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.signature.UkOpenBankingJwtSignatureHelper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.storage.UkOpenBankingPaymentStorage;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
@@ -56,9 +57,9 @@ public class UkOpenBankingPisRequestFilter extends Filter {
         }
     }
 
-    public void setSoftwareId(String softwareId) {
-        Objects.requireNonNull(softwareId);
-        jwtSignatureHelper.setSoftwareId(softwareId);
+    public void setSoftwareStatement(SoftwareStatementAssertion softwareStatement) {
+        Objects.requireNonNull(softwareStatement);
+        jwtSignatureHelper.setSoftwareStatement(softwareStatement);
     }
 
     private void addHeaders(HttpRequest httpRequest) {
