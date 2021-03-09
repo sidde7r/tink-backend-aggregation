@@ -16,7 +16,7 @@ public class N26AccountFetcher implements AccountFetcher<TransactionalAccount> {
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
         Collection<TransactionalAccount> result = new ArrayList<>();
-        result.add(n26ApiClient.fetchAccounts().toTransactionalAccount());
+        result.add(n26ApiClient.fetchAccounts().toTransactionalAccount().orElse(null));
         result.addAll(n26ApiClient.fetchSavingsAccounts().toSavingsAccounts());
         result.addAll(n26ApiClient.fetchSavingsSpaceAccounts().toSavingsAccounts());
         return result;

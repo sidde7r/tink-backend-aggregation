@@ -2,8 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.fr.banks.labanquepostale.fetche
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
-import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.labanquepostale.LaBanquePostaleApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.labanquepostale.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.labanquepostale.fetcher.transactionalaccount.entities.TransactionEntity;
@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 public class LaBanquePostaleTransactionalAccountFetcher
@@ -27,24 +28,24 @@ public class LaBanquePostaleTransactionalAccountFetcher
     }
 
     private static boolean isTransactionalAccount(AccountEntity accountEntity) {
-        AccountTypes tinkType = accountEntity.toTinkAccountType();
-        return AccountTypes.CHECKING.equals(tinkType) || AccountTypes.SAVINGS.equals(tinkType);
+        TransactionalAccountType tinkType = accountEntity.toTinkAccountType();
+        return TransactionalAccountType.CHECKING.equals(tinkType)
+                || TransactionalAccountType.SAVINGS.equals(tinkType);
     }
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
-
         AccountsResponse response = apiClient.getAccounts();
-
         return response.getAccounts().stream()
                 .filter(LaBanquePostaleTransactionalAccountFetcher::isTransactionalAccount)
                 .map(AccountEntity::toTinkAccount)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .collect(Collectors.toList());
     }
 
     @Override
     public PaginatorResponse getTransactionsFor(TransactionalAccount account, int page) {
-
         TransactionsResponse response =
                 apiClient.getTransactions(account.getApiIdentifier(), account.getType());
 

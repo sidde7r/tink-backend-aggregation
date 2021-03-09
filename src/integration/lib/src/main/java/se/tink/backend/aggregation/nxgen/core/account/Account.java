@@ -30,14 +30,10 @@ import se.tink.backend.agents.rpc.HolderRole;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.utils.typeguesser.accountholder.AccountHolderTypeUtil;
 import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
-import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.entity.Party;
-import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
-import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.builder.BuildStep;
 import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
 import se.tink.backend.aggregation.source_info.AccountSourceInfo;
@@ -166,27 +162,6 @@ public abstract class Account {
                         .filter(holderName -> !Strings.isNullOrEmpty(holderName))
                         .map(holderName -> new Party(holderName, HOLDER))
                         .collect(Collectors.toList());
-    }
-
-    @Deprecated
-    public static Builder<? extends Account, ?> builder(
-            AccountTypes type, String uniqueIdentifier) {
-        switch (type) {
-            case SAVINGS:
-            case OTHER:
-            case CHECKING:
-                return TransactionalAccount.builder(type, uniqueIdentifier);
-            case CREDIT_CARD:
-                return CreditCardAccount.builder(uniqueIdentifier);
-            case PENSION:
-            case INVESTMENT:
-                return InvestmentAccount.builder(uniqueIdentifier);
-            case MORTGAGE:
-            case LOAN:
-                return LoanAccount.builder(uniqueIdentifier);
-            default:
-                throw new IllegalStateException(String.format("Unknown Account type (%s)", type));
-        }
     }
 
     private String sanitizeUniqueIdentifier(String uniqueIdentifier) {

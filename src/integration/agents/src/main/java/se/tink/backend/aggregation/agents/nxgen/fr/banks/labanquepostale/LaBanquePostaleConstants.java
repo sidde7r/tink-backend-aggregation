@@ -5,8 +5,8 @@ import com.google.common.collect.ImmutableMap;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import java.util.regex.Pattern;
-import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class LaBanquePostaleConstants {
@@ -122,13 +122,13 @@ public class LaBanquePostaleConstants {
     }
 
     public static class AccountType {
-        private static final ImmutableMap<String, AccountTypes> KNOWN_PRODUCT_CODES =
-                ImmutableMap.<String, AccountTypes>builder()
-                        .put("000001", AccountTypes.CHECKING)
-                        .put("000002", AccountTypes.SAVINGS)
+        private static final ImmutableMap<String, TransactionalAccountType> KNOWN_PRODUCT_CODES =
+                ImmutableMap.<String, TransactionalAccountType>builder()
+                        .put("000001", TransactionalAccountType.CHECKING)
+                        .put("000002", TransactionalAccountType.SAVINGS)
                         .build();
 
-        public static Optional<AccountTypes> translate(String productCode) {
+        public static Optional<TransactionalAccountType> translate(String productCode) {
             if (Strings.isNullOrEmpty(productCode)) {
                 return Optional.empty();
             }
