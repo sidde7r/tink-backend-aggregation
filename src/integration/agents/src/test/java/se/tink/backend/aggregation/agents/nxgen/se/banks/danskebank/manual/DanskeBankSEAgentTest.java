@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.ArgumentManagerEnum;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.SsnArgumentEnum;
+import se.tink.libraries.credentials.service.RefreshableItem;
 
 public final class DanskeBankSEAgentTest {
     private enum Arg implements ArgumentManagerEnum {
@@ -41,6 +42,8 @@ public final class DanskeBankSEAgentTest {
         builder =
                 new AgentIntegrationTest.Builder("se", "se-danskebank-bankid")
                         .addCredentialField(Field.Key.USERNAME, ssnManager.get(SsnArgumentEnum.SSN))
+                        .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
+                        .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);
         builder.build().testRefresh();
