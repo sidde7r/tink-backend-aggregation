@@ -120,14 +120,13 @@ public enum OpenbankIdentityDataFixtures {
                     + "  \"telefonoContacto\": null\n"
                     + "}");
 
-  private final String json;
+    private final String json;
 
-  OpenbankIdentityDataFixtures(String json) {
-    this.json = json;
-  }
+    OpenbankIdentityDataFixtures(String json) {
+        this.json = json;
+    }
 
-  public <T> T json(Class<T> aClass) {
-    return SerializationUtils.deserializeFromString(this.json, aClass);
-  }
-
+    public <T> T json(Class<T> aClass) {
+        return SerializationUtils.deserializeFromString(this.json, aClass);
+    }
 }
