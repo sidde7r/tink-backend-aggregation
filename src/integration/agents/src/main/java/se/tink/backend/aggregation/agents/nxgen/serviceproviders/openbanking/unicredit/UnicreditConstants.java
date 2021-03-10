@@ -40,9 +40,10 @@ public class UnicreditConstants {
         public static final String ACCOUNT_DETAILS = "/hydrogen/v1/accounts/{account-id}";
         public static final String BALANCES = "/hydrogen/v1/accounts/{account-id}/balances";
         public static final String TRANSACTIONS = "/hydrogen/v1/accounts/{account-id}/transactions";
-        public static final String PAYMENT_INITIATION = "/hydrogen/v1/payments/{payment-product}";
+        public static final String PAYMENT_INITIATION =
+                "/hydrogen/v1/{payment-service}/{payment-product}";
         public static final String FETCH_PAYMENT =
-                "/hydrogen/v1/payments/{payment-product}/{paymentId}";
+                "/hydrogen/v1/{payment-service}/{payment-product}/{paymentId}";
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -51,7 +52,14 @@ public class UnicreditConstants {
         public static final String CONSENT_ID = "consent-id";
         public static final String ACCOUNT_ID = "account-id";
         public static final String PAYMENT_PRODUCT = "payment-product";
+        public static final String PAYMENT_SERVICE = "payment-service";
         public static final String PAYMENT_ID = "paymentId";
+    }
+
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class PathParameterValues {
+        public static final String PAYMENT_SERVICE_PAYMENTS = "payments";
+        public static final String PAYMENT_SERVICE_PERIODIC_PAYMENTS = "periodic-payments";
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)

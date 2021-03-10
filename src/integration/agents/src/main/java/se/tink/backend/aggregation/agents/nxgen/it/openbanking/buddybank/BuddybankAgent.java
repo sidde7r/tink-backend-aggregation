@@ -40,7 +40,7 @@ public final class BuddybankAgent extends UnicreditBaseAgent {
     public Optional<PaymentController> constructPaymentController() {
         return Optional.of(
                 new BuddybankPaymentController(
-                        new UnicreditPaymentExecutor(apiClient, sessionStorage),
+                        new UnicreditPaymentExecutor(apiClient),
                         (BuddybankApiClient) apiClient,
                         persistentStorage));
     }

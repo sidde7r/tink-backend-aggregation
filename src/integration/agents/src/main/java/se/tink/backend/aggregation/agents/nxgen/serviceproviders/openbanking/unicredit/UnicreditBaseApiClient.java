@@ -37,6 +37,7 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.date.ThreadSafeDateFormat;
+import se.tink.libraries.transfer.rpc.PaymentServiceType;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -168,22 +169,20 @@ public class UnicreditBaseApiClient {
 
     public CreatePaymentResponse createSepaPayment(
             CreatePaymentRequest request, PaymentRequest paymentRequest) {
-        String psuIpAddress =
-                Optional.ofNullable(paymentRequest.getOriginatingUserIp())
-                        .orElse(HeaderValues.PSU_IP_ADDRESS);
 
-        String paymentProduct =
-                UnicreditConstants.PAYMENT_PRODUCT_MAPPER
-                        .translate(paymentRequest.getPayment().getPaymentScheme())
-                        .orElse(UnicreditPaymentProduct.SEPA_CREDIT_TRANSFERS.toString());
         CreatePaymentResponse createPaymentResponse =
                 createRequestBuilder(
                                 new URL(
                                                 providerConfiguration.getBaseUrl()
                                                         + Endpoints.PAYMENT_INITIATION)
-                                        .parameter(PathParameters.PAYMENT_PRODUCT, paymentProduct))
+                                        .parameter(
+                                                PathParameters.PAYMENT_SERVICE,
+                                                getPaymentService(paymentRequest))
+                                        .parameter(
+                                                PathParameters.PAYMENT_PRODUCT,
+                                                getPaymentProduct(paymentRequest)))
                         .header(HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId())
-                        .header(HeaderKeys.PSU_IP_ADDRESS, psuIpAddress)
+                        .header(HeaderKeys.PSU_IP_ADDRESS, getPsuIpAddress(paymentRequest))
                         .header(HeaderKeys.PSU_ID_TYPE, providerConfiguration.getPsuIdType())
                         .header(
                                 HeaderKeys.TPP_REDIRECT_URI,
@@ -205,20 +204,35 @@ public class UnicreditBaseApiClient {
 
     public FetchPaymentResponse fetchPayment(PaymentRequest paymentRequest) {
 
-        String psuIpAddress =
-                Optional.ofNullable(paymentRequest.getOriginatingUserIp())
-                        .orElse(HeaderValues.PSU_IP_ADDRESS);
-        String paymentProduct =
-                UnicreditConstants.PAYMENT_PRODUCT_MAPPER
-                        .translate(paymentRequest.getPayment().getPaymentScheme())
-                        .orElse(UnicreditPaymentProduct.SEPA_CREDIT_TRANSFERS.toString());
         String paymentId = paymentRequest.getPayment().getUniqueId();
         return createRequestBuilder(
                         new URL(providerConfiguration.getBaseUrl() + Endpoints.FETCH_PAYMENT)
-                                .parameter(PathParameters.PAYMENT_PRODUCT, paymentProduct)
+                                .parameter(
+                                        PathParameters.PAYMENT_SERVICE,
+                                        getPaymentService(paymentRequest))
+                                .parameter(
+                                        PathParameters.PAYMENT_PRODUCT,
+                                        getPaymentProduct(paymentRequest))
                                 .parameter(PathParameters.PAYMENT_ID, paymentId))
                 .header(HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId())
-                .header(HeaderKeys.PSU_IP_ADDRESS, psuIpAddress)
+                .header(HeaderKeys.PSU_IP_ADDRESS, getPsuIpAddress(paymentRequest))
                 .get(FetchPaymentResponse.class);
+    }
+
+    private String getPsuIpAddress(PaymentRequest paymentRequest) {
+        return Optional.ofNullable(paymentRequest.getOriginatingUserIp())
+                .orElse(HeaderValues.PSU_IP_ADDRESS);
+    }
+
+    private String getPaymentProduct(PaymentRequest paymentRequest) {
+        return UnicreditConstants.PAYMENT_PRODUCT_MAPPER
+                .translate(paymentRequest.getPayment().getPaymentScheme())
+                .orElse(UnicreditPaymentProduct.SEPA_CREDIT_TRANSFERS.toString());
+    }
+
+    private String getPaymentService(PaymentRequest paymentRequest) {
+        return PaymentServiceType.PERIODIC == paymentRequest.getPayment().getPaymentServiceType()
+                ? UnicreditConstants.PathParameterValues.PAYMENT_SERVICE_PERIODIC_PAYMENTS
+                : UnicreditConstants.PathParameterValues.PAYMENT_SERVICE_PAYMENTS;
     }
 }
