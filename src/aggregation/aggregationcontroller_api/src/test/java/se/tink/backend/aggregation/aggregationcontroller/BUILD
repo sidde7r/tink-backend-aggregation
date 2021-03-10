@@ -20,6 +20,7 @@ junit_test(
         "//src/integration/credentials:service",
         "//src/integration/credentials/src/main/java/se/tink/libraries/credentials/rpc",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/framework/wiremock",
+        "//src/libraries/connectivity_errors",
         "//third_party:com_fasterxml_jackson_jaxrs_jackson_jaxrs_json_provider",
         "//third_party:com_google_inject_guice",
         "//third_party:com_sun_jersey_contribs_jersey_apache_client4",
