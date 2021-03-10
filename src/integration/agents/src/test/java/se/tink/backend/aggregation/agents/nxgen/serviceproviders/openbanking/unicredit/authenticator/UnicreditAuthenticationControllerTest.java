@@ -161,6 +161,28 @@ public class UnicreditAuthenticationControllerTest {
     }
 
     @Test
+    public void should_throw_third_party_timed_out_when_supplemental_comes_empty() {
+        // given
+        ConsentResponse consentResponse = mockCreateConsentResponse("createConsentResponse.json");
+        mockUserNeverComesBackFromThirdPartyUrl();
+
+        // when
+        Throwable throwable =
+                catchThrowable(
+                        () -> thirdPartyAppAuthenticationController.authenticate(credentials));
+
+        // then
+        assertExceptionIsEqualToAgentExceptionFromUsersPerspective(
+                throwable, ThirdPartyAppError.TIMED_OUT.exception());
+
+        assertThat(getConsentIdFromPersistentStorage()).isEmpty();
+
+        verifyConsentCreation(consentResponse);
+        verifyRedirectingAndWaitingForUser(consentResponse);
+        verifyNoMoreMockInteractions();
+    }
+
+    @Test
     @Parameters(method = "consentStatusHreKnownInvalidConsentMessages")
     public void
             should_throw_third_party_authentication_error_and_clear_consent_when_consent_is_invalid_by_hre_in_manual_auth(
@@ -407,6 +429,12 @@ public class UnicreditAuthenticationControllerTest {
         when(supplementalInformationHelperMock.waitForSupplementalInformation(
                         eq(STRONG_AUTHENTICATION_STATE.getSupplementalKey()), anyLong(), any()))
                 .thenReturn(Optional.of(Collections.emptyMap()));
+    }
+
+    private void mockUserNeverComesBackFromThirdPartyUrl() {
+        when(supplementalInformationHelperMock.waitForSupplementalInformation(
+                        eq(STRONG_AUTHENTICATION_STATE.getSupplementalKey()), anyLong(), any()))
+                .thenReturn(Optional.empty());
     }
 
     private void mockDontOpenAnyThirdPartyUrl() {
