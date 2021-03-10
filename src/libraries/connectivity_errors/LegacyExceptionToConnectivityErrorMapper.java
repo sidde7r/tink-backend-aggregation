@@ -260,9 +260,8 @@ class LegacyExceptionToConnectivityErrorMapper {
                                             .USER_CONCURRENT_LOGINS))
                     .put(
                             NemIdError.LOCKED_PIN,
-                            ConnectivityErrorFactory.authorizationError(
-                                    ConnectivityErrorDetails.AuthorizationErrors
-                                            .ACTION_NOT_PERMITTED))
+                            ConnectivityErrorFactory.userLoginError(
+                                    ConnectivityErrorDetails.UserLoginErrors.USER_BLOCKED))
                     .put(
                             NemIdError.REJECTED,
                             ConnectivityErrorFactory.userLoginError(
@@ -278,6 +277,42 @@ class LegacyExceptionToConnectivityErrorMapper {
                             ConnectivityErrorFactory.userLoginError(
                                     ConnectivityErrorDetails.UserLoginErrors
                                             .DYNAMIC_CREDENTIALS_FLOW_TIMEOUT))
+                    .put(
+                            NemIdError.INVALID_CODE_CARD_CODE,
+                            ConnectivityErrorFactory.userLoginError(
+                                    ConnectivityErrorDetails.UserLoginErrors
+                                            .DYNAMIC_CREDENTIALS_INCORRECT))
+                    .put(
+                            NemIdError.USE_NEW_CODE_CARD,
+                            ConnectivityErrorFactory.userLoginError(
+                                    ConnectivityErrorDetails.UserLoginErrors
+                                            .DYNAMIC_CREDENTIALS_INCORRECT))
+                    .put(
+                            NemIdError.INVALID_CODE_TOKEN_CODE,
+                            ConnectivityErrorFactory.userLoginError(
+                                    ConnectivityErrorDetails.UserLoginErrors
+                                            .DYNAMIC_CREDENTIALS_INCORRECT))
+                    .put(
+                            NemIdError.NEMID_LOCKED,
+                            ConnectivityErrorFactory.userLoginError(
+                                    ConnectivityErrorDetails.UserLoginErrors.USER_BLOCKED))
+                    .put(
+                            NemIdError.NEMID_BLOCKED,
+                            ConnectivityErrorFactory.userLoginError(
+                                    ConnectivityErrorDetails.UserLoginErrors.USER_BLOCKED))
+                    .put(
+                            NemIdError.NEMID_PASSWORD_BLOCKED,
+                            ConnectivityErrorFactory.userLoginError(
+                                    ConnectivityErrorDetails.UserLoginErrors.USER_BLOCKED))
+                    .put(
+                            NemIdError.KEY_APP_NOT_READY_TO_USE,
+                            ConnectivityErrorFactory.userLoginError(
+                                    ConnectivityErrorDetails.UserLoginErrors
+                                            .THIRD_PARTY_AUTHENTICATION_UNAVAILABLE))
+                    .put(
+                            NemIdError.RENEW_NEMID,
+                            ConnectivityErrorFactory.userLoginError(
+                                    ConnectivityErrorDetails.UserLoginErrors.USER_BLOCKED))
                     .build();
 
     public static ConnectivityError from(Exception exception) {

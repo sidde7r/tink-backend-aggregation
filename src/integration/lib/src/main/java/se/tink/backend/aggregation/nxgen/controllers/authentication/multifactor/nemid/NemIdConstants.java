@@ -68,27 +68,45 @@ public class NemIdConstants {
                 ImmutableList.of(
                         Pattern.compile("^incorrect (user|password).*"),
                         Pattern.compile("^fejl i (bruger|adgangskode).*"),
-                        Pattern.compile("^indtast (bruger|adgangskode).*"));
+                        Pattern.compile("^indtast (bruger|adgangskode).*"),
+                        Pattern.compile("^Forkert adgangskode.*"));
 
         public static final ImmutableList<Pattern> ENTER_ACTIVATION_PASSWORD_PATTERNS =
                 ImmutableList.of(
-                        Pattern.compile("^enter activation password.*")
-                        // add for DK
-                        );
+                        Pattern.compile("^enter activation password.*"),
+                        Pattern.compile("^Indtast midlertidig adgangskode.*"));
+
+        public static final ImmutableList<Pattern> ENTER_6_DIGIT_PASSWORD_PATTERNS =
+                ImmutableList.of(
+                        // add for en
+                        Pattern.compile("^Indtast 6-cifret nøgle*"));
 
         /*
         Error messages from NemId heading
          */
         public static final ImmutableList<Pattern> NEM_ID_REVOKED_PATTERNS =
                 ImmutableList.of(
-                        Pattern.compile("^nemid revoked.*")
-                        // add for DK
-                        );
+                        Pattern.compile("^nemid revoked.*"),
+                        Pattern.compile("^NemID er spærret.*"));
         public static final ImmutableList<Pattern> USE_NEW_CODE_CARD_PATTERNS =
                 ImmutableList.of(
-                        Pattern.compile("^use new code card.*")
-                        // add for DK
-                        );
+                        Pattern.compile("^use new code card.*"),
+                        Pattern.compile("^Tag nyt nøglekort i brug.*"));
+        public static final ImmutableList<Pattern> KEY_APP_NOT_READY_TO_USE_PATTERNS =
+                ImmutableList.of(
+                        // add for en
+                        Pattern.compile("^Nøgleapp ikke klar til brug*"));
+        public static final ImmutableList<Pattern> NEMID_ISSUES_PATTERNS =
+                ImmutableList.of(
+                        // add for en
+                        Pattern.compile("^NemID er blevet genåbnet automatisk*"),
+                        // add for en
+                        Pattern.compile(
+                                "^Der opstod en fejl under oprettelsen af dit OCES-certifikat."));
+        public static final ImmutableList<Pattern> NEM_ID_RENEW_PATTERNS =
+                ImmutableList.of(
+                        // add for en
+                        Pattern.compile("^Vidste du, at NemID skal fornyes hvert tredje*"));
 
         /*
         NemId code card & code token errors

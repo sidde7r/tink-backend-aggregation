@@ -27,7 +27,11 @@ public enum NemIdError implements AgentError {
             new LocalizableKey("NemID password blocked. Please contact NemID support.")),
     LOCKED_PIN(
             new LocalizableKey(
-                    "Your chosen PIN code is locked. The PIN code must be changed in your Netbank before you can log on."));
+                    "Your chosen PIN code is locked. The PIN code must be changed in your Netbank before you can log on.")),
+    KEY_APP_NOT_READY_TO_USE(new LocalizableKey("Your key app is not ready to use.")),
+    RENEW_NEMID(
+            new LocalizableKey(
+                    "You must renew NemID every 3 years. Please contact NemID support."));
 
     private final LocalizableKey userMessage;
 

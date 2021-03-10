@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SupplementalInfoError;
 import se.tink.backend.aggregation.agents.exceptions.nemid.NemIdError;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.authenticator.LunarTestUtils;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AccountBlockedError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AgentBankApiError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AgentError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AuthenticationError;
@@ -85,17 +86,28 @@ public class AuthenticationExceptionHandlerTest {
             },
             new Object[] {
                 NemIdError.NEMID_LOCKED.exception(),
-                new AuthenticationError(
+                new AccountBlockedError(
                         LunarTestUtils.getExpectedErrorDetails(
-                                AgentError.THIRD_PARTY_APP_UNKNOWN_ERROR.getCode(),
-                                NemIdError.NEMID_LOCKED))
+                                AgentError.ACCOUNT_BLOCKED.getCode(), NemIdError.NEMID_LOCKED))
             },
             new Object[] {
                 NemIdError.NEMID_BLOCKED.exception(),
+                new AccountBlockedError(
+                        LunarTestUtils.getExpectedErrorDetails(
+                                AgentError.ACCOUNT_BLOCKED.getCode(), NemIdError.NEMID_BLOCKED))
+            },
+            new Object[] {
+                NemIdError.KEY_APP_NOT_READY_TO_USE.exception(),
                 new AuthenticationError(
                         LunarTestUtils.getExpectedErrorDetails(
                                 AgentError.THIRD_PARTY_APP_UNKNOWN_ERROR.getCode(),
-                                NemIdError.NEMID_BLOCKED))
+                                NemIdError.KEY_APP_NOT_READY_TO_USE))
+            },
+            new Object[] {
+                NemIdError.RENEW_NEMID.exception(),
+                new AccountBlockedError(
+                        LunarTestUtils.getExpectedErrorDetails(
+                                AgentError.ACCOUNT_BLOCKED.getCode(), NemIdError.RENEW_NEMID))
             },
             new Object[] {
                 NemIdError.INVALID_CODE_CARD_CODE.exception(),

@@ -12,6 +12,7 @@ import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.exceptions.agent.AgentException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.nemid.NemIdException;
+import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AccountBlockedError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AgentBankApiError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AgentError;
 import se.tink.backend.aggregation.agentsplatform.agentsframework.error.AuthenticationError;
@@ -93,11 +94,17 @@ public class AuthenticationExceptionHandler {
                                 getErrorWithOriginalUserMessage(
                                         AgentError.THIRD_PARTY_APP_CANCELLED.getCode(), e));
                     case INTERRUPTED:
-                    case NEMID_LOCKED:
-                    case NEMID_BLOCKED:
+                    case KEY_APP_NOT_READY_TO_USE:
                         return new AuthenticationError(
                                 getErrorWithOriginalUserMessage(
                                         AgentError.THIRD_PARTY_APP_UNKNOWN_ERROR.getCode(), e));
+                    case NEMID_LOCKED:
+                    case NEMID_BLOCKED:
+                    case LOCKED_PIN:
+                    case RENEW_NEMID:
+                        return new AccountBlockedError(
+                                getErrorWithOriginalUserMessage(
+                                        AgentError.ACCOUNT_BLOCKED.getCode(), e));
                     case INVALID_CODE_CARD_CODE:
                     case USE_NEW_CODE_CARD:
                     case INVALID_CODE_TOKEN_CODE:
