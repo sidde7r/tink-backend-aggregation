@@ -269,7 +269,7 @@ public final class DemobankAgent extends NextGenerationAgent
         final DemobankPaymentRequestFilter requestFilter =
                 new DemobankPaymentRequestFilter(storage);
         final DemobankPaymentApiClient paymentApiClient =
-                new DemobankPaymentApiClient(requestFilter, client, callbackUri);
+                new DemobankPaymentApiClient(requestFilter, storage, client, callbackUri);
         final DemobankPaymentAuthenticator authenticator =
                 new DemobankPaymentAuthenticator(
                         supplementalInformationHelper, strongAuthenticationState, callbackUri);
