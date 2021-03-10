@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CHECKING_ACCOUNTS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.CREDIT_CARDS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.LIST_BENEFICIARIES;
-import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.SAVINGS_ACCOUNTS;
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.TRANSFERS;
 
 import com.google.inject.Inject;
@@ -17,7 +16,6 @@ import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.RefreshBeneficiariesExecutor;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
-import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentPisCapability;
@@ -58,17 +56,10 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDe
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 
 @AgentDependencyModules(modules = QSealcSignerModuleRSASHA256.class)
-@AgentCapabilities({
-    CHECKING_ACCOUNTS,
-    SAVINGS_ACCOUNTS,
-    CREDIT_CARDS,
-    TRANSFERS,
-    LIST_BENEFICIARIES
-})
+@AgentCapabilities({CHECKING_ACCOUNTS, CREDIT_CARDS, TRANSFERS, LIST_BENEFICIARIES})
 @AgentPisCapability(capabilities = PisCapability.PIS_SEPA)
 public final class BpceGroupAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor,
-                RefreshSavingsAccountsExecutor,
                 RefreshTransferDestinationExecutor,
                 RefreshBeneficiariesExecutor,
                 RefreshCreditCardAccountsExecutor {
@@ -153,16 +144,6 @@ public final class BpceGroupAgent extends NextGenerationAgent
     @Override
     public FetchTransactionsResponse fetchCheckingTransactions() {
         return transactionalAccountRefreshController.fetchCheckingTransactions();
-    }
-
-    @Override
-    public FetchAccountsResponse fetchSavingsAccounts() {
-        return transactionalAccountRefreshController.fetchSavingsAccounts();
-    }
-
-    @Override
-    public FetchTransactionsResponse fetchSavingsTransactions() {
-        return transactionalAccountRefreshController.fetchSavingsTransactions();
     }
 
     @Override
