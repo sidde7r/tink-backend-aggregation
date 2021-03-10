@@ -10,6 +10,7 @@ import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsRequestType
 import se.tink.connectivity.errors.ConnectivityError;
 import se.tink.connectivity.errors.ConnectivityErrorDetails;
 import se.tink.connectivity.errors.ConnectivityErrorType;
+import src.libraries.connectivity_errors.ConnectivityErrorFactory;
 
 public class UpdateCredentialsStatusRequestTest {
 
@@ -42,11 +43,8 @@ public class UpdateCredentialsStatusRequestTest {
     public void ensureRequestObjectWithErrorSerializesAndDeserializes() throws IOException {
         // given
         updateRequest.setDetailedError(
-                ConnectivityError.newBuilder()
-                        .setType(ConnectivityErrorType.ERROR_AUTH_DYNAMIC_FLOW_CANCELLED)
-                        .setDetails(
-                                ConnectivityErrorDetails.newBuilder().setRetryable(true).build())
-                        .build());
+                ConnectivityErrorFactory.userLoginError(
+                        ConnectivityErrorDetails.UserLoginErrors.USER_BLOCKED));
 
         // when
         String json = mapper.writeValueAsString(updateRequest);
@@ -55,9 +53,8 @@ public class UpdateCredentialsStatusRequestTest {
 
         // then
         Assert.assertEquals(
-                ConnectivityErrorType.ERROR_AUTH_DYNAMIC_FLOW_CANCELLED,
-                result.getDetailedError().getType());
-        Assert.assertTrue(result.getDetailedError().getDetails().getRetryable());
+                ConnectivityErrorType.USER_LOGIN_ERROR, result.getDetailedError().getType());
+        Assert.assertEquals("USER_BLOCKED", result.getDetailedError().getDetails().getReason());
     }
 
     @Test
