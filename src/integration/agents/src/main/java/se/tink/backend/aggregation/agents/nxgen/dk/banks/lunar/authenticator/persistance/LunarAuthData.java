@@ -16,6 +16,7 @@ public class LunarAuthData {
     private String nemIdPassword;
     private String deviceId;
     private String accessToken;
+    private String lunarUserId;
     private AccountsResponse accountsResponse;
 
     public boolean hasCredentials() {

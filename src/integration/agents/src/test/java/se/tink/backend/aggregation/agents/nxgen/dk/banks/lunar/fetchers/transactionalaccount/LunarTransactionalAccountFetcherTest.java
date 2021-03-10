@@ -98,7 +98,7 @@ public class LunarTransactionalAccountFetcherTest {
                 (List<TransactionalAccount>) accountFetcher.fetchAccounts();
 
         // then
-        assertThat(result.size()).isEqualTo(6);
+        assertThat(result.size()).isEqualTo(7);
         for (int i = 0; i < result.size(); i++) {
             assertThat(result.get(i)).isEqualToComparingFieldByFieldRecursively(expected.get(i));
         }
@@ -175,7 +175,7 @@ public class LunarTransactionalAccountFetcherTest {
                 (List<TransactionalAccount>) accountFetcher.fetchAccounts();
 
         // then
-        assertThat(result.size()).isEqualTo(4);
+        assertThat(result.size()).isEqualTo(5);
         for (int i = 0; i < result.size(); i++) {
             assertThat(result.get(i)).isEqualToComparingFieldByFieldRecursively(expected.get(i));
         }
@@ -298,6 +298,11 @@ public class LunarTransactionalAccountFetcherTest {
                         BigDecimal.valueOf(99.99),
                         "",
                         "9f7416ac-e860-4df1-bc71-fd27b5209b25",
+                        parties),
+                getExpectedSavingsAccount(
+                        BigDecimal.valueOf(19.28),
+                        "Some place",
+                        "6beeef4d-a81d-4392-b456-b96958cc4c83",
                         parties));
     }
 

@@ -4,7 +4,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -17,9 +16,7 @@ import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.transact
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.transactionalaccount.entities.BaseResponseEntity;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.transactionalaccount.entities.CardEntity;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.transactionalaccount.entities.MemberEntity;
-import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.transactionalaccount.entities.SettingsEntity;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.transactionalaccount.rpc.AccountsResponse;
-import se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.transactionalaccount.rpc.UserSettingsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.identitydata.IdentityDataFetcher;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
@@ -75,7 +72,7 @@ public class LunarIdentityDataFetcher implements IdentityDataFetcher {
                         .filter(BaseResponseEntity::notDeleted)
                         .collect(Collectors.toList());
         List<String> accountsHoldersNamesFromCards = collectAccountsHoldersFromCards(accounts);
-        String userId = fetchUserId();
+        String userId = getLunarPersistedData().getLunarUserId();
         List<String> distinctAccountsMembers = collectAccountsMembers(accounts, userId);
         List<String> accountHolders =
                 getMainAccountHolders(accountsHoldersNamesFromCards, distinctAccountsMembers);
@@ -116,13 +113,6 @@ public class LunarIdentityDataFetcher implements IdentityDataFetcher {
         }
     }
 
-    private String fetchUserId() {
-        return Optional.ofNullable(apiClient.getUserSettings())
-                .map(UserSettingsResponse::getSettings)
-                .map(SettingsEntity::getId)
-                .orElse(null);
-    }
-
     private List<String> collectAccountsMembers(List<AccountEntity> accounts, String userId) {
         return accounts.stream()
                 .filter(account -> BooleanUtils.isTrue(account.getIsShared()))
@@ -134,7 +124,8 @@ public class LunarIdentityDataFetcher implements IdentityDataFetcher {
     private List<String> getMainAccountHolders(
             List<String> accountsHoldersNamesFromCards, List<String> accountsMembers) {
         // Filter account holder names from cards to check what name is not among members.
-        // It should return only one name of main account holder.
+        // It should return only one name of main account holder, but names in members response can
+        // be missing eg. user's middle name, hence we sometimes experience more names returned
         return accountsHoldersNamesFromCards.stream()
                 .filter(accountHolderFromCard -> !accountsMembers.contains(accountHolderFromCard))
                 .collect(Collectors.toList());
@@ -142,10 +133,6 @@ public class LunarIdentityDataFetcher implements IdentityDataFetcher {
 
     private List<String> fetchAccountMembers(AccountEntity account, String userId) {
         // Account members do not contain real name of main account holder, but only "Dig"/"You"
-        // Try to filter main account holder by id from settings. I am not sure if it will work,
-        // hence additional check for user name. With more information from logs, delete these
-        // comments and correct the logic.
-        log.info("Lunar account is shared");
         try {
             List<String> accountMembers =
                     apiClient.fetchMembers(account.getId()).getMembers().stream()

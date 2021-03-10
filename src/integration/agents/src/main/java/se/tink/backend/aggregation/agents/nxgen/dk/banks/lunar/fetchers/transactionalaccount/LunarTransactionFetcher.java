@@ -57,14 +57,11 @@ public class LunarTransactionFetcher
         if (lunarTransactions.size() < QueryParamsValues.PAGE_SIZE) {
             return null;
         }
-        String sort =
-                lunarTransactions.stream()
-                        .filter(transaction -> transaction.getTimestamp() > 0)
-                        .min(Comparator.comparing(BaseResponseEntity::getTimestamp))
-                        .map(transaction -> String.valueOf(transaction.getTimestamp()))
-                        .orElse(null);
-        log.info("[Lunar] Next key for transactions: {}", sort);
-        return sort;
+        return lunarTransactions.stream()
+                .filter(transaction -> transaction.getTimestamp() > 0)
+                .min(Comparator.comparing(BaseResponseEntity::getTimestamp))
+                .map(transaction -> String.valueOf(transaction.getTimestamp()))
+                .orElse(null);
     }
 
     private List<Transaction> toTinkTransactions(List<TransactionEntity> lunarTransactions) {
