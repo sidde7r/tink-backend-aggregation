@@ -11,10 +11,9 @@ import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 @JsonObject
-public class GetTransactionsResponse implements TransactionKeyPaginatorResponse<URL> {
+public class GetTransactionsResponse implements TransactionKeyPaginatorResponse<String> {
 
     @JsonProperty("_links")
     private Links links;
@@ -30,8 +29,8 @@ public class GetTransactionsResponse implements TransactionKeyPaginatorResponse<
     }
 
     @Override
-    public URL nextKey() {
-        return new URL(links.getNext().getHref());
+    public String nextKey() {
+        return links.getNext().getHref();
     }
 
     @Override

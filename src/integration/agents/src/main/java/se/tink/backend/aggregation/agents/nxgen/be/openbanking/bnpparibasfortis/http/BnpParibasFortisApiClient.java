@@ -14,12 +14,10 @@ import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.configuration.BnpParibasFortisConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.fetcher.transactionalaccount.entity.account.Account;
-import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.fetcher.transactionalaccount.entity.account.Links;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.fetcher.transactionalaccount.entity.balance.GetBalancesResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.fetcher.transactionalaccount.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.fetcher.transactionalaccount.rpc.GetTransactionsResponse;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
@@ -136,13 +134,7 @@ public final class BnpParibasFortisApiClient {
         return createAuthenticatedRequest(balancesUrl).get(GetBalancesResponse.class);
     }
 
-    public GetTransactionsResponse getTransactionsForAccount(TransactionalAccount account) {
-        final String baseUrl = Urls.BASE_PATH + Urls.PSD2_BASE_PATH;
-        final String transactionsUrl =
-                account.getFromTemporaryStorage(StorageKeys.ACCOUNT_LINKS, Links.class)
-                        .map(links -> baseUrl + links.getTransactions().getHref())
-                        .orElseThrow(IllegalStateException::new);
-
-        return createAuthenticatedRequest(transactionsUrl).get(GetTransactionsResponse.class);
+    public GetTransactionsResponse getTransactionsForAccount(String url) {
+        return createAuthenticatedRequest(url).get(GetTransactionsResponse.class);
     }
 }
