@@ -99,7 +99,8 @@ public class TransactionalAccountBuilderTest {
                                 AccountFlag.BUSINESS,
                                 AccountFlag.BUSINESS,
                                 AccountFlag.MANDATE,
-                                AccountFlag.PSD2_PAYMENT_ACCOUNT)
+                                AccountFlag.PSD2_PAYMENT_ACCOUNT,
+                                AccountFlag.DEPOT_CASH_BALANCE)
                         .withBalance(BalanceModule.of(ExactCurrencyAmount.inSEK(2572.28)))
                         .withId(ID_MODULE)
                         .build()
@@ -107,7 +108,10 @@ public class TransactionalAccountBuilderTest {
 
         Assert.assertArrayEquals(
                 new AccountFlag[] {
-                    AccountFlag.BUSINESS, AccountFlag.MANDATE, AccountFlag.PSD2_PAYMENT_ACCOUNT
+                    AccountFlag.BUSINESS,
+                    AccountFlag.MANDATE,
+                    AccountFlag.PSD2_PAYMENT_ACCOUNT,
+                    AccountFlag.DEPOT_CASH_BALANCE
                 },
                 account.getAccountFlags().toArray());
     }
