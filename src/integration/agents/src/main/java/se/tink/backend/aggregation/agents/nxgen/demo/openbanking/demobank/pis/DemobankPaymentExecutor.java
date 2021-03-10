@@ -45,11 +45,7 @@ public class DemobankPaymentExecutor implements PaymentExecutor, FetchablePaymen
 
     @Override
     public PaymentResponse create(PaymentRequest paymentRequest) throws PaymentException {
-        final PaymentResponse paymentResponse = apiClient.createPayment(paymentRequest);
-
-        storage.storePaymentId(paymentResponse.getPayment().getUniqueId());
-
-        return paymentResponse;
+        return apiClient.createPayment(paymentRequest);
     }
 
     @Override
@@ -84,9 +80,9 @@ public class DemobankPaymentExecutor implements PaymentExecutor, FetchablePaymen
     private PaymentMultiStepResponse authenticate(PaymentMultiStepRequest paymentMultiStepRequest)
             throws PaymentAuthorizationException {
 
-        final String paymentId = storage.getPaymentId();
+        final String authorizeUrl = storage.getAuthorizeUrl();
 
-        final String authCode = authenticator.authenticate(paymentId);
+        final String authCode = authenticator.authenticate(authorizeUrl);
         final OAuth2Token accessToken = apiClient.exchangeAccessCode(authCode);
         storage.storeAccessToken(accessToken);
 

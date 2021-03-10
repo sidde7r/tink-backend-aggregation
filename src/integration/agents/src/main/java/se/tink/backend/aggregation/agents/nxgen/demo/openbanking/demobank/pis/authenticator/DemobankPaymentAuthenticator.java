@@ -29,16 +29,15 @@ import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 @Slf4j
 public class DemobankPaymentAuthenticator {
 
-    private static final String PAYMENT_SCOPE = "payment:write";
     private static final long WAIT_FOR_MINUTES = 9L;
 
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final StrongAuthenticationState strongAuthenticationState;
     private final String callbackUri;
 
-    public String authenticate(String paymentId) throws PaymentAuthorizationException {
+    public String authenticate(String authorizeUrl) throws PaymentAuthorizationException {
         try {
-            openThirdPartyApp(paymentId);
+            openThirdPartyApp(authorizeUrl);
 
             return retrieveAuthCode();
         } catch (AuthenticationException | AuthorizationException e) {
@@ -52,20 +51,15 @@ public class DemobankPaymentAuthenticator {
         }
     }
 
-    private void openThirdPartyApp(String paymentId) {
+    private void openThirdPartyApp(String authorizeUrl) {
         supplementalInformationHelper.openThirdPartyApp(
-                ThirdPartyAppAuthenticationPayload.of(buildAuthorizeUrl(paymentId)));
+                ThirdPartyAppAuthenticationPayload.of(buildAuthorizeUrl(authorizeUrl)));
     }
 
-    private URL buildAuthorizeUrl(String paymentId) {
-        return new URL(Urls.BASE_URL)
-                .concat(Urls.OAUTH_AUTHORIZE)
-                .queryParam(QueryParams.RESPONSE_TYPE, QueryParamsValues.RESPONSE_TYPE)
-                .queryParam(QueryParams.CLIENT_ID, QueryParamsValues.CLIENT_ID)
+    private URL buildAuthorizeUrl(String authorizeUrl) {
+        return new URL(Urls.BASE_URL + authorizeUrl)
                 .queryParam(QueryParams.STATE, strongAuthenticationState.getState())
-                .queryParam(QueryParams.REDIRECT_URI, callbackUri)
-                .queryParam(QueryParams.PAYMENT_ID, paymentId)
-                .queryParam(QueryParams.SCOPE, PAYMENT_SCOPE);
+                .queryParam(QueryParams.REDIRECT_URI, callbackUri);
     }
 
     private String retrieveAuthCode() throws PaymentAuthorizationException {

@@ -11,14 +11,17 @@ import java.util.Optional;
 import javax.ws.rs.core.MediaType;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import se.tink.backend.aggregation.agents.Href;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.entities.TokenEntity;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.rpc.RedirectLoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.apiclient.dto.AccountIdentifierDto;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.apiclient.dto.AmountDto;
+import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.apiclient.dto.LinksDto;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.apiclient.dto.PaymentInitiationDto;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.apiclient.dto.PaymentResponseDto;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.apiclient.dto.RemittanceInformationStructuredDto;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.entity.PaymentStatusDto;
+import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.pis.storage.DemobankStorage;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
@@ -43,6 +46,7 @@ public class DemobankPaymentApiClient {
     private static final String PAYMENT_CLIENT_TOKEN_HEADER = "X-Client-Header";
 
     private final DemobankPaymentRequestFilter requestFilter;
+    private final DemobankStorage storage;
     private final TinkHttpClient client;
     private final String callbackUri;
 
@@ -56,6 +60,8 @@ public class DemobankPaymentApiClient {
                         .type(MediaType.APPLICATION_JSON_TYPE)
                         .accept(MediaType.APPLICATION_JSON_TYPE)
                         .post(PaymentResponseDto.class, paymentInitiationDto);
+
+        saveToStorage(paymentResponseDto);
 
         return convertResponseDtoToPaymentResponse(paymentResponseDto);
     }
@@ -88,6 +94,20 @@ public class DemobankPaymentApiClient {
                         .get(PaymentResponseDto.class);
 
         return convertResponseDtoToPaymentResponse(paymentResponseDto);
+    }
+
+    private void saveToStorage(PaymentResponseDto response) {
+        final String authorizeUrl =
+                Optional.ofNullable(response.getLinks())
+                        .map(LinksDto::getScaRedirect)
+                        .map(Href::getHref)
+                        .orElseThrow(
+                                () ->
+                                        new IllegalArgumentException(
+                                                "Response does not contain sca redirect link"));
+
+        storage.storePaymentId(response.getId());
+        storage.storeAuthorizeUrl(authorizeUrl);
     }
 
     private static PaymentInitiationDto createPaymentInitiationDto(PaymentRequest paymentRequest) {

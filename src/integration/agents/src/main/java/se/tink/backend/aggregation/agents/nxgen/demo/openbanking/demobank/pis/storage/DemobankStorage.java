@@ -7,7 +7,8 @@ import se.tink.backend.aggregation.nxgen.storage.Storage;
 public class DemobankStorage {
 
     private static final String ACCESS_TOKEN_KEY = "ACCESS_TOKEN_KEY";
-    public static final String PAYMENT_ID_KEY = "PAYMENT_ID_KEY";
+    private static final String PAYMENT_ID_KEY = "PAYMENT_ID_KEY";
+    private static final String AUTHORIZE_URL_KEY = "AUTHORIZE_URL_KEY";
 
     private final Storage storage = new Storage();
 
@@ -29,5 +30,17 @@ public class DemobankStorage {
 
     public void storeAccessToken(OAuth2Token accessToken) {
         storage.put(ACCESS_TOKEN_KEY, accessToken);
+    }
+
+    public String getAuthorizeUrl() {
+        return storage.get(AUTHORIZE_URL_KEY, String.class)
+                .orElseThrow(
+                        () ->
+                                new IllegalArgumentException(
+                                        "Authorize Url has not been found in the storage"));
+    }
+
+    public void storeAuthorizeUrl(String authorizeUrl) {
+        storage.put(AUTHORIZE_URL_KEY, authorizeUrl);
     }
 }
