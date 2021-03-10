@@ -32,18 +32,18 @@ public class DkbSupplementalDataProvider {
     }
 
     String getTanCode(
-            String scaMethodName,
+            ConsentAuthorization.ScaMethod scaMethod,
             List<String> data,
             ConsentAuthorization.ChallengeData challengeData)
             throws SupplementalInfoException {
-        List<Field> fields = getSupplementalFields(scaMethodName, data, challengeData);
+        List<Field> fields = getSupplementalFields(scaMethod, data, challengeData);
         return supplementalInformationHelper
                 .askSupplementalInformation(fields.toArray(new Field[0]))
                 .get(fields.get(fields.size() - 1).getName());
     }
 
     List<Field> getSupplementalFields(
-            String scaMethodName,
+            ConsentAuthorization.ScaMethod scaMethod,
             List<String> data,
             ConsentAuthorization.ChallengeData challengeData) {
         List<Field> fields = new LinkedList<>();
@@ -52,7 +52,8 @@ public class DkbSupplementalDataProvider {
         fields.add(
                 GermanFields.Tan.build(
                         catalog,
-                        scaMethodName,
+                        scaMethod != null ? scaMethod.getAuthenticationType() : null,
+                        scaMethod != null ? scaMethod.getName() : null,
                         challengeData != null ? challengeData.getOtpMaxLength() : null,
                         challengeData != null ? challengeData.getOtpFormat() : null));
 

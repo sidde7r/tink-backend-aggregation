@@ -49,6 +49,7 @@ public class PostbankAuthenticationController implements TypedAuthenticator {
     private static final String CHIP_OTP = "CHIP_OTP";
     private static final String SMS_OTP = "SMS_OTP";
     private static final String PUSH_OTP = "PUSH_OTP";
+
     private final Catalog catalog;
     private final SupplementalInformationController supplementalInformationController;
     private final PostbankAuthenticator authenticator;
@@ -218,6 +219,7 @@ public class PostbankAuthenticationController implements TypedAuthenticator {
 
     private String collectOtp(AuthorisationResponse authResponse) {
         String scaMethodName = authResponse.getChosenScaMethod().getName();
+        String authenticationType = authResponse.getChosenScaMethod().getAuthenticationType();
         ChallengeData challengeData = authResponse.getChallengeData();
         List<Field> fields = new LinkedList<>();
         extractStartcode(authResponse)
@@ -226,13 +228,14 @@ public class PostbankAuthenticationController implements TypedAuthenticator {
         fields.add(
                 GermanFields.Tan.build(
                         catalog,
+                        authenticationType,
                         scaMethodName,
                         challengeData != null ? challengeData.getOtpMaxLength() : null,
                         challengeData != null ? challengeData.getOtpFormat() : null));
 
         return supplementalInformationController
                 .askSupplementalInformationSync(fields.toArray(new Field[0]))
-                .get(GermanFields.Tan.getFieldKey());
+                .get(fields.get(fields.size() - 1).getName());
     }
 
     private Optional<String> extractStartcode(AuthorisationResponse authResponse) {

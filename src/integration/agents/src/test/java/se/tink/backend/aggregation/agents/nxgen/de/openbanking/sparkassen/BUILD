@@ -1,7 +1,7 @@
 load("//tools/bzl:junit.bzl", "junit_test")
 
 junit_test(
-    name = "sparkassen",
+    name = "sparkassen_unit_tests",
     srcs = glob(
         ["**/*.java"],
         exclude = ["agent/**/*.java"],
@@ -20,6 +20,7 @@ junit_test(
         "//src/integration/lib",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions/bankservice",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/berlingroup",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/supplementalfields",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/response",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",

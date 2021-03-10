@@ -35,7 +35,9 @@ public class DkbSupplementalDataProviderTest {
 
     private SupplementalInformationHelper supplementalInfoHelperMock =
             mock(SupplementalInformationHelper.class);
+
     private static Catalog catalog = mock(Catalog.class);
+    private static ConsentAuthorization.ScaMethod scaMethod;
 
     private DkbSupplementalDataProvider tested =
             new DkbSupplementalDataProvider(supplementalInfoHelperMock, catalog);
@@ -51,6 +53,10 @@ public class DkbSupplementalDataProviderTest {
                                 MessageFormat.format(
                                         ((LocalizableParametrizedKey) i.getArguments()[0]).get(),
                                         i.getArguments()[1]));
+
+        scaMethod = new ConsentAuthorization.ScaMethod();
+        scaMethod.setAuthenticationType("SMS_OTP");
+        scaMethod.setName(TEST_SCA_METHOD_NAME);
     }
 
     @Test
@@ -76,9 +82,7 @@ public class DkbSupplementalDataProviderTest {
         // when
         List<Field> result =
                 tested.getSupplementalFields(
-                        TEST_SCA_METHOD_NAME,
-                        challengeData,
-                        new ConsentAuthorization.ChallengeData());
+                        scaMethod, challengeData, new ConsentAuthorization.ChallengeData());
 
         // then
         assertThat(result).hasSize(1);
@@ -94,9 +98,7 @@ public class DkbSupplementalDataProviderTest {
         // when
         List<Field> result =
                 tested.getSupplementalFields(
-                        TEST_SCA_METHOD_NAME,
-                        challengeData,
-                        new ConsentAuthorization.ChallengeData());
+                        scaMethod, challengeData, new ConsentAuthorization.ChallengeData());
 
         // then
         assertThat(result).hasSize(1);
@@ -111,9 +113,7 @@ public class DkbSupplementalDataProviderTest {
         // when
         List<Field> result =
                 tested.getSupplementalFields(
-                        TEST_SCA_METHOD_NAME,
-                        challengeData,
-                        new ConsentAuthorization.ChallengeData());
+                        scaMethod, challengeData, new ConsentAuthorization.ChallengeData());
 
         // then
         assertThat(result).hasSize(2);
@@ -142,7 +142,7 @@ public class DkbSupplementalDataProviderTest {
     }
 
     private void assertTanField(Field field) {
-        assertThat(field.getName()).isEqualTo("tanField");
+        assertThat(field.getName()).isEqualTo("smsTan");
         assertThat(field.isImmutable()).isFalse();
         assertThat(field.getDescription()).isEqualTo("TAN");
         assertThat(field.getValue()).isNull();

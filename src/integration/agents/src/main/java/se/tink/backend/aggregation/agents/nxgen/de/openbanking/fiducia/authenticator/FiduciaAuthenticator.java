@@ -190,7 +190,9 @@ public class FiduciaAuthenticator implements MultiFactorAuthenticator, AutoAuthe
         List<Field> fields = new LinkedList<>();
         Optional<String> startcode = extractStartcode(scaResponse);
 
-        if (!startcode.isPresent() && isUnsupportedMethod(scaResponse.getChosenScaMethod())) {
+        ScaMethod chosenScaMethod = scaResponse.getChosenScaMethod();
+
+        if (!startcode.isPresent() && isUnsupportedMethod(chosenScaMethod)) {
             throwNoSupportedMethodFound();
         }
         startcode.ifPresent(x -> fields.add(GermanFields.Startcode.build(catalog, x)));
@@ -199,9 +201,8 @@ public class FiduciaAuthenticator implements MultiFactorAuthenticator, AutoAuthe
         fields.add(
                 GermanFields.Tan.build(
                         catalog,
-                        Optional.ofNullable(scaResponse.getChosenScaMethod())
-                                .map(ScaMethod::getName)
-                                .orElse(null),
+                        chosenScaMethod != null ? chosenScaMethod.getAuthenticationType() : null,
+                        chosenScaMethod != null ? chosenScaMethod.getName() : null,
                         challengeData != null ? challengeData.getOtpMaxLength() : null,
                         challengeData != null ? challengeData.getOtpFormat() : null));
 

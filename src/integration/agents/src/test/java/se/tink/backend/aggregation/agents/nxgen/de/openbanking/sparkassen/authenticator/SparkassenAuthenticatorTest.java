@@ -26,7 +26,6 @@ import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen
 import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.AuthenticatorTestData.SELECT_AUTH_METHOD_NO_CHALLENGE_DATA;
 import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.AuthenticatorTestData.SELECT_AUTH_METHOD_OK;
 import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.AuthenticatorTestData.SUPPLEMENTAL_INFO_EXCEPTION;
-import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.AuthenticatorTestData.SUPPLEMENTAL_RESPONSE_OK;
 import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.AuthenticatorTestData.TEST_AUTHORIZATION_ID;
 import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.AuthenticatorTestData.TEST_AUTH_URL;
 import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.AuthenticatorTestData.TEST_CONSENT_ID;
@@ -35,6 +34,7 @@ import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen
 import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.AuthenticatorTestData.USERNAME;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.Map;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
@@ -51,6 +51,7 @@ import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceExce
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenApiClient;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenPersistentStorage;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.entities.ScaMethodEntity;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.AuthenticationMethodResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.FinalizeAuthorizationResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentDetailsResponse;
@@ -321,7 +322,7 @@ public class SparkassenAuthenticatorTest {
         whenCreateConsentReturn(CONSENT_RESPONSE_OK);
         whenInitializeAuthorizationReturn(INIT_AUTH_RESPONSE_OK_TWO_METHODS);
         whenSelectAuthorizationMethodThrow(HTTP_RESPONSE_EXCEPTION);
-        whenSupplementalInformationHelperReturn(SUPPLEMENTAL_RESPONSE_OK);
+        whenSupplementalInformationHelperReturn(INIT_AUTH_RESPONSE_OK_TWO_METHODS);
 
         // when
         Throwable throwable = catchThrowable(() -> authenticator.authenticate(credentials));
@@ -345,7 +346,7 @@ public class SparkassenAuthenticatorTest {
         whenCreateConsentReturn(CONSENT_RESPONSE_OK);
         whenInitializeAuthorizationReturn(INIT_AUTH_RESPONSE_OK_TWO_METHODS);
         whenSelectAuthorizationMethodReturn(SELECT_AUTH_METHOD_NO_CHALLENGE_DATA);
-        whenSupplementalInformationHelperReturn(SUPPLEMENTAL_RESPONSE_OK);
+        whenSupplementalInformationHelperReturn(SELECT_AUTH_METHOD_NO_CHALLENGE_DATA);
 
         // when
         Throwable throwable = catchThrowable(() -> authenticator.authenticate(credentials));
@@ -413,7 +414,7 @@ public class SparkassenAuthenticatorTest {
         whenCreateConsentReturn(CONSENT_RESPONSE_OK);
         whenInitializeAuthorizationReturn(INIT_AUTH_RESPONSE_OK_ONE_METHOD);
         whenFinalizeAuthorizationThrow(LOGIN_EXCEPTION_INCORRECT_CHALLENGE);
-        whenSupplementalInformationHelperReturn(SUPPLEMENTAL_RESPONSE_OK);
+        whenSupplementalInformationHelperReturn(INIT_AUTH_RESPONSE_OK_ONE_METHOD);
 
         // when
         Throwable throwable = catchThrowable(() -> authenticator.authenticate(credentials));
@@ -436,7 +437,7 @@ public class SparkassenAuthenticatorTest {
         whenCreateConsentReturn(CONSENT_RESPONSE_OK);
         whenInitializeAuthorizationReturn(INIT_AUTH_RESPONSE_OK_ONE_METHOD);
         whenFinalizeAuthorizationThrow(LOGIN_EXCEPTION_INCORRECT_CHALLENGE);
-        whenSupplementalInformationHelperReturn(SUPPLEMENTAL_RESPONSE_OK);
+        whenSupplementalInformationHelperReturn(INIT_AUTH_RESPONSE_OK_ONE_METHOD);
 
         // when
         Throwable throwable = catchThrowable(() -> authenticator.authenticate(credentials));
@@ -459,7 +460,7 @@ public class SparkassenAuthenticatorTest {
         whenCreateConsentReturn(CONSENT_RESPONSE_OK);
         whenInitializeAuthorizationReturn(INIT_AUTH_RESPONSE_OK_ONE_METHOD);
         whenFinalizeAuthorizationReturn(FINALIZE_AUTH_FAILED);
-        whenSupplementalInformationHelperReturn(SUPPLEMENTAL_RESPONSE_OK);
+        whenSupplementalInformationHelperReturn(INIT_AUTH_RESPONSE_OK_ONE_METHOD);
 
         // when
         Throwable throwable = catchThrowable(() -> authenticator.authenticate(credentials));
@@ -482,7 +483,7 @@ public class SparkassenAuthenticatorTest {
         whenCreateConsentReturn(CONSENT_RESPONSE_OK);
         whenInitializeAuthorizationReturn(INIT_AUTH_RESPONSE_OK_ONE_METHOD);
         whenFinalizeAuthorizationReturn(FINALIZE_AUTH_OTHER);
-        whenSupplementalInformationHelperReturn(SUPPLEMENTAL_RESPONSE_OK);
+        whenSupplementalInformationHelperReturn(INIT_AUTH_RESPONSE_OK_ONE_METHOD);
 
         // when
         Throwable throwable = catchThrowable(() -> authenticator.authenticate(credentials));
@@ -505,7 +506,7 @@ public class SparkassenAuthenticatorTest {
         whenCreateConsentReturn(CONSENT_RESPONSE_OK);
         whenInitializeAuthorizationReturn(INIT_AUTH_RESPONSE_OK_ONE_METHOD);
         whenFinalizeAuthorizationReturn(FINALIZE_AUTH_OK);
-        whenSupplementalInformationHelperReturn(SUPPLEMENTAL_RESPONSE_OK);
+        whenSupplementalInformationHelperReturn(INIT_AUTH_RESPONSE_OK_ONE_METHOD);
         whenGetConsentDetailsReturn(CONSENT_DETAILS_RESPONSE_VALID);
 
         // when
@@ -530,7 +531,7 @@ public class SparkassenAuthenticatorTest {
         whenInitializeAuthorizationReturn(INIT_AUTH_RESPONSE_OK_TWO_METHODS);
         whenSelectAuthorizationMethodReturn(SELECT_AUTH_METHOD_OK);
         whenFinalizeAuthorizationReturn(FINALIZE_AUTH_OK);
-        whenSupplementalInformationHelperReturn(SUPPLEMENTAL_RESPONSE_OK);
+        whenSupplementalInformationHelperReturn(SELECT_AUTH_METHOD_OK);
         whenGetConsentDetailsReturn(CONSENT_DETAILS_RESPONSE_VALID);
 
         // when
@@ -556,7 +557,7 @@ public class SparkassenAuthenticatorTest {
         whenInitializeAuthorizationReturn(INIT_AUTH_RESPONSE_OK_TWO_METHODS);
         whenSelectAuthorizationMethodReturn(SELECT_AUTH_METHOD_OK);
         whenFinalizeAuthorizationReturn(FINALIZE_AUTH_OK);
-        whenSupplementalInformationHelperReturn(SUPPLEMENTAL_RESPONSE_OK);
+        whenSupplementalInformationHelperReturn(SELECT_AUTH_METHOD_OK);
         whenGetConsentDetailsReturn(CONSENT_DETAILS_RESPONSE_VALID);
 
         // when
@@ -665,9 +666,28 @@ public class SparkassenAuthenticatorTest {
     }
 
     private void whenSupplementalInformationHelperReturn(
-            Map<String, String> askSupplementalInformationResult) {
+            AuthenticationMethodResponse authenticationMethodResponse) {
+        Map<String, String> supplementalInformation = new HashMap<>();
+        supplementalInformation.put(
+                getFieldName(authenticationMethodResponse.getChosenScaMethod()), TEST_OTP);
+        supplementalInformation.put("selectAuthMethodField", "1");
+
         when(supplementalInformationHelper.askSupplementalInformation(any()))
-                .thenReturn(askSupplementalInformationResult);
+                .thenReturn(supplementalInformation);
+    }
+
+    private String getFieldName(ScaMethodEntity scaMethodEntity) {
+        if (scaMethodEntity != null) {
+            String authenticationType = scaMethodEntity.getAuthenticationType();
+            if ("CHIP_OTP".equalsIgnoreCase(authenticationType)) {
+                return "chipTan";
+            } else if ("SMS_OTP".equalsIgnoreCase(authenticationType)) {
+                return "smsTan";
+            } else if ("PUSH_OTP".equalsIgnoreCase(authenticationType)) {
+                return "pushTan";
+            }
+        }
+        return "tanField";
     }
 
     private void whenSupplementalInformationHelperThrow(
