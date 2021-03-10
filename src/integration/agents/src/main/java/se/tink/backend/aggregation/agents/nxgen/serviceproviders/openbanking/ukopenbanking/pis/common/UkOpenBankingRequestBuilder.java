@@ -19,7 +19,7 @@ public class UkOpenBankingRequestBuilder {
     }
 
     public RequestBuilder createPisRequestWithJwsHeader(URL url) {
-        return createRequest(url).type(MediaType.APPLICATION_JSON_TYPE);
+        return createRequest(url).type("application/json;charset=UTF-8");
     }
 
     public RequestBuilder createRequest(URL url) {

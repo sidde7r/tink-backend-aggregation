@@ -39,7 +39,7 @@ X-Fapi-Interaction-Id: 00000000-0000-4000-0000-000000000000
 REQUEST 3
 POST https://openbanking.monzo.com/open-banking/v3.1/pisp/domestic-payment-consents
 Accept: application/json
-Content-Type: application/json
+Content-Type: application/json; charset=UTF-8
 X-Aggregator: Tink Testing
 x-idempotency-key: 0000000000000000
 Authorization: Bearer DUMMY_ACCESS_TOKEN
@@ -124,7 +124,7 @@ x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
 REQUEST 7
 POST https://openbanking.monzo.com/open-banking/v3.1/pisp/domestic-payments
 Accept: application/json
-Content-Type: application/json
+Content-Type: application/json; charset=UTF-8
 x-idempotency-key: 0000000000000000
 x-jws-signature: RkFLRV9TSUdOQVRVUkUK
 X-Aggregator: Tink Testing

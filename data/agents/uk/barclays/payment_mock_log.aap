@@ -43,7 +43,7 @@ X-Content-Type-Options: nosniff
 REQUEST 3
 POST https://telesto.api.barclays:443/open-banking/v3.1/pisp/domestic-payment-consents
 Accept: application/json
-Content-Type: application/json
+Content-Type: application/json; charset=UTF-8
 X-Aggregator: Tink Testing
 x-idempotency-key: 0000000000000000
 Authorization: Bearer DUMMY_TPP_ACCESS_TOKEN
@@ -133,7 +133,7 @@ x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
 REQUEST 7
 POST https://telesto.api.barclays:443/open-banking/v3.1/pisp/domestic-payments
 Accept: application/json
-Content-Type: application/json
+Content-Type: application/json; charset=UTF-8
 X-Aggregator: Tink Testing
 x-idempotency-key: 0000000000000000
 Authorization: Bearer DUMMY_ACCESS_TOKEN
