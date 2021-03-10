@@ -164,7 +164,7 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
         softwareStatement = ukOpenBankingConfiguration.getSoftwareStatementAssertions();
         providerConfiguration = ukOpenBankingConfiguration.getProviderConfiguration();
         configureTls(ukOpenBankingConfiguration);
-        setSoftwareIdForSignatureCreator(softwareStatement);
+        setSoftwareStatementForSignatureCreator(softwareStatement);
 
         final String redirectUrl = getAgentConfiguration().getRedirectUrl();
 
@@ -473,9 +473,10 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
         return new RequiredReferenceRemittanceInfoDomesticSchedulerPaymentConverter();
     }
 
-    private void setSoftwareIdForSignatureCreator(SoftwareStatementAssertion softwareStatement) {
+    private void setSoftwareStatementForSignatureCreator(
+            SoftwareStatementAssertion softwareStatement) {
         if (Objects.nonNull(pisRequestFilter)) {
-            pisRequestFilter.setSoftwareId(softwareStatement.getSoftwareId());
+            pisRequestFilter.setSoftwareStatement(softwareStatement);
         }
     }
 

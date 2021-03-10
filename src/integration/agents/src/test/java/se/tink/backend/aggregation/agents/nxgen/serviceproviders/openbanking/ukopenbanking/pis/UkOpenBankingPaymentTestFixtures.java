@@ -14,6 +14,7 @@ import java.util.Map;
 import org.junit.Ignore;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.OpenIdConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.configuration.ClientInfo;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.configuration.SoftwareStatementAssertion;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.dto.CreditorAccount;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.dto.DebtorAccount;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.common.dto.InstructedAmount;
@@ -67,6 +68,7 @@ public class UkOpenBankingPaymentTestFixtures {
     public static final String SIGNATURE = "DUMMY_SIGNATURE";
     public static final String SOFTWARE_ID = "DUMMY_SOFTWARE_ID";
 
+    private static final String ORG_ID = "DUMMY_ORG_ID";
     private static final String ACCOUNT_NUMBER = "12345678901234";
     private static final String REMITTANCE_INFORMATION = "DUMMY_REMITTANCE_INFORMATION";
     private static final String CONSENT_RESPONSE_STATUS = "AwaitingAuthorisation";
@@ -364,6 +366,16 @@ public class UkOpenBankingPaymentTestFixtures {
         return mock(OAuth2Token.class);
     }
 
+    public static SoftwareStatementAssertion createSoftwareStatementAssertion() {
+        final SoftwareStatementAssertion softwareStatementMock =
+                mock(SoftwareStatementAssertion.class);
+
+        when(softwareStatementMock.getSoftwareId()).thenReturn(SOFTWARE_ID);
+        when(softwareStatementMock.getOrgId()).thenReturn(ORG_ID);
+
+        return softwareStatementMock;
+    }
+
     static PaymentMultiStepRequest createPaymentMultiStepRequestFoAuthenticateStep() {
         return createPaymentMultiStepRequest(SigningStepConstants.STEP_INIT);
     }
@@ -385,7 +397,7 @@ public class UkOpenBankingPaymentTestFixtures {
         return paymentMultiStepRequestMock;
     }
 
-    public static PaymentRequest createPaymentRequest() {
+    static PaymentRequest createPaymentRequest() {
         final PaymentRequest paymentRequest = mock(PaymentRequest.class);
         final Storage storage = createStorageWithConsentId();
         final Payment paymentMock = createPayment();
