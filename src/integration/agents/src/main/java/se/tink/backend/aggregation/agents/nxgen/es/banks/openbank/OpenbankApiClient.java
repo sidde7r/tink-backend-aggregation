@@ -101,7 +101,7 @@ public class OpenbankApiClient {
                 .post(CardTransactionsResponse.class);
     }
 
-    public IdentityResponse fetchIdentityData() {
+    public IdentityResponse getUserIdentity() {
         return createRequestInSession(Urls.IDENTITY_URL).get(IdentityResponse.class);
     }
 }
