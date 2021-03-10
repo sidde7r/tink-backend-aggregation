@@ -107,8 +107,8 @@ public class PostbankAuthenticationController implements TypedAuthenticator {
 
     private void authenticateUsingChosenScaMethod(
             String username, AuthorisationResponse initValues, ScaMethod chosenScaMethod) {
-        switch (GermanFields.Tan.AuthenticationType.getIfPresentOrDefault(
-                chosenScaMethod.getAuthenticationType())) {
+        switch (GermanFields.Tan.AuthenticationType.valueOf(
+                chosenScaMethod.getAuthenticationType().toUpperCase())) {
             case PUSH_OTP:
                 finishWithAcceptingPush(initValues, username);
                 break;
@@ -225,18 +225,14 @@ public class PostbankAuthenticationController implements TypedAuthenticator {
         fields.add(
                 GermanFields.Tan.build(
                         catalog,
-                        GermanFields.Tan.AuthenticationType.getIfPresentOrDefault(
-                                authenticationType),
+                        authenticationType,
                         scaMethodName,
                         challengeData != null ? challengeData.getOtpMaxLength() : null,
                         challengeData != null ? challengeData.getOtpFormat() : null));
 
         return supplementalInformationController
                 .askSupplementalInformationSync(fields.toArray(new Field[0]))
-                .get(
-                        GermanFields.Tan.AuthenticationType.getIfPresentOrDefault(
-                                        authenticationType)
-                                .getFieldName());
+                .get(fields.get(fields.size() - 1).getName());
     }
 
     private Optional<String> extractStartcode(AuthorisationResponse authResponse) {

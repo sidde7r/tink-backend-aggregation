@@ -201,7 +201,7 @@ public class FiduciaAuthenticator implements MultiFactorAuthenticator, AutoAuthe
         fields.add(
                 GermanFields.Tan.build(
                         catalog,
-                        getAuthenticationType(chosenScaMethod),
+                        chosenScaMethod != null ? chosenScaMethod.getAuthenticationType() : null,
                         chosenScaMethod != null ? chosenScaMethod.getName() : null,
                         challengeData != null ? challengeData.getOtpMaxLength() : null,
                         challengeData != null ? challengeData.getOtpFormat() : null));
@@ -213,13 +213,6 @@ public class FiduciaAuthenticator implements MultiFactorAuthenticator, AutoAuthe
 
         String authoriseTransactionHref = scaResponse.getLinks().getAuthoriseTransaction();
         return apiClient.authorizeWithOtpCode(authoriseTransactionHref, otpCode);
-    }
-
-    private GermanFields.Tan.AuthenticationType getAuthenticationType(ScaMethod scaMethod) {
-        return scaMethod != null
-                ? GermanFields.Tan.AuthenticationType.getIfPresentOrDefault(
-                        scaMethod.getAuthenticationType())
-                : GermanFields.Tan.AuthenticationType.UNKNOWN_OTP;
     }
 
     private Optional<String> extractStartcode(ScaResponse scaResponse) {

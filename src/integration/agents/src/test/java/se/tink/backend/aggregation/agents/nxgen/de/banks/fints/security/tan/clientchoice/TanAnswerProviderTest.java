@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.Map;
 import lombok.SneakyThrows;
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.utils.supplementalfields.GermanFields;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.libraries.i18n.Catalog;
 
@@ -33,8 +32,7 @@ public class TanAnswerProviderTest {
 
     private Map<String, String> getSimulatedUserAnswer() {
         HashMap<String, String> answer = new HashMap<>();
-        answer.put(
-                GermanFields.Tan.AuthenticationType.UNKNOWN_OTP.getFieldName(), "User TAN answer");
+        answer.put("tanField", "User TAN answer");
         return answer;
     }
 }

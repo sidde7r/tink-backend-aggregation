@@ -271,19 +271,31 @@ public class PostbankAuthenticationControllerTest {
 
     private void mockProvidingOtpCode(AuthorisationResponse authorisationResponse) {
         Map<String, String> supplementalInformation = new HashMap<>();
-        supplementalInformation.put(
-                getAuthenticationType(authorisationResponse).getFieldName(), OTP_CODE);
-        Field tan =
-                GermanFields.Tan.build(
-                        catalog, getAuthenticationType(authorisationResponse), "", null, null);
+        String authenticationType = getFieldName(authorisationResponse.getChosenScaMethod());
+        supplementalInformation.put(authenticationType, OTP_CODE);
+        Field tan = GermanFields.Tan.build(catalog, authenticationType, "", null, null);
         when(mockSuppController.askSupplementalInformationSync(argThat(new FieldMatcher(tan))))
                 .thenReturn(supplementalInformation);
     }
 
-    private GermanFields.Tan.AuthenticationType getAuthenticationType(
-            AuthorisationResponse authorisationResponse) {
-        return GermanFields.Tan.AuthenticationType.getIfPresentOrDefault(
-                authorisationResponse.getChosenScaMethod().getAuthenticationType());
+    private String getFieldName(ScaMethod scaMethod) {
+        if (scaMethod != null) {
+            String authenticationType = scaMethod.getAuthenticationType();
+            if (GermanFields.Tan.AuthenticationType.CHIP_OTP
+                    .name()
+                    .equalsIgnoreCase(authenticationType)) {
+                return "chipTan";
+            } else if (GermanFields.Tan.AuthenticationType.SMS_OTP
+                    .name()
+                    .equalsIgnoreCase(authenticationType)) {
+                return "smsTan";
+            } else if (GermanFields.Tan.AuthenticationType.PUSH_OTP
+                    .name()
+                    .equalsIgnoreCase(authenticationType)) {
+                return "pushTan";
+            }
+        }
+        return "tanField";
     }
 
     private void mockScaMethodSelection(

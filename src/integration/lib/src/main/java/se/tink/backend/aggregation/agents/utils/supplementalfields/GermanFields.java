@@ -1,8 +1,8 @@
 package se.tink.backend.aggregation.agents.utils.supplementalfields;
 
 import com.google.common.base.Enums;
+import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.agents.rpc.Field;
@@ -46,7 +46,8 @@ public class GermanFields {
             SMTP_OTP("smtpTan"),
             UNKNOWN_OTP("tanField");
 
-            @Getter private final String fieldName;
+            @Getter(AccessLevel.PRIVATE)
+            private final String fieldName;
 
             private static AuthenticationType getOrDefault(String authenticaionType) {
                 if (StringUtils.isEmpty(authenticaionType)) {
@@ -72,7 +73,7 @@ public class GermanFields {
 
         public static Field build(
                 Catalog catalog,
-                @NonNull AuthenticationType authenticationType,
+                String authenticationType,
                 String scaMethodName,
                 Integer otpMaxLength,
                 String otpFormat) {
@@ -83,7 +84,9 @@ public class GermanFields {
 
             Field.Builder otpBuilder =
                     Field.builder()
-                            .name(authenticationType.getFieldName())
+                            .name(
+                                    AuthenticationType.getOrDefault(authenticationType)
+                                            .getFieldName())
                             .description(catalog.getString(DESCRIPTION))
                             .helpText(helpText)
                             .minLength(1);

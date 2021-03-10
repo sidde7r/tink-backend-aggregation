@@ -670,21 +670,31 @@ public class SparkassenAuthenticatorTest {
             AuthenticationMethodResponse authenticationMethodResponse) {
         Map<String, String> supplementalInformation = new HashMap<>();
         supplementalInformation.put(
-                getAuthenticationType(authenticationMethodResponse).getFieldName(), TEST_OTP);
+                getFieldName(authenticationMethodResponse.getChosenScaMethod()), TEST_OTP);
         supplementalInformation.put("selectAuthMethodField", "1");
 
         when(supplementalInformationHelper.askSupplementalInformation(any()))
                 .thenReturn(supplementalInformation);
     }
 
-    private GermanFields.Tan.AuthenticationType getAuthenticationType(
-            AuthenticationMethodResponse authorisationResponse) {
-        ScaMethodEntity chosenScaMethod = authorisationResponse.getChosenScaMethod();
-        if (chosenScaMethod == null) {
-            return GermanFields.Tan.AuthenticationType.UNKNOWN_OTP;
+    private String getFieldName(ScaMethodEntity scaMethodEntity) {
+        if (scaMethodEntity != null) {
+            String authenticationType = scaMethodEntity.getAuthenticationType();
+            if (GermanFields.Tan.AuthenticationType.CHIP_OTP
+                    .name()
+                    .equalsIgnoreCase(authenticationType)) {
+                return "chipTan";
+            } else if (GermanFields.Tan.AuthenticationType.SMS_OTP
+                    .name()
+                    .equalsIgnoreCase(authenticationType)) {
+                return "smsTan";
+            } else if (GermanFields.Tan.AuthenticationType.PUSH_OTP
+                    .name()
+                    .equalsIgnoreCase(authenticationType)) {
+                return "pushTan";
+            }
         }
-        return GermanFields.Tan.AuthenticationType.getIfPresentOrDefault(
-                chosenScaMethod.getAuthenticationType());
+        return "tanField";
     }
 
     private void whenSupplementalInformationHelperThrow(

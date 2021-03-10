@@ -52,20 +52,12 @@ public class DkbSupplementalDataProvider {
         fields.add(
                 GermanFields.Tan.build(
                         catalog,
-                        getAuthenticationType(scaMethod),
+                        scaMethod != null ? scaMethod.getAuthenticationType() : null,
                         scaMethod != null ? scaMethod.getName() : null,
                         challengeData != null ? challengeData.getOtpMaxLength() : null,
                         challengeData != null ? challengeData.getOtpFormat() : null));
 
         return fields;
-    }
-
-    private GermanFields.Tan.AuthenticationType getAuthenticationType(
-            ConsentAuthorization.ScaMethod scaMethod) {
-        return scaMethod != null
-                ? GermanFields.Tan.AuthenticationType.getIfPresentOrDefault(
-                        scaMethod.getAuthenticationType())
-                : GermanFields.Tan.AuthenticationType.UNKNOWN_OTP;
     }
 
     private Optional<String> extractStartCode(List<String> challengeData) {

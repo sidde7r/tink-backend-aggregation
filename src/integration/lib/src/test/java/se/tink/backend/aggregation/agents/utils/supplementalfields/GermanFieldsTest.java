@@ -68,11 +68,8 @@ public class GermanFieldsTest {
 
     @Test
     public void shouldReturnProperTanFieldWithoutDetails() {
-        // given
-        GermanFields.Tan.AuthenticationType authenticationType =
-                GermanFields.Tan.AuthenticationType.getIfPresentOrDefault(null);
         // when
-        Field result = GermanFields.Tan.build(catalog, authenticationType, null, null, null);
+        Field result = GermanFields.Tan.build(catalog, null, null, null, null);
 
         // then
         assertThat(result.getName()).isEqualTo("tanField");
@@ -94,8 +91,8 @@ public class GermanFieldsTest {
     @Test
     public void shouldReturnProperTanFieldWithScaMethodNameAndKnownOTP() {
         // given
-        GermanFields.Tan.AuthenticationType authenticationType =
-                GermanFields.Tan.AuthenticationType.getIfPresentOrDefault("SMS_OTP");
+        String authenticationType = "SMS_OTP";
+
         // when
         Field result =
                 GermanFields.Tan.build(catalog, authenticationType, SCA_METHOD_NAME, null, null);
@@ -120,8 +117,7 @@ public class GermanFieldsTest {
         // given
         final Integer otpLength = 5;
         String otpType = GermanFields.Tan.OTP_TYPE.INTEGER.name();
-        GermanFields.Tan.AuthenticationType authenticationType =
-                GermanFields.Tan.AuthenticationType.getIfPresentOrDefault("SMS_OTP");
+        String authenticationType = "SMS_OTP";
 
         // when
         Field result =
@@ -150,8 +146,7 @@ public class GermanFieldsTest {
         // given
         final Integer otpLength = 5;
         final String otpType = GermanFields.Tan.OTP_TYPE.CHARACTERS.name();
-        GermanFields.Tan.AuthenticationType authenticationType =
-                GermanFields.Tan.AuthenticationType.getIfPresentOrDefault("SMS_OTP");
+        String authenticationType = "SMS_OTP";
 
         // when
         Field result =

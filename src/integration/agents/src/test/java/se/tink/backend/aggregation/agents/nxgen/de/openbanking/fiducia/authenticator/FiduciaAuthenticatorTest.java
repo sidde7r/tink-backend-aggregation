@@ -290,20 +290,32 @@ public class FiduciaAuthenticatorTest {
 
     private void whenSupplementalInformationHelperReturn(ScaResponse scaResponse) {
         Map<String, String> supplementalInformation = new HashMap<>();
-        supplementalInformation.put(getAuthenticationType(scaResponse).getFieldName(), OTP_CODE);
+        supplementalInformation.put(getFieldName(scaResponse), OTP_CODE);
         supplementalInformation.put("selectAuthMethodField", "2");
 
         when(supplementalInformationHelper.askSupplementalInformation(any()))
                 .thenReturn(supplementalInformation);
     }
 
-    private GermanFields.Tan.AuthenticationType getAuthenticationType(ScaResponse scaResponse) {
+    private String getFieldName(ScaResponse scaResponse) {
         ScaMethod chosenScaMethod = scaResponse.getChosenScaMethod();
-        if (chosenScaMethod == null) {
-            return GermanFields.Tan.AuthenticationType.UNKNOWN_OTP;
+        if (chosenScaMethod != null) {
+            String authenticationType = chosenScaMethod.getAuthenticationType();
+            if (GermanFields.Tan.AuthenticationType.CHIP_OTP
+                    .name()
+                    .equalsIgnoreCase(authenticationType)) {
+                return "chipTan";
+            } else if (GermanFields.Tan.AuthenticationType.SMS_OTP
+                    .name()
+                    .equalsIgnoreCase(authenticationType)) {
+                return "smsTan";
+            } else if (GermanFields.Tan.AuthenticationType.PUSH_OTP
+                    .name()
+                    .equalsIgnoreCase(authenticationType)) {
+                return "pushTan";
+            }
         }
-        return GermanFields.Tan.AuthenticationType.getIfPresentOrDefault(
-                chosenScaMethod.getAuthenticationType());
+        return "tanField";
     }
 
     @SuppressWarnings("SameParameterValue")
