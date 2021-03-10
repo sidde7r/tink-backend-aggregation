@@ -19,14 +19,13 @@ import se.tink.libraries.i18n.Catalog;
 public class FieldBuilder {
 
     private static final Pattern STARTCODE_CHIP_PATTERN = Pattern.compile("Startcode\\s(\\d+)");
+    private static final String CHIP_TYPE = "CHIP_OTP";
 
     private final Catalog catalog;
 
     public List<Field> getOtpFields(ScaMethodEntity scaMethod, ChallengeDataEntity challengeData) {
         List<Field> fields = new LinkedList<>();
-        if (GermanFields.Tan.AuthenticationType.CHIP_OTP
-                .name()
-                .equalsIgnoreCase(scaMethod.getAuthenticationType())) {
+        if (CHIP_TYPE.equalsIgnoreCase(scaMethod.getAuthenticationType())) {
             fields.add(
                     GermanFields.Startcode.build(
                             catalog, retrieveStartCode(challengeData.getAdditionalInformation())));

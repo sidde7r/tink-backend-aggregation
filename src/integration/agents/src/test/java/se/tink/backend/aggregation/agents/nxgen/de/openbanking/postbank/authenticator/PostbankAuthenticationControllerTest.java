@@ -281,17 +281,11 @@ public class PostbankAuthenticationControllerTest {
     private String getFieldName(ScaMethod scaMethod) {
         if (scaMethod != null) {
             String authenticationType = scaMethod.getAuthenticationType();
-            if (GermanFields.Tan.AuthenticationType.CHIP_OTP
-                    .name()
-                    .equalsIgnoreCase(authenticationType)) {
+            if ("CHIP_OTP".equalsIgnoreCase(authenticationType)) {
                 return "chipTan";
-            } else if (GermanFields.Tan.AuthenticationType.SMS_OTP
-                    .name()
-                    .equalsIgnoreCase(authenticationType)) {
+            } else if ("SMS_OTP".equalsIgnoreCase(authenticationType)) {
                 return "smsTan";
-            } else if (GermanFields.Tan.AuthenticationType.PUSH_OTP
-                    .name()
-                    .equalsIgnoreCase(authenticationType)) {
+            } else if ("PUSH_OTP".equalsIgnoreCase(authenticationType)) {
                 return "pushTan";
             }
         }

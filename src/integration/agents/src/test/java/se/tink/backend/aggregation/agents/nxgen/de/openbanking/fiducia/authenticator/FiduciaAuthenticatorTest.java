@@ -40,7 +40,6 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authentic
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.rpc.ScaResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.rpc.ScaStatusResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentDetailsResponse;
-import se.tink.backend.aggregation.agents.utils.supplementalfields.GermanFields;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
@@ -301,17 +300,11 @@ public class FiduciaAuthenticatorTest {
         ScaMethod chosenScaMethod = scaResponse.getChosenScaMethod();
         if (chosenScaMethod != null) {
             String authenticationType = chosenScaMethod.getAuthenticationType();
-            if (GermanFields.Tan.AuthenticationType.CHIP_OTP
-                    .name()
-                    .equalsIgnoreCase(authenticationType)) {
+            if ("CHIP_OTP".equalsIgnoreCase(authenticationType)) {
                 return "chipTan";
-            } else if (GermanFields.Tan.AuthenticationType.SMS_OTP
-                    .name()
-                    .equalsIgnoreCase(authenticationType)) {
+            } else if ("SMS_OTP".equalsIgnoreCase(authenticationType)) {
                 return "smsTan";
-            } else if (GermanFields.Tan.AuthenticationType.PUSH_OTP
-                    .name()
-                    .equalsIgnoreCase(authenticationType)) {
+            } else if ("PUSH_OTP".equalsIgnoreCase(authenticationType)) {
                 return "pushTan";
             }
         }

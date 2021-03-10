@@ -46,6 +46,10 @@ public class PostbankAuthenticationController implements TypedAuthenticator {
 
     private static final Pattern STARTCODE_CHIP_PATTERN = Pattern.compile("Startcode:\\s(\\d+)");
 
+    private static final String CHIP_OTP = "CHIP_OTP";
+    private static final String SMS_OTP = "SMS_OTP";
+    private static final String PUSH_OTP = "PUSH_OTP";
+
     private final Catalog catalog;
     private final SupplementalInformationController supplementalInformationController;
     private final PostbankAuthenticator authenticator;
@@ -107,8 +111,7 @@ public class PostbankAuthenticationController implements TypedAuthenticator {
 
     private void authenticateUsingChosenScaMethod(
             String username, AuthorisationResponse initValues, ScaMethod chosenScaMethod) {
-        switch (GermanFields.Tan.AuthenticationType.valueOf(
-                chosenScaMethod.getAuthenticationType().toUpperCase())) {
+        switch (chosenScaMethod.getAuthenticationType().toUpperCase()) {
             case PUSH_OTP:
                 finishWithAcceptingPush(initValues, username);
                 break;

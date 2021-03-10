@@ -38,7 +38,7 @@ public class GermanFields {
         }
 
         @RequiredArgsConstructor
-        public enum AuthenticationType {
+        private enum AuthenticationType {
             SMS_OTP("smsTan"),
             CHIP_OTP("chipTan"),
             PUSH_OTP("pushTan"),

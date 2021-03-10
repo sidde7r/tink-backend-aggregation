@@ -56,7 +56,6 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authen
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.FinalizeAuthorizationResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentDetailsResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentResponse;
-import se.tink.backend.aggregation.agents.utils.supplementalfields.GermanFields;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
@@ -680,17 +679,11 @@ public class SparkassenAuthenticatorTest {
     private String getFieldName(ScaMethodEntity scaMethodEntity) {
         if (scaMethodEntity != null) {
             String authenticationType = scaMethodEntity.getAuthenticationType();
-            if (GermanFields.Tan.AuthenticationType.CHIP_OTP
-                    .name()
-                    .equalsIgnoreCase(authenticationType)) {
+            if ("CHIP_OTP".equalsIgnoreCase(authenticationType)) {
                 return "chipTan";
-            } else if (GermanFields.Tan.AuthenticationType.SMS_OTP
-                    .name()
-                    .equalsIgnoreCase(authenticationType)) {
+            } else if ("SMS_OTP".equalsIgnoreCase(authenticationType)) {
                 return "smsTan";
-            } else if (GermanFields.Tan.AuthenticationType.PUSH_OTP
-                    .name()
-                    .equalsIgnoreCase(authenticationType)) {
+            } else if ("PUSH_OTP".equalsIgnoreCase(authenticationType)) {
                 return "pushTan";
             }
         }
