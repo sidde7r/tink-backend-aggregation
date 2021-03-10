@@ -26,7 +26,7 @@ public class ScaExpirationValidator {
         return LocalDateTime.now().isAfter(time.plusMinutes(limitInMinutes).minusSeconds(5));
     }
 
-    Optional<LocalDateTime> restoreLastScaTime() {
+    private Optional<LocalDateTime> restoreLastScaTime() {
         return persistentStorage.get(LAST_SCA_TIME, String.class).map(LocalDateTime::parse);
     }
 }
