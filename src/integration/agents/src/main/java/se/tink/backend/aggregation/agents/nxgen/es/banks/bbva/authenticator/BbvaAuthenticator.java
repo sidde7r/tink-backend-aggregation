@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
+import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.AuthenticationStates;
@@ -80,23 +81,26 @@ public class BbvaAuthenticator implements MultiFactorAuthenticator {
 
     private void mapHttpErrors(HttpResponseException e) throws LoginException {
         HttpResponse response = e.getResponse();
-        if (response.getStatus() == HttpStatus.SC_FORBIDDEN
-                || response.getStatus() == HttpStatus.SC_INTERNAL_SERVER_ERROR
-                || response.getStatus() == HttpStatus.SC_UNAUTHORIZED) {
+        if (response.getStatus() >= 400) {
             BbvaErrorResponse errorResponse = e.getResponse().getBody(BbvaErrorResponse.class);
+            if (HttpStatus.SC_INTERNAL_SERVER_ERROR <= errorResponse.getHttpStatus()) {
+                throw BankServiceError.BANK_SIDE_FAILURE.exception();
+            }
             switch (errorResponse.getHttpStatus()) {
                 case HttpStatus.SC_UNAUTHORIZED:
+                    throw AuthorizationError.UNAUTHORIZED.exception();
+                case HttpStatus.SC_CONFLICT:
+                    throw LoginError.NOT_CUSTOMER.exception();
                 case HttpStatus.SC_FORBIDDEN:
                     throw LoginError.INCORRECT_CREDENTIALS.exception();
-                case HttpStatus.SC_INTERNAL_SERVER_ERROR:
-                    throw LoginError.NOT_SUPPORTED.exception();
                 default:
-                    log.warn(
-                            "Unknown error: httpStatus {}, code {}, message {}",
-                            errorResponse.getHttpStatus(),
-                            errorResponse.getErrorCode(),
-                            errorResponse.getErrorMessage());
-                    throw LoginError.DEFAULT_MESSAGE.exception();
+                    String message =
+                            String.format(
+                                    "Unknown error: httpStatus %s, code %s, message %s",
+                                    errorResponse.getHttpStatus(),
+                                    errorResponse.getErrorCode(),
+                                    errorResponse.getErrorMessage());
+                    throw LoginError.DEFAULT_MESSAGE.exception(message);
             }
         }
         throw e;
