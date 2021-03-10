@@ -2932,6 +2932,7 @@ agentsServiceConfiguration:
     76b78df73ec94751829d73aee4f94321:
       tink:
         apiKey: dummyKey
+        keyId: dummyKey
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
     76d96fe1fe0b47d5b6b813f4a97774fc:
       tink:
