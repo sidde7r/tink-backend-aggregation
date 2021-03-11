@@ -49,6 +49,7 @@ public abstract class SwedbankBaseAgent extends NextGenerationAgent
     private final SwedbankApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final TransferDestinationRefreshController transferDestinationRefreshController;
+    private final SwedbankTransactionalAccountFetcher transactionalAccountFetcher;
 
     public SwedbankBaseAgent(AgentComponentProvider componentProvider, QsealcSigner qsealcSigner) {
         super(componentProvider);
@@ -64,6 +65,9 @@ public abstract class SwedbankBaseAgent extends NextGenerationAgent
                         qsealcSigner,
                         componentProvider.getCredentialsRequest());
 
+        transactionalAccountFetcher =
+                new SwedbankTransactionalAccountFetcher(
+                        apiClient, persistentStorage, sessionStorage, transactionPaginationHelper);
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
         transferDestinationRefreshController = constructTransferDestinationController();
     }
@@ -106,7 +110,9 @@ public abstract class SwedbankBaseAgent extends NextGenerationAgent
                 new BankIdAuthenticationController<>(
                         supplementalInformationController,
                         new SwedbankDecoupledAuthenticator(
-                                apiClient, supplementalInformationHelper),
+                                apiClient,
+                                supplementalInformationHelper,
+                                transactionalAccountFetcher),
                         persistentStorage,
                         credentials);
 
@@ -161,8 +167,7 @@ public abstract class SwedbankBaseAgent extends NextGenerationAgent
         return new TransactionalAccountRefreshController(
                 metricRefreshController,
                 updateController,
-                new SwedbankTransactionalAccountFetcher(
-                        apiClient, persistentStorage, sessionStorage, transactionPaginationHelper),
+                transactionalAccountFetcher,
                 new SwedbankTransactionFetcher(apiClient, sessionStorage));
     }
 
