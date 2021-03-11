@@ -61,6 +61,8 @@ public final class LaBanquePostaleConstants {
         public static final String MISSING_CONFIGURATION = "Bnp Paribas configuration missing";
         public static final String MISSING_TOKEN = "Cannot find token";
         public static final String TIME_OUT = "TIME_OUT";
+        public static final String TEMP_UNAVAILABLE =
+                "This service is temporarily unavailable. Please try again later.";
     }
 
     public static class QueryValues {
