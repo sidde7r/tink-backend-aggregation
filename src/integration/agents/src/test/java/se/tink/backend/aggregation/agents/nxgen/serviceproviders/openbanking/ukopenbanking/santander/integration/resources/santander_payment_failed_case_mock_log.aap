@@ -46,7 +46,7 @@ x-fapi-financial-id: 0015800000jfFGuAAM
 REQUEST 3
 POST https://openbanking-ma.santander.co.uk/sanuk/external/open-banking/v3.1/pisp/domestic-scheduled-payment-consents
 Accept: application/json
-Content-Type: application/json
+Content-Type: application/json; charset=UTF-8
 X-Aggregator: Tink Testing
 x-idempotency-key: 0000000000000000
 Authorization: Bearer DUMMY_TPP_ACCESS_TOKEN

@@ -104,7 +104,7 @@ Strict-Transport-Security: ***
 REQUEST 3
 POST https://api.ob.hsbc.co.uk/obie/open-banking/v3.1/pisp/domestic-payment-consents
 Accept: application/json
-Content-Type: application/json
+Content-Type: application/json; charset=UTF-8
 x-idempotency-key: 0000000000000000
 X-Aggregator: Tink Testing
 x-fapi-financial-id: 00158000016i44JAAQ
@@ -289,7 +289,7 @@ x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
 REQUEST 7
 POST https://api.ob.hsbc.co.uk/obie/open-banking/v3.1/pisp/domestic-payments
 Accept: application/json
-Content-Type: application/json
+Content-Type: application/json; charset=UTF-8
 x-idempotency-key: 0000000000000000
 x-jws-signature: RkFLRV9TSUdOQVRVUkUK
 X-Aggregator: Tink Testing

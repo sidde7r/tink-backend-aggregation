@@ -1,7 +1,11 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.steps;
 
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.Errors.ENTER_6_DIGIT_PASSWORD_PATTERNS;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.Errors.ENTER_ACTIVATION_PASSWORD_PATTERNS;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.Errors.INCORRECT_CREDENTIALS_ERROR_PATTERNS;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.Errors.KEY_APP_NOT_READY_TO_USE_PATTERNS;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.Errors.NEMID_ISSUES_PATTERNS;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.Errors.NEM_ID_RENEW_PATTERNS;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.Errors.NEM_ID_REVOKED_PATTERNS;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.Errors.USE_NEW_CODE_CARD_PATTERNS;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NEMID_WIDE_INFO_HEADING;
@@ -122,8 +126,30 @@ public class NemIdVerifyLoginResponseStep {
             throw NemIdError.NEMID_BLOCKED.exception();
         }
 
+        if (valueMatchesAnyPattern(errorTextLowerCase, NEM_ID_RENEW_PATTERNS)) {
+            throw NemIdError.RENEW_NEMID.exception();
+        }
+
         if (valueMatchesAnyPattern(errorTextLowerCase, USE_NEW_CODE_CARD_PATTERNS)) {
             throw NemIdError.USE_NEW_CODE_CARD.exception();
+        }
+
+        if (valueMatchesAnyPattern(errorTextLowerCase, KEY_APP_NOT_READY_TO_USE_PATTERNS)) {
+            throw NemIdError.KEY_APP_NOT_READY_TO_USE.exception();
+        }
+
+        if (valueMatchesAnyPattern(errorTextLowerCase, NEMID_ISSUES_PATTERNS)) {
+            throw LoginError.ACTIVATION_TIMED_OUT.exception();
+        }
+
+        if (valueMatchesAnyPattern(errorTextLowerCase, ENTER_ACTIVATION_PASSWORD_PATTERNS)) {
+            throw LoginError.INCORRECT_CREDENTIALS.exception(
+                    UserMessage.ENTER_ACTIVATION_PASSWORD.getKey());
+        }
+
+        if (valueMatchesAnyPattern(errorTextLowerCase, ENTER_6_DIGIT_PASSWORD_PATTERNS)) {
+            throw LoginError.INCORRECT_CREDENTIALS.exception(
+                    UserMessage.ENTER_6_DIGIT_CODE.getKey());
         }
 
         throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception(

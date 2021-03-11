@@ -292,9 +292,37 @@ public class DataStudioLoginEventPublisherService {
                                     AgentLoginCompletedEventProto.AgentLoginCompletedEvent
                                             .LoginResult.LOGIN_ERROR_NOT_SUPPORTED)
                             .put(
-                                    NemIdError.TIMEOUT,
+                                    NemIdError.INVALID_CODE_CARD_CODE,
                                     AgentLoginCompletedEventProto.AgentLoginCompletedEvent
-                                            .LoginResult.THIRD_PARTY_APP_ERROR_TIMED_OUT)
+                                            .LoginResult.LOGIN_ERROR_INCORRECT_CREDENTIALS)
+                            .put(
+                                    NemIdError.USE_NEW_CODE_CARD,
+                                    AgentLoginCompletedEventProto.AgentLoginCompletedEvent
+                                            .LoginResult.LOGIN_ERROR_INCORRECT_CREDENTIALS)
+                            .put(
+                                    NemIdError.INVALID_CODE_TOKEN_CODE,
+                                    AgentLoginCompletedEventProto.AgentLoginCompletedEvent
+                                            .LoginResult.LOGIN_ERROR_INCORRECT_CREDENTIALS)
+                            .put(
+                                    NemIdError.NEMID_LOCKED,
+                                    AgentLoginCompletedEventProto.AgentLoginCompletedEvent
+                                            .LoginResult.AUTHORIZATION_ERROR_ACCOUNT_BLOCKED)
+                            .put(
+                                    NemIdError.NEMID_BLOCKED,
+                                    AgentLoginCompletedEventProto.AgentLoginCompletedEvent
+                                            .LoginResult.AUTHORIZATION_ERROR_ACCOUNT_BLOCKED)
+                            .put(
+                                    NemIdError.NEMID_PASSWORD_BLOCKED,
+                                    AgentLoginCompletedEventProto.AgentLoginCompletedEvent
+                                            .LoginResult.AUTHORIZATION_ERROR_ACCOUNT_BLOCKED)
+                            .put(
+                                    NemIdError.KEY_APP_NOT_READY_TO_USE,
+                                    AgentLoginCompletedEventProto.AgentLoginCompletedEvent
+                                            .LoginResult.THIRD_PARTY_APP_ERROR_UNKNOWN)
+                            .put(
+                                    NemIdError.RENEW_NEMID,
+                                    AgentLoginCompletedEventProto.AgentLoginCompletedEvent
+                                            .LoginResult.AUTHORIZATION_ERROR_ACCOUNT_BLOCKED)
                             .build();
 
     private final LoginAgentEventProducer eventPublisher;

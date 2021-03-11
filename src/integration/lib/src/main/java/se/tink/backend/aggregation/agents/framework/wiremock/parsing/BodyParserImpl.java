@@ -24,26 +24,33 @@ public final class BodyParserImpl implements BodyParser {
 
     @Override
     public ImmutableList<StringValuePattern> getStringValuePatterns(
-            final String body, final String mediaType) {
+            final String body, final String type) {
+        MediaType mediaType;
+        try {
+            mediaType = MediaType.valueOf(type);
+        } catch (IllegalArgumentException e) {
+            throw new UnsupportedOperationException(
+                    String.format("No implemented parsing for Content-Type: %s", type));
+        }
 
-        if (MediaType.APPLICATION_JSON.equalsIgnoreCase(mediaType)) {
+        if (MediaType.APPLICATION_JSON_TYPE.isCompatible(mediaType)) {
             return asJsonPattern(body);
         }
 
-        if (MediaType.APPLICATION_FORM_URLENCODED.equalsIgnoreCase(mediaType)) {
+        if (MediaType.APPLICATION_FORM_URLENCODED_TYPE.isCompatible(mediaType)) {
             return asFormPattern(body);
         }
 
-        if (MediaType.TEXT_XML.equalsIgnoreCase(mediaType)) {
+        if (MediaType.TEXT_XML_TYPE.isCompatible(mediaType)) {
             return asXmlPattern(body);
         }
 
-        if (MediaType.TEXT_PLAIN.equalsIgnoreCase(mediaType)) {
+        if (MediaType.TEXT_PLAIN_TYPE.isCompatible(mediaType)) {
             return asPlainText(body);
         }
 
         throw new UnsupportedOperationException(
-                String.format("No implemented parsing for Content-Type: %s", mediaType));
+                String.format("No implemented parsing for Content-Type: %s", type));
     }
 
     private ImmutableList<StringValuePattern> asXmlPattern(final String body) {

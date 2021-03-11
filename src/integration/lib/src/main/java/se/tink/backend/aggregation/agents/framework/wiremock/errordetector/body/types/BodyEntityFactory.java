@@ -13,22 +13,24 @@ public class BodyEntityFactory {
 
         rawData = rawData.trim();
 
-        if (mediaType.equals(MediaType.APPLICATION_JSON_TYPE)) {
+        MediaType mediaTypeWithoutParams =
+                new MediaType(mediaType.getType(), mediaType.getSubtype());
+        if (mediaTypeWithoutParams.equals(MediaType.APPLICATION_JSON_TYPE)) {
             if (rawData.startsWith("[")) {
                 return new JSONListBodyEntity(rawData);
             }
             return new JSONMapBodyEntity(rawData);
         }
 
-        if (mediaType.equals(MediaType.APPLICATION_FORM_URLENCODED_TYPE)) {
+        if (mediaTypeWithoutParams.equals(MediaType.APPLICATION_FORM_URLENCODED_TYPE)) {
             return new URLEncodedBodyEntity(rawData);
         }
 
-        if (mediaType.equals(MediaType.TEXT_XML_TYPE)) {
+        if (mediaTypeWithoutParams.equals(MediaType.TEXT_XML_TYPE)) {
             return new XMLBodyEntity(rawData);
         }
 
-        if (mediaType.equals(MediaType.TEXT_PLAIN_TYPE)) {
+        if (mediaTypeWithoutParams.equals(MediaType.TEXT_PLAIN_TYPE)) {
             return new PlainTextBodyEntity(rawData);
         }
 

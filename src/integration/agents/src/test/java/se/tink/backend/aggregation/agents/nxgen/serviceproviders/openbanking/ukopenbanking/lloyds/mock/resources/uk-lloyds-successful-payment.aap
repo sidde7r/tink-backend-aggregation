@@ -56,7 +56,7 @@ Connection: keep-alive
 REQUEST 3
 POST https://secure-api.lloydsbank.com/prod01/lbg/lyds/open-banking/v3.1/pisp/domestic-payment-consents
 Accept: application/json
-Content-Type: application/json
+Content-Type: application/json; charset=UTF-8
 x-idempotency-key: 0000000000000000
 X-Aggregator: Tink Testing
 x-fapi-financial-id: 0015800000jf9GgAAI
@@ -175,7 +175,7 @@ x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
 REQUEST 7
 POST https://secure-api.lloydsbank.com/prod01/lbg/lyds/open-banking/v3.1/pisp/domestic-payments
 Accept: application/json
-Content-Type: application/json
+Content-Type: application/json; charset=UTF-8
 x-idempotency-key: 0000000000000000
 x-jws-signature: RkFLRV9TSUdOQVRVUkUK
 X-Aggregator: Tink Testing

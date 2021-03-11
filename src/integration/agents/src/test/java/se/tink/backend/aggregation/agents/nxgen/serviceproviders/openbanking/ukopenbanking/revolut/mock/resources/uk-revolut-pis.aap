@@ -156,7 +156,7 @@ REQUEST 3
 POST https://oba.revolut.com/domestic-payment-consents
 Authorization: Bearer DUMMY_TPP_ACCESS_TOKEN
 Accept: application/json
-Content-Type: application/json
+Content-Type: application/json; charset=UTF-8
 x-idempotency-key: 0000000000000000
 X-Aggregator: Tink Testing
 x-fapi-financial-id: 001580000103UAvAAM
@@ -263,7 +263,7 @@ REQUEST 7
 POST https://oba.revolut.com/domestic-payments
 Authorization: Bearer DUMMY_ACCESS_TOKEN
 Accept: application/json
-Content-Type: application/json
+Content-Type: application/json; charset=UTF-8
 x-idempotency-key: 0000000000000000
 X-Aggregator: Tink Testing
 x-fapi-financial-id: 001580000103UAvAAM

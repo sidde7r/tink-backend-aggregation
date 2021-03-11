@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-03-09 11:00+0100\n"
+"POT-Creation-Date: 2021-03-10 17:35+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1679,4 +1679,22 @@ msgstr ""
 msgid ""
 "Please open the BestSign app on device \"{0}\" and confirm login. Then click "
 "the \"Submit\" button"
+msgstr ""
+
+msgid "You must renew NemID every 3 years. Please contact NemID support."
+msgstr ""
+
+msgid "Your key app is not ready to use."
+msgstr ""
+
+msgid "Please provide NemId code card key"
+msgstr ""
+
+msgid "Please provide NemId code token code"
+msgstr ""
+
+msgid "Please choose NemId authentication method"
+msgstr ""
+
+msgid "Enter 6 digits code."
 msgstr ""
