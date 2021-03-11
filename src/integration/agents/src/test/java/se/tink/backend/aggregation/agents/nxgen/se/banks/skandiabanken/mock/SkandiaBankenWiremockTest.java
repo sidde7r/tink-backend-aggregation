@@ -22,7 +22,6 @@ public class SkandiaBankenWiremockTest {
                 AgentWireMockRefreshTest.builder(
                                 MarketCode.SE, "skandiabanken-ssn-bankid", wireMockFilePath)
                         .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
-                        .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
                         .build();
 
         final AgentContractEntity expected =
