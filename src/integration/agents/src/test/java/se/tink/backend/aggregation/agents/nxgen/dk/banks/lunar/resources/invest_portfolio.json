@@ -2,14 +2,14 @@
     "portfolio": {
         "accountId": "123456INET",
         "accountNumber": "1212-0101123456",
-        "cashAvailableForWithdrawal": 25.93,
-        "cashBalance": 25.93,
+        "cashAvailableForWithdrawal": 1.02,
+        "cashBalance": 1.02,
         "clientId": "12345678",
         "created": 1615132050000,
         "currency": "DKK",
         "id": "06a6f622-acc2-41f8-ac89-401ec3e056df_portfolio",
-        "totalOpenPositionsValue": 18.01,
-        "totalValue": 45,
+        "totalOpenPositionsValue": 13.94,
+        "totalValue": 15.84,
         "updated": 1615132050000,
         "userStatus": "active"
     }

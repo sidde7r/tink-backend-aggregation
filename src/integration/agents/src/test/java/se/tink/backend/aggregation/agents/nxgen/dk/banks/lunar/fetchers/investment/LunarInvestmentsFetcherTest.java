@@ -39,6 +39,10 @@ public class LunarInvestmentsFetcherTest {
     private static final String INVEST_ACCOUNT_NO = "1212-0101123456";
     private static final String INVEST_ACCOUNT_NO_WITH_QUOTES = "\"1212-0101123456\"";
     private static final String CURRENCY = "DKK";
+    private static final double CASH_VALUE = 1.02;
+    private static final double TOTAL_PROFIT = -61.15;
+    private static final double TOTAL_VALUE = 15.84;
+    private static final double TOTAL_OPEN_POSITIONS_VALUE = 13.94;
 
     private LunarInvestmentsFetcher investmentsFetcher;
     private FetcherApiClient apiClient;
@@ -47,13 +51,6 @@ public class LunarInvestmentsFetcherTest {
     public void setup() {
         apiClient = mock(FetcherApiClient.class);
         investmentsFetcher = new LunarInvestmentsFetcher(apiClient);
-
-        when(apiClient.fetchPerformanceData())
-                .thenReturn(
-                        SerializationUtils.deserializeFromString(
-                                Paths.get(TEST_DATA_PATH, "investment_performance_data.json")
-                                        .toFile(),
-                                PortfolioPerformanceResponse.class));
     }
 
     @Test
@@ -61,10 +58,12 @@ public class LunarInvestmentsFetcherTest {
     public void shouldFetchInvestments(
             InvestmentsResponse investmentsResponse,
             InstrumentsResponse instrumentsResponse,
+            PortfolioPerformanceResponse performanceResponse,
             List<InvestmentAccount> expected) {
         // given
         when(apiClient.fetchInvestments()).thenReturn(investmentsResponse);
         when(apiClient.fetchInstruments()).thenReturn(instrumentsResponse);
+        when(apiClient.fetchPerformanceData()).thenReturn(performanceResponse);
 
         // when
         List<InvestmentAccount> result =
@@ -78,23 +77,95 @@ public class LunarInvestmentsFetcherTest {
     private Object[] investmentsParams() throws IOException {
         return new Object[] {
             new Object[] {
-                SerializationUtils.deserializeFromString(
-                        Paths.get(TEST_DATA_PATH, "invest_portfolio.json").toFile(),
-                        InvestmentsResponse.class),
-                SerializationUtils.deserializeFromString(
-                        Paths.get(TEST_DATA_PATH, "invest_instruments.json").toFile(),
+                deserialize("invest_portfolio.json", InvestmentsResponse.class),
+                deserialize("invest_instruments.json", InstrumentsResponse.class),
+                deserialize("investment_performance_data.json", PortfolioPerformanceResponse.class),
+                buildExpectedInvestmentAccounts(
+                        CASH_VALUE,
+                        TOTAL_PROFIT,
+                        TOTAL_OPEN_POSITIONS_VALUE,
+                        1.9,
+                        buildTestInstruments())
+            },
+            new Object[] {
+                deserialize("invest_portfolio.json", InvestmentsResponse.class),
+                deserialize("invest_instruments.json", InstrumentsResponse.class),
+                deserialize("investment_performance_data.json", PortfolioPerformanceResponse.class),
+                buildExpectedInvestmentAccounts(
+                        CASH_VALUE,
+                        TOTAL_PROFIT,
+                        TOTAL_OPEN_POSITIONS_VALUE,
+                        1.9,
+                        buildTestInstruments())
+            },
+            new Object[] {
+                getTestInvestmentsResponse(
+                        INVEST_ACCOUNT_NO_WITH_QUOTES, CASH_VALUE, null, TOTAL_VALUE),
+                deserialize(
+                        "invest_instruments_without_position_or_deleted.json",
                         InstrumentsResponse.class),
-                buildExpectedInvestmentAccounts(25.93, -56.06, 43.73, 1.27, buildTestInstruments())
+                deserialize(
+                        "invest_performance_data_empty.json", PortfolioPerformanceResponse.class),
+                buildExpectedInvestmentAccounts(
+                        CASH_VALUE, 0.0, TOTAL_VALUE, 0.0, Collections.emptyList())
+            },
+            new Object[] {
+                getTestInvestmentsResponse(
+                        INVEST_ACCOUNT_NO_WITH_QUOTES, CASH_VALUE, null, TOTAL_VALUE),
+                new InstrumentsResponse(),
+                deserialize("investment_performance_data.json", PortfolioPerformanceResponse.class),
+                buildExpectedInvestmentAccounts(
+                        CASH_VALUE, TOTAL_PROFIT, TOTAL_VALUE, 0.0, Collections.emptyList())
+            },
+            new Object[] {
+                getTestInvestmentsResponse(
+                        INVEST_ACCOUNT_NO_WITH_QUOTES, CASH_VALUE, null, TOTAL_VALUE),
+                SerializationUtils.deserializeFromString(
+                        "{\"instruments\": []}", InstrumentsResponse.class),
+                deserialize("investment_performance_data.json", PortfolioPerformanceResponse.class),
+                buildExpectedInvestmentAccounts(
+                        CASH_VALUE, TOTAL_PROFIT, TOTAL_VALUE, 0.0, Collections.emptyList())
             },
             new Object[] {
                 getTestInvestmentsResponse(INVEST_ACCOUNT_NO_WITH_QUOTES, null, null, null),
                 new InstrumentsResponse(),
+                new PortfolioPerformanceResponse(),
+                buildExpectedInvestmentAccounts(0.0, 0.0, 0.0, 0.0, Collections.emptyList()),
+            },
+            new Object[] {
+                getTestInvestmentsResponse(INVEST_ACCOUNT_NO_WITH_QUOTES, null, null, null),
+                new InstrumentsResponse(),
+                deserialize(
+                        "invest_performance_data_empty.json", PortfolioPerformanceResponse.class),
                 buildExpectedInvestmentAccounts(0.0, 0.0, 0.0, 0.0, Collections.emptyList()),
             },
             new Object[] {
                 getTestInvestmentsResponse(INVEST_ACCOUNT_NO_WITH_QUOTES, 0.0, 0.0, 0.0),
                 new InstrumentsResponse(),
+                deserialize(
+                        "invest_performance_data_empty.json", PortfolioPerformanceResponse.class),
                 buildExpectedInvestmentAccounts(0.0, 0.0, 0.0, 0.0, Collections.emptyList()),
+            },
+            new Object[] {
+                getTestInvestmentsResponse(INVEST_ACCOUNT_NO_WITH_QUOTES, 0.0, 0.0, 0.0),
+                new InstrumentsResponse(),
+                new PortfolioPerformanceResponse(),
+                buildExpectedInvestmentAccounts(0.0, 0.0, 0.0, 0.0, Collections.emptyList()),
+            },
+            new Object[] {
+                getTestInvestmentsResponse(
+                        INVEST_ACCOUNT_NO_WITH_QUOTES, null, TOTAL_OPEN_POSITIONS_VALUE, null),
+                deserialize("invest_instruments.json", InstrumentsResponse.class),
+                deserialize("investment_performance_data.json", PortfolioPerformanceResponse.class),
+                buildExpectedInvestmentAccounts(
+                        0.0, TOTAL_PROFIT, TOTAL_OPEN_POSITIONS_VALUE, 0.0, buildTestInstruments())
+            },
+            new Object[] {
+                getTestInvestmentsResponse(INVEST_ACCOUNT_NO_WITH_QUOTES, 2.0, 30.0, 25.0),
+                deserialize("invest_instruments.json", InstrumentsResponse.class),
+                deserialize("investment_performance_data.json", PortfolioPerformanceResponse.class),
+                buildExpectedInvestmentAccounts(
+                        2.0, TOTAL_PROFIT, 30.0, -5.0, buildTestInstruments())
             },
         };
     }
@@ -105,10 +176,7 @@ public class LunarInvestmentsFetcherTest {
             boolean shouldFetchInvestmentsThrow, boolean shouldFetchPerformanceDataThrow) {
         // given
         when(apiClient.fetchInvestments())
-                .thenReturn(
-                        SerializationUtils.deserializeFromString(
-                                Paths.get(TEST_DATA_PATH, "invest_portfolio.json").toFile(),
-                                InvestmentsResponse.class));
+                .thenReturn(deserialize("invest_portfolio.json", InvestmentsResponse.class));
 
         // and
         if (shouldFetchInvestmentsThrow) {
@@ -154,52 +222,13 @@ public class LunarInvestmentsFetcherTest {
         return new Object[] {
             new Object[] {new InvestmentsResponse()},
             new Object[] {null},
-            new Object[] {getTestInvestmentsResponse(null, 25.93, 18.01, 45.0)},
+            new Object[] {
+                getTestInvestmentsResponse(
+                        null, CASH_VALUE, TOTAL_OPEN_POSITIONS_VALUE, TOTAL_VALUE)
+            },
             new Object[] {
                 SerializationUtils.deserializeFromString(
                         "{\"portfolio\": {}}", InvestmentsResponse.class)
-            },
-        };
-    }
-
-    @Test
-    @Parameters(method = "instrumentsParams")
-    public void shouldFetchInvestmentsWithoutInstruments(InstrumentsResponse instrumentsResponse)
-            throws IOException {
-        // given
-        when(apiClient.fetchInvestments())
-                .thenReturn(
-                        getTestInvestmentsResponse(
-                                INVEST_ACCOUNT_NO_WITH_QUOTES, 43.94, null, 43.94));
-        when(apiClient.fetchInstruments()).thenReturn(instrumentsResponse);
-
-        // and
-        List<InvestmentAccount> expected =
-                buildExpectedInvestmentAccounts(43.94, -56.06, 43.94, 0.0, Collections.emptyList());
-
-        // when
-        List<InvestmentAccount> result =
-                (List<InvestmentAccount>) investmentsFetcher.fetchAccounts();
-
-        // then
-        assertThat(result.size()).isEqualTo(1);
-        assertThat(result.get(0)).isEqualToComparingFieldByFieldRecursively(expected.get(0));
-    }
-
-    private Object[] instrumentsParams() {
-        return new Object[] {
-            new Object[] {new InstrumentsResponse()},
-            new Object[] {
-                SerializationUtils.deserializeFromString(
-                        "{\"instruments\": []}", InstrumentsResponse.class)
-            },
-            new Object[] {
-                SerializationUtils.deserializeFromString(
-                        Paths.get(
-                                        TEST_DATA_PATH,
-                                        "invest_instruments_without_position_or_deleted.json")
-                                .toFile(),
-                        InstrumentsResponse.class)
             },
         };
     }
@@ -288,5 +317,10 @@ public class LunarInvestmentsFetcherTest {
                         totalValue);
         return SerializationUtils.deserializeFromString(
                 investmentsResponseString, InvestmentsResponse.class);
+    }
+
+    private <T> T deserialize(String fileName, Class<T> responseClass) {
+        return SerializationUtils.deserializeFromString(
+                Paths.get(TEST_DATA_PATH, fileName).toFile(), responseClass);
     }
 }

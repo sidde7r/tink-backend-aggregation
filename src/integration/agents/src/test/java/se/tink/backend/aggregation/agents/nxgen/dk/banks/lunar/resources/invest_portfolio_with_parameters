@@ -2,7 +2,7 @@
     "portfolio": {
         "accountId": "123456INET",
         "accountNumber": %s,
-        "cashAvailableForWithdrawal": 25.93,
+        "cashAvailableForWithdrawal": 1.02,
         "cashBalance": %s,
         "clientId": "12345678",
         "created": 1615132050000,

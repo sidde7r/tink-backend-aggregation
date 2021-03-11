@@ -1,0 +1,22 @@
+{
+    "performanceData": {
+        "all": {
+            "timeValueSeries": null
+        },
+        "oneDay": {
+            "timeValueSeries": null
+        },
+        "oneMonth": {
+            "timeValueSeries": null
+        },
+        "oneWeek": {
+            "timeValueSeries": null
+        },
+        "oneYear": {
+            "timeValueSeries": null
+        },
+        "threeMonths": {
+            "timeValueSeries": null
+        }
+    }
+}

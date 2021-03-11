@@ -19,7 +19,7 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 @Slf4j
 public class PortfolioEntity {
     @Getter private String accountNumber;
-    private BigDecimal cashBalance;
+    private Double cashBalance;
     private String currency;
     private String id;
     private BigDecimal totalValue;
@@ -32,8 +32,7 @@ public class PortfolioEntity {
                 InvestmentAccount.nxBuilder()
                         .withPortfolios(buildPortfolioModule(performanceData, instruments))
                         .withCashBalance(
-                                ExactCurrencyAmount.of(
-                                        calculateCashBalanceRest(instruments), currency))
+                                ExactCurrencyAmount.of(calculateCashBalanceRest(), currency))
                         .withId(buildIdModule())
                         .build());
     }
@@ -57,37 +56,27 @@ public class PortfolioEntity {
         return PortfolioModule.builder()
                 .withType(PortfolioModule.PortfolioType.DEPOT)
                 .withUniqueIdentifier(accountNumber)
-                .withCashValue(cashBalance != null ? cashBalance.doubleValue() : 0)
+                .withCashValue(cashBalance != null ? cashBalance : 0)
                 .withTotalProfit(getTotalProfit(performanceData))
-                .withTotalValue(calculateTotalValue(instruments).doubleValue())
+                .withTotalValue(getPortfolioTotalValue().doubleValue())
                 .withInstruments(buildInstruments(instruments))
                 .build();
     }
 
     private double getTotalProfit(PerformanceDataEntity performanceData) {
-        if (performanceData == null || totalValue == null) {
-            return 0;
-        }
-        BigDecimal currentAvailablePositionsValues =
-                totalOpenPositionsValue != null
-                        ? totalOpenPositionsValue.add(cashBalance)
-                        : totalValue;
-        return performanceData.getTotalProfit(currentAvailablePositionsValues);
+        return performanceData != null ? performanceData.getTotalProfit() : 0;
     }
 
-    private BigDecimal calculateTotalValue(List<InstrumentEntity> instruments) {
-        BigDecimal calculatedValue = cashBalance != null ? cashBalance : BigDecimal.ZERO;
-        for (InstrumentEntity instrument : instruments) {
-            calculatedValue = calculatedValue.add(instrument.calculateInstrumentValue());
+    private BigDecimal getPortfolioTotalValue() {
+        if (totalOpenPositionsValue != null) {
+            return totalOpenPositionsValue;
         }
-        return calculatedValue;
+        return totalValue != null ? totalValue : BigDecimal.ZERO;
     }
 
-    private double calculateCashBalanceRest(List<InstrumentEntity> instruments) {
+    private double calculateCashBalanceRest() {
         // Investment cash balance is a sum of all portfolios and cash balance
-        return totalValue != null
-                ? totalValue.subtract(calculateTotalValue(instruments)).doubleValue()
-                : 0;
+        return totalValue != null ? totalValue.subtract(getPortfolioTotalValue()).doubleValue() : 0;
     }
 
     private List<InstrumentModule> buildInstruments(List<InstrumentEntity> instruments) {
