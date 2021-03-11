@@ -10,7 +10,6 @@ import se.tink.backend.aggregation.agents.exceptions.payment.DebtorValidationExc
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentCancelledException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
-import se.tink.backend.aggregation.agents.exceptions.payment.PaymentValidationException;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.ErrorMessages;
@@ -59,7 +58,6 @@ import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
-import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 public class LansforsakringarPaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
 
@@ -177,9 +175,8 @@ public class LansforsakringarPaymentExecutor implements PaymentExecutor, Fetchab
                         debtor,
                         amount,
                         executionDate,
-                        Optional.ofNullable(payment.getRemittanceInformation())
-                                .map(RemittanceInformation::getValue)
-                                .orElse(null));
+                        RemittanceInfoUtil.validateAndReturnRemittanceInfo(
+                                payment.getRemittanceInformation()));
 
         DomesticPaymentResponse domesticPaymentResponse = new DomesticPaymentResponse();
 
@@ -201,6 +198,7 @@ public class LansforsakringarPaymentExecutor implements PaymentExecutor, Fetchab
             Payment payment, AccountEntity debtor, AmountEntity amount, String executionDate)
             throws PaymentException {
 
+        RemittanceInfoUtil.validateRemittanceInfoForGiros(payment.getRemittanceInformation());
         GirosCreditorAccountEntity creditor =
                 new GirosCreditorAccountEntity(
                         payment.getCreditor().getAccountIdentifier().getIdentifier(GIRO_FORMATTER),
@@ -212,19 +210,14 @@ public class LansforsakringarPaymentExecutor implements PaymentExecutor, Fetchab
                         debtor,
                         amount,
                         executionDate,
-                        Optional.ofNullable(payment.getRemittanceInformation())
-                                .filter(
-                                        r ->
-                                                r.getType()
-                                                        .equals(
-                                                                RemittanceInformationType
-                                                                        .UNSTRUCTURED))
-                                .map(RemittanceInformation::getValue)
-                                .orElse(null),
-                        Optional.ofNullable(payment.getRemittanceInformation())
-                                .filter(r -> r.getType().equals(RemittanceInformationType.OCR))
-                                .map(RemittanceInformation::getValue)
-                                .orElse(null));
+                        payment.getRemittanceInformation().getType()
+                                        == RemittanceInformationType.UNSTRUCTURED
+                                ? payment.getRemittanceInformation().getValue()
+                                : null,
+                        payment.getRemittanceInformation().getType()
+                                        == RemittanceInformationType.OCR
+                                ? payment.getRemittanceInformation().getValue()
+                                : null);
 
         DomesticPaymentResponse domesticPaymentResponse = new DomesticPaymentResponse();
 
@@ -296,12 +289,8 @@ public class LansforsakringarPaymentExecutor implements PaymentExecutor, Fetchab
             throw new PaymentCancelledException();
         }
 
-        if (paymentStatus == PaymentStatus.REJECTED) {
-            throw new PaymentValidationException("Payment rejected by the bank.");
-        }
-
         if (paymentStatus != PaymentStatus.SIGNED) {
-            throw new PaymentRejectedException("Unexpected payment status: " + paymentStatus);
+            throw new PaymentRejectedException(PaymentRejectedException.MESSAGE);
         }
 
         return paymentResponse;

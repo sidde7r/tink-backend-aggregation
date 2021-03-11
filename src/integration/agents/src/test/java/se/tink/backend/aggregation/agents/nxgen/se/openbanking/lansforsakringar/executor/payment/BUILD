@@ -16,6 +16,7 @@ junit_test(
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions/transfer",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/authentication",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/authentication/multifactor/thirdpartyapp/payloads",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/authentication/progressive",

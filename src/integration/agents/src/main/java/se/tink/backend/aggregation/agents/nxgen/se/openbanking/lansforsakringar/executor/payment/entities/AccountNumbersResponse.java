@@ -31,15 +31,14 @@ public class AccountNumbersResponse {
                         .orElseThrow(
                                 () ->
                                         new DebtorValidationException(
-                                                ErrorMessages.DEBTOR_ACCOUNT_NOT_FOUND));
+                                                DebtorValidationException.DEFAULT_MESSAGE));
 
         switch (accountIdentifierType) {
             case SE_BG:
             case SE_PG:
                 if (correctAccountIfPresent.getAllowedTransactionTypes().stream()
                         .noneMatch(type -> type.equals(PaymentTypes.DOMESTIC_GIROS_RESPONSE))) {
-                    throw new DebtorValidationException(
-                            ErrorMessages.ILLEGAL_PAYMENT_TYPE_FOR_DEBTOR_ACCOUNT);
+                    throw new DebtorValidationException(DebtorValidationException.DEFAULT_MESSAGE);
                 }
                 break;
             case SE:
@@ -48,8 +47,7 @@ public class AccountNumbersResponse {
                                 type ->
                                         type.equals(
                                                 PaymentTypes.DOMESTIC_CREDIT_TRANSFERS_RESPONSE))) {
-                    throw new DebtorValidationException(
-                            ErrorMessages.ILLEGAL_PAYMENT_TYPE_FOR_DEBTOR_ACCOUNT);
+                    throw new DebtorValidationException(DebtorValidationException.DEFAULT_MESSAGE);
                 }
                 break;
             default:

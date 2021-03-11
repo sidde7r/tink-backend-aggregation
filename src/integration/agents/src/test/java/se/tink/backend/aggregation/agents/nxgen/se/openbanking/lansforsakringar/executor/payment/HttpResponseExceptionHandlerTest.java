@@ -6,8 +6,10 @@ import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.exceptions.payment.CreditorValidationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.DateValidationException;
+import se.tink.backend.aggregation.agents.exceptions.payment.InsufficientFundsException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
 import se.tink.backend.aggregation.agents.exceptions.payment.ReferenceValidationException;
+import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException.EndUserMessage;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.ErrorMessages;
 
 public class HttpResponseExceptionHandlerTest {
@@ -20,7 +22,7 @@ public class HttpResponseExceptionHandlerTest {
                 catchThrowable(() -> HttpResponseExceptionHandler.checkForErrors(errorMessage));
 
         Assertions.assertThat(thrown).isInstanceOf(ReferenceValidationException.class);
-        Assertions.assertThat(thrown).hasMessage(ErrorMessages.INVALID_INFO_STRUCTURED);
+        Assertions.assertThat(thrown).hasMessage(EndUserMessage.INVALID_OCR.getKey().get());
     }
 
     @Test
@@ -31,7 +33,7 @@ public class HttpResponseExceptionHandlerTest {
                 catchThrowable(() -> HttpResponseExceptionHandler.checkForErrors(errorMessage));
 
         Assertions.assertThat(thrown).isInstanceOf(ReferenceValidationException.class);
-        Assertions.assertThat(thrown).hasMessage(ErrorMessages.INVALID_INFO_UNSTRUCTURED);
+        Assertions.assertThat(thrown).hasMessage(EndUserMessage.INVALID_MESSAGE.getKey().get());
     }
 
     @Test
@@ -42,7 +44,7 @@ public class HttpResponseExceptionHandlerTest {
                 catchThrowable(() -> HttpResponseExceptionHandler.checkForErrors(errorMessage));
 
         Assertions.assertThat(thrown).isInstanceOf(ReferenceValidationException.class);
-        Assertions.assertThat(thrown).hasMessage(ErrorMessages.REMITTANCE_INFO_NOT_SET_FOR_GIROS);
+        Assertions.assertThat(thrown).hasMessage(EndUserMessage.INVALID_MESSAGE.getKey().get());
     }
 
     @Test
@@ -53,8 +55,7 @@ public class HttpResponseExceptionHandlerTest {
                 catchThrowable(() -> HttpResponseExceptionHandler.checkForErrors(errorMessage));
 
         Assertions.assertThat(thrown).isInstanceOf(PaymentRejectedException.class);
-        Assertions.assertThat(thrown)
-                .hasMessage(PaymentRejectedException.TEMPORARILY_UNAVAILABLE_MESSAGE);
+        Assertions.assertThat(thrown).hasMessage(PaymentRejectedException.MESSAGE);
     }
 
     @Test
@@ -65,7 +66,7 @@ public class HttpResponseExceptionHandlerTest {
                 catchThrowable(() -> HttpResponseExceptionHandler.checkForErrors(errorMessage));
 
         Assertions.assertThat(thrown).isInstanceOf(CreditorValidationException.class);
-        Assertions.assertThat(thrown).hasMessage(ErrorMessages.INVALID_CREDITOR_ACCOUNT);
+        Assertions.assertThat(thrown).hasMessage(EndUserMessage.INVALID_DESTINATION.getKey().get());
     }
 
     @Test
@@ -76,8 +77,7 @@ public class HttpResponseExceptionHandlerTest {
                 catchThrowable(() -> HttpResponseExceptionHandler.checkForErrors(errorMessage));
 
         Assertions.assertThat(thrown).isInstanceOf(DateValidationException.class);
-        Assertions.assertThat(thrown)
-                .hasMessage(ErrorMessages.REQUESTED_DATE_CAN_NOT_BE_IN_THE_PAST);
+        Assertions.assertThat(thrown).hasMessage(DateValidationException.DEFAULT_MESSAGE);
     }
 
     @Test
@@ -87,19 +87,8 @@ public class HttpResponseExceptionHandlerTest {
         Throwable thrown =
                 catchThrowable(() -> HttpResponseExceptionHandler.checkForErrors(errorMessage));
 
-        Assertions.assertThat(thrown).isInstanceOf(DateValidationException.class);
-        Assertions.assertThat(thrown).hasMessage(ErrorMessages.NOT_ENOUGH_FUNDS);
-    }
-
-    @Test
-    public void testFormatErrorMessage() {
-        String errorMessage = getErrorMessage("\"Other error\"");
-
-        Throwable thrown =
-                catchThrowable(() -> HttpResponseExceptionHandler.checkForErrors(errorMessage));
-
-        Assertions.assertThat(thrown).isInstanceOf(PaymentRejectedException.class);
-        Assertions.assertThat(thrown).hasMessage("Other error");
+        Assertions.assertThat(thrown).isInstanceOf(InsufficientFundsException.class);
+        Assertions.assertThat(thrown).hasMessage(InsufficientFundsException.DEFAULT_MESSAGE);
     }
 
     private String getErrorMessage(String error) {

@@ -2,12 +2,13 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar
 
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.exceptions.payment.CreditorValidationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.DateValidationException;
+import se.tink.backend.aggregation.agents.exceptions.payment.InsufficientFundsException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
 import se.tink.backend.aggregation.agents.exceptions.payment.ReferenceValidationException;
+import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException.EndUserMessage;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.ErrorMessages;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.signableoperation.enums.InternalStatus;
@@ -20,31 +21,24 @@ public class HttpResponseExceptionHandler {
     public static void checkForErrors(String errorMessage) throws PaymentException {
 
         if (isInvalidInfoStructured(errorMessage)) {
-            throw new ReferenceValidationException(ErrorMessages.INVALID_INFO_STRUCTURED);
+            throw new ReferenceValidationException(EndUserMessage.INVALID_OCR.getKey().get());
         } else if (isInvalidInfoUnstructured(errorMessage)) {
-            throw new ReferenceValidationException(ErrorMessages.INVALID_INFO_UNSTRUCTURED);
+            throw new ReferenceValidationException(EndUserMessage.INVALID_MESSAGE.getKey().get());
         } else if (isRemittanceInfoSetForGirosPayment(errorMessage)) {
-            throw new ReferenceValidationException(ErrorMessages.REMITTANCE_INFO_NOT_SET_FOR_GIROS);
+            throw new ReferenceValidationException(EndUserMessage.INVALID_MESSAGE.getKey().get());
         } else if (isServiceBlocked(errorMessage)) {
-            throw PaymentRejectedException.bankPaymentServiceUnavailable();
+            throw new PaymentRejectedException();
         } else if (isInvalidCreditorAccount(errorMessage)) {
             throw new CreditorValidationException(
-                    ErrorMessages.INVALID_CREDITOR_ACCOUNT,
+                    EndUserMessage.INVALID_DESTINATION.getKey().get(),
                     InternalStatus.INVALID_DESTINATION_ACCOUNT);
         } else if (isInvalidRequestedExecutionDate(errorMessage)) {
-            throw new DateValidationException(ErrorMessages.REQUESTED_DATE_CAN_NOT_BE_IN_THE_PAST);
+            throw new DateValidationException(DateValidationException.DEFAULT_MESSAGE);
         } else if (isNotEnoughFundsToMakePayment(errorMessage)) {
-            throw new DateValidationException(ErrorMessages.NOT_ENOUGH_FUNDS);
+            throw new InsufficientFundsException(InsufficientFundsException.DEFAULT_MESSAGE);
         } else {
-            throw new PaymentRejectedException(formatErrorMessage(errorMessage));
+            throw new PaymentRejectedException(PaymentRejectedException.MESSAGE);
         }
-    }
-
-    private static String formatErrorMessage(String errorMessage) {
-        return StringUtils.substringBetween(
-                errorMessage,
-                ErrorMessages.STRING_BEFORE_BANK_ERROR_MESSAGE,
-                ErrorMessages.STRING_AFTER_BANK_ERROR_MESSAGE);
     }
 
     private static boolean isInvalidInfoStructured(String errorMessage) {
