@@ -21,7 +21,10 @@ public class PartyV31Fetcher implements PartyFetcher {
 
     @Override
     public Optional<PartyV31Entity> fetchParty() {
-        return apiClient.fetchV31Party();
+        if (config.isPartyEndpointEnabled()) {
+            return apiClient.fetchV31Party();
+        }
+        return Optional.empty();
     }
 
     @Override
