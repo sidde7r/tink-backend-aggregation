@@ -1,0 +1,22 @@
+java_library(
+    name = "webtest",
+    srcs = glob(["**/*.java"]),
+    visibility = ["//visibility:public"],
+    deps = [
+        "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/client/provider_configuration/rpc",
+        "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
+        "//src/integration/credentials:service",
+        "//src/integration/lib",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/agentcapabilities",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/contexts/agent",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions/bankservice",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/annotations",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/agents",
+        "//src/integration/webdriver/src/main/java/se/tink/integration/webdriver",
+        "//third_party:com_google_inject_guice",
+        "//third_party:com_sun_jersey_jersey_core",
+        "//third_party:lombok_libs",
+        "//third_party:org_slf4j_slf4j_api",
+        "@selenium//:org_seleniumhq_selenium_selenium_api",
+    ],
+)
