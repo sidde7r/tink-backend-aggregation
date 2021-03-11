@@ -1,0 +1,194 @@
+REQUEST 1
+POST https://regulatory.api.bnpparibasfortis.be/token
+Content-Type: application/x-www-form-urlencoded
+X-Aggregator: Tink Testing
+
+code=DUMMY_CODE&grant_type=authorization_code&redirect_uri=https%3A%2F%2Fapi.tink.se%2Fapi%2Fv1%2Fcredentials%2Fthird-party%2Fcallback&client_id=DUMMY_CLIENT_ID&client_secret=DUMMY_CLIENT_SECRET&scope=aisp
+
+RESPONSE 1
+200
+Date: Mon, 08 Mar 2021 10:28:15 GMT
+Date: Mon, 08 Mar 2021 10:28:16 GMT
+Max-Forwards: ***
+X-CorrelationID: ***
+Cache-Control: no-store, no-cache=set-cookie
+Expires: Thu, 01 Dec 1994 16:00:00 GMT
+p3p: ***
+Pragma: no-cache
+x-frame-options: SAMEORIGIN
+Content-Language: en-US
+Content-Type: application/json;charset=utf-8
+Strict-Transport-Security: max-age=31536000; includeSubDomains
+X-XSS-Protection: 1; mode=block
+X-Content-Type-Options: nosniff
+Content-Security-Policy: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Set-Cookie: ***
+X-Request-ID: 5fb083c7-e4ad-4a0e-bb63-d4811b17f0fd
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"access_token":"DUMMY_TOKEN","scope":"aisp","token_type":"Bearer","expires_in":900}
+
+REQUEST 2
+GET https://regulatory.api.bnpparibasfortis.be/psd2/v2/accounts
+Content-Type: application/json
+Authorization: Bearer DUMMY_TOKEN
+User-Agent: Tink
+Accept: application/hal+json
+X-Aggregator: Tink Testing
+
+RESPONSE 2
+200
+Date: Mon, 08 Mar 2021 10:28:16 GMT
+Date: Mon, 08 Mar 2021 10:28:18 GMT
+Max-Forwards: ***
+X-CorrelationID: ***
+Accept-Charset: big5, big5-hkscs, cesu-8, euc-jp, euc-kr, gb18030, gb2312, gbk, hp-roman8, ibm-thai, ibm00858, ibm00924, ibm01140, ibm01141, ibm01142, ibm01143, ibm01144, ibm01145, ibm01146, ibm01147, ibm01148, ibm01149, ibm037, ibm1026, ibm1047, ibm1047_lf, ibm1141_lf, ibm1153, ibm273, ibm277, ibm278, ibm280, ibm284, ibm285, ibm290, ibm297, ibm420, ibm424, ibm437, ibm500, ibm775, ibm850, ibm852, ibm855, ibm857, ibm860, ibm861, ibm862, ibm863, ibm864, ibm865, ibm866, ibm868, ibm869, ibm870, ibm871, ibm918, ibm924_lf, iso-2022-cn, iso-2022-jp, iso-2022-jp-2, iso-2022-kr, iso-8859-1, iso-8859-10, iso-8859-13, iso-8859-14, iso-8859-15, iso-8859-16, iso-8859-2, iso-8859-3, iso-8859-4, iso-8859-5, iso-8859-6, iso-8859-7, iso-8859-8, iso-8859-9, jis_x0201, jis_x0212-1990, koi8-r, koi8-u, ptcp154, rk1048, shift_jis, tis-620, us-ascii, utf-16, utf-16be, utf-16le, utf-32, utf-32be, utf-32le, utf-8, windows-1250, windows-1251, windows-1252, windows-1253, windows-1254, windows-1255, windows-1256, windows-1257, windows-1258, windows-31j, x-big5-hkscs-2001, x-big5-solaris, x-compound-text, x-euc-tw, x-euc_cn, x-euc_jp_linux, x-eucjp-open, x-ibm-udcjp, x-ibm1006, x-ibm1025, x-ibm1027, x-ibm1041, x-ibm1043, x-ibm1046, x-ibm1046s, x-ibm1088, x-ibm1097, x-ibm1098, x-ibm1112, x-ibm1114, x-ibm1115, x-ibm1122, x-ibm1123, x-ibm1124, x-ibm1130, x-ibm1164, x-ibm1165, x-ibm1166, x-ibm1351, x-ibm1362, x-ibm1363, x-ibm1363c, x-ibm1364, x-ibm1370, x-ibm1371, x-ibm1377, x-ibm1379, x-ibm1380, x-ibm1381, x-ibm1382, x-ibm1383, x-ibm1385, x-ibm1386, x-ibm1388, x-ibm1390, x-ibm1390a, x-ibm1399, x-ibm1399a, x-ibm16684, x-ibm16684a, x-ibm29626, x-ibm29626c, x-ibm300, x-ibm300a, x-ibm301, x-ibm33722, x-ibm33722a, x-ibm33722c, x-ibm420s, x-ibm4933, x-ibm720, x-ibm737, x-ibm808, x-ibm833, x-ibm834, x-ibm835, x-ibm836, x-ibm837, x-ibm856, x-ibm859, x-ibm864s, x-ibm867, x-ibm874, x-ibm875, x-ibm897, x-ibm921, x-ibm922, x-ibm927, x-ibm930, x-ibm930a, x-ibm933, x-ibm935, x-ibm937, x-ibm939, x-ibm939a, x-ibm942, x-ibm942c, x-ibm943, x-ibm943c, x-ibm947, x-ibm948, x-ibm949, x-ibm949c, x-ibm950, x-ibm951, x-ibm954, x-ibm954c, x-ibm964, x-ibm970, x-ibm971, x-iscii91, x-iso-2022-cn-cns, x-iso-2022-cn-gb, x-iso-8859-11, x-iso-8859-6s, x-jis0208, x-jisautodetect, x-johab, x-koi8_ru, x-ksc5601, x-macarabic, x-maccentraleurope, x-maccroatian, x-maccyrillic, x-macdingbat, x-macgreek, x-machebrew, x-maciceland, x-macroman, x-macromania, x-macsymbol, x-macthai, x-macturkish, x-macukraine, x-ms932_0213, x-ms950-hkscs, x-ms950-hkscs-xp, x-mswin-936, x-mswin-936a, x-pck, x-sjis_0213, x-utf-16le-bom, x-utf-32be-bom, x-utf-32le-bom, x-utf_8j, x-windows-1256s, x-windows-50220, x-windows-50221, x-windows-874, x-windows-949, x-windows-950, x-windows-iso2022jp
+Cache-Control: no-cache, no-store, must-revalidate
+Cache-Control: no-cache, no-store, must-revalidate
+Expires: Thu, 01 Jan 1970 00:00:00 GMT
+Expires: Thu, 01 Dec 1994 16:00:00 GMT
+Pragma: no-cache
+Pragma: no-cache
+X-Request-ID: 6443eab7-11d1-43d1-9cd5-c597e533bb35
+Content-Language: en-US
+Content-Type: application/hal+json; charset=utf-8
+Strict-Transport-Security: max-age=31536000; includeSubDomains
+X-XSS-Protection: 1; mode=block
+X-Content-Type-Options: nosniff
+Content-Security-Policy: ***
+X-Frame-Options: SAMEORIGIN
+Set-Cookie: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Content-Length: 471
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"accounts":[{"resourceId":"DUMMY_IBANEUR","bicFi":"GEBABEBB","accountId":{"iban":"DUMMY_IBAN"},"name":"Dummy Name","usage":"PRIV","cashAccountType":"CACC","product":"Comfort Pack","currency":"EUR","psuStatus":"Holder","_links":{"balances":{"href":"/accounts/DUMMY_RESOURCE_IDEUR/balances","templated":false},"transactions":{"href":"/accounts/DUMMY_RESOURCE_IDEUR/transactions","templated":false}}}],"_links":{"self":{"href":"/accounts","templated":false}}}
+
+REQUEST 3
+GET https://regulatory.api.bnpparibasfortis.be/psd2/v2/accounts/DUMMY_RESOURCE_IDEUR/balances
+Content-Type: application/json
+Authorization: Bearer DUMMY_TOKEN
+User-Agent: Tink
+Accept: application/hal+json
+X-Aggregator: Tink Testing
+
+RESPONSE 3
+200
+Date: Mon, 08 Mar 2021 10:28:18 GMT
+Date: Mon, 08 Mar 2021 10:28:19 GMT
+Max-Forwards: ***
+X-CorrelationID: ***
+Accept-Charset: big5, big5-hkscs, cesu-8, euc-jp, euc-kr, gb18030, gb2312, gbk, hp-roman8, ibm-thai, ibm00858, ibm00924, ibm01140, ibm01141, ibm01142, ibm01143, ibm01144, ibm01145, ibm01146, ibm01147, ibm01148, ibm01149, ibm037, ibm1026, ibm1047, ibm1047_lf, ibm1141_lf, ibm1153, ibm273, ibm277, ibm278, ibm280, ibm284, ibm285, ibm290, ibm297, ibm420, ibm424, ibm437, ibm500, ibm775, ibm850, ibm852, ibm855, ibm857, ibm860, ibm861, ibm862, ibm863, ibm864, ibm865, ibm866, ibm868, ibm869, ibm870, ibm871, ibm918, ibm924_lf, iso-2022-cn, iso-2022-jp, iso-2022-jp-2, iso-2022-kr, iso-8859-1, iso-8859-10, iso-8859-13, iso-8859-14, iso-8859-15, iso-8859-16, iso-8859-2, iso-8859-3, iso-8859-4, iso-8859-5, iso-8859-6, iso-8859-7, iso-8859-8, iso-8859-9, jis_x0201, jis_x0212-1990, koi8-r, koi8-u, ptcp154, rk1048, shift_jis, tis-620, us-ascii, utf-16, utf-16be, utf-16le, utf-32, utf-32be, utf-32le, utf-8, windows-1250, windows-1251, windows-1252, windows-1253, windows-1254, windows-1255, windows-1256, windows-1257, windows-1258, windows-31j, x-big5-hkscs-2001, x-big5-solaris, x-compound-text, x-euc-tw, x-euc_cn, x-euc_jp_linux, x-eucjp-open, x-ibm-udcjp, x-ibm1006, x-ibm1025, x-ibm1027, x-ibm1041, x-ibm1043, x-ibm1046, x-ibm1046s, x-ibm1088, x-ibm1097, x-ibm1098, x-ibm1112, x-ibm1114, x-ibm1115, x-ibm1122, x-ibm1123, x-ibm1124, x-ibm1130, x-ibm1164, x-ibm1165, x-ibm1166, x-ibm1351, x-ibm1362, x-ibm1363, x-ibm1363c, x-ibm1364, x-ibm1370, x-ibm1371, x-ibm1377, x-ibm1379, x-ibm1380, x-ibm1381, x-ibm1382, x-ibm1383, x-ibm1385, x-ibm1386, x-ibm1388, x-ibm1390, x-ibm1390a, x-ibm1399, x-ibm1399a, x-ibm16684, x-ibm16684a, x-ibm29626, x-ibm29626c, x-ibm300, x-ibm300a, x-ibm301, x-ibm33722, x-ibm33722a, x-ibm33722c, x-ibm420s, x-ibm4933, x-ibm720, x-ibm737, x-ibm808, x-ibm833, x-ibm834, x-ibm835, x-ibm836, x-ibm837, x-ibm856, x-ibm859, x-ibm864s, x-ibm867, x-ibm874, x-ibm875, x-ibm897, x-ibm921, x-ibm922, x-ibm927, x-ibm930, x-ibm930a, x-ibm933, x-ibm935, x-ibm937, x-ibm939, x-ibm939a, x-ibm942, x-ibm942c, x-ibm943, x-ibm943c, x-ibm947, x-ibm948, x-ibm949, x-ibm949c, x-ibm950, x-ibm951, x-ibm954, x-ibm954c, x-ibm964, x-ibm970, x-ibm971, x-iscii91, x-iso-2022-cn-cns, x-iso-2022-cn-gb, x-iso-8859-11, x-iso-8859-6s, x-jis0208, x-jisautodetect, x-johab, x-koi8_ru, x-ksc5601, x-macarabic, x-maccentraleurope, x-maccroatian, x-maccyrillic, x-macdingbat, x-macgreek, x-machebrew, x-maciceland, x-macroman, x-macromania, x-macsymbol, x-macthai, x-macturkish, x-macukraine, x-ms932_0213, x-ms950-hkscs, x-ms950-hkscs-xp, x-mswin-936, x-mswin-936a, x-pck, x-sjis_0213, x-utf-16le-bom, x-utf-32be-bom, x-utf-32le-bom, x-utf_8j, x-windows-1256s, x-windows-50220, x-windows-50221, x-windows-874, x-windows-949, x-windows-950, x-windows-iso2022jp
+Cache-Control: no-cache, no-store, must-revalidate
+Cache-Control: no-cache, no-store, must-revalidate
+Expires: Thu, 01 Jan 1970 00:00:00 GMT
+Expires: Thu, 01 Jan 1970 00:00:00 GMT
+Pragma: no-cache
+Pragma: no-cache
+X-Request-ID: 878dd606-1134-45cc-b11b-6eb3adb64809
+Content-Language: en-US
+Content-Type: application/hal+json; charset=utf-8
+Strict-Transport-Security: max-age=31536000; includeSubDomains
+X-XSS-Protection: 1; mode=block
+X-Content-Type-Options: nosniff
+Content-Security-Policy: ***
+X-Frame-Options: SAMEORIGIN
+Set-Cookie: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Content-Length: 506
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"balances":[{"name":"Closing balance","balanceAmount":{"currency":"EUR","amount":"906.900"},"balanceType":"CLBD","referenceDate":"2021-03-08"},{"name":"Operational balance","balanceAmount":{"currency":"EUR","amount":"822.400"},"balanceType":"OTHR","referenceDate":"2021-03-08"}],"_links":{"self":{"href":"/accounts/DUMMY_RESOURCE_IDEUR/balances","templated":false},"parent-list":{"href":"/accounts","templated":false},"transactions":{"href":"/accounts/DUMMY_RESOURCE_IDEUR/transactions","templated":false}}}
+
+REQUEST 4
+GET https://regulatory.api.bnpparibasfortis.be/psd2/v2/accounts/DUMMY_RESOURCE_IDEUR/transactions
+Content-Type: application/json
+Authorization: Bearer DUMMY_TOKEN
+User-Agent: Tink
+Accept: application/hal+json
+X-Aggregator: Tink Testing
+
+RESPONSE 4
+200
+Date: Mon, 08 Mar 2021 10:28:20 GMT
+Date: Mon, 08 Mar 2021 10:28:21 GMT
+Max-Forwards: ***
+X-CorrelationID: ***
+Accept-Charset: big5, big5-hkscs, cesu-8, euc-jp, euc-kr, gb18030, gb2312, gbk, hp-roman8, ibm-thai, ibm00858, ibm00924, ibm01140, ibm01141, ibm01142, ibm01143, ibm01144, ibm01145, ibm01146, ibm01147, ibm01148, ibm01149, ibm037, ibm1026, ibm1047, ibm1047_lf, ibm1141_lf, ibm1153, ibm273, ibm277, ibm278, ibm280, ibm284, ibm285, ibm290, ibm297, ibm420, ibm424, ibm437, ibm500, ibm775, ibm850, ibm852, ibm855, ibm857, ibm860, ibm861, ibm862, ibm863, ibm864, ibm865, ibm866, ibm868, ibm869, ibm870, ibm871, ibm918, ibm924_lf, iso-2022-cn, iso-2022-jp, iso-2022-jp-2, iso-2022-kr, iso-8859-1, iso-8859-10, iso-8859-13, iso-8859-14, iso-8859-15, iso-8859-16, iso-8859-2, iso-8859-3, iso-8859-4, iso-8859-5, iso-8859-6, iso-8859-7, iso-8859-8, iso-8859-9, jis_x0201, jis_x0212-1990, koi8-r, koi8-u, ptcp154, rk1048, shift_jis, tis-620, us-ascii, utf-16, utf-16be, utf-16le, utf-32, utf-32be, utf-32le, utf-8, windows-1250, windows-1251, windows-1252, windows-1253, windows-1254, windows-1255, windows-1256, windows-1257, windows-1258, windows-31j, x-big5-hkscs-2001, x-big5-solaris, x-compound-text, x-euc-tw, x-euc_cn, x-euc_jp_linux, x-eucjp-open, x-ibm-udcjp, x-ibm1006, x-ibm1025, x-ibm1027, x-ibm1041, x-ibm1043, x-ibm1046, x-ibm1046s, x-ibm1088, x-ibm1097, x-ibm1098, x-ibm1112, x-ibm1114, x-ibm1115, x-ibm1122, x-ibm1123, x-ibm1124, x-ibm1130, x-ibm1164, x-ibm1165, x-ibm1166, x-ibm1351, x-ibm1362, x-ibm1363, x-ibm1363c, x-ibm1364, x-ibm1370, x-ibm1371, x-ibm1377, x-ibm1379, x-ibm1380, x-ibm1381, x-ibm1382, x-ibm1383, x-ibm1385, x-ibm1386, x-ibm1388, x-ibm1390, x-ibm1390a, x-ibm1399, x-ibm1399a, x-ibm16684, x-ibm16684a, x-ibm29626, x-ibm29626c, x-ibm300, x-ibm300a, x-ibm301, x-ibm33722, x-ibm33722a, x-ibm33722c, x-ibm420s, x-ibm4933, x-ibm720, x-ibm737, x-ibm808, x-ibm833, x-ibm834, x-ibm835, x-ibm836, x-ibm837, x-ibm856, x-ibm859, x-ibm864s, x-ibm867, x-ibm874, x-ibm875, x-ibm897, x-ibm921, x-ibm922, x-ibm927, x-ibm930, x-ibm930a, x-ibm933, x-ibm935, x-ibm937, x-ibm939, x-ibm939a, x-ibm942, x-ibm942c, x-ibm943, x-ibm943c, x-ibm947, x-ibm948, x-ibm949, x-ibm949c, x-ibm950, x-ibm951, x-ibm954, x-ibm954c, x-ibm964, x-ibm970, x-ibm971, x-iscii91, x-iso-2022-cn-cns, x-iso-2022-cn-gb, x-iso-8859-11, x-iso-8859-6s, x-jis0208, x-jisautodetect, x-johab, x-koi8_ru, x-ksc5601, x-macarabic, x-maccentraleurope, x-maccroatian, x-maccyrillic, x-macdingbat, x-macgreek, x-machebrew, x-maciceland, x-macroman, x-macromania, x-macsymbol, x-macthai, x-macturkish, x-macukraine, x-ms932_0213, x-ms950-hkscs, x-ms950-hkscs-xp, x-mswin-936, x-mswin-936a, x-pck, x-sjis_0213, x-utf-16le-bom, x-utf-32be-bom, x-utf-32le-bom, x-utf_8j, x-windows-1256s, x-windows-50220, x-windows-50221, x-windows-874, x-windows-949, x-windows-950, x-windows-iso2022jp
+Cache-Control: no-cache, no-store, must-revalidate
+Cache-Control: no-cache, no-store, must-revalidate
+Expires: Thu, 01 Jan 1970 00:00:00 GMT
+Expires: Thu, 01 Dec 1994 16:00:00 GMT
+Pragma: no-cache
+Pragma: no-cache
+X-Request-ID: 5e43430e-0ede-4941-82b6-68f4b033078a
+Content-Language: en-US
+Content-Type: application/hal+json; charset=utf-8
+Strict-Transport-Security: max-age=31536000; includeSubDomains
+X-XSS-Protection: 1; mode=block
+X-Content-Type-Options: nosniff
+Content-Security-Policy: ***
+X-Frame-Options: SAMEORIGIN
+Set-Cookie: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Transfer-Encoding: chunked
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"transactions":[{"resourceId":"resourceId","transactionAmount":{"currency":"EUR","amount":"-10.5"},"creditDebitIndicator":"DBIT","status":"PDNG","bookingDate":"2021-03-08","transactionDate":"2021-03-08","bankTransactionCode":{"domain":"OTHR","family":"OTHR","subFamily":"OTHR"}}, {"resourceId":"resourceId1","transactionAmount":{"currency":"EUR","amount":"1.21"},"creditDebitIndicator":"CRDT","transactionAmountDetails":{"bookedAmount":{"amount":{"currency":"EUR","amount":"1.21"}}},"status":"BOOK","bookingDate":"2021-01-12","valueDate":"2021-01-12","transactionDate":"2021-01-12","bankTransactionCode":{"domain":"PMNT","family":"RCDT","subFamily":"ESCT"},"relatedParties":{"debtorAgent":{"bicFi":"DEKTDE7G"},"debtor":{"name":"PPRO Payment Services SA"},"debtorAccount":{"iban":"DE92700111104101891050"}},"remittanceInformation":{"unstructured":["Refund"]},"additionalTransactionInformation":{"statementReference":"2021","eodOperationReference":"29","endToEndReference":"dqd3d3","narrative":["OVERSCHRIJVINGINEUROVANREKENING"]}}],"_links":{"self":{"href":"/accounts/DUMMY_RESOURCE_IDEUR/transactions","templated":false},"parent-list":{"href":"/accounts","templated":false},"balances":{"href":"/accounts/DUMMY_RESOURCE_IDEUR/balances","templated":false},"next":{"href":"/accounts/DUMMY_RESOURCE_IDEUR/transactions?index=BKO%7C20210307%7C2021-03-08-11.28.22.098000%7C95%7C801%7C801","templated":false}}}
+
+REQUEST 5
+GET https://regulatory.api.bnpparibasfortis.be/psd2/v2/accounts/DUMMY_RESOURCE_IDEUR/transactions?index=BKO%7C20210307%7C2021-03-08-11.28.22.098000%7C95%7C801%7C801
+Content-Type: application/json
+Authorization: Bearer DUMMY_TOKEN
+User-Agent: Tink
+Accept: application/hal+json
+X-Aggregator: Tink Testing
+
+RESPONSE 5
+200
+Date: Mon, 08 Mar 2021 10:28:20 GMT
+Date: Mon, 08 Mar 2021 10:28:21 GMT
+Max-Forwards: ***
+X-CorrelationID: ***
+Accept-Charset: big5, big5-hkscs, cesu-8, euc-jp, euc-kr, gb18030, gb2312, gbk, hp-roman8, ibm-thai, ibm00858, ibm00924, ibm01140, ibm01141, ibm01142, ibm01143, ibm01144, ibm01145, ibm01146, ibm01147, ibm01148, ibm01149, ibm037, ibm1026, ibm1047, ibm1047_lf, ibm1141_lf, ibm1153, ibm273, ibm277, ibm278, ibm280, ibm284, ibm285, ibm290, ibm297, ibm420, ibm424, ibm437, ibm500, ibm775, ibm850, ibm852, ibm855, ibm857, ibm860, ibm861, ibm862, ibm863, ibm864, ibm865, ibm866, ibm868, ibm869, ibm870, ibm871, ibm918, ibm924_lf, iso-2022-cn, iso-2022-jp, iso-2022-jp-2, iso-2022-kr, iso-8859-1, iso-8859-10, iso-8859-13, iso-8859-14, iso-8859-15, iso-8859-16, iso-8859-2, iso-8859-3, iso-8859-4, iso-8859-5, iso-8859-6, iso-8859-7, iso-8859-8, iso-8859-9, jis_x0201, jis_x0212-1990, koi8-r, koi8-u, ptcp154, rk1048, shift_jis, tis-620, us-ascii, utf-16, utf-16be, utf-16le, utf-32, utf-32be, utf-32le, utf-8, windows-1250, windows-1251, windows-1252, windows-1253, windows-1254, windows-1255, windows-1256, windows-1257, windows-1258, windows-31j, x-big5-hkscs-2001, x-big5-solaris, x-compound-text, x-euc-tw, x-euc_cn, x-euc_jp_linux, x-eucjp-open, x-ibm-udcjp, x-ibm1006, x-ibm1025, x-ibm1027, x-ibm1041, x-ibm1043, x-ibm1046, x-ibm1046s, x-ibm1088, x-ibm1097, x-ibm1098, x-ibm1112, x-ibm1114, x-ibm1115, x-ibm1122, x-ibm1123, x-ibm1124, x-ibm1130, x-ibm1164, x-ibm1165, x-ibm1166, x-ibm1351, x-ibm1362, x-ibm1363, x-ibm1363c, x-ibm1364, x-ibm1370, x-ibm1371, x-ibm1377, x-ibm1379, x-ibm1380, x-ibm1381, x-ibm1382, x-ibm1383, x-ibm1385, x-ibm1386, x-ibm1388, x-ibm1390, x-ibm1390a, x-ibm1399, x-ibm1399a, x-ibm16684, x-ibm16684a, x-ibm29626, x-ibm29626c, x-ibm300, x-ibm300a, x-ibm301, x-ibm33722, x-ibm33722a, x-ibm33722c, x-ibm420s, x-ibm4933, x-ibm720, x-ibm737, x-ibm808, x-ibm833, x-ibm834, x-ibm835, x-ibm836, x-ibm837, x-ibm856, x-ibm859, x-ibm864s, x-ibm867, x-ibm874, x-ibm875, x-ibm897, x-ibm921, x-ibm922, x-ibm927, x-ibm930, x-ibm930a, x-ibm933, x-ibm935, x-ibm937, x-ibm939, x-ibm939a, x-ibm942, x-ibm942c, x-ibm943, x-ibm943c, x-ibm947, x-ibm948, x-ibm949, x-ibm949c, x-ibm950, x-ibm951, x-ibm954, x-ibm954c, x-ibm964, x-ibm970, x-ibm971, x-iscii91, x-iso-2022-cn-cns, x-iso-2022-cn-gb, x-iso-8859-11, x-iso-8859-6s, x-jis0208, x-jisautodetect, x-johab, x-koi8_ru, x-ksc5601, x-macarabic, x-maccentraleurope, x-maccroatian, x-maccyrillic, x-macdingbat, x-macgreek, x-machebrew, x-maciceland, x-macroman, x-macromania, x-macsymbol, x-macthai, x-macturkish, x-macukraine, x-ms932_0213, x-ms950-hkscs, x-ms950-hkscs-xp, x-mswin-936, x-mswin-936a, x-pck, x-sjis_0213, x-utf-16le-bom, x-utf-32be-bom, x-utf-32le-bom, x-utf_8j, x-windows-1256s, x-windows-50220, x-windows-50221, x-windows-874, x-windows-949, x-windows-950, x-windows-iso2022jp
+Cache-Control: no-cache, no-store, must-revalidate
+Cache-Control: no-cache, no-store, must-revalidate
+Expires: Thu, 01 Jan 1970 00:00:00 GMT
+Expires: Thu, 01 Dec 1994 16:00:00 GMT
+Pragma: no-cache
+Pragma: no-cache
+X-Request-ID: 5e43430e-0ede-4941-82b6-68f4b033078a
+Content-Language: en-US
+Content-Type: application/hal+json; charset=utf-8
+Strict-Transport-Security: max-age=31536000; includeSubDomains
+X-XSS-Protection: 1; mode=block
+X-Content-Type-Options: nosniff
+Content-Security-Policy: ***
+X-Frame-Options: SAMEORIGIN
+Set-Cookie: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Transfer-Encoding: chunked
+Server: Jetty(9.4.z-SNAPSHOT)
+
+{"transactions":[{"resourceId":"resourceId2","transactionAmount":{"currency":"EUR","amount":"1.21"},"creditDebitIndicator":"CRDT","transactionAmountDetails":{"bookedAmount":{"amount":{"currency":"EUR","amount":"1.21"}}},"status":"BOOK","bookingDate":"2021-01-12","valueDate":"2021-01-12","transactionDate":"2021-01-12","bankTransactionCode":{"domain":"PMNT","family":"RCDT","subFamily":"ESCT"},"remittanceInformation":{"unstructured":["Refund"]},"additionalTransactionInformation":{"statementReference":"2021","eodOperationReference":"29","endToEndReference":"dqd3d3","narrative":["OVERSCHRIJVINGINEUROVANREKENING"]}},{"resourceId":"resourceId3","transactionAmount":{"currency":"EUR","amount":"1.21"},"creditDebitIndicator":"CRDT","transactionAmountDetails":{"bookedAmount":{"amount":{"currency":"EUR","amount":"1.21"}}},"status":"BOOK","bookingDate":"2021-01-12","valueDate":"2021-01-12","transactionDate":"2021-01-12","bankTransactionCode":{"domain":"PMNT","family":"RCDT","subFamily":"ESCT"},"additionalTransactionInformation":{"statementReference":"2021","eodOperationReference":"29","endToEndReference":"dqd3d3","narrative":["OVERSCHRIJVINGINEUROVANREKENING"]}},{"resourceId":"resourceId3","transactionAmount":{"currency":"EUR","amount":"1.21"},"creditDebitIndicator":"CRDT","transactionAmountDetails":{"bookedAmount":{"amount":{"currency":"EUR","amount":"1.21"}}},"status":"BOOK","bookingDate":"2021-01-12","valueDate":"2021-01-12","transactionDate":"2021-01-12","bankTransactionCode":{"domain":"PMNT","family":"RCDT","subFamily":"ESCT"},"remittanceInformation":{"structured":[{"creditorReferenceInformation":{"type":{"code":"SCOR","issuer":"BBA"},"reference":"100040794493"}}]},"additionalTransactionInformation":{"statementReference":"2021","eodOperationReference":"29","endToEndReference":"dqd3d3","narrative":["fglsidgvkjhsfdbvklefhisbd"]}}],"_links":{"self":{"href":"/accounts/DUMMY_RESOURCE_IDEUR/transactions","templated":false},"parent-list":{"href":"/accounts","templated":false},"balances":{"href":"/accounts/DUMMY_RESOURCE_IDEUR/balances","templated":false}}}

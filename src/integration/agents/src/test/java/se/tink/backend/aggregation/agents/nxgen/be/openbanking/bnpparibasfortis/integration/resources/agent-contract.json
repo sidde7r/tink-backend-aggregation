@@ -1,0 +1,98 @@
+{
+  "accounts": [
+    {
+      "accountNumber" : "DUMMY_IBAN",
+      "accountExclusion":"NONE",
+      "exactBalance": {
+        "currencyCode": "EUR",
+        "exactValue": 822.4,
+        "scale": 3,
+        "unscaledValue": 822400,
+        "doubleValue": 822.4
+      },
+      "currencyCode":"EUR",
+      "bankId": "DUMMYIBAN",
+      "name":"Comfort Pack",
+      "ownership":1.0,
+      "type":"CHECKING",
+      "identifiers": "[]",
+      "closed":false,
+      "holderName": "Dummy Name",
+      "accountHolder": {
+        "accountId": null,
+        "type": "PERSONAL",
+        "identities": [
+          {
+            "name": "Dummy Name",
+            "role": "HOLDER"
+          }
+        ]
+      },
+      "flags":"[\"PSD2_PAYMENT_ACCOUNT\"]",
+      "availableCredit":0.0,
+      "balance":822.4
+    }
+  ],
+  "transactions": [
+    {
+      "amount":-10.5,
+      "date":1615201200000,
+      "description":"",
+      "internalPayload":{},
+      "originalAmount":0.0,
+      "payload":{},
+      "pending":true,
+      "timestamp":0,
+      "type":"DEFAULT",
+      "upcoming":false
+    },
+    {
+      "amount":1.21,
+      "date":1610449200000,
+      "description": "PPRO Payment Services SA",
+      "internalPayload":{},
+      "originalAmount":0.0,
+      "payload":{},
+      "pending": false,
+      "timestamp":0,
+      "type":"DEFAULT",
+      "upcoming":false
+    },
+    {
+      "amount":1.21,
+      "date":1610449200000,
+      "description": "Refund",
+      "internalPayload":{},
+      "originalAmount":0.0,
+      "payload":{},
+      "pending": false,
+      "timestamp":0,
+      "type":"DEFAULT",
+      "upcoming":false
+    },
+    {
+      "amount":1.21,
+      "date":1610449200000,
+      "description": "OVERSCHRIJVINGINEUROVANREKENING",
+      "internalPayload":{},
+      "originalAmount":0.0,
+      "payload":{},
+      "pending": false,
+      "timestamp":0,
+      "type":"DEFAULT",
+      "upcoming":false
+    },
+    {
+      "amount":1.21,
+      "date":1610449200000,
+      "description": "fglsidgvkjhsfdbvklefhisbd",
+      "internalPayload":{},
+      "originalAmount":0.0,
+      "payload":{},
+      "pending": false,
+      "timestamp":0,
+      "type":"DEFAULT",
+      "upcoming":false
+    }
+  ]
+}
