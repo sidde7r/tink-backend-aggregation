@@ -24,6 +24,7 @@ public class AccountEntity {
     private String iban;
     private String currency;
     private String name;
+    private String ownerName;
     private String product;
     private String status;
     private String bic;
@@ -57,6 +58,7 @@ public class AccountEntity {
                                 .withAccountName(Strings.isNullOrEmpty(name) ? product : name)
                                 .addIdentifier(new IbanIdentifier(iban))
                                 .build())
+                .addHolderName(ownerName)
                 .putInTemporaryStorage(BankdataConstants.StorageKeys.ACCOUNT_ID, iban)
                 .setApiIdentifier(resourceId)
                 .setBankIdentifier(resourceId)

@@ -412,6 +412,7 @@ public final class NewAgentTestContext extends AgentContext {
         row.put("type", account.getType().name());
         row.put("number", account.getAccountNumber());
         row.put("name", account.getName());
+        row.put("holderName", account.getHolderName());
         row.put("balance", String.valueOf(account.getBalance()));
         if (account.getType() == AccountTypes.CREDIT_CARD) {
             row.put("availableCredit", String.valueOf(account.getAvailableCredit()));
