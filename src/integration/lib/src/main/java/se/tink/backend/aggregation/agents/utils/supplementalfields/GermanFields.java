@@ -46,6 +46,12 @@ public class GermanFields {
             SMTP_OTP("smtpTan"),
             UNKNOWN_OTP("tanField");
 
+            /**
+             * IMPORTANT!!! FieldName is used by SDK Team on Frontend - to have specific screen
+             * depending on authentication type. Try not to change the field names.
+             *
+             * <p>If you need to change field names - please inform SDK Team to support them.
+             */
             @Getter(AccessLevel.PRIVATE)
             private final String fieldName;
 
