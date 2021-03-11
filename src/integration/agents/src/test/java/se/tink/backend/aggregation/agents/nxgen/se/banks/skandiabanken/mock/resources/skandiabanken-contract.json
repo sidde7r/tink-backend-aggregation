@@ -1,480 +1,499 @@
 {
-    "accounts" : [ {
-        "accountNumber" : "91502222222",
-        "accountExclusion" : "NONE",
-        "exactBalance" : {
-            "currencyCode" : "SEK",
-            "doubleValue" : 200.75,
-            "exactValue" : 200.75,
-            "scale" : 2,
-            "unscaledValue" : 20075
+    "accounts": [
+        {
+            "accountNumber": "91502222222",
+            "accountExclusion": "NONE",
+            "exactBalance": {
+                "currencyCode": "SEK",
+                "doubleValue": 200.75,
+                "exactValue": 200.75,
+                "scale": 2,
+                "unscaledValue": 20075
+            },
+            "currencyCode": "SEK",
+            "bankId": "91502222222",
+            "excluded": false,
+            "favored": false,
+            "name": "Allt i Ett-Konto 2",
+            "ownership": 1.0,
+            "type": "CHECKING",
+            "userModifiedExcluded": false,
+            "userModifiedName": false,
+            "userModifiedType": false,
+            "identifiers": "[\"se://91502222222\",\"iban://SE1491500000091502222222\"]",
+            "closed": false,
+            "holderName": "Test Testsson",
+            "accountHolder": {
+                "accountId": null,
+                "type": "PERSONAL",
+                "identities": [
+                    {
+                        "name": "Test Testsson",
+                        "role": "HOLDER"
+                    }
+                ]
+            },
+            "flags": "[]",
+            "balances": [],
+            "availableCredit": 0.0,
+            "balance": 200.75
         },
-        "currencyCode" : "SEK",
-        "bankId" : "91502222222",
-        "excluded" : false,
-        "favored" : false,
-        "name" : "Allt i Ett-Konto 2",
-        "ownership" : 1.0,
-        "type" : "CHECKING",
-        "userModifiedExcluded" : false,
-        "userModifiedName" : false,
-        "userModifiedType" : false,
-        "identifiers" : "[\"se://91502222222\",\"iban://SE1491500000091502222222\"]",
-        "closed" : false,
-        "holderName" : "Test Testsson",
-        "accountHolder" : {
-            "accountId" : null,
-            "type" : "PERSONAL",
-            "identities" : [ {
-                "name" : "Test Testsson",
-                "role" : "HOLDER"
-            } ]
+        {
+            "accountNumber": "91504444444",
+            "accountExclusion": "NONE",
+            "exactAvailableCredit": {
+                "currencyCode": "SEK",
+                "doubleValue": 49999.97,
+                "exactValue": 49999.97,
+                "scale": 2,
+                "unscaledValue": 4999997
+            },
+            "exactBalance": {
+                "currencyCode": "SEK",
+                "doubleValue": -10000.03,
+                "exactValue": -10000.03,
+                "scale": 2,
+                "unscaledValue": -1000003
+            },
+            "currencyCode": "SEK",
+            "bankId": "91504444444",
+            "excluded": false,
+            "favored": false,
+            "name": "Kreditkortskonto",
+            "ownership": 1.0,
+            "type": "CREDIT_CARD",
+            "userModifiedExcluded": false,
+            "userModifiedName": false,
+            "userModifiedType": false,
+            "identifiers": "[\"se://91504444444\"]",
+            "closed": false,
+            "holderName": "Test Testsson",
+            "accountHolder": {
+                "accountId": null,
+                "type": "PERSONAL",
+                "identities": [
+                    {
+                        "name": "Test Testsson",
+                        "role": "HOLDER"
+                    }
+                ]
+            },
+            "flags": "[]",
+            "balances": [],
+            "availableCredit": 49999.97,
+            "balance": -10000.03
         },
-        "flags" : "[]",
-        "balances" : [ ],
-        "availableCredit" : 0.0,
-        "balance" : 200.75
-    }, {
-        "accountNumber" : "91504444444",
-        "accountExclusion" : "NONE",
-        "exactAvailableCredit" : {
-            "currencyCode" : "SEK",
-            "doubleValue" : 49999.97,
-            "exactValue" : 49999.97,
-            "scale" : 2,
-            "unscaledValue" : 4999997
+        {
+            "accountNumber": "91507777777",
+            "accountExclusion": "NONE",
+            "exactBalance": {
+                "currencyCode": "SEK",
+                "doubleValue": 5000.0,
+                "exactValue": 5000.0,
+                "scale": 1,
+                "unscaledValue": 50000
+            },
+            "currencyCode": "SEK",
+            "bankId": "91507777777",
+            "excluded": false,
+            "favored": false,
+            "name": "Skandiakonto",
+            "ownership": 1.0,
+            "type": "SAVINGS",
+            "userModifiedExcluded": false,
+            "userModifiedName": false,
+            "userModifiedType": false,
+            "identifiers": "[\"iban://SE5391500000091507777777\",\"se://91507777777\"]",
+            "closed": false,
+            "holderName": "Test Testsson",
+            "accountHolder": {
+                "accountId": null,
+                "type": "PERSONAL",
+                "identities": [
+                    {
+                        "name": "Test Testsson",
+                        "role": "HOLDER"
+                    }
+                ]
+            },
+            "flags": "[]",
+            "balances": [],
+            "availableCredit": 0.0,
+            "balance": 5000.0
         },
-        "exactBalance" : {
-            "currencyCode" : "SEK",
-            "doubleValue" : -10000.03,
-            "exactValue" : -10000.03,
-            "scale" : 2,
-            "unscaledValue" : -1000003
+        {
+            "accountNumber": "91506666666",
+            "accountExclusion": "NONE",
+            "exactBalance": {
+                "currencyCode": "SEK",
+                "doubleValue": 100000.0,
+                "exactValue": 100000.0,
+                "scale": 1,
+                "unscaledValue": 1000000
+            },
+            "currencyCode": "SEK",
+            "bankId": "91506666666",
+            "excluded": false,
+            "favored": false,
+            "name": "Fasträntekonto",
+            "ownership": 1.0,
+            "type": "SAVINGS",
+            "userModifiedExcluded": false,
+            "userModifiedName": false,
+            "userModifiedType": false,
+            "identifiers": "[\"se://91506666666\",\"iban://SE8491500000091506666666\"]",
+            "closed": false,
+            "holderName": "Test Testsson",
+            "accountHolder": {
+                "accountId": null,
+                "type": "PERSONAL",
+                "identities": [
+                    {
+                        "name": "Test Testsson",
+                        "role": "HOLDER"
+                    }
+                ]
+            },
+            "flags": "[]",
+            "balances": [],
+            "availableCredit": 0.0,
+            "balance": 100000.0
         },
-        "currencyCode" : "SEK",
-        "bankId" : "91504444444",
-        "excluded" : false,
-        "favored" : false,
-        "name" : "Kreditkortskonto",
-        "ownership" : 1.0,
-        "type" : "CREDIT_CARD",
-        "userModifiedExcluded" : false,
-        "userModifiedName" : false,
-        "userModifiedType" : false,
-        "identifiers" : "[\"se://91504444444\"]",
-        "closed" : false,
-        "holderName" : "Test Testsson",
-        "accountHolder" : {
-            "accountId" : null,
-            "type" : "PERSONAL",
-            "identities" : [ {
-                "name" : "Test Testsson",
-                "role" : "HOLDER"
-            } ]
+        {
+            "accountNumber": "91501111111",
+            "accountExclusion": "NONE",
+            "exactBalance": {
+                "currencyCode": "SEK",
+                "doubleValue": 100.0,
+                "exactValue": 100.0,
+                "scale": 1,
+                "unscaledValue": 1000
+            },
+            "currencyCode": "SEK",
+            "bankId": "91501111111",
+            "excluded": false,
+            "favored": false,
+            "name": "Allt i Ett-Konto 1",
+            "ownership": 1.0,
+            "type": "CHECKING",
+            "userModifiedExcluded": false,
+            "userModifiedName": false,
+            "userModifiedType": false,
+            "identifiers": "[\"iban://SE4591500000091501111111\",\"se://91501111111\"]",
+            "closed": false,
+            "holderName": "Test Testsson",
+            "accountHolder": {
+                "accountId": null,
+                "type": "PERSONAL",
+                "identities": [
+                    {
+                        "name": "Test Testsson",
+                        "role": "HOLDER"
+                    }
+                ]
+            },
+            "flags": "[]",
+            "balances": [],
+            "availableCredit": 0.0,
+            "balance": 100.0
         },
-        "flags" : "[]",
-        "balances" : [ ],
-        "availableCredit" : 49999.97,
-        "balance" : -10000.03
-    }, {
-        "accountNumber" : "91507777777",
-        "accountExclusion" : "NONE",
-        "exactBalance" : {
-            "currencyCode" : "SEK",
-            "doubleValue" : 5000.0,
-            "exactValue" : 5000.0,
-            "scale" : 1,
-            "unscaledValue" : 50000
+        {
+            "accountNumber": "91503333333",
+            "accountExclusion": "NONE",
+            "exactBalance": {
+                "currencyCode": "SEK",
+                "doubleValue": 30000.0,
+                "exactValue": 30000.0,
+                "scale": 1,
+                "unscaledValue": 300000
+            },
+            "currencyCode": "SEK",
+            "bankId": "91503333333",
+            "excluded": false,
+            "favored": false,
+            "name": "Sparkonto",
+            "ownership": 1.0,
+            "type": "SAVINGS",
+            "userModifiedExcluded": false,
+            "userModifiedName": false,
+            "userModifiedType": false,
+            "identifiers": "[\"se://91503333333\",\"iban://SE8091500000091503333333\"]",
+            "closed": false,
+            "holderName": "Test Testsson",
+            "accountHolder": {
+                "accountId": null,
+                "type": "PERSONAL",
+                "identities": [
+                    {
+                        "name": "Test Testsson",
+                        "role": "HOLDER"
+                    }
+                ]
+            },
+            "flags": "[]",
+            "balances": [],
+            "availableCredit": 0.0,
+            "balance": 30000.0
         },
-        "currencyCode" : "SEK",
-        "bankId" : "91507777777",
-        "excluded" : false,
-        "favored" : false,
-        "name" : "Skandiakonto",
-        "ownership" : 1.0,
-        "type" : "SAVINGS",
-        "userModifiedExcluded" : false,
-        "userModifiedName" : false,
-        "userModifiedType" : false,
-        "identifiers" : "[\"iban://SE5391500000091507777777\",\"se://91507777777\"]",
-        "closed" : false,
-        "holderName" : "Test Testsson",
-        "accountHolder" : {
-            "accountId" : null,
-            "type" : "PERSONAL",
-            "identities" : [ {
-                "name" : "Test Testsson",
-                "role" : "HOLDER"
-            } ]
+        {
+            "accountNumber": "S12345-1234-12",
+            "accountExclusion": "NONE",
+            "exactBalance": {
+                "currencyCode": "SEK",
+                "doubleValue": 150.0,
+                "exactValue": 150.0,
+                "scale": 1,
+                "unscaledValue": 1500
+            },
+            "currencyCode": "SEK",
+            "bankId": "12345123412",
+            "excluded": false,
+            "favored": false,
+            "name": "Tjänstepension",
+            "ownership": 1.0,
+            "type": "INVESTMENT",
+            "userModifiedExcluded": false,
+            "userModifiedName": false,
+            "userModifiedType": false,
+            "identifiers": "[]",
+            "closed": false,
+            "holderName": "Test Testsson",
+            "accountHolder": {
+                "accountId": null,
+                "type": "PERSONAL",
+                "identities": [
+                    {
+                        "name": "Test Testsson",
+                        "role": "HOLDER"
+                    }
+                ]
+            },
+            "flags": "[]",
+            "balances": [],
+            "availableCredit": 0.0,
+            "balance": 150.0
         },
-        "flags" : "[]",
-        "balances" : [ ],
-        "availableCredit" : 0.0,
-        "balance" : 5000.0
-    }, {
-        "accountNumber" : "91506666666",
-        "accountExclusion" : "NONE",
-        "exactBalance" : {
-            "currencyCode" : "SEK",
-            "doubleValue" : 100000.0,
-            "exactValue" : 100000.0,
-            "scale" : 1,
-            "unscaledValue" : 1000000
-        },
-        "currencyCode" : "SEK",
-        "bankId" : "91506666666",
-        "excluded" : false,
-        "favored" : false,
-        "name" : "Fasträntekonto",
-        "ownership" : 1.0,
-        "type" : "SAVINGS",
-        "userModifiedExcluded" : false,
-        "userModifiedName" : false,
-        "userModifiedType" : false,
-        "identifiers" : "[\"se://91506666666\",\"iban://SE8491500000091506666666\"]",
-        "closed" : false,
-        "holderName" : "Test Testsson",
-        "accountHolder" : {
-            "accountId" : null,
-            "type" : "PERSONAL",
-            "identities" : [ {
-                "name" : "Test Testsson",
-                "role" : "HOLDER"
-            } ]
-        },
-        "flags" : "[]",
-        "balances" : [ ],
-        "availableCredit" : 0.0,
-        "balance" : 100000.0
-    }, {
-        "accountNumber" : "91501111111",
-        "accountExclusion" : "NONE",
-        "exactBalance" : {
-            "currencyCode" : "SEK",
-            "doubleValue" : 100.0,
-            "exactValue" : 100.0,
-            "scale" : 1,
-            "unscaledValue" : 1000
-        },
-        "currencyCode" : "SEK",
-        "bankId" : "91501111111",
-        "excluded" : false,
-        "favored" : false,
-        "name" : "Allt i Ett-Konto 1",
-        "ownership" : 1.0,
-        "type" : "CHECKING",
-        "userModifiedExcluded" : false,
-        "userModifiedName" : false,
-        "userModifiedType" : false,
-        "identifiers" : "[\"iban://SE4591500000091501111111\",\"se://91501111111\"]",
-        "closed" : false,
-        "holderName" : "Test Testsson",
-        "accountHolder" : {
-            "accountId" : null,
-            "type" : "PERSONAL",
-            "identities" : [ {
-                "name" : "Test Testsson",
-                "role" : "HOLDER"
-            } ]
-        },
-        "flags" : "[]",
-        "balances" : [ ],
-        "availableCredit" : 0.0,
-        "balance" : 100.0
-    }, {
-        "accountNumber" : "91503333333",
-        "accountExclusion" : "NONE",
-        "exactBalance" : {
-            "currencyCode" : "SEK",
-            "doubleValue" : 30000.0,
-            "exactValue" : 30000.0,
-            "scale" : 1,
-            "unscaledValue" : 300000
-        },
-        "currencyCode" : "SEK",
-        "bankId" : "91503333333",
-        "excluded" : false,
-        "favored" : false,
-        "name" : "Sparkonto",
-        "ownership" : 1.0,
-        "type" : "SAVINGS",
-        "userModifiedExcluded" : false,
-        "userModifiedName" : false,
-        "userModifiedType" : false,
-        "identifiers" : "[\"se://91503333333\",\"iban://SE8091500000091503333333\"]",
-        "closed" : false,
-        "holderName" : "Test Testsson",
-        "accountHolder" : {
-            "accountId" : null,
-            "type" : "PERSONAL",
-            "identities" : [ {
-                "name" : "Test Testsson",
-                "role" : "HOLDER"
-            } ]
-        },
-        "flags" : "[]",
-        "balances" : [ ],
-        "availableCredit" : 0.0,
-        "balance" : 30000.0
-    }, {
-        "accountNumber" : "S12345-1234-12",
-        "accountExclusion" : "NONE",
-        "exactBalance" : {
-            "currencyCode" : "SEK",
-            "doubleValue" : 150.0,
-            "exactValue" : 150.0,
-            "scale" : 1,
-            "unscaledValue" : 1500
-        },
-        "currencyCode" : "SEK",
-        "bankId" : "12345123412",
-        "excluded" : false,
-        "favored" : false,
-        "name" : "Tjänstepension",
-        "ownership" : 1.0,
-        "type" : "INVESTMENT",
-        "userModifiedExcluded" : false,
-        "userModifiedName" : false,
-        "userModifiedType" : false,
-        "identifiers" : "[]",
-        "closed" : false,
-        "holderName" : "Test Testsson",
-        "accountHolder" : {
-            "accountId" : null,
-            "type" : "PERSONAL",
-            "identities" : [ {
-                "name" : "Test Testsson",
-                "role" : "HOLDER"
-            } ]
-        },
-        "flags" : "[]",
-        "balances" : [ ],
-        "availableCredit" : 0.0,
-        "balance" : 150.0
-    }, {
-        "accountNumber" : "91508888888",
-        "accountExclusion" : "NONE",
-        "exactBalance" : {
-            "currencyCode" : "SEK",
-            "doubleValue" : 20123.45,
-            "exactValue" : 20123.45,
-            "scale" : 2,
-            "unscaledValue" : 2012345
-        },
-        "currencyCode" : "SEK",
-        "bankId" : "91508888888",
-        "excluded" : false,
-        "favored" : false,
-        "name" : "Likviditetskonto",
-        "ownership" : 1.0,
-        "type" : "SAVINGS",
-        "userModifiedExcluded" : false,
-        "userModifiedName" : false,
-        "userModifiedType" : false,
-        "identifiers" : "[\"se://91508888888\",\"iban://SE2291500000091508888888\"]",
-        "closed" : false,
-        "holderName" : "Test Testsson",
-        "accountHolder" : {
-            "accountId" : null,
-            "type" : "PERSONAL",
-            "identities" : [ {
-                "name" : "Test Testsson",
-                "role" : "HOLDER"
-            } ]
-        },
-        "flags" : "[]",
-        "balances" : [ ],
-        "availableCredit" : 0.0,
-        "balance" : 20123.45
-    } ],
-    "transactions" : [ {
-        "amount" : -10.0,
-        "date" : 1608030000000,
-        "description" : "Transaction 1",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : { },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -500.7,
-        "date" : 1607770800000,
-        "description" : "Transaction 2",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : { },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -47.8,
-        "date" : 1607684400000,
-        "description" : "Transaction 3",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : { },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -50.0,
-        "date" : 1608202800000,
-        "description" : "Reserved transaction",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : { },
-        "pending" : true,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -99.0,
-        "date" : 1608030000000,
-        "description" : "Transaction 1",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : { },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -99.0,
-        "date" : 1607770800000,
-        "description" : "Transaction 2",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : { },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -70.0,
-        "date" : 1608116400000,
-        "description" : "Reserved transaction 1",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : { },
-        "pending" : true,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -40.05,
-        "date" : 1608030000000,
-        "description" : "Reserved transaction 2",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : { },
-        "pending" : true,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -1000.0,
-        "date" : 1592474400000,
-        "description" : "Invoice payment 1",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : { },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : 20000.0,
-        "date" : 1582110000000,
-        "description" : "Deposit 1",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : { },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : -2000.0,
-        "date" : 1606734000000,
-        "description" : "Invoice payment 1",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : { },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : 300.0,
-        "date" : 1606388400000,
-        "description" : "Deposit 1",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : { },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    }, {
-        "amount" : 600.0,
-        "date" : 1606388400000,
-        "description" : "Deposit 2",
-        "internalPayload" : { },
-        "originalAmount" : 0.0,
-        "payload" : { },
-        "pending" : false,
-        "timestamp" : 0,
-        "type" : "DEFAULT",
-        "upcoming" : false,
-        "externalSystemIds" : { },
-        "transactionDates" : [ ]
-    } ],
-    "identityData" : {
-        "nameElements" : [ {
-            "type" : "FULLNAME",
-            "value" : "Test Testsson"
-        } ],
-        "dateOfBirth" : {
-            "year" : 2000,
-            "month" : "JANUARY",
-            "era" : "CE",
-            "monthValue" : 1,
-            "dayOfMonth" : 1,
-            "dayOfWeek" : "SATURDAY",
-            "leapYear" : true,
-            "dayOfYear" : 1,
-            "chronology" : {
-                "id" : "ISO",
-                "calendarType" : "iso8601"
-            }
+        {
+            "accountNumber": "91508888888",
+            "accountExclusion": "NONE",
+            "exactBalance": {
+                "currencyCode": "SEK",
+                "doubleValue": 20123.45,
+                "exactValue": 20123.45,
+                "scale": 2,
+                "unscaledValue": 2012345
+            },
+            "currencyCode": "SEK",
+            "bankId": "91508888888",
+            "excluded": false,
+            "favored": false,
+            "name": "Likviditetskonto",
+            "ownership": 1.0,
+            "type": "SAVINGS",
+            "userModifiedExcluded": false,
+            "userModifiedName": false,
+            "userModifiedType": false,
+            "identifiers": "[\"se://91508888888\",\"iban://SE2291500000091508888888\"]",
+            "closed": false,
+            "holderName": "Test Testsson",
+            "accountHolder": {
+                "accountId": null,
+                "type": "PERSONAL",
+                "identities": [
+                    {
+                        "name": "Test Testsson",
+                        "role": "HOLDER"
+                    }
+                ]
+            },
+            "flags": "[]",
+            "balances": [],
+            "availableCredit": 0.0,
+            "balance": 20123.45
         }
-    }
+    ],
+    "transactions": [
+        {
+            "amount": -10.0,
+            "date": 1608030000000,
+            "description": "Transaction 1",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -500.7,
+            "date": 1607770800000,
+            "description": "Transaction 2",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -47.8,
+            "date": 1607684400000,
+            "description": "Transaction 3",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -50.0,
+            "date": 1608202800000,
+            "description": "Reserved transaction",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": true,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -99.0,
+            "date": 1608030000000,
+            "description": "Transaction 1",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -99.0,
+            "date": 1607770800000,
+            "description": "Transaction 2",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -70.0,
+            "date": 1608116400000,
+            "description": "Reserved transaction 1",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": true,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -40.05,
+            "date": 1608030000000,
+            "description": "Reserved transaction 2",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": true,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -1000.0,
+            "date": 1592474400000,
+            "description": "Invoice payment 1",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": 20000.0,
+            "date": 1582110000000,
+            "description": "Deposit 1",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": -2000.0,
+            "date": 1606734000000,
+            "description": "Invoice payment 1",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": 300.0,
+            "date": 1606388400000,
+            "description": "Deposit 1",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        },
+        {
+            "amount": 600.0,
+            "date": 1606388400000,
+            "description": "Deposit 2",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        }
+    ]
 }
