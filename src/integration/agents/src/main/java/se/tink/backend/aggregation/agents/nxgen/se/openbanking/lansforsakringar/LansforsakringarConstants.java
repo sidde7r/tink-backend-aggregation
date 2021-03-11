@@ -213,4 +213,10 @@ public abstract class LansforsakringarConstants {
     public class ErrorCodes {
         public static final String SERVER = "server";
     }
+
+    public static class PaymentValue {
+        public static final int MAX_DEST_MSG_LEN_UNSTRUCTURED = 12;
+        public static final int MAX_DEST_MSG_LEN_GIROS_UNSTRUCTURED = 70;
+        public static final int MAX_DEST_MSG_LEN_GIROS_STRUCTURED = 25;
+    }
 }
