@@ -4,6 +4,8 @@ java_library(
     data = [
         "//tools:phantomjs_linux",
         "//tools:phantomjs_mac",
+        "@chromedriver//file",
+        "@chromium//file",
     ],
     visibility = ["//visibility:public"],
     deps = [
@@ -11,6 +13,7 @@ java_library(
         "//third_party:lombok_libs",
         "@selenium//:com_codeborne_phantomjsdriver",
         "@selenium//:org_seleniumhq_selenium_selenium_api",
+        "@selenium//:org_seleniumhq_selenium_selenium_chrome_driver",
         "@selenium//:org_seleniumhq_selenium_selenium_htmlunit_driver",
         "@selenium//:org_seleniumhq_selenium_selenium_java",
         "@selenium//:org_seleniumhq_selenium_selenium_remote_driver",
