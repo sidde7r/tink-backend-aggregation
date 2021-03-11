@@ -40,7 +40,7 @@ public class LunarInvestmentsFetcherTest {
     private static final String INVEST_ACCOUNT_NO_WITH_QUOTES = "\"1212-0101123456\"";
     private static final String CURRENCY = "DKK";
     private static final double CASH_VALUE = 1.02;
-    private static final double TOTAL_PROFIT = -61.15000000000001;
+    private static final double TOTAL_PROFIT = -61.15;
     private static final double TOTAL_VALUE = 15.84;
     private static final double TOTAL_OPEN_POSITIONS_VALUE = 13.94;
 
@@ -101,11 +101,8 @@ public class LunarInvestmentsFetcherTest {
             new Object[] {
                 getTestInvestmentsResponse(
                         INVEST_ACCOUNT_NO_WITH_QUOTES, CASH_VALUE, null, TOTAL_VALUE),
-                SerializationUtils.deserializeFromString(
-                        Paths.get(
-                                        TEST_DATA_PATH,
-                                        "invest_instruments_without_position_or_deleted.json")
-                                .toFile(),
+                deserialize(
+                        "invest_instruments_without_position_or_deleted.json",
                         InstrumentsResponse.class),
                 deserialize(
                         "invest_performance_data_empty.json", PortfolioPerformanceResponse.class),
