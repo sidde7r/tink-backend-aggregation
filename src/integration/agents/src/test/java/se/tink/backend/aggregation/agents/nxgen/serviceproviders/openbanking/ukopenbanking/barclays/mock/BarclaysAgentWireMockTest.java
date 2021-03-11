@@ -31,7 +31,7 @@ public class BarclaysAgentWireMockTest {
 
     private static final String CONFIGURATION_PATH = "data/agents/uk/barclays/configuration.yml";
     private static final String RESTORE_PARTY_DATA_CONFIG_PATH =
-            "data/agents/uk/barclays/restore-party-data-config.yml";
+            "data/agents/uk/barclays/dont-fetch-party-data-config.yml";
 
     public static final String AIS_ACCESS_TOKEN_KEY = "open_id_ais_access_token";
     private static final String EXPIRED_OAUTH2_TOKEN =
@@ -77,7 +77,7 @@ public class BarclaysAgentWireMockTest {
     public void shouldRestorePartyDataSuccessfully() throws Exception {
 
         // given
-        final String wireMockFilePath = "data/agents/uk/barclays/restore-party-data.aap";
+        final String wireMockFilePath = "data/agents/uk/barclays/dont-fetch-party-data.aap";
         final String contractFilePath = "data/agents/uk/barclays/restore-party-data.json";
 
         final String parties =
@@ -99,6 +99,41 @@ public class BarclaysAgentWireMockTest {
                                 ScaExpirationValidator.LAST_SCA_TIME,
                                 LocalDateTime.now().minusMinutes(6).toString())
                         .addPersistentStorageData(PartyDataStorage.RECENT_PARTY_DATA_LIST, parties)
+                        .enableHttpDebugTrace()
+                        .enableDataDumpForContractFile()
+                        .build();
+
+        final AgentContractEntity expected =
+                new AgentContractEntitiesJsonFileParser()
+                        .parseContractOnBasisOfFile(contractFilePath);
+
+        // when
+        agentWireMockRefreshTest.executeRefresh();
+
+        // then
+        agentWireMockRefreshTest.assertExpectedData(expected);
+    }
+
+    /** Test for agents currently with SCA expired but without party data stored */
+    @Test
+    public void shouldNotFetchPartyData() throws Exception {
+
+        // given
+        final String wireMockFilePath = "data/agents/uk/barclays/dont-fetch-party-data.aap";
+        final String contractFilePath = "data/agents/uk/barclays/dont-fetch-party-data.json";
+
+        final AgentsServiceConfiguration configuration =
+                AgentsServiceConfigurationReader.read(RESTORE_PARTY_DATA_CONFIG_PATH);
+
+        final AgentWireMockRefreshTest agentWireMockRefreshTest =
+                AgentWireMockRefreshTest.nxBuilder()
+                        .withMarketCode(MarketCode.UK)
+                        .withProviderName("uk-barclays-oauth2")
+                        .withWireMockFilePath(wireMockFilePath)
+                        .withConfigFile(configuration)
+                        .testAutoAuthentication()
+                        .addRefreshableItems(RefreshableItem.CHECKING_ACCOUNTS)
+                        .addPersistentStorageData(AIS_ACCESS_TOKEN_KEY, EXPIRED_OAUTH2_TOKEN)
                         .enableHttpDebugTrace()
                         .enableDataDumpForContractFile()
                         .build();

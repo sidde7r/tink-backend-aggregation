@@ -18,7 +18,7 @@ public class ScaExpirationValidator {
     public boolean isScaExpired() {
         return restoreLastScaTime()
                 .map(lastSca -> hasXMinutesPassed(limitInMinutes, lastSca))
-                .orElse(Boolean.FALSE);
+                .orElse(Boolean.TRUE);
     }
 
     private boolean hasXMinutesPassed(long limitInMinutes, LocalDateTime time) {
