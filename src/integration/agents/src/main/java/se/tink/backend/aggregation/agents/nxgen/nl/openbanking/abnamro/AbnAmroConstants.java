@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.openbanking.abnamro;
 
+import java.util.regex.Pattern;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
@@ -7,6 +8,8 @@ public final class AbnAmroConstants {
 
     public static final String DATE_FORMAT = "EEE, dd MMM yyyy HH:mm:ss z";
     public static final String TRANSACTION_BOOKING_DATE_FORMAT = "yyyy-MM-dd";
+    public static final Pattern JOINT_ACCOUNT_SUFFIX_PATTERN =
+            Pattern.compile(" CJ$", Pattern.CASE_INSENSITIVE);
 
     private AbnAmroConstants() {
         throw new AssertionError();
