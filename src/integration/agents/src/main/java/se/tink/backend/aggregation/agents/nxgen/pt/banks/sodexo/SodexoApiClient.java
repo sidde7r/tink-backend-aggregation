@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.pt.banks.sodexo;
 import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
+import se.tink.backend.aggregation.agents.nxgen.pt.banks.sodexo.SodexoConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.sodexo.SodexoConstants.Headers;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.sodexo.SodexoConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.sodexo.rpc.AuthenticationPinRequest;
@@ -15,6 +16,7 @@ import se.tink.backend.aggregation.agents.nxgen.pt.banks.sodexo.rpc.SetupPinResp
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.sodexo.rpc.TransactionResponse;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
@@ -56,10 +58,19 @@ public class SodexoApiClient {
 
     public AuthenticationResponse authenticateWithPin(String pin) {
         AuthenticationPinRequest authenticationPinRequest = new AuthenticationPinRequest(pin);
-
-        return requestWithUserToken(Urls.SING_IN)
-                .header(Headers.CONTENT_TYPE, Headers.CONTENT_TYPE_X_FORM)
-                .post(AuthenticationResponse.class, authenticationPinRequest);
+        try {
+            return requestWithUserToken(Urls.SING_IN)
+                    .header(Headers.CONTENT_TYPE, Headers.CONTENT_TYPE_X_FORM)
+                    .post(AuthenticationResponse.class, authenticationPinRequest);
+        } catch (HttpResponseException e) {
+            HttpResponse response = e.getResponse();
+            SetupPinResponse responseBody = response.getBody(SetupPinResponse.class);
+            if (response.getStatus() == 403
+                    && ErrorMessages.AUTH_ERROR.equals(responseBody.getMessage())) {
+                throw LoginError.DEFAULT_MESSAGE.exception();
+            }
+            throw e;
+        }
     }
 
     public BalanceResponse getBalanceResponse() {

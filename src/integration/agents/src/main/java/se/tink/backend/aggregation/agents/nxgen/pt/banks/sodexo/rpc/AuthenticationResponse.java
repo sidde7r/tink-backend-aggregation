@@ -35,9 +35,6 @@ public class AuthenticationResponse {
     @JsonProperty("benefit-day")
     private int benefitDay;
 
-    @JsonProperty("needs-consent")
-    private String needsConsent;
-
     @JsonProperty("refeicoes-url")
     private String refeicoesUrl;
 }

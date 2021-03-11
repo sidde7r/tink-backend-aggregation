@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.Optional;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -143,6 +144,22 @@ public class SodexoApiClientTest {
         assertThat(transactionResponse.getTransactions().get(0).getAmount()).isEqualTo(147);
     }
 
+    @Test
+    public void shouldThrowLoginError() {
+        // given
+        SetupPinResponse response =
+                SerializationUtils.deserializeFromString(
+                        "{\"message\":\"A autentica\\u00e7\\u00e3o falhou.\"}",
+                        SetupPinResponse.class);
+        mockThrowPostRequest(403, Optional.of(response));
+
+        // when
+        Throwable throwable = catchThrowable(() -> sodexoApiClient.authenticateWithPin("tink"));
+
+        // then
+        assertThat(throwable).isExactlyInstanceOf(LoginException.class);
+    }
+
     private <T> void mockPostRequest(T response) {
         when(requestBuilder.header(any(), any())).thenReturn(requestBuilder);
         when(requestBuilder.post(any(), any())).thenReturn(response);
@@ -151,9 +168,14 @@ public class SodexoApiClientTest {
     }
 
     private void mockThrowPostRequest(int status) {
+        mockThrowPostRequest(status, Optional.empty());
+    }
+
+    private void mockThrowPostRequest(int status, Optional<Object> body) {
         when(requestBuilder.header(any(), any())).thenReturn(requestBuilder);
         HttpResponse httpResponse = mock(HttpResponse.class);
         when(httpResponse.getStatus()).thenReturn(status);
+        body.ifPresent(o -> when(httpResponse.getBody(any())).thenReturn(o));
         when(requestBuilder.post(any(), any()))
                 .thenThrow(new HttpResponseException(null, httpResponse));
         when(tinkHttpClient.request(any(URL.class))).thenReturn(requestBuilder);
