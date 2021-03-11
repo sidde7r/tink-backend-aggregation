@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.dk.banks.lunar.fetchers.investment.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import java.math.BigDecimal;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -13,7 +12,7 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrum
 @Slf4j
 public class InstrumentEntity {
     private String baseCurrency;
-    private BigDecimal currentPriceInBaseCurrency;
+    @Getter private Double currentPriceInBaseCurrency;
     @Getter private Boolean deleted;
     private String id;
     private String tickerCode;
@@ -26,19 +25,15 @@ public class InstrumentEntity {
         return InstrumentModule.builder()
                 .withType(getType())
                 .withId(buildInstrumentIdModule())
-                .withMarketPrice(currentPriceInBaseCurrency.doubleValue())
-                .withMarketValue(currentPriceInBaseCurrency.doubleValue())
+                .withMarketPrice(currentPriceInBaseCurrency)
+                .withMarketValue(currentPriceInBaseCurrency)
                 .withAverageAcquisitionPrice(position.getAveragePriceInBaseCurrency())
                 .withCurrency(baseCurrency)
-                .withQuantity(position.getAmount().doubleValue())
+                .withQuantity(position.getAmount())
                 .withProfit(position.getProfitLossOnTradeInBaseCurrency())
                 .setRawType(type)
                 .setTicker(tickerCode)
                 .build();
-    }
-
-    public BigDecimal calculateInstrumentValue() {
-        return currentPriceInBaseCurrency.multiply(position.getAmount());
     }
 
     private InstrumentModule.InstrumentType getType() {

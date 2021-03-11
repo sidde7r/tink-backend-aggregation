@@ -52,6 +52,9 @@ public class LunarInvestmentsFetcher implements AccountFetcher<InvestmentAccount
         return apiClient.fetchInstruments().getInstruments().stream()
                 .filter(instrumentEntity -> instrumentEntity.getPosition() != null)
                 .filter(instrumentEntity -> BooleanUtils.isNotTrue(instrumentEntity.getDeleted()))
+                .filter(
+                        instrumentEntity ->
+                                instrumentEntity.getCurrentPriceInBaseCurrency() != null)
                 .collect(Collectors.toList());
     }
 }

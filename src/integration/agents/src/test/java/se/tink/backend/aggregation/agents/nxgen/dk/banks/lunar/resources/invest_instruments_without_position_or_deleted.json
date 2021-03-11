@@ -91,6 +91,38 @@
             "title": "Testing title AB",
             "type": "stock",
             "updated": 1614849943494
+        },
+        {
+            "baseCurrency": "DKK",
+            "brandIconUrl": "https://api.prod.lunarway.com/storage/f12c8470-0fd1-4a84-8229-e1c55d680983/redirect",
+            "brandName": "Wirecard AG",
+            "created": 1610544916780,
+            "currency": "EUR",
+            "currentPriceTimestamp": -6795364578871,
+            "deleted": false,
+            "details": null,
+            "exchange": "fft",
+            "hasPosition": true,
+            "id": "74a7a58d-36c2-47c4-a2af-941f9ef95215",
+            "isTradable": false,
+            "isWatched": false,
+            "marketData": null,
+            "popular": false,
+            "position": {
+                "amount": 1,
+                "averagePriceInBaseCurrency": 5.43,
+                "created": 1615364939858,
+                "id": "74a7a58d-36c2-47c4-a2af-941f9ef95215_position",
+                "profitLossOnTradeInBaseCurrency": -146.25,
+                "profitLossOnTradePercentage": -0.4692,
+                "updated": 1615364939858
+            },
+            "subTitle": "WDI",
+            "subType": "stock",
+            "tickerCode": "WDI",
+            "title": "Wirecard AG",
+            "type": "stock",
+            "updated": 1615364939858
         }
     ]
 }
