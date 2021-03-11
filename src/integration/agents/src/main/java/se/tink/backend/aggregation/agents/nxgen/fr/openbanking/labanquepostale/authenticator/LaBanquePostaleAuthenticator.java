@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.
 
 import java.util.Map;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostaleApiClient;
@@ -42,6 +43,8 @@ public class LaBanquePostaleAuthenticator extends BerlinGroupAuthenticator
         String errorType = callbackData.get(CallbackParams.ERROR);
         if (ErrorMessages.TIME_OUT.equals(errorType)) {
             throw ThirdPartyAppError.TIMED_OUT.exception();
+        } else if (ErrorMessages.TEMP_UNAVAILABLE.equals(errorType)) {
+            throw BankServiceError.BANK_SIDE_FAILURE.exception();
         }
     }
 }
