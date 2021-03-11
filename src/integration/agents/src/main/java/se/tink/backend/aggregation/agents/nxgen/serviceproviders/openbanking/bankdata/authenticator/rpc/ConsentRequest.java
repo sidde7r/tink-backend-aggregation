@@ -29,9 +29,7 @@ public class ConsentRequest {
         this.frequencyPerDay = 4;
         this.combinedServiceIndicator = false;
         this.access =
-                new AccessEntity(
-                        BankdataConstants.ConsentRequest.ALL_ACCOUNTS,
-                        BankdataConstants.ConsentRequest.ALL_ACCOUNTS);
+                new AccessEntity(BankdataConstants.ConsentRequest.ALL_ACCOUNTS_WITH_OWNER_NAME);
     }
 
     private ConsentRequest(

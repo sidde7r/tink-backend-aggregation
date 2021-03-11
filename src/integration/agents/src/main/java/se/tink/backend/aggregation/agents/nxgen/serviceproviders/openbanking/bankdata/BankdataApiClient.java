@@ -2,9 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ba
 
 import java.security.cert.CertificateException;
 import java.util.Date;
-import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 import javax.ws.rs.core.MediaType;
 import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
@@ -31,8 +29,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ban
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.executor.payment.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.executor.payment.rpc.FetchPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.executor.payment.rpc.PaymentStatusResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.fetcher.transactionalaccount.entities.AccountEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.fetcher.transactionalaccount.entities.BalanceEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.fetcher.transactionalaccount.rpc.AccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.fetcher.transactionalaccount.rpc.TransactionResponse;
 import se.tink.backend.aggregation.api.Psd2Headers;
@@ -83,8 +79,8 @@ public class BankdataApiClient {
         authorizeConsent(consentId);
         final String codeVerifier = Psd2Headers.generateCodeVerifier();
         final String codeChallenge = Psd2Headers.generateCodeChallenge(codeVerifier);
-        sessionStorage.put(StorageKeys.CODE_VERIFIER, codeVerifier);
-        sessionStorage.put(StorageKeys.CONSENT_ID, consentId);
+        persistentStorage.put(StorageKeys.CODE_VERIFIER, codeVerifier);
+        persistentStorage.put(StorageKeys.CONSENT_ID, consentId);
         URL url = new URL(apiConfiguration.getBaseAuthUrl() + Endpoints.AUTHORIZE);
 
         return createRequest(url)
@@ -106,7 +102,7 @@ public class BankdataApiClient {
                         clientId,
                         code,
                         redirectUrl,
-                        sessionStorage.get(StorageKeys.CODE_VERIFIER));
+                        persistentStorage.get(StorageKeys.CODE_VERIFIER));
 
         return getTokenResponse(request);
     }
@@ -127,44 +123,13 @@ public class BankdataApiClient {
     public AccountResponse fetchAccounts() {
         final String requestId = UUID.randomUUID().toString();
         URL url = new URL(apiConfiguration.getBaseUrl() + Endpoints.ACCOUNTS);
-
-        final AccountResponse accountsWithoutBalances =
-                createRequestInSession(url)
-                        .queryParam(QueryKeys.WITH_BALANCE, QueryValues.TRUE)
-                        .header(HeaderKeys.CONSENT_ID, sessionStorage.get(StorageKeys.CONSENT_ID))
-                        .header(HeaderKeys.X_REQUEST_ID, requestId)
-                        .type(MediaType.APPLICATION_JSON)
-                        .header(HeaderKeys.X_API_KEY, configuration.getApiKey())
-                        .get(AccountResponse.class);
-
-        final List<AccountEntity> accountsWithBalances =
-                accountsWithoutBalances.getAccounts().stream()
-                        .map(this::fetchBalances)
-                        .collect(Collectors.toList());
-
-        return new AccountResponse(accountsWithBalances);
-    }
-
-    private AccountEntity fetchBalances(final AccountEntity accountEntity) {
-        final String requestId = UUID.randomUUID().toString();
-        final URL url =
-                new URL(
-                        apiConfiguration.getBaseUrl()
-                                + Endpoints.AIS_PRODUCT
-                                + accountEntity.getBalancesLink());
-
-        final List<BalanceEntity> balances =
-                client.request(url)
-                        .addBearerToken(getOauthToken())
-                        .header(HeaderKeys.CONSENT_ID, sessionStorage.get(StorageKeys.CONSENT_ID))
-                        .header(HeaderKeys.X_REQUEST_ID, requestId)
-                        .type(MediaType.APPLICATION_JSON)
-                        .header(HeaderKeys.X_API_KEY, configuration.getApiKey())
-                        .get(AccountEntity.class)
-                        .getBalances();
-        accountEntity.setBalances(balances);
-
-        return accountEntity;
+        return createRequestInSession(url)
+                .queryParam(QueryKeys.WITH_BALANCE, QueryValues.TRUE)
+                .header(HeaderKeys.CONSENT_ID, persistentStorage.get(StorageKeys.CONSENT_ID))
+                .header(HeaderKeys.X_REQUEST_ID, requestId)
+                .type(MediaType.APPLICATION_JSON)
+                .header(HeaderKeys.X_API_KEY, configuration.getApiKey())
+                .get(AccountResponse.class);
     }
 
     public TransactionResponse fetchTransactions(
@@ -179,7 +144,7 @@ public class BankdataApiClient {
         return createRequestInSession(fullUrl)
                 .header(HeaderKeys.X_REQUEST_ID, requestId)
                 .header(HeaderKeys.X_API_KEY, configuration.getApiKey())
-                .header(HeaderKeys.CONSENT_ID, sessionStorage.get(StorageKeys.CONSENT_ID))
+                .header(HeaderKeys.CONSENT_ID, persistentStorage.get(StorageKeys.CONSENT_ID))
                 .queryParam(
                         QueryKeys.DATE_TO,
                         DateFormat.formatDateTime(
@@ -205,7 +170,7 @@ public class BankdataApiClient {
         return createRequestInSession(fullUrl)
                 .header(HeaderKeys.X_REQUEST_ID, requestId)
                 .header(HeaderKeys.X_API_KEY, configuration.getApiKey())
-                .header(HeaderKeys.CONSENT_ID, sessionStorage.get(StorageKeys.CONSENT_ID))
+                .header(HeaderKeys.CONSENT_ID, persistentStorage.get(StorageKeys.CONSENT_ID))
                 .get(TransactionResponse.class);
     }
 
@@ -292,7 +257,7 @@ public class BankdataApiClient {
     public URL getSigningPaymentUrl(String paymentId) {
         final String codeVerifier = Psd2Headers.generateCodeVerifier();
         final String codeChallenge = Psd2Headers.generateCodeChallenge(codeVerifier);
-        sessionStorage.put(StorageKeys.CODE_VERIFIER, codeVerifier);
+        persistentStorage.put(StorageKeys.CODE_VERIFIER, codeVerifier);
 
         return new URL(apiConfiguration.getBaseAuthUrl() + Endpoints.AUTHORIZE)
                 .queryParam(QueryKeys.RESPONSE_TYPE, QueryValues.CODE)
@@ -359,7 +324,7 @@ public class BankdataApiClient {
                         refreshToken,
                         redirectUrl,
                         clientId,
-                        sessionStorage.get(StorageKeys.CODE_VERIFIER));
+                        persistentStorage.get(StorageKeys.CODE_VERIFIER));
 
         return getTokenResponse(request);
     }

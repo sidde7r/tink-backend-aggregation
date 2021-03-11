@@ -109,7 +109,7 @@ public final class BankdataConstants {
     }
 
     public static class ConsentRequest {
-        public static final String ALL_ACCOUNTS = "allAccounts";
+        public static final String ALL_ACCOUNTS_WITH_OWNER_NAME = "allAccountsWithOwnerName";
     }
 
     public static class Accounts {

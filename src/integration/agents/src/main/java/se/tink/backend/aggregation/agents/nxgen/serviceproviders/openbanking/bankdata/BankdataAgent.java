@@ -136,7 +136,7 @@ public abstract class BankdataAgent extends NextGenerationAgent
 
     @Override
     protected SessionHandler constructSessionHandler() {
-        return new BankdataSessionHandler(apiClient);
+        return SessionHandler.alwaysFail();
     }
 
     @Override
