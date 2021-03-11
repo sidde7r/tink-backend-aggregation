@@ -11,6 +11,7 @@ public class SwedbankSEConstants {
         public static final String BANK_ID = "08999";
         public static final String BANK_NAME = "Swedbank AB (publ)";
     */
+
     public static final String LOAN_YEARS = "år";
     public static final String LOAN_MONTHS = "mån";
     public static final String MEMBERSHIP_LOAN = "Medlemslån";
@@ -24,9 +25,9 @@ public class SwedbankSEConstants {
                             "swedbank",
                             new ProfileParameters(
                                     "swedbank",
-                                    "l5RN1Fqr3Zygko8G",
+                                    "xaFvhkDZilzJbwwA",
                                     false,
-                                    "SwedbankMOBPrivateIOS/7.27.0_(iOS;_13.3.1)_Apple/iPhone9,3"))
+                                    "SwedbankMOBPrivateIOS/7.30.0_(iOS;_13.3.1)_Apple/iPhone9,3"))
                     .put(
                             "swedbank-business",
                             new ProfileParameters(
@@ -38,9 +39,9 @@ public class SwedbankSEConstants {
                             "savingsbank",
                             new ProfileParameters(
                                     "savingsbank",
-                                    "3DrOCUQGmwPM7F7o",
+                                    "2pQrn30bQirJlFJL",
                                     true,
-                                    "SavingbankMOBPrivateIOS/7.27.0_(iOS;_13.3.1)_Apple/iPhone9,3"))
+                                    "SavingbankMOBPrivateIOS/7.30.0_(iOS;_13.3.1)_Apple/iPhone9,3"))
                     .put(
                             "savingsbank-business",
                             new ProfileParameters(
