@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -33,6 +34,10 @@ public interface DanskeBankConfiguration extends ClientConfiguration {
     List<String> getCheckingAccountTypes();
 
     List<String> getSavingsAccountTypes();
+
+    default List<String> getDepotCashBalanceAccounts() {
+        return Collections.emptyList();
+    }
 
     default AccountCapabilities.Answer canExecuteExternalTransfer(String productCode) {
         return AccountCapabilities.Answer.UNINITIALIZED;

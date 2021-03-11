@@ -21,6 +21,7 @@ import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.loan.LoanModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.transactional.TransactionalBuildStep;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.backend.aggregation.source_info.AccountSourceInfo;
@@ -268,25 +269,38 @@ public class AccountEntityMapper {
             DanskeBankConfiguration configuration,
             AccountEntity accountEntity,
             AccountDetailsResponse accountDetailsResponse) {
-        return TransactionalAccount.nxBuilder()
-                .withType(TransactionalAccountType.SAVINGS)
-                .withPaymentAccountFlag()
-                .withBalance(
-                        BalanceModule.of(
-                                ExactCurrencyAmount.of(
-                                        accountEntity.getBalance(), accountEntity.getCurrency())))
-                .withId(buildIdModule(accountEntity, accountDetailsResponse))
-                .setBankIdentifier(accountEntity.getAccountNoInt())
-                .setApiIdentifier(accountEntity.getAccountNoInt())
-                .canExecuteExternalTransfer(
-                        configuration.canExecuteExternalTransfer(accountEntity.getAccountProduct()))
-                .canReceiveExternalTransfer(
-                        configuration.canReceiveExternalTransfer(accountEntity.getAccountProduct()))
-                .canPlaceFunds(configuration.canPlaceFunds(accountEntity.getAccountProduct()))
-                .canWithdrawCash(configuration.canWithdrawCash(accountEntity.getAccountProduct()))
-                .sourceInfo(createAccountSourceInfo(accountEntity))
-                .addParties(getAccountParties(accountDetailsResponse.getAccountOwners(marketCode)))
-                .build();
+        TransactionalBuildStep transactionalAccount =
+                TransactionalAccount.nxBuilder()
+                        .withType(TransactionalAccountType.SAVINGS)
+                        .withPaymentAccountFlag()
+                        .withBalance(
+                                BalanceModule.of(
+                                        ExactCurrencyAmount.of(
+                                                accountEntity.getBalance(),
+                                                accountEntity.getCurrency())))
+                        .withId(buildIdModule(accountEntity, accountDetailsResponse))
+                        .setBankIdentifier(accountEntity.getAccountNoInt())
+                        .setApiIdentifier(accountEntity.getAccountNoInt())
+                        .canExecuteExternalTransfer(
+                                configuration.canExecuteExternalTransfer(
+                                        accountEntity.getAccountProduct()))
+                        .canReceiveExternalTransfer(
+                                configuration.canReceiveExternalTransfer(
+                                        accountEntity.getAccountProduct()))
+                        .canPlaceFunds(
+                                configuration.canPlaceFunds(accountEntity.getAccountProduct()))
+                        .canWithdrawCash(
+                                configuration.canWithdrawCash(accountEntity.getAccountProduct()))
+                        .sourceInfo(createAccountSourceInfo(accountEntity))
+                        .addParties(
+                                getAccountParties(
+                                        accountDetailsResponse.getAccountOwners(marketCode)));
+        if (configuration
+                .getDepotCashBalanceAccounts()
+                .contains(accountEntity.getAccountProduct())) {
+            transactionalAccount.addAccountFlags(AccountFlag.DEPOT_CASH_BALANCE);
+        }
+        return transactionalAccount.build();
     }
 
     private AccountSourceInfo createAccountSourceInfo(AccountEntity accountEntity) {
