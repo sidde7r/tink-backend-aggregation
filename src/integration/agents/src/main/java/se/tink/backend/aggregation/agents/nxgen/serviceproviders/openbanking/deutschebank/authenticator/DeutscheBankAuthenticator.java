@@ -51,7 +51,7 @@ public class DeutscheBankAuthenticator {
         credentials.setSessionExpiryDate(consentDetailsResponse.getValidUntil());
     }
 
-    private boolean isPersistedConsentIdValid() {
+    public boolean isPersistedConsentIdValid() {
         ConsentStatusResponse consentStatus = apiClient.getConsentStatus();
         return consentStatus != null && consentStatus.isValid();
     }

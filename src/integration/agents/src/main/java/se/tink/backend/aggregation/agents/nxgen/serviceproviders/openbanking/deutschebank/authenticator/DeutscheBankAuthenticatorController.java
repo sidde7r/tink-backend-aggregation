@@ -1,8 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator;
 
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
+import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.authenticator.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponse;
@@ -15,6 +19,7 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.i18n.LocalizableKey;
 
+@Slf4j
 public class DeutscheBankAuthenticatorController
         implements AutoAuthenticator, ThirdPartyAppAuthenticator<String> {
 
@@ -42,12 +47,19 @@ public class DeutscheBankAuthenticatorController
 
     @Override
     public ThirdPartyAppResponse<String> collect(final String reference) {
-        this.supplementalInformationHelper.waitForSupplementalInformation(
-                strongAuthenticationState.getSupplementalKey(),
-                ThirdPartyAppConstants.WAIT_FOR_MINUTES,
-                TimeUnit.MINUTES);
-
-        authenticator.verifyPersistedConsentIdIsValid();
+        Map<String, String> response =
+                supplementalInformationHelper
+                        .waitForSupplementalInformation(
+                                strongAuthenticationState.getSupplementalKey(),
+                                ThirdPartyAppConstants.WAIT_FOR_MINUTES,
+                                TimeUnit.MINUTES)
+                        .orElseThrow(ThirdPartyAppError.TIMED_OUT::exception);
+        // ITE-2430: Temporary solution to log what happens in case of failure
+        if (!authenticator.isPersistedConsentIdValid()) {
+            log.info("Supplemental info response {}", response);
+            throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception();
+        }
+        // authenticator.verifyPersistedConsentIdIsValid()
         authenticator.storeSessionExpiry();
         return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.DONE);
     }
