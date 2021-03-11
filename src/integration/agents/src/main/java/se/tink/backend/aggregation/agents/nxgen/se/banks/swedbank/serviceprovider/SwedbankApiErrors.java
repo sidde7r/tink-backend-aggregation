@@ -4,6 +4,7 @@ import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SupplementalInfoError;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants.ErrorCode;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants.ErrorMessage;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants.Url;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.ErrorResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
@@ -57,7 +58,9 @@ public class SwedbankApiErrors {
     private static boolean isAuthorizationSecurityTokenInvalid(HttpResponseException hre) {
         // This method expects an response with the following characteristics:
         // - Http status: 401
-        // - Http body: `ErrorResponse` with error field of "AUTHORIZATION_FAILED"
+        // - Http body: `ErrorResponse` with:
+        //   * error code of "AUTHORIZATION_FAILED"
+        //   * error message does not contain "Appen behöver uppdateras."
 
         HttpResponse httpResponse = hre.getResponse();
         if (httpResponse.getStatus() != HttpStatus.SC_UNAUTHORIZED) {
@@ -65,7 +68,25 @@ public class SwedbankApiErrors {
         }
 
         ErrorResponse errorResponse = httpResponse.getBody(ErrorResponse.class);
-        return errorResponse.hasErrorCode(SwedbankBaseConstants.ErrorCode.AUTHORIZATION_FAILED);
+        return errorResponse.hasErrorCode(SwedbankBaseConstants.ErrorCode.AUTHORIZATION_FAILED)
+                && !errorResponse.getAllErrors().contains(ErrorMessage.APP_NEEDS_UPDATE);
+    }
+
+    public static boolean isAppTooOld(HttpResponseException hre) {
+        // This method expects an response with the following characteristics:
+        // - Http status: 401
+        // - Http body: `ErrorResponse` with:
+        //   * error code of "AUTHORIZATION_FAILED"
+        //   * error message contains "Appen behöver uppdateras."
+
+        HttpResponse httpResponse = hre.getResponse();
+        if (httpResponse.getStatus() != HttpStatus.SC_UNAUTHORIZED) {
+            return false;
+        }
+
+        ErrorResponse errorResponse = httpResponse.getBody(ErrorResponse.class);
+        return errorResponse.hasErrorCode(SwedbankBaseConstants.ErrorCode.AUTHORIZATION_FAILED)
+                && errorResponse.getAllErrors().contains(ErrorMessage.APP_NEEDS_UPDATE);
     }
 
     public static void handleTokenErrors(HttpResponseException hre)

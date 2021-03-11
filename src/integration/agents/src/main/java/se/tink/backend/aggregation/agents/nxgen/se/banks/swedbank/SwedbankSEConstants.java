@@ -6,18 +6,19 @@ import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.InstrumentModule;
 
 public class SwedbankSEConstants {
-    /*
-        public static final String API_KEY = "Rh9KYIhL11Nn2XoR";
-        public static final String BANK_ID = "08999";
-        public static final String BANK_NAME = "Swedbank AB (publ)";
-    */
-
     public static final String LOAN_YEARS = "år";
     public static final String LOAN_MONTHS = "mån";
     public static final String MEMBERSHIP_LOAN = "Medlemslån";
     public static final String AMORTIZATION = "Amorteringsbelopp";
 
     public static final String HOST = "https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api";
+
+    /*
+     * Updating API key and User Agent:
+     * The apps don't do certificate pinning, so any phone can be used. It is not necessary to log in.
+     * apiKey: Encoded in `Authorization` header. Header is base64(apiKey + ":" + device ID).
+     * userAgent: `User-Agent` header.
+     */
 
     public static final ImmutableMap<String, ProfileParameters> PROFILE_PARAMETERS =
             new ImmutableMap.Builder<String, ProfileParameters>()

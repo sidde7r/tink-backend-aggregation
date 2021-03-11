@@ -471,6 +471,7 @@ public class SwedbankBaseConstants {
                 "Den valda mottagaren tillåter inte betalningar med OCR-nummer, vänligen välj meddelande.";
         public static final String DUPLICATE_PAYMENT =
                 "The payment could not be made because an identical payment is already registered";
+        public static final String APP_NEEDS_UPDATE = "Appen behöver uppdateras.";
     }
 
     public static class UserMessage {
