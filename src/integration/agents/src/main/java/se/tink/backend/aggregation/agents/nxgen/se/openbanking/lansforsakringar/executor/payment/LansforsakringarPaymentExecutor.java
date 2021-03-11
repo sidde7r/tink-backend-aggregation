@@ -10,7 +10,6 @@ import se.tink.backend.aggregation.agents.exceptions.payment.DebtorValidationExc
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentCancelledException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
-import se.tink.backend.aggregation.agents.exceptions.payment.PaymentValidationException;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.ErrorMessages;
@@ -290,12 +289,8 @@ public class LansforsakringarPaymentExecutor implements PaymentExecutor, Fetchab
             throw new PaymentCancelledException();
         }
 
-        if (paymentStatus == PaymentStatus.REJECTED) {
-            throw new PaymentValidationException("Payment rejected by the bank.");
-        }
-
         if (paymentStatus != PaymentStatus.SIGNED) {
-            throw new PaymentRejectedException("Unexpected payment status: " + paymentStatus);
+            throw new PaymentRejectedException(PaymentRejectedException.MESSAGE);
         }
 
         return paymentResponse;

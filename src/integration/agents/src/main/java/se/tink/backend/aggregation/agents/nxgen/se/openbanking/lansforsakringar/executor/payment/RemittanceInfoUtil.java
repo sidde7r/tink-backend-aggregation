@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar
 
 import com.google.common.base.Strings;
 import se.tink.backend.aggregation.agents.exceptions.payment.ReferenceValidationException;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.ErrorMessages;
+import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException.EndUserMessage;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.PaymentValue;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
@@ -13,7 +13,7 @@ public class RemittanceInfoUtil {
             throws ReferenceValidationException {
 
         if (remittanceInformation == null) {
-            throw new ReferenceValidationException(ErrorMessages.REMITTANCE_INFO_NOT_SET_FOR_GIROS);
+            throw new ReferenceValidationException(EndUserMessage.INVALID_MESSAGE.getKey().get());
         }
 
         switch (remittanceInformation.getType()) {
@@ -21,17 +21,17 @@ public class RemittanceInfoUtil {
                 validateMessageLength(
                         remittanceInformation.getValue(),
                         PaymentValue.MAX_DEST_MSG_LEN_GIROS_UNSTRUCTURED,
-                        ErrorMessages.INVALID_INFO_UNSTRUCTURED);
+                        EndUserMessage.INVALID_MESSAGE.getKey().get());
                 break;
             case OCR:
                 validateMessageLength(
                         remittanceInformation.getValue(),
                         PaymentValue.MAX_DEST_MSG_LEN_GIROS_STRUCTURED,
-                        ErrorMessages.INVALID_INFO_STRUCTURED);
+                        EndUserMessage.INVALID_OCR.getKey().get());
                 break;
             default:
                 throw new ReferenceValidationException(
-                        ErrorMessages.REMITTANCE_INFO_NOT_SET_FOR_GIROS);
+                        EndUserMessage.INVALID_MESSAGE.getKey().get());
         }
     }
 
@@ -43,10 +43,11 @@ public class RemittanceInfoUtil {
                 validateMessageLength(
                         remittanceInformation.getValue(),
                         PaymentValue.MAX_DEST_MSG_LEN_UNSTRUCTURED,
-                        ErrorMessages.INVALID_INFO_UNSTRUCTURED);
+                        EndUserMessage.INVALID_MESSAGE.getKey().get());
                 return remittanceInformation.getValue();
             } else {
-                throw new ReferenceValidationException(ErrorMessages.INVALID_INFO_UNSTRUCTURED);
+                throw new ReferenceValidationException(
+                        EndUserMessage.INVALID_MESSAGE.getKey().get());
             }
         }
 

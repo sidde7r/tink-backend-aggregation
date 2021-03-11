@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.catchThrowable;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.exceptions.payment.DebtorValidationException;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.executor.payment.entities.AccountNumbersResponse;
 import se.tink.libraries.account.AccountIdentifier.Type;
 
@@ -29,7 +28,7 @@ public class AccountNumbersResponseTest {
                                 accountNumbersResponse.checkIfTransactionTypeIsAllowed(
                                         "12345", Type.SE));
         Assertions.assertThat(thrown).isInstanceOf(DebtorValidationException.class);
-        Assertions.assertThat(thrown).hasMessage(ErrorMessages.DEBTOR_ACCOUNT_NOT_FOUND);
+        Assertions.assertThat(thrown).hasMessage(DebtorValidationException.DEFAULT_MESSAGE);
     }
 
     @Test
@@ -43,8 +42,7 @@ public class AccountNumbersResponseTest {
                                 accountNumbersResponse.checkIfTransactionTypeIsAllowed(
                                         "4321", Type.SE));
         Assertions.assertThat(thrown).isInstanceOf(DebtorValidationException.class);
-        Assertions.assertThat(thrown)
-                .hasMessage(ErrorMessages.ILLEGAL_PAYMENT_TYPE_FOR_DEBTOR_ACCOUNT);
+        Assertions.assertThat(thrown).hasMessage(DebtorValidationException.DEFAULT_MESSAGE);
     }
 
     @Test
@@ -58,7 +56,6 @@ public class AccountNumbersResponseTest {
                                 accountNumbersResponse.checkIfTransactionTypeIsAllowed(
                                         "4321", Type.SE_BG));
         Assertions.assertThat(thrown).isInstanceOf(DebtorValidationException.class);
-        Assertions.assertThat(thrown)
-                .hasMessage(ErrorMessages.ILLEGAL_PAYMENT_TYPE_FOR_DEBTOR_ACCOUNT);
+        Assertions.assertThat(thrown).hasMessage(DebtorValidationException.DEFAULT_MESSAGE);
     }
 }

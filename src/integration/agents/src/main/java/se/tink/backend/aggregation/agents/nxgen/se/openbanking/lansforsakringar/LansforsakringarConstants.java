@@ -163,17 +163,10 @@ public abstract class LansforsakringarConstants {
         public static final String REMITTANCE_INFO_NOT_SET_FOR_GIROS =
                 "Only one of remittance information unstructured or structured can be set";
         public static final String INVALID_CREDITOR_ACCOUNT = "Invalid creditor account";
-        public static final String DEBTOR_ACCOUNT_NOT_FOUND = "Debtor account not found";
-        public static final String ILLEGAL_PAYMENT_TYPE_FOR_DEBTOR_ACCOUNT =
-                "Illegal payment type for debtor account";
         public static final String INVALID_REQUESTED_EXECUTION_DATE =
                 "Invalid requested execution date";
-        public static final String REQUESTED_DATE_CAN_NOT_BE_IN_THE_PAST =
-                "Requested execution date can not be in the past";
         public static final String NOT_ENOUGH_FUNDS =
                 "Not enough funds on account to make payments";
-        public static final String STRING_BEFORE_BANK_ERROR_MESSAGE = "\"text\":\"";
-        public static final String STRING_AFTER_BANK_ERROR_MESSAGE = "\"";
     }
 
     public class IdTags {

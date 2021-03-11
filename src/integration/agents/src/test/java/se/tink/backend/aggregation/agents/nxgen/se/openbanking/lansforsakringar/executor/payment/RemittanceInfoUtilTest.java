@@ -6,7 +6,7 @@ import lombok.SneakyThrows;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.exceptions.payment.ReferenceValidationException;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.ErrorMessages;
+import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException.EndUserMessage;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
@@ -36,7 +36,7 @@ public class RemittanceInfoUtilTest {
                                         remittanceInformation));
 
         Assertions.assertThat(thrown).isInstanceOf(ReferenceValidationException.class);
-        Assertions.assertThat(thrown).hasMessage(ErrorMessages.INVALID_INFO_UNSTRUCTURED);
+        Assertions.assertThat(thrown).hasMessage(EndUserMessage.INVALID_MESSAGE.getKey().get());
     }
 
     @Test
@@ -52,7 +52,7 @@ public class RemittanceInfoUtilTest {
                                         remittanceInformation));
 
         Assertions.assertThat(thrown).isInstanceOf(ReferenceValidationException.class);
-        Assertions.assertThat(thrown).hasMessage(ErrorMessages.INVALID_INFO_UNSTRUCTURED);
+        Assertions.assertThat(thrown).hasMessage(EndUserMessage.INVALID_MESSAGE.getKey().get());
     }
 
     @SneakyThrows
@@ -88,7 +88,7 @@ public class RemittanceInfoUtilTest {
                                         remittanceInformation));
 
         Assertions.assertThat(thrown).isInstanceOf(ReferenceValidationException.class);
-        Assertions.assertThat(thrown).hasMessage(ErrorMessages.INVALID_INFO_UNSTRUCTURED);
+        Assertions.assertThat(thrown).hasMessage(EndUserMessage.INVALID_MESSAGE.getKey().get());
     }
 
     @Test
@@ -106,7 +106,7 @@ public class RemittanceInfoUtilTest {
                                         remittanceInformation));
 
         Assertions.assertThat(thrown).isInstanceOf(ReferenceValidationException.class);
-        Assertions.assertThat(thrown).hasMessage(ErrorMessages.INVALID_INFO_STRUCTURED);
+        Assertions.assertThat(thrown).hasMessage(EndUserMessage.INVALID_OCR.getKey().get());
     }
 
     @Test
@@ -122,7 +122,7 @@ public class RemittanceInfoUtilTest {
                                         remittanceInformation));
 
         Assertions.assertThat(thrown).isInstanceOf(ReferenceValidationException.class);
-        Assertions.assertThat(thrown).hasMessage(ErrorMessages.REMITTANCE_INFO_NOT_SET_FOR_GIROS);
+        Assertions.assertThat(thrown).hasMessage(EndUserMessage.INVALID_MESSAGE.getKey().get());
     }
 
     private RemittanceInformation getRemittanceInformation(
