@@ -252,3 +252,22 @@ spec:
       summary: Agent <{ $labels.className }> has failed over 20%
         of its login attempts the past 60 minutes.
       tags: {{ .Values.tags }}
+
+  ### Auth error
+  - alert: AuthErrorSE
+    expr: |
+      # Auth error above 90%
+      (sum(increase(tink_agent_login_total{action=~"login|is-logged-in", outcome=~"cancelled|failed|unavailable", market="SE", provider_type!="test"}[30m])) by (action,className,provider)
+                / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="SE", provider_type!="test"}[30m])) by (action,className,provider) >0.90)
+       and sum(increase(tink_agent_login_total{market="SE", provider_type!="test"}[30m])) by (action,className,provider) > 10
+    for: 5m
+    labels:
+      severity: urgent
+      priority: P1
+      who: integration-thundercats
+    annotations:
+      description: {{ .Values.kibanaLink }}
+        {{ .Values.grafanaLink }}
+      summary: Auth error rate is above 90% ( <{ $value }> ) for <{ $labels.className }>
+        the last 30 minutes.
+      tags: {{ .Values.tags }}
