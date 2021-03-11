@@ -49,7 +49,7 @@ public final class SantanderV31Agent extends UkOpenBankingBaseAgent {
                         .withOrganisationId(SantanderConstants.ORGANISATION_ID)
                         .withApiBaseURL(SantanderConstants.AIS_API_URL)
                         .withWellKnownURL(SantanderConstants.WELL_KNOWN_URL)
-                        .withPartyEndpoints(PartyEndpoint.IDENTITY_DATA_ENDPOINT_PARTY)
+                        .withPartyEndpoints(PartyEndpoint.PARTY)
                         .build();
     }
 

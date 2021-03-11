@@ -16,8 +16,9 @@ import se.tink.backend.aggregation.agents.framework.assertions.entities.AgentCon
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.AgentWireMockPaymentTest;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.command.PaymentGBCommand;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockrefresh.AgentWireMockRefreshTest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.PartyDataStorage;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.ScaExpirationValidator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingV31Constants;
-import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.MonzoConstants;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationReader;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.libraries.credentials.service.RefreshableItem;
@@ -139,17 +140,16 @@ public class MonzoAgentWiremockTest {
      * auto authentication data will be retrieved from persistent storage
      */
     @Test
-    public void restoreIdentityData() throws Exception {
+    public void restoreParty() throws Exception {
         // Given
-        final String wireMockServerFilePath = RESOURCES_PATH + "restore-identity-data.aap";
-        final String wireMockContractFilePath =
-                RESOURCES_PATH + "restore-identity-data-contract.json";
+        final String wireMockServerFilePath = RESOURCES_PATH + "restore-party.aap";
+        final String wireMockContractFilePath = RESOURCES_PATH + "restore-party-contract.json";
 
         final AgentContractEntity expected =
                 new AgentContractEntitiesJsonFileParser()
                         .parseContractOnBasisOfFile(wireMockContractFilePath);
 
-        final String identityDataV31Entity =
+        final String party =
                 "{\"PartyId\": \"user_11119x3OpXVihQdEO1EoXC\", \"Name\": \"John Tinker\", \"FullLegalName\":\"John The Tinker2\"}";
 
         final AgentWireMockRefreshTest agentWireMockRefreshTest =
@@ -160,14 +160,14 @@ public class MonzoAgentWiremockTest {
                         .withConfigFile(AgentsServiceConfigurationReader.read(configFilePath))
                         .testAutoAuthentication()
                         .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
+                        .addCallbackData("code", "DUMMY_ACCESS_TOKEN2")
                         .addPersistentStorageData(
                                 UkOpenBankingV31Constants.PersistentStorageKeys.AIS_ACCESS_TOKEN,
                                 EXPIRED_OAUTH2_TOKEN)
                         .addPersistentStorageData(
-                                UkOpenBankingV31Constants.PersistentStorageKeys.LAST_SCA_TIME,
+                                ScaExpirationValidator.LAST_SCA_TIME,
                                 LocalDateTime.now().minusMinutes(6).toString())
-                        .addPersistentStorageData(
-                                MonzoConstants.RECENT_IDENTITY_DATA, identityDataV31Entity)
+                        .addPersistentStorageData(PartyDataStorage.RECENT_PARTY_DATA, party)
                         .enableHttpDebugTrace()
                         .enableDataDumpForContractFile()
                         .build();

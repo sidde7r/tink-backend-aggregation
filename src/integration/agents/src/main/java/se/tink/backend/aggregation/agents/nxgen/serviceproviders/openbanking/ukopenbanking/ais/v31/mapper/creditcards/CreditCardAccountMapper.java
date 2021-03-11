@@ -11,7 +11,7 @@ import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountBalanceEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountIdentifierEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.IdentityDataV31Entity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.PartyV31Entity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.AccountMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.identifier.IdentifierMapper;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
@@ -35,7 +35,7 @@ public class CreditCardAccountMapper implements AccountMapper<CreditCardAccount>
     public Optional<CreditCardAccount> map(
             AccountEntity account,
             Collection<AccountBalanceEntity> balances,
-            Collection<IdentityDataV31Entity> parties) {
+            Collection<PartyV31Entity> parties) {
 
         AccountIdentifierEntity cardIdentifier =
                 identifierMapper.getCreditCardIdentifier(account.getIdentifiers());
@@ -84,9 +84,9 @@ public class CreditCardAccountMapper implements AccountMapper<CreditCardAccount>
     }
 
     private Collection<String> collectHolders(
-            AccountIdentifierEntity primaryIdentifier, Collection<IdentityDataV31Entity> parties) {
+            AccountIdentifierEntity primaryIdentifier, Collection<PartyV31Entity> parties) {
         return Stream.ofAll(parties)
-                .map(IdentityDataV31Entity::getName)
+                .map(PartyV31Entity::getName)
                 .append(primaryIdentifier.getOwnerName())
                 .filter(Objects::nonNull)
                 .distinct()

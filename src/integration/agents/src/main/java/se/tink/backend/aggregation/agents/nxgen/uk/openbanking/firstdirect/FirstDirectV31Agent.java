@@ -61,7 +61,7 @@ public final class FirstDirectV31Agent extends UkOpenBankingBaseAgent {
                         .withOrganisationId(FirstDirectConstants.ORGANISATION_ID)
                         .withApiBaseURL(FirstDirectConstants.AIS_API_URL)
                         .withWellKnownURL(FirstDirectConstants.WELL_KNOWN_URL)
-                        .withPartyEndpoints(PartyEndpoint.IDENTITY_DATA_ENDPOINT_ACCOUNT_ID_PARTY)
+                        .withPartyEndpoints(PartyEndpoint.ACCOUNT_ID_PARTY)
                         .build();
         pisConfig =
                 new UkOpenBankingPisConfiguration(

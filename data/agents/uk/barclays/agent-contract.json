@@ -32,7 +32,8 @@
             "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
             "balances": [],
             "availableCredit": 0.0,
-            "balance": 30.0
+            "balance": 30.0,
+            "holderName": "Little Big Digital Ltd"
         }
     ],
     "transactions": [

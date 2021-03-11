@@ -13,35 +13,51 @@ import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.UkOpenBankingApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.IdentityDataV31Entity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.UkOpenBankingAisConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.PartyV31Entity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.fixtures.PartyFixtures;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.fixtures.TransactionalAccountFixtures;
 
-public class PartyDataV31FetcherTest {
+public class PartyV31FetcherTest {
 
-    private PartyDataFetcher partyDataFetcher;
-    private UkOpenBankingAisConfiguration aisConfiguration;
+    private PartyV31Fetcher fetcher;
     private UkOpenBankingApiClient apiClient;
+    private UkOpenBankingAisConfig aisConfig;
 
     @Before
     public void setUp() {
         apiClient = mock(UkOpenBankingApiClient.class);
-        aisConfiguration = mock(UkOpenBankingAisConfiguration.class);
-        partyDataFetcher = new PartyDataV31Fetcher(apiClient, aisConfiguration);
+        aisConfig = mock(UkOpenBankingAisConfig.class);
+        fetcher = new PartyV31Fetcher(apiClient, aisConfig);
+    }
+
+    @Test
+    public void fetchPartySuccessfully() {
+        // given
+        PartyV31Entity expectedParty = PartyFixtures.party();
+
+        // when
+        when(aisConfig.isPartyEndpointEnabled()).thenReturn(true);
+        when(apiClient.fetchV31Party()).thenReturn(Optional.of(expectedParty));
+
+        Optional<PartyV31Entity> result = fetcher.fetchParty();
+
+        // then
+        assertThat(result.get().getName()).isEqualTo(expectedParty.getName());
+        assertThat(result.get()).isEqualTo(expectedParty);
     }
 
     @Test
     public void whenPartiesEndpointIsEnabled_fetchDataFromIt() {
         // given
         AccountEntity account = TransactionalAccountFixtures.currentAccount();
-        List<IdentityDataV31Entity> partiesResponse = PartyFixtures.parties();
+        List<PartyV31Entity> partiesResponse = PartyFixtures.parties();
 
         // when
         when(apiClient.fetchV31Parties(eq(account.getAccountId()))).thenReturn(partiesResponse);
-        when(aisConfiguration.isAccountPartiesEndpointEnabled()).thenReturn(true);
-        when(aisConfiguration.isAccountPartyEndpointEnabled()).thenReturn(true);
-        List<IdentityDataV31Entity> partyListResult = partyDataFetcher.fetchAccountParties(account);
+        when(aisConfig.isAccountPartiesEndpointEnabled()).thenReturn(true);
+        when(aisConfig.isAccountPartyEndpointEnabled()).thenReturn(true);
+        List<PartyV31Entity> partyListResult = fetcher.fetchAccountParties(account);
 
         // then
         assertThat(partyListResult).isEqualTo(partiesResponse);
@@ -50,16 +66,15 @@ public class PartyDataV31FetcherTest {
     @Test
     public void whenPartiesEndpointIsDisabled_fetchDataFromPartyEndpoint() {
         // given
-        IdentityDataV31Entity partyResponse = PartyFixtures.party();
+        PartyV31Entity partyResponse = PartyFixtures.party();
         AccountEntity account = TransactionalAccountFixtures.currentAccount();
 
         // when
         when(apiClient.fetchV31Party(eq(account.getAccountId())))
                 .thenReturn(Optional.of(partyResponse));
-        when(aisConfiguration.isAccountPartiesEndpointEnabled()).thenReturn(false);
-        when(aisConfiguration.isAccountPartyEndpointEnabled()).thenReturn(true);
-        List<IdentityDataV31Entity> singlePartyResult =
-                partyDataFetcher.fetchAccountParties(account);
+        when(aisConfig.isAccountPartiesEndpointEnabled()).thenReturn(false);
+        when(aisConfig.isAccountPartyEndpointEnabled()).thenReturn(true);
+        List<PartyV31Entity> singlePartyResult = fetcher.fetchAccountParties(account);
 
         // then
         assertThat(singlePartyResult).isEqualTo(Collections.singletonList(partyResponse));
@@ -68,10 +83,9 @@ public class PartyDataV31FetcherTest {
     @Test
     public void whenAccountPartiesEndpointsAreDisabled_emptyListIsReturned() {
         // when
-        when(aisConfiguration.isAccountPartyEndpointEnabled()).thenReturn(false);
-        when(aisConfiguration.isAccountPartiesEndpointEnabled()).thenReturn(false);
-        List<IdentityDataV31Entity> result =
-                partyDataFetcher.fetchAccountParties(mock(AccountEntity.class));
+        when(aisConfig.isAccountPartyEndpointEnabled()).thenReturn(false);
+        when(aisConfig.isAccountPartiesEndpointEnabled()).thenReturn(false);
+        List<PartyV31Entity> result = fetcher.fetchAccountParties(mock(AccountEntity.class));
 
         // then
         verifyZeroInteractions(apiClient);

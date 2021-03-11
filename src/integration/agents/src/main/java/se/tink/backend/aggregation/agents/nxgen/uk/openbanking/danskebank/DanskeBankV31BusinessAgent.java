@@ -38,7 +38,7 @@ public class DanskeBankV31BusinessAgent extends UkOpenBankingBaseAgent {
                         .withOrganisationId(DanskeBankConstants.ORGANISATION_ID)
                         .withApiBaseURL(DanskeBankConstants.AIS_API_URL)
                         .withWellKnownURL(DanskeBankConstants.BUSINESS_WELL_KNOWN_URL)
-                        .withPartyEndpoints(PartyEndpoint.IDENTITY_DATA_ENDPOINT_PARTY)
+                        .withPartyEndpoints(PartyEndpoint.PARTY)
                         .build();
     }
 

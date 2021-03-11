@@ -88,17 +88,17 @@ public class UkOpenBankingAisConfiguration implements UkOpenBankingAisConfig {
 
     @Override
     public boolean isPartyEndpointEnabled() {
-        return partyEndpoints.contains(PartyEndpoint.IDENTITY_DATA_ENDPOINT_PARTY);
+        return partyEndpoints.contains(PartyEndpoint.PARTY);
     }
 
     @Override
     public boolean isAccountPartiesEndpointEnabled() {
-        return partyEndpoints.contains(PartyEndpoint.IDENTITY_DATA_ENDPOINT_ACCOUNT_ID_PARTIES);
+        return partyEndpoints.contains(PartyEndpoint.ACCOUNT_ID_PARTIES);
     }
 
     @Override
     public boolean isAccountPartyEndpointEnabled() {
-        return partyEndpoints.contains(PartyEndpoint.IDENTITY_DATA_ENDPOINT_ACCOUNT_ID_PARTY);
+        return partyEndpoints.contains(PartyEndpoint.ACCOUNT_ID_PARTY);
     }
 
     @Override

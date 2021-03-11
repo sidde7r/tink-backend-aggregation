@@ -86,8 +86,8 @@ public class UkOpenBankingV31Constants implements UkOpenBankingConstants {
 
     public static class PersistentStorageKeys {
         public static final String AIS_ACCESS_TOKEN = "open_id_ais_access_token";
-        public static final String LAST_SCA_TIME = "last_SCA_time";
-        static final String AIS_ACCOUNT_PERMISSIONS_GRANTED = "ais_account_permissions_granted";
+        public static final String AIS_ACCOUNT_PERMISSIONS_GRANTED =
+                "ais_account_permissions_granted";
         public static final String AIS_ACCOUNT_CONSENT_ID = "ais_account_consent_id";
     }
 }
