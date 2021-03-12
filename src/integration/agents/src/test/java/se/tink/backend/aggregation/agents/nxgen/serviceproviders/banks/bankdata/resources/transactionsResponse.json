@@ -1,0 +1,80 @@
+{
+    "accountBalance": {
+        "available": 0.0,
+        "balance": -20.0
+    },
+    "lstTransactions": [
+        {
+            "account": {
+                "accountNo": "0001111111",
+                "regNo": "1111"
+            },
+            "attachment": false,
+            "balance": -20.0,
+            "balanced": false,
+            "canVerify": false,
+            "currency": "DKK",
+            "flagged": false,
+            "identifier": "2017-09-18-02.57.36.729033",
+            "mainAmount": -10.0,
+            "message": false,
+            "newMaxSplitAmount": 10.0,
+            "outOfSyncTransaction": false,
+            "parentCategoryId": 411,
+            "partial": false,
+            "reservation": false,
+            "split": false,
+            "splits": [
+                {
+                    "amount": 10.0,
+                    "categoryId": 459,
+                    "transactionSplitId": 111111111
+                }
+            ],
+            "status": 1,
+            "stoppable": false,
+            "tags": [],
+            "text": "Oprettelse af Basiskonto",
+            "transactionDate": "18.09.2017",
+            "unCleared": false,
+            "valeurDate": "18.09.2017"
+        },
+        {
+            "account": {
+                "accountNo": "0001111111",
+                "regNo": "1111"
+            },
+            "attachment": false,
+            "balance": -10.0,
+            "balanced": false,
+            "canVerify": false,
+            "currency": "DKK",
+            "flagged": false,
+            "identifier": "2017-09-17-00.05.58.215494",
+            "mainAmount": -10.0,
+            "message": false,
+            "newMaxSplitAmount": 10.0,
+            "outOfSyncTransaction": false,
+            "parentCategoryId": 411,
+            "partial": false,
+            "reservation": false,
+            "split": false,
+            "splits": [
+                {
+                    "amount": 10.0,
+                    "transactionSplitId": 111111111
+                }
+            ],
+            "status": 1,
+            "stoppable": false,
+            "tags": [],
+            "text": "MasterDebit-Årlig Standard",
+            "transactionDate": "17.09.2017",
+            "unCleared": false,
+            "valeurDate": "17.09.2017"
+        }
+    ],
+    "moreTransactionsAvailable": false,
+    "numOfTransactions": 2,
+    "reservedAmount": 0
+}

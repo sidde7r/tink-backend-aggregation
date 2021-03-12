@@ -56,6 +56,8 @@ public class BankdataApiClient {
 
     private URL exchangeNemIdUrl;
 
+    private HttpResponse accountsHttpResponse;
+
     public BankdataApiClient(TinkHttpClient client, Provider provider) {
         this.client = client;
         this.bankdataBankNumber = provider.getPayload();
@@ -68,7 +70,18 @@ public class BankdataApiClient {
     }
 
     public GetAccountsResponse getAccounts() {
-        return createRequest(BankdataConstants.Url.ACCOUNTS).get(GetAccountsResponse.class);
+        return getAccountsResponseAs(GetAccountsResponse.class);
+    }
+
+    public GetLoansResponse getLoans() {
+        return getAccountsResponseAs(GetLoansResponse.class);
+    }
+
+    private <T> T getAccountsResponseAs(Class<T> klass) {
+        if (accountsHttpResponse == null) {
+            accountsHttpResponse = createRequest(Url.ACCOUNTS).get(HttpResponse.class);
+        }
+        return accountsHttpResponse.getBody(klass);
     }
 
     public GetTransactionsResponse getTransactions(GetTransactionsRequest getTransactionsRequest) {
@@ -112,10 +125,6 @@ public class BankdataApiClient {
 
         return createRequest(BankdataConstants.Url.ASSET_DETAILS)
                 .post(AssetDetailsResponse.class, request);
-    }
-
-    public GetLoansResponse getLoans() {
-        return createRequest(BankdataConstants.Url.LOANS).get(GetLoansResponse.class);
     }
 
     private RequestBuilder createRequest(URL url) {

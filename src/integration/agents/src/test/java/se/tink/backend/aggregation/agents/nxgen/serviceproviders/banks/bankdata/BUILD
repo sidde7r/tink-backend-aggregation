@@ -4,13 +4,7 @@ junit_test(
     name = "bankdata",
     srcs = glob(["**/*.java"]),
     data = [
-        "//data:aggregation_test",
-        "//data:provider_configurations",
-        "//etc:development",
-    ],
-    tags = [
-        "external",
-        "manual",
+        "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/banks/bankdata/resources",
     ],
     visibility = ["//visibility:public"],
     deps = [

@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.List;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.TestDataReader;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
 public class GetAccountsResponseTest {
@@ -14,7 +15,9 @@ public class GetAccountsResponseTest {
 
     @Test
     public void parseGetAccountsResponse() {
-        GetAccountsResponse getAccountsResponse = GetAccountsResponseTestData.getTestData();
+        GetAccountsResponse getAccountsResponse =
+                TestDataReader.readFromFile(
+                        TestDataReader.ACCOUNTS_RESP, GetAccountsResponse.class);
 
         assertThat(getAccountsResponse).isNotNull();
         assertThat(getAccountsResponse.getAccounts()).hasSize(NO_OF_ACCOUNTS_IN_RESPONSE);
