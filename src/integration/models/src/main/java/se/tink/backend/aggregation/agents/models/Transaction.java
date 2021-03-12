@@ -325,6 +325,7 @@ public class Transaction implements Comparable<Transaction>, Cloneable {
                 .add("merchantCategoryCode", merchantCategoryCode)
                 .add("transactionReference", transactionReference)
                 .add("providerMarket", providerMarket)
+                .add("transactionDates", transactionDates)
                 .toString();
     }
 }
