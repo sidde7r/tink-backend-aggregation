@@ -542,7 +542,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
                     .meter(SUSPICIOUS_NUMBER_SERIES.label(AGENT, agent).label("label", label))
                     .inc();
             logger.warn(
-                    "Found suspicous number series ({}) from {}, credentialsId: {}.",
+                    "Found suspicious number series ({}) from {}, credentialsId: {}.",
                     label,
                     agent,
                     request.getCredentials().getId());
