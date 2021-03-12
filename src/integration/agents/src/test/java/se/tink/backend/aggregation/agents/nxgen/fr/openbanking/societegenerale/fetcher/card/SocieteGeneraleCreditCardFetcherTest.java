@@ -33,10 +33,11 @@ public class SocieteGeneraleCreditCardFetcherTest {
         // then
         CreditCardAccount creditCardAccount = response.iterator().next();
         assertThat(response.size()).isEqualTo(1);
-        assertThat(creditCardAccount.getExactBalance()).isEqualTo(ExactCurrencyAmount.of(0, "EUR"));
+        assertThat(creditCardAccount.getExactBalance()).isEqualTo(ExactCurrencyAmount.of(9, "EUR"));
         assertThat(creditCardAccount.getExactAvailableCredit())
-                .isEqualTo(ExactCurrencyAmount.of(0, "EUR"));
-        assertThat(creditCardAccount.getName()).isEqualTo("CB Mastercard");
+                .isEqualTo(ExactCurrencyAmount.of(9, "EUR"));
+        assertThat(creditCardAccount.getName())
+                .isEqualTo("CB Mastercard numéro **** **** **** prochaine imputation ****-**-**");
         assertThat(creditCardAccount.getCardModule().getCardNumber()).isEqualTo("213123213123");
         assertThat(creditCardAccount.getAccountNumber()).isEqualTo("9832749872938943875938");
     }

@@ -120,4 +120,8 @@ public final class SocieteGeneraleConstants {
         public static final String POST_SIGN_STEP = "post_sign_state";
         public static final String CONFIRM_PAYMENT_STEP = "confirm_payment_step";
     }
+
+    public static class CardDetails {
+        public static final String CREDIT_CARD = "Carte à débit différé";
+    }
 }
