@@ -81,7 +81,12 @@ public class NemIdVerifyLoginResponseStep {
                 NemId2FAMethodScreen.getScreenBySelector(elementSelector);
         if (maybe2FAScreen.isPresent()) {
             // some 2FA method is ready to use
-            return maybe2FAScreen.get();
+            NemId2FAMethodScreen nemId2FAMethodScreen = maybe2FAScreen.get();
+            log.info(
+                    "{}[NemIdVerifyLoginResponseStep] Some 2FA method ready to use {}",
+                    NEM_ID_PREFIX,
+                    nemId2FAMethodScreen.getSupportedMethod().getUserFriendlyName().get());
+            return nemId2FAMethodScreen;
         }
         if (elementSelector == NOT_EMPTY_NEMID_TOKEN) {
             /*

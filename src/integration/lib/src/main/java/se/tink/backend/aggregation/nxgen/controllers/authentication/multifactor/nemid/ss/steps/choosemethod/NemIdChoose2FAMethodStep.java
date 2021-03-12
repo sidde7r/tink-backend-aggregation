@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.steps.choosemethod;
 
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.NEM_ID_PREFIX;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.steps.choosemethod.NemIdDetect2FAMethodsResult.ResultType.CAN_ONLY_USE_DEFAULT_METHOD;
 
 import com.google.inject.Inject;
@@ -37,7 +38,13 @@ public class NemIdChoose2FAMethodStep {
             Credentials credentials, NemIdDetect2FAMethodsResult detect2FAMethodsResult) {
 
         if (detect2FAMethodsResult.getResultType() == CAN_ONLY_USE_DEFAULT_METHOD) {
-            return detect2FAMethodsResult.getCurrentScreen().getSupportedMethod();
+            NemId2FAMethod supportedMethod =
+                    detect2FAMethodsResult.getCurrentScreen().getSupportedMethod();
+            log.info(
+                    "{}[NemIdChoose2FAMethodStep] User can use only default method {}",
+                    NEM_ID_PREFIX,
+                    supportedMethod.getUserFriendlyName().get());
+            return supportedMethod;
         }
 
         return askUserToChoose2FAMethodStep.askUserToChoose2FAMethod(

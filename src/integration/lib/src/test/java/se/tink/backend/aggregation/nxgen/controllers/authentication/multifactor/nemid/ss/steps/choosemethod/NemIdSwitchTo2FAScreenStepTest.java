@@ -48,7 +48,6 @@ public class NemIdSwitchTo2FAScreenStepTest {
                 detect2FAMethodsResult, screenForMethodChosenByUser);
 
         // then
-        verifyWaits10SecondsForScreenToLoad(screenForMethodChosenByUser);
         mocksToVerifyInOrder.verifyNoMoreInteractions();
     }
 
@@ -78,7 +77,6 @@ public class NemIdSwitchTo2FAScreenStepTest {
                 detect2FAMethodsResult, screenForMethodChosenByUser);
 
         // then
-        verifyWaits10SecondsForScreenToLoad(screenForMethodChosenByUser);
         mocksToVerifyInOrder.verifyNoMoreInteractions();
     }
 
@@ -115,7 +113,7 @@ public class NemIdSwitchTo2FAScreenStepTest {
         mocksToVerifyInOrder
                 .verify(driverWrapper)
                 .clickButton(NEMID_LINK_TO_SELECT_DIFFERENT_2FA_METHOD);
-        verifyWaits10SecondsForScreenToLoad(screenForMethodChosenByUser);
+        verifyWaits20SecondsForScreenToLoad(screenForMethodChosenByUser);
         mocksToVerifyInOrder.verifyNoMoreInteractions();
     }
 
@@ -150,7 +148,6 @@ public class NemIdSwitchTo2FAScreenStepTest {
 
         // then
         mocksToVerifyInOrder.verify(driverWrapper).clickButton(NEMID_CLOSE_SELECT_METHOD_POPUP);
-        verifyWaits10SecondsForScreenToLoad(screenForMethodChosenByUser);
         mocksToVerifyInOrder.verifyNoMoreInteractions();
     }
 
@@ -189,7 +186,7 @@ public class NemIdSwitchTo2FAScreenStepTest {
 
         // then
         mocksToVerifyInOrder.verify(driverWrapper).clickButton(buttonExpectedToBeClicked);
-        verifyWaits10SecondsForScreenToLoad(screenForMethodChosenByUser);
+        verifyWaits20SecondsForScreenToLoad(screenForMethodChosenByUser);
         mocksToVerifyInOrder.verifyNoMoreInteractions();
     }
 
@@ -212,10 +209,10 @@ public class NemIdSwitchTo2FAScreenStepTest {
                 .toArray(Object[]::new);
     }
 
-    private void verifyWaits10SecondsForScreenToLoad(NemId2FAMethodScreen screen) {
+    private void verifyWaits20SecondsForScreenToLoad(NemId2FAMethodScreen screen) {
         mocksToVerifyInOrder
                 .verify(driverWrapper)
-                .waitForElement(screen.getSelectorToDetectScreen(), 10);
+                .waitForElement(screen.getSelectorToDetectScreen(), 20);
     }
 
     private Set<NemId2FAMethod> getAllMethodsAsSet() {
