@@ -41,4 +41,8 @@ public final class SodexoConstants {
         public static final String SURNAME = "SURNAME";
         public static final String CARD_NUMBER = "CARD_NUMBER";
     }
+
+    public static class ErrorMessages {
+        public static final String AUTH_ERROR = "A autenticação falhou.";
+    }
 }
