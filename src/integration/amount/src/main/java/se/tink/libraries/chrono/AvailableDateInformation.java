@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.InstantSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
+import com.google.common.base.MoreObjects;
 import java.time.Instant;
 import java.time.LocalDate;
 
@@ -41,5 +42,13 @@ public class AvailableDateInformation {
 
     public void setInstant(Instant instant) {
         this.instant = instant;
+    }
+
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this)
+                .add("date", date)
+                .add("instant", instant)
+                .toString();
     }
 }
