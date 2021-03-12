@@ -174,6 +174,9 @@ public class AccountDetailsResponseTest {
                 MarketCode.NO.name(),
                 Collections.singletonList(FIRST_ACCOUNT_OWNER)
             },
+            new Object[] {null, MarketCode.NO.name(), Collections.emptyList()},
+            new Object[] {null, MarketCode.DK.name(), Collections.emptyList()},
+            new Object[] {null, MarketCode.SE.name(), Collections.emptyList()},
         };
     }
 }
