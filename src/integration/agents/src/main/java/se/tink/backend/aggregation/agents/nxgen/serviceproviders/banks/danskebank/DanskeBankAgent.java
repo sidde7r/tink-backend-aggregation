@@ -21,6 +21,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeban
 import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshController;
@@ -61,6 +62,7 @@ public abstract class DanskeBankAgent<MarketSpecificApiClient extends DanskeBank
         this.deviceId = Hash.sha1AsHex(this.credentials.getField(Field.Key.USERNAME) + "-TINK");
         this.accountEntityMapper = accountEntityMapper;
         this.accountDetailsFetcher = new DanskeBankAccountDetailsFetcher(apiClient);
+        LocalDateTimeSource localDateTimeSource = agentComponentProvider.getLocalDateTimeSource();
 
         this.investmentRefreshController =
                 new InvestmentRefreshController(
@@ -79,12 +81,13 @@ public abstract class DanskeBankAgent<MarketSpecificApiClient extends DanskeBank
                                 accountEntityMapper,
                                 false,
                                 accountDetailsFetcher),
-                        createTransactionFetcherController());
+                        createTransactionFetcherController(localDateTimeSource));
 
-        this.creditCardRefreshController = constructCreditCardRefreshController();
+        this.creditCardRefreshController =
+                constructCreditCardRefreshController(localDateTimeSource);
 
         this.transactionalAccountRefreshController =
-                constructTransactionalAccountRefreshController();
+                constructTransactionalAccountRefreshController(localDateTimeSource);
 
         // Must add the filter here because `configureHttpClient` is called before the agent
         // constructor
@@ -123,7 +126,8 @@ public abstract class DanskeBankAgent<MarketSpecificApiClient extends DanskeBank
         return transactionalAccountRefreshController.fetchSavingsTransactions();
     }
 
-    private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
+    private TransactionalAccountRefreshController constructTransactionalAccountRefreshController(
+            LocalDateTimeSource localDateTimeSource) {
         return new TransactionalAccountRefreshController(
                 this.metricRefreshController,
                 this.updateController,
@@ -132,7 +136,7 @@ public abstract class DanskeBankAgent<MarketSpecificApiClient extends DanskeBank
                         this.configuration,
                         accountEntityMapper,
                         accountDetailsFetcher),
-                createTransactionFetcherController());
+                createTransactionFetcherController(localDateTimeSource));
     }
 
     @Override
@@ -145,7 +149,8 @@ public abstract class DanskeBankAgent<MarketSpecificApiClient extends DanskeBank
         return creditCardRefreshController.fetchCreditCardTransactions();
     }
 
-    private CreditCardRefreshController constructCreditCardRefreshController() {
+    private CreditCardRefreshController constructCreditCardRefreshController(
+            LocalDateTimeSource localDateTimeSource) {
         return new CreditCardRefreshController(
                 this.metricRefreshController,
                 this.updateController,
@@ -154,7 +159,7 @@ public abstract class DanskeBankAgent<MarketSpecificApiClient extends DanskeBank
                         this.configuration,
                         accountEntityMapper,
                         accountDetailsFetcher),
-                createTransactionFetcherController());
+                createTransactionFetcherController(localDateTimeSource));
     }
 
     @Override
@@ -177,14 +182,16 @@ public abstract class DanskeBankAgent<MarketSpecificApiClient extends DanskeBank
         return loanRefreshController.fetchLoanTransactions();
     }
 
-    private <A extends Account>
-            TransactionFetcherController<A> createTransactionFetcherController() {
+    private <A extends Account> TransactionFetcherController<A> createTransactionFetcherController(
+            LocalDateTimeSource localDateTimeSource) {
         DanskeBankMultiTransactionsFetcher<A> transactionFetcher =
                 new DanskeBankMultiTransactionsFetcher<>(
                         this.apiClient, this.configuration.getLanguageCode());
         return new TransactionFetcherController<>(
                 this.transactionPaginationHelper,
-                new TransactionDatePaginationController.Builder<>(transactionFetcher).build(),
+                new TransactionDatePaginationController.Builder<>(transactionFetcher)
+                        .setLocalDateTimeSource(localDateTimeSource)
+                        .build(),
                 transactionFetcher);
     }
 
