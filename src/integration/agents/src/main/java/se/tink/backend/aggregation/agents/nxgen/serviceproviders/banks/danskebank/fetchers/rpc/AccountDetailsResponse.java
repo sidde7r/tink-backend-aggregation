@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.ListUtils;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.rpc.AbstractResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -25,7 +26,7 @@ public class AccountDetailsResponse extends AbstractResponse {
     private static final Pattern EXTRACT_ACCOUNT_OWNERS_PATTERN = Pattern.compile("- (.*)");
     private static final int SCALE = 8;
     private AccountInterestDetailsEntity accountInterestDetails;
-    private List<String> accountOwners = Collections.emptyList();
+    private List<String> accountOwners;
     private BigDecimal feeAmount;
     private String feeCurrency;
     private String accountType;
@@ -64,7 +65,7 @@ public class AccountDetailsResponse extends AbstractResponse {
     public List<String> getAccountOwners(String marketCode) {
         // We don't know what is returned in Finland
         if (marketCode.equals(MarketCode.DK.name())) {
-            return accountOwners.stream()
+            return ListUtils.emptyIfNull(accountOwners).stream()
                     .filter(StringUtils::isNotBlank)
                     .collect(Collectors.toList());
         } else if (marketCode.equals(MarketCode.NO.name())
@@ -76,7 +77,7 @@ public class AccountDetailsResponse extends AbstractResponse {
 
     private List<String> extractAccountOwners() {
         try {
-            return accountOwners.stream()
+            return ListUtils.emptyIfNull(accountOwners).stream()
                     .filter(StringUtils::isNotBlank)
                     .map(this::extractAccountOwner)
                     .collect(Collectors.toList());
