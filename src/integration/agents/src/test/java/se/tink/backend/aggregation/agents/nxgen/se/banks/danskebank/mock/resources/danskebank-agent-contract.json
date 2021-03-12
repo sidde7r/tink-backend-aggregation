@@ -1,0 +1,382 @@
+{
+    "accounts" : [ {
+        "accountNumber" : "55555555555",
+        "accountExclusion" : "NONE",
+        "exactBalance" : {
+            "currencyCode" : "SEK",
+            "doubleValue" : 0.97,
+            "exactValue" : 0.97,
+            "unscaledValue" : 97,
+            "scale" : 2
+        },
+        "currencyCode" : "SEK",
+        "bankId" : "55555555555",
+        "excluded" : false,
+        "favored" : false,
+        "name" : "Sparkonto XL",
+        "ownership" : 1.0,
+        "type" : "SAVINGS",
+        "userModifiedExcluded" : false,
+        "userModifiedName" : false,
+        "userModifiedType" : false,
+        "identifiers" : "[\"se://55555555555\"]",
+        "closed" : false,
+        "holderName" : "Test Testson",
+        "accountHolder" : {
+            "accountId" : null,
+            "type" : "PERSONAL",
+            "identities" : [ {
+                "name" : "Test Testson",
+                "role" : "HOLDER"
+            } ]
+        },
+        "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
+        "balances" : [ ],
+        "availableCredit" : 0.0,
+        "balance" : 0.97
+    }, {
+        "accountNumber" : "4444444444",
+        "accountExclusion" : "NONE",
+        "exactBalance" : {
+            "currencyCode" : "SEK",
+            "doubleValue" : 0.0,
+            "exactValue" : 0.0,
+            "unscaledValue" : 0,
+            "scale" : 1
+        },
+        "currencyCode" : "SEK",
+        "bankId" : "4444444444",
+        "excluded" : false,
+        "favored" : false,
+        "name" : "Depå",
+        "ownership" : 1.0,
+        "type" : "INVESTMENT",
+        "userModifiedExcluded" : false,
+        "userModifiedName" : false,
+        "userModifiedType" : false,
+        "identifiers" : "[]",
+        "closed" : false,
+        "flags" : "[]",
+        "balances" : [ ],
+        "availableCredit" : 0.0,
+        "balance" : 0.0
+    }, {
+        "accountNumber" : "88888888888",
+        "accountExclusion" : "NONE",
+        "exactBalance" : {
+            "currencyCode" : "SEK",
+            "doubleValue" : 0.98,
+            "exactValue" : 0.98,
+            "unscaledValue" : 98,
+            "scale" : 2
+        },
+        "currencyCode" : "SEK",
+        "bankId" : "88888888888",
+        "excluded" : false,
+        "favored" : false,
+        "name" : "Investeringssparkto.",
+        "ownership" : 1.0,
+        "type" : "SAVINGS",
+        "userModifiedExcluded" : false,
+        "userModifiedName" : false,
+        "userModifiedType" : false,
+        "identifiers" : "[\"se://88888888888\"]",
+        "closed" : false,
+        "holderName" : "Test Testson",
+        "accountHolder" : {
+            "accountId" : null,
+            "type" : "PERSONAL",
+            "identities" : [ {
+                "name" : "Test Testson",
+                "role" : "HOLDER"
+            } ]
+        },
+        "flags" : "[\"DEPOT_CASH_BALANCE\",\"PSD2_PAYMENT_ACCOUNT\"]",
+        "balances" : [ ],
+        "availableCredit" : 0.0,
+        "balance" : 0.98
+    }, {
+        "accountNumber" : "33333333333",
+        "accountExclusion" : "NONE",
+        "exactBalance" : {
+            "currencyCode" : "SEK",
+            "doubleValue" : 0.99,
+            "exactValue" : 0.99,
+            "unscaledValue" : 99,
+            "scale" : 2
+        },
+        "currencyCode" : "SEK",
+        "bankId" : "33333333333",
+        "excluded" : false,
+        "favored" : false,
+        "name" : "Depåkonto",
+        "ownership" : 1.0,
+        "type" : "SAVINGS",
+        "userModifiedExcluded" : false,
+        "userModifiedName" : false,
+        "userModifiedType" : false,
+        "identifiers" : "[\"se://33333333333\"]",
+        "closed" : false,
+        "holderName" : "Test Testson",
+        "accountHolder" : {
+            "accountId" : null,
+            "type" : "PERSONAL",
+            "identities" : [ {
+                "name" : "Test Testson",
+                "role" : "HOLDER"
+            } ]
+        },
+        "flags" : "[\"DEPOT_CASH_BALANCE\",\"PSD2_PAYMENT_ACCOUNT\"]",
+        "balances" : [ ],
+        "availableCredit" : 0.0,
+        "balance" : 0.99
+    }, {
+        "accountNumber" : "22222222222",
+        "accountExclusion" : "NONE",
+        "exactAvailableCredit" : {
+            "currencyCode" : "SEK",
+            "doubleValue" : 0.0,
+            "exactValue" : 0.0,
+            "unscaledValue" : 0,
+            "scale" : 1
+        },
+        "exactBalance" : {
+            "currencyCode" : "SEK",
+            "doubleValue" : 4.31,
+            "exactValue" : 4.31,
+            "unscaledValue" : 431,
+            "scale" : 2
+        },
+        "currencyCode" : "SEK",
+        "bankId" : "22222222222",
+        "excluded" : false,
+        "favored" : false,
+        "name" : "Danske Konto",
+        "ownership" : 1.0,
+        "type" : "CHECKING",
+        "userModifiedExcluded" : false,
+        "userModifiedName" : false,
+        "userModifiedType" : false,
+        "identifiers" : "[]",
+        "closed" : false,
+        "holderName" : "Test Testson",
+        "accountHolder" : {
+            "accountId" : null,
+            "type" : "PERSONAL",
+            "identities" : [ {
+                "name" : "Test Testson",
+                "role" : "HOLDER"
+            } ]
+        },
+        "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
+        "balances" : [ ],
+        "availableCredit" : 0.0,
+        "balance" : 4.31
+    }, {
+        "accountNumber" : "9999999999",
+        "accountExclusion" : "NONE",
+        "exactBalance" : {
+            "currencyCode" : "SEK",
+            "doubleValue" : 0.0,
+            "exactValue" : 0.0,
+            "unscaledValue" : 0,
+            "scale" : 1
+        },
+        "currencyCode" : "SEK",
+        "bankId" : "9999999999",
+        "excluded" : false,
+        "favored" : false,
+        "name" : "Investeringssparkont",
+        "ownership" : 1.0,
+        "type" : "INVESTMENT",
+        "userModifiedExcluded" : false,
+        "userModifiedName" : false,
+        "userModifiedType" : false,
+        "identifiers" : "[]",
+        "closed" : false,
+        "flags" : "[]",
+        "balances" : [ ],
+        "availableCredit" : 0.0,
+        "balance" : 0.0
+    } ],
+    "transactions" : [ {
+        "amount" : -0.03,
+        "date" : 1615460400000,
+        "description" : "Till: 22222222222",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : 1.0,
+        "date" : 1615460400000,
+        "description" : "2489-09-33557",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -0.01,
+        "date" : 1615460400000,
+        "description" : "Till: 22222222222",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : 1.0,
+        "date" : 1615460400000,
+        "description" : "Test Testson",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -0.02,
+        "date" : 1615460400000,
+        "description" : "Till: 22222222222",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : 1.0,
+        "date" : 1615460400000,
+        "description" : "Test Testson",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : 0.01,
+        "date" : 1615460400000,
+        "description" : "Test Testson",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : 0.03,
+        "date" : 1615460400000,
+        "description" : "Test Testson",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : 0.02,
+        "date" : 1615460400000,
+        "description" : "Test Testson",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -1.0,
+        "date" : 1615460400000,
+        "description" : "Till: 88888888888",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -1.0,
+        "date" : 1615460400000,
+        "description" : "1212-05-16677",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    }, {
+        "amount" : -1.0,
+        "date" : 1615460400000,
+        "description" : "Till: 33333333333",
+        "internalPayload" : { },
+        "originalAmount" : 0.0,
+        "payload" : { },
+        "pending" : false,
+        "timestamp" : 0,
+        "type" : "DEFAULT",
+        "upcoming" : false,
+        "externalSystemIds" : { },
+        "transactionDates" : [ ]
+    } ],
+    "identityData" : {
+        "nameElements" : [ {
+            "type" : "FIRST_NAME",
+            "value" : "Test"
+        }, {
+            "type" : "SURNAME",
+            "value" : "Testson"
+        } ],
+        "dateOfBirth" : {
+            "year" : 1999,
+            "month" : "JANUARY",
+            "monthValue" : 1,
+            "dayOfMonth" : 1,
+            "dayOfWeek" : "FRIDAY",
+            "leapYear" : false,
+            "dayOfYear" : 1,
+            "chronology" : {
+                "calendarType" : "iso8601",
+                "id" : "ISO"
+            },
+            "era" : "CE"
+        }
+    }
+}
