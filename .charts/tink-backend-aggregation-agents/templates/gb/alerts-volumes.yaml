@@ -4,6 +4,7 @@ metadata:
   name: alerts-gb-volumes
   namespace: agents
 spec:
+  interval: 4h
   rules:
 
     - alert: LoginVolumeDropOver20%_GB
