@@ -192,6 +192,9 @@ public class SwedbankDefaultApiClient {
         } catch (HttpResponseException hre) {
             if (SwedbankApiErrors.isSessionTerminated(hre)) {
                 throw BankServiceError.SESSION_TERMINATED.exception(hre);
+            } else if (SwedbankApiErrors.isAppTooOld(hre)) {
+                // see SwedbankSEConstants
+                throw new IllegalStateException("App too old, update API keys.");
             }
             SwedbankApiErrors.handleTokenErrors(hre);
             if (retry
