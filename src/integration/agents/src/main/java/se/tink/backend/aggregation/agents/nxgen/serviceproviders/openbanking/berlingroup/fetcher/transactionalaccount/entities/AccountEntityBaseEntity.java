@@ -7,6 +7,7 @@ import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.StorageKeys;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Party;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -69,7 +70,7 @@ public class AccountEntityBaseEntity implements BerlinGroupAccountEntity {
                 .putInTemporaryStorage(StorageKeys.TRANSACTIONS_URL, getTransactionLink())
                 .setApiIdentifier(resourceId)
                 .setBankIdentifier(getUniqueIdentifier())
-                .addHolderName(name)
+                .addParties(getParties())
                 .build();
     }
 
@@ -119,6 +120,10 @@ public class AccountEntityBaseEntity implements BerlinGroupAccountEntity {
     @Override
     public String getBalancesLink() {
         return Optional.ofNullable(links).map(AccountLinksEntity::getBalanceLink).orElse("");
+    }
+
+    public List<Party> getParties() {
+        return Collections.singletonList(new Party(name, Party.Role.HOLDER));
     }
 
     public List<BalanceBaseEntity> getBalances() {
