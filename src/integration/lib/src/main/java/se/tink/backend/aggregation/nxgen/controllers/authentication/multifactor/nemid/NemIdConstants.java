@@ -154,6 +154,8 @@ public class NemIdConstants {
         public static final By NEMID_CODE_CARD_CODE_INPUT =
                 By.xpath(
                         "//div[@class='otp__frame__row']/div[@class='otp__frame__cell'][2]//input");
+        public static final By NEMID_OK_BUTTON_WHEN_RUNNING_OUT_OF_CODES =
+                By.xpath("//*[@id='framecontentscroll']/div[1]/div[2]/button");
 
         // Code token screen
         public static final By NEMID_CODE_TOKEN_SERIAL_NUMBER =
