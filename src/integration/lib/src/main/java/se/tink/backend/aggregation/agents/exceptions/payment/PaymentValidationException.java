@@ -3,9 +3,9 @@ package se.tink.backend.aggregation.agents.exceptions.payment;
 import se.tink.libraries.signableoperation.enums.InternalStatus;
 
 public class PaymentValidationException extends PaymentException {
-    public static final String DEFAULT_MESSAGE = "Payment validation failed";
+    public static final String DEFAULT_MESSAGE = "Payment validation failed.";
     private static final String INVALID_MINIMUM_AMOUNT =
-            "The transfer amount, less than 1 SEK is not supported";
+            "The transfer amount, less than 1 SEK is not supported.";
 
     private String path;
 
