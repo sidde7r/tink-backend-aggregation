@@ -6,13 +6,91 @@ metadata:
 spec:
   rules:
 
-    - alert: TransferSuccessRateLowIT
+    - alert: all_transfer_success_rates_below_20_bank_errors_and_attemp_limit_it
       expr: |
-        # Successful/Cancelled/Unavailable transfer outcomes below 50%
-        (sum by(className) (increase(tink_agent_transfer_total{ market="IT", provider_type!="test", outcome=~"completed|cancelled|unavailable" }[1h]))
-          / sum by(className) (increase(tink_agent_transfer_total{ market="IT", provider_type!="test" }[1h]))) < 0.5
-        # # At least this many attempts
-        and sum by(className) (increase(tink_agent_transfer_total{ market="IT", provider_type!="test" }[1h])) > 5
+          # Unavailable transfer outcomes below 20%
+          (sum by(className) (increase(tink_agent_transfer_total{ market="IT", provider_type!="test", {{ .Values.bankErrorsAuth }} }[1h]))
+            / sum by(className) (increase(tink_agent_transfer_total{ market="IT", provider_type!="test" }[1h]))) < 0.2
+          # # At least this many attempts
+          and sum by(className) (increase(tink_agent_transfer_total{ market="IT", provider_type!="test" }[1h])) > 5
+      for: 5m
+      labels:
+        severity: urgent
+        priority: P1
+        who: connectivity-teletubbies
+      annotations:
+        description: {{ .Values.kibanaLink }}
+            {{ .Values.grafanaLink }}
+        summary: Transfer success rate is below 20% actual % is <{ $value }> for <{ $labels.className }> the last 1h. More than 5 attempts.
+        tags: {{ .Values.tags }}
+
+    - alert: all_transfer_success_rates_below_20_temporary_errors_and_attemp_limit_it
+      expr: |
+          # Failed/Cancelled transfer outcomes below 20%
+          (sum by(className) (increase(tink_agent_transfer_total{ market="IT", provider_type!="test", {{ .Values.temporaryErrorsAuth }} }[1h]))
+            / sum by(className) (increase(tink_agent_transfer_total{ market="IT", provider_type!="test" }[1h]))) < 0.2
+          # # At least this many attempts
+          and sum by(className) (increase(tink_agent_transfer_total{ market="IT", provider_type!="test" }[1h])) > 5
+      for: 5m
+      labels:
+        severity: urgent
+        priority: P1
+        who: connectivity-teletubbies
+      annotations:
+        description: {{ .Values.kibanaLink }}
+            {{ .Values.grafanaLink }}
+        summary: Transfer success rate is below 20% actual % is <{ $value }> for <{ $labels.className }> the last 1h. More than 5 attempts.
+        tags: {{ .Values.tags }}
+
+    - alert: all_transfer_success_rates_below40_and_greater20_bank_errors_and_attemp_limit_it
+      expr: |
+          # Unavailable transfer between 20% and 40%
+          (sum by(className) (increase(tink_agent_transfer_total{ market="IT", provider_type!="test", {{ .Values.bankErrorsAuth }} }[1h]))
+            / sum by(className) (increase(tink_agent_transfer_total{ market="IT", provider_type!="test" }[1h]))) < 0.4
+          amd (sum by(className) (increase(tink_agent_transfer_total{ market="IT", provider_type!="test", {{ .Values.bankErrorsAuth }} }[1h]))
+                          / sum by(className) (increase(tink_agent_transfer_total{ market="IT", provider_type!="test" }[1h]))) >= 0.2
+          # # At least this many attempts
+          and sum by(className) (increase(tink_agent_transfer_total{ market="IT", provider_type!="test" }[1h])) > 5
+      for: 5m
+      labels:
+        severity: urgent
+        priority: P2
+        who: connectivity-teletubbies
+      annotations:
+        description: {{ .Values.kibanaLink }}
+            {{ .Values.grafanaLink }}
+        summary: Transfer success rate is between 20% and 40% actual % is <{ $value }> for <{ $labels.className }> the last 1h. More than 5 attempts.
+        tags: {{ .Values.tags }}
+
+    - alert: all_transfer_success_rates_below40_and_greater20_temporary_errors_and_attemp_limit_it
+      expr: |
+          # Failed/Cancelled transfer between 20% and 40%
+          (sum by(className) (increase(tink_agent_transfer_total{ market="IT", provider_type!="test", {{ .Values.temporaryErrorsAuth }} }[1h]))
+            / sum by(className) (increase(tink_agent_transfer_total{ market="IT", provider_type!="test" }[1h]))) < 0.4
+          amd (sum by(className) (increase(tink_agent_transfer_total{ market="IT", provider_type!="test", {{ .Values.temporaryErrorsAuth }} }[1h]))
+                          / sum by(className) (increase(tink_agent_transfer_total{ market="IT", provider_type!="test" }[1h]))) >= 0.2
+          # # At least this many attempts
+          and sum by(className) (increase(tink_agent_transfer_total{ market="IT", provider_type!="test" }[1h])) > 5
+      for: 5m
+      labels:
+        severity: urgent
+        priority: P2
+        who: connectivity-teletubbies
+      annotations:
+        description: {{ .Values.kibanaLink }}
+            {{ .Values.grafanaLink }}
+        summary: Transfer success rate is between 20% and 40% actual % is <{ $value }> for <{ $labels.className }> the last 1h. More than 5 attempts.
+        tags: {{ .Values.tags }}
+
+    - alert: all_transfer_success_rates_below_60_and_greater40_bank_errors_and_attemp_limit_it
+      expr: |
+          # Unavailable transfer outcomes between 40% and 60%
+          (sum by(className) (increase(tink_agent_transfer_total{ market="IT", provider_type!="test", {{ .Values.bankErrorsAuth }} }[1h]))
+            / sum by(className) (increase(tink_agent_transfer_total{ market="IT", provider_type!="test" }[1h]))) < 0.6
+          and (sum by(className) (increase(tink_agent_transfer_total{ market="IT", provider_type!="test", {{ .Values.bankErrorsAuth }} }[1h]))
+                                / sum by(className) (increase(tink_agent_transfer_total{ market="IT", provider_type!="test" }[1h]))) >= 0.4
+          # # At least this many attempts
+          and sum by(className) (increase(tink_agent_transfer_total{ market="IT", provider_type!="test" }[1h])) > 5
       for: 5m
       labels:
         severity: urgent
@@ -20,6 +98,26 @@ spec:
         who: connectivity-teletubbies
       annotations:
         description: {{ .Values.kibanaLink }}
-          {{ .Values.grafanaLink }}
-        summary: Transfer success rate is below 50% actual % is <{ $value }> for <{ $labels.className }> the last 1h. More than 5 attempts.
+            {{ .Values.grafanaLink }}
+        summary: Transfer success rate is between 40% and 60% actual % is <{ $value }> for <{ $labels.className }> the last 1h. More than 5 attempts.
+        tags: {{ .Values.tags }}
+
+    - alert: all_transfer_success_rates_below_60_and_greater40_temporary_errors_and_attemp_limit_it
+      expr: |
+          # Failed/Cancelled transfer outcomes between 40% and 60%
+          (sum by(className) (increase(tink_agent_transfer_total{ market="IT", provider_type!="test", {{ .Values.temporaryErrorsAuth }} }[1h]))
+            / sum by(className) (increase(tink_agent_transfer_total{ market="IT", provider_type!="test" }[1h]))) < 0.6
+          and (sum by(className) (increase(tink_agent_transfer_total{ market="IT", provider_type!="test", {{ .Values.temporaryErrorsAuth }} }[1h]))
+                                / sum by(className) (increase(tink_agent_transfer_total{ market="IT", provider_type!="test" }[1h]))) >= 0.4
+          # # At least this many attempts
+          and sum by(className) (increase(tink_agent_transfer_total{ market="IT", provider_type!="test" }[1h])) > 5
+      for: 5m
+      labels:
+        severity: urgent
+        priority: P3
+        who: connectivity-teletubbies
+      annotations:
+        description: {{ .Values.kibanaLink }}
+            {{ .Values.grafanaLink }}
+        summary: Transfer success rate is between 40% and 60% actual % is <{ $value }> for <{ $labels.className }> the last 1h. More than 5 attempts.
         tags: {{ .Values.tags }}
