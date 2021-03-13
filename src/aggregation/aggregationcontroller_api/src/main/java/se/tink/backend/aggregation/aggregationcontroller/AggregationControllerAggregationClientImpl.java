@@ -276,22 +276,6 @@ public class AggregationControllerAggregationClientImpl
             HostConfiguration hostConfiguration,
             UpdateCredentialsSupplementalInformationRequest request) {
 
-        String suppInfo = request.getSupplementalInformation();
-        if (suppInfo == null) {
-            log.info(
-                    "[SuppInfoDebug] {}: On AS, sending to AC: seeing: null",
-                    request.getCredentialsId());
-        } else if ("[]".equals(suppInfo)) {
-            log.info(
-                    "[SuppInfoDebug] {}: On AS, sending to AC: seeing: []",
-                    request.getCredentialsId());
-        } else {
-            log.info(
-                    "[SuppInfoDebug] {}: On AS, sending to AC: seeing: {}",
-                    request.getCredentialsId(),
-                    suppInfo.hashCode());
-        }
-
         return requestExecuter(
                 () ->
                         getCredentialsService(hostConfiguration)
