@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor
 
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NEMID_CLOSE_SELECT_METHOD_POPUP;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NEMID_LINK_TO_SELECT_DIFFERENT_2FA_METHOD;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.NEM_ID_PREFIX;
 
 import com.google.inject.Inject;
 import lombok.RequiredArgsConstructor;
@@ -19,8 +20,21 @@ class NemIdSwitchTo2FAScreenStep {
     public void switchTo2FAMethodScreen(
             NemIdDetect2FAMethodsResult detectMethodsResult, NemId2FAMethodScreen targetScreen) {
 
+        NemId2FAMethodScreen currentScreen = detectMethodsResult.getCurrentScreen();
+
+        log.info(
+                "{}[NemIdSwitchTo2FAScreenStep] Attempting to switch screen from {} to {}",
+                NEM_ID_PREFIX,
+                currentScreen.getSupportedMethod().getUserFriendlyName().get(),
+                targetScreen.getSupportedMethod().getUserFriendlyName().get());
+
         switchToTarget2FAScreen(detectMethodsResult, targetScreen);
-        driverWrapper.waitForElement(targetScreen.getSelectorToDetectScreen(), 10);
+
+        if (currentScreen != targetScreen) {
+            driverWrapper.waitForElement(targetScreen.getSelectorToDetectScreen(), 20);
+        } else {
+            log.info("{}[NemIdSwitchTo2FAScreenStep] No switch was made", NEM_ID_PREFIX);
+        }
     }
 
     private void switchToTarget2FAScreen(

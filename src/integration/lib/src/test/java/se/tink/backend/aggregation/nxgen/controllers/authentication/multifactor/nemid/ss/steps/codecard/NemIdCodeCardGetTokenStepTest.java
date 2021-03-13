@@ -6,6 +6,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NEMID_CODE_CARD_CODE_INPUT;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NEMID_OK_BUTTON_WHEN_RUNNING_OUT_OF_CODES;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NOT_EMPTY_ERROR_MESSAGE;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NOT_EMPTY_NEMID_TOKEN;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.SUBMIT_BUTTON;
@@ -75,7 +76,9 @@ public class NemIdCodeCardGetTokenStepTest {
                 .searchForFirstElement(
                         ElementsSearchQuery.builder()
                                 .searchInParentWindow(NOT_EMPTY_NEMID_TOKEN)
-                                .searchInAnIframe(NOT_EMPTY_ERROR_MESSAGE)
+                                .searchInAnIframe(
+                                        NOT_EMPTY_ERROR_MESSAGE,
+                                        NEMID_OK_BUTTON_WHEN_RUNNING_OUT_OF_CODES)
                                 .build());
         mocksToVerifyInOrder.verifyNoMoreInteractions();
     }
@@ -106,7 +109,9 @@ public class NemIdCodeCardGetTokenStepTest {
                 .searchForFirstElement(
                         ElementsSearchQuery.builder()
                                 .searchInParentWindow(NOT_EMPTY_NEMID_TOKEN)
-                                .searchInAnIframe(NOT_EMPTY_ERROR_MESSAGE)
+                                .searchInAnIframe(
+                                        NOT_EMPTY_ERROR_MESSAGE,
+                                        NEMID_OK_BUTTON_WHEN_RUNNING_OUT_OF_CODES)
                                 .build());
         mocksToVerifyInOrder.verifyNoMoreInteractions();
     }
@@ -184,8 +189,45 @@ public class NemIdCodeCardGetTokenStepTest {
                 .searchForFirstElement(
                         ElementsSearchQuery.builder()
                                 .searchInParentWindow(NOT_EMPTY_NEMID_TOKEN)
-                                .searchInAnIframe(NOT_EMPTY_ERROR_MESSAGE)
+                                .searchInAnIframe(
+                                        NOT_EMPTY_ERROR_MESSAGE,
+                                        NEMID_OK_BUTTON_WHEN_RUNNING_OUT_OF_CODES)
                                 .searchForSeconds(10)
+                                .build());
+        mocksToVerifyInOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void
+            should_accept_info_about_running_out_codes_and_submit_code_from_user_and_read_nem_id_token() {
+        // given
+        WebElement element = webElementMockWithText("--- SAMPLE TOKEN ---");
+        when(driverWrapper.searchForFirstElement(any()))
+                .thenReturn(
+                        ElementsSearchResult.of(NEMID_OK_BUTTON_WHEN_RUNNING_OUT_OF_CODES, null))
+                .thenReturn(ElementsSearchResult.of(NOT_EMPTY_NEMID_TOKEN, element));
+
+        // when
+        String nemIdToken = getTokenStep.enterCodeAndGetToken(CODE_CARD_CODE);
+
+        // then
+        assertThat(nemIdToken).isEqualTo("--- SAMPLE TOKEN ---");
+
+        mocksToVerifyInOrder
+                .verify(driverWrapper)
+                .clickButton(NEMID_OK_BUTTON_WHEN_RUNNING_OUT_OF_CODES);
+        mocksToVerifyInOrder
+                .verify(driverWrapper)
+                .setValueToElement(CODE_CARD_CODE, NEMID_CODE_CARD_CODE_INPUT);
+        mocksToVerifyInOrder.verify(driverWrapper).clickButton(SUBMIT_BUTTON);
+        mocksToVerifyInOrder
+                .verify(driverWrapper)
+                .searchForFirstElement(
+                        ElementsSearchQuery.builder()
+                                .searchInParentWindow(NOT_EMPTY_NEMID_TOKEN)
+                                .searchInAnIframe(
+                                        NOT_EMPTY_ERROR_MESSAGE,
+                                        NEMID_OK_BUTTON_WHEN_RUNNING_OUT_OF_CODES)
                                 .build());
         mocksToVerifyInOrder.verifyNoMoreInteractions();
     }

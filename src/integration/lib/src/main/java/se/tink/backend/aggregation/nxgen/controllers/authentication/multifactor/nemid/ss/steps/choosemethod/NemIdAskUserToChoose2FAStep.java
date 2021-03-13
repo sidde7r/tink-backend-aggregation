@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.steps.choosemethod;
 
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.NEM_ID_PREFIX;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.metrics.NemIdMetricLabel.WAITING_FOR_SUPPLEMENTAL_INFO_METRIC;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.NemIdCodeAppConstants.UserMessage.CHOOSE_NEM_ID_METHOD;
 
@@ -27,6 +28,7 @@ class NemIdAskUserToChoose2FAStep {
 
     public NemId2FAMethod askUserToChoose2FAMethod(
             Credentials credentials, Set<NemId2FAMethod> availableMethods) {
+        log.info("{}[NemIdAskUserToChoose2FAStep] User asked to choose 2FA method", NEM_ID_PREFIX);
         return metrics.executeWithTimer(
                 () -> askUserFor2FAMethod(credentials, availableMethods),
                 WAITING_FOR_SUPPLEMENTAL_INFO_METRIC);
@@ -42,6 +44,7 @@ class NemIdAskUserToChoose2FAStep {
                 supplementalInformationController.askSupplementalInformationSync(field);
 
         String chosenMethodKey = supplementalInfoResponse.get(NemIdChoose2FAMethodField.FIELD_KEY);
+        log.info("{}[NemIdAskUserToChoose2FAStep] User chose {}", NEM_ID_PREFIX, chosenMethodKey);
 
         return NemId2FAMethod.getMethodBySupplementalInfoKey(chosenMethodKey)
                 .orElseThrow(
