@@ -5,5 +5,6 @@ public final class NordeaSeConstants {
     public static final class Authentication {
         public static final String COUNTRY = "SE";
         public static final String AUTHENTICATION_METHOD = "BANKID_SE";
+        public static final String RESPONSE_TYPE = "code";
     }
 }

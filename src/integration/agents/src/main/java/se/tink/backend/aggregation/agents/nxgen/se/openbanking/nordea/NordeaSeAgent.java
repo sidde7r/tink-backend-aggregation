@@ -15,12 +15,11 @@ import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.agentcapabilities.AgentCapabilities;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.authenticator.NordeaSeAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.authenticator.NordeaSeDecoupledAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.executor.payment.NordeaSePaymentExecutorSelector;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.fetcher.creditcard.NordeaSeCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.fetcher.transactionalaccount.NordeaSeTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseAgent;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.authenticator.NordeaBaseAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.fetcher.creditcard.NordeaBaseCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.fetcher.transactionalaccount.NordeaBaseTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.fetcher.transactionalaccount.rpc.BaseGetTransactionResponse;
@@ -30,8 +29,7 @@ import se.tink.backend.aggregation.eidassigner.module.QSealcSignerModuleRSASHA25
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
@@ -62,21 +60,14 @@ public final class NordeaSeAgent extends NordeaBaseAgent
     @Override
     protected Authenticator constructAuthenticator() {
 
-        NordeaBaseAuthenticator authenticator =
-                new NordeaSeAuthenticator((NordeaSeApiClient) apiClient);
-        OAuth2AuthenticationController oAuth2AuthenticationController =
-                new OAuth2AuthenticationController(
+        BankIdAuthenticationController bankIdAuthenticationController =
+                new BankIdAuthenticationController(
+                        supplementalInformationController,
+                        new NordeaSeDecoupledAuthenticator((NordeaSeApiClient) apiClient),
                         persistentStorage,
-                        supplementalInformationHelper,
-                        authenticator,
-                        credentials,
-                        strongAuthenticationState);
+                        credentials);
         return new AutoAuthenticationController(
-                request,
-                context,
-                new ThirdPartyAppAuthenticationController<>(
-                        oAuth2AuthenticationController, supplementalInformationHelper),
-                oAuth2AuthenticationController);
+                request, context, bankIdAuthenticationController, bankIdAuthenticationController);
     }
 
     @Override
