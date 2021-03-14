@@ -72,7 +72,11 @@ public final class DanskeBankDKAgent extends DanskeBankAgent
                         this.metricRefreshController,
                         this.updateController,
                         new DanskeBankAccountLoanFetcher(
-                                apiClient, configuration, accountEntityMapper, true));
+                                apiClient,
+                                configuration,
+                                accountEntityMapper,
+                                true,
+                                accountDetailsFetcher));
 
         this.creditCardRefreshController = constructCreditCardRefreshController();
 
@@ -148,7 +152,10 @@ public final class DanskeBankDKAgent extends DanskeBankAgent
                 this.metricRefreshController,
                 this.updateController,
                 new DanskeBankTransactionalAccountFetcher(
-                        this.apiClient, this.configuration, new DkAccountEntityMapper()),
+                        this.apiClient,
+                        this.configuration,
+                        new DkAccountEntityMapper(),
+                        accountDetailsFetcher),
                 createTransactionFetcherController());
     }
 
@@ -167,7 +174,10 @@ public final class DanskeBankDKAgent extends DanskeBankAgent
                 this.metricRefreshController,
                 this.updateController,
                 new DanskeBankCreditCardFetcher(
-                        this.apiClient, this.configuration, new DkAccountEntityMapper()),
+                        this.apiClient,
+                        this.configuration,
+                        new DkAccountEntityMapper(),
+                        accountDetailsFetcher),
                 createTransactionFetcherController());
     }
 
