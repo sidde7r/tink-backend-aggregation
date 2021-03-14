@@ -5,11 +5,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankPredicates;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.mapper.AccountEntityMapper;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.AccountDetailsRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.AccountDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.CardsListRequest;
@@ -17,20 +17,13 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeban
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 
+@RequiredArgsConstructor
 public class DanskeBankCreditCardFetcher implements AccountFetcher<CreditCardAccount> {
 
     private final DanskeBankApiClient apiClient;
     private final DanskeBankConfiguration configuration;
     private final AccountEntityMapper accountEntityMapper;
-
-    public DanskeBankCreditCardFetcher(
-            DanskeBankApiClient apiClient,
-            DanskeBankConfiguration configuration,
-            AccountEntityMapper accountEntityMapper) {
-        this.apiClient = apiClient;
-        this.configuration = configuration;
-        this.accountEntityMapper = accountEntityMapper;
-    }
+    private final DanskeBankAccountDetailsFetcher accountDetailsFetcher;
 
     @Override
     public Collection<CreditCardAccount> fetchAccounts() {
@@ -47,8 +40,7 @@ public class DanskeBankCreditCardFetcher implements AccountFetcher<CreditCardAcc
         for (AccountEntity accountEntity : cardAccounts) {
             accountDetails.put(
                     accountEntity.getAccountNoExt(),
-                    apiClient.fetchAccountDetails(
-                            new AccountDetailsRequest(accountEntity.getAccountNoInt(), "EN")));
+                    accountDetailsFetcher.fetchAccountDetails(accountEntity.getAccountNoInt()));
         }
 
         reachCardEndpointsForDebugPurposes();

@@ -29,7 +29,10 @@ public class DanskeBankTransactionalAccountFetcherTest {
         AccountEntityMapper accountEntityMapper = mock(AccountEntityMapper.class);
         danskeBankTransactionalAccountFetcher =
                 new DanskeBankTransactionalAccountFetcher(
-                        apiClient, configuration, accountEntityMapper);
+                        apiClient,
+                        configuration,
+                        accountEntityMapper,
+                        mock(DanskeBankAccountDetailsFetcher.class));
         accounts =
                 SerializationUtils.deserializeFromString(
                                 new File(ACCOUNT_ENTITIES_FILE_PATH), ListAccountsResponse.class)

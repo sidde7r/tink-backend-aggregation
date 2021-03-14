@@ -6,7 +6,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankApiClient;
@@ -15,7 +14,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeban
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankPredicates;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.entities.LoanEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.mapper.AccountEntityMapper;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.AccountDetailsRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.AccountDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.ListAccountsRequest;
@@ -26,7 +24,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeban
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.LoanDetailsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
-import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
 public class DanskeBankAccountLoanFetcher implements AccountFetcher<LoanAccount> {
     private static final Logger logger =
@@ -38,18 +35,21 @@ public class DanskeBankAccountLoanFetcher implements AccountFetcher<LoanAccount>
     private final AccountEntityMapper accountEntityMapper;
     private final boolean shouldFetchMortgages;
     private final String marketCode;
+    private final DanskeBankAccountDetailsFetcher accountDetailsFetcher;
 
     public DanskeBankAccountLoanFetcher(
             DanskeBankApiClient apiClient,
             DanskeBankConfiguration configuration,
             AccountEntityMapper accountEntityMapper,
-            boolean shouldFetchMortgages) {
+            boolean shouldFetchMortgages,
+            DanskeBankAccountDetailsFetcher accountDetailsFetcher) {
         this.apiClient = apiClient;
         this.configuration = configuration;
         this.languageCode = configuration.getLanguageCode();
         this.accountEntityMapper = accountEntityMapper;
         this.shouldFetchMortgages = shouldFetchMortgages;
         this.marketCode = configuration.getMarketCode();
+        this.accountDetailsFetcher = accountDetailsFetcher;
     }
 
     @Override
@@ -76,7 +76,7 @@ public class DanskeBankAccountLoanFetcher implements AccountFetcher<LoanAccount>
 
     private LoanAccount toLoanAccount(AccountEntity account) {
         AccountDetailsResponse accountDetailsResponse =
-                fetchLoanAccountDetails(account.getAccountNoInt());
+                accountDetailsFetcher.fetchAccountDetails(account.getAccountNoInt());
         return accountEntityMapper.toLoanAccount(configuration, account, accountDetailsResponse);
     }
 
@@ -93,29 +93,6 @@ public class DanskeBankAccountLoanFetcher implements AccountFetcher<LoanAccount>
                                         "Unknown loan account: apiIdentifier = {}, accountProduct = {}",
                                         a.getAccountNoInt(),
                                         a.getAccountProduct()));
-    }
-
-    AccountDetailsResponse fetchLoanAccountDetails(String accountNumberInternal) {
-        // Use EN language, because information returned in other languages is gibberish.
-        try {
-            return apiClient.fetchAccountDetails(
-                    new AccountDetailsRequest(accountNumberInternal, "EN"));
-        } catch (HttpResponseException e) {
-            // Sometimes we receive 500 response that has a body of AccountDetailsResponse including
-            // interestRate, but missing other fields like accountOwners and accountType - that's
-            // why I think it is 500.
-            // Try to get the body, so we could set interest rate
-            if (e.getResponse().getStatus() == HttpStatus.SC_INTERNAL_SERVER_ERROR
-                    && e.getResponse().hasBody()) {
-                try {
-                    return e.getResponse().getBody(AccountDetailsResponse.class);
-                } catch (RuntimeException re) {
-                    logger.info("Failed to map exception body into AccountDetailsResponse. ", e);
-                }
-            }
-            logger.info("Failed to fetch loan account details. ", e);
-        }
-        return new AccountDetailsResponse();
     }
 
     private Collection<LoanAccount> fetchMortgages() {
