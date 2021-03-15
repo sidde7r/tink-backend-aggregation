@@ -123,6 +123,10 @@ class LegacyExceptionToConnectivityErrorMapper {
     static final ImmutableMap<BankIdError, ConnectivityError> BANKID_ERROR_MAPPER =
             ImmutableMap.<BankIdError, ConnectivityError>builder()
                     .put(
+                            BankIdError.UNKNOWN,
+                            ConnectivityErrorFactory.userLoginError(
+                                    UserLoginErrors.THIRD_PARTY_AUTHENTICATION_UNAVAILABLE))
+                    .put(
                             BankIdError.CANCELLED,
                             ConnectivityErrorFactory.userLoginError(
                                     ConnectivityErrorDetails.UserLoginErrors
@@ -175,6 +179,10 @@ class LegacyExceptionToConnectivityErrorMapper {
 
     static final ImmutableMap<ThirdPartyAppError, ConnectivityError> THIRD_PARTY_APP_ERROR_MAPPER =
             ImmutableMap.<ThirdPartyAppError, ConnectivityError>builder()
+                    .put(
+                            ThirdPartyAppError.AUTHENTICATION_ERROR,
+                            ConnectivityErrorFactory.userLoginError(
+                                    UserLoginErrors.DYNAMIC_CREDENTIALS_INCORRECT))
                     .put(
                             ThirdPartyAppError.CANCELLED,
                             ConnectivityErrorFactory.userLoginError(
