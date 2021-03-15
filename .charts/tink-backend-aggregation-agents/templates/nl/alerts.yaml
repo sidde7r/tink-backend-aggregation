@@ -174,10 +174,10 @@ spec:
   - alert: BankServerUnavailableForLoginNL
     expr: |
       # Unavailable outcome above 50%
-      (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"unavailable", market="NL", provider_type!="test"}[30m])) by (action,className)
-          / sum(increase(tink_agent_login_total{action=~"login|is-logged-in"}[30m])) by (action,className) > 0.50)
+      (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"unavailable", market="NL", provider_type!="test"}[30m])) by (action,className,provider)
+          / sum(increase(tink_agent_login_total{action=~"login|is-logged-in"}[30m])) by (action,className,provider) > 0.50)
       # At least this many attempts.
-      and sum(increase(tink_agent_login_total{action=~"login|is-logged-in"}[30m])) by (action,className) > 10
+      and sum(increase(tink_agent_login_total{action=~"login|is-logged-in"}[30m])) by (action,className,provider) > 10
     for: 5m
     labels:
       severity: urgent
@@ -186,17 +186,17 @@ spec:
     annotations:
       description: {{ .Values.kibanaLink }}
         {{ .Values.grafanaLink }}
-      summary: Login unavailable rate is above 50% ( <{ $value }> ) for <{ $labels.className }>
+      summary: Login unavailable rate is above 50% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
         the last 30 minutes.
       tags: {{ .Values.tags }}
 
   - alert: BankServerUnavailableForRefreshNL
     expr: |
       # Unavailable outcome above 50%
-      (sum(increase(tink_agent_refresh_total{outcome=~"unavailable", market="NL", provider_type!="test"}[30m])) by (className)
-          / sum(increase(tink_agent_refresh_total[30m])) by (className) > 0.50)
+      (sum(increase(tink_agent_refresh_total{outcome=~"unavailable", market="NL", provider_type!="test"}[30m])) by (className,provider)
+          / sum(increase(tink_agent_refresh_total[30m])) by (className,provider) > 0.50)
       # At least this many attempts.
-      and sum(increase(tink_agent_refresh_total[30m])) by (className) > 10
+      and sum(increase(tink_agent_refresh_total[30m])) by (className,provider) > 10
     for: 5m
     labels:
       severity: urgent
@@ -205,7 +205,7 @@ spec:
     annotations:
       description: {{ .Values.kibanaLink }}
         {{ .Values.grafanaLink }}
-      summary: Refresh unavailable rate is above 50% ( <{ $value }> ) for <{ $labels.className }>
+      summary: Refresh unavailable rate is above 50% ( <{ $value }> ) for <{ $labels.className }> ( <{ $labels.provider }> )
         the last 30 minutes.
       tags: {{ .Values.tags }}
 
