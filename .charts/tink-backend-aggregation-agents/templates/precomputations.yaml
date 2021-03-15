@@ -1,0 +1,69 @@
+kind: RuleGroup
+apiVersion: monitoring.tink.se/v1
+metadata:
+  name: alerts-precomputations
+  namespace: agents
+spec:
+  rules:
+
+  # Calculate the the ration of provider errors (without authentication errors).
+  - record: ratio:tink_provider_errors:delta60m
+    expr: 100 * ((sum(increase(tink_temporary_errors_total[1h])) BY (provider)) /
+      (sum(increase(tink_executions_total[1h])) BY (provider)))
+
+  # Payments SE market dashboard
+  - record: sum:tink_transfers_in_sweden:delta15m
+    expr: sum(increase(tink_agent_transfer_total{market="SE"}[15m])) or on() vector(0)
+
+  - record: sum:tink_transfers_in_sweden:delta12h
+    expr: sum(increase(tink_agent_transfer_total{market="SE"}[12h])) or on() vector(0)
+
+  - record: sum:tink_successful_transfers_in_sweden:delta15m
+    expr: sum(increase(tink_agent_transfer_total{market="SE", outcome="completed"}[15m])) or on() vector(0)
+
+  - record: sum:tink_successful_transfers_in_sweden:delta12h
+    expr: sum(increase(tink_agent_transfer_total{market="SE", outcome="completed"}[12h])) or on() vector(0)
+
+  - record: sum:tink_failed_transfers_in_sweden:delta15m
+    expr: sum(increase(tink_agent_transfer_total{market="SE", outcome="failed"}[15m])) or on() vector(0)
+
+  - record: sum:tink_failed_transfers_in_sweden:delta12h
+    expr: sum(increase(tink_agent_transfer_total{market="SE", outcome="failed"}[12h])) or on() vector(0)
+
+  - record: sum:tink_cancelled_transfers_in_sweden:delta15m
+    expr: sum(increase(tink_agent_transfer_total{market="SE", outcome="cancelled"}[15m])) or on() vector(0)
+
+  - record: sum:tink_cancelled_transfers_in_sweden:delta12h
+    expr: sum(increase(tink_agent_transfer_total{market="SE", outcome="cancelled"}[12h])) or on() vector(0)
+
+  # Precompute realtime banking metrics
+  - record: ratio:tink_aggregation_market_success:delta5m
+    expr: sum(increase(tink_aggregation_successful_market_total[5m])) by (market)
+        / sum(increase(tink_aggregation_total_market_total[5m])) by (market) > 0
+
+  - record: ratio:tink_aggregation_operation_success:delta5m
+    expr: sum(increase(tink_aggregation_successful_operations_total[5m])) by (operation)
+       / sum(increase(tink_aggregation_total_operations_total[5m])) by (operation) > 0
+
+  - record: ratio:tink_aggregation_market_operation_success:delta5m
+    expr: sum(increase(tink_aggregation_successful_market_operations_total[5m])) by (operation, market)
+      / sum(increase(tink_aggregation_total_market_operations_total[5m])) by (operation, market) > 0
+
+  # Precompute statistics
+  - record: statistics:tink_aggregation_market_success:delta5m:avg1w
+    expr: avg_over_time((ratio:tink_aggregation_market_success:delta5m > 0)[1w:])
+
+  - record: statistics:tink_aggregation_market_success:delta5m:stddev1w
+    expr: stddev_over_time((ratio:tink_aggregation_market_success:delta5m > 0)[1w:])
+
+  - record: statistics:tink_aggregation_operation_success:delta5m:avg1w
+    expr: avg_over_time((ratio:tink_aggregation_operation_success:delta5m > 0)[1w:])
+
+  - record: statistics:tink_aggregation_operation_success:delta5m:stddev1w
+    expr: stddev_over_time((ratio:tink_aggregation_operation_success:delta5m > 0)[1w:])
+
+  - record: statistics:tink_aggregation_market_operation_success:delta5m:avg1w
+    expr: avg_over_time((ratio:tink_aggregation_market_operation_success:delta5m > 0)[1w:])
+
+  - record: statistics:tink_aggregation_market_operation_success:delta5m:stddev1w
+    expr: stddev_over_time((ratio:tink_aggregation_market_operation_success:delta5m > 0)[1w:])
