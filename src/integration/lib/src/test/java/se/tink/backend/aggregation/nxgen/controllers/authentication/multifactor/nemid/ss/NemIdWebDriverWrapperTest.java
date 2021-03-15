@@ -184,6 +184,7 @@ public class NemIdWebDriverWrapperTest {
 
         // then
         mocksToVerifyInOrder.verify(driver).findElements(by);
+        mocksToVerifyInOrder.verify(sleeper).sleepFor(1000);
         mocksToVerifyInOrder.verifyNoMoreInteractions();
 
         verify(element1).isDisplayed();
