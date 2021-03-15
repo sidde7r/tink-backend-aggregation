@@ -193,6 +193,7 @@ public class UnicreditBaseApiClient {
                                                         .getAuthenticationState()
                                                         .orElse(null))
                                         .queryParam(HeaderKeys.CODE, HeaderValues.CODE))
+                        .header(HeaderKeys.TPP_REDIRECT_PREFERED, true)
                         .post(getCreatePaymentResponseType(), request);
 
         unicreditStorage.saveScaRedirectUrlForPayment(
