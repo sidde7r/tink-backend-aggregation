@@ -8,6 +8,7 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.agents.rpc.SelectOption;
+import se.tink.backend.aggregation.agents.utils.supplementalfields.CommonFields;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.NemId2FAMethod;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.i18n.LocalizableKey;
@@ -21,11 +22,8 @@ class NemIdChoose2FAMethodField {
             new LocalizableKey("Select how you want to confirm the NemID authentication");
 
     public static Field build(Catalog catalog, Collection<NemId2FAMethod> nemId2FAMethods) {
-        return Field.builder()
-                .description(catalog.getString(DESCRIPTION))
-                .name(FIELD_KEY)
-                .selectOptions(prepareSelectOptions(catalog, nemId2FAMethods))
-                .build();
+        return CommonFields.Selection.build(
+                catalog, DESCRIPTION, prepareSelectOptions(catalog, nemId2FAMethods));
     }
 
     private static List<SelectOption> prepareSelectOptions(
