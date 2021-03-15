@@ -100,7 +100,12 @@ public class RefreshInformationRequest extends CredentialsRequest {
         this.manual = manual;
     }
 
+    /**
+     * @deprecated use UserAvailability's userPresent or userAvailableForInteraction depending on
+     *     what you need
+     */
     @Override
+    @Deprecated
     public boolean isManual() {
         return manual;
     }

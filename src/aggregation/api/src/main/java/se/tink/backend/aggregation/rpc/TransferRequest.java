@@ -49,7 +49,12 @@ public class TransferRequest extends CredentialsRequest {
         this.signableOperation = signableOperation;
     }
 
+    /**
+     * @deprecated use UserAvailability's userPresent or userAvailableForInteraction depending on
+     *     what you need
+     */
     @Override
+    @Deprecated
     public boolean isManual() {
         return true;
     }

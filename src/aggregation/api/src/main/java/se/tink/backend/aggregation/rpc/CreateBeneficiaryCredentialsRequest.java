@@ -31,7 +31,12 @@ public class CreateBeneficiaryCredentialsRequest extends CredentialsRequest {
         this.ownerAccountNumber = ownerAccountNumber;
     }
 
+    /**
+     * @deprecated use UserAvailability's userPresent or userAvailableForInteraction depending on
+     *     what you need
+     */
     @Override
+    @Deprecated
     public boolean isManual() {
         return true;
     }

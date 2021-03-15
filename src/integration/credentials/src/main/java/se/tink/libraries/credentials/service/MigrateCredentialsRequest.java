@@ -15,7 +15,12 @@ public class MigrateCredentialsRequest extends CredentialsRequest {
         super(user, provider, credentials);
     }
 
+    /**
+     * @deprecated use UserAvailability's userPresent or userAvailableForInteraction depending on
+     *     what you need
+     */
     @Override
+    @Deprecated
     public boolean isManual() {
         return false;
     }

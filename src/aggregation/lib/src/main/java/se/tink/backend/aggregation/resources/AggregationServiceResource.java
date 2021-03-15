@@ -63,6 +63,8 @@ public class AggregationServiceResource implements AggregationService {
 
     private static final MetricId USER_AVAILABILITY =
             MetricId.newId("aggregation_user_availability");
+    private static final MetricId USER_AVAILABILITY_VALUES =
+            MetricId.newId("aggregation_user_availability_values");
 
     private final MetricRegistry metricRegistry;
     private final QueueProducer producer;
@@ -97,17 +99,35 @@ public class AggregationServiceResource implements AggregationService {
     }
 
     private void trackUserPresentFlagPresence(String method, CredentialsRequest request) {
-        if (metricRegistry == null) {
-            // just a safeguard for the initial deploy.
-            logger.error("metric registry not instantiated");
-            return;
-        }
         metricRegistry
                 .meter(
                         USER_AVAILABILITY
                                 .label("method", method)
                                 .label("is_present", request.getUserAvailability() != null))
                 .inc();
+    }
+
+    private boolean isHighPrioRequest(CredentialsRequest request) {
+        // The UserAvailability object and data that follows is the new (2021-03-15) way of taking
+        // decisions on Aggregation Service in relation to the User. For instance, we want to
+        // high-prioritize all requests where the user is present.
+        if (request.getUserAvailability() != null) {
+            metricRegistry
+                    .meter(
+                            USER_AVAILABILITY_VALUES
+                                    .label("manual", request.isManual())
+                                    .label("present", request.getUserAvailability().isUserPresent())
+                                    .label(
+                                            "available_for_interaction",
+                                            request.getUserAvailability()
+                                                    .isUserAvailableForInteraction()))
+                    .inc();
+
+            return request.getUserAvailability().isUserPresent();
+        }
+
+        // fallback to old flag
+        return request.isManual();
     }
 
     @Override
@@ -195,7 +215,7 @@ public class AggregationServiceResource implements AggregationService {
             throws Exception {
         trackUserPresentFlagPresence("refresh", request);
 
-        if (request.isManual()) {
+        if (isHighPrioRequest(request)) {
             agentWorker.execute(
                     agentWorkerCommandFactory.createOperationRefresh(request, clientInfo));
         } else {
