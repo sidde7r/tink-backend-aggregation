@@ -26,6 +26,7 @@ import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientExcept
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.connectivity.errors.ConnectivityError;
 import se.tink.connectivity.errors.ConnectivityErrorDetails;
+import se.tink.connectivity.errors.ConnectivityErrorDetails.UserLoginErrors;
 import se.tink.connectivity.errors.ConnectivityErrorType;
 
 class LegacyExceptionToConnectivityErrorMapper {
@@ -115,8 +116,8 @@ class LegacyExceptionToConnectivityErrorMapper {
                     // to be of a explicit type.
                     .put(
                             LoginError.DEFAULT_MESSAGE,
-                            ConnectivityErrorFactory.tinkSideError(
-                                    ConnectivityErrorDetails.TinkSideErrors.UNKNOWN_ERROR))
+                            ConnectivityErrorFactory.userLoginError(
+                                    UserLoginErrors.STATIC_CREDENTIALS_INCORRECT))
                     .build();
 
     static final ImmutableMap<BankIdError, ConnectivityError> BANKID_ERROR_MAPPER =
