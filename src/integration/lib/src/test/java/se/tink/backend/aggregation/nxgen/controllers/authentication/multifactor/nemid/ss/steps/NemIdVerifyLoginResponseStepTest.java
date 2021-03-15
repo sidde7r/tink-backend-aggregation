@@ -36,6 +36,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.agent.AgentException;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.nemid.NemIdError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.NemId2FAMethodScreen;
@@ -166,7 +167,17 @@ public class NemIdVerifyLoginResponseStepTest {
                                 ErrorTextTestParams.of(
                                         "enter activation password",
                                         LoginError.INCORRECT_CREDENTIALS.exception(
-                                                UserMessage.ENTER_ACTIVATION_PASSWORD.getKey())))
+                                                UserMessage.ENTER_ACTIVATION_PASSWORD.getKey())),
+                                ErrorTextTestParams.of(
+                                        "indtast midlertidig adgangskode",
+                                        LoginError.INCORRECT_CREDENTIALS.exception(
+                                                UserMessage.ENTER_ACTIVATION_PASSWORD.getKey())),
+                                ErrorTextTestParams.of(
+                                        "log på med nemid-nr. eller selvvalgt bruger-id",
+                                        LoginError.INCORRECT_CREDENTIALS.exception(
+                                                UserMessage
+                                                        .ENTER_NEM_ID_NUMBER_OR_SELF_CHOSEN_USER_ID
+                                                        .getKey())))
                         .stream()
                         .map(
                                 errorTextTestParams ->
@@ -246,7 +257,29 @@ public class NemIdVerifyLoginResponseStepTest {
                                         "use new code card",
                                         NemIdError.USE_NEW_CODE_CARD.exception()),
                                 ErrorTextTestParams.of(
-                                        "nemid revoked", NemIdError.NEMID_BLOCKED.exception()))
+                                        "tag nyt nøglekort i brug",
+                                        NemIdError.USE_NEW_CODE_CARD.exception()),
+                                ErrorTextTestParams.of(
+                                        "nemid revoked", NemIdError.NEMID_BLOCKED.exception()),
+                                ErrorTextTestParams.of(
+                                        "nemid er spærret", NemIdError.NEMID_BLOCKED.exception()),
+                                ErrorTextTestParams.of(
+                                        "vidste du, at nemid skal fornyes hvert tredje",
+                                        NemIdError.RENEW_NEMID.exception()),
+                                ErrorTextTestParams.of(
+                                        "nemid er blevet genåbnet automatisk",
+                                        BankServiceError.BANK_SIDE_FAILURE.exception()),
+                                ErrorTextTestParams.of(
+                                        "der opstod en fejl under oprettelsen af dit oces-certifikat.",
+                                        BankServiceError.BANK_SIDE_FAILURE.exception()),
+                                ErrorTextTestParams.of(
+                                        "enter activation password",
+                                        LoginError.INCORRECT_CREDENTIALS.exception(
+                                                UserMessage.ENTER_ACTIVATION_PASSWORD.getKey())),
+                                ErrorTextTestParams.of(
+                                        "indtast midlertidig adgangskodet",
+                                        LoginError.INCORRECT_CREDENTIALS.exception(
+                                                UserMessage.ENTER_ACTIVATION_PASSWORD.getKey())))
                         .stream()
                         .map(
                                 errorTextTestParams ->
