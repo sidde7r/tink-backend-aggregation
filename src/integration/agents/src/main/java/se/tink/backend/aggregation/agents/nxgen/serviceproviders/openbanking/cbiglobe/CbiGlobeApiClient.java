@@ -13,6 +13,9 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.IdTags;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.PathParameterKeys;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.PathParameterValues;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.PaymentProduct;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.StorageKeys;
@@ -31,7 +34,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.InstrumentType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.rpc.CreatePaymentResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.rpc.CreateRecurringPaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.GetBalancesResponse;
@@ -46,6 +48,9 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
+import se.tink.libraries.payment.rpc.Payment;
+import se.tink.libraries.payments.common.model.PaymentScheme;
+import se.tink.libraries.transfer.rpc.PaymentServiceType;
 
 @Slf4j
 public class CbiGlobeApiClient {
@@ -271,15 +276,17 @@ public class CbiGlobeApiClient {
                 .orElseThrow(SessionError.SESSION_EXPIRED::exception);
     }
 
-    public CreatePaymentResponse createPayment(CreatePaymentRequest createPaymentRequest) {
+    public CreatePaymentResponse createPayment(
+            CreatePaymentRequest createPaymentRequest, Payment payment) {
         RequestBuilder requestBuilder =
                 createRequestInSession(
-                                Urls.PAYMENT.parameter(
-                                        IdTags.PAYMENT_PRODUCT,
-                                        sessionStorage.getOrDefault(
-                                                StorageKeys.PAYMENT_PRODUCT,
-                                                CbiGlobeConstants.PaymentProduct
-                                                        .SEPA_CREDIT_TRANSFERS)))
+                                Urls.PAYMENT
+                                        .parameter(
+                                                PathParameterKeys.PAYMENT_SERVICE,
+                                                getPaymentService(payment))
+                                        .parameter(
+                                                PathParameterKeys.PAYMENT_PRODUCT,
+                                                getPaymentProduct(payment)))
                         .header(
                                 HeaderKeys.ASPSP_PRODUCT_CODE,
                                 providerConfiguration.getAspspProductCode())
@@ -294,61 +301,37 @@ public class CbiGlobeApiClient {
                 .post(CreatePaymentResponse.class, createPaymentRequest);
     }
 
-    public CreatePaymentResponse createRecurringPayment(
-            CreateRecurringPaymentRequest createRecurringPaymentRequest) {
-        RequestBuilder requestBuilder =
-                createRequestInSession(
-                                Urls.PERIODIC_PAYMENT.parameter(
-                                        IdTags.PAYMENT_PRODUCT, getPaymentProduct()))
-                        .header(
-                                HeaderKeys.ASPSP_PRODUCT_CODE,
-                                providerConfiguration.getAspspProductCode())
-                        .header(HeaderKeys.TPP_REDIRECT_PREFERRED, "true")
-                        .header(
-                                HeaderKeys.TPP_REDIRECT_URI,
-                                getRedirectUrl(
-                                        sessionStorage.get(QueryKeys.STATE),
-                                        HeaderKeys.CODE,
-                                        HeaderValues.CODE));
-        return addPsuIpAddressHeaderIfNeeded(requestBuilder)
-                .post(CreatePaymentResponse.class, createRecurringPaymentRequest);
-    }
-
     private URL getRedirectUrl(String s, String code, String code2) {
         return new URL(redirectUrl).queryParam(QueryKeys.STATE, s).queryParam(code, code2);
     }
 
-    private String getPaymentProduct() {
-        return sessionStorage.getOrDefault(
-                StorageKeys.PAYMENT_PRODUCT,
-                CbiGlobeConstants.PaymentProduct.SEPA_CREDIT_TRANSFERS);
-    }
-
-    public CreatePaymentResponse getPayment(String uniqueId) {
+    public CreatePaymentResponse getPayment(Payment payment) {
         RequestBuilder requestBuilder =
                 createRequestInSession(
                                 Urls.FETCH_PAYMENT
-                                        .parameter(IdTags.PAYMENT_ID, uniqueId)
-                                        .parameter(IdTags.PAYMENT_PRODUCT, getPaymentProduct()))
+                                        .parameter(
+                                                PathParameterKeys.PAYMENT_SERVICE,
+                                                getPaymentService(payment))
+                                        .parameter(
+                                                PathParameterKeys.PAYMENT_PRODUCT,
+                                                getPaymentProduct(payment))
+                                        .parameter(IdTags.PAYMENT_ID, payment.getUniqueId()))
                         .header(
                                 HeaderKeys.ASPSP_PRODUCT_CODE,
                                 providerConfiguration.getAspspProductCode());
         return addPsuIpAddressHeaderIfNeeded(requestBuilder).get(CreatePaymentResponse.class);
     }
 
-    public CreatePaymentResponse getPaymentStatus(String uniqueId) {
+    public CreatePaymentResponse getPaymentStatus(Payment payment) {
         return createRequestInSession(
                         Urls.FETCH_PAYMENT_STATUS
-                                .parameter(IdTags.PAYMENT_ID, uniqueId)
-                                .parameter(IdTags.PAYMENT_PRODUCT, getPaymentProduct()))
-                .get(CreatePaymentResponse.class);
-    }
-
-    public CreatePaymentResponse getRecurringPaymentStatus(String uniqueId) {
-        return createRequestInSession(
-                        Urls.FETCH_PERIODIC_PAYMENT_STATUS
-                                .parameter(IdTags.PAYMENT_ID, uniqueId)
-                                .parameter(IdTags.PAYMENT_PRODUCT, getPaymentProduct()))
+                                .parameter(
+                                        PathParameterKeys.PAYMENT_SERVICE,
+                                        getPaymentService(payment))
+                                .parameter(
+                                        PathParameterKeys.PAYMENT_PRODUCT,
+                                        getPaymentProduct(payment))
+                                .parameter(IdTags.PAYMENT_ID, payment.getUniqueId()))
                 .get(CreatePaymentResponse.class);
     }
 
@@ -358,5 +341,17 @@ public class CbiGlobeApiClient {
                         ? psuIpAddress
                         : sessionStorage.get(HeaderKeys.PSU_IP_ADDRESS));
         return requestBuilder.header(HeaderKeys.PSU_IP_ADDRESS, originatingUserIPAddress);
+    }
+
+    private String getPaymentProduct(Payment payment) {
+        return PaymentScheme.SEPA_INSTANT_CREDIT_TRANSFER == payment.getPaymentScheme()
+                ? PaymentProduct.INSTANT_SEPA_CREDIT_TRANSFERS
+                : PaymentProduct.SEPA_CREDIT_TRANSFERS;
+    }
+
+    private String getPaymentService(Payment payment) {
+        return PaymentServiceType.PERIODIC == payment.getPaymentServiceType()
+                ? PathParameterValues.PAYMENT_SERVICE_PERIODIC_PAYMENTS
+                : PathParameterValues.PAYMENT_SERVICE_PAYMENTS;
     }
 }

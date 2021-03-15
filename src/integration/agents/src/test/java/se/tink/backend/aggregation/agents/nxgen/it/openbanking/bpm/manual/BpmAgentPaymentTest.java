@@ -12,6 +12,11 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
+import se.tink.libraries.payments.common.model.PaymentScheme;
+import se.tink.libraries.transfer.enums.RemittanceInformationType;
+import se.tink.libraries.transfer.rpc.ExecutionRule;
+import se.tink.libraries.transfer.rpc.Frequency;
+import se.tink.libraries.transfer.rpc.PaymentServiceType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 public class BpmAgentPaymentTest {
@@ -38,12 +43,31 @@ public class BpmAgentPaymentTest {
         manager.before();
         creditorDebtorManager.before();
 
-        builder.build().testTinkLinkPayment(createRealDomesticPayment());
+        builder.build().testTinkLinkPayment(createRealDomesticPayment().build());
     }
 
-    private Payment createRealDomesticPayment() {
+    @Test
+    public void testRecurringPayments() throws Exception {
+        manager.before();
+        creditorDebtorManager.before();
+
+        builder.build().testTinkLinkPayment(createRealDomesticRecurringPayment().build());
+    }
+
+    private Payment.Builder createRealDomesticRecurringPayment() {
+        return createRealDomesticPayment()
+                .withPaymentServiceType(PaymentServiceType.PERIODIC)
+                .withFrequency(Frequency.MONTHLY)
+                .withStartDate(LocalDate.now().plusDays(2))
+                .withEndDate(LocalDate.now().plusMonths(3))
+                .withExecutionRule(ExecutionRule.FOLLOWING)
+                .withDayOfExecution(10);
+    }
+
+    private Payment.Builder createRealDomesticPayment() {
         RemittanceInformation remittanceInformation = new RemittanceInformation();
         remittanceInformation.setValue("BpmAgent");
+        remittanceInformation.setType(RemittanceInformationType.UNSTRUCTURED);
         AccountIdentifier creditorAccountIdentifier =
                 new IbanIdentifier(creditorDebtorManager.get(Arg.CREDITOR_ACCOUNT));
         Creditor creditor = new Creditor(creditorAccountIdentifier, "Creditor Name");
@@ -63,7 +87,7 @@ public class BpmAgentPaymentTest {
                 .withExecutionDate(executionDate)
                 .withCurrency(currency)
                 .withRemittanceInformation(remittanceInformation)
-                .build();
+                .withPaymentScheme(PaymentScheme.SEPA_CREDIT_TRANSFER);
     }
 
     private enum Arg implements ArgumentManager.ArgumentManagerEnum {

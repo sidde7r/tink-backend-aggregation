@@ -47,7 +47,6 @@ import se.tink.libraries.pair.Pair;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Payment;
-import se.tink.libraries.payments.common.model.PaymentScheme;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
 import se.tink.libraries.transfer.rpc.PaymentServiceType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
@@ -83,18 +82,15 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
         sessionStorage.put(QueryKeys.STATE, strongAuthenticationState.getState());
         sessionStorage.put(
                 CbiGlobeConstants.HeaderKeys.PSU_IP_ADDRESS, paymentRequest.getOriginatingUserIp());
-        if (PaymentScheme.SEPA_INSTANT_CREDIT_TRANSFER
-                == paymentRequest.getPayment().getPaymentScheme()) {
-            this.sessionStorage.put(
-                    StorageKeys.PAYMENT_PRODUCT,
-                    CbiGlobeConstants.PaymentProduct.INSTANT_SEPA_CREDIT_TRANSFERS);
-        }
 
-        CreatePaymentResponse createPaymentResponse =
+        CreatePaymentRequest createPaymentRequest =
                 PaymentServiceType.PERIODIC.equals(
                                 paymentRequest.getPayment().getPaymentServiceType())
-                        ? getCreateRecurringPaymentResponse(paymentRequest)
-                        : getCreatePaymentResponse(paymentRequest);
+                        ? getCreateRecurringPaymentResponse(paymentRequest.getPayment())
+                        : getCreatePaymentResponse(paymentRequest.getPayment());
+
+        CreatePaymentResponse createPaymentResponse =
+                apiClient.createPayment(createPaymentRequest, paymentRequest.getPayment());
 
         sessionStorage.put(
                 StorageKeys.LINK,
@@ -102,56 +98,56 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
         return createPaymentResponse.toTinkPaymentResponse(paymentRequest.getPayment());
     }
 
-    private CreatePaymentResponse getCreatePaymentResponse(PaymentRequest paymentRequest) {
-        Payment payment = paymentRequest.getPayment();
-        AccountEntity creditorEntity = AccountEntity.creditorOf(paymentRequest);
-        AccountEntity debtorEntity = AccountEntity.debtorOf(paymentRequest);
-        InstructedAmountEntity instructedAmountEntity = InstructedAmountEntity.of(paymentRequest);
-        RemittanceInformation remittanceInformation = payment.getRemittanceInformation();
-        RemittanceInformationValidator.validateSupportedRemittanceInformationTypesOrThrow(
-                remittanceInformation, null, RemittanceInformationType.UNSTRUCTURED);
-
-        CreatePaymentRequest createPaymentRequest =
-                CreatePaymentRequest.builder()
-                        .debtorAccount(debtorEntity)
-                        .instructedAmount(instructedAmountEntity)
-                        .creditorAccount(creditorEntity)
-                        .creditorName(payment.getCreditor().getName())
-                        .remittanceInformationUnstructured(remittanceInformation.getValue())
-                        .transactionType(FormValues.TRANSACTION_TYPE)
-                        .build();
-
-        return apiClient.createPayment(createPaymentRequest);
+    private CreatePaymentRequest getCreatePaymentResponse(Payment payment) {
+        return CreatePaymentRequest.builder()
+                .debtorAccount(getAccountEntity(payment.getDebtor().getAccountNumber()))
+                .instructedAmount(getInstructedAmountEntity(payment))
+                .creditorAccount(getAccountEntity(payment.getCreditor().getAccountNumber()))
+                .creditorName(payment.getCreditor().getName())
+                .remittanceInformationUnstructured(getRemittanceInformation(payment).getValue())
+                .transactionType(FormValues.TRANSACTION_TYPE)
+                .build();
     }
 
-    private CreatePaymentResponse getCreateRecurringPaymentResponse(PaymentRequest paymentRequest) {
-        Payment payment = paymentRequest.getPayment();
-        AccountEntity creditorEntity = AccountEntity.creditorOf(paymentRequest);
-        AccountEntity debtorEntity = AccountEntity.debtorOf(paymentRequest);
-        InstructedAmountEntity instructedAmountEntity = InstructedAmountEntity.of(paymentRequest);
+    private CreatePaymentRequest getCreateRecurringPaymentResponse(Payment payment) {
+
+        return CreateRecurringPaymentRequest.builder()
+                .debtorAccount(getAccountEntity(payment.getDebtor().getAccountNumber()))
+                .instructedAmount(getInstructedAmountEntity(payment))
+                .creditorAccount(getAccountEntity(payment.getCreditor().getAccountNumber()))
+                .creditorName(payment.getCreditor().getName())
+                .remittanceInformationUnstructured(getRemittanceInformation(payment).getValue())
+                .transactionType(FormValues.TRANSACTION_TYPE)
+                .frequency(payment.getFrequency().toString())
+                .startDate(payment.getStartDate().toString())
+                // optional attributes
+                .endDate(payment.getEndDate() != null ? payment.getEndDate().toString() : null)
+                .executionRule(
+                        payment.getExecutionRule() != null
+                                ? payment.getExecutionRule().toString()
+                                : null)
+                .dayOfExecution(
+                        payment.getDayOfExecution() != 0
+                                ? String.valueOf(payment.getDayOfExecution())
+                                : null)
+                .build();
+    }
+
+    private RemittanceInformation getRemittanceInformation(Payment payment) {
         RemittanceInformation remittanceInformation = payment.getRemittanceInformation();
         RemittanceInformationValidator.validateSupportedRemittanceInformationTypesOrThrow(
                 remittanceInformation, null, RemittanceInformationType.UNSTRUCTURED);
+        return remittanceInformation;
+    }
 
-        CreateRecurringPaymentRequest.CreateRecurringPaymentRequestBuilder createPaymentRequest =
-                CreateRecurringPaymentRequest.builder()
-                        .debtorAccount(debtorEntity)
-                        .instructedAmount(instructedAmountEntity)
-                        .creditorAccount(creditorEntity)
-                        .creditorName(payment.getCreditor().getName())
-                        .remittanceInformationUnstructured(remittanceInformation.getValue())
-                        .transactionType(FormValues.TRANSACTION_TYPE)
-                        .frequency(payment.getFrequency().toString())
-                        .startDate(payment.getStartDate().toString());
-        // optional attributes
-        if (payment.getEndDate() != null) {
-            createPaymentRequest.endDate(payment.getEndDate().toString());
-        }
-        if (payment.getExecutionRule() != null) {
-            createPaymentRequest.executionRule(payment.getExecutionRule().toString());
-        }
+    private InstructedAmountEntity getInstructedAmountEntity(Payment payment) {
+        return new InstructedAmountEntity(
+                payment.getExactCurrencyAmount().getCurrencyCode(),
+                String.valueOf(payment.getExactCurrencyAmount().getDoubleValue()));
+    }
 
-        return apiClient.createRecurringPayment(createPaymentRequest.build());
+    private AccountEntity getAccountEntity(String accountNumber) {
+        return new AccountEntity(accountNumber);
     }
 
     private void fetchToken() {
@@ -172,16 +168,12 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
     @Override
     public PaymentResponse fetch(PaymentRequest paymentRequest) {
         return apiClient
-                .getPayment(paymentRequest.getPayment().getUniqueId())
+                .getPayment(paymentRequest.getPayment())
                 .toTinkPaymentResponse(paymentRequest.getPayment());
     }
 
-    private CreatePaymentResponse fetchPaymentStatus(String paymentId) {
-        return apiClient.getPaymentStatus(paymentId);
-    }
-
-    private CreatePaymentResponse fetchRecurringPaymentStatus(String paymentId) {
-        return apiClient.getRecurringPaymentStatus(paymentId);
+    private CreatePaymentResponse fetchPaymentStatus(Payment payment) {
+        return apiClient.getPaymentStatus(payment);
     }
 
     @Override
@@ -201,11 +193,7 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
         }
 
         CreatePaymentResponse createPaymentResponse =
-                PaymentServiceType.PERIODIC.equals(
-                                paymentMultiStepRequest.getPayment().getPaymentServiceType())
-                        ? fetchRecurringPaymentStatus(
-                                paymentMultiStepRequest.getPayment().getUniqueId())
-                        : fetchPaymentStatus(paymentMultiStepRequest.getPayment().getUniqueId());
+                fetchPaymentStatus(paymentMultiStepRequest.getPayment());
 
         CbiGlobePaymentStatus cbiGlobePaymentStatus =
                 CbiGlobePaymentStatus.fromString(createPaymentResponse.getTransactionStatus());

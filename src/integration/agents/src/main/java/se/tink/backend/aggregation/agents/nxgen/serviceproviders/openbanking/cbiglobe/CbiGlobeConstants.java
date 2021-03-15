@@ -31,19 +31,15 @@ public final class CbiGlobeConstants {
         public static final URL TRANSACTIONS = new URL(BASE_URL + ApiServices.TRANSACTIONS);
         public static final URL CONSENTS_STATUS = new URL(BASE_URL + ApiServices.CONSENTS_STATUS);
         public static final URL PAYMENT = new URL(BASE_URL + ApiServices.PAYMENT);
-        public static final URL PERIODIC_PAYMENT = new URL(BASE_URL + ApiServices.PERIODIC_PAYMENT);
         public static final URL FETCH_PAYMENT = new URL(BASE_URL + ApiServices.FETCH_PAYMENT);
         public static final URL FETCH_PAYMENT_STATUS =
                 new URL(BASE_URL + ApiServices.FETCH_PAYMENT_STATUS);
-        public static final URL FETCH_PERIODIC_PAYMENT_STATUS =
-                new URL(BASE_URL + ApiServices.FETCH_PERIODIC_PAYMENT_STATUS);
         public static final URL CARD_ACCOUNTS = new URL(BASE_URL + ApiServices.CARD_ACCOUNTS);
         public static final URL CARD_BALANCES = new URL(BASE_URL + ApiServices.CARD_BALANCES);
         public static final URL CARD_TRANSACTIONS =
                 new URL(BASE_URL + ApiServices.CARD_TRANSACTIONS);
     }
 
-    // TODO: Remove 'sbx' prefix for production
     public static class ApiServices {
         public static final String TOKEN = "/auth/oauth/v2/token";
         public static final String CONSENTS =
@@ -57,15 +53,11 @@ public final class CbiGlobeConstants {
         public static final String CONSENTS_STATUS =
                 "/platform/enabler/psd2orchestrator/ais/2.3.2/consents/{consentId}";
         private static final String PAYMENT =
-                "/platform/enabler/psd2orchestrator/pis/2.3.2/payments/{payment-product}";
-        private static final String PERIODIC_PAYMENT =
-                "/platform/enabler/psd2orchestrator/pis/2.3.2/periodic-payments/{payment-product}";
+                "/platform/enabler/psd2orchestrator/pis/2.3.2/{payment-service}/{payment-product}";
         private static final String FETCH_PAYMENT =
-                "/platform/enabler/psd2orchestrator/pis/2.3.2/payments/{payment-product}/{payment-id}";
+                "/platform/enabler/psd2orchestrator/pis/2.3.2/{payment-service}/{payment-product}/{payment-id}";
         private static final String FETCH_PAYMENT_STATUS =
-                "/platform/enabler/psd2orchestrator/pis/2.3.2/payments/{payment-product}/{payment-id}/status";
-        private static final String FETCH_PERIODIC_PAYMENT_STATUS =
-                "/platform/enabler/psd2orchestrator/pis/2.3.2/periodic-payments/{payment-product}/{payment-id}/status";
+                "/platform/enabler/psd2orchestrator/pis/2.3.2/{payment-service}/{payment-product}/{payment-id}/status";
         public static final String CARD_ACCOUNTS =
                 "/platform/enabler/psd2orchestrator/ais/2.3.2/card-accounts";
         public static final String CARD_BALANCES =
@@ -139,7 +131,16 @@ public final class CbiGlobeConstants {
         public static final String ACCOUNT_ID = "accountId";
         public static final String CONSENT_ID = "consentId";
         public static final String PAYMENT_ID = "payment-id";
+    }
+
+    public static class PathParameterKeys {
         public static final String PAYMENT_PRODUCT = "payment-product";
+        public static final String PAYMENT_SERVICE = "payment-service";
+    }
+
+    public static class PathParameterValues {
+        public static final String PAYMENT_SERVICE_PAYMENTS = "payments";
+        public static final String PAYMENT_SERVICE_PERIODIC_PAYMENTS = "periodic-payments";
     }
 
     public static class PSUAuthenticationStatus {
