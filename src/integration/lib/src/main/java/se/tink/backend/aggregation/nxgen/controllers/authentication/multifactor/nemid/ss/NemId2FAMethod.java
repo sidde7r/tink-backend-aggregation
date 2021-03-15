@@ -1,9 +1,10 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss;
 
+import java.util.List;
 import java.util.Optional;
-import java.util.stream.Stream;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.math.NumberUtils;
 import se.tink.libraries.i18n.LocalizableKey;
 
 @Getter
@@ -30,9 +31,18 @@ public enum NemId2FAMethod {
     private final String supplementalInfoIconUrl;
     private final Integer supplementalInfoOrder;
 
-    public static Optional<NemId2FAMethod> getMethodBySupplementalInfoKey(String key) {
-        return Stream.of(NemId2FAMethod.values())
+    public static Optional<NemId2FAMethod> getMethodBySupplementalInfoKey(
+            String key, List<NemId2FAMethod> availableMethods) {
+        if (shouldHandleBackwardCompatibility(key)) {
+            int index = Integer.parseInt(key) - 1;
+            return Optional.of(availableMethods.get(index));
+        }
+        return availableMethods.stream()
                 .filter(method -> method.getSupplementalInfoKey().equals(key))
                 .findFirst();
+    }
+
+    private static boolean shouldHandleBackwardCompatibility(String key) {
+        return NumberUtils.isDigits(key);
     }
 }

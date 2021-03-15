@@ -4,7 +4,9 @@ import static se.tink.backend.aggregation.nxgen.controllers.authentication.multi
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.metrics.NemIdMetricLabel.WAITING_FOR_SUPPLEMENTAL_INFO_METRIC;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.NemIdCodeAppConstants.UserMessage.CHOOSE_NEM_ID_METHOD;
 
+import com.google.common.collect.Lists;
 import com.google.inject.Inject;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
@@ -36,8 +38,8 @@ class NemIdAskUserToChoose2FAStep {
 
     private NemId2FAMethod askUserFor2FAMethod(
             Credentials credentials, Set<NemId2FAMethod> availableMethods) {
-
-        Field field = NemIdChoose2FAMethodField.build(catalog, availableMethods);
+        List<NemId2FAMethod> availableMethodsList = Lists.newArrayList(availableMethods);
+        Field field = NemIdChoose2FAMethodField.build(catalog, availableMethodsList);
 
         statusUpdater.updateStatusPayload(credentials, CHOOSE_NEM_ID_METHOD);
         Map<String, String> supplementalInfoResponse =
@@ -46,7 +48,7 @@ class NemIdAskUserToChoose2FAStep {
         String chosenMethodKey = supplementalInfoResponse.get(NemIdChoose2FAMethodField.FIELD_KEY);
         log.info("{}[NemIdAskUserToChoose2FAStep] User chose {}", NEM_ID_PREFIX, chosenMethodKey);
 
-        return NemId2FAMethod.getMethodBySupplementalInfoKey(chosenMethodKey)
+        return NemId2FAMethod.getMethodBySupplementalInfoKey(chosenMethodKey, availableMethodsList)
                 .orElseThrow(
                         () ->
                                 new IllegalStateException(
