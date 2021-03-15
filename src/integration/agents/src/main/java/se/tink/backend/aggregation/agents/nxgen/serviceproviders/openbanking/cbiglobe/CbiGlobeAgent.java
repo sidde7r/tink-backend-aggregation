@@ -72,10 +72,10 @@ public abstract class CbiGlobeAgent extends SubsequentProgressiveGenerationAgent
     private void applyFilters(TinkHttpClient client) {
         client.addFilter(
                 new AccessExceededFilter(this.provider != null ? this.provider.getName() : null));
+        client.addFilter(new BadGatewayFilter());
         client.addFilter(
                 new CBIGlobeRetryFilter(
                         HttpClient.MAX_RETRIES, HttpClient.RETRY_SLEEP_MILLISECONDS));
-        client.addFilter(new BadGatewayFilter());
     }
 
     protected CbiGlobeApiClient getApiClient(boolean requestManual) {
