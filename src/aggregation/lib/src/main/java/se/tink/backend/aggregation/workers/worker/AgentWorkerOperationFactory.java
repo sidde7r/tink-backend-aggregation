@@ -32,7 +32,6 @@ import se.tink.backend.aggregation.events.LoginAgentEventProducer;
 import se.tink.backend.aggregation.events.RefreshEventProducer;
 import se.tink.backend.aggregation.rpc.ConfigureWhitelistInformationRequest;
 import se.tink.backend.aggregation.rpc.CreateBeneficiaryCredentialsRequest;
-import se.tink.backend.aggregation.rpc.KeepAliveRequest;
 import se.tink.backend.aggregation.rpc.ReEncryptCredentialsRequest;
 import se.tink.backend.aggregation.rpc.RefreshWhitelistInformationRequest;
 import se.tink.backend.aggregation.rpc.TransferRequest;
@@ -55,7 +54,6 @@ import se.tink.backend.aggregation.workers.commands.EncryptCredentialsWorkerComm
 import se.tink.backend.aggregation.workers.commands.ExpireSessionAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.FetcherInstrumentationAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.InstantiateAgentWorkerCommand;
-import se.tink.backend.aggregation.workers.commands.KeepAliveAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.LockAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.LoginAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.MigrateCredentialsAndAccountsWorkerCommand;
@@ -1126,65 +1124,6 @@ public class AgentWorkerOperationFactory {
         commands.add(
                 new LockAgentWorkerCommand(context, operation, interProcessSemaphoreMutexFactory));
         commands.add(new EncryptCredentialsWorkerCommand(context, false, credentialsCrypto));
-
-        return new AgentWorkerOperation(
-                agentWorkerOperationState, operation, request, commands, context);
-    }
-
-    public AgentWorkerOperation createOperationKeepAlive(
-            KeepAliveRequest request, ClientInfo clientInfo) {
-        ControllerWrapper controllerWrapper =
-                controllerWrapperProvider.createControllerWrapper(clientInfo.getClusterId());
-
-        final String correlationId = UUIDUtils.generateUUID();
-
-        AgentWorkerCommandContext context =
-                new AgentWorkerCommandContext(
-                        request,
-                        metricRegistry,
-                        coordinationClient,
-                        agentsServiceConfiguration,
-                        aggregatorInfoProvider.createAggregatorInfoFor(
-                                clientInfo.getAggregatorId()),
-                        supplementalInformationController,
-                        providerSessionCacheController,
-                        controllerWrapper,
-                        clientInfo.getClusterId(),
-                        clientInfo.getAppId(),
-                        correlationId,
-                        accountInformationServiceEventsProducer);
-        CryptoWrapper cryptoWrapper =
-                cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
-        CredentialsCrypto credentialsCrypto =
-                new CredentialsCrypto(
-                        cacheClient, controllerWrapper, cryptoWrapper, metricRegistry);
-        List<AgentWorkerCommand> commands = Lists.newArrayList();
-
-        commands.add(new ValidateProviderAgentWorkerStatus(context, controllerWrapper));
-        String operation = "keep-alive";
-        commands.add(
-                new LockAgentWorkerCommand(context, operation, interProcessSemaphoreMutexFactory));
-        commands.add(new DecryptCredentialsWorkerCommand(context, credentialsCrypto));
-        commands.add(
-                new MigrateCredentialsAndAccountsWorkerCommand(
-                        context.getRequest(), controllerWrapper, clientInfo));
-        commands.add(
-                new ReportProviderMetricsAgentWorkerCommand(
-                        context,
-                        operation,
-                        reportMetricsAgentWorkerCommandState,
-                        new AgentWorkerMetricReporter(
-                                metricRegistry, this.providerTierConfiguration)));
-        commands.add(
-                new CreateAgentConfigurationControllerWorkerCommand(
-                        context, tppSecretsServiceClient));
-        commands.add(new CreateLogMaskerWorkerCommand(context));
-        commands.add(
-                new DebugAgentWorkerCommand(
-                        context, debugAgentWorkerCommandState, agentDebugStorageHandler));
-        commands.add(
-                new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
-        commands.add(new KeepAliveAgentWorkerCommand(context));
 
         return new AgentWorkerOperation(
                 agentWorkerOperationState, operation, request, commands, context);

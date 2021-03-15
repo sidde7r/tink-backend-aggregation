@@ -31,7 +31,6 @@ import se.tink.backend.aggregation.queue.models.RefreshInformation;
 import se.tink.backend.aggregation.rpc.ChangeProviderRateLimitsRequest;
 import se.tink.backend.aggregation.rpc.ConfigureWhitelistInformationRequest;
 import se.tink.backend.aggregation.rpc.CreateBeneficiaryCredentialsRequest;
-import se.tink.backend.aggregation.rpc.KeepAliveRequest;
 import se.tink.backend.aggregation.rpc.ReEncryptCredentialsRequest;
 import se.tink.backend.aggregation.rpc.RecurringPaymentRequest;
 import se.tink.backend.aggregation.rpc.RefreshWhitelistInformationRequest;
@@ -259,12 +258,6 @@ public class AggregationServiceResource implements AggregationService {
         agentWorker.execute(
                 agentWorkerCommandFactory.createOperationExecuteWhitelistedTransfer(
                         request, clientInfo));
-    }
-
-    @Override
-    public void keepAlive(KeepAliveRequest request, ClientInfo clientInfo) throws Exception {
-        agentWorker.execute(
-                agentWorkerCommandFactory.createOperationKeepAlive(request, clientInfo));
     }
 
     @Override
