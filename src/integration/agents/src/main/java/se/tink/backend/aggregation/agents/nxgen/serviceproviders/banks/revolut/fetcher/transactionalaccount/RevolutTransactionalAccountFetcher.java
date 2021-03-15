@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.RevolutApiClient;
@@ -46,8 +47,10 @@ public class RevolutTransactionalAccountFetcher implements AccountFetcher<Transa
                 .filter(this::isTransactionalAccount)
                 .map(
                         pocket ->
-                                pocket.toTinkCheckingAccount(
+                                pocket.toTransactionalAccount(
                                         currencyIbanMap.get(pocket.getCurrency()), holderName))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .collect(Collectors.toList());
     }
 

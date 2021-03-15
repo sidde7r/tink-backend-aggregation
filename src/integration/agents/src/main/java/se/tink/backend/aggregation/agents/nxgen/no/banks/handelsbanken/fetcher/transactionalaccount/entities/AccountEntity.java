@@ -5,13 +5,17 @@ import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.HandelsbankenNOConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
+import se.tink.libraries.account.identifiers.OtherIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
@@ -45,15 +49,28 @@ public class AccountEntity {
     }
 
     @JsonIgnore
-    public TransactionalAccount toTinkAccount() {
-        return TransactionalAccount.builder(
-                        getTinkAccountType(),
-                        accountNumber,
-                        getBalance(accountBalance.getAvailableBalance()))
-                .setAccountNumber(accountNumber)
-                .setName(displayName)
-                .setHolderName(new HolderName(owner.getName()))
-                .setBankIdentifier(getTransactionUrl())
+    public Optional<TransactionalAccount> toTinkAccount() {
+        AccountTypes accountType = getTinkAccountType();
+
+        if (TransactionalAccountType.isNotTransactionalAccount(accountType)) {
+            return Optional.empty();
+        }
+
+        TransactionalAccountType transactionalAccountType =
+                TransactionalAccountType.from(accountType).orElse(null);
+        return TransactionalAccount.nxBuilder()
+                .withType(transactionalAccountType)
+                .withPaymentAccountFlag()
+                .withBalance(BalanceModule.of(getBalance(accountBalance.getAvailableBalance())))
+                .withId(
+                        IdModule.builder()
+                                .withUniqueIdentifier(accountNumber)
+                                .withAccountNumber(accountNumber)
+                                .withAccountName(displayName)
+                                .addIdentifier(new OtherIdentifier(accountNumber))
+                                .build())
+                .setApiIdentifier(getTransactionUrl())
+                .addHolderName(owner.getName())
                 .build();
     }
 

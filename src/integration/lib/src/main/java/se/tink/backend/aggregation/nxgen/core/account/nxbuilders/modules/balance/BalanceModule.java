@@ -5,7 +5,6 @@ import java.util.Optional;
 import javax.annotation.Nonnull;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.builder.BalanceBuilderStep;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.builder.BalanceStep;
-import se.tink.libraries.amount.Amount;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public final class BalanceModule {
@@ -38,11 +37,6 @@ public final class BalanceModule {
 
     public Optional<Double> getInterestRate() {
         return Optional.ofNullable(interestRate);
-    }
-
-    public Optional<Amount> getAvailableCredit() {
-        return Optional.ofNullable(exactAvailableCredit)
-                .map(e -> new Amount(e.getCurrencyCode(), e.getDoubleValue()));
     }
 
     public Optional<ExactCurrencyAmount> getExactAvailableCredit() {

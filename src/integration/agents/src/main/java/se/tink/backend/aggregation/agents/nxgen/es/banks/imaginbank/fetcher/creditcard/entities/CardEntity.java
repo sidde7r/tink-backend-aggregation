@@ -98,9 +98,8 @@ public class CardEntity {
                 .setAccountNumber(formattedAccountNumber)
                 .setExactAvailableCredit(
                         ExactCurrencyAmount.of(
-                                availbaleCredit.doubleValue(), availbaleCredit.getCurrency()))
-                .setExactBalance(
-                        ExactCurrencyAmount.of(balance.doubleValue(), balance.getCurrency()))
+                                availbaleCredit.getValue(), availbaleCredit.getCurrency()))
+                .setExactBalance(ExactCurrencyAmount.of(balance.getValue(), balance.getCurrency()))
                 .setHolderName(getHolderName())
                 .setName(getName())
                 .setBankIdentifier(cardKey)

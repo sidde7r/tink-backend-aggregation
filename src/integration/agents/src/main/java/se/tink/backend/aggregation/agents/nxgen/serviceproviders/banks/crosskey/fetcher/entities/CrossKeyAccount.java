@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.fetcher.entities;
 
 import com.google.common.base.Strings;
+import java.util.Optional;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.CrossKeyConfiguration;
@@ -30,7 +31,8 @@ public class CrossKeyAccount {
     private int accountType;
     private String accountOwnerName;
 
-    public TransactionalAccount toTransactionalAccount(CrossKeyConfiguration agentConfiguration) {
+    public Optional<TransactionalAccount> toTransactionalAccount(
+            CrossKeyConfiguration agentConfiguration) {
         return agentConfiguration.parseTransactionalAccount(this);
     }
 

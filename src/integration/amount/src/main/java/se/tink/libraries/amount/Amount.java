@@ -1,22 +1,16 @@
 package se.tink.libraries.amount;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.MoreObjects;
 import java.math.BigDecimal;
 import java.util.Objects;
 
 @Deprecated
-public class Amount extends Number {
+public class Amount {
 
     private static final int SCALE = 2;
 
     private String currency;
     private double value;
-
-    public Amount() {
-        this.currency = null;
-        this.value = 0D;
-    }
 
     public Amount(String currency, Number value) {
         this(currency, value != null ? value.doubleValue() : Double.NaN);
@@ -31,11 +25,6 @@ public class Amount extends Number {
         return currency;
     }
 
-    /**
-     * Should preferably return double rather than Double, but too much code expects a reference
-     * type here. It's probably better to call either {@link #doubleValue()} or {@link
-     * #toBigDecimal()}}.
-     */
     public Double getValue() {
         return value;
     }
@@ -68,37 +57,12 @@ public class Amount extends Number {
                 .toString();
     }
 
-    @JsonIgnore
-    public boolean isLessThan(double pivot) {
-        return value < pivot;
-    }
-
     public BigDecimal toBigDecimal() {
         if (Double.isFinite(value)) {
             return BigDecimal.valueOf(Math.round(value * 100D), SCALE);
         } else {
             return null; // Not nice, but it's what's expected...
         }
-    }
-
-    @Override
-    public int intValue() {
-        return (int) longValue();
-    }
-
-    @Override
-    public long longValue() {
-        return Math.round(value);
-    }
-
-    @Override
-    public float floatValue() {
-        return (float) value;
-    }
-
-    @Override
-    public double doubleValue() {
-        return value;
     }
 
     public Amount negate() {

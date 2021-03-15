@@ -1,11 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.accounts.checking.entities;
 
+import static se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType.*;
+
+import java.util.Optional;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.accounts.checking.rpc.AccountDetailsResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.libraries.account.enums.AccountFlag;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
@@ -71,19 +75,31 @@ public class AccountEntity {
         return ExactCurrencyAmount.of(balance, currency);
     }
 
-    public TransactionalAccount toTinkTransactionalAccount(AccountDetailsResponse details) {
+    public Optional<TransactionalAccount> toTinkTransactionalAccount(
+            AccountDetailsResponse details) {
         // Should not be able to throw an exception here.
         AccountTypes accountType =
                 details.getTinkAccountType()
                         .orElseThrow(() -> new IllegalStateException("Unknown account type"));
 
-        return TransactionalAccount.builder(accountType, accountId, getTinkBalance())
-                .setAccountNumber(accountId)
-                .setBankIdentifier(accountId)
-                .setName(accountName)
-                .setHolderName(new HolderName(details.getAccountHolder()))
-                .addAccountFlag(AccountFlag.PSD2_PAYMENT_ACCOUNT)
-                .addIdentifier(new IbanIdentifier(details.getIban()))
+        TransactionalAccountType transactionalAccountType = from(accountType).orElse(null);
+
+        if (isNotTransactionalAccount(accountType)) {
+            return Optional.empty();
+        }
+
+        return TransactionalAccount.nxBuilder()
+                .withType(transactionalAccountType)
+                .withPaymentAccountFlag()
+                .withBalance(BalanceModule.of(getTinkBalance()))
+                .withId(
+                        IdModule.builder()
+                                .withUniqueIdentifier(accountId)
+                                .withAccountNumber(accountId)
+                                .withAccountName(accountName)
+                                .addIdentifier(new IbanIdentifier(details.getIban()))
+                                .build())
+                .addHolderName(details.getAccountHolder())
                 .build();
     }
 }

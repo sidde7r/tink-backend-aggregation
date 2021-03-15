@@ -2,8 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.fetchers;
 
 import com.google.common.collect.Lists;
 import java.util.Collection;
+import java.util.Optional;
 import java.util.stream.Collectors;
-import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.KbcApiClient;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.KbcConstants;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.fetchers.dto.AgreementDto;
@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
@@ -44,9 +45,11 @@ public class KbcTransactionalAccountFetcher
                 .filter(
                         agreement ->
                                 agreement.getAccountType().isPresent()
-                                        && AccountTypes.SAVINGS
+                                        && TransactionalAccountType.SAVINGS
                                                 == agreement.getAccountType().orElse(null))
                 .map(AgreementDto::toTransactionalAccount)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .collect(Collectors.toList());
     }
 

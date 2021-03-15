@@ -2,12 +2,14 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Strings;
-import se.tink.backend.agents.rpc.AccountTypes;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.RevolutConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.libraries.account.enums.AccountFlag;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
+import se.tink.libraries.account.identifiers.OtherIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
@@ -23,30 +25,26 @@ public class PocketEntity {
     private int creditLimit; // expressed in cents
 
     @JsonIgnore
-    public TransactionalAccount toTinkCheckingAccount(String accountNumber, String holderName) {
-        return toTinkAccount(accountNumber, holderName, AccountTypes.CHECKING);
-    }
-
-    private TransactionalAccount toTinkAccount(
-            String accountNumber, String holderName, AccountTypes accountType) {
-        TransactionalAccount.Builder builder =
-                TransactionalAccount.builder(
-                                accountType,
-                                id,
-                                ExactCurrencyAmount.of(getBalance(), currency.toUpperCase()))
-                        .addAccountFlag(AccountFlag.PSD2_PAYMENT_ACCOUNT)
-                        .setName(getAccountName())
-                        .setHolderName(new HolderName(holderName))
-                        .setBankIdentifier(id);
-
-        if (!Strings.isNullOrEmpty(accountNumber)) {
-            builder.setAccountNumber(accountNumber);
-        } else {
-            builder.setAccountNumber(id);
-        }
-
-        builder.putInTemporaryStorage(RevolutConstants.Storage.CURRENCY, currency);
-        return builder.build();
+    public Optional<TransactionalAccount> toTransactionalAccount(
+            String accountNumber, String holderName) {
+        return TransactionalAccount.nxBuilder()
+                .withType(TransactionalAccountType.CHECKING)
+                .withPaymentAccountFlag()
+                .withBalance(
+                        BalanceModule.of(
+                                ExactCurrencyAmount.of(getBalance(), currency.toUpperCase())))
+                .withId(
+                        IdModule.builder()
+                                .withUniqueIdentifier(id)
+                                .withAccountNumber(
+                                        Strings.isNullOrEmpty(accountNumber) ? id : accountNumber)
+                                .withAccountName(getAccountName())
+                                .addIdentifier(new OtherIdentifier(id))
+                                .build())
+                .setApiIdentifier(id)
+                .addHolderName(holderName)
+                .putInTemporaryStorage(RevolutConstants.Storage.CURRENCY, currency)
+                .build();
     }
 
     @JsonIgnore

@@ -3,10 +3,14 @@ package se.tink.backend.aggregation.agents.nxgen.ro.banks.raiffeisen.fetcher.ent
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Strings;
 import java.util.List;
-import se.tink.backend.agents.rpc.AccountTypes;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.ro.banks.raiffeisen.RaiffeisenConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
+import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
@@ -44,10 +48,18 @@ public class AccountEntity {
         return resourceId;
     }
 
-    public TransactionalAccount toTransactionalAccount() {
-        return TransactionalAccount.builder(AccountTypes.CHECKING, iban, toTinkAmount())
-                .setName(accountName)
-                .setAccountNumber(getAccountNumber())
+    public Optional<TransactionalAccount> toTransactionalAccount() {
+        return TransactionalAccount.nxBuilder()
+                .withType(TransactionalAccountType.CHECKING)
+                .withoutFlags()
+                .withBalance(BalanceModule.of(toTinkAmount()))
+                .withId(
+                        IdModule.builder()
+                                .withUniqueIdentifier(getAccountNumber())
+                                .withAccountNumber(getAccountNumber())
+                                .withAccountName(accountName)
+                                .addIdentifier(new IbanIdentifier(iban))
+                                .build())
                 .putInTemporaryStorage(
                         RaiffeisenConstants.STORAGE.TRANSACTIONS_URL, links.getTransactionUrl())
                 .putInTemporaryStorage(
