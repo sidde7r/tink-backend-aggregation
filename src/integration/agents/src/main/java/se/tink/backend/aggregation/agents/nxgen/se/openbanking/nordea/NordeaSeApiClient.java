@@ -28,4 +28,12 @@ public final class NordeaSeApiClient extends NordeaBaseApiClient {
                 .body(requestBody, MediaType.APPLICATION_JSON)
                 .post(DecoupledAuthenticationResponse.class);
     }
+
+    public DecoupledAuthenticationResponse getDecoupledAuthenticationStatus(String sessionId) {
+        return createRequest(
+                        Urls.DECOUPLED_AUTHENTICATION.concatWithSeparator(sessionId),
+                        HttpMethod.GET,
+                        null)
+                .get(DecoupledAuthenticationResponse.class);
+    }
 }
