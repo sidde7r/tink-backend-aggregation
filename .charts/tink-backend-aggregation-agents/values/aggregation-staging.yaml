@@ -24,3 +24,8 @@ allLoginActions: action=~"login-auto|login-manual|login-cron|is-logged-in|persis
 
 obAgents: provider=~".*-ob|.*-oauth2"
 reAgents: provider!~".*-ob|.*-oauth2"
+
+p4TimeWindow: 30m
+p3TimeWindow: 20m
+p2TimeWindow: 10m
+p1TimeWindow: 5m
