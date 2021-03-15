@@ -8,15 +8,17 @@ import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.NordeaSeApiClient;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.authenticator.rpc.DecoupledAuthenticationResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 
 public class NordeaSeDecoupledAuthenticator implements BankIdAuthenticator {
 
     private final NordeaSeApiClient apiClient;
+    private String autoStartToken;
+    private String ssn;
 
-    public NordeaSeDecoupledAuthenticator(
-            NordeaSeApiClient apiClient) {
+    public NordeaSeDecoupledAuthenticator(NordeaSeApiClient apiClient) {
         this.apiClient = apiClient;
     }
 
@@ -24,7 +26,10 @@ public class NordeaSeDecoupledAuthenticator implements BankIdAuthenticator {
     public Object init(String ssn)
             throws BankIdException, BankServiceException, AuthorizationException,
                     AuthenticationException {
-        apiClient.authenticateDecoupled(ssn);
+        this.ssn = ssn;
+        DecoupledAuthenticationResponse authenticationResponse =
+                apiClient.authenticateDecoupled(ssn);
+        this.autoStartToken = authenticationResponse.getAutoStartToken();
         return null;
     }
 
@@ -38,12 +43,12 @@ public class NordeaSeDecoupledAuthenticator implements BankIdAuthenticator {
     public Object refreshAutostartToken()
             throws BankIdException, BankServiceException, AuthorizationException,
                     AuthenticationException {
-        return null;
+        return init(ssn);
     }
 
     @Override
     public Optional<String> getAutostartToken() {
-        return Optional.empty();
+        return Optional.ofNullable(autoStartToken);
     }
 
     @Override
