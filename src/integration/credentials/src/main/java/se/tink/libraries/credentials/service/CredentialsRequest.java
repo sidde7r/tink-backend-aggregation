@@ -46,8 +46,13 @@ public abstract class CredentialsRequest {
 
     private List<DataFetchingRestrictions> dataFetchingRestrictions = new ArrayList<>();
 
-    /** @return true if and only if this request was not initiated by a cron job */
+    /**
+     * @deprecated use UserAvailability's userPresent or userAvailableForInteraction depending on
+     *     what you need
+     * @return true if and only if this request was not initiated by a cron job
+     */
     @JsonIgnore
+    @Deprecated
     public abstract boolean isManual();
 
     @JsonIgnore

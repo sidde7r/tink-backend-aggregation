@@ -20,7 +20,12 @@ public class CreateCredentialsRequest extends CredentialsRequest {
         return CredentialsRequestType.CREATE;
     }
 
+    /**
+     * @deprecated use UserAvailability's userPresent or userAvailableForInteraction depending on
+     *     what you need
+     */
     @Override
+    @Deprecated
     public boolean isManual() {
         return true;
     }
