@@ -111,6 +111,18 @@ public class AggregationServiceResource implements AggregationService {
                 .inc();
     }
 
+    private boolean isHighPrioRequest(CredentialsRequest request) {
+        // The UserAvailability object and data that follows is the new (2021-03-15) way of taking
+        // decisions on Aggregation Service in relation to the User. For instance, we want to
+        // high-prioritize all requests where the user is present.
+        if (request.getUserAvailability() != null) {
+            return request.getUserAvailability().isUserPresent();
+        }
+
+        // fallback to old flag
+        return request.isManual();
+    }
+
     @Override
     public Credentials createCredentials(CreateCredentialsRequest request, ClientInfo clientInfo) {
         AgentWorkerOperation createCredentialsOperation =
@@ -196,7 +208,7 @@ public class AggregationServiceResource implements AggregationService {
             throws Exception {
         trackUserPresentFlagPresence("refresh", request);
 
-        if (request.isManual()) {
+        if (isHighPrioRequest(request)) {
             agentWorker.execute(
                     agentWorkerCommandFactory.createOperationRefresh(request, clientInfo));
         } else {
