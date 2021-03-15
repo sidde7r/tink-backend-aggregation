@@ -5,6 +5,7 @@ import static se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.Spare
 import static se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.Sparebank1Constants.AccountTypes.SAVINGS_ACCOUNT;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.math.BigDecimal;
 import java.util.Optional;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -58,7 +59,7 @@ public class AccountEntity {
                 .build();
     }
 
-    private BalanceModule buildBalanceModule(String creditLine) {
+    private BalanceModule buildBalanceModule(BigDecimal creditLine) {
         return BalanceModule.builder()
                 .withBalance(
                         ExactCurrencyAmount.of(
@@ -70,7 +71,7 @@ public class AccountEntity {
                                 Sparebank1AmountUtils.constructDouble(
                                         disposableAmountInteger, disposableAmountFraction),
                                 currencyCode))
-                .setCreditLimit(ExactCurrencyAmount.of(creditLine, currencyCode))
+                .setCreditLimit(ExactCurrencyAmount.of(creditLine.abs(), currencyCode))
                 .build();
     }
 
