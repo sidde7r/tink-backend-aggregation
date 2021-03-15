@@ -89,6 +89,34 @@ class LegacyExceptionToConnectivityErrorMapper {
                             ConnectivityErrorFactory.authorizationError(
                                     ConnectivityErrorDetails.AuthorizationErrors
                                             .USER_ACTION_REQUIRED_UNSIGNED_AGREEMENT))
+                    .put(
+                            LoginError.INVALIDATED_CREDENTIALS,
+                            ConnectivityErrorFactory.userLoginError(
+                                    ConnectivityErrorDetails.UserLoginErrors
+                                            .STATIC_CREDENTIALS_INCORRECT))
+                    .put(
+                            LoginError.WRONG_ACTIVATION_CODE,
+                            ConnectivityErrorFactory.userLoginError(
+                                    ConnectivityErrorDetails.UserLoginErrors
+                                            .DYNAMIC_CREDENTIALS_INCORRECT))
+                    .put(
+                            LoginError.ACTIVATION_TIMED_OUT,
+                            ConnectivityErrorFactory.userLoginError(
+                                    ConnectivityErrorDetails.UserLoginErrors
+                                            .DYNAMIC_CREDENTIALS_FLOW_TIMEOUT))
+                    .put(
+                            LoginError.NO_AVAILABLE_SCA_METHODS,
+                            ConnectivityErrorFactory.tinkSideError(
+                                    ConnectivityErrorDetails.TinkSideErrors
+                                            .AUTHENTICATION_METHOD_NOT_SUPPORTED))
+
+                    // we must either take a decision if we should introduce a UserLoginError of
+                    // UNKNOWN type, or if all usages of LoginError.DEFAULT_MESSAGE should be fixed
+                    // to be of a explicit type.
+                    .put(
+                            LoginError.DEFAULT_MESSAGE,
+                            ConnectivityErrorFactory.tinkSideError(
+                                    ConnectivityErrorDetails.TinkSideErrors.UNKNOWN_ERROR))
                     .build();
 
     static final ImmutableMap<BankIdError, ConnectivityError> BANKID_ERROR_MAPPER =
