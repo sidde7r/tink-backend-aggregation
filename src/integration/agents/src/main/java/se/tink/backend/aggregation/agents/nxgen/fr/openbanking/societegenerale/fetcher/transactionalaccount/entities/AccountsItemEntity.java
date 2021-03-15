@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.SocieteGeneraleConstants;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.SocieteGeneraleConstants.CardDetails;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
@@ -43,6 +44,8 @@ public class AccountsItemEntity {
 
     private String bicFi;
 
+    private String details;
+
     public String getResourceId() {
         return resourceId;
     }
@@ -69,13 +72,12 @@ public class AccountsItemEntity {
     }
 
     public CreditCardAccount toTinkCreditCard() {
-
         return CreditCardAccount.nxBuilder()
                 .withCardDetails(
                         CreditCardModule.builder()
                                 .withCardNumber(accountIdEntity.getOther().getIdentification())
-                                .withBalance(ExactCurrencyAmount.of(0, "EUR"))
-                                .withAvailableCredit(ExactCurrencyAmount.of(0, "EUR"))
+                                .withBalance(getBalance())
+                                .withAvailableCredit(getBalance())
                                 .withCardAlias(name)
                                 .build())
                 .withInferredAccountFlags()
@@ -120,7 +122,8 @@ public class AccountsItemEntity {
     }
 
     public boolean isCreditCard() {
-        return CashAccountTypeEntity.CARD == cashAccountType;
+        return CashAccountTypeEntity.CARD == cashAccountType
+                && CardDetails.CREDIT_CARD.equals(details);
     }
 
     public AccountIdEntity getAccountIdEntity() {

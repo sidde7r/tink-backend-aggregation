@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator;
 
 import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
@@ -19,25 +20,21 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swe
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.entities.ChallengeDataEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.rpc.AuthenticationResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.authenticator.rpc.AuthenticationStatusResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.fetcher.transactionalaccount.SwedbankTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.swedbank.rpc.GenericResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
+@RequiredArgsConstructor
 public class SwedbankDecoupledAuthenticator implements BankIdAuthenticator<String> {
     private final SwedbankApiClient apiClient;
     private final SupplementalInformationHelper supplementalInformationHelper;
+    private final SwedbankTransactionalAccountFetcher transactionalAccountFetcher;
     private String ssn;
     private String autoStartToken;
     private OAuth2Token accessToken;
-
-    public SwedbankDecoupledAuthenticator(
-            SwedbankApiClient apiClient,
-            SupplementalInformationHelper supplementalInformationHelper) {
-        this.apiClient = apiClient;
-        this.supplementalInformationHelper = supplementalInformationHelper;
-    }
 
     @Override
     public String init(String ssn) {
@@ -84,6 +81,12 @@ public class SwedbankDecoupledAuthenticator implements BankIdAuthenticator<Strin
                 accessToken =
                         apiClient.exchangeCodeForToken(
                                 authenticationStatusResponse.getAuthorizationCode());
+                // Handle the case where the user has single engagement at Swedbank and selects
+                // Savingsbank provider by mistake
+                if (transactionalAccountFetcher.isCrossLogin()) {
+                    throw LoginError.NOT_CUSTOMER.exception(
+                            SwedbankConstants.EndUserMessage.WRONG_BANK_SAVINGSBANK.getKey());
+                }
                 return BankIdStatus.DONE;
             case AuthStatus.FAILED:
                 return BankIdStatus.EXPIRED_AUTOSTART_TOKEN;

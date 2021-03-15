@@ -47,13 +47,4 @@ public class SocieteGeneraleCreditCardFetcher
             throw e;
         }
     }
-
-    private CreditCardAccount toTinkCreditCard(AccountsItemEntity entity) {
-        // temporary call to discover if balances are available for credit card
-        log.debug(
-                "Credit card balance response: "
-                        + societeGeneraleApiClient.getCreditCardBalances(
-                                URL.of(entity.getLinks().getBalancesEntity().getHref())));
-        return entity.toTinkCreditCard();
-    }
 }
