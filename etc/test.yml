@@ -2958,8 +2958,8 @@ agentsServiceConfiguration:
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
     76b78df73ec94751829d73aee4f94321:
       tink:
-        apiKey: dummyKey
-        keyId: dummyKey
+        apiKey: dummyApiKey
+        keyId: SN=6a3616cca87dc6204f498a3223e59c09,CA=CN=MULTICERT Trust Services Certification Authority 002,OU=Certification Authority,O=MULTICERT - Servi\C3\A7os de Certifica\C3\A7\C3\A3o Electr\C3\B3nica S.A.,C=PT
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
     76d96fe1fe0b47d5b6b813f4a97774fc:
       tink:

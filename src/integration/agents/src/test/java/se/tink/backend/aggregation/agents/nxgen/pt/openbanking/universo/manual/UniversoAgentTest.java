@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.pt.openbanking.universo;
+package se.tink.backend.aggregation.agents.nxgen.pt.openbanking.universo.manual;
 
 import org.junit.Before;
 import org.junit.Test;
