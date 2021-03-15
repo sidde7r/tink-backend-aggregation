@@ -60,8 +60,8 @@ public final class NordeaSeAgent extends NordeaBaseAgent
     @Override
     protected Authenticator constructAuthenticator() {
 
-        BankIdAuthenticationController bankIdAuthenticationController =
-                new BankIdAuthenticationController(
+        BankIdAuthenticationController<String> bankIdAuthenticationController =
+                new BankIdAuthenticationController<>(
                         supplementalInformationController,
                         new NordeaSeDecoupledAuthenticator((NordeaSeApiClient) apiClient),
                         persistentStorage,

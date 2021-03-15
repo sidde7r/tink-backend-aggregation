@@ -12,7 +12,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.authentica
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 
-public class NordeaSeDecoupledAuthenticator implements BankIdAuthenticator {
+public class NordeaSeDecoupledAuthenticator implements BankIdAuthenticator<String> {
 
     private final NordeaSeApiClient apiClient;
     private String autoStartToken;
@@ -23,7 +23,7 @@ public class NordeaSeDecoupledAuthenticator implements BankIdAuthenticator {
     }
 
     @Override
-    public Object init(String ssn)
+    public String init(String ssn)
             throws BankIdException, BankServiceException, AuthorizationException,
                     AuthenticationException {
         this.ssn = ssn;
@@ -34,13 +34,13 @@ public class NordeaSeDecoupledAuthenticator implements BankIdAuthenticator {
     }
 
     @Override
-    public BankIdStatus collect(Object reference)
+    public BankIdStatus collect(String reference)
             throws AuthenticationException, AuthorizationException {
         return null;
     }
 
     @Override
-    public Object refreshAutostartToken()
+    public String refreshAutostartToken()
             throws BankIdException, BankServiceException, AuthorizationException,
                     AuthenticationException {
         return init(ssn);
