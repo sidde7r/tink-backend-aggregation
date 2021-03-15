@@ -25,6 +25,8 @@ public class HandelsbankenNOAccountFetcher implements AccountFetcher<Transaction
         return Optional.ofNullable(accounts).orElseGet(Collections::emptyList).stream()
                 .filter(AccountEntity::isTransactionalAccount)
                 .map(AccountEntity::toTinkAccount)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .collect(Collectors.toList());
     }
 }

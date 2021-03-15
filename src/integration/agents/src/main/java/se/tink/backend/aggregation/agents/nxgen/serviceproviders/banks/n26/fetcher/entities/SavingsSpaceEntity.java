@@ -1,10 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.fetcher.entities;
 
-import se.tink.backend.agents.rpc.AccountTypes;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.N26Constants;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.SavingsAccount;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
+import se.tink.libraries.account.identifiers.OtherIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
@@ -26,11 +29,18 @@ public class SavingsSpaceEntity {
         return isPrimary;
     }
 
-    public TransactionalAccount toSavingsAccount() {
-        return SavingsAccount.builder(AccountTypes.SAVINGS, getAccountId(), getAmount())
-                .setAccountNumber(getAccountId())
-                .setName(getName())
-                .setBankIdentifier(getAccountId())
+    public Optional<TransactionalAccount> toSavingsAccount() {
+        return TransactionalAccount.nxBuilder()
+                .withType(TransactionalAccountType.SAVINGS)
+                .withoutFlags()
+                .withBalance(BalanceModule.of(getAmount()))
+                .withId(
+                        IdModule.builder()
+                                .withUniqueIdentifier(getAccountId())
+                                .withAccountNumber(getAccountId())
+                                .withAccountName(getName())
+                                .addIdentifier(new OtherIdentifier(getAccountId()))
+                                .build())
                 .putInTemporaryStorage(N26Constants.SPACE_ID, id)
                 .build();
     }

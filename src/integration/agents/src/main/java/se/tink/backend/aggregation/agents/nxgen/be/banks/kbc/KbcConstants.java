@@ -2,9 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.kbc;
 
 import com.google.common.base.Preconditions;
 import java.util.Locale;
-import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.backend.aggregation.nxgen.http.UrlEnum;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.i18n.LocalizableEnum;
@@ -212,16 +212,16 @@ public class KbcConstants {
         "4058"
     }; // Compte d'épargne gar.locative KBC Brussels
 
-    public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
-            TypeMapper.<AccountTypes>builder()
+    public static final TypeMapper<TransactionalAccountType> ACCOUNT_TYPE_MAPPER =
+            TypeMapper.<TransactionalAccountType>builder()
                     .put(
-                            AccountTypes.CHECKING,
+                            TransactionalAccountType.CHECKING,
                             "0028", // Company Card
                             "0030", //
                             "3737", // Business Pro
                             "3844") // KBC-Zichtrekening
                     .put(
-                            AccountTypes.SAVINGS,
+                            TransactionalAccountType.SAVINGS,
                             "3590", // Start2Save
                             "3591",
                             "3594", // KBC-Huurwaarborgspaarrekening

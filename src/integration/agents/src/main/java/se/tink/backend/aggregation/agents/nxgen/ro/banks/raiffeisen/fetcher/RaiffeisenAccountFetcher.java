@@ -20,7 +20,7 @@ public class RaiffeisenAccountFetcher implements AccountFetcher<TransactionalAcc
             return client.fetchAccounts().toTransactionalAccounts();
         } catch (Exception e) {
             // If we get here the user has not consented that we access their balance
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         }
     }
 }

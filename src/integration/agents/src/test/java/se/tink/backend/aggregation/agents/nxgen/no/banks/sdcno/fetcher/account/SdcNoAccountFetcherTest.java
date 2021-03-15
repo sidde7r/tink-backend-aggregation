@@ -12,12 +12,15 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
-import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.SdcNoApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.converter.AccountNumberToIbanConverter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetcher.rpc.FilterAccountsRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetcher.rpc.FilterAccountsResponse;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
+import se.tink.libraries.account.identifiers.OtherIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class SdcNoAccountFetcherTest {
@@ -62,11 +65,18 @@ public class SdcNoAccountFetcherTest {
     }
 
     private TransactionalAccount transactionalAccount() {
-        return TransactionalAccount.builder(
-                        AccountTypes.CHECKING, "sampleid", ExactCurrencyAmount.inEUR(12.34))
-                .setAccountNumber("sample account number")
-                .setName("sample name")
-                .setBankIdentifier("sample bank identifier")
-                .build();
+        return TransactionalAccount.nxBuilder()
+                .withType(TransactionalAccountType.CHECKING)
+                .withoutFlags()
+                .withBalance(BalanceModule.of(ExactCurrencyAmount.inEUR(12.34)))
+                .withId(
+                        IdModule.builder()
+                                .withUniqueIdentifier("UN123")
+                                .withAccountNumber("AN123")
+                                .withAccountName("NM123")
+                                .addIdentifier(new OtherIdentifier("ID123"))
+                                .build())
+                .build()
+                .orElse(null);
     }
 }

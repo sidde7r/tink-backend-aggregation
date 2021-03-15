@@ -18,7 +18,8 @@ public abstract class CrossKeyConfiguration implements ClientConfiguration {
 
     public abstract String getBaseUrl();
 
-    public abstract TransactionalAccount parseTransactionalAccount(CrossKeyAccount crossKeyAccount);
+    public abstract Optional<TransactionalAccount> parseTransactionalAccount(
+            CrossKeyAccount crossKeyAccount);
 
     public abstract Transaction parseTinkTransaction(CrossKeyTransaction crossKeyTransaction);
 

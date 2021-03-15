@@ -30,6 +30,8 @@ junit_test(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/core/account",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
+        "//src/integration/transfer:rpc",
+        "//src/libraries/account_identifier",
         "//src/libraries/mapper",
         "//third_party:org_assertj_assertj_core",
         "//third_party:org_mockito_mockito_core",

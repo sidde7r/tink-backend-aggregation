@@ -42,4 +42,15 @@ public enum TransactionalAccountType {
                 return AccountTypes.OTHER;
         }
     }
+
+    public static boolean isTransactionalAccount(AccountTypes type) {
+        Optional<TransactionalAccountType> transactionalAccountType =
+                TransactionalAccountType.from(type);
+        return transactionalAccountType.isPresent()
+                && transactionalAccountType.orElse(null) != OTHER;
+    }
+
+    public static boolean isNotTransactionalAccount(AccountTypes type) {
+        return !isTransactionalAccount(type);
+    }
 }

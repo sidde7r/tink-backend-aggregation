@@ -307,7 +307,7 @@ public class Payment {
         public Builder withAmount(Amount amount) {
             this.amount = amount;
             this.exactCurrencyAmount =
-                    ExactCurrencyAmount.of(amount.doubleValue(), amount.getCurrency());
+                    ExactCurrencyAmount.of(amount.getValue(), amount.getCurrency());
             return this;
         }
 

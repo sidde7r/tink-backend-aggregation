@@ -31,7 +31,11 @@ public class LclTransactionalAccountFetcher implements AccountFetcher<Transactio
 
         List<AccountEntity> accounts = getAllCheckingAccounts(checkingAccountGroup.get());
 
-        return accounts.stream().map(this::getTinkAccount).collect(Collectors.toList());
+        return accounts.stream()
+                .map(this::getTinkAccount)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList());
     }
 
     private List<AccountEntity> getAllCheckingAccounts(AccountGroupEntity accountGroupEntity) {
@@ -48,7 +52,7 @@ public class LclTransactionalAccountFetcher implements AccountFetcher<Transactio
         return accounts;
     }
 
-    private TransactionalAccount getTinkAccount(AccountEntity accountEntity) {
+    private Optional<TransactionalAccount> getTinkAccount(AccountEntity accountEntity) {
         AccountDetailsEntity accountDetails =
                 apiClient.getAccountDetails(
                         accountEntity.getAgency(),

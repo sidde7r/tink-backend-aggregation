@@ -1,17 +1,17 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.fetchers.dto;
 
 import java.beans.Transient;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Optional;
-import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.general.models.GeneralAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.KbcConstants;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.dto.TypeEncValueTuple;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.dto.TypeValuePair;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.transactional.TransactionalBuildStep;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountFlag;
 import se.tink.libraries.amount.ExactCurrencyAmount;
@@ -184,36 +184,47 @@ public class AgreementDto implements GeneralAccountEntity {
     }
 
     @Transient
-    public Optional<AccountTypes> getAccountType() {
+    public Optional<TransactionalAccountType> getAccountType() {
         return KbcConstants.ACCOUNT_TYPE_MAPPER.translate(productTypeNr.getValue());
     }
 
-    public TransactionalAccount toTransactionalAccount() {
-        AccountTypes accountType = getAccountType().orElseThrow(IllegalArgumentException::new);
+    public Optional<TransactionalAccount> toTransactionalAccount() {
+        TransactionalAccountType accountType =
+                getAccountType().orElseThrow(IllegalArgumentException::new);
 
-        TransactionalAccount.Builder builder =
-                TransactionalAccount.builder(accountType, agreementNo.getValue(), getAmount())
-                        .setName(agreementMakeUp.getName().getValue())
-                        .setHolderName(new HolderName(agreementName.getValue()))
-                        .setBankIdentifier(agreementNo.getValue())
-                        .setAccountNumber(agreementNo.getValue())
-                        .addIdentifier(generalGetAccountIdentifier())
-                        .addAccountFlags(getAccountFlags());
+        TransactionalBuildStep builder =
+                TransactionalAccount.nxBuilder()
+                        .withType(accountType)
+                        .withoutFlags()
+                        .withBalance(BalanceModule.of(getAmount()))
+                        .withId(
+                                IdModule.builder()
+                                        .withUniqueIdentifier(agreementNo.getValue())
+                                        .withAccountNumber(agreementNo.getValue())
+                                        .withAccountName(agreementMakeUp.getName().getValue())
+                                        .addIdentifier(generalGetAccountIdentifier())
+                                        .build())
+                        .setApiIdentifier(agreementNo.getValue())
+                        .addHolderName(agreementName.getValue());
 
-        if (accountType == AccountTypes.CHECKING) {
-            builder.addAccountFlag(AccountFlag.PSD2_PAYMENT_ACCOUNT);
+        if (accountType == TransactionalAccountType.CHECKING) {
+            builder.addAccountFlags(AccountFlag.PSD2_PAYMENT_ACCOUNT);
+        }
+
+        AccountFlag accountFlag = getAccountFlag();
+
+        if (null != accountFlag) {
+            builder.addAccountFlags(accountFlag);
         }
 
         return builder.build();
     }
 
-    private Collection<AccountFlag> getAccountFlags() {
-        return getIsBusinessAccount()
-                ? Collections.singletonList(AccountFlag.BUSINESS)
-                : Collections.emptyList();
+    private AccountFlag getAccountFlag() {
+        return isBusinessAccount() ? AccountFlag.BUSINESS : null;
     }
 
-    private boolean getIsBusinessAccount() {
+    private boolean isBusinessAccount() {
         return isBusiness != null && Boolean.parseBoolean(isBusiness.getValue());
     }
 

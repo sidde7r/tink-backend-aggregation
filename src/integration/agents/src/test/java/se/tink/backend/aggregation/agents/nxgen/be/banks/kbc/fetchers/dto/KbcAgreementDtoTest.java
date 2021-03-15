@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.fetchers.dto;
 
-import org.junit.Assert;
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.util.List;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -9,28 +11,28 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class KbcAgreementDtoTest {
 
-    private static final String FAKE_IBAN =
-            "BE62456595893861"; // http://randomiban.com/?country=Belgium
+    private static final String FAKE_IBAN = "BE62456595893861";
 
     @Test
     public void shouldNotSetBusinessFlag() {
         AgreementDto agreementDto =
                 SerializationUtils.deserializeFromString(AGREEMENT_NO_BUSINESS, AgreementDto.class);
-        TransactionalAccount transactionalAccount = agreementDto.toTransactionalAccount();
+        TransactionalAccount transactionalAccount =
+                agreementDto.toTransactionalAccount().orElse(null);
 
-        org.junit.Assert.assertTrue(
-                "No account flags should be set", transactionalAccount.getAccountFlags().isEmpty());
+        List<AccountFlag> accountFlags = transactionalAccount.getAccountFlags();
+
+        assertThat(accountFlags).doesNotContain(AccountFlag.BUSINESS);
     }
 
     @Test
     public void shouldSetBusinessFlag() {
         AgreementDto agreementDto =
                 SerializationUtils.deserializeFromString(AGREEMENT_BUSINESS, AgreementDto.class);
-        TransactionalAccount transactionalAccount = agreementDto.toTransactionalAccount();
+        TransactionalAccount transactionalAccount =
+                agreementDto.toTransactionalAccount().orElse(null);
 
-        org.junit.Assert.assertTrue(
-                "Business flag set",
-                transactionalAccount.getAccountFlags().get(0).equals(AccountFlag.BUSINESS));
+        assertThat(transactionalAccount.getAccountFlags()).contains(AccountFlag.BUSINESS);
     }
 
     @Test
@@ -38,10 +40,10 @@ public class KbcAgreementDtoTest {
         AgreementDto agreementDto =
                 SerializationUtils.deserializeFromString(
                         AGREEMENT_MISSING_BUSINESS_TAG, AgreementDto.class);
-        TransactionalAccount transactionalAccount = agreementDto.toTransactionalAccount();
+        TransactionalAccount transactionalAccount =
+                agreementDto.toTransactionalAccount().orElse(null);
 
-        org.junit.Assert.assertTrue(
-                "No account flags should be set", transactionalAccount.getAccountFlags().isEmpty());
+        assertThat(transactionalAccount.getAccountFlags()).doesNotContain(AccountFlag.BUSINESS);
     }
 
     @Test
@@ -51,9 +53,10 @@ public class KbcAgreementDtoTest {
                 SerializationUtils.deserializeFromString(
                         AGREEMENT_MAPPINGTEST.replace("MAPPING_VALUE", checkingAccountType),
                         AgreementDto.class);
-        TransactionalAccount transactionalAccount = agreementDto.toTransactionalAccount();
+        TransactionalAccount transactionalAccount =
+                agreementDto.toTransactionalAccount().orElse(null);
 
-        Assert.assertEquals(AccountTypes.CHECKING, transactionalAccount.getType());
+        assertThat(AccountTypes.CHECKING).isEqualTo(transactionalAccount.getType());
     }
 
     @Test
@@ -63,7 +66,8 @@ public class KbcAgreementDtoTest {
                 SerializationUtils.deserializeFromString(
                         AGREEMENT_MAPPINGTEST.replace("MAPPING_VALUE", savingsAccountType),
                         AgreementDto.class);
-        Assert.assertEquals(AccountTypes.SAVINGS, agreementDto.toTransactionalAccount().getType());
+        assertThat(AccountTypes.SAVINGS)
+                .isEqualTo(agreementDto.toTransactionalAccount().orElse(null).getType());
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -83,7 +87,7 @@ public class KbcAgreementDtoTest {
                 SerializationUtils.deserializeFromString(
                         AGREEMENT_MAPPINGTEST.replace("MAPPING_VALUE", checkingAccountType),
                         AgreementDto.class);
-        TransactionalAccount transactionalAccount = agreementDto.toTransactionalAccount();
+        agreementDto.toTransactionalAccount().orElse(null);
     }
 
     private static final String AGREEMENT_NO_BUSINESS =

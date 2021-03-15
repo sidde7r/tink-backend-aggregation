@@ -1955,8 +1955,8 @@ public final class SEBApiAgent extends AbstractAgent
         }
     }
 
-    public void ensureIsValidTransferAmount(Transfer transfer) throws TransferExecutionException {
-        if (transfer.getAmount().isLessThan(1.00)) {
+    private void ensureIsValidTransferAmount(Transfer transfer) throws TransferExecutionException {
+        if (transfer.getAmount().getValue() < 1.00) {
             cancelTransferAndThrow(
                     catalog.getString(
                             TransferExecutionException.EndUserMessage.INVALID_MINIMUM_AMOUNT),

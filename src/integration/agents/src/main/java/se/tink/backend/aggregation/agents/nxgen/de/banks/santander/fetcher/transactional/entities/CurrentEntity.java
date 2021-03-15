@@ -1,16 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.de.banks.santander.fetcher.transactional.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.santander.SantanderConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
 @JsonObject
 public class CurrentEntity {
-    @JsonIgnore private Logger logger = LoggerFactory.getLogger(CurrentEntity.class);
 
     @JsonProperty("current")
     private AccountEntity accountEntity;

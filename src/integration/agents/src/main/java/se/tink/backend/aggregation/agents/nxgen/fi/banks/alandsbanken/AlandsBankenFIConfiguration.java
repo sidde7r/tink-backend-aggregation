@@ -1,12 +1,17 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.banks.alandsbanken;
 
+import static se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType.from;
+import static se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType.isNotTransactionalAccount;
+
 import com.google.common.base.Strings;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.CrossKeyConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.fetcher.entities.CrossKeyAccount;
@@ -17,7 +22,10 @@ import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.FinnishIdentifier;
@@ -36,21 +44,30 @@ public class AlandsBankenFIConfiguration extends CrossKeyConfiguration {
     }
 
     @Override
-    public TransactionalAccount parseTransactionalAccount(CrossKeyAccount account) {
-        HolderName accountHolderName = null;
-        if (!Strings.isNullOrEmpty(account.getAccountOwnerName())) {
-            accountHolderName = new HolderName(account.getAccountOwnerName());
+    public Optional<TransactionalAccount> parseTransactionalAccount(CrossKeyAccount account) {
+        AccountTypes accountType = account.translateAccountType();
+        TransactionalAccountType transactionalAccountType = from(accountType).orElse(null);
+
+        if (isNotTransactionalAccount(accountType)) {
+            return Optional.empty();
         }
 
-        return TransactionalAccount.builder(
-                        account.translateAccountType(),
-                        account.getAccountId(),
-                        ExactCurrencyAmount.of(account.getBalance(), account.getCurrency()))
-                .setAccountNumber(account.getBbanFormatted())
-                .setName(account.getAccountTypeName())
-                .addIdentifiers(getIdentifiers(account))
-                .setBankIdentifier(account.getAccountId())
-                .setHolderName(accountHolderName)
+        return TransactionalAccount.nxBuilder()
+                .withType(transactionalAccountType)
+                .withPaymentAccountFlag()
+                .withBalance(
+                        BalanceModule.of(
+                                ExactCurrencyAmount.of(
+                                        account.getBalance(), account.getCurrency())))
+                .withId(
+                        IdModule.builder()
+                                .withUniqueIdentifier(account.getBbanFormatted())
+                                .withAccountNumber(account.getBbanFormatted())
+                                .withAccountName(account.getAccountTypeName())
+                                .addIdentifiers(getIdentifiers(account))
+                                .build())
+                .addHolderName(account.getAccountOwnerName())
+                .setApiIdentifier(account.getAccountId())
                 .build();
     }
 

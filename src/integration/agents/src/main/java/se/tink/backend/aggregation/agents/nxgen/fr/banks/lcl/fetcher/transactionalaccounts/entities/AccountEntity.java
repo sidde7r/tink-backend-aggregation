@@ -2,12 +2,15 @@ package se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.fetcher.transactio
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.LclConstants;
-import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
+import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.strings.StringUtils;
 
@@ -66,14 +69,19 @@ public class AccountEntity {
     private String operNotIncludedBalanceSign;
 
     @JsonIgnore
-    public TransactionalAccount toTinkAccount(AccountDetailsEntity accountDetailsEntity) {
-        return TransactionalAccount.builder(
-                        getTinkAccountType(),
-                        accountDetailsEntity.getIban().toLowerCase(),
-                        getAmount())
-                .setAccountNumber(accountDetailsEntity.getIban())
-                .setName(getTypeLabel())
-                .setHolderName(new HolderName(accountDetailsEntity.getHolderName()))
+    public Optional<TransactionalAccount> toTinkAccount(AccountDetailsEntity accountDetailsEntity) {
+        return TransactionalAccount.nxBuilder()
+                .withType(getTinkAccountType())
+                .withoutFlags()
+                .withBalance(BalanceModule.of(getAmount()))
+                .withId(
+                        IdModule.builder()
+                                .withUniqueIdentifier(accountDetailsEntity.getIban().toLowerCase())
+                                .withAccountNumber(accountDetailsEntity.getIban())
+                                .withAccountName(typeLabel != null ? typeLabel : "")
+                                .addIdentifier(new IbanIdentifier(accountDetailsEntity.getIban()))
+                                .build())
+                .addHolderName(accountDetailsEntity.getHolderName())
                 .putInTemporaryStorage(
                         LclConstants.Storage.ACCOUNT_DETAILS_ENTITY, accountDetailsEntity)
                 .build();
@@ -85,9 +93,9 @@ public class AccountEntity {
     }
 
     @JsonIgnore
-    private AccountTypes getTinkAccountType() {
+    private TransactionalAccountType getTinkAccountType() {
         if (isCheckingAccount()) {
-            return AccountTypes.CHECKING;
+            return TransactionalAccountType.CHECKING;
         }
 
         log.warn(
@@ -96,7 +104,7 @@ public class AccountEntity {
                 typeLabel,
                 originalTypeLabel);
 
-        return AccountTypes.OTHER;
+        return TransactionalAccountType.OTHER;
     }
 
     @JsonIgnore
