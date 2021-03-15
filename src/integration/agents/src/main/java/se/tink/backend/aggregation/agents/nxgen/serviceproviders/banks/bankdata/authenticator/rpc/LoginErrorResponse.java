@@ -6,7 +6,6 @@ import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.libraries.i18n.LocalizableKey;
 
 @JsonObject
 public class LoginErrorResponse {
@@ -66,18 +65,14 @@ public class LoginErrorResponse {
         return debugMessage;
     }
 
-    private LocalizableKey getUserMessage() {
-        return new LocalizableKey(errorMessage);
-    }
-
     public void throwException() throws LoginException, AuthorizationException {
 
         if (numberOfLoginAttemptsLeft == 1) {
-            throw LoginError.INCORRECT_CREDENTIALS_LAST_ATTEMPT.exception(getUserMessage());
+            throw LoginError.INCORRECT_CREDENTIALS_LAST_ATTEMPT.exception(errorMessage);
         }
 
         if (blocked) {
-            throw AuthorizationError.ACCOUNT_BLOCKED.exception(getUserMessage());
+            throw AuthorizationError.ACCOUNT_BLOCKED.exception(errorMessage);
         }
 
         switch (errorCode) {
@@ -85,25 +80,24 @@ public class LoginErrorResponse {
                 handle109ErrorCode();
                 break;
             case 112:
-                throw LoginError.INCORRECT_CREDENTIALS.exception(getUserMessage());
+                throw LoginError.INCORRECT_CREDENTIALS.exception(errorMessage);
             default:
-                throw LoginError.DEFAULT_MESSAGE.exception(
-                        new LocalizableKey(String.format("Unknown error code %d", errorCode)));
+                throw LoginError.DEFAULT_MESSAGE.exception("Unknown error code " + errorCode);
         }
     }
 
     private void handle109ErrorCode() {
         switch (loginErrorNumber) {
             case 1:
-                throw LoginError.INCORRECT_CREDENTIALS.exception(getUserMessage());
+            case 7:
+                throw LoginError.INCORRECT_CREDENTIALS.exception(errorMessage);
             case 2:
-                throw LoginError.NO_ACCESS_TO_MOBILE_BANKING.exception(getUserMessage());
+                throw LoginError.NO_ACCESS_TO_MOBILE_BANKING.exception(errorMessage);
             default:
                 throw LoginError.DEFAULT_MESSAGE.exception(
-                        new LocalizableKey(
-                                String.format(
-                                        "Unknown login error number %d for error code %d",
-                                        loginErrorNumber, errorCode)));
+                        String.format(
+                                "Unknown login error number %d for error code %d",
+                                loginErrorNumber, errorCode));
         }
     }
 }
