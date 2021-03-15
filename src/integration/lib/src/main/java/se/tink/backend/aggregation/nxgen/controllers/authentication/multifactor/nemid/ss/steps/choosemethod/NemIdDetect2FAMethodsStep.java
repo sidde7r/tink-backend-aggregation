@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor
 
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NEMID_LINK_TO_SELECT_DIFFERENT_2FA_METHOD;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.HtmlElements.NEMID_SELECT_METHOD_POPUP;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.NEM_ID_PREFIX;
 
 import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
@@ -58,6 +59,10 @@ class NemIdDetect2FAMethodsStep {
         Optional<NemId2FAMethodScreen> maybeMethodScreen =
                 NemId2FAMethodScreen.getScreenBySelector(elementFound);
         if (maybeMethodScreen.isPresent()) {
+            log.info(
+                    "{}[NemIdDetect2FAMethodsStep] Detected 2FA method {}",
+                    NEM_ID_PREFIX,
+                    maybeMethodScreen.get().getSupportedMethod().getUserFriendlyName().get());
             return handleSomeScreenIsVisibleAfterClickingLink(
                     defaultScreen, maybeMethodScreen.get());
         }
@@ -75,7 +80,8 @@ class NemIdDetect2FAMethodsStep {
         // It's a guess that if user has only 1 NemID method available there might not be any
         // link to change it
         log.info(
-                "Cannot find link to change 2FA method. Check page source:\n{}",
+                "{}[NemIdDetect2FAMethodsStep] Cannot find link to change 2FA method. Check page source:\n{}",
+                NEM_ID_PREFIX,
                 driverWrapper.getFullPageSourceLog());
         return NemIdDetect2FAMethodsResult.canOnlyUseDefaultMethod(defaultScreen);
     }
@@ -86,7 +92,8 @@ class NemIdDetect2FAMethodsStep {
             // It's a guess that if user has only 1 NemID method available there might be a link
             // but it doesn't change it
             log.info(
-                    "Link to change 2FA method does not work. Check page source:\n{}",
+                    "{}[NemIdDetect2FAMethodsStep] Link to change 2FA method does not work. Check page source:\n{}",
+                    NEM_ID_PREFIX,
                     driverWrapper.getFullPageSourceLog());
             return NemIdDetect2FAMethodsResult.canOnlyUseDefaultMethod(defaultScreen);
         }
@@ -100,6 +107,7 @@ class NemIdDetect2FAMethodsStep {
     }
 
     private void clickChange2FAMethodLink() {
+        log.info("{}[NemIdDetect2FAMethodsStep] Changing 2FA step", NEM_ID_PREFIX);
         driverWrapper.clickButton(NEMID_LINK_TO_SELECT_DIFFERENT_2FA_METHOD);
     }
 

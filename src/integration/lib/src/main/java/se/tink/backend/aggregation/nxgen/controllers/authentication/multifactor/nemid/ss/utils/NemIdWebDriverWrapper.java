@@ -84,6 +84,7 @@ public class NemIdWebDriverWrapper {
                 .orElseThrow(
                         () -> new IllegalStateException("Could not find button element by " + by))
                 .click();
+        sleepFor(1_000);
     }
 
     public Optional<WebElement> waitForElement(By by, int seconds) {
