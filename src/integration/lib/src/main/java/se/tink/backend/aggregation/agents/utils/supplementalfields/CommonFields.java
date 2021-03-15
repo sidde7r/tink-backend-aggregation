@@ -38,8 +38,13 @@ public class CommonFields {
 
         public static Field build(
                 Catalog catalog, List<String> options, LocalizableKey description) {
-            logOptions(options);
-            int maxNumber = options.size();
+            return build(catalog, description, prepareSelectOptions(options));
+        }
+
+        public static Field build(
+                Catalog catalog, LocalizableKey description, List<SelectOption> selectOptions) {
+            logOptions(selectOptions);
+            int maxNumber = selectOptions.size();
             String helpText =
                     IntStream.range(0, maxNumber)
                             .mapToObj(
@@ -47,7 +52,7 @@ public class CommonFields {
                                             String.format(
                                                     SELECTABLE_OPTION_FORMAT,
                                                     index + 1,
-                                                    options.get(index)))
+                                                    selectOptions.get(index).getText()))
                             .collect(joining("\n"));
 
             return Field.builder()
@@ -62,11 +67,11 @@ public class CommonFields {
                     .maxLength(Integer.toString(maxNumber).length())
                     .pattern(RangeRegex.regexForRange(1, maxNumber))
                     .patternError(catalog.getString(PATTERN_ERROR_MESSAGE))
-                    .selectOptions(prepareSelectOptions(options))
+                    .selectOptions(selectOptions)
                     .build();
         }
 
-        private static void logOptions(List<String> options) {
+        private static void logOptions(List<SelectOption> options) {
             log.info("[SelectOption] Available methods to select: {}", options);
         }
 
