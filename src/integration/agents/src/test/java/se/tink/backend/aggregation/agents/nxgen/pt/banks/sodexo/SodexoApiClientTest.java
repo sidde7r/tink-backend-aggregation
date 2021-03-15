@@ -15,6 +15,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
+import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.sodexo.rpc.AuthenticationResponse;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.sodexo.rpc.BalanceResponse;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.sodexo.rpc.SetupPinResponse;
@@ -157,7 +158,7 @@ public class SodexoApiClientTest {
         Throwable throwable = catchThrowable(() -> sodexoApiClient.authenticateWithPin("tink"));
 
         // then
-        assertThat(throwable).isExactlyInstanceOf(LoginException.class);
+        assertThat(throwable).isInstanceOf(SessionException.class);
     }
 
     private <T> void mockPostRequest(T response) {

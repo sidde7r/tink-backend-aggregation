@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.pt.banks.sodexo;
 import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.sodexo.SodexoConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.sodexo.SodexoConstants.Headers;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.sodexo.SodexoConstants.Urls;
@@ -67,7 +68,7 @@ public class SodexoApiClient {
             SetupPinResponse responseBody = response.getBody(SetupPinResponse.class);
             if (response.getStatus() == 403
                     && ErrorMessages.AUTH_ERROR.equals(responseBody.getMessage())) {
-                throw LoginError.DEFAULT_MESSAGE.exception();
+                throw SessionError.SESSION_EXPIRED.exception();
             }
             throw e;
         }
