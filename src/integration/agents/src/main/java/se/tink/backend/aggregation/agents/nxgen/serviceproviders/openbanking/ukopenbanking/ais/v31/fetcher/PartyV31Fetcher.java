@@ -29,17 +29,28 @@ public class PartyV31Fetcher implements PartyFetcher {
 
     @Override
     public List<PartyV31Entity> fetchAccountParties(AccountEntity account) {
+        List<PartyV31Entity> parties = Collections.emptyList();
+
+        /**
+         * https://openbankinguk.github.io/read-write-api-site3/v3.1.7/resources-and-data-models/aisp/Parties.html#get-accounts-accountid-parties
+         * if endpoint available, it MAY return details on the account owner(s)/holder(s) and
+         * operator(s)
+         */
         if (config.isAccountPartiesEndpointEnabled()) {
-            return apiClient.fetchV31Parties(account.getAccountId());
+            parties = apiClient.fetchV31Parties(account.getAccountId());
         }
 
-        if (config.isAccountPartyEndpointEnabled()) {
+        /**
+         * https://openbankinguk.github.io/read-write-api-site3/v3.1.7/resources-and-data-models/aisp/Parties.html#get-accounts-accountid-party
+         * if endpoint available, it MUST return details on the account owner/holder
+         */
+        if (parties.isEmpty() && config.isAccountPartyEndpointEnabled()) {
             return apiClient
                     .fetchV31Party(account.getAccountId())
                     .map(Collections::singletonList)
                     .orElse(Collections.emptyList());
         }
 
-        return Collections.emptyList();
+        return parties;
     }
 }

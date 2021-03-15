@@ -1,0 +1,221 @@
+
+REQUEST 1
+GET https://openbanking.santander.co.uk/sanuk/external/open-banking/openid-connect-provider/v1/.well-known/openid-configuration
+x-fapi-financial-id: 0015800000jfFGuAAM
+
+RESPONSE 1
+200
+Connection: Keep-Alive
+Content-Type: application/json;charset=UTF-8
+x-fapi-financial-id: 0015800000jfFGuAAM
+
+{
+    "issuer": "https://openbanking-ma.santander.co.uk",
+    "authorization_endpoint": "https://openbanking.santander.co.uk/sanuk/external/open-banking/openid-connect-provider/v1/oauth2/authorize",
+    "token_endpoint": "https://openbanking-ma.santander.co.uk/sanuk/external/open-banking/openid-connect-provider/v1/oauth2/token",
+    "token_endpoint_auth_methods_supported": [
+        "client_secret_post",
+        "tls_client_auth"
+    ],
+    "jwks_uri": "https://keystore.openbanking.org.uk/0015800000jfFGuAAM/0015800000jfFGuAAM.jwks",
+    "scopes_supported": [
+        "openid",
+        "accounts",
+        "payments",
+        "fundsconfirmations"
+    ],
+    "response_types_supported": [
+        "code id_token"
+    ],
+    "response_modes_supported": [
+        "fragment"
+    ],
+    "acr_values_supported": [
+        "urn:openbanking:psd2:sca"
+    ],
+    "subject_types_supported": [
+        "pairwise"
+    ],
+    "id_token_signing_alg_values_supported": [
+        "PS256"
+    ],
+    "request_object_signing_alg_values_supported": [
+        "RS256",
+        "PS256"
+    ],
+    "display_values_supported": [
+        "page"
+    ],
+    "claim_types_supported": [
+        "normal"
+    ],
+    "claims_supported": [
+        "jti",
+        "iss",
+        "sub",
+        "aud",
+        "exp",
+        "iat",
+        "at_hash",
+        "openbanking_intent_id",
+        "nonce",
+        "disclaimer",
+        "http://openbanking.org.uk/refresh_token_expires_at",
+        "acr",
+        "auth_time",
+        "c_hash",
+        "s_hash"
+    ],
+    "claims_parameter_supported": "true",
+    "grant_types_supported": [
+        "client_credentials",
+        "authorization_code",
+        "refresh_token"
+    ],
+    "request_parameter_supported": "true",
+    "request_uri_parameter_supported": "false",
+    "token_endpoint_auth_signing_alg_values_supported": [
+        "PS256"
+    ]
+}
+
+REQUEST 2
+POST https://openbanking-ma.santander.co.uk/sanuk/external/open-banking/openid-connect-provider/v1/oauth2/token
+Content-Type: application/x-www-form-urlencoded
+Accept: application/json
+x-fapi-financial-id: 0015800000jfFGuAAM
+
+grant_type=refresh_token
+    &scope=accounts
+    &redirect_uri=https%3A%2F%2Fapi.tink.se%2Fapi%2Fv1%2Fcredentials%2Fthird-party%2Fcallback
+    &client_id=DUMMY_CLIENT_ID
+    &client_secret=DUMMY_CLIENT_SECRET
+    &refresh_token=DUMMY_REFRESH_TOKEN
+
+RESPONSE 2
+200
+Connection: Keep-Alive
+Content-Type: application/json;charset=UTF-8
+
+{
+    "token_type": "Bearer",
+    "access_token": "DUMMY_ACCESS_TOKEN",
+    "expires_in": 600,
+    "consented_on": 1000000000,
+    "scope": "openid accounts",
+    "refresh_token": "DUMMY_REFRESH_TOKEN",
+    "refresh_token_expires_in": 99999999,
+    "id_token": "DUMMY_ID_TOKEN"
+}
+
+REQUEST 3
+GET https://openbanking-ma.santander.co.uk/sanuk/external/open-banking/v3.1/aisp/accounts
+Authorization: Bearer DUMMY_ACCESS_TOKEN
+x-fapi-financial-id: 0015800000jfFGuAAM
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+RESPONSE 3
+200
+Connection: Keep-Alive
+Content-Type: application/json;charset=UTF-8
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+{
+    "Data": {
+        "Account": [
+            {
+                "AccountId": "8c201ba9-b066-4ea1-b453-3d05b17b18a9",
+                "Currency": "GBP",
+                "AccountType": "Personal",
+                "AccountSubType": "CurrentAccount",
+                "Account": [
+                    {
+                        "SchemeName": "UK.OBIE.SortCodeAccountNumber",
+                        "Identification": "09090912345678"
+                    }
+                ],
+                "Servicer": {
+                    "SchemeName": "UK.OBIE.BICFI",
+                    "Identification": "ABBYGB2LXXX"
+                }
+            }
+        ]
+    },
+    "Links": {
+        "Self": "https://openbanking-ma.santander.co.uk/sanuk/external/open-banking/v3.1/aisp/accounts"
+    },
+    "Meta": {
+        "TotalPages": 1
+    }
+}
+
+REQUEST 4
+GET https://openbanking-ma.santander.co.uk/sanuk/external/open-banking/v3.1/aisp/accounts/8c201ba9-b066-4ea1-b453-3d05b17b18a9/balances
+Authorization: Bearer DUMMY_ACCESS_TOKEN
+x-fapi-financial-id: 0015800000jfFGuAAM
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+RESPONSE 4
+200
+Connection: Keep-Alive
+Content-Type: application/json;charset=UTF-8
+x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
+
+{
+    "Data": {
+        "Balance": [
+            {
+                "AccountId": "8c201ba9-b066-4ea1-b453-3d05b17b18a9",
+                "Amount": {
+                    "Amount": "1295.87",
+                    "Currency": "GBP"
+                },
+                "CreditDebitIndicator": "Debit",
+                "CreditLine": [
+                    {
+                        "Amount": {
+                            "Amount": "1300.00",
+                            "Currency": "GBP"
+                        },
+                        "Included": false,
+                        "Type": "Pre-Agreed"
+                    },
+                    {
+                        "Amount": {
+                            "Amount": "0.00",
+                            "Currency": "GBP"
+                        },
+                        "Included": false,
+                        "Type": "Temporary"
+                    },
+                    {
+                        "Amount": {
+                            "Amount": "4.13",
+                            "Currency": "GBP"
+                        },
+                        "Included": false,
+                        "Type": "Available"
+                    }
+                ],
+                "Type": "InterimAvailable",
+                "DateTime": "2020-11-18T13:07:47.205+0000"
+            },
+            {
+                "AccountId": "8c201ba9-b066-4ea1-b453-3d05b17b18a9",
+                "Amount": {
+                    "Amount": "1295.87",
+                    "Currency": "GBP"
+                },
+                "CreditDebitIndicator": "Debit",
+                "Type": "InterimBooked",
+                "DateTime": "2020-11-18T13:07:47.205+0000"
+            }
+        ]
+    },
+    "Links": {
+        "Self": "https://openbanking-ma.santander.co.uk/sanuk/external/open-banking/v3.1/aisp/accounts/8c201ba9-b066-4ea1-b453-3d05b17b18a9/balances"
+    },
+    "Meta": {
+        "TotalPages": 1
+    }
+}

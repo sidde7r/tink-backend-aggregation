@@ -24,7 +24,15 @@
       "type": "CHECKING",
       "identifiers": "[\"sort-code://09090912345678\"]",
       "closed": false,
-      "holderName": null,
+      "holderName" : "Mr John Tink",
+      "accountHolder" : {
+        "accountId" : null,
+        "type" : "PERSONAL",
+        "identities" : [ {
+          "name" : "Mr John Tink",
+          "role" : "HOLDER"
+        } ]
+      },
       "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
       "availableCredit": 4.13,
       "balance": -1295.87
@@ -53,11 +61,29 @@
       "type": "SAVINGS",
       "identifiers": "[\"bban://SAVINGR12345678\"]",
       "closed": false,
-      "holderName": null,
+      "holderName" : "Mr Adam Tink",
+      "accountHolder" : {
+        "accountId" : null,
+        "type" : "PERSONAL",
+        "identities" : [ {
+          "name" : "Mr Adam Tink",
+          "role" : "HOLDER"
+        }, {
+          "name" : "Mrs Anna Tink",
+          "role" : "HOLDER"
+        } ]
+      },
       "flags": "[]",
       "availableCredit": 0.0,
       "balance": 0.0
     }
   ],
-  "transactions": []
+  "transactions": [],
+  "identityData" : {
+    "nameElements" : [ {
+      "type" : "FULLNAME",
+      "value" : "MR JOHN TINK"
+    } ],
+    "dateOfBirth" : null
+  }
 }
