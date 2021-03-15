@@ -6,13 +6,17 @@ import static org.assertj.core.api.Assertions.catchThrowable;
 import java.time.LocalDate;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
+import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesJsonFileParser;
+import se.tink.backend.aggregation.agents.framework.assertions.entities.AgentContractEntity;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.AgentWireMockPaymentTest;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.command.PaymentCommand;
+import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockrefresh.AgentWireMockRefreshTest;
 import se.tink.backend.aggregation.agents.utils.remittanceinformation.RemittanceInformationUtils;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationReader;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
+import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.enums.MarketCode;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Payment;
@@ -29,6 +33,42 @@ public class LloydsAgentWireMockTest {
 
     private static final String PROVIDER_NAME = "uk-lloyds-oauth2";
     private static final String STATE = "00000000-0000-4000-0000-000000000000";
+
+    @Test
+    public void testManualRefresh() throws Exception {
+
+        // given
+        final String wireMockFilePath = RESOURCES_PATH + "uk-lloyds-manual.aap";
+        final String contractFilePath = RESOURCES_PATH + "uk-lloyds-manual.json";
+
+        final AgentsServiceConfiguration configuration =
+                AgentsServiceConfigurationReader.read(CONFIGURATION_PATH);
+
+        final AgentWireMockRefreshTest agentWireMockRefreshTest =
+                AgentWireMockRefreshTest.nxBuilder()
+                        .withMarketCode(MarketCode.UK)
+                        .withProviderName("uk-lloyds-oauth2")
+                        .withWireMockFilePath(wireMockFilePath)
+                        .withConfigFile(configuration)
+                        .testFullAuthentication()
+                        .addRefreshableItems(
+                                RefreshableItem.CHECKING_ACCOUNTS,
+                                RefreshableItem.CHECKING_TRANSACTIONS)
+                        .addCallbackData("code", "DUMMY_AUTH_CODE")
+                        .enableHttpDebugTrace()
+                        .enableDataDumpForContractFile()
+                        .build();
+
+        final AgentContractEntity expected =
+                new AgentContractEntitiesJsonFileParser()
+                        .parseContractOnBasisOfFile(contractFilePath);
+
+        // when
+        agentWireMockRefreshTest.executeRefresh();
+
+        // then
+        agentWireMockRefreshTest.assertExpectedData(expected);
+    }
 
     @Test
     public void testSuccessfulPayment() throws Exception {
