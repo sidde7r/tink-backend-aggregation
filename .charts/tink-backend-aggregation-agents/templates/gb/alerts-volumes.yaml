@@ -12,7 +12,7 @@ spec:
         (sum(increase(tink_agent_login_total{market="GB", provider_type!="test"}[1d])) by (market)
         / (sum(increase(tink_agent_login_total{market="GB", provider_type!="test"}[2d])) by (market)
         - sum(increase(tink_agent_login_total{market="GB", provider_type!="test"}[1d])) by (market)) - 1) < -0.20
-      for: 4h
+      for: 5m
       labels:
         severity: urgent
         priority: P1
@@ -28,7 +28,7 @@ spec:
         (sum(increase(tink_agent_login_total{market="GB", provider_type!="test"}[1d])) by (market,action)
         / (sum(increase(tink_agent_login_total{market="GB", provider_type!="test"}[2d])) by (market,action)
         - sum(increase(tink_agent_login_total{market="GB", provider_type!="test"}[1d])) by (market,action)) - 1) < -0.20
-      for: 4h
+      for: 5m
       labels:
         severity: urgent
         priority: P1
