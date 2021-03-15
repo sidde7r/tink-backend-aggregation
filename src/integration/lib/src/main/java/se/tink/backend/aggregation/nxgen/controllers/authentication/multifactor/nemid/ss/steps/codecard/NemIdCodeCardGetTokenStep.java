@@ -31,13 +31,9 @@ class NemIdCodeCardGetTokenStep {
     public String enterCodeAndGetToken(String codeCardCode) {
         return metrics.executeWithTimer(
                 () -> {
-                    // it is now hard to judge if we are getting information about running out of
-                    // codes before entering
-                    // code or after entering
-                    lookForRunningOutOfNemIdCodeCardsAndAcceptPrompt(false);
                     enterCode(codeCardCode);
                     clickSendButton();
-                    lookForRunningOutOfNemIdCodeCardsAndAcceptPrompt(true);
+                    lookForRunningOutOfNemIdCodeCardsAndAcceptPrompt();
 
                     return findNemIdToken();
                 },
@@ -52,7 +48,7 @@ class NemIdCodeCardGetTokenStep {
         driverWrapper.clickButton(SUBMIT_BUTTON);
     }
 
-    private void lookForRunningOutOfNemIdCodeCardsAndAcceptPrompt(boolean isAfterProvidingCode) {
+    private void lookForRunningOutOfNemIdCodeCardsAndAcceptPrompt() {
         ElementsSearchResult searchResult =
                 driverWrapper.searchForFirstElement(
                         ElementsSearchQuery.builder()
@@ -60,10 +56,7 @@ class NemIdCodeCardGetTokenStep {
                                 .build());
         By elementSelector = searchResult.getSelector();
         if (elementSelector == NEMID_OK_BUTTON_WHEN_RUNNING_OUT_OF_CODES) {
-            log.info(
-                    "{}[NemIdCodeCardGetTokenStep], user is running out codes, when: {}",
-                    NEM_ID_PREFIX,
-                    isAfterProvidingCode);
+            log.info("{}[NemIdCodeCardGetTokenStep], user is running out codes", NEM_ID_PREFIX);
             driverWrapper.clickButton(elementSelector);
         }
     }

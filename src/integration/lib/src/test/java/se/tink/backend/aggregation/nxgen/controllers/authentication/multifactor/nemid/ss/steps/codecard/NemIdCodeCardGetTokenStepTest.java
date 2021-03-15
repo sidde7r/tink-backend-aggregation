@@ -199,7 +199,7 @@ public class NemIdCodeCardGetTokenStepTest {
 
     @Test
     public void
-            should_accept_info_about_running_out_codes_and_submit_code_from_user_and_read_nem_id_token() {
+            should_submit_code_from_user_and_read_nem_id_token_and_accept_info_about_running_out_codes() {
         // given
         WebElement element = webElementMockWithText("--- SAMPLE TOKEN ---");
         when(driverWrapper.searchForFirstElement(any()))
@@ -215,11 +215,11 @@ public class NemIdCodeCardGetTokenStepTest {
 
         mocksToVerifyInOrder
                 .verify(driverWrapper)
-                .clickButton(NEMID_OK_BUTTON_WHEN_RUNNING_OUT_OF_CODES);
-        mocksToVerifyInOrder
-                .verify(driverWrapper)
                 .setValueToElement(CODE_CARD_CODE, NEMID_CODE_CARD_CODE_INPUT);
         mocksToVerifyInOrder.verify(driverWrapper).clickButton(SUBMIT_BUTTON);
+        mocksToVerifyInOrder
+                .verify(driverWrapper)
+                .clickButton(NEMID_OK_BUTTON_WHEN_RUNNING_OUT_OF_CODES);
         mocksToVerifyInOrder
                 .verify(driverWrapper)
                 .searchForFirstElement(
