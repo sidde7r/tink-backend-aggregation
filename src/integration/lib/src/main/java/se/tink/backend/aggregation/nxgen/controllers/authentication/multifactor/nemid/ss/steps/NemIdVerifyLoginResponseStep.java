@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.steps;
 
-import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.Errors.ENTER_6_DIGIT_PASSWORD_PATTERNS;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.Errors.ENTER_ACTIVATION_PASSWORD_PATTERNS;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.Errors.ENTER_NEMID_NUMBER_OR_SELF_CHOSEN_USER_ID_PATTERNS;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.Errors.INCORRECT_CREDENTIALS_ERROR_PATTERNS;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.Errors.KEY_APP_NOT_READY_TO_USE_PATTERNS;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.NemIdConstants.Errors.NEMID_ISSUES_PATTERNS;
@@ -26,6 +26,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.nemid.NemIdError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.nemid.ss.NemId2FAMethodScreen;
@@ -120,6 +121,12 @@ public class NemIdVerifyLoginResponseStep {
                     UserMessage.ENTER_ACTIVATION_PASSWORD.getKey());
         }
 
+        if (valueMatchesAnyPattern(
+                errorTextLowerCase, ENTER_NEMID_NUMBER_OR_SELF_CHOSEN_USER_ID_PATTERNS)) {
+            throw LoginError.INCORRECT_CREDENTIALS.exception(
+                    UserMessage.ENTER_NEM_ID_NUMBER_OR_SELF_CHOSEN_USER_ID.getKey());
+        }
+
         throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception(
                 NEM_ID_PREFIX + " Unknown login error: " + errorText);
     }
@@ -144,17 +151,12 @@ public class NemIdVerifyLoginResponseStep {
         }
 
         if (valueMatchesAnyPattern(errorTextLowerCase, NEMID_ISSUES_PATTERNS)) {
-            throw LoginError.ACTIVATION_TIMED_OUT.exception();
+            throw BankServiceError.BANK_SIDE_FAILURE.exception();
         }
 
         if (valueMatchesAnyPattern(errorTextLowerCase, ENTER_ACTIVATION_PASSWORD_PATTERNS)) {
             throw LoginError.INCORRECT_CREDENTIALS.exception(
                     UserMessage.ENTER_ACTIVATION_PASSWORD.getKey());
-        }
-
-        if (valueMatchesAnyPattern(errorTextLowerCase, ENTER_6_DIGIT_PASSWORD_PATTERNS)) {
-            throw LoginError.INCORRECT_CREDENTIALS.exception(
-                    UserMessage.ENTER_6_DIGIT_CODE.getKey());
         }
 
         throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception(
