@@ -9,7 +9,9 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.ws.rs.core.MediaType;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaDkConstants.FormKeys;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaDkConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaDkConstants.HeaderKeys;
@@ -42,6 +44,7 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.TimeoutFilter;
 import se.tink.backend.aggregation.nxgen.http.form.Form;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.i18n.Catalog;
@@ -135,10 +138,17 @@ public class NordeaDkApiClient {
 
     public CodeExchangeResponse codeExchange(String code, String referer) {
         CodeExchangeRequest request = new CodeExchangeRequest(code);
-        return baseIdentifyRequest(URLs.NORDEA_AUTH_BASE_URL + URLs.AUTHORIZATION)
-                .header(HeaderKeys.REFERER, referer)
-                .type(MediaType.APPLICATION_JSON)
-                .post(CodeExchangeResponse.class, request);
+        try {
+            return baseIdentifyRequest(URLs.NORDEA_AUTH_BASE_URL + URLs.AUTHORIZATION)
+                    .header(HeaderKeys.REFERER, referer)
+                    .type(MediaType.APPLICATION_JSON)
+                    .post(CodeExchangeResponse.class, request);
+        } catch (HttpResponseException e) {
+            if (HttpStatus.SC_NOT_FOUND == e.getResponse().getStatus()) {
+                throw LoginError.NO_ACCESS_TO_MOBILE_BANKING.exception();
+            }
+            throw e;
+        }
     }
 
     public void redirect(String state, String code, String loginHint, String referer) {
