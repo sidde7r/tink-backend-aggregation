@@ -16,7 +16,7 @@ import se.tink.libraries.i18n.LocalizableKey;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 class NemIdChoose2FAMethodField {
 
-    public static final String FIELD_KEY = "chooseNemId2FAMethod";
+    public static final String FIELD_KEY = "selectAuthMethodField";
 
     private static final LocalizableKey DESCRIPTION =
             new LocalizableKey("Select how you want to confirm the NemID authentication");
