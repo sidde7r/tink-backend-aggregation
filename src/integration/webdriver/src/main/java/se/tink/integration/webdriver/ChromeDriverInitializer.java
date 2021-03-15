@@ -1,12 +1,15 @@
 package se.tink.integration.webdriver;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
+@Slf4j
 public class ChromeDriverInitializer {
     private static final String CHROMEDRIVER_PATH = "external/chromedriver/file/chromedriver/";
     private static final String BASE_CHROME_PATH = "external/chromium/file/chromium/";
@@ -27,6 +30,13 @@ public class ChromeDriverInitializer {
     }
 
     public static ChromeDriver constructChromeDriver(String userAgent, String acceptLanguage) {
+        File chromeFile = new File(getChromePath());
+        log.info("chrome exists: " + chromeFile.exists());
+        log.info("chrome path: " + chromeFile.getAbsolutePath());
+
+        File chromedriverFile = new File(CHROMEDRIVER_PATH);
+        log.info("chromedriver exists: " + chromedriverFile.exists());
+        log.info("chromedriver path: " + chromedriverFile.getAbsolutePath());
         System.setProperty("webdriver.chrome.driver", CHROMEDRIVER_PATH);
         ChromeOptions options = new ChromeOptions();
         options.addArguments(getListArguments(userAgent, acceptLanguage));
