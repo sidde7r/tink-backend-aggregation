@@ -28,7 +28,7 @@ public class AbnAmroAccountFetcher implements AccountFetcher<TransactionalAccoun
         String accountId = getAccountId();
         AccountHolderResponse accountInfo = apiClient.fetchAccountHolder(accountId);
         String accountNumber = accountInfo.getAccountNumber();
-        String holderName = accountInfo.getAccountHolderName();
+        String holderName = accountInfo.getFilteredAccountHolderName();
         AccountBalanceResponse balanceInfo = apiClient.fetchAccountBalance(accountId);
 
         Optional<TransactionalAccount> account =
