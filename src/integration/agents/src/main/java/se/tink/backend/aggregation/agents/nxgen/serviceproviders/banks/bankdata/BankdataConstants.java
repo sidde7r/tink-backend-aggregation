@@ -33,7 +33,6 @@ public class BankdataConstants {
         public static final URL DEPOSITS = new URL(BASE_URL + "deposits");
         public static final URL DEPOSITS_CONTENT_LIST = new URL(BASE_URL + "deposits/contentlist");
         public static final URL ASSET_DETAILS = new URL(BASE_URL + "asset/details");
-        public static final URL LOANS = ACCOUNTS;
     }
 
     public static class UrlParam {

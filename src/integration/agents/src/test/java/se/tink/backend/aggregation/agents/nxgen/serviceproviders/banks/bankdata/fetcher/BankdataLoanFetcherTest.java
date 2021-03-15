@@ -8,8 +8,8 @@ import java.util.Collection;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.BankdataApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.TestDataReader;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher.rpc.GetLoansResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher.rpc.GetLoansResponseTestData;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails.Type;
 import se.tink.libraries.amount.ExactCurrencyAmount;
@@ -28,7 +28,8 @@ public class BankdataLoanFetcherTest {
     @Test
     public void fetchAccountsDataAndCheckIfExactOneIsALoan() {
         // given
-        GetLoansResponse loansResponse = GetLoansResponseTestData.getTestData();
+        GetLoansResponse loansResponse =
+                TestDataReader.readFromFile(TestDataReader.ACCOUNTS_RESP, GetLoansResponse.class);
         when(bankdataApiClient.getLoans()).thenReturn(loansResponse);
 
         // when

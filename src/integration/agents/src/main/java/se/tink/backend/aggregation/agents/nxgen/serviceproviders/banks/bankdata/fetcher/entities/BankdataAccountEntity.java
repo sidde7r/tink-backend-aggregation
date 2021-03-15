@@ -49,13 +49,12 @@ public class BankdataAccountEntity {
 
     public Optional<TransactionalAccount> toTinkAccount() {
         AccountTypes type = getType();
-        if (isNotTransactionalAccount(type)) {
+        TransactionalAccountType transType = TransactionalAccountType.from(type).orElse(null);
+        if (!isProperTransactionalAccount(transType)) {
             return Optional.empty();
         }
-
-        TransactionalAccountType tinkAccountType = TransactionalAccountType.from(type).orElse(null);
         return TransactionalAccount.nxBuilder()
-                .withType(tinkAccountType)
+                .withType(transType)
                 .withPaymentAccountFlag()
                 .withBalance(BalanceModule.of(ExactCurrencyAmount.of(getBalance(), currencyCode)))
                 .withId(
@@ -80,11 +79,8 @@ public class BankdataAccountEntity {
                 .build();
     }
 
-    private boolean isNotTransactionalAccount(AccountTypes type) {
-        Optional<TransactionalAccountType> transactionalAccountType =
-                TransactionalAccountType.from(type);
-        return transactionalAccountType.isPresent()
-                && transactionalAccountType.orElse(null) != TransactionalAccountType.OTHER;
+    private boolean isProperTransactionalAccount(TransactionalAccountType type) {
+        return type != null && type != TransactionalAccountType.OTHER;
     }
 
     public AccountTypes getType() {
