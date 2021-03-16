@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import se.tink.backend.aggregation.agents.exceptions.agent.AgentException;
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
-import se.tink.backend.aggregation.agents.exceptions.errors.SupplementalInfoError;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants.EndUserErrorMessageKeys;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants.ErrorMessageKeys;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants.FormValues;
@@ -267,6 +266,6 @@ public class FiduciaApiClient {
                 .contains(ErrorMessageKeys.PSU_CREDENTIALS_INVALID.toUpperCase())) {
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
-        throw SupplementalInfoError.UNKNOWN.exception();
+        throw httpResponseException;
     }
 }
