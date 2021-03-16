@@ -20,7 +20,7 @@
         "blockedPayment": 0.000,
         "balance": 8842.290,
         "confirmedAmount": 0.000,
-        "creditLine": 2.340,
+        "creditLine": -2.340,
         "suspenseAmount": 0.000
     },
     "urls": {
