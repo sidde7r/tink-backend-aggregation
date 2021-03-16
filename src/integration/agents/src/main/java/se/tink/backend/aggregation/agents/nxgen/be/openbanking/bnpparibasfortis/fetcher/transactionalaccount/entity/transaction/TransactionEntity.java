@@ -14,13 +14,16 @@ public class TransactionEntity {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date bookingDate;
 
-    private String creditDebitIndicator;
+    private CreditDebitIndicator creditDebitIndicator;
     private String entryReference;
 
     private RemittanceInformationEntity remittanceInformation;
 
     private String status;
     private TransactionAmount transactionAmount;
+    private RelatedParties relatedParties;
+
+    private AdditionalTransactionInformation additionalTransactionInformation;
 
     public Transaction toTinkModel() {
         return Transaction.builder()
@@ -32,11 +35,35 @@ public class TransactionEntity {
     }
 
     private String getDescription() {
-        return remittanceInformation != null ? remittanceInformation.toString() : "";
+        return relatedParties != null ? getNameFromRelatedParties() : getOtherDescription();
     }
 
     private ExactCurrencyAmount getAmount() {
         return new ExactCurrencyAmount(
                 new BigDecimal(transactionAmount.getAmount()), transactionAmount.getCurrency());
+    }
+
+    private String getNameFromRelatedParties() {
+        return relatedParties.getDebtor() != null
+                ? relatedParties.getDebtor().getName()
+                : relatedParties.getCreditor().getName();
+    }
+
+    private String getOtherDescription() {
+        return remittanceInformation != null
+                ? getUnstructuredDesc()
+                : getAdditionalInformationDesc();
+    }
+
+    private String getUnstructuredDesc() {
+        return remittanceInformation.getUnstructured() != null
+                ? remittanceInformation.getUnstructuredInformation()
+                : getAdditionalInformationDesc();
+    }
+
+    private String getAdditionalInformationDesc() {
+        return additionalTransactionInformation != null
+                ? additionalTransactionInformation.getDescription()
+                : "";
     }
 }

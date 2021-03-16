@@ -1,11 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.fetcher.transactionalaccount.entity.transaction;
 
 import java.util.List;
-import lombok.Setter;
+import lombok.Data;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-@Setter
+@Data
 public class RemittanceInformationEntity {
     private List<CreditorReferenceInformationEntity> structured;
     private List<String> unstructured;
@@ -25,7 +25,7 @@ public class RemittanceInformationEntity {
                 .toString();
     }
 
-    private String getUnstructuredInformation() {
+    public String getUnstructuredInformation() {
         return unstructured.stream()
                 .findFirst()
                 .orElseThrow(
