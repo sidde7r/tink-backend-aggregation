@@ -2,8 +2,12 @@ package se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia;
 
 import javax.ws.rs.core.MediaType;
 import lombok.AllArgsConstructor;
+import se.tink.backend.aggregation.agents.exceptions.agent.AgentException;
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
+import se.tink.backend.aggregation.agents.exceptions.errors.SupplementalInfoError;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants.EndUserErrorMessageKeys;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants.ErrorMessageKeys;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants.QueryParamsKeys;
@@ -31,7 +35,6 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.libraries.i18n.LocalizableKey;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @AllArgsConstructor
@@ -52,26 +55,6 @@ public class FiduciaApiClient {
 
     private static final String EMPTY_BODY = "";
 
-    private static final String PSU_CREDENTIALS_INVALID = "PSU_CREDENTIALS_INVALID";
-    private static final String NO_ACCOUNT_AVAILABLE =
-            "There is no activation for XS2A or there are no accounts available for access. Please contact your bank (SERVICE_BLOCKED)";
-    private static final String TAN_PLUS_BLOCKED =
-            "Sm@rt-TAN plus blocked. Please contact your bank (SERVICE_BLOCKED)";
-    private static final String ONLINE_ACCESS_BLOCKED =
-            "Online access blocked. Please contact your bank (SERVICE_BLOCKED)";
-    private static final String PIN_CHANGE_REQUIRED = "PIN change required (SERVICE_BLOCKED)";
-    private static final String ERROR_KONF = "ERR_KONF_CSV_BANK_MISS";
-
-    private static final LocalizableKey UNAVAILABLE_ACCOUNT_MESSAGE =
-            new LocalizableKey(
-                    "There are no accounts available for access. Please contact your bank.");
-    private static final LocalizableKey BLOCKED_TAN_MESSAGE =
-            new LocalizableKey("Online access blocked. Please contact your bank.");
-    private static final LocalizableKey PIN_CHANGE_MESSAGE =
-            new LocalizableKey("Sm@rt-TAN plus blocked. Please contact your bank.");
-    private static final LocalizableKey BANK_NO_LONGER_AVAILABLE_MESSAGE =
-            new LocalizableKey("Bank is no longer available.");
-
     private static final String ACCOUNT_ID = "accountId";
     private static final String CONSENT_ID = "consentId";
     private static final String PAYMENT_ID = "paymentId";
@@ -89,13 +72,17 @@ public class FiduciaApiClient {
                         FormValues.FREQUENCY_PER_DAY,
                         false);
 
-        return fiduciaRequestBuilder
-                .createRequest(
-                        createUrl(CONSENTS_ENDPOINT),
-                        SerializationUtils.serializeToString(createConsentRequest))
-                .type(MediaType.APPLICATION_JSON_TYPE)
-                .post(ConsentResponse.class, createConsentRequest)
-                .getConsentId();
+        try {
+            return fiduciaRequestBuilder
+                    .createRequest(
+                            createUrl(CONSENTS_ENDPOINT),
+                            SerializationUtils.serializeToString(createConsentRequest))
+                    .type(MediaType.APPLICATION_JSON_TYPE)
+                    .post(ConsentResponse.class, createConsentRequest)
+                    .getConsentId();
+        } catch (HttpResponseException e) {
+            throw errorChecker(e);
+        }
     }
 
     public ConsentDetailsResponse getConsentDetails(String consentId) {
@@ -108,6 +95,7 @@ public class FiduciaApiClient {
     public ScaResponse authorizeConsent(String consentId, String password) {
         AuthorizeConsentRequest authorizeConsentRequest =
                 new AuthorizeConsentRequest(new PsuData(password));
+
         try {
             return fiduciaRequestBuilder
                     .createRequest(
@@ -117,18 +105,7 @@ public class FiduciaApiClient {
                     .type(MediaType.APPLICATION_JSON_TYPE)
                     .post(ScaResponse.class, authorizeConsentRequest);
         } catch (HttpResponseException e) {
-            if (e.getResponse().getBody(String.class).contains(ERROR_KONF)) {
-                throw LoginError.NOT_CUSTOMER.exception(BANK_NO_LONGER_AVAILABLE_MESSAGE);
-            } else if (e.getResponse().getBody(String.class).contains(TAN_PLUS_BLOCKED)) {
-                throw LoginError.NO_ACCESS_TO_MOBILE_BANKING.exception(UNAVAILABLE_ACCOUNT_MESSAGE);
-            } else if (e.getResponse().getBody(String.class).contains(ONLINE_ACCESS_BLOCKED)) {
-                throw AuthorizationError.ACCOUNT_BLOCKED.exception(BLOCKED_TAN_MESSAGE);
-            } else if (e.getResponse().getBody(String.class).contains(PIN_CHANGE_REQUIRED)) {
-                throw LoginError.PASSWORD_CHANGE_REQUIRED.exception();
-            } else if (e.getResponse().getBody(String.class).contains(NO_ACCOUNT_AVAILABLE)) {
-                throw AuthorizationError.UNAUTHORIZED.exception(PIN_CHANGE_MESSAGE);
-            }
-            throw e;
+            throw errorChecker(e);
         }
     }
 
@@ -142,10 +119,7 @@ public class FiduciaApiClient {
                     .type(MediaType.APPLICATION_JSON_TYPE)
                     .put(ScaResponse.class, request);
         } catch (HttpResponseException e) {
-            if (e.getResponse().getBody(String.class).contains(PSU_CREDENTIALS_INVALID)) {
-                throw LoginError.INCORRECT_CREDENTIALS.exception();
-            }
-            throw e;
+            throw errorChecker(e);
         }
     }
 
@@ -158,7 +132,9 @@ public class FiduciaApiClient {
                     .type(MediaType.APPLICATION_JSON_TYPE)
                     .put(ScaStatusResponse.class, otpCodeBody);
         } catch (HttpResponseException e) {
-            if (e.getResponse().getBody(String.class).contains(PSU_CREDENTIALS_INVALID)) {
+            if (e.getResponse()
+                    .getBody(String.class)
+                    .contains(ErrorMessageKeys.PSU_CREDENTIALS_INVALID)) {
                 throw LoginError.INCORRECT_CHALLENGE_RESPONSE.exception();
             }
             throw e;
@@ -259,5 +235,38 @@ public class FiduciaApiClient {
 
     private URL createUrl(String path) {
         return new URL(serverUrl + path);
+    }
+
+    private AgentException errorChecker(HttpResponseException httpResponseException) {
+        String errorMessage = httpResponseException.getResponse().getBody(String.class);
+
+        if (errorMessage.toUpperCase().contains(ErrorMessageKeys.ERROR_KONF)) {
+            throw LoginError.NOT_CUSTOMER.exception(
+                    EndUserErrorMessageKeys.BANK_NO_LONGER_AVAILABLE_MESSAGE);
+        } else if (errorMessage
+                .toUpperCase()
+                .contains(ErrorMessageKeys.TAN_PLUS_BLOCKED.toUpperCase())) {
+            throw LoginError.NO_ACCESS_TO_MOBILE_BANKING.exception(
+                    EndUserErrorMessageKeys.UNAVAILABLE_ACCOUNT_MESSAGE);
+        } else if (errorMessage
+                .toUpperCase()
+                .contains(ErrorMessageKeys.ONLINE_ACCESS_BLOCKED.toUpperCase())) {
+            throw AuthorizationError.ACCOUNT_BLOCKED.exception(
+                    EndUserErrorMessageKeys.BLOCKED_TAN_MESSAGE);
+        } else if (errorMessage
+                .toUpperCase()
+                .contains(ErrorMessageKeys.PIN_CHANGE_REQUIRED.toUpperCase())) {
+            return LoginError.PASSWORD_CHANGE_REQUIRED.exception();
+        } else if (errorMessage
+                .toUpperCase()
+                .contains(ErrorMessageKeys.NO_ACCOUNT_AVAILABLE.toUpperCase())) {
+            throw AuthorizationError.UNAUTHORIZED.exception(
+                    EndUserErrorMessageKeys.PIN_CHANGE_MESSAGE);
+        } else if (errorMessage
+                .toUpperCase()
+                .contains(ErrorMessageKeys.PSU_CREDENTIALS_INVALID.toUpperCase())) {
+            throw LoginError.INCORRECT_CREDENTIALS.exception();
+        }
+        throw SupplementalInfoError.UNKNOWN.exception();
     }
 }
