@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia;
 
 import javax.ws.rs.core.MediaType;
 import lombok.AllArgsConstructor;
+import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants.HeaderKeys;
@@ -30,6 +31,7 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.libraries.i18n.LocalizableKey;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @AllArgsConstructor
@@ -51,6 +53,24 @@ public class FiduciaApiClient {
     private static final String EMPTY_BODY = "";
 
     private static final String PSU_CREDENTIALS_INVALID = "PSU_CREDENTIALS_INVALID";
+    private static final String NO_ACCOUNT_AVAILABLE =
+            "There is no activation for XS2A or there are no accounts available for access. Please contact your bank (SERVICE_BLOCKED)";
+    private static final String TAN_PLUS_BLOCKED =
+            "Sm@rt-TAN plus blocked. Please contact your bank (SERVICE_BLOCKED)";
+    private static final String ONLINE_ACCESS_BLOCKED =
+            "Online access blocked. Please contact your bank (SERVICE_BLOCKED)";
+    private static final String PIN_CHANGE_REQUIRED = "PIN change required (SERVICE_BLOCKED)";
+    private static final String ERROR_KONF = "ERR_KONF_CSV_BANK_MISS";
+
+    private static final LocalizableKey UNAVAILABLE_ACCOUNT_MESSAGE =
+            new LocalizableKey(
+                    "There are no accounts available for access. Please contact your bank.");
+    private static final LocalizableKey BLOCKED_TAN_MESSAGE =
+            new LocalizableKey("Online access blocked. Please contact your bank.");
+    private static final LocalizableKey PIN_CHANGE_MESSAGE =
+            new LocalizableKey("Sm@rt-TAN plus blocked. Please contact your bank.");
+    private static final LocalizableKey BANK_NO_LONGER_AVAILABLE_MESSAGE =
+            new LocalizableKey("Bank is no longer available.");
 
     private static final String ACCOUNT_ID = "accountId";
     private static final String CONSENT_ID = "consentId";
@@ -97,8 +117,16 @@ public class FiduciaApiClient {
                     .type(MediaType.APPLICATION_JSON_TYPE)
                     .post(ScaResponse.class, authorizeConsentRequest);
         } catch (HttpResponseException e) {
-            if (e.getResponse().getBody(String.class).contains(PSU_CREDENTIALS_INVALID)) {
-                throw LoginError.INCORRECT_CREDENTIALS.exception();
+            if (e.getResponse().getBody(String.class).contains(ERROR_KONF)) {
+                throw LoginError.NOT_CUSTOMER.exception(BANK_NO_LONGER_AVAILABLE_MESSAGE);
+            } else if (e.getResponse().getBody(String.class).contains(TAN_PLUS_BLOCKED)) {
+                throw LoginError.NO_ACCESS_TO_MOBILE_BANKING.exception(UNAVAILABLE_ACCOUNT_MESSAGE);
+            } else if (e.getResponse().getBody(String.class).contains(ONLINE_ACCESS_BLOCKED)) {
+                throw AuthorizationError.ACCOUNT_BLOCKED.exception(BLOCKED_TAN_MESSAGE);
+            } else if (e.getResponse().getBody(String.class).contains(PIN_CHANGE_REQUIRED)) {
+                throw LoginError.PASSWORD_CHANGE_REQUIRED.exception();
+            } else if (e.getResponse().getBody(String.class).contains(NO_ACCOUNT_AVAILABLE)) {
+                throw AuthorizationError.UNAUTHORIZED.exception(PIN_CHANGE_MESSAGE);
             }
             throw e;
         }
@@ -107,10 +135,18 @@ public class FiduciaApiClient {
     public ScaResponse selectAuthMethod(String urlPath, String scaMethodId) {
         SelectScaMethodRequest request = new SelectScaMethodRequest(scaMethodId);
 
-        return fiduciaRequestBuilder
-                .createRequest(createUrl(urlPath), SerializationUtils.serializeToString(request))
-                .type(MediaType.APPLICATION_JSON_TYPE)
-                .put(ScaResponse.class, request);
+        try {
+            return fiduciaRequestBuilder
+                    .createRequest(
+                            createUrl(urlPath), SerializationUtils.serializeToString(request))
+                    .type(MediaType.APPLICATION_JSON_TYPE)
+                    .put(ScaResponse.class, request);
+        } catch (HttpResponseException e) {
+            if (e.getResponse().getBody(String.class).contains(PSU_CREDENTIALS_INVALID)) {
+                throw LoginError.INCORRECT_CREDENTIALS.exception();
+            }
+            throw e;
+        }
     }
 
     public ScaStatusResponse authorizeWithOtpCode(String urlPath, String otpCode) {
