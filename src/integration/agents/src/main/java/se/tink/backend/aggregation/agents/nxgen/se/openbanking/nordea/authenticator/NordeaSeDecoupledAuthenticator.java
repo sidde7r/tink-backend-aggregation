@@ -21,6 +21,7 @@ public class NordeaSeDecoupledAuthenticator implements BankIdAuthenticator<Strin
     private String autoStartToken;
     private String ssn;
     private boolean isConfirmedPending = false;
+    private OAuth2Token accessToken;
 
     public NordeaSeDecoupledAuthenticator(NordeaSeApiClient apiClient) {
         this.apiClient = apiClient;
@@ -43,12 +44,14 @@ public class NordeaSeDecoupledAuthenticator implements BankIdAuthenticator<Strin
 
         DecoupledAuthenticationResponse authenticationResponse;
         try {
-            authenticationResponse = apiClient.getDecoupledAuthenticationStatus(sessionId);
+            authenticationResponse = apiClient.getAuthenticationStatusDecoupled(sessionId);
         } catch (HttpResponseException e) {
-            if (e.getResponse().getStatus() == HttpStatus.SC_BAD_REQUEST && isConfirmedPending) {
-                return BankIdStatus.CANCELLED;
-            } else if (e.getResponse().getStatus() == HttpStatus.SC_BAD_REQUEST) {
-                return BankIdStatus.EXPIRED_AUTOSTART_TOKEN;
+            if (e.getResponse().getStatus() == HttpStatus.SC_BAD_REQUEST) {
+                if (isConfirmedPending) {
+                    return BankIdStatus.CANCELLED;
+                } else {
+                    return BankIdStatus.EXPIRED_AUTOSTART_TOKEN;
+                }
             }
             throw e;
         }
@@ -60,7 +63,11 @@ public class NordeaSeDecoupledAuthenticator implements BankIdAuthenticator<Strin
                 isConfirmedPending = true;
                 return BankIdStatus.WAITING;
             case BodyValues.COMPLETED:
-                apiClient.authorizePsuAccounts(authenticationResponse.getCode());
+                String code =
+                        apiClient
+                                .authorizePsuAccountsDecoupled(authenticationResponse.getCode())
+                                .getCode();
+                accessToken = apiClient.getTokenDecoupled(code);
                 return BankIdStatus.DONE;
             default:
                 return BankIdStatus.FAILED_UNKNOWN;
@@ -81,11 +88,11 @@ public class NordeaSeDecoupledAuthenticator implements BankIdAuthenticator<Strin
 
     @Override
     public Optional<OAuth2Token> getAccessToken() {
-        return Optional.empty();
+        return Optional.ofNullable(accessToken);
     }
 
     @Override
     public Optional<OAuth2Token> refreshAccessToken(String refreshToken) throws SessionException {
-        return Optional.empty();
+        return Optional.of(apiClient.refreshTokenDecoupled(refreshToken));
     }
 }

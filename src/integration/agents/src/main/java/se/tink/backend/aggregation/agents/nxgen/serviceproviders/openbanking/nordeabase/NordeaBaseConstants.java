@@ -24,11 +24,12 @@ public final class NordeaBaseConstants {
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class Urls {
         public static final String BASE_URL = "https://open.nordea.com/personal";
-        public static final URL AUTHORIZE = new URL(BASE_URL + ApiService.AUTHORIZE);
         public static final URL DECOUPLED_AUTHENTICATION =
                 new URL(BASE_URL + ApiService.DECOUPLED_AUTHENTICATION);
         public static final URL DECOUPLED_AUTHORIZATION =
                 new URL(BASE_URL + ApiService.DECOUPLED_AUTHORIZATION);
+        public static final URL DECOUPLED_TOKEN = new URL(BASE_URL + ApiService.DECOUPLED_TOKEN);
+        public static final URL AUTHORIZE = new URL(BASE_URL + ApiService.AUTHORIZE);
         public static final URL GET_TOKEN = new URL(BASE_URL + ApiService.GET_TOKEN);
         public static final URL GET_ASSETS = new URL(BASE_URL + ApiService.GET_ASSETS);
         public static final URL GET_ACCOUNTS = new URL(BASE_URL + ApiService.GET_ACCOUNTS);
@@ -59,9 +60,10 @@ public final class NordeaBaseConstants {
     public static class ApiService {
         private static final String V_4 = "/v4";
         private static final String V_5 = "/v5";
-        public static final String AUTHORIZE = V_5 + "/authorize";
         public static final String DECOUPLED_AUTHENTICATION = V_5 + "/decoupled/authentications";
         public static final String DECOUPLED_AUTHORIZATION = V_5 + "/decoupled/authorizations";
+        public static final String DECOUPLED_TOKEN = V_5 + "/decoupled/token";
+        public static final String AUTHORIZE = V_5 + "/authorize";
         public static final String GET_TOKEN = V_5 + "/authorize/token";
         public static final String GET_ASSETS = V_4 + "/assets";
         public static final String GET_ACCOUNTS = V_4 + "/accounts";
