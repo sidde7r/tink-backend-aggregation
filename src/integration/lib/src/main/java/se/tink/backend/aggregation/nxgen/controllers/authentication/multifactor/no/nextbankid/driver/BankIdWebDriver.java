@@ -1,42 +1,23 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver;
 
-import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.iframe.BankIdConstants.HtmlElements.BY_IFRAME;
+import java.util.Set;
+import org.openqa.selenium.Cookie;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.BankIdElementLocator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.nextbankid.driver.searchelements.BankIdElementsSearcher;
 
-import com.google.inject.Inject;
-import lombok.extern.slf4j.Slf4j;
-import org.openqa.selenium.NoSuchFrameException;
-import org.openqa.selenium.WebDriver;
-import se.tink.integration.webdriver.utils.Sleeper;
-import se.tink.integration.webdriver.utils.WebDriverWrapperImpl;
+public interface BankIdWebDriver extends BankIdElementsSearcher {
 
-@Slf4j
-public class BankIdWebDriver extends WebDriverWrapperImpl {
+    void getUrl(String url);
 
-    @Inject
-    public BankIdWebDriver(WebDriver webDriver, Sleeper sleeper) {
-        super(webDriver, sleeper);
-    }
+    String getCurrentUrl();
 
-    public boolean trySwitchToIframe() {
-        switchToParentWindow();
-        try {
-            return trySwitchToFrame(BY_IFRAME);
+    void quitDriver();
 
-        } catch (NoSuchFrameException e) {
-            log.warn("[BankID] Couldn't switch to iFrame");
-            return false;
-        }
-    }
+    String getFullPageSourceLog();
 
-    public String getFullPageSourceLog() {
-        switchToParentWindow();
-        String mainPageSource = getPageSource();
+    Set<Cookie> getCookies();
 
-        boolean switchedToIframe = trySwitchToIframe();
-        String iframeSource = switchedToIframe ? getPageSource() : null;
+    void clickButton(BankIdElementLocator selector);
 
-        return String.format(
-                "Main page source:%n" + "%s" + "%nBankID iframe source:%n" + "%s",
-                mainPageSource, iframeSource);
-    }
+    void setValueToElement(String value, BankIdElementLocator selector);
 }
