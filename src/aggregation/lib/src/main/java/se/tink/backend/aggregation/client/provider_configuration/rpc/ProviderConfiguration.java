@@ -49,6 +49,11 @@ public class ProviderConfiguration {
         CORPORATE
     }
 
+    public enum AgentSource {
+        AGGREGATION_SERVICE,
+        STANDALONE_AGENT;
+    }
+
     @SuppressWarnings("serial")
     private static class CapabilityList extends ArrayList<Capability> {}
 
@@ -94,6 +99,11 @@ public class ProviderConfiguration {
     @Nullable private ComplianceStatus complianceStatus;
 
     private List<FinancialService> financialServices;
+    private Set<AgentSource> agentSources;
+
+    public Set<AgentSource> getAgentSources() {
+        return agentSources;
+    }
 
     public AccessType getAccessType() {
         return accessType;
@@ -369,5 +379,9 @@ public class ProviderConfiguration {
 
     public void setFinancialServices(List<FinancialService> financialServices) {
         this.financialServices = financialServices;
+    }
+
+    public void setAgentSources(Set<AgentSource> agentSources) {
+        this.agentSources = agentSources;
     }
 }

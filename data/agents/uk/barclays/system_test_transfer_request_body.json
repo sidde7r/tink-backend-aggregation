@@ -36,6 +36,9 @@
     },
     "provider": {
         "accessType": "OPEN_BANKING",
+        "agentSources": [
+            "AGGREGATION_SERVICE"
+        ],
         "backgroundRefreshEnabled": true,
         "backgroundRefreshMaxFrequency": 4,
         "capabilities": [

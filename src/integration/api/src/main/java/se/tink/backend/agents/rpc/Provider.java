@@ -8,10 +8,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.CaseFormat;
 import com.google.common.collect.Lists;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
@@ -42,6 +39,11 @@ public class Provider implements Cloneable {
         PERSONAL,
         BUSINESS,
         CORPORATE
+    }
+
+    public enum AgentSource {
+        AGGREGATION_SERVICE,
+        STANDALONE_AGENT;
     }
 
     @SuppressWarnings("serial")
@@ -76,6 +78,7 @@ public class Provider implements Cloneable {
     private String financialInstitutionId;
     @Deprecated private AuthenticationUserType authenticationUserType;
     private List<FinancialService> financialServices;
+    private Set<AgentSource> agentSources;
 
     public Provider() {
         setFields(Lists.newArrayList());
@@ -277,6 +280,14 @@ public class Provider implements Cloneable {
                         .map(FinancialService::of)
                         .collect(Collectors.toList()));
         return provider;
+    }
+
+    public Set<AgentSource> getAgentSources() {
+        return agentSources;
+    }
+
+    public void setAgentSources(Set<AgentSource> agentSources) {
+        this.agentSources = agentSources;
     }
 
     @Override
