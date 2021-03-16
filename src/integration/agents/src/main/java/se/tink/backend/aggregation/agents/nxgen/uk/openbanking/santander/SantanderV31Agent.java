@@ -15,19 +15,16 @@ import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModul
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.UkOpenBankingBaseAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.entities.AccountOwnershipType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAis;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.interfaces.UkOpenBankingConstants.PartyEndpoint;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.module.JwtSignerModule;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.module.UkOpenBankingLocalKeySignerModuleForDecoupledMode;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.base.module.UkOpenBankingModule;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.UkOpenBankingAisConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.UkOpenBankingV31Ais;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.creditcards.CreditCardAccountMapper;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.ais.v31.mapper.identifier.DefaultIdentifierMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.jwt.signer.iface.JwtSigner;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.configuration.UkOpenBankingPisConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
-import se.tink.libraries.mapper.PrioritizedValueExtractor;
 
 @AgentDependencyModulesForProductionMode(
         modules = {UkOpenBankingModule.class, JwtSignerModule.class})
@@ -37,9 +34,7 @@ import se.tink.libraries.mapper.PrioritizedValueExtractor;
 @AgentPisCapability(capabilities = PIS_UK_FASTER_PAYMENT, markets = "GB")
 public final class SantanderV31Agent extends UkOpenBankingBaseAgent {
 
-    private static final se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking
-                    .ukopenbanking.ais.base.interfaces.UkOpenBankingAisConfig
-            aisConfig;
+    private static final UkOpenBankingAisConfig aisConfig;
     private final LocalDateTimeSource localDateTimeSource;
 
     static {
@@ -49,7 +44,10 @@ public final class SantanderV31Agent extends UkOpenBankingBaseAgent {
                         .withOrganisationId(SantanderConstants.ORGANISATION_ID)
                         .withApiBaseURL(SantanderConstants.AIS_API_URL)
                         .withWellKnownURL(SantanderConstants.WELL_KNOWN_URL)
-                        .withPartyEndpoints(PartyEndpoint.PARTY)
+                        .withPartyEndpoints(
+                                PartyEndpoint.PARTY,
+                                PartyEndpoint.ACCOUNT_ID_PARTY,
+                                PartyEndpoint.ACCOUNT_ID_PARTIES)
                         .build();
     }
 
@@ -68,13 +66,6 @@ public final class SantanderV31Agent extends UkOpenBankingBaseAgent {
 
     @Override
     protected UkOpenBankingAis makeAis() {
-        PrioritizedValueExtractor valueExtractor = new PrioritizedValueExtractor();
-        CreditCardAccountMapper creditCardAccountMapper =
-                new CreditCardAccountMapper(
-                        new SantanderCreditCardBalanceMapper(valueExtractor),
-                        new DefaultIdentifierMapper(valueExtractor));
-
-        return new UkOpenBankingV31Ais(
-                aisConfig, persistentStorage, creditCardAccountMapper, localDateTimeSource);
+        return new SantanderV31Ais(aisConfig, persistentStorage, localDateTimeSource, apiClient);
     }
 }
