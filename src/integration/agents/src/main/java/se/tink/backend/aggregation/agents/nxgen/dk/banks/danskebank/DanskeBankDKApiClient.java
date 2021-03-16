@@ -15,6 +15,7 @@ public class DanskeBankDKApiClient extends DanskeBankApiClient {
             Credentials credentials,
             Catalog catalog) {
         super(client, configuration, credentials, catalog);
+        client.setUserAgent(configuration.getUserAgent());
     }
 
     @Override
