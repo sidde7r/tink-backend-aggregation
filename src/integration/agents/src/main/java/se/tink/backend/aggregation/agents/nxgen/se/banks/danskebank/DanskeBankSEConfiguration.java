@@ -245,6 +245,16 @@ public class DanskeBankSEConfiguration implements DanskeBankConfiguration {
                 .build();
     }
 
+    @Override
+    public List<String> getDepotCashBalanceAccounts() {
+        return ImmutableList.<String>builder()
+                // 2AB: "Depåkonto" - "Depot account"
+                .add("2AB")
+                // 2DC: "Investeringssparkonto" - "Investment savings account"
+                .add("2DC")
+                .build();
+    }
+
     public class BankIdStatus {
         public static final String ALREADY_IN_PROGRESS = "already_in_progress";
         public static final String CANCELLED = "cancelled";
