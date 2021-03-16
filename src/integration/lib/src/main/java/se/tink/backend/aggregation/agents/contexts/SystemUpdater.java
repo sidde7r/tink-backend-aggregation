@@ -14,6 +14,8 @@ public interface SystemUpdater {
 
     Account sendAccountToUpdateService(String bankAccountId);
 
+    Account updateAccountMetaData(String accountId, String newBankId);
+
     AccountHolder sendAccountHolderToUpdateService(Account processedAccount);
 
     void updateTransferDestinationPatterns(Map<Account, List<TransferDestinationPattern>> map);

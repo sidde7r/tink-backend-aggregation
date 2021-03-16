@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Assert;
 import org.junit.Test;
@@ -16,6 +17,7 @@ import se.tink.backend.aggregation.agents.models.Transaction;
 public class AccountDataCacheTest {
     private static final String DUMMY_ACCOUNT_ID_0 = "dummy0";
     private static final String DUMMY_ACCOUNT_ID_1 = "dummy1";
+    private static final String DUMMY_TINK_UUID = "00000000000040008000000000000000";
 
     @Test
     public void testCacheSameAccount() {
@@ -97,6 +99,28 @@ public class AccountDataCacheTest {
 
         accountDataCache.clear();
         Assert.assertEquals(accountDataCache.getFilteredAccounts().size(), 0);
+    }
+
+    @Test
+    public void testUpdateAccountBankId() {
+        AccountDataCache accountDataCache = new AccountDataCache();
+
+        Account account = new Account();
+        account.setId(DUMMY_TINK_UUID);
+        account.setBankId(DUMMY_ACCOUNT_ID_0);
+        accountDataCache.cacheAccount(account);
+        accountDataCache.updateAccountBankId(DUMMY_TINK_UUID, DUMMY_ACCOUNT_ID_1);
+
+        Assert.assertEquals(DUMMY_ACCOUNT_ID_1, account.getBankId());
+
+        Assert.assertEquals(
+                Optional.empty(),
+                accountDataCache.getFilteredAccountDataByBankAccountId(DUMMY_ACCOUNT_ID_0));
+
+        final Optional<AccountData> accountData =
+                accountDataCache.getFilteredAccountDataByBankAccountId(DUMMY_ACCOUNT_ID_1);
+        Assert.assertTrue(accountData.isPresent());
+        Assert.assertEquals(account, accountData.get().getAccount());
     }
 
     @Test

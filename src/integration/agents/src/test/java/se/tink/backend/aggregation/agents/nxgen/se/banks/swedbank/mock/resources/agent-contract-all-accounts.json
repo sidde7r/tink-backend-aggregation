@@ -1,421 +1,444 @@
 {
-  "accounts" : [ {
-    "accountNumber" : "123 123 000-2",
-    "accountExclusion" : "NONE",
-    "exactBalance" : {
-      "currencyCode" : "SEK",
-      "unscaledValue" : -1968400,
-      "scale" : 1,
-      "exactValue" : -196840.0,
-      "doubleValue" : -196840.0
-    },
-    "currencyCode" : "SEK",
-    "bankId" : "800101231230002",
-    "excluded" : false,
-    "favored" : false,
-    "name" : "BOLÅN",
-    "ownership" : 1.0,
-    "type" : "LOAN",
-    "userModifiedExcluded" : false,
-    "userModifiedName" : false,
-    "userModifiedType" : false,
-    "identifiers" : "[]",
-    "closed" : false,
-    "flags" : "[]",
-    "balances" : [ ],
-    "availableCredit" : 0.0,
-    "balance" : -196840.0
-  }, {
-    "accountNumber" : "8 123 456-9",
-    "accountExclusion" : "NONE",
-    "exactBalance" : {
-      "currencyCode" : "SEK",
-      "unscaledValue" : 103,
-      "scale" : 2,
-      "exactValue" : 1.03,
-      "doubleValue" : 1.03
-    },
-    "currencyCode" : "SEK",
-    "bankId" : "81234569",
-    "excluded" : false,
-    "favored" : false,
-    "name" : "Fond",
-    "ownership" : 1.0,
-    "type" : "INVESTMENT",
-    "userModifiedExcluded" : false,
-    "userModifiedName" : false,
-    "userModifiedType" : false,
-    "identifiers" : "[]",
-    "closed" : false,
-    "flags" : "[]",
-    "balances" : [ ],
-    "availableCredit" : 0.0,
-    "balance" : 1.03
-  }, {
-    "accountNumber" : "123 123 003-6",
-    "accountExclusion" : "NONE",
-    "exactBalance" : {
-      "currencyCode" : "SEK",
-      "unscaledValue" : -3500000,
-      "scale" : 1,
-      "exactValue" : -350000.0,
-      "doubleValue" : -350000.0
-    },
-    "currencyCode" : "SEK",
-    "bankId" : "800101231230036",
-    "excluded" : false,
-    "favored" : false,
-    "name" : "BOLÅN",
-    "ownership" : 1.0,
-    "type" : "LOAN",
-    "userModifiedExcluded" : false,
-    "userModifiedName" : false,
-    "userModifiedType" : false,
-    "identifiers" : "[]",
-    "closed" : false,
-    "flags" : "[]",
-    "balances" : [ ],
-    "availableCredit" : 0.0,
-    "balance" : -350000.0
-  }, {
-    "accountNumber" : "1234567890",
-    "accountExclusion" : "NONE",
-    "exactBalance" : {
-      "currencyCode" : "SEK",
-      "unscaledValue" : -5166661,
-      "scale" : 2,
-      "exactValue" : -51666.61,
-      "doubleValue" : -51666.61
-    },
-    "currencyCode" : "SEK",
-    "bankId" : "1234567890",
-    "excluded" : false,
-    "favored" : false,
-    "name" : "Billån",
-    "ownership" : 1.0,
-    "type" : "LOAN",
-    "userModifiedExcluded" : false,
-    "userModifiedName" : false,
-    "userModifiedType" : false,
-    "identifiers" : "[]",
-    "closed" : false,
-    "flags" : "[]",
-    "balances" : [ ],
-    "availableCredit" : 0.0,
-    "balance" : -51666.61
-  }, {
-    "accountNumber" : "8105-9,333 333 666-1",
-    "accountExclusion" : "NONE",
-    "exactBalance" : {
-      "currencyCode" : "SEK",
-      "unscaledValue" : 0,
-      "scale" : 1,
-      "exactValue" : 0.0,
-      "doubleValue" : 0.0
-    },
-    "currencyCode" : "SEK",
-    "availableBalance" : {
-      "currencyCode" : "SEK",
-      "unscaledValue" : 0,
-      "scale" : 1,
-      "exactValue" : 0.0,
-      "doubleValue" : 0.0
-    },
-    "creditLimit" : {
-      "currencyCode" : "SEK",
-      "unscaledValue" : 0,
-      "scale" : 1,
-      "exactValue" : 0.0,
-      "doubleValue" : 0.0
-    },
-    "bankId" : "810593333336661",
-    "excluded" : false,
-    "favored" : false,
-    "name" : "Depåkonto 1",
-    "ownership" : 1.0,
-    "type" : "SAVINGS",
-    "userModifiedExcluded" : false,
-    "userModifiedName" : false,
-    "userModifiedType" : false,
-    "identifiers" : "[\"se://810593333336661\",\"iban://SE4080000810593333336661\"]",
-    "closed" : false,
-    "holderName" : "Wiremock User",
-    "accountHolder" : {
-      "accountId" : null,
-      "type" : "PERSONAL",
-      "identities" : [ {
-        "name" : "Wiremock User",
-        "role" : "HOLDER"
-      } ]
-    },
-    "flags" : "[]",
-    "balances" : [ ],
-    "availableCredit" : 0.0,
-    "balance" : 0.0
-  }, {
-    "accountNumber" : "8000-2,111 111 111-6",
-    "accountExclusion" : "NONE",
-    "exactBalance" : {
-      "currencyCode" : "SEK",
-      "unscaledValue" : 33333,
-      "scale" : 2,
-      "exactValue" : 333.33,
-      "doubleValue" : 333.33
-    },
-    "currencyCode" : "SEK",
-    "availableBalance" : {
-      "currencyCode" : "SEK",
-      "unscaledValue" : 33333,
-      "scale" : 2,
-      "exactValue" : 333.33,
-      "doubleValue" : 333.33
-    },
-    "creditLimit" : {
-      "currencyCode" : "SEK",
-      "unscaledValue" : 0,
-      "scale" : 1,
-      "exactValue" : 0.0,
-      "doubleValue" : 0.0
-    },
-    "bankId" : "800021111111116",
-    "excluded" : false,
-    "favored" : false,
-    "name" : "Privatkonto",
-    "ownership" : 1.0,
-    "type" : "CHECKING",
-    "userModifiedExcluded" : false,
-    "userModifiedName" : false,
-    "userModifiedType" : false,
-    "identifiers" : "[\"iban://SE9280000800021111111116\",\"se://800021111111116\"]",
-    "closed" : false,
-    "holderName" : "Wiremock User",
-    "accountHolder" : {
-      "accountId" : null,
-      "type" : "PERSONAL",
-      "identities" : [ {
-        "name" : "Wiremock User",
-        "role" : "HOLDER"
-      } ]
-    },
-    "flags" : "[\"PSD2_PAYMENT_ACCOUNT\"]",
-    "balances" : [ ],
-    "availableCredit" : 0.0,
-    "balance" : 333.33
-  }, {
-    "accountNumber" : "5500 00** **** 0000",
-    "accountExclusion" : "NONE",
-    "exactAvailableCredit" : {
-      "currencyCode" : "SEK",
-      "unscaledValue" : 1999947,
-      "scale" : 2,
-      "exactValue" : 19999.47,
-      "doubleValue" : 19999.47
-    },
-    "exactBalance" : {
-      "currencyCode" : "SEK",
-      "unscaledValue" : -53,
-      "scale" : 2,
-      "exactValue" : -0.53,
-      "doubleValue" : -0.53
-    },
-    "currencyCode" : "SEK",
-    "bankId" : "5500000000",
-    "excluded" : false,
-    "favored" : false,
-    "name" : "Betal- och kreditkort Mastercard",
-    "ownership" : 1.0,
-    "type" : "CREDIT_CARD",
-    "userModifiedExcluded" : false,
-    "userModifiedName" : false,
-    "userModifiedType" : false,
-    "identifiers" : "[]",
-    "closed" : false,
-    "holderName" : "Wiremock User",
-    "accountHolder" : {
-      "accountId" : null,
-      "type" : "PERSONAL",
-      "identities" : [ {
-        "name" : "Wiremock User",
-        "role" : "HOLDER"
-      } ]
-    },
-    "flags" : "[]",
-    "balances" : [ ],
-    "availableCredit" : 19999.47,
-    "balance" : -0.53
-  }, {
-    "accountNumber" : "222 333 444-8",
-    "accountExclusion" : "NONE",
-    "exactBalance" : {
-      "currencyCode" : "SEK",
-      "unscaledValue" : -270740,
-      "scale" : 1,
-      "exactValue" : -27074.0,
-      "doubleValue" : -27074.0
-    },
-    "currencyCode" : "SEK",
-    "bankId" : "812322223334448",
-    "excluded" : false,
-    "favored" : false,
-    "name" : "Nya Medlemslån LO",
-    "ownership" : 1.0,
-    "type" : "LOAN",
-    "userModifiedExcluded" : false,
-    "userModifiedName" : false,
-    "userModifiedType" : false,
-    "identifiers" : "[]",
-    "closed" : false,
-    "flags" : "[]",
-    "balances" : [ ],
-    "availableCredit" : 0.0,
-    "balance" : -27074.0
-  }, {
-    "accountNumber" : "8104043333334444",
-    "accountExclusion" : "NONE",
-    "exactBalance" : {
-      "currencyCode" : "SEK",
-      "unscaledValue" : 66666666,
-      "scale" : 2,
-      "exactValue" : 666666.66,
-      "doubleValue" : 666666.66
-    },
-    "currencyCode" : "SEK",
-    "bankId" : "8104043333334444",
-    "excluded" : false,
-    "favored" : false,
-    "name" : "ITP 1 pension fond",
-    "ownership" : 1.0,
-    "type" : "INVESTMENT",
-    "userModifiedExcluded" : false,
-    "userModifiedName" : false,
-    "userModifiedType" : false,
-    "identifiers" : "[]",
-    "closed" : false,
-    "flags" : "[]",
-    "balances" : [ ],
-    "availableCredit" : 0.0,
-    "balance" : 666666.66
-  }, {
-    "accountNumber" : "8001-0,222 222 222-2",
-    "accountExclusion" : "NONE",
-    "exactBalance" : {
-      "currencyCode" : "SEK",
-      "unscaledValue" : 0,
-      "scale" : 1,
-      "exactValue" : 0.0,
-      "doubleValue" : 0.0
-    },
-    "currencyCode" : "SEK",
-    "availableBalance" : {
-      "currencyCode" : "SEK",
-      "unscaledValue" : 0,
-      "scale" : 1,
-      "exactValue" : 0.0,
-      "doubleValue" : 0.0
-    },
-    "creditLimit" : {
-      "currencyCode" : "SEK",
-      "unscaledValue" : 0,
-      "scale" : 1,
-      "exactValue" : 0.0,
-      "doubleValue" : 0.0
-    },
-    "bankId" : "800102222222222",
-    "excluded" : false,
-    "favored" : false,
-    "name" : "e-sparkonto",
-    "ownership" : 1.0,
-    "type" : "SAVINGS",
-    "userModifiedExcluded" : false,
-    "userModifiedName" : false,
-    "userModifiedType" : false,
-    "identifiers" : "[\"se://800102222222222\",\"iban://SE7280000800102222222222\"]",
-    "closed" : false,
-    "holderName" : "Wiremock User",
-    "accountHolder" : {
-      "accountId" : null,
-      "type" : "PERSONAL",
-      "identities" : [ {
-        "name" : "Wiremock User",
-        "role" : "HOLDER"
-      } ]
-    },
-    "flags" : "[]",
-    "balances" : [ ],
-    "availableCredit" : 0.0,
-    "balance" : 0.0
-  }, {
-    "accountNumber" : "333 333 333-8",
-    "accountExclusion" : "NONE",
-    "exactBalance" : {
-      "currencyCode" : "SEK",
-      "unscaledValue" : 6666666,
-      "scale" : 2,
-      "exactValue" : 66666.66,
-      "doubleValue" : 66666.66
-    },
-    "currencyCode" : "SEK",
-    "bankId" : "3333333338",
-    "excluded" : false,
-    "favored" : false,
-    "name" : "Individuellt pensionssparande",
-    "ownership" : 1.0,
-    "type" : "INVESTMENT",
-    "userModifiedExcluded" : false,
-    "userModifiedName" : false,
-    "userModifiedType" : false,
-    "identifiers" : "[]",
-    "closed" : false,
-    "flags" : "[]",
-    "balances" : [ ],
-    "availableCredit" : 0.0,
-    "balance" : 66666.66
-  }, {
-    "accountNumber" : "8105-9,333 333 555-6",
-    "accountExclusion" : "NONE",
-    "exactBalance" : {
-      "currencyCode" : "SEK",
-      "unscaledValue" : 59577737,
-      "scale" : 2,
-      "exactValue" : 595777.37,
-      "doubleValue" : 595777.37
-    },
-    "currencyCode" : "SEK",
-    "bankId" : "810593333335556",
-    "excluded" : false,
-    "favored" : false,
-    "name" : "Investeringssparande",
-    "ownership" : 1.0,
-    "type" : "INVESTMENT",
-    "userModifiedExcluded" : false,
-    "userModifiedName" : false,
-    "userModifiedType" : false,
-    "identifiers" : "[]",
-    "closed" : false,
-    "flags" : "[]",
-    "balances" : [ ],
-    "availableCredit" : 0.0,
-    "balance" : 595777.37
-  } ],
-  "transactions" : [ ],
-  "identityData" : {
-    "nameElements" : [ {
-      "type" : "FULLNAME",
-      "value" : "Wiremock User"
-    } ],
-    "dateOfBirth" : {
-      "year" : 1990,
-      "month" : "JANUARY",
-      "monthValue" : 1,
-      "dayOfMonth" : 1,
-      "era" : "CE",
-      "dayOfWeek" : "MONDAY",
-      "leapYear" : false,
-      "dayOfYear" : 1,
-      "chronology" : {
-        "id" : "ISO",
-        "calendarType" : "iso8601"
-      }
+    "accounts": [
+        {
+            "accountNumber": "123 123 000-2",
+            "accountExclusion": "NONE",
+            "exactBalance": {
+                "currencyCode": "SEK",
+                "unscaledValue": -1968400,
+                "scale": 1,
+                "exactValue": -196840.0,
+                "doubleValue": -196840.0
+            },
+            "currencyCode": "SEK",
+            "bankId": "800101231230002",
+            "excluded": false,
+            "favored": false,
+            "name": "BOLÅN",
+            "ownership": 1.0,
+            "type": "LOAN",
+            "userModifiedExcluded": false,
+            "userModifiedName": false,
+            "userModifiedType": false,
+            "identifiers": "[]",
+            "closed": false,
+            "flags": "[]",
+            "balances": [],
+            "availableCredit": 0.0,
+            "balance": -196840.0
+        },
+        {
+            "accountNumber": "8 123 456-9",
+            "accountExclusion": "NONE",
+            "exactBalance": {
+                "currencyCode": "SEK",
+                "unscaledValue": 103,
+                "scale": 2,
+                "exactValue": 1.03,
+                "doubleValue": 1.03
+            },
+            "currencyCode": "SEK",
+            "bankId": "81234569",
+            "excluded": false,
+            "favored": false,
+            "name": "Fond",
+            "ownership": 1.0,
+            "type": "INVESTMENT",
+            "userModifiedExcluded": false,
+            "userModifiedName": false,
+            "userModifiedType": false,
+            "identifiers": "[]",
+            "closed": false,
+            "flags": "[]",
+            "balances": [],
+            "availableCredit": 0.0,
+            "balance": 1.03
+        },
+        {
+            "accountNumber": "123 123 003-6",
+            "accountExclusion": "NONE",
+            "exactBalance": {
+                "currencyCode": "SEK",
+                "unscaledValue": -3500000,
+                "scale": 1,
+                "exactValue": -350000.0,
+                "doubleValue": -350000.0
+            },
+            "currencyCode": "SEK",
+            "bankId": "800101231230036",
+            "excluded": false,
+            "favored": false,
+            "name": "BOLÅN",
+            "ownership": 1.0,
+            "type": "LOAN",
+            "userModifiedExcluded": false,
+            "userModifiedName": false,
+            "userModifiedType": false,
+            "identifiers": "[]",
+            "closed": false,
+            "flags": "[]",
+            "balances": [],
+            "availableCredit": 0.0,
+            "balance": -350000.0
+        },
+        {
+            "accountNumber": "1234567890",
+            "accountExclusion": "NONE",
+            "exactBalance": {
+                "currencyCode": "SEK",
+                "unscaledValue": -5166661,
+                "scale": 2,
+                "exactValue": -51666.61,
+                "doubleValue": -51666.61
+            },
+            "currencyCode": "SEK",
+            "bankId": "1234567890",
+            "excluded": false,
+            "favored": false,
+            "name": "Billån",
+            "ownership": 1.0,
+            "type": "LOAN",
+            "userModifiedExcluded": false,
+            "userModifiedName": false,
+            "userModifiedType": false,
+            "identifiers": "[]",
+            "closed": false,
+            "flags": "[]",
+            "balances": [],
+            "availableCredit": 0.0,
+            "balance": -51666.61
+        },
+        {
+            "accountNumber": "8105-9,333 333 666-1",
+            "accountExclusion": "NONE",
+            "exactBalance": {
+                "currencyCode": "SEK",
+                "unscaledValue": 0,
+                "scale": 1,
+                "exactValue": 0.0,
+                "doubleValue": 0.0
+            },
+            "currencyCode": "SEK",
+            "availableBalance": {
+                "currencyCode": "SEK",
+                "unscaledValue": 0,
+                "scale": 1,
+                "exactValue": 0.0,
+                "doubleValue": 0.0
+            },
+            "creditLimit": {
+                "currencyCode": "SEK",
+                "unscaledValue": 0,
+                "scale": 1,
+                "exactValue": 0.0,
+                "doubleValue": 0.0
+            },
+            "bankId": "810593333336661",
+            "excluded": false,
+            "favored": false,
+            "name": "Depåkonto 1",
+            "ownership": 1.0,
+            "type": "SAVINGS",
+            "userModifiedExcluded": false,
+            "userModifiedName": false,
+            "userModifiedType": false,
+            "identifiers": "[\"se://810593333336661\",\"iban://SE4080000810593333336661\"]",
+            "closed": false,
+            "holderName": "Wiremock User",
+            "accountHolder": {
+                "accountId": null,
+                "type": "PERSONAL",
+                "identities": [
+                    {
+                        "name": "Wiremock User",
+                        "role": "HOLDER"
+                    }
+                ]
+            },
+            "flags": "[]",
+            "balances": [],
+            "availableCredit": 0.0,
+            "balance": 0.0
+        },
+        {
+            "accountNumber": "8000-2,111 111 111-6",
+            "accountExclusion": "NONE",
+            "exactBalance": {
+                "currencyCode": "SEK",
+                "unscaledValue": 33333,
+                "scale": 2,
+                "exactValue": 333.33,
+                "doubleValue": 333.33
+            },
+            "currencyCode": "SEK",
+            "availableBalance": {
+                "currencyCode": "SEK",
+                "unscaledValue": 33333,
+                "scale": 2,
+                "exactValue": 333.33,
+                "doubleValue": 333.33
+            },
+            "creditLimit": {
+                "currencyCode": "SEK",
+                "unscaledValue": 0,
+                "scale": 1,
+                "exactValue": 0.0,
+                "doubleValue": 0.0
+            },
+            "bankId": "800021111111116",
+            "excluded": false,
+            "favored": false,
+            "name": "Privatkonto",
+            "ownership": 1.0,
+            "type": "CHECKING",
+            "userModifiedExcluded": false,
+            "userModifiedName": false,
+            "userModifiedType": false,
+            "identifiers": "[\"iban://SE9280000800021111111116\",\"se://800021111111116\"]",
+            "closed": false,
+            "holderName": "Wiremock User",
+            "accountHolder": {
+                "accountId": null,
+                "type": "PERSONAL",
+                "identities": [
+                    {
+                        "name": "Wiremock User",
+                        "role": "HOLDER"
+                    }
+                ]
+            },
+            "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
+            "balances": [],
+            "availableCredit": 0.0,
+            "balance": 333.33
+        },
+        {
+            "accountNumber": "5500 00** **** 0000",
+            "accountExclusion": "NONE",
+            "exactAvailableCredit": {
+                "currencyCode": "SEK",
+                "unscaledValue": 1999947,
+                "scale": 2,
+                "exactValue": 19999.47,
+                "doubleValue": 19999.47
+            },
+            "exactBalance": {
+                "currencyCode": "SEK",
+                "unscaledValue": -53,
+                "scale": 2,
+                "exactValue": -0.53,
+                "doubleValue": -0.53
+            },
+            "currencyCode": "SEK",
+            "bankId": "5500000000",
+            "excluded": false,
+            "favored": false,
+            "name": "Betal- och kreditkort Mastercard",
+            "ownership": 1.0,
+            "type": "CREDIT_CARD",
+            "userModifiedExcluded": false,
+            "userModifiedName": false,
+            "userModifiedType": false,
+            "identifiers": "[]",
+            "closed": false,
+            "holderName": "Wiremock User",
+            "accountHolder": {
+                "accountId": null,
+                "type": "PERSONAL",
+                "identities": [
+                    {
+                        "name": "Wiremock User",
+                        "role": "HOLDER"
+                    }
+                ]
+            },
+            "flags": "[]",
+            "balances": [],
+            "availableCredit": 19999.47,
+            "balance": -0.53
+        },
+        {
+            "accountNumber": "222 333 444-8",
+            "accountExclusion": "NONE",
+            "exactBalance": {
+                "currencyCode": "SEK",
+                "unscaledValue": -270740,
+                "scale": 1,
+                "exactValue": -27074.0,
+                "doubleValue": -27074.0
+            },
+            "currencyCode": "SEK",
+            "bankId": "812322223334448",
+            "excluded": false,
+            "favored": false,
+            "name": "Nya Medlemslån LO",
+            "ownership": 1.0,
+            "type": "LOAN",
+            "userModifiedExcluded": false,
+            "userModifiedName": false,
+            "userModifiedType": false,
+            "identifiers": "[]",
+            "closed": false,
+            "flags": "[]",
+            "balances": [],
+            "availableCredit": 0.0,
+            "balance": -27074.0
+        },
+        {
+            "accountNumber": "8104-4,333 333 444-4",
+            "accountExclusion": "NONE",
+            "exactBalance": {
+                "currencyCode": "SEK",
+                "unscaledValue": 66666666,
+                "scale": 2,
+                "exactValue": 666666.66,
+                "doubleValue": 666666.66
+            },
+            "currencyCode": "SEK",
+            "bankId": "810443333334444",
+            "excluded": false,
+            "favored": false,
+            "name": "ITP 1 pension fond",
+            "ownership": 1.0,
+            "type": "INVESTMENT",
+            "userModifiedExcluded": false,
+            "userModifiedName": false,
+            "userModifiedType": false,
+            "identifiers": "[\"se://810443333334444\"]",
+            "closed": false,
+            "flags": "[]",
+            "balances": [],
+            "availableCredit": 0.0,
+            "balance": 666666.66
+        },
+        {
+            "accountNumber": "8001-0,222 222 222-2",
+            "accountExclusion": "NONE",
+            "exactBalance": {
+                "currencyCode": "SEK",
+                "unscaledValue": 0,
+                "scale": 1,
+                "exactValue": 0.0,
+                "doubleValue": 0.0
+            },
+            "currencyCode": "SEK",
+            "availableBalance": {
+                "currencyCode": "SEK",
+                "unscaledValue": 0,
+                "scale": 1,
+                "exactValue": 0.0,
+                "doubleValue": 0.0
+            },
+            "creditLimit": {
+                "currencyCode": "SEK",
+                "unscaledValue": 0,
+                "scale": 1,
+                "exactValue": 0.0,
+                "doubleValue": 0.0
+            },
+            "bankId": "800102222222222",
+            "excluded": false,
+            "favored": false,
+            "name": "e-sparkonto",
+            "ownership": 1.0,
+            "type": "SAVINGS",
+            "userModifiedExcluded": false,
+            "userModifiedName": false,
+            "userModifiedType": false,
+            "identifiers": "[\"se://800102222222222\",\"iban://SE7280000800102222222222\"]",
+            "closed": false,
+            "holderName": "Wiremock User",
+            "accountHolder": {
+                "accountId": null,
+                "type": "PERSONAL",
+                "identities": [
+                    {
+                        "name": "Wiremock User",
+                        "role": "HOLDER"
+                    }
+                ]
+            },
+            "flags": "[]",
+            "balances": [],
+            "availableCredit": 0.0,
+            "balance": 0.0
+        },
+        {
+            "accountNumber": "8103-4,333 333 333-8",
+            "accountExclusion": "NONE",
+            "exactBalance": {
+                "currencyCode": "SEK",
+                "unscaledValue": 6666666,
+                "scale": 2,
+                "exactValue": 66666.66,
+                "doubleValue": 66666.66
+            },
+            "currencyCode": "SEK",
+            "bankId": "810343333333338",
+            "excluded": false,
+            "favored": false,
+            "name": "Individuellt pensionssparande",
+            "ownership": 1.0,
+            "type": "INVESTMENT",
+            "userModifiedExcluded": false,
+            "userModifiedName": false,
+            "userModifiedType": false,
+            "identifiers": "[\"se://810343333333338\"]",
+            "closed": false,
+            "flags": "[]",
+            "balances": [],
+            "availableCredit": 0.0,
+            "balance": 66666.66
+        },
+        {
+            "accountNumber": "8105-9,333 333 555-6",
+            "accountExclusion": "NONE",
+            "exactBalance": {
+                "currencyCode": "SEK",
+                "unscaledValue": 59577737,
+                "scale": 2,
+                "exactValue": 595777.37,
+                "doubleValue": 595777.37
+            },
+            "currencyCode": "SEK",
+            "bankId": "810593333335556",
+            "excluded": false,
+            "favored": false,
+            "name": "Investeringssparande",
+            "ownership": 1.0,
+            "type": "INVESTMENT",
+            "userModifiedExcluded": false,
+            "userModifiedName": false,
+            "userModifiedType": false,
+            "identifiers": "[]",
+            "closed": false,
+            "flags": "[]",
+            "balances": [],
+            "availableCredit": 0.0,
+            "balance": 595777.37
+        }
+    ],
+    "transactions": [],
+    "identityData": {
+        "nameElements": [
+            {
+                "type": "FULLNAME",
+                "value": "Wiremock User"
+            }
+        ],
+        "dateOfBirth": {
+            "year": 1990,
+            "month": "JANUARY",
+            "monthValue": 1,
+            "dayOfMonth": 1,
+            "era": "CE",
+            "dayOfWeek": "MONDAY",
+            "leapYear": false,
+            "dayOfYear": 1,
+            "chronology": {
+                "id": "ISO",
+                "calendarType": "iso8601"
+            }
+        }
     }
-  }
 }

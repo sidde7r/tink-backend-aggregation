@@ -187,6 +187,17 @@ public class AgentTestContext extends AgentContext {
     }
 
     @Override
+    public Account updateAccountMetaData(String accountId, String newBankId) {
+        Optional<AccountData> optionalAccountData =
+                accountDataCache.getFilteredAccountDataByBankAccountId(accountId);
+        if (!optionalAccountData.isPresent()) {
+            log.warn("Trying to update meta data for a non-existent Account!.");
+            return null;
+        }
+        return optionalAccountData.get().getAccount();
+    }
+
+    @Override
     public AccountHolder sendAccountHolderToUpdateService(Account processedAccount) {
         return processedAccount.getAccountHolder();
     }

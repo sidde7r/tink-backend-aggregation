@@ -523,6 +523,25 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         return updatedAccount;
     }
 
+    @Override
+    public Account updateAccountMetaData(String accountId, String newBankId) {
+        Account updatedAccount;
+        try {
+            logger.info("Updating bankId for account {}", accountId);
+            updatedAccount = controllerWrapper.updateAccountMetaData(accountId, newBankId);
+
+        } catch (UniformInterfaceException e) {
+            logger.error(
+                    "Account metadata update request failed, response: {}",
+                    (e.getResponse().hasEntity() ? e.getResponse().getEntity(String.class) : ""));
+            throw e;
+        }
+
+        // update in data cache
+        accountDataCache.updateAccountBankId(accountId, newBankId);
+        return updatedAccount;
+    }
+
     private void measureSuspiciousNumberSeries(String label, String numberSeries) {
         if (Strings.isNullOrEmpty(numberSeries)) {
             return;
