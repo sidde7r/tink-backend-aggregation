@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.configuration.MarketConfiguration;
 import se.tink.backend.aggregation.agents.utils.berlingroup.BalanceEntity;
 import se.tink.backend.aggregation.agents.utils.berlingroup.BerlinGroupBalanceMapper;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -60,7 +61,7 @@ public class AccountEntity {
 
     @JsonIgnore
     public Optional<TransactionalAccount> toTinkAccount(
-            List<BalanceEntity> balances, boolean lowercaseAccountId) {
+            List<BalanceEntity> balances, MarketConfiguration marketConfiguration) {
         if (!isTransactionalAccount()) {
             throw new IllegalStateException("Not a transactional account.");
         }
@@ -70,12 +71,15 @@ public class AccountEntity {
                 .withBalance(getBalanceModule(balances))
                 .withId(
                         IdModule.builder()
-                                .withUniqueIdentifier(getUniqueIdentifier(lowercaseAccountId))
+                                .withUniqueIdentifier(
+                                        getUniqueIdentifier(
+                                                marketConfiguration
+                                                        .shouldReturnLowercaseAccountId()))
                                 .withAccountNumber(iban)
                                 .withAccountName(product)
                                 .addIdentifier(new IbanIdentifier(iban))
                                 .build())
-                .addHolderName(name)
+                .addParties(marketConfiguration.convertHolderNamesToParties(name))
                 .setApiIdentifier(resourceId)
                 .setBankIdentifier(maskedPan)
                 .putInTemporaryStorage(IngBaseConstants.StorageKeys.ACCOUNT_ID, resourceId)

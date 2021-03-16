@@ -3,6 +3,8 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.in
 import com.google.common.collect.ImmutableSet;
 import java.security.cert.CertificateException;
 import java.time.LocalDate;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
@@ -31,6 +33,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Party;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.BankServiceInternalErrorFilter;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.ServiceUnavailableBankServiceErrorFilter;
@@ -157,9 +160,7 @@ public abstract class IngBaseAgent extends NextGenerationAgent
                 metricRefreshController,
                 updateController,
                 new IngBaseAccountsFetcher(
-                        apiClient,
-                        request.getProvider().getCurrency().toUpperCase(),
-                        shouldReturnLowercaseAccountId()),
+                        apiClient, request.getProvider().getCurrency().toUpperCase(), this),
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
                         new TransactionKeyPaginationController<>(
@@ -223,5 +224,10 @@ public abstract class IngBaseAgent extends NextGenerationAgent
     @Override
     public Class<? extends BaseFetchTransactionsResponse> getTransactionsResponseClass() {
         return BaseFetchTransactionsResponse.class;
+    }
+
+    @Override
+    public List<Party> convertHolderNamesToParties(String holderNames) {
+        return Collections.singletonList(new Party(holderNames, Party.Role.HOLDER));
     }
 }
