@@ -4,6 +4,7 @@ import java.util.Map;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
+import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostaleApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostaleConstants.ErrorMessages;
@@ -45,6 +46,9 @@ public class LaBanquePostaleAuthenticator extends BerlinGroupAuthenticator
             throw ThirdPartyAppError.TIMED_OUT.exception();
         } else if (ErrorMessages.TEMP_UNAVAILABLE.equals(errorType)) {
             throw BankServiceError.BANK_SIDE_FAILURE.exception();
+        } else if (ErrorMessages.BAD_REDIRECT.equals(errorType)) {
+            throw AuthorizationError.NO_VALID_PROFILE.exception(
+                    "User is not registered in the CerticodePlus and can not use PSD2 endpoints");
         }
     }
 }

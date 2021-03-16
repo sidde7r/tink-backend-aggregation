@@ -63,6 +63,7 @@ public final class LaBanquePostaleConstants {
         public static final String TIME_OUT = "TIME_OUT";
         public static final String TEMP_UNAVAILABLE =
                 "This service is temporarily unavailable. Please try again later.";
+        public static final String BAD_REDIRECT = "badredirect";
     }
 
     public static class QueryValues {
