@@ -1,16 +1,40 @@
 package se.tink.backend.aggregation.rpc;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.time.LocalDate;
+import java.util.UUID;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsRequestType;
+import se.tink.libraries.account.enums.AccountIdentifierType;
+import se.tink.libraries.amount.ExactCurrencyAmount;
+import se.tink.libraries.payments.common.model.PaymentScheme;
 import se.tink.libraries.signableoperation.rpc.SignableOperation;
+import se.tink.libraries.transfer.rpc.ExecutionRule;
+import se.tink.libraries.transfer.rpc.Frequency;
 import se.tink.libraries.transfer.rpc.RecurringPayment;
+import se.tink.libraries.transfer.rpc.RemittanceInformation;
 import se.tink.libraries.user.rpc.User;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class RecurringPaymentRequest extends TransferRequest {
+
+    private UUID id;
+    private UUID credentialsId;
+    private UUID userId;
+    private AccountIdentifierType creditorType;
+    private String creditorId;
+    private AccountIdentifierType debtorType;
+    private String debtorId;
+    private ExactCurrencyAmount amount;
+    private RemittanceInformation remittanceInformation;
+    private PaymentScheme paymentScheme;
+    private String originatingUserIp;
+    private Frequency frequency;
+    private LocalDate startDate;
+    private LocalDate endDate;
+    private ExecutionRule executionRule;
+    private int dayOfExecution;
 
     public RecurringPaymentRequest() {}
 
@@ -23,13 +47,28 @@ public class RecurringPaymentRequest extends TransferRequest {
         super(user, provider, credentials, signableOperation, update);
     }
 
-    @JsonIgnore
-    public RecurringPayment getRecurringPayment() {
-        return this.getSignableOperation().getSignableObject(RecurringPayment.class);
-    }
-
     @Override
     public CredentialsRequestType getType() {
         return CredentialsRequestType.RECURRING_PAYMENT;
+    }
+
+    public RecurringPayment getRecurringPayment() {
+        RecurringPayment recurringPayment = new RecurringPayment();
+        recurringPayment.setId(id);
+        recurringPayment.setUserId(userId);
+        recurringPayment.setCredentialsId(credentialsId);
+        recurringPayment.setDestination(creditorType, creditorId);
+        recurringPayment.setSource(debtorType, debtorId);
+        recurringPayment.setAmount(amount);
+        recurringPayment.setRemittanceInformation(remittanceInformation);
+        recurringPayment.setPaymentScheme(paymentScheme);
+        recurringPayment.setOriginatingUserIp(originatingUserIp);
+        recurringPayment.setFrequency(frequency);
+        recurringPayment.setStartDate(startDate);
+        recurringPayment.setEndDate(endDate);
+        recurringPayment.setExecutionRule(executionRule);
+        recurringPayment.setDayOfExecution(dayOfExecution);
+
+        return recurringPayment;
     }
 }

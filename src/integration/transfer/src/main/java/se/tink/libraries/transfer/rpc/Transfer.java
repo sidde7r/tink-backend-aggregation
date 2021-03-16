@@ -1,5 +1,7 @@
 package se.tink.libraries.transfer.rpc;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
+
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -23,6 +25,7 @@ import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountIdentifierType;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.date.ThreadSafeDateFormat;
@@ -158,6 +161,10 @@ public class Transfer implements UuidIdentifiable, Serializable, Cloneable {
         }
     }
 
+    public void setAmount(BigDecimal amount, String currency) {
+        setAmount(ExactCurrencyAmount.of(amount, currency));
+    }
+
     /**
      * @return Non-formatted destination message of transfer. For e.g. bank transfers message might
      *     need formatting and default values (use TransferMessageFormatter for this) to confirm to
@@ -245,6 +252,13 @@ public class Transfer implements UuidIdentifiable, Serializable, Cloneable {
         }
     }
 
+    public void setDestination(AccountIdentifierType destinationType, String destinationId) {
+        if (isNullOrEmpty(destinationId)) {
+            return;
+        }
+        setDestination(AccountIdentifier.create(destinationType, destinationId));
+    }
+
     public AccountIdentifier getSource() {
         if (Strings.isNullOrEmpty(source)) {
             return null;
@@ -258,6 +272,13 @@ public class Transfer implements UuidIdentifiable, Serializable, Cloneable {
         } else {
             this.source = source.toUriAsString();
         }
+    }
+
+    public void setSource(AccountIdentifierType sourceType, String sourceId) {
+        if (isNullOrEmpty(sourceId)) {
+            return;
+        }
+        setSource(AccountIdentifier.create(sourceType, sourceId));
     }
 
     public TransferType getType() {
