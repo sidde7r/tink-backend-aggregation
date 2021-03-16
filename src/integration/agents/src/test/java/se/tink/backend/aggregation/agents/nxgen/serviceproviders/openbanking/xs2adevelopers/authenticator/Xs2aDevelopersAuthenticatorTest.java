@@ -41,7 +41,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.WellKnownResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.configuration.Xs2aDevelopersProviderConfiguration;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.ActualLocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.MockRandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
@@ -98,6 +97,8 @@ public class Xs2aDevelopersAuthenticatorTest {
                             + SCA_OAUTH
                             + "\"} }",
                     ConsentResponse.class);
+    private static final Xs2aDevelopersProviderConfiguration xs2aDevelopersProviderConfiguration =
+            new Xs2aDevelopersProviderConfiguration(CLIENT_ID, BASE_URL, REDIRECT_URL);
 
     private Xs2aDevelopersApiClient apiClient;
     private LocalDateTimeSource localDateTimeSource;
@@ -108,18 +109,16 @@ public class Xs2aDevelopersAuthenticatorTest {
     public void init() {
         apiClient = mock(Xs2aDevelopersApiClient.class);
         storage = mock(PersistentStorage.class);
-        Xs2aDevelopersProviderConfiguration configuration =
-                new Xs2aDevelopersProviderConfiguration(CLIENT_ID, BASE_URL, REDIRECT_URL);
         localDateTimeSource = mock(LocalDateTimeSource.class);
+        when(localDateTimeSource.now()).thenReturn(LocalDateTime.of(1234, 5, 12, 12, 30, 40));
 
         authenticator =
                 new Xs2aDevelopersAuthenticator(
                         apiClient,
                         storage,
-                        configuration,
+                        xs2aDevelopersProviderConfiguration,
                         localDateTimeSource,
-                        new Credentials(),
-                        false);
+                        new Credentials());
     }
 
     @Test
@@ -173,7 +172,6 @@ public class Xs2aDevelopersAuthenticatorTest {
         when(apiClient.createConsent(any())).thenReturn(POST_CONSENT_RESPONSE);
         when(apiClient.buildAuthorizeUrl(STATE, AIS_CONSENT_ID, SCA_OAUTH))
                 .thenReturn(new URL(API_CLIENT_AUTHORIZE_URL));
-        when(localDateTimeSource.now()).thenReturn(LocalDateTime.of(1234, 5, 12, 12, 30, 40));
 
         // when
         URL authorizeUrl = authenticator.buildAuthorizeUrl(STATE);
@@ -195,8 +193,7 @@ public class Xs2aDevelopersAuthenticatorTest {
         credentials.setType(CredentialsTypes.THIRD_PARTY_APP);
 
         Xs2aDevelopersAuthenticator xs2aDevelopersAuthenticator =
-                createXs2aDevelopersAuthenticator(
-                        tinkHttpClient, persistentStorage, credentials, false);
+                createXs2aDevelopersAuthenticator(tinkHttpClient, persistentStorage, credentials);
 
         AutoAuthenticationController autoAuthenticationController =
                 createAutoAuthenticationController(
@@ -216,8 +213,7 @@ public class Xs2aDevelopersAuthenticatorTest {
         Credentials credentials = createCredentials(new Date());
 
         Xs2aDevelopersAuthenticator xs2aDevelopersAuthenticator =
-                createXs2aDevelopersAuthenticator(
-                        tinkHttpClient, persistentStorage, credentials, false);
+                createXs2aDevelopersAuthenticator(tinkHttpClient, persistentStorage, credentials);
         AutoAuthenticationController autoAuthenticationController =
                 createAutoAuthenticationController(
                         xs2aDevelopersAuthenticator, credentials, persistentStorage, false);
@@ -241,8 +237,7 @@ public class Xs2aDevelopersAuthenticatorTest {
         Credentials credentials = createCredentials(currentSessionExpiryDate);
 
         Xs2aDevelopersAuthenticator xs2aDevelopersAuthenticator =
-                createXs2aDevelopersAuthenticator(
-                        tinkHttpClient, persistentStorage, credentials, false);
+                createXs2aDevelopersAuthenticator(tinkHttpClient, persistentStorage, credentials);
         AutoAuthenticationController autoAuthenticationController =
                 createAutoAuthenticationController(
                         xs2aDevelopersAuthenticator, credentials, persistentStorage, false);
@@ -257,21 +252,44 @@ public class Xs2aDevelopersAuthenticatorTest {
     @Test
     public void buildAuthorizeUrl_should_request_for_wellKnownUrl_if_needed() {
         // given
-        TinkHttpClient tinkHttpClient = mockHttpClient();
+        final URL expectedAuthorizeUrl =
+                new URL("https://psd2.bank.domain/authorize/dsadfdsfedwsf?someParam1=value1");
+        final ConsentResponse postConsentResponseWithWellKnownUri =
+                SerializationUtils.deserializeFromString(
+                        "{\"consentId\" : \""
+                                + CONSENT_ID
+                                + "\", \"_links\" : {\"scaOAuth\" : \""
+                                + "http://test.domain/.well-known/121234324234"
+                                + "\"} }",
+                        ConsentResponse.class);
+
+        final WellKnownResponse postWellKnownUriResponse =
+                SerializationUtils.deserializeFromString(
+                        "{\"authorization_endpoint\" : \"https://psd2.bank.domain/authorize/dsadfdsfedwsf\"}",
+                        WellKnownResponse.class);
+        when(apiClient.createConsent(any())).thenReturn(postConsentResponseWithWellKnownUri);
+        when(apiClient.getAuthorizationEndpointFromWellKnownURI(
+                        postConsentResponseWithWellKnownUri.getLinks().getScaOAuth()))
+                .thenReturn(postWellKnownUriResponse.getAuthorizationEndpoint());
+        when(apiClient.buildAuthorizeUrl(
+                        any(), any(), eq(postWellKnownUriResponse.getAuthorizationEndpoint())))
+                .thenReturn(expectedAuthorizeUrl);
         PersistentStorage persistentStorage = new PersistentStorage();
         Credentials credentials = new Credentials();
         credentials.setType(CredentialsTypes.THIRD_PARTY_APP);
         Xs2aDevelopersAuthenticator authenticatiorWithRequestForWellKnownUrlNeeded =
-                createXs2aDevelopersAuthenticator(
-                        tinkHttpClient, persistentStorage, credentials, true);
+                new Xs2aDevelopersAuthenticator(
+                        apiClient,
+                        persistentStorage,
+                        xs2aDevelopersProviderConfiguration,
+                        localDateTimeSource,
+                        credentials);
 
         // when
-        authenticatiorWithRequestForWellKnownUrlNeeded.buildAuthorizeUrl("dummyState");
+        URL result = authenticatiorWithRequestForWellKnownUrlNeeded.buildAuthorizeUrl("dummyState");
 
         // then
-        verify(tinkHttpClient)
-                .request(
-                        "https://psd.xs2a-api.com/public/berlingroup/authorize/55d7b2c8-d120-441c-ab3c-ca930e2f6ec9");
+        assertThat(result).isEqualTo(expectedAuthorizeUrl);
     }
 
     private Credentials createCredentials(Date sessionExpiryDate) {
@@ -343,10 +361,7 @@ public class Xs2aDevelopersAuthenticatorTest {
     private Xs2aDevelopersAuthenticator createXs2aDevelopersAuthenticator(
             TinkHttpClient tinkHttpClient,
             PersistentStorage persistentStorage,
-            Credentials credentials,
-            boolean isRequestForWellKnownUrlNeeded) {
-        Xs2aDevelopersProviderConfiguration xs2aDevelopersProviderConfiguration =
-                new Xs2aDevelopersProviderConfiguration("clientId", "baseUrl", "redirectUrl");
+            Credentials credentials) {
 
         Xs2aDevelopersApiClient xs2aDevelopersApiClient =
                 new Xs2aDevelopersApiClient(
@@ -356,15 +371,12 @@ public class Xs2aDevelopersAuthenticatorTest {
                         true,
                         "userIp",
                         new MockRandomValueGenerator());
-
-        LocalDateTimeSource localDateTimeSource = new ActualLocalDateTimeSource();
         return new Xs2aDevelopersAuthenticator(
                 xs2aDevelopersApiClient,
                 persistentStorage,
                 xs2aDevelopersProviderConfiguration,
                 localDateTimeSource,
-                credentials,
-                isRequestForWellKnownUrlNeeded);
+                credentials);
     }
 
     public TinkHttpClient mockHttpClient() {

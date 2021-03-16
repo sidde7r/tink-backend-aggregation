@@ -82,8 +82,7 @@ public abstract class Xs2aDevelopersTransactionalAgent extends NextGenerationAge
                 persistentStorage,
                 configuration,
                 componentProvider.getLocalDateTimeSource(),
-                credentials,
-                false);
+                credentials);
     }
 
     protected TransactionalAccountRefreshController constructTransactionalAccountRefreshController(

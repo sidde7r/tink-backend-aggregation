@@ -20,7 +20,7 @@ public class BPostAuthenticator extends Xs2aDevelopersAuthenticator {
             Xs2aDevelopersProviderConfiguration configuration,
             LocalDateTimeSource localDateTimeSource,
             Credentials credentials) {
-        super(apiClient, persistentStorage, configuration, localDateTimeSource, credentials, true);
+        super(apiClient, persistentStorage, configuration, localDateTimeSource, credentials);
     }
 
     @Override
