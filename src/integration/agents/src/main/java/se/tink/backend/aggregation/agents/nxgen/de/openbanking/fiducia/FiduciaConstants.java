@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia;
 
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
+import se.tink.libraries.i18n.LocalizableKey;
 import se.tink.libraries.payment.enums.PaymentStatus;
 
 public final class FiduciaConstants {
@@ -90,5 +91,29 @@ public final class FiduciaConstants {
         public static final String IBAN = "iban";
         public static final String PSU_ID = "psu-id";
         public static final String PASSWORD = "password";
+    }
+
+    public static class ErrorMessageKeys {
+        public static final String PSU_CREDENTIALS_INVALID = "PSU_CREDENTIALS_INVALID";
+        public static final String NO_ACCOUNT_AVAILABLE =
+                "There is no activation for XS2A or there are no accounts available for access. Please contact your bank (SERVICE_BLOCKED)";
+        public static final String TAN_PLUS_BLOCKED =
+                "Sm@rt-TAN plus blocked. Please contact your bank (SERVICE_BLOCKED)";
+        public static final String ONLINE_ACCESS_BLOCKED =
+                "Online access blocked. Please contact your bank (SERVICE_BLOCKED)";
+        public static final String PIN_CHANGE_REQUIRED = "PIN change required (SERVICE_BLOCKED)";
+        public static final String ERROR_KONF = "ERR_KONF_CSV_BANK_MISS";
+    }
+
+    public static class EndUserErrorMessageKeys {
+        public static final LocalizableKey UNAVAILABLE_ACCOUNT_MESSAGE =
+                new LocalizableKey(
+                        "There are no accounts available for access. Please contact your bank.");
+        public static final LocalizableKey BLOCKED_TAN_MESSAGE =
+                new LocalizableKey("Online access blocked. Please contact your bank.");
+        public static final LocalizableKey PIN_CHANGE_MESSAGE =
+                new LocalizableKey("Sm@rt-TAN plus blocked. Please contact your bank.");
+        public static final LocalizableKey BANK_NO_LONGER_AVAILABLE_MESSAGE =
+                new LocalizableKey("Bank is no longer available.");
     }
 }

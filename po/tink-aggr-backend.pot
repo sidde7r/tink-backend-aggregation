@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-03-15 17:34+0100\n"
+"POT-Creation-Date: 2021-03-16 16:14+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1700,4 +1700,19 @@ msgid "Enter 6 digits code."
 msgstr ""
 
 msgid "Enter NemID number or self chosen User ID"
+msgstr ""
+
+msgid "There are no accounts available for access. Please contact your bank."
+msgstr ""
+
+msgid "Online access blocked. Please contact your bank."
+msgstr ""
+
+msgid "Sm@rt-TAN plus blocked. Please contact your bank."
+msgstr ""
+
+msgid "Bank is no longer available."
+msgstr ""
+
+msgid "PIN change required."
 msgstr ""
