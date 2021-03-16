@@ -50,7 +50,6 @@ public class SwedbankTransactionalAccountFetcher implements AccountFetcher<Trans
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
-        handleConsentFlow();
 
         Collection<TransactionalAccount> tinkAccounts =
                 getAccounts().getAccountList().stream()
@@ -93,6 +92,7 @@ public class SwedbankTransactionalAccountFetcher implements AccountFetcher<Trans
     private FetchAccountResponse getAccounts() {
         try {
             if (fetchAccountResponse == null) {
+                handleConsentFlow();
                 fetchAccountResponse = apiClient.fetchAccounts();
             }
             return fetchAccountResponse;
