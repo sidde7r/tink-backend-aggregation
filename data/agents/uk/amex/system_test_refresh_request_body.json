@@ -35,6 +35,9 @@
     },
     "provider": {
         "accessType": "OTHER",
+        "agentSources": [
+            "AGGREGATION_SERVICE"
+        ],
         "className": "nxgen.uk.creditcards.amex.v62.AmericanExpressV62UKAgent",
         "credentialsType": "PASSWORD",
         "displayName": "American Express",

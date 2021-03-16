@@ -84,6 +84,10 @@ public class AgentInitialisationTest {
                                 ProviderStatuses.ENABLED.equals(provider.getStatus())
                                         || ProviderStatuses.OBSOLETE.equals(provider.getStatus()))
                 .filter(provider -> !provider.getName().toLowerCase().contains("test"))
+                .filter(
+                        provider ->
+                                provider.getAgentSources()
+                                        .contains(Provider.AgentSource.AGGREGATION_SERVICE))
                 .collect(groupingBy(Provider::getClassName))
                 .entrySet()
                 .stream()
