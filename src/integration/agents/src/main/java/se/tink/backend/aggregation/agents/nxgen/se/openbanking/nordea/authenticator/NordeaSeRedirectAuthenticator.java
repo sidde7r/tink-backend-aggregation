@@ -6,9 +6,9 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nor
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.authenticator.rpc.AuthorizeRequest.AuthorizeRequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
-public class NordeaSeAuthenticator extends NordeaBaseAuthenticator {
+public class NordeaSeRedirectAuthenticator extends NordeaBaseAuthenticator {
 
-    public NordeaSeAuthenticator(NordeaSeApiClient apiClient) {
+    public NordeaSeRedirectAuthenticator(NordeaSeApiClient apiClient) {
         super(apiClient);
     }
 
