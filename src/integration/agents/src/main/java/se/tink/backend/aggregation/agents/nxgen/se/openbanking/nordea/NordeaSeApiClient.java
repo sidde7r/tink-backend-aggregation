@@ -1,9 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea;
 
+import com.google.common.collect.ImmutableList;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.ws.rs.HttpMethod;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.authenticator.rpc.DecoupledAuthenticationRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.authenticator.rpc.DecoupledAuthenticationResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.authenticator.rpc.DecoupledAuthorizationRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants.Urls;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
@@ -35,5 +39,22 @@ public final class NordeaSeApiClient extends NordeaBaseApiClient {
                         HttpMethod.GET,
                         null)
                 .get(DecoupledAuthenticationResponse.class);
+    }
+
+    public void authorizePsuAccounts(String code) {
+        String requestBody =
+                SerializationUtils.serializeToString(
+                        DecoupledAuthorizationRequest.builder()
+                                .code(code)
+                                .scope(
+                                        ImmutableList.copyOf(
+                                                Stream.of(getScopes().split(","))
+                                                        // We get 400 for CARD scopes
+                                                        .filter(s -> s.matches("^[AP].*"))
+                                                        .collect(Collectors.toList())))
+                                .build());
+        createRequest(Urls.DECOUPLED_AUTHORIZATION, HttpMethod.POST, requestBody)
+                .body(requestBody, MediaType.APPLICATION_JSON)
+                .post();
     }
 }

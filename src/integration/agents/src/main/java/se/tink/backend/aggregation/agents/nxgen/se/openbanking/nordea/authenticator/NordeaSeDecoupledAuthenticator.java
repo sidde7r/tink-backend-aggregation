@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.NordeaSeApiClient;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.NordeaSeConstants.Authentication;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.NordeaSeConstants.BodyValues;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.authenticator.rpc.DecoupledAuthenticationResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
@@ -54,12 +54,13 @@ public class NordeaSeDecoupledAuthenticator implements BankIdAuthenticator<Strin
         }
 
         switch (authenticationResponse.getStatus().toLowerCase()) {
-            case Authentication.ASSIGNMENT_PENDING:
+            case BodyValues.ASSIGNMENT_PENDING:
                 return BankIdStatus.WAITING;
-            case Authentication.CONFIRMATION_PENDING:
+            case BodyValues.CONFIRMATION_PENDING:
                 isConfirmedPending = true;
                 return BankIdStatus.WAITING;
-            case Authentication.COMPLETED:
+            case BodyValues.COMPLETED:
+                apiClient.authorizePsuAccounts(authenticationResponse.getCode());
                 return BankIdStatus.DONE;
             default:
                 return BankIdStatus.FAILED_UNKNOWN;
