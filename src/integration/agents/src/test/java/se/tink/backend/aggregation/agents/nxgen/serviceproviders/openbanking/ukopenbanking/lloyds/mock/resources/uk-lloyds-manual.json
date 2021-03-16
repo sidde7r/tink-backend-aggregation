@@ -1,0 +1,191 @@
+{
+    "accounts": [
+        {
+            "accountNumber": "00000000000000",
+            "accountExclusion": "NONE",
+            "exactBalance": {
+                "currencyCode": "GBP",
+                "scale": 2,
+                "unscaledValue": 4322,
+                "doubleValue": 43.22,
+                "exactValue": 43.22
+            },
+            "currencyCode": "GBP",
+            "availableBalance": {
+                "currencyCode": "GBP",
+                "scale": 2,
+                "unscaledValue": 4322,
+                "doubleValue": 43.22,
+                "exactValue": 43.22
+            },
+            "bankId": "00000000000000",
+            "excluded": false,
+            "favored": false,
+            "name": "Szymon Mysiak",
+            "ownership": 1.0,
+            "type": "CHECKING",
+            "userModifiedExcluded": false,
+            "userModifiedName": false,
+            "userModifiedType": false,
+            "identifiers": "[\"sort-code://00000000000000\"]",
+            "closed": false,
+            "holderName": "Szymon Mysiak",
+            "accountHolder": {
+                "accountId": null,
+                "type": "PERSONAL",
+                "identities": [
+                    {
+                        "name": "Szymon Mysiak",
+                        "role": "HOLDER"
+                    }
+                ]
+            },
+            "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
+            "balances": [],
+            "availableCredit": 0.0,
+            "balance": 43.22
+        }
+    ],
+    "transactions": [
+        {
+            "amount": -5.0,
+            "date": 1613646000000,
+            "description": "BUDGETR.CO.UK          BRISTOL       LND",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": null,
+                        "instant": "2021-02-18T00:00:00.000Z"
+                    }
+                },
+                {
+                    "type": "VALUE_DATE",
+                    "value": {
+                        "date": null,
+                        "instant": "2021-02-17T00:00:00.000Z"
+                    }
+                }
+            ],
+            "proprietaryFinancialInstitutionType": "1",
+            "merchantName": "BUDGETR.CO.UK         ",
+            "merchantCategoryCode": "5734",
+            "transactionReference": "MT210490255000010096156",
+            "providerMarket": "UK"
+        },
+        {
+            "amount": -7.59,
+            "date": 1613041200000,
+            "description": "Amazon.co.uk*MF96E9XD4 AMAZON.CO.UK  LUX",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": null,
+                        "instant": "2021-02-11T00:00:00.000Z"
+                    }
+                },
+                {
+                    "type": "VALUE_DATE",
+                    "value": {
+                        "date": null,
+                        "instant": "2021-02-11T00:00:00.000Z"
+                    }
+                }
+            ],
+            "proprietaryFinancialInstitutionType": "1",
+            "merchantName": "Amazon.co.uk*MF96E9XD4",
+            "merchantCategoryCode": "5969",
+            "transactionReference": "MT210420525000010023329",
+            "providerMarket": "UK"
+        },
+        {
+            "amount": -5.0,
+            "date": 1613646000000,
+            "description": "BUDGETR.CO.UK          BRISTOL       LND",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": null,
+                        "instant": "2021-02-18T00:00:00.000Z"
+                    }
+                },
+                {
+                    "type": "VALUE_DATE",
+                    "value": {
+                        "date": null,
+                        "instant": "2021-02-17T00:00:00.000Z"
+                    }
+                }
+            ],
+            "proprietaryFinancialInstitutionType": "1",
+            "merchantName": "BUDGETR.CO.UK         ",
+            "merchantCategoryCode": "5734",
+            "transactionReference": "MT210490255000010096156",
+            "providerMarket": "UK"
+        },
+        {
+            "amount": -7.59,
+            "date": 1613041200000,
+            "description": "Amazon.co.uk*MF96E9XD4 AMAZON.CO.UK  LUX",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "mutability": "IMMUTABLE",
+            "transactionDates": [
+                {
+                    "type": "BOOKING_DATE",
+                    "value": {
+                        "date": null,
+                        "instant": "2021-02-11T00:00:00.000Z"
+                    }
+                },
+                {
+                    "type": "VALUE_DATE",
+                    "value": {
+                        "date": null,
+                        "instant": "2021-02-11T00:00:00.000Z"
+                    }
+                }
+            ],
+            "proprietaryFinancialInstitutionType": "1",
+            "merchantName": "Amazon.co.uk*MF96E9XD4",
+            "merchantCategoryCode": "5969",
+            "transactionReference": "MT210420525000010023329",
+            "providerMarket": "UK"
+        }
+    ]
+}
