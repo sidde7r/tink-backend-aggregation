@@ -23,17 +23,24 @@ public class DanskeBankDKConfiguration implements DanskeBankConfiguration {
     private static final String DA_APP_CULTURE = "da-DK";
     private static final String APP_NAME = "com.danskebank.mobilebank3dk";
     private static final String APP_REFERER = "MobileBanking3 DK";
-    private static final String APP_VERSION = "0.43.0";
     private static final String BRAND = "DB";
     private static final String DA_LANGUAGE_CODE = "DA";
     private static final String EN_LANGUAGE_CODE = "EN";
     private static final String MARKET_CODE = "DK";
-    private static final String APP_VERSION_HEADER = "MobileBank ios DK 17798";
     private static final String DEVICE_SERIAL_NO_KEY = "x-device-serial-no";
     private static final String STEP_UP_TOKEN_KEY = "x-stepup-token";
     private static final String CLIENT_ID = "5ec4b8ad-a93d-43e1-831c-8e78ee6e661a";
+    private static final String APP_VERSION = "2021.1";
+    private static final String APP_VERSION_HEADER =
+            "MobileBank ios com danskebank.mobilebank3dk 28076";
     private static final String CLIENT_SECRET =
-            "Z2ow2vugJe6RhSUpjhFoBFVdy8W41rnqs5JGJaLtrllCeJxrBF";
+            "WYwlVohBVQhQ7KcMm3pP6aFcZkAE931qi8w4Y4ibH5l4EozN1t";
+    private static final String USER_AGENT =
+            "dennyemobilbankdkdanskebank/2021.2 (com.danskebank.mobilebank3dk; build:28076; iOS 13.3.1; DK)";
+
+    public String getUserAgent() {
+        return USER_AGENT;
+    }
 
     @Override
     public String getAppVersionHeader() {

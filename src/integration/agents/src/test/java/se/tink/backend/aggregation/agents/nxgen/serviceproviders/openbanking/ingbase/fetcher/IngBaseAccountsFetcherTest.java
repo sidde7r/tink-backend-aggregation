@@ -7,6 +7,7 @@ import static org.mockito.Mockito.mock;
 import java.util.Collection;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.configuration.MarketConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.fetcher.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.fetcher.rpc.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.fetcher.rpc.FetchBalancesResponse;
@@ -18,6 +19,7 @@ public class IngBaseAccountsFetcherTest {
     private static final String TEST_CURRENCY = "EUR";
 
     private IngBaseApiClient apiClient = mock(IngBaseApiClient.class);
+    private MarketConfiguration marketConfiguration = mock(MarketConfiguration.class);
     private static final FetchAccountsResponse ACCOUNTS_RESPONSE =
             SerializationUtils.deserializeFromString(
                     "{\"accounts\" : [{\"_links\" : { \"transactions\" : {\"href\" : \"HREF\"}} , \"iban\" : \"PL666\", \"resourceId\" : \"1\", \"name\" : \"NAME\", \"currency\" : \"EUR\", \"product\" : \"PRODUCT\"}]}",
@@ -29,7 +31,7 @@ public class IngBaseAccountsFetcherTest {
                     FetchBalancesResponse.class);
 
     private IngBaseAccountsFetcher fetcher =
-            new IngBaseAccountsFetcher(apiClient, TEST_CURRENCY, false);
+            new IngBaseAccountsFetcher(apiClient, TEST_CURRENCY, marketConfiguration);
 
     @Test
     public void shouldFetchAndMapCheckingTransactionalAccount() {
