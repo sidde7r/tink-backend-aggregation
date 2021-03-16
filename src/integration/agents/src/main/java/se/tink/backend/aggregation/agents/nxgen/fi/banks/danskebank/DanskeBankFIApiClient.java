@@ -15,6 +15,7 @@ public class DanskeBankFIApiClient extends DanskeBankApiClient {
             Credentials credentials,
             Catalog catalog) {
         super(client, configuration, credentials, catalog);
+        client.setUserAgent(configuration.getUserAgent());
     }
 
     FetchHouseholdFIResponse fetchHousehold() {
