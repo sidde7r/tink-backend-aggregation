@@ -62,6 +62,7 @@ public class NordeaSeTransactionalAccountFetcher<R extends GetTransactionsRespon
                 .putInTemporaryStorage(
                         NordeaBaseConstants.StorageKeys.ACCOUNT_ID, accountEntity.getId())
                 .setApiIdentifier(accountEntity.getId())
+                .addHolderName(accountEntity.getHolderName())
                 .build();
     }
 }

@@ -6,6 +6,8 @@ import java.lang.invoke.MethodHandles;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.apache.commons.collections4.ListUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -123,6 +125,11 @@ public class AccountEntity {
         return valueDatedBalance;
     }
 
+    @JsonIgnore
+    public String getHolderName() {
+        return formatHolderName();
+    }
+
     public Optional<TransactionalAccount> toTinkAccount() {
         AccountIdentifier identifier =
                 AccountIdentifier.create(AccountIdentifier.Type.IBAN, getIban());
@@ -203,5 +210,14 @@ public class AccountEntity {
                                             + LogTag.from("openbanking_base_nordea"));
                             return new IllegalArgumentException();
                         });
+    }
+
+    @JsonIgnore
+    private String formatHolderName() {
+        // We get accountName on the form "<SURNAME>,<FORENAME>", at least for Nordea Sweden.
+        // Splitting on comma and changing the order of forename and surname.
+        List<String> holderName =
+                Stream.of(accountName.split(",")).map(String::trim).collect(Collectors.toList());
+        return holderName.get(1) + " " + holderName.get(0);
     }
 }
