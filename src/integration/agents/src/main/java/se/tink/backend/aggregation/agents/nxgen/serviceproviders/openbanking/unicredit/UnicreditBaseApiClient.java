@@ -7,6 +7,8 @@ import java.util.Optional;
 import javax.ws.rs.core.MediaType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.http.cookie.Cookie;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants.Endpoints;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants.Formats;
@@ -86,9 +88,13 @@ public class UnicreditBaseApiClient {
     }
 
     protected RequestBuilder createRequestBuilder(URL url) {
-        return client.request(url)
-                .accept(MediaType.APPLICATION_JSON)
-                .type(MediaType.APPLICATION_JSON);
+        try {
+            return client.request(url)
+                    .accept(MediaType.APPLICATION_JSON)
+                    .type(MediaType.APPLICATION_JSON);
+        } finally {
+            logLastMRHCookie();
+        }
     }
 
     private RequestBuilder createRequestInSession(URL url) {
@@ -235,5 +241,20 @@ public class UnicreditBaseApiClient {
         return PaymentServiceType.PERIODIC == paymentRequest.getPayment().getPaymentServiceType()
                 ? UnicreditConstants.PathParameterValues.PAYMENT_SERVICE_PERIODIC_PAYMENTS
                 : UnicreditConstants.PathParameterValues.PAYMENT_SERVICE_PAYMENTS;
+    }
+
+    // Temp log cookie key "LastMRH_Session" since UniCredit support requires that for debugging on
+    // their side
+    private void logLastMRHCookie() {
+        String lastMRHCookie =
+                client.getCookies().stream()
+                        .filter(cookie -> "LastMRH_Session".equals(cookie.getName()))
+                        .findFirst()
+                        .map(Cookie::getValue)
+                        .orElse(StringUtils.EMPTY);
+
+        if (!lastMRHCookie.isEmpty()) {
+            log.debug("LastMRH_Session cookie for temporary debugging: " + lastMRHCookie);
+        }
     }
 }
