@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.curator.framework.CuratorFramework;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,6 +52,7 @@ public class AgentWorkerCommandContext extends AgentWorkerContext {
             MetricId.newId("no_accounts_fetched");
     public static final MetricId NUMBER_ACCOUNTS_FETCHED_BY_REFRESH =
             MetricId.newId("number_accounts_fetched_by_refresh");
+    public static final MetricId REQUESTED_ACCOUNT_IDS = MetricId.newId("requested_account_ids");
     protected CuratorFramework coordinationClient;
     private static final String EMPTY_CLASS_NAME = "";
 
@@ -206,12 +208,22 @@ public class AgentWorkerCommandContext extends AgentWorkerContext {
         processAccountsRequest.setCredentialsId(credentials.getId());
         processAccountsRequest.setUserId(request.getUser().getId());
         processAccountsRequest.setOperationId(request.getOperationId());
-        processAccountsRequest.setRequestedAccountIds(
-                Lists.newArrayList(
-                        AccountClosureUtil.getRequestedAccountIds(
-                                request, getAccountDataCache().getProcessedAccounts())));
+        processAccountsRequest.setRequestedAccountIds(getRequestedAccounts());
 
         controllerWrapper.processAccounts(processAccountsRequest);
+    }
+
+    private List<String> getRequestedAccounts() {
+        List<String> requestedAccountIds =
+                Lists.newArrayList(
+                        AccountClosureUtil.getRequestedAccountIds(
+                                request, getAccountDataCache().getProcessedAccounts()));
+        getMetricRegistry()
+                .meter(
+                        REQUESTED_ACCOUNT_IDS.label(
+                                "empty", CollectionUtils.isEmpty(requestedAccountIds)))
+                .inc();
+        return requestedAccountIds;
     }
 
     public CuratorFramework getCoordinationClient() {
