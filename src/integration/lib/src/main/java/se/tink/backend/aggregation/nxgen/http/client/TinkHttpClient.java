@@ -80,6 +80,10 @@ public interface TinkHttpClient extends Filterable<TinkHttpClient>, RequestBuild
 
     void setEidasProxyConfiguration(EidasProxyConfiguration eidasProxyConfiguration);
 
+    void resetInternalClient();
+
+    void clearEidasProxy();
+
     void setTimeout(int milliseconds);
 
     void setChunkedEncoding(boolean chunkedEncoding);

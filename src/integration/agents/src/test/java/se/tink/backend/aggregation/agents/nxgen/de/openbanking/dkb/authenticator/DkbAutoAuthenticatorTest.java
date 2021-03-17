@@ -293,7 +293,7 @@ public class DkbAutoAuthenticatorTest {
     private ConsentDetailsResponse consentWithStatus(String status) {
         ConsentDetailsResponse consent = new ConsentDetailsResponse();
         consent.setConsentStatus(status);
-        consent.setValidUntil(DATE_2030_01_01);
+        consent.setValidUntil(DATE_2030_01_01.toString());
         return consent;
     }
 

@@ -1,0 +1,10 @@
+{
+    "access": {
+        "availableAccounts": "allAccounts"
+    },
+    "recurringIndicator": false,
+    "validUntil": "2020-11-11 00:00:00",
+    "frequencyPerDay": 4,
+    "lastActionDate": "2019-03-09 10:07:00",
+    "consentStatus": "valid"
+}

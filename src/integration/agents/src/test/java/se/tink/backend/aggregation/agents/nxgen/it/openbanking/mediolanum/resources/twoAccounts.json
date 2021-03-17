@@ -1,0 +1,50 @@
+{
+    "accounts": [
+        {
+            "balances": [
+                {
+                    "balanceAmount": {
+                        "amount": "1234.00",
+                        "currency": "EUR"
+                    },
+                    "balanceType": "expected",
+                    "referenceDate": "2020-10-12"
+                },
+                {
+                    "balanceAmount": {
+                        "amount": "2345.00",
+                        "currency": "EUR"
+                    },
+                    "balanceType": "interimAvailable",
+                    "referenceDate": "2020-10-12"
+                }
+            ],
+            "currency": "EUR",
+            "iban": "IT98V1234567890123456789012",
+            "resourceId": "IT98V1234567890123456789012_EUR"
+        },
+        {
+            "balances": [
+                {
+                    "balanceAmount": {
+                        "amount": "4321.00",
+                        "currency": "EUR"
+                    },
+                    "balanceType": "expected",
+                    "referenceDate": "2020-10-12"
+                },
+                {
+                    "balanceAmount": {
+                        "amount": "5432.00",
+                        "currency": "EUR"
+                    },
+                    "balanceType": "interimAvailable",
+                    "referenceDate": "2020-10-12"
+                }
+            ],
+            "currency": "EUR",
+            "iban": "IT98V1234567890123456789321",
+            "resourceId": "IT98V1234567890123456789321_EUR"
+        }
+    ]
+}

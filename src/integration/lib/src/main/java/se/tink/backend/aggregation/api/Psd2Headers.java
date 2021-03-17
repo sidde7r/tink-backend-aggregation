@@ -39,6 +39,7 @@ public final class Psd2Headers {
         public static final String TPP_ID = "TPP-ID";
         public static final String TPP_REDIRECT_PREFERRED = "TPP-Redirect-Preferred";
         public static final String TPP_REDIRECT_URI = "TPP-Redirect-Uri";
+        public static final String TPP_NOK_REDIRECT_URI = "TPP-Nok-Redirect-Uri";
         public static final String TPP_SESSION_ID = "TPP-SESSION-ID";
         public static final String TPP_SIGNATURE_CERTIFICATE = "TPP-Signature-Certificate";
         public static final String WEB_API_KEY = "web-api-key";

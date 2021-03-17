@@ -314,8 +314,7 @@ public class FiduciaAuthenticatorTest {
     @SuppressWarnings("SameParameterValue")
     private ConsentDetailsResponse consentDetailsResponse(
             String consentId, String consentStatus, String validUntil) {
-        return new ConsentDetailsResponse(
-                consentStatus, consentId, LocalDate.parse(validUntil, DateTimeFormatter.ISO_DATE));
+        return new ConsentDetailsResponse(consentStatus, consentId, validUntil);
     }
 
     @SuppressWarnings("SameParameterValue")

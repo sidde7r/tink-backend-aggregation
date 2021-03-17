@@ -9,6 +9,7 @@ public class LinksEntity {
 
     @Getter private Href startAuthorisationWithPsuAuthentication;
     @Getter private Href scaOAuth;
+    @Getter private Href scaRedirect;
     private Href self;
     private Href status;
 }

@@ -1,0 +1,9 @@
+{
+    "consentStatus": "received",
+    "consentId": "test_consent_id",
+    "_links": {
+        "scaRedirect": {
+            "href": "https://www.test.com/ecm/consent?consent-id=test_consent_id&d=asdfzxcv"
+        }
+    }
+}

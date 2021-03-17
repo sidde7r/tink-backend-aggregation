@@ -1,0 +1,54 @@
+{
+    "accounts": [
+        {
+            "accountNumber": "IT98V12345678912345679",
+            "accountExclusion": "NONE",
+            "exactBalance": {
+                "currencyCode": "EUR",
+                "exactValue": 1234.0,
+                "doubleValue": 1234.0,
+                "unscaledValue": 123400,
+                "scale": 2
+            },
+            "currencyCode": "EUR",
+            "availableBalance": {
+                "currencyCode": "EUR",
+                "exactValue": 1234.0,
+                "doubleValue": 1234.0,
+                "unscaledValue": 123400,
+                "scale": 2
+            },
+            "bankId": "IT98V12345678912345679",
+            "excluded": false,
+            "favored": false,
+            "name": "IT98V12345678912345679",
+            "ownership": 1.0,
+            "type": "CHECKING",
+            "userModifiedExcluded": false,
+            "userModifiedName": false,
+            "userModifiedType": false,
+            "identifiers": "[]",
+            "closed": false,
+            "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
+            "balances": [],
+            "availableCredit": 0.0,
+            "balance": 1234.0
+        }
+    ],
+    "transactions": [
+        {
+            "amount": 123.0,
+            "date": 1602496800000,
+            "description": "Awesome transaction description 001",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false,
+            "externalSystemIds": {},
+            "transactionDates": []
+        }
+    ]
+}
