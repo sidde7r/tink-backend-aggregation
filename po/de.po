@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: VERSION\n"
-"POT-Creation-Date: 2021-03-16 14:57+0000\n"
-"PO-Revision-Date: 2021-03-16 14:57+0000\n"
+"POT-Creation-Date: 2021-03-17 11:56+0000\n"
+"PO-Revision-Date: 2021-03-17 11:56+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE TEAM <EMAIL@ADDRESS>\n"
 "Language: de\n"
@@ -10,24 +10,6 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-msgid "PIN change required."
-msgstr ""
-"PIN-Änderung erforderlich. Bitte ändern Sie Ihre PIN im Online Banking."
-
-msgid "There are no accounts available for access. Please contact your bank."
-msgstr ""
-"Es sind keine Konten für den Zugriff verfügbar. Bitte kontaktieren Sie Ihre "
-"Bank."
-
-msgid "Online access blocked. Please contact your bank."
-msgstr "Online-Zugang gesperrt. Bitte kontaktieren Sie Ihre Bank."
-
-msgid "Sm@rt-TAN plus blocked. Please contact your bank."
-msgstr "Sm@rt-TAN plus gesperrt. Bitte wenden Sie sich an Ihre Bank."
-
-msgid "Bank is no longer available."
-msgstr "Die Bank ist nicht mehr verfügbar."
 
 msgid "Input the code from your code card"
 msgstr "Geben Sie den Code von der Codekarte ein."
@@ -1967,3 +1949,28 @@ msgid ""
 msgstr ""
 "Bitte öffnen Sie die BestSign-App auf dem Gerät “{0}” und bestätigen Sie die "
 "Anmeldung. Klicken Sie dann auf die Schaltfläche „Senden”"
+
+msgid "There are no accounts available for access. Please contact your bank."
+msgstr ""
+"Es sind keine Konten für den Zugriff verfügbar. Bitte kontaktieren Sie Ihre "
+"Bank."
+
+msgid "Online access blocked. Please contact your bank."
+msgstr "Online-Zugang gesperrt. Bitte kontaktieren Sie Ihre Bank."
+
+msgid "Sm@rt-TAN plus blocked. Please contact your bank."
+msgstr "Sm@rt-TAN plus gesperrt. Bitte wenden Sie sich an Ihre Bank."
+
+msgid "Bank is no longer available."
+msgstr "Die Bank ist nicht mehr verfügbar."
+
+msgid "PIN change required."
+msgstr ""
+"PIN-Änderung erforderlich. Bitte ändern Sie Ihre PIN im Online Banking."
+
+msgid ""
+"Please confirm the login in your N26 app and then return to continue the "
+"connection"
+msgstr ""
+"Bitte bestätigen Sie die Anmeldung in Ihrer N26 App und kehren sie dann "
+"zurück, um die Verbindung fertigzustellen"

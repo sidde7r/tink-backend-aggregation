@@ -26,7 +26,7 @@ public class N26AwaitUserConfirmationStep
     private static final String FIELD_ID_BASE = "consentConfirmationAwait";
     private static final LocalizableKey FIELD_LABEL_1 =
             new LocalizableKey(
-                    "Please confirm the login in your N26 app and then click \"Submit\".");
+                    "Please confirm the login in your N26 app and then return to continue the connection");
     private static final LocalizableKey FIELD_LABEL_2 =
             new LocalizableKey(
                     "You haven't confirmed your login in the N26 app yet. Please confirm it and click \"Submit\".");

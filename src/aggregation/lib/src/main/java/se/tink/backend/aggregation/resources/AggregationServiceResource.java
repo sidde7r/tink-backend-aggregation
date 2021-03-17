@@ -352,7 +352,7 @@ public class AggregationServiceResource implements AggregationService {
         String providerId = request.getProviderId();
 
         Preconditions.checkArgument(
-                Strings.isNullOrEmpty(providerId), "The request must contain providerId.");
+                !Strings.isNullOrEmpty(providerId), "The request must contain providerId.");
         Preconditions.checkNotNull(
                 request.getSecretsNames(),
                 "SecretsNames in SecretsNamesValidationRequest cannot be null.");
