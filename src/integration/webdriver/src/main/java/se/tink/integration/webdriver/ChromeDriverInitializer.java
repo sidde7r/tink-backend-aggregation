@@ -46,7 +46,7 @@ public class ChromeDriverInitializer {
         driver.manage().timeouts().pageLoadTimeout(DEFAULT_TIMEOUT_SECONDS, TimeUnit.SECONDS);
         driver.manage().timeouts().setScriptTimeout(DEFAULT_TIMEOUT_SECONDS, TimeUnit.SECONDS);
 
-        return new ChromeDriver(options);
+        return driver;
     }
 
     public static List<String> getListArguments(String userAgent, String acceptLanguage) {
