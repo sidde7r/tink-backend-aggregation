@@ -97,11 +97,22 @@ public class BankinterTransactionalAccountFetcher
     @Override
     public TransactionKeyPaginatorResponse<PaginationKey> getTransactionsFor(
             TransactionalAccount account, PaginationKey nextKey) {
-        final TransactionsResponse response = fetchTransactionsPage(account, nextKey);
-        final Collection<Transaction> transactions = response.toTinkTransactions();
+        TransactionsResponse response = fetchTransactionsPage(account, nextKey);
         final TransactionKeyPaginatorResponseImpl<PaginationKey> paginatorResponse =
-                new TransactionKeyPaginatorResponseImpl<PaginationKey>();
+                new TransactionKeyPaginatorResponseImpl<>();
 
+        if (response.hasError()) {
+            log.warn("Got error page as response, trying to fetch again");
+            response = fetchTransactionsPage(account, nextKey);
+            if (response.hasError()) {
+                log.warn("Got error page again, returning empty list of transactions");
+                paginatorResponse.setTransactions(Collections.emptyList());
+                paginatorResponse.setNext(null);
+                return paginatorResponse;
+            }
+        }
+
+        final Collection<Transaction> transactions = response.toTinkTransactions();
         if (nextKey != null
                 && nextKey.getPreviousPageDate() != null
                 && transactions.size() > 0

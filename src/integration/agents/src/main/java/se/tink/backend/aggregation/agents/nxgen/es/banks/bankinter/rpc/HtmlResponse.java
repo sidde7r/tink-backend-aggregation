@@ -24,7 +24,10 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.assertj.core.util.VisibleForTesting;
+import org.jsoup.Jsoup;
+import org.jsoup.helper.W3CDom;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -75,7 +78,8 @@ public class HtmlResponse {
         factory.setCoalescing(false);
         factory.setXIncludeAware(false);
 
-        try {
+        final String adaptedBody = removeDoubleDashesFromComments(body);
+        try (InputStream inputStream = IOUtils.toInputStream(adaptedBody, StandardCharsets.UTF_8)) {
             factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
             factory.setFeature("http://xml.org/sax/features/namespaces", false);
             factory.setFeature("http://xml.org/sax/features/validation", false);
@@ -84,12 +88,9 @@ public class HtmlResponse {
             factory.setFeature(
                     "http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
 
-            final InputStream inputStream =
-                    IOUtils.toInputStream(
-                            removeDoubleDashesFromComments(body), StandardCharsets.UTF_8);
             return factory.newDocumentBuilder().parse(inputStream);
         } catch (SAXException | IOException | ParserConfigurationException e) {
-            throw new IllegalStateException("Could not parse HTML response", e);
+            return fallbackParse(adaptedBody);
         }
     }
 
@@ -166,6 +167,14 @@ public class HtmlResponse {
         }
     }
 
+    private static Document fallbackParse(String input) {
+        try {
+            return W3CDom.convert(Jsoup.parse(input));
+        } catch (RuntimeException e) {
+            throw new IllegalStateException("Could not parse HTML response", e);
+        }
+    }
+
     protected static <T> T evaluateXPath(Node node, String xPathExpression, Class<T> returnClass) {
         final XPath xPath = xpathFactory.newXPath();
         final XPathExpression expr;
@@ -195,5 +204,10 @@ public class HtmlResponse {
 
     public String getBody() {
         return body;
+    }
+
+    public boolean hasError() {
+        final String error = evaluateXPath("//div[contains(@class, 'genericError')]", String.class);
+        return StringUtils.isNotBlank(error);
     }
 }

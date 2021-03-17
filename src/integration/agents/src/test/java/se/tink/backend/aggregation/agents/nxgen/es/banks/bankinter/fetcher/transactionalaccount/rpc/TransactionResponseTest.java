@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.fetcher.tran
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterTestData.loadTestResponse;
 
 import java.util.Collection;
@@ -60,5 +61,15 @@ public class TransactionResponseTest {
         final PaginationKey nextKey = transactionsResponse.getNextKey(0);
         assertEquals(1, nextKey.getConsecutiveEmptyReplies());
         assertEquals("j_id1111011110_5f006392", nextKey.getSource());
+    }
+
+    @Test
+    public void testHtmlErrorPageAsResponse() {
+        // given
+        final TransactionsResponse transactionsResponse =
+                loadTestResponse("13.error_html_page.xhtml", TransactionsResponse.class);
+
+        // then
+        assertTrue(transactionsResponse.hasError());
     }
 }
