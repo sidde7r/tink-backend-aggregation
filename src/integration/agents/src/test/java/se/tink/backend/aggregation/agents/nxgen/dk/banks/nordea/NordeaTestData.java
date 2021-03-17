@@ -50,8 +50,6 @@ public class NordeaTestData {
         public static final String TRANSACTIONAL_ACCOUNTS_FILE =
                 TRANSACTIONAL_ACCOUNT_TEST_DATA_DIR + "transactional_accounts.json";
 
-        public static final String ACCOUNT_TRANSACTIONS_FILE =
-                TRANSACTIONAL_ACCOUNT_TEST_DATA_DIR + "account_transactions.json";
         public static final String ACCOUNT_1_API_ID = "NAID-DK-DKK-7418529630";
         public static final String ACCOUNT_WITH_CREDIT_API_ID = "NAID-DK-DKK-2551697498";
 
@@ -60,8 +58,8 @@ public class NordeaTestData {
 
         public static final String ACCOUNT_TRANSACTIONS_WITH_CONTINUATION_FILE =
                 TRANSACTIONAL_ACCOUNT_TEST_DATA_DIR + "account_transactions_with_continuation.json";
-        public static final String ACCOUNT_TRANSACTIONS_CONTINUATION_FILE =
-                TRANSACTIONAL_ACCOUNT_TEST_DATA_DIR + "account_transactions_continuation.json";
+        public static final String ACCOUNT_TRANSACTIONS_W_O_CONTINUATION_FILE =
+                TRANSACTIONAL_ACCOUNT_TEST_DATA_DIR + "account_transactions_w_o_continuation.json";
         public static final String TRANSACTIONS_CONTINUATION_KEY =
                 "LEG_EjcqIJ8Abe9-bsc61MMA-UMCB7stdmeb2qPfCQVuitc=:rO0ABXNyAD9jb20ubm9yZGVhLmRiZi5kay5hY2NvdW50LmludGVncmF0aW9uLmNvcHlib29rcy5Db250aW51YXRpb25LZXlgVTENuzwM0gIAAUwAD2NvbnRpbnVhdGlvbmtleXQAEkxqYXZhL2xhbmcvU3RyaW5nO3hwdAA3UDAwMDAwMDAzNkc2ODk3NjQ3MDdHwIDAgMCAwIDAgMCAwIDAgDAwMDAwMDAwMDAwNTYyOTU0RA==";
     }

@@ -8,6 +8,7 @@ import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capa
 import static se.tink.backend.aggregation.client.provider_configuration.rpc.Capability.MORTGAGE_AGGREGATION;
 
 import com.google.inject.Inject;
+import java.time.temporal.ChronoUnit;
 import java.util.Collections;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
@@ -114,7 +115,10 @@ public final class NordeaDkAgent extends NextGenerationAgent
                 fetcher,
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        new TransactionDatePaginationController.Builder<>(fetcher).build()));
+                        new TransactionDatePaginationController.Builder<>(fetcher)
+                                .setConsecutiveEmptyPagesLimit(2)
+                                .setAmountAndUnitToFetch(12, ChronoUnit.MONTHS)
+                                .build()));
     }
 
     private LoanRefreshController constructLoanRefreshController() {

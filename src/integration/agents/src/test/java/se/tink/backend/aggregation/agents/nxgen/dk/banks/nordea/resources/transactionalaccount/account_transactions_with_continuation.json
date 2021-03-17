@@ -30,6 +30,21 @@
       "title": "From Nordea Pay",
       "transaction_date": "2020-03-05",
       "transaction_id": "_sA7vL0hbV2lql6ZNsSTc3hBOqL_IyQQ-iDV76ypO28.a2V5PTAzOTI0NTA2NDIwMDY1Njg5NzY0NzA3NzA1MDMyMDIwJmRzPUFEVklTJmluY29taW5nPXRydWU"
+    },
+    {
+      "amount": 2300.00,
+      "balance_after": 95008.71,
+      "booked": true,
+      "booking_date": "2020-03-04",
+      "currency": "DKK",
+      "description": "Bgs From Pekao Pay",
+      "has_details": true,
+      "interest_date": "2020-03-05",
+      "reconciliation_id": "UDY4OTc2NDcwNzcyMDIwMDMwNTAwMDAwMDA1NjU",
+      "reconciliation_status": "not_done",
+      "title": "From Nordea Pay",
+      "transaction_date": "2020-03-04",
+      "transaction_id": "_sA7vL0hbV2lql6ZNsSTc3hBOqL_IyQQ-iDV76ypO28.a2V5PTAzOTI0NTA2NDIwMDY1Njg5NzY0NzA3NzA1MDMyMDIwJmRzPUFEVklTJmluY29taW5nPXRydWU"
     }
   ],
   "sub_system_errors": []
