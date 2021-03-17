@@ -40,6 +40,7 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.enums.PaymentType;
+import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
@@ -82,7 +83,13 @@ public class FrOpenBankingPaymentExecutor implements PaymentExecutor, FetchableP
         AccountEntity creditor = AccountEntity.creditorOf(paymentRequest);
         AccountEntity debtor = AccountEntity.debtorOf(paymentRequest);
         AmountEntity amount = AmountEntity.amountOf(paymentRequest);
-
+        Optional.ofNullable(paymentRequest.getPayment().getDebtor())
+                .map(Debtor::getAccountIdentifier)
+                .ifPresent(
+                        accountIdentifier ->
+                                log.info(
+                                        "Debtor Account AccountIdentifier validate: "
+                                                + accountIdentifier.isValid()));
         Payment payment = paymentRequest.getPayment();
 
         LocalDate executionDate =
