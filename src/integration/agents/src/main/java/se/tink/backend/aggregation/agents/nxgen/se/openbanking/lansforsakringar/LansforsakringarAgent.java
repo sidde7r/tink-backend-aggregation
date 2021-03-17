@@ -101,6 +101,7 @@ public final class LansforsakringarAgent extends NextGenerationAgent
                         LansforsakringarConstants.MAX_NUM_RETRIES,
                         LansforsakringarConstants.RETRY_SLEEP_MILLIS_SECONDS));
         client.addFilter(new ServerFaultFilter());
+        client.setTimeout(LansforsakringarConstants.TIME_OUT_MILLIS);
     }
 
     private LansforsakringarUserIpInformation getUserIpInformation() {
