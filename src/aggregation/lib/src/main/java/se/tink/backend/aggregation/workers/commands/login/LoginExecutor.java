@@ -7,12 +7,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.agentplatform.authentication.AgentPlatformAuthenticationExecutor;
 import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.ActualLocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.workers.commands.login.handler.AgentPlatformAgentLoginHandler;
 import se.tink.backend.aggregation.workers.commands.login.handler.CredentialsStatusLoginResultVisitor;
 import se.tink.backend.aggregation.workers.commands.login.handler.DefaultLegacyAgentLoginHandler;
 import se.tink.backend.aggregation.workers.commands.login.handler.LoginHandler;
 import se.tink.backend.aggregation.workers.commands.login.handler.ProgressiveAgentLoginHandler;
+import se.tink.backend.aggregation.workers.commands.login.handler.SessionEndedPrematurelyLoginResultVisitor;
 import se.tink.backend.aggregation.workers.commands.login.handler.result.LoginResult;
 import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
@@ -84,6 +86,11 @@ public class LoginExecutor {
         loginResult.accept(
                 new CredentialsStatusLoginResultVisitor(
                         context.getMetricRegistry(), statusUpdater, context.getCatalog()));
+        loginResult.accept(
+                new SessionEndedPrematurelyLoginResultVisitor(
+                        context.getMetricRegistry(),
+                        context.getRequest(),
+                        new ActualLocalDateTimeSource()));
     }
 
     private void createLoginMetric(
