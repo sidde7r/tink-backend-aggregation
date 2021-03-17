@@ -31,6 +31,7 @@ import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.storage.Storage;
 import se.tink.backend.aggregationcontroller.v1.rpc.enums.CredentialsStatus;
 import se.tink.libraries.payment.enums.PaymentStatus;
+import se.tink.libraries.payment.rpc.Debtor;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -48,7 +49,13 @@ public class UkOpenBankingPaymentExecutor implements PaymentExecutor, FetchableP
         paymentRequestValidator.validate(paymentRequest);
 
         authFilterInstantiator.instantiateAuthFilterWithClientToken();
-
+        Optional.ofNullable(paymentRequest.getPayment().getDebtor())
+                .map(Debtor::getAccountIdentifier)
+                .ifPresent(
+                        accountIdentifier ->
+                                log.info(
+                                        "Debtor Account AccountIdentifier validate: "
+                                                + accountIdentifier.isValid()));
         return apiClient.createPaymentConsent(paymentRequest);
     }
 
