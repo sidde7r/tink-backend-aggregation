@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.workers.refresh.individual_refresh;
 
 import com.google.common.collect.ImmutableSet;
+import java.lang.invoke.MethodHandles;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -8,6 +9,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.apache.commons.collections4.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.libraries.credentials.service.CredentialsRequest;
@@ -15,6 +18,8 @@ import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.credentials.service.RefreshableItem;
 
 public class AccountClosureUtil {
+    private static final Logger logger =
+            LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     /*
      * We expect refresh to return accounts if:
@@ -95,14 +100,15 @@ public class AccountClosureUtil {
             case LOAN_ACCOUNTS:
                 return ImmutableSet.of(AccountTypes.LOAN, AccountTypes.MORTGAGE);
             case SAVING_ACCOUNTS:
-                return ImmutableSet.of(AccountTypes.SAVINGS);
+                return ImmutableSet.of(AccountTypes.SAVINGS, AccountTypes.PENSION);
             case CREDITCARD_ACCOUNTS:
                 return ImmutableSet.of(AccountTypes.CREDIT_CARD);
             case INVESTMENT_ACCOUNTS:
-                return ImmutableSet.of(AccountTypes.INVESTMENT, AccountTypes.PENSION);
+                return ImmutableSet.of(AccountTypes.INVESTMENT);
             case ACCOUNTS:
                 return ImmutableSet.copyOf(AccountTypes.values());
             default:
+                logger.info("Unexpected RefreshableItem: {}", item);
                 return ImmutableSet.of();
         }
     }
