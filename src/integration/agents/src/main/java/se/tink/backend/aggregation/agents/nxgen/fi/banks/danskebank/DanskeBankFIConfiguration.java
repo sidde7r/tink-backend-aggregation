@@ -13,17 +13,23 @@ public class DanskeBankFIConfiguration implements DanskeBankConfiguration {
     private static final String APP_CULTURE = "en-GB";
     private static final String APP_NAME = "com.danskebank.mobilebank3fi";
     private static final String APP_REFERER = "MobileBanking3 FI";
-    private static final String APP_VERSION = "0.43.0";
     private static final String BRAND = "SAM";
     private static final String LANGUAGE_CODE = "FI";
     private static final String MARKET_CODE = "FI";
     private static final String DEVICE_SERIAL_NO_KEY = "x-device-serial-no";
     private static final String STEP_UP_TOKEN_KEY = "x-stepup-token";
     private static final String CLIENT_ID = "5ec4b8ad-a93d-43e1-831c-8e78ee6e661a";
+    private static final String APP_VERSION = "2021.2";
     private static final String CLIENT_SECRET =
             "k49FSuV18VUl7YyMoE4yxtNfDSCJtmS6oTXraw1ucprL9HqJWc";
     private static final String APP_VERSION_HEADER =
             "MobileBank ios com danskebank.mobilebank3fi 28076";
+    private static final String USER_AGENT =
+            "uusimobiilipankkidanskebank/2021.2 (com.danskebank.mobilebank3fi; build:28076; iOS 13.3.1; FI)";
+
+    public String getUserAgent() {
+        return USER_AGENT;
+    }
 
     @Override
     public String getAppVersionHeader() {
