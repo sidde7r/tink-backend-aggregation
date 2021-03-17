@@ -24,7 +24,9 @@ public class PasswordAuthenticator implements TypedAuthenticator {
                     "tink3",
                     "tink-3456",
                     "tink4",
-                    "tink-äöü");
+                    "tink-äöü",
+                    "tink-äöü",
+                    "tink5");
 
     public PasswordAuthenticator() {}
 
