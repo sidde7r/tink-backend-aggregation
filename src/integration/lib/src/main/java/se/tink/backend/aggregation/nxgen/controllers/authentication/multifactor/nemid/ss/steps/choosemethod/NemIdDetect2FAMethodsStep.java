@@ -54,6 +54,9 @@ class NemIdDetect2FAMethodsStep {
      */
     private NemIdDetect2FAMethodsResult detect2FAMethodsByTheEffectOfClickingLink(
             NemId2FAMethodScreen defaultScreen) {
+
+        // wait a second to give screens some time to reload
+        driverWrapper.sleepFor(1_000);
         By elementFound = searchForScreenOrPopup();
 
         Optional<NemId2FAMethodScreen> maybeMethodScreen =
