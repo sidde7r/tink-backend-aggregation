@@ -15,7 +15,6 @@ public class JwtHeaders {
     public static final String TAN_KEY_HEADER = "http://openbanking.org.uk/tan";
     public static final String CRIT_KEY_HEADER = "crit";
     static final String B64_KEY_HEADER = "b64";
-    private static final String UKOB_TAN = "openbanking.org.uk";
     private static final String RFC_2253_DN =
             "CN=00158000016i44IAAQ, OID.2.5.4.97=PSDSE-FINA-44059, O=Tink AB, C=GB";
 
@@ -55,8 +54,8 @@ public class JwtHeaders {
         return this;
     }
 
-    public JwtHeaders addTan() {
-        headers.put(TAN_KEY_HEADER, UKOB_TAN);
+    public JwtHeaders addTan(String tanHeaderValue) {
+        headers.put(TAN_KEY_HEADER, tanHeaderValue);
         return this;
     }
 

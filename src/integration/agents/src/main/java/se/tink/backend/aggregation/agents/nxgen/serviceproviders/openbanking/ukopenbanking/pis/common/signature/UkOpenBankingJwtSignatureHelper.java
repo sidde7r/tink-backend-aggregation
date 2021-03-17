@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableMap;
 import java.util.Map;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.assertj.core.util.VisibleForTesting;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.common.openid.configuration.SoftwareStatementAssertion;
@@ -34,8 +35,13 @@ public class UkOpenBankingJwtSignatureHelper {
     }
 
     public void setSoftwareStatement(SoftwareStatementAssertion softwareStatement) {
+        final String trustAnchorDomain =
+                TrustAnchorDomainParser.getTrustAnchorDomain(softwareStatement);
+        Objects.requireNonNull(trustAnchorDomain);
+
         rs256SignatureCreator.setSoftwareId(softwareStatement.getSoftwareId());
         ps256SignatureCreator.setSoftwareStatement(softwareStatement);
+        ps256SignatureCreator.setTrustAnchorDomain(trustAnchorDomain);
     }
 
     @SuppressWarnings("unchecked")

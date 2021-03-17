@@ -13,12 +13,15 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 
 public class HsbcSignatureCreatorTest {
 
+    private static final String TRUST_ANCHOR_DOMAIN = "dummy.domain";
+
     private HsbcSignatureCreator hsbcSignatureCreator;
 
     @Before
     public void setUp() {
         final JwtSigner jwtSignerMock = mock(JwtSigner.class);
         hsbcSignatureCreator = new HsbcSignatureCreator(jwtSignerMock);
+        hsbcSignatureCreator.setTrustAnchorDomain(TRUST_ANCHOR_DOMAIN);
     }
 
     @Test
