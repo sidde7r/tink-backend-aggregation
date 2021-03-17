@@ -254,7 +254,7 @@ public class UnicreditBaseApiClient {
                         .orElse(StringUtils.EMPTY);
 
         if (!lastMRHCookie.isEmpty()) {
-            log.debug("LastMRH_Session cookie for temporary debugging: " + lastMRHCookie);
+            log.info("LastMRH_Session cookie for temporary debugging: " + lastMRHCookie);
         }
     }
 }
