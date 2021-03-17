@@ -883,7 +883,7 @@ maven_install(
         "org.javassist:javassist:3.26.0-GA",
         "org.jboss.logging:jboss-logging:3.1.3.GA",
         "org.json:json:20080701",
-        "org.jsoup:jsoup:1.7.2",
+        "org.jsoup:jsoup:1.13.1",
         "org.mockito:mockito-core:3.0.0",
         "org.modelmapper:modelmapper:1.1.0",
         "org.mozilla:rhino:1.7R4",
