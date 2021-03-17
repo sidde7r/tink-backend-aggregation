@@ -11,9 +11,12 @@ import static org.mockito.Mockito.when;
 import static se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaTestData.TransactionalAccountTestData.ACCOUNT_1_API_ID;
 import static se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaTestData.TransactionalAccountTestData.ACCOUNT_WITH_CREDIT_API_ID;
 
+import io.vavr.collection.Stream;
 import java.io.File;
 import java.math.BigDecimal;
-import java.util.Calendar;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.Date;
 import org.junit.Before;
@@ -32,7 +35,6 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.amount.ExactCurrencyAmount;
-import se.tink.libraries.date.ThreadSafeDateFormat;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class NordeaAccountFetcherTest {
@@ -44,8 +46,7 @@ public class NordeaAccountFetcherTest {
     private TransactionalAccount transactionalAccount;
     private Date dateTo;
     private Date dateFrom;
-    private String dateToString;
-    private String dateFromString;
+    private LocalDate now;
 
     @Before
     public void before() {
@@ -54,12 +55,9 @@ public class NordeaAccountFetcherTest {
         fetcher = new NordeaAccountFetcher(client);
 
         transactionalAccount = getTransactionalAccount();
-        Calendar calendar = Calendar.getInstance();
-        dateTo = calendar.getTime();
-        calendar.add(Calendar.MONTH, -3);
-        dateFrom = calendar.getTime();
-        dateToString = ThreadSafeDateFormat.FORMATTER_DAILY.format(dateTo);
-        dateFromString = ThreadSafeDateFormat.FORMATTER_DAILY.format(dateFrom);
+        now = LocalDate.now();
+        dateTo = parseLocalDate(now);
+        dateFrom = parseLocalDate(now.minusMonths(12));
     }
 
     @Test
@@ -132,16 +130,41 @@ public class NordeaAccountFetcherTest {
     public void shouldFetchTransactionsForAccountAndMapCorrectly() {
         // given
         mockAccountTransactionsQueriedByDate(
-                null, TransactionalAccountTestData.ACCOUNT_TRANSACTIONS_WITH_CONTINUATION_FILE);
+                null,
+                TransactionalAccountTestData.ACCOUNT_TRANSACTIONS_WITH_CONTINUATION_FILE,
+                now.minusMonths(3),
+                now);
+        mockAccountTransactionsQueriedByDate(
+                null,
+                TransactionalAccountTestData.ACCOUNT_TRANSACTIONS_W_O_CONTINUATION_FILE,
+                now.minusMonths(6),
+                now.minusMonths(3));
+        mockAccountTransactionsQueriedByDate(
+                null,
+                TransactionalAccountTestData.ACCOUNT_TRANSACTIONS_W_O_CONTINUATION_FILE,
+                now.minusMonths(9),
+                now.minusMonths(6));
+        mockAccountTransactionsQueriedByDate(
+                null,
+                TransactionalAccountTestData.ACCOUNT_TRANSACTIONS_WITH_CONTINUATION_FILE,
+                now.minusMonths(12),
+                now.minusMonths(9));
         mockAccountTransactionsQueriedByDate(
                 TransactionalAccountTestData.TRANSACTIONS_CONTINUATION_KEY,
-                TransactionalAccountTestData.ACCOUNT_TRANSACTIONS_CONTINUATION_FILE);
+                TransactionalAccountTestData.ACCOUNT_TRANSACTIONS_W_O_CONTINUATION_FILE,
+                now.minusMonths(3),
+                now);
+        mockAccountTransactionsQueriedByDate(
+                TransactionalAccountTestData.TRANSACTIONS_CONTINUATION_KEY,
+                TransactionalAccountTestData.ACCOUNT_TRANSACTIONS_W_O_CONTINUATION_FILE,
+                now.minusMonths(12),
+                now.minusMonths(9));
 
         // when
         PaginatorResponse paginatorResponse =
                 fetcher.getTransactionsFor(transactionalAccount, dateFrom, dateTo);
         // then
-        assertThat(paginatorResponse.getTinkTransactions()).hasSize(4);
+        assertThat(paginatorResponse.getTinkTransactions()).hasSize(14);
         // and
         Transaction transaction1 =
                 paginatorResponse.getTinkTransactions().stream()
@@ -159,40 +182,66 @@ public class NordeaAccountFetcherTest {
     @Test
     public void shouldFetchTransactionsWithoutDate() {
         // given
-        mockAccountTransactionsQueriedByDate(
-                null, TransactionalAccountTestData.ACCOUNT_TRANSACTIONS_WITHOUT_DATE_FILE);
+        mockAllTransactionsResponse(
+                TransactionalAccountTestData.ACCOUNT_TRANSACTIONS_WITHOUT_DATE_FILE);
 
         // when
         PaginatorResponse paginatorResponse =
                 fetcher.getTransactionsFor(transactionalAccount, dateFrom, dateTo);
         // then
-        assertThat(paginatorResponse.getTinkTransactions()).hasSize(3);
+        assertThat(paginatorResponse.getTinkTransactions()).hasSize(12);
     }
 
     @Test
-    public void shouldFetchTransactionsUsingDate() {
+    public void shouldFetchTransactionsUsing4PartitionDateRanges() {
         // given
-        mockAccountTransactionsQueriedByDate(
-                null, TransactionalAccountTestData.ACCOUNT_TRANSACTIONS_FILE);
+        mockAllTransactionsResponse(
+                TransactionalAccountTestData.ACCOUNT_TRANSACTIONS_W_O_CONTINUATION_FILE);
 
         // when
         PaginatorResponse paginatorResponse =
                 fetcher.getTransactionsFor(transactionalAccount, dateFrom, dateTo);
 
         // then
-        assertThat(paginatorResponse.getTinkTransactions().size()).isEqualTo(2);
-        verify(client)
-                .getAccountTransactions(
-                        anyString(), anyString(), isNull(), eq(dateFromString), eq(dateToString));
+        Stream.range(0, 4)
+                .forEach(
+                        partition ->
+                                verify(client)
+                                        .getAccountTransactions(
+                                                anyString(),
+                                                anyString(),
+                                                isNull(),
+                                                eq(
+                                                        formatLocalDatetoString(
+                                                                now.minusMonths(
+                                                                        (partition + 1) * 3))),
+                                                eq(
+                                                        formatLocalDatetoString(
+                                                                now.minusMonths(partition * 3)))));
     }
 
-    private void mockAccountTransactionsQueriedByDate(String continuationKey, String path) {
+    private void mockAllTransactionsResponse(String path) {
+        Stream.range(0, 4)
+                .forEach(
+                        partition ->
+                                mockAccountTransactionsQueriedByDate(
+                                        null,
+                                        path,
+                                        now.minusMonths((partition + 1) * 3),
+                                        now.minusMonths(partition * 3)));
+    }
+
+    private void mockAccountTransactionsQueriedByDate(
+            String continuationKey,
+            String path,
+            LocalDate localDateFrom,
+            LocalDate localDateToString) {
         when(client.getAccountTransactions(
                         eq(transactionalAccount.getApiIdentifier()),
                         any(),
                         eq(continuationKey),
-                        eq(dateFromString),
-                        eq(dateToString)))
+                        eq(formatLocalDatetoString(localDateFrom)),
+                        eq(formatLocalDatetoString(localDateToString))))
                 .thenReturn(
                         SerializationUtils.deserializeFromString(
                                 new File(path), TransactionsResponse.class));
@@ -214,5 +263,13 @@ public class NordeaAccountFetcherTest {
                 .setApiIdentifier("API_IDENTIFIER")
                 .build()
                 .orElseThrow(IllegalStateException::new);
+    }
+
+    private String formatLocalDatetoString(LocalDate localDate) {
+        return localDate.format(DateTimeFormatter.ISO_LOCAL_DATE);
+    }
+
+    private Date parseLocalDate(LocalDate localDate) {
+        return Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
     }
 }
