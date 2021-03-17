@@ -146,7 +146,9 @@ public class UnicreditPaymentExecutor implements PaymentExecutor, FetchablePayme
     }
 
     private PaymentResponse fetchPaymentWithId(PaymentRequest paymentRequest) {
-        return apiClient.fetchPayment(paymentRequest).toTinkPayment(paymentRequest.getPayment());
+        return apiClient
+                .fetchPaymentStatus(paymentRequest)
+                .toTinkPayment(paymentRequest.getPayment());
     }
 
     @Override
@@ -164,7 +166,9 @@ public class UnicreditPaymentExecutor implements PaymentExecutor, FetchablePayme
 
     @Override
     public PaymentResponse fetch(PaymentRequest paymentRequest) {
-        return apiClient.fetchPayment(paymentRequest).toTinkPayment(paymentRequest.getPayment());
+        return apiClient
+                .fetchPaymentStatus(paymentRequest)
+                .toTinkPayment(paymentRequest.getPayment());
     }
 
     @Override

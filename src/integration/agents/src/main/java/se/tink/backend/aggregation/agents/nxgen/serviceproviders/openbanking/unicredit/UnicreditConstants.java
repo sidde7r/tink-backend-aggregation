@@ -42,8 +42,8 @@ public class UnicreditConstants {
         public static final String TRANSACTIONS = "/hydrogen/v1/accounts/{account-id}/transactions";
         public static final String PAYMENT_INITIATION =
                 "/hydrogen/v1/{payment-service}/{payment-product}";
-        public static final String FETCH_PAYMENT =
-                "/hydrogen/v1/{payment-service}/{payment-product}/{paymentId}";
+        public static final String FETCH_PAYMENT_STATUS =
+                "/hydrogen/v1/{payment-service}/{payment-product}/{paymentId}/status";
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
