@@ -123,6 +123,10 @@ class LegacyExceptionToConnectivityErrorMapper {
                             ConnectivityErrorFactory.userLoginError(
                                     ConnectivityErrorDetails.UserLoginErrors
                                             .STATIC_CREDENTIALS_INCORRECT))
+                    .put(
+                            LoginError.NO_ACCOUNTS,
+                            ConnectivityErrorFactory.accountInformationError(
+                                    ConnectivityErrorDetails.AccountInformationErrors.NO_ACCOUNTS))
                     .build();
 
     static final ImmutableMap<BankIdError, ConnectivityError> BANKID_ERROR_MAPPER =

@@ -39,7 +39,8 @@ public enum LoginError implements AgentError {
             new LocalizableKey("There aren't any Authentication methods available.")),
     WRONG_ACTIVATION_CODE(new LocalizableKey("Activation code is incorrect. Please try again.")),
     ACTIVATION_TIMED_OUT(new LocalizableKey("Activation timed out. Please try again.")),
-    PASSWORD_CHANGE_REQUIRED(new LocalizableKey("PIN change required."));
+    PASSWORD_CHANGE_REQUIRED(new LocalizableKey("PIN change required.")),
+    NO_ACCOUNTS(new LocalizableKey("You do not have any accounts available for online access."));
 
     private LocalizableKey userMessage;
 
