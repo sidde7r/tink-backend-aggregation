@@ -52,6 +52,7 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.dat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -210,6 +211,9 @@ public class LansforsakringarApiClient {
         } catch (HttpResponseException e) {
             tryToHandleTokenFetchFailureDueToBankIssuesAndExpiredAuthCode(e);
             throw e;
+        } catch (HttpClientException e) {
+            LOGGER.warn("Unhandled Client exception", e);
+            throw BankServiceError.BANK_SIDE_FAILURE.exception();
         }
     }
 
