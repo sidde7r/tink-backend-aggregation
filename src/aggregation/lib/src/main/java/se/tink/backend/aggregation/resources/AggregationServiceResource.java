@@ -349,12 +349,10 @@ public class AggregationServiceResource implements AggregationService {
             SecretsNamesValidationRequest request) {
         Preconditions.checkNotNull(request, "SecretsNamesValidationRequest cannot be null.");
 
-        String financialInstitutionId = request.getFinancialInstitutionId();
         String providerId = request.getProviderId();
 
         Preconditions.checkArgument(
-                Strings.isNullOrEmpty(financialInstitutionId) ^ Strings.isNullOrEmpty(providerId),
-                "The request must either contain fiid or providerId.");
+                Strings.isNullOrEmpty(providerId), "The request must contain providerId.");
         Preconditions.checkNotNull(
                 request.getSecretsNames(),
                 "SecretsNames in SecretsNamesValidationRequest cannot be null.");
@@ -378,37 +376,18 @@ public class AggregationServiceResource implements AggregationService {
 
         List<ProviderConfiguration> filteredProviders =
                 allProviders.stream()
-                        // Trying to get rid of possible sandbox providers if they exist when
-                        // the financialInstitutionId is not null or empty.
-                        .filter(
-                                prv ->
-                                        (Objects.equals(
-                                                                financialInstitutionId,
-                                                                prv.getFinancialInstitutionId())
-                                                        && !StringUtils.containsIgnoreCase(
-                                                                prv.getName(), "sandbox")
-                                                || Objects.equals(providerId, prv.getName())))
+                        .filter(prv -> (Objects.equals(providerId, prv.getName())))
                         .filter(prv -> prv.getAccessType() == AccessType.OPEN_BANKING)
                         .collect(Collectors.toList());
 
         Preconditions.checkState(
                 !allProviders.isEmpty(), "Should find at least 1 provider for all providers");
 
-        boolean filteredProvidersValid = validateFilteredProviders(filteredProviders);
-        String nonUniqueProviderNames =
-                getNonUniqueProviderNames(
-                        filteredProvidersValid,
-                        providerId,
-                        financialInstitutionId,
-                        filteredProviders.size());
+        Preconditions.checkState(
+                !filteredProviders.isEmpty() || filteredProviders.size() != 1,
+                "Should find 1 provider for the request providerId");
 
-        ProviderConfiguration filterProvider;
-        if (filteredProvidersValid) {
-            filterProvider = filteredProviders.get(0);
-        } else {
-            filterProvider = allProviders.get(0);
-        }
-        return new ClientConfigurationValidator(Provider.of(filterProvider))
+        return new ClientConfigurationValidator(Provider.of(filteredProviders.get(0)))
                 .validate(
                         request.getSecretsNames(),
                         request.getExcludedSecretsNames(),
@@ -416,31 +395,8 @@ public class AggregationServiceResource implements AggregationService {
                         request.getExcludedSensitiveSecretsNames(),
                         request.getAgentConfigParamNames(),
                         request.getExcludedAgentConfigParamNames(),
-                        nonUniqueProviderNames);
-    }
-
-    private String getNonUniqueProviderNames(
-            boolean filteredProvidersValid,
-            String providerId,
-            String financialInstitutionId,
-            int numOfFilteredProviders) {
-        String nonUniqueProviderNames = "";
-
-        if (filteredProvidersValid) {
-            return nonUniqueProviderNames;
-        }
-
-        if (!Strings.isNullOrEmpty(providerId)) {
-            nonUniqueProviderNames = "for providerId : " + providerId;
-        } else {
-            nonUniqueProviderNames = "for financialInstitutionId : " + financialInstitutionId;
-        }
-
-        nonUniqueProviderNames =
-                nonUniqueProviderNames
-                        + String.format(" but found instead : %d ", numOfFilteredProviders);
-
-        return nonUniqueProviderNames;
+                        // will remove nonUniqueProviderNames after the removal of its usage in ESS
+                        "");
     }
 
     @Override
@@ -456,20 +412,6 @@ public class AggregationServiceResource implements AggregationService {
         } else {
             logger.warn("Feature is not enabled/implemented.");
         }
-    }
-
-    private boolean validateFilteredProviders(List<ProviderConfiguration> filteredProviders) {
-        if (filteredProviders.size() == 1) {
-            return true;
-        }
-        // This is the case there are two open banking provider share the same FIID, same secrets.
-        // E.g. one private provider and one business provider
-        return filteredProviders.stream()
-                        .map(ProviderConfiguration::getFinancialInstitutionName)
-                        .distinct()
-                        .limit(2)
-                        .count()
-                == 1;
     }
 
     private Provider getProviderFromName(String providerName) {
