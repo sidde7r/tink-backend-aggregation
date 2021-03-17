@@ -2,10 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia;
 
 import javax.ws.rs.core.MediaType;
 import lombok.AllArgsConstructor;
-import se.tink.backend.aggregation.agents.exceptions.agent.AgentException;
-import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants.EndUserErrorMessageKeys;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants.ErrorMessageKeys;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants.HeaderKeys;
@@ -25,6 +22,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.executor.
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.fetcher.transactionalaccount.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.fetcher.transactionalaccount.rpc.GetBalancesResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.fetcher.transactionalaccount.rpc.GetTransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.utils.ErrorChecker;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.AccessEntity;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentDetailsResponse;
 import se.tink.backend.aggregation.agents.utils.berlingroup.consent.ConsentRequest;
@@ -80,7 +78,7 @@ public class FiduciaApiClient {
                     .post(ConsentResponse.class, createConsentRequest)
                     .getConsentId();
         } catch (HttpResponseException e) {
-            throw errorChecker(e);
+            throw ErrorChecker.errorChecker(e);
         }
     }
 
@@ -104,7 +102,7 @@ public class FiduciaApiClient {
                     .type(MediaType.APPLICATION_JSON_TYPE)
                     .post(ScaResponse.class, authorizeConsentRequest);
         } catch (HttpResponseException e) {
-            throw errorChecker(e);
+            throw ErrorChecker.errorChecker(e);
         }
     }
 
@@ -118,7 +116,7 @@ public class FiduciaApiClient {
                     .type(MediaType.APPLICATION_JSON_TYPE)
                     .put(ScaResponse.class, request);
         } catch (HttpResponseException e) {
-            throw errorChecker(e);
+            throw ErrorChecker.errorChecker(e);
         }
     }
 
@@ -234,38 +232,5 @@ public class FiduciaApiClient {
 
     private URL createUrl(String path) {
         return new URL(serverUrl + path);
-    }
-
-    private AgentException errorChecker(HttpResponseException httpResponseException) {
-        String errorMessage = httpResponseException.getResponse().getBody(String.class);
-
-        if (errorMessage.toUpperCase().contains(ErrorMessageKeys.ERROR_KONF)) {
-            throw LoginError.NOT_CUSTOMER.exception(
-                    EndUserErrorMessageKeys.BANK_NO_LONGER_AVAILABLE_MESSAGE);
-        } else if (errorMessage
-                .toUpperCase()
-                .contains(ErrorMessageKeys.TAN_PLUS_BLOCKED.toUpperCase())) {
-            throw LoginError.NO_ACCESS_TO_MOBILE_BANKING.exception(
-                    EndUserErrorMessageKeys.UNAVAILABLE_ACCOUNT_MESSAGE);
-        } else if (errorMessage
-                .toUpperCase()
-                .contains(ErrorMessageKeys.ONLINE_ACCESS_BLOCKED.toUpperCase())) {
-            throw AuthorizationError.ACCOUNT_BLOCKED.exception(
-                    EndUserErrorMessageKeys.BLOCKED_TAN_MESSAGE);
-        } else if (errorMessage
-                .toUpperCase()
-                .contains(ErrorMessageKeys.PIN_CHANGE_REQUIRED.toUpperCase())) {
-            return LoginError.PASSWORD_CHANGE_REQUIRED.exception();
-        } else if (errorMessage
-                .toUpperCase()
-                .contains(ErrorMessageKeys.NO_ACCOUNT_AVAILABLE.toUpperCase())) {
-            throw AuthorizationError.UNAUTHORIZED.exception(
-                    EndUserErrorMessageKeys.PIN_CHANGE_MESSAGE);
-        } else if (errorMessage
-                .toUpperCase()
-                .contains(ErrorMessageKeys.PSU_CREDENTIALS_INVALID.toUpperCase())) {
-            throw LoginError.INCORRECT_CREDENTIALS.exception();
-        }
-        throw httpResponseException;
     }
 }
