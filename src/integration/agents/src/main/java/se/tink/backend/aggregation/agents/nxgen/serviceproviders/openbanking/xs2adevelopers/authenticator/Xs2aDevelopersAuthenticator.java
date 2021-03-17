@@ -31,7 +31,6 @@ public class Xs2aDevelopersAuthenticator implements OAuth2Authenticator, OAuth2T
     private final Xs2aDevelopersProviderConfiguration configuration;
     protected final LocalDateTimeSource localDateTimeSource;
     private final Credentials credentials;
-    private final boolean isRequestForWellKnownUrlNeeded;
 
     @Override
     public URL buildAuthorizeUrl(String state) {
@@ -56,10 +55,14 @@ public class Xs2aDevelopersAuthenticator implements OAuth2Authenticator, OAuth2T
 
     private String retrieveScaUrl(ConsentResponse consentResponse) {
         String scaOAuthSourceUrl = consentResponse.getLinks().getScaOAuth();
-        if (isRequestForWellKnownUrlNeeded) {
-            return apiClient.getAuthorizationEndpoint(scaOAuthSourceUrl);
+        if (isWellKnownURI(scaOAuthSourceUrl)) {
+            return apiClient.getAuthorizationEndpointFromWellKnownURI(scaOAuthSourceUrl);
         }
         return scaOAuthSourceUrl;
+    }
+
+    private boolean isWellKnownURI(String uri) {
+        return uri.contains("/.well-known/");
     }
 
     @Override

@@ -238,7 +238,7 @@ public class Xs2aDevelopersApiClient {
                 .get(GetPaymentResponse.class);
     }
 
-    public String getAuthorizationEndpoint(String authorizationEndpointSource) {
+    public String getAuthorizationEndpointFromWellKnownURI(String authorizationEndpointSource) {
         return client.request(authorizationEndpointSource)
                 .accept(MediaType.APPLICATION_JSON_TYPE)
                 .get(WellKnownResponse.class)
