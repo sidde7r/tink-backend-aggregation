@@ -81,10 +81,10 @@ import se.tink.libraries.uuid.UUIDUtils;
 
 public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
 
-    private CmcicApiClient apiClient;
-    private SessionStorage sessionStorage;
-    private String redirectUrl;
-    private List<PaymentResponse> paymentResponses;
+    private final CmcicApiClient apiClient;
+    private final SessionStorage sessionStorage;
+    private final String redirectUrl;
+    private final List<PaymentResponse> paymentResponses;
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final StrongAuthenticationState strongAuthenticationState;
     private static final Logger logger = LoggerFactory.getLogger(CmcicPaymentExecutor.class);
@@ -137,7 +137,7 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
     }
 
     @Override
-    public PaymentResponse fetch(PaymentRequest paymentRequest) throws PaymentException {
+    public PaymentResponse fetch(PaymentRequest paymentRequest) {
         HalPaymentRequestEntity paymentRequestEntity =
                 apiClient.fetchPayment(paymentRequest.getPayment().getUniqueId());
 
@@ -149,7 +149,7 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
     @Override
     public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest)
             throws PaymentException {
-        PaymentMultiStepResponse paymentMultiStepResponse = null;
+        PaymentMultiStepResponse paymentMultiStepResponse;
         Payment payment = paymentMultiStepRequest.getPayment();
         String paymentId = getPaymentId(sessionStorage.get(StorageKeys.AUTH_URL));
         switch (paymentMultiStepRequest.getStep()) {
