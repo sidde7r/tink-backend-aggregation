@@ -39,4 +39,20 @@ pkg_tar(
     visibility = ["//docker:__pkg__"],
 )
 
+pkg_tar(
+    name = "chromedriver_bin_tar",
+    srcs = ["@chromedriver//file"],
+    mode = "0555",
+    package_dir = "/usr/share/tink-backend-aggregation/external/chromedriver/file/chromedriver",
+    visibility = ["//docker:__pkg__"],
+)
+
+pkg_tar(
+    name = "chrome_bin_tar",
+    srcs = ["@chromium//file"],
+    mode = "0555",
+    package_dir = "/usr/share/tink-backend-aggregation/external/chromium/file/chromium",
+    visibility = ["//docker:__pkg__"],
+)
+
 # end binary files

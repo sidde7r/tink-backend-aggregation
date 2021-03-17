@@ -47,6 +47,8 @@ container_image(
         "//deb:aggregation_data_tar",
         "//deb:libkbc_wbaes_bin_tar",
         "//deb:phantomjs_bin_tar",
+        "//deb:chrome_bin_tar",
+        "//deb:chromedriver_bin_tar",
     ],
     workdir = "/usr/share/tink-backend-aggregation",
 )
