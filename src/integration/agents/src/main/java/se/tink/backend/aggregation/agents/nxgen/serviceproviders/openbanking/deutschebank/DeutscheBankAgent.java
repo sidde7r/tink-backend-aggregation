@@ -55,7 +55,8 @@ public abstract class DeutscheBankAgent extends NextGenerationAgent
         final DeutscheBankAuthenticatorController deutscheBankAuthenticatorController =
                 new DeutscheBankAuthenticatorController(
                         supplementalInformationHelper,
-                        new DeutscheBankAuthenticator(apiClient, persistentStorage, credentials),
+                        new DeutscheBankAuthenticator(
+                                apiClient, persistentStorage, sessionStorage, credentials),
                         strongAuthenticationState);
 
         return new AutoAuthenticationController(

@@ -57,6 +57,7 @@ public class DeutscheBankAuthenticatorController
         // ITE-2430: Temporary solution to log what happens in case of failure
         if (!authenticator.isPersistedConsentIdValid()) {
             log.info("Supplemental info response {}", response);
+            log.info("Authentication object status {}", authenticator.getAuthorisationDetails());
             throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception();
         }
         // authenticator.verifyPersistedConsentIdIsValid()
