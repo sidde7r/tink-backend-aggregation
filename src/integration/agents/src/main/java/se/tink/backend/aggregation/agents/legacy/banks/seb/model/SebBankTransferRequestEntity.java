@@ -41,7 +41,7 @@ public class SebBankTransferRequestEntity extends SebTransferRequestEntity {
             TransferMessageFormatter.Messages messages =
                     transferMessageFormatter.getMessagesFromRemittanceInformation(transfer, true);
             request.destinationMessage = messages.getDestinationMessage();
-            request.sourceMessage = messages.getDestinationMessage();
+            request.sourceMessage = messages.getSourceMessage();
             return request;
         } else {
             return request;
