@@ -1726,3 +1726,6 @@ msgid ""
 "Incorrect login credentials. Please try entering the first 5 digits of your "
 "PIN or try again."
 msgstr ""
+
+msgid "You do not have any accounts available for online access."
+msgstr ""
