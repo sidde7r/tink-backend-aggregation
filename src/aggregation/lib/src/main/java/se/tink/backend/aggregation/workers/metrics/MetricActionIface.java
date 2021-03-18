@@ -16,6 +16,8 @@ public interface MetricActionIface {
 
     void cancelled();
 
+    void cancelledDueToThirdPartyAppTimeout();
+
     void unavailable();
 
     void partiallyCompleted();

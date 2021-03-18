@@ -62,6 +62,11 @@ public class MetricAction implements MetricActionIface {
         mark(Outcome.CANCELLED);
     }
 
+    @Override
+    public void cancelledDueToThirdPartyAppTimeout() {
+        mark(Outcome.CANCELLED_DUE_TO_THIRD_PARTY_APP_TIMEOUT);
+    }
+
     public void unavailable() {
         mark(Outcome.UNAVAILABLE);
     }
@@ -79,6 +84,7 @@ public class MetricAction implements MetricActionIface {
         PARTIALLY_COMPLETED,
         FAILED,
         CANCELLED,
+        CANCELLED_DUE_TO_THIRD_PARTY_APP_TIMEOUT,
         UNAVAILABLE;
 
         private String getMetricName() {

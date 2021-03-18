@@ -100,7 +100,8 @@ public class LoginExecutor {
         loginResult.accept(
                 new LoginMetricLoginResultVisitor(
                         metricsFactory.createLoginMetric(
-                                credentialsRequest, supplementalInformationInteractionCounter)));
+                                credentialsRequest, supplementalInformationInteractionCounter),
+                        credentialsRequest.getCredentials()));
     }
 
     private void publishDataStudioLoginEvent(
