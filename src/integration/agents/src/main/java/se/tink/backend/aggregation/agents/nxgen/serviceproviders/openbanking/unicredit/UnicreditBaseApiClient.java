@@ -5,10 +5,10 @@ import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Optional;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.NewCookie;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.cookie.Cookie;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants.Endpoints;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants.Formats;
@@ -37,6 +37,7 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 import se.tink.libraries.transfer.rpc.PaymentServiceType;
@@ -88,13 +89,9 @@ public class UnicreditBaseApiClient {
     }
 
     protected RequestBuilder createRequestBuilder(URL url) {
-        try {
-            return client.request(url)
-                    .accept(MediaType.APPLICATION_JSON)
-                    .type(MediaType.APPLICATION_JSON);
-        } finally {
-            logLastMRHCookie();
-        }
+        return client.request(url)
+                .accept(MediaType.APPLICATION_JSON)
+                .type(MediaType.APPLICATION_JSON);
     }
 
     private RequestBuilder createRequestInSession(URL url) {
@@ -118,11 +115,19 @@ public class UnicreditBaseApiClient {
     }
 
     public ConsentDetailsResponse getConsentDetails() {
-        return createRequest(
-                        new URL(providerConfiguration.getBaseUrl() + Endpoints.CONSENT_DETAILS)
-                                .parameter(PathParameters.CONSENT_ID, getConsentIdFromStorage()))
-                .header(HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId())
-                .get(ConsentDetailsResponse.class);
+        HttpResponse response =
+                createRequest(
+                                new URL(
+                                                providerConfiguration.getBaseUrl()
+                                                        + Endpoints.CONSENT_DETAILS)
+                                        .parameter(
+                                                PathParameters.CONSENT_ID,
+                                                getConsentIdFromStorage()))
+                        .header(HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId())
+                        .get(HttpResponse.class);
+        logLastMRHCookie(response);
+
+        return response.getBody(ConsentDetailsResponse.class);
     }
 
     private String getConsentIdFromStorage() {
@@ -245,12 +250,12 @@ public class UnicreditBaseApiClient {
 
     // Temp log cookie key "LastMRH_Session" since UniCredit support requires that for debugging on
     // their side
-    private void logLastMRHCookie() {
+    private void logLastMRHCookie(HttpResponse response) {
         String lastMRHCookie =
-                client.getCookies().stream()
+                response.getCookies().stream()
                         .filter(cookie -> "LastMRH_Session".equals(cookie.getName()))
                         .findFirst()
-                        .map(Cookie::getValue)
+                        .map(NewCookie::getValue)
                         .orElse(StringUtils.EMPTY);
 
         if (!lastMRHCookie.isEmpty()) {

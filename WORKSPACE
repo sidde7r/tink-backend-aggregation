@@ -1360,10 +1360,10 @@ download_extract_archive(
         "9bb83c07e5b67a6d032e6b9e22500f11e34f86551971f4892dfa68e3544ac39a",
     linux_url =
         "https://commondatastorage.googleapis.com/chromium-browser-snapshots/Linux_x64/612434/chrome-linux.zip",
-    linux_path_to_binary = "/chrome-linux/",
+    linux_path_to_binary = "/",
     macos_sha256 =
         "ab1a75f0d918a0e266f85e43517db5bd701f34544377e3d6aa89f035b508667d",
     macos_url =
         "https://commondatastorage.googleapis.com/chromium-browser-snapshots/Mac/612398/chrome-mac.zip",
-    macos_path_to_binary = "/chrome-mac/Chromium.app/Contents/MacOS/",
+    macos_path_to_binary = "/",
 )

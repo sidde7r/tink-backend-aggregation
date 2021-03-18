@@ -15,7 +15,7 @@ public class ChromeDriverInitializerTest {
                 ChromeDriverInitializer.getListArguments("dummyAgent", "dummyLanguage");
 
         // then
-        assertThat(arguments).hasSize(13);
+        assertThat(arguments).hasSize(14);
         assertThat(arguments).contains("--headless");
         assertThat(arguments).contains("--blink-settings=imagesEnabled=false");
     }

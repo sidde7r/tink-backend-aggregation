@@ -13,13 +13,16 @@ import org.openqa.selenium.chrome.ChromeOptions;
 public class ChromeDriverInitializer {
     private static final String CHROMEDRIVER_PATH = "external/chromedriver/file/chromedriver/";
     private static final String BASE_CHROME_PATH = "external/chromium/file/chromium/";
+    private static final String MAC_CHROME_PATH =
+            BASE_CHROME_PATH + "chrome-mac/Chromium.app/Contents/MacOS/Chromium";
+    private static final String LINUX_CHROME_PATH = BASE_CHROME_PATH + "chrome-linux/chrome";
+
+    private static boolean isMacOs = System.getProperty("os.name").toLowerCase().contains("mac");
 
     private static final String DEFAULT_USER_AGENT =
             "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.82 Safari/537.36";
     private static final String DEFAULT_ACCEPT_LANGUAGE = "en-US";
     private static final long DEFAULT_TIMEOUT_SECONDS = 30;
-
-    private static boolean isMacOs = System.getProperty("os.name").toLowerCase().contains("mac");
 
     public static ChromeDriver constructChromeDriver() {
         return constructChromeDriver(DEFAULT_USER_AGENT, DEFAULT_ACCEPT_LANGUAGE);
@@ -67,6 +70,8 @@ public class ChromeDriverInitializer {
         // Unfortunately doesn't work for linux. Remember to uncomment when pushing on prod.
         arguments.add("--headless");
         arguments.add("--blink-settings=imagesEnabled=false");
+        arguments.add("--disable-dev-shm-usage");
+
         return arguments;
     }
 
@@ -77,9 +82,9 @@ public class ChromeDriverInitializer {
 
     private static String getChromePath() {
         if (isMacOs) {
-            return BASE_CHROME_PATH + "chromium";
+            return MAC_CHROME_PATH;
         } else {
-            return BASE_CHROME_PATH + "chrome";
+            return LINUX_CHROME_PATH;
         }
     }
 }
