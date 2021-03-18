@@ -69,7 +69,7 @@ public class NemIdConstants {
                         Pattern.compile("^incorrect (user|password).*"),
                         Pattern.compile("^fejl i (bruger|adgangskode).*"),
                         Pattern.compile("^indtast (bruger|adgangskode).*"),
-                        Pattern.compile("^Forkert adgangskode.*"));
+                        Pattern.compile("^forkert adgangskode.*"));
 
         public static final ImmutableList<Pattern> ENTER_ACTIVATION_PASSWORD_PATTERNS =
                 ImmutableList.of(
@@ -82,11 +82,6 @@ public class NemIdConstants {
                                 // add for en
                                 Pattern.compile(
                                         "^log på med nemid-nr. eller selvvalgt bruger-id.*"));
-
-        public static final ImmutableList<Pattern> ENTER_6_DIGIT_PASSWORD_PATTERNS =
-                ImmutableList.of(
-                        // add for en
-                        Pattern.compile("^Indtast 6-cifret nøgle*"));
 
         /*
         Error messages from NemId heading
