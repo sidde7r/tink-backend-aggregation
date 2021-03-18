@@ -33,13 +33,13 @@ public final class NorwegianConstants {
         public static final String SAVINGS_ACCOUNTS_URL = BASE_URL + "MinSida/SavingsAccount/";
         public static final String CARD_TRANSACTION_URL = CREDIT_CARD_URL + "Transactions";
         public static final String SAVINGS_TRANSACTION_URL = SAVINGS_ACCOUNTS_URL + "Transactions";
-
+        public static final String LOGIN_STATUS_URL = BASE_URL + "login/status";
         public static final URL TRANSACTIONS_PAGINATION_URL =
                 new URL(BASE_URL + "MyPage2/Transaction/GetTransactionsFromTo");
 
         public static final String INIT_URL = "https://www.banknorwegian.se/Login";
         public static final String LOGIN_URL =
-                "https://id.banknorwegian.se/std/method/banknorwegian.se/?id=sbid-mobil-2014:default:sv&target=";
+                "https://identity.banknorwegian.se/MyPage/MobiltBankId?returnUrl=";
         public static final String TARGET_URL =
                 "https://identity.banknorwegian.se/MyPage/SignicatCallback?ipid=22&returnUrl=";
         public static final String ORDER = "order";
@@ -76,5 +76,11 @@ public final class NorwegianConstants {
         public static final String GET_LAST_DAYS_FALSE = "false";
         public static final String FROM_LAST_EOC = "false";
         public static final String CORE_DOWN = "false";
+    }
+
+    public static class HeaderValues {
+        public static final String LANGUAGE = "en-US,en;q=0.9,sv;q=0.8";
+        public static final String ACCEPT =
+                "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9";
     }
 }
