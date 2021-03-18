@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebCommonConstants.HttpClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.AuthResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.AuthorizeResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.ErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.RefreshRequest;
@@ -55,10 +54,6 @@ public abstract class SebBaseApiClient {
     }
 
     public abstract RequestBuilder getAuthorizeUrl();
-
-    public abstract AuthResponse initBankId();
-
-    public abstract AuthResponse collectBankId(String csrfToken);
 
     public abstract AuthorizeResponse getAuthorization(String clientId, String redirectUri);
 

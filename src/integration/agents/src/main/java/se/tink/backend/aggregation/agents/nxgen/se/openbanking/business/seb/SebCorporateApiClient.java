@@ -12,7 +12,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.seb
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebCommonConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebCommonConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebCommonConstants.Urls;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.AuthResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.AuthorizeResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.TokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.TokenResponse;
@@ -22,7 +21,6 @@ import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
-import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.credentials.service.CredentialsRequest;
@@ -41,29 +39,6 @@ public class SebCorporateApiClient extends SebBaseApiClient {
     @Override
     public RequestBuilder getAuthorizeUrl() {
         return client.request(new URL(Urls.OAUTH));
-    }
-
-    @Override
-    public AuthResponse initBankId() {
-        final HttpResponse response =
-                client.request(new URL(SebCommonConstants.Urls.INIT_BANKID))
-                        .accept(MediaType.APPLICATION_JSON)
-                        .post(HttpResponse.class);
-
-        final String csrfToken = response.getHeaders().getFirst(HeaderKeys.X_SEB_CSRF);
-        return response.getBody(AuthResponse.class).withCsrfToken(csrfToken);
-    }
-
-    @Override
-    public AuthResponse collectBankId(final String csrfToken) {
-        final HttpResponse response =
-                client.request(new URL(SebCommonConstants.Urls.INIT_BANKID))
-                        .accept(MediaType.APPLICATION_JSON)
-                        .header(HeaderKeys.X_SEB_CSRF, csrfToken)
-                        .get(HttpResponse.class);
-
-        final String newCsrfToken = response.getHeaders().getFirst(HeaderKeys.X_SEB_CSRF);
-        return response.getBody(AuthResponse.class).withCsrfToken(newCsrfToken);
     }
 
     @Override
