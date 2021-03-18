@@ -18,9 +18,12 @@ public class SebCommonConstants {
     }
 
     public static class Urls {
-        public static final String BASE_AUTH_URL = "https://tpp-auth.seb.se";
+        public static final String BASE_AUTH_URL = "https://authorize.sebgroup.com";
         public static final String BASE_URL = "https://tpp-api.sebgroup.com";
 
+        public static final String DECOUPLED_AUTHORIZATION =
+                BASE_AUTH_URL + "/auth/v3/authorizations";
+        public static final String DECOUPLED_TOKEN = BASE_AUTH_URL + "/auth/v3/tokens";
         public static final String INIT_BANKID = BASE_AUTH_URL + "/auth/bid/v2/authentications";
         private static final String BASE_OAUTH = BASE_AUTH_URL + "/mga/sps/oauth";
         public static final String OAUTH = BASE_OAUTH + "/oauth20/dpsd2/authorize";
